@@ -19,7 +19,7 @@ $smarty->assign("arr_proj_facing", $arr_proj_facing);
 
 //code for define host name
 
-if($_SERVER['SERVER_NAME']=='proptiger.com' || $_SERVER['SERVER_NAME']=='www.proptiger.com' || $_SERVER['SERVER_NAME']=='staging.proptiger.com' )
+if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 {
 	$dirName = '';
 	define("SERVER_IMAGE_PATH",$_SERVER['DOCUMENT_ROOT'].$dirName);
@@ -35,7 +35,7 @@ else
 
 /*Added by siddharth for Forum module on 12th Jan 2012*/
 /*Forum Paths in Project Detail page*/
-if($_SERVER['SERVER_NAME']=='proptiger.com' || $_SERVER['SERVER_NAME']=='www.proptiger.com' || $_SERVER['SERVER_NAME']=='staging.proptiger.com' )
+if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 {
 	define('FORUM_INTERNET_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/");
 	define('FORUM_INTERNET_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/images/");
@@ -100,7 +100,7 @@ DEFINE("FCOM_CAT",FORUM_TABLE_PREFIX."COMMENT_CATEGORY");
 
 /*Added by sudhanshu for Crawler  module on 12th Mar 2012*/
 /*Crawler Paths in Project Detail page*/
-if($_SERVER['SERVER_NAME']=='proptiger.com' || $_SERVER['SERVER_NAME']=='www.proptiger.com' || $_SERVER['SERVER_NAME']=='staging.proptiger.com' )
+if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 {
 	define('OFFLINE_PROJECT_INTERNET_PATH',"http://".$_SERVER['SERVER_NAME']."/");
 	define('OFFLINE_PROJECT_INTERNET_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME']."/images/");
@@ -650,7 +650,8 @@ if(in_array($_SESSION['adminId'],$arrUser))
 }
 $smarty->assign("accessModule", $accessModule);
 
-$newImagePath = "/home/sysadmin/public_html/images_new/";
+//$newImagePath = "/home/sysadmin/public_html/images_new/";
+$newImagePath = "/home/vimlesh/public_html/images_new/";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
 

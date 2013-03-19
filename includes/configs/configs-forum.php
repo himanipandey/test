@@ -1,5 +1,5 @@
 <?php
-if($_SERVER['SERVER_NAME']=='proptiger.com' || $_SERVER['SERVER_NAME']=='www.proptiger.com' || $_SERVER['SERVER_NAME']=='staging.proptiger.com' )
+if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 {
 	$dirName = '';
 	define("SERVER_IMAGE_PATH",$_SERVER['DOCUMENT_ROOT'].$dirName);
@@ -13,7 +13,7 @@ else
 
 /*Added by siddharth for Forum module on 12th Jan 2012*/
 /*Forum Paths in Project Detail page*/
-if($_SERVER['SERVER_NAME']=='proptiger.com' || $_SERVER['SERVER_NAME']=='www.proptiger.com' || $_SERVER['SERVER_NAME']=='staging.proptiger.com' )
+if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 {
 	define('FORUM_INTERNET_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/");
 	define('FORUM_INTERNET_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/images/");
@@ -75,7 +75,7 @@ DEFINE("FCOM_CAT",FORUM_TABLE_PREFIX."COMMENT_CATEGORY");
 
 DEFINE("PROJECT","RESI_PROJECT");
 
-if($_SERVER['SERVER_NAME']=='proptiger.com' || $_SERVER['SERVER_NAME']=='www.proptiger.com')
+if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
     DEFINE("CONTENT_ADMIN_USERID",'1810');
 else
     DEFINE("CONTENT_ADMIN_USERID",'1426');

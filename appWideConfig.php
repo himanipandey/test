@@ -13,7 +13,7 @@ define("SMALL_IMG_VER", "?v=10");
 define("ICON_IMG_VER","?v=5");
 define("ADS_IMG_VER", "?v=1");
 
-if($_SERVER['SERVER_NAME']=='proptiger.com' || $_SERVER['SERVER_NAME']=='www.proptiger.com')
+if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 {
 	$myDocRoot = dirname(__FILE__);
 	define("IMG_SERVER",'http://dyjz00pttbyut.cloudfront.net/');
