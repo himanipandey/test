@@ -1,0 +1,83 @@
+/*forum css starts*/
+/********************************************************************************************************************/
+.forumhead{background:url(images/google_sprite1.png) repeat-x left -1127px; height:38px; padding-top:15px; font:normal 15px Arial, Helvetica, sans-serif; color:#666666; padding-left:5px;}
+
+.forumtext{margin-left:5px; float:left; border-bottom:solid 1px #e6f2ff; padding-bottom:8px;}
+
+.forumtext span.number{color:#e6f2ff; font-size:18px;}
+
+.forumtext span.innertext{line-height:18px; }
+
+.proj_comment{font:bold 15px Arial, Helvetica, sans-serif; color:#333333; border-bottom:solid 1px #ebebeb; border-top:solid 1px #ebebeb; padding:8px 5px;}
+
+.font11{font-size:11px;}
+
+.ugccmt-comments-post-field{background-color: #F9FFFF; border: 1px solid #CFCFCC !important ; line-height: 18px; overflow: auto; padding: 5px; resize: none;width: 97%; height: 150px;}
+
+.post_new_comment{ background:url(images/google_sprite1.png) no-repeat left -1097px; height:28px; font:bold 12px Arial, Helvetica, sans-serif; color:#FFF; text-align:center; width:198px; text-transform:uppercase;  text-transform:uppercase;  -moz-background-clip:border; -moz-background-inline-policy:continuous; -moz-background-origin:padding;  border:0; margin-right:5px;}
+
+.post_comment{ background:url(images/google_sprite1.png) no-repeat left -684px; height:27px; font:bold 12px Arial, Helvetica, sans-serif; color:#FFF; text-align:center; width:100px; padding-top:0px; text-transform:uppercase;  -moz-background-clip:border; -moz-background-inline-policy:continuous; -moz-background-origin:padding;  border:0}
+
+.post_a_comment{background:url(images/google_sprite1.png) no-repeat left -1179px; margin-left:5px; padding-left:20px !important; height:15px;}
+/******************************************************************************************************************/
+/*forum css ends*/
+
+/*Login form css*/
+
+.signupformfull{width:390px;}
+
+a:link, a:active, a:visited {color:#0065DE; text-decoration:none;}
+a:hover {text-decoration:underline; }
+
+.signupformleft{float:left; width:125px; padding-top:6px; font-size:13px; color:#1D2A5B; text-align:right;}
+
+/*Login form css ends*/
+
+.curve660 {
+float: left;
+width: 666px;
+border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+box-shadow: 1px 1px 2px 1px #EFEFEF;
+border: solid 1px #E0E0E0;
+padding: 10px;
+}
+.container990 {
+margin: 0 auto;
+width: 700px;
+}
+.pad5 {
+padding: 5px;
+line-height: 16px;
+}
+.font11 {
+font-size: 11px;
+}
+.flt {
+float: left;
+}
+.spacer5 {
+line-height: 5px;
+clear: both;
+}
+.text {
+line-height: 16px;
+text-align: justify;
+}
+a:hover {
+text-decoration: underline;
+}
+.post_comment {
+background: url('images/google_sprite1.png') 0% -684px no-repeat;
+font-size:11px;
+border: 0px;
+}
+
+.ugccmt-user-field{background-color: #F9FFFF; border: 1px solid #CFCFCC !important ; line-height: 18px; overflow: hidden; padding: 5px; resize: none;width: 50%;}
+
+.err_msg {background: url('images/sprite1.png') no-repeat left -715px;font: normal 11px Arial,Helvetica,sans-serif;color: red;padding-left: 8px;height: 18px;}
+
+.displayname{float:left;text-align: left;padding-left: 0px;}
+.displaydate{float:left;text-align: left;padding-left: 0px;}
+
