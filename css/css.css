@@ -51,7 +51,7 @@ li{margin:0; padding:0;}
     width:210px;
 }
 .footer_bg {
-	BACKGROUND-IMAGE: url(images/footerbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 80px; BACKGROUND-COLOR: #ffffff
+	BACKGROUND-IMAGE: url(../images/footerbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 80px; BACKGROUND-COLOR: #ffffff
 }
 
 
@@ -106,7 +106,7 @@ A:hover {
 	FONT-WEIGHT: normal; FONT-SIZE: 12px; TEXT-TRANSFORM: none; COLOR: #1b70ca; FONT-FAMILY: Arial, Tahoma, Helvetica, sans-serif; TEXT-DECORATION: none
 }
 .thinline {
-	PADDING-LEFT: 5px; BACKGROUND-IMAGE: url(images/doted_line.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 1px
+	PADDING-LEFT: 5px; BACKGROUND-IMAGE: url(../images/doted_line.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 1px
 }
 .bluelink:link {
 	FONT-WEIGHT: normal; FONT-SIZE: 12px; TEXT-TRANSFORM: none; COLOR: #1b70ca; FONT-FAMILY: Arial,Tahoma, Helvetica, sans-serif; TEXT-DECORATION: underline
@@ -149,31 +149,31 @@ A:hover {
 	HEIGHT: 17px; BACKGROUND-COLOR: #f6f6f6; BORDER-RIGHT-WIDTH: 0px; TEXT-DECORATION: none
 }
 .horizontal-bg {
-	BACKGROUND-POSITION: 50% top; BACKGROUND-IMAGE: url(images/horbg.gif); BACKGROUND-REPEAT: repeat-x
+	BACKGROUND-POSITION: 50% top; BACKGROUND-IMAGE: url(../images/horbg.gif); BACKGROUND-REPEAT: repeat-x
 }
 .table-lt_bg {
-	BACKGROUND-IMAGE: url(images/tableltbg.gif); WIDTH: 7px; BACKGROUND-REPEAT: repeat-y
+	BACKGROUND-IMAGE: url(../images/tableltbg.gif); WIDTH: 7px; BACKGROUND-REPEAT: repeat-y
 }
 .table-rt_bg {
-	BACKGROUND-IMAGE: url(images/tablertbg.gif); WIDTH: 8px; BACKGROUND-REPEAT: repeat-y
+	BACKGROUND-IMAGE: url(../images/tablertbg.gif); WIDTH: 8px; BACKGROUND-REPEAT: repeat-y
 }
 .table-top_bg {
-	BACKGROUND-IMAGE: url(images/tabletopbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 5px
+	BACKGROUND-IMAGE: url(../images/tabletopbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 5px
 }
 .table-bot_bg {
-	BACKGROUND-IMAGE: url(images/tablebotbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 6px
+	BACKGROUND-IMAGE: url(../images/tablebotbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 6px
 }
 .text_bg {
-	BACKGROUND-IMAGE: url(images/text-bg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 35px
+	BACKGROUND-IMAGE: url(../images/text-bg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 35px
 }
 .button_bg {
-	BACKGROUND-IMAGE: url(images/buttonbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 38px
+	BACKGROUND-IMAGE: url(../images/buttonbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 38px
 }
 .login_bg {
-	BACKGROUND-IMAGE: url(images/admin-bg.jpg); WIDTH: 575px; BACKGROUND-REPEAT: no-repeat; HEIGHT: 275px
+	BACKGROUND-IMAGE: url(../images/admin-bg.jpg); WIDTH: 575px; BACKGROUND-REPEAT: no-repeat; HEIGHT: 275px
 }
 .header_bg {
-	BACKGROUND-IMAGE: url(images/heading_bg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 40px; BACKGROUND-COLOR: #ffffff
+	BACKGROUND-IMAGE: url(../images/heading_bg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 40px; BACKGROUND-COLOR: #ffffff
 }
 .textfield {
 	PADDING-LEFT: 6px; FONT-WEIGHT: normal; FONT-SIZE: 12px; COLOR: #000000; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none
