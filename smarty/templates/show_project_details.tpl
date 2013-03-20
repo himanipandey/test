@@ -1307,6 +1307,32 @@ function getDateNow(){
 							</td>
 						</tr>
 						
+						<tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left">
+								<b>Launched Units:</b>
+							</td>
+							<td>
+								{if $projectDetails[0].LAUNCHED_UNITS != ''}
+									{$projectDetails[0].LAUNCHED_UNITS}
+								{else}
+									--
+								{/if}
+							</td>
+						</tr>
+						
+						<tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left" valign ="top">
+								<b>Reason For UnLaunched Units:</b>
+							</td>
+							<td>
+								{if $projectDetails[0].REASON_UNLAUNCHED_UNITS != ''}
+									{$projectDetails[0].REASON_UNLAUNCHED_UNITS}
+								{else}
+									--
+								{/if}
+							</td>
+						</tr>
+						
 					</table>
 				</td>
 			</tr>

@@ -246,7 +246,7 @@
 	}
 
 	/**********project insert***************/
-	function InsertProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark)
+	function InsertProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
 	{
 
 		if($project_type == '1')
@@ -347,6 +347,8 @@
 							SHOULD_DISPLAY_PRICE        =     $shouldDisplayPrice,
 							CALLING_REMARK				=	'".$txtCallingRemark."',
 							AUDIT_REMARK				=	'".$txtAuditRemark."',
+							LAUNCHED_UNITS				=	'".$launchedUnits."',
+							REASON_UNLAUNCHED_UNITS		=   '".$reasonUnlaunchedUnits."',		
 							PROJECT_SMALL_IMAGE			=   '/on-request/sagar-kunj-apartments/defaultprojectsearchimage-small.png'";
 							if($display_flag=='1'){
 								$Sql.= ", DISPLAY_ORDER_LOCALITY='30', DISPLAY_ORDER ='30'";
@@ -868,7 +870,7 @@ function RoomCategoryList()
 	}
 
 	/**********project insert***************/
-	function UpdateProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$ProjectId,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark)
+	function UpdateProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$ProjectId,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
 	{
 		$Completion = $Completion." Onwards";
 		$Sql = "UPDATE " .RESI_PROJECT."
@@ -925,6 +927,8 @@ function RoomCategoryList()
 					BOOKING_STATUS 				=	'".$Booking_Status."',
 					SHOULD_DISPLAY_PRICE        =   '".$shouldDisplayPrice."',
 					CALLING_REMARK				=	'".$txtCallingRemark."',
+					LAUNCHED_UNITS				=	'".$launchedUnits."',
+					REASON_UNLAUNCHED_UNITS		=   '".$reasonUnlaunchedUnits."',
 					AUDIT_REMARK				=	'".$txtAuditRemark."'";
 					if($display_flag=='1'){
 						$Sql.= ", DISPLAY_ORDER_LOCALITY='30', DISPLAY_ORDER ='30'";
