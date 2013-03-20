@@ -37,7 +37,7 @@
 	$preview = $_REQUEST['preview'];
 	$smarty->assign("preview", $preview);
 
-	if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
+	if (isset($_POST['btnSave']))
 	{
 		if($_POST['btnSave'] == "Save")
 		{
@@ -148,16 +148,15 @@
 					header("Location:add_apartmentConfiguration.php?projectId=".$projectId);
 				}
 			}
-		
 	} 
-	else if($_POST['btnExit'] == "Exit")
+	else if(isset($_POST['btnExit']))
 	{
 		  if($preview == 'true')
 			header("Location:show_project_details.php?projectId=".$projectId);
-		else
+		  else
 			header("Location:ProjectList.php?projectId=".$projectId);
 	}
-	else if($_POST['Skip'] == "Skip")
+	else if(isset($_POST['Skip']))
 	{
 		  header("Location:add_apartmentConfiguration.php?projectId=".$projectId);
 	}

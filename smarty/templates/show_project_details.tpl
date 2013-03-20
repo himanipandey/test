@@ -106,7 +106,6 @@ function towerSelect(towerId)
 
 	function changePhase(pId, phase, dir, projectStatus, promisedComDate,launchDate, preLaunchDate,phaseId,stg)
 	{
-	
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
@@ -364,12 +363,12 @@ function getDateNow(){
 /*********builder contact info related js end here*************/
 
 /**********Old value dispaly function****/
- function oldValueShow(stageName, phasename, projectId)
+ function oldValueShow(stageName, phasename, projectId,phaseId)
  {
 	jQuery.ajax({
 			type:"POST",
 			url:"ajax/fetchOldValues.php",
-			data:"stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId,
+			data:"stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId+"&phaseId="+phaseId,
 			beforeSend: function(){
 				jQuery("#projectOldVal").html('<img src = "images/ajax-loader.gif">');
 			},
@@ -536,8 +535,12 @@ function getDateNow(){
 									(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')
 									OR
 									(trim($projectDetails[0].PROJECT_STAGE) == 'updationCycle' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')}
-								
-								<input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID});">
+								{if $phaseId == ''}
+									{$phsId = ''}
+								{else}
+									{$phsId = $phaseId}
+								{/if}
+								<input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID}, '{$phsId}');">
 							{/if}
 							
 							</td>
@@ -757,7 +760,7 @@ function getDateNow(){
 								                  <select name = "projects_call_{$start}[]" id = "projects_call_{$cnt}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}" {if strstr($arrContact[$cnt]['PROJECTS'],$item['PROJECT_ID'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>
@@ -820,7 +823,7 @@ function getDateNow(){
 								                  <select name = "projects_call_{$start}[]" id = "projects_call_{$cnt+1}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}" {if strstr($arrContact[$cnt]['PROJECTS'],$item['PROJECT_ID'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>

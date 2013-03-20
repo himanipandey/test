@@ -311,7 +311,6 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		 $smarty->assign("cityId", stripslashes($ProjectDetail[0]['CITY_ID']));
 		 $smarty->assign("suburbId", stripslashes($ProjectDetail[0]['SUBURB_ID']));
 		 $smarty->assign("localityId", stripslashes($ProjectDetail[0]['LOCALITY_ID']));
-		 $smarty->assign("txtProjectTypes", stripslashes($ProjectDetail[0]['PROJECT_TYPES']));
 		 $smarty->assign("txtProjectSmallImg", stripslashes($ProjectDetail[0]['PROJECT_SMALL_IMAGE']));
 		 $smarty->assign("BUILDER_NAME", stripslashes($ProjectDetail[0]['BUILDER_NAME']));
 		 $smarty->assign("txtProjectLocation", stripslashes($ProjectDetail[0]['LOCATION_DESC']));
@@ -325,8 +324,6 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		 $smarty->assign("Status", stripslashes($ProjectDetail[0]['PROJECT_STATUS']));
 		 $smarty->assign("txtProjectURL", stripslashes($ProjectDetail[0]['PROJECT_URL']));
 		 $smarty->assign("Featured", stripslashes($ProjectDetail[0]['FEATURED']));
-		 $completion =	explode(" ",$ProjectDetail[0]['COMPLETION_DATE']);
-		 $smarty->assign("Completion", stripslashes($completion[0][0]));
 		 $smarty->assign("txtDisclaimer", stripslashes($ProjectDetail[0]['PRICE_DISCLAIMER']));
 		$smarty->assign("payment", stripslashes($ProjectDetail[0]['PAYMENT_PLAN']));
 		$smarty->assign("no_of_towers", stripslashes($ProjectDetail[0]['NO_OF_TOWERS']));
@@ -335,7 +332,6 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("special_offer", stripslashes($ProjectDetail[0]['OFFER']));
 		$smarty->assign("display_flag", stripslashes($ProjectDetail[0]['DISPLAY_FLAG']));
 		$smarty->assign("youtube_link", stripslashes($ProjectDetail[0]['YOUTUBE_VIDEO']));
-		$smarty->assign("specification", stripslashes($ProjectDetail[0]['SPECIFICATION']));
 		$smarty->assign("price_list", stripslashes($ProjectDetail[0]['PRICE_LIST']));
 		$smarty->assign("app_form", stripslashes($ProjectDetail[0]['APPLICATION_FORM']));
 		$smarty->assign("txtProjectDesc", stripslashes($ProjectDetail[0]['OPTIONS_DESC']));
@@ -380,11 +376,9 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		//	print_r($localitySelect);
 		//echo "</pre>";
 		$CityDataArr = CityArr();
-		$smarty->assign("BankDataArr", $BankDataArr);
 		$BuilderDataArr = BuilderArr();
 		$smarty->assign("BuilderDataArr", $BuilderDataArr);
 		$BankDataArr = BankList();
-		$smarty->assign("BankDataArr", $BankDataArr);
 	 }
 
 

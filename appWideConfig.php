@@ -43,7 +43,6 @@ else{
 
 	$gblData['prodServer'] = false;
 	$t = $_SERVER['SERVER_NAME'];
-
 	define("IMG_SERVER",'http://www.proptiger.com/');
 	define("JS_SERVER","http://$t" . $gblData['beyondServerDocRoot']);
 	define("CSS_SERVER","http://$t" . $gblData['beyondServerDocRoot']);

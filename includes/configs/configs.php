@@ -650,6 +650,15 @@ if(in_array($_SESSION['adminId'],$arrUser))
 }
 $smarty->assign("accessModule", $accessModule);
 
+/******array for force migrate access*****/
+$forceMigrateModule = array();
+$arrForce      = array(53,506);
+if(in_array($_SESSION['adminId'],$arrForce))
+{
+	$forceMigrateModule['urlEdit'] = $_SESSION['adminId'];
+}
+$smarty->assign("forceMigrateModule", $forceMigrateModule);
+
 //$newImagePath = "/home/sysadmin/public_html/images_new/";
 $newImagePath = "/home/vimlesh/public_html/images_new/";
 $imgDisplayPath = "images_new/";

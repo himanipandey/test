@@ -1,5 +1,6 @@
 <?php
 
+    $effectiveDt  = '';
 	$projectId		=	$_REQUEST['projectId'];
 	$projectDetail		=	ProjectDetail($projectId);
 	$smarty->assign("ProjectDetail", $projectDetail);
@@ -40,7 +41,6 @@
 			$supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
 		}
 	}
-	$smarty->assign("arrPhase",$arrPhase);
 	$smarty->assign("supplyAllArray",$supplyAllArray);
 	
 	$arrAudit   = getLastUpdatedTime($projectId);
@@ -135,7 +135,7 @@
 		}
 				
     }
-	else if($_POST['btnExit'] == "Exit")
+	else if(isset($_POST['btnExit']))
 	{
 		if($preview == 'true')
 			header("Location:show_project_details.php?projectId=".$projectId);

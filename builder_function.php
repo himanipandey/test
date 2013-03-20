@@ -2034,7 +2034,7 @@ function fetchProjectCallingLinks($projectId)
 
 function getLastUpdatedTime($projectId)
 {
-	$qry = "SELECT MAX(_t_transaction_date)
+	$qry = "SELECT MAX(_t_transaction_date) as _t_transaction_date
 	FROM
 	_t_resi_proj_supply
 	WHERE
@@ -2047,7 +2047,7 @@ function getLastUpdatedTime($projectId)
 }
 
 /**********Fetch history for all tables*********/
-function fetchColumnChanges($projectId, $stageName, $phasename)
+function fetchColumnChanges($projectId, $stageName, $phasename, $phaseId)
 {
 	$arrTblName	= array("resi_project","resi_project_options","resi_proj_supply");
 	$arrFields  = array("_t_transaction_id","_t_transaction_date","_t_operation","_t_user_id");
@@ -2061,13 +2061,19 @@ function fetchColumnChanges($projectId, $stageName, $phasename)
 		$auditTbl  = "_t_$table";
 		$startTime = fetchStartTime($stageName,$phasename,$projectId);
 		
+		if($auditTbl == '_t_resi_proj_supply' AND $phaseId != '' AND $phaseId != '-1')
+			$andClause = " AND PHASE_ID = $phaseId";
+		else 
+			$andClause = '';
+		
 		if($startTime == NULL)
 		{
 			$qryStartTime = "SELECT MIN(_t_transaction_date) as  _t_transaction_date
 							FROM 
 								$auditTbl 
 							WHERE 
-								PROJECT_ID = $projectId";
+								PROJECT_ID = $projectId
+							$andClause";
 			$resStartTime  = mysql_query($qryStartTime) or die(mysql_error());
 			$dataStartTime = mysql_fetch_assoc($resStartTime);
 			$startTime     = $dataStartTime['_t_transaction_date'];
@@ -2078,6 +2084,7 @@ function fetchColumnChanges($projectId, $stageName, $phasename)
 					 PROJECT_ID = $projectId
 				   AND
 					 _t_transaction_date <= '$startTime'
+				   $andClause
 				   ORDER BY
 					 _t_transaction_id DESC LIMIT 1";
 		$fstRes = mysql_query($fstQry) or die(mysql_error());
@@ -2089,6 +2096,7 @@ function fetchColumnChanges($projectId, $stageName, $phasename)
 					  PROJECT_ID = $projectId
 				  AND
 					 _t_transaction_date < NOW()
+				  $andClause
 				  ORDER BY
 					 _t_transaction_id DESC LIMIT 1";
 		$lstRes = mysql_query($lstQry) or die(mysql_error());

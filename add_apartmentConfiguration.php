@@ -9,7 +9,6 @@ ini_set('display_errors','1');
 	AdminAuthentication();
 	
 	include('add_apartmentConfigurationProcess.php');;
-	//$smarty->display(SERVER_PATH."/smarty/templates/admin/crawler/header.tpl");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."add_apartment_configuration.tpl");
