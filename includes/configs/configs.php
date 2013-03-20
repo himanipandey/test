@@ -625,22 +625,21 @@ $arrType = array("Location Plan"=>"loc-plan","Layout Plan"=>"layout-plan","Site 
 $arrCampaign = 
   array(
 	"Select Campaign", 
-	"Pune_Campaign_C2C", 
-	"Pune_Campaign_out",
-	"Delhi_campaign_Out", 
-	"Mumbai_Campaign_Out", 
-	"Kolkatta_Campaign_Out", 
-	"Chennai_Campaign_Out", 
-	"Bangalore_Campaign_Out",
-	"Pune2",
-	"Pune3",
-	"Mumbai2",
-	"Mumbai3",
-	"Bangalore2",
-	"Bangalore3",
+	"Delhi1", 
+	"Delhi2",
+	"Delhi3", 
+	"Pune1", 
+	"Pune_2", 
+	"Mumbai_1", 
+  	"Mumbai_2",
+	"Mumbai_3",
+	"Kolkata",
+	"Chennai",
+	"Bangalore_1",
+	"Bangalore_2",
+	"Bangalore_3",
   	"Pune_New"
 	);
-
 /**************Authentication*************/
 $accessModule = array();
 $arrUser      = array(547,525,588);
