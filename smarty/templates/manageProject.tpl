@@ -94,11 +94,9 @@ function gotoAddress(link){
 
 	function update_locality(ctid)
 	{
-		alert("here");
 		xmlHttpLoc=GetXmlHttpObject()
 
 		var url="Refreshlocality.php?ctid="+ctid;
-		//alert(url);
 		xmlHttpLoc.onreadystatechange=stateChanged
 		xmlHttpLoc.open("GET",url,true)
 		xmlHttpLoc.send(null)
@@ -108,7 +106,7 @@ function gotoAddress(link){
 
 		if (xmlHttpLoc.readyState==4)
 		{
-		//alert("here");
+		//alert(xmlHttpLoc.responseText+"here");
 			document.getElementById("LocalityList").innerHTML=xmlHttpLoc.responseText;
 
 		}

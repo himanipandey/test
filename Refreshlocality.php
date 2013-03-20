@@ -4,15 +4,13 @@
 	include("appWideConfig.php");
 	include("dbConfig.php");
 	include("/includes/configs/configs.php");
-
 	 $ctid		=	$_REQUEST["ctid"];
-	
     if($ctid != '')	
     {
     	$localityArr = Array();
-		$sql = "SELECT A.LOCALITY_ID, A.LABEL FROM LOCALITY AS A WHERE A.CITY_ID = " . $ctid." GROUP BY A.LABEL ORDER BY A.LABEL ASC";
+		$sql = "SELECT A.LOCALITY_ID, A.LABEL FROM locality AS A WHERE A.CITY_ID = " . $ctid." GROUP BY A.LABEL ORDER BY A.LABEL ASC";
 		
-		$data = mysql_query($sql);
+		$data = mysql_query($sql) or die(mysql_error());
 		while ($dataArr = mysql_fetch_array($data))
 		 {
 			array_push($localityArr, $dataArr);
