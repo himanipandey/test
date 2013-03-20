@@ -8,7 +8,6 @@ ini_set('display_errors','1');
 	include("builder_function.php");
 	AdminAuthentication();
 	include('add_projectProcess.php');
-	//$smarty->display(SERVER_PATH."/smarty/templates/admin/crawler/header.tpl");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."add_project.tpl");
