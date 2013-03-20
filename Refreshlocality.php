@@ -2,7 +2,7 @@
 
 	include("smartyConfig.php");
 	include("appWideConfig.php");
-	include("../../dbConfig.php");
+	include("dbConfig.php");
 	include("/includes/configs/configs.php");
 
 	 $ctid		=	$_REQUEST["ctid"];

@@ -94,6 +94,7 @@ function gotoAddress(link){
 
 	function update_locality(ctid)
 	{
+		alert("here");
 		xmlHttpLoc=GetXmlHttpObject()
 
 		var url="Refreshlocality.php?ctid="+ctid;
