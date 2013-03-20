@@ -1,6 +1,6 @@
 <?php
 	$projectId = trim($_REQUEST['projectId']);
-	$smarty->assign("projectId", projectId);
+	$smarty->assign("projectId", $projectId);
 	
 	if(isset($_REQUEST['submit']))
 	{
