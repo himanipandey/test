@@ -1,6 +1,6 @@
 <?php
-error_reporting(1);
-ini_set('display_errors','1');
+	error_reporting(1);
+	ini_set('display_errors','1');
 	include("smartyConfig.php");
 	include("appWideConfig.php");
 	include("dbConfig.php");
@@ -12,9 +12,6 @@ ini_set('display_errors','1');
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."add_apartment_configuration.tpl");
-	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
-
-	
-	
+	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");	
 ?>
 
