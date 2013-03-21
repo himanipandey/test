@@ -4,14 +4,16 @@
 	
 	if(isset($_REQUEST['submit']))
 	{
-		function forceMigrateProjects($commaSeparatedProjectIds)
-		{
+
 			$tmpFile = '/tmp/project_ids.txt';
 			$handle = fopen($tmpFile, "w");
-			fwrite($handle, str_replace(',', "\n", $commaSeparatedProjectIds));
+			fwrite($handle, str_replace(',', "\n", $projectId));
 			fclose($handle);
-			exec("cd /home/sysadmin/production/cron/migration; php main.php $tmpFile");
-		}		
+			exec("cd /home/sysadmin/production/cron/migration; php main.php $tmpFile");	
+			
+			$res = mysql_query('delete from proptiger.REDIRECT_URL_MAP;insert into proptiger.REDIRECT_URL_MAP select * from project.redirect_url_map;');
+			if($res)
+				$msg = "Successfully migrated following ProjectIds:<br>$projectId";
 	}
 	
 	
