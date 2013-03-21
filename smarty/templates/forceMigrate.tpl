@@ -34,7 +34,15 @@
         <div style="overflow:auto;">
           <TABLE cellSpacing=2 cellPadding=4 width="50%" align=center  style="border:1px solid #c2c2c2;">
           <div>
-           
+           {if $msg != ''}
+           		<tr>
+	                <td align = "center" nowrap valign ="top">
+		                <span font color = "green">
+		                {$msg}
+		                </span>
+	                </td>
+            	</tr>
+           {/if}
             <tr>
                 <td align = "center" nowrap valign ="top"><b>Project Ids:</b></td>
                 <td align = "left">

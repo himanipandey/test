@@ -1,7 +1,7 @@
 <?php
 	$projectId = trim($_REQUEST['projectId']);
 	$smarty->assign("projectId", $projectId);
-	
+	$msg = '';
 	if(isset($_REQUEST['submit']))
 	{
 
@@ -14,7 +14,11 @@
 			$res = mysql_query('delete from proptiger.REDIRECT_URL_MAP;insert into proptiger.REDIRECT_URL_MAP select * from project.redirect_url_map;');
 			if($res)
 				$msg = "Successfully migrated following ProjectIds:<br>$projectId";
+			else
+				$msg = "Problem in migration for following ProjectIds:<br>$projectId";
+			
 	}
+	$smarty->assign("msg", $msg);
 	
 	
 
