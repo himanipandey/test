@@ -312,7 +312,13 @@ $reviews = $_POST['reviews'];
     	updateProjectPhase($projectId, $k);
     }
 }*/
-updateProjectPhase($projectId, "dataCollection", $reviews,$projectStage,TRUE);
+
+if($_REQUEST['returnStage'] == 'newProject' AND $_REQUEST['currentPhase'] == 'audit1')
+	$phaseName = 'dcCallCenter';
+else
+	$phaseName = 'dataCollection';
+
+updateProjectPhase($projectId, $phaseName, $reviews, $projectStage,TRUE);
 
 
 	header("Location:$returnURLPID");

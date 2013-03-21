@@ -1,8 +1,8 @@
 
 <script type="text/javascript" src="javascript/jquery.js"></script>
 
-<script type="text/javascript" src="../../scripts/fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<link rel="stylesheet" type="text/css" href="../../scripts/fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -175,6 +175,7 @@ function towerSelect(towerId)
 				{
 					$('#forwardFlag').val('no');
 					$('#currentPhase').val(phase);
+					$('#returnStage').val(stg);
 					$('#reviews').val(document.getElementById("comments").value);
 					$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
 					$('#changePhaseForm').submit();
@@ -387,6 +388,7 @@ function getDateNow(){
   <input type="hidden" id="reviews" name="reviews" value=""/>
   <input type="hidden" id="revertFlag" name="revertFlag" value=""/>
   <input type="hidden" id="returnURLPID" name="returnURLPID" value=""/>
+  <input type="hidden" id="returnStage" name="returnStage" value=""/>
 </form>
 
 
@@ -1085,6 +1087,33 @@ function getDateNow(){
 								{/if}
 							</td>
 						</tr>
+						
+						
+						<tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left">
+								<b>Launched Units:</b>
+							</td>
+							<td>
+								{if $projectDetails[0].LAUNCHED_UNITS != ''}
+									{$projectDetails[0].LAUNCHED_UNITS}
+								{else}
+									--
+								{/if}
+							</td>
+						</tr>
+						
+						<tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left" valign ="top">
+								<b>Reason For UnLaunched Units:</b>
+							</td>
+							<td>
+								{if $projectDetails[0].REASON_UNLAUNCHED_UNITS != ''}
+									{$projectDetails[0].REASON_UNLAUNCHED_UNITS}
+								{else}
+									--
+								{/if}
+							</td>
+						</tr>
 
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
@@ -1301,32 +1330,6 @@ function getDateNow(){
 							<td>
 								{if $projectDetails[0].TOWNSHIP != ''}
 									{$projectDetails[0].TOWNSHIP}
-								{else}
-									--
-								{/if}
-							</td>
-						</tr>
-						
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Launched Units:</b>
-							</td>
-							<td>
-								{if $projectDetails[0].LAUNCHED_UNITS != ''}
-									{$projectDetails[0].LAUNCHED_UNITS}
-								{else}
-									--
-								{/if}
-							</td>
-						</tr>
-						
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left" valign ="top">
-								<b>Reason For UnLaunched Units:</b>
-							</td>
-							<td>
-								{if $projectDetails[0].REASON_UNLAUNCHED_UNITS != ''}
-									{$projectDetails[0].REASON_UNLAUNCHED_UNITS}
 								{else}
 									--
 								{/if}

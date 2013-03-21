@@ -81,7 +81,7 @@ if (isset($_POST['Next']))
 			if((!is_dir($newdirlow)))
 			{
 				$lowerdir	=	strtolower($BuilderName);
-			echo	$newdir		=	$newImagePath."".$lowerdir;
+				$newdir		=	$newImagePath."".$lowerdir;
 				mkdir($newdir, 0777);
 				$flag=1;
 			}

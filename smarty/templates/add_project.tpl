@@ -400,6 +400,24 @@
 								  </td>
 								  <td width="50%" align="left"></td>
 							   </tr>
+							   
+							   <tr>
+								  <td width="20%" align="right" valign ="top"><b> Launched Units:</b> </td><td width="30%" align="left">
+
+									 <input type = "text" name = "launchedUnits" id = "launchedUnits" value = "{$launchedUnits}" style ="width:360px;">
+
+								  </td>
+								  <td width="50%" align="left"><font color="red"></font></td>
+							   </tr>
+							   
+							    <tr>
+								  <td width="20%" align="right" valign ="top"><b> Reason For UnLaunched Units:</b> </td><td width="30%" align="left">
+
+									 <textarea name = "reasonUnlaunchedUnits" id = "reasonUnlaunchedUnits" rows="10" cols="45">{$reasonUnlaunchedUnits}</textarea>
+
+								  </td>
+								  <td width="50%" align="left"><font color="red"></font></td>
+							   </tr>
 								
 							   <tr>
 								  <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Location Desc :</b> </td>
@@ -791,24 +809,6 @@
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 							   
-							    <tr>
-								  <td width="20%" align="right" valign ="top"><b> Launched Units:</b> </td><td width="30%" align="left">
-
-									 <input type = "text" name = "launchedUnits" id = "launchedUnits" value = "{$launchedUnits}" style ="width:360px;">
-
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-							   
-							    <tr>
-								  <td width="20%" align="right" valign ="top"><b> Reason For UnLaunched Units:</b> </td><td width="30%" align="left">
-
-									 <textarea name = "reasonUnlaunchedUnits" id = "reasonUnlaunchedUnits" rows="10" cols="45">{$reasonUnlaunchedUnits}</textarea>
-
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>							   
-
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Show price on website ?</b> </td><td width="30%" align="left">
 									<select name="shouldDisplayPrice">

@@ -1743,51 +1743,6 @@ function fetch_other_price($projectId)
 	{
 		array_push($arrOtherPrice,$data);
 	}
-	if(count($arrOtherPrice) == 0)
-	{
-		$arrOtherPrice[0]['EDC_IDC'] = '';
-		$arrOtherPrice[0]['EDC_IDC_TYPE'] = '';
-		$arrOtherPrice[0]['EDC_IDC_MEND_OPT'] = '';
-		$arrOtherPrice[0]['LEASE_RENT'] = '';
-		$arrOtherPrice[0]['LEASE_RENT_TYPE'] = '';
-		$arrOtherPrice[0]['LEASE_RENT_MEND_OPT'] = '';
-		$arrOtherPrice[0]['OPEN_CAR_PARKING'] = '';
-		$arrOtherPrice[0]['OPEN_CAR_PARKING_TYPE'] = '';
-		$arrOtherPrice[0]['OPEN_CAR_PARKING_MEND_OPT'] = '';
-		$arrOtherPrice[0]['CLOSE_CAR_PARKING'] = '';
-		$arrOtherPrice[0]['CLOSE_CAR_PARKING_TYPE'] = '';
-		$arrOtherPrice[0]['CLOSE_CAR_PARKING_MEND_OPT'] = '';
-		
-		$arrOtherPrice[0]['SEMI_CLOSE_CAR_PARKING'] = '';
-		$arrOtherPrice[0]['SEMI_CLOSE_CAR_PARKING_TYPE'] = '';
-		$arrOtherPrice[0]['SEMI_CLOSE_CAR_PARKING_MEND_OPT'] = '';
-		$arrOtherPrice[0]['CLUB_HOUSE'] = '';
-		$arrOtherPrice[0]['CLUB_HOUSE_PSF_FIXED'] = '';
-		
-		$arrOtherPrice[0]['CLUB_HOUSE_MEND_OPT'] = '';
-		$arrOtherPrice[0]['IFMS'] = '';
-		$arrOtherPrice[0]['IFMS_PSF_FIXED'] = '';
-		$arrOtherPrice[0]['IFMS_MEND_OPT'] = '';
-		$arrOtherPrice[0]['POWER_BACKUP'] = '';
-		
-		$arrOtherPrice[0]['POWER_BACKUP_PSF_FIXED'] = '';
-		$arrOtherPrice[0]['POWER_BACKUP_MEND_OPT'] = '';
-		$arrOtherPrice[0]['LEGAL_FEES'] = '';
-		$arrOtherPrice[0]['LEGAL_FEES_PSF_FIXED'] = '';
-		$arrOtherPrice[0]['LEGAL_FEES_MEND_OPT'] = '';
-		
-		$arrOtherPrice[0]['POWER_WATER'] = '';
-		$arrOtherPrice[0]['POWER_WATER_PSF_FIXED'] = '';
-		$arrOtherPrice[0]['POWER_WATER_MEND_OPT'] = '';
-		$arrOtherPrice[0]['MAINTENANCE_ADVANCE'] = '';
-		$arrOtherPrice[0]['MAINTENANCE_ADVANCE_PSF_FIXED'] = '';
-		
-		$arrOtherPrice[0]['MAINTENANCE_ADVANCE_MEND_OPT'] = '';
-		$arrOtherPrice[0]['MAINTENANCE_ADVANCE_MONTHS'] = '';
-		$arrOtherPrice[0]['PLC'] = '';
-		$arrOtherPrice[0]['FLOOR_RISE'] = '';
-		$arrOtherPrice[0]['OTHERS'] = '';
-	}
 	return $arrOtherPrice;
 }
 

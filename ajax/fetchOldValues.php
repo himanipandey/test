@@ -7,7 +7,7 @@
 	$stageName	=	$_REQUEST['stageName'];
 	$phasename	=	$_REQUEST['phasename'];
 	$projectId	=	$_REQUEST['projectId'];
-	$phaseId	    =	$_REQUEST['phaseId'];
+	$phaseId    =	$_REQUEST['phaseId'];
 	
 	//$endtime   = '2013-03-16';
 	$changedValueArr = fetchColumnChanges($projectId, $stageName, $phasename, $phaseId);

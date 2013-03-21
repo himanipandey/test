@@ -6,9 +6,9 @@
 	$smarty->assign("ProjectDetailArr", $projectDetail);
 	
 	$OtherPrice	= fetch_other_price($projectId);
-	//echo "<pre>";
-	//print_r($OtherPrice);
-	//echo "</pre>";
+	echo "<pre>";
+	print_r($OtherPrice);
+	echo "</pre>";
 
 	if(count($OtherPrice)>0)
 		$edit = 1;
