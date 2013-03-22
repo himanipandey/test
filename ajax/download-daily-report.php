@@ -1,5 +1,5 @@
 <?php
-include("dbConfig.php");
+include("../dbConfig.php");
 include("appWideConfig.php");
 include("includes/function.php");
 include("builder_function.php");
