@@ -1,8 +1,7 @@
 <?php
 include("../dbConfig.php");
 include("appWideConfig.php");
-include("includes/function.php");
-include("builder_function.php");
+include("../builder_function.php");
 
 $arr = array();
 $fromdateymd = $fromdate = $_POST['frmdate']!='' ? $_POST['frmdate'] : date("Y-m-d",mktime(0, 0, 0, date("m"), date("d")-1, date("Y")));
