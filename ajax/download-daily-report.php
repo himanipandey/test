@@ -1,6 +1,6 @@
 <?php
 include("../dbConfig.php");
-include("appWideConfig.php");
+include("../appWideConfig.php");
 include("../builder_function.php");
 
 $arr = array();

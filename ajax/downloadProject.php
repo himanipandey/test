@@ -1,8 +1,7 @@
 <?php
 include("../dbConfig.php");
-include("appWideConfig.php");
-include("includes/function.php");
-include("builder_function.php");
+include("../appWideConfig.php");
+include("../builder_function.php");
 date_default_timezone_set('Asia/Kolkata');
 
 $dept = $_SESSION['DEPARTMENT'];
@@ -68,7 +67,7 @@ $selectdata		= 	$_POST['dwnld_selectdata'];
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
-	$QueryMember1 = "SELECT RP.PROJECT_ID,RP.BUILDER_NAME,RP.PROJECT_NAME,RP.PROJECT_PHASE,RP.PROJECT_STAGE,C.LABEL AS CITY_NAME FROM resi_project RP LEFT JOIN city C AS RP.CITY_ID=C.CITY_ID ";
+	$QueryMember1 = "SELECT RP.PROJECT_ID,RP.BUILDER_NAME,RP.PROJECT_NAME,RP.PROJECT_PHASE,RP.PROJECT_STAGE,C.LABEL AS CITY_NAME FROM resi_project RP LEFT JOIN city C ON RP.CITY_ID=C.CITY_ID ";
 
 	$and = " WHERE ";
 
