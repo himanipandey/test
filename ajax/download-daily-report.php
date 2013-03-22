@@ -47,11 +47,12 @@ foreach($dateArr as $key=>$dates)
 
 	#---------------------------------------
 	$q = "SELECT
-				A.PROJECT_ID,C.PROJECT_NAME,A.PROJECT_PHASE,A.PROJECT_STAGE,B.FNAME,C.PROJECT_STATUS,C.BOOKING_STATUS,'".$seldate."' DT
+				A.PROJECT_ID,C.PROJECT_NAME,A.PROJECT_PHASE,A.PROJECT_STAGE,B.FNAME,C.PROJECT_STATUS,C.BOOKING_STATUS,'".$seldate."' DT,D.LABEL AS CITY_NAME
 			FROM
 				project_stage_history A 
 				LEFT JOIN proptiger_admin B ON A.ADMIN_ID=B.ADMINID
 				LEFT JOIN resi_project C ON A.PROJECT_ID=C.PROJECT_ID
+				LEFT JOIN city D ON D.CITY_ID=C.CITY_ID 
 				".$quryand."
 			ORDER BY DATE_TIME ";
 
@@ -70,6 +71,8 @@ foreach($dateArr as $key=>$dates)
 		$bookingStatus = $ob1['PROJECT_STATUS'];
 		$projectStatus = $ob1['BOOKING_STATUS'];
 		
+		$cityName = $ob1['CITY_NAME'];
+		
 		
 		
 		$arr[] = array(
@@ -80,7 +83,8 @@ foreach($dateArr as $key=>$dates)
 						'FNAME'=> $fname,
 						'PROJECT_STAGE'=>$stage,
 						'PROJECT_PHASE'=>$phase,
-						'DT'=>$dt
+						'DT'=>$dt,
+						'CITY_NAME'=>$cityName
 					);
 	}
 }
@@ -99,6 +103,7 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>PROJECT STATUS</td>
 <td>PHASE</td>
 <td>STAGE</td>
+<td>CITY</td>
 </tr>
 ";
 $cnt = 1;
@@ -114,6 +119,8 @@ foreach($arr as $key=>$ob1)
 	$bookingStatus = $ob1['BOOKING_STATUS'];
 	$projectStatus = $ob1['PROJECT_STATUS'];
 	
+	$cityName = $ob1['CITY_NAME'];
+	
 	$contents .= "
 	<tr bgcolor='#f2f2f2'>
 	<td>".$cnt."</td>
@@ -125,6 +132,7 @@ foreach($arr as $key=>$ob1)
 	<td>".$projectStatus."</td>
 	<td>".$phase."</td>
 	<td>".$stage."</td>	
+	<td>".$cityName."</td>
 	</tr>
 ";
 	$cnt++;
