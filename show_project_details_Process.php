@@ -63,78 +63,35 @@ $smarty->assign("arrAudit", $arrAudit);
 		$phaseId				=	$_REQUEST['phaseId'];
 		
 /*******supply code start here**********/
-	if($phaseId != '')
-		$qryPhase = " AND PHASE_ID = $phaseId";
-	else
-		$qryPhase = '';
-	
-	$supplyArray = array();
 	$supplyAllArray = array();
-	
-	$qry = "SELECT
-					a.*
-			FROM
-			".RESI_PROJ_SUPPLY." a
-			JOIN
-				(SELECT PROJECT_ID, PROJECT_TYPE, NO_OF_BEDROOMS, MAX(PROJ_SUPPLY_ID) AS LATEST_PROJ_SUPPLY_ID
-			FROM 
-				".RESI_PROJ_SUPPLY."
-			WHERE 
-				PROJECT_ID = $projectId $qryPhase
-			GROUP BY 
-				PROJECT_ID, PROJECT_TYPE, NO_OF_BEDROOMS) b
-			 ON
-				(a.PROJ_SUPPLY_ID = b.LATEST_PROJ_SUPPLY_ID)";
+	$qry = "SELECT p.PHASE_NAME,p.LAUNCH_DATE,p.COMPLETION_DATE, a.*
+				FROM resi_proj_supply a
+				JOIN (SELECT PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS, MAX(PROJ_SUPPLY_ID) AS LATEST_PROJ_SUPPLY_ID
+				         FROM resi_proj_supply
+				         WHERE PROJECT_ID = $projectId
+				         GROUP BY PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS) b
+				ON (a.PROJ_SUPPLY_ID = b.LATEST_PROJ_SUPPLY_ID)
+				LEFT JOIN resi_project_phase p
+				       on (p.PHASE_ID = a.PHASE_ID)";
 	
 	$res = mysql_query($qry) or die(mysql_error());
-	if(mysql_num_rows($res) > 0) 
+	$arrPhaseCount = array();
+	$arrPhaseTypeCount = array();
+	if(mysql_num_rows($res) > 0)
 	{
 		while($data = mysql_fetch_assoc($res))
 		{
-			array_push($supplyArray,$data);
-			$supplyAllArray[$data['PROJECT_TYPE']][$data['NO_OF_BEDROOMS']] = $data;
+			if($data['PHASE_NAME'] == '')
+				$data['PHASE_NAME'] = 'noPhase';
+			$supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
+			$arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
+			$arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 		}
 	}
-	
-	//print_r($supplyAllArray);
-	$smarty->assign("supplyAllArray",$supplyAllArray);	
-	$total =0;
-	$available=0;
-	$flagnof = false;
-	foreach($supplyArray as $key=>$val){
-		$total+= $val['NO_OF_FLATS'];
-		if($val['AVAILABLE_NO_FLATS'] != '-')
-		{
-			$available+=$val['AVAILABLE_NO_FLATS'];
-		}
-		if($val['AVAILABLE_NO_FLATS'] == '-')
-		{
-			$flagnof = true;
-		}		
-	}
-	
-	if($total != 0 && $available > 0)
-		$percentAvailable = $available/$total*100;
-	else if($flagnof == true && $available == 0)
-		$percentAvailable = 100;
-	else
-		$percentAvailable = 0;
-	$smarty->assign("percentAvailable",$percentAvailable);
-	$smarty->assign("AvailableFlat",$available);
-	$smarty->assign("total",$total);
-/*******end supply code start here**********/
-	$arr_RoomNot = "";
-	
-	foreach($fetch_projectOptions as $key=>$val)
-	{
-		$exp = explode("-",$val);
-		$bedroom = trim($exp[1]);
-		$qry = "SELECT PROJ_SUPPLY_ID FROM ".RESI_PROJ_SUPPLY." WHERE NO_OF_BEDROOMS = '".$bedroom."' AND PROJECT_ID = '".$projectId."'";
-		$res = mysql_query($qry) or die(mysql_error());	
-		if(mysql_num_rows($res)>0)
-			$arr_RoomNot.= $bedroom.",";
-	}
-	$smarty->assign("arr_RoomNot",$arr_RoomNot);
+	$smarty->assign("arrPhaseCount",$arrPhaseCount);
+	$smarty->assign("arrPhaseTypeCount",$arrPhaseTypeCount);
+	$smarty->assign("supplyAllArray",$supplyAllArray);
+
 
 
 // Project Phases

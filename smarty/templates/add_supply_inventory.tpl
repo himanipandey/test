@@ -12,11 +12,11 @@
     for(var i=1;i<=lp_select;i++)
     {      
 
-        var noOfFlats = "noOfFlats_"+i;
+        var noOfFlats   =  "noOfFlats_"+i;
         var no_of_floor =  "no_of_floor_"+i;
         var isFlats     =  "isFlats_"+i;
         var soi         =  "soi_"+i;
-         
+        var effctvDate  =  "f_date_c_to_"+i;
         if($("#"+noOfFlats).val() == '')
         {
             alert("Number of flats cant blank!");
@@ -29,6 +29,13 @@
 
             alert("Please choose Is flats Information is Currect!");
             $("#"+isFlats).focus();
+            return false;
+        }
+        else if($("."+effctvDate).val() == '')
+        {
+
+            alert("Effective Date cant Blank!!");
+            $("."+effctvDate).focus();
             return false;
         }
         else if($("#"+soi).val() == '')
@@ -150,37 +157,53 @@
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Last Effective Date</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Delete</b></td>
 										</tr>
-										{$olderValue = ''}
+										{$olderValuePhase = ''}
 										{$cnt = 0}
+										{$totalSumFlat = 0}
+										{$totalSumflatAvail = 0}
+										
 										{foreach from = $supplyAllArray key=key item = item}
+											{$totalNoOfFlatsPPhase = 0}
+											{$totalSumflatAvail = 0}
+											{$availableoOfFlatsPPhase = 0}
+											
+											{$olderValueType = ''}
 											{foreach from = $item key = keyInner item = innerItem}
-												{$innOlderValue = ''}
+												
+												{$totalNoOfFlatsPtype = 0}
+												{$availableoOfFlatsPtype = 0}
 												
 												{foreach from = $innerItem key = keylast item = lastItem}
+													
 													{$cnt = $cnt+1}
 													{if ($cnt)%2 == 0}
 															{$color = "bgcolor='#F7F8E0'"}
 													{else}
 														{$color = "bgcolor='#f2f2f2'"}
 													{/if}
+													
 													<tr {$color} >
 														<td valign ="top" align="center">{$cnt}</td>
-													{*{if $olderValue != $key}*}
-														<td valign ="top" align = "center" nowrap>
-														{$key}
+														
+														{if $olderValuePhase == '' || $olderValuePhase != $key}
+															<td valign ="top" align = "center" nowrap rowspan = "{count($arrPhaseCount[$key])+1}">
+																{ucfirst($key)}
+															</td>
+														{/if}
 														<input type = "hidden" name = "phaseId[]" value = "{$lastItem['PHASE_ID']}">
+													
+														{$olderValuePhase = $key}
+													
+														{if $olderValueType != $keyInner || $olderValueType == ''}
+														<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}">
+															{$keyInner}
 														</td>
-													{*{/if}*}
-													{$olderValue = $key}
-													{*{if $innOlderValue != $keyInner}*}
-														<td valign ="top" align = "center">
-														{$keyInner}
+														{/if}
 														<input type = "hidden" name = "projectType[]" value = "{$lastItem['PROJECT_TYPE']}">
-														</td>
-													{*{/if}*}
-													{$innOlderValue = $keyInner}
+														{$olderValueType = $keyInner}
 													
 													<td valign ="top" align="center">
 													{$lastItem['NO_OF_BEDROOMS']}BHK
@@ -190,7 +213,12 @@
 														<input style = "width:63px;" type = "text" name = "noOfFlats[]" 
 															value = "{$lastItem['NO_OF_FLATS']}" id ="noOfFlats_{$cnt}">
 														<input type = "hidden" name = "old_noOfFlats[]" value = "{$lastItem['NO_OF_FLATS']}">
-														
+														{$totalNoOfFlatsPtype = $totalNoOfFlatsPtype+$lastItem['NO_OF_FLATS']}
+														{$totalNoOfFlatsPPhase = $totalNoOfFlatsPPhase+$lastItem['NO_OF_FLATS']}
+														{if $key != 'noPhase'}
+															{$totalSumFlat = $totalSumFlat+$lastItem['NO_OF_FLATS']}
+															{$totalSumflatAvail = $totalSumflatAvail+$lastItem['AVAILABLE_NO_FLATS']}
+														{/if}
 													</td>
 													<td valign ="top" align="center">
 														 <select name="isFlats[]" id = "isFlats_{$cnt}">
@@ -204,6 +232,8 @@
 														<input style = "width:63px;" type="text" value="{$lastItem['AVAILABLE_NO_FLATS']}" name="AvilFlatId[]" 
 															class="AvilFlatId" id="AvilFlatId_{$cnt}"/>
 													    <input type = "hidden" name = "old_AvilFlatId[]" value = "{$lastItem['AVAILABLE_NO_FLATS']}">
+														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
+														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
 																									
 													</td>
 													
@@ -228,10 +258,10 @@
 														<input type = "hidden" name = "old_soi[]" value = "{$lastItem['SOURCE_OF_INFORMATION']}">
 													</td>
 													<td valign ="top" align ="center" nowrap>
-														<input name="eff_date_to[]" value="{$lastItem['SUBMITTED_DATE']}" type="text"
-															 class="formstyle2" id="f_date_c_to_{$cnt}"
-															  readonly="1" value="" size="10"  style="width:150px;"/> 
-														 <img src="../images/cal_1.jpg" id="f_trigger_c_to_{$cnt}" 
+														<input name="eff_date_to[]" value="" type="text"
+															 class="f_date_c_to_{$cnt}" id="f_date_c_to_{$cnt}"
+															   value="" size="10"  style="width:150px;"/> 
+														 <img src="images/cal_1.jpg" id="f_trigger_c_to_{$cnt}" 
 														 	style="cursor: pointer; border: 1px solid red;" title="Date selector"
 														 	 onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 														 	 
@@ -249,14 +279,58 @@
 														</script>
 													</td>
 													<td valign ="top" align ="center" nowrap>
+														<input name="" value="{$lastItem['SUBMITTED_DATE']}" type="text"
+															 class="formstyle2"  readonly="1" size="10"  style="width:150px;"/> 
+													</td>
+													<td valign ="top" align ="center" nowrap>
 														<input type="checkbox" name="delete_{$cnt}" id = "{$cnt}">
 													</td>
 												</tr>
 												
 													<input type = "hidden" name = "supplyId[]" value = "{$lastItem['PROJ_SUPPLY_ID']}">
 												{/foreach}
-											{/foreach}				 
+												{if count($arrPhaseTypeCount[$key][$keyInner])>1}
+													<tr bgcolor ="#FBF2EF" height="30px;">
+														<td align ="right" colspan ="4" nowrap><b>SubTotal {$lastItem['PROJECT_TYPE']}</b></td>
+														<td align ="center"><b> {$totalNoOfFlatsPtype}</b></td>
+														<td align ="right" nowrap>&nbsp;</td>
+														<td  align ="center"><b> {$availableoOfFlatsPtype}</b></td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+													</tr>
+												{/if}
+											{/foreach}
+												<tr bgcolor ="#F6D8CE" height="30px;">
+													<td align ="right" colspan ="4" nowrap><b>SubTotal {ucfirst($key)}</b></td>
+													<td align ="center"><b> {$totalNoOfFlatsPPhase}</b></td>
+													<td align ="right" nowrap >&nbsp;</td>
+													<td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													
+												</tr>			 
 										{/foreach}
+												<tr bgcolor ="#F2F2F2" height="30px;">
+													<td align ="right" colspan ="4" nowrap><b>Grand Total</b></td>
+													<td align ="center"><b> {$totalSumFlat}</b></td>
+													<td align ="right" nowrap >&nbsp;</td>
+													<td align ="center"><b>{$totalSumflatAvail}</b></td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+												</tr>
 								 <tr>
 								 	<td align = "left" colspan = "12">
 								 		<b>Insert New Supply</b>
@@ -316,7 +390,7 @@
 								 		<input name="newEffDateTo" value="{$newDate}" type="text"
 											 class="formstyle2" id="newEffDateTo"
 											  readonly="1" value="" size="10"  style="width:150px;"/> 
-										 <img src="../images/cal_1.jpg" id="f_trigger_c_to_new" 
+										 <img src="../images/cal_1.jpg" id="f_trigger_c_new" 
 										 	style="cursor: pointer; border: 1px solid red;" title="Date selector"
 										 	 onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 										<script type="text/javascript">
@@ -331,6 +405,7 @@
 										  });
 										</script>
 								 	</td>
+								 	
 								 <tr>
 								 <tr class = "headingrowcolor">
 					                <td align="left" nowrap  colspan = "6">
@@ -340,12 +415,13 @@
 					                 &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
 					               </td>
 					               
-					               <td align="right" nowrap  colspan = "6">
+					               <td align="right" nowrap  colspan = "9">
 					                 <input type="hidden" name="projectId" value="{$projectId}" id ="projectId"/>
 					                 <input type="submit" name="btnSave" id="btnSave" value="Add More"  onclick = "return chkConfirm({$cnt});"/>
 					                 <input type="submit" name="btnSave" id="btnSave" value="Submit" onclick = "return chkConfirm({$cnt});" />
 					                 &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
 					               </td>
+					               
 					            </tr>
 							</table>
 						</td>

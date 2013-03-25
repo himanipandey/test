@@ -1,5 +1,4 @@
 <?php
-
     $effectiveDt  = '';
 	$projectId		=	$_REQUEST['projectId'];
 	$projectDetail		=	ProjectDetail($projectId);
@@ -18,7 +17,7 @@
 	
 	$phaseProject = fetch_phaseDetails($projectId);
 	$smarty->assign("phaseProject",$phaseProject);
-	//die;
+
 	/*******new code start here************/
 	$supplyAllArray = array();
 	$qry = "SELECT p.PHASE_NAME, a.*
@@ -32,6 +31,8 @@
 				       on (p.PHASE_ID = a.PHASE_ID)";
 	
 	$res = mysql_query($qry) or die(mysql_error());
+	$arrPhaseCount = array();
+	$arrPhaseTypeCount = array();
 	if(mysql_num_rows($res) > 0)
 	{
 		while($data = mysql_fetch_assoc($res))
@@ -39,8 +40,15 @@
 			if($data['PHASE_NAME'] == '')
 				$data['PHASE_NAME'] = 'noPhase';
 			$supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
+			$arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
+			$arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 		}
 	}
+	echo "<pre>";
+	print_r($arrPhaseTypeCount);
+	echo "</pre>";
+	$smarty->assign("arrPhaseCount",$arrPhaseCount);
+	$smarty->assign("arrPhaseTypeCount",$arrPhaseTypeCount);
 	$smarty->assign("supplyAllArray",$supplyAllArray);
 	
 	$arrAudit   = getLastUpdatedTime($projectId);

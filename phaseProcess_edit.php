@@ -44,7 +44,7 @@
         $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
         $smarty->assign("remark", $current_phase[0]['REMARKS']);
 
-        $towerDetail    =   fetch_towerDetails_for_phase($projectId, $phaseId);
+        $towerDetail    =   fetch_towerDetails_for_phase($projectId);
         $smarty->assign("TowerDetails", $towerDetail);
 
         $phase_quantity    =   get_phase_quantity($phaseId);
@@ -131,7 +131,7 @@
 						set_phase_quantity($phaseId,$_POST['plotvilla'],'0',$supply,$projectId);
 					}
 
-                    $towerDetail    =   fetch_towerDetails_for_phase($projectId, $phaseId);
+                    $towerDetail    =   fetch_towerDetails_for_phase($projectId);
                     $smarty->assign("TowerDetails", $towerDetail);
 
                     $phase_quantity    =   get_phase_quantity($phaseId);

@@ -796,15 +796,12 @@ function RoomCategoryList()
 		return $arrDetail;
 	}
 
-	function fetch_towerDetails_for_phase($projectId, $phaseId = 'NULL')
+	function fetch_towerDetails_for_phase($projectId)
 	{
 		// Returns towers that are available for phase to select. So, if tower1 is selected in phase1 and tower2 is selected by no other phase,
 		// in that case - both tower1 and tower2 are available to phase1 to select from.
-		if($phaseId == 'NULL') {
-			$qrySel	=	"SELECT TOWER_NAME,TOWER_ID,PHASE_ID FROM ".RESI_PROJECT_TOWER_DETAILS."  WHERE PROJECT_ID = '".$projectId."' AND PHASE_ID is NULL GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";
-		} else {
-			$qrySel	=	"SELECT TOWER_NAME,TOWER_ID,PHASE_ID FROM ".RESI_PROJECT_TOWER_DETAILS."  WHERE PROJECT_ID = '".$projectId."' AND (PHASE_ID is NULL OR PHASE_ID=".$phaseId.") GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";				
-		}
+		
+		$qrySel	=	"SELECT TOWER_NAME,TOWER_ID,PHASE_ID FROM ".RESI_PROJECT_TOWER_DETAILS."  WHERE PROJECT_ID = '".$projectId."' GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";				
 		$res_Sel=	mysql_query($qrySel);
 		$arrDetail	=	array();
 		while($data = mysql_fetch_assoc($res_Sel))

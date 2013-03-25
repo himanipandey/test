@@ -73,12 +73,7 @@ function builder_contact(builderId,buildernm)
         return baseURL + "?" + newAdditionalURL + rows_txt;
     }
 
-    function change_phase() {
-        var new_id = $('#phaseName').val();
-        var newURL = updateURLParameter(window.location.href, 'phaseId', new_id);
-        window.location.href = newURL;
-    }
-
+   
 function towerSelect(towerId)
 	{
 		var projectId = document.getElementById("projectId").value;
@@ -491,7 +486,7 @@ function getDateNow(){
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0>
 					<TBODY>
 						<TR>
-						  <TD class="h1" width="67%"><img height="18" hspace="5" src="../images/arrow.gif" width="18">   {$projectDetails[0].PROJECT_NAME} </TD>
+						  <TD class="h1" width="67%"><img height="18" hspace="5" src="images/arrow.gif" width="18">   {$projectDetails[0].PROJECT_NAME} </TD>
 						  <TD width="33%" align ="right"></TD>
 						</TR>
 						
@@ -506,21 +501,12 @@ function getDateNow(){
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 	      <div>
 
-			{*new project display code*}
-			
 			<!-- Project Phases -->
             
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
             <br><br><b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
             {/if}
-            <select id="phaseName" name="phaseName" onchange="change_phase();">
-                <option value="-1">Select Phase</option>
-            {foreach $phases as $p}
-                <option value="{$p.id}">{$p.name}</option>
-            {/foreach}
-
-            
-            </select>
+           
             <!-- End of Project Phases -->	   
 							   
 			<tr>
@@ -589,7 +575,7 @@ function getDateNow(){
 							  	<span id = "plusMinusImg">
 							  	<a href = "javascript:void(0);" onclick = "showhideBuilder('plus');">
 							  		
-							  			<img src = "../images/plus.jpg" width ="20px">
+							  			<img src = "images/plus.jpg" width ="20px">
 							  		
 							  	</a>
 							  	</span>
@@ -1191,15 +1177,7 @@ function getDateNow(){
 								<b>Launch Date:</b>
 							</td>
 							<td>
-								{if $phaseId != ''}
-									{if $phase_launch_date != '0000-10-00 00:00:00'}
-										{$phase_launch_date}
-									{else}
-										0000-10-00 00:00:00 
-									{/if}
-								{else}
-									{$projectDetails[0].LAUNCH_DATE}
-								{/if}
+								{$projectDetails[0].LAUNCH_DATE}
 							</td>
 						</tr>
 
@@ -1208,16 +1186,7 @@ function getDateNow(){
 								<b>Promised Completion Date:</b>
 							</td>
 							<td>
-								{if $phaseId != ''}
-									{if $phase_completion_date != '0000-10-00 00:00:00'}
-										{$phase_completion_date}
-									{else}
-										0000-10-00 00:00:00 
-									{/if}
-								{else}
-									{$projectDetails[0].PROMISED_COMPLETION_DATE}
-								{/if}
-								
+								{$projectDetails[0].PROMISED_COMPLETION_DATE}
 							</td>
 						</tr>
 						
@@ -2285,102 +2254,149 @@ function getDateNow(){
 						  </tr>
 						{/if}
 						
-						 <tr height = "30px;">
-							  <td width="20%" align="right" nowrap><b>Total Supply :</b>{$total} </td>
-							  <td width="30%" align="left" nowrap>
-									<b>Total Available Flats :</b>{if $AvailableFlat == '-1'} - {else} {$AvailableFlat} {/if}
-							  </td>
-							   <td width="30%" align="left" colspan = 5>
-									<b>Sold Out :</b>{(100-$percentAvailable)|string_format:"%.2f"} %
-							  </td>
-						   </tr>
-
-						{$flatChk = 0}
-						{$flatAvailChk = 0}
-						{if count($supplyAllArray)>0}
-							<tr class="headingrowcolor" height="30px;">
-								<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>No of Flats</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
-							</tr>
-							{$olderValue = ''}
-							{foreach from = $supplyAllArray key=key item = item}
-								
-							<tr {$color} >
-										{foreach from = $item key = keyInner item = innerItem}
+						 <tr>
+							<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+							
+								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+										<tr class="headingrowcolor" height="30px;">
+											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch / Completion Date</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
-											{if $olderValue != $key}
-												<td valign ="top" align = "center" rowspan ={count($supplyAllArray[$key])}>{$key}</td>
-											{/if}
-											{$olderValue = $key}
-											<td align="center">{$innerItem['NO_OF_BEDROOMS']}BHK</td>
-											<td align="center">
-												{$innerItem['NO_OF_FLATS']}
-												{if $innerItem['NO_OF_FLATS'] == 0}
-													{$flatChk = 1}
-												{/if}
-											</td>
-											<td align="center">
-												{if $innerItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1}
-													Accurate
-												{/if}
-												{if $innerItem['ACCURATE_NO_OF_FLATS_FLAG'] == 0}
-													Guessed
-												{/if}	
-											</td>
-											<td align="center">
-												{$innerItem['AVAILABLE_NO_FLATS']}												
-											</td>
-											
-											<td align="center">
-												{if $innerItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1}
-													Accurate
-												{/if}
-												{if $innerItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 0}
-													Guessed
-												{/if}
-											</td>
-											<td align ="center">
-												{$innerItem['SOURCE_OF_INFORMATION']}
-											</td>
-											<td align ="center" nowrap>
-												{$innerItem['SUBMITTED_DATE']}
-												
-												{if $innerItem['AVAILABLE_NO_FLATS'] != 0}
-													{$exp = explode("-",$innerItem['SUBMITTED_DATE'])}
-													{$combineMonthyear = $exp[0]|cat:"-"|cat:$exp[1]}
-													
-													{if $smarty.now|date_format:'%Y-%m' != $combineMonthyear}
-														{$flatAvailChk = 1}
-													{/if}
-												{/if}
-											</td>
-												{if ($keyInner)%2 == 0}
-														{$color = "bgcolor='#F7F8E0'"}
-												{else}
-													{$color = "bgcolor='#f2f2f2'"}
-												{/if}
-												
-												</tr><tr {$color}>
-										{/foreach}
+											<td class="whiteTxt" align = "center" nowrap><b>No of Flats</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
+										</tr>
+							{$olderValuePhase = ''}
+										{$cnt = 0}
+										{$totalSumFlat = 0}
+										{$totalSumflatAvail = 0}
 										
-											 
-							</tr>
-							{/foreach}
-						{/if}
+										{foreach from = $supplyAllArray key=key item = item}
+											{$totalNoOfFlatsPPhase = 0}
+											{$totalSumflatAvail = 0}
+											{$availableoOfFlatsPPhase = 0}
+											
+											{$olderValueType = ''}
+											{foreach from = $item key = keyInner item = innerItem}
+												
+												{$totalNoOfFlatsPtype = 0}
+												{$availableoOfFlatsPtype = 0}
+												
+												{foreach from = $innerItem key = keylast item = lastItem}
+													
+													{$cnt = $cnt+1}
+													{if ($cnt)%2 == 0}
+															{$color = "bgcolor='#F7F8E0'"}
+													{else}
+														{$color = "bgcolor='#f2f2f2'"}
+													{/if}
+													
+													<tr {$color}  height="30px;">
+														<td valign ="top" align="center">{$cnt}</td>
+														
+														{if $olderValuePhase == '' || $olderValuePhase != $key}
+															<td valign ="top" align = "center" nowrap rowspan = "{count($arrPhaseCount[$key])+1}">
+																{ucfirst($key)}
+																<br>
+																{if $lastItem['LAUNCH_DATE'] != '' && $lastItem['COMPLETION_DATE'] != ''}
+																	
+																	{$lastItem['LAUNCH_DATE']} / {$lastItem['COMPLETION_DATE']}
+																{else}
+																	--
+																{/if}
+															</td>
+														{/if}
+													
+														{$olderValuePhase = $key}
+													
+														{if $olderValueType != $keyInner || $olderValueType == ''}
+														<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}">
+															{$keyInner}
+														</td>
+														{/if}
+														{$olderValueType = $keyInner}
+													
+													<td valign ="top" align="center">
+														{$lastItem['NO_OF_BEDROOMS']}BHK
+													</td>
+													<td valign ="top" align="center" >{$lastItem['NO_OF_FLATS']}
+														{$totalNoOfFlatsPtype = $totalNoOfFlatsPtype+$lastItem['NO_OF_FLATS']}
+														{$totalNoOfFlatsPPhase = $totalNoOfFlatsPPhase+$lastItem['NO_OF_FLATS']}
+														{if $key != 'noPhase'}
+															{$totalSumFlat = $totalSumFlat+$lastItem['NO_OF_FLATS']}
+															{$totalSumflatAvail = $totalSumflatAvail+$lastItem['AVAILABLE_NO_FLATS']}
+														{/if}
+													</td>
+													<td valign ="top" align="center">
+														 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
+													</td>
+													<td valign ="top" align="center">{$lastItem['AVAILABLE_NO_FLATS']}
+														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
+														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
+																									
+													</td>
+													
+													<td valign ="top" align="center">
+														
+														 {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
+													    
+													</td>
+													<td valign ="top" align="center">{$lastItem['EDIT_REASON']}</td>
+													<td valign ="top" align ="center">{$lastItem['SOURCE_OF_INFORMATION']}</td>
+													
+													<td valign ="top" align ="center" nowrap>{$lastItem['SUBMITTED_DATE']}</td>
+													
+												</tr>	
+												{/foreach}
+												{if count($arrPhaseTypeCount[$key][$keyInner])>1}
+													<tr bgcolor ="#FBF2EF" height="30px;">
+														<td align ="right" colspan ="4" nowrap><b>SubTotal {$lastItem['PROJECT_TYPE']}</b></td>
+														<td align ="center"><b> {$totalNoOfFlatsPtype}</b></td>
+														<td align ="right" nowrap>&nbsp;</td>
+														<td  align ="center"><b> {$availableoOfFlatsPtype}</b></td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+													</tr>
+												{/if}
+											{/foreach}
+												<tr bgcolor ="#F6D8CE" height="30px;">
+													<td align ="right" colspan ="4" nowrap><b>SubTotal {ucfirst($key)}</b></td>
+													<td align ="center"><b> {$totalNoOfFlatsPPhase}</b></td>
+													<td align ="right" nowrap >&nbsp;</td>
+													<td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+
+													
+												</tr>			 
+										{/foreach}
+												<tr bgcolor ="#F2F2F2" height="30px;">
+													<td align ="right" colspan ="4" nowrap><b>Grand Total</b></td>
+													<td align ="center"><b> {$totalSumFlat}</b></td>
+													<td align ="right" nowrap >&nbsp;</td>
+													<td align ="center"><b>{$totalSumflatAvail}</b></td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" >&nbsp;</td>
+
+												</tr>
+								
+							</table>
 						
-						<input type = 'hidden' id = "flatChk" value = "{$flatChk}">
-						<input type = 'hidden' id = "flatAvailChk" value ="{$flatAvailChk}">
-						  
-					</table>
-				{/if}
 				</td>
 		   </tr>
+		   {/if}
 		   <tr><td colspan ="8">&nbsp;</td><tr>
 		   <tr class="headingrowcolor" height="30px;">
 			<td class="whiteTxt" colspan = "8" align ="center">
