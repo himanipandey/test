@@ -1,8 +1,7 @@
 <?php
-include("dbConfig.php");
-include("appWideConfig.php");
-include("includes/function.php");
-include("builder_function.php");
+include("../dbConfig.php");
+include("../appWideConfig.php");
+include("../builder_function.php");
 date_default_timezone_set('Asia/Kolkata');
 
 $dept = $_SESSION['DEPARTMENT'];
@@ -68,7 +67,7 @@ $selectdata		= 	$_POST['dwnld_selectdata'];
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
-	$QueryMember1 = "Select PROJECT_ID,BUILDER_NAME,PROJECT_NAME,PROJECT_PHASE,PROJECT_STAGE FROM resi_project  ";
+	$QueryMember1 = "SELECT RP.PROJECT_ID,RP.BUILDER_NAME,RP.PROJECT_NAME,RP.PROJECT_PHASE,RP.PROJECT_STAGE,C.LABEL AS CITY_NAME FROM resi_project RP LEFT JOIN city C ON RP.CITY_ID=C.CITY_ID ";
 
 	$and = " WHERE ";
 
@@ -80,15 +79,15 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 			$QueryMember .= $and ." (1 = 0 ";
 			if(in_array(0,$arrAvalibality))
 			{
-				$QueryMember .=  " OR AVAILABLE_NO_FLATS = 0";
+				$QueryMember .=  " OR RP.AVAILABLE_NO_FLATS = 0";
 			}
 			if(in_array(1,$arrAvalibality))
 			{
-				$QueryMember .=  " OR AVAILABLE_NO_FLATS > 0";
+				$QueryMember .=  " OR RP.AVAILABLE_NO_FLATS > 0";
 			}
 			if(in_array(2,$arrAvalibality))
 			{
-				$QueryMember .=  " OR AVAILABLE_NO_FLATS IS NULL ";
+				$QueryMember .=  " OR RP.AVAILABLE_NO_FLATS IS NULL ";
 			}
 			$QueryMember .= ")";
 			$and  = ' AND ';
@@ -96,61 +95,61 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 		
 		if($_POST['dwnld_project_name'] != '')
 		{
-			$QueryMember .= $and." PROJECT_NAME LIKE '%".$_POST['dwnld_project_name']."%'";
+			$QueryMember .= $and." RP.PROJECT_NAME LIKE '%".$_POST['dwnld_project_name']."%'";
 			$and  = ' AND ';
 		}
 		if($_POST['dwnld_city'] != '')
 		{
-			$QueryMember .=  $and." CITY_ID = '".$_POST['dwnld_city']."'";
+			$QueryMember .=  $and." RP.CITY_ID = '".$_POST['dwnld_city']."'";
 			$and  = ' AND ';
 		}
 		if($_POST['dwnld_Residential'] != '')
 		{
-			$QueryMember .=  $and." RESIDENTIAL = '".$_POST['dwnld_Residential']."'";
+			$QueryMember .=  $and." RP.RESIDENTIAL = '".$_POST['dwnld_Residential']."'";
 			$and  = ' AND ';
 		}
 
 		if($ActiveValue != '')
 		{
-			$QueryMember .=  $and." ACTIVE IN(".$ActiveValue.")";
+			$QueryMember .=  $and." RP.ACTIVE IN(".$ActiveValue.")";
 			$and  = ' AND ';
 		}
 
 		if($StatusValue != '')
 		{
-			$QueryMember .=  $and." PROJECT_STATUS IN(".$StatusValue.")";
+			$QueryMember .=  $and." RP.PROJECT_STATUS IN(".$StatusValue.")";
 			$and  = ' AND ';
 		}
 
 		if($_POST['dwnld_locality'] != '')
 		{
-			$QueryMember .= $and." LOCALITY_ID = '".$_POST['dwnld_locality']."'";
+			$QueryMember .= $and." RP.LOCALITY_ID = '".$_POST['dwnld_locality']."'";
 			$and  = ' AND ';
 		}
 		if($_POST['dwnld_builder'] != '')
 		{
-			$QueryMember .= $and." BUILDER_ID = '".$_POST['dwnld_builder']."'";
+			$QueryMember .= $and." RP.BUILDER_ID = '".$_POST['dwnld_builder']."'";
 			$and  = ' AND ';
 		}
 		if($_POST['current_dwnld_phase'] != '')
 		{
-			$QueryMember .= $and." PROJECT_STAGE = '".$_POST['current_dwnld_phase']."'";
+			$QueryMember .= $and." RP.PROJECT_STAGE = '".$_POST['current_dwnld_phase']."'";
 			$and  = ' AND ';
 		}
 		if($stage != '')
 		{
-			$QueryMember .= $and." PROJECT_PHASE = '".$stage."'";
+			$QueryMember .= $and." RP.PROJECT_PHASE = '".$stage."'";
 			$and  = ' AND ';
 		}
 		if($tag != '')
 		{
-			$QueryMember .= $and." UPDATION_CYCLE_ID = '".$tag."'";
+			$QueryMember .= $and." RP.UPDATION_CYCLE_ID = '".$tag."'";
 			$and  = ' AND ';
 		}
 	}
 	else
 	{
-		$QueryMember .= $and. " PROJECT_ID IN (".$_POST['dwnld_projectId'].")";
+		$QueryMember .= $and. " RP.PROJECT_ID IN (".$_POST['dwnld_projectId'].")";
 
 	}
 }
@@ -172,6 +171,7 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>PROJECT NAME</td>
 <td>PHASE</td>
 <td>STAGE</td>
+<td>CITY</td>
 </tr>
 ";
 $cnt = 1;
@@ -183,6 +183,8 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 
 	$projid = $ob1['PROJECT_ID'];
 	$projname = $ob1['PROJECT_NAME'];
+	
+	$cityname = $ob1['CITY_NAME'];
 
 	$contents .= "
 	<tr bgcolor='#f2f2f2'>
@@ -192,6 +194,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	<td>".$projname."</td>
 	<td>".$phase."</td>
 	<td>".$stage."</td>
+	<td>".$cityname."</td>
 	</tr>
 ";
 	$cnt++;
