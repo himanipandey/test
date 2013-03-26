@@ -10,7 +10,11 @@
 
       function isNumberKey(evt)
       {
-         var charCode = (evt.which) ? evt.which : event.keyCode
+
+		
+         var charCode = (evt.which) ? evt.which : event.keyCode;
+		 if(charCode == 99 || charCode == 118)
+        	 return true;
          if (charCode > 31 && (charCode < 46 || charCode > 57))
             return false;
 
