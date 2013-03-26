@@ -33,6 +33,7 @@
 	$res = mysql_query($qry) or die(mysql_error());
 	$arrPhaseCount = array();
 	$arrPhaseTypeCount = array();
+	$submittedDate = '';
 	if(mysql_num_rows($res) > 0)
 	{
 		while($data = mysql_fetch_assoc($res))
@@ -42,15 +43,14 @@
 			$supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
 			$arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
 			$arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
+			$submittedDate = $data['SUBMITTED_DATE'];
 		}
 	}
-	echo "<pre>";
-	print_r($arrPhaseTypeCount);
-	echo "</pre>";
+	$smarty->assign("submittedDate",$submittedDate);
 	$smarty->assign("arrPhaseCount",$arrPhaseCount);
 	$smarty->assign("arrPhaseTypeCount",$arrPhaseTypeCount);
 	$smarty->assign("supplyAllArray",$supplyAllArray);
-	
+
 	$arrAudit   = getLastUpdatedTime($projectId);
 	$smarty->assign("arrAudit", $arrAudit);
 	/*******end new code*******************/
@@ -92,7 +92,7 @@
 				OR
 					($source_of_information	 != $source_of_information)
 				OR
-					($effectiveDt	 != $_REQUEST['eff_date_to_old'][$key])	
+					($effectiveDt	 != $_REQUEST['old_date'])	
 			 )
 			{
 				$returnChk = insert_supplyandinventoryDetail($projectId,$configs,$no_of_flats,$isFlats,$AvilFlatId,$avilflats,$edit_reson,$source_of_information,$effectiveDt,$projectType,$phaseId);	

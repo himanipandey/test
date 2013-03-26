@@ -9,6 +9,12 @@
   {
     var chk = 0;
     var lp_select = TotRow;
+    if($("#f_date_c_to").val() == '')
+    {
+    	alert("Please select effective date!");
+    	$("#f_date_c_to").focus();
+    	return false;
+    }
     for(var i=1;i<=lp_select;i++)
     {      
 
@@ -16,7 +22,6 @@
         var no_of_floor =  "no_of_floor_"+i;
         var isFlats     =  "isFlats_"+i;
         var soi         =  "soi_"+i;
-        var effctvDate  =  "f_date_c_to_"+i;
         if($("#"+noOfFlats).val() == '')
         {
             alert("Number of flats cant blank!");
@@ -29,13 +34,6 @@
 
             alert("Please choose Is flats Information is Currect!");
             $("#"+isFlats).focus();
-            return false;
-        }
-        else if($("."+effctvDate).val() == '')
-        {
-
-            alert("Effective Date cant Blank!!");
-            $("."+effctvDate).focus();
             return false;
         }
         else if($("#"+soi).val() == '')
@@ -110,7 +108,7 @@
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0>
 					<TBODY>
 						<TR>
-						  <TD class="h1" width="67%"><img height="18" hspace="5" src="../images/arrow.gif" width="18">Supply({$ProjectDetail[0]['BUILDER_NAME']} {$ProjectDetail[0]['PROJECT_NAME']})</TD>
+						  <TD class="h1" width="67%"><img height="18" hspace="5" src="images/arrow.gif" width="18">Supply({$ProjectDetail[0]['BUILDER_NAME']} {$ProjectDetail[0]['PROJECT_NAME']})</TD>
 						  <TD width="33%" align ="right"></TD>
 
 						</TR>
@@ -123,14 +121,43 @@
 
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 					<form method="post" name='frm' id="formss" enctype="multipart/form-data" action = ''>
-				    {if $arrAudit != ''} 	
+				    	
 						<tr>
 							<td>
 								
 								  <table align = "center" width = "90%">
 									   <tr>
 										  <td width="20%" align="left"><b>Last Updated Date :</b>
-											 {$arrAudit}
+											 {if $arrAudit != ''} 
+											 	{$arrAudit}
+											 {else}
+											 	--
+											 {/if}	
+											 &nbsp;&nbsp;
+											<b> Effective Date:</b>
+											 <input name="eff_date_to" value="" type="text"
+												 class="f_date_c_to" id="f_date_c_to"
+												   value="" size="10"  style="width:150px;"/> 
+											 <img src="images/cal_1.jpg" id="f_trigger_c_to" 
+											 	style="cursor: pointer; border: 1px solid red;" title="Date selector"
+											 	 onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+											 	 
+											 <input type = "hidden" name = "old_date" value = "{$submittedDate}">
+											<script type="text/javascript">
+											   Calendar.setup({
+											
+											    inputField     :    "f_date_c_to",     // id of the input field
+												ifFormat       :    "%Y-%m-%d",      // format of the input field
+											    button         :    "f_trigger_c_to",  // trigger for the calendar (button ID)
+											    align          :    "Tl",           // alignment (defaults to "Bl")
+											    singleClick    :    true,
+											    showsTime		:	true
+											  });
+											</script>
+										&nbsp;&nbsp;
+										<b>Last Effective Date:</b>
+											<input name="" value="{$submittedDate}" type="text"
+												 class="formstyle2"  readonly="1" size="10"  style="width:150px;"/> 
 										  </td>
 										 
 									   </tr>
@@ -138,7 +165,8 @@
 							  
 								</td>
 						<tr>
-					{/if}	
+
+					
 						
 						<tr>
 							<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
@@ -156,8 +184,6 @@
 											<td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Last Effective Date</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Delete</b></td>
 										</tr>
 										{$olderValuePhase = ''}
@@ -167,7 +193,6 @@
 										
 										{foreach from = $supplyAllArray key=key item = item}
 											{$totalNoOfFlatsPPhase = 0}
-											{$totalSumflatAvail = 0}
 											{$availableoOfFlatsPPhase = 0}
 											
 											{$olderValueType = ''}
@@ -257,31 +282,7 @@
 														  </select>
 														<input type = "hidden" name = "old_soi[]" value = "{$lastItem['SOURCE_OF_INFORMATION']}">
 													</td>
-													<td valign ="top" align ="center" nowrap>
-														<input name="eff_date_to[]" value="" type="text"
-															 class="f_date_c_to_{$cnt}" id="f_date_c_to_{$cnt}"
-															   value="" size="10"  style="width:150px;"/> 
-														 <img src="images/cal_1.jpg" id="f_trigger_c_to_{$cnt}" 
-														 	style="cursor: pointer; border: 1px solid red;" title="Date selector"
-														 	 onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-														 	 
-														 <input type = "hidden" name = "old_date[]" value = "{$lastItem['SUBMITTED_DATE']}">
-														<script type="text/javascript">
-														   Calendar.setup({
-														
-														    inputField     :    "f_date_c_to_{$cnt}",     // id of the input field
-															ifFormat       :    "%Y-%m-%d",      // format of the input field
-														    button         :    "f_trigger_c_to_{$cnt}",  // trigger for the calendar (button ID)
-														    align          :    "Tl",           // alignment (defaults to "Bl")
-														    singleClick    :    true,
-														    showsTime		:	true
-														  });
-														</script>
-													</td>
-													<td valign ="top" align ="center" nowrap>
-														<input name="" value="{$lastItem['SUBMITTED_DATE']}" type="text"
-															 class="formstyle2"  readonly="1" size="10"  style="width:150px;"/> 
-													</td>
+													
 													<td valign ="top" align ="center" nowrap>
 														<input type="checkbox" name="delete_{$cnt}" id = "{$cnt}">
 													</td>
@@ -299,8 +300,6 @@
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
-														<td  align ="left" >&nbsp;</td>
-														<td  align ="left" >&nbsp;</td>
 													</tr>
 												{/if}
 											{/foreach}
@@ -313,8 +312,6 @@
 													<td  align ="left" >&nbsp;</td>
 													<td  align ="left" >&nbsp;</td>
 													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
 													
 												</tr>			 
 										{/foreach}
@@ -323,9 +320,6 @@
 													<td align ="center"><b> {$totalSumFlat}</b></td>
 													<td align ="right" nowrap >&nbsp;</td>
 													<td align ="center"><b>{$totalSumflatAvail}</b></td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
 													<td  align ="left" >&nbsp;</td>
 													<td  align ="left" >&nbsp;</td>
 													<td  align ="left" >&nbsp;</td>

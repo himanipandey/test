@@ -2260,7 +2260,7 @@ function getDateNow(){
 								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 										<tr class="headingrowcolor" height="30px;">
 											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch / Completion Date</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
@@ -2272,14 +2272,13 @@ function getDateNow(){
 											<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
 										</tr>
-							{$olderValuePhase = ''}
+										{$olderValuePhase = ''}
 										{$cnt = 0}
 										{$totalSumFlat = 0}
 										{$totalSumflatAvail = 0}
 										
 										{foreach from = $supplyAllArray key=key item = item}
 											{$totalNoOfFlatsPPhase = 0}
-											{$totalSumflatAvail = 0}
 											{$availableoOfFlatsPPhase = 0}
 											
 											{$olderValueType = ''}
@@ -2306,7 +2305,7 @@ function getDateNow(){
 																<br>
 																{if $lastItem['LAUNCH_DATE'] != '' && $lastItem['COMPLETION_DATE'] != ''}
 																	
-																	{$lastItem['LAUNCH_DATE']} / {$lastItem['COMPLETION_DATE']}
+																	{$lastItem['LAUNCH_DATE']} <br> {$lastItem['COMPLETION_DATE']}
 																{else}
 																	--
 																{/if}
@@ -2330,7 +2329,7 @@ function getDateNow(){
 														{$totalNoOfFlatsPPhase = $totalNoOfFlatsPPhase+$lastItem['NO_OF_FLATS']}
 														{if $key != 'noPhase'}
 															{$totalSumFlat = $totalSumFlat+$lastItem['NO_OF_FLATS']}
-															{$totalSumflatAvail = $totalSumflatAvail+$lastItem['AVAILABLE_NO_FLATS']}
+															{$totalSumflatAvail = $totalSumflatAvail+$lastItem['AVAILABLE_NO_FLATS']}																	
 														{/if}
 													</td>
 													<td valign ="top" align="center">
@@ -2338,8 +2337,7 @@ function getDateNow(){
 													</td>
 													<td valign ="top" align="center">{$lastItem['AVAILABLE_NO_FLATS']}
 														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
-														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
-																									
+														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}											
 													</td>
 													
 													<td valign ="top" align="center">

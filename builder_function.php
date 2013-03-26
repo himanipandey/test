@@ -613,8 +613,7 @@ function set_phase_quantity($phaseId,$unit_type,$bedrooms,$quantity,$projectId='
 					SOURCE_OF_INFORMATION					=	'".$source_of_information."',
 					PROJECT_TYPE							=	'".$projectType."',
 					SUBMITTED_DATE							=	'".$effDt."',
-					PHASE_ID								=	'".$phaseid."' 
-				";
+					PHASE_ID								=	'".$phaseid."'";
 
 		$res_ins=mysql_query($qry_ins) OR DIE(mysql_error());
 		if($res_ins)
