@@ -112,8 +112,8 @@ $option1 = $option2 = "<option value='' selected>Select Date</option>";
 
 for($i=0;$i<=60;$i++)
 {
-	$dtval = date("Y-m-d",mktime(0, 0, 0, date("m"), date("d"), date("Y")));
-	$dtshow = date("d-m-Y",mktime(0, 0, 0, date("m"), date("d"), date("Y")));
+	$dtval = date("Y-m-d",mktime(0, 0, 0, date("m"), date("d")-$i, date("Y")));
+	$dtshow = date("d-m-Y",mktime(0, 0, 0, date("m"), date("d")-$i, date("Y")));
 	
 	$option1 .= "<option value='".$dtval."' ";
 	if($fromdateymd == $dtval) $option1 .= " selected ";
