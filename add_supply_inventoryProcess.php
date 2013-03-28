@@ -74,7 +74,8 @@
 	        $edit_reson_old			=	$_REQUEST['old_edit_reason'][$key];
 			$source_of_information	=	$_REQUEST['soi'][$key];
 			$source_of_information_old	=	$_REQUEST['old_soi'][$key];
-			$effectiveDt =  ($_REQUEST['eff_date_to'][$key]!='') ? $_REQUEST['eff_date_to'][$key] : date('Y-m-d');
+			
+			$effectiveDt =  ($_REQUEST['eff_date_to']!='') ? $_REQUEST['eff_date_to'] : date('Y-m-d');
 			
 			$configs		=	$_REQUEST['configs'][$key];
 			$phaseId		=	$_REQUEST['phaseId'][$key];
