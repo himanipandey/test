@@ -15,9 +15,9 @@ foreach($dateArr as $key=>$dates)
 	$mf = date('m',strtotime($dates));
 	$Yf = date('Y',strtotime($dates));
 
-	$fromdate = date('Y-m-d H:i:s',mktime(12,30, 0, $mf, $df-1, $Yf));
-	$todate = date('Y-m-d H:i:s',mktime(12,30, 0, $mf, $df, $Yf));
-	$seldate = date('Y-m-d',mktime(12,30, 0, $mf, $df, $Yf));
+	$fromdate = date('Y-m-d H:i:s',mktime(0,0, 0, $mf, $df-1, $Yf));
+	$todate = date('Y-m-d H:i:s',mktime(0,0, 0, $mf, $df, $Yf));
+	$seldate = date('Y-m-d',mktime(0,0, 0, $mf, $df, $Yf));
 
 	$quryand = $and = '';
 	$and = ' WHERE ';
