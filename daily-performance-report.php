@@ -42,7 +42,7 @@ function generate_excel()
           <TD vAlign=top align=middle width="100%" bgColor=#FFFFFF height=400>
 <?php	
 $arr = array();
-$fromdateymd = $fromdate = $_POST['frmdate']!='' ? $_POST['frmdate'] : date("Y-m-d",mktime(0, 0, 0, date("m"), date("d")-1, date("Y")));
+$fromdateymd = $fromdate = $_POST['frmdate']!='' ? $_POST['frmdate'] : date("Y-m-d",mktime(0, 0, 0, date("m"), date("d"), date("Y")));
 $todateymd  = $todate   = $_POST['todate']!='' ? $_POST['todate'] : date("Y-m-d",mktime(0, 0, 0, date("m"), date("d"), date("Y")));
 
 $dateArr = getDatesBetweeenTwoDates($fromdate,$todate);
@@ -53,21 +53,21 @@ foreach($dateArr as $key=>$dates)
 	$mf = date('m',strtotime($dates));
 	$Yf = date('Y',strtotime($dates));	
 	
-	$fromdate = date('Y-m-d H:i:s',mktime(0,0, 0, $mf, $df-1, $Yf));
-	$todate = date('Y-m-d H:i:s',mktime(0,0, 0, $mf, $df, $Yf));
-	$seldate = date('Y-m-d',mktime(0,0, 0, $mf, $df, $Yf));
+	$fromdate = date('Y-m-d',mktime(0,0,0, $mf, $df, $Yf));
+	$todate = date('Y-m-d',mktime(0,0,0, $mf, $df, $Yf));
+	$seldate = date('Y-m-d',mktime(0,0,0, $mf, $df, $Yf));
 	
 	$quryand = $and = '';
 	$and = ' WHERE ';
 	if($fromdate!='')
 	{
-		$quryand .= $and." DATE_TIME>='".$fromdate."'";	
+		$quryand .= $and." DATE(DATE_TIME)>='".$fromdate."'";	
 		$and = ' AND ';
 	}
 
 	if($todate!='')
 	{
-		$quryand .= $and." DATE_TIME<='".$todate."'";	
+		$quryand .= $and." DATE(DATE_TIME)<='".$todate."'";	
 		$and = ' AND ';
 	}
 
@@ -79,7 +79,7 @@ foreach($dateArr as $key=>$dates)
 
 	if($todate == '' && $fromdate == '')
 	{
-		$quryand .= $and." DATE_TIME>='".$fromdate."' AND DATE_TIME<='".$todate."'";
+		$quryand .= $and." DATE(DATE_TIME)>='".$fromdate."' AND DATE(DATE_TIME)<='".$todate."'";
 		$and = ' AND ';	
 	}
 
@@ -112,8 +112,8 @@ $option1 = $option2 = "<option value='' selected>Select Date</option>";
 
 for($i=0;$i<=60;$i++)
 {
-	$dtval = date("Y-m-d",mktime(0, 0, 0, date("m"), date("d")-$i, date("Y")));
-	$dtshow = date("d-m-Y",mktime(0, 0, 0, date("m"), date("d")-$i, date("Y")));
+	$dtval = date("Y-m-d",mktime(0, 0, 0, date("m"), date("d"), date("Y")));
+	$dtshow = date("d-m-Y",mktime(0, 0, 0, date("m"), date("d"), date("Y")));
 	
 	$option1 .= "<option value='".$dtval."' ";
 	if($fromdateymd == $dtval) $option1 .= " selected ";
