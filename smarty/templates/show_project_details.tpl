@@ -1863,55 +1863,82 @@ function getDateNow(){
 						{/if}
 						
 						{if count($towerDetail)>0}
-							<tr class="headingrowcolor" height="30px;">
-								<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Tower Name</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>No of floors</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>No. of Flats</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Remarks</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Tower Facing Direction</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Stilt On Ground Floor</b></td>
-								<td class="whiteTxt" align = "center" nowrap><b>Actual Completion Date</b></td>
-								
-							</tr>
-							{foreach from = $towerDetail key=key item = item}
-								{if ($key+1)%2 == 0}
-									{$color = "bgcolor='#F7F8E0'"}
-								{else}
-									{$color = "bgcolor='#f2f2f2'"}
-								{/if}
-							{if $phaseId != ''}
-								{if in_array($towerDetail[$key]['TOWER_ID'],$arrTower)}
-									<tr {$color}>
-										<td align = "center">{$key+1}</td>
-										<td align = "center">{$towerDetail[$key]['TOWER_NAME']}</td>
-										<td align = "center">{$towerDetail[$key]['NO_OF_FLOORS']}</td>
-										<td align = "center">{$towerDetail[$key]['NO_OF_FLATS']}</td>
-										<td align = "center" nowrap>{$towerDetail[$key]['REMARKS']}</td>
-										<td align = "center">{$towerDetail[$key]['TOWER_FACING_DIRECTION']}</td>
-										<td align = "center">
-											{if $towerDetail[$key]['STILT'] == '1'} Yes {/if}
-										    {if $towerDetail[$key]['STILT'] == '0'} No {/if}
-										</td>
-										<td align = "center">{$towerDetail[$key]['ACTUAL_COMPLETION_DATE']}</td>
-									</tr>
-								{/if}
-							{else}	
-								<tr {$color}>
-									<td align = "center">{$key+1}</td>
-									<td align = "center">{$towerDetail[$key]['TOWER_NAME']}</td>
-									<td align = "center">{$towerDetail[$key]['NO_OF_FLOORS']}</td>
-									<td align = "center">{$towerDetail[$key]['NO_OF_FLATS']}</td>
-									<td align = "center" nowrap>{$towerDetail[$key]['REMARKS']}</td>
-									<td align = "center">{$towerDetail[$key]['TOWER_FACING_DIRECTION']}</td>
-									<td align = "center">
-										{if $towerDetail[$key]['STILT'] == '1'} Yes {/if}
-									    {if $towerDetail[$key]['STILT'] == '0'} No {/if}
-									</td>
-									<td align = "center">{$towerDetail[$key]['ACTUAL_COMPLETION_DATE']}</td>
+							{$flatChk = 0}
+							{$flatAvailChk = 0}
+								<tr class="headingrowcolor" height="30px;">
+									<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>Tower Name</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>No of floors</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>No. of Flats</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>Remarks</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>Tower Facing Direction</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>Stilt On Ground Floor</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>Actual Completion Date</b></td>
 								</tr>
-							{/if}
-							{/foreach}
+								{$olderValue = ''}
+								{$color = ''}
+								{$grandTotalFloor = 0}
+								{$grandTotalFlats = 0}
+								{foreach from = $towerDetail key=key item = item}
+									{$phaseWiseTotalFloor = 0}
+									{$phaseWiseTotalFlats = 0}
+									
+									{foreach from = $item key = keyInner item = innerItem}
+										
+										{if ($keyInner)%2 == 0}
+											{$color = "bgcolor='#F7F8E0'"}
+										{else}
+											{$color = "bgcolor='#f2f2f2'"}
+										{/if}
+										
+										<tr {$color}  height ="30px">
+										{if $olderValue != $key}
+											<td valign ="top" align = "center" rowspan ={count($towerDetail[$key])}>{$key}</td>
+										{/if}
+										{$olderValue = $key}
+										<td align="center">{$innerItem['TOWER_NAME']}</td>
+										<td align="center">{$innerItem['NO_OF_FLOORS']}</td>
+										<td align="center">{$innerItem['NO_OF_FLATS']}</td>
+										{$phaseWiseTotalFloor = $phaseWiseTotalFloor+$innerItem['NO_OF_FLOORS']}
+										{$phaseWiseTotalFlats = $phaseWiseTotalFlats+$innerItem['NO_OF_FLATS']}
+										
+										{if $key != 'NoPhase'}
+											{$grandTotalFloor = $grandTotalFloor+$innerItem['NO_OF_FLOORS']}
+											{$grandTotalFlats = $grandTotalFlats+$innerItem['NO_OF_FLATS']}
+										{/if}
+										<td align="center">{$innerItem['REMARKS']}</td>
+										<td align="center">{$innerItem['TOWER_FACING_DIRECTION']}</td>
+										<td align ="center">
+											{if $innerItem['STILT'] == '1'} Yes {/if}
+											{if $innerItem['STILT'] == '0'} No {/if}
+										</td>
+										<td align = "center">{$innerItem['ACTUAL_COMPLETION_DATE']}</td>
+											
+											
+									</tr>		
+									{/foreach}	
+									
+									<tr height ="30px" bgcolor="#F6D8CE">
+										<td colspan ="2" align ="right"><b>Sub Total {$key} </b></b></td>
+										<td align ="center"><b>{$phaseWiseTotalFloor}</b></b></td>
+										<td  align = "center" nowrap><b>{$phaseWiseTotalFlats}</b></td>
+									<td align = "center" nowrap><b></b></td>
+									<td  align = "center" nowrap><b></b></td>
+									<td  align = "center" nowrap><b></b></td>
+									<td  align = "center" nowrap><b></b></td>
+									</tr>		 
+								</tr>
+								{/foreach}
+								
+									<tr height ="30px" bgcolor="#F7F8E0">
+										<td colspan ="2" align ="right"><b>Grand Total </b></b></td>
+										<td align ="center"><b>{$grandTotalFloor}</b></b></td>
+										<td  align = "center" nowrap><b>{$grandTotalFlats}</b></td>
+									<td align = "center" nowrap><b></b></td>
+									<td  align = "center" nowrap><b></b></td>
+									<td  align = "center" nowrap><b></b></td>
+									<td  align = "center" nowrap><b></b></td>
+									</tr>
 						{/if}
 						  
 					</table>
@@ -2372,10 +2399,18 @@ function getDateNow(){
 													<td align ="center"><b> {$totalNoOfFlatsPPhase}</b></td>
 													<td align ="right" nowrap >&nbsp;</td>
 													<td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
+													{if ucfirst($key) == 'NoPhase'}
+														<td  align ="left" colspan ="4"><b> 
+														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
+															{100-($availableoOfFlatsPPhase*100/$totalNoOfFlatsPPhase)|string_format:"%.2f"}%
+														</b></td>													
+													{else}
+														<td  align ="left">&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+														<td  align ="left" >&nbsp;</td>
+													
+													{/if}
 
 													
 												</tr>			 
@@ -2385,10 +2420,10 @@ function getDateNow(){
 													<td align ="center"><b> {$totalSumFlat}</b></td>
 													<td align ="right" nowrap >&nbsp;</td>
 													<td align ="center"><b>{$totalSumflatAvail}</b></td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
-													<td  align ="left" >&nbsp;</td>
+													<td  align ="left" colspan ="4"><b> 
+														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
+															{100-($totalSumflatAvail*100/$totalSumFlat)|string_format:"%.2f"}%
+														</b></td>
 
 												</tr>
 								

@@ -773,7 +773,14 @@ function RoomCategoryList()
 
     function fetch_towerDetails($projectId)
 	{
-		$qrySel	=	"SELECT TOWER_NAME,TOWER_ID,NO_OF_FLOORS,REMARKS,STILT,NO_OF_FLATS,TOWER_FACING_DIRECTION,ACTUAL_COMPLETION_DATE FROM ".RESI_PROJECT_TOWER_DETAILS."  WHERE PROJECT_ID = '".$projectId."' ORDER BY TOWER_NAME ASC";
+		$qrySel	=	"SELECT 
+							t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME  
+						FROM 
+							".RESI_PROJECT_TOWER_DETAILS." t LEFT JOIN resi_project_phase p 
+						ON   
+							t.PHASE_ID = p.PHASE_ID
+						WHERE 
+							t.PROJECT_ID = '".$projectId."' ORDER BY t.TOWER_NAME ASC";
 		$res_Sel=	mysql_query($qrySel);
 		$arrDetail	=	array();
 		while($data = mysql_fetch_assoc($res_Sel))

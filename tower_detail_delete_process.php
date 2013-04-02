@@ -31,10 +31,6 @@
 	$smarty->assign("projectId", $projectId);
 	
 	$fetch_towerName = fetch_towerName($projectId);
-	//	echo "<pre>";
-	//print_r($_REQUEST);
-	//echo "</pre>";
-	
 	if ($_POST['btnSave'] == "Save")
 	{
 
@@ -62,7 +58,6 @@
 			$stilt_old 			= 	$_REQUEST['stilt_old'][$key];
 			$eff_date_old 		= 	$_REQUEST['eff_date_old'][$key];
 
-			echo $towername ."===". $tower_name_old;
 			if(($val != '') AND (!array_key_exists($tower_id,$fetch_towerName)))
 			{
 				//code for insert tower detail if not exists
@@ -90,7 +85,8 @@
 									REMARKS      			=	'".$remark."',
 									STILT      				=	'".$stilt."',
 									NO_OF_FLATS      		=	'".$no_of_flats."',
-									TOWER_FACING_DIRECTION  =	'".$face."'
+									TOWER_FACING_DIRECTION  =	'".$face."',
+									ACTUAL_COMPLETION_DATE  =	'".$eff_date."'
 								WHERE
 									PROJECT_ID = '".$projectId."'
 								AND

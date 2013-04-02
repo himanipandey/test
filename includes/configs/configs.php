@@ -642,7 +642,7 @@ $arrCampaign =
 	);
 /**************Authentication*************/
 $accessModule = array();
-$arrUser      = array(547,525,588);
+$arrUser      = array(547,525,588,506,53,558,582);
 if(in_array($_SESSION['adminId'],$arrUser))
 {
 	$accessModule['urlEdit'] = $_SESSION['adminId'];

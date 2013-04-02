@@ -538,7 +538,7 @@ else{
 						</TD>-->
 					   <td align=left class=td-border>{$projectDataArr[data].PROJECT_ID}</td>
 						{if $projectDataArr[data].PROJECT_STAGE!=""}
-						<TD align=left class=td-border style="background:{$BG};" onclick="gotoAddress('show_project_details.php?projectId={$projectDataArr[data].PROJECT_ID}')"><a style="color:black" href="javascript:void(0);" title='{$projectDataArr[data].PROJECT_STAGE}' alt='{$projectDataArr[data].PROJECT_STAGE}'>{$projectDataArr[data].PROJECT_NAME}  </a> </TD>
+						<TD align=left class=td-border style="background:{$BG};"><a style="color:black" href="show_project_details.php?projectId={$projectDataArr[data].PROJECT_ID}" title='{$projectDataArr[data].PROJECT_STAGE}' alt='{$projectDataArr[data].PROJECT_STAGE}'>{$projectDataArr[data].PROJECT_NAME}  </a> </TD>
 																							{else}
 						<TD align=left class=td-border style="background:{$BG};">{$projectDataArr[data].PROJECT_NAME}</TD>
 																									{/if}

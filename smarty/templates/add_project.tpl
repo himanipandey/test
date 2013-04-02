@@ -198,7 +198,7 @@
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0>
 					<TBODY>
 						<TR>
-						  <TD class="h1" width="67%"><img height="18" hspace="5" src="../images/arrow.gif" width="18">{if $projectId != ''} Edit Project  ({$BUILDER_NAME} {$txtProjectName}){else}Add New Project{/if} </TD>
+						  <TD class="h1" width="67%"><img height="18" hspace="5" src="images/arrow.gif" width="18">{if $projectId != ''} Edit Project  ({$BUILDER_NAME} {$txtProjectName}){else}Add New Project{/if} </TD>
 						  <TD width="33%" align ="right"></TD>
 
 						</TR>
@@ -473,12 +473,17 @@
 							   <tr>
 								  <td width="20%" align="right"><b>Active :</b> </td>
 								  <td width="30%" align="left">
+								  {if count($accessModule['urlEdit'])>0 AND $projectId != ''}
+								 	 {$disable = 'disabled'}
+								  {else}
+								  	 {$disable = ''}
+								  {/if}
 									 <select name="Active" id="Active" class="field">
 									  <option value ="" >Select</option>
-									  <option {if $Active == 0}  value="0" selected="selected" {else} value="0"{/if} >Inactive on both Website and IS DB</option>
-									 <option {if $Active == 1} value="1" selected="selected" {else} value="1" {/if} >Active on both Website and IS DB</option>
-									 <option {if $Active == 2}  value="2" selected="selected" {else} value="2"{/if} >Deleted</option>
-									 <option {if $Active == 3} value="3" selected="selected" {else} value="3" {/if} >Active on IS but inactive on website</option>
+									  <option {if $Active == 0}  value="0" selected="selected" {else} value="0"{/if} {$disable}>Inactive on both Website and IS DB</option>
+									 <option {if $Active == 1} value="1" selected="selected" {else} value="1" {/if} {$disable}>Active on both Website and IS DB</option>
+									 <option {if $Active == 2}  value="2" selected="selected" {else} value="2"{/if} {$disable}>Deleted</option>
+									 <option {if $Active == 3} value="3" selected="selected" {else} value="3" {/if} {$disable}>Active on IS but inactive on website</option>
 									 </select>
 								  </td>
 								  <td width="50%" align="left">
@@ -567,21 +572,21 @@
                                <tr>
                                    <td width="20%" align="right" valign="top"><b>Pre - Launch Date :</b> </td>
                                    <td width="30%" align="left">
-                                       <input name="pre_launch_date" value="{$pre_launch_date}" type="text" class="formstyle2" id="pre_f_date_c_to" size="10" />  <img src="../images/cal_1.jpg" id="pre_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                       <input name="pre_launch_date" value="{$pre_launch_date}" type="text" class="formstyle2" id="pre_f_date_c_to" size="10" />  <img src="images/cal_1.jpg" id="pre_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                    </td>
                                    <td width="50%" align="left"></td>
                                </tr>
 							   <tr>
 							   <td width="20%" align="right" valign="top"><b>Launch Date :</b> </td>
 							   <td width="30%" align="left">
-							   <input name="eff_date_to" value="{$eff_date_to}" type="text" class="formstyle2" id="f_date_c_to" value="" size="10" />  <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+							   <input name="eff_date_to" value="{$eff_date_to}" type="text" class="formstyle2" id="f_date_c_to" value="" size="10" />  <img src="images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 							   </td>
 							   <td width="50%" align="left"></td>
 							   </tr>
 
 							    <tr>
 								  <td width="20%" align="right" valign ="top"><b> Promised Completion Date:</b> </td><td width="30%" align="left">
-									<input name="eff_date_to_prom" value="{$eff_date_to_prom}" type="text" class="formstyle2" id="f_date_c_prom" value="" size="10" />  <img src="../images/cal_1.jpg" id="f_trigger_c_prom" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+									<input name="eff_date_to_prom" value="{$eff_date_to_prom}" type="text" class="formstyle2" id="f_date_c_prom" value="" size="10" />  <img src="images/cal_1.jpg" id="f_trigger_c_prom" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>

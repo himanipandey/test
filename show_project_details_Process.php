@@ -49,7 +49,22 @@ $ImageDataListingArrFloor = allProjectFloorImages($projectId);
 $smarty->assign("ImageDataListingArrFloor", $ImageDataListingArrFloor);
 
 $towerDetail			=	fetch_towerDetails($projectId);
-$smarty->assign("towerDetail", $towerDetail);
+
+$towerDtlPhWise = array();
+$towerNoPh = array();
+foreach($towerDetail as $val)
+{
+	if($val['PHASE_NAME'] == '')
+	{
+		$towerNoPh['NoPhase'][] = $val;
+	}
+	else
+	{
+		$towerDtlPhWise[$val['PHASE_NAME']][] = $val;
+	}	
+}
+
+$smarty->assign("towerDetail", array_merge($towerNoPh,$towerDtlPhWise));
 
 $arrAudit   = AuditTblDataByTblName('resi_project_tower_details',$projectId);
 $smarty->assign("arrAudit", $arrAudit); 

@@ -8,7 +8,7 @@
 	include("builder_function.php");
 	AdminAuthentication();
 	
-	include('add_apartmentConfigurationProcess.php');;
+	include('add_apartmentConfigurationProcess.php');
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."add_apartment_configuration.tpl");
