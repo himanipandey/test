@@ -4,7 +4,7 @@ include("../appWideConfig.php");
 include("../builder_function.php");
 
 $arr = array();
-$fromdateymd = $fromdate = $_POST['frmdate']!='' ? $_POST['frmdate'] : date("Y-m-d",mktime(0, 0, 0, date("m"), date("d")-1, date("Y")));
+$fromdateymd = $fromdate = $_POST['frmdate']!='' ? $_POST['frmdate'] : date("Y-m-d",mktime(0, 0, 0, date("m"), date("d"), date("Y")));
 $todateymd  = $todate   = $_POST['todate']!='' ? $_POST['todate'] : date("Y-m-d",mktime(0, 0, 0, date("m"), date("d"), date("Y")));
 
 $dateArr = getDatesBetweeenTwoDates($fromdate,$todate);
@@ -15,21 +15,21 @@ foreach($dateArr as $key=>$dates)
 	$mf = date('m',strtotime($dates));
 	$Yf = date('Y',strtotime($dates));
 
-	$fromdate = date('Y-m-d H:i:s',mktime(12,30, 0, $mf, $df-1, $Yf));
-	$todate = date('Y-m-d H:i:s',mktime(12,30, 0, $mf, $df, $Yf));
-	$seldate = date('Y-m-d',mktime(12,30, 0, $mf, $df, $Yf));
+	$fromdate = date('Y-m-d',mktime(0,0, 0, $mf, $df, $Yf));
+	$todate = date('Y-m-d',mktime(0,0, 0, $mf, $df, $Yf));
+	$seldate = date('Y-m-d',mktime(0,0, 0, $mf, $df, $Yf));
 
 	$quryand = $and = '';
 	$and = ' WHERE ';
 	if($fromdate!='')
 	{
-		$quryand .= $and." DATE_TIME>='".$fromdate."'";
+		$quryand .= $and." DATE(DATE_TIME)>='".$fromdate."'";
 		$and = ' AND ';
 	}
 
 	if($todate!='')
 	{
-		$quryand .= $and." DATE_TIME<='".$todate."'";
+		$quryand .= $and." DATE(DATE_TIME)<='".$todate."'";
 		$and = ' AND ';
 	}
 
@@ -41,7 +41,7 @@ foreach($dateArr as $key=>$dates)
 
 	if($todate == '' && $fromdate == '')
 	{
-		$quryand .= $and." DATE_TIME>='".$fromdate."' AND DATE_TIME<='".$todate."'";
+		$quryand .= $and." DATE(DATE_TIME)>='".$fromdate."' AND DATE(DATE_TIME)<='".$todate."'";
 		$and = ' AND ';
 	}
 

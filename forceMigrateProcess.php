@@ -11,7 +11,8 @@
 			fclose($handle);
 			exec("cd /home/sysadmin/production/cron/migration; php main.php $tmpFile");	
 			
-			$res = mysql_query('delete from proptiger.REDIRECT_URL_MAP;insert into proptiger.REDIRECT_URL_MAP select * from project.redirect_url_map;');
+			$res = mysql_query('delete from proptiger.REDIRECT_URL_MAP;');
+			$res = mysql_query('insert into proptiger.REDIRECT_URL_MAP select * from project.redirect_url_map;');
 			if($res)
 				$msg = "Successfully migrated following ProjectIds:<br>$projectId";
 			else
