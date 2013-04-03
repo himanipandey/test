@@ -638,11 +638,9 @@ function set_phase_quantity($phaseId,$unit_type,$bedrooms,$quantity,$projectId='
     function InsertProjectType($qrylast,$projectId)
     {
      	$qry	=	"INSERT INTO ".PROJECT_OPTIONS." (`PROJECT_ID`, `UNIT_NAME`, `UNIT_TYPE`, `SIZE`, `MEASURE`, `PRICE_PER_UNIT_AREA`, `PRICE_PER_UNIT_AREA_DP`,  `STATUS`, `BEDROOMS`, `CREATED_DATE`, `BATHROOMS` ,`PRICE_PER_UNIT_HIGH`,`PRICE_PER_UNIT_LOW`,`NO_OF_FLOORS`,`VILLA_PLOT_AREA`,`VILLA_NO_FLOORS`,`VILLA_TERRACE_AREA`,`VILLA_GARDEN_AREA`,`BALCONY`,`STUDY_ROOM`,`SERVANT_ROOM`,`POOJA_ROOM`,`LENGTH_OF_PLOT`,`BREADTH_OF_PLOT`,`TOTAL_PLOT_AREA`) values ".$qrylast; //die("here");
-        //echo "<br/>";
         $res				=	mysql_query($qry);
         $optionId = mysql_insert_id();
         audit_insert($optionId,'insert','resi_project_options',$projectId);
-
         if($res)
             return true;
         else

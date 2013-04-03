@@ -1880,7 +1880,6 @@ function getDateNow(){
 								{$grandTotalFloor = 0}
 								{$grandTotalFlats = 0}
 								{foreach from = $towerDetail key=key item = item}
-									{$phaseWiseTotalFloor = 0}
 									{$phaseWiseTotalFlats = 0}
 									
 									{foreach from = $item key = keyInner item = innerItem}
@@ -1899,11 +1898,9 @@ function getDateNow(){
 										<td align="center">{$innerItem['TOWER_NAME']}</td>
 										<td align="center">{$innerItem['NO_OF_FLOORS']}</td>
 										<td align="center">{$innerItem['NO_OF_FLATS']}</td>
-										{$phaseWiseTotalFloor = $phaseWiseTotalFloor+$innerItem['NO_OF_FLOORS']}
 										{$phaseWiseTotalFlats = $phaseWiseTotalFlats+$innerItem['NO_OF_FLATS']}
 										
 										{if $key != 'NoPhase'}
-											{$grandTotalFloor = $grandTotalFloor+$innerItem['NO_OF_FLOORS']}
 											{$grandTotalFlats = $grandTotalFlats+$innerItem['NO_OF_FLATS']}
 										{/if}
 										<td align="center">{$innerItem['REMARKS']}</td>
@@ -1919,8 +1916,7 @@ function getDateNow(){
 									{/foreach}	
 									
 									<tr height ="30px" bgcolor="#F6D8CE">
-										<td colspan ="2" align ="right"><b>Sub Total {$key} </b></b></td>
-										<td align ="center"><b>{$phaseWiseTotalFloor}</b></b></td>
+										<td colspan ="3" align ="right"><b>Sub Total {$key} </b></b></td>
 										<td  align = "center" nowrap><b>{$phaseWiseTotalFlats}</b></td>
 									<td align = "center" nowrap><b></b></td>
 									<td  align = "center" nowrap><b></b></td>
@@ -1931,8 +1927,7 @@ function getDateNow(){
 								{/foreach}
 								
 									<tr height ="30px" bgcolor="#F7F8E0">
-										<td colspan ="2" align ="right"><b>Grand Total </b></b></td>
-										<td align ="center"><b>{$grandTotalFloor}</b></b></td>
+										<td colspan ="3" align ="right"><b>Grand Total </b></b></td>
 										<td  align = "center" nowrap><b>{$grandTotalFlats}</b></td>
 									<td align = "center" nowrap><b></b></td>
 									<td  align = "center" nowrap><b></b></td>
@@ -2305,7 +2300,6 @@ function getDateNow(){
 										{$cnt = 0}
 										{$totalSumFlat = 0}
 										{$totalSumflatAvail = 0}
-										
 										{foreach from = $supplyAllArray key=key item = item}
 											{$totalNoOfFlatsPPhase = 0}
 											{$availableoOfFlatsPPhase = 0}
@@ -2415,8 +2409,9 @@ function getDateNow(){
 													
 												</tr>			 
 										{/foreach}
+												{if count($supplyAllArray)>1}
 												<tr bgcolor ="#F2F2F2" height="30px;">
-													<td align ="right" colspan ="4" nowrap><b>Grand Total</b></td>
+													<td align ="right" colspan ="4" nowrap><b>Grand Total {$flafHideGrandTot}</b></td>
 													<td align ="center"><b> {$totalSumFlat}</b></td>
 													<td align ="right" nowrap >&nbsp;</td>
 													<td align ="center"><b>{$totalSumflatAvail}</b></td>
@@ -2426,6 +2421,7 @@ function getDateNow(){
 														</b></td>
 
 												</tr>
+												{/if}
 								
 							</table>
 						

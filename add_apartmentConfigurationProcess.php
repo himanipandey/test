@@ -250,7 +250,8 @@
 
 		if(!is_array($ErrorMsg) && $ErrorMsg1 == '')
 		{
-			$returnval = InsertProjectType($qrylast,$projectId);
+			if($qrylast != '')
+				$returnval = InsertProjectType($qrylast,$projectId);
 			if($flg_edit == 1)
 			{
 				if($preview == 'true')
