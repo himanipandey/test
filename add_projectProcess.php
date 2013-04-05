@@ -50,13 +50,12 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$txtProjectMetaTitle		=	trim($_POST['txtProjectMetaTitle']);
 		$txtMetaKeywords			=	trim($_POST['txtMetaKeywords']);
 		$txtMetaDescription			=	trim($_POST['txtMetaDescription']);
-		$DisplayOrder				=	trim($_POST['DisplayOrder']);
+		$DisplayOrder				=	'';
 		$Active						=	trim($_POST['Active']);
 		$Status						=	trim($_POST['Status']);
 		$txtProjectURL				=	trim($_POST['txtProjectURL']);
 		$Featured					=	trim($_POST['Featured']);
 		$txtDisclaimer				=	trim($_POST['txtDisclaimer']);
-		$folderId					=	trim($_POST['folderId']);
 		$no_of_towers				=	trim($_POST['no_of_towers']);
 		$no_of_flats				=	trim($_POST['no_of_flats']);
 		$pre_launch_date    		=	trim($_POST['pre_launch_date']);
@@ -68,15 +67,26 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 
 		$price_list_chk				=	trim($_POST['price_list_chk']);
 		$price_list					=	trim($_POST['price_list']);
-		$price_list_pdf				=	trim($_POST['price_list_pdf']);
+		
+		if(isset($_POST['price_list_pdf']))
+			$price_list_pdf				=	trim($_POST['price_list_pdf']);
+		else
+			$price_list_pdf				=	'';
 
 		$application				=	trim($_POST['application']);
 		$app_form					=	trim($_POST['app_form']);
-		$app_form_pdf				=	trim($_POST['app_form_pdf']);
-
+		
+		if(isset($_POST['app_form_pdf']))
+			$app_form_pdf				=	trim($_POST['app_form_pdf']);
+		else
+			$app_form_pdf				=	'';
 		$payment_chk				=	trim($_POST['payment_chk']);
 		$payment					=	trim($_POST['payment']);
-		$payment_pdf				=	trim($_POST['payment_pdf']);
+		
+		if(isset($_POST['payment_pdf']))
+			$payment_pdf				=	trim($_POST['payment_pdf']);
+		else
+			$payment_pdf				=	'';
 
 		$approvals					=	trim($_POST['approvals']);
 		$project_size				=	trim($_POST['project_size']);
@@ -100,11 +110,10 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$launchedUnits         		=   trim($_POST['launchedUnits']);
 		$reasonUnlaunchedUnits     	=   trim($_POST['reasonUnlaunchedUnits']);
 		
-
-		
-		
-
-		$bank_list = implode(",",$_POST['bank_list']);//die("here");
+		if(isset($_POST['bank_list']))
+			$bank_list = implode(",",$_POST['bank_list']);//die("here");
+		else
+			$bank_list = '';
 		/***************Query for suburb selected************/
 		if($_POST['cityId'] != '')
 		{
@@ -133,7 +142,6 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("txtProjectDesc", $txtProjectDesc);
 		$smarty->assign("txtProjectSource", $txtProjectSource);
 		$smarty->assign("project_type", $project_type);
-		$smarty->assign("txtProjectSmallImg", $txtProjectSmallImg);
 		$smarty->assign("txtProjectLocation", $txtProjectLocation);
 		$smarty->assign("txtProjectLattitude", $txtProjectLattitude);
 		$smarty->assign("txtProjectLongitude", $txtProjectLongitude);
@@ -153,7 +161,10 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("special_offer", $special_offer);
 		$smarty->assign("display_flag", $display_flag);
 		$smarty->assign("youtube_link", $youtube_link);
-		$smarty->assign("bank_arr", $_POST['bank_list']);
+		if(isset($_POST['bank_list']))
+			$smarty->assign("bank_arr", $_POST['bank_list']);
+		else
+			$smarty->assign("bank_arr", '');
 
 		$smarty->assign("price_list_chk", $price_list_chk);
 		$smarty->assign("price_list", $_POST['price_list']);
@@ -315,7 +326,6 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		 $smarty->assign("cityId", stripslashes($ProjectDetail[0]['CITY_ID']));
 		 $smarty->assign("suburbId", stripslashes($ProjectDetail[0]['SUBURB_ID']));
 		 $smarty->assign("localityId", stripslashes($ProjectDetail[0]['LOCALITY_ID']));
-		 $smarty->assign("txtProjectSmallImg", stripslashes($ProjectDetail[0]['PROJECT_SMALL_IMAGE']));
 		 $smarty->assign("BUILDER_NAME", stripslashes($ProjectDetail[0]['BUILDER_NAME']));
 		 $smarty->assign("txtProjectLocation", stripslashes($ProjectDetail[0]['LOCATION_DESC']));
 		 $smarty->assign("txtProjectLattitude", stripslashes($ProjectDetail[0]['LATITUDE']));
@@ -362,8 +372,15 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("txtAuditRemark", stripslashes($ProjectDetail[0]['AUDIT_REMARK']));
 		$smarty->assign("launchedUnits", stripslashes($ProjectDetail[0]['LAUNCHED_UNITS']));
 		$smarty->assign("reasonUnlaunchedUnits", stripslashes($ProjectDetail[0]['REASON_UNLAUNCHED_UNITS']));
-				
-		$bank_arr = explode(",",$ProjectDetail[0]['BANK_LIST']);
+
+		if(isset($ProjectDetail[0]['BANK_LIST']))
+		{
+			$bank_arr = explode(",",$ProjectDetail[0]['BANK_LIST']);
+		}
+		else
+		{
+			$bank_arr = '';
+		}
 
 		$smarty->assign("bank_arr", $bank_arr);
 
