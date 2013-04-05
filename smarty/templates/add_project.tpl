@@ -473,7 +473,7 @@
 							   <tr>
 								  <td width="20%" align="right"><b>Active :</b> </td>
 								  <td width="30%" align="left">
-								  {if count($accessModule['urlEdit'])>0 AND $projectId != ''}
+								  {if count($accessModule['urlEdit']) == 0 AND $projectId != ''}
 								 	 {$disable = 'disabled'}
 								  {else}
 								  	 {$disable = ''}
