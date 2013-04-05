@@ -475,16 +475,22 @@
 								  <td width="30%" align="left">
 								  {if count($accessModule['urlEdit']) == 0 AND $projectId != ''}
 								 	 {$disable = 'disabled'}
+								 	 
+								 	 {if $Active == 0}Inactive on both Website and IS DB{/if}
+								 	 {if $Active == 1}Active on both Website and IS DB{/if}
+								 	 {if $Active == 2}Deleted{/if}
+								 	 {if $Active == 3}Active on IS but inactive on website{/if}
+								 	 <input type = "hidden"  name="Active" value = "{$Active}">
 								  {else}
-								  	 {$disable = ''}
-								  {/if}
-									 <select name="Active" id="Active" class="field">
+								  	<select name="Active" id="Active" class="field">
 									  <option value ="" >Select</option>
-									  <option {if $Active == 0}  value="0" selected="selected" {else} value="0"{/if} {$disable}>Inactive on both Website and IS DB</option>
-									 <option {if $Active == 1} value="1" selected="selected" {else} value="1" {/if} {$disable}>Active on both Website and IS DB</option>
-									 <option {if $Active == 2}  value="2" selected="selected" {else} value="2"{/if} {$disable}>Deleted</option>
-									 <option {if $Active == 3} value="3" selected="selected" {else} value="3" {/if} {$disable}>Active on IS but inactive on website</option>
+									  <option {if $Active == 0}  value="0" selected="selected" {else} value="0"{/if}>Inactive on both Website and IS DB</option>
+									 <option {if $Active == 1} value="1" selected="selected" {else} value="1" {/if}>Active on both Website and IS DB</option>
+									 <option {if $Active == 2}  value="2" selected="selected" {else} value="2"{/if}>Deleted</option>
+									 <option {if $Active == 3} value="3" selected="selected" {else} value="3" {/if}>Active on IS but inactive on website</option>
 									 </select>
+								  {/if}
+									 
 								  </td>
 								  <td width="50%" align="left">
 									  <font color="red"><span id = "err_project_active" style = "display:none;"></span></font>
