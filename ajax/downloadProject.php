@@ -67,7 +67,7 @@ $selectdata		= 	$_POST['dwnld_selectdata'];
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
-	$QueryMember1 = "SELECT RP.PROJECT_ID,RP.BUILDER_NAME,RP.PROJECT_NAME,RP.PROJECT_PHASE,RP.PROJECT_STAGE,C.LABEL AS CITY_NAME FROM resi_project RP LEFT JOIN city C ON RP.CITY_ID=C.CITY_ID ";
+	$QueryMember1 = "SELECT RP.PROJECT_ID,RP.BUILDER_NAME,RP.PROJECT_NAME,RP.PROJECT_PHASE,RP.PROJECT_STAGE,C.LABEL AS CITY_NAME, RP.PROJECT_STATUS,RP.BOOKING_STATUS,UC.LABEL UPDATION_LABEL FROM resi_project RP LEFT JOIN city C ON RP.CITY_ID=C.CITY_ID LEFT JOIN updation_cycle UC ON RP.UPDATION_CYCLE_ID=UC.UPDATION_CYCLE_ID";
 
 	$and = " WHERE ";
 
@@ -172,7 +172,9 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>PHASE</td>
 <td>STAGE</td>
 <td>CITY</td>
-</tr>
+<td>PROJECT STATUS</td>
+<td>BOOKING STATUS</td>
+<td>UPDATION LABEL</td></tr>
 ";
 $cnt = 1;
 while($ob1 = mysql_fetch_assoc($QueryExecute))
@@ -185,7 +187,11 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	$projname = $ob1['PROJECT_NAME'];
 	
 	$cityname = $ob1['CITY_NAME'];
-
+	
+	$proj_status = $ob1['PROJECT_STATUS'];
+	$booking_status = $ob1['BOOKING_STATUS'];
+	$updation_label = $ob1['UPDATION_LABEL'];
+	
 	$contents .= "
 	<tr bgcolor='#f2f2f2'>
 	<td>".$cnt."</td>
@@ -195,6 +201,9 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	<td>".$phase."</td>
 	<td>".$stage."</td>
 	<td>".$cityname."</td>
+	<td>".$proj_status."</td>
+	<td>".$booking_status."</td>
+	<td>".$updation_label."</td>
 	</tr>
 ";
 	$cnt++;
