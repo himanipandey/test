@@ -1,4 +1,6 @@
 <?php
+require_once 'includes/session.php';
+
 $gblData = array();
 if(!isset($noObStart))
 	ob_start();
