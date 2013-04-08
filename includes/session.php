@@ -87,7 +87,8 @@ class memcacheSessionHandler{
 				'ACCESS_LEVEL' => $_SESSION['ACCESS_LEVEL']
 			);
 		}
-		session_decode($data);
+		unset($_SESSION['cms_session']['cms_session']);
+		//session_decode($data);
 		
 		$new_data = json_decode($this->memcache->get("SESSIONID:{$id}"), true);
 		$new_data['cms_session'] = $_SESSION['cms_session'];
