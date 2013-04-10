@@ -361,20 +361,9 @@ function getDateNow(){
 /*********builder contact info related js end here*************/
 
 /**********Old value dispaly function****/
- function oldValueShow(stageName, phasename, projectId,phaseId)
+ function oldValueShow(stageName, phasename, projectId)
  {
-	jQuery.ajax({
-			type:"POST",
-			url:"ajax/fetchOldValues.php",
-			data:"stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId+"&phaseId="+phaseId,
-			beforeSend: function(){
-				jQuery("#projectOldVal").html('<img src = "images/ajax-loader.gif">');
-			},
-			success: function(responsedata){
-				jQuery("#projectOldVal").html('');
-				jQuery("#projectOldVal").html(responsedata);
-			}
-		});
+	window.location.href = "show_project_details.php?stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId;
  }
 </script>
 
@@ -502,11 +491,18 @@ function getDateNow(){
 			 
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 	      <div>
-
+				{if 
+				(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'newProject')
+				OR
+				(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')
+				OR
+				(trim($projectDetails[0].PROJECT_STAGE) == 'updationCycle' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')}
+					<input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID});">
+				{/if}
 			<!-- Project Phases -->
             
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-            <br><br><b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
             {/if}
            
             <!-- End of Project Phases -->	   
@@ -519,27 +515,54 @@ function getDateNow(){
 						<tr>
 							<td align="left" colspan='4'>
 								<b>Project : {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}<button class="clickbutton" onclick="$(this).trigger('event1');">Edit</button>{/if}
-								{if 
-									(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'newProject')
-									OR
-									(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')
-									OR
-									(trim($projectDetails[0].PROJECT_STAGE) == 'updationCycle' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')}
-								{if $phaseId == ''}
-									{$phsId = ''}
-								{else}
-									{$phsId = $phaseId}
-								{/if}
-								<input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID}, '{$phsId}');">
-							{/if}
-							
 							</td>
 						</tr>
 						
 						<tr>
 							<td align="left" colspan='4'>
 								<div id = "projectOldVal">
-								
+									{if count($changedValueArr)>0}
+										<table style = "border:1px solid #c2c2c2;" align = "left" width ="60%">
+											{foreach from = $changedValueArr key=key item = item}
+												<tr><td>&nbsp;</td></tr>
+												<tr>
+													<td align ="left" nowrap><b>Old Value for {$arrTableName[$key]}</b></td>
+												</tr>
+												
+												<tr class="headingrowcolor" height="30px;">
+													 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt>Field Name</td>
+													 <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>New Value</td>
+													 <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>Old Value</td>	
+												</tr>
+												{$cnt =0}
+												{foreach from = $item key=keyInner item = itemInner}
+													{if ($cnt+1)%2 == 0}
+														{$color = "bgcolor='#F7F8E0'"}
+													{else}
+														{$color = "bgcolor='#f2f2f2'"}
+													{/if}
+												<tr {$color} height="25px;">
+													<td width="10%" align="left">{ucwords(strtolower(str_replace("_"," ",$keyInner)))}</td>
+													<td width="10%" align="left">
+															{if $itemInner['new'] != ''}
+																{$itemInner['new']} 
+															{else}
+																--
+															{/if}
+													</td>
+													<td width="10%" align="left">
+															{if $itemInner['old'] != ''}
+																{$itemInner['old']} 
+															{else}
+																--
+															{/if}
+													</td>
+												</tr>
+												{$cnt = $cnt+1}
+												{/foreach}
+											{/foreach}
+										</table>
+									{/if}
 								</div>
 							</td>
 						</tr>
@@ -1123,7 +1146,7 @@ function getDateNow(){
 
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
-								<b>Project Latitude:</b>
+								<b>Project Longitude:</b>
 							</td>
 							<td>
 								{$projectDetails[0].LONGITUDE}
@@ -1764,7 +1787,6 @@ function getDateNow(){
 							  
 						  </tr>
 						{/if}
-						
 						{if count($ProjectOptionDetail)>0}
 							<tr class="headingrowcolor" height="30px;">
 								 <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
@@ -1778,6 +1800,7 @@ function getDateNow(){
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>File Name</td>
 								
 							</tr>
+							{$cntAudit = 0}
 							{foreach from = $ProjectOptionDetail key=key item = item}
 								{if ($key+1)%2 == 0}
 									{$color = "bgcolor='#F7F8E0'"}
@@ -1830,6 +1853,69 @@ function getDateNow(){
 							  {/if}
 							  </td>
 							</tr>
+							{if $phasename != '' && $stageName != ''}
+								<tr bgcolor ="#ACFA58">
+										<td align = "center" nowrap>Old Value</td>
+										<td>
+											{if $arrProjectPriceAuditOld['UNIT_NAME'][$cntAudit] != $ProjectOptionDetail[$key]['UNIT_NAME']}
+												{$arrProjectPriceAuditOld['UNIT_NAME'][$cntAudit]}
+											{else}
+												--
+											{/if}
+									  </td>
+									  <td>										
+										{if trim($arrProjectPriceAuditOld['SIZE'][$cntAudit]) != trim($ProjectOptionDetail[$key]['SIZE'])}
+										
+												{if $arrProjectPriceAuditOld['TOTAL_PLOT_AREA'][$cntAudit] != 0}
+													{$arrProjectPriceAuditOld['TOTAL_PLOT_AREA'][$cntAudit]}
+												{else}
+													{$arrProjectPriceAuditOld['SIZE'][$cntAudit]}
+												{/if}
+										{else}
+												--
+										{/if}
+										</td>
+									  <td>										
+										{if $arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA'][$cntAudit] != $ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']}
+											{$arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA'][$cntAudit]}
+										{else}
+											--
+										{/if}
+									  </td>
+									  <td>
+									  	{if $arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA_DP'][$cntAudit] != $ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_DP']}
+											{$arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA_DP'][$cntAudit]}
+										{else}
+											--
+										{/if}
+									  </td>
+									  <td>
+									  	{if $arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA_FP'][$cntAudit] != $ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_FP']}
+											{$arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA_FP'][$cntAudit]}
+										{else}
+											--
+										{/if}
+									  </td>
+									   <td>
+											{if $arrProjectPriceAuditOld['NO_OF_FLOORS'][$cntAudit] != $ProjectOptionDetail[$key]['NO_OF_FLOORS']}
+												{$arrProjectPriceAuditOld['NO_OF_FLOORS'][$cntAudit]}
+											{else}
+												--
+											{/if}
+									  </td>
+									  <td>
+									  		{if $arrProjectPriceAuditOld['VILLA_NO_FLOORS'][$cntAudit] != $ProjectOptionDetail[$key]['VILLA_NO_FLOORS']}
+												{$arrProjectPriceAuditOld['VILLA_NO_FLOORS'][$cntAudit]}
+											{else}
+												--
+											{/if}
+									  </td>
+									  <td nowrap>
+									 &nbsp;
+									  </td>
+								</tr>
+							{/if}
+							{$cntAudit = $cntAudit+1}
 							{/foreach}
 						{/if}
 						  
@@ -2354,24 +2440,80 @@ function getDateNow(){
 															{$totalSumFlat = $totalSumFlat+$lastItem['NO_OF_FLATS']}
 															{$totalSumflatAvail = $totalSumflatAvail+$lastItem['AVAILABLE_NO_FLATS']}																	
 														{/if}
+														{if $phasename != '' && $stageName != ''}
+															{if $lastItem['NO_OF_FLATS'] != $arrProjectSupply[$key][$keyInner][$keylast]['NO_OF_FLATS']}
+																<br>
+																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['NO_OF_FLATS']}</span>
+															{/if}
+														{/if}
 													</td>
 													<td valign ="top" align="center">
 														 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
+														 {if $phasename != '' && $stageName != ''}
+															 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG']}
+																<br>
+																<span style="background-color: yellow;">
+																	 {if $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
+																</span>
+															{/if}
+														 {/if}
 													</td>
 													<td valign ="top" align="center">{$lastItem['AVAILABLE_NO_FLATS']}
 														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
-														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}											
+														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
+														
+														{if $phasename != '' && $stageName != ''}
+															{if $lastItem['AVAILABLE_NO_FLATS'] != $arrProjectSupply[$key][$keyInner][$keylast]['AVAILABLE_NO_FLATS']}
+																<br>
+																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['AVAILABLE_NO_FLATS']}</span>
+															{/if}	
+														{/if}										
 													</td>
 													
 													<td valign ="top" align="center">
 														
 														 {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
-													    
+													    {if $phasename != '' && $stageName != ''}
+														    {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG']}
+																<br>
+																<span style="background-color: yellow;">
+																	{if $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
+																</span>
+															{/if}
+														{/if}
+														
 													</td>
-													<td valign ="top" align="center">{$lastItem['EDIT_REASON']}</td>
-													<td valign ="top" align ="center">{$lastItem['SOURCE_OF_INFORMATION']}</td>
+													<td valign ="top" align="center">
+														{$lastItem['EDIT_REASON']}
+														
+														{if $phasename != '' && $stageName != ''}
+															{if $lastItem['EDIT_REASON'] != $arrProjectSupply[$key][$keyInner][$keylast]['EDIT_REASON']}
+																<br>
+																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['EDIT_REASON']}</span>
+															{/if}
+														{/if}
+													</td>
+													<td valign ="top" align ="center">
+														{$lastItem['SOURCE_OF_INFORMATION']}
+														
+														{if $phasename != '' && $stageName != ''}
+															{if $lastItem['SOURCE_OF_INFORMATION'] != $arrProjectSupply[$key][$keyInner][$keylast]['SOURCE_OF_INFORMATION']}
+																<br>
+																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['SOURCE_OF_INFORMATION']}</span>
+															{/if}
+														{/if}
+													</td>
 													
-													<td valign ="top" align ="center" nowrap>{$lastItem['SUBMITTED_DATE']}</td>
+													<td valign ="top" align ="center" nowrap>
+														{$lastItem['SUBMITTED_DATE']}
+														
+														{if $phasename != '' && $stageName != ''}
+															{if $lastItem['SUBMITTED_DATE'] != $arrProjectSupply[$key][$keyInner][$keylast]['SUBMITTED_DATE']}
+																<br>
+																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['SUBMITTED_DATE']}</span>
+															{/if}
+														{/if}
+													</td>
 													
 												</tr>	
 												{/foreach}
