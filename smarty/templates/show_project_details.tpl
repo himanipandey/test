@@ -2450,7 +2450,7 @@ function getDateNow(){
 													<td valign ="top" align="center">
 														 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
 														 {if $phasename != '' && $stageName != ''}
-															 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG']}
+															 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] AND $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] != ''}
 																<br>
 																<span style="background-color: yellow;">
 																	 {if $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
@@ -2474,7 +2474,7 @@ function getDateNow(){
 														
 														 {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
 													    {if $phasename != '' && $stageName != ''}
-														    {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG']}
+														    {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] AND $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] != ''}
 																<br>
 																<span style="background-color: yellow;">
 																	{if $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}

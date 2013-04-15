@@ -7,6 +7,11 @@
 	
 	if(isset($_REQUEST['submit']))
 	{
+		
+		$qryChkUrl = "SELECT COUNT(*) as cnt FROM resi_project WHERE  PROJECT_URL  = '".$toUrl."'";
+		$resChkUrl = mysql_query($qryChkUrl);
+		$dataChkUrl= mysql_fetch_assoc($resChkUrl);
+		
 		$msg = '';
 		if($fromUrl == '')
 		{
@@ -22,11 +27,19 @@
 		{
 			$msg = "<font color = 'red'>Please enter To url!</font>";
 		}
+		if($fromUrl == $fromUrl)
+		{
+			$msg = "<font color = 'red'>From url and To url can't equal!</font>";
+		}
 		if($toUrl != '')
 		{
 			if(!preg_match('/^[a-z0-9\-]+\.php$/',$toUrl)){
 				$msg = "<font color = 'red'>Please enter a valid To url that contains only small characters, numerics & hyphen</font>";
 			}
+		}
+		if($dataChkUrl['cnt'] != 1)
+		{
+			$msg = "<font color = 'red'>To URL does not exists in project DB</font>";
 		}
 		if($msg == '')
 		{

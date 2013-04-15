@@ -1523,7 +1523,7 @@ $ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function updateProj
 						project_stage_history 
 							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID)
 				VALUES 
-							(NULL,'".$pID."','".$phase."','".$stage."','".date('Y-m-d H:i:s')."','".$_SESSION['adminId']."') 
+							(NULL,'".$pID."','".$phase."','".$stage."',NOW(),'".$_SESSION['adminId']."') 
 			";
 	$r = mysql_query($ins);
 return 1;
@@ -2015,12 +2015,12 @@ function fetchColumnChanges($projectId, $stageName, $phasename, &$arrProjectPric
 	foreach($arrTblName as $table)
 	{
 		$auditTbl  = "_t_$table";
-		$startTime = fetchStartTime($stageName,$phasename,$projectId);
 		if($auditTbl == '_t_resi_proj_supply')
 		{
+			$startTime = fetchStartTime($stageName,$phasename,$projectId);
 			$fstDataSupply  = array();
 			$lstDataSupply  = array();
-			$qrySupply = "SELECT a.PROJ_SUPPLY_ID,a.PROJECT_TYPE,a.NO_OF_BEDROOMS,a.PHASE_ID
+			$qrySupply = "SELECT a.PROJECT_TYPE,a.NO_OF_BEDROOMS,a.PHASE_ID
 							FROM resi_proj_supply a
 							JOIN (SELECT PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS, MAX(PROJ_SUPPLY_ID) AS LATEST_PROJ_SUPPLY_ID
 							         FROM resi_proj_supply
@@ -2048,29 +2048,35 @@ function fetchColumnChanges($projectId, $stageName, $phasename, &$arrProjectPric
 					$startTime     = $dataStartTime['_t_transaction_date'];
 				}
 					
-				$fstQrySupply = "SELECT PROJ_SUPPLY_ID,PHASE_ID,NO_OF_BEDROOMS,NO_OF_FLATS,AVAILABLE_NO_FLATS,EDIT_REASON,SOURCE_OF_INFORMATION,ACCURATE_NO_OF_FLATS_FLAG,
-								   PROJECT_TYPE,SUBMITTED_DATE,ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG
+			 $fstQrySupply = "SELECT a._t_transaction_id,a.PROJ_SUPPLY_ID,a.PHASE_ID,a.NO_OF_BEDROOMS,a.NO_OF_FLATS,a.AVAILABLE_NO_FLATS,a.EDIT_REASON,a.SOURCE_OF_INFORMATION,a.ACCURATE_NO_OF_FLATS_FLAG,
+								   a.PROJECT_TYPE,a.SUBMITTED_DATE,a.ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG,b.PHASE_NAME
 								FROM
-									$auditTbl
+									$auditTbl a 
+								LEFT JOIN 
+								   resi_project_phase b
+								ON
+								   a.PHASE_ID = b.PHASE_ID
 								WHERE
-									PROJECT_ID = $projectId
+									a.PROJECT_ID = $projectId
 								AND
-									_t_transaction_date <= '$startTime'
+									a.PROJECT_TYPE = '".$supply['PROJECT_TYPE']."'
 								AND
-									PROJECT_TYPE = '".$supply['PROJECT_TYPE']."'
+									a._t_transaction_date<='$startTime'
 								AND
-									PHASE_ID = '".$supply['PHASE_ID']."'
+									a.PHASE_ID = '".$supply['PHASE_ID']."'
 								AND
-									NO_OF_BEDROOMS = '".$supply['NO_OF_BEDROOMS']."'
+									a.NO_OF_BEDROOMS = '".$supply['NO_OF_BEDROOMS']."'
 								
 								ORDER BY
-									_t_transaction_id DESC";
+									a._t_transaction_id DESC";
 				$fstResSupply  = mysql_query($fstQrySupply) or die(mysql_error());
 				$fstDataSupply = mysql_fetch_assoc($fstResSupply);
-
-					if($fstDataSupply['PHASE_NAME'] == '')
+					if($fstDataSupply['PHASE_NAME'] == '' || $fstDataSupply['PHASE_NAME'] == NULL)
 						$fstDataSupply['PHASE_NAME'] = 'noPhase';
 					$arrProjectSupply[$fstDataSupply['PHASE_NAME']][$fstDataSupply['PROJECT_TYPE']][] = $fstDataSupply;
+					
+					if(trim($phasename) == 'newProject' AND trim($stageName) == 'newProject')
+						$startTime = NULL;
 			}
 		}
 		else if($auditTbl == '_t_resi_project_options')

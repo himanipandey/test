@@ -26,7 +26,9 @@ if(isset($_REQUEST['stageName']) && isset($_REQUEST['phasename']) && isset($_REQ
 }
 $smarty->assign("stageName", $stageName);
 $smarty->assign("phasename", $phasename);
-
+//echo "<pre>";
+//print_r($arrProjectSupply);
+//echo "</pre>";
 $smarty->assign("arrProjectSupply", $arrProjectSupply);
 $smarty->assign("arrProjectPriceAuditOld", $arrProjectPriceAuditOld);
 $smarty->assign("changedValueArr", $arrProjectAudit);
