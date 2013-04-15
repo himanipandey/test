@@ -625,12 +625,9 @@ function set_phase_quantity($phaseId,$unit_type,$bedrooms,$quantity,$projectId='
 			if($returnAvailability)
 			{
 				$updateProject = updateAvailability($projectId,$returnAvailability);
-				if($updateProject)
-				{
+			}
 			audit_insert($last_id,'insert','resi_proj_supply',$projectId);
 			return 1;
-		}
-			}
 		}
 
 	}
@@ -2007,73 +2004,185 @@ function getLastUpdatedTime($projectId)
 }
 
 /**********Fetch history for all tables*********/
-function fetchColumnChanges($projectId, $stageName, $phasename, $phaseId)
+$arrProjectPriceAuditOld = array();
+$$arrProjectAudit       =  array();
+$arrProjectSupply       =  array();
+function fetchColumnChanges($projectId, $stageName, $phasename, &$arrProjectPriceAuditOld, &$arrProjectAudit, &$arrProjectSupply)
 {
 	$arrTblName	= array("resi_project","resi_project_options","resi_proj_supply");
 	$arrFields  = array("_t_transaction_id","_t_transaction_date","_t_operation","_t_user_id");
 	
-	$changedValueArr = array();
 	foreach($arrTblName as $table)
 	{
-		$fstData  = array();
-		$lstData  = array();
-
 		$auditTbl  = "_t_$table";
 		$startTime = fetchStartTime($stageName,$phasename,$projectId);
-		
-		if($auditTbl == '_t_resi_proj_supply' AND $phaseId != '' AND $phaseId != '-1')
-			$andClause = " AND PHASE_ID = $phaseId";
-		else 
-			$andClause = '';
-		
-		if($startTime == NULL)
+		if($auditTbl == '_t_resi_proj_supply')
 		{
-			$qryStartTime = "SELECT MIN(_t_transaction_date) as  _t_transaction_date
-							FROM 
-								$auditTbl 
-							WHERE 
-								PROJECT_ID = $projectId
-							$andClause";
-			$resStartTime  = mysql_query($qryStartTime) or die(mysql_error());
-			$dataStartTime = mysql_fetch_assoc($resStartTime);
-			$startTime     = $dataStartTime['_t_transaction_date'];
-		}
-		
-		$fstQry = "SELECT * FROM $auditTbl 
-				   WHERE
-					 PROJECT_ID = $projectId
-				   AND
-					 _t_transaction_date <= '$startTime'
-				   $andClause
-				   ORDER BY
-					 _t_transaction_id DESC LIMIT 1";
-		$fstRes = mysql_query($fstQry) or die(mysql_error());
-		$fstData = mysql_fetch_assoc($fstRes);
-		
-		
-		$lstQry = "SELECT * FROM $auditTbl
-				   WHERE
-					  PROJECT_ID = $projectId
-				  AND
-					 _t_transaction_date < NOW()
-				  $andClause
-				  ORDER BY
-					 _t_transaction_id DESC LIMIT 1";
-		$lstRes = mysql_query($lstQry) or die(mysql_error());
-		$lstData = mysql_fetch_assoc($lstRes);
-		foreach($lstData as $key=>$val)
-		{
-			if($val != $fstData[$key])
+			$fstDataSupply  = array();
+			$lstDataSupply  = array();
+			$qrySupply = "SELECT a.PROJ_SUPPLY_ID,a.PROJECT_TYPE,a.NO_OF_BEDROOMS,a.PHASE_ID
+							FROM resi_proj_supply a
+							JOIN (SELECT PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS, MAX(PROJ_SUPPLY_ID) AS LATEST_PROJ_SUPPLY_ID
+							         FROM resi_proj_supply
+							         WHERE PROJECT_ID = $projectId
+							         GROUP BY PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS) b
+							ON (a.PROJ_SUPPLY_ID = b.LATEST_PROJ_SUPPLY_ID)";
+			$resSupply = mysql_query($qrySupply);
+			while($supply = mysql_fetch_assoc($resSupply))
 			{
-				if(!in_array($key,$arrFields))
+				if($startTime == NULL)
 				{
-					$changedValueArr[$table][$key]['new'] = trim($val);
-					$changedValueArr[$table][$key]['old']  = trim($fstData[$key]);  
+					$qryStartTime = "SELECT MIN(_t_transaction_date) as  _t_transaction_date
+									FROM
+										$auditTbl
+									WHERE
+										PROJECT_ID = $projectId
+									AND
+										PROJECT_TYPE = '".$supply['PROJECT_TYPE']."'
+									AND
+										PHASE_ID = '".$supply['PHASE_ID']."'
+									AND
+										NO_OF_BEDROOMS = '".$supply['NO_OF_BEDROOMS']."'";
+					$resStartTime  = mysql_query($qryStartTime) or die(mysql_error());
+					$dataStartTime = mysql_fetch_assoc($resStartTime);
+					$startTime     = $dataStartTime['_t_transaction_date'];
+				}
+					
+				$fstQrySupply = "SELECT PROJ_SUPPLY_ID,PHASE_ID,NO_OF_BEDROOMS,NO_OF_FLATS,AVAILABLE_NO_FLATS,EDIT_REASON,SOURCE_OF_INFORMATION,ACCURATE_NO_OF_FLATS_FLAG,
+								   PROJECT_TYPE,SUBMITTED_DATE,ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG
+								FROM
+									$auditTbl
+								WHERE
+									PROJECT_ID = $projectId
+								AND
+									_t_transaction_date <= '$startTime'
+								AND
+									PROJECT_TYPE = '".$supply['PROJECT_TYPE']."'
+								AND
+									PHASE_ID = '".$supply['PHASE_ID']."'
+								AND
+									NO_OF_BEDROOMS = '".$supply['NO_OF_BEDROOMS']."'
+								
+								ORDER BY
+									_t_transaction_id DESC";
+				$fstResSupply  = mysql_query($fstQrySupply) or die(mysql_error());
+				$fstDataSupply = mysql_fetch_assoc($fstResSupply);
+
+					if($fstDataSupply['PHASE_NAME'] == '')
+						$fstDataSupply['PHASE_NAME'] = 'noPhase';
+					$arrProjectSupply[$fstDataSupply['PHASE_NAME']][$fstDataSupply['PROJECT_TYPE']][] = $fstDataSupply;
+			}
+		}
+		else if($auditTbl == '_t_resi_project_options')
+		{
+			$fstDataOpt  = array();
+			$lstDataOpt  = array();
+			$selectOptions = "SELECT OPTIONS_ID 
+							  FROM 
+								 resi_project_options 
+							  WHERE 
+								 PROJECT_ID = $projectId";
+			$resSelectOpt  = mysql_query($selectOptions) or die(mysql_error());
+			$arrOptId = array();
+			while($ids  = mysql_fetch_assoc($resSelectOpt))
+			{
+				array_push($arrOptId,$ids['OPTIONS_ID']);
+			}
+			
+			foreach($arrOptId as $val)
+			{				
+				if($startTime == NULL)
+				{
+					$qryStartTime = "SELECT MIN(_t_transaction_date) as  _t_transaction_date
+									FROM 
+										$auditTbl 
+									WHERE 
+										PROJECT_ID = $projectId
+									AND
+										OPTIONS_ID = $val";
+					$resStartTime  = mysql_query($qryStartTime) or die(mysql_error());
+					$dataStartTime = mysql_fetch_assoc($resStartTime);
+					$startTime     = $dataStartTime['_t_transaction_date'];
+				}
+				
+				$fstQryOpt = "SELECT OPTIONS_ID,UNIT_NAME,UNIT_TYPE,SIZE,PRICE_PER_UNIT_AREA,PRICE_PER_UNIT_AREA_DP,PRICE_PER_UNIT_AREA_FP,TOTAL_PLOT_AREA,NO_OF_FLOORS,VILLA_NO_FLOORS FROM $auditTbl
+							WHERE
+								PROJECT_ID = $projectId
+							AND
+								OPTIONS_ID = $val
+							AND
+								_t_transaction_date <= '$startTime'
+							ORDER BY
+								_t_transaction_id DESC LIMIT 1";
+				$fstResOpt = mysql_query($fstQryOpt) or die(mysql_error());
+				$fstDataOpt = mysql_fetch_assoc($fstResOpt);
+					
+					
+				$lstQryOpt = "SELECT OPTIONS_ID,UNIT_NAME,UNIT_TYPE,SIZE,PRICE_PER_UNIT_AREA,PRICE_PER_UNIT_AREA_DP,PRICE_PER_UNIT_AREA_FP,TOTAL_PLOT_AREA,NO_OF_FLOORS,VILLA_NO_FLOORS FROM $auditTbl
+							WHERE
+								PROJECT_ID = $projectId
+							AND
+								OPTIONS_ID = $val
+							AND
+								_t_transaction_date < NOW()
+							ORDER BY
+								_t_transaction_id DESC LIMIT 1";
+				$lstResOpt = mysql_query($lstQryOpt) or die(mysql_error());
+				$lstDataOpt = mysql_fetch_assoc($lstResOpt);
+				foreach($lstDataOpt as $key=>$val)
+				{
+					$arrProjectPriceAuditOld[$key][]  = trim($fstDataOpt[$key]);
+				}
+			}
+		}
+		else
+		{
+			$fstData  = array();
+			$lstData  = array();
+			if($startTime == NULL)
+			{
+				$qryStartTime = "SELECT MIN(_t_transaction_date) as  _t_transaction_date
+								FROM
+									$auditTbl
+								WHERE
+									PROJECT_ID = $projectId";
+				$resStartTime  = mysql_query($qryStartTime) or die(mysql_error());
+				$dataStartTime = mysql_fetch_assoc($resStartTime);
+				$startTime     = $dataStartTime['_t_transaction_date'];
+			}
+			$fstQry = "SELECT * FROM $auditTbl 
+					   WHERE
+						 PROJECT_ID = $projectId
+					   AND
+						 _t_transaction_date <= '$startTime'
+					   ORDER BY
+						 _t_transaction_id DESC LIMIT 1";
+			$fstRes = mysql_query($fstQry) or die(mysql_error());
+			$fstData = mysql_fetch_assoc($fstRes);
+			
+			
+			$lstQry = "SELECT * FROM $auditTbl
+					   WHERE
+						  PROJECT_ID = $projectId
+					  AND
+						 _t_transaction_date < NOW()
+					  ORDER BY
+						 _t_transaction_id DESC LIMIT 1";
+			$lstRes = mysql_query($lstQry) or die(mysql_error());
+			$lstData = mysql_fetch_assoc($lstRes);
+			foreach($lstData as $key=>$val)
+			{
+				if($val != $fstData[$key])
+				{
+					if(!in_array($key,$arrFields))
+					{
+						$arrProjectAudit[$table][$key]['new'] = trim($val);
+						$arrProjectAudit[$table][$key]['old']  = trim($fstData[$key]);  
+					}
 				}
 			}
 		}
 	}
-	return $changedValueArr;
 }
 
 function fetchStartTime($stageName,$phasename,$projectId)

@@ -9,6 +9,29 @@ $BankListArr	=	BankList();
 $projectId  = $_GET['projectId'];
 $arrCaling = fetchProjectCallingLinks($projectId);
 $smarty->assign("arrCaling", $arrCaling);
+ 
+/*********code for audit tables*********/
+$stageName = '';
+$phasename = '';
+$changedValueArr = array();
+if(isset($_REQUEST['stageName']) && isset($_REQUEST['phasename']) && isset($_REQUEST['projectId']))
+{
+	$arrTableName = array("resi_project"=>"Project","resi_project_options"=>"project Configuration","resi_proj_supply"=>"Project Supply");
+	$smarty->assign("changedValueArr", $changedValueArr);
+	$stageName	=	$_REQUEST['stageName'];
+	$phasename	=	$_REQUEST['phasename'];
+	$projectId	=	$_REQUEST['projectId'];
+	fetchColumnChanges($projectId, $stageName, $phasename, $arrProjectPriceAuditOld, $arrProjectAudit, $arrProjectSupply);
+	
+}
+$smarty->assign("stageName", $stageName);
+$smarty->assign("phasename", $phasename);
+
+$smarty->assign("arrProjectSupply", $arrProjectSupply);
+$smarty->assign("arrProjectPriceAuditOld", $arrProjectPriceAuditOld);
+$smarty->assign("changedValueArr", $arrProjectAudit);
+
+/*********end code for audit tables*********/
 
 if(!isset($_REQUEST['btnExit']))
 	$_REQUEST['btnExit'] ='';
@@ -26,6 +49,7 @@ $smarty->assign("otherPricing", $otherPricing);
 /******end display other pricing******/
 
 $ProjectOptionDetail	=	ProjectOptionDetail($projectId);
+
 $smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
 
 $ProjectAmenities	=	ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
@@ -106,7 +130,6 @@ $smarty->assign("arrAudit", $arrAudit);
 	$smarty->assign("arrPhaseCount",$arrPhaseCount);
 	$smarty->assign("arrPhaseTypeCount",$arrPhaseTypeCount);
 	$smarty->assign("supplyAllArray",$supplyAllArray);
-
 
 
 // Project Phases

@@ -8,13 +8,10 @@
 	$phasename	=	$_REQUEST['phasename'];
 	$projectId	=	$_REQUEST['projectId'];
 	$phaseId    =	$_REQUEST['phaseId'];
+	$tablename  =	$_REQUEST['tablename'];
 	
 	//$endtime   = '2013-03-16';
-	$changedValueArr = fetchColumnChanges($projectId, $stageName, $phasename, $phaseId);
-	
-	//echo "<pre>";
-	//print_r($changedValueArr);
-	//echo "</pre>";
+	$changedValueArr = fetchColumnChanges($projectId, $stageName, $phasename, $phaseId, $tablename);
 ?>
 	<table style = "border:1px solid #c2c2c2;" align = "left" width ="60%"> 
 	<?php 
