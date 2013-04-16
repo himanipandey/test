@@ -27,7 +27,7 @@ if(isset($_REQUEST['stageName']) && isset($_REQUEST['phasename']) && isset($_REQ
 $smarty->assign("stageName", $stageName);
 $smarty->assign("phasename", $phasename);
 //echo "<pre>";
-//print_r($arrProjectSupply);
+//print_r($arrProjectAudit);
 //echo "</pre>";
 $smarty->assign("arrProjectSupply", $arrProjectSupply);
 $smarty->assign("arrProjectPriceAuditOld", $arrProjectPriceAuditOld);
@@ -221,6 +221,9 @@ $res = mysql_query($qry) or die(mysql_error());
  $suburbSelect = SuburbArr($projectDetails[0]['CITY_ID']);
  $localitySelect = localityList($projectDetails[0]['CITY_ID'], $projectDetails[0]['SUBURB_ID']);
 
+ $builderDetail	= fetch_builderDetail($projectDetails[0]['BUILDER_ID']);
+ $smarty->assign("builderDetail", $builderDetail);
+ 
 	$smarty->assign("localitySelect", $localitySelect);
 	$smarty->assign("projectDetails", $projectDetails);
 	$smarty->assign("CityDataArr", $CityDataArr);

@@ -491,6 +491,12 @@ function getDateNow(){
 			 
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 	      <div>
+	      <tr>
+	      <td style = "padding-left:30px;">
+	      		<b>Project {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}<button class="clickbutton" onclick="$(this).trigger('event1');">Edit</button>{/if}
+				
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				
 				{if 
 				(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'newProject')
 				OR
@@ -500,23 +506,16 @@ function getDateNow(){
 					<input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID});">
 				{/if}
 			<!-- Project Phases -->
-            
+            &nbsp;&nbsp;&nbsp;&nbsp;
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
             &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
             {/if}
            
             <!-- End of Project Phases -->	   
-							   
+			</td></tr>				   
 			<tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-					
-						
-						<tr>
-							<td align="left" colspan='4'>
-								<b>Project : {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}<button class="clickbutton" onclick="$(this).trigger('event1');">Edit</button>{/if}
-							</td>
-						</tr>
 						
 						<tr>
 							<td align="left" colspan='4'>
@@ -526,7 +525,7 @@ function getDateNow(){
 											{foreach from = $changedValueArr key=key item = item}
 												<tr><td>&nbsp;</td></tr>
 												<tr>
-													<td align ="left" nowrap><b>Old Value for {$arrTableName[$key]}</b></td>
+													<td align ="left" nowrap><b>Old Value for Project Detail</b></td>
 												</tr>
 												
 												<tr class="headingrowcolor" height="30px;">
@@ -614,7 +613,7 @@ function getDateNow(){
 								<table cellSpacing=0 cellPadding=0 width="100%" style = "border:1px solid #BDBDBD;" align= "center">
 								   <tr><td>&nbsp;</td></tr>      
 								  <TR>
-								    <TD style = "padding-left:20px;" align = "left" nowrap colspan = "6"><b>Builder URL: {$builderDetail['URL']}</b></TD>
+								    <TD style = "padding-left:20px;" align = "left" nowrap colspan = "6"><b>Builder URL:</b> {$builderDetail['URL']}&nbsp;&nbsp;&nbsp;&nbsp;<b>Builder Website:</b> {$builderDetail['WEBSITE']}</TD>
 								    
 								  </TR>
 								     <tr><td>&nbsp;</td></tr>    

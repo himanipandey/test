@@ -1516,7 +1516,6 @@ else{
 	$Sql = "UPDATE ".RESI_PROJECT." SET PROJECT_PHASE = '".$phase."', PROJECT_STAGE = 'noStage', UPDATION_CYCLE_ID = NULL, AUDIT_COMMENTS = '".$reviews."' WHERE PROJECT_ID = '".$pID."';";
 }
 $ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function updateProjectPhase()');
-
 	if($revert == TRUE) $phase='revert';
 	$ins = "
 				INSERT INTO 
@@ -2081,6 +2080,7 @@ function fetchColumnChanges($projectId, $stageName, $phasename, &$arrProjectPric
 		}
 		else if($auditTbl == '_t_resi_project_options')
 		{
+			$startTime = fetchStartTime($stageName,$phasename,$projectId);
 			$fstDataOpt  = array();
 			$lstDataOpt  = array();
 			$selectOptions = "SELECT OPTIONS_ID 
