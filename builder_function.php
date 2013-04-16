@@ -2145,6 +2145,7 @@ function fetchColumnChanges($projectId, $stageName, $phasename, &$arrProjectPric
 		{
 			$fstData  = array();
 			$lstData  = array();
+			$startTime = fetchStartTime($stageName,$phasename,$projectId);
 			if($startTime == NULL)
 			{
 				$qryStartTime = "SELECT MIN(_t_transaction_date) as  _t_transaction_date
@@ -2196,7 +2197,35 @@ function fetchStartTime($stageName,$phasename,$projectId)
 	$whereClause = '';
 	if(trim($phasename) == 'newProject' AND trim($stageName) == 'newProject')
 	{
-		return NULL;
+		$qryRevert = "SELECT * FROM project_stage_history
+			WHERE
+				PROJECT_ID = $projectId
+			AND
+				PROJECT_STAGE = 'newProject'
+			AND
+				PROJECT_PHASE = 'newProject'
+			ORDER BY HISTORY_ID DESC";
+		$resRevert = mysql_query($qryRevert);
+		if(mysql_num_rows($resRevert)>1)
+		{
+			$qryRevert = "SELECT DATE_TIME FROM project_stage_history
+				WHERE
+					HISTORY_ID< (SELECT HISTORY_ID FROM project_stage_history
+									WHERE
+										PROJECT_ID = $projectId
+									AND
+										PROJECT_STAGE = 'newProject'
+									AND
+										PROJECT_PHASE = 'newProject'
+									ORDER BY HISTORY_ID DESC LIMIT 1)
+				 ORDER BY HISTORY_ID DESC LIMIT 1";
+			$resRevert = mysql_query($qryRevert);
+			$dataStartTime = mysql_fetch_assoc($resRevert);
+			$startTime =  $dataStartTime['DATE_TIME'];
+			return $startTime;
+		}
+		else
+			return NULL;
 	}
 	elseif(trim($phasename) == 'audit1' AND trim($stageName) == 'newProject')
 	{
