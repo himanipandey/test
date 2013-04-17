@@ -27,7 +27,7 @@
 		{
 			$msg = "<font color = 'red'>Please enter To url!</font>";
 		}
-		if($fromUrl == $fromUrl)
+		if($fromUrl == $toUrl)
 		{
 			$msg = "<font color = 'red'>From url and To url can't equal!</font>";
 		}
