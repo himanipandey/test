@@ -411,7 +411,10 @@ function getDateNow(){
 		<span> Audit Completed</span>
 		{/if}
 	</div>
-
+{if $projectLabel != ''}
+	Label: {$projectLabel}
+	<br>
+{/if}
 {if $projectDetails[0].PROJECT_STAGE != 'noStage'}
 
 	{$projectStatus = $projectDetails[0]['PROJECT_STATUS']}
@@ -439,7 +442,6 @@ function getDateNow(){
 	{/if}
 {/if}
 	<br>
-
 	{if $projectDetails[0].PROJECT_PHASE!="complete"}
 		<textarea name="comments" id="comments" placeholder="
 			{if $projectDetails[0].AUDIT_COMMENTS}
@@ -1210,7 +1212,7 @@ function getDateNow(){
 								<b>Promised Completion Date:</b>
 							</td>
 							<td>
-								{$projectDetails[0].PROMISED_COMPLETION_DATE}
+								<a href = "add_project_construction.php?projectId={$projectId}">{$completionDate}</a>
 							</td>
 						</tr>
 						
@@ -1342,6 +1344,8 @@ function getDateNow(){
 						<tr class="headingrowcolor" height="30px;">
 							 <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
 							 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
+							 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
+							 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
 							 <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
 							 <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
 						</tr>
@@ -1358,6 +1362,12 @@ function getDateNow(){
 							</td>
 							<td width ="15%">
 								{$item['FNAME']}
+							</td>
+							<td width ="15%">
+								{$item['StartTime']}
+							</td>
+							<td width ="15%">
+								{$item['EndTime']}
 							</td>
 							<td width ="30%" nowrap>
 								<a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
@@ -1768,7 +1778,11 @@ function getDateNow(){
 						<tr>
 						  	<td align="left"  nowrap colspan = "9">
 						  	<b>Project Price:</b> <button class="clickbutton" onclick="$(this).trigger('event12');">Edit</button>&nbsp;&nbsp;
-							<b>Project Configuration:</b> <button class="clickbutton" onclick="$(this).trigger('event7');">Edit</button><br><br>
+							<b>Project Configuration:</b> <button class="clickbutton" onclick="$(this).trigger('event7');">Edit</button>
+							&nbsp;&nbsp;<b>Project Price Effective From:</b> {$ProjectOptionDetail[0].CREATED_DATE}
+							<br><br>
+						  	
+						  	
 						  	</td>
 						</tr>
 						{/if}
@@ -1779,7 +1793,7 @@ function getDateNow(){
 									
 									<b>Department: </b> {$key}</br>
 									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
+									<b>Last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
 								{/foreach}
 								
 							  </td>

@@ -9,7 +9,10 @@ $BankListArr	=	BankList();
 $projectId  = $_GET['projectId'];
 $arrCaling = fetchProjectCallingLinks($projectId);
 $smarty->assign("arrCaling", $arrCaling);
- 
+
+$projectLabel = fetchProjectLabel($projectId);
+$smarty->assign("projectLabel", $projectLabel);
+
 /*********code for audit tables*********/
 $stageName = '';
 $phasename = '';
@@ -224,6 +227,20 @@ $res = mysql_query($qry) or die(mysql_error());
  $builderDetail	= fetch_builderDetail($projectDetails[0]['BUILDER_ID']);
  $smarty->assign("builderDetail", $builderDetail);
  
+ /*****code for promised completion date********/
+ $expCompletionDate = costructionDetail($projectId); 
+ date_default_timezone_set('Asia/Calcutta');
+ $dateProject   = new DateTime($projectDetails[0]['PROMISED_COMPLETION_DATE']);
+ $dateConstruct = new DateTime($expCompletionDate['EXPECTED_COMPLETION_DATE']);
+ $completionDate = '';
+ if ($dateProject < $dateConstruct)
+ 	$completionDate = $expCompletionDate['EXPECTED_COMPLETION_DATE'];
+ else
+ 	$completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
+ 	
+ $smarty->assign("completionDate", $completionDate);
+ /*****code for promised completion date********/
+
 	$smarty->assign("localitySelect", $localitySelect);
 	$smarty->assign("projectDetails", $projectDetails);
 	$smarty->assign("CityDataArr", $CityDataArr);

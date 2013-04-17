@@ -79,6 +79,11 @@
 
         return name_flag && flat_bed && villa_bed;
     }
+    
+    function deletePhase()
+    {
+    	return confirm("Are you sure! you want to delete phase.");
+    }
 
 </script>
 
@@ -253,6 +258,10 @@
 									
 								  <td align="left" style="padding-left:0px;">
 									<input type="submit" name="btnSave" id="btnSave" value="Submit" onclick="return validate_phase();" />
+								  
+								  {if count($accessModule)>0}
+								  	&nbsp;&nbsp;<input type="submit" name="delete" value="Delete" onclick = "return deletePhase();" />
+								  {/if}
 								  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
 								  </td>
 							   </tr>

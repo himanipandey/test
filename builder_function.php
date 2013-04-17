@@ -374,7 +374,7 @@
 	/**********audit insert***********/
 	function audit_insert($rowid,$action,$table,$projectId)
 	{
-		$qry_ins	=	"
+		echo $qry_ins	=	"
 			INSERT INTO audit
 			SET
 				DONE_BY			=	'".$_SESSION['adminId']."',
@@ -1961,7 +1961,7 @@ function lastUpdatedAuditDetail($projectId)
 
 function fetchProjectCallingLinks($projectId)
 {
-	$qry = "SELECT d.AudioLink,a.FNAME,d.Remark,d.StartTime 
+	$qry = "SELECT d.AudioLink,a.FNAME,d.Remark,d.StartTime,d.EndTime 
 			FROM 
 				(".CALLDETAILS." d LEFT JOIN ".CALLPROJECT." p 
 			ON
@@ -2247,6 +2247,23 @@ function fetchStartTime($stageName,$phasename,$projectId)
 	$res = mysql_query($qry) or die(mysql_error());
 	$data= mysql_fetch_assoc($res);
 	return $data['DATE_TIME'];
+}
+
+function fetchProjectLabel($projectId)
+{
+	$qry	=	"SELECT a.LABEL 
+				FROM
+					 ".UPDATION_CYCLE." a 
+				LEFT JOIN
+					 revision_phase b
+				ON
+					a.UPDATION_CYCLE_ID = b.UPDATION_CYCLE_ID  
+				WHERE 
+					b.PROJECT_ID = (SELECT c.PROJECT_ID FROM revision_phase c  WHERE c.PROJECT_ID = $projectId ORDER BY c.DATE_TIME DESC LIMIT 1)";
+	$res	=	mysql_query($qry) or die(mysql_error().' Error in function FetchProjectlabel()');
+	$labelArray = array();
+	$data = mysql_fetch_assoc($res);
+	return $data['LABEL'];
 }
 
 ?>

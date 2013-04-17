@@ -5,8 +5,26 @@
 
 	$projectId				=	$_REQUEST['projectId'];
 	$phaseId				=	$_REQUEST['phaseId'];
+	$preview = $_REQUEST['preview'];
+	$smarty->assign("preview", $preview);
+	
+	/*********code for delete phase**********/
+	if(isset($_REQUEST['delete']))
+	{
+		 $qryDelete = "DELETE FROM ".RESI_PROJECT_PHASE." WHERE PHASE_ID = $phaseId";
+		 $resDelete = mysql_query($qryDelete);
+		 if($resDelete)
+		 {
+		 	audit_insert($phaseId,'delete','resi_project_phase',$projectId);
+		 	if($preview == 'true')
+		 		header("Location:show_project_details.php?projectId=".$projectId);
+		 	else
+		 		header("Location:ProjectList.php?projectId=".$projectId);
+		 	
+		 }
+	}
+	/*********end code for delete phase******/
     $smarty->assign("phaseId", $phaseId);
-
     $projectDetail			=	ProjectDetail($projectId);
 	$smarty->assign("ProjectDetail", $projectDetail);
 
@@ -20,9 +38,6 @@
 
     $phases = Array();
     $old_phase_name = '';
-
-	$preview = $_REQUEST['preview'];
-	$smarty->assign("preview", $preview);
 
     foreach($phaseDetail as $k=>$val) {
         $p = Array();
@@ -52,8 +67,6 @@
         $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity['Villa']));
         $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity['Plot']));
     }
-
-
 	/*************************************/
     if (isset($_POST['btnSave'])) {
         // Vars
