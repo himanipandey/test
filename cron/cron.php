@@ -1,7 +1,6 @@
 <?php
 $docroot = dirname(__FILE__) . "/";
 require_once $docroot.'cronConfig.php';
-
 switch ($argv[1]) {
 	case 'daily':
 		$configArray = $dailyEmail;

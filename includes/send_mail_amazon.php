@@ -1,9 +1,8 @@
 <?php
 error_reporting(E_ERROR);
 ini_set('display_error','1');
-
-require_once('amazon-sdk/sdk.class.php');
-
+$docroot = dirname(__FILE__) . "/../";
+require_once($docroot.'amazon-sdk/sdk.class.php');
 function sendMailFromAmazon($to,  $subject, $message, $from , $cc=null, $bcc=null, $ajaxCall=true) {
 
     //Provide the Key and Secret keys from amazon here.

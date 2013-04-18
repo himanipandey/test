@@ -12,6 +12,22 @@
 		$resChkUrl = mysql_query($qryChkUrl);
 		$dataChkUrl= mysql_fetch_assoc($resChkUrl);
 		
+		$qryChkUrlLoc = "SELECT COUNT(*) as cnt FROM locality WHERE  URL  = '".$toUrl."'";
+		$resChkUrlLoc = mysql_query($qryChkUrlLoc);
+		$dataChkUrlLoc= mysql_fetch_assoc($resChkUrlLoc);
+		
+		$qryChkUrlCity = "SELECT COUNT(*) as cnt FROM city WHERE  URL  = '".$toUrl."'";
+		$resChkUrlCity = mysql_query($qryChkUrlCity);
+		$dataChkUrlCity= mysql_fetch_assoc($resChkUrlCity);
+		
+		$qryChkUrlSuburb = "SELECT COUNT(*) as cnt FROM suburb WHERE  URL  = '".$toUrl."'";
+		$resChkUrlSuburb = mysql_query($qryChkUrlSuburb);
+		$dataChkUrlSuburb= mysql_fetch_assoc($resChkUrlSuburb);
+		
+		$qryChkUrlBuilder = "SELECT COUNT(*) as cnt FROM resi_builder WHERE  URL  = '".$toUrl."'";
+		$resChkUrlBuilder = mysql_query($qryChkUrlBuilder);
+		$dataChkUrlBuilder= mysql_fetch_assoc($resChkUrlBuilder);
+		
 		$msg = '';
 		if($fromUrl == '')
 		{
@@ -37,9 +53,9 @@
 				$msg = "<font color = 'red'>Please enter a valid To url that contains only small characters, numerics & hyphen</font>";
 			}
 		}
-		if($dataChkUrl['cnt'] != 1)
+		if($dataChkUrl['cnt'] == 0 && $dataChkUrlLoc['cnt'] == 0 && $dataChkUrlCity['cnt'] == 0 && $dataChkUrlSuburb['cnt'] == 0 && $dataChkUrlBuilder['cnt'] == 0)
 		{
-			$msg = "<font color = 'red'>To URL does not exists in project DB</font>";
+			$msg = "<font color = 'red'>To URL does not exists in project,locality,city,builder and suburb tables</font>";
 		}
 		if($msg == '')
 		{

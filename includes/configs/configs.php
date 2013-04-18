@@ -604,7 +604,7 @@ define('PLOT_APARTMENTS','6');
 
 
 $ARR_PROJ_EDIT_PERMISSION = array(
-	"ADMINISTRATOR"=>array('dataCollection','newProject','audit1','audit2','complete','bulkupdate','dailymis','dcCallCenter','noPhase'),
+	"ADMINISTRATOR"=>array('dataCollection','newProject','audit1','audit2','complete','bulkupdate','dailymis','dcCallCenter','noPhase','noStage'),
 	"DATAENTRY"=>array('dataCollection'),
 	"CALLCENTER"=>array('dataCollection','newProject','dailymis','dcCallCenter'),
 	"AUDIT-1"=>array('audit1'),
@@ -658,8 +658,8 @@ if(in_array($_SESSION['adminId'],$arrForce))
 }
 $smarty->assign("forceMigrateModule", $forceMigrateModule);
 
-//$newImagePath = "/home/sysadmin/public_html/images_new/";
-$newImagePath = "/home/vimlesh/public_html/images_new/";
+$newImagePath = "/home/sysadmin/public_html/images_new/";
+//$newImagePath = "/home/vimlesh/public_html/images_new/";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
 

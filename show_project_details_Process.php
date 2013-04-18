@@ -229,15 +229,21 @@ $res = mysql_query($qry) or die(mysql_error());
  
  /*****code for promised completion date********/
  $expCompletionDate = costructionDetail($projectId); 
- date_default_timezone_set('Asia/Calcutta');
- $dateProject   = new DateTime($projectDetails[0]['PROMISED_COMPLETION_DATE']);
- $dateConstruct = new DateTime($expCompletionDate['EXPECTED_COMPLETION_DATE']);
  $completionDate = '';
- if ($dateProject < $dateConstruct)
- 	$completionDate = $expCompletionDate['EXPECTED_COMPLETION_DATE'];
+ if(count($expCompletionDate['EXPECTED_COMPLETION_DATE'])>0)
+ {
+	 echo count($expCompletionDate['EXPECTED_COMPLETION_DATE']);
+	 date_default_timezone_set('Asia/Calcutta');
+	 $dateProject   = new DateTime($projectDetails[0]['PROMISED_COMPLETION_DATE']);
+	 $dateConstruct = new DateTime($expCompletionDate['EXPECTED_COMPLETION_DATE']);
+	 if ($dateProject < $dateConstruct)
+	 	$completionDate = $expCompletionDate['EXPECTED_COMPLETION_DATE'];
+	 else
+	 	$completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
+ }
  else
  	$completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
- 	
+ 
  $smarty->assign("completionDate", $completionDate);
  /*****code for promised completion date********/
 

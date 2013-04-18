@@ -423,10 +423,12 @@ function getDateNow(){
 	{$prelaunchDate = $projectDetails[0]['PRE_LAUNCH_DATE']}
 	{$stageProject = $projectDetails[0].PROJECT_STAGE}
 	
-	<span>
-		Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
-											<input type = "radio" name = "validationChk" value = "N">No<br>
-	</span>
+	{if count($accessModule)>0}
+		<span>
+			Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
+												<input type = "radio" name = "validationChk" value = "N">No<br>
+		</span>
+	{/if}
 	{if $projectDetails[0].PROJECT_STAGE=='newProject'}
 		{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 			<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
@@ -1212,7 +1214,7 @@ function getDateNow(){
 								<b>Promised Completion Date:</b>
 							</td>
 							<td>
-								<a href = "add_project_construction.php?projectId={$projectId}">{$completionDate}</a>
+								{$completionDate}&nbsp;&nbsp;<button class="clickbutton" onclick="$(this).trigger('event10');">Update Completion Date</button>
 							</td>
 						</tr>
 						
