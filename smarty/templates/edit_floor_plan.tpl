@@ -1,4 +1,4 @@
-<script type="text/javascript" src="javascript/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.js"></script>
 <link href="fancybox/fancybox/jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">

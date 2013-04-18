@@ -6,7 +6,7 @@ div,td,label,span {
 font-family:arial,tahoma,verdana;
 }
 </style>
-<script type="text/javascript" src="javascript/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
 <script language="javascript">
 
 var selectAllFlag = false;

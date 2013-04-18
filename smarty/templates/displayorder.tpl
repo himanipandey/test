@@ -1,5 +1,5 @@
-<script type="text/javascript" src="javascript/tablednd.js"></script>
-<script type="text/javascript" src="javascript/jquery.js"></script>
+<script type="text/javascript" src="js/tablednd.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
 <script>
    var list = '';
    var upid = new Array();

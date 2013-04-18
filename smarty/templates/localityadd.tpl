@@ -1,4 +1,4 @@
-<script type="text/javascript" src="javascript/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
 var id = 0;
 $(document).ready(function()

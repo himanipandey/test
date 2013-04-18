@@ -3,12 +3,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<title>{$SITETITLE}</title>
 	<link href="{$FORUM_SERVER_PATH}css/css.css" rel="stylesheet" type="text/css">
-	<script language="javascript" src="{$FORUM_SERVER_PATH}javascript/jquery/jquery-1.4.4.min.js"></script>
+	<script language="javascript" src="{$FORUM_SERVER_PATH}js/jquery/jquery-1.4.4.min.js"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="{$FORUM_SERVER_PATH}jscal/skins/aqua/theme.css" title="Aqua" />
 	<!-- <link href="{$FORUM_SERVER_PATH}css/calendar.css" rel="stylesheet" type="text/css">
 	<link href="{$FORUM_SERVER_PATH}css/picker.css" rel="stylesheet" type="text/css"> -->
-	<!-- <script language="javascript" src="{$FORUM_SERVER_PATH}javascript/calendar.js"></script>
-	<script language="javascript" src="{$FORUM_SERVER_PATH}javascript/picker.js"></script>
+	<!-- <script language="javascript" src="{$FORUM_SERVER_PATH}js/calendar.js"></script>
+	<script language="javascript" src="{$FORUM_SERVER_PATH}js/picker.js"></script>
 
  -->
 </head>

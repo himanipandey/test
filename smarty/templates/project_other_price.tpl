@@ -1,5 +1,5 @@
-<script type="text/javascript" src="javascript/jquery.js"></script>
-<script type="text/javascript" src="javascript/common.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript">
 
   function isNumberKey(evt)
