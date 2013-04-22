@@ -24,7 +24,7 @@ $dailyEmail = array(
 			    AND
 				    DATE(a.ACTION_DATE) = DATE(subdate(current_date, 1))", 
 		'subject'=>'PROJECTS LIST INSERTED TILL TODAY', 
-		'recipients'=>array('vimlesh.rajput@proptiger.com'), 
+		'recipients'=>array('ankur.dhawan@proptiger.com','chandan.singh@proptiger.com'), 
 		'attachmentname'=>'ProjectList', 
 		'message'=>'This is a list of projects which are inserted till today.', 
 		'sendifnodata'=> 0
