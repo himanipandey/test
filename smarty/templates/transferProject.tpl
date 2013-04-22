@@ -481,8 +481,7 @@ function removeExtraCode()
 				  	  				{if $arrVal['PROJECT_STAGE'] == 'noStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'audit2'} 
 				  	  					{$phaseName = $arrVal['PROJECT_PHASE']}
 				  	  					{$stageName = $arrVal['PROJECT_STAGE']}
-				  	  					<input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName');" name='selectdata[]' value="
-				  	  					{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
+				  	  					<input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName');" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
 				  	  					{if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}
 				  	  					> 
 				  	  					{$flagcheck=1}
