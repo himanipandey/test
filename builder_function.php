@@ -374,7 +374,7 @@
 	/**********audit insert***********/
 	function audit_insert($rowid,$action,$table,$projectId)
 	{
-		echo $qry_ins	=	"
+		 $qry_ins	=	"
 			INSERT INTO audit
 			SET
 				DONE_BY			=	'".$_SESSION['adminId']."',

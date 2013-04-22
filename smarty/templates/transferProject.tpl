@@ -221,7 +221,42 @@ function makeLabel()
 		$('#errmsgLabel').show();
 		return false;
 	}
-}		
+}
+
+function showHidePhase(phaseName,stageName)
+{
+		var phaseNameList = '';
+	    $('.showHideCls:checked').each(function(){
+	    	phaseNameList = phaseNameList+"#"+$(this).val();
+	    });
+	
+	if(phaseNameList.search("audit2") != -1)
+	{
+		$("#noPhaseDisplay").show();
+		$("#showHidePhs").hide();
+		$("#removePhaseCode").html("1");
+			
+	}
+	else
+	{
+		$("#noPhaseDisplay").hide();
+		$("#showHidePhs").show();
+		$("#removePhaseCode").html("0");
+	}
+}
+
+function removeExtraCode()
+{
+	var id = $("#removePhaseCode").val();
+	if(id == 0)
+	{
+		$("#noPhaseDisplay").html('');
+	}
+	else
+	{
+		$("#showHidePhs").html('');
+	}
+}
 </script>
 <form name='frmdownload' method='post' action='ajax/downloadProject.php'>
 <input type='hidden' name='dwnld_city' id='dwnld_city' value="{$_POST['city']}">
@@ -242,6 +277,7 @@ function makeLabel()
 <input type='hidden' name='current_dwnld_phase' id='current_dwnld_phase' value="">
 <input type='hidden' name='current_dwnld_stage' id='current_dwnld_stage' value="">
 </form>
+<span id = "removePhaseCode" style = "display:none"></span>
 	<TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
       <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
@@ -442,7 +478,17 @@ function makeLabel()
 				  	  	<tr bgcolor='#ffffff'>
 				  	  		<td align='center' width='40' height=30>
 				  	  			&nbsp;
-				  	  				{if $arrVal['PROJECT_STAGE'] == 'noStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'audit2'} <input type='checkbox' name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" {if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}> {$flagcheck=1} {else}-{/if}
+				  	  				{if $arrVal['PROJECT_STAGE'] == 'noStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'audit2'} 
+				  	  					{$phaseName = $arrVal['PROJECT_PHASE']}
+				  	  					{$stageName = $arrVal['PROJECT_STAGE']}
+				  	  					<input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName');" name='selectdata[]' value="
+				  	  					{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
+				  	  					{if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}
+				  	  					> 
+				  	  					{$flagcheck=1}
+				  	  			   {else}
+				  	  			   	-
+				  	  			   {/if}
 				  	  		</td>
 				  	  		<td align='center'>{$ctrl}</td>
 				  	  		<td align='center'>{$arrVal['CNT']}</td>
@@ -485,14 +531,21 @@ function makeLabel()
 							<tr>
 							<td width="75" align="right" style = "padding-left:20px;"><b>Select Phase:</b></td>
 							<td width="25" align="left" style = "padding-left:20px;">
-							<select name="updatePhase" id="updatePhase" class="updatePhase" style = "margin:5px;width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;">									
-										<option value="noStage|0" {if $updatePhasePost == "noStage|0"} selected {/if}>No Phase</option>
-										<option value="newProject|0" {if $updatePhasePost == "newProject|0"} selected {/if}>New Project</option>
-										{foreach from=$UpdationArr key=k item=v}
-										 <option value = "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"  {if $updatePhasePost == "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"} selected {/if}> updationCycle - {$UpdationArr[$k].LABEL}
-										 </option>
-										{/foreach}	
-							</select>
+							<span id = "showHidePhs">
+								<select name="updatePhase" id="updatePhase" class="updatePhase" style = "margin:5px;width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;">									
+											<option value="noStage|0" {if $updatePhasePost == "noStage|0"} selected {/if}>No Phase</option>
+											<option value="newProject|0" {if $updatePhasePost == "newProject|0"} selected {/if}>New Project</option>
+											{foreach from=$UpdationArr key=k item=v}
+											 <option value = "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"  {if $updatePhasePost == "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"} selected {/if}> updationCycle - {$UpdationArr[$k].LABEL}
+											 </option>
+											{/foreach}	
+								</select>
+							</span>
+							<span id = "noPhaseDisplay" style = "display:none;">
+								<select name='updatePhase' id='updatePhase' class='updatePhase' style = 'margin:5px;width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;'>
+									<option value='noStage|0'>No Phase</option>
+								</select>
+							</span>
 							</td>
 							</tr>
 							<!-- <tr>
@@ -511,7 +564,7 @@ function makeLabel()
 						  </tr>
 				  	  		<tr>
 							<td height="25" align="center" colspan= "2"  style = "padding-right:40px;">
-								<input type = "submit" value = "Transfer" name = "transfer" style="border:1px solid #c2c2c2;height:30px;width:70px;background:#999999;color:#fff;font-weight:bold;cursor:hand;pointer:hand;">
+								<input onclick = "removeExtraCode();" type = "submit" value = "Transfer" name = "transfer" style="border:1px solid #c2c2c2;height:30px;width:70px;background:#999999;color:#fff;font-weight:bold;cursor:hand;pointer:hand;">
 							</td>
 						  </tr>							
 						   <tr>
