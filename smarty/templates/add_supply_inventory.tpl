@@ -235,8 +235,17 @@
 													<input type = "hidden" name = "configs[]" value = "{$lastItem['NO_OF_BEDROOMS']}">
 													</td>
 													<td valign ="top" align="center" >
-														<input style = "width:63px;" type = "text" name = "noOfFlats[]" 
+													
+														{if $key == 'noPhase'}
+															<input style = "width:63px;" type = "text" name = "noOfFlats[]" 
 															value = "{$lastItem['NO_OF_FLATS']}" id ="noOfFlats_{$cnt}">
+														{else}
+															<input type = "hidden" name = "noOfFlats[]" 
+															value = "{$lastItem['NO_OF_FLATS']}" id ="noOfFlats_{$cnt}">
+															{$lastItem['NO_OF_FLATS']}
+														{/if}
+														
+															
 														<input type = "hidden" name = "old_noOfFlats[]" value = "{$lastItem['NO_OF_FLATS']}">
 														{$totalNoOfFlatsPtype = $totalNoOfFlatsPtype+$lastItem['NO_OF_FLATS']}
 														{$totalNoOfFlatsPPhase = $totalNoOfFlatsPPhase+$lastItem['NO_OF_FLATS']}
@@ -246,41 +255,47 @@
 														{/if}
 													</td>
 													<td valign ="top" align="center">
-														 <select name="isFlats[]" id = "isFlats_{$cnt}">
-														  <option value="">Choose atleast One</option>
-														  <option value="1" {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} selected {/if}>Accurate</option>
-														  <option value="0" {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 0} selected {/if}>Guessed</option>
-														 </select>	
+														 	
 														 <input type = "hidden" name = "old_isFlats[]" value = "{$lastItem['ACCURATE_NO_OF_FLATS_FLAG']}">
+															<select name="isFlats[]" id = "isFlats_{$cnt}">
+														  		<option value="">Choose atleast One</option>
+														  		<option value="1" {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} selected {/if}>Accurate</option>
+														  		<option value="0" {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 0} selected {/if}>Guessed</option>
+														 	</select>
+														
 													</td>
 													<td valign ="top" align="center">
-														<input style = "width:63px;" type="text" value="{$lastItem['AVAILABLE_NO_FLATS']}" name="AvilFlatId[]" 
-															class="AvilFlatId" id="AvilFlatId_{$cnt}"/>
+														
 													    <input type = "hidden" name = "old_AvilFlatId[]" value = "{$lastItem['AVAILABLE_NO_FLATS']}">
 														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
 														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
-																									
+														
+														<input style = "width:63px;" type="text" value="{$lastItem['AVAILABLE_NO_FLATS']}" name="AvilFlatId[]" 
+															class="AvilFlatId" id="AvilFlatId_{$cnt}"/>
+														
 													</td>
 													
 													<td valign ="top" align="center">
-														<select name="avilflats[]" id ="avilflats_{$cnt}" class="avilflats">
-														  <option value="">Choose atleast One</option>
-														  <option value="1" {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} selected {/if}>Accurate</option>
-														  <option value="0" {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 0} selected {/if}>Guessed</option>
-													    </select>
+														
 													    <input type = "hidden" name = "old_avilflats[]" value = "{$lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG']}">
+													
+															<select name="avilflats[]" id ="avilflats_{$cnt}" class="avilflats">
+															  <option value="">Choose atleast One</option>
+															  <option value="1" {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} selected {/if}>Accurate</option>
+															  <option value="0" {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 0} selected {/if}>Guessed</option>
+														    </select>
 													</td>
 													<td valign ="top" align="center">
-													 	<textarea name="edit_reason[]" rows="2" cols="20" id="texta_{$cnt}">{$supply_bed[0]['EDIT_REASON']}</textarea>
+														<textarea name="edit_reason[]" rows="2" cols="20" id="texta_{$cnt}">{$supply_bed[0]['EDIT_REASON']}</textarea>
 													</td>
 													<td valign ="top" align ="center">
-														<select name="soi[]" id = "soi_{$cnt}">
-															<option value="">Choose Source</option>
-															{foreach from=$source_of_information key=k item=v}
-															<option value = "{$v['SOURCE_NAME']}" {if $lastItem['SOURCE_OF_INFORMATION'] == $v['SOURCE_NAME']}  selected {/if}>{$v['SOURCE_NAME']}</option>
-															{/foreach}
-														  </select>
 														<input type = "hidden" name = "old_soi[]" value = "{$lastItem['SOURCE_OF_INFORMATION']}">
+															<select name="soi[]" id = "soi_{$cnt}">
+																<option value="">Choose Source</option>
+																{foreach from=$source_of_information key=k item=v}
+																	<option value = "{$v['SOURCE_NAME']}" {if $lastItem['SOURCE_OF_INFORMATION'] == $v['SOURCE_NAME']}  selected {/if}>{$v['SOURCE_NAME']}</option>
+																{/foreach}
+														  	</select>
 													</td>
 													
 													<td valign ="top" align ="center" nowrap>

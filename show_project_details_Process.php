@@ -232,7 +232,6 @@ $res = mysql_query($qry) or die(mysql_error());
  $completionDate = '';
  if(count($expCompletionDate['EXPECTED_COMPLETION_DATE'])>0)
  {
-	 echo count($expCompletionDate['EXPECTED_COMPLETION_DATE']);
 	 date_default_timezone_set('Asia/Calcutta');
 	 $dateProject   = new DateTime($projectDetails[0]['PROMISED_COMPLETION_DATE']);
 	 $dateConstruct = new DateTime($expCompletionDate['EXPECTED_COMPLETION_DATE']);
