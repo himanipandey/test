@@ -545,17 +545,17 @@ else{
 
 																				{if $phse =='updation'}
 
-																				{foreach from=$UpdationArr key=k item=v}
-										 									{if ($projectDataArr[data].UPDATION_CYCLE_ID)==($UpdationArr[$k].UPDATION_CYCLE_ID)}
-																							<TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - {$UpdationArr[$k].LABEL}</TD>
-																				{/if}
-																				{/foreach}
-																				{if $projectDataArr[data].UPDATION_CYCLE_ID==null}
-																								<TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
-																				{/if}
+																					{foreach from=$UpdationArr key=k item=v}
+											 											{if ($projectDataArr[data].UPDATION_CYCLE_ID)==($UpdationArr[$k].UPDATION_CYCLE_ID)}
+																								<TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - {$UpdationArr[$k].LABEL}</TD>
+																						{/if}
+																					{/foreach}
+																					{if $projectDataArr[data].UPDATION_CYCLE_ID==null}
+																									<TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
+																					{/if}
 																				{else}
 																					<TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
-																					{/if}
+																				{/if}
                         <TD align=left class=td-border nowrap>{$projectDataArr[data].BUILDER_NAME}</TD>
                         <TD align=left class=td-border>
                         	{$projectDataArr[data].PROJECT_ADDRESS}

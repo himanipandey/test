@@ -396,23 +396,7 @@
 									   </select>
 								 	</td>
 								 	<td align = "center" valign = "top">
-								 		<input name="newEffDateTo" value="{$newDate}" type="text"
-											 class="formstyle2" id="newEffDateTo"
-											  readonly="1" value="" size="10"  style="width:150px;"/> 
-										 <img src="../images/cal_1.jpg" id="f_trigger_c_new" 
-										 	style="cursor: pointer; border: 1px solid red;" title="Date selector"
-										 	 onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-										<script type="text/javascript">
-										   Calendar.setup({
-										
-										    inputField     :    "newEffDateTo",     // id of the input field
-											ifFormat       :    "%Y-%m-%d",      // format of the input field
-										    button         :    "f_trigger_c_to_new",  // trigger for the calendar (button ID)
-										    align          :    "Tl",           // alignment (defaults to "Bl")
-										    singleClick    :    true,
-										    showsTime		:	true
-										  });
-										</script>
+								 	&nbsp;
 								 	</td>
 								 	
 								 <tr>

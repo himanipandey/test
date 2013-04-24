@@ -1,6 +1,6 @@
 <?php
     $effectiveDt  = '';
-	$projectId		=	$_REQUEST['projectId'];
+	$projectId			=	$_REQUEST['projectId'];
 	$projectDetail		=	ProjectDetail($projectId);
 	$smarty->assign("ProjectDetail", $projectDetail);
 	$smarty->assign("projectId", $projectId);

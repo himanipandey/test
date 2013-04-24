@@ -2249,22 +2249,5 @@ function fetchStartTime($stageName,$phasename,$projectId)
 	return $data['DATE_TIME'];
 }
 
-function fetchProjectLabel($projectId)
-{
-	$qry	=	"SELECT a.LABEL 
-				FROM
-					 ".UPDATION_CYCLE." a 
-				LEFT JOIN
-					 revision_phase b
-				ON
-					a.UPDATION_CYCLE_ID = b.UPDATION_CYCLE_ID  
-				WHERE 
-					b.PROJECT_ID = (SELECT c.PROJECT_ID FROM revision_phase c  WHERE c.PROJECT_ID = $projectId ORDER BY c.DATE_TIME DESC LIMIT 1)";
-	$res	=	mysql_query($qry) or die(mysql_error().' Error in function FetchProjectlabel()');
-	$labelArray = array();
-	$data = mysql_fetch_assoc($res);
-	return $data['LABEL'];
-}
-
 ?>
 

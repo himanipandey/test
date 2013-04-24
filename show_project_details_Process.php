@@ -10,9 +10,6 @@ $projectId  = $_GET['projectId'];
 $arrCaling = fetchProjectCallingLinks($projectId);
 $smarty->assign("arrCaling", $arrCaling);
 
-$projectLabel = fetchProjectLabel($projectId);
-$smarty->assign("projectLabel", $projectLabel);
-
 /*********code for audit tables*********/
 $stageName = '';
 $phasename = '';
@@ -218,9 +215,42 @@ $res = mysql_query($qry) or die(mysql_error());
 	while($data	=	mysql_fetch_array($res))
  	{
  		$projectStage = $data['PROJECT_STAGE']; 
- 	array_push($projectDetails, $data);	
+ 		array_push($projectDetails, $data);	
  	}
 
+ 	if($projectDetails[0]['PROJECT_STAGE'] == 'newProject')
+ 	{
+ 		$phse = 'newP';
+ 	}
+ 	else if($projectDetails[0]['PROJECT_STAGE'] == 'noStage')
+ 	{
+ 		$phse = 'noS';
+ 	}
+ 	else if($projectDetails[0]['PROJECT_STAGE'] == 'updationCycle')
+ 	{
+	 	$phse = 'updation';
+ 	}
+ 	
+ 	$UpdationArr = updationCycleTable();
+ 	$projectLabel = '';
+ 	if($phse =='updation')
+ 	{
+	 	foreach($UpdationArr as $k=>$v)
+	 	{
+		 	if($projectDetails[0]['UPDATION_CYCLE_ID'] == $UpdationArr[$k]['UPDATION_CYCLE_ID'])
+		 		$projectLabel = $UpdationArr[$k]['LABEL'];
+	 	}
+	 	if($projectDetails[0]['UPDATION_CYCLE_ID']==null)
+	 	{	
+	 		$projectLabel = 'No Label';
+	 	}
+ 	}
+ 	else
+ 	{ 
+ 		$projectLabel = 'No Label';
+ 	}
+ 	$smarty->assign("projectLabel", $projectLabel);
+ 	
  $suburbSelect = SuburbArr($projectDetails[0]['CITY_ID']);
  $localitySelect = localityList($projectDetails[0]['CITY_ID'], $projectDetails[0]['SUBURB_ID']);
 
