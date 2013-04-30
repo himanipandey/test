@@ -1,5 +1,5 @@
 <?php
-
+    set_time_limit(0);
 	error_reporting(1);
 	ini_set('display_errors','1');
 	include("smartyConfig.php");
@@ -10,20 +10,22 @@
 	
 	$qry = "SELECT PROJECT_ID FROM resi_project";
 	$res = mysql_query($qry) or die(mysql_error());
+	$arr = array();
 	while($data = mysql_fetch_assoc($res))
 	{
-		 $returnAvailability = computeAvailability($data['PROJECT_ID']);
-		if($returnAvailability)
+		$arr[] = $data['PROJECT_ID'];
+	}
+	foreach($arr as $val)
+	{
+	 	$returnAvailability = computeAvailability($val);
+		$updateProject = updateAvailability($arr,$returnAvailability);
+		if($updateProject)
 		{
-			$updateProject = updateAvailability($data['PROJECT_ID'],$returnAvailability);
-			if($updateProject)
-			{
-				echo "Data has been updateed successfully for: ".$data['PROJECT_ID']."<br>";
-			}
-			else
-			{
-				echo "Problem in data updation for :".$data['PROJECT_ID']."<br>";
-			}
+			echo "Data has been updateed successfully for: ".$val."<br>";
+		}
+		else
+		{
+			echo "Problem in data updation for :".$val."<br>";
 		}
 	}
 
