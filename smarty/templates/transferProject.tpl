@@ -478,15 +478,24 @@ function removeExtraCode()
 				  	  	<tr bgcolor='#ffffff'>
 				  	  		<td align='center' width='40' height=30>
 				  	  			&nbsp;
-				  	  				{if $arrVal['PROJECT_STAGE'] == 'noStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'audit2'} 
+				  	  				{if count($forceMigrateModule)>0}
 				  	  					{$phaseName = $arrVal['PROJECT_PHASE']}
 				  	  					{$stageName = $arrVal['PROJECT_STAGE']}
 				  	  					<input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName');" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
 				  	  					{if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}
 				  	  					> 
 				  	  					{$flagcheck=1}
-				  	  			   {else}
-				  	  			   	-
+				  	  				{else}
+					  	  				{if $arrVal['PROJECT_STAGE'] == 'noStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'audit2'} 
+					  	  					{$phaseName = $arrVal['PROJECT_PHASE']}
+					  	  					{$stageName = $arrVal['PROJECT_STAGE']}
+					  	  					<input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName');" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
+					  	  					{if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}
+					  	  					> 
+					  	  					{$flagcheck=1}
+					  	  			   {else}
+					  	  			   	-
+					  	  			   {/if}
 				  	  			   {/if}
 				  	  		</td>
 				  	  		<td align='center'>{$ctrl}</td>

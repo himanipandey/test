@@ -516,9 +516,16 @@ function set_phase_quantity($phaseId,$unit_type,$bedrooms,$quantity,$projectId='
 	                	BEDROOMS  	 =	'".$bedrooms."'";
 	        $res_update = mysql_query($qry_update) OR DIE(mysql_error());
 		if($projectId!='') {
-			if($quantity=='') $quantity=0;
-			$ins = "UPDATE resi_proj_supply SET NO_OF_FLATS='".$quantity."' WHERE PROJECT_ID='".$projectId."' AND PHASE_ID='".$phaseId."' AND NO_OF_BEDROOMS='".$bedrooms."' AND PROJECT_TYPE='".$unit_type."' ORDER BY PROJ_SUPPLY_ID DESC LIMIT 1";
-			mysql_query($ins);
+				if($quantity=='') $quantity=0;
+				$ins = "UPDATE resi_proj_supply SET NO_OF_FLATS='".$quantity."' WHERE PROJECT_ID='".$projectId."' AND PHASE_ID='".$phaseId."' AND NO_OF_BEDROOMS='".$bedrooms."' AND PROJECT_TYPE='".$unit_type."' ORDER BY PROJ_SUPPLY_ID DESC LIMIT 1";
+				mysql_query($ins);
+			
+				$returnAvailability = computeAvailability($projectId);
+				if($returnAvailability)
+				{
+					$updateProject = updateAvailability($projectId,$returnAvailability);
+				}
+				audit_insert($projectId,'update','resi_project',$projectId);
 	        }
 	}
         else {
@@ -618,14 +625,7 @@ function set_phase_quantity($phaseId,$unit_type,$bedrooms,$quantity,$projectId='
 		$res_ins=mysql_query($qry_ins) OR DIE(mysql_error());
 		if($res_ins)
 		{
-
 			$last_id = mysql_insert_id();
-
-			$returnAvailability = computeAvailability($projectId);
-			if($returnAvailability)
-			{
-				$updateProject = updateAvailability($projectId,$returnAvailability);
-			}
 			audit_insert($last_id,'insert','resi_proj_supply',$projectId);
 			return 1;
 		}
@@ -1860,44 +1860,84 @@ function BuilderContactInfo($builderid)
 /**********function for calculate supply availability**********/
 function computeAvailability($projectId)
 {
-	$qry = "select a.*, rps.available_no_flats from
-			(SELECT rp.project_id, unit_type, bedrooms
-			FROM resi_project rp
-			JOIN resi_project_options rpo
-			  ON (rp.project_id = rpo.project_id)
-			WHERE rp.project_id = $projectId
-			GROUP BY rp.project_id, unit_type, bedrooms) a
-			left join 
-			(select rps.project_id, rps.project_type, rps.no_of_bedrooms, max(proj_supply_id) as proj_supply_id from resi_proj_supply rps 
-			where rps.project_id = $projectId and submitted_date > 
-			(select STR_TO_DATE(CONCAT(MONTH(max(submitted_date)), '-', YEAR(max(submitted_date))), '%m-%Y')
-			from resi_project rp
-			join resi_proj_supply rps
-			on (rp.project_id = rps.project_id)
-			where rp.project_id = $projectId)
-			group by rps.project_id, rps.project_type, rps.no_of_bedrooms) b
-			on (a.project_id = b.project_id and a.unit_type = b.project_type and a.bedrooms = b.no_of_bedrooms)
-			left join resi_proj_supply rps
-			on (rps.proj_supply_id = b.proj_supply_id)";
+	$qryPhase	=	"SELECT PHASE_ID FROM resi_project_phase WHERE PROJECT_ID = $projectId";
+	$resPhase   = mysql_query($qryPhase);
+	$arrPhaseId = array();
+	if(mysql_num_rows($resPhase)>0)
+	{
+		while($PhaseId = mysql_fetch_assoc($resPhase))
+		{
+			$arrPhaseId[] = $PhaseId['PHASE_ID'];
+		}
+	}
+	if(count($arrPhaseId)>0)
+	{
+		$qry = "select a.*, rps.available_no_flats from
+				(SELECT rp.project_id, unit_type, bedrooms
+				FROM resi_project rp
+					JOIN resi_project_options rpo
+				ON (rp.project_id = rpo.project_id)
+				WHERE rp.project_id = $projectId
+				GROUP BY rp.project_id, unit_type, bedrooms) a
+				left join
+					(select rps.project_id, rps.phase_id, rps.project_type, rps.no_of_bedrooms, max(proj_supply_id) as proj_supply_id
+					 from resi_proj_supply rps
+					where rps.project_id = $projectId 
+							and rps.phase_id != 0
+							and submitted_date >
+							(select STR_TO_DATE(CONCAT(MONTH(max(submitted_date)), '-', YEAR(max(submitted_date))), '%m-%Y')
+							from resi_project rp
+							join resi_proj_supply rps
+								on (rp.project_id = rps.project_id)
+							where rp.project_id = $projectId
+							and rps.phase_id != 0)
+					group by rps.project_id, rps.phase_id, rps.project_type, rps.no_of_bedrooms) b
+				on (a.project_id = b.project_id and a.unit_type = b.project_type and a.bedrooms = b.no_of_bedrooms)
+				left join resi_proj_supply rps
+					on (rps.proj_supply_id = b.proj_supply_id)";
+	}
+	else
+	{
+		$qry = "select a.*, rps.available_no_flats from
+				(SELECT rp.project_id, unit_type, bedrooms
+				FROM resi_project rp
+					JOIN resi_project_options rpo
+				ON (rp.project_id = rpo.project_id)
+				WHERE rp.project_id = $projectId
+				GROUP BY rp.project_id, unit_type, bedrooms) a
+				left join
+					(select rps.project_id, rps.project_type, rps.no_of_bedrooms, max(proj_supply_id) as proj_supply_id from resi_proj_supply rps
+				where rps.project_id = $projectId and submitted_date >
+				(select STR_TO_DATE(CONCAT(MONTH(max(submitted_date)), '-', YEAR(max(submitted_date))), '%m-%Y')
+				from resi_project rp
+				join resi_proj_supply rps
+				on (rp.project_id = rps.project_id)
+				where rp.project_id = $projectId)
+				group by rps.project_id, rps.project_type, rps.no_of_bedrooms) b
+				on (a.project_id = b.project_id and a.unit_type = b.project_type and a.bedrooms = b.no_of_bedrooms)
+				left join resi_proj_supply rps
+				on (rps.proj_supply_id = b.proj_supply_id)";
+	}
 
-    $res = mysql_query($qry) or die(mysql_error());
+	$res = mysql_query($qry) or die(mysql_error());
+	
+	$sum = 0;
+	while($data = mysql_fetch_assoc($res))
+	{
+		if($data['available_no_flats'] != NULL)
+			$sum += $data['available_no_flats'];
+		else
+			return NULL;
+	}
 
-    $sum = 0;
-    while($data = mysql_fetch_assoc($res))
-    {
-    	if($data['available_no_flats'] != NULL)
-    		$sum += $data['available_no_flats'];
-    	else
-    		return NULL;
-    }
-    return $sum;
-
+	return $sum;
 }
 
 /**********function for update resi project supply availability***********/
 function updateAvailability($projectId,$returnAvailability)
 {
-	$value = $returnAvailability == NULL ? 'NULL':$returnAvailability;
+	$value = $returnAvailability === NULL ? 'NULL':$returnAvailability;
+	
 	$qryUp = "UPDATE resi_project
 			  SET 
 			  	 AVAILABLE_NO_FLATS = $value

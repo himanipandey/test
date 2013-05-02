@@ -614,7 +614,7 @@
 										<option value="0" {if $display_flag == 0} selected = selected {/if}>No Sequence </option>
 										<option value="1" {if $display_flag == 1} selected = selected {/if}>Sequence </option>
 
-										{if $projectid!=''}
+										{if $projectId!=''}
 										<option value="2" {if $display_flag == 2} selected = selected {/if}>No sequence action </option>
 										{/if}
 									 </select>

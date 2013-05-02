@@ -130,6 +130,8 @@
     	}
 		if($flg == 1)
 		{
+			$returnAvailability = computeAvailability($projectId);
+			$updateProject = updateAvailability($projectId,$returnAvailability);
 			if($_POST['btnSave'] == 'Add More')
 			{
 				header("Location:add_supply_inventory.php?projectId=".$projectId."&preview=".$preview);

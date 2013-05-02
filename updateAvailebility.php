@@ -18,7 +18,7 @@
 	foreach($arr as $val)
 	{
 	 	$returnAvailability = computeAvailability($val);
-		$updateProject = updateAvailability($arr,$returnAvailability);
+		$updateProject = updateAvailability($val,$returnAvailability);
 		if($updateProject)
 		{
 			echo "Data has been updateed successfully for: ".$val."<br>";
