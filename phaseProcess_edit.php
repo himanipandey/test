@@ -71,6 +71,8 @@
         $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
         $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
         $smarty->assign("remark", $current_phase[0]['REMARKS']);
+        $smarty->assign("phaseLaunched", $current_phase[0]['LAUNCHED']);
+        
 
         $towerDetail    =   fetch_towerDetails_for_phase($projectId);
         $smarty->assign("TowerDetails", $towerDetail);
@@ -88,12 +90,14 @@
         $completion_date        =   $_REQUEST['completion_date'];
         $towers                 =   $_REQUEST['towers'];  // Array
         $remark                 =   $_REQUEST['remark'];
+        $phaseLaunched          =   $_REQUEST['phaseLaunched'];
 
         // Assign vars for smarty
         $smarty->assign("phasename", $phasename);
         $smarty->assign("launch_date", $launch_date);
         $smarty->assign("completion_date", $completion_date);
         $smarty->assign("remark", $remark);
+        $smarty->assign("phaseLaunched", $phaseLaunched);
 
         $PhaseExists        =   searchPhase($phaseDetail,$phasename);
         if($PhaseExists!=-1 && $phasename!=$old_phase_name) {
@@ -122,7 +126,7 @@
                     ############## Transaction ##############
                     mysql_query("SET AUTOCOMMIT=0");
                     mysql_query("START TRANSACTION");
-                    $updated = update_phase($projectId,$phaseId,$phasename,$launch_date,$completion_date,$remark);
+                    $updated = update_phase($projectId,$phaseId,$phasename,$launch_date,$completion_date,$remark,$phaseLaunched);
 
                     if($_POST['project_type_id']=='1' || $_POST['project_type_id']=='3' || $_POST['project_type_id']=='6')
 					{			
@@ -174,6 +178,7 @@
                         array_push($phases, $p);
                     }
                     $smarty->assign("phases", $phases);
+                    header("Location:phase_edit.php?projectId=".$projectId);
         }
     }
     else if($_POST['btnExit'] == "Exit") {

@@ -50,8 +50,8 @@
 						/*********************code for floor plan add***************************/
 						if ($_FILES["imgurl"]["type"][$key])
 						{
-
-							$BuilderName			=	str_replace(" ","-",$builderDetail['BUILDER_NAME']);	
+							$builderNamebuild		=	explode("/",$builderDetail['BUILDER_IMAGE']);
+							$BuilderName			=	$builderNamebuild[1];	
 							$ProjectName			=	str_replace(" ","-",$projectDetail[0]['PROJECT_NAME']);	
 							$imgurl1				=	$_FILES["imgurl"]["name"][$key];
 							$foldlowe				=	strtolower($BuilderName);

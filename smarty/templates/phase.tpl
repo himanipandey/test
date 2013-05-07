@@ -221,6 +221,17 @@
 							   </tr>
 							   
 							   <tr>
+								  <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
+								  <td width="30%" align="left">
+									 <select name = "phaseLaunched">
+									 	<option value ="1" {if $phaseLaunched == 1} selected {/if}>Launched</option>
+									 	<option value ="0" {if $phaseLaunched == 0} selected {/if}>Not Launched</option>
+									 </select>
+								  </td>
+								  <td width="50%" align="left"></td>
+							   </tr>
+							   
+							   <tr>
 								  <td>&nbsp;</td>
 								  <td align="left" style="padding-left:0px;">
 								  <input type="submit" name="btnAddMore" id="btnAddMore" value="Add More" onclick="return validate_phase();" />

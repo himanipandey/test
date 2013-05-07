@@ -615,9 +615,19 @@
 										<option value="1" {if $display_flag == 1} selected = selected {/if}>Sequence </option>
 
 										{if $projectId!=''}
-										<option value="2" {if $display_flag == 2} selected = selected {/if}>No sequence action </option>
+											<option value="2" selected = selected>No sequence action </option>
 										{/if}
 									 </select>
+									 
+									 
+									 	{if $projectId!=''}
+									 		<b>Current Sequence:</b>
+											{if $DisplayOrder == 0}
+												No Sequence
+											{else}
+												Sequence
+											{/if}
+										{/if}
 								  </td>
 								  {if $ErrorMsg["display_flag"] != ''}
 								  <td width="50%" align="left"><font color="red">{$ErrorMsg["display_flag"]}</font></td>

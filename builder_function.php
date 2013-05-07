@@ -906,7 +906,6 @@ function RoomCategoryList()
 					PRICE_LIST					=	'".addslashes($price)."',
 					APPLICATION_FORM			=	'".addslashes($app)."',
 					OFFER						=	'".$special_offer."',
-					DISPLAY_FLAG				=	'".$display_flag."',
 					OFFER_HEADING				=	'".$offer_heading."',
 					OFFER_DESC					=	'".$offer_desc."',
 					APPROVALS					=	'".$approvals."',
@@ -929,9 +928,9 @@ function RoomCategoryList()
 					REASON_UNLAUNCHED_UNITS		=   '".$reasonUnlaunchedUnits."',
 					AUDIT_REMARK				=	'".$txtAuditRemark."'";
 					if($display_flag=='1'){
-						$Sql.= ", DISPLAY_ORDER_LOCALITY='30', DISPLAY_ORDER ='30'";
-					}else{
-						$Sql.= ", DISPLAY_ORDER_LOCALITY='99999', DISPLAY_ORDER ='99999'";
+						$Sql.= ", DISPLAY_FLAG = $display_flag, DISPLAY_ORDER_LOCALITY='30', DISPLAY_ORDER ='30'";
+					}else if($display_flag=='0'){
+						$Sql.= ", DISPLAY_FLAG = $display_flag, DISPLAY_ORDER_LOCALITY='99999', DISPLAY_ORDER ='99999'";
 					}
 
 					$Sql.= " WHERE PROJECT_ID = '".$ProjectId."'";
@@ -1219,15 +1218,16 @@ function RoomCategoryList()
 	}
 
     /********function for update phase detail**********/
-    function update_phase($projectId,$phaseId,$phasename,$launch_date,$completion_date,$remark)
+    function update_phase($projectId,$phaseId,$phasename,$launch_date,$completion_date,$remark,$phaseLaunched)
     {
         $qry_ins	=	"
                     UPDATE ". RESI_PROJECT_PHASE."
                     SET
-                    	PHASE_NAME  		            	=	'".$phasename."',
-                        LAUNCH_DATE  		            	=	'".$launch_date."',
-                        COMPLETION_DATE  		        	=	'".$completion_date."',
-                        REMARKS		            			=	'".$remark."'
+                    	PHASE_NAME  		  =	'".$phasename."',
+                        LAUNCH_DATE  		  =	'".$launch_date."',
+                        COMPLETION_DATE  	  =	'".$completion_date."',
+                        REMARKS		          =	'".$remark."',
+                        LAUNCHED			  =	'".$phaseLaunched."'		
                     WHERE
                         PROJECT_ID	= '".$projectId."'
                     AND

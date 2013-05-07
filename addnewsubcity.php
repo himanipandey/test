@@ -57,7 +57,12 @@ else
 
 	if($c==0 && $ins==0)
 	{	
-		$qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,ACTIVE) value('".$subcityval."','".$cityid."','1')";
+		$qryCity = "SELECT LABEL FROM ".CITY." WHERE CITY_ID = $cityid";
+		$resCity = mysql_query($qryCity);
+		$dataCity= mysql_fetch_assoc($resCity);
+		$url = "property-in-".str_replace(" ","-",strtolower($subcityval))."-".
+				str_replace(" ","-",strtolower($dataCity['LABEL']))."-real-estate.php";
+		$qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,ACTIVE,URL) value('".$subcityval."','".$cityid."','1','$url')";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;

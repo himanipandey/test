@@ -61,8 +61,13 @@ else
 	$ins = mysql_num_rows($resdata);
 
 	if($c==0 && $ins==0)
-	{	
-		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE) value('".$localityval."','".$cityid."','".$subcityval."','1')";
+	{	$qryCity = "SELECT LABEL FROM ".CITY." WHERE CITY_ID = $cityid";
+		$resCity = mysql_query($qryCity);
+		$dataCity= mysql_fetch_assoc($resCity);
+		$url = "property-in-".str_replace(" ","-",strtolower($localityval))."-".
+				str_replace(" ","-",strtolower($dataCity['LABEL']))."-real-estate.php";
+		
+		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE,URL) value('".$localityval."','".$cityid."','".$subcityval."','1','$url')";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;

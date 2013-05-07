@@ -141,6 +141,8 @@
 						}
 						else
 						{
+							if($txtPlotArea != 0)
+								$txtPlotArea = $txtSize;
 							 $qryUpdate	=	"UPDATE ".RESI_PROJECT_OPTIONS."
 												SET
 													UNIT_NAME				=	'".$txtUnitName."',

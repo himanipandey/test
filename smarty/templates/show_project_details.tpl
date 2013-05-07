@@ -428,6 +428,8 @@ function getDateNow(){
 			Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
 												<input type = "radio" name = "validationChk" value = "N">No<br>
 		</span>
+	{else}
+		<span style = "display:none;"><input type = "radio" name = "validationChk" value = "Y" checked></span>
 	{/if}
 	{if $projectDetails[0].PROJECT_STAGE=='newProject'}
 		{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}

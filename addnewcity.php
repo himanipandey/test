@@ -58,7 +58,8 @@ else
 
 	if($c==0 && $ins==0)
 	{	
-		$qry = "INSERT INTO ".CITY." (LABEL,ACTIVE) value('".$cityval."','0')";
+		$url = "property-in-".str_replace(" ","-",strtolower($cityval))."-real-estate.php";
+		$qry = "INSERT INTO ".CITY." (LABEL,ACTIVE,URL) value('".$cityval."','0','$url')";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;
