@@ -98,7 +98,7 @@
         {
         	$phaseLaunched = 0;
         }
-        $phaseLaunched          =   $_REQUEST['phaseLaunched'];
+        $phaseLaunched   =   $phaseLaunched;
 
         // Assign vars for smarty
         $smarty->assign("phasename", $phasename);
