@@ -90,6 +90,14 @@
         $completion_date        =   $_REQUEST['completion_date'];
         $towers                 =   $_REQUEST['towers'];  // Array
         $remark                 =   $_REQUEST['remark'];
+        if(isset($_REQUEST["phaseLaunched"]))
+        {
+        	$phaseLaunched = $_REQUEST["phaseLaunched"];
+        }
+        else
+        {
+        	$phaseLaunched = 0;
+        }
         $phaseLaunched          =   $_REQUEST['phaseLaunched'];
 
         // Assign vars for smarty

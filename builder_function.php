@@ -477,15 +477,16 @@
 
 	}
 
-    function insert_phase($projectId,$phasename,$launch_date,$completion_date,$remark) {
+    function insert_phase($projectId,$phasename,$launch_date,$completion_date,$remark,$phaseLaunched) {
         $qry_ins	=	"
                     INSERT INTO ". RESI_PROJECT_PHASE."
                     SET
-                        PROJECT_ID				            =	'".$projectId."',
-                        PHASE_NAME	            			=	'".$phasename."',
-                        LAUNCH_DATE  		            	=	'".$launch_date."',
-                        COMPLETION_DATE  		       	    =	'".$completion_date."',
-                        REMARKS		            			=	'".$remark."'";
+                        PROJECT_ID			=	'".$projectId."',
+                        PHASE_NAME	        =	'".$phasename."',
+                        LAUNCH_DATE  		=	'".$launch_date."',
+                        COMPLETION_DATE  	=	'".$completion_date."',
+                        REMARKS		        =	'".$remark."',
+                        LAUNCHED		    =	'".$phaseLaunched."'";
 
         $res_ins=mysql_query($qry_ins) OR DIE(mysql_error());
         if($res_ins)

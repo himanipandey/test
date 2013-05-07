@@ -25,6 +25,14 @@
         $completion_date    =   $_REQUEST['completion_date'];
         $towers             =   $_REQUEST['towers'];  // Array
         $remark             =   $_REQUEST['remark'];
+        if(isset($_REQUEST["phaseLaunched"]))
+        {
+        	$phaseLaunched = $_REQUEST["phaseLaunched"];
+        }
+        else
+        {
+        	$phaseLaunched = 0;
+        }
 
         // Flats Config
         $flats_config = array();
@@ -56,7 +64,7 @@
 			$no_of_flats = $available_no_flats = 0;
 			
 
-            $phaseId = insert_phase($projectId,$phasename,$launch_date,$completion_date,$remark);
+            $phaseId = insert_phase($projectId,$phasename,$launch_date,$completion_date,$remark,$phaseLaunched);
 			
 			if($_POST['project_type_id']=='1' || $_POST['project_type_id']=='3' || $_POST['project_type_id']=='6')
 			{
