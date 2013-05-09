@@ -201,6 +201,9 @@ function addupdatesubcity()
 
 	cityid = $("#cityId").val();
 
+	var array=label.split(".");
+	var length=array.length;
+	
 	xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
@@ -214,6 +217,10 @@ function addupdatesubcity()
 	else if(label == '')
 	{
 		alert("Please enter suburb");
+	}
+	else if(length > 1)
+	{
+		alert("There is a dot(.) in suburb name");
 	}
 	else
 	{
@@ -309,6 +316,8 @@ function addupdatelocality()
 	cityid = $("#cityId").val();
 	suburbId = $("#suburbId").val();
 
+	var array=label.split(".");
+	var length=array.length;
 	xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
@@ -327,6 +336,10 @@ function addupdatelocality()
 	else if(label == '')
 	{
 		alert("Please enter locality");
+	}
+	else if(length > 1)
+	{
+		alert("There is a dot(.) in locality name");
 	}
 	else
 	{
