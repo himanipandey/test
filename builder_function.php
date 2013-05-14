@@ -2290,5 +2290,60 @@ function fetchStartTime($stageName,$phasename,$projectId)
 	return $data['DATE_TIME'];
 }
 
+/*******Insert update in redirect url table if update any url in builder,project,city,suburb and locality tables*********/
+function insertUpdateInRedirectTbl($toUrl,$fromUrl)
+{
+	$qrySel = "SELECT * FROM redirect_url_map WHERE FROM_URL = '$fromUrl'";
+	$resSel = mysql_query($qrySel) or die(mysql_error()." error");
+	
+	$action = '';
+	$qrySelTF = "SELECT * FROM redirect_url_map WHERE FROM_URL = '$toUrl' AND TO_URL = '$fromUrl'";
+	$resSelTF = mysql_query($qrySelTF) or die(mysql_error()." error");
+	if(mysql_num_rows($resSelTF)>0)
+	{
+		return $action;
+	}
+	
+	$cyclicQryT = "SELECT * FROM redirect_url_map WHERE TO_URL = '$fromUrl'";
+	$cyclicresT = mysql_query($cyclicQryT);
+	
+	if(mysql_num_rows($cyclicresT)>0)
+	{
+		$qry = "UPDATE redirect_url_map
+			SET
+				TO_URL			=	'$toUrl',
+				MODIFIIED_DATE	=	now(),
+				MODIFIED_BY		=	".$_SESSION['adminId']."
+			WHERE
+			   TO_URL = '$fromUrl'";
+		$res   = mysql_query($qry) or die(mysql_error());
+	}
+	
+	if(mysql_num_rows($resSel)==0)
+	{
+		$qry = "INSERT INTO redirect_url_map
+				SET
+					FROM_URL		=	'$fromUrl',
+					TO_URL			=	'$toUrl',
+					SUBMITTED_DATE	=	now(),
+					SUBMITTED_BY	=	".$_SESSION['adminId'];
+		$action = 'Insertion';
+	}
+	else
+	{
+		$qry = "UPDATE redirect_url_map
+			SET
+				TO_URL			=	'$toUrl',
+				MODIFIIED_DATE	=	now(),
+				MODIFIED_BY		=	".$_SESSION['adminId']."
+			WHERE
+				FROM_URL		=	'$fromUrl'";
+		$action = 'Updation';
+	}
+					
+	$res   = mysql_query($qry) or die(mysql_error());
+	return $action;
+}
+
 ?>
 

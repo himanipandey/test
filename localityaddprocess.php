@@ -73,6 +73,7 @@ if (isset($_POST['btnSave'])) {
 					  DESCRIPTION			=	'".$desc."' WHERE LOCALITY_ID='".$localityid."'";
 					   
 				mysql_query($updateQry);
+				insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
 			    header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
 		}
 		else

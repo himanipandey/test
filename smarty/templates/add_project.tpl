@@ -536,6 +536,8 @@
 								  		<br><span style = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</font>
 								  	{/if}
 								  	
+								  	<input type = "hidden" name = "txtProjectURLOld" value = "{$txtProjectURLOld}">
+								  	
 
 
 								  	</td>

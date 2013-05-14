@@ -11,6 +11,7 @@ if (isset($_POST['btnSave'])) {
 
 		$txtCityName			=	trim($_POST['txtCityName']);
 		$txtCityUrl				=	trim($_POST['txtCityUrl']);
+		$txtCityUrlOld			=	trim($_POST['txtCityUrlOld']);
 		$DisplayOrder			=	trim($_POST['DisplayOrder']);
 		$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
 		$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
@@ -77,6 +78,8 @@ if (isset($_POST['btnSave'])) {
 					  DISPLAY_ORDER			=	'".$DisplayOrder."',
 					  DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
 		mysql_query($updateQry);
+		
+		insertUpdateInRedirectTbl($txtCityUrl,$txtCityUrlOld);
 		header("Location:CityList.php?page=1&sort=all");
 	}	
 	
@@ -87,6 +90,7 @@ if($cityid!=''){
 	$cityDetailsArray		=   ViewCityDetails($cityid);
 	$txtCityName			=	trim($cityDetailsArray['LABEL']);
 	$txtCityUrl				=	trim($cityDetailsArray['URL']);
+	$txtCityUrlOld			=	trim($cityDetailsArray['URL']);
 	$DisplayOrder			=	trim($cityDetailsArray['DISPLAY_ORDER']);
 	$txtMetaTitle			=	trim($cityDetailsArray['META_TITLE']);
 	$txtMetaKeywords		=	trim($cityDetailsArray['META_KEYWORDS']);
@@ -98,6 +102,7 @@ if($cityid!=''){
 }
 $smarty->assign("txtCityName", $txtCityName);
 $smarty->assign("txtCityUrl", $txtCityUrl);
+$smarty->assign("txtCityUrlOld", $txtCityUrlOld);
 $smarty->assign("DisplayOrder", $DisplayOrder);
 $smarty->assign("txtMetaTitle", $txtMetaTitle);
 $smarty->assign("txtMetaKeywords", $txtMetaKeywords);

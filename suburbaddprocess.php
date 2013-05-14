@@ -51,6 +51,7 @@ if (isset($_POST['btnSave'])) {
 						  DESCRIPTION			=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
 						   
 			mysql_query($updateQry);
+			insertUpdateInRedirectTbl($txtCityUrl,$old_sub_url);
 			header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
 		}
 		else

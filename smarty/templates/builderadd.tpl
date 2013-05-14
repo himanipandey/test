@@ -98,11 +98,12 @@
 					 <td width="20%" align="right" >*Builder URL : </td>
 
 					<td width="30%" align="left" >
-						{if $builderid != ''  && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525 && $accessModule['urlEdit'] != 588}
+						{if $builderid != ''  && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525 && $accessModule['urlEdit'] != 588  && $accessModule['urlEdit'] != 53}
 							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;" readonly>
 						{else}
 							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;">
 						{/if}
+						<input type = "hidden" name = "txtBuilderUrlOld" value = "{$txtBuilderUrlOld}">
 						
 
 					</td>

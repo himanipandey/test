@@ -8,8 +8,6 @@ $watermark_path = 'pt_shadow1.png';
 $smarty->assign("builderid", $builderid);
 $ProjectList = project_list($builderid);
 $smarty->assign("ProjectList", $ProjectList);
-//print_r($_REQUEST);
-
 if ($_POST['btnExit'] == "Exit")
 {
 	header("Location:BuilderList.php");
@@ -21,6 +19,7 @@ if ($_POST['btnSave'] == "Save")
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
 	$txtBuilderDescription	=	trim($_POST['txtBuilderDescription']);
 	$txtBuilderUrl			=	trim($_POST['txtBuilderUrl']);
+	$txtBuilderUrlOld		=	trim($_POST['txtBuilderUrlOld']);
 	$DisplayOrder			=	trim($_POST['DisplayOrder']);
 	$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
 	$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
@@ -46,6 +45,7 @@ if ($_POST['btnSave'] == "Save")
 	$smarty->assign("txtBuilderName", $txtBuilderName);
 	$smarty->assign("txtBuilderDescription", $txtBuilderDescription);
 	$smarty->assign("txtBuilderUrl", $txtBuilderUrl);
+	$smarty->assign("txtBuilderUrlOld", $txtBuilderUrlOld);
 	$smarty->assign("DisplayOrder", $DisplayOrder);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
 	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
@@ -155,7 +155,7 @@ if ($_POST['btnSave'] == "Save")
 			if($return)
 			{				
 				$imgurl		=	"/".$foldername."/".$name;
-				InsertBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);				
+				InsertBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
 				$createFolder = $newImagePath.$foldername;
 				if ($handle = opendir($createFolder))
  				{
@@ -232,7 +232,6 @@ if ($_POST['btnSave'] == "Save")
 			{
 				$imgurl		=	"/".$cutpath[1]."/".$name;
 				UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
-					
 				/*************Resize images code***************************/
 				$createFolder = $newImagePath.$cutpath[1];//die;
 				if ($handle = opendir($createFolder))
@@ -291,6 +290,7 @@ if ($_POST['btnSave'] == "Save")
 			else
 				$ErrorMsg['dataInsertionError'] = "Please try again there is a problem";	
 		}
+		insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
 	}
 	
 }	
@@ -340,6 +340,7 @@ if ($_POST['btnSave'] == "Save")
 	$smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
 	$smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
 	$smarty->assign("txtBuilderUrl", $dataedit['URL']);
+	$smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
 	$smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER']);
 	$smarty->assign("txtMetaTitle", $dataedit['META_TITLE']);
 	$smarty->assign("txtMetaKeywords", $dataedit['META_KEYWORDS']);

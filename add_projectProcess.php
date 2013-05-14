@@ -54,6 +54,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$Active						=	trim($_POST['Active']);
 		$Status						=	trim($_POST['Status']);
 		$txtProjectURL				=	trim($_POST['txtProjectURL']);
+		$txtProjectURLOld			=	trim($_POST['txtProjectURLOld']);
 		$Featured					=	trim($_POST['Featured']);
 		$txtDisclaimer				=	trim($_POST['txtDisclaimer']);
 		$no_of_towers				=	trim($_POST['no_of_towers']);
@@ -152,6 +153,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("Active", $Active);
 		$smarty->assign("Status", $Status);
 		$smarty->assign("txtProjectURL", $txtProjectURL);
+		$smarty->assign("txtProjectURLOld", $txtProjectURLOld);
 		$smarty->assign("Featured", $Featured);
 		$smarty->assign("txtDisclaimer", $txtDisclaimer);
 		$smarty->assign("no_of_towers", $no_of_towers);
@@ -293,7 +295,8 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 			{
 				//echo $price1."==".$payment1;
 				$projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
-
+				
+				insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
 				if($preview == 'true')
 					header("Location:show_project_details.php?projectId=".$projectId);
 				else
@@ -337,6 +340,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		 $smarty->assign("Active", stripslashes($ProjectDetail[0]['ACTIVE']));
 		 $smarty->assign("Status", stripslashes($ProjectDetail[0]['PROJECT_STATUS']));
 		 $smarty->assign("txtProjectURL", stripslashes($ProjectDetail[0]['PROJECT_URL']));
+		 $smarty->assign("txtProjectURLOld", stripslashes($ProjectDetail[0]['PROJECT_URL']));
 		 $smarty->assign("Featured", stripslashes($ProjectDetail[0]['FEATURED']));
 		 $smarty->assign("txtDisclaimer", stripslashes($ProjectDetail[0]['PRICE_DISCLAIMER']));
 		$smarty->assign("payment", stripslashes($ProjectDetail[0]['PAYMENT_PLAN']));

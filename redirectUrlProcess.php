@@ -59,36 +59,11 @@
 		}
 		if($msg == '')
 		{
-			$qrySel = "SELECT * FROM redirect_url_map WHERE FROM_URL = '$fromUrl'";
-			$resSel = mysql_query($qrySel) or die(mysql_error()." error");
-			$action = '';
-			if(mysql_num_rows($resSel)==0)
-			{
-				$qry = "INSERT INTO redirect_url_map 
-						SET
-							FROM_URL		=	'$fromUrl',
-							TO_URL			=	'$toUrl',
-							SUBMITTED_DATE	=	now(),
-							SUBMITTED_BY	=	".$_SESSION['adminId'];
-				$action = 'Insertion';
-			}
+			$return = insertUpdateInRedirectTbl($toUrl,$fromUrl);
+			if($return)
+				$msg = "<font color = 'green'>URL $return successfully!</font>";
 			else
-			{
-				$qry = "UPDATE redirect_url_map
-						SET
-							TO_URL			=	'$toUrl',
-							MODIFIIED_DATE	=	now(),
-							MODIFIED_BY		=	".$_SESSION['adminId']."
-						WHERE
-							FROM_URL		=	'$fromUrl'";
-				$action = 'Updation';
-			}
-			
-			$res   = mysql_query($qry) or die(mysql_error());
-			if($res)
-				$msg = "<font color = 'green'>URL $action successfully!</font>";
-			else
-				$msg = "<font color = 'red'>Problem in data $action!</font>";
+				$msg = "<font color = 'red'>Problem in data Updation/Insertion!</font>";
 			
 			
 		}
