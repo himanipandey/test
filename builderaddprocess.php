@@ -184,6 +184,10 @@ if ($_POST['btnSave'] == "Save")
 									$image->resize(95,65);
 									$newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
 									$image->save($createFolder."/".$newimg);
+									
+									$image->resize(80,36);
+									$newimg	=	str_replace('.jpg','-thumb.jpg',$file);
+									$image->save($createFolder."/".$newimg);
 								
 									/**********Working for watermark*******************/
 									// Image path

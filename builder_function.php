@@ -348,14 +348,11 @@
 							CALLING_REMARK				=	'".$txtCallingRemark."',
 							AUDIT_REMARK				=	'".$txtAuditRemark."',
 							LAUNCHED_UNITS				=	'".$launchedUnits."',
-							REASON_UNLAUNCHED_UNITS		=   '".$reasonUnlaunchedUnits."',		
+							REASON_UNLAUNCHED_UNITS		=   '".$reasonUnlaunchedUnits."',
+							DISPLAY_ORDER 				=	'99999',	
 							PROJECT_SMALL_IMAGE			=   '/on-request/sagar-kunj-apartments/defaultprojectsearchimage-small.png'";
-							if($display_flag=='1'){
-								$Sql.= ", DISPLAY_ORDER_LOCALITY='30', DISPLAY_ORDER ='30'";
-							}else{
-								$Sql.= ", DISPLAY_ORDER_LOCALITY='99999', DISPLAY_ORDER ='99999'";
-							}
-			$ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function InsertProject()');
+
+		$ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function InsertProject()');
 			$pid			=	mysql_insert_id();
 
 			audit_insert($pid,'insert','resi_project',$pid);
@@ -928,12 +925,6 @@ function RoomCategoryList()
 					LAUNCHED_UNITS				=	'".$launchedUnits."',
 					REASON_UNLAUNCHED_UNITS		=   '".$reasonUnlaunchedUnits."',
 					AUDIT_REMARK				=	'".$txtAuditRemark."'";
-					if($display_flag=='1'){
-						$Sql.= ", DISPLAY_FLAG = $display_flag, DISPLAY_ORDER_LOCALITY='30', DISPLAY_ORDER ='30'";
-					}else if($display_flag=='0'){
-						$Sql.= ", DISPLAY_FLAG = $display_flag, DISPLAY_ORDER_LOCALITY='99999', DISPLAY_ORDER ='99999'";
-					}
-
 					$Sql.= " WHERE PROJECT_ID = '".$ProjectId."'";
 			$ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function UpdateProject()');
 
