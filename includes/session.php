@@ -8,6 +8,11 @@
  * This class is used to store session data with memcache, it store in json the session to be used more easily in Node.JS
  */
 
+require_once($_SERVER['DOCUMENT_ROOT'].'/dbConfig.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/function/login.php');
+
+mysql_query('select 1');
+
 class memcacheSessionHandler{
     private $host = "127.0.0.1";
     private $port = 11211;
@@ -57,12 +62,11 @@ class memcacheSessionHandler{
     public function read($id){
         $tmp = $_SESSION;
         $_SESSION = json_decode($this->memcache->get("SESSIONID:{$id}"), true);
-        if(isset($_SESSION) && !empty($_SESSION) && $_SESSION != null){
-			
-			if($_SESSION['proptiger_login']['USER_ID']){
-				$_SESSION['cms_session']['AdminLogin'] = "Y";
-			}
-			$_SESSION = $_SESSION['cms_session'];
+        if(isset($_SESSION) && !empty($_SESSION) && $_SESSION != null){		
+            if($_SESSION['proptiger_login']['USER_ID'] and !$_SESSION['cms_session']['AdminLogin']){
+		$_SESSION['cms_session'] = getNewCmsSession($_SESSION['proptiger_login']['USER_ID']);
+            }
+            $_SESSION = $_SESSION['cms_session'];
             $new_data = session_encode();
             $_SESSION = $tmp;
             return $new_data;
@@ -78,21 +82,19 @@ class memcacheSessionHandler{
      * @return boolean True if memcached was able to write the session data
      */
     public function write($id, $data){
-		$tmp = $_SESSION;
+        $tmp = $_SESSION;
 		
-		$_SESSION['cms_session']=$_SESSION;
-		if ($_SESSION['cms_session']['AdminLogin'] == "Y"){
-			$_SESSION['proptiger_login'] = array(
-				'USER_ID' => $_SESSION['adminId'],
-				'ACCESS_LEVEL' => $_SESSION['ACCESS_LEVEL']
-			);
-		}
-		unset($_SESSION['cms_session']['cms_session']);
-		//session_decode($data);
+	$_SESSION['cms_session']=$_SESSION;
+	if ($_SESSION['cms_session']['AdminLogin'] == "Y"){
+            $_SESSION['proptiger_login'] = array(
+                'USER_ID' => $_SESSION['adminId']
+            );
+	}
+	unset($_SESSION['cms_session']['cms_session']);
 		
-		$new_data = json_decode($this->memcache->get("SESSIONID:{$id}"), true);
-		$new_data['cms_session'] = $_SESSION['cms_session'];
-		$new_data['proptiger_login'] = $_SESSION['proptiger_login'];
+	$new_data = json_decode($this->memcache->get("SESSIONID:{$id}"), true);
+	$new_data['cms_session'] = $_SESSION['cms_session'];
+	$new_data['proptiger_login'] = $_SESSION['proptiger_login'];
 		
         $_SESSION = $tmp;
         return $this->memcache->set("SESSIONID:{$id}", json_encode($new_data), 0, $this->lifetime);
@@ -125,5 +127,4 @@ class memcacheSessionHandler{
 }
 
 new memcacheSessionHandler();
-//$handler = new memcacheSessionHandler();
 ?>
