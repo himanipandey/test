@@ -11,8 +11,6 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/dbConfig.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/function/login.php');
 
-mysql_query('select 1');
-
 class memcacheSessionHandler{
     private $host = "127.0.0.1";
     private $port = 11211;
