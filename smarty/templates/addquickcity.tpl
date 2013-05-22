@@ -76,7 +76,10 @@ function addupdatecity()
 	id = $("#city_txtbox_hidden").val();
 	label = $("#city_txtbox").val();
 	label = label.replace("&", "@");
-
+	
+	var arrayComma=label.split(",");
+	var langthComma=arrayComma.length;
+	
 	xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
@@ -86,6 +89,11 @@ function addupdatecity()
 	if(label == '')
 	{
 		alert("Please select city or enter text");
+	}
+	else if(langthComma > 1)
+	{
+		alert("There is a comma(,) in city name");
+		
 	}
 	else
 	{
@@ -204,6 +212,9 @@ function addupdatesubcity()
 	var array=label.split(".");
 	var length=array.length;
 	
+	var arrayComma=label.split(",");
+	var lengthComma=arrayComma.length;
+	
 	xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
@@ -221,6 +232,10 @@ function addupdatesubcity()
 	else if(length > 1)
 	{
 		alert("There is a dot(.) in suburb name");
+	}
+	else if(lengthComma > 1)
+	{
+		alert("There is a comma(,) in suburb name");
 	}
 	else
 	{
@@ -318,6 +333,10 @@ function addupdatelocality()
 
 	var array=label.split(".");
 	var length=array.length;
+	
+	var arrayComma=label.split(",");
+	var lengthComma=arrayComma.length;
+	
 	xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
@@ -340,6 +359,10 @@ function addupdatelocality()
 	else if(length > 1)
 	{
 		alert("There is a dot(.) in locality name");
+	}
+	else if(lengthComma > 1)
+	{
+		alert("There is a comma(,) in locality name");
 	}
 	else
 	{

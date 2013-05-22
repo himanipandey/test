@@ -2310,7 +2310,7 @@ function insertUpdateInRedirectTbl($toUrl,$fromUrl)
 		$res   = mysql_query($qry) or die(mysql_error());
 	}
 	
-	if(mysql_num_rows($resSel)==0)
+	if(mysql_num_rows($resSel)==0 && $fromUrl != $toUrl)
 	{
 		$qry = "INSERT INTO redirect_url_map
 				SET

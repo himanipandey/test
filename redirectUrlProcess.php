@@ -29,9 +29,13 @@
 		$dataChkUrlBuilder= mysql_fetch_assoc($resChkUrlBuilder);
 		
 		$msg = '';
-		if($fromUrl == '')
+		if(trim($fromUrl) == '')
 		{
 			$msg = "<font color = 'red'>Please enter From url!</font>";
+		}
+		if(trim($fromUrl) == '/')
+		{
+			$msg = "<font color = 'red'>Please enter full From url!</font>";
 		}
 		if($fromUrl!='')
 		{
@@ -39,7 +43,7 @@
 				$msg = "<font color = 'red'>Please enter a valid From url that contains only small characters, numerics & hyphen</font>";
 			}
 		}
-		if($toUrl == '')
+		if(trim($toUrl) == '')
 		{
 			$msg = "<font color = 'red'>Please enter To url!</font>";
 		}
