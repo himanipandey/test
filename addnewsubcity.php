@@ -46,9 +46,17 @@ else
 {
 	if($subcityval!='' && $id!='')
 	{
-		$seldata = "UPDATE ".SUBURB." SET LABEL = '".trim($subcityval)."' WHERE SUBURB_ID='".$id."'";
+		$url = urlCreaationDynamic('property-in-',$subcityval);
+		
+		$qryOld = "SELECT URL FROM ".SUBURB." WHERE SUBURB_ID='".$id."'";
+		$resOld = mysql_query($qryOld);
+		$oldUrl = mysql_fetch_assoc($resOld);
+		
+		$seldata = "UPDATE ".SUBURB." SET LABEL = '".trim($subcityval)."',URL = '".$url."' WHERE SUBURB_ID='".$id."'";
 		$resdata = mysql_query($seldata);
 		$c = mysql_affected_rows();
+		
+		insertUpdateInRedirectTbl($url,$oldUrl['URL']);
 	}
 
 	$seldata = "SELECT LABEL FROM ".SUBURB." WHERE LABEL = '".trim($subcityval)."' AND CITY_ID='".$cityid."'";

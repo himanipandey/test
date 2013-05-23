@@ -12,7 +12,6 @@ if(isset($_POST['btnExit'])){
 if (isset($_POST['btnSave'])) {
 
 		$txtCityName			=	trim($_POST['txtCityName']);
-		$txtCityUrl				=	trim($_POST['txtCityUrl']);
 		$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
 		$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
 		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
@@ -22,7 +21,6 @@ if (isset($_POST['btnSave'])) {
 
 		
 		$smarty->assign("txtCityName", $txtCityName);
-		$smarty->assign("txtCityUrl", $txtCityUrl);
 		$smarty->assign("old_loc_url", $old_loc_url);
 		$smarty->assign("txtMetaTitle", $txtMetaTitle);
 		$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
@@ -30,18 +28,17 @@ if (isset($_POST['btnSave'])) {
 		$smarty->assign("status", $status);	
 		$smarty->assign("desc", $desc);
 		
-		 if( $txtCityUrl == '')   {
-			 $ErrorMsg["txtCityUrl"] = "Please enter locality URL.";
-		 } else {
-				
-				if(!preg_match('/^property-in-[a-z0-9\-]+\.php$/',$txtCityUrl)){
-					$ErrorMsg["txtCityUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
-				}
-			}
-
-		if( $txtMetaTitle == '')   {
-			 $ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
+		 
+		  if( $txtCityName == '')   {
+			 $ErrorMsg["txtCityName"] = "Please enter locality name.";
 		   }
+		   if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtCityName)>0){
+		   	$ErrorMsg["txtCityName"] = "Special characters are not allowed";
+		   }
+		   if( $txtMetaTitle == '')   {
+		   	$ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
+		   }
+		   
 		if( $txtMetaKeywords == '')  {
 			 $ErrorMsg["txtMetaKeywords"] = "Please enter meta keywords.";
 		   }
@@ -50,30 +47,32 @@ if (isset($_POST['btnSave'])) {
 		   }
 
 		/*******locality url already exists**********/
-			$qryLocalityUrl = "SELECT * FROM ".LOCALITY." WHERE URL = '".$txtCityUrl."'";
-			if($localityid != '')
-				$qryLocalityUrl .= " AND LOCALITY_ID != $localityid";
-			echo $qryLocalityUrl;
-			$resUrl     = mysql_query($qryLocalityUrl) or die(mysql_error());
-			if(mysql_num_rows($resUrl)>0)
-			{
-				$ErrorMsg["urlLoc"] = "This URL Already exists";
-			}
+		   if($localityid == '')
+		   {
+				$qryLocality = "SELECT * FROM ".LOCALITY." WHERE LABEL = '".$txtCityName."'";
+				
+				$res     = mysql_query($qryLocality) or die(mysql_error());
+				if(mysql_num_rows($res)>0)
+				{
+					$ErrorMsg["txtCityName"] = "This Locality Already exists";
+				}
+		   }
 		/*******end locality url already exists*******/ 
-
+		   $url = urlCreaationDynamic('property-in-',$txtCityName);
 		   if(!is_array($ErrorMsg))
 		   {
 				 $updateQry = "UPDATE ".LOCALITY." SET 
 					 
-					  META_TITLE			=	'".$txtMetaTitle."',
+					  LABEL					=	'".$txtCityName."',
+					   META_TITLE			=	'".$txtMetaTitle."',		
 					  META_KEYWORDS		    =	'".$txtMetaKeywords."',
 					  META_DESCRIPTION		=	'".$txtMetaDescription."',
 					  ACTIVE				=	'".$status."',
-					  URL					=	'".$txtCityUrl."',
+					  URL					=	'".$url."',
 					  DESCRIPTION			=	'".$desc."' WHERE LOCALITY_ID='".$localityid."'";
 					   
 				mysql_query($updateQry);
-				insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
+				insertUpdateInRedirectTbl($url,$old_loc_url);
 			    header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
 		}
 		else
@@ -83,11 +82,10 @@ if (isset($_POST['btnSave'])) {
 	}	
 	
 
-if($localityid!=''){
+elseif($localityid!=''){
 
 	$localityDetailsArray	=   ViewLocalityDetails($localityid);
 	$txtCityName			=	trim($localityDetailsArray['LABEL']);
-	$txtCityUrl				=	trim($localityDetailsArray['URL']);
 	$old_loc_url			=	trim($localityDetailsArray['URL']);
 	$txtMetaTitle			=	trim($localityDetailsArray['META_TITLE']);
 	$txtMetaKeywords		=	trim($localityDetailsArray['META_KEYWORDS']);
@@ -96,7 +94,6 @@ if($localityid!=''){
 	$desc					=	trim($localityDetailsArray['DESCRIPTION']);
 
 	$smarty->assign("txtCityName", $txtCityName);
-	$smarty->assign("txtCityUrl", $txtCityUrl);
 	$smarty->assign("old_loc_url", $old_loc_url);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
 	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);

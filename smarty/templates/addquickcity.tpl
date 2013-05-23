@@ -74,26 +74,24 @@ function dispcity(cityId)
 function addupdatecity()
 {
 	id = $("#city_txtbox_hidden").val();
-	label = $("#city_txtbox").val();
-	label = label.replace("&", "@");
-	
-	var arrayComma=label.split(",");
-	var langthComma=arrayComma.length;
-	
+	label = $("#city_txtbox").val();	
 	xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
 		alert ("Browser does not support HTTP Request")
 		return
 	}
+	var rtrn = specialCharacterValidation($("#city_txtbox").val());
+	if(rtrn == false)
+	{
+		alert("Special Characters are not allowed");
+		return false;
+	}
+	
 	if(label == '')
 	{
 		alert("Please select city or enter text");
-	}
-	else if(langthComma > 1)
-	{
-		alert("There is a comma(,) in city name");
-		
+		return false;
 	}
 	else
 	{
@@ -125,11 +123,12 @@ function deletecity()
 		if (xmlHttpdeletec==null)
 		{
 			alert ("Browser does not support HTTP Request")
-			return
+			return false;
 		}
 		if(id == '')
 		{
 			alert("Please select city");
+			return false;
 		}
 		else
 		{
@@ -205,37 +204,30 @@ function addupdatesubcity()
 {
 	id = $("#subcity_txtbox_hidden").val();
 	label = $("#subcity_txtbox").val();
-	label = label.replace("&", "@");
-
 	cityid = $("#cityId").val();
 
-	var array=label.split(".");
-	var length=array.length;
-	
-	var arrayComma=label.split(",");
-	var lengthComma=arrayComma.length;
-	
 	xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
 		alert ("Browser does not support HTTP Request")
-		return
+		return false;
+	}
+	
+	var rtrn = specialCharacterValidation($("#subcity_txtbox").val());
+	if(rtrn == false)
+	{
+		alert("Special Characters are not allowed");
+		return false;
 	}
 	if(cityid == '')
 	{
 		alert("Please select city");
+		return false;
 	}
 	else if(label == '')
 	{
 		alert("Please enter suburb");
-	}
-	else if(length > 1)
-	{
-		alert("There is a dot(.) in suburb name");
-	}
-	else if(lengthComma > 1)
-	{
-		alert("There is a comma(,) in suburb name");
+		return false;
 	}
 	else
 	{
@@ -330,39 +322,35 @@ function addupdatelocality()
 	label = label.replace("&", "@");
 	cityid = $("#cityId").val();
 	suburbId = $("#suburbId").val();
-
-	var array=label.split(".");
-	var length=array.length;
-	
-	var arrayComma=label.split(",");
-	var lengthComma=arrayComma.length;
 	
 	xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
-		alert ("Browser does not support HTTP Request")
-		return
+		alert ("Browser does not support HTTP Request");
+		return false;
 	}
 
+	var rtrn = specialCharacterValidation($("#locality_txtbox").val());
+	if(rtrn == false)
+	{
+		alert("Special Characters are not allowed");
+		return false;
+	}
+	
 	if(cityid == '')
 	{
 		alert("Please select city");
+		return false;
 	}
 	else if(suburbId == '')
 	{
 		alert("Please select suburb");
+		return false;
 	}
 	else if(label == '')
 	{
 		alert("Please enter locality");
-	}
-	else if(length > 1)
-	{
-		alert("There is a dot(.) in locality name");
-	}
-	else if(lengthComma > 1)
-	{
-		alert("There is a comma(,) in locality name");
+		return false;
 	}
 	else
 	{
@@ -424,6 +412,23 @@ function deletelocality()
 	{
 		return false ;
 	}
+}
+
+function specialCharacterValidation(fieldVal)
+{
+	var lengthStr = fieldVal.length;
+	var iChars = "!@#$%^&*()+=-[]\\\';,./{}|\":<>?";
+	var flg = 0;
+	for (var i = 0; i < lengthStr; i++) {
+		var srch = iChars.search(fieldVal[i]);
+	    if (srch != -1) {
+	    		flg = 1;
+	        }
+	  }
+	if(flg == 1)
+		return false;
+	else
+		return true;
 }
 
 </script>

@@ -525,31 +525,16 @@
 									  <font color="red"><span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
-
+								{if $projectId != ''}
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
 								  <td width="30%" align="left">
-								  	{if $projectId != '' && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525 && $accessModule['urlEdit'] != 588}
-								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
-								  	{else}
-								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
-								  		<br><span style = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</font>
-								  	{/if}
-								  	
+								  		{$txtProjectURL}
 								  	<input type = "hidden" name = "txtProjectURLOld" value = "{$txtProjectURLOld}">
-								  	
-
-
 								  	</td>
-								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtProjectURL"] != ''} {$ErrorMsg["txtProjectURL"]} {/if}
-
-									  	{if $ErrorMsg["txtProjectUrlDuplicate"] != ''} {$ErrorMsg["txtProjectUrlDuplicate"]} {/if}
-
-									  	
-									   <span id = "err_project_url" style = "display:none;">Please enter project url!</span></font>
-								  </td>
+								  <td width="50%" align="left"> </td>
 							   </tr>
+							   {/if}
 							   <tr>
 								  <td width="20%" align="right"><b>Featured :</b> </td>
 								  <td width="30%" align="left">

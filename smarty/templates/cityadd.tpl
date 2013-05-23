@@ -40,29 +40,15 @@
 				  <td width="20%" align="right" >*City Name : </td>
 				  <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
-								<tr>
+				{if $txtCityUrlOld != ''}
+				<tr>
 				  <td width="20%" align="right" >*City URL : </td>
-				  <td width="30%" align="left" ><input type=text name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;"></td>				   
+				  <td width="30%" align="left" >{$txtCityUrlOld}</td>				   
 					<input type = "hidden" name = "txtCityUrlOld" value = "{$txtCityUrlOld}">
-				 
-				  	<td width="50%" align="left" >
-				  		<font color = "red">
-
-				  			 {if $ErrorMsg["txtCityUrl"] != ''} 
-				  			 	{$ErrorMsg["txtCityUrl"]}
-				  			 {/if}
-
-				  			 {if $ErrorMsg["CtUrl"] != ''} 
-
-				  				{$ErrorMsg["CtUrl"]}
-				  			 {/if}
-
-				  			</font>
-				  </td>
-				  
-
-
-				</tr>												<tr>
+				  	<td width="50%" align="left" ></td>
+				</tr>	
+				{/if}
+				<tr>
 				  <td width="20%" align="right">*Display Order : </td>
 				  <td width="30%" align="left" >				  				  				 						
 				  

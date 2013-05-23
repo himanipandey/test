@@ -11,6 +11,5 @@
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."builderadd.tpl");
 
-	
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 ?>

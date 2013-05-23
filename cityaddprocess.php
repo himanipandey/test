@@ -10,7 +10,6 @@ if(isset($_POST['btnExit'])){
 if (isset($_POST['btnSave'])) {
 
 		$txtCityName			=	trim($_POST['txtCityName']);
-		$txtCityUrl				=	trim($_POST['txtCityUrl']);
 		$txtCityUrlOld			=	trim($_POST['txtCityUrlOld']);
 		$DisplayOrder			=	trim($_POST['DisplayOrder']);
 		$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
@@ -18,19 +17,24 @@ if (isset($_POST['btnSave'])) {
 		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
 		$status					=	trim($_POST['status']);
 		$desc					=	trim($_POST['desc']);	
+		
+		
+		$smarty->assign("txtCityName", $txtCityName);
+		$smarty->assign("txtCityUrl", $txtCityUrl);
+		$smarty->assign("txtCityUrlOld", $txtCityUrlOld);
+		$smarty->assign("DisplayOrder", $DisplayOrder);
+		$smarty->assign("txtMetaTitle", $txtMetaTitle);
+		$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
+		$smarty->assign("txtMetaDescription", $txtMetaDescription);
+		$smarty->assign("status", $status);
+		$smarty->assign("desc", $desc);
 		 
 		if( $txtCityName == '')  {
 			 $ErrorMsg["txtCityName"] = "Please enter City name.";
 		   }
-		if( $txtCityUrl == '')   {
-			 $ErrorMsg["txtCityUrl"] = "Please enter city URL.";
-		 } else {
-				
-				if(!preg_match('/^property-in-[a-z0-9\-]+\.php$/',$txtCityUrl)){
-					$ErrorMsg["txtCityUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
-				}
-			}
-		
+	   if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtCityName)>0){
+	   		$ErrorMsg["txtCityName"] = "Special characters are not allowed";
+	       }
 		if( $DisplayOrder == '')   {
 			 $ErrorMsg["DisplayOrder"] = "Please enter display order.";
 		   }
@@ -46,24 +50,23 @@ if (isset($_POST['btnSave'])) {
 		if( $desc == '')   {
 			 $ErrorMsg["desc"] = "Please enter city description.";
 		   }  
-
-		/*******city url already exists**********/
-			$qryCityUrl = "SELECT * FROM ".CITY." WHERE URL = '".$txtCityUrl."'";
-			if($cityid != '')
-				$qryCityUrl .= " AND CITY_ID != $cityid";
-			echo $qryCityUrl;
-			$resUrl     = mysql_query($qryCityUrl);
-			if(mysql_num_rows($resUrl)>0)
-			{
-				$ErrorMsg["CtUrl"] = "This URL Already exists";
-			}
+			
+		   if($cityid == ''){
+				$qryCity = "SELECT * FROM ".CITY." WHERE LABEL = '".$txtCityName."'";
+				$res     = mysql_query($qryCity);
+				if(mysql_num_rows($res)>0)
+				{
+					$ErrorMsg["txtCityName"] = "This CITY Already exists";
+				}
+		   }
 		/*******end city url already exists*******/ 
-	
+	$url = urlCreaationDynamic('property-in-',$txtCityName);
+	$smarty->assign("ErrorMsg", $ErrorMsg);
 	if(is_array($ErrorMsg)) {
 		
 	} 
 	else if ($cityid == '') {	
-		InsertCity($txtCityName, $txtCityUrl, $DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$status,$desc);
+		InsertCity($txtCityName, $url, $DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$status,$desc);
 		header("Location:CityList.php?page=1&sort=all");
 		
 	}else if($cityid!= ''){
@@ -74,22 +77,21 @@ if (isset($_POST['btnSave'])) {
 					  META_KEYWORDS		    =	'".$txtMetaKeywords."',
 					  META_DESCRIPTION		=	'".$txtMetaDescription."',
 					  ACTIVE				=	'".$status."',
-					  URL					=	'".$txtCityUrl."',
+					  URL					=	'".$url."',
 					  DISPLAY_ORDER			=	'".$DisplayOrder."',
 					  DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
 		mysql_query($updateQry);
 		
-		insertUpdateInRedirectTbl($txtCityUrl,$txtCityUrlOld);
+		insertUpdateInRedirectTbl($url,$txtCityUrlOld);
 		header("Location:CityList.php?page=1&sort=all");
 	}	
 	
 }
 
-if($cityid!=''){
+elseif($cityid!=''){
 
 	$cityDetailsArray		=   ViewCityDetails($cityid);
 	$txtCityName			=	trim($cityDetailsArray['LABEL']);
-	$txtCityUrl				=	trim($cityDetailsArray['URL']);
 	$txtCityUrlOld			=	trim($cityDetailsArray['URL']);
 	$DisplayOrder			=	trim($cityDetailsArray['DISPLAY_ORDER']);
 	$txtMetaTitle			=	trim($cityDetailsArray['META_TITLE']);
@@ -97,18 +99,18 @@ if($cityid!=''){
 	$txtMetaDescription		=	trim($cityDetailsArray['META_DESCRIPTION']);
 	$status					=	trim($cityDetailsArray['ACTIVE']);
 	$desc					=	trim($cityDetailsArray['DESCRIPTION']);
+	
+	$smarty->assign("txtCityName", $txtCityName);
+	$smarty->assign("txtCityUrlOld", $txtCityUrlOld);
+	$smarty->assign("DisplayOrder", $DisplayOrder);
+	$smarty->assign("txtMetaTitle", $txtMetaTitle);
+	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
+	$smarty->assign("txtMetaDescription", $txtMetaDescription);
+	$smarty->assign("status", $status);
+	$smarty->assign("desc", $desc);
 
 	
 }
-$smarty->assign("txtCityName", $txtCityName);
-$smarty->assign("txtCityUrl", $txtCityUrl);
-$smarty->assign("txtCityUrlOld", $txtCityUrlOld);
-$smarty->assign("DisplayOrder", $DisplayOrder);
-$smarty->assign("txtMetaTitle", $txtMetaTitle);
-$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
-$smarty->assign("txtMetaDescription", $txtMetaDescription);
-$smarty->assign("status", $status);	
-$smarty->assign("desc", $desc);
-$smarty->assign("ErrorMsg", $ErrorMsg);
+
  
 ?>

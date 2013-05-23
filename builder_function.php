@@ -2254,9 +2254,17 @@ function insertUpdateInRedirectTbl($toUrl,$fromUrl)
 				FROM_URL		=	'$fromUrl'";
 		$action = 'Updation';
 	}
-					
-	$res   = mysql_query($qry) or die(mysql_error());
+			
+	$res   = mysql_query($qry) or die(mysql_error());		
 	return $action;
+}
+
+function urlCreaationDynamic($followStr,$name)
+{
+	$output = preg_replace('!\s+!', '-', $name);
+	$url = strtolower($output);
+	$url = $followStr.$url.'.php';
+	return $url;
 }
 
 ?>

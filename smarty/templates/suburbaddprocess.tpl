@@ -34,21 +34,15 @@
 			      <div>
 				<tr>
 				  <td width="20%" align="right" >*Suburb Name : </td>
-				  <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;" readonly></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				  <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
-								<tr>
+				{if $old_sub_url != ''}
+				<tr>
 				  <td width="20%" align="right" >*Suburb URL : </td>
-				  <td width="30%" align="left" >
-				  	<input type = "hidden" name = "old_sub_url" value = "{$old_sub_url}">
-				  	{if $old_sub_url != ''}
-				  		<input type=text name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;" readonly>
-				  	{else}
-				  		<input type=text name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;">
-				  	{/if}
-				  	
-
-				  </td>				   {if $ErrorMsg["txtCityUrl"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityUrl"]}</font></td>{else} <td width="50%" align="left" id="errmsgurl"></td>{/if}
-				</tr>												
+				  <td width="30%" align="left">{$old_sub_url}</td>
+				</tr>	
+					<input type = "hidden" name = "old_sub_url" value = "{$old_sub_url}">
+				{/if}											
 								
 				<tr>
 				  <td width="20%" align="right" >* Meta Title : </td>
@@ -81,7 +75,6 @@
 				<tr>
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
-				  <input type="hidden" name="catid" value="<?php echo $catid ?>" />
 				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
 				  </td>

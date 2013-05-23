@@ -34,33 +34,17 @@
 			      <div>
 				<tr>
 				  <td width="20%" align="right" >*Locality Name : </td>
-				  <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;" readonly></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				  <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
-				<input type = "hidden" name = "old_loc_url" value = "{$old_loc_url}">
-				<tr>
-				  <td width="20%" align="right" >*Locality URL : </td>
-				  <td width="30%" align="left" >
-				  	{if $old_loc_url != '' && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525  && $accessModule['urlEdit'] != 588}
-				  			<input type=text name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;" readonly>
-				  	{else}
-				  			<input type=text name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;">
-				  	{/if}
-				  
-
-				  </td>	
-		  			   <td width="50%" align="left" ><font color = "red">
-
-			  			   {if $ErrorMsg["txtCityUrl"] != ''} 
-				   				{$ErrorMsg["txtCityUrl"]}
-					   	   {/if}
-
-					   		{if $ErrorMsg["urlLoc"] != ''} 
-						   		{$ErrorMsg["urlLoc"]}
-						   	{/if}
-				   	</td>
-
-				</tr>												
-								
+				
+				{if $old_loc_url != ''}
+					<tr>
+					  <td width="20%" align="right" >*Locality URL : </td>
+					  <td width="30%" align="left" > {$old_loc_url}</td>	
+			  		  <td width="50%" align="left" ><font color = "red">	</td>
+					</tr>	
+					<input type = "hidden" name = "old_loc_url" value = "{$old_loc_url}">											
+				{/if}				
 				<tr>
 				  <td width="20%" align="right" >* Meta Title : </td>
 				  <td width="30%" align="left" ><input type=text name=txtMetaTitle id=txtMetaTitle value="{$txtMetaTitle}" style="width:250px;"></td>				   {if $ErrorMsg["txtMetaTitle"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaTitle"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetatitle"></td>{/if}

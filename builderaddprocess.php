@@ -18,7 +18,6 @@ if ($_POST['btnSave'] == "Save")
 	
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
 	$txtBuilderDescription	=	trim($_POST['txtBuilderDescription']);
-	$txtBuilderUrl			=	trim($_POST['txtBuilderUrl']);
 	$txtBuilderUrlOld		=	trim($_POST['txtBuilderUrlOld']);
 	$DisplayOrder			=	trim($_POST['DisplayOrder']);
 	$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
@@ -44,7 +43,6 @@ if ($_POST['btnSave'] == "Save")
 	
 	$smarty->assign("txtBuilderName", $txtBuilderName);
 	$smarty->assign("txtBuilderDescription", $txtBuilderDescription);
-	$smarty->assign("txtBuilderUrl", $txtBuilderUrl);
 	$smarty->assign("txtBuilderUrlOld", $txtBuilderUrlOld);
 	$smarty->assign("DisplayOrder", $DisplayOrder);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
@@ -66,6 +64,10 @@ if ($_POST['btnSave'] == "Save")
 	$smarty->assign("website", $website);	
 	$smarty->assign("revenue", $revenue);
 	$smarty->assign("debt", $debt);
+
+	if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtBuilderName)>0){
+		$ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
+	 }
 	
 	 if( $txtBuilderName == '') 
 	   {
@@ -75,16 +77,7 @@ if ($_POST['btnSave'] == "Save")
 	   {
 	     $ErrorMsg["txtBuilderDescription"] = "Please enter Builder description.";
 	   }   
-	if( $txtBuilderUrl == '') 
-	   {
-	     $ErrorMsg["txtBuilderUrl"] = "Please enter Builder URL.";
-	   }
-	 if($txtBuilderUrl!='')
-	 {
-		if(!preg_match('/^b-[a-z0-9\-]+\.php$/',$txtBuilderUrl)){
-			$ErrorMsg["txtBuilderUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
-		}
-	 }
+	
 	if( $DisplayOrder == '') 
 	   {
 	     $ErrorMsg["DisplayOrder"] = "Please enter Builder Display Order.";
@@ -102,17 +95,6 @@ if ($_POST['btnSave'] == "Save")
 	     $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
 	   } 
 
-	 /******code for builder url already exists******/
-	 $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE URL = '".$txtBuilderUrl."'";
-	 if($builderid != '')
-	 	$qryUrl .= " AND BUILDER_ID != $builderid";
-	 //echo $qryUrl ;
-	 $resUrl = mysql_query($qryUrl) or die(mysql_error());
-	 if(mysql_num_rows($resUrl)>0)
-	 {
-	 	$ErrorMsg["BuilderUrlExists"] = "This URL already exists.";
-	 }
-	 /******end code for builder url already exists******/
 	//  die; 
 	if($_FILES['txtBuilderImg']['type'] != '')
 	{
@@ -136,7 +118,7 @@ if ($_POST['btnSave'] == "Save")
 		$contactArr['Projects'][] = implode($_REQUEST[$key],"#");
 
 	}
-
+	$url = urlCreaationDynamic('b-',$txtBuilderName);
 	if(is_array($ErrorMsg)) {
 		// Do Nothing
 	} 	
@@ -155,7 +137,8 @@ if ($_POST['btnSave'] == "Save")
 			if($return)
 			{				
 				$imgurl		=	"/".$foldername."/".$name;
-				InsertBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
+				
+				InsertBuilder($txtBuilderName, $txtBuilderDescription, $url,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
 				$createFolder = $newImagePath.$foldername;
 				if ($handle = opendir($createFolder))
  				{
@@ -235,7 +218,14 @@ if ($_POST['btnSave'] == "Save")
 			if($return)
 			{
 				$imgurl		=	"/".$cutpath[1]."/".$name;
-				UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+				UpdateBuilder($txtBuilderName, $txtBuilderDescription, $url,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+				if($return)
+				{
+					insertUpdateInRedirectTbl($url,$txtBuilderUrlOld);
+					header("Location:BuilderList.php?page=1&sort=all");
+				}
+				else
+					$ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
 				/*************Resize images code***************************/
 				$createFolder = $newImagePath.$cutpath[1];//die;
 				if ($handle = opendir($createFolder))
@@ -288,13 +278,16 @@ if ($_POST['btnSave'] == "Save")
 		}
 		else 
 		{
-			$return = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+			$return = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $url,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
 			if($return)
+			{
+				insertUpdateInRedirectTbl($url,$txtBuilderUrlOld);
 				header("Location:BuilderList.php?page=1&sort=all");
+			}
 			else
 				$ErrorMsg['dataInsertionError'] = "Please try again there is a problem";	
 		}
-		insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
+		
 	}
 	
 }	
