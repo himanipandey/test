@@ -218,10 +218,12 @@ if ($_POST['btnSave'] == "Save")
 			if($return)
 			{
 				$imgurl		=	"/".$cutpath[1]."/".$name;
-				UpdateBuilder($txtBuilderName, $txtBuilderDescription, $url,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
-				if($return)
+				$rt = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $url,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+				if($rt)
 				{
 					insertUpdateInRedirectTbl($url,$txtBuilderUrlOld);
+					if($url != $txtBuilderUrlOld)
+						updateProjectUrl($id,$tblName,$builderName);
 					header("Location:BuilderList.php?page=1&sort=all");
 				}
 				else
@@ -282,6 +284,8 @@ if ($_POST['btnSave'] == "Save")
 			if($return)
 			{
 				insertUpdateInRedirectTbl($url,$txtBuilderUrlOld);
+				if($url != $txtBuilderUrlOld)
+					updateProjectUrl($builderid,'builder',$txtBuilderName);
 				header("Location:BuilderList.php?page=1&sort=all");
 			}
 			else
@@ -290,6 +294,42 @@ if ($_POST['btnSave'] == "Save")
 		
 	}
 	
+}
+else if($builderid	!= '')
+{
+	$qryedit	=	"SELECT * FROM ".RESI_BUILDER." WHERE BUILDER_ID = '".$builderid."'";
+	$resedit	=	mysql_query($qryedit);
+	$dataedit	=	mysql_fetch_array($resedit);
+
+	$smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
+	$smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
+	$smarty->assign("txtBuilderUrl", $dataedit['URL']);
+	$smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
+	$smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER']);
+	$smarty->assign("txtMetaTitle", $dataedit['META_TITLE']);
+	$smarty->assign("txtMetaKeywords", $dataedit['META_KEYWORDS']);
+	$smarty->assign("txtMetaDescription", $dataedit['META_DESCRIPTION']);
+	$smarty->assign("img", $dataedit['BUILDER_IMAGE']);
+	$smarty->assign("imgedit", $dataedit['BUILDER_IMAGE']);
+	$smarty->assign("oldval", $dataedit['BUILDER_NAME']);
+	$smarty->assign("address", $dataedit['ADDRESS']);
+	$smarty->assign("city", $dataedit['CITY']);
+	$smarty->assign("pincode", $dataedit['PINCODE']);
+	$smarty->assign("ceo", $dataedit['CEO_MD_NAME']);
+	$smarty->assign("employee", $dataedit['TOTAL_NO_OF_EMPL']);
+	$smarty->assign("established", $dataedit['ESTABLISHED_DATE']);
+
+	$smarty->assign("delivered_project", $dataedit['TOTAL_NO_OF_DELIVERED_PROJECT']);
+	$smarty->assign("area_delivered", $dataedit['AREA_DELIVERED']);
+	$smarty->assign("ongoing_project", $dataedit['ONGOING_PROJECTS']);
+	$smarty->assign("website", $dataedit['WEBSITE']);
+	$smarty->assign("revenue", $dataedit['REVENUE']);
+	$smarty->assign("debt", $dataedit['DEBT']);
+
+	$arrContact = BuilderContactInfo($builderid);
+	$smarty->assign("Contact", count($arrContact));
+	$smarty->assign("arrContact", $arrContact);
+
 }	
  $smarty->assign("ErrorMsg", $ErrorMsg);	
  
@@ -328,42 +368,7 @@ if ($_POST['btnSave'] == "Save")
  $smarty->assign("BuilderDataArr", $BuilderDataArr);
  
  
- if($builderid	!= '')
- {
-	$qryedit	=	"SELECT * FROM ".RESI_BUILDER." WHERE BUILDER_ID = '".$builderid."'";
-	$resedit	=	mysql_query($qryedit);
-	$dataedit	=	mysql_fetch_array($resedit);
-
-	$smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
-	$smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
-	$smarty->assign("txtBuilderUrl", $dataedit['URL']);
-	$smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
-	$smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER']);
-	$smarty->assign("txtMetaTitle", $dataedit['META_TITLE']);
-	$smarty->assign("txtMetaKeywords", $dataedit['META_KEYWORDS']);
-	$smarty->assign("txtMetaDescription", $dataedit['META_DESCRIPTION']);	
-	$smarty->assign("img", $dataedit['BUILDER_IMAGE']);	
-	$smarty->assign("imgedit", $dataedit['BUILDER_IMAGE']);	
-	$smarty->assign("oldval", $dataedit['BUILDER_NAME']);	
-	$smarty->assign("address", $dataedit['ADDRESS']);	
-	$smarty->assign("city", $dataedit['CITY']);	
-	$smarty->assign("pincode", $dataedit['PINCODE']);
-	$smarty->assign("ceo", $dataedit['CEO_MD_NAME']);	
-	$smarty->assign("employee", $dataedit['TOTAL_NO_OF_EMPL']);
-	$smarty->assign("established", $dataedit['ESTABLISHED_DATE']);
-
-	$smarty->assign("delivered_project", $dataedit['TOTAL_NO_OF_DELIVERED_PROJECT']);	
-	$smarty->assign("area_delivered", $dataedit['AREA_DELIVERED']);	
-	$smarty->assign("ongoing_project", $dataedit['ONGOING_PROJECTS']);
-	$smarty->assign("website", $dataedit['WEBSITE']);	
-	$smarty->assign("revenue", $dataedit['REVENUE']);
-	$smarty->assign("debt", $dataedit['DEBT']);
-
-	 $arrContact = BuilderContactInfo($builderid);
-	 $smarty->assign("Contact", count($arrContact));
-	 $smarty->assign("arrContact", $arrContact);
-
- }
+ 
 
   /*****************City Data************/
  $CityDataArr	=	array();

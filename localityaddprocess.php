@@ -71,9 +71,14 @@ if (isset($_POST['btnSave'])) {
 					  URL					=	'".$url."',
 					  DESCRIPTION			=	'".$desc."' WHERE LOCALITY_ID='".$localityid."'";
 					   
-				mysql_query($updateQry);
-				insertUpdateInRedirectTbl($url,$old_loc_url);
-			    header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+				$up = mysql_query($updateQry);
+				if($up)
+				{
+					if($url != $old_loc_url)
+						updateProjectUrl($localityid,'locality','');
+					insertUpdateInRedirectTbl($url,$old_loc_url);
+			   	 	header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+				}
 		}
 		else
 		{

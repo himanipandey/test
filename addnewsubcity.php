@@ -56,6 +56,8 @@ else
 		$resdata = mysql_query($seldata);
 		$c = mysql_affected_rows();
 		
+		if($url != $oldUrl['URL'])
+			updateProjectUrl($id,'locality','');
 		insertUpdateInRedirectTbl($url,$oldUrl['URL']);
 	}
 

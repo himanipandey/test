@@ -139,7 +139,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("txtProjectRemark", $txtProjectRemark);
 		$smarty->assign("txtAddress", $txtAddress);
 		$smarty->assign("txtProjectDesc", $txtProjectDesc);
-		$smarty->assign("txtProjectSource", $txtProjectSource);
+		$smarty->assign("txtSourceofInfo", $txtProjectSource);
 		$smarty->assign("project_type", $project_type);
 		$smarty->assign("txtProjectLocation", $txtProjectLocation);
 		$smarty->assign("txtProjectLattitude", $txtProjectLattitude);
@@ -198,14 +198,30 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		/***********Folder name**********/
 		$builderDetail	=	fetch_builderDetail($builderId);
 		$BuilderName	=	$builderDetail['BUILDER_NAME'];
-
-		/***********Folder name**********/
-		$builderDetail	=	fetch_builderDetail($builderId);
-		$BuilderName	=	$builderDetail['BUILDER_NAME'];
-
+		
+		$localityDetail	=	ViewLocalityDetails($localityId);
+		$localityName   =   $localityDetail['LABEL'];
+		
+		$cityDetail	=	ViewCityDetails($cityId);
+		$cityName   =   $cityDetail['LABEL'];
+		
+		$projectUrlText = $BuilderName." ".$projName." ".$localityName." ".$cityName;
+		$url = urlCreaationDynamic('p-',$projectUrlText);
 		
 		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtProjectName)>0){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
+		}
+		
+		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $BuilderName)>0){
+			$ErrorMsg["txtProjectName"] = "Special characters are not allowed in builder name";
+		}
+		
+		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $localityName)>0){
+			$ErrorMsg["txtProjectName"] = "Special characters are not allowed in locality name";
+		}
+		
+		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $cityName)>0){
+			$ErrorMsg["txtProjectName"] = "Special characters are not allowed in city name";
 		}
 		
 		$qryprojectchk	=	"SELECT PROJECT_NAME,PROJECT_SMALL_IMAGE FROM ".RESI_PROJECT." WHERE PROJECT_NAME = '".$txtProjectName."' AND BUILDER_ID = '".$builderId."' AND LOCALITY_ID = '".$localityId."' AND CITY_ID = '".$cityId."'";
@@ -274,7 +290,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 				}
 
 			}
-			$url = urlCreaationDynamic('p-',$projName);
+			
 		   if ($projectId == '')
 		   {
 		   		

@@ -81,7 +81,8 @@ if (isset($_POST['btnSave'])) {
 					  DISPLAY_ORDER			=	'".$DisplayOrder."',
 					  DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
 		mysql_query($updateQry);
-		
+		if($url != $txtCityUrlOld)
+			updateProjectUrl($cityid,'city','');
 		insertUpdateInRedirectTbl($url,$txtCityUrlOld);
 		header("Location:CityList.php?page=1&sort=all");
 	}	

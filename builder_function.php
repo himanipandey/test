@@ -2267,5 +2267,48 @@ function urlCreaationDynamic($followStr,$name)
 	return $url;
 }
 
+function updateProjectUrl($id,$tblName,$builderName)
+{
+	$where = '';
+	$blder = '';
+	if($tblName == 'builder')
+	{
+		$where .= " WHERE BUILDER_ID = '$id'";
+		$blder = ", BUILDER_NAME = '".$builderName."'";
+	}
+	else if($tblName == 'locality')
+	{
+		$where .= " WHERE LOCALITY_ID = '$id'";
+	}
+	else if($tblName == 'city')
+	{
+		$where .= " WHERE CITY_ID = '$id'";
+	}
+	$qry = "SELECT PROJECT_ID,BUILDER_ID,CITY_ID,LOCALITY_ID,PROJECT_URL,PROJECT_NAME FROM ".RESI_PROJECT." $where";
+	$res = mysql_query($qry) or die(mysql_error());
+	while($data = mysql_fetch_assoc($res))
+	{
+		$builderDetail	=	fetch_builderDetail($data['BUILDER_ID']);
+		$BuilderName	=	$builderDetail['BUILDER_NAME'];
+		
+		$localityDetail	=	ViewLocalityDetails($data['LOCALITY_ID']);
+		$localityName   =   $localityDetail['LABEL'];
+		
+		$cityDetail	=	ViewCityDetails($data['CITY_ID']);
+		$cityName   =   $cityDetail['LABEL'];
+		
+		$projectUrlText = $BuilderName." ".$data['PROJECT_NAME']." ".$localityName." ".$cityName;
+		$url = urlCreaationDynamic('p-',$projectUrlText);
+		
+		$qryUp = "UPDATE ".RESI_PROJECT." SET PROJECT_URL = '".$url."'". $blder . $where."  AND PROJECT_ID = ".$data['PROJECT_ID'];
+		$resUp = mysql_query($qryUp) or die(mysql_error());
+		if($resUp)
+		{
+			insertUpdateInRedirectTbl($url,$data['PROJECT_URL']);
+		}
+	}
+	return true;
+}
+
 ?>
 
