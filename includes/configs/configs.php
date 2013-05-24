@@ -659,7 +659,7 @@ if(in_array($_SESSION['adminId'],$arrForce))
 $smarty->assign("forceMigrateModule", $forceMigrateModule);
 
 //$newImagePath = "/home/sysadmin/public_html/images_new/";
-$newImagePath = "/home/vimlesh/public_html/images_new/";
+$newImagePath = "/home/sysadmin/public_html/images_new/";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
 
