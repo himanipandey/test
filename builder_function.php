@@ -2207,10 +2207,14 @@ function fetchStartTime($stageName,$phasename,$projectId)
 /*******Insert update in redirect url table if update any url in builder,project,city,suburb and locality tables*********/
 function insertUpdateInRedirectTbl($toUrl,$fromUrl)
 {
+	$action = '';
+	if($fromUrl == $toUrl)
+		return $action;
+	
 	$qrySel = "SELECT * FROM redirect_url_map WHERE FROM_URL = '$fromUrl'";
 	$resSel = mysql_query($qrySel) or die(mysql_error()." error");
 	
-	$action = '';
+	
 	$qrySelTF = "SELECT * FROM redirect_url_map WHERE FROM_URL = '$toUrl' AND TO_URL = '$fromUrl'";
 	$resSelTF = mysql_query($qrySelTF) or die(mysql_error()." error");
 	if(mysql_num_rows($resSelTF)>0)
@@ -2233,7 +2237,7 @@ function insertUpdateInRedirectTbl($toUrl,$fromUrl)
 		$res   = mysql_query($qry) or die(mysql_error());
 	}
 	
-	if(mysql_num_rows($resSel)==0 && $fromUrl != $toUrl)
+	if(mysql_num_rows($resSel)==0)
 	{
 		$qry = "INSERT INTO redirect_url_map
 				SET
