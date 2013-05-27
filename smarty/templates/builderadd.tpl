@@ -121,13 +121,9 @@
 								});
 								</script>
 					</div>
-					
-
-
-				 
 				  
 				</tr>
-					{/if}
+				{/if}
 				<tr>
 				  <td width="20%" align="right" >*Builder Image : </td>
 				  <td width="30%" align="left"><input type=file name='txtBuilderImg'  style="width:400px;"></td>

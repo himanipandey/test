@@ -32,7 +32,8 @@ if (isset($_POST['btnSave'])) {
 		  if( $txtCityName == '')   {
 			 $ErrorMsg["txtCityName"] = "Please enter locality name.";
 		   }
-		   if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtCityName)>0){
+		  
+		   if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtCityName)){
 		   	$ErrorMsg["txtCityName"] = "Special characters are not allowed";
 		   }
 		   if( $txtMetaTitle == '')   {

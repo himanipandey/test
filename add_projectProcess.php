@@ -208,19 +208,17 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$projectUrlText = $BuilderName." ".$projName." ".$localityName." ".$cityName;
 		$url = urlCreaationDynamic('p-',$projectUrlText);
 		
-		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtProjectName)>0){
+		
+		if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtProjectName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 		}
-		
-		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $BuilderName)>0){
-			$ErrorMsg["txtProjectName"] = "Special characters are not allowed in builder name";
+		if(!preg_match('/^[a-zA-z0-9 ]+$/', $BuilderName)){
+			$ErrorMsg["txtProjectName"] = "Special characters are not allowed inbuilder name";
 		}
-		
-		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $localityName)>0){
+		if(!preg_match('/^[a-zA-z0-9 ]+$/', $localityName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed in locality name";
 		}
-		
-		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $cityName)>0){
+		if(!preg_match('/^[a-zA-z0-9 ]+$/', $cityName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed in city name";
 		}
 		

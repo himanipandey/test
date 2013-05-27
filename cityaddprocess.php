@@ -32,8 +32,9 @@ if (isset($_POST['btnSave'])) {
 		if( $txtCityName == '')  {
 			 $ErrorMsg["txtCityName"] = "Please enter City name.";
 		   }
-	   if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtCityName)>0){
-	   		$ErrorMsg["txtCityName"] = "Special characters are not allowed";
+	       
+	    if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtCityName)){
+	       		$ErrorMsg["txtCityName"] = "Special characters are not allowed";
 	       }
 		if( $DisplayOrder == '')   {
 			 $ErrorMsg["DisplayOrder"] = "Please enter display order.";

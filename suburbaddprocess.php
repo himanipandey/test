@@ -30,8 +30,9 @@ if (isset($_POST['btnSave'])) {
 		if( $txtCityName == '')   {
 			$ErrorMsg["txtCityName"] = "Please enter suburb name.";
 		}
-		if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtCityName)>0){
-			$ErrorMsg["txtCityName"] = "Special characters are not allowed";
+		
+		if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtCityName)){
+			$ErrorMsg["txtCityName"] = "Special characters are not allowed in city name";
 		}
 		if( $txtMetaTitle == '')   {
 			 $ErrorMsg["txtMetaTitle"] = "Please enter meta title.";

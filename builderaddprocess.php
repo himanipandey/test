@@ -65,7 +65,7 @@ if ($_POST['btnSave'] == "Save")
 	$smarty->assign("revenue", $revenue);
 	$smarty->assign("debt", $debt);
 
-	if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $txtBuilderName)>0){
+	if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)){
 		$ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
 	 }
 	
@@ -194,12 +194,12 @@ if ($_POST['btnSave'] == "Save")
 			}	
 			else 
 			{
-				$ErrorMsg['img'] = "Please insert image";
+				$ErrorMsg['ImgError'] = "Please insert image";
 			}
 			
 		}
 		else {
-				$ErrorMsg['img'] = "Please insert image";
+				$ErrorMsg['ImgError'] = "Please insert image";
 		}	
 
 	}
@@ -293,7 +293,7 @@ if ($_POST['btnSave'] == "Save")
 		}
 		
 	}
-	
+	$smarty->assign("ErrorMsg", $ErrorMsg);
 }
 else if($builderid	!= '')
 {
@@ -331,7 +331,7 @@ else if($builderid	!= '')
 	$smarty->assign("arrContact", $arrContact);
 
 }	
- $smarty->assign("ErrorMsg", $ErrorMsg);	
+ 
  
  /*****************City Data************/
 	$CityDataArr	=	array();
