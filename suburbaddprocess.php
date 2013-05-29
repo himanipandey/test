@@ -43,7 +43,8 @@ if (isset($_POST['btnSave'])) {
 		if( $txtMetaDescription == '')  {
 			 $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
 		   }
-		$url = urlCreaationDynamic('property-in-',$txtCityName);
+		   $txtCityURL = $txtCityName."-real-estate";
+		$url = urlCreaationDynamic('property-in-',$txtCityURL);
 		if(!is_array($ErrorMsg))
 		{
 			$updateQry = "UPDATE ".SUBURB." SET 

@@ -59,7 +59,8 @@ if (isset($_POST['btnSave'])) {
 				}
 		   }
 		/*******end locality url already exists*******/ 
-		   $url = urlCreaationDynamic('property-in-',$txtCityName);
+		   $txtCityURL = $txtCityName."-real-estate";
+		   $url = urlCreaationDynamic('property-in-',$txtCityURL);
 		   if(!is_array($ErrorMsg))
 		   {
 				 $updateQry = "UPDATE ".LOCALITY." SET 

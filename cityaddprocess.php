@@ -61,7 +61,8 @@ if (isset($_POST['btnSave'])) {
 				}
 		   }
 		/*******end city url already exists*******/ 
-	$url = urlCreaationDynamic('property-in-',$txtCityName);
+		   $txtCityURL = $txtCityName."-real-estate";
+	$url = urlCreaationDynamic('property-in-',$txtCityURL);
 	$smarty->assign("ErrorMsg", $ErrorMsg);
 	if(is_array($ErrorMsg)) {
 		

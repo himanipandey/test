@@ -8,7 +8,6 @@ AdminAuthentication();
 
 
 $cityval = $_GET['cityval'];
-$cityval = str_replace("@","&",$cityval);
 $id = $_GET['id'];
 $deleteCity	=	$_GET['ciddelete'];
 $sel_id = $_GET['id'];
@@ -70,8 +69,8 @@ else
 
 	if($c==0 && $ins==0)
 	{	
-		$cityval =  preg_replace('!\s+!', '-', strtolower($cityval));
-		$url = "property-in-".$cityval."-real-estate.php";
+		$cityurl =  preg_replace('!\s+!', '-', strtolower($cityval));
+		$url = "property-in-".$cityurl."-real-estate.php";
 		$qry = "INSERT INTO ".CITY." (LABEL,ACTIVE,URL) value('".$cityval."','0','$url')";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
