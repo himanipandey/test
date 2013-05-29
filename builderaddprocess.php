@@ -118,7 +118,7 @@ if ($_POST['btnSave'] == "Save")
 		$contactArr['Projects'][] = implode($_REQUEST[$key],"#");
 
 	}
-	$url = urlCreaationDynamic('b-',$txtBuilderName);
+	$url = urlCreaationDynamic('b-',$txtBuilderName."-projects");
 	if(is_array($ErrorMsg)) {
 		// Do Nothing
 	} 	
