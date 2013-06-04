@@ -36,13 +36,20 @@
 				  <td width="20%" align="right" >*Suburb Name : </td>
 				  <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
-				{if $old_sub_url != ''}
-				<tr>
+								<tr>
 				  <td width="20%" align="right" >*Suburb URL : </td>
-				  <td width="30%" align="left">{$old_sub_url}</td>
-				</tr>	
-					<input type = "hidden" name = "old_sub_url" value = "{$old_sub_url}">
-				{/if}											
+				  <td width="30%" align="left" >
+				  	<input type = "hidden" name = "old_sub_url" value = "{$old_sub_url}">
+				  					  	
+				  	{if $old_loc_url != '' && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525  && $accessModule['urlEdit'] != 588}
+				  			<input type=text name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;" readonly>
+				  	{else}
+				  			<input type=text name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;">
+				  	{/if}
+				  	
+
+				  </td>{if $ErrorMsg["txtCityUrl"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityUrl"]}</font></td>{else} <td width="50%" align="left" id="errmsgurl"></td>{/if}
+				</tr>												
 								
 				<tr>
 				  <td width="20%" align="right" >* Meta Title : </td>

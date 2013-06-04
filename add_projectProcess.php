@@ -53,6 +53,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$DisplayOrder				=	'';
 		$Active						=	trim($_POST['Active']);
 		$Status						=	trim($_POST['Status']);
+		$txtProjectURL				=	trim($_POST['txtProjectURL']);
 		$txtProjectURLOld			=	trim($_POST['txtProjectURLOld']);
 		$Featured					=	trim($_POST['Featured']);
 		$txtDisclaimer				=	trim($_POST['txtDisclaimer']);
@@ -150,6 +151,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("DisplayOrder", $DisplayOrder);
 		$smarty->assign("Active", $Active);
 		$smarty->assign("Status", $Status);
+		$smarty->assign("txtProjectURL", $txtProjectURL);
 		$smarty->assign("txtProjectURLOld", $txtProjectURLOld);
 		$smarty->assign("Featured", $Featured);
 		$smarty->assign("txtDisclaimer", $txtDisclaimer);
@@ -204,34 +206,34 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		
 		$cityDetail	=	ViewCityDetails($cityId);
 		$cityName   =   $cityDetail['LABEL'];
-		
-		$projectUrlText = $BuilderName." ".$projName." ".$localityName." ".$cityName;
-		$url = urlCreaationDynamic('p-',$projectUrlText);
-		
-		
+				
 		if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtProjectName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
-		}
-		if(!preg_match('/^[a-zA-z0-9 ]+$/', $BuilderName)){
-			$ErrorMsg["txtProjectName"] = "Special characters are not allowed inbuilder name";
-		}
-		if(!preg_match('/^[a-zA-z0-9 ]+$/', $localityName)){
-			$ErrorMsg["txtProjectName"] = "Special characters are not allowed in locality name";
-		}
-		if(!preg_match('/^[a-zA-z0-9 ]+$/', $cityName)){
-			$ErrorMsg["txtProjectName"] = "Special characters are not allowed in city name";
 		}
 		
 		$qryprojectchk	=	"SELECT PROJECT_NAME,PROJECT_SMALL_IMAGE FROM ".RESI_PROJECT." WHERE PROJECT_NAME = '".$txtProjectName."' AND BUILDER_ID = '".$builderId."' AND LOCALITY_ID = '".$localityId."' AND CITY_ID = '".$cityId."'";
 		$resprojectchk	=	mysql_query($qryprojectchk);
 		
-		$txtProjectName = preg_replace('!\s+!', '-', strtolower($txtProjectName));
 		if($projectId=='')
 		 {
 		   if(mysql_num_rows($resprojectchk) >0)
 		   {
 			   $ErrorMsg["txtProjectName"] = "Project already exist.";
 		   }
+	     }
+	     
+	     $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_URL = '".$txtProjectURL."'";
+	     $resUrl = mysql_query($qryUrl) or die(mysql_error());
+	     if(mysql_num_rows($resUrl)>0)
+	     {
+	     	$ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
+	     }
+	     
+	     if($txtProjectURL!='')
+	     {
+	     	if(!preg_match('/^p-[a-z0-9\-]+\.php$/',$txtProjectURL)){
+	     		$ErrorMsg["txtProjectURL"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
+	     	}
 	     }
 	   $smarty->assign("ErrorMsg", $ErrorMsg);
 	   if(is_array($ErrorMsg)) {
@@ -292,20 +294,19 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		   if ($projectId == '')
 		   {
 		   		
-				$projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$url,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
+				$projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
 				header("Location:project_img_add.php?projectId=".$projectId);
 			}
 			else
 			{
 				//echo $price1."==".$payment1;
-				$projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$url,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
-				
-				insertUpdateInRedirectTbl($url,$txtProjectURLOld);
+				$projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
+				if($txtProjectURL != $txtProjectURLOld)
+					insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
 				if($preview == 'true')
 					header("Location:show_project_details.php?projectId=".$projectId);
 				else
 					header("Location:ProjectList.php?projectId=".$projectId);
-				
 				
 			}
 		}

@@ -12,6 +12,7 @@ if(isset($_POST['btnExit'])){
 if (isset($_POST['btnSave'])) {
 
 		$txtCityName			=	trim($_POST['txtCityName']);
+		$txtCityUrl				=	trim($_POST['txtCityUrl']);
 		$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
 		$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
 		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
@@ -25,6 +26,7 @@ if (isset($_POST['btnSave'])) {
 		$smarty->assign("txtMetaDescription", $txtMetaDescription);
 		$smarty->assign("status", $status);
 		$smarty->assign("desc", $desc);
+		$smarty->assign("txtCityUrl", $txtCityUrl);
 		$smarty->assign("old_sub_url", $old_sub_url);
 		 
 		if( $txtCityName == '')   {
@@ -33,6 +35,15 @@ if (isset($_POST['btnSave'])) {
 		
 		if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtCityName)){
 			$ErrorMsg["txtCityName"] = "Special characters are not allowed in suburb name";
+		}
+		if( $txtCityUrl == '')   {
+			$ErrorMsg["txtCityUrl"] = "Please enter locality URL.";
+		}
+		else
+		{
+			if(!preg_match('/^property-in-[a-z0-9\-]+\.php$/',$txtCityUrl)){
+				$ErrorMsg["txtCityUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
+			}
 		}
 		if( $txtMetaTitle == '')   {
 			 $ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
@@ -43,8 +54,7 @@ if (isset($_POST['btnSave'])) {
 		if( $txtMetaDescription == '')  {
 			 $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
 		   }
-		   $txtCityURL = $txtCityName."-real-estate";
-		$url = urlCreaationDynamic('property-in-',$txtCityURL);
+
 		if(!is_array($ErrorMsg))
 		{
 			$updateQry = "UPDATE ".SUBURB." SET 
@@ -54,11 +64,12 @@ if (isset($_POST['btnSave'])) {
 						  META_KEYWORDS		    =	'".$txtMetaKeywords."',
 						  META_DESCRIPTION		=	'".$txtMetaDescription."',
 						  ACTIVE				=	'".$status."',
-						  URL					=	'".$url."',
+						  URL					=	'".$txtCityUrl."',
 						  DESCRIPTION			=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
 						   
 			mysql_query($updateQry);
-			insertUpdateInRedirectTbl($url,$old_sub_url);
+			if($txtCityUrl != $old_sub_url)
+				insertUpdateInRedirectTbl($txtCityUrl,$old_sub_url);
 			header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
 		}
 		else
@@ -71,6 +82,7 @@ else if($suburbid!=''){
 
 	$localityDetailsArray	=   ViewSuburbDetails($suburbid);
 	$txtCityName			=	trim($localityDetailsArray['LABEL']);
+	$txtCityUrl				=	trim($localityDetailsArray['URL']);
 	$old_sub_url			=	trim($localityDetailsArray['URL']);
 	$txtMetaTitle			=	trim($localityDetailsArray['META_TITLE']);
 	$txtMetaKeywords		=	trim($localityDetailsArray['META_KEYWORDS']);
@@ -79,6 +91,7 @@ else if($suburbid!=''){
 	$desc					=	trim($localityDetailsArray['DESCRIPTION']);
 	
 	$smarty->assign("txtCityName", $txtCityName);
+	$smarty->assign("txtCityUrl", $txtCityUrl);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
 	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);

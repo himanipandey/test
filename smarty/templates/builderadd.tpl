@@ -94,17 +94,37 @@
 					{if $ErrorMsg["txtBuilderDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtBuilderDescription"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 
-				{if $builderid != ''}
 				<tr>
 					 <td width="20%" align="right" >*Builder URL : </td>
+
 					<td width="30%" align="left" >
-						{$txtBuilderUrl}
+						{if $builderid != ''  && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525 && $accessModule['urlEdit'] != 588  && $accessModule['urlEdit'] != 53}
+							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;" readonly>
+						{else}
+							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;">
+						{/if}
 						<input type = "hidden" name = "txtBuilderUrlOld" value = "{$txtBuilderUrlOld}">
+						
+
 					</td>
-					 <td width="50%" align="left" nowrap> </td>
+					 <td width="50%" align="left" nowrap>
+					 	<font color = "red">
+						 	{if $ErrorMsg["txtBuilderUrl"] != ''}
+
+						 		{$ErrorMsg["txtBuilderUrl"]}
+						 	{/if}
+
+							 	{if $ErrorMsg["BuilderUrlExists"] != ''}
+
+							 		{$ErrorMsg["BuilderUrlExists"]}
+							 	{/if}
+
+
+					 	</font>
+
+					 </td>
 
 				</tr>
-				{/if}
 				<input type = 'hidden' name = 'imgedit' value = '{$imgedit}'>
 					{if $img != ''}
 				

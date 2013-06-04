@@ -50,18 +50,10 @@ if($deleteloc != '')
 else
 {
 	if($subcityval!='' && $id!='')
-	{
-		$url = urlCreaationDynamic('property-in-',$localityval);
-		
-		$qryOld = "SELECT URL FROM ".LOCALITY." WHERE LOCALITY_ID='".$id."'";
-		$resOld = mysql_query($qryOld);
-		$oldUrl = mysql_fetch_assoc($resOld);
-		
-		$seldata = "UPDATE ".LOCALITY." SET LABEL = '".trim($localityval)."',URL = '".$url."' WHERE LOCALITY_ID='".$id."' AND SUBURB_ID='".$subcityval."'";
+	{		
+		$seldata = "UPDATE ".LOCALITY." SET LABEL = '".trim($localityval)."' WHERE LOCALITY_ID='".$id."' AND SUBURB_ID='".$subcityval."'";
 		$resdata = mysql_query($seldata);
 		$c = mysql_affected_rows();
-		
-		insertUpdateInRedirectTbl($url,$oldUrl['URL']);
 	}
 
 	$seldata = "SELECT LABEL FROM ".LOCALITY." WHERE LABEL = '".trim($localityval)."' AND CITY_ID='".$cityid."' AND SUBURB_ID='".$subcityval."'";
@@ -72,10 +64,8 @@ else
 	{	$qryCity = "SELECT LABEL FROM ".CITY." WHERE CITY_ID = $cityid";
 		$resCity = mysql_query($qryCity);
 		$dataCity= mysql_fetch_assoc($resCity);
-		$url = "property-in-".str_replace(" ","-",strtolower($localityval))."-".
-				str_replace(" ","-",strtolower($dataCity['LABEL']))."-real-estate.php";
 		
-		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE,URL) value('".$localityval."','".$cityid."','".$subcityval."','1','$url')";
+		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE) value('".$localityval."','".$cityid."','".$subcityval."','1')";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;

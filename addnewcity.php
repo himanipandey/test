@@ -22,7 +22,6 @@ if($deleteCity != '')
 		$res	=	mysql_query($qry);
 		if($res)
 		{
-			
 			$selqry = "SELECT CITY_ID,LABEL FROM ".CITY." ORDER BY LABEL";
 			$ressel = mysql_query($selqry);
 			?>
@@ -50,28 +49,14 @@ else
 	
 	if($cityval!='' && $id!='')
 	{
-		$url = urlCreaationDynamic('property-in-',$cityval);
 		
-		$qryOld = "SELECT URL FROM ".CITY." WHERE CITY_ID='".$id."'";
-		$resOld = mysql_query($qryOld);
-		$oldUrl = mysql_fetch_assoc($resOld);
-		
-		$seldata = "UPDATE ".CITY." SET LABEL = '".trim($cityval)."',URL = '".$url."' WHERE CITY_ID='".$id."'";
+		$seldata = "UPDATE ".CITY." SET LABEL = '".trim($cityval)."' WHERE CITY_ID='".$id."'";
 		$resdata = mysql_query($seldata);
-		$c = mysql_affected_rows();
-		
-		if($url != $oldUrl['URL'])
-			updateProjectUrl($id,'city','');
-		
-		insertUpdateInRedirectTbl($url,$oldUrl['URL']);
-		
+		$c = mysql_affected_rows();		
 	}
 
-	if($c==0 && $ins==0)
-	{	
-		$cityurl =  preg_replace('!\s+!', '-', strtolower($cityval));
-		$url = "property-in-".$cityurl."-real-estate.php";
-		$qry = "INSERT INTO ".CITY." (LABEL,ACTIVE,URL) value('".$cityval."','0','$url')";
+	if($c==0 && $ins==0){
+		$qry = "INSERT INTO ".CITY." (LABEL,ACTIVE) value('".$cityval."','0')";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;

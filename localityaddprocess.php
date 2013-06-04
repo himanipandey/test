@@ -12,6 +12,7 @@ if(isset($_POST['btnExit'])){
 if (isset($_POST['btnSave'])) {
 
 		$txtCityName			=	trim($_POST['txtCityName']);
+		$txtCityUrl				=	trim($_POST['txtCityUrl']);
 		$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
 		$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
 		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
@@ -21,6 +22,7 @@ if (isset($_POST['btnSave'])) {
 
 		
 		$smarty->assign("txtCityName", $txtCityName);
+		$smarty->assign("txtCityUrl", $txtCityUrl);
 		$smarty->assign("old_loc_url", $old_loc_url);
 		$smarty->assign("txtMetaTitle", $txtMetaTitle);
 		$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
@@ -36,6 +38,16 @@ if (isset($_POST['btnSave'])) {
 		   if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtCityName)){
 		   	$ErrorMsg["txtCityName"] = "Special characters are not allowed";
 		   }
+		   
+		   if( $txtCityUrl == '')   {
+		   	$ErrorMsg["txtCityUrl"] = "Please enter locality URL.";
+		   } else {
+		   
+		   	if(!preg_match('/^property-in-[a-z0-9\-]+\.php$/',$txtCityUrl)){
+		   		$ErrorMsg["txtCityUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
+		   	}
+		   }
+		   
 		   if( $txtMetaTitle == '')   {
 		   	$ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
 		   }
@@ -59,8 +71,7 @@ if (isset($_POST['btnSave'])) {
 				}
 		   }
 		/*******end locality url already exists*******/ 
-		   $txtCityURL = $txtCityName."-real-estate";
-		   $url = urlCreaationDynamic('property-in-',$txtCityURL);
+
 		   if(!is_array($ErrorMsg))
 		   {
 				 $updateQry = "UPDATE ".LOCALITY." SET 
@@ -70,15 +81,14 @@ if (isset($_POST['btnSave'])) {
 					  META_KEYWORDS		    =	'".$txtMetaKeywords."',
 					  META_DESCRIPTION		=	'".$txtMetaDescription."',
 					  ACTIVE				=	'".$status."',
-					  URL					=	'".$url."',
+					  URL					=	'".$txtCityUrl."',
 					  DESCRIPTION			=	'".$desc."' WHERE LOCALITY_ID='".$localityid."'";
 					   
 				$up = mysql_query($updateQry);
 				if($up)
 				{
-					if($url != $old_loc_url)
-						updateProjectUrl($localityid,'locality','');
-					insertUpdateInRedirectTbl($url,$old_loc_url);
+					if($txtCityUrl != $old_loc_url)
+						insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
 			   	 	header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
 				}
 		}
@@ -93,6 +103,7 @@ elseif($localityid!=''){
 
 	$localityDetailsArray	=   ViewLocalityDetails($localityid);
 	$txtCityName			=	trim($localityDetailsArray['LABEL']);
+	$txtCityUrl				=	trim($localityDetailsArray['URL']);
 	$old_loc_url			=	trim($localityDetailsArray['URL']);
 	$txtMetaTitle			=	trim($localityDetailsArray['META_TITLE']);
 	$txtMetaKeywords		=	trim($localityDetailsArray['META_KEYWORDS']);
@@ -101,6 +112,7 @@ elseif($localityid!=''){
 	$desc					=	trim($localityDetailsArray['DESCRIPTION']);
 
 	$smarty->assign("txtCityName", $txtCityName);
+	$smarty->assign("txtCityUrl", $txtCityUrl);
 	$smarty->assign("old_loc_url", $old_loc_url);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
 	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);

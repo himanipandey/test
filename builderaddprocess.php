@@ -3,7 +3,6 @@ $builderid = $_REQUEST['builderid'];
 
 include("ftp.new.php");
 $watermark_path = 'pt_shadow1.png';
-
 //echo $_REQUEST['suburb'];die("here");
 $smarty->assign("builderid", $builderid);
 $ProjectList = project_list($builderid);
@@ -12,12 +11,11 @@ if ($_POST['btnExit'] == "Exit")
 {
 	header("Location:BuilderList.php");
 }
-
 if ($_POST['btnSave'] == "Save")
 {
-	
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
 	$txtBuilderDescription	=	trim($_POST['txtBuilderDescription']);
+	$txtBuilderUrl			=	trim($_POST['txtBuilderUrl']);
 	$txtBuilderUrlOld		=	trim($_POST['txtBuilderUrlOld']);
 	$DisplayOrder			=	trim($_POST['DisplayOrder']);
 	$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
@@ -43,6 +41,7 @@ if ($_POST['btnSave'] == "Save")
 	
 	$smarty->assign("txtBuilderName", $txtBuilderName);
 	$smarty->assign("txtBuilderDescription", $txtBuilderDescription);
+	$smarty->assign("txtBuilderUrl", $txtBuilderUrl);
 	$smarty->assign("txtBuilderUrlOld", $txtBuilderUrlOld);
 	$smarty->assign("DisplayOrder", $DisplayOrder);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
@@ -78,6 +77,16 @@ if ($_POST['btnSave'] == "Save")
 	     $ErrorMsg["txtBuilderDescription"] = "Please enter Builder description.";
 	   }   
 	
+	   if( $txtBuilderUrl == '')
+	   {
+	   	$ErrorMsg["txtBuilderUrl"] = "Please enter Builder URL.";
+	   }
+	   if($txtBuilderUrl!='')
+	   {
+	   	if(!preg_match('/^b-[a-z0-9\-]+\.php$/',$txtBuilderUrl)){
+	   		$ErrorMsg["txtBuilderUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
+	   	}
+	   }
 	if( $DisplayOrder == '') 
 	   {
 	     $ErrorMsg["DisplayOrder"] = "Please enter Builder Display Order.";
@@ -95,6 +104,17 @@ if ($_POST['btnSave'] == "Save")
 	     $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
 	   } 
 
+	/******code for builder url already exists******/
+	 $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE URL = '".$txtBuilderUrl."'";
+	 if($builderid != '')
+	 	$qryUrl .= " AND BUILDER_ID != $builderid";
+	 //echo $qryUrl ;
+	 $resUrl = mysql_query($qryUrl) or die(mysql_error());
+	 if(mysql_num_rows($resUrl)>0)
+	 {
+	 	$ErrorMsg["BuilderUrlExists"] = "This URL already exists.";
+	 }
+	 /******end code for builder url already exists******/
 	//  die; 
 	if($_FILES['txtBuilderImg']['type'] != '')
 	{
@@ -118,7 +138,7 @@ if ($_POST['btnSave'] == "Save")
 		$contactArr['Projects'][] = implode($_REQUEST[$key],"#");
 
 	}
-	$url = urlCreaationDynamic('b-',$txtBuilderName."-projects");
+	
 	if(is_array($ErrorMsg)) {
 		// Do Nothing
 	} 	
@@ -132,13 +152,10 @@ if ($_POST['btnSave'] == "Save")
 			$createFolder	=	 $newImagePath.$foldername;
 			mkdir($createFolder, 0777);
 			$return 			=	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], "".$createFolder."/" . $name);
-
-			//die("cc");
 			if($return)
 			{				
 				$imgurl		=	"/".$foldername."/".$name;
-				
-				InsertBuilder($txtBuilderName, $txtBuilderDescription, $url,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
+				InsertBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
 				$createFolder = $newImagePath.$foldername;
 				if ($handle = opendir($createFolder))
  				{
@@ -149,7 +166,6 @@ if ($_POST['btnSave'] == "Save")
 							
 								if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
 								{
-									
 									$image = new SimpleImage();
 									$path	=	$createFolder."/".$file;
 									$image->load($path);
@@ -171,14 +187,11 @@ if ($_POST['btnSave'] == "Save")
 									$image->resize(80,36);
 									$newimg	=	str_replace('.jpg','-thumb.jpg',$file);
 									$image->save($createFolder."/".$newimg);
-								
 									/**********Working for watermark*******************/
 									// Image path
 										$image_path = $createFolder."/".$file;
-
 										// Where to save watermarked image
 										$imgdestpath = $createFolder."/".$file;
-
 									 // Watermark image
 									$img = new Zubrag_watermark($image_path);
 									$img->ApplyWatermark($watermark_path);
@@ -189,19 +202,15 @@ if ($_POST['btnSave'] == "Save")
 					
 					header("Location:BuilderList.php");
 				}	
-
-				//header("Location:BuilderList.php?page=1&sort=all");
 			}	
 			else 
 			{
 				$ErrorMsg['ImgError'] = "Please insert image";
 			}
-			
 		}
 		else {
 				$ErrorMsg['ImgError'] = "Please insert image";
 		}	
-
 	}
 	else
 	{
@@ -212,18 +221,16 @@ if ($_POST['btnSave'] == "Save")
 			
 		if (($_FILES["txtBuilderImg"]["type"]))
    		{
-			
    			$return 	=	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], "".$newfold."/" . $name);
-
 			if($return)
 			{
 				$imgurl		=	"/".$cutpath[1]."/".$name;
-				$rt = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $url,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+				$rt = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
 				if($rt)
 				{
-					insertUpdateInRedirectTbl($url,$txtBuilderUrlOld);
-					if($url != $txtBuilderUrlOld)
-						updateProjectUrl($id,$tblName,$builderName);
+					
+					if($txtBuilderUrl != $txtBuilderUrlOld)
+						insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
 					header("Location:BuilderList.php?page=1&sort=all");
 				}
 				else
@@ -236,7 +243,6 @@ if ($_POST['btnSave'] == "Save")
 					while (false !== ($file = readdir($handle)))
 					{
 						/************Working for large***********************/
-						
 						if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
 						{
 							$image = new SimpleImage();
@@ -276,16 +282,14 @@ if ($_POST['btnSave'] == "Save")
 			{
 				$ErrorMsg['img'] = "Please insert image";
 			}
-			
 		}
 		else 
 		{
-			$return = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $url,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+			$return = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
 			if($return)
 			{
-				insertUpdateInRedirectTbl($url,$txtBuilderUrlOld);
-				if($url != $txtBuilderUrlOld)
-					updateProjectUrl($builderid,'builder',$txtBuilderName);
+				if($txtBuilderUrl != $txtBuilderUrlOld)
+					insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
 				header("Location:BuilderList.php?page=1&sort=all");
 			}
 			else
