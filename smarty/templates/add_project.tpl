@@ -610,7 +610,7 @@
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Display Order:</b> </td>
 								  <td width="30%" align="left">
-								     <input type='text' name='display_order', id='display_order' class='field' value='{$display_order}'>
+								     <input type='text' name='display_order' id='display_order' class='field' value='{$display_order}'>
 								  </td>
 								  {if $ErrorMsg["display_order"] != ''}
 								  <td width="50%" align="left"><font color="red">{$ErrorMsg["display_order"]}</font></td>
