@@ -222,7 +222,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		   }
 	     }
 	     
-	     $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_URL = '".$txtProjectURL."'";
+	     $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_URL = '".$txtProjectURL."' and project_id != '$projectId'";
 	     $resUrl = mysql_query($qryUrl) or die(mysql_error());
 	     if(mysql_num_rows($resUrl)>0)
 	     {
@@ -234,7 +234,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 	         $ErrorMsg["display_order"] = "Please put in display order (1-15 for city page), (101-998 for locality page), 999 for default";
 	     }
 	     elseif ($display_order >= 1 && $display_order <= 15) {
-	         $numProjects = getNumProjectsUnderDisplayOrder(15, $cityId);
+	         $numProjects = getNumProjectsUnderDisplayOrder(15, $cityId, $projectId);
 	         if ($numProjects >= 15) {
 	             $ErrorMsg["display_order"] = "Already $numProjects projects have been assigned city page level editorial priority. Please edit them out of the range (1-15) first.";
 	         }
@@ -364,7 +364,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("no_of_flats", stripslashes($ProjectDetail[0]['NO_OF_FLATS']));
 		$smarty->assign("eff_date_to", stripslashes($ProjectDetail[0]['LAUNCH_DATE']));
 		$smarty->assign("special_offer", stripslashes($ProjectDetail[0]['OFFER']));
-		$smarty->assign("display_order", stripslashes($ProjectDetail[0]['DISPLAY_ORDER']));
+		$smarty->assign("display_order", $ProjectDetail[0]['DISPLAY_ORDER']);
 		$smarty->assign("youtube_link", stripslashes($ProjectDetail[0]['YOUTUBE_VIDEO']));
 		$smarty->assign("price_list", stripslashes($ProjectDetail[0]['PRICE_LIST']));
 		$smarty->assign("app_form", stripslashes($ProjectDetail[0]['APPLICATION_FORM']));
@@ -423,9 +423,9 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$BankDataArr = BankList();
 	 }
 
-	 function getNumProjectsUnderDisplayOrder($displayOrder, $cityId) {
+	 function getNumProjectsUnderDisplayOrder($displayOrder, $cityId, $projectId) {
 	     $numProjects = 0;
-	     $qry = "SELECT count(*) as numProjects FROM resi_project WHERE display_order <= $displayOrder and city_id = $cityId";
+	     $qry = "SELECT count(*) as numProjects FROM resi_project WHERE display_order <= $displayOrder and city_id = $cityId and project_id != $projectId";
 	     $res = mysql_query($qry);
 	     while($data = mysql_fetch_array($res))
 	     {
