@@ -663,4 +663,5 @@ $newImagePath = "/home/sysadmin/public_html/images_new/";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
 
+$analytics_credential=array("username"=>"cms","password"=>"Cms123!");
 ?>

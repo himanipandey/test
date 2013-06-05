@@ -1811,6 +1811,9 @@ function getDateNow(){
 								 <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
 								 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Last Month</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Laster Month</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Number of Floors</td>
@@ -1843,6 +1846,15 @@ function getDateNow(){
 							  <td>
 								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']}
 							  </td>
+							 {foreach from = $PreviousMonthsData key=k item=it}
+							 	<td>
+							 		{if substr($PreviousMonthsData[$k][$ProjectOptionDetail[$key]['OPTIONS_ID']]['effective_date'],0,7)==$k}
+							 			{$PreviousMonthsData[$k][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
+							 		{else}
+							 			{"outdated data!"}
+							 		{/if}
+							 	</td>							 
+							 {/foreach}
 							  <td>
 								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_DP']}
 							  

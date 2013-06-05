@@ -52,7 +52,10 @@ $smarty->assign("otherPricing", $otherPricing);
 
 $ProjectOptionDetail	=	ProjectOptionDetail($projectId);
 
+$PreviousMonthsData	=	getPrevMonthProjectData($projectId);
+// var_dump($PreviousMonthsData);
 $smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
+$smarty->assign("PreviousMonthsData",$PreviousMonthsData);
 
 $ProjectAmenities	=	ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
 $arrSpecification	=	specification($projectId);
