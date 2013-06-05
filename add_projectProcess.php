@@ -236,7 +236,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 	     elseif ($display_order >= 1 && $display_order <= 15) {
 	         $numProjects = getNumProjectsUnderDisplayOrder(15, $cityId);
 	         if ($numProjects >= 15) {
-	             $ErrorMsg["display_order"] = "Already $numProjects assigned city page level editorial priority. Please edit projects out of the range (1-15) first.";
+	             $ErrorMsg["display_order"] = "Already $numProjects projects have been assigned city page level editorial priority. Please edit them out of the range (1-15) first.";
 	         }
 	     }
 
