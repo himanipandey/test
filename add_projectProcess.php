@@ -207,7 +207,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$cityDetail	=	ViewCityDetails($cityId);
 		$cityName   =   $cityDetail['LABEL'];
 				
-		if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtProjectName)){
+		if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 		}
 		
@@ -331,7 +331,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 
 	}
 }
-	if ($projectId!='')
+elseif ($projectId!='')
 	{
 		
 		$ProjectDetail 	= ProjectDetail($projectId);
