@@ -169,7 +169,7 @@
 	}
 
 	/**********project insert***************/
-	function InsertProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
+	function InsertProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
 	{
 
 		if($project_type == '1')
@@ -250,7 +250,7 @@
 							PRICE_LIST					=	'".addslashes($price)."',
 							APPLICATION_FORM			=	'".addslashes($app)."',
 							OFFER						=	'".$special_offer."',
-							DISPLAY_FLAG				=	'".$display_flag."',
+							DISPLAY_ORDER				=	'".$display_order."',
 							OFFER_HEADING				=	'".$offer_heading."',
 							OFFER_DESC					=	'".$offer_desc."',
 							APPROVALS					=	'".$approvals."',
@@ -272,7 +272,6 @@
 							AUDIT_REMARK				=	'".$txtAuditRemark."',
 							LAUNCHED_UNITS				=	'".$launchedUnits."',
 							REASON_UNLAUNCHED_UNITS		=   '".$reasonUnlaunchedUnits."',
-							DISPLAY_ORDER 				=	'99999',	
 							PROJECT_SMALL_IMAGE			=   '/on-request/sagar-kunj-apartments/defaultprojectsearchimage-small.png'";
 
 		$ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function InsertProject()');
@@ -789,7 +788,7 @@ function RoomCategoryList()
 	}
 
 	/**********project insert***************/
-	function UpdateProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$ProjectId,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
+	function UpdateProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$ProjectId,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
 	{
 		$Completion = " Onwards";
 		$Sql = "UPDATE " .RESI_PROJECT."
@@ -812,6 +811,7 @@ function RoomCategoryList()
 					META_KEYWORDS	 	      	= '".d_($txtMetaKeywords)."',
 					META_DESCRIPTION 	      	= '".d_($txtMetaDescription)."',
 					ACTIVE			 	      	= '".d_($Active)."',
+					DISPLAY_ORDER			 	= $display_order,
 					PROJECT_STATUS 	      		= '".d_($Status)."',
 					PROJECT_URL		 	      	= '".d_($txtProjectURL)."',
 					FEATURED			 	    = '".d_($Featured)."',

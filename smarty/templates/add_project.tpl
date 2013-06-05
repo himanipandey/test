@@ -608,29 +608,12 @@
 							   <td width="50%" align="left"></td>
 							   </tr>
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Display Flag:</b> </td><td width="30%" align="left">
-									 <select name="display_flag" id="display_flag" class="field">
-										<option value="">Select </option>
-										<option value="0" {if $display_flag == 0} selected = selected {/if}>No Sequence </option>
-										<option value="1" {if $display_flag == 1} selected = selected {/if}>Sequence </option>
-
-										{if $projectId!=''}
-											<option value="2" selected = selected>No sequence action </option>
-										{/if}
-									 </select>
-									 
-									 
-									 	{if $projectId!=''}
-									 		<b>Current Sequence:</b>
-											{if $DisplayOrder == 0}
-												No Sequence
-											{else}
-												Sequence
-											{/if}
-										{/if}
+								  <td width="20%" align="right"><font color ="red">*</font><b>Display Order:</b> </td>
+								  <td width="30%" align="left">
+								     <input type='text' name='display_order', id='display_order' class='field' value='{$display_order}'>
 								  </td>
-								  {if $ErrorMsg["display_flag"] != ''}
-								  <td width="50%" align="left"><font color="red">{$ErrorMsg["display_flag"]}</font></td>
+								  {if $ErrorMsg["display_order"] != ''}
+								  <td width="50%" align="left"><font color="red">{$ErrorMsg["display_order"]}</font></td>
 								  {else}
 								  <td width="50%" align="left"></td>
 								  {/if}

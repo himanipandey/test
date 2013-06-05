@@ -129,7 +129,12 @@ $(".localityId").html(html);
 				  </td>
 				</tr>
 				
-			
+				<tr>
+				  <td width="20%" align="right" >* Priority : </td>
+				  <td width="30%" align="left" ><input type=text name=priority id=priority value="{$priority}" style="width:360px;"></td>
+				   {if $ErrorMsg["priority"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["priority"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+				</tr>
+				
 				<tr>
 				  <td width="20%" align="right" >* Meta Title : </td>
 				  <td width="30%" align="left" ><input type=text name=txtLocalityMetaTitle id=txtLocalityMetaTitle value="{$txtLocalityMetaTitle}" style="width:360px;"></td>

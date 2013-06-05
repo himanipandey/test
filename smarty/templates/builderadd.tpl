@@ -163,7 +163,7 @@
 						 <select name="DisplayOrder"  id="DisplayOrder" class="field">
 						 
 						 	<option value="">Select </option> 
-  							{section name=foo start=1 loop=51 step=1}
+  							{section name=foo start=1 loop=101 step=1}
   							<option {if $DisplayOrder == {$smarty.section.foo.index}} value="{$DisplayOrder}" selected = 'selected' {else} value="{$smarty.section.foo.index}"{/if} >{$smarty.section.foo.index}</option>
   							{/section}
   							 	

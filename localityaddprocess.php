@@ -18,8 +18,8 @@ if (isset($_POST['btnSave'])) {
 		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
 		$status					=	trim($_POST['status']);
 		$desc					=	trim($_POST['desc']);
-		$old_loc_url			=	trim($_POST['old_loc_url']);	
-
+		$old_loc_url			=	trim($_POST['old_loc_url']);
+		$priority               =   trim($_POST['priority']);
 		
 		$smarty->assign("txtCityName", $txtCityName);
 		$smarty->assign("txtCityUrl", $txtCityUrl);
@@ -29,7 +29,7 @@ if (isset($_POST['btnSave'])) {
 		$smarty->assign("txtMetaDescription", $txtMetaDescription);
 		$smarty->assign("status", $status);	
 		$smarty->assign("desc", $desc);
-		
+		$smarty->assign("priority", $priority);
 		 
 		  if( $txtCityName == '')   {
 			 $ErrorMsg["txtCityName"] = "Please enter locality name.";
@@ -59,6 +59,9 @@ if (isset($_POST['btnSave'])) {
 			 $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
 		   }
 
+		   if( empty($priority) || $priority < 1 || $priority > 100) {
+		       $ErrorMsg["priority"] = "Please enter valid priority(1-100)";
+		   }
 		/*******locality url already exists**********/
 		   if($localityid == '')
 		   {
@@ -82,6 +85,7 @@ if (isset($_POST['btnSave'])) {
 					  META_DESCRIPTION		=	'".$txtMetaDescription."',
 					  ACTIVE				=	'".$status."',
 					  URL					=	'".$txtCityUrl."',
+					  PRIORITY				=	$priority,
 					  DESCRIPTION			=	'".$desc."' WHERE LOCALITY_ID='".$localityid."'";
 					   
 				$up = mysql_query($updateQry);
@@ -110,7 +114,8 @@ elseif($localityid!=''){
 	$txtMetaDescription		=	trim($localityDetailsArray['META_DESCRIPTION']);
 	$status					=	trim($localityDetailsArray['ACTIVE']);
 	$desc					=	trim($localityDetailsArray['DESCRIPTION']);
-
+	$priority				=	trim($localityDetailsArray['PRIORITY']);
+	
 	$smarty->assign("txtCityName", $txtCityName);
 	$smarty->assign("txtCityUrl", $txtCityUrl);
 	$smarty->assign("old_loc_url", $old_loc_url);
@@ -119,6 +124,7 @@ elseif($localityid!=''){
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);
 	$smarty->assign("status", $status);	
 	$smarty->assign("desc", $desc);
+	$smarty->assign("priority", $priority);
 }
  
 ?>
