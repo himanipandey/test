@@ -1813,9 +1813,9 @@ function getDateNow(){
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Last Month</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Laster Month</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td>
+								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
+								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Number of Floors</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Villa Floors</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>File Name</td>
@@ -1846,7 +1846,9 @@ function getDateNow(){
 							  <td>
 								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']}
 							  </td>
+							  {$c=2}
 							 {foreach from = $PreviousMonthsData key=k item=it}
+							 	{if ($c>0)}
 							 	<td>
 							 		{if substr($PreviousMonthsData[$k][$ProjectOptionDetail[$key]['OPTIONS_ID']]['effective_date'],0,7)==$k}
 							 			{$PreviousMonthsData[$k][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
@@ -1854,15 +1856,19 @@ function getDateNow(){
 							 			{"outdated data!"}
 							 		{/if}
 							 	</td>							 
+							 	{else}
+							 		{break}
+							 	{/if}
+							 	{$c=$c-1}
 							 {/foreach}
-							  <td>
+							  <!-- <td>
 								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_DP']}
 							  
-							  </td>
-							  <td>
+							  </td> -->
+							<!--   <td>
 							{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_FP']}
 							  
-							  </td>
+							  </td> -->
 							   <td>
 									{$ProjectOptionDetail[$key]['NO_OF_FLOORS']}
 							  </td>
@@ -2405,9 +2411,12 @@ function getDateNow(){
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
 											<td class="whiteTxt" align = "center" nowrap><b>No of Flats</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td>
+											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Last Month</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Laster Month</b></td>
+											<!-- <td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Lastest Month</b></td> -->
+											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
@@ -2477,7 +2486,36 @@ function getDateNow(){
 															{/if}
 														{/if}
 													</td>
-													<td valign ="top" align="center">
+														<!-- $key->phase_id -->
+														<!-- if key==mykey -->
+														{$c=2}
+														{foreach from =$PreviousMonthsAvailability key=k item=i}
+															{if $c>0}
+															<td valign ="top" align="center">
+																{foreach from=$i key=k2 item=i2}
+																	{foreach from=$i2 key=k3 item=i3}
+																	<!-- {$key}
+																	{$keyInner}
+																	{$lastItem['PHASE_ID']}
+																	{$supplyAllArray[$key][$keyInner][$keyLast]['PHASE_ID']} -->
+																		{if $lastItem['PHASE_ID']==$k2}
+																			{if $keyInner==$PreviousMonthsAvailability[$k][$k2][$k3]['project_type']}
+																				{if $lastItem['NO_OF_BEDROOMS']==$PreviousMonthsAvailability[$k][$k2][$k3]['no_of_bedrooms']}
+																					{if substr($PreviousMonthsAvailability[$k][$k2][$k3]['effective_date'],0,7)==$k}					
+																						{$PreviousMonthsAvailability[$k][$k2][$k3]['available_no_of_flats']}	
+																					{else}
+																						{"Outdated!"}
+																					{/if}
+																				{/if}
+																			{/if}
+																		{/if}
+																	{/foreach}
+																{/foreach}														
+															</td>															
+															{/if}
+														{$c=$c-1}
+														{/foreach}														
+													<!-- <td valign ="top" align="center">
 														 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
 														 {if $phasename != '' && $stageName != ''}
 															 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] AND $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] != ''}
@@ -2487,7 +2525,7 @@ function getDateNow(){
 																</span>
 															{/if}
 														 {/if}
-													</td>
+													</td> -->
 													<td valign ="top" align="center">{$lastItem['AVAILABLE_NO_FLATS']}
 														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
 														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
@@ -2500,7 +2538,7 @@ function getDateNow(){
 														{/if}										
 													</td>
 													
-													<td valign ="top" align="center">
+												<!-- 	<td valign ="top" align="center">
 														
 														 {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
 													    {if $phasename != '' && $stageName != ''}
@@ -2512,7 +2550,7 @@ function getDateNow(){
 															{/if}
 														{/if}
 														
-													</td>
+													</td> -->
 													<td valign ="top" align="center">
 														{$lastItem['EDIT_REASON']}
 														

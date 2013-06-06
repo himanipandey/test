@@ -2316,17 +2316,16 @@ function updateProjectUrl($id,$tblName,$builderName)
 
 function getPrevMonthProjectData($projectId)
 {
-	$usrn="cms";//$analytics_credential["username"];
-	$psswd="Cms123!";//$analytics_credential["password"];
+	global $analytics_credential;
+	$usrn=$analytics_credential["username"];
+	$psswd=$analytics_credential["password"];
 	$tmstmp='1';
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
 	$url = "http://cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 
-	for ($i=0; $i < count($projectId); $i++) {
-		$url=$url.'&project_ids[]='.$projectId;
-	}
+	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj = file_get_contents($url);
 	$json=json_decode($obj,true);
@@ -2337,17 +2336,45 @@ function getPrevMonthProjectData($projectId)
 
 	foreach ($months as $mkey => $mvalue) {
 		$mlist=array();
-	// echo $mkey."\n";
 		foreach ($mvalue as $pkey => $pvalue) {
-		// echo $pkey."\n";
 			foreach ($pvalue as $okey => $ovalue) {
 				$mlist[$okey]=$ovalue;
 			}
 		}
 		$final_list[$mkey]=$mlist;
-		// var_dump($final_list);
 	}
 
+	return $final_list;
+}
+
+function getFlatAvailability($projectId)
+{
+	$usrn="cms";//$analytics_credential["username"];
+	$psswd="Cms123!";//$analytics_credential["password"];
+	$tmstmp='1';
+
+	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
+
+	$url = "http://cms.proptiger.com/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+
+	$url=$url.'&project_ids[]='.$projectId;
+
+	$obj = file_get_contents($url);
+	$json=json_decode($obj,true);
+
+	$months=$json['availability'];
+
+	$final_list = array();
+
+	foreach ($months as $mkey => $mvalue) {
+		$mlist=array();
+		foreach ($mvalue as $pkey => $pvalue) {
+			foreach ($pvalue as $okey => $ovalue) {
+				$mlist[$okey]=$ovalue;
+			}
+		}
+		$final_list[$mkey]=$mlist;
+	}
 	return $final_list;
 }
 

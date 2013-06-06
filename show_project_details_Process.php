@@ -29,6 +29,7 @@ $smarty->assign("phasename", $phasename);
 //echo "<pre>";
 //print_r($arrProjectAudit);
 //echo "</pre>";
+// var_dump($arrProjectSupply);
 $smarty->assign("arrProjectSupply", $arrProjectSupply);
 $smarty->assign("arrProjectPriceAuditOld", $arrProjectPriceAuditOld);
 $smarty->assign("changedValueArr", $arrProjectAudit);
@@ -51,11 +52,18 @@ $smarty->assign("otherPricing", $otherPricing);
 /******end display other pricing******/
 
 $ProjectOptionDetail	=	ProjectOptionDetail($projectId);
-
 $PreviousMonthsData	=	getPrevMonthProjectData($projectId);
+$PreviousMonthsAvailability = getFlatAvailability($projectId);
+
+
+// var_dump($PreviousMonthsAvailability,4);
+// echo "\n\n\n\n";
 // var_dump($PreviousMonthsData);
 $smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
 $smarty->assign("PreviousMonthsData",$PreviousMonthsData);
+$smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
+
+// print_r($PreviousMonthsAvailability);
 
 $ProjectAmenities	=	ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
 $arrSpecification	=	specification($projectId);
@@ -128,6 +136,7 @@ $smarty->assign("arrAudit", $arrAudit);
 			if($data['PHASE_NAME'] == '')
 				$data['PHASE_NAME'] = 'noPhase';
 			$supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
+			// print_r($supplyAllArray);
 			$arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
 			$arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 		}
@@ -380,5 +389,5 @@ updateProjectPhase($projectId, $phaseName, $reviews, $projectStage,TRUE);
 }
 
 include('builder_contact_info_process.php');
-
+// print_r($supplyAllArray);
 ?>
