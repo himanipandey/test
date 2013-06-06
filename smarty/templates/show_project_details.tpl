@@ -1811,8 +1811,9 @@ function getDateNow(){
 								 <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
 								 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Last Month</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Laster Month</td>
+								 {$pmd_keys=array_keys($PreviousMonthsData)}
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {$pmd_keys[0]}</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {$pmd_keys[1]}</td>
 								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
 								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
@@ -2413,8 +2414,9 @@ function getDateNow(){
 											<td class="whiteTxt" align = "center" nowrap><b>No of Flats</b></td>
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Last Month</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Laster Month</b></td>
+											{$pma_keys=array_keys($PreviousMonthsAvailability)}
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$pma_keys[0]}</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$pma_keys[1]}</b></td>
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Lastest Month</b></td> -->
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
@@ -2488,7 +2490,30 @@ function getDateNow(){
 													</td>
 														<!-- $key->phase_id -->
 														<!-- if key==mykey -->
-														{$c=2}
+																											
+													<!-- <td valign ="top" align="center">
+														 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
+														 {if $phasename != '' && $stageName != ''}
+															 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] AND $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] != ''}
+																<br>
+																<span style="background-color: yellow;">
+																	 {if $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
+																</span>
+															{/if}
+														 {/if}
+													</td> -->
+													<td valign ="top" align="center">{$lastItem['AVAILABLE_NO_FLATS']}
+														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
+														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
+														
+														{if $phasename != '' && $stageName != ''}
+															{if $lastItem['AVAILABLE_NO_FLATS'] != $arrProjectSupply[$key][$keyInner][$keylast]['AVAILABLE_NO_FLATS']}
+																<br>
+																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['AVAILABLE_NO_FLATS']}</span>
+															{/if}	
+														{/if}										
+													</td>
+													{$c=2}
 														{foreach from =$PreviousMonthsAvailability key=k item=i}
 															{if $c>0}
 															<td valign ="top" align="center">
@@ -2514,29 +2539,7 @@ function getDateNow(){
 															</td>															
 															{/if}
 														{$c=$c-1}
-														{/foreach}														
-													<!-- <td valign ="top" align="center">
-														 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
-														 {if $phasename != '' && $stageName != ''}
-															 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] AND $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] != ''}
-																<br>
-																<span style="background-color: yellow;">
-																	 {if $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
-																</span>
-															{/if}
-														 {/if}
-													</td> -->
-													<td valign ="top" align="center">{$lastItem['AVAILABLE_NO_FLATS']}
-														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
-														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
-														
-														{if $phasename != '' && $stageName != ''}
-															{if $lastItem['AVAILABLE_NO_FLATS'] != $arrProjectSupply[$key][$keyInner][$keylast]['AVAILABLE_NO_FLATS']}
-																<br>
-																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['AVAILABLE_NO_FLATS']}</span>
-															{/if}	
-														{/if}										
-													</td>
+														{/foreach}	
 													
 												<!-- 	<td valign ="top" align="center">
 														
