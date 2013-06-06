@@ -2513,33 +2513,40 @@ function getDateNow(){
 															{/if}	
 														{/if}										
 													</td>
-													{$c=2}
-														{foreach from =$PreviousMonthsAvailability key=k item=i}
-															{if $c>0}
-															<td valign ="top" align="center">
-																{foreach from=$i key=k2 item=i2}
-																	{foreach from=$i2 key=k3 item=i3}
-																	<!-- {$key}
-																	{$keyInner}
-																	{$lastItem['PHASE_ID']}
-																	{$supplyAllArray[$key][$keyInner][$keyLast]['PHASE_ID']} -->
-																		{if $lastItem['PHASE_ID']==$k2}
-																			{if $keyInner==$PreviousMonthsAvailability[$k][$k2][$k3]['project_type']}
-																				{if $lastItem['NO_OF_BEDROOMS']==$PreviousMonthsAvailability[$k][$k2][$k3]['no_of_bedrooms']}
-																					{if substr($PreviousMonthsAvailability[$k][$k2][$k3]['effective_date'],0,7)==$k}					
-																						{$PreviousMonthsAvailability[$k][$k2][$k3]['available_no_of_flats']}	
-																					{else}
-																						{"Outdated!"}
+													<td valign ="top" align="center">
+														{foreach from=$PreviousMonthsAvailability[$pma_keys[0]] key=k2 item=i2}
+															{foreach from=$i2 key=k3 item=i3}
+																{if $lastItem['PHASE_ID']==$k2}
+																	{if $keyInner==$PreviousMonthsAvailability[$pma_keys[0]][$k2][$k3]['project_type']}
+																	{if $lastItem['NO_OF_BEDROOMS']==$PreviousMonthsAvailability[$pma_keys[0]][$k2][$k3]['no_of_bedrooms']}
+																		{if substr($PreviousMonthsAvailability[$pma_keys[0]][$k2][$k3]['effective_date'],0,7)==$pma_keys[0]}
+																			{$PreviousMonthsAvailability[$pma_keys[0]][$k2][$k3]['available_no_of_flats']}	
+																			{else}
+																				{"Outdated!"}
+																			{/if}
+																		{/if}
+																	{/if}
+																{/if}
+															{/foreach}
+														{/foreach}														
+													</td>	
+																<td valign ="top" align="center">
+																	{foreach from=$PreviousMonthsAvailability[$pma_keys[1]] key=k2 item=i2}
+																		{foreach from=$i2 key=k3 item=i3}
+																			{if $lastItem['PHASE_ID']==$k2}
+																				{if $keyInner==$PreviousMonthsAvailability[$pma_keys[1]][$k2][$k3]['project_type']}
+																					{if $lastItem['NO_OF_BEDROOMS']==$PreviousMonthsAvailability[$pma_keys[1]][$k2][$k3]['no_of_bedrooms']}
+																						{if substr($PreviousMonthsAvailability[$pma_keys[1]][$k2][$k3]['effective_date'],0,7)==$pma_keys[1]}					
+																							{$PreviousMonthsAvailability[$pma_keys[1]][$k2][$k3]['available_no_of_flats']}	
+																						{else}
+																							{"Outdated!"}
+																						{/if}
 																					{/if}
 																				{/if}
 																			{/if}
-																		{/if}
-																	{/foreach}
-																{/foreach}														
-															</td>															
-															{/if}
-														{$c=$c-1}
-														{/foreach}	
+																		{/foreach}
+																	{/foreach}														
+																</td>			
 													
 												<!-- 	<td valign ="top" align="center">
 														
