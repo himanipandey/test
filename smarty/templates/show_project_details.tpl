@@ -2599,7 +2599,6 @@ function getDateNow(){
 													<tr bgcolor ="#FBF2EF" height="30px;">
 														<td align ="right" colspan ="4" nowrap><b>SubTotal {$lastItem['PROJECT_TYPE']}</b></td>
 														<td align ="center"><b> {$totalNoOfFlatsPtype}</b></td>
-														<td align ="right" nowrap>&nbsp;</td>
 														<td  align ="center"><b> {$availableoOfFlatsPtype}</b></td>
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
@@ -2611,7 +2610,6 @@ function getDateNow(){
 												<tr bgcolor ="#F6D8CE" height="30px;">
 													<td align ="right" colspan ="4" nowrap><b>SubTotal {ucfirst($key)}</b></td>
 													<td align ="center"><b> {$totalNoOfFlatsPPhase}</b></td>
-													<td align ="right" nowrap >&nbsp;</td>
 													<td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
 													{if ucfirst($key) == 'NoPhase'}
 														<td  align ="left" colspan ="4"><b> 
@@ -2633,7 +2631,6 @@ function getDateNow(){
 												<tr bgcolor ="#F2F2F2" height="30px;">
 													<td align ="right" colspan ="4" nowrap><b>Grand Total {$flafHideGrandTot}</b></td>
 													<td align ="center"><b> {$totalSumFlat}</b></td>
-													<td align ="right" nowrap >&nbsp;</td>
 													<td align ="center"><b>{$totalSumflatAvail}</b></td>
 													<td  align ="left" colspan ="4"><b> 
 														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
