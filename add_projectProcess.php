@@ -62,7 +62,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$pre_launch_date    		=	trim($_POST['pre_launch_date']);
 		$eff_date_to				=	trim($_POST['eff_date_to']);
 		$special_offer				=	trim($_POST['special_offer']);
-		$display_flag				=	trim($_POST['display_flag']);
+		$display_order				=	trim($_POST['display_order']);
 		$oldbuilderId				=	trim($_POST['oldbuilderId']);
 		$youtube_link				=	trim($_POST['youtube_link']);
 
@@ -160,7 +160,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("pre_launch_date", $pre_launch_date);
 		$smarty->assign("eff_date_to", $eff_date_to);
 		$smarty->assign("special_offer", $special_offer);
-		$smarty->assign("display_flag", $display_flag);
+		$smarty->assign("display_order", $display_order);
 		$smarty->assign("youtube_link", $youtube_link);
 		if(isset($_POST['bank_list']))
 			$smarty->assign("bank_arr", $_POST['bank_list']);
@@ -207,7 +207,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$cityDetail	=	ViewCityDetails($cityId);
 		$cityName   =   $cityDetail['LABEL'];
 				
-		if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtProjectName)){
+		if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 		}
 		
@@ -222,13 +222,24 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		   }
 	     }
 	     
-	     $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_URL = '".$txtProjectURL."'";
+	     $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_URL = '".$txtProjectURL."' and project_id != '$projectId'";
 	     $resUrl = mysql_query($qryUrl) or die(mysql_error());
 	     if(mysql_num_rows($resUrl)>0)
 	     {
 	     	$ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
 	     }
-	     
+
+	     if(empty($display_order) || $display_order < 1 || $display_order > 999 || ($display_order > 15 && $display_order < 101))
+	     {
+	         $ErrorMsg["display_order"] = "Please put in display order (1-15 for city page), (101-998 for locality page), 999 for default";
+	     }
+	     elseif ($display_order >= 1 && $display_order <= 15) {
+	         $numProjects = getNumProjectsUnderDisplayOrder(15, $cityId, $projectId);
+	         if ($numProjects >= 15) {
+	             $ErrorMsg["display_order"] = "Already $numProjects projects have been assigned city page level editorial priority. Please edit them out of the range (1-15) first.";
+	         }
+	     }
+
 	     if($txtProjectURL!='')
 	     {
 	     	if(!preg_match('/^p-[a-z0-9\-]+\.php$/',$txtProjectURL)){
@@ -294,13 +305,13 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		   if ($projectId == '')
 		   {
 		   		
-				$projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
+				$projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
 				header("Location:project_img_add.php?projectId=".$projectId);
 			}
 			else
 			{
 				//echo $price1."==".$payment1;
-				$projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_flag,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
+				$projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
 				if($txtProjectURL != $txtProjectURLOld)
 					insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
 				if($preview == 'true')
@@ -320,7 +331,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 
 	}
 }
-	if ($projectId!='')
+elseif ($projectId!='')
 	{
 		
 		$ProjectDetail 	= ProjectDetail($projectId);
@@ -353,7 +364,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("no_of_flats", stripslashes($ProjectDetail[0]['NO_OF_FLATS']));
 		$smarty->assign("eff_date_to", stripslashes($ProjectDetail[0]['LAUNCH_DATE']));
 		$smarty->assign("special_offer", stripslashes($ProjectDetail[0]['OFFER']));
-		$smarty->assign("display_flag", stripslashes($ProjectDetail[0]['DISPLAY_FLAG']));
+		$smarty->assign("display_order", $ProjectDetail[0]['DISPLAY_ORDER']);
 		$smarty->assign("youtube_link", stripslashes($ProjectDetail[0]['YOUTUBE_VIDEO']));
 		$smarty->assign("price_list", stripslashes($ProjectDetail[0]['PRICE_LIST']));
 		$smarty->assign("app_form", stripslashes($ProjectDetail[0]['APPLICATION_FORM']));
@@ -412,5 +423,16 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$BankDataArr = BankList();
 	 }
 
+	 function getNumProjectsUnderDisplayOrder($displayOrder, $cityId, $projectId) {
+	     $numProjects = 0;
+	     $qry = "SELECT count(*) as numProjects FROM resi_project WHERE display_order <= $displayOrder and city_id = $cityId and project_id != $projectId";
+	     $res = mysql_query($qry);
+	     while($data = mysql_fetch_array($res))
+	     {
+	         $numProjects = $data['numProjects'];
+	     }
+	      
+	     return $numProjects;
+	 }
 
 ?>
