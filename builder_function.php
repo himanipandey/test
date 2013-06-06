@@ -2317,13 +2317,15 @@ function updateProjectUrl($id,$tblName,$builderName)
 function getPrevMonthProjectData($projectId)
 {
 	global $analytics_credential;
+	// global $_SERVER['SERVER_NAME'];
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
-	$tmstmp=time.now;
+	$tmstmp=time();
+	// echo $tmstmp;
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
-	$url = "/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
 
 	$url=$url.'&project_ids[]='.$projectId;
 
@@ -2350,14 +2352,16 @@ function getPrevMonthProjectData($projectId)
 function getFlatAvailability($projectId)
 {
 	global $analytics_credential;
+	// global $_SERVER['SERVER_NAME'];
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
-	$tmstmp=time.now;
+	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
-	$url = "/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
-
+	$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	// echo $url;
+	// $url="http://cms.proptiger.com/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj = file_get_contents($url);
