@@ -1847,21 +1847,20 @@ function getDateNow(){
 							  <td>
 								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']}
 							  </td>
-							  {$c=2}
-							 {foreach from = $PreviousMonthsData key=k item=it}
-							 	{if ($c>0)}
 							 	<td>
-							 		{if substr($PreviousMonthsData[$k][$ProjectOptionDetail[$key]['OPTIONS_ID']]['effective_date'],0,7)==$k}
-							 			{$PreviousMonthsData[$k][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
+							 		{if substr($PreviousMonthsData[$pmd_keys[0]][$ProjectOptionDetail[$key]['OPTIONS_ID']]['effective_date'],0,7)==$pmd_keys[0]}
+							 			{$PreviousMonthsData[$pmd_keys[0]][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
 							 		{else}
 							 			{"outdated data!"}
 							 		{/if}
 							 	</td>							 
-							 	{else}
-							 		{break}
-							 	{/if}
-							 	{$c=$c-1}
-							 {/foreach}
+							 	<td>
+							 		{if substr($PreviousMonthsData[$pmd_keys[1]][$ProjectOptionDetail[$key]['OPTIONS_ID']]['effective_date'],0,7)==$pmd_keys[1]}
+							 			{$PreviousMonthsData[$pmd_keys[1]][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
+							 		{else}
+							 			{"outdated data!"}
+							 		{/if}
+							 	</td>
 							  <!-- <td>
 								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_DP']}
 							  
