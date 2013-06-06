@@ -1812,8 +1812,8 @@ function getDateNow(){
 								 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
 								 {$pmd_keys=array_keys($PreviousMonthsData)}
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {$pmd_keys[0]}</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {$pmd_keys[1]}</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
 								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
 								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
@@ -2414,8 +2414,8 @@ function getDateNow(){
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats</b></td>
 											{$pma_keys=array_keys($PreviousMonthsAvailability)}
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$pma_keys[0]}</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$pma_keys[1]}</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {date('Y-m', strtotime("-1 month"))}</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {date('Y-m', strtotime("-2 month"))}</b></td>
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Lastest Month</b></td> -->
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
@@ -2603,6 +2603,7 @@ function getDateNow(){
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
+                                                                                                                <td  align ="left" >&nbsp;</td>
 													</tr>
 												{/if}
 											{/foreach}
@@ -2611,7 +2612,7 @@ function getDateNow(){
 													<td align ="center"><b> {$totalNoOfFlatsPPhase}</b></td>
 													<td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
 													{if ucfirst($key) == 'NoPhase'}
-														<td  align ="left" colspan ="4"><b> 
+														<td  align ="left" colspan ="5"><b> 
 														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
 															{100-($availableoOfFlatsPPhase*100/$totalNoOfFlatsPPhase)|string_format:"%.2f"}%
 														</b></td>													
@@ -2620,6 +2621,7 @@ function getDateNow(){
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
+                                                                                                                <td  align ="left" >&nbsp;</td>
 													
 													{/if}
 
@@ -2631,7 +2633,7 @@ function getDateNow(){
 													<td align ="right" colspan ="4" nowrap><b>Grand Total {$flafHideGrandTot}</b></td>
 													<td align ="center"><b> {$totalSumFlat}</b></td>
 													<td align ="center"><b>{$totalSumflatAvail}</b></td>
-													<td  align ="left" colspan ="4"><b> 
+													<td  align ="left" colspan ="5"><b> 
 														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
 															{100-($totalSumflatAvail*100/$totalSumFlat)|string_format:"%.2f"}%
 														</b></td>
