@@ -2538,7 +2538,7 @@ function getDateNow(){
 															{foreach from=$i2 key=k3 item=i3}
 															{if $lastItem['PHASE_ID']==$k2}
 																{if $keyInner==$PreviousMonthsAvailability[$monkey][$k2][$k3]['project_type']}
-																	if $lastItem['NO_OF_BEDROOMS']==$PreviousMonthsAvailability[$monkey][$k2][$k3]['no_of_bedrooms']}
+																	{if $lastItem['NO_OF_BEDROOMS']==$PreviousMonthsAvailability[$monkey][$k2][$k3]['no_of_bedrooms']}
 																		{if substr($PreviousMonthsAvailability[$monkey][$k2][$k3]['effective_date'],0,7)==$monkey}					
 																			{$PreviousMonthsAvailability[$monkey][$k2][$k3]['available_no_of_flats']}	
 																		{else}
