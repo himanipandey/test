@@ -2314,6 +2314,20 @@ function updateProjectUrl($id,$tblName,$builderName)
 	return true;
 }
 
+
+function curlFetch($url)
+{
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+	curl_setopt($ch, CURLOPT_NOBODY, FALSE); // show the body 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
+	$obj=curl_exec($ch);
+	curl_close($ch);
+	return $obj;
+}
+
 function getPrevMonthProjectData($projectId)
 {
 	global $analytics_credential;
@@ -2321,19 +2335,17 @@ function getPrevMonthProjectData($projectId)
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
 	$tmstmp=time();
-	// echo $tmstmp;
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
 	$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
-
+	// $url="http://dev.cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url=$url.'&project_ids[]='.$projectId;
 
-	$obj = file_get_contents($url);
+	$obj=curlFetch($url);
 	$json=json_decode($obj,true);
 
 	$months=$json['prices'];
-
 	$final_list = array();
 
 	foreach ($months as $mkey => $mvalue) {
@@ -2349,6 +2361,7 @@ function getPrevMonthProjectData($projectId)
 	return $final_list;
 }
 
+
 function getFlatAvailability($projectId)
 {
 	global $analytics_credential;
@@ -2358,13 +2371,11 @@ function getFlatAvailability($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-
+	// $url="http://dev.cms.proptiger.com/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
-	// echo $url;
-	// $url="http://cms.proptiger.com/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url=$url.'&project_ids[]='.$projectId;
 
-	$obj = file_get_contents($url);
+	$obj=curlFetch($url);
 	$json=json_decode($obj,true);
 
 	$months=$json['availability'];
