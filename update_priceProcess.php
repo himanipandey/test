@@ -6,13 +6,14 @@
 		header("Location:index.php");
 	$projectDetail			=	ProjectDetail($projectId);
 	$ProjectOptionDetail	=	ProjectOptionDetail($projectId);
+	$PreviousMonthsData		=	getPrevMonthProjectData($projectId);
 	$source_of_information	=	fetch_sourceofInformation();
-
 	//echo "<pre>";
 	//print_r($ProjectOptionDetail);
 	//echo "</pre>";
 	//die("fdsgs");
-	$arrAudit				=	AuditTblDataByTblName('resi_project_options',$projectId);
+	$arrAudit	=	AuditTblDataByTblName('resi_project_options',$projectId);
+	$smarty->assign("PreviousMonthsData",$PreviousMonthsData);
 	$smarty->assign("projectId", $projectId);
 	$smarty->assign("source_of_information", $source_of_information);
 	$smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);

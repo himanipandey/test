@@ -2,7 +2,7 @@
 	set_time_limit(0);
 	ini_set("memory_limit","256M");
 	include("ftp.new.php");
-	$watermark_path = 'pt_shadow1.png';
+	$watermark_path = 'images/pt_shadow1.png';
 	$projectId				=	$_REQUEST['projectId'];
 	$projectDetail			=	ProjectDetail($projectId);
 	$builderDetail			=	fetch_builderDetail($projectDetail[0]['BUILDER_ID']);

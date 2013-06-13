@@ -55,7 +55,7 @@ $ProjectOptionDetail	=	ProjectOptionDetail($projectId);
 $PreviousMonthsData	=	getPrevMonthProjectData($projectId);
 $PreviousMonthsAvailability = getFlatAvailability($projectId);
 
-
+//echo key($PreviousMonthsData['current']);
 $smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
 $smarty->assign("PreviousMonthsData",$PreviousMonthsData);
 $smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);

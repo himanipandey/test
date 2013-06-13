@@ -3,7 +3,7 @@ set_time_limit(0);
 ini_set("memory_limit","256M");
 
 $projectplansid = $_REQUEST['projectplansid'];
-$watermark_path = SERVER_PATH.'/images/watermark/pt_shadow1.png';
+$watermark_path = 'images/pt_shadow1.png';
 //echo $_REQUEST['suburb'];die("here");
 
 //echo "<pre>";

@@ -2,7 +2,7 @@
 $builderid = $_REQUEST['builderid'];
 
 include("ftp.new.php");
-$watermark_path = 'pt_shadow1.png';
+$watermark_path = 'images/pt_shadow1.png';
 //echo $_REQUEST['suburb'];die("here");
 $smarty->assign("builderid", $builderid);
 $ProjectList = project_list($builderid);

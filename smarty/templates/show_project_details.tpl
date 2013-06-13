@@ -1784,10 +1784,15 @@ function getDateNow(){
 						  	<td align="left"  nowrap colspan = "9">
 						  	<b>Project Price:</b> <button class="clickbutton" onclick="$(this).trigger('event12');">Edit</button>&nbsp;&nbsp;
 							<b>Project Configuration:</b> <button class="clickbutton" onclick="$(this).trigger('event7');">Edit</button>
-							&nbsp;&nbsp;<b>Project Price Effective From:</b> {$ProjectOptionDetail[0].CREATED_DATE}
+							&nbsp;&nbsp;<b>Project Price Effective From:</b>
+							
+							{$keyFirst = key($PreviousMonthsData['current'])}
+							{if $PreviousMonthsData['current'][$keyFirst]['effective_date'] != ''}
+								{$PreviousMonthsData['current'][$keyFirst]['effective_date']}
+							{else}
+								0000-00-00 00:00:00 
+							{/if}
 							<br><br>
-						  	
-						  	
 						  	</td>
 						</tr>
 						{/if}
@@ -1845,7 +1850,12 @@ function getDateNow(){
 								{/if}
 								</td>
 							  <td>
-								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']}
+							  	{if $PreviousMonthsData['current'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] != ''}
+							  		{$PreviousMonthsData['current'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
+							  	{else}
+							  		--
+							  	{/if}
+								<!-- {$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']} -->
 							  </td>
 							 	<td>
 							 		{$monkey=print_r(date('Y-m', strtotime("-1 month")),true)}

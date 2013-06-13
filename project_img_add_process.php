@@ -4,7 +4,7 @@
 	include("ftp.new.php");
 	$ErrorMsg='';
 	//$projectplansid = $_REQUEST['projectplansid'];
-	$watermark_path = "images/watermark/pt_shadow1.png";
+	$watermark_path = "images/pt_shadow1.png";
 	$projectId		=	$_REQUEST['projectId'];
 	$projectDetail	=	ProjectDetail($projectId);
 	$smarty->assign("ProjectDetail", $projectDetail);
@@ -17,7 +17,7 @@
 	$smarty->assign("edit_project", $edit_project);
 	//echo $projectplansid = $edit_project;
 
-	$watermark_path = 'pt_shadow1.png';
+	$watermark_path = 'images/pt_shadow1.png';
 	$source=array();
 	$dest=array();
 //$smarty->assign("projectplansid", $projectplansid);

@@ -4,7 +4,7 @@ ini_set("memory_limit","256M");
 include("../../dbConfig.php");
 
 $projectplansid = $_REQUEST['projectplansid'];
-$watermark_path = OFFLINE_PROJECT_INTERNET_PATH.'images/watermark/pt_shadow1.png';
+$watermark_path = 'images/pt_shadow1.png';
 
 
 $smarty->assign("projectplansid", $projectplansid);

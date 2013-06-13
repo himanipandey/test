@@ -4,7 +4,7 @@
 		include("ftp.new.php");
 		$ErrorMsg='';
 
-		$watermark_path = 'pt_shadow1.png';
+		$watermark_path = 'images/pt_shadow1.png';
 		 $projectId		=	$_GET['projectId'];
 		$projectDetail	=	ProjectDetail($projectId);
 		$smarty->assign("ProjectDetail", $projectDetail);
