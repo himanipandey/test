@@ -9,7 +9,6 @@ li{margin:0; padding:0;}
 	background-color: #ffffff;
 	background-repeat: no-repeat;
 	background-position: center;
-	//height: 77px;
 }
 .headingrowcolor{
 	 background-color:#666666;
@@ -53,20 +52,6 @@ li{margin:0; padding:0;}
 .footer_bg {
 	BACKGROUND-IMAGE: url(../images/footerbg.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 80px; BACKGROUND-COLOR: #ffffff
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .white-bg {
 	BACKGROUND-COLOR: #ffffff
@@ -324,3 +309,14 @@ A:hover {
 
 .borderRed{border:1px solid red;}
 .borderBlack{border:1px solid #677788;}
+
+.squareDiv200{
+    height: 200px; 
+    width: 200px; 
+    border: 1px solid #b1b1b1;
+    overflow-y: auto
+}
+.contentBox{
+    background: #ffffff;
+    border: 1px solid #b1b1b1;
+}
