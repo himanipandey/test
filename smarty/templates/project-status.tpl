@@ -1,3 +1,19 @@
+<link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="js/tablesorter_default_table.js"></script>
+
+<script>
+function selectAllCheckBoxes(inputName, checked){
+    var all = document.getElementsByName(inputName);
+    for(var i=0; i<all.length; i++){
+        if ($(all[i]).closest('tr').is(":visible")) all[i].checked = checked;
+    }
+}
+</script>
+
 </TD>
 </TR>
 <TR>
@@ -31,11 +47,14 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <form  method="get" id="abc" name="abc">
+                                            <form method="post" action="project-assign.php" onsubmit="return verifyChecked()">
                                                 <table class="tablesorter">
                                                     <thead>
                                                         <tr>
-                                                            <th>&nbsp;</th>
+                                                            <th>
+                                                                <input type=checkbox onclick="selectAllCheckBoxes('assign[]', this.checked);">
+                                                            </th>
+                                                            
                                                             <th>PID</td>
                                                             <th>Project Name</th>
                                                             <th>Builder Name</th>
@@ -62,10 +81,20 @@
                                                     <tfoot>
                                                         <tr>
                                                             <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
-                                                                <input style="float: left;" type="submit" name="submit" value="fresh"></input>
-                                                                <input style="float: left;" type="submit" name="submit" value="field"></input>
-                                                                <button id="abc" value="submit" style="float: left" />
-
+                                                                <input type="submit" name="submit" value="fresh assignement"></input>&nbsp;&nbsp;
+                                                                <input type="submit" name="submit" value="field assignement"></input>&nbsp;&nbsp;
+                                                                <button class="btn first"><i class="icon-step-backward"></i></button>
+                                                                <button class="btn prev"><i class="icon-arrow-left"></i></button>
+                                                                <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+                                                                <button class="btn next"><i class="icon-arrow-right"></i></button>
+                                                                <button class="btn last"><i class="icon-step-forward"></i></button>
+                                                                <select class="pagesize input-mini" title="Select page size">
+                                                                    <option selected="selected" value="10">10</option>
+                                                                    <option value="20">20</option>
+                                                                    <option value="30">30</option>
+                                                                    <option value="40">40</option>
+                                                                </select>
+                                                                <select class="pagenum input-mini" title="Select page number"></select>
                                                             </th>
                                                         </tr>
                                                     </tfoot>
@@ -111,19 +140,15 @@
 </TR>
 
 <script>
-$(document).ready(function() {
-    $("#abc").ajaxForm({
-        success: function(responseText){
-            $.fancybox({
-                'content' : responseText
-            });
-        }
-    }); 
-});
-
-$("#abc").click(function() {
-    $('<a href="path/to/whatever">Friendly description</a>').fancybox({
-    	overlayShow: true
-    }).click();
-});
+function verifyChecked(){
+    var all = document.getElementsByName('assign[]')
+    var flag = false;
+    for(i=0; i<all.length; i++){
+        flag = flag || all[i].checked
+    }
+    if(!flag){
+        alert("Please select projects to be assigned");
+    }
+    return flag;
+}
 </script>
