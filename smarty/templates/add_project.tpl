@@ -594,19 +594,7 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-
-							   <tr>
-							   <td width="20%" align="right" valign="top"><b><b>Offer :</b> </td>
-							   <td width="30%" align="left">
-							   <select name="special_offer">
-							   <option {if $special_offer == 'none'} value="none" selected = "selected" {else}  value ='none' {/if} >No Offer</option>
-							   <option {if $special_offer == 'so'} value="so" selected = "selected"{else}  value ='so'  {/if} >Special Offer</option>
-							   <option {if $special_offer == 'nl'} value="nl" selected = "selected"{else}  value ='nl'  {/if}>New Launch</option>
-							   <option {if $special_offer == 'ne'} value="ne" selected = "selected"{else}  value ='ne' {/if}>No EMI</option>
-							   </select>
-							   </td>
-							   <td width="50%" align="left"></td>
-							   </tr>
+							   
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Display Order:</b> </td>
 								  <td width="30%" align="left">
@@ -777,18 +765,31 @@
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 
+								<tr>
+								   <td width="20%" align="right" valign="top"><b><b>Heighlight :</b> </td>
+								   <td width="30%" align="left">
+								   <select name="special_offer">
+								   <option {if $special_offer == 'none'} value="none" selected = "selected" {else}  value ='none' {/if} >No Offer</option>
+								   <option {if $special_offer == 'nl'} value="nl" selected = "selected"{else}  value ='nl'  {/if}>New Launch</option>
+								   <option {if $special_offer == 'so'} value="so" selected = "selected"{else}  value ='so' {/if}>Sold Out</option>
+								   </select>
+								   </td>
+							   <td width="50%" align="left"></td>
+							   </tr>
+							   
 							    <tr>
-								  <td width="20%" align="right" valign ="top"><b>Special Offer Heading:</b> </td><td width="30%" align="left">
-									 <textarea name = "offer_heading" id = "offer_heading" rows="10" cols="45">{$offer_heading}</textarea>
+								  <td width="20%" align="right" valign ="top"><b>Offer Heading:</b> </td><td width="30%" align="left">
+									 
+									 <input maxlength = "13" type = "text" name = "offer_heading" id = "offer_heading" value ="{$offer_heading}" style ="width:360px;">
 								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
+								  <td width="50%" align="left"><font color="red"><span id = "offerHeading"></span></font></td>
 							   </tr>
 
 							    <tr>
-								  <td width="20%" align="right" valign ="top"><b>Special Offer Description:</b> </td><td width="30%" align="left">
-									<textarea name = "offer_desc" id = "offer_desc" rows="10" cols="45">{$offer_desc}</textarea>
+								  <td width="20%" align="right" valign ="top"><b>Offer Description:</b> </td><td width="30%" align="left">
+									<input maxlength = "40" type = "text" name = "offer_desc" id = "offer_desc" value ="{$offer_desc}" style ="width:360px;">
 								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
+								  <td width="50%" align="left"><font color="red"><span id = "offerDesc"></span></font></td>
 							   </tr>
 
 							   <tr>
