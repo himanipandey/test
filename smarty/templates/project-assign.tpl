@@ -55,7 +55,7 @@
                                                             <td>
                                                                 <select class="squareDiv200" multiple>
                                                                     {foreach from = $executiveWorkLoad item = executive}
-                                                                        <option value="{$executive["ADMINID"]}">{$executive['USERNAME']} - {$executive['TOTAL']}</option>
+                                                                        <option value="{$executive["ADMINID"]}">{$executive['USERNAME']} - {$executive['WORKLOAD']}</option>
                                                                     {/foreach}
                                                             </td>
                                                         </TR>
