@@ -93,17 +93,3 @@ function selectAllCheckBoxes(inputName, checked){
         </TABLE>
     </TD>
 </TR>
-
-<script>
-function verifyChecked(){
-    var all = document.getElementsByName('assign[]')
-    var flag = false;
-    for(i=0; i<all.length; i++){
-        flag = flag || all[i].checked
-    }
-    if(!flag){
-        alert("Please select projects to be assigned");
-    }
-    return flag;
-}
-</script>
