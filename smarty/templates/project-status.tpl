@@ -102,7 +102,7 @@ function selectAllCheckBoxes(inputName, checked){
                                                         {foreach from = $projectList key=key item = item}
                                                         <tr>
                                                             <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
-                                                            <td>{$item['PROJECT_ID']}</td>
+                                                            <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
                                                             <td>{$item['PROJECT_NAME']}</td>
                                                             <td>{$item['BUILDER_NAME']}</td>
                                                             <td>{$item['CITY']}</td>
