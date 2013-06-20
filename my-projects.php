@@ -8,7 +8,7 @@
     include("builder_function.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
-    require_once ('myProjectsProcess.php');
+    require_once ('datacollection/myProjectsProcess.php');
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."my-projects.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
