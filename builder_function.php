@@ -1425,6 +1425,7 @@ function RoomCategoryList()
 
 function updateProjectPhase($pID, $phase, $reviews,$stage='',$revert=FALSE){
 if($phase!="complete"){
+    mysql_query('begin');
 $Sql = "UPDATE ".RESI_PROJECT." SET PROJECT_PHASE = '".$phase."', AUDIT_COMMENTS = '".$reviews."' WHERE PROJECT_ID = '".$pID."';";
 }
 else{
@@ -1432,14 +1433,23 @@ else{
 }
 $ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function updateProjectPhase()');
 	if($revert == TRUE) $phase='revert';
+        
+$sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = $pID";
+$res = mysql_query($sql);
+$res = mysql_fetch_assoc($res);
+$last_hist_id = $res['ID'];
+
 	$ins = "
 				INSERT INTO 
 						project_stage_history 
-							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID)
+							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
 				VALUES 
-							(NULL,'".$pID."','".$phase."','".$stage."',NOW(),'".$_SESSION['adminId']."') 
+							(NULL,'".$pID."','".$phase."','".$stage."',NOW(),'".$_SESSION['adminId']."','".$last_hist_id."') 
 			";
 	$r = mysql_query($ins);
+        $sql = "update resi_project set MOVEMENT_HISTORY_ID = ".mysql_insert_id()." where PROJECT_ID = $pID;";
+        mysql_query($sql);
+        mysql_query('commit');
 return 1;
 }
 

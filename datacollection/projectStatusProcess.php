@@ -19,7 +19,7 @@ function prepareDisplayData($data){
         $new['LAST_WORKED_AT'] = $value['LAST_WORKED_AT'];
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         if(empty($assigned_to[0])){
-            if($value['PREV_PROJECT_PHASE'] == 'audit1') $new['ASSIGNMENT_TYPE'] = 'Assigned - Reverted';
+            if($value['PREV_PROJECT_PHASE'] == 'revert') $new['ASSIGNMENT_TYPE'] = 'Assigned - Reverted';
             else $new['ASSIGNMENT_TYPE'] = 'Unassigned';
         }
         else $new['ASSIGNMENT_TYPE'] = 'Assigned-'.  strval(count($assigned_to));
