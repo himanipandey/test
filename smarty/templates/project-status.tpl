@@ -55,26 +55,26 @@ function selectAllCheckBoxes(inputName, checked){
                                                                 <input type=checkbox onclick="selectAllCheckBoxes('assign[]', this.checked);">
                                                             </th>
                                                             
-                                                            <th>PID</td>
-                                                            <th>Project Name</th>
-                                                            <th>Builder Name</th>
-                                                            <th>City</th>
-                                                            <th>Locality</th>
-                                                            <th>Project Phase</th>
-                                                            <th>Last Worked At</th>
-                                                            <th>Assignment Type</th>
-                                                            <th>1st Assigned To</th>
-                                                            <th>Assigned On</th>
-                                                            <th>Status</th>
-                                                            <th>Remark</th>
-                                                            <th>2nd Assignment</th>
-                                                            <th>Assigned On</th>
-                                                            <th>Status</th>
-                                                            <th>Remark</th>
-                                                            <th>3rd Assignment</th>
-                                                            <th>Assigned On</th>
-                                                            <th>Status</th>
-                                                            <th>Remark</th>
+                                                            <th style="font-size: 12px">PID</td>
+                                                            <th style="font-size: 12px">Project Name</th>
+                                                            <th style="font-size: 12px">Builder Name</th>
+                                                            <th style="font-size: 12px">City</th>
+                                                            <th style="font-size: 12px">Locality</th>
+                                                            <th style="font-size: 12px">Project Phase</th>
+                                                            <th style="font-size: 12px">Last Worked At</th>
+                                                            <th style="font-size: 12px">Assignment Type</th>
+                                                            <th style="font-size: 12px">1st Assigned To</th>
+                                                            <th style="font-size: 12px">Assigned On</th>
+                                                            <th style="font-size: 12px">Status</th>
+                                                            <th style="font-size: 12px">Remark</th>
+                                                            <th style="font-size: 12px">2nd Assignment</th>
+                                                            <th style="font-size: 12px">Assigned On</th>
+                                                            <th style="font-size: 12px">Status</th>
+                                                            <th style="font-size: 12px">Remark</th>
+                                                            <th style="font-size: 12px">3rd Assignment</th>
+                                                            <th style="font-size: 12px">Assigned On</th>
+                                                            <th style="font-size: 12px">Status</th>
+                                                            <th style="font-size: 12px">Remark</th>
 
                                                         </tr>
                                                     </thead>

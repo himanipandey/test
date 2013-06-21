@@ -27,18 +27,10 @@
                                     </TD>
                                 </TR>
                                 <TR>
-                                    {if is_array($errorMsg)}
-                                        <TD colspan="0">
-                                            <div class="error" style="text-align: center">
-                                                {foreach from = $errorMsg item = error}
-                                                    {$error}<br/>
-                                                {/foreach}
-                                            </div>
-                                        </TD>
-                                    {else}
+                                    {if isset($assignmentType)}
                                         <TD>
                                             <div class="contentBox">
-                                                <form>
+                                                <form method="post" onsubmit="return verifySelected();">
                                                     <table cellSpacing=10px style="margin: 0 auto">
                                                         <TR>
                                                             <th>PROJECTS</th>
@@ -46,21 +38,22 @@
                                                         </TR>
                                                         <TR>
                                                             <td>
-                                                                <div class="squareDiv200">
+                                                                <select name="projects[]" class="squareDiv200" multiple>
                                                                     {foreach from = $projectDetails item = project}
-                                                                        {$project['PROJECT_NAME']} - {$project['BUILDER_NAME']}<br/>
+                                                                        <option value={$project["PROJECT_ID"]} selected>{$project['PROJECT_NAME']} - {$project['BUILDER_NAME']}</option>
                                                                     {/foreach}
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <select class="squareDiv200" multiple>
+                                                                <select name="executives[]" class="squareDiv200" multiple>
                                                                     {foreach from = $executiveWorkLoad item = executive}
-                                                                        <option value="{$executive["ADMINID"]}">{$executive['USERNAME']} - {$executive['WORKLOAD']}</option>
+                                                                        <option value="{$executive["ADMINID"]}" {if $executive['WORKLOAD'] gte 80}disabled{/if}>{$executive['USERNAME']} - {$executive['WORKLOAD']}</option>
                                                                     {/foreach}
                                                             </td>
                                                         </TR>
                                                         <tr>
                                                             <td colspan="2" style="text-align: center">
+                                                                <input type="hidden" name="assignmenttype" value="{$assignmentType}">
                                                                 <input type="submit" name="submit" value="Assign">
                                                             </TD>
                                                         </TR>
@@ -68,6 +61,15 @@
                                                 </form>
                                             </div>
                                         </TD>
+                                    {elseif !empty($errorMsg)}
+                                        <TD colspan="0">
+                                            <div class="error" style="text-align: center">
+                                                Projets {implode(', ', $errorMsg)} couldn't be assigned.
+                                            </div>
+                                        </TD>
+                                        <td>
+                                            <a href = "project-status.php">BACK</a>
+                                        </td>
                                     {/if}
                                 </TR>
                             </TBODY>
@@ -80,19 +82,14 @@
 </TR>
 
 <script>
-$(document).ready(function() {
-    $("#abc").ajaxForm({
-        success: function(responseText){
-            $.fancybox({
-                'content' : responseText
-            });
-        }
-    }); 
-});
-
-$("#abc").click(function() {
-    $('<a href="path/to/whatever">Friendly description</a>').fancybox({
-    	overlayShow: true
-    }).click();
-});
+function verifySelected(){
+    var errMsg = '';
+    
+    if($("[name='projects[]'] option:selected").length === 0)errMsg += "Please select projects. \n";
+    if($("[name='executives[]'] option:selected").length === 0)errMsg += "Please select executives.";
+    
+    if(errMsg === '')return true;
+    alert(errMsg);
+    return false;
+}
 </script>
