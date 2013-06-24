@@ -1,13 +1,17 @@
 <?php
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
-if(!(($_SESSION['ROLE'] === 'teamLeader') && (in_array($_SESSION['DEPARTMENT'], array('DATAENTRY', 'CALLCENTER'))))){
+if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER'))){
     header("Location: project_desktop.php");
 }
 
-$projectsfromDB = getProjectListForManagers($_SESSION['adminId']);
-$projectList = prepareDisplayData($projectsfromDB);
+if(isset($_POST['cityId']) && !empty($_POST['cityId'])){
+    $projectsfromDB = getProjectListForManagers($_POST['cityId'], $_POST['suburbId']);
+    $projectList = prepareDisplayData($projectsfromDB);
+}
 
+$CityDataArr = CityArr();
+$smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("projectList", $projectList);
 $smarty->assign("projectPageURL", '/show_project_details.php?projectId=');
 

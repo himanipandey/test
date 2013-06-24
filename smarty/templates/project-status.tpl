@@ -5,14 +5,6 @@
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="js/tablesorter_default_table.js"></script>
 
-<script>
-function selectAllCheckBoxes(inputName, checked){
-    var all = document.getElementsByName(inputName);
-    for(var i=0; i<all.length; i++){
-        if ($(all[i]).closest('tr').is(":visible")) all[i].checked = checked;
-    }
-}
-</script>
 
 </TD>
 </TR>
@@ -44,6 +36,24 @@ function selectAllCheckBoxes(inputName, checked){
                                         </TABLE>
                                      </TD>
                                 </TR>
+                                <tr>
+                                    <td colspan="0">
+                                        <div style="width: 100%; height: 31px;">
+                                            <form method="post" onsubmit="return verifyDataGetForm();">
+                                                <select name="cityId" id = "cityId" class="cityId" onchange="updateSuburbDropdown(this.value, 'suburbId');" STYLE="width: 150px">
+                                                        <option value =''>Select City</option>
+                                                        {foreach from = $CityDataArr key=key item = item}
+                                                        <option {if $cityId == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
+                                                         {/foreach}
+                                                </select>
+                                                <select name="suburbId" id = "suburbId" class="suburbId" STYLE="width: 150px">
+                                                    <option value="">Select Suburb</option>
+                                                </select>
+                                                <input class="cityId" STYLE="width: 150px; vertical-align: top;" type="submit" name="submit" value="Get Projects"></input>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>
                                         <div>
@@ -150,5 +160,45 @@ function verifyChecked(){
         alert("Please select projects to be assigned");
     }
     return flag;
+}
+
+
+function selectAllCheckBoxes(inputName, checked){
+    var all = document.getElementsByName(inputName);
+    for(var i=0; i<all.length; i++){
+        if ($(all[i]).closest('tr').is(":visible")) all[i].checked = checked;
+    }
+}
+
+function verifyDataGetForm(){
+    var city = $(".cityId :selected").val();
+    var sub = $(".suburbId :selected").val();
+    if (city === ""){
+        alert("Please Select City!");
+        return false;
+    }
+    else{
+        if(city==2 && sub === ""){
+            alert("Please Select Suburb");
+            return false;
+        }
+    }
+    return true;
+}
+
+function updateSuburbDropdown(cityId, suburbSelectboxId)
+{
+        dataString = 'id='+cityId
+	$.ajax
+	({
+		type: "POST",
+		url: "RefreshSuburb.php",
+		data: dataString,
+		cache: false,
+		success: function(html)
+		{
+			$("."+suburbSelectboxId).html('<option value="">All</option>'+html);
+		}
+	});
 }
 </script>
