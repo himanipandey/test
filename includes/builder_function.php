@@ -45,6 +45,8 @@
 			$ResDetails['LAST_LOGIN_DATE'] 	= 	$Res['LAST_LOGIN_DATE'];
 			$ResDetails['LAST_LOGIN_IP'] 	= 	$Res['LAST_LOGIN_IP'];
 			$ResDetails['BRANCH_LOCATION'] 	= 	$Res['BRANCH_LOCATION'];
+                        $ResDetails['DEPARTMENT'] 	= 	$Res['DEPARTMENT'];
+                        $ResDetails['ROLE']         	= 	$Res['ROLE'];
 			return $ResDetails;
 		} else {
 			return 0;

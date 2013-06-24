@@ -50,6 +50,7 @@
 			$ResDetails['LAST_LOGIN_IP'] 	= 	$Res['LAST_LOGIN_IP'];
 			$ResDetails['BRANCH_LOCATION'] 	= 	$Res['BRANCH_LOCATION'];
 			$ResDetails['DEPARTMENT'] 	= 	$Res['DEPARTMENT'];
+                        $ResDetails['ROLE'] 	= 	$Res['ROLE'];
 			return $ResDetails;
 		} else {
 			return 0;
@@ -57,7 +58,6 @@
 	}
         
         function getNewCmsSession($AdminId){
-            error_log('DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
             $AdminDetail = AdminLoginDetail(NULL,$AdminId);
             $session['adminId'] 		= $AdminDetail['adminId'];
             $session['AdminUserName'] 	= $AdminDetail['userName'];
@@ -66,6 +66,7 @@
             $session['LAST_LOGIN_DATE'] 		= $AdminDetail['LAST_LOGIN_DATE'];
             $session['LAST_LOGIN_IP'] 			= $AdminDetail['LAST_LOGIN_IP'];
             $session['DEPARTMENT'] 			= $AdminDetail['DEPARTMENT'];
+            $session['ROLE'] 			= $AdminDetail['ROLE'];
 
             /************update admin table for last login*******************/
             $qryUpDate	= "UPDATE proptiger_admin SET LAST_LOGIN_DATE = now(),LAST_LOGIN_IP = '".$_SERVER['REMOTE_ADDR']."' WHERE ADMINID = '".$AdminId."'";

@@ -19,6 +19,7 @@ if(isset($_POST['Submit_x']))
 		$_SESSION['LAST_LOGIN_DATE'] 		= $AdminDetail['LAST_LOGIN_DATE'];
 		$_SESSION['LAST_LOGIN_IP'] 			= $AdminDetail['LAST_LOGIN_IP'];
 		$_SESSION['DEPARTMENT'] 			= $AdminDetail['DEPARTMENT'];
+                $_SESSION['ROLE']                               = $AdminDetail['ROLE'];
 		
 		/************update admin table for last login*******************/
 		$qryUpDate	=	"UPDATE ".ADMIN." SET LAST_LOGIN_DATE = now(),LAST_LOGIN_IP = '".$_SERVER['REMOTE_ADDR']."' WHERE ADMINID = '".$_SESSION['adminId']."'";

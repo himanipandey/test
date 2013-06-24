@@ -43,8 +43,8 @@ $("table").tablesorter({
         // this is no longer required, if theme is set
         // ,uitheme : "bootstrap"
 
-    },
-    headers: { 0:{sorter:false} }
+    }
+    //headers: { 0:{sorter:false} }
 })
 .tablesorterPager({
 

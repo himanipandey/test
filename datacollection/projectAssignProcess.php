@@ -31,9 +31,9 @@ elseif($_POST['submit'] === 'Assign') {   //assigning projects
     }
     elseif($_POST['assignmenttype'] === 'field assignement'){
         $projectIds = $_POST['projects'];
-        $result = assignProjectsToField($projectIds);
+        $assignmentStatus = assignProjectsToField($projectIds);
     }
-    $errorMsg = array_keys($result);
+    $errorMsg = array_keys($assignmentStatus);
 }
 
 $smarty->assign("errorMsg", $errorMsg);

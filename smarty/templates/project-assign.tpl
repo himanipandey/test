@@ -61,16 +61,24 @@
                                                 </form>
                                             </div>
                                         </TD>
-                                    {elseif !empty($errorMsg)}
-                                        <TD colspan="0">
-                                            <div class="error" style="text-align: center">
-                                                Projets {implode(', ', $errorMsg)} couldn't be assigned.
-                                            </div>
-                                        </TD>
-                                        <td>
-                                            <a href = "project-status.php">BACK</a>
-                                        </td>
+                                    {else}
+                                        {if !empty($errorMsg)}
+                                            <TD colspan="0">
+                                                <div class="error" style="text-align: center">
+                                                    ProjetId {implode(', ', $errorMsg)} couldn't be assigned.
+                                                </div>
+                                            </TD>
+                                        {else}
+                                            <td style="text-align: center;">
+                                                Projects Assigned Sussessfully.
+                                            </td>
+                                        {/if}
                                     {/if}
+                                </TR>
+                                <TR>
+                                    <td style="text-align: center;">
+                                        <a href = "project-status.php">BACK</a>
+                                    </td>
                                 </TR>
                             </TBODY>
                         </TABLE>
