@@ -99,10 +99,10 @@
                                                                 <button class="btn next"><i class="icon-arrow-right"></i></button>
                                                                 <button class="btn last"><i class="icon-step-forward"></i></button>
                                                                 <select class="pagesize input-mini" title="Select page size">
-                                                                    <option selected="selected" value="10">10</option>
+                                                                    <option value="10">10</option>
                                                                     <option value="20">20</option>
-                                                                    <option value="30">30</option>
-                                                                    <option value="40">40</option>
+                                                                    <option value="50">50</option>
+                                                                    <option selected="selected" value="100">100</option>
                                                                 </select>
                                                                 <select class="pagenum input-mini" title="Select page number"></select>
                                                             </th>

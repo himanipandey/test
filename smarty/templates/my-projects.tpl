@@ -76,7 +76,7 @@
                                                     <tr>
                                                         <form id={$item['PROJECT_ID']} method="post" onsubmit="return verifyValues({$item['PROJECT_ID']});">
                                                             <input type="hidden" name="projectid" value={$item['PROJECT_ID']}></input>
-                                                            <td>{$item['PROJECT_ID']}</td>
+                                                            <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
                                                             <td>{$item['PROJECT_NAME']}</td>
                                                             <td>{$item['BUILDER_NAME']}</td>
                                                             <td>{$item['CITY']}</td>
@@ -96,7 +96,16 @@
                                                                     <option value='doneExceptInventory'>All But Inventory</option>
                                                                 </select>
                                                             </td>
-                                                            <td><input name="remark" type="textbox" value="{$item['REMARK']}"></input></td>
+                                                            <td>
+                                                                <select name="remark">
+                                                                    <option value="">Please Pick One</option>
+                                                                    <option value="callBackRequest">Call Back Request</option>
+                                                                    <option value="couldNotContact">couldNotContact</option>
+                                                                    <option value="contactNoNotAvailable">Contact No Not Available</option>
+                                                                    <option value="noSuchProject">No Such Project</option>
+                                                                    <option value="languageBarrier">Language Barrier</option>
+                                                                </select>
+                                                            </td>
                                                             <td>
                                                                 <input type="submit" name="submit" value="Save">
                                                             </td>
@@ -122,8 +131,12 @@ function verifyValues(formId){
     var id = formId.toString();
     var form = document.getElementById(id);
     
-    if(form.status.value === 'notAttempted' && form.remark.value.trim() === ''){
-        alert("Please change status or put remerk");
+    if(form.status.value === 'notAttempted'){
+        alert("Please change status.");
+        return false;
+    }
+    else if(form.status.value === 'incomplete' && form.remark.value === ''){
+        alert('Putting Remark is mendatory in case of incolplete status.');
         return false;
     }
     return true;

@@ -12,3 +12,5 @@ update resi_project rp inner join (select PROJECT_ID, max(HISTORY_ID) HISTORY_ID
 alter table project_stage_history add column PREV_HISTORY_ID int null default null;
 
 alter table project_stage_history add foreign key (PREV_HISTORY_ID) references project_stage_history(HISTORY_ID);
+
+alter table project_assignment modify column EXECUTIVE_REMARK enum('callBackRequest', 'couldNotContact', 'contactNoNotAvailable', 'noSuchProject', 'languageBarrier') default null;
