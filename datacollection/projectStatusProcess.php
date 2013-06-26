@@ -51,15 +51,14 @@ function prepareDisplayData($data){
         $new['LAST_WORKED_AT'] = $value['LAST_WORKED_AT'];
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
-        if(empty($assigned_to[0])){
-            if($value['PREV_PROJECT_PHASE'] == 'revert') $new['ASSIGNMENT_TYPE'] = 'Assigned - Reverted';
-            else $new['ASSIGNMENT_TYPE'] = 'Unassigned';
+        $assignment_type = '';
+        if($value['PREV_PROJECT_PHASE'] == 'audit1') $assignment_type .= 'Reverted-';
+        if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY')$assignment_type .= 'Field';
+        elseif(empty($assigned_to[0])) $assignment_type .= 'Unassigned';
+        else{
+            $assignment_type .= 'Assigned-'.  strval(count($assigned_to));
         }
-        elseif($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY'){
-            $new['ASSIGNMENT_TYPE'] = 'Field';
-        }else{
-            $new['ASSIGNMENT_TYPE'] = 'Assigned-'.  strval(count($assigned_to));
-        }
+        $new['ASSIGNMENT_TYPE'] = $assignment_type;
         $new['ASSIGNED_TO'] = $assigned_to;
         $new['ASSIGNED_AT'] = explode('|', $value['ASSIGNED_AT']);
         $new['STATUS'] = explode('|', $value['STATUS']);
