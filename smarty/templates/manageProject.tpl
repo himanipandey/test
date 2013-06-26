@@ -7,6 +7,9 @@ font-family:arial,tahoma,verdana;
 }
 </style>
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script>
 <script language="javascript">
 
 var selectAllFlag = false;
@@ -153,8 +156,10 @@ function gotoAddress(link){
 		var Active     	 = $("#Active").val();
 		var Status     	 = $("#Status").val();
 		var project_name = $("#project_name").val();
-		var project_name = $("#project_name").val();
-		if(ct == '' && loc == '' && bldr == '' && project_name == '' && phase=='' && stage=='' && tag=='' && pid == '' && Availability == null && Residential == '' && Active == null  && Status == null  && project_name == '')
+		var f_date_c_from = $("#f_date_c_from").val();
+                var f_date_c_from = $("#f_date_c_to").val();
+		if(ct == '' && loc == '' && bldr == '' && project_name == '' && phase=='' && stage=='' && tag=='' && pid == '' && Availability == null && Residential == '' && Active == null  && Status == null  && project_name == ''
+                            && f_date_c_from =='' && f_date_c_to =='')
 		{
 			$("#errmsg").show();
 			return false;
@@ -451,8 +456,20 @@ else{
 										{/foreach}
 									 </select>
 								</td>
-							  </tr>
+							  </tr>      
+                                                          
 							  <tr><td>&nbsp;</td></tr>		 
+							<tr> 
+								<td align="right" style = "padding-left:20px;"><b>Expected Supply Date:</b></td>
+								<td align="left" style = "padding-left:20px;">
+									From:<input name="exp_supply_date_from" value="{$exp_supply_date_from}" type="text" class="formstyle2" id="f_date_c_from" size="5" />  <img src="images/cal_1.jpg" id="f_trigger_c_from" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                                                       &nbsp; To:<input name="exp_supply_date_to" value="{$exp_supply_date_to}" type="text" class="formstyle2" id="f_date_c_to" size="5" />  <img src="images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                                                        
+                                                                        
+								</td>
+							  </tr>
+                                                          
+                                                          <tr><td>&nbsp;</td></tr>		 
 							<tr> 
 								<td align="right" style = "padding-left:20px;"><b>Project Name:</b></td>
 								<td align="left" style = "padding-left:20px;">
@@ -619,3 +636,23 @@ else{
         </td></tr>
     </TBODY></TABLE>
 
+<script type="text/javascript">
+    var cals_dict = {
+      
+        "f_trigger_c_from" : "f_date_c_from",
+        "f_trigger_c_to" : "f_date_c_to",
+       
+    };
+
+    $.each(cals_dict, function(k, v) {
+        Calendar.setup({
+            inputField     :    v,                                 // id of the input field
+            //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
+            ifFormat       :    "%Y-%m-%d",                        // format of the input field
+            button         :    k,                                 // trigger for the calendar (button ID)
+            align          :    "Tl",                              // alignment (defaults to "Bl")
+            singleClick    :    true,
+            showsTime	  :	true
+        });
+    });
+</script>

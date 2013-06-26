@@ -47,7 +47,15 @@
 
 	if($search != '' OR $_GET['projectId'] != '')
 	{
-		if(!isset($_REQUEST['city']))
+		if(!isset($_REQUEST['exp_supply_date_from']))
+		$_REQUEST['exp_supply_date_from'] = '';
+		$exp_supply_date_from = $_REQUEST['exp_supply_date_from'];
+                
+                if(!isset($_REQUEST['exp_supply_date_to']))
+		$_REQUEST['city'] = '';
+		$exp_supply_date_to = $_REQUEST['exp_supply_date_to'];
+                
+                if(!isset($_REQUEST['city']))
 		$_REQUEST['city'] = '';
 		$city			=	$_REQUEST['city'];
 
@@ -75,8 +83,6 @@
 		$Status 		= 	$_REQUEST['Status'];
 		$Active 		= 	$_REQUEST['Active'];
 
-		
-		
 		if($_GET['projectId'] != '')
 			$project_name= $ProjectDetail[0]['PROJECT_NAME'];
 		else
@@ -88,6 +94,10 @@
 		$smarty->assign("phase", $phase);
 		$smarty->assign("tag", $tag);
 		$smarty->assign("stage", $stage);
+                $smarty->assign("stage", $stage);
+                $smarty->assign("exp_supply_date_from", $exp_supply_date_from);
+                $smarty->assign("exp_supply_date_to", $exp_supply_date_to);
+               
 
 
   		if($city != '')
@@ -218,7 +228,22 @@
 				$QueryMember .= $and." UPDATION_CYCLE_ID = '".$_REQUEST['tag']."'";
 				$and  = ' AND ';
 			}
+                        if($exp_supply_date_to != '' && $exp_supply_date_from != '')
+			{
+				$QueryMember .= $and." EXPECTED_SUPPLY_DATE BETWEEN '".$exp_supply_date_to."' AND '".$exp_supply_date_from."'";
+				$and  = ' AND ';
 			}
+                        if($exp_supply_date_to != '' && $exp_supply_date_from == '')
+			{
+				$QueryMember .= $and." EXPECTED_SUPPLY_DATE <= '".$exp_supply_date_to."'";
+				$and  = ' AND ';
+			}
+                        if($exp_supply_date_to == '' && $exp_supply_date_from != '')
+			{
+				$QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
+				$and  = ' AND ';
+			}
+		}
 		else
 		{
 			$QueryMember .=" PROJECT_ID = '".$_REQUEST['projectId']."'";

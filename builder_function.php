@@ -169,7 +169,7 @@
 	}
 
 	/**********project insert***************/
-	function InsertProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
+	function InsertProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
 	{
 
 		if($project_type == '1')
@@ -244,6 +244,7 @@
 							NO_OF_TOWERS				=	'".$no_of_towers."',
 							NO_OF_FLATS					=	'".$no_of_flats."',
 							PRE_LAUNCH_DATE             =   '".$pre_launch_date."',
+                                                        EXPECTED_SUPPLY_DATE             =   '".$exp_launch_date."',
 							LAUNCH_DATE					=	'".$eff_date_to."',
 							BANK_LIST					=	'".$bank_list."',
 							YOUTUBE_VIDEO				=	'".$youtube_link."',
@@ -788,7 +789,7 @@ function RoomCategoryList()
 	}
 
 	/**********project insert***************/
-	function UpdateProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$ProjectId,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
+	function UpdateProject($txtProjectName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$ProjectId,$residential,$township,$plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits)
 	{
 		$Completion = " Onwards";
 		$Sql = "UPDATE " .RESI_PROJECT."
@@ -820,7 +821,8 @@ function RoomCategoryList()
 					PAYMENT_PLAN				=	'".$payment."',
 					NO_OF_TOWERS				=	'".$no_of_towers."',
 					NO_OF_FLATS					=	'".$no_of_flats."',
-					PRE_LAUNCH_DATE             =   '".$pre_launch_date."',
+					PRE_LAUNCH_DATE                         =   '".$pre_launch_date."',
+                                        EXPECTED_SUPPLY_DATE                    =   '".$exp_launch_date."',
 					LAUNCH_DATE					=	'".$eff_date_to."',
 					BANK_LIST					=	'".$bank_list."',
 					YOUTUBE_VIDEO				=	'".$youtube_link."',
@@ -840,7 +842,7 @@ function RoomCategoryList()
 					SOURCE_OF_INFORMATION		=	'".$txtProjectSource."',
 					RESIDENTIAL					=	'".$residential."',
 					TOWNSHIP					=	'".$township."',
-                    NO_OF_PLOTS					=	'".$plot."',
+                                        NO_OF_PLOTS					=	'".$plot."',
 					OPEN_SPACE					=	'".$open_space."',
 					BOOKING_STATUS 				=	'".$Booking_Status."',
 					SHOULD_DISPLAY_PRICE        =   '".$shouldDisplayPrice."',
@@ -2348,13 +2350,12 @@ function getPrevMonthProjectData($projectId)
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
-	$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
-	// $url="http://dev.cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	//$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
+	$url="http://cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
 	$json=json_decode($obj,true);
-
 	$months=$json['prices'];
 	$final_list = array();
 
@@ -2381,8 +2382,8 @@ function getFlatAvailability($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	// $url="http://dev.cms.proptiger.com/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
-	$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	 $url="http://cms.proptiger.com/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	//$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);

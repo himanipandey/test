@@ -594,6 +594,14 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
+                                                           
+                                                           <tr>
+                                                                <td width="20%" align="right" valign="top"><b>Expected Supply Date :</b> </td>
+                                                                <td width="30%" align="left">
+                                                                    <input name="exp_launch_date" value="{$exp_launch_date}" type="text" class="formstyle2" id="exp_f_date_c_to" size="10" />  <img src="images/cal_1.jpg" id="exp_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                                                </td>
+                                                                <td width="50%" align="left"></td>
+                                                            </tr>
 							   
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Display Order:</b> </td>
@@ -853,6 +861,7 @@
     var cals_dict = {
         "f_trigger_c_to" : "f_date_c_to",
         "pre_f_trigger_c_to" : "pre_f_date_c_to",
+        "exp_f_trigger_c_to" : "exp_f_date_c_to",
         "f_trigger_c_prom" : "f_date_c_prom"
     };
 

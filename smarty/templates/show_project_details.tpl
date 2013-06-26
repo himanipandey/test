@@ -1202,6 +1202,14 @@ function getDateNow(){
 								 {$projectDetails[0].PRE_LAUNCH_DATE}
 							</td>
 						</tr>
+                                                <tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left">
+								<b>Expected Supply Date:</b>
+							</td>
+							<td>
+								 {$projectDetails[0].EXPECTED_SUPPLY_DATE}
+							</td>
+						</tr>
 
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">

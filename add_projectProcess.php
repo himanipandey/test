@@ -59,7 +59,8 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$txtDisclaimer				=	trim($_POST['txtDisclaimer']);
 		$no_of_towers				=	trim($_POST['no_of_towers']);
 		$no_of_flats				=	trim($_POST['no_of_flats']);
-		$pre_launch_date    		=	trim($_POST['pre_launch_date']);
+		$pre_launch_date                        =	trim($_POST['pre_launch_date']);
+                $exp_launch_date                        =	trim($_POST['exp_launch_date']);
 		$eff_date_to				=	trim($_POST['eff_date_to']);
 		$special_offer				=	trim($_POST['special_offer']);
 		$display_order				=	trim($_POST['display_order']);
@@ -158,6 +159,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("no_of_towers", $no_of_towers);
 		$smarty->assign("no_of_flats", $no_of_flats);
 		$smarty->assign("pre_launch_date", $pre_launch_date);
+                $smarty->assign("exp_launch_date", $exp_launch_date);
 		$smarty->assign("eff_date_to", $eff_date_to);
 		$smarty->assign("special_offer", $special_offer);
 		$smarty->assign("display_order", $display_order);
@@ -305,13 +307,13 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		   if ($projectId == '')
 		   {
 		   		
-				$projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
+				$projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
 				header("Location:project_img_add.php?projectId=".$projectId);
 			}
 			else
 			{
 				//echo $price1."==".$payment1;
-				$projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
+				$projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
 				if($txtProjectURL != $txtProjectURLOld)
 					insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
 				if($preview == 'true')
@@ -383,6 +385,7 @@ elseif ($projectId!='')
 		$smarty->assign("residential", stripslashes($ProjectDetail[0]['RESIDENTIAL']));
 		$smarty->assign("township", stripslashes($ProjectDetail[0]['TOWNSHIP']));
 		$smarty->assign("pre_launch_date", stripslashes($ProjectDetail[0]['PRE_LAUNCH_DATE']));
+                $smarty->assign("exp_launch_date", stripslashes($ProjectDetail[0]['EXPECTED_SUPPLY_DATE']));
 		$smarty->assign("no_of_villa", stripslashes($ProjectDetail[0]['NO_OF_VILLA']));
 		$smarty->assign("no_of_plot", stripslashes($ProjectDetail[0]['NO_OF_PLOTS']));
 		$smarty->assign("open_space", stripslashes($ProjectDetail[0]['OPEN_SPACE']));
