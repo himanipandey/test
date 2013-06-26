@@ -34,7 +34,7 @@ elseif($_POST['submit'] === 'Assign') {   //assigning projects
         $assignmentStatus = assignProjectsToField($projectIds);
     }
     $errorMsg = array_keys($assignmentStatus);
+    $_SESSION['project-status']['assignmentError'] = $errorMsg;
+    header("Location: project-status.php");
 }
-
-$smarty->assign("errorMsg", $errorMsg);
 ?>

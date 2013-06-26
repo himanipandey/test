@@ -36,6 +36,15 @@
                                         </TABLE>
                                      </TD>
                                 </TR>
+                                {if !empty($message)}
+                                    <tr>
+                                        <TD>
+                                            <div class="{$message['type']}" style="text-align: left;">
+                                                {$message['content']}
+                                            </div>
+                                        </TD>
+                                    </tr>
+                                {/if}
                                 <tr>
                                     <td colspan="0">
                                         <div style="width: 100%; height: 31px;">
@@ -43,11 +52,14 @@
                                                 <select name="cityId" id = "cityId" class="cityId" onchange="updateSuburbDropdown(this.value, 'suburbId');" STYLE="width: 150px">
                                                         <option value =''>Select City</option>
                                                         {foreach from = $CityDataArr key=key item = item}
-                                                        <option {if $cityId == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
-                                                         {/foreach}
+                                                        <option {if $selectedCity == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
+                                                        {/foreach}
                                                 </select>
                                                 <select name="suburbId" id = "suburbId" class="suburbId" STYLE="width: 150px">
                                                     <option value="">Select Suburb</option>
+                                                    {foreach from = $SuburbDataArr key=key item = item}
+                                                        <option {if $selectedSuburb == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
+                                                    {/foreach}
                                                 </select>
                                                 <input class="cityId" STYLE="width: 150px; vertical-align: top;" type="submit" name="submit" value="Get Projects"></input>
                                             </form>
@@ -68,11 +80,11 @@
                                                             <th style="font-size: 12px">PID</td>
                                                             <th style="font-size: 12px">Project Name</th>
                                                             <th style="font-size: 12px">Builder Name</th>
-                                                            <th style="font-size: 12px">City</th>
                                                             <th style="font-size: 12px">Locality</th>
                                                             <th style="font-size: 12px">Project Phase</th>
+                                                            <th style="font-size: 12px">Project Stage</th>
                                                             <th style="font-size: 12px">Last Worked At</th>
-                                                            <th style="font-size: 12px">Assignment Type</th>
+                                                            <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px">Assignment Type</th>
                                                             <th style="font-size: 12px">1st Assigned To</th>
                                                             <th style="font-size: 12px">Assigned On</th>
                                                             <th style="font-size: 12px">Status</th>
@@ -115,9 +127,9 @@
                                                             <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
                                                             <td>{$item['PROJECT_NAME']}</td>
                                                             <td>{$item['BUILDER_NAME']}</td>
-                                                            <td>{$item['CITY']}</td>
                                                             <td>{$item['LOCALITY']}</td>
                                                             <td>{$item['PROJECT_PHASE']}</td>
+                                                            <td>{$item['PROJECT_STAGE']}</td>
                                                             <td>{$item['LAST_WORKED_AT']}</td>
                                                             <td>{$item['ASSIGNMENT_TYPE']}</td>
                                                             <td>{$item['ASSIGNED_TO'][0]}</td>

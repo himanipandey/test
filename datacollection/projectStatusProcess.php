@@ -6,14 +6,38 @@ if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLC
 }
 
 if(isset($_POST['cityId']) && !empty($_POST['cityId'])){
-    $projectsfromDB = getProjectListForManagers($_POST['cityId'], $_POST['suburbId']);
+    $_SESSION['project-status']['city'] = $_POST['cityId'];
+    $_SESSION['project-status']['suburb'] = $_POST['suburbId'];
+}
+
+if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
+    $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $_SESSION['project-status']['suburb']);
     $projectList = prepareDisplayData($projectsfromDB);
+    $suburbDataArr = SuburbArr($_SESSION['project-status']['city']);
+}
+
+if(isset($_SESSION['project-status']['assignmentError'])){
+    if(empty($_SESSION['project-status']['assignmentError'])){
+        $msg['type'] = 'success';
+        $msg['content'] = 'All Projects Assigned Successfully';
+    }
+    else {
+        $msg['type'] = 'error';
+        $msg['content'] = "ProjetId " . implode(', ', array_keys($_SESSION['project-status']['assignmentError'])) ." couldn't be assigned.";
+    }
+    unset($_SESSION['project-status']['assignmentError']);
 }
 
 $CityDataArr = CityArr();
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("projectList", $projectList);
 $smarty->assign("projectPageURL", '/show_project_details.php?projectId=');
+$smarty->assign("selectedCity", $_SESSION['project-status']['city']);
+$smarty->assign("selectedSuburb", $_SESSION['project-status']['suburb']);
+$smarty->assign("SuburbDataArr", $suburbDataArr);
+$smarty->assign("message", $msg);
+
+
 
 function prepareDisplayData($data){ 
     $result = array();
@@ -21,9 +45,9 @@ function prepareDisplayData($data){
         $new['PROJECT_ID'] = $value['PROJECT_ID'];
         $new['PROJECT_NAME'] = $value['PROJECT_NAME'];
         $new['BUILDER_NAME'] = $value['BUILDER_NAME'];
-        $new['CITY'] = $value['CITY'];
         $new['LOCALITY'] = $value['LOCALITY'];
         $new['PROJECT_PHASE'] = $value['PROJECT_STAGE'];
+        $new['PROJECT_STAGE'] = $value['PROJECT_PHASE'];
         $new['LAST_WORKED_AT'] = $value['LAST_WORKED_AT'];
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);

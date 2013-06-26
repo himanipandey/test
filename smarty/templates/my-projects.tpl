@@ -46,7 +46,6 @@
                                                         <th>Builder Name</th>
                                                         <th>City</th>
                                                         <th>Assigned Date</th>
-                                                        <th>Assignment Type</th>
                                                         <th>Assignment Status</th>
                                                         <th>Remark</th>
                                                         <th class="{ sorter: false }">&nbsp;</th>
@@ -82,16 +81,8 @@
                                                             <td>{$item['CITY']}</td>
                                                             <td>{$item['ASSIGNMENT_DATE']}</td>
                                                             <td>
-                                                                {if $item['ASSIGNMENT_COUNT'] gt 1}
-                                                                    REVERTED
-                                                                {else}
-                                                                    ASSIGNED
-                                                                {/if}
-                                                            </td>
-                                                            <td>
                                                                 <select name="status">
                                                                     <option value='notAttempted'>Not Attempted</option>
-                                                                    <option value='done'>Done</option>
                                                                     <option value='incomplete'>Incomplete</option>
                                                                     <option value='doneExceptInventory'>All But Inventory</option>
                                                                 </select>
@@ -100,10 +91,13 @@
                                                                 <select name="remark">
                                                                     <option value="">Please Pick One</option>
                                                                     <option value="callBackRequest">Call Back Request</option>
-                                                                    <option value="couldNotContact">couldNotContact</option>
+                                                                    <option value="couldNotContact">Could Not Contact</option>
                                                                     <option value="contactNoNotAvailable">Contact No Not Available</option>
                                                                     <option value="noSuchProject">No Such Project</option>
                                                                     <option value="languageBarrier">Language Barrier</option>
+                                                                    <option value="websiteNotFound">Website Not Found</option>
+                                                                    <option value="partialInfoOnCall">Partial Info On Call</option>
+                                                                    <option value="ringingButNoResponse">Ringing But No Response</option>
                                                                 </select>
                                                             </td>
                                                             <td>
