@@ -1440,8 +1440,8 @@ $sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = 
 $res = mysql_query($sql);
 $res = mysql_fetch_assoc($res);
 $last_hist_id = $res['ID'];
-        if(empty($last_hist_id)){
-	$ins = "
+        if(!empty($last_hist_id)){
+            $ins = "
 				INSERT INTO 
 						project_stage_history 
 							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
