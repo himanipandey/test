@@ -14,30 +14,30 @@ if ($_POST['btnExit'] == "Exit")
 if ($_POST['btnSave'] == "Save")
 {
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
-	$txtBuilderDescription	=	trim($_POST['txtBuilderDescription']);
+	$txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
 	$txtBuilderUrl			=	trim($_POST['txtBuilderUrl']);
 	$txtBuilderUrlOld		=	trim($_POST['txtBuilderUrlOld']);
 	$DisplayOrder			=	trim($_POST['DisplayOrder']);
 	$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
 	$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
 	$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
-	$img					=	trim($_POST['img']);
-	$oldbuilder				=	trim($_POST['oldbuilder']);
-	$imgedit				=	trim($_POST['imgedit']);
-	$address				=	trim($_POST['address']);
-	$city					=	trim($_POST['city']);
-	$pincode				=	trim($_POST['pincode']);
-	$ceo					=	trim($_POST['ceo']);
-	$employee				=	trim($_POST['employee']);
+        $img				=	trim($_POST['img']);
+        $oldbuilder			=	trim($_POST['oldbuilder']);
+        $imgedit			=	trim($_POST['imgedit']);
+        $address			=	trim($_POST['address']);
+        $city				=	trim($_POST['city']);
+        $pincode			=	trim($_POST['pincode']);
+        $ceo				=	trim($_POST['ceo']);
+        $employee			=	trim($_POST['employee']);
 	$established			=	trim($_POST['established']);
 
-	$employee				=	trim($_POST['employee']);
+	$employee			=	trim($_POST['employee']);
 	$delivered_project		=	trim($_POST['delivered_project']);
 	$area_delivered			=	trim($_POST['area_delivered']);
 	$ongoing_project		=	trim($_POST['ongoing_project']);
-	$website				=	trim($_POST['website']);
-	$revenue				=	trim($_POST['revenue']);
-	$debt					=	trim($_POST['debt']);
+	$website			=	trim($_POST['website']);
+	$revenue			=	trim($_POST['revenue']);
+	$debt				=	trim($_POST['debt']);
 	
 	$smarty->assign("txtBuilderName", $txtBuilderName);
 	$smarty->assign("txtBuilderDescription", $txtBuilderDescription);
@@ -118,24 +118,24 @@ if ($_POST['btnSave'] == "Save")
 	//  die; 
 	if($_FILES['txtBuilderImg']['type'] != '')
 	{
-		if(!in_array(strtolower($_FILES['txtBuilderImg']['type']), $arrImg))
-		{
-			$ErrorMsg["ImgError"] = "You can upload only jpg / jpeg gif png images.";
-		} 
+            if(!in_array(strtolower($_FILES['txtBuilderImg']['type']), $arrImg))
+            {
+               $ErrorMsg["ImgError"] = "You can upload only jpg / jpeg gif png images.";
+            } 
 	}  
 	 
 		/*******code for no of contacts*******/
 	$contactArr	=	array();
 	foreach($_REQUEST['contact_name'] as $k=>$v)
 	{
-		$contactArr['Name'][] = $v;
-		if($_REQUEST['contact_ph'][$k] !='')
-			$contactArr['Phone'][] = $_REQUEST['contact_ph'][$k];
-		if($_REQUEST['contact_email'][$k] !='')
-			$contactArr['Email'][] = $_REQUEST['contact_email'][$k];
+            $contactArr['Name'][] = $v;
+            if($_REQUEST['contact_ph'][$k] !='')
+                    $contactArr['Phone'][] = $_REQUEST['contact_ph'][$k];
+            if($_REQUEST['contact_email'][$k] !='')
+                    $contactArr['Email'][] = $_REQUEST['contact_email'][$k];
 
-		$key = "projects_".($k+1);
-		$contactArr['Projects'][] = implode($_REQUEST[$key],"#");
+            $key = "projects_".($k+1);
+            $contactArr['Projects'][] = implode($_REQUEST[$key],"#");
 
 	}
 	
@@ -147,154 +147,153 @@ if ($_POST['btnSave'] == "Save")
 		if (($_FILES["txtBuilderImg"]["type"]))
    		{   
    	
-  			$name			=	$_FILES["txtBuilderImg"]["name"];
-			$foldername		=	str_replace(' ','-',strtolower($txtBuilderName));
-			$createFolder	=	 $newImagePath.$foldername;
-			mkdir($createFolder, 0777);
-			$return 			=	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], "".$createFolder."/" . $name);
-			if($return)
-			{				
-				$imgurl		=	"/".$foldername."/".$name;
-				InsertBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
-				$createFolder = $newImagePath.$foldername;
-				if ($handle = opendir($createFolder))
- 				{
-       					rewinddir($handle);
-     						while (false !== ($file = readdir($handle)))
-     						{
-								/************Working for large***********************/
-							
-								if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
-								{
-									$image = new SimpleImage();
-									$path	=	$createFolder."/".$file;
-									$image->load($path);
-									
-									/************Working for large Img Backup***********************/
-									$image = new SimpleImage();
-								
-										$image->load($path);
+                   $name    =	$_FILES["txtBuilderImg"]["name"];
+                   if(!preg_match('/^[a-zA-Z0-9\-_\.]+$/',$name)){
+                        $ErrorMsg['ImgError']='Only letters [A-Z, a-z, 0-9, -, ., _] are allowed';
+                   }else{
+                        $foldername		=	str_replace(' ','-',strtolower($txtBuilderName));
+                        $createFolder	=	 $newImagePath.$foldername;
+                        mkdir($createFolder, 0777);
+                        $return 	= move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], "".$createFolder."/" . $name);
+                        if($return)
+                        {				
+                            $imgurl	=   "/".$foldername."/".$name;
+                            InsertBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
+                            $createFolder = $newImagePath.$foldername;
+                            if ($handle = opendir($createFolder))
+                            {
+                                rewinddir($handle);
+                                while (false !== ($file = readdir($handle)))
+                                {
+                                    /************Working for large***********************/
 
-									$image->resize(477,247);
+                                    if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
+                                    {
+                                        $image = new SimpleImage();
+                                        $path	=	$createFolder."/".$file;
+                                        $image->load($path);
 
-									$image->save($createFolder."/". str_replace('.jpg','-rect.jpg',$file));
+                                        /************Working for large Img Backup***********************/
+                                        $image->load($path);
 
-								/************Resize and large to small*************/
-									$image->resize(95,65);
-									$newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
-									$image->save($createFolder."/".$newimg);
-									
-									$image->resize(80,36);
-									$newimg	=	str_replace('.jpg','-thumb.jpg',$file);
-									$image->save($createFolder."/".$newimg);
-									/**********Working for watermark*******************/
-									// Image path
-										$image_path = $createFolder."/".$file;
-										// Where to save watermarked image
-										$imgdestpath = $createFolder."/".$file;
-									 // Watermark image
-									$img = new Zubrag_watermark($image_path);
-									$img->ApplyWatermark($watermark_path);
-									$img->SaveAsFile($imgdestpath);
-									$img->Free();
-								}	
-							} 
-					
-					header("Location:BuilderList.php");
-				}	
-			}	
-			else 
-			{
-				$ErrorMsg['ImgError'] = "Please insert image";
-			}
+                                        $image->resize(477,247);
+
+                                        $image->save($createFolder."/". str_replace('.jpg','-rect.jpg',$file));
+                                        
+                                        /************Resize and large to small*************/
+                                        $image->resize(95,65);
+                                        $newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
+                                        $image->save($createFolder."/".$newimg);
+
+                                        $image->resize(80,36);
+                                        $newimg	=	str_replace('.jpg','-thumb.jpg',$file);
+                                        $image->save($createFolder."/".$newimg);
+                                        /**********Working for watermark*******************/
+                                        // Image path
+                                                $image_path = $createFolder."/".$file;
+                                                // Where to save watermarked image
+                                                $imgdestpath = $createFolder."/".$file;
+                                         // Watermark image
+                                        $img = new Zubrag_watermark($image_path);
+                                        $img->ApplyWatermark($watermark_path);
+                                        $img->SaveAsFile($imgdestpath);
+                                        $img->Free();
+                                    }	
+                                } 
+
+                                header("Location:BuilderList.php");
+                            }	
+                        }	
+                        else 
+                        {
+                            $ErrorMsg['ImgError'] = "Problem in image upload";
+                        }
+                    }
 		}
 		else {
-				$ErrorMsg['ImgError'] = "Please insert image";
+			$ErrorMsg['ImgError'] = "Please insert image";
 		}	
 	}
 	else
 	{
 		
-		$name			=	$_FILES["txtBuilderImg"]["name"];
-		$cutpath		=	explode("/",$imgedit);
-		$newfold		=	$newImagePath.$cutpath[1];
-			
-		if (($_FILES["txtBuilderImg"]["type"]))
-   		{
-   			$return 	=	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], "".$newfold."/" . $name);
-			if($return)
-			{
-				$imgurl		=	"/".$cutpath[1]."/".$name;
-				$rt = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
-				if($rt)
-				{
-					
-					if($txtBuilderUrl != $txtBuilderUrlOld)
-						insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
-					header("Location:BuilderList.php?page=1&sort=all");
-				}
-				else
-					$ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
-				/*************Resize images code***************************/
-				$createFolder = $newImagePath.$cutpath[1];//die;
-				if ($handle = opendir($createFolder))
- 				{
-   					rewinddir($handle);
-					while (false !== ($file = readdir($handle)))
-					{
-						/************Working for large***********************/
-						if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
-						{
-							$image = new SimpleImage();
-							$path	=	$createFolder."/".$file;
-							$image->load($path);
-							
-							/************Working for large Img Backup***********************/
-							$image->resize(477,247);
+            $name	=	$_FILES["txtBuilderImg"]["name"];
+            $cutpath	=	explode("/",$imgedit);
+            $newfold	=	$newImagePath.$cutpath[1];
 
+            if (($_FILES["txtBuilderImg"]["type"]))
+            {
+                    $return  =	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], "".$newfold."/" . $name);
+                    if($return)
+                    {
+                        $imgurl = "/".$cutpath[1]."/".$name;
+                        $rt = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                        if($rt)
+                        {
+                            if($txtBuilderUrl != $txtBuilderUrlOld)
+                                    insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
+                            header("Location:BuilderList.php?page=1&sort=all");
+                        }
+                        else
+                                $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
+                        /*************Resize images code***************************/
+                        $createFolder = $newImagePath.$cutpath[1];//die;
+                        if ($handle = opendir($createFolder))
+                        {
+                            rewinddir($handle);
+                            while (false !== ($file = readdir($handle)))
+                            {
+                                /************Working for large***********************/
+                                if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
+                                {
+                                    $image = new SimpleImage();
+                                    $path = $createFolder."/".$file;
+                                    $image->load($path);
 
-							$image->save($newImagePath.$cutpath[1]."/". str_replace('.jpg','-rect.jpg',$file));
+                                    /************Working for large Img Backup***********************/
+                                    $image->resize(477,247);
+                                    $image->save($newImagePath.$cutpath[1]."/". str_replace('.jpg','-rect.jpg',$file));
+                                     /************Resize and large to small*************/
+                                    $image->resize(95,65);
+                                    $newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
+                                    $image->save($newImagePath.$cutpath[1]."/".$newimg);
+                                    
+                                    $image->resize(80,36);
+                                    $newimg	=	str_replace('.jpg','-thumb.jpg',$file);
+                                    $image->save($createFolder."/".$newimg);
 
-						/************Resize and large to small*************/
-							$image->resize(95,65);
-							$newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
-							$image->save($newImagePath.$cutpath[1]."/".$newimg);
-						
-							/**********Working for watermark*******************/
-							// Image path
-								$image_path =$newImagePath.$cutpath[1]."/".$file;
-
-								// Where to save watermarked image
-								$imgdestpath = $newImagePath.$cutpath[1]."/".$file;
-
-							 // Watermark image
-							$img = new Zubrag_watermark($image_path);
-							$img->ApplyWatermark($watermark_path);
-							$img->SaveAsFile($imgdestpath);
-							$img->Free();
-						}	
-					}	 		
-				
-				header("Location:BuilderList.php");
- 				}	
-			}	
-			else 
-			{
-				$ErrorMsg['img'] = "Please insert image";
-			}
-		}
-		else 
-		{
-			$return = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
-			if($return)
-			{
-				if($txtBuilderUrl != $txtBuilderUrlOld)
-					insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
-				header("Location:BuilderList.php?page=1&sort=all");
-			}
-			else
-				$ErrorMsg['dataInsertionError'] = "Please try again there is a problem";	
-		}
+                                    /**********Working for watermark*******************/
+                                    // Image path
+                                    $image_path =$newImagePath.$cutpath[1]."/".$file;
+                                    // Where to save watermarked image
+                                    $imgdestpath = $newImagePath.$cutpath[1]."/".$file;
+                                     // Watermark image
+                                    $img = new Zubrag_watermark($image_path);
+                                    $img->ApplyWatermark($watermark_path);
+                                    $img->SaveAsFile($imgdestpath);
+                                    $img->Free();
+                                }	
+                            }	 		
+                            header("Location:BuilderList.php");
+                        }	
+                    }	
+                    else 
+                    {
+                       $ErrorMsg['img'] = "Problem in image upload";
+                    }
+            }
+            else 
+            {
+                $return = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                if($return)
+                {
+                    if($txtBuilderUrl != $txtBuilderUrlOld)
+                            insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
+                    header("Location:BuilderList.php?page=1&sort=all");
+                }
+                else
+                    $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";	
+            }
 		
 	}
 	$smarty->assign("ErrorMsg", $ErrorMsg);

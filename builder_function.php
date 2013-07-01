@@ -1436,12 +1436,12 @@ else{
 $ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function updateProjectPhase()');
 	if($revert == TRUE) $phase='revert';
         
-$sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = $pID";
+echo$sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = $pID";
 $res = mysql_query($sql);
 $res = mysql_fetch_assoc($res);
 $last_hist_id = $res['ID'];
 
-	$ins = "
+	echo "function insert",$ins = "
 				INSERT INTO 
 						project_stage_history 
 							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
