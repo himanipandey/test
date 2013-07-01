@@ -1436,7 +1436,7 @@ else{
 $ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function updateProjectPhase()');
 	if($revert == TRUE) $phase='revert';
         
-$sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = $pID";
+echo$sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = $pID";
 $res = mysql_query($sql);
 $res = mysql_fetch_assoc($res);
 $last_hist_id = $res['ID'];
