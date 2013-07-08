@@ -23,7 +23,7 @@ if(isset($_SESSION['project-status']['assignmentError'])){
     }
     else {
         $msg['type'] = 'error';
-        $msg['content'] = "ProjetId " . implode(', ', array_keys($_SESSION['project-status']['assignmentError'])) ." couldn't be assigned.";
+        $msg['content'] = "ProjetId " . implode(', ', $_SESSION['project-status']['assignmentError']) ." couldn't be assigned.";
     }
     unset($_SESSION['project-status']['assignmentError']);
 }

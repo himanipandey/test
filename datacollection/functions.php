@@ -41,16 +41,16 @@ function assignToCCExecutives($projectList, $executiveList){
     $executiveCount = count($executiveList);
     $j = 0;
     while($projectId = current($projectList)){
-        if($executiveList[$j%$executiveCount]['WORKLOAD'] >= 80){
+        if(intval($executiveList[$j%$executiveCount]['WORKLOAD']) >= 80){
             unset($executiveList[$j/$executiveCount]);
             array_values($executiveList);
             $executiveCount = $executiveCount - 1;
         }
         if($executiveCount > 0){
             $assign = assignProject($projectId, $executiveList[($j%$executiveCount)]['ADMINID']);
+            $j++;
             if(is_int($assign)){
                 next($projectList);
-                $j++;
                 continue;
             }
             elseif ($assign === 'alreadyAssignedToSameId') {
@@ -59,13 +59,16 @@ function assignToCCExecutives($projectList, $executiveList){
                     next($projectList);
                 }
                 else{
-                    $assign = assignProject($projectId, $executiveList[($j%$executiveCount)]['ADMINID']);
+                    continue;
                 }
             }
             else{
                 $errorList[$projectId] = 'Error Occured While Assignment';
                 next($projectList);
             }
+        }else{
+            $errorList[$projectId] = 'No More Executive Left to Assign';
+            next($projectList);
         }
     }
     return $errorList;
@@ -135,8 +138,6 @@ function assignProjectsToField($projectIds){
     $projectDetails = getMultipleProjectDetails($projectIds);
     $fieldTeamLeads  = getSurveyTeamLeadsForCities();
     foreach ($projectDetails as $project) {
-        error_log(json_encode($project));
-        error_log(json_encode($fieldTeamLeads));
         if(isset($fieldTeamLeads[$project['CITY_ID']])){
             $res = assignProject($project['PROJECT_ID'], $fieldTeamLeads[$project['CITY_ID']]);
             if(!is_int($res)){
@@ -147,5 +148,6 @@ function assignProjectsToField($projectIds){
             $result[$project['PROJECT_ID']] = 'No survey teamlead for this project';
         }
     }
+    return $result;
 }
 ?>
