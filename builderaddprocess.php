@@ -309,7 +309,7 @@ else if($builderid	!= '')
 	$smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
 	$smarty->assign("txtBuilderUrl", $dataedit['URL']);
 	$smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
-	$smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER']);
+	$smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER'] ? $dataedit['DISPLAY_ORDER'] : 100);
 	$smarty->assign("txtMetaTitle", $dataedit['META_TITLE']);
 	$smarty->assign("txtMetaKeywords", $dataedit['META_KEYWORDS']);
 	$smarty->assign("txtMetaDescription", $dataedit['META_DESCRIPTION']);
@@ -334,6 +334,9 @@ else if($builderid	!= '')
 	$smarty->assign("Contact", count($arrContact));
 	$smarty->assign("arrContact", $arrContact);
 
+}
+else {
+    $smarty->assign("DisplayOrder", 100);
 }	
  
  

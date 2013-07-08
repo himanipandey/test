@@ -124,7 +124,7 @@ elseif($localityid!=''){
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);
 	$smarty->assign("status", $status);	
 	$smarty->assign("desc", $desc);
-	$smarty->assign("priority", $priority);
+	$smarty->assign("priority", $priority ? $priority : 100);
 }
  
 ?>

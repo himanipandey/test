@@ -10,6 +10,8 @@
 	$smarty->assign("ProjectTypeArr",$ProjectTypeArr);
 	$smarty->assign("BankListArr",$BankListArr);
 	$smarty->assign("enum_value",$enum_value);
+	$smarty->assign("display_order", 999);
+
 	//echo "<pre>";
 			//print_r($_REQUEST);
 	//echo "</pre>";//die();
