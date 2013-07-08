@@ -480,6 +480,7 @@
 								 	 {if $Active == 3}Active on IS but inactive on website{/if}
 								 	 <input type = "hidden"  name="Active" value = "{$Active}">
 								  {else}
+                                                                      {if $Active == ''}{$Active =1}{/if}
 								  	<select name="Active" id="Active" class="field">
 									  <option value ="" >Select</option>
 									  <option {if $Active == 0}  value="0" selected="selected" {else} value="0"{/if}>Inactive on both Website and IS DB</option>
@@ -824,7 +825,8 @@
 							   
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Show price on website ?</b> </td><td width="30%" align="left">
-									<select name="shouldDisplayPrice">
+									{if $shouldDisplayPrice == ''}{$shouldDisplayPrice =1}{/if}
+                                                                      <select name="shouldDisplayPrice">
 										<option value="1" {if $shouldDisplayPrice == 1} selected = selected {/if}>Yes</option>
 										<option value="0" {if $shouldDisplayPrice == 0} selected = selected {/if}>No</option>
 									</select>
