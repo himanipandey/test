@@ -1,4 +1,8 @@
 <?php
+
+include_once dirname(__FILE__) . '/../phpgacl-3.3.7/gacl.class.php';
+$gacl = new gacl(array('db_password' => 'vertrigo'));
+
 /**
 	 ************************************************
 	 * Function ChkAdminLogin
@@ -97,5 +101,10 @@
 			exit;
 		}
 	}
+
+    function isUserPermitted($resource, $action) {
+        global $gacl;
+        return $gacl->acl_check($resource, $action, 'Users', $_SESSION['AdminUserName']);
+    }
 
 ?>

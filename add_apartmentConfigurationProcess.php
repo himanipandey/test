@@ -108,20 +108,20 @@
                 $smarty->assign("txtSizeLen", $txtSizeLen);
                 $smarty->assign("txtSizeBre", $txtSizeBre);
 
-				$smarty->assign("bedval", $bedval);
-				$smarty->assign("bathroomsval",$bathroomsval);
-				$smarty->assign("balconysval",$Balconysval);
-				$smarty->assign("studyroomsval",$studyroomsval);
-				$smarty->assign("servantroomsval",$servantroomsval);
-				$smarty->assign("poojaroomsval",$poojaroomsval);
-				$smarty->assign("statusval",$statusval);
-
+                $smarty->assign("bedval", $bedval);
+                $smarty->assign("bathroomsval",$bathroomsval);
+                $smarty->assign("balconysval",$Balconysval);
+                $smarty->assign("studyroomsval",$studyroomsval);
+                $smarty->assign("servantroomsval",$servantroomsval);
+                $smarty->assign("poojaroomsval",$poojaroomsval);
+                $smarty->assign("statusval",$statusval);
+                
                 if($_REQUEST['unitType'][$key]!='Plot'){
                     if(trim($txtSize) == '' OR (!is_numeric(trim($txtSize))))
                     {
                         $ErrorMsg[$key] .=	"<br>Please enter unit size";
                     }
-
+                
                     if($bed == '')
                     {
                         $ErrorMsg[$key]	.=	"<br>Please select bedroom";
@@ -129,8 +129,75 @@
                 }
                 else
                 {
-                	$txtSize = $txtPlotArea;
+                    $txtSize = $txtPlotArea;
                 }
+
+                $currentPropertyObject = null;
+                $sizeChanging = false;
+                $priceChanging = false;
+                if ($_REQUEST['typeid_edit'][$key]) {
+                    $currentPropertyObject = getProperty($_REQUEST['typeid_edit'][$key]);
+                    if ($currentPropertyObject['SIZE'] != $txtSize || $currentPropertyObject['BEDROOMS'] != $bed) {
+                        $sizeChanging = true;
+                    }
+
+                    if ($currentPropertyObject['PRICE_PER_UNIT_AREA'] != $txtPricePerUnit ||
+                        $currentPropertyObject['PRICE_PER_UNIT_AREA_DP'] != $txtPricePerUnitAreaDp ||
+                        $currentPropertyObject['PRICE_PER_UNIT_HIGH'] != $txtPricePerUnitHigh ||
+                        $currentPropertyObject['PRICE_PER_UNIT_LOW'] != $txtPricePerUnitLow)
+                    {
+                        $priceChanging = true;
+                    }
+                }
+
+			    if ($sizeChanging && !isUserPermitted('size', 'overrideValidation')) {
+			        if ($bed == 1 && $txtSize > 1200) {
+			            $ErrorMsg[$key]	.=	"<br>Unit Size can't greater then 1200 sqft for 1 BHK";
+			        }
+			        if ($bed == 2 && $txtSize > 2000) {
+			            $ErrorMsg[$key]	.=	"<br>Unit Size can't greater then 2000 sqft for 2 BHK";
+			        }
+			        if ($bed == 3 && $txtSize > 4000) {
+			            $ErrorMsg[$key]	.=	"<br>Unit Size can't greater then 4000 sqft for 3 BHK";
+			        }
+			        if ($bed == 4 && $txtSize > 6000) {
+			            $ErrorMsg[$key]	.=	"<br>Unit Size can't greater then 6000 sqft for 4 BHK";
+			        }
+			        if ($bed == 5 && $txtSize > 7000) {
+			            $ErrorMsg[$key]	.=	"<br>Unit Size can't greater then 7000 sqft for 5 BHK";
+			        }
+			        if ($bed == 6 && $txtSize > 10000) {
+			            $ErrorMsg[$key]	.=	"<br>Unit Size can't greater then 10000 sqft for 6 BHK";
+			        }
+                }
+                
+                if ($priceChanging && !isUserPermitted('price', 'overrideValidation')) {
+                    $cityId = 0;
+                    $pricePerUnitAreaUpperLimit = 20000;
+
+                    switch ($cityId) {
+                        case 18:
+                            $pricePerUnitAreaUpperLimit = 100000;
+                            break;
+                        case 6:
+                            $pricePerUnitAreaUpperLimit = 40000;
+                            break;
+                        case 2:
+                            $pricePerUnitAreaUpperLimit = 30000;
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    if ($txtPricePerUnitArea > $pricePerUnitAreaUpperLimit ||
+                        $txtPricePerUnitAreaDp > $pricePerUnitAreaUpperLimit ||
+                        $txtPricePerUnitHigh > $pricePerUnitAreaUpperLimit ||
+                        $txtPricePerUnitLow  > $pricePerUnitAreaUpperLimit)
+                    {
+                        $ErrorMsg[$key]	.=	"<br>Price Per Unit Area/Price Per Unit Area DP/Price Per Unit High/Price Per Unit Low can't greater than $pricePerUnitAreaUpperLimit";
+                    }
+                }
+
 				if(!is_array($ErrorMsg))
 				{
 					if($_REQUEST['delete'][$key] == '')
@@ -346,6 +413,19 @@
         /***************query for project name display if edit********************/
     }
 
+    $smarty->assign("ErrorMsg", $ErrorMsg);
     $smarty->assign("ErrorMsg1", $ErrorMsg1);
     $smarty->assign("projecteror", $projecteror);
+    
+function getProperty($typeId) {
+    $property = array();
+    $resource = mysql_query("SELECT * FROM RESI_PROJECT_TYPES WHERE OPTIONS_ID = $typeId");
+    if ($resource) {
+        while ($property = mysql_fetch_assoc($resource)) {
+        }
+    }
+    
+    return $property;
+}
+
 ?>

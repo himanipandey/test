@@ -54,121 +54,19 @@
 
 	 }
 /*******function for deletion confirmation***********/
- function chkConfirm() 
-  {
-    var chk = 0;
-    for(var i=0;i<=30;i++)
-    {      
-       var bd = "bed_"+(i+1);
-       var bedid =  $("#"+bd).val();
+    function chkConfirm() 
+    {
+        var chk = 0;
+        for(var i=0;i<=30;i++) {      
+            if($("#"+i).attr('checked')) {
+                chk = 1;
+            }
+        }
 
-       var sz = "txtSize_"+(i+1);
-       var Size =  $("#"+sz).val();
-       
-       if(bedid == 1 && Size > 1200)
-       {
-          alert("Unit Size can't greater then 1200 sqft for 1 BHK");
-          $("#"+sz).focus();
-          return false;
-       }
-       if(bedid == 2 && Size > 2000)
-       {
-          alert("Unit Size can't greater then 2000 sqft for 2 BHK");
-          $("#"+sz).focus();
-          return false;
-       }
-
-       if(bedid == 3 && Size >= 4000)
-       {
-          alert("Unit Size can't greater then 4000 sqft for 3 BHK");
-          $("#"+sz).focus();
-          return false;
-       }
-
-       if(bedid == 4 && Size >= 6000)
-       {
-          alert("Unit Size can't greater then 6000 sqft for 4 BHK");
-          $("#"+sz).focus();
-          return false;
-       }
-
-       if(bedid == 5 && Size >= 7000)
-       {
-          alert("Unit Size can't greater then 7000 sqft for 5 BHK");
-          $("#"+sz).focus();
-          return false;
-       }
-
-       if(bedid == 6 && Size >= 10000)
-       {
-          alert("Unit Size can't greater then 10000 sqft for 6 BHK");
-          $("#"+sz).focus();
-          return false;
-       }
-
-       var pricePerUnitArea     = "txtPricePerUnitArea_"+(i+1);
-       var pricePerUnitAreaVal  =  $("#"+pricePerUnitArea).val();
-
-       var pricePerUnitAreaDp   = "txtPricePerUnitAreaDp_"+(i+1);
-       var pricePerUnitAreaDpVal =  $("#"+pricePerUnitAreaDp).val();
-
-       var pricePerUnitAreaHigh = "txtPricePerUnitHigh_"+(i+1);
-       var pricePerUnitAreaHighVal =  $("#"+pricePerUnitAreaHigh).val();
-
-       var pricePerUnitAreaLow = "txtPricePerUnitLow_"+(i+1);
-       var pricePerUnitAreaLowVal =  $("#"+pricePerUnitAreaLow).val();
-
-       if($("#cityId").val() != 18)
-       {
-    	   if($("#cityId").val() == 6)
-    	   {
-   		      if(pricePerUnitAreaVal >40000 || pricePerUnitAreaDpVal >40000 || pricePerUnitAreaHighVal >40000 || pricePerUnitAreaLowVal >40000)
-   	          {
-   	            alert("Price Per Unit Area/Price Per Unit Area DP/Price Per Unit High/Price Per Unit Low can't greater than 40000");
-   	            $("#"+pricePerUnitArea).focus();
-   	            return false;
-   	          }
-    	   }
-    	   else if($("#cityId").val() == 2)
-    	   {
-    		   if(pricePerUnitAreaVal >30000 || pricePerUnitAreaDpVal >30000 || pricePerUnitAreaHighVal >30000 || pricePerUnitAreaLowVal >30000)
-	          {
-	            alert("Price Per Unit Area/Price Per Unit Area DP/Price Per Unit High/Price Per Unit Low can't greater than 30000");
-	            $("#"+pricePerUnitArea).focus();
-	            return false;
-	          }
-           }
-	       else
-	       {
-	          if(pricePerUnitAreaVal >=20000 || pricePerUnitAreaDpVal >=20000 || pricePerUnitAreaHighVal >=20000 || pricePerUnitAreaLowVal >=20000)
-	          {
-	        	  alert("Price Per Unit Area/Price Per Unit Area DP/Price Per Unit High/Price Per Unit Low can't greater than 20000");
-		          $("#"+pricePerUnitArea).focus();
-		          return false;
-	          }
-	       }
-       }
-       else
-       {
-          if(pricePerUnitAreaVal >=100000 || pricePerUnitAreaDpVal >=100000 || pricePerUnitAreaHighVal >=100000 || pricePerUnitAreaLowVal >=100000)
-          {
-            alert("Price to be always less than 100,000");
-            $("#"+pricePerUnitArea).focus();
-            return false;
-          }
-       }
-
-       if($("#"+i).attr('checked'))
-       {
-          chk = 1;
-       }
+        if(chk == 1)
+            return confirm("Are you sure! you want to delete records which are checked.");
     }
-    if(chk == 1)
-      return confirm("Are you sure! you want to delete records which are checked.");
-    //else
-      //return true;
-  }
-   </SCRIPT>
+</SCRIPT>
 
 
 
@@ -230,7 +128,7 @@
 
                       <div>
 
-                        <!--  {foreach from = $errormsg  key=k item = datafirst}
+                         {foreach from = $ErrorMsg  key=k item = datafirst}
                             <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                     <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
                                     {else if $k == 3} Fourth row errors {else if $k == 4} Fifth row errors {else if $k == 5} Sixth row errors {else if $k == 6} Seventh row errors
@@ -238,10 +136,10 @@
 
                             </tr>
 
-                        <tr id="row_{$k}" style="display:none;"><td colspan="15"><font color="red">{$datafirst}</font></td></tr>
+                        <tr id="row_{$k}"><td colspan="15"><font color="red">{$datafirst}</font></td></tr>
 
 
-                          {/foreach} -->
+                          {/foreach}
 
                         <tr><td colspan="17"><b><span style='font-size:15px;'>APARTMENTS</span></b></td></tr>
                         <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
