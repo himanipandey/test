@@ -81,7 +81,7 @@
                                         </div>
                                         <div style="float: left; height: 31px;">
                                             <form method="post" onsubmit="return verifyProjectIds();">
-                                                <input name="projectIds" id="projectIds" STYLE="width: 150px" placeholder="Comma Seperated PIDs" {if $selectedProjectIds}value={$selectedProjectIds}{/if}>
+                                                <input name="projectIds" id="projectIds" STYLE="width: 150px" placeholder="Comma Seperated PIDs" value="{$selectedProjectIds}">
                                                 </input>
                                                 <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
                                             </form>

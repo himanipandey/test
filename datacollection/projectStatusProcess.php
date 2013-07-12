@@ -14,7 +14,7 @@ elseif(isset($_REQUEST['executive']) && !empty($_REQUEST['executive'])){
     unset($_SESSION['project-status']);
     $_SESSION['project-status']['executive'] = $_REQUEST['executive'];
 }
-elseif(isset($_REQUEST['projectIds']) && !empty($_REQUEST['projectIds'])){
+elseif(isset($_POST['projectIds']) && !empty($_POST['projectIds'])){
     unset($_SESSION['project-status']);
     $_SESSION['project-status']['projectIds'] = $_REQUEST['projectIds'];
 }
