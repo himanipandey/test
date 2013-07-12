@@ -383,8 +383,8 @@ function removeExtraCode()
 										<option value = "newProject"{if {$stage}=='newProject'}selected{/if}>New Project Entry</option>										
 										{foreach from=$UpdationArr key=k item=v}
 										 <option value = "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}" 
-										 	{if "{$stage}|{$tag}" == "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"} selected {/if}
-										 > updationCycle - {$UpdationArr[$k].LABEL}
+										 	{if "{$stage}|{$tag}" == "{$UpdationArr[$k].CYCLE_TYPE}Cycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"} selected {/if}
+										 > {$UpdationArr[$k].CYCLE_TYPE}Cycle - {$UpdationArr[$k].LABEL}
 										 </option>
 										{/foreach}										
 									</select>
@@ -544,7 +544,7 @@ function removeExtraCode()
 											<option value="noStage|0" {if $updatePhasePost == "noStage|0"} selected {/if}>No Phase</option>
 											<option value="newProject|0" {if $updatePhasePost == "newProject|0"} selected {/if}>New Project</option>
 											{foreach from=$UpdationArr key=k item=v}
-											 <option value = "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"  {if $updatePhasePost == "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"} selected {/if}> updationCycle - {$UpdationArr[$k].LABEL}
+											 <option value = "{$UpdationArr[$k].CYCLE_TYPE}Cycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"  {if $updatePhasePost == "{$UpdationArr[$k].CYCLE_TYPE}Cycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"} selected {/if}> {$UpdationArr[$k].CYCLE_TYPE}Cycle - {$UpdationArr[$k].LABEL}
 											 </option>
 											{/foreach}	
 								</select>

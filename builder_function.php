@@ -1522,7 +1522,7 @@ function ViewCityDetails($cityID){
 		$ResDetails['URL'] 				=  $Res['URL'];
 		$ResDetails['DISPLAY_ORDER']  	=  $Res['DISPLAY_ORDER'];
 		$ResDetails['DESCRIPTION']		=  $Res['DESCRIPTION'];
-		return $ResDetails;
+                return $ResDetails;
 	}
 	else
 	{
@@ -2410,6 +2410,17 @@ function getFlatAvailability($projectId)
 		$final_list[$mkey]=$mlist;
 	}
 	return $final_list;
+}
+function projectDetailById($projectId){
+    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."'";
+    $res = mysql_query($qry) or die(mysql_error());	
+    $projectDetails = array();
+    while($data	= mysql_fetch_array($res))
+    {
+        $projectStage = $data['PROJECT_STAGE']; 
+        array_push($projectDetails, $data);	
+    }
+    return $projectDetails;
 }
 
 ?>
