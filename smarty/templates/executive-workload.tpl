@@ -75,7 +75,7 @@ function selectAllCheckBoxes(inputName, checked){
                                                     <tbody>
                                                         {foreach from = $executiveWorkLoad key=key item = item}
                                                         <tr>
-                                                            <td>{$item['USERNAME']}</td>
+                                                            <td><a href="/project-status.php?executive={$item['ADMINID']}">{$item['USERNAME']}</td>
                                                             <td>{$item['WORKLOAD']}</td>
                                                         </tr>
                                                         {/foreach}
