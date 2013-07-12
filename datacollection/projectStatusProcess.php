@@ -6,14 +6,32 @@ if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLC
 }
 
 if(isset($_POST['cityId']) && !empty($_POST['cityId'])){
+    unset($_SESSION['project-status']);
     $_SESSION['project-status']['city'] = $_POST['cityId'];
     $_SESSION['project-status']['suburb'] = $_POST['suburbId'];
+}
+elseif(isset($_REQUEST['executive']) && !empty($_REQUEST['executive'])){
+    unset($_SESSION['project-status']);
+    $_SESSION['project-status']['executive'] = $_REQUEST['executive'];
+}
+elseif(isset($_REQUEST['projectIds']) && !empty($_REQUEST['projectIds'])){
+    unset($_SESSION['project-status']);
+    $_SESSION['project-status']['projectIds'] = $_REQUEST['projectIds'];
 }
 
 if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
     $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $_SESSION['project-status']['suburb']);
     $projectList = prepareDisplayData($projectsfromDB);
     $suburbDataArr = SuburbArr($_SESSION['project-status']['city']);
+}elseif(isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
+    $projectsAssignedToExec = getAssignedProjects($_SESSION['project-status']['executive']);
+    $projectIds = getProjectIdsFromProjectDetails($projectsAssignedToExec);
+    $projectsfromDB = getassignedProjectsFromPIDs($projectIds);
+    $projectList = prepareDisplayData($projectsfromDB);
+}elseif(isset($_SESSION['project-status']['projectIds']) && !empty($_SESSION['project-status']['projectIds'])){
+    $projectIds = extractPIDs($_SESSION['project-status']['projectIds']);
+    $projectsfromDB = getassignedProjectsFromPIDs($projectIds);
+    $projectList = prepareDisplayData($projectsfromDB);
 }
 
 if(isset($_SESSION['project-status']['assignmentError'])){
@@ -29,11 +47,16 @@ if(isset($_SESSION['project-status']['assignmentError'])){
 }
 
 $CityDataArr = CityArr();
+$executiveList = getCallCenterExecutiveWorkLoad();
+
 $smarty->assign("CityDataArr", $CityDataArr);
+$smarty->assign("executiveList", $executiveList);
 $smarty->assign("projectList", $projectList);
 $smarty->assign("projectPageURL", '/show_project_details.php?projectId=');
 $smarty->assign("selectedCity", $_SESSION['project-status']['city']);
 $smarty->assign("selectedSuburb", $_SESSION['project-status']['suburb']);
+$smarty->assign("selectedExecutive", $_SESSION['project-status']['executive']);
+$smarty->assign("selectedProjectIds", $_SESSION['project-status']['projectIds']);
 $smarty->assign("SuburbDataArr", $suburbDataArr);
 $smarty->assign("message", $msg);
 
@@ -64,6 +87,23 @@ function prepareDisplayData($data){
         $new['STATUS'] = explode('|', $value['STATUS']);
         $new['REMARK'] = explode('|', $value['REMARK']);
         $result[] = $new;
+    }
+    return $result;
+}
+
+function getProjectIdsFromProjectDetails($projectDetails){
+    $arr = array();
+    foreach ($projectDetails as $entry) {
+        $arr[] = $entry['PROJECT_ID'];
+    }
+    return $arr;
+}
+
+function extractPIDs($pidString){
+    $result = array();
+    $pidArr = explode(',', $pidString);
+    foreach ($pidArr as $value) {
+        $result[] = trim($value);
     }
     return $result;
 }

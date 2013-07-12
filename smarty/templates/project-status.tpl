@@ -47,7 +47,7 @@
                                 {/if}
                                 <tr>
                                     <td colspan="0">
-                                        <div style="width: 100%; height: 31px;">
+                                        <div style="height: 31px; float: left">
                                             <form method="post" onsubmit="return verifyDataGetForm();">
                                                 <select name="cityId" id = "cityId" class="cityId" onchange="updateSuburbDropdown(this.value, 'suburbId');" STYLE="width: 150px">
                                                         <option value =''>Select City</option>
@@ -61,7 +61,29 @@
                                                         <option {if $selectedSuburb == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
                                                     {/foreach}
                                                 </select>
-                                                <input class="cityId" STYLE="width: 150px; vertical-align: top;" type="submit" name="submit" value="Get Projects"></input>
+                                                <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
+                                            </form>
+                                        </div>
+                                        <div style="float: left; width: 20px; height: 31px;">
+                                        </div>
+                                        <div style="float: left; height: 31px;">
+                                            <form method="post" onsubmit="return verifyAdminSelected();">
+                                                <select name="executive" id="executive" STYLE="width: 150px">
+                                                        <option value =''>Select Exec</option>
+                                                        {foreach from = $executiveList item = item}
+                                                            <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
+                                                        {/foreach}
+                                                </select>
+                                                <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
+                                            </form>
+                                        </div>
+                                        <div style="float: left; width: 20px; height: 31px;">
+                                        </div>
+                                        <div style="float: left; height: 31px;">
+                                            <form method="post" onsubmit="return verifyProjectIds();">
+                                                <input name="projectIds" id="projectIds" STYLE="width: 150px" placeholder="Comma Seperated PIDs" {if $selectedProjectIds}value={$selectedProjectIds}{/if}>
+                                                </input>
+                                                <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
                                             </form>
                                         </div>
                                     </td>
@@ -198,6 +220,23 @@ function verifyDataGetForm(){
     return true;
 }
 
+function verifyAdminSelected(){
+    var id = $("#executive :selected").val();
+    if (id === ""){
+        alert("Please select Admin!");
+        return false;
+    }
+    return true;
+}
+
+function verifyProjectIds(){
+    var pids = $("#projectIds").val();
+    if (pids.trim().match(/^[1-9]+([0-9, ]+[0-9]+)*$/)){
+        return true;
+    }
+    alert("Please Enter ProjectIds!");
+    return false;
+}
 function updateSuburbDropdown(cityId, suburbSelectboxId)
 {
         dataString = 'id='+cityId
