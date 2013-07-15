@@ -305,7 +305,7 @@ function getDateNow(){
 	  {
 	      type:"get",
 	      url:"call_contact.php",
-	      data:"contactNo="+phNo+"&campaign="+campaign,
+	      data:"contactNo="+phNo+"&campaign="+campaign+"&projectType=primary",
 	      success: function(dt) { // return call Id
 		  resp = dt.split('_');
 		  if (resp[0].trim() === "call") {
@@ -1348,53 +1348,190 @@ function getDateNow(){
 				</td>
 			</tr>
 			
-			{*code start for calling records*}
-			{if count($arrCaling)>0}
+			{*code start for calling records primry*}
+			{if count($arrCalingPrimary)>0}
 			<tr>
-				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-						
-						<tr class="headingrowcolor" height="30px;">
-							 <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
-							 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
-							 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
-							 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
-							 <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
-							 <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
-						</tr>
-						
-						{foreach from = $arrCaling key = key item = item}
-							{if ($key+1)%2 == 0}
-									{$color = "bgcolor='#F7F8E0'"}
-							{else}
-								{$color = "bgcolor='#f2f2f2'"}
-							{/if}
-						<tr {$color} height="25px;">
-							<td nowrap="nowrap" width="10%" align="center">
-								{$key+1}
-							</td>
-							<td width ="15%">
-								{$item['FNAME']}
-							</td>
-							<td width ="15%">
-								{$item['StartTime']}
-							</td>
-							<td width ="15%">
-								{$item['EndTime']}
-							</td>
-							<td width ="30%" nowrap>
-								<a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
-							</td>
-							<td width ="90%">
-								{$item['Remark']}
-							</td>
-						</tr>
-						{/foreach}
-					</table>
-				</td>
+                            <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+                                <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+
+                                    <tr class="headingrowcolor" height="30px;">
+                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
+                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
+                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
+                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
+                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
+                                             <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
+                                    </tr>
+
+                                    {foreach from = $arrCalingPrimary key = key item = item}
+                                            {if ($key+1)%2 == 0}
+                                                            {$color = "bgcolor='#F7F8E0'"}
+                                            {else}
+                                                    {$color = "bgcolor='#f2f2f2'"}
+                                            {/if}
+                                    <tr {$color} height="25px;">
+                                            <td nowrap="nowrap" width="10%" align="center">
+                                                    {$key+1}
+                                            </td>
+                                            <td width ="15%">
+                                                    {$item['FNAME']}
+                                            </td>
+                                            <td width ="15%">
+                                                    {$item['StartTime']}
+                                            </td>
+                                            <td width ="15%">
+                                                    {$item['EndTime']}
+                                            </td>
+                                            <td width ="30%" nowrap>
+                                                    <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
+                                            </td>
+                                            <td width ="90%">
+                                                    {$item['Remark']}
+                                            </td>
+                                    </tr>
+                                    {/foreach}
+                                </table>
+                            </td>
 			</tr>
 			{/if}
-			{*end code start for calling records*}
+			{*end code start for calling records primary*}
+                        
+                        {*code start for calling records secondary*}
+                            {if count($arrCalingSecondary)>0}
+                                {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
+                                    <tr>
+                                        <td width = "100%" align = "Left" colspan = "16" style="padding-left: 30px;">
+                                            <b>Secondary Price Broker Calling Detail&nbsp&nbsp:</b><a href="secondary_price.php?projectId={$projectId}">Update Project Secondary Price</a>
+                                        </td>
+                                    </tr>
+                                {/if}
+                            <tr>
+                                <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+                                    <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+
+                                        <tr class="headingrowcolor" height="30px;">
+                                                 <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
+                                                 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
+                                                 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
+                                                 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
+                                                 <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
+                                                 <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
+                                        </tr>
+
+                                        {foreach from = $arrCalingSecondary key = key item = item}
+                                                {if ($key+1)%2 == 0}
+                                                                {$color = "bgcolor='#F7F8E0'"}
+                                                {else}
+                                                        {$color = "bgcolor='#f2f2f2'"}
+                                                {/if}
+                                        <tr {$color} height="25px;">
+                                                <td nowrap="nowrap" width="10%" align="center">
+                                                        {$key+1}
+                                                </td>
+                                                <td width ="15%">
+                                                        {$item['FNAME']}
+                                                </td>
+                                                <td width ="15%">
+                                                        {$item['StartTime']}
+                                                </td>
+                                                <td width ="15%">
+                                                        {$item['EndTime']}
+                                                </td>
+                                                <td width ="30%" nowrap>
+                                                        <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
+                                                </td>
+                                                <td width ="90%">
+                                                        {$item['Remark']}
+                                                </td>
+                                        </tr>
+                                        {/foreach}
+                                    </table>
+                                </td>
+                            </tr>
+                            {/if}
+			{*end code start for calling records secondary*}
+                        
+                        <!--code start for all brokers secondary price display-->
+                        <tr>
+                            <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;"><b>Secondary price Configuration Effective Date:</b>&nbsp; {$maxEffectiveDt}</td>
+                            <td align ="left">&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                          <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
+                                <table align="left" style = "border:1px solid;">
+                                    <tr class ="headingrowcolor">
+                                        <td colspan="5">&nbsp;</td>
+                                        <td colspan="3" align ="center" class ="whiteTxt"><b>Brokers</b></td>
+                                        <td colspan="2">&nbsp;</td>
+                                    </tr>
+                                    <tr class ="headingrowcolor" height="30px">
+                                        <th class ="whiteTxt" align = "left"><b>S.NO.</b></th>
+                                         <th style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Unit Type</b></th>
+                                         <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Min Price</b></th>
+                                         <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Max Price</b></th>
+                                         <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Mean</b></th>
+                                         {foreach from = $brokerIdList key=brokerkey item = brokerId}
+                                            <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>{$allBrokerByProject[$brokerId][0]['BROKER_NAME']}</b></th>
+                                         {/foreach}
+                                            <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price One Month Ago</b></th>
+                                         <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price Two Month Ago</b></th>
+                                    </tr>
+                                    <form name ="frm" method = "post">
+                                    {$cnt = 0}
+                                    {foreach from= $arrPType key=k item = val}
+                                        {$cnt = $cnt+1}
+                                        {if $cnt%2 == 0}
+                                            {$bgcolor = '#F7F7F7'}
+                                        {else}
+                                            {$bgcolor = '#FCFCFC'}
+                                        {/if}
+                                        <tr bgcolor = "{$bgcolor}" height="30px">
+                                           <td valign ="top" align = "center">{$cnt}</td>
+                                           <td valign ="top" style ="padding-left: 10px;" align = "left">
+                                               {$val}
+                                           </td>
+                                           <td  valign ="top" style ="padding-left: 10px;" align = "left">
+                                               {min($minMaxSum[$val]['minPrice'])|string_format:"%d"}
+                                           </td>
+                                           <td  valign ="top" style ="padding-left: 10px;" align = "left">
+                                                {max($minMaxSum[$val]['maxPrice'])|string_format:"%d"}
+                                           </td>
+                                           <td  valign ="top" style ="padding-left: 10px;" align = "left">
+                                               {$arrCnt = count($minMaxSum[$val]['minPrice'])+count($minMaxSum[$val]['maxPrice'])}
+                                               {$arrSum = array_sum($minMaxSum[$val]['minPrice'])+array_sum($minMaxSum[$val]['maxPrice'])}
+                                               {($arrSum/$arrCnt)|string_format:"%d"}
+                                           </td>
+                                           {foreach from = $latestMonthAllBrokerPrice[$val] key=brokerId item = priceDetail}  
+                                            <td  valign ="top" style ="padding-left: 10px;" align = "left">
+                                                {$priceDetail['minPrice']|string_format:"%d"} - {$priceDetail['maxPrice']|string_format:"%d"}
+                                            </td>
+                                           {/foreach}
+                                           <td  valign ="top" style ="padding-left: 10px;" align = "left">
+                                               {$arrCnt = count($oneMonthAgoPrice[$val]['minPrice'])+count($oneMonthAgoPrice[$val]['maxPrice'])}
+                                               {$arrSumOneMonthAgo = array_sum($oneMonthAgoPrice[$val]['minPrice'])+array_sum($oneMonthAgoPrice[$val]['maxPrice'])}
+                                               {($arrSumOneMonthAgo/$arrCnt)|string_format:"%d"}
+                                           </td>
+                                           <td  valign ="top" style ="padding-left: 10px;" align = "left">
+                                               {$arrCnt = count($twoMonthAgoPrice[$val]['minPrice'])+count($twoMonthAgoPrice[$val]['maxPrice'])}
+                                               {$arrSumTwoMonthAgo = array_sum($twoMonthAgoPrice[$val]['minPrice'])+array_sum($twoMonthAgoPrice[$val]['maxPrice'])}
+                                               {($arrSumTwoMonthAgo/$arrCnt)|string_format:"%d"}
+                                           </td>
+                                       </tr>
+                                    {/foreach}
+                                </table>
+                           </td>
+                         </tr>
+                          {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
+                            <tr>
+                               <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
+                                   <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href = "insertSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Update Secondary Price</b></a>&nbsp;&nbsp;
+                                   <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href = "updateSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Edit Secondary Price</b></a>
+                               </td>
+                               <td align ="left">&nbsp;</td>
+                           </tr>
+                         {/if}
+                        <!--end code for all brokers secondary price display-->
 			
 			<tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">

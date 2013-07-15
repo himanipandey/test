@@ -24,7 +24,7 @@ function builder_contact(builderId,buildernm)
 	  {
 	      type:"get",
 	      url:"call_contact.php",
-	      data:"contactNo="+phNo+"&campaign="+campaign,
+	      data:"contactNo="+phNo+"&campaign="+campaign+"&projectType=secondary",
 	      success: function(dt) { // return call Id
 		  resp = dt.split('_');
 		  if (resp[0].trim() === "call") {
@@ -102,7 +102,7 @@ function builder_contact(builderId,buildernm)
 	      <tr>
               <td style = "padding-left:30px;" align = "left">	
                  
-                  <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" onclick="window.open('assign_broker.php?projectId={$projectDetails[0].PROJECT_ID}&projectName={$projectDetails[0].PROJECT_NAME}','Assign Broker','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');return false;" href="#"><b>&nbsp;&nbsp;Assign Broker&nbsp;&nbsp;</b></a>
+                  <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" onclick="window.open('assign_broker.php?projectId={$projectDetails[0].PROJECT_ID}&projectName={$projectDetails[0].PROJECT_NAME}&cityId={$projectDetails[0].CITY_ID}','Assign Broker','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');return false;" href="#"><b>&nbsp;&nbsp;Assign Broker&nbsp;&nbsp;</b></a>
               </td>
               <td style = "padding-left:30px;height: 30px;" align = "right">	
                   <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href ="show_project_details.php?projectId={$projectDetails[0].PROJECT_ID}"><b>&nbsp;&nbsp;Projct Detail&nbsp;&nbsp;</b></a>
@@ -203,6 +203,65 @@ function builder_contact(builderId,buildernm)
                         </table>
                    </td>
                 </tr>
+              
+                <!--code for broker calling detail-->
+                {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
+                    {if count($arrCalingSecondary)>0}
+                        <tr>
+                            <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;"><b>Broker Calling Detail:</b></td>
+                            <td align ="left">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
+                                <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+
+                                    <tr class="headingrowcolor" height="30px;">
+                                        <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
+                                        <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
+                                        <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
+                                        <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
+                                        <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
+                                        <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
+                                        <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Add More Project</td>
+                                    </tr>
+                                    {foreach from = $arrCalingSecondary key = key item = item}
+                                        {if ($key+1)%2 == 0}
+                                              {$color = "bgcolor='#F7F8E0'"}
+                                        {else}
+                                                {$color = "bgcolor='#f2f2f2'"}
+                                        {/if}
+                                    <tr {$color} height="25px;">
+                                        <td nowrap="nowrap" width="10%" align="center">
+                                                {$key+1}
+                                        </td>
+                                        <td width ="15%">
+                                                {$item['FNAME']}
+                                        </td>
+                                        <td width ="15%">
+                                                {$item['StartTime']}
+                                        </td>
+                                        <td width ="15%">
+                                                {$item['EndTime']}
+                                        </td>
+                                        <td width ="30%" nowrap>
+                                                <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
+                                        </td>
+                                        <td width ="90%">
+                                                {$item['Remark']}
+                                        </td>
+                                        <td width ="90%">
+                                           <a href="addMoreProjectCall.php?callId={$item['CallId']}&brokerId={$item['BROKER_ID']}&projectId={$projectId}">
+                                             AddMore</a>
+                                        </td>
+                                    </tr>
+                                    {/foreach}
+                                </table>
+                            </td>
+                            <td align ="left">&nbsp;</td>
+                        </tr>
+                   {/if}
+                 {/if}
+                <!--end code for broker calling detail-->
               <!--code start for all brokers secondary price display-->
                 <tr>
                     <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;"><b>Configuration Effective Date:</b>&nbsp; {$maxEffectiveDt}</td>

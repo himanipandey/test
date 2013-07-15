@@ -39,6 +39,12 @@
                                   {if $ErrorMsg["dataInsertionError"] != ''}
                                   <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["dataInsertionError"]}</font></td></tr>
                                   {/if}
+                                  {if $ErrorMsg["success"] != ''}
+                                  <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["success"]}</font></td></tr>
+                                  {/if}
+                                  {if $ErrorMsg["wrongPId"] != ''}
+                                  <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["wrongPId"]}</font></td></tr>
+                                  {/if}
 				<tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Broker Name : </td>
                                     <td width="30%" align="left"><input type=text name="brokerName" id="brokerName" value="{$brokerName}" style="width:357px;"></td>
@@ -47,7 +53,7 @@
                                     <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["brokerName"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 				<tr>
-				  <td width="20%" align="right" valign="top"><Contact Person Name :</td>
+				  <td width="20%" align="right" valign="top">Contact Person Name :</td>
 				  <td width="30%" align="left" >
                                       <input type=text name="contactPerson" value ="{$contactPerson}" style="width:357px;">
                                   </td>
@@ -96,6 +102,31 @@
                                   </td>
                                    <td width="50%" align="left" ></td>
 				</tr>
+                                
+                                <tr>
+				  <td width="20%" align="right" valign="top">How many project ids would you like to add? :</td>
+				  <td width="30%" align="left" >
+				   <select name="addMore" onchange="addMoreProject(this.value);">
+                                        {section name=loop start=1 loop=100 step=1}
+                                            <option {if $selectedVal == $smarty.section.loop.index} selected{/if} value="{$smarty.section.loop.index}">{$smarty.section.loop.index}</option>
+                                        {/section}
+                                    </select>
+                                  </td>
+                                   <td width="50%" align="left" ></td>
+				</tr>
+                                
+                                <tr>
+				  <td width="20%" align="right" valign="top">Project Ids :</td>
+				  <td width="30%" align="left" >
+				   {section name=loop start=1 loop=100 step=1}
+                                        <div id="addId_{$smarty.section.loop.index}" style="display:none;">
+                                            <input maxlength="10" onkeypress="return isNumberKey(event);" type="text" name ="multiple_project[]" value="">
+                                        </div>
+                                    {/section}
+                                  </td>
+                                   <td width="50%" align="left" ></td>
+				</tr>
+                                
 				<tr>
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:152px;" >
@@ -119,3 +150,24 @@
     </TBODY></TABLE>
   </TD>
 </TR>
+<script type="text/javascript">
+    function addMoreProject(ct) {
+
+        for(i=1;i<=ct;i++)
+        {
+         document.getElementById('addId_'+i).style.display='none';
+        }	
+        for(i=1;i<=ct;i++)
+        {
+         document.getElementById('addId_'+i).style.display='';
+        }		
+    }
+    function isNumberKey(evt){
+           var charCode = (evt.which) ? evt.which : event.keyCode;
+              if(charCode == 99 || charCode == 118)
+              return true;
+           if (charCode > 31 && (charCode < 46 || charCode > 57))
+              return false;
+           return true;
+    }
+ </script>

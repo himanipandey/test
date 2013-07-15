@@ -19,6 +19,9 @@
      $oneMonthAgoPrice = array();
      $twoMonthAgoPrice = array();
      
+     $arrCalingSecondary = fetchProjectCallingLinks($projectId,'secondary');
+     $smarty->assign("arrCalingSecondary", $arrCalingSecondary);
+     
      /******one and two month age date create******/
      $dateBreak = explode("-",$maxEffectiveDt);
      $oneMonthAgo = mktime(0, 0, 0, $dateBreak[1]-1, 1, $dateBreak[0]);
@@ -62,6 +65,7 @@
      $smarty->assign("maxEffectiveDt", $maxEffectiveDt);
      $smarty->assign("projectDetails", $projectDetails);
      $smarty->assign("arrCampaign", $arrCampaign);
+     $smarty->assign("projectId", $projectId);
      
      //code for distinct unit for a project
     $arrProjectType = fetch_projectOptions($projectId);

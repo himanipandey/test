@@ -46,7 +46,8 @@
     }else{
         $projectId    = $_REQUEST['projectId'];
         $projectName  = $_REQUEST['projectName'];
-        $arrAllActiveBrokerList = getActiveBrokerList();
+        $cityId       = $_REQUEST['cityId'];
+        $arrAllActiveBrokerList = getActiveBrokerList($cityId);
         include("dbConfig.php");
         $allBrokerByProject   = getBrokerByProject($projectId);
         $smarty->assign("projectId", $projectId);

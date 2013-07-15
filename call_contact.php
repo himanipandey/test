@@ -14,7 +14,8 @@ $sql = "SELECT CLOUDAGENT_ID FROM proptiger_admin WHERE ADMINID=" . $aID . ";";
 $result = mysql_query($sql);
 $row = mysql_fetch_array($result);
 $agentId = $row['CLOUDAGENT_ID'];
-$sql = "INSERT INTO CallDetails (AgentID) VALUES (". $aID .");";
+$projectType = $_REQUEST['projectType'];
+$sql = "INSERT INTO CallDetails (AgentID,PROJECT_TYPE) VALUES (". $aID .",'".$projectType."');";
 
 mysql_query($sql);
 $callId= mysql_insert_id();

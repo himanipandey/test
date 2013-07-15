@@ -41,7 +41,7 @@
                         CREATION_DATE = now()";
         $resIns = mysql_query($qryIns) or die(mysql_error()." error in insert broker");
         if($resIns)
-            return true;
+            return mysql_insert_id();
         else
             return false;
     }
@@ -64,8 +64,11 @@
         else
             return false;
     }
-    function getActiveBrokerList(){
-        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE STATUS = '1' ORDER BY BROKER_NAME ASC";
+    function getActiveBrokerList($cityId=''){
+        $city = '';
+        if($cityId !='')
+            $city = " AND HQ = $cityId";
+        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE STATUS = '1' $city ORDER BY BROKER_NAME ASC";
         $res = mysql_query($qry) or die(mysql_error()." error in active broker list");
         $arrActiveBrokerlist = array();
         if(mysql_num_rows($res)>0){
