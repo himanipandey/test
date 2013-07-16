@@ -10,7 +10,10 @@
     include("dbConfig_crm.php");
     include("function/resale_functions.php");
     include('addMoreProjectCallProcess.php');
+    die("1");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
+    die("2");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."addMoreProjectCall.tpl");
+    die("3");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 ?>
