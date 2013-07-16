@@ -34,7 +34,7 @@
         if(count($ErrorMsg['noPid']) == 0) {
             $cnt = 1;
             $comma = ',';
-             $qryIns = "INSERT IGNORE INTO Callproject (CallId,ProjectId,BROKER_ID)
+             $qryIns = "INSERT IGNORE INTO CallProject (CallId,ProjectId,BROKER_ID)
                                 VALUES ";
             foreach($arrProjectListValid as $val) {
                  if($cnt == count($arrProjectListValid))
