@@ -246,9 +246,9 @@
 			$getProjectId = implode(',',$arrPropId);
 		}
 		
-		
-		//print($getProjectId);
-		
+		//echo "<pre>";
+		//print_r($selectdata);
+		//die;
 		if($getProjectId != '' && $selectdata != '')
 		{
 			$finalProjectIds = '';
@@ -257,7 +257,7 @@
 			{
 				//echo $value;
 				$arrExp = explode("|",$value);
-				
+				//print_r($arrExp);//die;
 				$arrUpdatePhase = explode("|",$_POST['updatePhase']);
 				$SET = ' SET ';
 				$SetQry = '';
@@ -288,7 +288,7 @@
 				{
                                         mysql_query('begin');
 					$Qry = " UPDATE resi_project " . $SetQry . " WHERE PROJECT_STAGE='".$arrExp[0]."' AND PROJECT_PHASE='".$arrExp[1]."' AND PROJECT_ID IN (".$getProjectId.") ";
-					//echo "<br>".$Qry;
+					//echo "<br>".$Qry;die;
 					if($arrUpdatePhase[1] != '' && $arrUpdatePhase[1] != '0')
 					{
 						$QueryUpdateCycle = "INSERT INTO revision_phase (PROJECT_ID, UPDATION_CYCLE_ID ) SELECT PROJECT_ID,'".$arrUpdatePhase[1]."' FROM resi_project WHERE PROJECT_STAGE='".$arrExp[0]."' AND PROJECT_PHASE='".$arrExp[1]."' AND PROJECT_ID IN (".$getProjectId.") ";

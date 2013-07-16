@@ -185,6 +185,14 @@
 	<tr>
 		<td class="thinline" align="left" colspan="2"></td>
 	</tr>
+        
+	<tr>
+		<td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+		<td align="left" height="22"><a class="leftnav" href="brokerList.php"><font color = "#f15a22">Broker Management</font></a></td>
+	</tr>
+        <tr>
+		<td class="thinline" align="left" colspan="2"></td>
+	</tr>
 	<tr>
 		<td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
 		<td align="left" height="22"><a class="leftnav" href="logout.php"><font color = "#f15a22">Logout</font></a></td>
@@ -209,7 +217,7 @@ jQuery(document).ready(function(){
 	jQuery(".label_click").live('click',function(){
 		var title =  jQuery(this).attr('title');
 		jQuery(this).attr('href','javascript:void(0)');
-		window.open('AddQuickLabel.php','LabelManagement','height=300,width=600,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
+		window.open('AddQuickLabel.php','LabelManagement','height=300,width=800,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
 	});
 });
 </script>
