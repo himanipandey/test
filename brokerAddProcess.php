@@ -66,15 +66,22 @@
         {
             /**********project add code start here***********/
             $arrProjectListInValid = array();
-             $arrProjectListValid = array();
+            $arrProjectListValid = array();
             $flag = 0;
             include("dbConfig.php");
+            $projectList = getProjectByBroker($brokerIdFormapping);
+            $projectExist = array();
+             foreach($projectList as $key=>$val) {
+                 $projectExist[] = $val['PROJECT_ID'];
+             }         
             foreach($_REQUEST['multiple_project'] as $k=>$v) {
                 if($v !='') {  
                     $flag = 1;
                     $projectdetail = projectdetail($v);
                    if( count($projectdetail) != 0 ) {
-                       $arrProjectListValid[] = $v;
+                       if( !in_array($v,$projectExist) ) {
+                            $arrProjectListValid[] = $v;
+                       }
                    }
                    else {
                        $arrProjectListInValid[] = $v; 
@@ -85,19 +92,24 @@
                 $cnt = 1;
                 $comma = ',';
                 $qryIns = "INSERT IGNORE INTO BROKER_PROJECT_MAPPING (PROJECT_ID,BROKER_ID,ACTION_DATE) VALUES ";
-                foreach($arrProjectListValid as $val) {
-                    if($cnt == count($arrProjectListValid))
-                        $comma = '';
-                    $qryIns .= "($val,$brokerIdFormapping, now())$comma";
-                    $cnt++;
+                if( count($arrProjectListValid) > 0) {
+                    foreach($arrProjectListValid as $val) {
+                        if($cnt == count($arrProjectListValid))
+                            $comma = '';
+                        $qryIns .= "($val,$brokerIdFormapping, now())$comma";
+                        $cnt++;
+                    }
+                    $resIns = mysql_query($qryIns) or die(mysql_error());
+                    if($resIns)
+                        $ErrorMsg['success'] = "Data has been inserted successfully!";
+                    if(count($arrProjectListInValid)>0) {
+                        $str = implode(", ",$arrProjectListInValid);
+                        $ErrorMsg['wrongPId'] = "You cant enter wrong project ids which are following: $str";
+                    }  
                 }
-                $resIns = mysql_query($qryIns) or die(mysql_error());
-                if($resIns)
-                    $ErrorMsg['success'] = "Data has been inserted successfully!";
-                if(count($arrProjectListInValid)>0) {
-                    $str = implode(", ",$arrProjectListInValid);
-                    $ErrorMsg['wrongPId'] = "You cant enter wrong project ids which are following: $str";
-                }   
+                else {
+                    $ErrorMsg['wrongPId'] = "All project ids are dupplicate!";
+                }
             }
         }
 
