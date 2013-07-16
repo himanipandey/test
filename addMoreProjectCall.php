@@ -12,8 +12,6 @@
     include('addMoreProjectCallProcess.php');
     
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
-   die("1");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."addMoreProjectCall.tpl");
-     
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 ?>
