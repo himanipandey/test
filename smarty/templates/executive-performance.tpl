@@ -36,58 +36,6 @@
                                         </TABLE>
                                      </TD>
                                 </TR>
-                                {if !empty($message)}
-                                    <tr>
-                                        <TD>
-                                            <div class="{$message['type']}" style="text-align: left;">
-                                                {$message['content']}
-                                            </div>
-                                        </TD>
-                                    </tr>
-                                {/if}
-                                <tr>
-                                    <td colspan="0">
-                                        <div style="height: 31px; float: left">
-                                            <form method="post" onsubmit="return verifyDataGetForm();">
-                                                <select name="cityId" id = "cityId" class="cityId" onchange="updateSuburbDropdown(this.value, 'suburbId');" STYLE="width: 150px">
-                                                        <option value =''>Select City</option>
-                                                        {foreach from = $CityDataArr key=key item = item}
-                                                        <option {if $selectedCity == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
-                                                        {/foreach}
-                                                </select>
-                                                <select name="suburbId" id = "suburbId" class="suburbId" STYLE="width: 150px">
-                                                    <option value="">Select Suburb</option>
-                                                    {foreach from = $SuburbDataArr key=key item = item}
-                                                        <option {if $selectedSuburb == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
-                                                    {/foreach}
-                                                </select>
-                                                <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
-                                            </form>
-                                        </div>
-                                        <div style="float: left; width: 20px; height: 31px;">
-                                        </div>
-                                        <div style="float: left; height: 31px;">
-                                            <form method="post" onsubmit="return verifyAdminSelected();">
-                                                <select name="executive" id="executive" STYLE="width: 150px">
-                                                        <option value =''>Select Exec</option>
-                                                        {foreach from = $executiveList item = item}
-                                                            <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
-                                                        {/foreach}
-                                                </select>
-                                                <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
-                                            </form>
-                                        </div>
-                                        <div style="float: left; width: 20px; height: 31px;">
-                                        </div>
-                                        <div style="float: left; height: 31px;">
-                                            <form method="post" onsubmit="return verifyProjectIds();">
-                                                <input name="projectIds" id="projectIds" STYLE="width: 150px" placeholder="Comma Seperated PIDs" value="{$selectedProjectIds}">
-                                                </input>
-                                                <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
                                 <tr>
                                     <td>
                                         <div>
@@ -95,19 +43,13 @@
                                                 <table class="tablesorter">
                                                     <thead>
                                                         <tr>
-                                                            <th>
-                                                                <input type=checkbox onclick="selectAllCheckBoxes('assign[]', this.checked);">
-                                                            </th>
-                                                            
-                                                            <th style="font-size: 12px">PID</td>
-                                                            <th style="font-size: 12px">Project Name</th>
-                                                            <th style="font-size: 12px">Builder Name</th>
-                                                            <th style="font-size: 12px">Locality</th>
-                                                            <th style="font-size: 12px">Booking Status</th>
-                                                            <th style="font-size: 12px">Project Status</th>
-                                                            <th style="font-size: 12px">Project Phase</th>
-                                                            <th style="font-size: 12px">Project Stage</th>
-                                                            <th style="font-size: 12px">Last Worked At</th>
+                                                            <th style="font-size: 12px">UserName</td>
+                                                            <th style="font-size: 12px">Total Calls Made</th>
+                                                            <th style="font-size: 12px">Done</th>
+                                                            <th style="font-size: 12px">Reverted</th>
+                                                            <th style="font-size: 12px">Calls/Done</th>
+                                                            <th style="font-size: 12px">Not Contactable</th>
+                                                            <th style="font-size: 12px">Not Contactable %</th>
                                                             <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px">Assignment Type</th>
                                                             <th style="font-size: 12px">1st Assigned To</th>
                                                             <th style="font-size: 12px">Assigned On</th>
@@ -152,8 +94,6 @@
                                                             <td>{$item['PROJECT_NAME']}</td>
                                                             <td>{$item['BUILDER_NAME']}</td>
                                                             <td>{$item['LOCALITY']}</td>
-                                                            <td>{$item['BOOKING_STATUS']}</td>
-                                                            <td>{$item['PROJECT_STATUS']}</td>
                                                             <td>{$item['PROJECT_PHASE']}</td>
                                                             <td>{$item['PROJECT_STAGE']}</td>
                                                             <td>{$item['LAST_WORKED_AT']}</td>
