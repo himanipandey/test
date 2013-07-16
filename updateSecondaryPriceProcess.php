@@ -37,7 +37,7 @@
                  $minPrice = $_REQUEST['minPrice'][$key];
                  $maxPrice = $_REQUEST['maxPrice'][$key];
                  $typeName =   $val;
-                 $qryUp = "UPDATE PROJECT_SECONDARY_PRICE
+                 $qryUp = "UPDATE project_secondary_price
                            SET 
                               MIN_PRICE           =   '".$minPrice."',
                               MAX_PRICE           =   '".$maxPrice."',

@@ -38,7 +38,7 @@
         }
         $errorPrice = '';
         if($flag == 0){
-            $ins = "INSERT INTO PROJECT_SECONDARY_PRICE 
+            $ins = "INSERT INTO project_secondary_price 
                     (ID, PROJECT_ID, UNIT_TYPE, BROKER_ID, MIN_PRICE, MAX_PRICE, EFFECTIVE_DATE,
                         LAST_MODIFIED_BY, LAST_MODIFIED_DATE) VALUES $qryStr";
             $res = mysql_query($ins) or die(mysql_error());

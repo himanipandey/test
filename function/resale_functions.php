@@ -133,7 +133,7 @@
 
       $qry = "SELECT * 
                 FROM 
-                    PROJECT_SECONDARY_PRICE   
+                    project_secondary_price   
                 WHERE
                     PROJECT_ID = $projectId
                 AND $brokerQuery
