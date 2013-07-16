@@ -539,6 +539,10 @@ else{
 						{else if $projectDataArr[data].PROJECT_STAGE=='noStage'}
 							{$BG = 'white'}
 							{$phse = 'noS'}
+                                                {else if $projectDataArr[data].PROJECT_STAGE=='secondaryPriceCycle'}
+							{$BG = 'blue'}
+							{$phse = 'updation'}
+                                                        
 						{else if $projectDataArr[data].PROJECT_STAGE=='updationCycle'}
 							{$BG = 'yellow'}
 							{$phse = 'updation'}
@@ -570,7 +574,7 @@ else{
                                 <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
                             {/if}
                         {else}
-                                <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
+                                <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - No Label</TD>
                         {/if}
                         <TD align=left class=td-border nowrap>{$projectDataArr[data].BUILDER_NAME}</TD>
                         <TD align=left class=td-border>
