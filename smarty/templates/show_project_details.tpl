@@ -1462,7 +1462,7 @@ function getDateNow(){
                                 <table align="left" style = "border:1px solid;">
                                     <tr class ="headingrowcolor">
                                         <td colspan="5">&nbsp;</td>
-                                        <td colspan="3" align ="center" class ="whiteTxt"><b>Brokers</b></td>
+                                        <td colspan="{count($brokerIdList)}" align ="center" class ="whiteTxt"><b>Brokers</b></td>
                                         <td colspan="2">&nbsp;</td>
                                     </tr>
                                     <tr class ="headingrowcolor" height="30px">
