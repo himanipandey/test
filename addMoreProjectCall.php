@@ -7,7 +7,7 @@
     AdminAuthentication();
     $dept = $_SESSION['DEPARTMENT'];
     $smarty->assign("arrProjEditPermission", $ARR_PROJ_EDIT_PERMISSION[$dept]);
-    include("dbConfig_crmConn.php");
+    include("dbConfig_crm.php");
     include("function/resale_functions.php");
     include('addMoreProjectCallProcess.php');
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
