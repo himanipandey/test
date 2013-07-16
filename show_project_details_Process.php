@@ -234,11 +234,10 @@ $res = mysql_query($qry) or die(mysql_error());
  	{
 	 	$phse = 'updation';
  	}
-        else if($projectDetails[0]['PROJECT_STAGE'] == 'secondaryPrice')
+        else if($projectDetails[0]['PROJECT_STAGE'] == 'secondaryPriceCycle')
  	{
-	 	$phse = 'secondary';
+	 	$phse = 'updation';
  	}
- 	
  	$UpdationArr = updationCycleTable();
  	$projectLabel = '';
  	if($phse =='updation')
