@@ -89,7 +89,7 @@ function builder_contact(builderId,buildernm)
                         <TBODY>
                             <TR>
                               <TD class="h1" width="67%"><img height="18" hspace="5" src="images/arrow.gif" width="18">
-                                  Secondary Price Project Update Screen
+                                  Secondary Price Update Screen
                               </TD>
                               <TD width="33%" align ="right"></TD>
                             </TR>
@@ -269,6 +269,14 @@ function builder_contact(builderId,buildernm)
                 </tr>
                
                 <tr>
+                    <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
+                        <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href = "insertSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Update Secondary Price</b></a>&nbsp;&nbsp;
+                        <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href = "updateSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Edit Secondary Price</b></a>
+                    </td>
+                    <td align ="left">&nbsp;</td>
+               </tr>
+               
+                <tr>
                   <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
                         <table align="left" style = "border:1px solid;">
                             <tr class ="headingrowcolor">
@@ -333,13 +341,7 @@ function builder_contact(builderId,buildernm)
                         </table>
                    </td>
                  </tr>
-                 <tr>
-                    <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
-                        <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href = "insertSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Update Secondary Price</b></a>&nbsp;&nbsp;
-                        <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href = "updateSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Edit Secondary Price</b></a>
-                    </td>
-                    <td align ="left">&nbsp;</td>
-               </tr>
+                 
                 <!--end code for all brokers secondary price display-->
                 <tr><td colspan ="8">&nbsp;</td><tr>
                 <tr class="headingrowcolor" height="30px;">

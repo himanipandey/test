@@ -44,6 +44,9 @@ if($_REQUEST['btnExit'] == "Exit")
 $lastUpdatedDetail = lastUpdatedAuditDetail($projectId);
 $smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);
 
+$arrCalingPrimary = fetchProjectCallingLinks($projectId,'primary');
+$smarty->assign("arrCalingPrimary", $arrCalingPrimary);
+
 /******start display other pricing******/
 $otherPricing = fetch_other_price($projectId);
 $smarty->assign("otherPricing", $otherPricing);
