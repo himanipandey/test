@@ -78,24 +78,27 @@
 			    <form method="post" enctype="multipart/form-data">
 			      <div>
 				<tr>
-				 
-					<td width="20%" align="right" >*Builder Name : </td>
-					
-					<input type=hidden name=oldbuilder id=oldbuilder value="{$oldval}" style="width:357px;">
-					<td width="30%" align="left"><input type=text name=txtBuilderName id=txtBuilderName value="{$txtBuilderName}" style="width:357px;"></td>
-					{if $ErrorMsg["txtBuilderName"] != ''}
-					
-					<td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["txtBuilderName"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+                                    <td width="20%" align="right" ><font color = "red">*</font>Builder Display Name : </td>
+                                    <input type=hidden name=oldbuilder id=oldbuilder value="{$oldval}" style="width:357px;">
+                                    <td width="30%" align="left"><input type=text name=txtBuilderName id=txtBuilderName value="{$txtBuilderName}" style="width:357px;"></td>
+                                    {if $ErrorMsg["txtBuilderName"] != ''}
+                                    <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["txtBuilderName"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+				</tr>
+                                <tr>
+                                    <td width="20%" align="right" ><font color = "red">*</font>Legal Entity Name : </td>
+                                    <td width="30%" align="left"><input type=text name="legalEntity" id="legalEntity" value="{$legalEntity}" style="width:357px;"></td>
+                                    {if $ErrorMsg["legalEntity"] != ''}
+                                    <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["legalEntity"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 				<tr>
-				  <td width="20%" align="right" valign="top">*Builder Description :</td>
+				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Builder Description :</td>
 				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" cols="45">{$txtBuilderDescription}</textarea>
 </td>
 					{if $ErrorMsg["txtBuilderDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtBuilderDescription"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 
 				<tr>
-					 <td width="20%" align="right" >*Builder URL : </td>
+					 <td width="20%" align="right" ><font color = "red">*</font>Builder URL : </td>
 
 					<td width="30%" align="left" >
 						{if $builderid != ''  && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525 && $accessModule['urlEdit'] != 588  && $accessModule['urlEdit'] != 53}
@@ -145,7 +148,7 @@
 				</tr>
 				{/if}
 				<tr>
-				  <td width="20%" align="right" >*Builder Image : </td>
+				  <td width="20%" align="right" ><font color = "red">*</font>Builder Image : </td>
 				  <td width="30%" align="left"><input type=file name='txtBuilderImg'  style="width:400px;"></td>
 				    <td width="50%" align="left" nowrap>
 				    	{if $ErrorMsg["ImgError"] != ''}
@@ -155,7 +158,7 @@
 				    </td>
 				</tr>
 				<tr>
-				  <td width="20%" align="right">*Display Order : </td>
+				  <td width="20%" align="right"><font color = "red">*</font>Display Order : </td>
 				  <td width="30%" align="left" >
 				  
 				  
@@ -173,19 +176,19 @@
 				  {if $ErrorMsg["DisplayOrder"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["DisplayOrder"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 				<tr>
-				  <td width="20%" align="right" >* Meta Title : </td>
+				  <td width="20%" align="right" ><font color = "red">*</font> Meta Title : </td>
 				  <td width="30%" align="left" ><input type=text name=txtMetaTitle id=txtMetaTitle value="{$txtMetaTitle}" style="width:360px;"></td>
 				   {if $ErrorMsg["txtMetaTitle"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaTitle"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 				<tr>
-				  <td width="20%" align="right" valign="top">*Meta Keywords :</td>
+				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Meta Keywords :</td>
 				  <td width="30%" align="left" >
 				  <textarea name="txtMetaKeywords" rows="10" cols="45">{$txtMetaKeywords}</textarea>
                   </td>
                   {if $ErrorMsg["txtMetaKeywords"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaKeywords"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 				<tr>
-				  <td width="20%" align="right" valign="top">*Meta Description :</td>
+				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Meta Description :</td>
 				  <td width="30%" align="left" >
 				  <textarea name="txtMetaDescription" rows="10" cols="45">{$txtMetaDescription}</textarea>
                   </td>
