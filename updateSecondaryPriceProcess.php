@@ -34,28 +34,33 @@
             $arrMaxPrice[] = $_REQUEST['maxPrice'][$key];
             $arrMeanPrice[] = ($_REQUEST['minPrice'][$key]+$_REQUEST['maxPrice'][$key])/2;
             if($_REQUEST['minPrice'][$key] != '' AND $_REQUEST['maxPrice'][$key] != ''){
-                 $minPrice = $_REQUEST['minPrice'][$key];
-                 $maxPrice = $_REQUEST['maxPrice'][$key];
-                 $typeName =   $val;
-                 $qryUp = "UPDATE project_secondary_price
-                           SET 
-                              MIN_PRICE           =   '".$minPrice."',
-                              MAX_PRICE           =   '".$maxPrice."',
-                              LAST_MODIFIED_BY    = '".$_SESSION['adminId']."',
-                              LAST_MODIFIED_DATE  = now()
-                            WHERE
-                              PROJECT_ID = '".$projectId."'
-                            AND
-                              BROKER_ID  = '".$brokerId."'
-                            AND
-                              UNIT_TYPE  = '".$typeName."'
-                            AND
-                              EFFECTIVE_DATE = '".$oldEffectiveDate."'";
-               $resUp  = mysql_query($qryUp) or die(mysql_error());
-               if($resUp)
-                   $flag = 0;
-               else
-                   $flag = 1;
+                if($_REQUEST['minPrice'][$key] > $_REQUEST['maxPrice'][$key]) {
+                    $flag = 2;
+                }
+                else {
+                    $minPrice = $_REQUEST['minPrice'][$key];
+                    $maxPrice = $_REQUEST['maxPrice'][$key];
+                    $typeName =   $val;
+                    $qryUp = "UPDATE project_secondary_price
+                              SET 
+                                 MIN_PRICE           =   '".$minPrice."',
+                                 MAX_PRICE           =   '".$maxPrice."',
+                                 LAST_MODIFIED_BY    = '".$_SESSION['adminId']."',
+                                 LAST_MODIFIED_DATE  = now()
+                               WHERE
+                                 PROJECT_ID = '".$projectId."'
+                               AND
+                                 BROKER_ID  = '".$brokerId."'
+                               AND
+                                 UNIT_TYPE  = '".$typeName."'
+                               AND
+                                 EFFECTIVE_DATE = '".$oldEffectiveDate."'";
+                  $resUp  = mysql_query($qryUp) or die(mysql_error());
+                  if($resUp)
+                      $flag = 0;
+                  else
+                      $flag = 1;
+                }
             }
             else
                 $flag = 1;     
@@ -66,7 +71,10 @@
                 $errorPrice = "<font color = 'green'>Price has been updated successfully!</font>";
             
         }else{
-            $errorPrice = "<font color = 'red'>Min/Max price cant blank!</font>";
+           if($flag == 2)
+                    $errorPrice = "<font color = 'red'>Minimum price should be less them max price!</font>";
+                else
+                    $errorPrice = "<font color = 'red'>Min/Max price cant blank!</font>";
         }
         $arrBrokerPriceByProject = getBrokerPriceByProject($projectId, $brokerId, $effectiveDt);
         $smarty->assign("arrMinPrice",  $arrMinPrice);

@@ -100,13 +100,19 @@ function builder_contact(builderId,buildernm)
 	      <TD vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>	 
             <table cellSpacing="1" cellPadding="4" width="67%" align="center" style="border:1px solid;">
 	      <tr>
-              <td style = "padding-left:30px;" align = "left">	
-                 
-                  <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" onclick="window.open('assign_broker.php?projectId={$projectDetails[0].PROJECT_ID}&projectName={$projectDetails[0].PROJECT_NAME}&cityId={$projectDetails[0].CITY_ID}','Assign Broker','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');return false;" href="#"><b>&nbsp;&nbsp;Assign Broker&nbsp;&nbsp;</b></a>
-              </td>
-              <td style = "padding-left:30px;height: 30px;" align = "right">	
-                  <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href ="show_project_details.php?projectId={$projectDetails[0].PROJECT_ID}"><b>&nbsp;&nbsp;Projct Detail&nbsp;&nbsp;</b></a>
-              </td>
+                  <td colspan="2" style = "padding-left:30px;" align = "left">	
+                      <div style="margin-top:10px;margin-bottom:10px">
+                          <div>
+                                <a style = " display: block;width: 100px; height: 15px;background: #c2c2c2; padding: 5px; text-align: center; border: 1px;border-radius: 5px;text-decoration: none;color: black;
+                font-weight: bold;" onclick="window.open('assign_broker.php?projectId={$projectDetails[0].PROJECT_ID}&projectName={$projectDetails[0].PROJECT_NAME}&cityId={$projectDetails[0].CITY_ID}','Assign Broker','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');return false;" href="#"><b>&nbsp;&nbsp;Assign Broker&nbsp;&nbsp;</b></a>
+                                        </div>
+
+                                        <div style="float: left;  margin-left: 294px;  margin-top: -25px;">
+                                <a style = "display: block;width: 100px; height: 15px;background: #c2c2c2; padding: 5px; text-align: center; border: 1px;border-radius: 5px;text-decoration: none;color: black;
+                font-weight: bold;" href ="show_project_details.php?projectId={$projectDetails[0].PROJECT_ID}"><b>&nbsp;&nbsp;Projct Detail&nbsp;&nbsp;</b></a>
+                           </div>
+                      </div>
+                </td>
               </tr>
               
               <tr>
@@ -270,8 +276,12 @@ function builder_contact(builderId,buildernm)
                
                 <tr>
                     <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
-                        <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href = "insertSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Update Secondary Price</b></a>&nbsp;&nbsp;
-                        <a style = "text-decoration:none;background: #b4a5a5; font-size: 16; color: black;" href = "updateSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Edit Secondary Price</b></a>
+                        <div style="margin-top:10px;margin-bottom:10px">
+                            <div><a style = "display: block;width: 200px; height: 15px;background: #c2c2c2; padding: 5px; text-align: center; border: 1px;border-radius: 5px;text-decoration: none;color: black;
+  font-weight: bold;" href = "insertSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Update Secondary Price</b></a></div>
+                            <div style="float: left;  margin-left: 294px;  margin-top: -25px;"><a style = "display: block;width: 200px; height: 15px;background: #c2c2c2; padding: 5px; text-align: center; border: 1px;border-radius: 5px;text-decoration: none;color: black;
+  font-weight: bold;" href = "updateSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Edit Secondary Price</b></a></div>
+                        </div>
                     </td>
                     <td align ="left">&nbsp;</td>
                </tr>
@@ -293,8 +303,8 @@ function builder_contact(builderId,buildernm)
                                  {foreach from = $brokerIdList key=brokerkey item = brokerId}
                                     <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>{$allBrokerByProject[$brokerId][0]['BROKER_NAME']}</b></th>
                                  {/foreach}
-                                    <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price One Month Ago</b></th>
-                                 <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price Two Month Ago</b></th>
+                                    <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$oneMonthAgoDt}</b></th>
+                                 <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$twoMonthAgoDt}</b></th>
                             </tr>
                             <form name ="frm" method = "post">
                             {$cnt = 0}
