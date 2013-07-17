@@ -5,44 +5,51 @@ if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLC
     header("Location: project_desktop.php");
 }
 
+if($_POST['submit']==='Get'){
+    $_SESSION[$_SERVER['PHP_SELF']]['dateFrom'] = $_POST['dateFrom'];
+    $_SESSION[$_SERVER['PHP_SELF']]['dateTo'] = $_POST['dateTo'];
+}
 
-$smarty->assign("CityDataArr", $CityDataArr);
-$smarty->assign("executiveList", $executiveList);
-$smarty->assign("projectList", $projectList);
-$smarty->assign("projectPageURL", '/show_project_details.php?projectId=');
-$smarty->assign("selectedCity", $_SESSION['project-status']['city']);
-$smarty->assign("selectedSuburb", $_SESSION['project-status']['suburb']);
-$smarty->assign("selectedExecutive", $_SESSION['project-status']['executive']);
-$smarty->assign("selectedProjectIds", $_SESSION['project-status']['projectIds']);
-$smarty->assign("SuburbDataArr", $suburbDataArr);
-$smarty->assign("message", $msg);
+if(!empty($_SESSION[$_SERVER['PHP_SELF']]['dateFrom'])){
+    $dateFrom = $_SESSION[$_SERVER['PHP_SELF']]['dateFrom'];
+    $dateTo = $_SESSION[$_SERVER['PHP_SELF']]['dateTo'];
+    $execCallCount = getExecCallCount($dateFrom, $dateTo);
+    $completionCount = getCompletionCountByExecs($dateFrom, $dateTo);
+    $revertCount = getRevertCountForExecs($dateFrom, $dateTo);
+    $displayData = prepareDisplayData($execCallCount, $completionCount, $revertCount);
+}
+
+$smarty->assign("dateFrom", $dateFrom);
+$smarty->assign("dateTo", $dateTo);
+$smarty->assign("displayData", $displayData);
 
 
 
-function prepareDisplayData($data){ 
+function prepareDisplayData($execCallCount, $completionCount, $revertCount){ 
     $result = array();
-    foreach ($data as $value) {
-        $new['PROJECT_ID'] = $value['PROJECT_ID'];
-        $new['PROJECT_NAME'] = $value['PROJECT_NAME'];
-        $new['BUILDER_NAME'] = $value['BUILDER_NAME'];
-        $new['LOCALITY'] = $value['LOCALITY'];
-        $new['PROJECT_PHASE'] = $value['PROJECT_STAGE'];
-        $new['PROJECT_STAGE'] = $value['PROJECT_PHASE'];
-        $new['LAST_WORKED_AT'] = $value['LAST_WORKED_AT'];
-        $assigned_to = explode('|', $value['ASSIGNED_TO']);
-        $assigned_to_dep = explode('|', $value['DEPARTMENT']);
-        $assignment_type = '';
-        if($value['PREV_PROJECT_PHASE'] == 'audit1') $assignment_type .= 'Reverted-';
-        if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY')$assignment_type .= 'Field';
-        elseif(empty($assigned_to[0])) $assignment_type .= 'Unassigned';
-        else{
-            $assignment_type .= 'Assigned-'.  strval(count($assigned_to));
-        }
-        $new['ASSIGNMENT_TYPE'] = $assignment_type;
-        $new['ASSIGNED_TO'] = $assigned_to;
-        $new['ASSIGNED_AT'] = explode('|', $value['ASSIGNED_AT']);
-        $new['STATUS'] = explode('|', $value['STATUS']);
-        $new['REMARK'] = explode('|', $value['REMARK']);
+    $completionCount = indexAdminId($completionCount);
+    $revertCount = indexAdminId($revertCount);
+    
+    $execCallCount = groupByAdminId($execCallCount);
+    foreach ($execCallCount as $adminId=>$adminDetail) {
+        $new = array();
+        $new['USERNAME'] = $adminDetail[0]['USERNAME'];
+        $new['TOTAL-CALLS'] = intval(getTotalCallsFromExecCallDetail($adminDetail));
+        $new['DONE'] = intval($completionCount[$adminId]['COMPLETED']);
+        $new['REVERTED'] = intval($revertCount[$adminId]['REVERT_COUNT']);
+        $new['CALL-DONE-RATIO'] = round($new['TOTAL-CALLS']/$new['DONE'], 2);
+        $new['NOT-CONTACTABLE'] = intval(getNotContactableCount($adminDetail));
+        $new['NOT-CONTACTABLE-%'] = round(($new['NOT-CONTACTABLE']*100)/$new['TOTAL-CALLS'],2);
+        $new['INCOMPLETE'] = intval(getIncompleteCallCount($adminDetail));
+        $new['TOTAL-CONNECTED-CALLS'] = intval($new['TOTAL-CALLS']-$new['NOT-CONTACTABLE']);
+        $new['ACCURACY'] = round((($new['TOTAL-CONNECTED-CALLS']-$new['INCOMPLETE'])*100)/$new['TOTAL-CONNECTED-CALLS'], 2);
+        $totalCallTime = intval(getTotalCallTime($adminDetail));
+        $new['TOTAL-CALL-TIME'] = round($totalCallTime/60, 2);
+        $new['AVERAGE-CALL-TIME'] = round($totalCallTime/(60*$new['TOTAL-CONNECTED-CALLS']), 2);
+        
+        //Converting to human readabletime format
+        $new['TOTAL-CALL-TIME'] = secsToHumanReadable($new['TOTAL-CALL-TIME']);
+        $new['AVERAGE-CALL-TIME'] = secsToHumanReadable($new['AVERAGE-CALL-TIME']);
         $result[] = $new;
     }
     return $result;
@@ -63,5 +70,87 @@ function extractPIDs($pidString){
         $result[] = trim($value);
     }
     return $result;
+}
+
+function indexAdminId($array){
+    $result = array();
+    foreach ($array as $value) {
+        $result[$value['ADMIN_ID']] = $value;
+    }
+    return $result;
+}
+
+function groupByAdminId($execCallDetail){
+    $result = array();
+    foreach ($execCallDetail as $value) {
+        $result[$value['ADMINID']][] = $value;
+    }
+    return $result;
+}
+
+function getTotalCallsFromExecCallDetail($execCallDetail){
+    $total = 0;
+    foreach ($execCallDetail as $detail) {
+        $total += $detail['TOTAL_CALLS'];
+    }
+    return $total;
+}
+
+function getNotContactableCount($execCallDetail){
+    $total = 0;
+    foreach ($execCallDetail as $detail) {
+        if(is_null($detail['CallStatus'])){
+            $total = $detail['TOTAL_CALLS'];
+            break;
+        }
+    }
+    return $total;
+}
+
+function getIncompleteCallCount($execCallDetail){
+    $total = 0;
+    foreach ($execCallDetail as $detail) {
+        if($detail['CallStatus']==='fail'){
+            $total = $detail['TOTAL_CALLS'];
+            break;
+        }
+    }
+    return $total;
+}
+
+function getTotalCallTime($execCallDetail){
+    $total = 0;
+    foreach ($execCallDetail as $detail) {
+        if(in_array($detail['CallStatus'], array('fail', 'success'))){
+            $total = $detail['TOTAL_TIME'];
+        }
+    }
+    return $total;
+}
+
+function secsToHumanReadable($secs)
+{
+    $secs = intval($secs);
+    $units = array(
+        "w"   => 7*24*3600,
+        "d"    =>   24*3600,
+        "h"   =>      3600,
+        "m" =>        60,
+        "s" =>         1,
+    );
+
+    // specifically handle zero
+    if ( $secs == 0 ) return "0 s";
+
+    $s = "";
+
+    foreach ( $units as $name => $divisor ) {
+            if ( $quot = intval($secs / $divisor) ) {
+                    $s .= "$quot $name, ";
+                    $secs -= $quot * $divisor;
+            }
+    }
+
+    return substr($s, 0, -2);
 }
 ?>
