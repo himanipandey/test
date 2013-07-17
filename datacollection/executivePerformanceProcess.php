@@ -39,7 +39,7 @@ function prepareDisplayData($execCallCount, $completionCount, $revertCount){
         $new['REVERTED'] = intval($revertCount[$adminId]['REVERT_COUNT']);
         $new['CALL-DONE-RATIO'] = round($new['TOTAL_CALLS']/$new['DONE'], 2);
         $new['NOT-CONTACTABLE'] = intval(getNotContactableCount($adminDetail));
-        $new['NOT-CONTACTABLE-%'] = round(($new['NOT-CONTACTABLE']*100)/$new['TOTAL_CALLS'],2);
+        $new['NOT-CONTACTABLE-%'] = round(($new['NOT-CONTACTABLE']*100)/$new['TOTAL-CALLS'],2);
         $new['INCOMPLETE'] = intval(getIncompleteCallCount($adminDetail));
         $new['TOTAL-CONNECTED-CALLS'] = intval($new['TOTAL-CALLS']-$new['NOT-CONTACTABLE']);
         $new['ACCURACY'] = round((($new['TOTAL-CONNECTED-CALLS']-$new['INCOMPLETE'])*100)/$new['TOTAL-CONNECTED-CALLS'], 2);
