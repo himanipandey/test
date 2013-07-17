@@ -145,7 +145,7 @@ if ($_POST['btnSave'] == "Save")
 
 	}
         /**code for duplicate builder name or entity name***/
-        if($builderid == '') {
+        if($builderid == '' && $txtBuilderName != '' && $legalEntity != '') {
             $qryBuilder = "SELECT * FROM ".RESI_BUILDER." 
                             WHERE
                                 BUILDER_NAME = '".$txtBuilderName."' OR ENTITY = '".$legalEntity."'";
