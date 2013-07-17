@@ -37,7 +37,7 @@ function prepareDisplayData($execCallCount, $completionCount, $revertCount){
         $new['TOTAL-CALLS'] = intval(getTotalCallsFromExecCallDetail($adminDetail));
         $new['DONE'] = intval($completionCount[$adminId]['COMPLETED']);
         $new['REVERTED'] = intval($revertCount[$adminId]['REVERT_COUNT']);
-        $new['CALL-DONE-RATIO'] = round($new['TOTAL_CALLS']/$new['DONE'], 2);
+        $new['CALL-DONE-RATIO'] = round($new['TOTAL-CALLS']/$new['DONE'], 2);
         $new['NOT-CONTACTABLE'] = intval(getNotContactableCount($adminDetail));
         $new['NOT-CONTACTABLE-%'] = round(($new['NOT-CONTACTABLE']*100)/$new['TOTAL-CALLS'],2);
         $new['INCOMPLETE'] = intval(getIncompleteCallCount($adminDetail));
@@ -46,6 +46,10 @@ function prepareDisplayData($execCallCount, $completionCount, $revertCount){
         $totalCallTime = intval(getTotalCallTime($adminDetail));
         $new['TOTAL-CALL-TIME'] = round($totalCallTime/60, 2);
         $new['AVERAGE-CALL-TIME'] = round($totalCallTime/(60*$new['TOTAL-CONNECTED-CALLS']), 2);
+        
+        //Converting to human readabletime format
+        $new['TOTAL-CALL-TIME'] = secsToHumanReadable($new['TOTAL-CALL-TIME']);
+        $new['AVERAGE-CALL-TIME'] = secsToHumanReadable($new['AVERAGE-CALL-TIME']);
         $result[] = $new;
     }
     return $result;
@@ -122,5 +126,31 @@ function getTotalCallTime($execCallDetail){
         }
     }
     return $total;
+}
+
+function secsToHumanReadable($secs)
+{
+    $secs = intval($secs);
+    $units = array(
+        "w"   => 7*24*3600,
+        "d"    =>   24*3600,
+        "h"   =>      3600,
+        "m" =>        60,
+        "s" =>         1,
+    );
+
+    // specifically handle zero
+    if ( $secs == 0 ) return "0 s";
+
+    $s = "";
+
+    foreach ( $units as $name => $divisor ) {
+            if ( $quot = intval($secs / $divisor) ) {
+                    $s .= "$quot $name, ";
+                    $secs -= $quot * $divisor;
+            }
+    }
+
+    return substr($s, 0, -2);
 }
 ?>

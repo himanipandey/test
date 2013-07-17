@@ -104,8 +104,8 @@
                                                             <td>{$item['INCOMPLETE']}</td>
                                                             <td>{$item['ACCURACY']}</td>
                                                             <td>{$item['TOTAL-CONNECTED-CALLS']}</td>
-                                                            <td>{$item['TOTAL-CALL-TIME']} min</td>
-                                                            <td>{$item['AVERAGE-CALL-TIME']} min</td>
+                                                            <td>{$item['TOTAL-CALL-TIME']}</td>
+                                                            <td>{$item['AVERAGE-CALL-TIME']}<td>
                                                         </tr>
                                                         {/foreach}
                                                     </tbody>
