@@ -381,6 +381,7 @@ else{
 											<option value = "newProject"{if $stage == 'newProject'}selected {else}{/if}>New Project Entry</option>
 											<option value = "updationCycle"{if $stage == 'updationCycle'}selected {else}{/if}>Updation Cycle</option>
 											<option value = "noStage"{if $stage == 'NoPhase'}selected {else}{/if}>No Phase</option>
+                                                                                        <option value = "secondaryPriceCycle"{if $stage == 'secondaryPriceCycle'}selected {else}{/if}>Secondary Price Cycle</option>
 										</select>
 									</span>
 								</td>
@@ -538,6 +539,10 @@ else{
 						{else if $projectDataArr[data].PROJECT_STAGE=='noStage'}
 							{$BG = 'white'}
 							{$phse = 'noS'}
+                                                {else if $projectDataArr[data].PROJECT_STAGE=='secondaryPriceCycle'}
+							{$BG = 'blue'}
+							{$phse = 'updation'}
+                                                        
 						{else if $projectDataArr[data].PROJECT_STAGE=='updationCycle'}
 							{$BG = 'yellow'}
 							{$phse = 'updation'}
@@ -546,33 +551,31 @@ else{
 
                       <TR  style="background:{$color}">
                         <TD align=center class=td-border>{$count}  </TD>
-						<!-- <TD align=left class="td-border">
-							<div>
-								<input type="checkbox" id="checkit" class="stateSelection" value="{$projectDataArr[data].PROJECT_ID}"><br>
-								<input type="hidden" class = "phaseCheck" value = "{$projectDataArr[data].PROJECT_PHASE}"></input>
-								<div class="phaseError" style="color:red;"> </div>
-							</div>
-						</TD>-->
-					   <td align=left class=td-border>{$projectDataArr[data].PROJECT_ID}</td>
-						{if $projectDataArr[data].PROJECT_STAGE!=""}
-						<TD align=left class=td-border style="background:{$BG};"><a style="color:black" href="show_project_details.php?projectId={$projectDataArr[data].PROJECT_ID}" title='{$projectDataArr[data].PROJECT_STAGE}' alt='{$projectDataArr[data].PROJECT_STAGE}'>{$projectDataArr[data].PROJECT_NAME}  </a> </TD>
-																							{else}
-						<TD align=left class=td-border style="background:{$BG};">{$projectDataArr[data].PROJECT_NAME}</TD>
-																									{/if}
-
-																				{if $phse =='updation'}
-
-																					{foreach from=$UpdationArr key=k item=v}
-											 											{if ($projectDataArr[data].UPDATION_CYCLE_ID)==($UpdationArr[$k].UPDATION_CYCLE_ID)}
-																								<TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - {$UpdationArr[$k].LABEL}</TD>
-																						{/if}
-																					{/foreach}
-																					{if $projectDataArr[data].UPDATION_CYCLE_ID==null}
-																									<TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
-																					{/if}
-																				{else}
-																					<TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
-																				{/if}
+                        <!-- <TD align=left class="td-border">
+                            <div>
+                                <input type="checkbox" id="checkit" class="stateSelection" value="{$projectDataArr[data].PROJECT_ID}"><br>
+                                <input type="hidden" class = "phaseCheck" value = "{$projectDataArr[data].PROJECT_PHASE}"></input>
+                                <div class="phaseError" style="color:red;"> </div>
+                            </div>
+                        </TD>-->
+                       <td align=left class=td-border>{$projectDataArr[data].PROJECT_ID}</td>
+                        {if $projectDataArr[data].PROJECT_STAGE!=""}
+                        <TD align=left class=td-border style="background:{$BG};"><a style="color:black" href="show_project_details.php?projectId={$projectDataArr[data].PROJECT_ID}" title='{$projectDataArr[data].PROJECT_STAGE}' alt='{$projectDataArr[data].PROJECT_STAGE}'>{$projectDataArr[data].PROJECT_NAME}  </a> </TD>
+                                                                                                                                                                {else}
+                        <TD align=left class=td-border style="background:{$BG};">{$projectDataArr[data].PROJECT_NAME}</TD>
+                                                                                                                                                                                {/if}
+                        {if $phse =='updation'}
+                            {foreach from=$UpdationArr key=k item=v}
+                                {if ($projectDataArr[data].UPDATION_CYCLE_ID)==($UpdationArr[$k].UPDATION_CYCLE_ID)}
+                                   <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - {$UpdationArr[$k].LABEL}</TD>
+                                {/if}
+                            {/foreach}
+                            {if $projectDataArr[data].UPDATION_CYCLE_ID==null}
+                                <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
+                            {/if}
+                        {else}
+                                <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - No Label</TD>
+                        {/if}
                         <TD align=left class=td-border nowrap>{$projectDataArr[data].BUILDER_NAME}</TD>
                         <TD align=left class=td-border>
                         	{$projectDataArr[data].PROJECT_ADDRESS}
@@ -584,35 +587,38 @@ else{
                         <TD  class="td-border" align=left nowrap = 'nowrap'>
 
 						
-							<select name = "option_value" onchange = "updatelink(this.value);" style='width:180px;'>
-								<option value = "">Select Option</option>
-								{if $projectDataArr[data].PROJECT_STAGE!="noStage"}
-									<option value = "show_project_details.php?projectId={$projectDataArr[data].PROJECT_ID}">View Project</option>
-								{/if}
-								{if in_array($projectDataArr[data].PROJECT_PHASE,$arrProjEditPermission)}
-								<option value = "add_project.php?projectId={$projectDataArr[data].PROJECT_ID}">Edit Project</option>
-								<option value = "add_specification.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Edit/Add Specification and Amenities</option>
-								<option value = "image_edit.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Edit Plans</option>
-								<option value = "project_img_add.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add Plans</option>
-								<option value = "add_apartmentConfiguration.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add/Edit Configuration</option>
-								<option value = "edit_floor_plan.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Edit Floor Plans</option>
-								<option value = "add_apartmentFloorPlan.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add Floor Plans</option>
-								<option value = "project_other_price.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Edit Other Price</option>
-								<option value = "tower_detail_delete.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add/Edit/Delete Tower Detail</option>
-                                <option value = "phase.php?projectId={$projectDataArr[data].PROJECT_ID}">Add Phase</option>
-                                <option value = "phase_edit.php?projectId={$projectDataArr[data].PROJECT_ID}">Edit Phase</option>
-								{/if}
-							</select>
+                                <select name = "option_value" onchange = "updatelink(this.value);" style='width:180px;'>
+                                    <option value = "">Select Option</option>
+                                {if $projectDataArr[data].PROJECT_STAGE!="noStage"}
+                                        <option value = "show_project_details.php?projectId={$projectDataArr[data].PROJECT_ID}">View Project</option>
+                                {/if}
+                                {if in_array($projectDataArr[data].PROJECT_PHASE,$arrProjEditPermission)}
+                                    <option value = "add_project.php?projectId={$projectDataArr[data].PROJECT_ID}">Edit Project</option>
+                                    <option value = "add_specification.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Edit/Add Specification and Amenities</option>
+                                    <option value = "image_edit.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Edit Plans</option>
+                                    <option value = "project_img_add.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add Plans</option>
+                                    <option value = "add_apartmentConfiguration.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add/Edit Configuration</option>
+                                    <option value = "edit_floor_plan.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Edit Floor Plans</option>
+                                    <option value = "add_apartmentFloorPlan.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add Floor Plans</option>
+                                    <option value = "project_other_price.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Edit Other Price</option>
+                                    <option value = "tower_detail_delete.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add/Edit/Delete Tower Detail</option>
+                                    <option value = "phase.php?projectId={$projectDataArr[data].PROJECT_ID}">Add Phase</option>
+                                    <option value = "phase_edit.php?projectId={$projectDataArr[data].PROJECT_ID}">Edit Phase</option>
+                                 {/if}
+                                </select>
 
-							<select name = "option_value" onchange = "updatelink(this.value);" style='width:180px;'>
-								<option value = "">Select Option</option>
-								{if in_array($projectDataArr[data].PROJECT_PHASE,$arrProjEditPermission)}
-								<option value = "update_price.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Price</option>
-								<option value = "add_supply_inventory.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Availability(Supply)</option>
-								<option value = "add_tower_construction_status.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Tower Construction</option>
-								<option value = "add_project_construction.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Project Construction</option>
-								{/if}
-							</select>
+                                <select name = "option_value" onchange = "updatelink(this.value);" style='width:180px;'>
+                                        <option value = "">Select Option</option>
+                                        {if in_array($projectDataArr[data].PROJECT_PHASE,$arrProjEditPermission)}
+                                            <option value = "update_price.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Price</option>
+                                            <option value = "add_supply_inventory.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Availability(Supply)</option>
+                                            <option value = "add_tower_construction_status.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Tower Construction</option>
+                                            <option value = "add_project_construction.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Project Construction</option>
+                                            {if $projectDataArr[data].PROJECT_STAGE == 'secondaryPriceCycle'}
+                                             <option value = "secondary_price.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Project Secondary Price</option>
+                                            {/if}
+                                        {/if}
+                                </select>
 
 
                           <!--<a href="?projectid={$projectDataArr[data].PROJECT_ID}&mode=delete&page={$page}&sort={$sort}" title="Delete Member" onClick="return chkConfirm();">Delete</a></TD>-->

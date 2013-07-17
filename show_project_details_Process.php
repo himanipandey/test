@@ -7,8 +7,6 @@ $AmenitiesArr	=	AmenitiesList();
 $BankListArr	=	BankList();
 
 $projectId  = $_GET['projectId'];
-$arrCaling = fetchProjectCallingLinks($projectId);
-$smarty->assign("arrCaling", $arrCaling);
 
 /*********code for audit tables*********/
 $stageName = '';
@@ -45,6 +43,9 @@ if($_REQUEST['btnExit'] == "Exit")
 
 $lastUpdatedDetail = lastUpdatedAuditDetail($projectId);
 $smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);
+
+$arrCalingPrimary = fetchProjectCallingLinks($projectId,'primary');
+$smarty->assign("arrCalingPrimary", $arrCalingPrimary);
 
 /******start display other pricing******/
 $otherPricing = fetch_other_price($projectId);
@@ -236,7 +237,10 @@ $res = mysql_query($qry) or die(mysql_error());
  	{
 	 	$phse = 'updation';
  	}
- 	
+        else if($projectDetails[0]['PROJECT_STAGE'] == 'secondaryPriceCycle')
+ 	{
+	 	$phse = 'updation';
+ 	}
  	$UpdationArr = updationCycleTable();
  	$projectLabel = '';
  	if($phse =='updation')
@@ -381,6 +385,81 @@ updateProjectPhase($projectId, $phaseName, $reviews, $projectStage,TRUE);
 
 	header("Location:$returnURLPID");
 }
-
 include('builder_contact_info_process.php');
+
+/**code for secondary price dispaly************/
+include("function/resale_functions.php");
+$allBrokerByProject   = getBrokerByProject($projectId);
+    $arrBrokerList = array();
+   
+    foreach($allBrokerByProject as $key=>$val){
+         $brikerList = getBrokerDetailById($key);
+         $arrBrokerList[$key] = $brikerList;
+        
+    }
+     $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
+     
+     $minMaxSum = array();
+     $maxEffectiveDt = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
+     $latestMonthAllBrokerPrice = array();
+     $oneMonthAgoPrice = array();
+     $twoMonthAgoPrice = array();
+     
+     $arrCalingSecondary = fetchProjectCallingLinks($projectId,'secondary');
+     $smarty->assign("arrCalingSecondary", $arrCalingSecondary);
+     
+     /******one and two month age date create******/
+     $dateBreak = explode("-",$maxEffectiveDt);
+     $oneMonthAgo = mktime(0, 0, 0, $dateBreak[1]-1, 1, $dateBreak[0]);
+     $oneMonthAgoDt = date('Y-m',$oneMonthAgo)."-01 00:00:00";
+     $twoMonthAgo = mktime(0, 0, 0, $dateBreak[1]-2, 1, $dateBreak[0]);
+     $twoMonthAgoDt = date('Y-m',$twoMonthAgo)."-01 00:00:00";
+     /******end one and two month age date create******/
+     $brokerIdList = array();
+     foreach($arrBrokerPriceByProject as $k=>$v) {
+         if ($maxEffectiveDt == $v['EFFECTIVE_DATE']) {
+            $minMaxSum[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
+            $minMaxSum[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
+            
+            $latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['minPrice'] = $v['MIN_PRICE'];
+            $latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['maxPrice'] = $v['MAX_PRICE'];
+            if (!in_array($v['BROKER_ID'],$brokerIdList)) {
+                $brokerIdList[] = $v['BROKER_ID'];
+            }
+         }
+        
+         if($oneMonthAgoDt == $v['EFFECTIVE_DATE']){
+            $oneMonthAgoPrice[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
+            $oneMonthAgoPrice[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
+         }
+         
+         if($twoMonthAgoDt == $v['EFFECTIVE_DATE']){
+            $twoMonthAgoPrice[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
+            $twoMonthAgoPrice[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
+         }
+     }
+     
+     $projectDetails = projectDetailById($projectId);
+     
+     $smarty->assign("latestMonthAllBrokerPrice", $latestMonthAllBrokerPrice);
+     $smarty->assign("oneMonthAgoPrice", $oneMonthAgoPrice);
+     $smarty->assign("twoMonthAgoPrice", $twoMonthAgoPrice);
+     $smarty->assign("minMaxSum", $minMaxSum);
+     $smarty->assign("allBrokerByProject", $arrBrokerList);
+     $smarty->assign("brokerIdList", $brokerIdList);
+
+     $smarty->assign("maxEffectiveDt", $maxEffectiveDt);
+  
+     $smarty->assign("arrCampaign", $arrCampaign);
+     
+     //code for distinct unit for a project
+    $arrProjectType = fetch_projectOptions($projectId);
+    $arrPType = array(); 
+    foreach($arrProjectType as $val){
+        $exp = explode("-",$val);
+        if(!in_array(trim($exp[0]),$arrPType))
+            array_push($arrPType,trim($exp[0]));
+    }
+    $smarty->assign("arrPType", $arrPType);
+/**code for secondary price dispaly************/
 ?>

@@ -1522,7 +1522,7 @@ function ViewCityDetails($cityID){
 		$ResDetails['URL'] 				=  $Res['URL'];
 		$ResDetails['DISPLAY_ORDER']  	=  $Res['DISPLAY_ORDER'];
 		$ResDetails['DESCRIPTION']		=  $Res['DESCRIPTION'];
-		return $ResDetails;
+                return $ResDetails;
 	}
 	else
 	{
@@ -1906,20 +1906,20 @@ function scaleDimensions($orig_width, $orig_height, $max_width, $max_height)
 function lastUpdatedAuditDetail($projectId)
 {
 	$qry = "   SELECT
-					   b.TABLE_NAME, b.DEPARTMENT, c.FNAME, a.ACTION_DATE
-					FROM
-					   audit a
-					       JOIN
-					   (SELECT
-					       a.TABLE_NAME, p.DEPARTMENT, MAX(a.AUDIT_ID) as AUDIT_ID
-					   FROM
-					       audit a
-					   JOIN proptiger_admin p ON a.DONE_BY = p.ADMINID
-					   WHERE
-					       a.PROJECT_ID = $projectId
-					   GROUP BY a.TABLE_NAME , p.DEPARTMENT) b ON (b.audit_id = a.audit_id)
-					       join
-					   proptiger_admin c ON (c.ADMINID = a.DONE_BY)";
+                    b.TABLE_NAME, b.DEPARTMENT, c.FNAME, a.ACTION_DATE
+                    FROM
+                       audit a
+                           JOIN
+                       (SELECT
+                           a.TABLE_NAME, p.DEPARTMENT, MAX(a.AUDIT_ID) as AUDIT_ID
+                       FROM
+                           audit a
+                       JOIN proptiger_admin p ON a.DONE_BY = p.ADMINID
+                       WHERE
+                           a.PROJECT_ID = $projectId
+                       GROUP BY a.TABLE_NAME , p.DEPARTMENT) b ON (b.audit_id = a.audit_id)
+                           join
+                       proptiger_admin c ON (c.ADMINID = a.DONE_BY)";
 	$res = mysql_query($qry) or die(mysql_error());
 	$arrData = array();
 	while($data = mysql_fetch_assoc($res))
@@ -1933,9 +1933,9 @@ function lastUpdatedAuditDetail($projectId)
 
 /*************function for fetch fetch project calling links*****************/
 
-function fetchProjectCallingLinks($projectId)
+function fetchProjectCallingLinks($projectId,$projectType)
 {
-	$qry = "SELECT d.AudioLink,a.FNAME,d.Remark,d.StartTime,d.EndTime 
+	$qry = "SELECT d.AudioLink,a.FNAME,d.Remark,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
 			FROM 
 				(".CALLDETAILS." d LEFT JOIN ".CALLPROJECT." p 
 			ON
@@ -1949,7 +1949,9 @@ function fetchProjectCallingLinks($projectId)
 			AND 
 				d.AudioLink IS NOT NULL
 			AND 
-				d.AudioLink != ''";
+				d.AudioLink != ''
+                        AND
+                                d.PROJECT_TYPE = '$projectType'";
 	$res = mysql_query($qry) or die(mysql_error());
 	$arrCallLink = array();
 	if(mysql_num_rows($res)>0)
@@ -2410,6 +2412,17 @@ function getFlatAvailability($projectId)
 		$final_list[$mkey]=$mlist;
 	}
 	return $final_list;
+}
+function projectDetailById($projectId){
+    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."'";
+    $res = mysql_query($qry) or die(mysql_error());	
+    $projectDetails = array();
+    while($data	= mysql_fetch_array($res))
+    {
+        $projectStage = $data['PROJECT_STAGE']; 
+        array_push($projectDetails, $data);	
+    }
+    return $projectDetails;
 }
 
 ?>

@@ -124,7 +124,7 @@
     	if($_REQUEST['newBedId'] != '')
     	{
     		$split = explode("-",$_REQUEST['newBedId']);
-    		$effectiveDt =  ($_REQUEST['newEffDateTo']!='') ? $_REQUEST['newEffDateTo'] : date('Y-m-d');
+    		$effectiveDt =  ($_REQUEST['eff_date_to']!='') ? $_REQUEST['eff_date_to'] : date('Y-m-d');
     		$returnChk = insert_supplyandinventoryDetail($projectId,$split[1],$_REQUEST['newNoOfFlats'],$_REQUEST['newIsFlats'],$_REQUEST['newAvailFlats'],$_REQUEST['newAvailIsFlats'],$_REQUEST['newEditReason'],$_REQUEST['newSoi'],$effectiveDt,$split[0],$_REQUEST['newPhase']);
     		$flg = 1;
     	}

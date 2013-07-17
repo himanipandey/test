@@ -3,7 +3,7 @@
 	$CityDataArr	=	CityArr();
 	$ProjectTypeArr	=	ProjectTypeArr();
 	$BankListArr	=	BankList();
-	$enum_value		=	enum_value();
+	$enum_value	=	enum_value();
 
 	$smarty->assign("BuilderDataArr",$BuilderDataArr);
 	$smarty->assign("CityDataArr",$CityDataArr);

@@ -9,7 +9,7 @@
 	AdminAuthentication();
 	
 	if($_POST['label_txtbox']!='' && $_POST['submit']=='Save'){
-		echo $QueryMember = "INSERT INTO updation_cycle (TIME_STAMP, LABEL) values ('".date('Y-m-d H:i:s')."', '".$_POST['label_txtbox']."')";
+		echo $QueryMember = "INSERT INTO updation_cycle (TIME_STAMP, LABEL, CYCLE_TYPE) values (now(), '".$_POST['label_txtbox']."', '".$_POST['cycleType']."')";
 		$QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
 		header("location:AddQuickLabel.php?m=1");
 		exit;
@@ -17,14 +17,13 @@
 	
 	$labelDataArr	=	array();
  	
- 	$qry	=	"SELECT TIME_STAMP,LABEL FROM updation_cycle ORDER BY TIME_STAMP ASC";
+ 	$qry	=	"SELECT TIME_STAMP,LABEL,CYCLE_TYPE FROM updation_cycle ORDER BY TIME_STAMP ASC";
  	$res = mysql_query($qry,$db);
  	
  	while($data	=	mysql_fetch_array($res))
  	{
- 		$labelDataArr[]	=	array($data['TIME_STAMP'],$data['LABEL']);		
+ 		$labelDataArr[]	=	array($data['TIME_STAMP'],$data['LABEL'],$data['CYCLE_TYPE']);		
  	}
- 	
 ?>
 	
 <script type="text/javascript" src="js/jquery.js"></script>
@@ -110,7 +109,13 @@ function addlabel()
 	<td height="25" align="left" >
 		<div id="maincity_txtbox">
 			<input type="text" name="label_txtbox" id="label_txtbox" maxLength="15" style='border:1px solid #333;padding:2px;height:28px;background:#c2c2c2;text-decoration:none;font-weight:bold;color:#fff;'>
-		&nbsp;&nbsp;<input type='submit' value='Save' name='submit' style='border:1px solid #333;padding:5px;background:#c2c2c2;text-decoration:none;font-weight:bold;color:#fff;'>
+		&nbsp;&nbsp;
+                <select name ="cycleType" id ="cycleType">
+                    <option value ="updation">Updation Cycle</option>
+                    <option value ="secondaryPrice">Secondary Price</option>
+                </select>
+                &nbsp;&nbsp;
+                <input type='submit' value='Save' name='submit' style='border:1px solid #333;padding:5px;background:#c2c2c2;text-decoration:none;font-weight:bold;color:#fff;'>
 		</div>
 	</td>
 </tr>
@@ -122,13 +127,16 @@ function addlabel()
 </table>
 <br>
 <table cellspacing=1 bgcolor='#f2f2f2' border=0 width="90%">
-<tr><td align='center' height='28' valign='middle' colspan='3'><b>Label Management</b></td></tr>
-<tr bgcolor='#ffffff'><td height='30' align="center"><b>SNo.</b></td><td align="center"><b>Label</b></td><td align="center"><b>Date</b></td></tr>
+<tr><td align='center' height='28' valign='middle' colspan='4'><b>Label Management</b></td></tr>
+<tr bgcolor='#ffffff'>
+    <td height='30' align="center"><b>SNo.</b></td><td align="center"><b>Label</b></td>
+    <td align="center"><b>Cycle Type</b></td>
+    <td align="center"><b>Date</b></td></tr>
 <?php 
 $i = 1;
 foreach($labelDataArr as $k=>$valArr)
 {
-	echo "<tr bgcolor='#ffffff'><td height='30' align='center'>".$i."</td><td align='center'>".$valArr[1]."</td><td align='center'>".$valArr[0]."</td></tr>";
+	echo "<tr bgcolor='#ffffff'><td height='30' align='center'>".$i."</td><td align='center'>".$valArr[1]."</td><td align='center'>".ucwords($valArr[2])."</td><td align='center'>".$valArr[0]."</td></tr>";
 	$i++;
 }
 
