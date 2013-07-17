@@ -1,6 +1,6 @@
 <?php
-error_reporting(1);
-ini_set('display_errors','1');
+        error_reporting(1);
+        ini_set('display_errors','1');
 	include("smartyConfig.php");
 	include("appWideConfig.php");
 	include("dbConfig.php");

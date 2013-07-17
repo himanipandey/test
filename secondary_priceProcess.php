@@ -12,7 +12,6 @@
          $arrProjectByBroker[$key] = getProjectByBroker($key);
     }
      $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
-     
      $minMaxSum = array();
      $maxEffectiveDt = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
      $latestMonthAllBrokerPrice = array();
@@ -34,9 +33,10 @@
          if ($maxEffectiveDt == $v['EFFECTIVE_DATE']) {
             $minMaxSum[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
             $minMaxSum[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
-            
-            $latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['minPrice'] = $v['MIN_PRICE'];
-            $latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['maxPrice'] = $v['MAX_PRICE'];
+            if(count($latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['minPrice']) == 0) {
+                $latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['minPrice'] = $v['MIN_PRICE'];
+                $latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['maxPrice'] = $v['MAX_PRICE'];
+            }
             if (!in_array($v['BROKER_ID'],$brokerIdList)) {
                 $brokerIdList[] = $v['BROKER_ID'];
             }
@@ -58,6 +58,8 @@
      $smarty->assign("latestMonthAllBrokerPrice", $latestMonthAllBrokerPrice);
      $smarty->assign("oneMonthAgoPrice", $oneMonthAgoPrice);
      $smarty->assign("twoMonthAgoPrice", $twoMonthAgoPrice);
+     $smarty->assign("oneMonthAgoDt",  $oneMonthAgoDt);
+     $smarty->assign("twoMonthAgoDt", $twoMonthAgoDt);
      $smarty->assign("minMaxSum", $minMaxSum);
      $smarty->assign("allBrokerByProject", $arrBrokerList);
      $smarty->assign("brokerIdList", $brokerIdList);

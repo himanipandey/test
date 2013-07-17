@@ -25,13 +25,20 @@
                 $comma = ';';
             $arrMinPrice[] = $_REQUEST['minPrice'][$key];
             $arrMaxPrice[] = $_REQUEST['maxPrice'][$key];
+            
             $arrMeanPrice[] = ($_REQUEST['minPrice'][$key]+$_REQUEST['maxPrice'][$key])/2;
             if($_REQUEST['minPrice'][$key] != '' AND $_REQUEST['maxPrice'][$key] != ''){
+               
+                if($_REQUEST['minPrice'][$key] > $_REQUEST['maxPrice'][$key]) {
+                    $flag = 2;
+                }
+                else {
                  $minPrice = $_REQUEST['minPrice'][$key];
                  $maxPrice = $_REQUEST['maxPrice'][$key];
                  $typeName =   $val;
                  $qryStr .= "('','".$projectId."','".$typeName."','".$brokerId."','".$minPrice."',
                              '".$maxPrice."','".$effMonthYear."','".$_SESSION['adminId']."',now())$comma";
+                }
             }
             else
                 $flag = 1;        
@@ -47,8 +54,13 @@
             else
                 $errorPrice = "<font color = 'red'>Problem in price insertion please try again!</font>";
         }else{
-            $errorPrice = "<font color = 'red'>Min/Max price cant blank!</font>";
+                if($flag == 2)
+                    $errorPrice = "<font color = 'red'>Minimum price should be less them max price!</font>";
+                else
+                    $errorPrice = "<font color = 'red'>Min/Max price cant blank!</font>";
         }
+        $arrBrokerPriceByProject = getBrokerPriceByProject($projectId, $brokerId);
+         $smarty->assign("arrBrokerPriceByProject", $arrBrokerPriceByProject);
         $smarty->assign("arrMinPrice",  $arrMinPrice);
         $smarty->assign("arrMaxPrice", $arrMaxPrice);
         $smarty->assign("arrMeanPrice", $arrMeanPrice);
@@ -71,6 +83,13 @@
      foreach($allBrokerByProject as $key=>$val){
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
+     }
+
+     $arrLatestMinPrice = '';
+     $arrLatestMaxPrice = '';
+     $arrEffectvDtLatest = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
+     foreach($arrBrokerPriceByProject as $k=>$v) {
+         
      }
      $smarty->assign("allBrokerByProject", $arrBrokerList);
      $projectDetails = array();

@@ -393,10 +393,12 @@ $allBrokerByProject   = getBrokerByProject($projectId);
     $arrBrokerList = array();
    
     foreach($allBrokerByProject as $key=>$val){
+         include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
         
     }
+     include("dbConfig.php");
      $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
      
      $minMaxSum = array();
@@ -443,6 +445,9 @@ $allBrokerByProject   = getBrokerByProject($projectId);
      
      $smarty->assign("latestMonthAllBrokerPrice", $latestMonthAllBrokerPrice);
      $smarty->assign("oneMonthAgoPrice", $oneMonthAgoPrice);
+     $smarty->assign("oneMonthAgoDt", $oneMonthAgoDt);
+     $smarty->assign("twoMonthAgoDt", $twoMonthAgoDt);
+     
      $smarty->assign("twoMonthAgoPrice", $twoMonthAgoPrice);
      $smarty->assign("minMaxSum", $minMaxSum);
      $smarty->assign("allBrokerByProject", $arrBrokerList);
