@@ -4,6 +4,9 @@
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="js/tablesorter_default_table.js"></script>
+<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
 
 </TD>
@@ -37,6 +40,18 @@
                                      </TD>
                                 </TR>
                                 <tr>
+                                    <td colspan="0">
+                                        <div style="height: 31px; float: left">
+                                            <form method="post" onsubmit="return verifyDataGetForm();">
+                                                From: <input name="dateFrom" value="{$dateFrom}" type="text" class="formstyle2" id="f_date_c_from" size="5" /><img src="images/cal_1.jpg" id="f_trigger_c_from" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                                &nbsp;
+                                                To: <input name="dateTo" value="{$dateTo}" type="text" class="formstyle2" id="f_date_c_to" size="5" />  <img src="images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                                <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>
                                         <div>
                                             <form method="post" action="project-assign.php" onsubmit="return verifyChecked()">
@@ -50,27 +65,17 @@
                                                             <th style="font-size: 12px">Calls/Done</th>
                                                             <th style="font-size: 12px">Not Contactable</th>
                                                             <th style="font-size: 12px">Not Contactable %</th>
-                                                            <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px">Assignment Type</th>
-                                                            <th style="font-size: 12px">1st Assigned To</th>
-                                                            <th style="font-size: 12px">Assigned On</th>
-                                                            <th style="font-size: 12px">Status</th>
-                                                            <th style="font-size: 12px">Remark</th>
-                                                            <th style="font-size: 12px">2nd Assignment</th>
-                                                            <th style="font-size: 12px">Assigned On</th>
-                                                            <th style="font-size: 12px">Status</th>
-                                                            <th style="font-size: 12px">Remark</th>
-                                                            <th style="font-size: 12px">3rd Assignment</th>
-                                                            <th style="font-size: 12px">Assigned On</th>
-                                                            <th style="font-size: 12px">Status</th>
-                                                            <th style="font-size: 12px">Remark</th>
+                                                            <th style="font-size: 12px">InComplete</th>
+                                                            <th style="font-size: 12px">Call Accuracy</th>
+                                                            <th style="font-size: 12px">Total Connected Calls</th>
+                                                            <th style="font-size: 12px">Total Calls Connected Time</th>
+                                                            <th style="font-size: 12px">Average Talk Time</th>
 
                                                         </tr>
                                                     </thead>
                                                     <tfoot>
                                                         <tr>
                                                             <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
-                                                                <input type="submit" name="submit" value="fresh assignement"></input>&nbsp;&nbsp;
-                                                                <input type="submit" name="submit" value="field assignement"></input>&nbsp;&nbsp;
                                                                 <button class="btn first"><i class="icon-step-backward"></i></button>
                                                                 <button class="btn prev"><i class="icon-arrow-left"></i></button>
                                                                 <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
@@ -87,29 +92,20 @@
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-                                                        {foreach from = $projectList key=key item = item}
+                                                        {foreach from = $displayData key=key item = item}
                                                         <tr>
-                                                            <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
-                                                            <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
-                                                            <td>{$item['PROJECT_NAME']}</td>
-                                                            <td>{$item['BUILDER_NAME']}</td>
-                                                            <td>{$item['LOCALITY']}</td>
-                                                            <td>{$item['PROJECT_PHASE']}</td>
-                                                            <td>{$item['PROJECT_STAGE']}</td>
-                                                            <td>{$item['LAST_WORKED_AT']}</td>
-                                                            <td>{$item['ASSIGNMENT_TYPE']}</td>
-                                                            <td>{$item['ASSIGNED_TO'][0]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][0]}</td>
-                                                            <td>{$item['STATUS'][0]}</td>
-                                                            <td>{$item['REMARK'][0]}</td>
-                                                            <td>{$item['ASSIGNED_TO'][1]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][1]}</td>
-                                                            <td>{$item['STATUS'][1]}</td>
-                                                            <td>{$item['REMARK'][1]}</td>
-                                                            <td>{$item['ASSIGNED_TO'][2]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][2]}</td>
-                                                            <td>{$item['STATUS'][2]}</td>
-                                                            <td>{$item['REMARK'][2]}</td>
+                                                            <td>{$item['USERNAME']}</td>
+                                                            <td>{$item['TOTAL-CALLS']}</td>
+                                                            <td>{$item['DONE']}</td>
+                                                            <td>{$item['REVERTED']}</td>
+                                                            <td>{$item['CALL-DONE-RATIO']}</td>
+                                                            <td>{$item['NOT-CONTACTABLE']}</td>
+                                                            <td>{$item['NOT-CONTACTABLE-%']}</td>
+                                                            <td>{$item['INCOMPLETE']}</td>
+                                                            <td>{$item['ACCURACY']}</td>
+                                                            <td>{$item['TOTAL-CONNECTED-CALLS']}</td>
+                                                            <td>{$item['TOTAL-CALL-TIME']} min</td>
+                                                            <td>{$item['AVERAGE-CALL-TIME']} min</td>
                                                         </tr>
                                                         {/foreach}
                                                     </tbody>
@@ -196,4 +192,22 @@ function updateSuburbDropdown(cityId, suburbSelectboxId)
 		}
 	});
 }
+var cals_dict = {
+
+    "f_trigger_c_from" : "f_date_c_from",
+    "f_trigger_c_to" : "f_date_c_to",
+
+};
+
+$.each(cals_dict, function(k, v) {
+    Calendar.setup({
+        inputField     :    v,                                 // id of the input field
+        //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
+        ifFormat       :    "%Y-%m-%d",                        // format of the input field
+        button         :    k,                                 // trigger for the calendar (button ID)
+        align          :    "Tl",                              // alignment (defaults to "Bl")
+        singleClick    :    true,
+        showsTime	  :	true
+    });
+});
 </script>

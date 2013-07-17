@@ -160,4 +160,22 @@ function assignProjectsToField($projectIds){
     }
     return $result;
 }
+
+function getExecCallCount($startTime = '0', $endTime = NULL){
+    if(is_null($endTime)) $endTime = strftime('%Y-%m-%d %T', time());
+    $sql = "select pa.ADMINID, pa.USERNAME, cd.CallStatus, sum(UNIX_TIMESTAMP(EndTime)-UNIX_TIMESTAMP(StartTime)) TOTAL_TIME, count(*) TOTAL_CALLS from proptiger_admin pa inner join CallDetails cd on pa.ADMINID = cd.AgentID where cd.CreationTime between '" . $startTime . "' and '" . $endTime . "' group by pa.ADMINID, cd.CallStatus order by ADMINID;";
+    return dbQuery($sql);
+}
+
+function getCompletionCountByExecs($startTime = '0', $endTime = NULL){
+    if(is_null($endTime)) $endTime = strftime('%Y-%m-%d %T', time());
+    $sql = "select ADMIN_ID, count(*) COMPLETED from project_stage_history where PROJECT_PHASE = 'audit1' and DATE_TIME between '" . $startTime . "' and '" . $endTime . "' group by ADMIN_ID;";
+    return dbQuery($sql);
+}
+
+function getRevertCountForExecs($startTime = '0', $endTime = NULL){
+    if(is_null($endTime)) $endTime = strftime('%Y-%m-%d %T', time());
+    $sql = "select t2.ADMIN_ID, count(*) REVERT_COUNT from project_stage_history t1 inner join project_stage_history t2 on t1.PREV_HISTORY_ID = t2.HISTORY_ID where t1.PROJECT_PHASE = 'revert' and t2.PROJECT_PHASE = 'audit1' and t2.DATE_TIME between '" . $startTime . "' and '" . $endTime . "' group by t2.ADMIN_ID";
+    return dbQuery($sql);
+}
 ?>
