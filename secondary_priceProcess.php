@@ -10,9 +10,9 @@
         include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
+         include("dbConfig.php");
          $arrProjectByBroker[$key] = getProjectByBroker($key);
     }
-     include("dbConfig.php");
      $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
      $minMaxSum = array();
      $maxEffectiveDt = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
