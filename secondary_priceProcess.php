@@ -7,10 +7,12 @@
     $arrBrokerList = array();
     $arrProjectByBroker = array();
     foreach($allBrokerByProject as $key=>$val){
+        include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
          $arrProjectByBroker[$key] = getProjectByBroker($key);
     }
+     include("dbConfig.php");
      $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
      $minMaxSum = array();
      $maxEffectiveDt = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
