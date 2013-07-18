@@ -39,10 +39,9 @@
             foreach($arrProjectListValid as $val) {
                  if($cnt == count($arrProjectListValid))
                     $comma = '';
-                 $qryIns .= "($callId, $val, $projectId)$comma";
+                 $qryIns .= "($callId, $val, $brokerId)$comma";
                  $cnt++;
             }
-            echo $qryIns;
             $resIns = mysql_query($qryIns) or die(mysql_error());
             if($resIns)
                 $ErrorMsg['success'] = "Data has been inserted successfully!";

@@ -382,7 +382,7 @@ function removeExtraCode()
 										<option value = "noStage"{if {$stage}=='NoPhase'}selected{/if}>No Phase</option>
 										<option value = "newProject"{if {$stage}=='newProject'}selected{/if}>New Project Entry</option>										
 										{foreach from=$UpdationArr key=k item=v}
-										 <option value = "updationCycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}" 
+										 <option value = "{$UpdationArr[$k].CYCLE_TYPE}Cycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}" 
 										 	{if "{$stage}|{$tag}" == "{$UpdationArr[$k].CYCLE_TYPE}Cycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"} selected {/if}
 										 > {$UpdationArr[$k].CYCLE_TYPE}Cycle - {$UpdationArr[$k].LABEL}
 										 </option>
