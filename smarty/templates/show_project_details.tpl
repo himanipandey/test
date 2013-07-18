@@ -340,13 +340,8 @@ function getDateNow(){
 	      type:"get",
 	      url:"save_call_projects.php",
 	      data:"projectList="+projectList+"&callId="+callId+"&status="+status+"&remark="+projectRemark,
-	      success : function (returnType) {
-                   if(returnType == 'success') {
-                    alert("Saved Status as " + status + " with project Ids " + projectList);
-                  }
-                  else {
-                    alert("Problem in call detail insertion with project Ids " + projectList);
-                  }
+	      success : function (dt) {
+		  alert("Saved Status as " + status + " with project Ids " + projectList);
 	      }
 	  });
       }

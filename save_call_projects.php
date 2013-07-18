@@ -5,7 +5,7 @@ include_once("dbConfig.php");
 $callId = $_REQUEST['callId'];
 $status = $_REQUEST['status'];
 $remark = $_REQUEST['remark'];
-$brokerId = '';
+$brokerId = 'null';
 if(isset($_REQUEST['brokerId']))
     $brokerId = $_REQUEST['brokerId'];
 
@@ -21,13 +21,7 @@ foreach($projectList as $value) {
 
 $sql = $sql . implode(", ", $arr);
 
-$return = mysql_query($sql);
-if($return) {
-    echo "success";
-}
-else {
-    echo "fail";
-}
+mysql_query($sql);
 
 
 ?>
