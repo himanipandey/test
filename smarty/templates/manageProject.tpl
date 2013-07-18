@@ -574,7 +574,7 @@ else{
                                 <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
                             {/if}
                         {else}
-                                <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - No Label</TD>
+                                <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
                         {/if}
                         <TD align=left class=td-border nowrap>{$projectDataArr[data].BUILDER_NAME}</TD>
                         <TD align=left class=td-border>

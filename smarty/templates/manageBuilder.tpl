@@ -50,10 +50,10 @@ function chkConfirm()
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="77%" height="25" align="center" style="padding-top:30px;padding-bottom:10px;">
-								<form name="frm_build" id="frm_build" method="post" action ="BuilderList.php?page=1&sort=all">
-									<label class="fwb">Enter Builder Name : </label><input name="builders" id="builders" value="{$builders}" class="button"> &nbsp;&nbsp;&nbsp;
-									<input type="submit" name="search" id="search" value="Search" class="button">
-								</form>
+                                <form name="frm_build" id="frm_build" method="post" action ="BuilderList.php?page=1&sort=all">
+                                        <label class="fwb">Enter Builder Name : </label><input name="builders" id="builders" value="{$builders}" class="button"> &nbsp;&nbsp;&nbsp;
+                                        <input type="submit" name="search" id="search" value="Search" class="button">
+                                </form>
                             </td>
                           </tr>
                         </table>
@@ -65,7 +65,8 @@ function chkConfirm()
                       <TBODY>
                       <TR class = "headingrowcolor" height="25">
                         <TD class=whiteTxt width=5% align="center">S NO</TD>
-						<TD class=whiteTxt width=15% align="center">Builder Name</TD>
+			<TD class=whiteTxt width=15% align="center">Builder Display Name</TD>
+                        <TD class=whiteTxt width=15% align="center">Legal Entity Name</TD>
                         <TD class=whiteTxt width=15% align="center">Builder URL</TD>
                         <TD class=whiteTxt width=25% align="center">Meta Title</TD>
                         <TD class=whiteTxt width=25% align="center">Meta Keywords</TD>
@@ -74,16 +75,17 @@ function chkConfirm()
                       </TR>
                       <TR><TD colspan=12 class=td-border></TD></TR>
                       {$count = 0}
-					  {section name=data loop=$builderDataArr}
-						{$count = $count+1}
-						{if $count%2 == 0}
-							{$color = "bgcolor = '#FCFCFC'"} 
-						{else}
-							{$color = "bgcolor = '#F7F7F7'"}
-						{/if}	
+                    {section name=data loop=$builderDataArr}
+                          {$count = $count+1}
+                          {if $count%2 == 0}
+                                  {$color = "bgcolor = '#FCFCFC'"} 
+                          {else}
+                                  {$color = "bgcolor = '#F7F7F7'"}
+                          {/if}	
                       <TR {$color}>
-					  <TD align=center class=td-border>{$count}</TD>
+			 <TD align=center class=td-border>{$count}</TD>
                         <TD align=center class=td-border>{$builderDataArr[data].BUILDER_NAME}  </TD>
+                        <TD align=center class=td-border>{$builderDataArr[data].ENTITY}  </TD>
                         <TD align=center class=td-border>{$builderDataArr[data].URL}</TD>
                         <TD align=left class=td-border>{$builderDataArr[data].META_TITLE}</TD>
                         <TD align=left class=td-border>{$builderDataArr[data].META_KEYWORDS}</TD>
