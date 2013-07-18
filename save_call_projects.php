@@ -21,7 +21,13 @@ foreach($projectList as $value) {
 
 $sql = $sql . implode(", ", $arr);
 
-mysql_query($sql);
+$return = mysql_query($sql);
+if($return) {
+    echo "success";
+}
+else {
+    echo "fail";
+}
 
 
 ?>
