@@ -417,13 +417,6 @@ elseif ($projectId!='')
 
 		$localitySelect = localityList($ProjectDetail[0]['CITY_ID'],$suburbId);
 		$smarty->assign("localitySelect", $localitySelect);
-		//echo "<pre>";
-		//	print_r($localitySelect);
-		//echo "</pre>";
-		$CityDataArr = CityArr();
-		$BuilderDataArr = BuilderArr();
-		$smarty->assign("BuilderDataArr", $BuilderDataArr);
-		$BankDataArr = BankList();
 	 }
 
 	 function getNumProjectsUnderDisplayOrder($displayOrder, $cityId, $projectId) {

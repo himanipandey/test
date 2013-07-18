@@ -106,12 +106,12 @@
 	/********builder list with id**************/
 	function BuilderArr()
 	{
-		$qryBuilder	=	"SELECT BUILDER_NAME,BUILDER_ID FROM ".RESI_BUILDER." ORDER BY BUILDER_NAME ASC";
+		$qryBuilder	=	"SELECT BUILDER_NAME,BUILDER_ID,ENTITY FROM ".RESI_BUILDER." ORDER BY BUILDER_NAME ASC";
 		$resBuilder	=	mysql_query($qryBuilder);
 		$arrBuilder	=	array();
 		while($data = mysql_fetch_assoc($resBuilder))
 		{
-			$arrBuilder[$data['BUILDER_ID']] = $data['BUILDER_NAME'];
+                    $arrBuilder[$data['BUILDER_ID']] = $data['ENTITY'];
 		}
 		return $arrBuilder;
 	}
