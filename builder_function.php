@@ -1934,33 +1934,34 @@ function lastUpdatedAuditDetail($projectId)
 
 /*************function for fetch fetch project calling links*****************/
 
-function fetchProjectCallingLinks($projectId,$projectType)
+function fetchProjectCallingLinks($projectId,$projectType,$audioLinkChk='')
 {
-	$qry = "SELECT d.AudioLink,a.FNAME,d.Remark,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
-			FROM 
-				(".CALLDETAILS." d LEFT JOIN ".CALLPROJECT." p 
-			ON
-				d.CallId = p.CallId)
-			LEFT JOIN
-				".ADMIN." a
-			ON
-				d.AgentId = a.ADMINID
-			WHERE
-				p.ProjectId = $projectId
-			AND 
-				d.AudioLink IS NOT NULL
-			AND 
-				d.AudioLink != ''
-                        AND
-                                d.PROJECT_TYPE = '$projectType'";
+    if($audioLinkChk == '')
+        $and = "AND d.AudioLink IS NOT NULL AND d.AudioLink != ''";
+    else
+        $and = "";
+	$qry = "SELECT 
+                    d.AudioLink,a.FNAME,d.Remark,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
+                FROM 
+                   (".CALLDETAILS." d LEFT JOIN ".CALLPROJECT." p 
+                ON
+                   d.CallId = p.CallId)
+                LEFT JOIN
+                   ".ADMIN." a
+                ON 
+                   d.AgentId = a.ADMINID
+                WHERE
+                   p.ProjectId = $projectId
+                AND
+                   d.PROJECT_TYPE = '$projectType'";
 	$res = mysql_query($qry) or die(mysql_error());
 	$arrCallLink = array();
 	if(mysql_num_rows($res)>0)
 	{
-		while($data = mysql_fetch_assoc($res))
-		{
-			array_push($arrCallLink,$data);
-		}
+            while($data = mysql_fetch_assoc($res))
+            {
+                    array_push($arrCallLink,$data);
+            }
 	}
 	return $arrCallLink;
 }

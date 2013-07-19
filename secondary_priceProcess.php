@@ -20,7 +20,7 @@
      $oneMonthAgoPrice = array();
      $twoMonthAgoPrice = array();
      
-     $arrCalingSecondary = fetchProjectCallingLinks($projectId,'secondary');
+     $arrCalingSecondary = fetchProjectCallingLinks($projectId,'secondary',1);
      $smarty->assign("arrCalingSecondary", $arrCalingSecondary);
      
      /******one and two month age date create******/
