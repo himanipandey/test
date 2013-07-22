@@ -106,12 +106,12 @@
 	/********builder list with id**************/
 	function BuilderArr()
 	{
-		$qryBuilder	=	"SELECT BUILDER_NAME,BUILDER_ID FROM ".RESI_BUILDER." ORDER BY BUILDER_NAME ASC";
+		$qryBuilder	=	"SELECT BUILDER_NAME,BUILDER_ID,ENTITY FROM ".RESI_BUILDER." ORDER BY BUILDER_NAME ASC";
 		$resBuilder	=	mysql_query($qryBuilder);
 		$arrBuilder	=	array();
 		while($data = mysql_fetch_assoc($resBuilder))
 		{
-			$arrBuilder[$data['BUILDER_ID']] = $data['BUILDER_NAME'];
+                    $arrBuilder[$data['BUILDER_ID']] = $data['ENTITY'];
 		}
 		return $arrBuilder;
 	}
@@ -1263,30 +1263,31 @@ function RoomCategoryList()
 	}
 
 	/***********Builder management**************/
-	function InsertBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgname,$address,$city,$pincode,$ceo,$employee,$date,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr)
+	function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgname,$address,$city,$pincode,$ceo,$employee,$date,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr)
 
 	{
 		$Sql = "INSERT INTO " .RESI_BUILDER." SET
-				BUILDER_NAME  	   				= '".d_($txtBuilderName)."',
-				DESCRIPTION 	  				= '".d_($txtBuilderDescription)."',
-				URL	 	  						= '".d_($txtBuilderUrl)."',
-				BUILDER_IMAGE 					= '".d_($imgname)."',
-				DISPLAY_ORDER					= '".d_($DisplayOrder)."',
-				META_TITLE	 					= '".d_($txtMetaTitle)."',
-				META_KEYWORDS	 				= '".d_($txtMetaKeywords)."',
-				ADDRESS			 				= '".d_($address)."',
-				CITY			 				= '".d_($city)."',
-				PINCODE			 				= '".d_($pincode)."',
-				META_DESCRIPTION				= '".d_($txtMetaDescription)."',
-				CEO_MD_NAME						= '".d_($ceo)."',
-				TOTAL_NO_OF_EMPL				= '".d_($employee)."',
-				TOTAL_NO_OF_DELIVERED_PROJECT	= '".$delivered_project."',
-				AREA_DELIVERED					='".$area_delivered."',
-				ONGOING_PROJECTS				= '".$ongoing_project."',
-				WEBSITE							='".$website."',
-				REVENUE							='".$revenue."',
-				DEBT							='".$debt."',
-				ESTABLISHED_DATE	= '".$date."'";
+				BUILDER_NAME  	   	     = '".d_($txtBuilderName)."',
+                                ENTITY  	   	     = '".d_($legalEntity)."',
+				DESCRIPTION 	  	     = '".d_($txtBuilderDescription)."',
+				URL	 	  	     = '".d_($txtBuilderUrl)."',
+				BUILDER_IMAGE 		     = '".d_($imgname)."',
+				DISPLAY_ORDER		     = '".d_($DisplayOrder)."',
+				META_TITLE	 	     = '".d_($txtMetaTitle)."',
+				META_KEYWORDS	 	     = '".d_($txtMetaKeywords)."',
+				ADDRESS			     = '".d_($address)."',
+				CITY			     = '".d_($city)."',
+				PINCODE			     = '".d_($pincode)."',
+				META_DESCRIPTION	     = '".d_($txtMetaDescription)."',
+				CEO_MD_NAME                  = '".d_($ceo)."',
+				TOTAL_NO_OF_EMPL             = '".d_($employee)."',
+				TOTAL_NO_OF_DELIVERED_PROJECT= '".$delivered_project."',
+				AREA_DELIVERED		     ='".$area_delivered."',
+				ONGOING_PROJECTS	     = '".$ongoing_project."',
+				WEBSITE			     ='".$website."',
+				REVENUE			     ='".$revenue."',
+				DEBT			     ='".$debt."',
+				ESTABLISHED_DATE	     = '".$date."'";
 
 		$ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function InsertBuilder()');
 		$lastId  = mysql_insert_id();
@@ -1364,32 +1365,32 @@ function RoomCategoryList()
 	}
 
 	/********update builder if already exists***************/
-	function UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgname,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr)
+	function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgname,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr)
 	{
 		 $Sql = "UPDATE " .RESI_BUILDER." SET
-				BUILDER_NAME  	   				= '".d_($txtBuilderName)."',
-				DESCRIPTION 	  				= '".d_($txtBuilderDescription)."',
-				URL	 	  						= '".d_($txtBuilderUrl)."',
-				BUILDER_IMAGE 	   				= '".d_($imgname)."',
-				DISPLAY_ORDER					= '".d_($DisplayOrder)."',
-				META_TITLE	 					= '".d_($txtMetaTitle)."',
-				META_KEYWORDS	 				= '".d_($txtMetaKeywords)."',
-				ADDRESS			 				= '".d_($address)."',
-				CITY			 				= '".d_($city)."',
-				PINCODE			 				= '".d_($pincode)."',
-				META_DESCRIPTION				= '".d_($txtMetaDescription)."',
-				ESTABLISHED_DATE				= '".d_($established)."',
-				CEO_MD_NAME						= '".d_($ceo)."',
-				TOTAL_NO_OF_DELIVERED_PROJECT	= '".$delivered_project."',
-				AREA_DELIVERED					='".$area_delivered."',
-				ONGOING_PROJECTS				= '".$ongoing_project."',
-				WEBSITE							='".$website."',
-				REVENUE							='".$revenue."',
-				DEBT							='".$debt."',
-				TOTAL_NO_OF_EMPL				= '".d_($employee)."'
-
+				BUILDER_NAME  	   	     = '".d_($txtBuilderName)."',
+                                ENTITY  	   	     = '".d_($legalEntity)."',				
+                                DESCRIPTION 	  	     = '".d_($txtBuilderDescription)."',
+				URL	 	  	     = '".d_($txtBuilderUrl)."',
+				BUILDER_IMAGE 	   	     = '".d_($imgname)."',
+				DISPLAY_ORDER		     = '".d_($DisplayOrder)."',
+				META_TITLE	 	     = '".d_($txtMetaTitle)."',
+				META_KEYWORDS	 	     = '".d_($txtMetaKeywords)."',
+				ADDRESS			     = '".d_($address)."',
+				CITY			     = '".d_($city)."',
+				PINCODE			     = '".d_($pincode)."',
+				META_DESCRIPTION	     = '".d_($txtMetaDescription)."',
+				ESTABLISHED_DATE	     = '".d_($established)."',
+				CEO_MD_NAME		     = '".d_($ceo)."',
+				TOTAL_NO_OF_DELIVERED_PROJECT= '".$delivered_project."',
+				AREA_DELIVERED		     ='".$area_delivered."',
+				ONGOING_PROJECTS	     = '".$ongoing_project."',
+				WEBSITE			     ='".$website."',
+				REVENUE			     ='".$revenue."',
+				DEBT			     ='".$debt."',
+				TOTAL_NO_OF_EMPL	     = '".d_($employee)."'
 			WHERE	
-				BUILDER_ID			=	'".$builderid."'";//die("here");
+				BUILDER_ID = '".$builderid."'";//die("here");
 
 		$list    = ''; 
 		$del	=	"DELETE FROM ".BUILDER_CONTACT_INFO." WHERE BUILDER_ID = '".$builderid."'";
@@ -1933,33 +1934,34 @@ function lastUpdatedAuditDetail($projectId)
 
 /*************function for fetch fetch project calling links*****************/
 
-function fetchProjectCallingLinks($projectId,$projectType)
+function fetchProjectCallingLinks($projectId,$projectType,$audioLinkChk='')
 {
-	$qry = "SELECT d.AudioLink,a.FNAME,d.Remark,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
-			FROM 
-				(".CALLDETAILS." d LEFT JOIN ".CALLPROJECT." p 
-			ON
-				d.CallId = p.CallId)
-			LEFT JOIN
-				".ADMIN." a
-			ON
-				d.AgentId = a.ADMINID
-			WHERE
-				p.ProjectId = $projectId
-			AND 
-				d.AudioLink IS NOT NULL
-			AND 
-				d.AudioLink != ''
-                        AND
-                                d.PROJECT_TYPE = '$projectType'";
+    if($audioLinkChk == '')
+        $and = "AND d.AudioLink IS NOT NULL AND d.AudioLink != ''";
+    else
+        $and = "";
+	$qry = "SELECT 
+                    d.AudioLink,a.FNAME,d.Remark,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
+                FROM 
+                   (".CALLDETAILS." d LEFT JOIN ".CALLPROJECT." p 
+                ON
+                   d.CallId = p.CallId)
+                LEFT JOIN
+                   ".ADMIN." a
+                ON 
+                   d.AgentId = a.ADMINID
+                WHERE
+                   p.ProjectId = $projectId
+                AND
+                   d.PROJECT_TYPE = '$projectType'";
 	$res = mysql_query($qry) or die(mysql_error());
 	$arrCallLink = array();
 	if(mysql_num_rows($res)>0)
 	{
-		while($data = mysql_fetch_assoc($res))
-		{
-			array_push($arrCallLink,$data);
-		}
+            while($data = mysql_fetch_assoc($res))
+            {
+                    array_push($arrCallLink,$data);
+            }
 	}
 	return $arrCallLink;
 }

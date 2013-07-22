@@ -7,8 +7,10 @@
     $arrBrokerList = array();
     $arrProjectByBroker = array();
     foreach($allBrokerByProject as $key=>$val){
+        include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
+         include("dbConfig.php");
          $arrProjectByBroker[$key] = getProjectByBroker($key);
     }
      $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
@@ -18,7 +20,7 @@
      $oneMonthAgoPrice = array();
      $twoMonthAgoPrice = array();
      
-     $arrCalingSecondary = fetchProjectCallingLinks($projectId,'secondary');
+     $arrCalingSecondary = fetchProjectCallingLinks($projectId,'secondary',1);
      $smarty->assign("arrCalingSecondary", $arrCalingSecondary);
      
      /******one and two month age date create******/

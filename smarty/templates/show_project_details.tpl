@@ -2072,8 +2072,8 @@ function getDateNow(){
                                  {foreach from = $brokerIdList key=brokerkey item = brokerId}
                                     <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>{$allBrokerByProject[$brokerId][0]['BROKER_NAME']}</b></th>
                                  {/foreach}
-                                    <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price One Month Ago</b></th>
-                                 <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price Two Month Ago</b></th>
+                                    <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$oneMonthAgoDt}</b></th>
+                                 <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$twoMonthAgoDt}</b></th>
                             </tr>
                             {$cnt = 0}
                             {foreach from= $arrPType key=k item = val}

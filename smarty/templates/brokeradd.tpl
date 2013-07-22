@@ -119,7 +119,12 @@
 				  <td width="20%" align="right" valign="top">Project Ids :</td>
 				  <td width="30%" align="left" >
 				   {section name=loop start=1 loop=100 step=1}
-                                        <div id="addId_{$smarty.section.loop.index}" style="display:none;">
+                                       {if $smarty.section.loop.index != 1}
+                                           {$style = "style='display:none;'"}
+                                       {else}
+                                           {$style = ""}
+                                       {/if}
+                                        <div id="addId_{$smarty.section.loop.index}" {$style}>
                                             <input maxlength="10" onkeypress="return isNumberKey(event);" type="text" name ="multiple_project[]" value="">
                                         </div>
                                     {/section}

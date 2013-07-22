@@ -395,8 +395,7 @@ $allBrokerByProject   = getBrokerByProject($projectId);
     foreach($allBrokerByProject as $key=>$val){
          include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
-         $arrBrokerList[$key] = $brikerList;
-        
+         $arrBrokerList[$key] = $brikerList; 
     }
      include("dbConfig.php");
      $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);

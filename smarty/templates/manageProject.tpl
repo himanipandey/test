@@ -375,48 +375,36 @@ else{
 								 <tr>
 								<td align="right" style = "padding-left:20px;"><b>Phase:</b></td>
 								<td align="left" style = "padding-left:20px;">
-									<span id = "BuilderList">
-										<select name = 'stage' id = "stage" >
-											<option value = "">Select Phase:</option>
-											<option value = "newProject"{if $stage == 'newProject'}selected {else}{/if}>New Project Entry</option>
-											<option value = "updationCycle"{if $stage == 'updationCycle'}selected {else}{/if}>Updation Cycle</option>
-											<option value = "noStage"{if $stage == 'NoPhase'}selected {else}{/if}>No Phase</option>
-                                                                                        <option value = "secondaryPriceCycle"{if $stage == 'secondaryPriceCycle'}selected {else}{/if}>Secondary Price Cycle</option>
-										</select>
-									</span>
+                                                                    <span id = "BuilderList">
+                                                                        <select name = 'stage' id = "stage" >
+                                                                            <option value = "">Select Phase:</option>
+                                                                            <option value = "noStage"{if {$stage}=='NoPhase'}selected{/if}>No Phase</option>
+                                                                            <option value = "newProject"{if {$stage}=='newProject'}selected{/if}>New Project Entry</option>										
+                                                                            {foreach from=$UpdationArr key=k item=v}
+                                                                             <option value = "{$UpdationArr[$k].CYCLE_TYPE}Cycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}" 
+                                                                                    {if "{$stage}|{$tag}" == "{$UpdationArr[$k].CYCLE_TYPE}Cycle|{$UpdationArr[$k].UPDATION_CYCLE_ID}"} selected {/if}
+                                                                             > {$UpdationArr[$k].CYCLE_TYPE}Cycle - {$UpdationArr[$k].LABEL}
+                                                                             </option>
+                                                                            {/foreach}
+                                                                        </select>
+                                                                    </span>
 								</td>
 							  </tr>
 							 <tr><td>&nbsp;</td></tr>
-	
-	
-							<tr>
-								<td align="right" style = "padding-left:20px;"><b>Label:</b></td>
-								<td align="left" style = "padding-left:20px;">
-								<select name="tag" id="tag"  >
-											<option value="">Select Label</option>
-											{foreach from=$UpdationArr key=k item=v}
-											 <option value = "{$UpdationArr[$k].UPDATION_CYCLE_ID}" {if $tag == $UpdationArr[$k].UPDATION_CYCLE_ID}selected {else} {/if}   >{$UpdationArr[$k].LABEL}</option>
-											{/foreach}
-										 </select>
-								</td>
-	
-							  </tr>
-							<tr><td>&nbsp;</td></tr>
 							
 							  <tr>
-								<td width="50" align="right" style = "padding-left:20px;" nowrap><b>Availability:</b></td>
-								<td width="50" align="left" style = "padding-left:20px;">
-								<select name="Availability[]" id="Avail" multiple>
-											<option value="">Select Availability</option>
-											{if !is_array($Availability)}
-												{$Availability = array()}
-											{/if}
-											<option value="0" {if in_array(0,$Availability)}selected {else} {/if}>Inventory Not Available</option>
-											<option value="1" {if in_array(1,$Availability)}selected {else} {/if}>Inventory Available</option>
-											<option value="2" {if in_array(2,$Availability)}selected {else} {/if}>Data Not Available</option>
-											
-										 </select>
-								</td>
+                                                                <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Availability:</b></td>
+                                                                <td width="50" align="left" style = "padding-left:20px;">
+                                                                <select name="Availability[]" id="Avail" multiple>
+                                                                    <option value="">Select Availability</option>
+                                                                    {if !is_array($Availability)}
+                                                                            {$Availability = array()}
+                                                                    {/if}
+                                                                    <option value="0" {if in_array(0,$Availability)}selected {else} {/if}>Inventory Not Available</option>
+                                                                    <option value="1" {if in_array(1,$Availability)}selected {else} {/if}>Inventory Available</option>
+                                                                    <option value="2" {if in_array(2,$Availability)}selected {else} {/if}>Data Not Available</option>
+                                                                 </select>
+                                                                </td>
 							  </tr>
 	
 							<tr><td>&nbsp;</td></tr>
@@ -540,7 +528,7 @@ else{
 							{$BG = 'white'}
 							{$phse = 'noS'}
                                                 {else if $projectDataArr[data].PROJECT_STAGE=='secondaryPriceCycle'}
-							{$BG = 'blue'}
+							{$BG = '#A9A9F5'}
 							{$phse = 'updation'}
                                                         
 						{else if $projectDataArr[data].PROJECT_STAGE=='updationCycle'}
@@ -574,7 +562,7 @@ else{
                                 <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
                             {/if}
                         {else}
-                                <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - No Label</TD>
+                                <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
                         {/if}
                         <TD align=left class=td-border nowrap>{$projectDataArr[data].BUILDER_NAME}</TD>
                         <TD align=left class=td-border>

@@ -14,6 +14,7 @@ if ($_POST['btnExit'] == "Exit")
 if ($_POST['btnSave'] == "Save")
 {
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
+        $legalEntity			=	trim($_POST['legalEntity']);
 	$txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
 	$txtBuilderUrl			=	trim($_POST['txtBuilderUrl']);
 	$txtBuilderUrlOld		=	trim($_POST['txtBuilderUrlOld']);
@@ -40,6 +41,7 @@ if ($_POST['btnSave'] == "Save")
 	$debt				=	trim($_POST['debt']);
 	
 	$smarty->assign("txtBuilderName", $txtBuilderName);
+        $smarty->assign("legalEntity", $legalEntity);
 	$smarty->assign("txtBuilderDescription", $txtBuilderDescription);
 	$smarty->assign("txtBuilderUrl", $txtBuilderUrl);
 	$smarty->assign("txtBuilderUrlOld", $txtBuilderUrlOld);
@@ -68,9 +70,13 @@ if ($_POST['btnSave'] == "Save")
 		$ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
 	 }
 	
-	 if( $txtBuilderName == '') 
+        if( $txtBuilderName == '') 
 	   {
 	     $ErrorMsg["txtBuilderName"] = "Please enter Builder name.";
+	   }
+         if( $legalEntity == '') 
+	   {
+	     $ErrorMsg["legalEntity"] = "Please enter legal entity name.";
 	   }
 	if( $txtBuilderDescription == '') 
 	   {
@@ -138,7 +144,23 @@ if ($_POST['btnSave'] == "Save")
             $contactArr['Projects'][] = implode($_REQUEST[$key],"#");
 
 	}
-	
+        /**code for duplicate builder name or entity name***/
+        if($builderid == '' && $txtBuilderName != '' && $legalEntity != '') {
+            $qryBuilder = "SELECT * FROM ".RESI_BUILDER." 
+                            WHERE
+                                BUILDER_NAME = '".$txtBuilderName."' OR ENTITY = '".$legalEntity."'";
+            $resBuilder = mysql_query($qryBuilder);
+            $dataBuilder = mysql_fetch_assoc($resBuilder);
+
+            if(count($dataBuilder)>0) {
+                if($txtBuilderName == $dataBuilder['BUILDER_NAME'])
+                     $ErrorMsg["txtBuilderName"] = "This builder already exists.";
+                if($legalEntity == $dataBuilder['ENTITY'])
+                     $ErrorMsg["legalEntity"] = "This entity already exists.";
+            }
+        }
+        /**code for duplicate builder name or entity name***/
+        
 	if(is_array($ErrorMsg)) {
 		// Do Nothing
 	} 	
@@ -158,7 +180,7 @@ if ($_POST['btnSave'] == "Save")
                         if($return)
                         {				
                             $imgurl	=   "/".$foldername."/".$name;
-                            InsertBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
+                            InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
                             $createFolder = $newImagePath.$foldername;
                             if ($handle = opendir($createFolder))
                             {
@@ -227,7 +249,7 @@ if ($_POST['btnSave'] == "Save")
                     if($return)
                     {
                         $imgurl = "/".$cutpath[1]."/".$name;
-                        $rt = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                        $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
                         if($rt)
                         {
                             if($txtBuilderUrl != $txtBuilderUrlOld)
@@ -284,7 +306,7 @@ if ($_POST['btnSave'] == "Save")
             }
             else 
             {
-                $return = UpdateBuilder($txtBuilderName, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
                 if($return)
                 {
                     if($txtBuilderUrl != $txtBuilderUrlOld)
@@ -305,6 +327,7 @@ else if($builderid	!= '')
 	$dataedit	=	mysql_fetch_array($resedit);
 
 	$smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
+        $smarty->assign("legalEntity", $dataedit['ENTITY']);
 	$smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
 	$smarty->assign("txtBuilderUrl", $dataedit['URL']);
 	$smarty->assign("txtBuilderUrlOld", $dataedit['URL']);

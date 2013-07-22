@@ -108,7 +108,7 @@
                     }  
                 }
                 else {
-                    $ErrorMsg['wrongPId'] = "All project ids are dupplicate!";
+                    $ErrorMsg['wrongPId'] = "All project ids are duplicate!";
                 }
             }
         }

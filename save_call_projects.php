@@ -5,7 +5,7 @@ include_once("dbConfig.php");
 $callId = $_REQUEST['callId'];
 $status = $_REQUEST['status'];
 $remark = $_REQUEST['remark'];
-$brokerId = '';
+$brokerId = 'null';
 if(isset($_REQUEST['brokerId']))
     $brokerId = $_REQUEST['brokerId'];
 

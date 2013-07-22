@@ -39,7 +39,7 @@
             foreach($arrProjectListValid as $val) {
                  if($cnt == count($arrProjectListValid))
                     $comma = '';
-                 $qryIns .= "($callId,$projectId,$val)$comma";
+                 $qryIns .= "($callId, $val, $brokerId)$comma";
                  $cnt++;
             }
             $resIns = mysql_query($qryIns) or die(mysql_error());
