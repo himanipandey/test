@@ -50,6 +50,23 @@
                     </select>
                 </td>
               </tr>
+              {if count($arrPType) == 0}
+                <tr bgcolor = '#F7F7F7'>
+                  <td align ="left" valign ="top" colspan="2"  style = "padding-left:310px;">
+                      <font color="red">
+                          First add property before price updation!
+                      </font>
+                  </td>
+                </tr>
+                <form method = "post">
+                <tr class="headingrowcolor" height="30px;">
+                    <td class="whiteTxt" colspan = "2" align ="center">
+                        <input type = "hidden" name = "projectId" id = "projectId" value = "{$projectId}">
+                        <input type="submit" name="btnExit" id="btnExit" value="Exit">
+                    </td>
+                </tr>
+                </form>
+             {/if}
               {if $brokerId != ''}
                   <form name ="frm" method = "post">
                   <tr bgcolor = '#FCFCFC'>
@@ -68,10 +85,10 @@
                   {/if}
                   {if $errorPrice != ''}
                       <tr bgcolor = '#F7F7F7'>
-                      <td align ="left" valign ="top" colspan="2"  style = "padding-left:310px;">
-                        {$errorPrice}
-                      </td>
-                  </tr>
+                        <td align ="left" valign ="top" colspan="2"  style = "padding-left:310px;">
+                          {$errorPrice}
+                        </td>
+                      </tr>
                   {/if}
                   <tr bgcolor = '#FCFCFC'>
                   <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
