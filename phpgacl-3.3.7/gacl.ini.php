@@ -16,7 +16,7 @@ debug 			= FALSE
 db_type 		= "mysql"
 db_host			= "localhost"
 db_user			= "root"
-db_password		= "vertrigo"
+db_password		= "root"
 db_name			= "gacl"
 db_table_prefix		= ""
 

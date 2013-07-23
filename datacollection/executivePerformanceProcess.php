@@ -44,8 +44,8 @@ function prepareDisplayData($execCallCount, $completionCount, $revertCount){
         $new['TOTAL-CONNECTED-CALLS'] = intval($new['TOTAL-CALLS']-$new['NOT-CONTACTABLE']);
         $new['ACCURACY'] = round((($new['TOTAL-CONNECTED-CALLS']-$new['INCOMPLETE'])*100)/$new['TOTAL-CONNECTED-CALLS'], 2);
         $totalCallTime = intval(getTotalCallTime($adminDetail));
-        $new['TOTAL-CALL-TIME'] = round($totalCallTime/60, 2);
-        $new['AVERAGE-CALL-TIME'] = round($totalCallTime/(60*$new['TOTAL-CONNECTED-CALLS']), 2);
+        $new['TOTAL-CALL-TIME'] = round($totalCallTime, 2);
+        $new['AVERAGE-CALL-TIME'] = round($totalCallTime/$new['TOTAL-CONNECTED-CALLS'], 2);
         
         //Converting to human readabletime format
         $new['TOTAL-CALL-TIME'] = secsToHumanReadable($new['TOTAL-CALL-TIME']);
@@ -122,7 +122,7 @@ function getTotalCallTime($execCallDetail){
     $total = 0;
     foreach ($execCallDetail as $detail) {
         if(in_array($detail['CallStatus'], array('fail', 'success'))){
-            $total = $detail['TOTAL_TIME'];
+            $total += $detail['TOTAL_TIME'];
         }
     }
     return $total;
