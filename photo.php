@@ -82,14 +82,27 @@
                     $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "Error#".$IMG['error'][ $__imgCnt ];
                 }
             }
+            $str = "";
+            foreach( $uploadStatus as $__imgName => $__statusMsg ) {
+                if ( $str ) {
+                    $str .= "; ".$__imgName." : ".$__statusMsg;
+                }
+                else {
+                    $str = $__imgName." : ".$__statusMsg;
+                }
+            }
+            $message = array(
+                'type' => 'success-msg',
+                'content' => $str
+            );
         }
-
-        echo "<pre>";
-        //print_r( $_REQUEST );
-        //print_r( $_FILES );
-        print_r( $uploadStatus );
-        echo "</pre>";
-        //die('___+___+___');
+        else {
+            $message = array(
+                'type' => 'error',
+                'content' => $errMsg
+            );
+        }
+        $smarty->assign( 'message', $message );
     }
 
     $areaType = isset( $_REQUEST['areaType'] ) ? trim( $_REQUEST['areaType'] ) : "";

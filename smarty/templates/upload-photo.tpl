@@ -61,7 +61,7 @@
                                                 </option>
                                             {/foreach}
                                         </select>
-                                        <input type="file" name="img[]" multiple>
+                                        <input id="area-img" type="file" name="img[]" multiple>
                                     </td>
                                 </tr>
                                 {/if}
@@ -81,52 +81,4 @@
         </table>
     </td>
 </tr>
-<script type="text/javascript">
-    window.areaResponse = { suburb:-1,locality:-1,city:-1 };
-
-    function verifyPhotoFormData() {
-        return true;
-        return false;
-    }
-
-    function areaTypeChanged() {
-        var areaType = $('#area-type').val();
-        if ( window.areaResponse[ areaType ] == -1 ) {
-            $.ajax({
-                async:false,
-                type: 'GET',
-                url:'/ajax/photo.php',
-                data:'areaType='+areaType,
-                success: function( json ) {
-                    var __json = JSON.parse( json );
-                    if ( __json['result'] == true ) {
-                        //console.log('yaho00o');
-                        window.areaResponse[ areaType ] = __json['data'];
-                        updateDropDown( areaType );
-                    }
-                    else {
-                        //console.log('sad');
-                    }
-                }
-            });
-        }
-        else {
-            updateDropDown( areaType );
-        }
-    }
-
-    function updateDropDown( area ) {
-        var __data = window.areaResponse[ area ];
-        $('#area-list').empty();
-        var __cnt = 0;
-        for( __cnt = 0; __cnt < __data.length; __cnt++ ) {
-            var html = "<option value='"+ __data[ __cnt ]['id'] +"'><span>"+ __data[ __cnt ]['name'] +"</span>";
-            if ( 'city' in __data[ __cnt ] ) {
-                html += "<span> === </span><span>"+ __data[ __cnt ]['city'] +"</span>";
-            }
-            html += "</option>";
-
-            $('#area-list').append( html );
-        }
-    }
-</script>
+<script type="text/javascript" src="js/photo.js"></script>
