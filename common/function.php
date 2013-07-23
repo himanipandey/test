@@ -32,3 +32,16 @@ function getListing( $areaType ) {
         return $dataSet;
     }
 }
+
+function addImageToDB( $columnName, $areaId, $imageName ) {
+    if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID' ) ) ) {
+
+    }
+    else {
+        $columnName = 'LOCALITY_ID';
+    }
+    $imageName = mysql_escape_string( $imageName );
+    $insertQuery = "INSERT INTO `locality_image` ( `$columnName`, `IMAGE_NAME` ) VALUES ( '$areaId', '$imageName' )";
+
+    dbExecute( $insertQuery );
+}

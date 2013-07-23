@@ -67,13 +67,14 @@
                         $__height = "444";
                         $__thumbWidth = "91";
                         $__thumbHeight = "68";
+                        $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension );
                         $thumb->load( $IMG['tmp_name'][ $__imgCnt ] );
                         $thumb->resize( $__width, $__height );
-                        $thumb->save('newimg/'.$IMG['name'][ $__imgCnt ], $imgType);
+                        $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
                         $thumb->resize( $__thumbWidth, $__thumbHeight );
-                        $thumb->save('newimg/thumb_'.$IMG['name'][ $__imgCnt ], $imgType);
+                        $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
                         //  add image to DB
-
+                        addImageToDB( $columnName, $areaId, $imgName );
                         $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
                     }
                 }
