@@ -1,0 +1,52 @@
+table#upload-tbl {
+    float:left;
+    padding:5px;
+    margin:0px;
+    width:600px;
+    border:none;
+    background-color:#b1b1b1;
+}
+table#upload-tbl tbody, table#upload-tbl tr, table#upload-tbl td {
+    border:none;
+}
+table#upload-tbl td {
+    padding:10px;
+    color:#fff;
+}
+table td.hdng {
+    font-size:18px;
+    padding:5px !important;
+    color:#333333 !important;
+    background: #fcfff4; /* Old browsers */
+    background: -moz-linear-gradient(top,  #fcfff4 0%, #e9e9ce 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfff4), color-stop(100%,#e9e9ce)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #fcfff4 0%,#e9e9ce 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #fcfff4 0%,#e9e9ce 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #fcfff4 0%,#e9e9ce 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #fcfff4 0%,#e9e9ce 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#e9e9ce',GradientType=0 ); /* IE6-9 */
+}
+table td label {
+    width:200px!important;
+    font:normal 13px Arial;
+}
+.msg {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #fcf8e3;
+    border: 1px solid #fbeed5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.error-msg {
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
+}
+.success-msg {
+    color: #468847;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}

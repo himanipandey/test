@@ -114,6 +114,8 @@
     $smarty->assign( 'selectedAreaType', $selectedAreaType );
     $smarty->assign( 'areaId', $areaId );
 
+    $smarty->assign( 'photoCSS', 1 );
+
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."upload-photo.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");

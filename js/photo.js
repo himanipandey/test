@@ -71,7 +71,7 @@ function updateDropDown( area ) {
     for( __cnt = 0; __cnt < __data.length; __cnt++ ) {
         var html = "<option value='"+ __data[ __cnt ]['id'] +"'><span>"+ __data[ __cnt ]['name'] +"</span>";
         if ( 'city' in __data[ __cnt ] ) {
-            html += "<span> === </span><span>"+ __data[ __cnt ]['city'] +"</span>";
+            html += "<span> ,  </span><span>"+ __data[ __cnt ]['city'] +"</span>";
         }
         html += "</option>";
 

@@ -2,7 +2,7 @@
 </tr>
 <tr>
     <td class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
-        <table cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <table cellSpacing=0 cellPadding=0 border=0>
             <tbody>
                 <tr>
                     <td width=224 height=25>&nbsp;</td>
@@ -15,22 +15,18 @@
                     </td>
                     <td vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</td>
                     <td vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
-                        <table cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=1>
+                        <table id="upload-tbl" cellSpacing=1 cellPadding=0 border=0>
                             <tbody>
                                 <tr>
-                                    <td class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
-                                        <table cellSpacing=0 cellPadding=0 width="99%" border=0><tbody>
-                                                <tr>
-                                                    <td class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Upload photos for Locality/Suburb/City</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                     </td>
+                                    <td class="hdng" colspan="2">
+                                        <IMG height="18" hspace="5" width="18" src="images/arrow.gif">
+                                        Upload photos for Locality/Suburb/City
+                                    </td>
                                 </tr>
                                 {if !empty($message)}
                                     <tr>
                                         <td>
-                                            <div class="{$message['type']}" style="text-align: left;">
+                                            <div class="msg {$message['type']}">
                                                 {$message['content']}
                                             </div>
                                         </td>
@@ -39,6 +35,9 @@
                                 <form method="post" onsubmit="return verifyPhotoFormData();" enctype="multipart/form-data">
                                 <tr>
                                     <td>
+                                        <label> Select a Locality/Suburb/City </label>
+                                    </td>
+                                    <td style="width: 375px;">
                                         <input type="hidden" name="upImg" value="1">
                                         <select name="areaType" id="area-type" onchange="areaTypeChanged()">
                                             <option {$selectedAreaType.locality} value="locality">Locality</option>
@@ -50,22 +49,32 @@
                                 {if count($areaList)>0}
                                 <tr>
                                     <td>
+                                        <label> Choose the area for which<br /> pictures are to be uploaded </label>
+                                    </td>
+                                    <td>
                                        <select id="area-list" name="areaId">
                                             {foreach from=$areaList key=id item=areaName}
                                                 <option {if $areaId==$areaName.id}selected{/if} value="{$areaName.id}">
-                                                <span>{$areaName.name}</span>
+                                                    <span>{$areaName.name}</span>
                                                     {if isset($areaName.city)}
-                                                    <span> === </span>
+                                                    <span> ,  </span>
                                                     <span>{$areaName.city}</span>
                                                     {/if}
                                                 </option>
                                             {/foreach}
                                         </select>
-                                        <input id="area-img" type="file" name="img[]" multiple>
                                     </td>
                                 </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Upload Pictures</label>
+                                        </td>
+                                        <td>
+                                            <input id="area-img" type="file" name="img[]" multiple>
+                                        </td>
+                                    </tr>
                                 {/if}
-                                <tr>
+                                    <tr>
                                     <td colspan="0">
                                         <div style="height: 31px; float: left">
                                             <button>Upload</button>
