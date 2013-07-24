@@ -375,7 +375,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     
     function getProperty($typeId) {
         $property = array();
-        $qry = "SELECT * FROM RESI_PROJECT_OPTIONS WHERE OPTIONS_ID = $typeId";
+        $qry = "SELECT * FROM ".RESI_PROJECT_OPTIONS." WHERE OPTIONS_ID = $typeId";
         $resource = mysql_query($qry) or die(mysql_error()." error in select qry");
         if ($resource) {
             while ($property1= mysql_fetch_assoc($resource)) {
