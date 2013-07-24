@@ -30,5 +30,18 @@ $dailyEmail = array(
 		'sendifnodata'=> 0
 	),
 	
+        array(
+		'sql'=>"select 
+                            from_url,to_url,MODIFIIED_DATE
+                        FROM
+                            redirect_url_map a
+                        WHERE
+                            DATE(a.MODIFIIED_DATE) = DATE(subdate(current_date, 1))", 
+		'subject'=>'Redirections inserted yesterday', 
+		'recipients'=>array('ankur.dhawan@proptiger.com','chandan.singh@proptiger.com'), 
+		'attachmentname'=>'redirections', 
+		'message'=>'', 
+		'sendifnodata'=> 0
+	),
 );
 ?>

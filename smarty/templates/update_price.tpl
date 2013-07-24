@@ -82,43 +82,11 @@
 	 function validation(cnt)
 	 {
 
-	 	/********code for price validation*************/
-	 	for(var i=0;i<cnt;i++)
-	 	{
-	       var pricePerUnitArea     = "same_diff_"+i;
-	       var pricePerUnitAreaVal  =  $("#"+pricePerUnitArea).val();
-
-	       var pricePerUnitAreaDp   = "same_diff_dp_"+i;
-	       var pricePerUnitAreaDpVal =  $("#"+pricePerUnitAreaDp).val();
-
-	       var pricePerUnitAreaHigh = "same_diff_fp_"+i;
-	       var pricePerUnitAreaHighVal =  $("#"+pricePerUnitAreaHigh).val();
-
-	       if($("#cityId").val() != 18)
-	       {
-	          if(pricePerUnitAreaVal >20000 || pricePerUnitAreaDpVal >20000 || pricePerUnitAreaHighVal >20000)
-	          {
-	            alert("Price Per Unit Area/Price Per Unit Area DP/Price Per Unit Area FP can't greater than 20000");
-	            $("#"+pricePerUnitArea).focus();
-	            return false;
-	          }
-	       }
-	       else
-	       {
-	          if(pricePerUnitAreaVal >=100000 || pricePerUnitAreaDpVal >=100000 || pricePerUnitAreaHighVal >=100000)
-	          {
-	            alert("Price to be always less than 100,000");
-	            $("#"+pricePerUnitArea).focus();
-	            return false;
-	          }
-	       }
-	   }
-	 	/********end code for price validation********/
 	   if($("#f_date_c_to").val() == '')
 	   {
-			alert("Please Select Date Effective From!");
-			$("#f_date_c_to").focus();
-			return false;
+                alert("Please Select Date Effective From!");
+                $("#f_date_c_to").focus();
+                return false;
 	   }
 		return true;
 	 }
@@ -200,6 +168,11 @@
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center  style="border:1px solid #c2c2c2;">
 			    
 			      <div>
+                                  {if count($ErrorMsg)>0}
+                                      {foreach from = $ErrorMsg key=key item = datafirst}
+                                          <tr id="row_{$k}"><td colspan="15"><font color="red">Error in row {$key+1}<br>&nbsp;&nbsp;{$datafirst}</font></td></tr>
+                                      {/foreach}
+                                  {/if}
 				<tr><td colspan="6"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
 				<tr class = "headingrowcolor" >
 				  <td  nowrap="nowrap" width="1%" align="center" class="whiteTxt" >SNo.</td>

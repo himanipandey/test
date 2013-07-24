@@ -241,18 +241,18 @@
                                 <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizeval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                           </td>
                           <td>
-                                <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea_{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea" value="{$txtPricePerUnitAreaval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtPricePerUnitAreaval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                              <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea_{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea" value="{$txtPricePerUnitAreaval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtPricePerUnitAreaval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};" readonly=""  maxlength = "10">
                           </td>
                           <td>
-                                <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitAreaDp[] tempName="txtPricePerUnitAreaDp" id="txtPricePerUnitAreaDp_{($smarty.section.foo.index+1)}" value="{$txtPricePerUnitAreaDpval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                                <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitAreaDp[] tempName="txtPricePerUnitAreaDp" id="txtPricePerUnitAreaDp_{($smarty.section.foo.index+1)}" value="{$txtPricePerUnitAreaDpval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10"  readonly="">
                           </td>
 
                            <td>
-                                <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitHigh[] tempName="txtPricePerUnitHigh" id="txtPricePerUnitHigh_{($smarty.section.foo.index+1)}" value="{$txtPricePerUnitHighval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                                <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitHigh[] tempName="txtPricePerUnitHigh" id="txtPricePerUnitHigh_{($smarty.section.foo.index+1)}" value="{$txtPricePerUnitHighval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10"  readonly="">
 
                           </td>
                            <td>
-                                <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitLow[] tempName="txtPricePerUnitLow"  id="txtPricePerUnitLow_{($smarty.section.foo.index+1)}" value="{$txtPricePerUnitLowval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                                <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitLow[] tempName="txtPricePerUnitLow"  id="txtPricePerUnitLow_{($smarty.section.foo.index+1)}" value="{$txtPricePerUnitLowval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10"  readonly="">
 
                           </td>
 
@@ -469,18 +469,18 @@
                                     <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval_VA[$new_index]} == '') OR !is_numeric({$txtSizeval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                               </td>
                               <td>
-                                    <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea_{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea" value="{$txtPricePerUnitAreaval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval_VA[$new_index]} == '') OR !is_numeric({$txtPricePerUnitAreaval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                                    <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea_{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea" value="{$txtPricePerUnitAreaval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval_VA[$new_index]} == '') OR !is_numeric({$txtPricePerUnitAreaval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" readonly="">
                               </td>
                               <td>
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitAreaDp[] tempName="txtPricePerUnitAreaDp" id=txtPricePerUnitAreaDp value="{$txtPricePerUnitAreaDpval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitAreaDp[] tempName="txtPricePerUnitAreaDp" id=txtPricePerUnitAreaDp value="{$txtPricePerUnitAreaDpval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10" readonly="">
                               </td>
 
                                <td>
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitHigh[] tempName="txtPricePerUnitHigh" id=txtPricePerUnitHigh value="{$txtPricePerUnitHighval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitHigh[] tempName="txtPricePerUnitHigh" id=txtPricePerUnitHigh value="{$txtPricePerUnitHighval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10" readonly="">
 
                               </td>
                                <td   >
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitLow[] tempName="txtPricePerUnitLow"  id=txtPricePerUnitLow value="{$txtPricePerUnitLowval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitLow[] tempName="txtPricePerUnitLow"  id=txtPricePerUnitLow value="{$txtPricePerUnitLowval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10" readonly="">
 
                               </td>
 
@@ -649,7 +649,7 @@
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeBreval_P[$new_index]} == '') OR !is_numeric({$txtSizeBreval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                               </td>
                               <td>
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea_P" value="{$txtPricePerUnitAreaval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval_P[$new_index]} == '') OR !is_numeric({$txtPricePerUnitAreaval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea_P" value="{$txtPricePerUnitAreaval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval_P[$new_index]} == '') OR !is_numeric({$txtPricePerUnitAreaval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" readonly="">
                               </td>
                               <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">

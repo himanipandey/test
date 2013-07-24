@@ -1862,7 +1862,7 @@ function getDateNow(){
 								{/if}
 								</td>
 							  <td>
-							  	{if $PreviousMonthsData['current'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] != ''}
+							  	{if $PreviousMonthsData['current'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] !== ''}
 							  		{$PreviousMonthsData['current'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
 							  	{else}
 							  		--
@@ -2381,7 +2381,7 @@ function getDateNow(){
 										  Mandatory 
 									{else}
 										Optional
-									{/if}
+									{/if}   
 								</td>
 							</tr>
 			
