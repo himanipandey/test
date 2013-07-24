@@ -294,16 +294,10 @@
 	/**********audit insert***********/
 	function audit_insert($rowid,$action,$table,$projectId)
 	{
-        // if projectId is 0, then it is made null to avoid voilation of foreign key validation
-        if((int)$projectId == 0) $projectId = "NULL";
-
-        // if adminId is 0, then it is made null to avoid voilation of foreign key validation
-        $adminId = $_SESSION['adminId'];
-        if((int)$adminId == 0) $adminId = "NULL";
 		 $qry_ins	=	"
 			INSERT INTO audit
 			SET
-				DONE_BY			=	'".$adminId."',
+				DONE_BY			=	'".$_SESSION['adminId']."',
 				ACTION_DATE		=	now(),
 				TABLE_NAME		=	'".$table."',
 				ACTION			=	'".$action."',
