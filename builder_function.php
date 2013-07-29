@@ -1347,215 +1347,236 @@ function updateProjectPhase($pID, $phase, $reviews, $stage = '', $revert = FALSE
 						project_stage_history 
 							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
 				VALUES 
-							(NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "', NULL)";
-    }
-    $r = mysql_query($ins);
-    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " where PROJECT_ID = $pID;";
-    mysql_query($sql);
-    mysql_query('commit');
-    return 1;
+							(NULL,'".$pID."','".$phase."','".$stage."',NOW(),'".$_SESSION['adminId']."', NULL)";
+        }
+	$r = mysql_query($ins);
+        $sql = "update resi_project set MOVEMENT_HISTORY_ID = ".mysql_insert_id()." where PROJECT_ID = $pID;";
+        mysql_query($sql);
+        mysql_query('commit');
+return 1;
 }
 
-function updationCycleTable() {
-    $qry = "SELECT * FROM " . UPDATION_CYCLE . ";";
-    $res = mysql_query($qry) or die(mysql_error() . ' Error in function UpdationCycleTable()');
-    $labelArray = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        array_push($labelArray, $data);
-    }
-    return $labelArray;
+function updationCycleTable()
+	{
+		$qry	=	"SELECT * FROM ".UPDATION_CYCLE.";";
+		$res	=	mysql_query($qry) or die(mysql_error().' Error in function UpdationCycleTable()');
+		$labelArray = array();
+		while($data = mysql_fetch_assoc($res))
+		{
+			array_push($labelArray,$data);
+		}
+		return $labelArray;
+	}
+
+function changeLabel($pID, $val){
+
 }
 
-function changeLabel($pID, $val) {
-    
+
+/**************City management**********************/
+
+function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$status,$desc)
+{
+
+	  $Sql = "INSERT INTO " .CITY." SET
+			LABEL 	   			= '".d_($txtCityName)."',
+			META_TITLE   		= '".d_($txtMetaTitle)."',
+			META_KEYWORDS  		= '".d_($txtMetaKeywords)."',
+			META_DESCRIPTION	= '".d_($txtMetaDescription)."',
+			ACTIVE 	   			= '".d_($status)."',
+			URL					= '".d_($txtCityUrl)."',
+			DISPLAY_ORDER		= '".d_($DisplayOrder)."',
+			DESCRIPTION			=	'".d_($desc)."'";//die();
+	  $ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function InsertCity()');
+	  return 1;
 }
 
-/* * ************City management********************* */
 
-function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $status, $desc) {
+function DeleteCity($ID)
+{
+	$Sql 		= "DELETE FROM ".CITY." WHERE CITY_ID = '".$ID."'";
+	$ExecSql 	= mysql_query($Sql) or die(mysql_error().' Error in function DeleteCity()');
 
-    $Sql = "INSERT INTO " . CITY . " SET
-			LABEL 	   			= '" . d_($txtCityName) . "',
-			META_TITLE   		= '" . d_($txtMetaTitle) . "',
-			META_KEYWORDS  		= '" . d_($txtMetaKeywords) . "',
-			META_DESCRIPTION	= '" . d_($txtMetaDescription) . "',
-			ACTIVE 	   			= '" . d_($status) . "',
-			URL					= '" . d_($txtCityUrl) . "',
-			DISPLAY_ORDER		= '" . d_($DisplayOrder) . "',
-			DESCRIPTION			=	'" . d_($desc) . "'"; //die();
-    $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertCity()');
-    return 1;
+	return 1;
 }
 
-function DeleteCity($ID) {
-    $Sql = "DELETE FROM " . CITY . " WHERE CITY_ID = '" . $ID . "'";
-    $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function DeleteCity()');
+function ViewCityDetails($cityID){
+	$Sql = "SELECT * FROM ".CITY." WHERE CITY_ID ='".$cityID."'";
+	$ExecSql = mysql_query($Sql);
 
-    return 1;
+	if(mysql_num_rows($ExecSql)==1)	{
+
+		$Res = mysql_fetch_assoc($ExecSql);
+		$ResDetails['CITY_ID'] 		 	=  $Res['CITY_ID'];
+		$ResDetails['LABEL']			=  $Res['LABEL'];
+		$ResDetails['META_TITLE'] 		=  $Res['META_TITLE'];
+		$ResDetails['META_KEYWORDS'] 	=  $Res['META_KEYWORDS'];
+		$ResDetails['META_DESCRIPTION'] =  $Res['META_DESCRIPTION'];
+		$ResDetails['ACTIVE'] 			=  $Res['ACTIVE'];
+		$ResDetails['URL'] 				=  $Res['URL'];
+		$ResDetails['DISPLAY_ORDER']  	=  $Res['DISPLAY_ORDER'];
+		$ResDetails['DESCRIPTION']		=  $Res['DESCRIPTION'];
+                return $ResDetails;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
-function ViewCityDetails($cityID) {
-    $Sql = "SELECT * FROM " . CITY . " WHERE CITY_ID ='" . $cityID . "'";
-    $ExecSql = mysql_query($Sql);
+function getAllCities(){
 
-    if (mysql_num_rows($ExecSql) == 1) {
-
-        $Res = mysql_fetch_assoc($ExecSql);
-        $ResDetails['CITY_ID'] = $Res['CITY_ID'];
-        $ResDetails['LABEL'] = $Res['LABEL'];
-        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
-        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
-        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
-        $ResDetails['URL'] = $Res['URL'];
-        $ResDetails['DISPLAY_ORDER'] = $Res['DISPLAY_ORDER'];
-        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
-        return $ResDetails;
-    } else {
-        return 0;
-    }
+	$allCities = "SELECT * FROM ".CITY." WHERE 1 ORDER BY LABEL";
+	$execQry = mysql_query($allCities);
+	while($cityArr = mysql_fetch_assoc($execQry)){
+		$allCityArr[] = $cityArr;
+	}
+	return $allCityArr;
 }
 
-function getAllCities() {
+function ViewLocalityDetails($localityID){
+	$Sql = "SELECT * FROM ".LOCALITY." WHERE LOCALITY_ID ='".$localityID."'";
+	$ExecSql = mysql_query($Sql);
 
-    $allCities = "SELECT * FROM " . CITY . " WHERE 1 ORDER BY LABEL";
-    $execQry = mysql_query($allCities);
-    while ($cityArr = mysql_fetch_assoc($execQry)) {
-        $allCityArr[] = $cityArr;
-    }
-    return $allCityArr;
+	if(mysql_num_rows($ExecSql)==1)	{
+
+		$Res = mysql_fetch_assoc($ExecSql);
+		$ResDetails['LOCALITY_ID']		=  $Res['LOCALITY_ID'];
+		$ResDetails['CITY_ID'] 		 	=  $Res['CITY_ID'];
+		$ResDetails['LABEL']			=  $Res['LABEL'];
+		$ResDetails['META_TITLE'] 		=  $Res['META_TITLE'];
+		$ResDetails['META_KEYWORDS'] 	=  $Res['META_KEYWORDS'];
+		$ResDetails['META_DESCRIPTION'] =  $Res['META_DESCRIPTION'];
+		$ResDetails['ACTIVE'] 			=  $Res['ACTIVE'];
+		$ResDetails['URL'] 				=  $Res['URL'];
+		$ResDetails['DESCRIPTION']		=  $Res['DESCRIPTION'];
+		return $ResDetails;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
-function ViewLocalityDetails($localityID) {
-    $Sql = "SELECT * FROM " . LOCALITY . " WHERE LOCALITY_ID ='" . $localityID . "'";
-    $ExecSql = mysql_query($Sql);
+function ViewSuburbDetails($suburbID){
+	$Sql = "SELECT * FROM ".SUBURB." WHERE SUBURB_ID  ='".$suburbID."'";
+	$ExecSql = mysql_query($Sql);
 
-    if (mysql_num_rows($ExecSql) == 1) {
+	if(mysql_num_rows($ExecSql)==1)	{
 
-        $Res = mysql_fetch_assoc($ExecSql);
-        $ResDetails['LOCALITY_ID'] = $Res['LOCALITY_ID'];
-        $ResDetails['CITY_ID'] = $Res['CITY_ID'];
-        $ResDetails['LABEL'] = $Res['LABEL'];
-        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
-        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
-        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
-        $ResDetails['URL'] = $Res['URL'];
-        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
-        return $ResDetails;
-    } else {
-        return 0;
-    }
+		$Res = mysql_fetch_assoc($ExecSql);
+		$ResDetails['LOCALITY_ID']		=  $Res['LOCALITY_ID'];
+		$ResDetails['CITY_ID'] 		 	=  $Res['CITY_ID'];
+		$ResDetails['LABEL']			=  $Res['LABEL'];
+		$ResDetails['META_TITLE'] 		=  $Res['META_TITLE'];
+		$ResDetails['META_KEYWORDS'] 	=  $Res['META_KEYWORDS'];
+		$ResDetails['META_DESCRIPTION'] =  $Res['META_DESCRIPTION'];
+		$ResDetails['ACTIVE'] 			=  $Res['ACTIVE'];
+		$ResDetails['URL'] 				=  $Res['URL'];
+		$ResDetails['DESCRIPTION']		=  $Res['DESCRIPTION'];
+        $ResDetails['PRIORITY']		=  $Res['PRIORITY'];
+		return $ResDetails;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
-function ViewSuburbDetails($suburbID) {
-    $Sql = "SELECT * FROM " . SUBURB . " WHERE SUBURB_ID  ='" . $suburbID . "'";
-    $ExecSql = mysql_query($Sql);
-
-    if (mysql_num_rows($ExecSql) == 1) {
-
-        $Res = mysql_fetch_assoc($ExecSql);
-        $ResDetails['LOCALITY_ID'] = $Res['LOCALITY_ID'];
-        $ResDetails['CITY_ID'] = $Res['CITY_ID'];
-        $ResDetails['LABEL'] = $Res['LABEL'];
-        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
-        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
-        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
-        $ResDetails['URL'] = $Res['URL'];
-        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
-        return $ResDetails;
-    } else {
-        return 0;
-    }
+function DeleteBank($bank_id){
+	$sql = "DELETE FROM ".BANK_LIST." WHERE BANK_ID = '".$bank_id."'";
+	$execQry = mysql_query($sql) or die(mysql_error());
+	return true;
 }
 
-function DeleteBank($bank_id) {
-    $sql = "DELETE FROM " . BANK_LIST . " WHERE BANK_ID = '" . $bank_id . "'";
-    $execQry = mysql_query($sql) or die(mysql_error());
-    return true;
+function project_list($builderId)
+{
+	$sql	=	"SELECT PROJECT_ID,PROJECT_NAME FROM ".RESI_PROJECT." WHERE BUILDER_ID = '".$builderId."' AND PROJECT_NAME != '' ORDER BY PROJECT_NAME ASC";
+	$res	=	mysql_query($sql) or die(mysql_error());
+	$arrBuilder = array();
+	while($data = mysql_fetch_assoc($res))
+	{
+		array_push($arrBuilder,$data);
+	}
+	return $arrBuilder;
 }
 
-function project_list($builderId) {
-    $sql = "SELECT PROJECT_ID,PROJECT_NAME FROM " . RESI_PROJECT . " WHERE BUILDER_ID = '" . $builderId . "' AND PROJECT_NAME != '' ORDER BY PROJECT_NAME ASC";
-    $res = mysql_query($sql) or die(mysql_error());
-    $arrBuilder = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrBuilder, $data);
-    }
-    return $arrBuilder;
+/*************Query for insert other price***********************/
+function InsertOtherPrice($arr)
+{
+
+	 $Sql = "INSERT INTO " .RESI_PROJECT_OTHER_PRICING." SET
+				PROJECT_ID  	   					= '".d_($arr['projectId'])."',
+				EDC_IDC 	  						= '".d_($arr['edc_idc_val1'])."',
+				EDC_IDC_TYPE	 	  				= '".d_($arr['edc_idc'])."',
+				EDC_IDC_MEND_OPT 					= '".d_($arr['edc_idc_type1'])."',
+				LEASE_RENT							= '".d_($arr['lease_rent_val1'])."',
+				LEASE_RENT_TYPE	 					= '".d_($arr['lease_rent'])."',
+				LEASE_RENT_MEND_OPT	 				= '".d_($arr['lease_rent_type1'])."',
+				OPEN_CAR_PARKING			 		= '".d_($arr['open_car_parking1'])."',
+				OPEN_CAR_PARKING_TYPE			 	= '".d_($arr['open_car_parking'])."',
+				OPEN_CAR_PARKING_MEND_OPT			= '".d_($arr['open_car_parking_type1'])."',
+				CLOSE_CAR_PARKING					= '".d_($arr['close_car_parking1'])."',
+				CLOSE_CAR_PARKING_TYPE				= '".d_($arr['close_car_parking'])."',
+				CLOSE_CAR_PARKING_MEND_OPT			= '".d_($arr['close_car_parking_type1'])."',
+				SEMI_CLOSE_CAR_PARKING				= '".d_($arr['semi_close_car_parking1'])."',
+				SEMI_CLOSE_CAR_PARKING_TYPE			= '".d_($arr['semi_close_car_parking'])."',
+				SEMI_CLOSE_CAR_PARKING_MEND_OPT		= '".d_($arr['semi_close_car_parking_type1'])."',
+				CLUB_HOUSE							= '".d_($arr['club_house1'])."',
+				CLUB_HOUSE_PSF_FIXED				= '".d_($arr['club_house'])."',
+				CLUB_HOUSE_MEND_OPT					= '".d_($arr['club_house_type1'])."',
+				IFMS								= '".d_($arr['ifms1'])."',
+				IFMS_PSF_FIXED						= '".d_($arr['ifms'])."',
+				IFMS_MEND_OPT						= '".d_($arr['ifms_type1'])."',
+				POWER_BACKUP						= '".d_($arr['power_backup1'])."',
+				POWER_BACKUP_PSF_FIXED				= '".d_($arr['power_backup'])."',
+				POWER_BACKUP_MEND_OPT				= '".d_($arr['power_backup_type1'])."',
+				LEGAL_FEES							= '".d_($arr['legal_fees1'])."',
+				LEGAL_FEES_PSF_FIXED				= '".d_($arr['legal_fees'])."',
+				LEGAL_FEES_MEND_OPT					= '".d_($arr['legal_fees_type1'])."',
+				POWER_WATER							= '".d_($arr['power_and_water1'])."',
+				POWER_WATER_PSF_FIXED				= '".d_($arr['power_and_water'])."',
+				POWER_WATER_MEND_OPT				= '".d_($arr['power_and_water_type1'])."',
+				MAINTENANCE_ADVANCE					= '".d_($arr['maintenance_advance1'])."',
+				MAINTENANCE_ADVANCE_PSF_FIXED		= '".d_($arr['maintenance_advance'])."',
+				MAINTENANCE_ADVANCE_MEND_OPT		= '".d_($arr['maintenance_advance_type1'])."',
+				MAINTENANCE_ADVANCE_MONTHS			= '".d_($arr['maintenance_advance_months'])."',
+				PLC									= '".d_($arr['plc'])."',
+				FLOOR_RISE							= '".d_($arr['floor_rise'])."',
+				OTHERS								= '".d_($arr['other'])."'";
+
+		$ExecSql = mysql_query($Sql) or die(mysql_error().' Error in function InsertOtherPrice()');
+		
+		if($ExecSql)
+		{
+			$last_id = mysql_insert_id();
+			audit_insert($last_id,'insert','resi_project_other_pricing',$arr['projectId']);
+			return 1;
+		}
+
+
+
 }
 
-/* * ***********Query for insert other price********************** */
+/*******function to fetch project other pricing********/
 
-function InsertOtherPrice($arr) {
-
-    $Sql = "INSERT INTO " . RESI_PROJECT_OTHER_PRICING . " SET
-				PROJECT_ID  	   					= '" . d_($arr['projectId']) . "',
-				EDC_IDC 	  						= '" . d_($arr['edc_idc_val1']) . "',
-				EDC_IDC_TYPE	 	  				= '" . d_($arr['edc_idc']) . "',
-				EDC_IDC_MEND_OPT 					= '" . d_($arr['edc_idc_type1']) . "',
-				LEASE_RENT							= '" . d_($arr['lease_rent_val1']) . "',
-				LEASE_RENT_TYPE	 					= '" . d_($arr['lease_rent']) . "',
-				LEASE_RENT_MEND_OPT	 				= '" . d_($arr['lease_rent_type1']) . "',
-				OPEN_CAR_PARKING			 		= '" . d_($arr['open_car_parking1']) . "',
-				OPEN_CAR_PARKING_TYPE			 	= '" . d_($arr['open_car_parking']) . "',
-				OPEN_CAR_PARKING_MEND_OPT			= '" . d_($arr['open_car_parking_type1']) . "',
-				CLOSE_CAR_PARKING					= '" . d_($arr['close_car_parking1']) . "',
-				CLOSE_CAR_PARKING_TYPE				= '" . d_($arr['close_car_parking']) . "',
-				CLOSE_CAR_PARKING_MEND_OPT			= '" . d_($arr['close_car_parking_type1']) . "',
-				SEMI_CLOSE_CAR_PARKING				= '" . d_($arr['semi_close_car_parking1']) . "',
-				SEMI_CLOSE_CAR_PARKING_TYPE			= '" . d_($arr['semi_close_car_parking']) . "',
-				SEMI_CLOSE_CAR_PARKING_MEND_OPT		= '" . d_($arr['semi_close_car_parking_type1']) . "',
-				CLUB_HOUSE							= '" . d_($arr['club_house1']) . "',
-				CLUB_HOUSE_PSF_FIXED				= '" . d_($arr['club_house']) . "',
-				CLUB_HOUSE_MEND_OPT					= '" . d_($arr['club_house_type1']) . "',
-				IFMS								= '" . d_($arr['ifms1']) . "',
-				IFMS_PSF_FIXED						= '" . d_($arr['ifms']) . "',
-				IFMS_MEND_OPT						= '" . d_($arr['ifms_type1']) . "',
-				POWER_BACKUP						= '" . d_($arr['power_backup1']) . "',
-				POWER_BACKUP_PSF_FIXED				= '" . d_($arr['power_backup']) . "',
-				POWER_BACKUP_MEND_OPT				= '" . d_($arr['power_backup_type1']) . "',
-				LEGAL_FEES							= '" . d_($arr['legal_fees1']) . "',
-				LEGAL_FEES_PSF_FIXED				= '" . d_($arr['legal_fees']) . "',
-				LEGAL_FEES_MEND_OPT					= '" . d_($arr['legal_fees_type1']) . "',
-				POWER_WATER							= '" . d_($arr['power_and_water1']) . "',
-				POWER_WATER_PSF_FIXED				= '" . d_($arr['power_and_water']) . "',
-				POWER_WATER_MEND_OPT				= '" . d_($arr['power_and_water_type1']) . "',
-				MAINTENANCE_ADVANCE					= '" . d_($arr['maintenance_advance1']) . "',
-				MAINTENANCE_ADVANCE_PSF_FIXED		= '" . d_($arr['maintenance_advance']) . "',
-				MAINTENANCE_ADVANCE_MEND_OPT		= '" . d_($arr['maintenance_advance_type1']) . "',
-				MAINTENANCE_ADVANCE_MONTHS			= '" . d_($arr['maintenance_advance_months']) . "',
-				PLC									= '" . d_($arr['plc']) . "',
-				FLOOR_RISE							= '" . d_($arr['floor_rise']) . "',
-				OTHERS								= '" . d_($arr['other']) . "'";
-
-    $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertOtherPrice()');
-
-    if ($ExecSql) {
-        $last_id = mysql_insert_id();
-        audit_insert($last_id, 'insert', 'resi_project_other_pricing', $arr['projectId']);
-        return 1;
-    }
+function fetch_other_price($projectId)
+{
+	$qry	=	"SELECT * FROM ".RESI_PROJECT_OTHER_PRICING." WHERE PROJECT_ID = '".$projectId."'";
+	$res	=	mysql_query($qry) or die(mysql_error());
+	$arrOtherPrice = array();
+	while($data = mysql_fetch_assoc($res))
+	{
+		array_push($arrOtherPrice,$data);
+	}
+	return $arrOtherPrice;
 }
 
-/* * *****function to fetch project other pricing******* */
+/*************Query for update other price***********************/
+function UpdateOtherPrice($arr)
+{
 
-function fetch_other_price($projectId) {
-    $qry = "SELECT * FROM " . RESI_PROJECT_OTHER_PRICING . " WHERE PROJECT_ID = '" . $projectId . "'";
-    $res = mysql_query($qry) or die(mysql_error());
-    $arrOtherPrice = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrOtherPrice, $data);
-    }
-    return $arrOtherPrice;
-}
-
-/* * ***********Query for update other price********************** */
-
-function UpdateOtherPrice($arr) {
-
-    $Sql = "UPDATE " . RESI_PROJECT_OTHER_PRICING . "
+	 $Sql = "UPDATE " .RESI_PROJECT_OTHER_PRICING."
 				SET
 					EDC_IDC 	  						= '" . d_($arr['edc_idc_val1']) . "',
 					EDC_IDC_TYPE	 	  				= '" . d_($arr['edc_idc']) . "',
