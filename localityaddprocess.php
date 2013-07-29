@@ -1,5 +1,7 @@
 <?php
 
+include_once("function/locality_functions.php");
+
 $localityid = $_REQUEST['localityid'];
 $smarty->assign("localityid", $localityid);
 
@@ -22,7 +24,6 @@ if (isset($_POST['btnSave'])) {
 		$priority               =   trim($_POST['priority']);
 		
 		$smarty->assign("txtCityName", $txtCityName);
-		$smarty->assign("txtCityUrl", $txtCityUrl);
 		$smarty->assign("old_loc_url", $old_loc_url);
 		$smarty->assign("txtMetaTitle", $txtMetaTitle);
 		$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
@@ -38,16 +39,9 @@ if (isset($_POST['btnSave'])) {
 		   if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtCityName)){
 		   	$ErrorMsg["txtCityName"] = "Special characters are not allowed";
 		   }
-		   
-		   if( $txtCityUrl == '')   {
-		   	$ErrorMsg["txtCityUrl"] = "Please enter locality URL.";
-		   } else {
-		   
-		   	if(!preg_match('/^property-in-[a-z0-9\-]+\.php$/',$txtCityUrl)){
-		   		$ErrorMsg["txtCityUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
-		   	}
-		   }
-		   
+
+		   $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL']);
+
 		   if( $txtMetaTitle == '')   {
 		   	$ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
 		   }
@@ -77,6 +71,12 @@ if (isset($_POST['btnSave'])) {
 
 		   if(!is_array($ErrorMsg))
 		   {
+		       $qryCity = "SELECT C.LABEL FROM locality L join city C on (C.city_id = L.city_id) where L.locality_id = $localityid";
+		       $resCity = mysql_query($qryCity);
+		       $dataCity = mysql_fetch_assoc($resCity);
+		       mysql_free_result($resCity);
+		       $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL']);
+		        
 				 $updateQry = "UPDATE ".LOCALITY." SET 
 					 
 					  LABEL					=	'".$txtCityName."',
@@ -107,8 +107,6 @@ elseif($localityid!=''){
 
 	$localityDetailsArray	=   ViewLocalityDetails($localityid);
 	$txtCityName			=	trim($localityDetailsArray['LABEL']);
-	$txtCityUrl				=	trim($localityDetailsArray['URL']);
-	$old_loc_url			=	trim($localityDetailsArray['URL']);
 	$txtMetaTitle			=	trim($localityDetailsArray['META_TITLE']);
 	$txtMetaKeywords		=	trim($localityDetailsArray['META_KEYWORDS']);
 	$txtMetaDescription		=	trim($localityDetailsArray['META_DESCRIPTION']);
@@ -117,8 +115,6 @@ elseif($localityid!=''){
 	$priority				=	trim($localityDetailsArray['PRIORITY']);
 	
 	$smarty->assign("txtCityName", $txtCityName);
-	$smarty->assign("txtCityUrl", $txtCityUrl);
-	$smarty->assign("old_loc_url", $old_loc_url);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
 	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);

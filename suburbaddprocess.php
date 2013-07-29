@@ -1,5 +1,7 @@
 <?php
 
+include_once("function/locality_functions.php");
+
 $suburbid = $_REQUEST['suburbid'];
 $smarty->assign("suburbid", $suburbid);
 
@@ -12,7 +14,6 @@ if(isset($_POST['btnExit'])){
 if (isset($_POST['btnSave'])) {
 
 		$txtCityName			=	trim($_POST['txtCityName']);
-		$txtCityUrl				=	trim($_POST['txtCityUrl']);
 		$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
 		$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
 		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
@@ -36,15 +37,7 @@ if (isset($_POST['btnSave'])) {
 		if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtCityName)){
 			$ErrorMsg["txtCityName"] = "Special characters are not allowed in suburb name";
 		}
-		if( $txtCityUrl == '')   {
-			$ErrorMsg["txtCityUrl"] = "Please enter locality URL.";
-		}
-		else
-		{
-			if(!preg_match('/^property-in-[a-z0-9\-]+\.php$/',$txtCityUrl)){
-				$ErrorMsg["txtCityUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
-			}
-		}
+
 		if( $txtMetaTitle == '')   {
 			 $ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
 		   }
@@ -57,6 +50,12 @@ if (isset($_POST['btnSave'])) {
 
 		if(!is_array($ErrorMsg))
 		{
+		    $qryCity = "SELECT C.LABEL FROM suburb S join city C on (C.city_id = S.city_id) where S.suburb_id = $suburbid";
+		    $resCity = mysql_query($qryCity);
+		    $dataCity = mysql_fetch_assoc($resCity);
+		    mysql_free_result($resCity);
+		    $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL']);
+		    
 			$updateQry = "UPDATE ".SUBURB." SET 
 						 
 						  LABEL 				=	'".$txtCityName."',
@@ -82,8 +81,6 @@ else if($suburbid!=''){
 
 	$localityDetailsArray	=   ViewSuburbDetails($suburbid);
 	$txtCityName			=	trim($localityDetailsArray['LABEL']);
-	$txtCityUrl				=	trim($localityDetailsArray['URL']);
-	$old_sub_url			=	trim($localityDetailsArray['URL']);
 	$txtMetaTitle			=	trim($localityDetailsArray['META_TITLE']);
 	$txtMetaKeywords		=	trim($localityDetailsArray['META_KEYWORDS']);
 	$txtMetaDescription		=	trim($localityDetailsArray['META_DESCRIPTION']);
@@ -91,13 +88,11 @@ else if($suburbid!=''){
 	$desc					=	trim($localityDetailsArray['DESCRIPTION']);
 	
 	$smarty->assign("txtCityName", $txtCityName);
-	$smarty->assign("txtCityUrl", $txtCityUrl);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
 	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);
 	$smarty->assign("status", $status);	
 	$smarty->assign("desc", $desc);
-	$smarty->assign("old_sub_url", $old_sub_url);
 }
  
 ?>
