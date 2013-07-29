@@ -1581,6 +1581,7 @@ function ViewSuburbDetails($suburbID){
 		$ResDetails['ACTIVE'] 			=  $Res['ACTIVE'];
 		$ResDetails['URL'] 				=  $Res['URL'];
 		$ResDetails['DESCRIPTION']		=  $Res['DESCRIPTION'];
+        $ResDetails['PRIORITY']		=  $Res['PRIORITY'];
 		return $ResDetails;
 	}
 	else

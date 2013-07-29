@@ -20,6 +20,7 @@ if (isset($_POST['btnSave'])) {
 		$status					=	trim($_POST['status']);
 		$desc					=	trim($_POST['desc']);	
 		$old_sub_url			=	trim($_POST['old_sub_url']);
+        $priority               =   trim($_POST['priority']);
 
 		$smarty->assign("txtCityName", $txtCityName);
 		$smarty->assign("txtMetaTitle", $txtMetaTitle);
@@ -29,7 +30,8 @@ if (isset($_POST['btnSave'])) {
 		$smarty->assign("desc", $desc);
 		$smarty->assign("txtCityUrl", $txtCityUrl);
 		$smarty->assign("old_sub_url", $old_sub_url);
-		 
+		$smarty->assign("priority", $priority);
+        
 		if( $txtCityName == '')   {
 			$ErrorMsg["txtCityName"] = "Please enter suburb name.";
 		}
@@ -47,7 +49,9 @@ if (isset($_POST['btnSave'])) {
 		if( $txtMetaDescription == '')  {
 			 $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
 		   }
-
+        if( empty($priority) || $priority < 1 || $priority > 100) {
+		       $ErrorMsg["priority"] = "Please enter valid priority(1-100)";
+		   }
 		if(!is_array($ErrorMsg))
 		{
 		    $qryCity = "SELECT C.LABEL FROM suburb S join city C on (C.city_id = S.city_id) where S.suburb_id = $suburbid";
@@ -64,7 +68,9 @@ if (isset($_POST['btnSave'])) {
 						  META_DESCRIPTION		=	'".$txtMetaDescription."',
 						  ACTIVE				=	'".$status."',
 						  URL					=	'".$txtCityUrl."',
-						  DESCRIPTION			=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
+						  DESCRIPTION			=	'".$desc."',
+                          PRIORITY				=	$priority  
+                            WHERE SUBURB_ID ='".$suburbid."'";
 						   
 			mysql_query($updateQry);
 			if($txtCityUrl != $old_sub_url)
@@ -86,13 +92,15 @@ else if($suburbid!=''){
 	$txtMetaDescription		=	trim($localityDetailsArray['META_DESCRIPTION']);
 	$status					=	trim($localityDetailsArray['ACTIVE']);
 	$desc					=	trim($localityDetailsArray['DESCRIPTION']);
-	
+	$priority				=	trim($localityDetailsArray['PRIORITY']);
+    
 	$smarty->assign("txtCityName", $txtCityName);
 	$smarty->assign("txtMetaTitle", $txtMetaTitle);
 	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);
 	$smarty->assign("status", $status);	
 	$smarty->assign("desc", $desc);
+    $smarty->assign("priority", $priority ? $priority : 100);
 }
  
 ?>
