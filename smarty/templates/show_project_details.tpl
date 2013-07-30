@@ -21,7 +21,7 @@
 			["event9","add_tower_construction_status.php"],
 			["event10","add_project_construction.php"],
 			["event11", "edit_floor_plan.php", true],
-			["event12", "update_price.php", true],
+			["event12", "/new/price", true],
 			["event13", "project_other_price.php", true],
                         ["event14", "secondary_price.php", true],
                         ["event15", "insertSecondaryPrice.php", true],
