@@ -10,7 +10,7 @@ ActiveRecord\Config::initialize(function($cfg)
 });
 
 // Includes whole model directory
-foreach (glob("models/*.php") as $filename)
+foreach (glob(dirname(__FILE__)."/models/*.php") as $filename)
 {
     include_once $filename;
 }
