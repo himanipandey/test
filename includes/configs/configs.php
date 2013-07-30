@@ -638,8 +638,11 @@ $arrCampaign =
 	"Bangalore_1",
 	"Bangalore_2",
 	"Bangalore_3",
-  	"Pune_New"
+  	"Pune_New",
+    "Delhi_Resale1",
+    "Delhi_Resale2"
 	);
+
 /**************Authentication*************/
 $accessModule = array();
 $arrUser      = array(547,525,588,506,53,558,582);
