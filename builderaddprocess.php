@@ -249,7 +249,7 @@ if ($_POST['btnSave'] == "Save")
                     if($return)
                     {
                         $imgurl = "/".$cutpath[1]."/".$name;
-                        $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                        $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                         if($rt)
                         {
                             if($txtBuilderUrl != $txtBuilderUrlOld)
@@ -306,7 +306,7 @@ if ($_POST['btnSave'] == "Save")
             }
             else 
             {
-                $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                 if($return)
                 {
                     if($txtBuilderUrl != $txtBuilderUrlOld)
@@ -327,6 +327,7 @@ else if($builderid	!= '')
 	$dataedit	=	mysql_fetch_array($resedit);
 
 	$smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
+        $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
         $smarty->assign("legalEntity", $dataedit['ENTITY']);
 	$smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
 	$smarty->assign("txtBuilderUrl", $dataedit['URL']);

@@ -79,7 +79,7 @@
 			      <div>
 				<tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Builder Display Name : </td>
-                                    <input type=hidden name=oldbuilder id=oldbuilder value="{$oldval}" style="width:357px;">
+                                    <input type=hidden name="oldbuilder" id="oldbuilder" value="{$oldval}" style="width:357px;">
                                     <td width="30%" align="left"><input type=text name=txtBuilderName id=txtBuilderName value="{$txtBuilderName}" style="width:357px;"></td>
                                     {if $ErrorMsg["txtBuilderName"] != ''}
                                     <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["txtBuilderName"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
