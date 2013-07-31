@@ -2,10 +2,6 @@
 	<tr>
 		<td height="6"></td>
 	</tr>
-<!--<tr>
-		<td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$CRAWLER_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-		  <td align="left" height="22"><A class="leftnav" href="BuilderList.php?page=1&sort=all"><font color = "#f15a22">Builder Management</font></A></td>
-	</tr> -->
 
 	<tr>
 		<td class="thinline" align="left" colSpan="2"></td>
@@ -77,24 +73,6 @@
 		  <td align="left" height="22"><A class="leftnav" href="bank_list.php"><font color = "#f15a22">Bank Management</font></A></td>
 	</tr>
 
-	<tr>
-		<td class="thinline" align="left" colSpan="2"></td>
-	</tr>
-
-	<tr>
-		<td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-		  <td align="left" height="22"><A class="leftnav" href="displayorder.php"><font color = "#f15a22">Display Order</font></A></td>
-	</tr>
-	
-	<tr>
-		<td class="thinline" align="left" colSpan="2"></td>
-	</tr>
-
-	<tr>
-		<td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-		  <td align="left" height="22"><A class="leftnav" href="displayorder_locality.php"><font color = "#f15a22">Display Order Locality</font></A></td>
-	</tr>
-	
 	<tr>
 		<td class="thinline" align="left" colSpan="2"></td>
 	</tr>

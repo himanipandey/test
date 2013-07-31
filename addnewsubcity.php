@@ -1,9 +1,11 @@
 <?php
-include("smartyConfig.php");
-include("appWideConfig.php");
-include("dbConfig.php");
-include("includes/configs/configs.php");
-include("builder_function.php");
+include_once("smartyConfig.php");
+include_once("appWideConfig.php");
+include_once("dbConfig.php");
+include_once("includes/configs/configs.php");
+include_once("builder_function.php");
+include_once("function/locality_functions.php");
+
 AdminAuthentication();
 
 $subcityval = $_GET['subcityval'];
@@ -44,24 +46,28 @@ if($deletesubcity != '')
 
 else
 {
-	if($subcityval!='' && $id!='')
+    $qryCity = "SELECT LABEL FROM ".CITY." WHERE CITY_ID = $cityid";
+    $resCity = mysql_query($qryCity);
+    $dataCity = mysql_fetch_assoc($resCity);
+    mysql_free_result($resCity);
+    $subcityval = trim($subcityval);
+    $url = createLocalityURL($subcityval, $dataCity['LABEL']);
+    var_dump($dataCity);
+    if($subcityval!='' && $id!='')
 	{		
-		$seldata = "UPDATE ".SUBURB." SET LABEL = '".trim($subcityval)."'  WHERE SUBURB_ID='".$id."'";
+		$seldata = "UPDATE ".SUBURB." SET LABEL = '".$subcityval."', URL = '$url'  WHERE SUBURB_ID='".$id."'";
 		$resdata = mysql_query($seldata);
 		$c = mysql_affected_rows();
 	}
 
-	$seldata = "SELECT LABEL FROM ".SUBURB." WHERE LABEL = '".trim($subcityval)."' AND CITY_ID='".$cityid."'";
+	$seldata = "SELECT LABEL FROM ".SUBURB." WHERE LABEL = '".$subcityval."' AND CITY_ID='".$cityid."'";
 	$resdata = mysql_query($seldata);
 	$ins = mysql_num_rows($resdata);
 
 	if($c==0 && $ins==0)
 	{	
-		$qryCity = "SELECT LABEL FROM ".CITY." WHERE CITY_ID = $cityid";
-		$resCity = mysql_query($qryCity);
-		$dataCity= mysql_fetch_assoc($resCity);
 		
-		$qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,ACTIVE) value('".$subcityval."','".$cityid."','1')";
+		$qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,ACTIVE,URL) value('".$subcityval."','".$cityid."','1', '$url')";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;

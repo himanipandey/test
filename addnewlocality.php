@@ -1,9 +1,11 @@
 <?php
-include("smartyConfig.php");
-include("appWideConfig.php");
-include("dbConfig.php");
-include("includes/configs/configs.php");
-include("builder_function.php");
+include_once("smartyConfig.php");
+include_once("appWideConfig.php");
+include_once("dbConfig.php");
+include_once("includes/configs/configs.php");
+include_once("builder_function.php");
+include_once("function/locality_functions.php");
+
 AdminAuthentication();
 
 $subcityval = $_GET['subcityval'];
@@ -49,23 +51,27 @@ if($deleteloc != '')
 
 else
 {
+    $qryCity = "SELECT LABEL FROM ".CITY." WHERE CITY_ID = $cityid";
+    $resCity = mysql_query($qryCity);
+    $dataCity = mysql_fetch_assoc($resCity);
+    mysql_free_result($resCity);
+    $localityval = trim($localityval);
+    $url = createLocalityURL($localityval, $dataCity['LABEL']);
+    
 	if($subcityval!='' && $id!='')
 	{		
-		$seldata = "UPDATE ".LOCALITY." SET LABEL = '".trim($localityval)."' WHERE LOCALITY_ID='".$id."' AND SUBURB_ID='".$subcityval."'";
+		$seldata = "UPDATE ".LOCALITY." SET LABEL = '".$localityval."', URL = '$url' WHERE LOCALITY_ID='".$id."' AND SUBURB_ID='".$subcityval."'";
 		$resdata = mysql_query($seldata);
 		$c = mysql_affected_rows();
 	}
 
-	$seldata = "SELECT LABEL FROM ".LOCALITY." WHERE LABEL = '".trim($localityval)."' AND CITY_ID='".$cityid."' AND SUBURB_ID='".$subcityval."'";
+	$seldata = "SELECT LABEL FROM ".LOCALITY." WHERE LABEL = '".$localityval."' AND CITY_ID='".$cityid."' AND SUBURB_ID='".$subcityval."'";
 	$resdata = mysql_query($seldata);
 	$ins = mysql_num_rows($resdata);
 
 	if($c==0 && $ins==0)
-	{	$qryCity = "SELECT LABEL FROM ".CITY." WHERE CITY_ID = $cityid";
-		$resCity = mysql_query($qryCity);
-		$dataCity= mysql_fetch_assoc($resCity);
-		
-		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE) value('".$localityval."','".$cityid."','".$subcityval."','1')";
+	{	
+		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE,URL) value('".$localityval."','".$cityid."','".$subcityval."','1', '$url')";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;
