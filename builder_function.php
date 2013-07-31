@@ -103,14 +103,26 @@ function BuilderDetail() {
 /* * ******builder list with id************* */
 
 function BuilderArr() {
-    $qryBuilder = "SELECT BUILDER_NAME,BUILDER_ID,ENTITY FROM " . RESI_BUILDER . " ORDER BY BUILDER_NAME ASC";
+    $qryBuilder = "SELECT BUILDER_NAME,BUILDER_ID FROM " . RESI_BUILDER . " ORDER BY BUILDER_NAME ASC";
     $resBuilder = mysql_query($qryBuilder);
     $arrBuilder = array();
     while ($data = mysql_fetch_assoc($resBuilder)) {
-        $arrBuilder[$data['BUILDER_ID']] = $data['ENTITY'];
+        $arrBuilder[$data['BUILDER_ID']] = $data['BUILDER_NAME'];
     }
     return $arrBuilder;
 }
+
+function BuilderEntityArr()
+    {
+        $qryBuilder	=	"SELECT BUILDER_ID, ENTITY FROM ".RESI_BILDER." ORDER BY LABEL DESC";
+        $resBuilder	=	mysql_query($qryBuilder);
+        $arrBuilder	=	array();
+        while($data = mysql_fetch_assoc($resBuilder))
+        {
+                $arrBuilder[$data['BUILDER_ID']] = $data['ENTITY'];
+        }
+        return $arrBuilder;
+    }
 
 /* * ******city list with id************* */
 
@@ -1259,7 +1271,7 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 /* * ******update builder if already exists************** */
 
-function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
+function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder) {
     $Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
                                 ENTITY  	   	     = '" . d_($legalEntity) . "',				
@@ -1311,10 +1323,24 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
     }
 
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function UpdateBuilder()');
-    return 1;
+    
+    if( $ExecSql ) {
+        if( $txtBuilderName != $oldbuilder ) { //code for update resi_project if builder name updates 
+            $qryProject ="UPDATE 
+                            resi_project
+                          SET
+                            BUILDER_NAME = '".$txtBuilderName."' 
+                          WHERE 
+                            BUILDER_ID = $builderid";
+            $resProject = mysql_query($qryProject);
+        }
+        return 1;
+    }
+    else 
+       return 0;  
 }
 
-/* * ****************************** */
+/*********************************/
 
 function updateProjectPhase($pID, $phase, $reviews, $stage = '', $revert = FALSE) {
     if ($phase != "complete") {
