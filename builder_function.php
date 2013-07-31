@@ -1108,29 +1108,6 @@ function getfrom_phase_quantity($phaseId, $bedId, $unit_type = '') {
     return $arr;
 }
 
-/* * *************bed supply of a project************ */
-
-function bedSupplyDetail($projectId, $bedId, $project_type, $phaseId = '') {
-    $sql = "SELECT *
-					FROM " . RESI_PROJ_SUPPLY . "
-				WHERE
-					PROJECT_ID ='" . $projectId . "'
-				AND
-					NO_OF_BEDROOMS	=	'" . $bedId . "'
-				AND
-					PROJECT_TYPE    =  '" . $project_type . "'";
-    if ($phaseId != '')
-        $sql .= " AND PHASE_ID='" . $phaseId . "' ";
-    $sql .=" ORDER BY PROJ_SUPPLY_ID DESC LIMIT 1";
-
-    $data = mysql_query($sql) or die(mysql_error());
-    $arr = array();
-    while ($dataarr = mysql_fetch_assoc($data)) {
-        $arr[] = $dataarr;
-    }
-    return $arr;
-}
-
 /* * *************tower of a project************ */
 
 function towerDetail($towerId) {

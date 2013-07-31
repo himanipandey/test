@@ -276,25 +276,6 @@ if ($_GET['towerId'] != '') {
     $smarty->assign("arrAudit", $arrAudit);
 }
 
-if (!isset($_GET['bedId']))
-    $_GET['bedId'] = '';
-if ($_GET['bedId'] != '') {
-    $bed = explode("-", $_GET['bedId']);
-
-    $supply_bed = bedSupplyDetail($projectId, $bed[1]);
-    if (count($supply_bed) == 0) {
-        $supply_bed[0]['NO_OF_BEDROOMS'] = $_GET['bedId'];
-    } else {
-        $supply_bed[0]['NO_OF_BEDROOMS'] = $bed[0] . "-" . $supply_bed[0]['NO_OF_BEDROOMS'];
-    }
-    $arrAudit = AuditTblDataByTblName('resi_proj_supply', $projectId);
-    $smarty->assign("supply_bed", $supply_bed);
-    $smarty->assign("arrAudit", $arrAudit);
-    $smarty->assign("bedAnchor", "true");
-}
-
-
-
 $newPhase = array(
     "dataCollection" => "newProject",
     "newProject" => "dcCallCenter",
