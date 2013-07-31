@@ -7,8 +7,16 @@ class BookValidations extends ActiveRecord\Model
 {
 	static $table_name = 'books';
 	static $alias_attribute = array('name_alias' => 'name', 'x' => 'secondary_author_id');
-	static $validates_presence_of = array(array('name'));
+	static $validates_presence_of = array();
 	static $validates_uniqueness_of = array();
+	static $custom_validator_error_msg = 'failed custom validation';
+
+	// fired for every validation - but only used for custom validation test
+	public function validate()
+	{
+		if ($this->name == 'test_custom_validation')
+			$this->errors->add('name', self::$custom_validator_error_msg);
+	}
 }
 
 class ValidationsTest extends DatabaseTest
@@ -17,7 +25,8 @@ class ValidationsTest extends DatabaseTest
 	{
 		parent::set_up($connection_name);
 
-		BookValidations::$validates_uniqueness_of[0] = array('name');
+		BookValidations::$validates_presence_of[0] = 'name';
+		BookValidations::$validates_uniqueness_of[0] = 'name';
 	}
 
 	public function test_is_valid_invokes_validations()
@@ -69,6 +78,23 @@ class ValidationsTest extends DatabaseTest
 		$this->assert_equals(array("Name can't be blank"),array_values($book->errors->full_messages(array('hash' => true))));
 	}
 
+	public function test_to_array()
+	{
+		$book = new BookValidations();
+		$book->is_valid();
+
+		$this->assert_equals(array("name" => array("Name can't be blank")), $book->errors->to_array());
+	}
+	
+	public function test_toString()
+	{
+		$book = new BookValidations();
+		$book->is_valid();
+		$book->errors->add('secondary_author_id', "is invalid");
+		
+		$this->assert_equals("Name can't be blank\nSecondary author id is invalid", (string) $book->errors);
+	}
+
 	public function test_validates_uniqueness_of()
 	{
 		BookValidations::create(array('name' => 'bob'));
@@ -81,7 +107,7 @@ class ValidationsTest extends DatabaseTest
 	public function test_validates_uniqueness_of_excludes_self()
 	{
 		$book = BookValidations::first();
-		$this->assert_equals(true,$book->is_valid()); 
+		$this->assert_equals(true,$book->is_valid());
 	}
 
 	public function test_validates_uniqueness_of_with_multiple_fields()
@@ -120,6 +146,21 @@ class ValidationsTest extends DatabaseTest
 		$book = new BookValidations();
 		$book->is_valid();
 		$this->assert_true(strpos(serialize($book->errors),'model";N;') !== false);
+	}
+
+	public function test_validations_takes_strings()
+	{
+		BookValidations::$validates_presence_of = array('numeric_test', array('special'), 'name');
+		$book = new BookValidations(array('numeric_test' => 1, 'special' => 1));
+		$this->assert_false($book->is_valid());
+	}
+
+	public function test_gh131_custom_validation()
+	{
+		$book = new BookValidations(array('name' => 'test_custom_validation'));
+		$book->save();
+		$this->assert_true($book->errors->is_invalid('name'));
+		$this->assert_equals(BookValidations::$custom_validator_error_msg, $book->errors->on('name'));
 	}
 };
 ?>

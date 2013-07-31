@@ -170,7 +170,18 @@
 											 </select>
 										  </td>
 										  <td width="50%" align="left"></td>
-									   </tr> 
+									      </tr>
+                                          <tr>
+                                              <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
+                                              <td width="30%" align="left">
+                                                  <select name="options[]" id="options" multiple="multiple" style="width: 150px; height: 110px;">
+                                                      {foreach $options as $option}
+                                                          <option selected="selected" value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure}</option>
+                                                      {/foreach}
+                                                  </select>
+                                              </td>
+                                              <td width="50%" align="left"></td>
+                                          </tr>
 								  {/if}
 
 								  {if $ProjectDetail[0]['PROJECT_TYPE_ID']==2 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5}

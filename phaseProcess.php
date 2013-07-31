@@ -2,6 +2,9 @@
 <?php
 
 $projectId = $_REQUEST['projectId'];
+$project = ResiProject::find($projectId);
+$options = $project->options;
+$smarty->assign("options", $options);
 $projectDetail = ProjectDetail($projectId);
 $smarty->assign("ProjectDetail", $projectDetail);
 if (isset($_GET['error'])) {
@@ -54,26 +57,26 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
         header("Location:phase.php?projectId=" . $projectId . "&error=true");
     } else {
         ############## Transaction ##############
-        mysql_query("SET AUTOCOMMIT=0");
-        mysql_query("START TRANSACTION");
+        ResiProjectPhase::transaction(function(){
+            global $projectId, $phasename, $launch_date, $completion_date, $remark, $phaseLaunched, $towers;
 
-        $no_of_flats = $available_no_flats = 0;
+//          Creating a new phase
+            $phase = new ResiProjectPhase();
+            $phase->project_id = $projectId;
+            $phase->phase_name = $phasename;
+            $phase->launch_date = $launch_date;
+            $phase->completion_date = $completion_date;
+            $phase->remarks = $remark;
+            $phase->launched = $phaseLaunched;
+            $phase->save();
 
-
-        $phaseId = insert_phase($projectId, $phasename, $launch_date, $completion_date, $remark, $phaseLaunched);
-
-        if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
-            $return = update_towers_for_project_and_phase($projectId, $phaseId, $towers);
-        }
-
-        if ($return || $phaseId) {
-            mysql_query("COMMIT");
-        } else {
-            echo 'Transaction failed..';
-            mysql_query("ROLLBACK");
-            die;
-        }
-        mysql_query("SET AUTOCOMMIT=1");
+            if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
+                ResiProjectTowerDetails::update_towers_for_project_and_phase($projectId, $phase->phase_id, $towers);
+            }
+            if(isset($_POST['options'])){
+                $phase->reset_options($_POST['options']);
+            }
+        });
         #########################################
         // Phase Quantity
         if (sizeof($flats_config) > 0) {
