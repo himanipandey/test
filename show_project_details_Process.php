@@ -2,7 +2,7 @@
 $CityDataArr	=	CityArr();
 $ProjectTypeArr	=	ProjectTypeArr();
 $BankListArr	=	BankList();
-$enum_value		=	enum_value();
+$enum_value	=	enum_value();
 $AmenitiesArr	=	AmenitiesList();
 $BankListArr	=	BankList();
 
@@ -56,10 +56,16 @@ $ProjectOptionDetail	=	ProjectOptionDetail($projectId);
 $PreviousMonthsData	=	getPrevMonthProjectData($projectId);
 $PreviousMonthsAvailability = getFlatAvailability($projectId);
 
-//echo key($PreviousMonthsData['current']);
 $smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
 $smarty->assign("PreviousMonthsData",$PreviousMonthsData);
 $smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
+
+$arrOnlyPreviousMonthData = array();
+foreach($PreviousMonthsData as $k=>$v) { 
+    if( $k != 'current' && $k != 'latest')
+        $arrOnlyPreviousMonthData[] = $k;
+}
+$smarty->assign("arrOnlyPreviousMonthData",$arrOnlyPreviousMonthData);
 
 $ProjectAmenities	=	ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
 $arrSpecification	=	specification($projectId);

@@ -1797,10 +1797,9 @@ function getDateNow(){
 						  	<b>Project Price:</b> <button class="clickbutton" onclick="$(this).trigger('event12');">Edit</button>&nbsp;&nbsp;
 							<b>Project Configuration:</b> <button class="clickbutton" onclick="$(this).trigger('event7');">Edit</button>
 							&nbsp;&nbsp;<b>Project Price Effective From:</b>
-							
 							{$keyFirst = key($PreviousMonthsData['current'])}
-							{if $PreviousMonthsData['current'][$keyFirst]['effective_date'] != ''}
-								{$PreviousMonthsData['current'][$keyFirst]['effective_date']}
+							{if $PreviousMonthsData['latest'][$keyFirst]['effective_date'] != ''}
+								{$PreviousMonthsData['latest'][$keyFirst]['effective_date']}
 							{else}
 								0000-00-00 00:00:00 
 							{/if}
@@ -1828,9 +1827,8 @@ function getDateNow(){
 								 <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
 								 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
-								 {$pmd_keys=array_keys($PreviousMonthsData)}
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {$arrOnlyPreviousMonthData[0]}</td>
+								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {$arrOnlyPreviousMonthData[1]}</td>
 								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
 								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
 								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
@@ -1862,28 +1860,28 @@ function getDateNow(){
 								{/if}
 								</td>
 							  <td>
-							  	{if $PreviousMonthsData['current'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] !== ''}
-							  		{$PreviousMonthsData['current'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
+							  	{if $PreviousMonthsData['lalest'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] !== ''}
+							  		{$PreviousMonthsData['latest'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
 							  	{else}
 							  		--
 							  	{/if}
 								<!-- {$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']} -->
 							  </td>
 							 	<td>
-							 		{$monkey=print_r(date('Y-m', strtotime("-1 month")),true)}
-							 		{if substr($PreviousMonthsData[$monkey][$ProjectOptionDetail[$key]['OPTIONS_ID']]['effective_date'],0,7)==$monkey}
-							 			{$PreviousMonthsData[$monkey][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
-							 		{else}
-							 			{"Not Applicable"}
-							 		{/if}
+                                                                    {$monthKeyPrev=$arrOnlyPreviousMonthData[0]}
+                                                                    {if $PreviousMonthsData[$monthKeyPrev][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] != ''}
+                                                                         {$PreviousMonthsData[$monthKeyPrev][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
+                                                                     {else}
+                                                                          Not Applicable 
+                                                                     {/if}
 							 	</td>							 
 							 	<td>
-							 		{$monkey=print_r(date('Y-m', strtotime("-2 month")),true)}
-							 		{if substr($PreviousMonthsData[$monkey][$ProjectOptionDetail[$key]['OPTIONS_ID']]['effective_date'],0,7)==$monkey}
-							 			{$PreviousMonthsData[$monkey][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
-							 		{else}
-							 			{"Not Applicable"}
-							 		{/if}
+                                                                    {$monthKeyPrevLast=$arrOnlyPreviousMonthData[1]}
+                                                                    {if $PreviousMonthsData[$monthPrevLast][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] != ''}
+                                                                        {$PreviousMonthsData[$monthPrevLast][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
+                                                                    {else}
+                                                                         Not Applicable 
+                                                                    {/if}
 							 	</td>
 							  <!-- <td>
 								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_DP']}
