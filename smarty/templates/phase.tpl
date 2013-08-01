@@ -130,35 +130,21 @@
                                         <font color="red"><span id = "err_completion_date" style = "display:none;">Enter Actual Launch Date</span></font>
                                     </td>
                                 </tr>
-								{/if}     
+								{/if}
 
-                                                              
+                                 <tr>
+                                     <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
+                                     <td width="30%" align="left">
+                                         <select name="options[]" id="options" multiple="multiple" style="width: 150px; height: 110px;">
+                                             <option value="-1">Select Option</option>
+                                             {foreach $options as $option}
+                                                 <option selected="selected" value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure}</option>
+                                             {/foreach}
+                                         </select>
+                                     </td>
+                                     <td width="50%" align="left"></td>
+                                 </tr>
 								  {if $ProjectDetail[0]['PROJECT_TYPE_ID']==1 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
-										  <tr>
-										  <td width="20%" align="right" valign="top"><b><b><b>Supply of Apartment :</b> </td>
-										  <td width="30%" align="left">
-											 <ul id="flats_config">
-											  {foreach $BedroomDetails['Apartment'] as $num}
-												<li class="flat_bed">
-												  <font color="red"><span class = "err_flat_bed" style = "display:none;">Integer expected</span>
-													<br/></font>
-												  <label for="flat_bed_{$num}">{$num} Bedroom(s)</label>
-												  <input id="flat_bed_{$num}" name="flat_bed_{$num}" style="width: 50px;" />
-												  <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
-													 {foreach $OptionsDetails as $option}
-														 {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Apartment'}
-														 <option value="{$option.UNIT_NAME}">{$option.UNIT_NAME}</option>
-														 {/if}
-													 {/foreach}
-												  </select>
-												</li>
-											  {/foreach}
-											 </ul>
-											 </td>
-										  <td width="50%" align="left">
-										  </td>
-										 </tr>
-
 										 <tr>
 										  <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
 										  <td width="30%" align="left">
@@ -171,43 +157,6 @@
 										  </td>
 										  <td width="50%" align="left"></td>
 									      </tr>
-                                          <tr>
-                                              <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
-                                              <td width="30%" align="left">
-                                                  <select name="options[]" id="options" multiple="multiple" style="width: 150px; height: 110px;">
-                                                      {foreach $options as $option}
-                                                          <option selected="selected" value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure}</option>
-                                                      {/foreach}
-                                                  </select>
-                                              </td>
-                                              <td width="50%" align="left"></td>
-                                          </tr>
-								  {/if}
-
-								  {if $ProjectDetail[0]['PROJECT_TYPE_ID']==2 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5}
-										<tr>
-										  <td width="20%" align="right" valign="top"><b><b><b>Supply of Villa :</b> </td>
-										  <td width="30%" align="left">
-											 <ul id="villa_config">
-											  {foreach $BedroomDetails['Villa'] as $num}
-												<li class="villa_bed">
-												  <font color="red"><span class = "err_villa_bed" style = "display:none;">Integer expected</span>
-													<br/></font>
-												  <label for="villa_bed_{$num}">{$num} Bedroom(s)</label>
-												  <input id="villa_bed_{$num}" name="villa_bed_{$num}" style="width: 50px;" />
-												  <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
-													 {foreach $OptionsDetails as $option}
-														 {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Villa'}
-														 <option value="{$option.UNIT_NAME}">{$option.UNIT_NAME}</option>
-														 {/if}
-													 {/foreach}
-												  </select>
-												</li>
-											  {/foreach}
-											 </ul>
-										  </td>
-										  <td width="50%" align="left"></td>
-									   </tr>
 								  {/if}
 
 								  {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}

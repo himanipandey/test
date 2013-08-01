@@ -39,7 +39,7 @@ class ResiProjectPhase extends ActiveRecord\Model
         $audit->action = $action;
         $audit->project_id = $this->project_id;
         // Todo: remove this hardcoded id
-        $audit->done_by = 53;
+        $audit->done_by = $_SESSION['adminId'];
         $audit->save();
     }
 

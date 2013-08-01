@@ -74,22 +74,12 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 ResiProjectTowerDetails::update_towers_for_project_and_phase($projectId, $phase->phase_id, $towers);
             }
             if(isset($_POST['options'])){
-                $phase->reset_options($_POST['options']);
+                $arr = $_POST['options'];
+                $arr = array_diff($arr, array(-1));
+                $phase->reset_options($arr);
             }
         });
         #########################################
-        // Phase Quantity
-        if (sizeof($flats_config) > 0) {
-            foreach ($flats_config as $key => $value) {
-                set_phase_quantity($phaseId, 'Apartment', $key, $value, $projectId);
-            }
-        }
-        if (sizeof($villas_config) > 0) {
-            foreach ($villas_config as $key => $value) {
-                set_phase_quantity($phaseId, 'Villa', $key, $value, $projectId);
-            }
-        }
-
         if ($_POST['plotvilla'] != '') {
             $supply = $_POST['supply'];
             set_phase_quantity($phaseId, $_POST['plotvilla'], '0', $supply, $projectId);

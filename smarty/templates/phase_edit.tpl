@@ -198,7 +198,7 @@
                                      <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
                                      <td width="30%" align="left">
                                          <select name="options[]" id="options" multiple="multiple" style="width: 150px; height: 110px;" disabled>
-                                             <option value="-1" {if count($phase_options) <= 0}selected="selected"{/if}>No Phase</option>
+                                             <option value="-1" {if count($phase_options) <= 0}selected="selected"{/if}>Select Option</option>
                                              {foreach $options as $option}
                                                  <option {if in_array($option->options_id, $option_ids) && count($phase_options) > 0}selected="selected"{/if} value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure}</option>
                                              {/foreach}

@@ -4,7 +4,6 @@
 class ResiProjectTowerDetails extends ActiveRecord\Model
 {
     static $table_name = 'resi_project_tower_details';
-
     function update_towers_for_project_and_phase($projectId, $phaseId, $tower_array){
 
         $tower_ids = join(',',$tower_array);
