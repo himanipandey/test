@@ -8,6 +8,7 @@
     $(document).ready(function() {
         var pid = '{$phaseId}';
         $('select#phaseSelect').val(pid);
+        toggle_supply_and_option();
     });
 
     function updateURLParameter(url, param, paramVal){
@@ -53,27 +54,33 @@
 
         $('li.flat_bed').each(function() {
           var intRegex = /^\d+$/;
-          var v = $(this).find('input').val();
-          var err = $(this).find('span.err_flat_bed');
-          if(!intRegex.test(v)) {
-            $(err).show();
-            villa_bed = false;
-          }
-          else {
-            $(err).hide();
+          var input = $(this).find('input');
+          if(!$(input).is(":disabled")){
+              var v = input.val();
+              var err = $(this).find('span.err_flat_bed');
+              if(!intRegex.test(v)) {
+                  $(err).show();
+                  villa_bed = false;
+              }
+              else {
+                  $(err).hide();
+              }
           }
         });
 
         $('li.villa_bed').each(function() {
           var intRegex = /^\d+$/;
-          var v = $(this).find('input').val();
-          var err = $(this).find('span.err_villa_bed');
-          if(!intRegex.test(v)) {
-            $(err).show();
-            flat_bed = false;
-          }
-          else {
-            $(err).hide();
+          var input = $(this).find('input');
+          if($(input).is(":disabled")){
+              var v = input.val();
+              var err = $(this).find('span.err_villa_bed');
+              if(!intRegex.test(v)) {
+                  $(err).show();
+                  flat_bed = false;
+              }
+              else {
+                  $(err).hide();
+              }
           }
         });
 
@@ -83,6 +90,24 @@
     function deletePhase()
     {
     	return confirm("Are you sure! you want to delete phase.");
+    }
+
+    function toggle_supply_and_option(){
+        $(".reset_option_and_supply").click(function(){
+           if($(this).is(".supply_button")){
+               $(".options_select").show();
+               $(".options_select  select").removeAttr("disabled");
+               $(".supply_select  input").attr("disabled", true);
+               $(".supply_select").hide();
+           }
+            else{
+               $(".supply_select").show();
+               $(".supply_select  input").removeAttr("disabled");
+               $(".options_select  select").attr("disabled", true);
+               $(".options_select").hide();
+           }
+            return false;
+        });
     }
 
 </script>
@@ -169,12 +194,27 @@
                                     </td>
                                 </tr>
 
+                                 <tr class="options_select" style="display: none">
+                                     <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
+                                     <td width="30%" align="left">
+                                         <select name="options[]" id="options" multiple="multiple" style="width: 150px; height: 110px;" disabled>
+                                             <option value="-1" {if count($phase_options) <= 0}selected="selected"{/if}>No Phase</option>
+                                             {foreach $options as $option}
+                                                 <option {if in_array($option->options_id, $option_ids) && count($phase_options) > 0}selected="selected"{/if} value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure}</option>
+                                             {/foreach}
+                                         </select>
+                                     </td>
+                                     <td width="50%" align="left">
+                                         <button class="reset_option_and_supply option_button">Change to supply</button>
+                                     </td>
+                                 </tr>
+
                                 {if $ProjectDetail[0]['PROJECT_TYPE_ID']==1 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
-									<tr>
+									<tr class="supply_select">
 									  <td width="20%" align="right" valign="top"><b><b><b>Supply of Flats :</b> </td>
 									  <td width="30%" align="left">
 										 <ul id="flats_config">
-										  {foreach $BedroomDetails['Apartment'] as $num}
+										  {foreach $bedrooms_hash['Apartment'] as $num}
 											<li class="flat_bed">
 											  <font color="red"><span class = "err_flat_bed" style = "display:none;">Integer expected</span>
 												<br/></font>
@@ -182,7 +222,7 @@
 											  <input id="flat_bed_{$num}" name="flat_bed_{$num}" style="width: 50px;" value="{$FlatsQuantity[$num]}" />
 											  <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
 												 {foreach $OptionsDetails as $option}
-													 {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Apartment'}
+													 {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Apartment' and in_array($option.OPTIONS_ID, $option_ids)}
 													 <option value="{$option.UNIT_NAME}">{$option.UNIT_NAME}</option>
 													 {/if}
 												 {/foreach}
@@ -191,7 +231,9 @@
 										  {/foreach}
 										 </ul>
 									  </td>
-									  <td width="50%" align="left"></td>
+									  <td width="50%" align="left">
+                                          <button class="reset_option_and_supply supply_button">Change to options</button>
+									  </td>
 								   </tr>
 
 								   <tr>
@@ -209,11 +251,11 @@
                                {/if}
 
                                 {if $ProjectDetail[0]['PROJECT_TYPE_ID']==2 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5}
-									<tr>
+									<tr class="supply_select">
 									  <td width="20%" align="right" valign="top"><b><b><b>Supply of Villas :</b> </td>
 									  <td width="30%" align="left">
 										 <ul id="villa_config">
-										  {foreach $BedroomDetails['Villa'] as $num}
+										  {foreach $bedrooms_hash['Villa'] as $num}
 											<li class="villa_bed">
 											  <font color="red"><span class = "err_villa_bed" style = "display:none;">Integer expected</span>
 												<br/></font>
@@ -221,7 +263,7 @@
 											  <input id="villa_bed_{$num}" name="villa_bed_{$num}" style="width: 50px;" value="{$VillasQuantity[$num]}" />
 											  <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
 												 {foreach $OptionsDetails as $option}
-													 {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Villa'}
+													 {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Villa' and in_array($option.OPTIONS_ID, $option_ids)}
 													 <option value="{$option.UNIT_NAME}">{$option.UNIT_NAME}</option>
 													 {/if}
 												 {/foreach}
@@ -230,7 +272,9 @@
 										  {/foreach}
 										 </ul>
 									  </td>
-									  <td width="50%" align="left"></td>
+									  <td width="50%" align="left">
+                                          <button class="reset_option_and_supply supply_button">Change to options</button>
+									  </td>
 								   </tr>
                                {/if}
 							   {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}

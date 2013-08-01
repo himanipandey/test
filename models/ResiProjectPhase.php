@@ -4,7 +4,8 @@
 class ResiProjectPhase extends ActiveRecord\Model
 {
     static $table_name = 'resi_project_phase';
-    static $after_create = array('insert_audit');
+    static $after_create = array('insert_audit_create');
+    static $after_update = array('insert_audit_save');
 
     public function options(){
         $join = "LEFT JOIN project_options_phases p on (resi_project_options.OPTIONS_ID = p.option_id)";
@@ -30,14 +31,23 @@ class ResiProjectPhase extends ActiveRecord\Model
         }
     }
 
-    public function insert_audit(){
+    public function insert_audit($action){
         $audit = new Audit();
         $audit->row_id = $this->phase_id;
         $audit->action_date = date("Y-m-d H:i:s");
-        $audit->table_name = "";
-        $audit->action = "create";
+        $audit->table_name = self::$table_name;
+        $audit->action = $action;
         $audit->project_id = $this->project_id;
+        // Todo: remove this hardcoded id
         $audit->done_by = 53;
         $audit->save();
+    }
+
+    public function insert_audit_create(){
+        self::insert_audit("create");
+    }
+
+    public function insert_audit_save(){
+        self::insert_audit("update");
     }
 }
