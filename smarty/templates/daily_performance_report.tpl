@@ -205,7 +205,7 @@
                                             </tr>
                                             {else}
                                             <tr height ="30px">
-                                                <td nowrap align = "center" colspan="7">
+                                                <td nowrap align = "center" colspan="17">
                                                     <font color = "red"> No record found!</font>
                                                 </td>
                                             </tr>
@@ -251,7 +251,7 @@
                                                      </td>
                                                      <td nowrap align = "center">
                                                          {$value['newProject']['newProject']}
-                                                           {$np_newProject = $np_newProject+$value['newProject']['newProject']}
+                                                         {$np_newProject = $np_newProject+$value['newProject']['newProject']}
                                                      </td>
                                                      <td nowrap align = "center">
                                                          {$value['newProject']['dcCallCenter']}
@@ -307,19 +307,17 @@
                                                      <td nowrap align = "right" colspan="3">
                                                          <b>Sum of {ucwords(strtolower($department))}</b>
                                                      </td> 
-                                                     
-
                                                      <td nowrap align = "center">
                                                          {$np_dataCollection}
+                                                     </td>
+                                                     <td nowrap align = "center">
+                                                           {$np_newProject}
                                                      </td>
                                                      <td nowrap align = "center">
                                                          {$np_dcCallCenter}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                       {$np_audit}
-                                                     </td>
-                                                     <td nowrap align = "center">
-                                                           {$np_newProject}
+                                                     {$np_audit}
                                                      </td>
                                                      <td nowrap align = "center">
                                                         {$np_audit2}
