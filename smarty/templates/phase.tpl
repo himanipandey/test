@@ -135,10 +135,10 @@
                                  <tr>
                                      <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
                                      <td width="30%" align="left">
-                                         <select name="options[]" id="options" multiple="multiple" style="width: 150px; height: 110px;">
+                                         <select name="options[]" id="options" multiple="multiple" style="width: 236px; height: 210px;">
                                              <option value="-1">Select Option</option>
                                              {foreach $options as $option}
-                                                 <option selected="selected" value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure}</option>
+                                                 <option selected="selected" value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure} - {$option->unit_type}</option>
                                              {/foreach}
                                          </select>
                                      </td>
