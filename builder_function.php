@@ -114,7 +114,7 @@ function BuilderArr() {
 
 function BuilderEntityArr()
     {
-        $qryBuilder	=	"SELECT BUILDER_ID, ENTITY FROM ".RESI_BILDER." ORDER BY LABEL DESC";
+        $qryBuilder	=	"SELECT BUILDER_ID, ENTITY FROM ".RESI_BUILDER." ORDER BY ENTITY ASC";
         $resBuilder	=	mysql_query($qryBuilder);
         $arrBuilder	=	array();
         while($data = mysql_fetch_assoc($resBuilder))

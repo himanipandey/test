@@ -64,6 +64,14 @@ foreach($PreviousMonthsData as $k=>$v) {
 }
 $smarty->assign("arrOnlyPreviousMonthData",$arrOnlyPreviousMonthData);
 
+$arrAvaiPreviousMonthData = array();
+foreach($PreviousMonthsAvailability as $k=>$v) { 
+    if( $k != 'current' && $k != 'latest')
+        $arrAvaiPreviousMonthData[] = $k;
+}
+$smarty->assign("arrAvaiPreviousMonthData",$arrAvaiPreviousMonthData);
+
+
 $ProjectAmenities	=	ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
 $arrSpecification	=	specification($projectId);
 

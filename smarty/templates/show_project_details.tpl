@@ -1877,8 +1877,8 @@ function getDateNow(){
 							 	</td>							 
 							 	<td>
                                                                     {$monthKeyPrevLast=$arrOnlyPreviousMonthData[1]}
-                                                                    {if $PreviousMonthsData[$monthPrevLast][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] != ''}
-                                                                        {$PreviousMonthsData[$monthPrevLast][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
+                                                                    {if $PreviousMonthsData[$monthKeyPrevLast][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] != ''}
+                                                                        {$PreviousMonthsData[$monthKeyPrevLast][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
                                                                     {else}
                                                                          Not Applicable 
                                                                     {/if}
@@ -2572,9 +2572,8 @@ function getDateNow(){
 											<td class="whiteTxt" align = "center" nowrap><b>No of Flats</b></td>
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats</b></td>
-											{$pma_keys=array_keys($PreviousMonthsAvailability)}
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {date('Y-m', strtotime("-1 month"))}</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {date('Y-m', strtotime("-2 month"))}</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$arrAvaiPreviousMonthData[0]}</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$arrAvaiPreviousMonthData[1]}</b></td>
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Lastest Month</b></td> -->
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
@@ -2672,7 +2671,7 @@ function getDateNow(){
 														{/if}										
 													</td>
 													<td valign ="top" align="center">
-														{$monkey=(string)date('Y-m', strtotime("-1 month"))}
+														{$monkey=$arrAvaiPreviousMonthData[0]}
 														{foreach from=$PreviousMonthsAvailability[$monkey] key=k2 item=i2}
 															{foreach from=$i2 key=k3 item=i3}
 																{if $lastItem['PHASE_ID']==$k2}
@@ -2690,7 +2689,7 @@ function getDateNow(){
 														{/foreach}														
 													</td>	
 													<td valign ="top" align="center">
-														{$monkey=(string)date('Y-m', strtotime("-2 month"))}
+														{$monkey=$arrAvaiPreviousMonthData[1]}
 														{foreach from=$PreviousMonthsAvailability[$monkey] key=k2 item=i2}
 															{foreach from=$i2 key=k3 item=i3}
 															{if $lastItem['PHASE_ID']==$k2}
