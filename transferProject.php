@@ -57,7 +57,7 @@
 	$NumRows =  $city = $builder = $project_name = '';
 	
 	$citylist		=	CityArr();
-	$builderList	=	BuilderArr();
+	$builderList	=	BuilderEntityArr();
 	$enum_value		=	enum_value();
 	$UpdationArr 	= 	updationCycleTable();
 	

@@ -1,6 +1,6 @@
 <?php
 	$citylist	=	CityArr();
-	$builderList	=	BuilderArr();
+	$builderList	=	BuilderEntityArr();
 	if(!isset($_GET['projectId']))
             $_GET['projectId'] = '';
 

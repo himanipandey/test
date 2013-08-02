@@ -601,7 +601,7 @@ function getDateNow(){
 							  <td  nowrap="nowrap" width="1%" align="left"><b>Builder Name:</b></td>
 
 							  <td>
-							  		{$projectDetails[0].BUILDER_NAME}
+                                                              {$builderDetail['ENTITY']}
 							</td>
 						</tr>
 
