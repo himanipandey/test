@@ -59,8 +59,16 @@ $smarty->assign("ProjectOptionDetail", $ProjectOptionDetail);
 $smarty->assign("PreviousMonthsData", $PreviousMonthsData);
 $smarty->assign("PreviousMonthsAvailability", $PreviousMonthsAvailability);
 
-$ProjectAmenities = ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
-$arrSpecification = specification($projectId);
+$arrAvaiPreviousMonthData = array();
+foreach($PreviousMonthsAvailability as $k=>$v) { 
+    if( $k != 'current' && $k != 'latest')
+        $arrAvaiPreviousMonthData[] = $k;
+}
+$smarty->assign("arrAvaiPreviousMonthData",$arrAvaiPreviousMonthData);
+
+
+$ProjectAmenities	=	ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
+$arrSpecification	=	specification($projectId);
 
 $smarty->assign("arrNotninty", $arrNotninty);
 $smarty->assign("arrDetail", $arrDetail);
