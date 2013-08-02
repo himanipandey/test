@@ -155,9 +155,9 @@
 							 0000-00-00 00:00:00
 						{/if}
 						&nbsp;<b>Effective From : </b>&nbsp;
-						{$keyFirst = key($PreviousMonthsData['current'])}
-						{if $PreviousMonthsData['current'][$keyFirst]['effective_date'] != ''}
-							{$PreviousMonthsData['current'][$keyFirst]['effective_date']}
+						{$keyFirst = key($PreviousMonthsData['latest'])}
+						{if $PreviousMonthsData['latest'][$keyFirst]['effective_date'] != ''}
+							{$PreviousMonthsData['latest'][$keyFirst]['effective_date']}
 						{else}
 							0000-00-00 00:00:00 
 						{/if}
@@ -221,7 +221,7 @@
 				 
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}</td>
 				  <td>
-					<input type = "text" name = "price_per_unit_area[]" size = "10" value = " {$PreviousMonthsData['current'][$ProjectOptionDetail[$smarty.section.foo.index]['OPTIONS_ID']]['price']}" {if $smarty.section.foo.index != 0}class ="same_diff" {/if} id = "same_diff_{$smarty.section.foo.index}" onkeyup = "valueOnkeyUp('same_diff');" onkeypress='return isNumberKey(event)'>
+					<input type = "text" name = "price_per_unit_area[]" size = "10" value = " {$PreviousMonthsData['latest'][$ProjectOptionDetail[$smarty.section.foo.index]['OPTIONS_ID']]['price']}" {if $smarty.section.foo.index != 0}class ="same_diff" {/if} id = "same_diff_{$smarty.section.foo.index}" onkeyup = "valueOnkeyUp('same_diff');" onkeypress='return isNumberKey(event)'>
 				  </td>
 				  <td>
 					<input type = "text" name = "price_per_unit_area_dp[]" size = "10" value = "{$ProjectOptionDetail[$smarty.section.foo.index]['PRICE_PER_UNIT_AREA_DP']}" {if $smarty.section.foo.index != 0}class ="same_diff1" {/if}  id = "same_diff_dp_{$smarty.section.foo.index}" onkeyup = "valueOnkeyUp('same_diff1');" onkeypress='return isNumberKey(event)'>
