@@ -162,7 +162,7 @@
                         $and  = ' AND ';
                         //code for builder refresh if city selected
                         $ctName = ViewCityDetails($_REQUEST['city']);
-                        $sqlBuilder = "SELECT A.ENTITY, A.BUILDER_ID FROM ".RESI_BUILDER." AS A WHERE A.CITY = '" .$ctName['LABEL']."' ENTITY ASC";	
+                        $sqlBuilder = "SELECT A.ENTITY, A.BUILDER_ID FROM ".RESI_BUILDER." AS A WHERE A.CITY = '" .$ctName['LABEL']."'ORDER BY ENTITY ASC";	
                         $arrBuilder	=	array();
                         $resBuilder	=	mysql_query($sqlBuilder);
                         while($data = mysql_fetch_assoc($resBuilder))
