@@ -1,6 +1,6 @@
 <?php
 include 'helpers/config.php';
-require_once dirname(__FILE__) . '/../lib/adapters/SqliteAdapter.php';
+require_once __DIR__ . '/../lib/adapters/SqliteAdapter.php';
 
 class SqliteAdapterTest extends AdapterTest
 {
@@ -26,8 +26,17 @@ class SqliteAdapterTest extends AdapterTest
 		}
 		catch (ActiveRecord\DatabaseException $e)
 		{
-			$this->assertFalse(file_exists(dirname(__FILE__) . "/" . self::InvalidDb));
+			$this->assertFalse(file_exists(__DIR__ . "/" . self::InvalidDb));
 		}
+	}
+
+	public function test_limit_with_null_offset_does_not_contain_offset()
+	{
+		$ret = array();
+		$sql = 'SELECT * FROM authors ORDER BY name ASC';
+		$this->conn->query_and_fetch($this->conn->limit($sql,null,1),function($row) use (&$ret) { $ret[] = $row; });
+
+		$this->assert_true(strpos($this->conn->last_query, 'LIMIT 1') !== false);
 	}
 
 	// not supported

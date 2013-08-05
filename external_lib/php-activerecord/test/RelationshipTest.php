@@ -191,6 +191,13 @@ class RelationshipTest extends DatabaseTest
 		$this->assert_equals($values, array_intersect_key($values, $venue->attributes()));
 	}
 
+	public function test_has_many_build_association()
+	{
+		$author = Author::first();
+		$this->assert_equals($author->id, $author->build_books()->author_id);
+		$this->assert_equals($author->id, $author->build_book()->author_id);
+	}
+
 	public function test_belongs_to_create_association()
 	{
 		$event = $this->get_relationship();
@@ -494,7 +501,16 @@ class RelationshipTest extends DatabaseTest
 		AuthorWithNonModelRelationship::first()->books;
 	}
 
-	public function test_eager_loading_has_many()
+	public function test_gh93_and_gh100_eager_loading_respects_association_options()
+	{
+		Venue::$has_many = array(array('events', 'class_name' => 'Event', 'order' => 'id asc', 'conditions' => array('length(title) = ?', 14)));
+		$venues = Venue::find(array(2, 6), array('include' => 'events'));
+
+		$this->assert_sql_has("WHERE length(title) = ? AND venue_id IN(?,?) ORDER BY id asc",ActiveRecord\Table::load('Event')->last_sql);
+		$this->assert_equals(1, count($venues[0]->events));
+    }
+
+	public function test_eager_loading_has_many_x()
 	{
 		$venues = Venue::find(array(2, 6), array('include' => 'events'));
 		$this->assert_sql_has("WHERE venue_id IN(?,?)",ActiveRecord\Table::load('Event')->last_sql);
