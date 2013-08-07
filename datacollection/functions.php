@@ -163,7 +163,7 @@ function assignProjectsToField($projectIds){
 
 function getExecCallCount($startTime = '0', $endTime = NULL){
     if(is_null($endTime)) $endTime = strftime('%Y-%m-%d %T', time());
-    $sql = "select pa.ADMINID, pa.USERNAME, cd.CallStatus, sum(UNIX_TIMESTAMP(EndTime)-UNIX_TIMESTAMP(StartTime)) TOTAL_TIME, count(*) TOTAL_CALLS from proptiger_admin pa inner join CallDetails cd on pa.ADMINID = cd.AgentID where cd.CreationTime between '" . $startTime . "' and '" . $endTime . "' group by pa.ADMINID, cd.CallStatus order by ADMINID;";
+    $sql = "select pa.ADMINID, pa.USERNAME, cd.CallStatus, cd.DialStatus, SUM(TIME_TO_SEC(CallDuration)) TOTAL_TIME, count(*) TOTAL_CALLS from proptiger_admin pa inner join CallDetails cd on pa.ADMINID = cd.AgentID where cd.CreationTime between '" . $startTime . "' and '" . $endTime . "' group by pa.ADMINID, cd.CallStatus, cd.DialStatus order by ADMINID;";
     return dbQuery($sql);
 }
 
