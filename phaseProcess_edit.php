@@ -203,7 +203,9 @@ if (isset($_POST['btnSave'])) {
             array_push($phases, $p);
         }
         $smarty->assign("phases", $phases);
-        header("Location:phase_edit.php?projectId=" . $projectId);
+        $loc = "Location:phase_edit.php?projectId=" . $projectId;
+        if($preview == 'true') $loc = $loc."&preview=true";
+        header($loc);
     }
 } else if ($_POST['btnExit'] == "Exit") {
     if ($preview == 'true')
