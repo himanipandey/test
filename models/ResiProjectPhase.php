@@ -50,4 +50,16 @@ class ResiProjectPhase extends ActiveRecord\Model
     public function insert_audit_save(){
         self::insert_audit("update");
     }
+
+    function get_phase_option_hash_by_project($projectId){
+        $phases = self::all(array('conditions' => array('PROJECT_ID = ?', $projectId)));
+        $options = ResiProjectOptions::all(array('conditions' => array('PROJECT_ID = ?', $projectId)));
+        $phase_option_hash = array();
+        foreach($phases as $phase){
+            $phase_option_hash[$phase->phase_id] = $phase->options();
+        }
+        $phase_option_hash[0] = $options;
+        return array($phases, $phase_option_hash);
+    }
+
 }
