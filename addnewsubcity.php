@@ -52,7 +52,7 @@ else
     mysql_free_result($resCity);
     $subcityval = trim($subcityval);
     $url = createLocalityURL($subcityval, $dataCity['LABEL']);
-    var_dump($dataCity);
+    //var_dump($dataCity);
     if($subcityval!='' && $id!='')
 	{		
 		$seldata = "UPDATE ".SUBURB." SET LABEL = '".$subcityval."', URL = '$url'  WHERE SUBURB_ID='".$id."'";
@@ -67,7 +67,7 @@ else
 	if($c==0 && $ins==0)
 	{	
 		
-		$qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,ACTIVE,URL) value('".$subcityval."','".$cityid."','1', '$url')";
+		$qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,ACTIVE,URL,PRIORITY) value('".$subcityval."','".$cityid."','1', '$url',100)";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;

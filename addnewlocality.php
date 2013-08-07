@@ -71,7 +71,7 @@ else
 
 	if($c==0 && $ins==0)
 	{	
-		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE,URL) value('".$localityval."','".$cityid."','".$subcityval."','1', '$url')";
+		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE,URL,PRIORITY) value('".$localityval."','".$cityid."','".$subcityval."','1', '$url',100)";
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;
