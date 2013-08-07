@@ -20,12 +20,12 @@ $dup_builder = array();
 $table_to_id_map = array(
         "proptiger.BANNER_ADS"        =>  array( "key" => "BANNER_ID"),
         "proptiger.BUILDER_AGREEMENT" =>  array( "key" => "ID"),
-        "project.RESI_PROJECT"      =>  array( "key" => "PROJECT_ID",
+        "project.resi_project"      =>  array( "key" => "PROJECT_ID",
                                     "col"   => "BUILDER_NAME"),
         "proptiger.ORDERS"            =>  array( "key" => "ORDER_ID"),
         "proptiger.ORDERS1"           =>  array( "key" => "ORDER_ID"),
         "proptiger.ORDERS_ARCH"       =>  array( "key" => "ORDER_ID"),
-        "project.PROJECT_PLAN_IMAGES"=> array( "key" => "PROJECT_PLAN_ID"),
+        "project.project_plan_images"=> array( "key" => "PROJECT_PLAN_ID"),
         "proptiger.PROJ_INVOICE"      =>  array( "key" => "PROJ_INVOICE_ID"),
         "proptiger.PROJ_INVOICE_ARCH" =>  array( "key" => "PROJ_INVOICE_ID"),
         "proptiger.REVENUE_ASSURANCE" =>  array( "key" => "ID"),
@@ -34,11 +34,11 @@ $table_to_id_map = array(
         "proptiger.FEATURED_BUILDER_ORDER"=>  array( "key" => "FEATURED_ID"),
         "proptiger.PAYMENT_COLLECTIONS_DETAILS"=> array( "key" => "PAYMENT_ID",
                                     "col"   => "BUILDER_NAME"),
-        "project.RESI_PROJECT as RP JOIN proptiger.SIMILAR_BUILDER as SB ON RP.PROJECT_ID=SB.PROJECT_ID" => array("key" => "SB.ID",
+        "project.resi_project as RP JOIN proptiger.SIMILAR_BUILDER as SB ON RP.PROJECT_ID=SB.PROJECT_ID" => array("key" => "SB.ID",
                                                                                                 "col" => "SB.BUILDER_NAME"),
-        "project.RESI_PROJECT as RP JOIN proptiger.SIMILAR_PROPERTIES as SP ON RP.PROJECT_ID=SP.PROJECT_ID" => array("key" => "SP.ID",
+        "project.resi_project as RP JOIN proptiger.SIMILAR_PROPERTIES as SP ON RP.PROJECT_ID=SP.PROJECT_ID" => array("key" => "SP.ID",
                                                                                                 "col" => "SP.BUILDER_NAME"),
-        "proptiger.FDATA_LISTING as PD JOIN project.RESI_PROJECT as P ON PD.PROPTIGER_PROJECT_ID = P.PROJECT_ID" => array("key" => "PD.ID",
+        "proptiger.FDATA_LISTING as PD JOIN project.resi_project as P ON PD.PROPTIGER_PROJECT_ID = P.PROJECT_ID" => array("key" => "PD.ID",
                                                                                                 "col" => "PD.BUILDER_NAME")
  
         );
@@ -105,7 +105,7 @@ function fetchBuilderData($orig_builderId, $dup_builderId){
 
     global $orig_builder;
     global $dup_builder;
-    $query = "select B.BUILDER_ID, B.URL, B.BUILDER_NAME, CONCAT(REPLACE (B.URL, '.php' , ''), '-in-', LOWER(C.LABEL), '.php') AS CITY_URL from project.RESI_BUILDER as B INNER JOIN project.RESI_PROJECT AS P ON B.BUILDER_ID = P.BUILDER_ID INNER JOIN project.CITY AS C ON P.CITY_ID = C.CITY_ID WHERE P.BUILDER_ID IS NOT NULL AND P.ACTIVE =  '1' AND B.BUILDER_ID in (".$orig_builderId.",".$dup_builderId.")";
+    $query = "select B.BUILDER_ID, B.URL, B.BUILDER_NAME, CONCAT(REPLACE (B.URL, '.php' , ''), '-in-', LOWER(C.LABEL), '.php') AS CITY_URL from project.resi_builder as B INNER JOIN project.resi_project AS P ON B.BUILDER_ID = P.BUILDER_ID INNER JOIN project.city AS C ON P.CITY_ID = C.CITY_ID WHERE P.BUILDER_ID IS NOT NULL AND P.ACTIVE =  '1' AND B.BUILDER_ID in (".$orig_builderId.",".$dup_builderId.")";
     $res = mysql_query($query) or die(mysql_error());
 	while($row = mysql_fetch_array($res)){
 		if($row['BUILDER_ID'] == $orig_builderId){
@@ -136,27 +136,27 @@ function redirectOldBuildersURL($orig_builderId, $dup_builderId){
     global $orig_builder;
     global $dup_builder;
 
-    $query = "select * from project.REDIRECT_URL_MAP where FROM_URL ='".$dup_builder['URL']."'";
+    $query = "select * from project.redirect_url_map where FROM_URL ='".$dup_builder['URL']."'";
     $res = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($res);
     if($row && $row['TO_URL'] != ''){
-        $updateSQL = "update project.REDIRECT_URL_MAP set TO_URL ='".$orig_builder['URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$dup_builder['URL']."'";
+        $updateSQL = "update project.redirect_url_map set TO_URL ='".$orig_builder['URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$dup_builder['URL']."'";
         array_push($updateSQLs, $updateSQL);
 
-        $restoreSQL = "update project.REDIRECT_URL_MAP set TO_URL ='".$row['TO_URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$dup_builder['URL']."'";
+        $restoreSQL = "update project.redirect_url_map set TO_URL ='".$row['TO_URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$dup_builder['URL']."'";
         array_push($restoreSQLs, $restoreSQL);
     } else {
-        $updateSQL = "insert into project.REDIRECT_URL_MAP (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$dup_builder['URL']."','".$orig_builder['URL']."', NOW(), ".$_SESSION['adminId'].")";
+        $updateSQL = "insert into project.redirect_url_map (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$dup_builder['URL']."','".$orig_builder['URL']."', NOW(), ".$_SESSION['adminId'].")";
         array_push($updateSQLs, $updateSQL);
    
-        $restoreSQL = "delete from project.REDIRECT_URL_MAP where FROM_URL = '".$dup_builder['URL']."' and TO_URL = '".$orig_builder['URL']."'";
+        $restoreSQL = "delete from project.redirect_url_map where FROM_URL = '".$dup_builder['URL']."' and TO_URL = '".$orig_builder['URL']."'";
         array_push($restoreSQLs, $restoreSQL);
     }
     
-    $updateSQL = "insert into project.REDIRECT_URL_MAP (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$dup_builder['CITY_URL']."','".$orig_builder['CITY_URL']."', NOW(), ".$_SESSION['adminId'].")";
+    $updateSQL = "insert into project.redirect_url_map (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$dup_builder['CITY_URL']."','".$orig_builder['CITY_URL']."', NOW(), ".$_SESSION['adminId'].")";
     array_push($updateSQLs, $updateSQL);
     
-    $restoreSQL = "delete from project.REDIRECT_URL_MAP where FROM_URL = '".$dup_builder['CITY_URL']."' and TO_URL = '".$orig_builder['CITY_URL']."'";
+    $restoreSQL = "delete from project.redirect_url_map where FROM_URL = '".$dup_builder['CITY_URL']."' and TO_URL = '".$orig_builder['CITY_URL']."'";
     array_push($restoreSQLs, $restoreSQL); 
 };
 
@@ -190,10 +190,10 @@ function disableOldBuilderURL($builderId){
 
     global $updateSQLs;
     global $restoreSQLs;
-    $updateSQL = "update project.RESI_BUILDER set ACTIVE = 0 where BUILDER_ID in (".$builderId.")";
+    $updateSQL = "update project.resi_builder set ACTIVE = 0 where BUILDER_ID in (".$builderId.")";
     array_push($updateSQLs, $updateSQL);
     
-    $restoreSQL = "update project.RESI_BUILDER set ACTIVE = 1 where BUILDER_ID in (".$builderId.")";
+    $restoreSQL = "update project.resi_builder set ACTIVE = 1 where BUILDER_ID in (".$builderId.")";
     array_push($restoreSQLs,$restoreSQL);
 
     //echo "<pre>";
