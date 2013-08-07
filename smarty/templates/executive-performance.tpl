@@ -59,6 +59,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="font-size: 12px">UserName</td>
+                                                            <th style="font-size: 12px">Total ATTEMPTS</th>
                                                             <th style="font-size: 12px">Total Calls Made</th>
                                                             <th style="font-size: 12px">Done</th>
                                                             <th style="font-size: 12px">Reverted</th>
@@ -95,6 +96,7 @@
                                                         {foreach from = $displayData key=key item = item}
                                                         <tr>
                                                             <td>{$item['USERNAME']}</td>
+                                                            <td>{$item['TOTAL-ATTEMPTS']}</td>
                                                             <td>{$item['TOTAL-CALLS']}</td>
                                                             <td>{$item['DONE']}</td>
                                                             <td>{$item['REVERTED']}</td>
