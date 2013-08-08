@@ -70,7 +70,7 @@
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 		
-		
+		{if $accessBuilder == ''}
 		     
 <!--			<fieldset class="field-border">
 			  <legend><b>Message</b></legend>-->
@@ -101,7 +101,7 @@
 					 <td width="20%" align="right" ><font color = "red">*</font>Builder URL : </td>
 
 					<td width="30%" align="left" >
-						{if $builderid != ''  && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525 && $accessModule['urlEdit'] != 588  && $accessModule['urlEdit'] != 53}
+						{if $builderid != ''  && $urlEditAccess == 0}
 							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;" readonly>
 						{else}
 							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;">
@@ -429,6 +429,22 @@
 	            </td>
 		  </tr>
 		</TABLE>
+                <script type="text/javascript">
+                     Calendar.setup({
+
+                         inputField     :    "f_date_c_to",     // id of the input field
+                     //    ifFormat       :    "%Y/%m/%d %l:%M %P",      // format of the input field
+                     ifFormat       :    "%Y-%m-%d",      // format of the input field
+                         button         :    "f_trigger_c_to",  // trigger for the calendar (button ID)
+                         align          :    "Tl",           // alignment (defaults to "Bl")
+                         singleClick    :    true,
+                     showsTime		:	true
+
+                     });
+                  </script>                                             
+                {else}
+                    <font color="red">No Access</font>
+                {/if}
 	      </TD>
             </TR>
           </TBODY></TABLE>
@@ -437,18 +453,3 @@
     </TBODY></TABLE>
   </TD>
 </TR>
-
-
-<script type="text/javascript">
-   Calendar.setup({
-   
-       inputField     :    "f_date_c_to",     // id of the input field
-   //    ifFormat       :    "%Y/%m/%d %l:%M %P",      // format of the input field
-   ifFormat       :    "%Y-%m-%d",      // format of the input field
-       button         :    "f_trigger_c_to",  // trigger for the calendar (button ID)
-       align          :    "Tl",           // alignment (defaults to "Bl")
-       singleClick    :    true,
-   showsTime		:	true
-   
-   });
-</script>

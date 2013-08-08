@@ -1,4 +1,9 @@
 <?php 
+
+     $accessBroker = '';
+    if( $brokerAuth == false )
+      die("No Access");
+    
     if(isset($_REQUEST['exit'])){
        ?>
         <script type="text/javascript">

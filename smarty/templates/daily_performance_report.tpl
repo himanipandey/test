@@ -71,7 +71,7 @@
 	      </TR>
                 <tr>
                   <TD vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
-
+                    {if $accessDailyPerform == ''}
                       <table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
                           <tr  bgcolor='#f2f2f2'>
                               <td nowrap align ="center" colspan="3">
@@ -357,7 +357,9 @@
                               </td>
                           </tr>
                       </table>
-
+                     {else}
+                        <font color="red">No Access</font>
+                    {/if}                    
                   </TD>
               </TR>
 

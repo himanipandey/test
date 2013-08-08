@@ -1,9 +1,13 @@
 <?php
-$bannerid = $_REQUEST['bannerid'];
-//echo $_REQUEST['suburb'];die("here");
-//print_r($_REQUEST);//die();
-//print_r($_FILES);
-$smarty->assign("bannerid", $bannerid);
+
+    $accessCity = '';
+    if( $cityAuth == false )
+       $accessCity = "No Access";
+    $smarty->assign("accessCity",$accessCity);
+    
+    
+    $bannerid = $_REQUEST['bannerid'];
+    $smarty->assign("bannerid", $bannerid);
 
 
 if ($_POST['btnSave'] == "Save")

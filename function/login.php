@@ -103,8 +103,11 @@ $gacl = new gacl(array('db_password' => 'root'));
 	}
 
     function isUserPermitted($resource, $action) {
+        
         global $gacl;
-        return $gacl->acl_check($resource, $action, 'Users', $_SESSION['AdminUserName']);
+        $isAllowed = $gacl->acl_check($resource, $action, 'Users', $_SESSION['AdminUserName']);
+        include("../dbConfig.php");
+        return $isAllowed;
     }
 
 ?>

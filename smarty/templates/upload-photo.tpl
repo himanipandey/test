@@ -15,6 +15,7 @@
                     </td>
                     <td vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</td>
                     <td vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
+                         {if $accessPhoto == ''}
                         <table id="upload-tbl" cellSpacing=1 cellPadding=0 border=0>
                             <tbody>
                                 <tr>
@@ -84,10 +85,19 @@
                                 </form>
                             </tbody>
                         </table>
+                        {else}
+                           <font color="red">No Access</font>
+                       {/if}           
                     </td>
                 </tr>
             </tbody>
-        </table>
+        </table>                           
     </td>
 </tr>
+ </TBODY></TABLE>
+        </TD>
+      </TR>
+    </TBODY></TABLE>
+  </TD>
+</TR>
 <script type="text/javascript" src="js/photo.js"></script>

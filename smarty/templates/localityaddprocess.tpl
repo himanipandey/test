@@ -28,7 +28,7 @@
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
-
+                {if $accessLocality == ''}
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" enctype="multipart/form-data" id="frmcity" name="frmcity">
 			      <div>
@@ -86,6 +86,9 @@
 		  </tr>
 		</TABLE>
 	      </TD>
+              {else}
+                    <font color="red">No Access</font>
+                {/if}
             </TR>
           </TBODY></TABLE>
         </TD>

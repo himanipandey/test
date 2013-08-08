@@ -1,35 +1,36 @@
-<?php
-	$BuilderDataArr	=	BuilderArr();
-	$CityDataArr	=	CityArr();
-	$ProjectTypeArr	=	ProjectTypeArr();
-	$BankListArr	=	BankList();
-	$enum_value	=	enum_value();
+<?php        
 
-	$smarty->assign("BuilderDataArr",$BuilderDataArr);
-	$smarty->assign("CityDataArr",$CityDataArr);
-	$smarty->assign("ProjectTypeArr",$ProjectTypeArr);
-	$smarty->assign("BankListArr",$BankListArr);
-	$smarty->assign("enum_value",$enum_value);
-	$smarty->assign("display_order", 999);
+$BuilderDataArr	=	BuilderEntityArr();
+$CityDataArr	=	CityArr();
+$ProjectTypeArr	=	ProjectTypeArr();
+$BankListArr	=	BankList();
+$enum_value	=	enum_value();
 
-	//echo "<pre>";
-			//print_r($_REQUEST);
-	//echo "</pre>";//die();
-	/*************************************/
-	$sourcepath=array();
-	$destinationpath=array();
-	$flag=0;
-	$projectFolderCreated=0;
-	if(!isset($_REQUEST['projectId']))
-		$_REQUEST['projectId'] = '';
-	$projectId = $_REQUEST['projectId'];
-	$smarty->assign("projectId", $projectId);
-	
-	if(!isset($_REQUEST['preview']))
-		$_REQUEST['preview'] = '';
-	$preview = $_REQUEST['preview'];
-	$smarty->assign("preview", $preview);
+$smarty->assign("BuilderDataArr",$BuilderDataArr);
+$smarty->assign("CityDataArr",$CityDataArr);
+$smarty->assign("ProjectTypeArr",$ProjectTypeArr);
+$smarty->assign("BankListArr",$BankListArr);
+$smarty->assign("enum_value",$enum_value);
+$smarty->assign("display_order", 999);
 
+//echo "<pre>";
+                //print_r($_REQUEST);
+//echo "</pre>";//die();
+/*************************************/
+$sourcepath=array();
+$destinationpath=array();
+$flag=0;
+$projectFolderCreated=0;
+if(!isset($_REQUEST['projectId']))
+        $_REQUEST['projectId'] = '';
+$projectId = $_REQUEST['projectId'];
+$smarty->assign("projectId", $projectId);
+
+if(!isset($_REQUEST['preview']))
+        $_REQUEST['preview'] = '';
+$preview = $_REQUEST['preview'];
+$smarty->assign("preview", $preview);
+        
 if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 {
 	if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
@@ -225,7 +226,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 			   $ErrorMsg["txtProjectName"] = "Project already exist.";
 		   }
 	     }
-	     
+             
 	     $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_URL = '".$txtProjectURL."' and project_id != '$projectId'";
 	     $resUrl = mysql_query($qryUrl) or die(mysql_error());
 	     if(mysql_num_rows($resUrl)>0)
@@ -250,7 +251,26 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 	     		$ErrorMsg["txtProjectURL"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
 	     	}
 	     }
-	   $smarty->assign("ErrorMsg", $ErrorMsg);
+            
+            $showTypeError = '';
+            if($specialAccessAuth == false)
+            {
+                if($_REQUEST['project_type_hidden'] != '' && $_REQUEST['project_type_hidden'] != 0)
+                {
+                    if($project_type != $_REQUEST['project_type_hidden'])
+                    {
+                        $ErrorMsgType['showTypeError'] = 'style = "display:block;"';
+                         $ErrorMsg['showTypeError'] = 'error';
+                    }
+                    else
+                    {
+                        $ErrorMsgType['showTypeError'] = 'style = "display:none;"'; 
+                    }
+                }
+            }
+           $smarty->assign("projectTypeOld",$_REQUEST['project_type_hidden']);
+           $smarty->assign("ErrorMsgType", $ErrorMsgType);
+           $smarty->assign("ErrorMsg", $ErrorMsg);
 	   if(is_array($ErrorMsg)) {
 		// Do Nothing
 	   }
@@ -375,6 +395,8 @@ elseif ($projectId!='')
 		$smarty->assign("txtProjectDesc", stripslashes($ProjectDetail[0]['OPTIONS_DESC']));
 		$smarty->assign("txtSourceofInfo", stripslashes($ProjectDetail[0]['SOURCE_OF_INFORMATION']));
 		$smarty->assign("project_type", stripslashes($ProjectDetail[0]['PROJECT_TYPE_ID']));
+                $smarty->assign("projectTypeOld", stripslashes($ProjectDetail[0]['PROJECT_TYPE_ID']));
+                
 		$smarty->assign("approvals", stripslashes($ProjectDetail[0]['APPROVALS']));
 		$smarty->assign("project_size", stripslashes($ProjectDetail[0]['PROJECT_SIZE']));
 		$smarty->assign("no_of_lift", stripslashes($ProjectDetail[0]['NO_OF_LIFTS_PER_TOWER']));

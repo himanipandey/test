@@ -4,6 +4,12 @@
 	include("appWideConfig.php");
 	include("dbConfig.php");
 	include("includes/configs/configs.php");
+        
+        $accessBulkProject = '';
+        if( $bulkProjUpdateAuth == false )
+           $accessBulkProject = "No Access";
+        $smarty->assign("accessBulkProject",$accessBulkProject);
+    
 	date_default_timezone_set('Asia/Kolkata');
 	include("builder_function.php"); 
 	AdminAuthentication();
@@ -39,6 +45,14 @@
 	
 	if(!isset($_REQUEST['Status']))
 		$_REQUEST['Status'] = '';
+        
+        if(!isset($_REQUEST['exp_supply_date_from']))
+        $_REQUEST['exp_supply_date_from'] = '';
+        $exp_supply_date_from = $_REQUEST['exp_supply_date_from'];
+
+        if(!isset($_REQUEST['exp_supply_date_to']))
+        $_REQUEST['city'] = '';
+        $exp_supply_date_to = $_REQUEST['exp_supply_date_to'];
 	
 	
 	if(count($_REQUEST['Active'])>0)
@@ -56,26 +70,26 @@
 	$projectDataArr = array();
 	$NumRows =  $city = $builder = $project_name = '';
 	
-	$citylist		=	CityArr();
-	$builderList	=	BuilderEntityArr();
-	$enum_value		=	enum_value();
-	$UpdationArr 	= 	updationCycleTable();
+	$citylist    = CityArr();
+	$builderList = BuilderEntityArr();
+	$enum_value  = enum_value();
+	$UpdationArr = updationCycleTable();
 	
-	if($_POST['projectId'] != '') $ProjectDetail	=	ProjectDetail($_POST['projectId']);
+	if($_POST['projectId'] != '') $ProjectDetail = ProjectDetail($_POST['projectId']);
 	
-	$transfer 		= 	$_REQUEST['transfer'];
-	$search 		= 	$_REQUEST['search'];
-	$city		  	=	$_REQUEST['city'];
-	$locality	 	=	$_REQUEST['locality'];
-	$builder		=	$_REQUEST['builder'];
-	$phase 			= 	$_REQUEST['phase'];
-	$arrPhase 		= 	explode('|',$_REQUEST['stage']);
-	$stage 			= 	$arrPhase[0];
-	$tag 			= 	$arrPhase[1];
-	$Status 		= 	$_REQUEST['Status'];
-	$Active 		= 	$_REQUEST['Active'];
-	$Availability	= 	$_REQUEST['Availability'];
-	$selectdata		= 	$_POST['selectdata'];
+	$transfer = $_REQUEST['transfer'];
+	$search = $_REQUEST['search'];
+	$city =	$_REQUEST['city'];
+	$locality = $_REQUEST['locality'];
+	$builder = $_REQUEST['builder'];
+	$phase = $_REQUEST['phase'];
+	$arrPhase = explode('|',$_REQUEST['stage']);
+	$stage = $arrPhase[0];
+	$tag = $arrPhase[1];
+	$Status = $_REQUEST['Status'];
+	$Active	= $_REQUEST['Active'];
+	$Availability =	$_REQUEST['Availability'];
+	$selectdata = $_POST['selectdata'];
 	
 	$smarty->assign("enum_value",$enum_value);
 	$smarty->assign("citylist", $citylist);
@@ -86,15 +100,15 @@
 	$smarty->assign("Status", $_REQUEST['Status']);
 	$smarty->assign("city", $city);
 	$smarty->assign("builder", $builder);
+        $smarty->assign("exp_supply_date_from", $exp_supply_date_from);
+        $smarty->assign("exp_supply_date_to", $exp_supply_date_to);
 	$smarty->assign("project_name", $project_name);
 	$smarty->assign("projectId", $_POST['projectId']);
 	$smarty->assign("selectdata", $selectdata);
 	$smarty->assign("updatePhasePost", $_REQUEST['updatePhase']);
 	$smarty->assign("updateStagePost", $_REQUEST['updateStage']);
 	$smarty->assign("Availability", $Availability);
-	$smarty->assign("Active", $_REQUEST['Active']);
-	
-		
+	$smarty->assign("Active", $_REQUEST['Active']);	
 	
 	if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
 	{
@@ -216,7 +230,23 @@
 			{
 				$QueryMember .= $and." UPDATION_CYCLE_ID = '".$tag."'";
 				$and  = ' AND ';
-			}	
+			}
+                        
+                        if($exp_supply_date_to != '' && $exp_supply_date_from != '')
+                        {
+                            $QueryMember .= $and." EXPECTED_SUPPLY_DATE BETWEEN '".$exp_supply_date_to."' AND '".$exp_supply_date_from."'";
+                            $and  = ' AND ';
+                        }
+                        if($exp_supply_date_to != '' && $exp_supply_date_from == '')
+                        {
+                            $QueryMember .= $and." EXPECTED_SUPPLY_DATE <= '".$exp_supply_date_to."'";
+                            $and  = ' AND ';
+                        }
+                        if($exp_supply_date_to == '' && $exp_supply_date_from != '')
+                        {
+                            $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
+                            $and  = ' AND ';
+                        }
 		}
 		else
 		{

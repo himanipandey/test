@@ -27,13 +27,18 @@ function chkConfirm()
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>City List</TD>
-                      <TD align=right colSpan=3><a href="cityadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add City</b></a></TD>
+                      <TD align=right colSpan=3>
+                          {if $accessCity == ''}
+                            <a href="cityadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add City</b></a>
+                          {/if}
+                      </TD>
                     </TR>
 		  </TBODY></TABLE>
 		</TD>
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                {if $accessCity == ''}
                   <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
@@ -107,7 +112,10 @@ function chkConfirm()
                       </td>
                     </tr>
                   </table>                
-				  {/if}
+		   {/if}
+                {else}
+                    <font color = "red">No Access</font>
+                {/if}
 	      </TD>
             </TR>
           </TBODY></TABLE>

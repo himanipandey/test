@@ -26,42 +26,43 @@
       </TBODY></TABLE>
     </TD>
         </TR>
-              <TR>
-                <TD vAlign=top align=middle class="backgorund-rt" height="450"><BR>
+        <TR>
+          <TD vAlign=top align=middle class="backgorund-rt" height="450"><BR>
+          {if $accessMigrate == ''}
+            <form method="post" action ="">
 
-      <form method="post" action ="">
-
-        <div style="overflow:auto;">
-          <TABLE cellSpacing=2 cellPadding=4 width="50%" align=center  style="border:1px solid #c2c2c2;">
-          <div>
-           {if $msg != ''}
-           		<tr>
-	                <td align = "center" nowrap valign ="top">
-		                <span font color = "green">
-		                {$msg}
-		                </span>
-	                </td>
-            	</tr>
-           {/if}
-            <tr>
-                <td align = "center" nowrap valign ="top"><b>Project Ids:</b></td>
-                <td align = "left">
-                <textarea name = "projectId" rows = "5" style = "width:300px;">
-                {$projectId}
-                </textarea>
-                </td>
-            </tr> 
-            <tr>
-                <td align = "center" nowrap colspan ="2"><input type = "submit" name = "submit" value = "Submit">
-                </td>
-            </tr>                          
+            <div style="overflow:auto;">
+              <TABLE cellSpacing=2 cellPadding=4 width="50%" align=center  style="border:1px solid #c2c2c2;">
+              <div>
+               {if $msg != ''}
+                <tr>
+                    <td align = "center" nowrap valign ="top">
+                        <span font color = "green">
+                        {$msg}
+                        </span>
+                    </td>
+                </tr>
+               {/if}
+                <tr>
+                    <td align = "center" nowrap valign ="top"><b>Project Ids:</b></td>
+                    <td align = "left">
+                    <textarea name = "projectId" rows = "5" style = "width:300px;">
+                    {$projectId}
+                    </textarea>
+                    </td>
+                </tr> 
+                <tr>
+                    <td align = "center" nowrap colspan ="2"><input type = "submit" name = "submit" value = "Submit">
+                    </td>
+                </tr>                          
+                </div>
+             </TABLE>
             </div>
-         </TABLE>
-        </div>
 
         </form>
-<!--      </fieldset>-->
-
+        {else}
+            <font color="red">No Access</font>
+        {/if}
        </TD>
             </TR>
           </TBODY></TABLE>

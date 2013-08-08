@@ -22,6 +22,7 @@
                     </TD>
                     <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
                     <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
+                    {if $accessDataCollection == ''}    
                         <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0>
                             <TBODY>
                                 <TR>
@@ -113,6 +114,9 @@
                                 </TR>
                             </TBODY>
                         </TABLE>
+                       {else}
+                            <font color = "red">No Access</font>
+                       {/if}                         
                     </TD>
                 </TR>
             </TBODY>

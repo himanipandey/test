@@ -1,4 +1,6 @@
 <?php
+        if($labelAuth == false)
+            die("No Access");
 	error_reporting(1);
 	ini_set('display_errors','1');
 	include("smartyConfig.php");

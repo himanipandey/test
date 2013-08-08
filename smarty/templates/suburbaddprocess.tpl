@@ -28,7 +28,7 @@
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
-
+                {if $accessSuburb == ''}
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" enctype="multipart/form-data" id="frmcity" name="frmcity">
 			      <div>
@@ -78,6 +78,7 @@
 	            </td>
 		  </tr>
 		</TABLE>
+                                         
 	      </TD>
             </TR>
           </TBODY></TABLE>

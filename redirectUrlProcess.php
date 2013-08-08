@@ -1,5 +1,9 @@
 <?php
-
+        $accessUrl = '';
+        if( $urlAuth == false )
+           $accessUrl = "No Access";
+        $smarty->assign("accessUrl",$accessUrl);
+    
 	$fromUrl = $_REQUEST['fromUrl'];
 	$toUrl   = $_REQUEST['toUrl'];
 	$smarty->assign("fromUrl", $fromUrl);

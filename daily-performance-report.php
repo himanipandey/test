@@ -9,6 +9,11 @@
     include("modelsConfig.php"); 
     AdminAuthentication();
     $dept = $_SESSION['DEPARTMENT'];
+    
+    $accessDailyPerform = '';
+    if( $dailyPerformanceReportAuth == false )
+       $accessDailyPerform = "No Access";
+    $smarty->assign("accessDailyPerform",$accessDailyPerform);
 
     if (isset($_REQUEST['team']) ) {
 

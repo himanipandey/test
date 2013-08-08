@@ -30,13 +30,18 @@
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Broker List</TD>
-                      <TD align=right colSpan=3><a href="brokeradd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Broker</b></a></TD>
+                      <TD align=right colSpan=3>
+                          {if $accessBroker == ''}
+                          <a href="brokeradd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Broker</b></a>
+                          {/if}
+                          </TD>
                     </TR>
 		  </TBODY></TABLE>
 		</TD>
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                {if $accessBroker == ''}
                   <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
@@ -125,6 +130,9 @@
                     </tr>
                   </table>
                   {/if}
+               {else}
+                   <font color = "red">No Access</fonnt>
+               {/if}
 	      </TD>
             </TR>
           </TBODY></TABLE>
