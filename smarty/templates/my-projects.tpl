@@ -99,6 +99,7 @@
                                                                     <option value="websiteNotFound">Website Not Found</option>
                                                                     <option value="partialInfoOnCall">Partial Info On Call</option>
                                                                     <option value="ringingButNoResponse">Ringing But No Response</option>
+                                                                    <option value="gotNoInfo">Got No Info</option>
                                                                 </select>
                                                             </td>
                                                             <td>

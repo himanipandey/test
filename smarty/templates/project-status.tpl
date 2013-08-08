@@ -106,6 +106,7 @@
                                                             <th style="font-size: 12px">Locality</th>
                                                             <th style="font-size: 12px">Booking Status</th>
                                                             <th style="font-size: 12px">Project Status</th>
+                                                            <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px">Label</th>
                                                             <th style="font-size: 12px">Project Phase</th>
                                                             <th style="font-size: 12px">Project Stage</th>
                                                             <th style="font-size: 12px">Last Worked At</th>
@@ -155,6 +156,7 @@
                                                             <td>{$item['LOCALITY']}</td>
                                                             <td>{$item['BOOKING_STATUS']}</td>
                                                             <td>{$item['PROJECT_STATUS']}</td>
+                                                            <td>{$item['LABEL']}</td>
                                                             <td>{$item['PROJECT_PHASE']}</td>
                                                             <td>{$item['PROJECT_STAGE']}</td>
                                                             <td>{$item['LAST_WORKED_AT']}</td>
