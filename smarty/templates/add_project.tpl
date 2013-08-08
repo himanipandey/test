@@ -473,7 +473,7 @@
 							   <tr>
 								  <td width="20%" align="right"><b>Active :</b> </td>
 								  <td width="30%" align="left">
-								  {if $specialAccess == 1 AND $projectId != ''}
+								  {if $specialAccess == 0 AND $projectId != ''}
 								 	 {if $Active == 0}Inactive on both Website and IS DB{/if}
 								 	 {if $Active == 1}Active on both Website and IS DB{/if}
 								 	 {if $Active == 2}Deleted{/if}
