@@ -78,7 +78,9 @@
 	            </td>
 		  </tr>
 		</TABLE>
-                                         
+                {else}
+                    <font color="red">No Access</font>
+                {/if}                         
 	      </TD>
             </TR>
           </TBODY></TABLE>
