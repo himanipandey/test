@@ -49,13 +49,17 @@ $otherPricing = fetch_other_price($projectId);
 $smarty->assign("otherPricing", $otherPricing);
 /* * ****end display other pricing***** */
 
-$ProjectOptionDetail = ProjectOptionDetail($projectId);
-$PreviousMonthsData = getPrevMonthProjectData($projectId);
+$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId);
+$PhaseOptionHash = $ProjectPhases[1];
+$ProjectPhases = $ProjectPhases[0];
+$ProjectOptionDetail	=	ProjectOptionDetail($projectId);
+$PreviousMonthsData	=	getPrevMonthProjectData($projectId);
 $PreviousMonthsAvailability = getFlatAvailability($projectId);
-
 $smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
 $smarty->assign("PreviousMonthsData",$PreviousMonthsData);
 $smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
+$smarty->assign("ProjectPhases",$ProjectPhases);
+$smarty->assign("PhaseOptionHash",$PhaseOptionHash);
 
 $arrOnlyPreviousMonthData = array();
 foreach($PreviousMonthsData as $k=>$v) { 

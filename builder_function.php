@@ -2099,131 +2099,132 @@ function insertUpdateInRedirectTbl($toUrl, $fromUrl) {
 				MODIFIED_BY		=	" . $_SESSION['adminId'] . "
 			WHERE
 				FROM_URL		=	'$fromUrl'";
-        $action = 'Updation';
-    }
-
-    $res = mysql_query($qry) or die(mysql_error());
-    return $action;
+		$action = 'Updation';
+	}
+			
+	$res   = mysql_query($qry) or die(mysql_error());		
+	return $action;
 }
 
-function urlCreaationDynamic($followStr, $name) {
-    $output = preg_replace('!\s+!', '-', $name);
-    $url = strtolower($output);
-    $url = $followStr . $url . '.php';
-    return $url;
+function urlCreaationDynamic($followStr,$name)
+{
+	$output = preg_replace('!\s+!', '-', $name);
+	$url = strtolower($output);
+	$url = $followStr.$url.'.php';
+	return $url;
 }
 
-function updateProjectUrl($id, $tblName, $builderName) {
-    $where = '';
-    $blder = '';
-    if ($tblName == 'builder') {
-        $where .= " WHERE BUILDER_ID = '$id'";
-        $blder = ", BUILDER_NAME = '" . $builderName . "'";
-    } else if ($tblName == 'locality') {
-        $where .= " WHERE LOCALITY_ID = '$id'";
-    } else if ($tblName == 'city') {
-        $where .= " WHERE CITY_ID = '$id'";
-    }
-    $qry = "SELECT PROJECT_ID,BUILDER_ID,CITY_ID,LOCALITY_ID,PROJECT_URL,PROJECT_NAME FROM " . RESI_PROJECT . " $where";
-    $res = mysql_query($qry) or die(mysql_error());
-    while ($data = mysql_fetch_assoc($res)) {
-        $builderDetail = fetch_builderDetail($data['BUILDER_ID']);
-        $BuilderName = $builderDetail['BUILDER_NAME'];
-
-        $localityDetail = ViewLocalityDetails($data['LOCALITY_ID']);
-        $localityName = $localityDetail['LABEL'];
-
-        $cityDetail = ViewCityDetails($data['CITY_ID']);
-        $cityName = $cityDetail['LABEL'];
-
-        $projectUrlText = $BuilderName . " " . $data['PROJECT_NAME'] . " " . $localityName . " " . $cityName;
-        $url = urlCreaationDynamic('p-', $projectUrlText);
-
-        $qryUp = "UPDATE " . RESI_PROJECT . " SET PROJECT_URL = '" . $url . "'" . $blder . $where . "  AND PROJECT_ID = " . $data['PROJECT_ID'];
-        $resUp = mysql_query($qryUp) or die(mysql_error());
-        if ($resUp) {
-            insertUpdateInRedirectTbl($url, $data['PROJECT_URL']);
-        }
-    }
-    return true;
+function updateProjectUrl($id,$tblName,$builderName)
+{
+	$where = '';
+	$blder = '';
+	if($tblName == 'builder')
+	{
+		$where .= " WHERE BUILDER_ID = '$id'";
+		$blder = ", BUILDER_NAME = '".$builderName."'";
+	}
+	else if($tblName == 'locality')
+	{
+		$where .= " WHERE LOCALITY_ID = '$id'";
+	}
+	else if($tblName == 'city')
+	{
+		$where .= " WHERE CITY_ID = '$id'";
+	}
+	$qry = "SELECT PROJECT_ID,BUILDER_ID,CITY_ID,LOCALITY_ID,PROJECT_URL,PROJECT_NAME FROM ".RESI_PROJECT." $where";
+	$res = mysql_query($qry) or die(mysql_error());
+	while($data = mysql_fetch_assoc($res))
+	{
+		$builderDetail	=	fetch_builderDetail($data['BUILDER_ID']);
+		$BuilderName	=	$builderDetail['BUILDER_NAME'];
+		
+		$localityDetail	=	ViewLocalityDetails($data['LOCALITY_ID']);
+		$localityName   =   $localityDetail['LABEL'];
+		
+		$cityDetail	=	ViewCityDetails($data['CITY_ID']);
+		$cityName   =   $cityDetail['LABEL'];
+		
+		$projectUrlText = $BuilderName." ".$data['PROJECT_NAME']." ".$localityName." ".$cityName;
+		$url = urlCreaationDynamic('p-',$projectUrlText);
+		
+		$qryUp = "UPDATE ".RESI_PROJECT." SET PROJECT_URL = '".$url."'". $blder . $where."  AND PROJECT_ID = ".$data['PROJECT_ID'];
+		$resUp = mysql_query($qryUp) or die(mysql_error());
+		if($resUp)
+		{
+			insertUpdateInRedirectTbl($url,$data['PROJECT_URL']);
+		}
+	}
+	return true;
 }
 
-function curlFetch($url) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-    curl_setopt($ch, CURLOPT_NOBODY, FALSE); // show the body 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    $obj = curl_exec($ch);
-    curl_close($ch);
-    return $obj;
+
+function curlFetch($url)
+{
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+	curl_setopt($ch, CURLOPT_NOBODY, FALSE); // show the body 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
+	$obj=curl_exec($ch);
+	curl_close($ch);
+	return $obj;
 }
 
-function getPrevMonthProjectData($projectId) {
-    global $analytics_credential;
-    // global $_SERVER['SERVER_NAME'];
-    $usrn = $analytics_credential["username"];
-    $psswd = $analytics_credential["password"];
-    $tmstmp = time();
+function getPrevMonthProjectData($projectId)
+{
+	global $analytics_credential;
+	// global $_SERVER['SERVER_NAME'];
+	$usrn=$analytics_credential["username"];
+	$psswd=$analytics_credential["password"];
+	$tmstmp=time();
 
-    $keytoken = hash_hmac('sha1', $tmstmp, $psswd);
+	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
-    //$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
-    $url = "http://cms.proptiger.com/analytics/getpricehistory.json?username=" . $usrn . "&token=" . $keytoken . "&timestamp=" . $tmstmp; //http://cms.proptiger.com
-    $url = $url . '&project_ids[]=' . $projectId;
+	//$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
+	$url="http://cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	$url=$url.'&project_ids[]='.$projectId;
 
-    $obj = curlFetch($url);
-    $json = json_decode($obj, true);
-    $months = $json['prices'];
-    $final_list = array();
-
-    foreach ($months as $mkey => $mvalue) {
-        $mlist = array();
-        foreach ($mvalue as $pkey => $pvalue) {
-            foreach ($pvalue as $okey => $ovalue) {
-                $mlist[$okey] = $ovalue;
-            }
-        }
-        $final_list[$mkey] = $mlist;
-    }
-
-    return $final_list;
+	$obj=curlFetch($url);
+	$json=json_decode($obj,true);
+	$months=$json['prices'];
+	return $months;
 }
 
-function getFlatAvailability($projectId) {
-    global $analytics_credential;
-    // global $_SERVER['SERVER_NAME'];
-    $usrn = $analytics_credential["username"];
-    $psswd = $analytics_credential["password"];
-    $tmstmp = time();
 
-    $keytoken = hash_hmac('sha1', $tmstmp, $psswd);
-    $url = "http://cms.proptiger.com/analytics/getavailabilityhistory.json?username=" . $usrn . "&token=" . $keytoken . "&timestamp=" . $tmstmp; //http://cms.proptiger.com
-    //$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
-    $url = $url . '&project_ids[]=' . $projectId;
+function getFlatAvailability($projectId)
+{
+	global $analytics_credential;
+	// global $_SERVER['SERVER_NAME'];
+	$usrn=$analytics_credential["username"];
+	$psswd=$analytics_credential["password"];
+	$tmstmp=time();
 
-    $obj = curlFetch($url);
-    $json = json_decode($obj, true);
+	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
+	 $url="http://cms.proptiger.com/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	//$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	$url=$url.'&project_ids[]='.$projectId;
 
-    $months = $json['availability'];
+	$obj=curlFetch($url);
+	$json=json_decode($obj,true);
 
-    $final_list = array();
+	$months=$json['availability'];
 
-    foreach ($months as $mkey => $mvalue) {
-        $mlist = array();
-        foreach ($mvalue as $pkey => $pvalue) {
-            foreach ($pvalue as $okey => $ovalue) {
-                $mlist[$okey] = $ovalue;
-            }
-        }
-        $final_list[$mkey] = $mlist;
-    }
-    return $final_list;
+	$final_list = array();
+
+	foreach ($months as $mkey => $mvalue) {
+		$mlist=array();
+		foreach ($mvalue as $pkey => $pvalue) {
+			foreach ($pvalue as $okey => $ovalue) {
+				$mlist[$okey]=$ovalue;
+			}
+		}
+		$final_list[$mkey]=$mlist;
+	}
+	return $final_list;
 }
-
-function projectDetailById($projectId) {
-    $qry = "SELECT * FROM " . RESI_PROJECT . " WHERE PROJECT_ID = '" . $projectId . "'";
+function projectDetailById($projectId){
+    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."'";
     $res = mysql_query($qry) or die(mysql_error());
     $projectDetails = array();
     while ($data = mysql_fetch_array($res)) {

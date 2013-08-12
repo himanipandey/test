@@ -602,7 +602,7 @@ function selectedBuilderValue(builderId) {
                                 <select name = "option_value" onchange = "updatelink(this.value);" style='width:180px;'>
                                         <option value = "">Select Option</option>
                                         {if in_array($projectDataArr[data].PROJECT_PHASE,$arrProjEditPermission)}
-                                            <option value = "update_price.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Price</option>
+                                            <option value = "/new/price?projectId={$projectDataArr[data].PROJECT_ID}">Update Price</option>
                                             <option value = "add_supply_inventory.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Availability(Supply)</option>
                                             <option value = "add_tower_construction_status.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Tower Construction</option>
                                             <option value = "add_project_construction.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Project Construction</option>

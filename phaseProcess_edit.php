@@ -5,6 +5,7 @@ if (isset($_GET['error'])) {
 }
 
 $projectId = $_REQUEST['projectId'];
+$project = ResiProject::find($projectId);
 $phaseId = $_REQUEST['phaseId'];
 $preview = $_REQUEST['preview'];
 $smarty->assign("preview", $preview);
@@ -42,8 +43,25 @@ $phaseDetail = fetch_phaseDetails($projectId);
 // Project Options and Bedroom Details
 $optionsDetails = ProjectOptionDetail($projectId);
 $smarty->assign("OptionsDetails", $optionsDetails);
-$bedroomDetails = ProjectBedroomDetail($projectId);
-$smarty->assign("BedroomDetails", $bedroomDetails);
+$options = $project->options;
+$smarty->assign("options", $options);
+if (isset($phaseId) && $phaseId != -1){
+    $phase = ResiProjectPhase::find($phaseId);
+    $smarty->assign("phase", $phase);
+    $phase_options = $phase->options();
+    $phase_options_temp = $phase_options;
+    if (count($phase_options_temp) <= 0){
+        $phase_options_temp = $options;
+    }
+    $option_ids = array();
+    foreach($phase_options_temp as $options) array_push($option_ids, $options->options_id);
+    $bedrooms = ResiProjectOptions::optionwise_bedroom_details($option_ids);
+    $bedrooms_hash = array();
+    foreach($bedrooms as $bed) $bedrooms_hash[$bed->unit_type] = explode(",", $bed->beds);
+    $smarty->assign("option_ids", $option_ids);
+    $smarty->assign("phase_options", $phase_options);
+    $smarty->assign("bedrooms_hash", $bedrooms_hash);
+}
 
 $phases = Array();
 $old_phase_name = '';
@@ -73,10 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $towerDetail = fetch_towerDetails_for_phase($projectId);
     $smarty->assign("TowerDetails", $towerDetail);
 
-    $phase_quantity = get_phase_quantity($phaseId);
-    $smarty->assign("FlatsQuantity", explode_bedroom_quantity($phase_quantity['Apartment']));
-    $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity['Villa']));
-    $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity['Plot']));
+    $phase_quantity = ResiPhaseQuantity::quantity_for_phase($phaseId);
+    $phase_quantity_hash = array();
+    foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->agg;
+    $smarty->assign("FlatsQuantity", explode_bedroom_quantity($phase_quantity_hash['Apartment']));
+    $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity_hash['Villa']));
+    $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity_hash['Plot']));
 }
 /* * ********************************** */
 if (isset($_POST['btnSave'])) {
@@ -124,22 +144,28 @@ if (isset($_POST['btnSave'])) {
 
         // Update
         ############## Transaction ##############
-        mysql_query("SET AUTOCOMMIT=0");
-        mysql_query("START TRANSACTION");
-        $updated = update_phase($projectId, $phaseId, $phasename, $launch_date, $completion_date, $remark, $phaseLaunched);
+        ResiProjectPhase::transaction(function(){
+            global $projectId, $phaseId, $phasename, $launch_date, $completion_date, $remark, $phaseLaunched, $towers;
 
-        if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
-            $return = update_towers_for_project_and_phase($projectId, $phaseId, $towers);
-        }
+            //          Updating existing phase
+            $phase = ResiProjectPhase::find($phaseId);
+            $phase->project_id = $projectId;
+            $phase->phase_name = $phasename;
+            $phase->launch_date = $launch_date;
+            $phase->completion_date = $completion_date;
+            $phase->remarks = $remark;
+            $phase->launched = $phaseLaunched;
+            $phase->save();
 
-        if ($updated || $return) {
-            mysql_query("COMMIT");
-        } else {
-            echo 'Transaction failed..';
-            mysql_query("ROLLBACK");
-            die;
-        }
-        mysql_query("SET AUTOCOMMIT=1");
+            if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
+                ResiProjectTowerDetails::update_towers_for_project_and_phase($projectId, $phase->phase_id, $towers);
+            }
+            if(isset($_POST['options'])){
+                $arr = $_POST['options'];
+                $arr = array_diff($arr, array(-1));
+                $phase->reset_options($arr);
+            }
+        });
         #########################################
         // Phase Quantity
         if (sizeof($flats_config) > 0) {
@@ -161,10 +187,12 @@ if (isset($_POST['btnSave'])) {
         $towerDetail = fetch_towerDetails_for_phase($projectId);
         $smarty->assign("TowerDetails", $towerDetail);
 
-        $phase_quantity = get_phase_quantity($phaseId);
-        $smarty->assign("FlatsQuantity", explode_bedroom_quantity($phase_quantity['Apartment']));
-        $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity['Villa']));
-        $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity['Plot']));
+        $phase_quantity = ResiPhaseQuantity::quantity_for_phase($phaseId);
+        $phase_quantity_hash = array();
+        foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->agg;
+        $smarty->assign("FlatsQuantity", explode_bedroom_quantity($phase_quantity_hash['Apartment']));
+        $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity_hash['Villa']));
+        $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity_hash['Plot']));
 
         $phaseDetail = fetch_phaseDetails($projectId);
         $phases = Array();
@@ -175,7 +203,9 @@ if (isset($_POST['btnSave'])) {
             array_push($phases, $p);
         }
         $smarty->assign("phases", $phases);
-        header("Location:phase_edit.php?projectId=" . $projectId);
+        $loc = "Location:phase_edit.php?projectId=" . $projectId;
+        if($preview == 'true') $loc = $loc."&preview=true";
+        header($loc);
     }
 } else if ($_POST['btnExit'] == "Exit") {
     if ($preview == 'true')

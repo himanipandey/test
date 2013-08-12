@@ -21,7 +21,7 @@
 			["event9","add_tower_construction_status.php"],
 			["event10","add_project_construction.php"],
 			["event11", "edit_floor_plan.php", true],
-			["event12", "update_price.php", true],
+			["event12", "/new/price", true],
 			["event13", "project_other_price.php", true],
                         ["event14", "secondary_price.php", true],
                         ["event15", "insertSecondaryPrice.php", true],
@@ -1796,13 +1796,14 @@ function getDateNow(){
 						  	<td align="left"  nowrap colspan = "9">
 						  	<b>Project Price:</b> <button class="clickbutton" onclick="$(this).trigger('event12');">Edit</button>&nbsp;&nbsp;
 							<b>Project Configuration:</b> <button class="clickbutton" onclick="$(this).trigger('event7');">Edit</button>
-							&nbsp;&nbsp;<b>Project Price Effective From:</b>
-							{$keyFirst = key($PreviousMonthsData['current'])}
-							{if $PreviousMonthsData['latest'][$keyFirst]['effective_date'] != ''}
-								{$PreviousMonthsData['latest'][$keyFirst]['effective_date']}
-							{else}
-								0000-00-00 00:00:00 
-							{/if}
+							{*&nbsp;&nbsp;<b>Project Price Effective From:</b>*}
+							{**}
+							{*{$keyFirst = key($PreviousMonthsData['current'])}*}
+							{*{if $PreviousMonthsData['current'][$keyFirst]['effective_date'] != ''}*}
+								{*{$PreviousMonthsData['current'][$keyFirst]['effective_date']}*}
+							{*{else}*}
+								{*0000-00-00 00:00:00 *}
+							{*{/if}*}
 							<br><br>
 						  	</td>
 						</tr>
@@ -1821,162 +1822,99 @@ function getDateNow(){
 							  
 						  </tr>
 						{/if}
-						{if count($ProjectOptionDetail)>0}
-							<tr class="headingrowcolor" height="30px;">
-								 <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
-								 <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
-								 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {$arrOnlyPreviousMonthData[0]}</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {$arrOnlyPreviousMonthData[1]}</td>
-								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
-								 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Number of Floors</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Villa Floors</td>
-								 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>File Name</td>
-								
-							</tr>
-							{$cntAudit = 0}
-							{foreach from = $ProjectOptionDetail key=key item = item}
-								{if ($key+1)%2 == 0}
-									{$color = "bgcolor='#F7F8E0'"}
-								{else}
-									{$color = "bgcolor='#f2f2f2'"}
-								{/if}
-							<tr {$color}>
-								<td align = "center">{$key+1}</td>
-								<td>
-						 			 <input type='hidden' value='{$projectId}' name='projectId' />
-									{$ProjectOptionDetail[$key]['UNIT_NAME']}
-							  </td>
-							 
-							  <td>
-								
-								{if $ProjectOptionDetail[$key]['TOTAL_PLOT_AREA'] != 0}
-									{$ProjectOptionDetail[$key]['TOTAL_PLOT_AREA']}
-								{else}
-									{$ProjectOptionDetail[$key]['SIZE']}
-								{/if}
-								</td>
-							  <td>
-							  	{if $PreviousMonthsData['lalest'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] !== ''}
-							  		{$PreviousMonthsData['latest'][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
-							  	{else}
-							  		--
-							  	{/if}
-								<!-- {$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']} -->
-							  </td>
-							 	<td>
-                                                                    {$monthKeyPrev=$arrOnlyPreviousMonthData[0]}
-                                                                    {if $PreviousMonthsData[$monthKeyPrev][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] != ''}
-                                                                         {$PreviousMonthsData[$monthKeyPrev][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
-                                                                     {else}
-                                                                          Not Applicable 
-                                                                     {/if}
-							 	</td>							 
-							 	<td>
-                                                                    {$monthKeyPrevLast=$arrOnlyPreviousMonthData[1]}
-                                                                    {if $PreviousMonthsData[$monthKeyPrevLast][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price'] != ''}
-                                                                        {$PreviousMonthsData[$monthKeyPrevLast][$ProjectOptionDetail[$key]['OPTIONS_ID']]['price']}
-                                                                    {else}
-                                                                         Not Applicable 
-                                                                    {/if}
-							 	</td>
-							  <!-- <td>
-								{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_DP']}
-							  
-							  </td> -->
-							<!--   <td>
-							{$ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_FP']}
-							  
-							  </td> -->
-							   <td>
-									{$ProjectOptionDetail[$key]['NO_OF_FLOORS']}
-							  </td>
-							  <td>
-									{$ProjectOptionDetail[$key]['VILLA_NO_FLOORS']}
-							  </td>
-							  <td nowrap>
-							  {if $ProjectOptionDetail[$key]['FLOOR_IMAGES'] != ''}
-							  		{$exp = explode(",",$ProjectOptionDetail[$key]['FLOOR_IMAGES'])}
-							  		{foreach from = $exp key=key item=item}
-								  		{$expinner = explode("/",$item)}
-								  		{$cnt = count($expinner)-1}
-								  		{$imgName = $expinner[$cnt]}
-										<a style="text-decoration : none;" href= "javascript:void(0);">{$imgName}</a><br>
-									{/foreach}
-							  {else}
-							  	--
-							  {/if}
-							  </td>
-							</tr>
-							{if $phasename != '' && $stageName != ''}
-								<tr bgcolor ="#ACFA58">
-										<td align = "center" nowrap>Old Value</td>
-										<td>
-											{if $arrProjectPriceAuditOld['UNIT_NAME'][$cntAudit] != $ProjectOptionDetail[$key]['UNIT_NAME']}
-												{$arrProjectPriceAuditOld['UNIT_NAME'][$cntAudit]}
-											{else}
-												--
-											{/if}
-									  </td>
-									  <td>										
-										{if trim($arrProjectPriceAuditOld['SIZE'][$cntAudit]) != trim($ProjectOptionDetail[$key]['SIZE'])}
-										
-												{if $arrProjectPriceAuditOld['TOTAL_PLOT_AREA'][$cntAudit] != 0}
-													{$arrProjectPriceAuditOld['TOTAL_PLOT_AREA'][$cntAudit]}
-												{else}
-													{$arrProjectPriceAuditOld['SIZE'][$cntAudit]}
-												{/if}
-										{else}
-												--
-										{/if}
-										</td>
-									  <td>										
-										{if $arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA'][$cntAudit] != $ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA']}
-											{$arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA'][$cntAudit]}
-										{else}
-											--
-										{/if}
-									  </td>
-									  <td>
-									  	{if $arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA_DP'][$cntAudit] != $ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_DP']}
-											{$arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA_DP'][$cntAudit]}
-										{else}
-											--
-										{/if}
-									  </td>
-									  <td>
-									  	{if $arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA_FP'][$cntAudit] != $ProjectOptionDetail[$key]['PRICE_PER_UNIT_AREA_FP']}
-											{$arrProjectPriceAuditOld['PRICE_PER_UNIT_AREA_FP'][$cntAudit]}
-										{else}
-											--
-										{/if}
-									  </td>
-									   <td>
-											{if $arrProjectPriceAuditOld['NO_OF_FLOORS'][$cntAudit] != $ProjectOptionDetail[$key]['NO_OF_FLOORS']}
-												{$arrProjectPriceAuditOld['NO_OF_FLOORS'][$cntAudit]}
-											{else}
-												--
-											{/if}
-									  </td>
-									  <td>
-									  		{if $arrProjectPriceAuditOld['VILLA_NO_FLOORS'][$cntAudit] != $ProjectOptionDetail[$key]['VILLA_NO_FLOORS']}
-												{$arrProjectPriceAuditOld['VILLA_NO_FLOORS'][$cntAudit]}
-											{else}
-												--
-											{/if}
-									  </td>
-									  <td nowrap>
-									 &nbsp;
-									  </td>
-								</tr>
-							{/if}
-							{$cntAudit = $cntAudit+1}
-							{/foreach}
-						{/if}
-						  
+                    <tr class="headingrowcolor" height="30px;">
+                         <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
+                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase</td>
+                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
+                         <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
+                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                         {$pmd_keys=array_keys($PreviousMonthsData)}
+                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
+                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
+                         <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
+                         <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
+                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
+                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Number of Floors</td>
+                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Villa Floors</td>
+
+                    </tr>
+                    {$cntAudit = 0}
+                    {if count($ProjectPhases) == 0}
+                        {$ProjectPhases = array(0)}
+                    {/if}
+                    {foreach from = $ProjectPhases key=key item = phase_obj}
+                        {if (gettype($phase_obj) == "integer")}
+                            {$phase_id = $phase_obj}
+                            {$phase_name = "No Phase"}
+                        {else}
+                            {$phase_id = $phase_obj->phase_id}
+                            {$phase_name = $phase_obj->phase_name}
+                        {/if}
+                        {$count = count($PhaseOptionHash[$phase_id])}
+                        {foreach from = $PhaseOptionHash[$phase_id] key=inner_key item=option_obj}
+                        {$hash_key = $phase_id|cat:"_"|cat:$option_obj->options_id}
+                        {if ($cntAudit+1)%2 == 0}
+                            {$color = "bgcolor='#F7F8E0'"}
+                        {else}
+                            {$color = "bgcolor='#f2f2f2'"}
+                        {/if}
+                        <tr {$color}>
+                        <td align = "center">{$cntAudit+1}</td>
+                        {if $inner_key == 0}
+                        <td rowspan="{$count}" bgcolor="#ccc" align="center">
+                            {$phase_name} <br>
+                            {$date = $PreviousMonthsData['current'][$projectId][$hash_key][0]["effective_date"]}
+                            {if $date != ''}
+                                {$date = date_parse_from_format('Y-m-dTH:i:sZ', $date)}
+                                <strong>Effective Date: {$date["month"]}/{$date["year"]}</strong>
+                            {/if}
+                        </td>
+                        {/if}
+                        <td>
+                             <input type='hidden' value='{$projectId}' name='projectId' />
+                            {$option_obj->unit_name}
+                      </td>
+                      <td>
+                        {if $option_obj->total_plot_area != 0}
+                            {(int)$option_obj->total_plot_area}
+                        {else}
+                            {(int)$option_obj->size}
+                        {/if}
+                        </td>
+                      <td>
+                        {$price_per_unit_area = $PreviousMonthsData['current'][$projectId][$hash_key][0]["price"]}
+                        {if $price_per_unit_area !== ''}
+                            {(int)$price_per_unit_area}
+                        {else}
+                            --
+                        {/if}
+                      </td>
+                        <td>
+                            {$monkey=print_r(date('Y-m', strtotime("-1 month")),true)}
+                            {if substr($PreviousMonthsData[$monkey][$projectId][$hash_key][0]['effective_date'],0,7)==$monkey}
+                                {$PreviousMonthsData[$monkey][$projectId][$hash_key][0]['price']}
+                            {else}
+                                {"Not Applicable"}
+                            {/if}
+                        </td>
+                        <td>
+                            {$monkey=print_r(date('Y-m', strtotime("-2 month")),true)}
+                            {if substr($PreviousMonthsData[$monkey][$projectId][$hash_key][0]['effective_date'],0,7)==$monkey}
+                                {$PreviousMonthsData[$monkey][$projectId][$hash_key][0]['price']}
+                            {else}
+                                {"Not Applicable"}
+                            {/if}
+                        </td>
+                       <td>
+                            {$option_obj->no_of_floors}
+                      </td>
+                      <td>
+                            {$option_obj->villa_no_floors}
+                      </td>
+                    </tr>
+                    {$cntAudit = $cntAudit+1}
+                    {/foreach}
+                    {/foreach}
 					</table>
 				{/if}
 				</td>
