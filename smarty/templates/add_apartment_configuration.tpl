@@ -122,7 +122,7 @@
 			  <legend><b>Message</b></legend>-->
 
 			  <div style="overflow:auto;">
-
+                      {$globalDelete  = 0}
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID'] == 0}
                       <TABLE cellSpacing=2 cellPadding=4 width="100%" align=center  style="border:1px solid #c2c2c2;">
 
@@ -172,7 +172,7 @@
                         {$looprange	=	15}
                         {$flg = 0}
                         {section name=foo start= 0 loop={$looprange} step=1}
-
+                          
                             {$var	=$var+1}
 
                             {if $var%2 == 0}
@@ -185,8 +185,9 @@
                                 {$flg = $flg+1}
                             {/if}
                         <tr {$color} id="row_{($smarty.section.foo.index+1)}">
-                          <td align="center"><input type="checkbox" name="delete[{$smarty.section.foo.index}]" id = "{$smarty.section.foo.index}"></td>
-                         <td align="center">
+                          <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}"></td>
+                           {$globalDelete = $globalDelete+1}
+                          <td align="center">
                                  {($smarty.section.foo.index+1)}
                           </td>
                            <td align="center">
@@ -406,8 +407,9 @@
 
 
                             <tr {$color} id="row_{($smarty.section.foo.index+1)}">
-                              <td align="center"><input type="checkbox" name="delete[{$smarty.section.foo.index}]"  id = "{$smarty.section.foo.index}"></td>
-                             <td align="center">
+                              <td align="center"><input type="checkbox" name="delete[{$globalDelete}]"  id = "{$globalDelete}"></td>
+                              {$globalDelete = $globalDelete+1}
+                              <td align="center">
                                      {($smarty.section.foo.index+1)}
                               </td>
                                <td align="center">
@@ -619,8 +621,9 @@
                                 {/if}
 
                             <tr {$color} id="row_{($smarty.section.foo.index+1)}">
-                               <td align="center"><input type="checkbox" name="delete[{$smarty.section.foo.index}]" id = "{$smarty.section.foo.index}"></td>
-                              <td align="center">
+                               <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}"></td>
+                               {$globalDelete = $globalDelete+1}
+                               <td align="center">
                                      {($smarty.section.foo.index+1)}
                               </td>
 							   {if $flg != 0}
