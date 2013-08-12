@@ -317,6 +317,13 @@
 								  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
 								  </td>
 							   </tr>
+                             {else}
+                                 <tr>
+                                     <td>&nbsp;</td>
+                                     <td align="left" style="padding-left:0px;">
+                                         &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
+                                     </td>
+                                 </tr>
                                {/if}
                      </form>
 				</table>
