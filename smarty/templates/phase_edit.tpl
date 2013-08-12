@@ -108,6 +108,16 @@
            }
             return false;
         });
+
+        $(".select_all_options").change(function(){
+            if($(this).is(":checked")){
+                $("#options > option").attr("selected", true);
+                $("#options > option[value=\"-1\"]").attr("selected", false);
+            }
+            else{
+                $("#options > option").attr("selected", false);
+            }
+        })
     }
 
 </script>
@@ -206,6 +216,7 @@
                                      </td>
                                      <td width="50%" align="left">
                                          <button class="reset_option_and_supply option_button">Change to supply</button>
+                                         <br><br><strong>Select all options:</strong> <input type="checkbox" class="select_all_options">
                                      </td>
                                  </tr>
 
