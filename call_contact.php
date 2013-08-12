@@ -27,6 +27,10 @@ $campaign = $_REQUEST['campaign'];
 $url = "http://Kookoo.in/propTiger/manualDial.php?api_key=KK6553cb21f45e304ffb6c8c92a279fde5&customerNumber=" . $contactNo . "&uui=" . $callId . "&campaignName=" . $campaign . "&agentID=" . $agentId . "&username=proptiger";
 
 $response = file_get_contents($url);
+$xml = simplexml_load_string($response);
+
+$sql = "update CallDetails set ApiResponse = '" . $xml[0] . "' where CallId = " . $callId;
+mysql_query($sql);
 
 if ($callId) 
   echo "call_" . $callId . "_" . $agentId;
