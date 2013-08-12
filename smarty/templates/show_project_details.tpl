@@ -1796,14 +1796,14 @@ function getDateNow(){
 						  	<td align="left"  nowrap colspan = "9">
 						  	<b>Project Price:</b> <button class="clickbutton" onclick="$(this).trigger('event12');">Edit</button>&nbsp;&nbsp;
 							<b>Project Configuration:</b> <button class="clickbutton" onclick="$(this).trigger('event7');">Edit</button>
-							&nbsp;&nbsp;<b>Project Price Effective From:</b>
-							
-							{$keyFirst = key($PreviousMonthsData['current'])}
-							{if $PreviousMonthsData['current'][$keyFirst]['effective_date'] != ''}
-								{$PreviousMonthsData['current'][$keyFirst]['effective_date']}
-							{else}
-								0000-00-00 00:00:00 
-							{/if}
+							{*&nbsp;&nbsp;<b>Project Price Effective From:</b>*}
+							{**}
+							{*{$keyFirst = key($PreviousMonthsData['current'])}*}
+							{*{if $PreviousMonthsData['current'][$keyFirst]['effective_date'] != ''}*}
+								{*{$PreviousMonthsData['current'][$keyFirst]['effective_date']}*}
+							{*{else}*}
+								{*0000-00-00 00:00:00 *}
+							{*{/if}*}
 							<br><br>
 						  	</td>
 						</tr>
@@ -1862,7 +1862,12 @@ function getDateNow(){
                         <td align = "center">{$cntAudit+1}</td>
                         {if $inner_key == 0}
                         <td rowspan="{$count}" bgcolor="#ccc" align="center">
-                            {$phase_name}
+                            {$phase_name} <br>
+                            {$date = $PreviousMonthsData['current'][$projectId][$hash_key][0]["effective_date"]}
+                            {if $date != ''}
+                                {$date = date_parse_from_format('Y-m-dTH:i:sZ', $date)}
+                                <strong>Effective Date: {$date["month"]}/{$date["year"]}</strong>
+                            {/if}
                         </td>
                         {/if}
                         <td>
@@ -1871,15 +1876,15 @@ function getDateNow(){
                       </td>
                       <td>
                         {if $option_obj->total_plot_area != 0}
-                            {$option_obj->total_plot_area}
+                            {(int)$option_obj->total_plot_area}
                         {else}
-                            {$option_obj->size}
+                            {(int)$option_obj->size}
                         {/if}
                         </td>
                       <td>
                         {$price_per_unit_area = $PreviousMonthsData['current'][$projectId][$hash_key][0]["price"]}
                         {if $price_per_unit_area !== ''}
-                            {$price_per_unit_area}
+                            {(int)$price_per_unit_area}
                         {else}
                             --
                         {/if}

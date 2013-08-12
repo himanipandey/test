@@ -57,6 +57,7 @@ class ResiProjectPhase extends ActiveRecord\Model
         $phase_option_hash = array();
         foreach($phases as $phase){
             $phase_option_hash[$phase->phase_id] = $phase->options();
+            if(count($phase_option_hash[$phase->phase_id]) == 0) $phase_option_hash[$phase->phase_id]= $options;
         }
         $phase_option_hash[0] = $options;
         return array($phases, $phase_option_hash);
