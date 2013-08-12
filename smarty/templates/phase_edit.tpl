@@ -117,7 +117,20 @@
             else{
                 $("#options > option").attr("selected", false);
             }
-        })
+            return false;
+        });
+
+        $("#options").change(function(){
+            var all_select = $("#options").find("option:selected").not("option[value='-1']").length == $("#options").
+                    find("option").not("option[value='-1']").length;
+            if(all_select){
+                $(".select_all_options").attr("checked", true);
+            }
+            else{
+                $(".select_all_options").attr("checked", false);
+            }
+            return false;
+        });
     }
 
 </script>
