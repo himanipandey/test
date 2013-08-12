@@ -257,6 +257,9 @@ else{
 }
 }
 
+function selectedBuilderValue(builderId) {
+    $(".builerUPdate").val(builderId);
+}
 
 </script>
 
@@ -343,7 +346,7 @@ else{
 								<td align="right" style = "padding-left:20px;"><b>Builder:</b></td>
 								<td align="left" style = "padding-left:20px;">
 									<span id = "BuilderList">
-										<select name = 'builder' id = "builder">
+										<select name = 'builder' id = "builder" onchange = 'selectedBuilderValue(this.value);'>
 											<option value = "">Select Builder</option>
 											{foreach from = $builderList key= key item = val}
 	
@@ -476,6 +479,7 @@ else{
 							  <tr>
 								<td height="25" align="right" colspan= "2"></td>
 							  </tr>
+                                                          <input type="hidden" name = "builder" class = "builerUPdate">
 							   <tr>
 								<td height="25" align="center" colspan= "2"  style = "padding-right:40px;">
 									<input type = "submit" value = "search" name = "search" style="border:1px solid #c2c2c2;height:30px;width:70px;background:#999999;color:#fff;font-weight:bold;cursor:hand;pointer:hand;">

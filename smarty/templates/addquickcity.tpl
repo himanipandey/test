@@ -479,97 +479,101 @@ function specialCharacterValidation(fieldVal)
 	</tr>
 <tr>
 <td>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-<form name="frm">
-{if $ErrorMsg["errmsg"] != ''}
-<tr>
-<td align="center" colspan="3">
-	<font color = 'red'>{$ErrorMsg["errmsg"]}</font>oncity_update</td>
-</tr>
+{if $accessCity == ''}
+
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <form name="frm">
+    {if $ErrorMsg["errmsg"] != ''}
+    <tr>
+    <td align="center" colspan="3">
+            <font color = 'red'>{$ErrorMsg["errmsg"]}</font>oncity_update</td>
+    </tr>
+    {/if}
+    <tr><td height="15px" colspan="3"></td></tr>
+
+    <tr>
+    <td  height="25" align="left" style="padding-left:5px;">
+    Add City:
+            </td>
+            <td height="50%" align="left">
+                    <div id="maincity">
+                            <select name="cityId" id = "cityId" class="cityId" onchange="dispcity(this.value);" STYLE="width: 150px">
+                                    <option value =''>Select City</option>
+                                     {section name=data loop=$CityDataArr}
+                                    <option {if $cityId == {$CityDataArr[data].CITY_ID}} value ='{$cityId}' selected="selected" {else} value ='{$CityDataArr[data].CITY_ID}' {/if}>{$CityDataArr[data].LABEL}</option>
+                                     {/section}
+                            </select>
+                    </div>
+            </td>
+
+            <td height="25" align="left">
+                    <div id="maincity_txtbox">
+                            <input type="hidden" name="city_txtbox_hidden" id="city_txtbox_hidden">
+                            <input type="text" name="city_txtbox" id="city_txtbox" maxLength="40">
+                    <a href="#" onclick="addupdatecity();"><b>Save</b></a>  | 
+                    <a href="#" onclick="return deletecity();">Delete</a>
+                    </div>
+            </td>
+    </tr>
+    <tr ><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
+    <tr>
+    <td  height="25" align="left" style="padding-left:5px;">
+    Add Suburb:
+                            </td>
+                            <td height="50%" align="left">
+                            <div id="mainsubcity">
+                            <select name="suburbId" id = "suburbId" class="suburbId" onchange="dispsubcity(this.value,1);" STYLE="width: 150px">
+                            <option value="">Select Suburb</option>
+                            {if count($suburbSelect) gt 0}
+                                    {section name=data loop=$suburbSelect}
+                                    <option {if $suburbId == {$suburbSelect[data].SUBURB_ID}} value = "{$suburbSelect[data].SUBURB_ID}" selected="selected" {else}  value = "{$suburbSelect[data].SUBURB_ID}" {/if}>{$suburbSelect[data].LABEL}</option>
+                                    {/section}
+                            {/if}
+                            </select>
+                            </div>
+                            </td>
+                            <td height="25" align="left">
+                            <div id="mainsubcity_txtbox">
+                                    <input type="hidden" name="subcity_txtbox_hidden" id="subcity_txtbox_hidden">
+                                    <input type="text" name="subcity_txtbox" id="subcity_txtbox" maxLength="40">
+                                    <a href="#" onclick="addupdatesubcity();"><b>Save</b></a>  | 
+                                    <a href="#" onclick="return deletesubcity();">Delete</a>
+                            </div>
+                            </tr>
+    <tr><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
+    <tr>
+    <td  height="25" align="left" style="padding-left:5px;">
+    Add locality:
+                            </td>
+                            <td height="50%" align="left">
+                            <div id="mainlocality">
+                            <select name="localityId" id = "localityId" class="localityId" onchange="displocality(this.value,1);" STYLE="width: 150px">
+                                    <option value="">Select Locality</option>
+                                    {if count($localitySelect) gt 0}
+
+                                            {section name=data loop=$localitySelect}
+
+                                            <option {if $localityId == {$localitySelect[data].LOCALITY_ID}} value = "{$localitySelect[data].LOCALITY_ID}" selected="selected" {else}  value = "{$localitySelect[data].LOCALITY_ID}" {/if}>{$localitySelect[data].LABEL}</option>
+                                            {/section}
+                                    {/if}
+                            </select>
+                            </div>
+                            </td>
+                            <td height="25" align="left">
+                            <div  id="mainlocality_txtbox">
+                                    <input type="hidden" name="locality_txtbox_hidden" id="locality_txtbox_hidden">
+                                    <input type="text" name="locality_txtbox" id="locality_txtbox" maxLength="40" >
+                                    <a href="#" onclick="addupdatelocality();"><b>Save</b></a>  | 
+                                    <a href="#" onclick="return deletelocality();">Delete</a>
+                            </div>
+                    </tr>
+    <tr><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
+
+                            </form>
+    </table>
+{else}
+    <font color = "red">No Access</font>
 {/if}
-<tr><td height="15px" colspan="3"></td></tr>
-
-<tr>
-<td  height="25" align="left" style="padding-left:5px;">
-Add City:
-	</td>
-	<td height="50%" align="left">
-		<div id="maincity">
-			<select name="cityId" id = "cityId" class="cityId" onchange="dispcity(this.value);" STYLE="width: 150px">
-				<option value =''>Select City</option>
-				 {section name=data loop=$CityDataArr}
-				<option {if $cityId == {$CityDataArr[data].CITY_ID}} value ='{$cityId}' selected="selected" {else} value ='{$CityDataArr[data].CITY_ID}' {/if}>{$CityDataArr[data].LABEL}</option>
-				 {/section}
-			</select>
-		</div>
-	</td>
-
-	<td height="25" align="left">
-		<div id="maincity_txtbox">
-			<input type="hidden" name="city_txtbox_hidden" id="city_txtbox_hidden">
-			<input type="text" name="city_txtbox" id="city_txtbox" maxLength="40">
-		<a href="#" onclick="addupdatecity();"><b>Save</b></a>  | 
-		<a href="#" onclick="return deletecity();">Delete</a>
-		</div>
-	</td>
-</tr>
-<tr ><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
-<tr>
-<td  height="25" align="left" style="padding-left:5px;">
-Add Suburb:
-			</td>
-			<td height="50%" align="left">
-			<div id="mainsubcity">
-			<select name="suburbId" id = "suburbId" class="suburbId" onchange="dispsubcity(this.value,1);" STYLE="width: 150px">
-			<option value="">Select Suburb</option>
-			{if count($suburbSelect) gt 0}
-				{section name=data loop=$suburbSelect}
-				<option {if $suburbId == {$suburbSelect[data].SUBURB_ID}} value = "{$suburbSelect[data].SUBURB_ID}" selected="selected" {else}  value = "{$suburbSelect[data].SUBURB_ID}" {/if}>{$suburbSelect[data].LABEL}</option>
-				{/section}
-			{/if}
-			</select>
-			</div>
-			</td>
-			<td height="25" align="left">
-			<div id="mainsubcity_txtbox">
-				<input type="hidden" name="subcity_txtbox_hidden" id="subcity_txtbox_hidden">
-				<input type="text" name="subcity_txtbox" id="subcity_txtbox" maxLength="40">
-				<a href="#" onclick="addupdatesubcity();"><b>Save</b></a>  | 
-				<a href="#" onclick="return deletesubcity();">Delete</a>
-			</div>
-			</tr>
-<tr><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
-<tr>
-<td  height="25" align="left" style="padding-left:5px;">
-Add locality:
-			</td>
-			<td height="50%" align="left">
-			<div id="mainlocality">
-			<select name="localityId" id = "localityId" class="localityId" onchange="displocality(this.value,1);" STYLE="width: 150px">
-				<option value="">Select Locality</option>
-				{if count($localitySelect) gt 0}
-
-					{section name=data loop=$localitySelect}
-
-					<option {if $localityId == {$localitySelect[data].LOCALITY_ID}} value = "{$localitySelect[data].LOCALITY_ID}" selected="selected" {else}  value = "{$localitySelect[data].LOCALITY_ID}" {/if}>{$localitySelect[data].LABEL}</option>
-					{/section}
-				{/if}
-			</select>
-			</div>
-			</td>
-			<td height="25" align="left">
-			<div  id="mainlocality_txtbox">
-				<input type="hidden" name="locality_txtbox_hidden" id="locality_txtbox_hidden">
-				<input type="text" name="locality_txtbox" id="locality_txtbox" maxLength="40" >
-				<a href="#" onclick="addupdatelocality();"><b>Save</b></a>  | 
-				<a href="#" onclick="return deletelocality();">Delete</a>
-			</div>
-		</tr>
-<tr><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
-
-			</form>
-</table>
-
 </td>
 
 

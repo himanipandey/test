@@ -54,7 +54,8 @@
 							 <tr>
 								   <td width="20%" align="right" valign="top" nowrap><b><font color ="red">*</font>Expected Completion Date :</b> </td>
 								   <td width="30%" align="left">
-								   <input name="eff_date_to" value="{$costDetail['EXPECTED_COMPLETION_DATE']}" type="text" class="formstyle2" id="f_date_c_to" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+								   <input name="eff_date_to" value="{$costDetail['EXPECTED_COMPLETION_DATE']}" type="text" class="formstyle2" id="f_date_c_to" size="15" />  <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" /><br>
+                                                                     <span style ="font-size: 10px;">format : 2013-07-23 00:000:00</span>
 								   </td>
 								    
 								    <td width="50%" align="left">
@@ -65,7 +66,8 @@
 							   <tr>
 								<td width="20%" align="left">
 								<b>Select Date Effective From :</b> </td>
-								 <td width="30%" align="left"><input name="eff_date" value="{$costDetail['SUBMITTED_DATE']}" type="text" class="formstyle2" id="eff_date" readonly="1" value="" size="10" />  <img src="../images/cal_1.jpg" id="f_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+								 <td width="30%" align="left"><input name="eff_date" value="{$costDetail['SUBMITTED_DATE']}" type="text" class="formstyle2" id="eff_date" value="" size="15" />  <img src="../images/cal_1.jpg" id="f_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" /><br>
+                                                                     <span style ="fon-:size: 10px;">format : 2013-07-23 00:000:00</span>
 								</td>
 							  </tr>
 							   <tr>

@@ -356,8 +356,8 @@
 									</select>
 								  </td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_type" style = "display:none;">Please select project type!</span></font>	
-									  {if $project_type != '' && $project_type != 0}<font color="red"><span id = "err_project_typeChk" style = "display:none;">You can not update project type!</span></font>{/if}	  
+									  <font color="red"><span id = "err_project_type" style ="display:none;">Please select project type!</span></font>	
+									  {if $project_type != '' && $project_type != 0}<font color="red"><span id = "err_project_typeChk" {if count($ErrorMsgType['showTypeError']) == 0} style = "display:none;" {else}{$ErrorMsg['showTypeError']}{/if}>You can not update project type!</span></font>{/if}	  
 								  </td>
 							   </tr>
 
@@ -473,7 +473,7 @@
 							   <tr>
 								  <td width="20%" align="right"><b>Active :</b> </td>
 								  <td width="30%" align="left">
-								  {if count($accessModule['urlEdit']) == 0 AND $projectId != ''}
+								  {if $specialAccess == 0 AND $projectId != ''}
 								 	 {if $Active == 0}Inactive on both Website and IS DB{/if}
 								 	 {if $Active == 1}Active on both Website and IS DB{/if}
 								 	 {if $Active == 2}Deleted{/if}
@@ -528,7 +528,7 @@
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
 								  <td width="30%" align="left">
-								  	{if $projectId != '' && $accessModule['urlEdit'] != 547 && $accessModule['urlEdit'] != 525 && $accessModule['urlEdit'] != 588}
+								  	{if $projectId != '' && $urlEditAccess == 0}
 								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
 								  	{else}
 								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
@@ -841,11 +841,11 @@
 									 <input type="hidden" name="projectId" value="{$projectId}" />
 									 <input type="hidden" name="oldbuilderId" value="{$builderId}" />
 									 <input type="hidden" name="preview" value="{$preview}" />
-									 <input type = "hidden" name = "project_type_hidden" id = "project_type_hidden" value = "{$project_type}">
+									 <input type = "hidden" name = "project_type_hidden" id = "project_type_hidden" value = "{$projectTypeOld}">
 									 {if $projectId == ''}
-										<input type="submit" name="btnSave" id="btnSave" value="Next" onclick = "return project_scn1({$accessModule['urlEdit']});" />
+										<input type="submit" name="btnSave" id="btnSave" value="Next" onclick = "return project_scn1();" />
 									 {else}
-										<input type="submit" name="btnSave" id="btnSave" value="Save" onclick = "return project_scn1({$accessModule['urlEdit']});" />
+										<input type="submit" name="btnSave" id="btnSave" value="Save" onclick = "return project_scn1();" />
 									 {/if}
 									 &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
 								  </td>

@@ -51,7 +51,7 @@ class gacl {
 	/*
 	--- phpGACL Configuration path/file ---
 	*/
-	var $config_file = './gacl.ini.php';
+	var $config_file = 'phpgacl-3.3.7/gacl.ini.php';
 
 	/*
 	--- Private properties ---
@@ -116,7 +116,7 @@ class gacl {
 		        $config = parse_ini_file($this->config_file);
 
 		        if ( is_array($config) ) {
-		                $gacl_options = array_merge($config, $options);
+		                $options = array_merge($config, $options);
 		        }
 
 	        	unset($config);

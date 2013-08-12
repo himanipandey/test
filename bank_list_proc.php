@@ -1,11 +1,16 @@
 <?php
-	error_reporting(E_ALL & ~E_NOTICE);
-	if ($_GET['mode'] == 'delete') 
-	{
-		
-		DeleteBank($_GET['bank_id']);
-		header("Location:bank_list.php?page=1&sort=all");
-	}
+    $accessBank = '';
+    if( $bankAuth == false )
+       $accessBank = "No Access";
+    $smarty->assign("accessBank",$accessBank);
+
+    error_reporting(E_ALL & ~E_NOTICE);
+    if ($_GET['mode'] == 'delete') 
+    {
+
+            DeleteBank($_GET['bank_id']);
+            header("Location:bank_list.php?page=1&sort=all");
+    }
 /***********************************************************/
 /**
  * *********************************

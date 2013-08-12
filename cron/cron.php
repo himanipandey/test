@@ -31,6 +31,7 @@ foreach ($configArray as $email) {
 			$filePath = $docroot.mt_rand().'rand.csv';
 			putResultsInFile($result_table, $filePath);
 			sendRawEmailFromAmazon($to, $from, $cc, $emailSubject, $emailContent, $email['attachmentname'].'-'.date("d-m-Y").'.csv', $filePath, $email['recipients']);
+                        unlink($filePath);
 		}
 	}
 }

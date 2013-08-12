@@ -9,6 +9,7 @@ ActiveRecord\Config::initialize(function($cfg)
     'mysql://root:root@localhost/project'));
 });
 
+// Includes whole model directory
 foreach (glob(dirname(__FILE__)."/models/*.php") as $filename)
 {
     include_once $filename;

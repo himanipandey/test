@@ -37,13 +37,18 @@ function chkConfirm()
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Builders List</TD>
-                      <TD align=right colSpan=3><a href="builderadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Builder</b></a></TD>
+                      <TD align=right colSpan=3>
+                          {if $accessBuilder == ''}
+                            <a href="builderadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Builder</b></a>
+                          {/if}
+                      </TD>
                     </TR>
 		  </TBODY></TABLE>
 		</TD>
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                 {if $accessBuilder == ''}
                   <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
@@ -123,6 +128,9 @@ function chkConfirm()
                     </tr>
                   </table>
                   {/if}
+                {else}
+                    <font color=red>{$accessBuilder}</font>
+                {/if}
 	      </TD>
             </TR>
           </TBODY></TABLE>

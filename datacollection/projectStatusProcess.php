@@ -1,4 +1,10 @@
 <?php
+
+$accessDataCollection = '';
+if( $dataCollectionFlowAuth == false )
+   $accessDataCollection = "No Access";
+$smarty->assign("accessDataCollection",$accessDataCollection);
+
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER'))){
@@ -65,7 +71,7 @@ $smarty->assign("message", $msg);
 function prepareDisplayData($data){ 
     $result = array();
     foreach ($data as $value) {
-        $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS']);
+        $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'], 'LABEL'=>$value['LABEL']);
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
         $assignment_type = '';

@@ -6,6 +6,12 @@
     include("dbConfig.php");
     include("includes/configs/configs.php");
     include("common/function.php");
+    
+    $accessPhoto = '';
+    if( $imageAuth == false )
+       $accessPhoto = "No Access";
+    $smarty->assign("accessPhoto",$accessPhoto);
+    
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 

@@ -26,45 +26,46 @@
       </TBODY></TABLE>
     </TD>
         </TR>
-              <TR>
-                <TD vAlign=top align=middle class="backgorund-rt" height="450"><BR>
+        <TR>
+          <TD vAlign=top align=middle class="backgorund-rt" height="450"><BR>
+           {if $accessUrl == ''}
+            <form method="post" enctype="multipart/form-data">
 
-      <form method="post" enctype="multipart/form-data">
+            <div style="overflow:auto;">
+              <TABLE cellSpacing=2 cellPadding=4 width="50%" align=center  style="border:1px solid #c2c2c2;">
+              <div>
+               {if $msg != ''}
+                    <tr>
+                        <td align = "center" nowrap colspan ="2">{$msg}</td>
+                    </tr> 
+               {/if}
+                <tr>
+                    <td align = "center" nowrap><b>From URL:</b></td>
+                    <td align = "left">
+                        <input type = "text" name = "fromUrl" value = "{$fromUrl}" style = "width:300px;"><br>
+                        <span syyle = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</span>
+                    </td>
+                </tr> 
+                <tr>
+                    <td align = "center" nowrap><b>To URL:</b></td>
+                    <td align = "left">
+                        <input type = "text" name = "toUrl" value = "{$toUrl}" style = "width:300px;"><br>
+                        <span syyle = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</span>
+                    </td>
+                </tr>
 
-        <div style="overflow:auto;">
-          <TABLE cellSpacing=2 cellPadding=4 width="50%" align=center  style="border:1px solid #c2c2c2;">
-          <div>
-           {if $msg != ''}
-	            <tr>
-	                <td align = "center" nowrap colspan ="2">{$msg}</td>
-	            </tr> 
-           {/if}
-            <tr>
-                <td align = "center" nowrap><b>From URL:</b></td>
-                <td align = "left">
-                    <input type = "text" name = "fromUrl" value = "{$fromUrl}" style = "width:300px;"><br>
-                    <span syyle = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</span>
-                </td>
-            </tr> 
-            <tr>
-                <td align = "center" nowrap><b>To URL:</b></td>
-                <td align = "left">
-                    <input type = "text" name = "toUrl" value = "{$toUrl}" style = "width:300px;"><br>
-                    <span syyle = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</span>
-                </td>
-            </tr>
-            
-            <tr>
-                <td align = "center" nowrap colspan ="2"><input type = "submit" name = "submit" value = "Submit">
-                </td>
-            </tr>                          
+                <tr>
+                    <td align = "center" nowrap colspan ="2"><input type = "submit" name = "submit" value = "Submit">
+                    </td>
+                </tr>                          
+                </div>
+             </TABLE>
             </div>
-         </TABLE>
-        </div>
 
         </form>
-<!--      </fieldset>-->
-
+        {else}
+            <font color="red">No Access</font>
+        {/if}
        </TD>
             </TR>
           </TBODY></TABLE>

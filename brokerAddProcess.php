@@ -1,5 +1,10 @@
 <?php
     
+    $accessBroker = '';
+    if( $brokerAuth == false )
+       $accessBroker = "No Access";
+    $smarty->assign("accessBroker",$accessBroker);
+    
     $brokerId = $_REQUEST['brokerId'];
     $smarty->assign("brokerId", $brokerId);
     $brokerIdForMapping = '';

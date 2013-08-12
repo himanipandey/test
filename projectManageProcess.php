@@ -1,6 +1,6 @@
 <?php
 	$citylist	=	CityArr();
-	$builderList	=	BuilderArr();
+	$builderList	=	BuilderEntityArr();
 	if(!isset($_GET['projectId']))
             $_GET['projectId'] = '';
 
@@ -160,6 +160,16 @@
                     {
                         $QueryMember .=  $and." CITY_ID = '".$_REQUEST['city']."'";
                         $and  = ' AND ';
+                        //code for builder refresh if city selected
+                        $ctName = ViewCityDetails($_REQUEST['city']);
+                        $sqlBuilder = "SELECT A.ENTITY, A.BUILDER_ID FROM ".RESI_BUILDER." AS A WHERE A.CITY = '" .$ctName['LABEL']."'ORDER BY ENTITY ASC";	
+                        $arrBuilder	=	array();
+                        $resBuilder	=	mysql_query($sqlBuilder);
+                        while($data = mysql_fetch_assoc($resBuilder))
+                        {
+                                $arrBuilder[$data['BUILDER_ID']] = $data['ENTITY'];
+                        }
+                        $smarty->assign("builderList", $arrBuilder);
                     }
                     if($_REQUEST['Residential'] != '')
                     {
@@ -254,6 +264,7 @@
                         array_push($projectDataArr,$data);
                     }
 		}
+                
 	}
 	$smarty->assign("city", $city);
 	$smarty->assign("builder", $builder);

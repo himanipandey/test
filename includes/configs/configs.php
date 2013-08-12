@@ -606,8 +606,9 @@ define('PLOT_APARTMENTS','6');
 $ARR_PROJ_EDIT_PERMISSION = array(
 	"ADMINISTRATOR"=>array('dataCollection','newProject','audit1','audit2','complete','bulkupdate','dailymis','dcCallCenter','noPhase','noStage'),
 	"DATAENTRY"=>array('dataCollection'),
-	"CALLCENTER"=>array('dataCollection','newProject','dailymis','dcCallCenter'),
-	"AUDIT-1"=>array('audit1'),
+	"CALLCENTER"=>array('dataCollection','dailymis','dcCallCenter'),
+        "RESALE-CALLCENTER"=>array('dataCollection','dailymis'),
+	"AUDIT-1"=>array('audit1','dailymis'),
 	"NEWPROJECTAUDIT"=>array('newProject'),
 	"AUDIT-2"=>array('audit2'),
 	"SURVEY"=>array('dataCollection','newProject')
@@ -667,4 +668,7 @@ $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
 
 $analytics_credential=array("username"=>"cms","password"=>"Cms123!");
+
+include("authConstents.php");
+    
 ?>

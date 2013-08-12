@@ -28,11 +28,7 @@
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
-		
-		
-		     
-<!--			<fieldset class="field-border">
-			  <legend><b>Message</b></legend>-->
+		{if $accessBroker == ''}
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" enctype="multipart/form-data">
 			      <div>
@@ -147,6 +143,9 @@
 	            </td>
 		  </tr>
 		</TABLE>
+                {else}
+                   <font color = "red">No Access</fonnt>
+               {/if}                  
 	      </TD>
             </TR>
           </TBODY></TABLE>

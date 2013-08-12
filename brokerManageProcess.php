@@ -1,4 +1,10 @@
 <?php
+
+    $accessBroker = '';
+    if( $brokerAuth == false )
+       $accessBroker = "No Access";
+    $smarty->assign("accessBroker",$accessBroker);
+    
     $smarty->assign("sort",$_GET['sort']);
     $smarty->assign("page",$_GET['page']);
     if(isset($_GET['page'])) {

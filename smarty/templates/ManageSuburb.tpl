@@ -40,6 +40,7 @@ function selectCity(value){
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                {if $accessSuburb == ''}
                   <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
@@ -50,13 +51,13 @@ function selectCity(value){
                             </td>
 							<td width="35%" height="25" align="right" valign="top">
                              <form name="frmcity" id="frmcity" method="post">
-								 <select id="citydd" name="citydd" onchange="selectCity(this.value)">
-									<option>select</option>
-									{foreach from=$cityArray key=k item=v}
-									 <option  value="{$v.CITY_ID}" {if $cityId=={$v.CITY_ID}}  selected="selected" {/if}>{$v.LABEL}</option>
-								   {/foreach}
-								 </select>
-							</form>
+                                <select id="citydd" name="citydd" onchange="selectCity(this.value)">
+                                       <option>select</option>
+                                       {foreach from=$cityArray key=k item=v}
+                                        <option  value="{$v.CITY_ID}" {if $cityId=={$v.CITY_ID}}  selected="selected" {/if}>{$v.LABEL}</option>
+                                  {/foreach}
+                                </select>
+                           </form>
                             </td>
                           </tr>
                         </table>
@@ -131,7 +132,10 @@ function selectCity(value){
                       </td>
                     </tr>
                   </table>                
-				  {/if}
+		    {/if}
+                 {else}
+                     <font color = "red">No Access</font>
+                 {/if}
 	      </TD>
             </TR>
           </TBODY></TABLE>

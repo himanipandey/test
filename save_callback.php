@@ -10,11 +10,15 @@
     $et      = "'" . substr($data['EndTime'], 0, 19) . "'";
     $agentId = $data['AgentID'];
     $callId  = $data['UUI'];
+    $duration = "'$data[Duration]'";
+    $dialStatus = "'$data[DialStatus]'";
 
     $sql = "UPDATE CallDetails SET "
     . "AudioLink=" . $audio . ", " 
     . "StartTime=" . $st . ", "
     . "EndTime=" . $et . ", "
+    . "CallDuration=" . $duration . ", "
+    . "DialStatus=" . $dialStatus . ", "
     . "CallbackJson='" . $test
     . "' WHERE CallId=". $callId .";";
     mysql_query($sql);

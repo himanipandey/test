@@ -1,4 +1,10 @@
 <?php
+
+$accessDataCollection = '';
+if( $dataCollectionFlowAuth == false )
+   $accessDataCollection = "No Access";
+$smarty->assign("accessDataCollection",$accessDataCollection);
+
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER'))){
@@ -34,6 +40,7 @@ function prepareDisplayData($execCallCount, $completionCount, $revertCount){
     foreach ($execCallCount as $adminId=>$adminDetail) {
         $new = array();
         $new['USERNAME'] = $adminDetail[0]['USERNAME'];
+        $new['TOTAL-ATTEMPTS'] = intval(getTotalAttemptsFromExecCallDetail($adminDetail));
         $new['TOTAL-CALLS'] = intval(getTotalCallsFromExecCallDetail($adminDetail));
         $new['DONE'] = intval($completionCount[$adminId]['COMPLETED']);
         $new['REVERTED'] = intval($revertCount[$adminId]['REVERT_COUNT']);
@@ -88,7 +95,7 @@ function groupByAdminId($execCallDetail){
     return $result;
 }
 
-function getTotalCallsFromExecCallDetail($execCallDetail){
+function getTotalAttemptsFromExecCallDetail($execCallDetail){
     $total = 0;
     foreach ($execCallDetail as $detail) {
         $total += $detail['TOTAL_CALLS'];
@@ -96,14 +103,21 @@ function getTotalCallsFromExecCallDetail($execCallDetail){
     return $total;
 }
 
+function getTotalCallsFromExecCallDetail($execCallDetail){
+    $total = 0;
+    foreach ($execCallDetail as $detail) {
+        if(!empty($detail['DialStatus']))$total += $detail['TOTAL_CALLS'];
+    }
+    return $total;
+}
+
 function getNotContactableCount($execCallDetail){
     $total = 0;
     foreach ($execCallDetail as $detail) {
-        if(is_null($detail['CallStatus'])){
-            $total = $detail['TOTAL_CALLS'];
-            break;
+        if($detail['DialStatus']!='answered' && !empty($detail['DialStatus'])){
+            $total += $detail['TOTAL_CALLS'];
         }
-    }
+    } 
     return $total;
 }
 
@@ -111,8 +125,7 @@ function getIncompleteCallCount($execCallDetail){
     $total = 0;
     foreach ($execCallDetail as $detail) {
         if($detail['CallStatus']==='fail'){
-            $total = $detail['TOTAL_CALLS'];
-            break;
+            $total += $detail['TOTAL_CALLS'];
         }
     }
     return $total;
@@ -121,7 +134,7 @@ function getIncompleteCallCount($execCallDetail){
 function getTotalCallTime($execCallDetail){
     $total = 0;
     foreach ($execCallDetail as $detail) {
-        if(in_array($detail['CallStatus'], array('fail', 'success'))){
+        if($detail['DialStatus']=='answered'){
             $total += $detail['TOTAL_TIME'];
         }
     }

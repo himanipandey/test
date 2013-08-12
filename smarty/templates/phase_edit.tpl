@@ -335,7 +335,7 @@
 								  <td align="left" style="padding-left:0px;">
 									<input type="submit" name="btnSave" id="btnSave" value="Submit" onclick="return validate_phase();" />
 								  
-								  {if count($accessModule)>0}
+								  {if $specialAccess == 1}
 								  	&nbsp;&nbsp;<input type="submit" name="delete" value="Delete" onclick = "return deletePhase();" />
 								  {/if}
 								  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
