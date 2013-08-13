@@ -216,6 +216,14 @@
                                         <font color="red"><span id = "err_completion_date" style = "display:none;">Enter Completion Date</span></font>
                                     </td>
                                 </tr>
+                                
+                                <tr>
+                                        <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
+                                        <td width="30%" align="left">
+                                              <input name = "phaseLaunched" type = "checkbox" value = "1" {if $phaseLaunched == 1} checked {/if}>
+                                        </td>
+                                        <td width="50%" align="left"></td>
+                                 </tr>
 
                                  <tr class="options_select" style="display: none">
                                      <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
@@ -323,14 +331,6 @@
 								  <td width="20%" align="right" valign="top"><b><b><b>Remarks :</b> </td>
 								  <td width="30%" align="left">
 									 <textarea name="remark" rows="10" cols="30" id="remark">{$remark}</textarea>
-								  </td>
-								  <td width="50%" align="left"></td>
-							   </tr>
-							   
-							    <tr>
-								  <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
-								  <td width="30%" align="left">
-								  	<input name = "phaseLaunched" type = "checkbox" value = "1" {if $phaseLaunched == 1} checked {/if}>
 								  </td>
 								  <td width="50%" align="left"></td>
 							   </tr>
