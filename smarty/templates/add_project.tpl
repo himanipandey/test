@@ -586,7 +586,13 @@
 							   <td width="30%" align="left">
 							   <input name="eff_date_to" value="{$eff_date_to}" type="text" class="formstyle2" id="f_date_c_to" value="" size="10" />  <img src="images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 							   </td>
-							   <td width="50%" align="left"><font color="red">{if count($ErrorMsg["launchDateGreater"])>0}{$ErrorMsg["launchDateGreater"]}{/if}</font></td>
+							   <td width="50%" align="left"><font color="red">
+                                                            {if count($ErrorMsg['launchDate'])>0}
+                                                                {$ErrorMsg['launchDate']}
+                                                            {else}
+                                                                {if count($ErrorMsg["launchDateGreater"])>0}{$ErrorMsg["launchDateGreater"]}{/if}
+                                                            {/if}
+                                                                </font></td>
 							   </tr>
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Promised Completion Date:</b> </td><td width="30%" align="left">
@@ -600,7 +606,7 @@
                                                                 <td width="30%" align="left">
                                                                     <input name="exp_launch_date" value="{$exp_launch_date}" type="text" class="formstyle2" id="exp_f_date_c_to" size="10" />  <img src="images/cal_1.jpg" id="exp_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                                                 </td>
-                                                                <td width="50%" align="left"><font color="red">{$ErrorMsg['launchExpDate']}</font></td>
+                                                                <td width="50%" align="left"><font color="red">{$ErrorMsg['supplyDate']}</font></td>
                                                             </tr>
 							   
 							   <tr>

@@ -272,7 +272,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
             if( $exp_launch_date != '' && $exp_launch_date != '0000-00-00' ) {
                  $retdt  = ((strtotime($exp_launch_date)-strtotime(date("Y-m-d")))/(60*60*24));
 		if( $retdt <= 0 ) {
-                    $ErrorMsg['launchExpDate'] = 'Expected supply date should be future date!';
+                    $ErrorMsg['supplyDate'] = 'Expected supply date should be future date!';
 		}
             }
             
@@ -324,6 +324,10 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
            if( $Status == 'Pre Launch' && $preLaunchDt == '' ) {
                $ErrorMsg['preLaunchDate'] = "Pre Launch date cant empty";
            }
+           
+           if( $Status == 'Pre Launch' && $launchDt != '' ) {
+               $ErrorMsg['launchDate'] = "Launch date should be blank/zero";
+           }
           
            if( $Status == 'Occupied' || $Status == 'Ready for Possession' ) {
                $yearExp = explode("-",$promisedDt);
@@ -335,6 +339,19 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
                } 
                else if (intval($yearExp[0]) > intval(date("Y")) ) {
                    $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+               }
+           }
+           
+           if( $Status == 'Under Construction' ) {
+               
+               $yearExp = explode("-",$launchDt);
+               if( $yearExp[0] == date("Y") ) {
+                   if( intval($yearExp[1]) > intval(date("m"))) {
+                     $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
+                   }    
+               } 
+               else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                   $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
                }
            }
            
