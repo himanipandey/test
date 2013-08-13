@@ -172,8 +172,6 @@ DEFINE("RESI_FLOOR_PLANS","resi_floor_plans");
 
 DEFINE("RESI_PROJECT_TOWER_DETAILS","resi_project_tower_details");
 DEFINE("RESI_PROJECT_PHASE","resi_project_phase");
-DEFINE("RESI_PROJECT_PHASE_QUANTITY","resi_phase_quantity");
-DEFINE("RESI_PROJ_SUPPLY","resi_proj_supply");
 DEFINE("RESI_PROJ_TOWER_CONSTRUCTION_STATUS","resi_proj_tower_construction_status");
 DEFINE("RESI_PROJ_SPECIFICATION","resi_proj_specification");
 DEFINE("RESI_SOURCEOFINFORMATION","resi_sourceofinformation");
