@@ -269,6 +269,13 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
                 }
             }
             
+            if( $exp_launch_date != '' && $exp_launch_date != '0000-00-00' ) {
+                 $retdt  = ((strtotime($exp_launch_date)-strtotime(date("Y-m-d")))/(60*60*24));
+		if( $retdt <= 0 ) {
+                    $ErrorMsg['launchExpDate'] = 'Expected supply date should be future date!';
+		}
+            }
+            
             /**code for new launch and completion date diff and if In case PROJECT_STATUS = Pre Launch then Pre_launch_date cannot be empty In case PROJECT_STATUS = Occupied or Ready For Possession then  ****/  
             $launchDt = $eff_date_to;
             $promisedDt = $eff_date_to_prom;

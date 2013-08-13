@@ -600,7 +600,7 @@
                                                                 <td width="30%" align="left">
                                                                     <input name="exp_launch_date" value="{$exp_launch_date}" type="text" class="formstyle2" id="exp_f_date_c_to" size="10" />  <img src="images/cal_1.jpg" id="exp_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                                                 </td>
-                                                                <td width="50%" align="left"></td>
+                                                                <td width="50%" align="left"><font color="red">{$ErrorMsg['launchExpDate']}</font></td>
                                                             </tr>
 							   
 							   <tr>
