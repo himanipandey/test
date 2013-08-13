@@ -12,21 +12,12 @@ $smarty->assign("preview", $preview);
 
 /* * *******code for delete phase********* */
 if (isset($_REQUEST['delete'])) {
+    ProjectAvailability::deleteAvailabilityForPhase($projectId, $phaseId);
+    ProjectSupply::deleteSupplyForPhase($projectId, $phaseId);
     $qryDelete = "DELETE FROM " . RESI_PROJECT_PHASE . " WHERE PHASE_ID = $phaseId";
     $resDelete = mysql_query($qryDelete);
     if ($resDelete) {
         audit_insert($phaseId, 'delete', 'resi_project_phase', $projectId);
-        $qrySupply = "SELECT  PROJ_SUPPLY_ID FROM " . RESI_PROJ_SUPPLY . " WHERE PHASE_ID = $phaseId AND PROJECT_ID = $projectId";
-        $resSupply = mysql_query($qrySupply);
-        while ($supply = mysql_fetch_assoc($resSupply)) {
-            $supplyId = $supply['PROJ_SUPPLY_ID'];
-            $qrySupplyDel = "DELETE FROM " . RESI_PROJ_SUPPLY . " WHERE PHASE_ID = $phaseId AND  PROJ_SUPPLY_ID = $supplyId.";
-            $resSupplyDel = mysql_query($qrySupplyDel);
-            if ($resSupplyDel) {
-
-                audit_insert($supplyId, 'delete', 'resi_proj_supply', $projectId);
-            }
-        }
         if ($preview == 'true')
             header("Location:show_project_details.php?projectId=" . $projectId);
         else
