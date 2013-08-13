@@ -357,7 +357,7 @@
 								  </td>
 								  <td width="50%" align="left">
 									  <font color="red"><span id = "err_project_type" style ="display:none;">Please select project type!</span></font>	
-									  {if $project_type != '' && $project_type != 0}<font color="red"><span id = "err_project_typeChk" {if count($ErrorMsgType['showTypeError']) == 0} style = "display:none;" {else}{$ErrorMsg['showTypeError']}{/if}>You can not update project type!</span></font>{/if}	  
+									  {if $project_type != '' && $project_type != 0}<font color="red"><span id = "err_project_typeChk">{$ErrorMsgType['showTypeError']}</span></font>{/if}	  
 								  </td>
 							   </tr>
 
@@ -564,7 +564,7 @@
 							   </tr>
 
 							   <tr>
-								  <td width="20%" align="right" valign="top"><b>Price Disclaimer :</b> </td>
+								  <td width="20%" align="right" valign="top"><b>Price Disclaimer :</b></td>
 								  <td width="30%" align="left">
 									 <textarea name="txtDisclaimer" rows="10" cols="45" id = "txtDisclaimer">{$txtDisclaimer}</textarea>
 								  </td>
@@ -579,21 +579,20 @@
                                    <td width="30%" align="left">
                                        <input name="pre_launch_date" value="{$pre_launch_date}" type="text" class="formstyle2" id="pre_f_date_c_to" size="10" />  <img src="images/cal_1.jpg" id="pre_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                    </td>
-                                   <td width="50%" align="left"></td>
+                                   <td width="50%" align="left"><font color="red">{if count($ErrorMsg["preLaunchDate"])>0}{$ErrorMsg["preLaunchDate"]}{/if}</font></td>
                                </tr>
 							   <tr>
 							   <td width="20%" align="right" valign="top"><b>Launch Date :</b> </td>
 							   <td width="30%" align="left">
 							   <input name="eff_date_to" value="{$eff_date_to}" type="text" class="formstyle2" id="f_date_c_to" value="" size="10" />  <img src="images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 							   </td>
-							   <td width="50%" align="left"></td>
+							   <td width="50%" align="left"><font color="red">{if count($ErrorMsg["launchDateGreater"])>0}{$ErrorMsg["launchDateGreater"]}{/if}</font></td>
 							   </tr>
-
-							    <tr>
+							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Promised Completion Date:</b> </td><td width="30%" align="left">
 									<input name="eff_date_to_prom" value="{$eff_date_to_prom}" type="text" class="formstyle2" id="f_date_c_prom" value="" size="10" />  <img src="images/cal_1.jpg" id="f_trigger_c_prom" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
+								  <td width="50%" align="left"><font color="red">{if count($ErrorMsg['CompletionDateGreater'])>0} {$ErrorMsg['CompletionDateGreater']}{/if}</font> </td>
 							   </tr>
                                                            
                                                            <tr>

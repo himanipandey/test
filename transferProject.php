@@ -234,7 +234,7 @@
                         
                         if($exp_supply_date_to != '' && $exp_supply_date_from != '')
                         {
-                            $QueryMember .= $and." EXPECTED_SUPPLY_DATE BETWEEN '".$exp_supply_date_to."' AND '".$exp_supply_date_from."'";
+                            $QueryMember .= $and." EXPECTED_SUPPLY_DATE BETWEEN '".$exp_supply_date_from."' AND '".$exp_supply_date_to."'";
                             $and  = ' AND ';
                         }
                         if($exp_supply_date_to != '' && $exp_supply_date_from == '')
