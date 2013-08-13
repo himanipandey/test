@@ -25,7 +25,7 @@
 			if($_POST['btnSave'] == 'Submit')
 				header("Location:ProjectList.php?projectId=".$projectId);
 			else
-			header("Location:add_supply_inventory.php?projectId=".$projectId);
+			header("Location:new/availability/".$projectId."/edit");
 	}
 	}
 	else if($_REQUEST['btnExit'] == "Exit")
@@ -34,7 +34,7 @@
     }
 	else if($_REQUEST['Skip'] == "Skip")
 	{
-		  header("Location:add_supply_inventory.php?projectId=".$projectId);
+		  header("Location:new/availability/".$projectId."/edit");
 	}
 
 ?>

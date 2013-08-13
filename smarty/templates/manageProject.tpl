@@ -603,7 +603,7 @@ function selectedBuilderValue(builderId) {
                                         <option value = "">Select Option</option>
                                         {if in_array($projectDataArr[data].PROJECT_PHASE,$arrProjEditPermission)}
                                             <option value = "/new/price?projectId={$projectDataArr[data].PROJECT_ID}">Update Price</option>
-                                            <option value = "add_supply_inventory.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Availability(Supply)</option>
+                                            <option value = "new/availability/{$projectDataArr[data].PROJECT_ID}/edit">Update Availability(Supply)</option>
                                             <option value = "add_tower_construction_status.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Tower Construction</option>
                                             <option value = "add_project_construction.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Project Construction</option>
                                             <option value = "project_img_add.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add Construction Image</option>

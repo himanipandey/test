@@ -17,7 +17,7 @@
 			["event5","tower_detail_delete.php", true],
 			["event6","phase_edit.php"],
 			["event7","add_apartmentConfiguration.php", true],
-			["event8","add_supply_inventory.php"],
+			["event8","new/availability/"],
 			["event9","add_tower_construction_status.php"],
 			["event10","add_project_construction.php"],
 			["event11", "edit_floor_plan.php", true],
@@ -39,7 +39,11 @@
 						else{
 							var str="";
 						}
-						var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
+                                                if(eventArray[i][0]=='event8'){
+                                                    var url = eventArray[i][1]+ projectId + "/edit";    
+                                                }else{
+                                                    var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
+                                                }
                                                 $(location).attr('href',url);
 					}
 				}
@@ -1796,14 +1800,6 @@ function getDateNow(){
 						  	<td align="left"  nowrap colspan = "9">
 						  	<b>Project Price:</b> <button class="clickbutton" onclick="$(this).trigger('event12');">Edit</button>&nbsp;&nbsp;
 							<b>Project Configuration:</b> <button class="clickbutton" onclick="$(this).trigger('event7');">Edit</button>
-							{*&nbsp;&nbsp;<b>Project Price Effective From:</b>*}
-							{**}
-							{*{$keyFirst = key($PreviousMonthsData['current'])}*}
-							{*{if $PreviousMonthsData['current'][$keyFirst]['effective_date'] != ''}*}
-								{*{$PreviousMonthsData['current'][$keyFirst]['effective_date']}*}
-							{*{else}*}
-								{*0000-00-00 00:00:00 *}
-							{*{/if}*}
 							<br><br>
 						  	</td>
 						</tr>

@@ -13,7 +13,6 @@ $stageName = '';
 $phasename = '';
 $changedValueArr = array();
 if (isset($_REQUEST['stageName']) && isset($_REQUEST['phasename']) && isset($_REQUEST['projectId'])) {
-    $arrTableName = array("resi_project" => "Project", "resi_project_options" => "project Configuration", "resi_proj_supply" => "Project Supply");
     $smarty->assign("changedValueArr", $changedValueArr);
     $stageName = $_REQUEST['stageName'];
     $phasename = $_REQUEST['phasename'];
