@@ -71,7 +71,7 @@
         $('li.villa_bed').each(function() {
           var intRegex = /^\d+$/;
           var input = $(this).find('input');
-          if($(input).is(":disabled")){
+          if(!$(input).is(":disabled")){
               var v = input.val();
               var err = $(this).find('span.err_villa_bed');
               if(!intRegex.test(v)) {
