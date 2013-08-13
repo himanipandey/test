@@ -392,70 +392,6 @@ function insert_phase($projectId, $phasename, $launch_date, $completion_date, $r
     }
 }
 
-function set_phase_quantity($phaseId, $unit_type, $bedrooms, $quantity, $projectId = '') {
-    $qry_select = "
-			      SELECT COUNT(*) as count FROM " . RESI_PROJECT_PHASE_QUANTITY . "
-                    WHERE
-					PHASE_ID     =  '" . $phaseId . "' AND
-                	UNIT_TYPE	 =	'" . $unit_type . "' AND
-                	BEDROOMS  	 =	'" . $bedrooms . "'";
-    $res_Sel = mysql_query($qry_select);
-    $row = mysql_fetch_assoc($res_Sel);
-    if ($row['count'] > 0) {
-        $qry_update = "
-				      UPDATE " . RESI_PROJECT_PHASE_QUANTITY . "
-	                  SET
-	                    QUANTITY  	 =	'" . $quantity . "'
-	                    WHERE
-						PHASE_ID     =  '" . $phaseId . "' AND
-	                	UNIT_TYPE	 =	'" . $unit_type . "' AND
-	                	BEDROOMS  	 =	'" . $bedrooms . "'";
-        $res_update = mysql_query($qry_update) OR DIE(mysql_error());
-        if ($projectId != '') {
-            if ($quantity == '')
-                $quantity = 0;
-            $ins = "UPDATE resi_proj_supply SET NO_OF_FLATS='" . $quantity . "' WHERE PROJECT_ID='" . $projectId . "' AND PHASE_ID='" . $phaseId . "' AND NO_OF_BEDROOMS='" . $bedrooms . "' AND PROJECT_TYPE='" . $unit_type . "' ORDER BY PROJ_SUPPLY_ID DESC LIMIT 1";
-            mysql_query($ins);
-
-            $returnAvailability = computeAvailability($projectId);
-            if ($returnAvailability) {
-                $updateProject = updateAvailability($projectId, $returnAvailability);
-            }
-            audit_insert($projectId, 'update', 'resi_project', $projectId);
-        }
-    } else {
-        $qry_insert = "
-			      INSERT INTO " . RESI_PROJECT_PHASE_QUANTITY . "
-                  SET
-                    PHASE_ID     =  '" . $phaseId . "',
-                	UNIT_TYPE	 =	'" . $unit_type . "',
-                	BEDROOMS  	 =	'" . $bedrooms . "',
-                	QUANTITY  	 =	'" . $quantity . "'";
-        $res_insert = mysql_query($qry_insert) OR DIE(mysql_error());
-        if ($projectId != '') {
-            if ($quantity == '')
-                $quantity = 0;
-            $ins = "INSERT INTO resi_proj_supply (PROJECT_ID,PHASE_ID,NO_OF_BEDROOMS,NO_OF_FLATS,SUBMITTED_DATE,PROJECT_TYPE)
-					VALUES ('" . $projectId . "','" . $phaseId . "','" . $bedrooms . "','" . $quantity . "','" . date('Y-m-d H:i:s') . "','" . $unit_type . "')";
-            mysql_query($ins);
-        }
-    }
-}
-
-function get_phase_quantity($phaseId) {
-    $qrySel = "SELECT UNIT_TYPE, GROUP_CONCAT(CONCAT(BEDROOMS, ':', QUANTITY)) as AGG from " . RESI_PROJECT_PHASE_QUANTITY . " WHERE PHASE_ID='" . $phaseId . "' GROUP BY UNIT_TYPE";
-    $res_Sel = mysql_query($qrySel);
-    $arrDetail = array();
-    while ($data = mysql_fetch_assoc($res_Sel)) {
-        array_push($arrDetail, $data);
-    }
-    $details = array();
-    foreach ($arrDetail as $result) {
-        $details[$result['UNIT_TYPE']] = $result['AGG'];
-    }
-    return $details;
-}
-
 function explode_bedroom_quantity($val) {
     $arr = array();
     $bedrooms = explode(',', $val);
@@ -503,31 +439,6 @@ function update_towers_for_project_and_phase($projectId, $phaseId, $tower_array)
     if ($res_ins) {
         $last_id = mysql_insert_id();
         audit_insert($last_id, 'update', 'resi_project_tower_details', $projectId);
-        return 1;
-    }
-}
-
-function insert_supplyandinventoryDetail($projectId, $config, $no_of_flats, $accuracy_flats, $avilable_no_of_flats, $accuracy_avilable_flats, $edit_reson, $source_of_information, $effDt, $projectType, $phaseid = '') {
-
-    $qry_ins = "
-				INSERT INTO " . RESI_PROJ_SUPPLY . "
-				SET
-					PROJECT_ID								=	'" . $projectId . "',
-					NO_OF_BEDROOMS							=	'" . $config . "',
-					NO_OF_FLATS		    					=	'" . $no_of_flats . "',
-					ACCURATE_NO_OF_FLATS_FLAG				=	'" . $accuracy_flats . "',
-					AVAILABLE_NO_FLATS						=	'" . $avilable_no_of_flats . "',
-					ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG		=	'" . $accuracy_avilable_flats . "',
-					EDIT_REASON								=	'" . $edit_reson . "',
-					SOURCE_OF_INFORMATION					=	'" . $source_of_information . "',
-					PROJECT_TYPE							=	'" . $projectType . "',
-					SUBMITTED_DATE							=	'" . $effDt . "',
-					PHASE_ID								=	'" . $phaseid . "'";
-
-    $res_ins = mysql_query($qry_ins) OR DIE(mysql_error());
-    if ($res_ins) {
-        $last_id = mysql_insert_id();
-        audit_insert($last_id, 'insert', 'resi_proj_supply', $projectId);
         return 1;
     }
 }
@@ -861,8 +772,6 @@ function ProjectAmenities($projectId, &$arrNotninty, &$arrDetail, &$arrninty) {
             $cnt++;
         }
     }
-    //print_r($arrNotninty);
-    //return $arrDetail;
 }
 
 function deleteAmenities($projectId) {
@@ -1108,26 +1017,6 @@ function update_towerDetail($projectId, $TowerId, $no_of_floors, $stilt, $no_of_
         audit_insert($last_id, 'insert', 'resi_project_tower_details', $projectId);
         return 1;
     }
-}
-
-function getfrom_phase_quantity($phaseId, $bedId, $unit_type = '') {
-    if ($phaseId == '' || $phaseId == '0')
-        return false;
-    $sql = "
-				SELECT QUANTITY
-					FROM resi_phase_quantity
-				WHERE					
-					BEDROOMS='" . $bedId . "'
-					AND PHASE_ID ='" . $phaseId . "' 
-					AND UNIT_TYPE = '" . $unit_type . "'
-				ORDER BY QID DESC ";
-
-    $data = mysql_query($sql) or die(mysql_error());
-    $arr = array();
-    while ($dataarr = mysql_fetch_assoc($data)) {
-        $arr[] = $dataarr;
-    }
-    return $arr;
 }
 
 /* * *************tower of a project************ */
@@ -1735,19 +1624,6 @@ function fetchProjectCallingLinks($projectId, $projectType, $audioLinkChk = '') 
         }
     }
     return $arrCallLink;
-}
-
-function getLastUpdatedTime($projectId) {
-    $qry = "SELECT MAX(_t_transaction_date) as _t_transaction_date
-	FROM
-	_t_resi_proj_supply
-	WHERE
-	PROJECT_ID  = $projectId
-	AND
-	_t_operation = 'I'";
-    $res = mysql_query($qry) or die(mysql_query());
-    $data = mysql_fetch_assoc($res);
-    return $data['_t_transaction_date'];
 }
 
 /* * ********Fetch history for all tables******** */

@@ -161,20 +161,17 @@ if (isset($_POST['btnSave'])) {
         if (sizeof($flats_config) > 0) {
             foreach ($flats_config as $key => $value) {
                 ProjectSupply::addEditSupply($projectId, $phaseId, 'apartment', $key, $value['supply'], $value['launched']);
-                //set_phase_quantity($phaseId, 'Apartment', $key, $value, $projectId);
             }
         }
         if (sizeof($villas_config) > 0) {
             foreach ($villas_config as $key => $value) {
                 ProjectSupply::addEditSupply($projectId, $phaseId, 'villa', $key, $value['supply'], $value['launched']);
-                //set_phase_quantity($phaseId, 'Villa', $key, $value, $projectId);
             }
         }
 
         if ($_POST['plotvilla'] != '') {
             $supply = $_POST['supply'];
             ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', $key, $_POST['supply'], $_POST['launched']);
-            //set_phase_quantity($phaseId, $_POST['plotvilla'], '0', $supply, $projectId);
         }
 
         $towerDetail = fetch_towerDetails_for_phase($projectId);

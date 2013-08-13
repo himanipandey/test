@@ -173,7 +173,7 @@ if ($phaseId) {
         array_push($arrTower, $val['TOWER_ID']);
     }
     $smarty->assign("arrTower", $arrTower);
-    $phase_quantity = get_phase_quantity($phaseId);
+    $phase_quantity = ProjectSupply::projectTypeGroupedQuantityForPhase($projectId, $phaseId);
     $smarty->assign("FlatsQuantity", explode_bedroom_quantity($phase_quantity['Apartment']));
     $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity['Villa']));
     $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity['Plot']));
