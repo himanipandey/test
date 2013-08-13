@@ -243,7 +243,9 @@
 											  <font color="red"><span class = "err_flat_bed" style = "display:none;">Integer expected</span>
 												<br/></font>
 											  <label for="flat_bed_{$num}">{$num} Bedroom(s)</label>
-											  <input id="flat_bed_{$num}" name="flat_bed_{$num}" style="width: 50px;" value="{$FlatsQuantity[$num]}" />
+											  <input id="flat_bed_{$num}" name="flat_bed_{$num}[supply]" style="width: 50px;" value="{$FlatsQuantity[$num]['supply']}" />
+                                                                                          <label>Launched</label>
+                                                                                          <input id="flat_bed_{$num}" name="flat_bed_{$num}[launched]" style="width: 50px;" value="{$FlatsQuantity[$num]['launched']}" />
 											  <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
 												 {foreach $OptionsDetails as $option}
 													 {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Apartment' and in_array($option.OPTIONS_ID, $option_ids)}
@@ -284,7 +286,9 @@
 											  <font color="red"><span class = "err_villa_bed" style = "display:none;">Integer expected</span>
 												<br/></font>
 											  <label for="villa_bed_{$num}">{$num} Bedroom(s)</label>
-											  <input id="villa_bed_{$num}" name="villa_bed_{$num}" style="width: 50px;" value="{$VillasQuantity[$num]}" />
+											  <input id="villa_bed_{$num}" name="villa_bed_{$num}[supply]" style="width: 50px;" value="{$VillasQuantity[$num]['supply']}" />
+                                                                                          <label>Launched</label>
+                                                                                          <input id="villa_bed_{$num}" name="villa_bed_{$num}[launched]" style="width: 50px;" value="{$VillasQuantity[$num]['launched']}" />
 											  <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
 												 {foreach $OptionsDetails as $option}
 													 {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Villa' and in_array($option.OPTIONS_ID, $option_ids)}
@@ -305,7 +309,9 @@
 									<tr>
 										<td width="20%" align="right" valign="top"><b>Supply of Plot  :</b> </td>
 										<td width="30%" align="left" nowrap>
-											<input type='text' name='supply' id='supply' value='{$PlotQuantity[0]}'>
+											<input type='text' name='supply' id='supply' value='{$PlotQuantity[0]['supply']}'>
+                                                                                        <label>Launched</label>
+                                                                                          <input id="supply" name="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
 										</td>
 										<td width="50%" align="left">
 											<font color="red"><span id = "err_supply" style = "display:none;">Enter the supply for Plot</span></font>

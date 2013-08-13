@@ -466,6 +466,16 @@ function explode_bedroom_quantity($val) {
     return $arr;
 }
 
+function explodeBedroomSupplyLaunched($val) {
+    $arr = array();
+    $bedrooms = explode(',', $val);
+    foreach ($bedrooms as $value) {
+        $v = explode(':', $value);
+        $arr[$v[0]] = array('supply'=>$v[1], 'launched'=>$v[2]);
+    }
+    return $arr;
+}
+
 function update_towers_for_project_and_phase($projectId, $phaseId, $tower_array) {
     $tower_ids = join(',', $tower_array);
     if ($tower_ids) {

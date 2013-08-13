@@ -82,16 +82,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $towerDetail = fetch_towerDetails_for_phase($projectId);
     $smarty->assign("TowerDetails", $towerDetail);
 
-    $phase_quantity = ResiPhaseQuantity::quantity_for_phase($phaseId);
+    $phase_quantity = ProjectSupply::projectTypeGroupedQuantityForPhase($projectId, $phaseId);
     $phase_quantity_hash = array();
     foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->agg;
-    $smarty->assign("FlatsQuantity", explode_bedroom_quantity($phase_quantity_hash['Apartment']));
-    $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity_hash['Villa']));
-    $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity_hash['Plot']));
+    $smarty->assign("FlatsQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['apartment']));
+    $smarty->assign("VillasQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['villa']));
+    $smarty->assign("PlotQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['plot']));
 }
 /* * ********************************** */
 if (isset($_POST['btnSave'])) {
-    // Vars
     $phasename = $_REQUEST['phaseName'];
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
@@ -161,29 +160,32 @@ if (isset($_POST['btnSave'])) {
         // Phase Quantity
         if (sizeof($flats_config) > 0) {
             foreach ($flats_config as $key => $value) {
-                set_phase_quantity($phaseId, 'Apartment', $key, $value, $projectId);
+                ProjectSupply::addEditSupply($projectId, $phaseId, 'apartment', $key, $value['supply'], $value['launched']);
+                //set_phase_quantity($phaseId, 'Apartment', $key, $value, $projectId);
             }
         }
         if (sizeof($villas_config) > 0) {
             foreach ($villas_config as $key => $value) {
-                set_phase_quantity($phaseId, 'Villa', $key, $value, $projectId);
+                ProjectSupply::addEditSupply($projectId, $phaseId, 'villa', $key, $value['supply'], $value['launched']);
+                //set_phase_quantity($phaseId, 'Villa', $key, $value, $projectId);
             }
         }
 
         if ($_POST['plotvilla'] != '') {
             $supply = $_POST['supply'];
-            set_phase_quantity($phaseId, $_POST['plotvilla'], '0', $supply, $projectId);
+            ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', $key, $_POST['supply'], $_POST['launched']);
+            //set_phase_quantity($phaseId, $_POST['plotvilla'], '0', $supply, $projectId);
         }
 
         $towerDetail = fetch_towerDetails_for_phase($projectId);
         $smarty->assign("TowerDetails", $towerDetail);
 
-        $phase_quantity = ResiPhaseQuantity::quantity_for_phase($phaseId);
+        $phase_quantity = ProjectSupply::projectTypeGroupedQuantityForPhase($projectId, $phaseId);
         $phase_quantity_hash = array();
         foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->agg;
-        $smarty->assign("FlatsQuantity", explode_bedroom_quantity($phase_quantity_hash['Apartment']));
-        $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity_hash['Villa']));
-        $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity_hash['Plot']));
+        $smarty->assign("FlatsQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['apartment']));
+        $smarty->assign("VillasQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['villa']));
+        $smarty->assign("PlotQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['plot']));
 
         $phaseDetail = fetch_phaseDetails($projectId);
         $phases = Array();
