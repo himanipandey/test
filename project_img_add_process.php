@@ -5,10 +5,15 @@
 	$ErrorMsg='';
 	//$projectplansid = $_REQUEST['projectplansid'];
 	$watermark_path = "images/pt_shadow1.png";
-	$projectId		=	$_REQUEST['projectId'];
+	$projectId = $_REQUEST['projectId'];
 	$projectDetail	=	ProjectDetail($projectId);
 	$smarty->assign("ProjectDetail", $projectDetail);
 
+        $linkShowHide = 0;
+        if( isset($_REQUEST['auth']) ) {
+            $linkShowHide = 1;
+        }
+        $smarty->assign("linkShowHide", $linkShowHide);
 	$builderDetail = fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
 	if(isset($_REQUEST['edit']))
 		$edit_project = $projectId;
