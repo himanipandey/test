@@ -64,11 +64,18 @@
         else
             return false;
     }
-    function getActiveBrokerList($cityId=''){
+    function getActiveBrokerList($cityId='', $broker='', $mobile=''){
         $city = '';
-        if($cityId !='')
+        $brokerName = '';
+        $mobileNumber = '';
+        if( $cityId !='' )
             $city = " AND HQ = $cityId";
-        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE STATUS = '1' $city ORDER BY BROKER_NAME ASC";
+        if( $broker != '' )
+            $brokerName = " AND BROKER_NAME LIKE '%$broker%'";
+        if( $mobile != '' )
+            $mobileNumber = " AND BROKER_MOBILE LIKE '%$mobile%'";
+ 
+        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE STATUS = '1' $city $brokerName $mobileNumber ORDER BY BROKER_NAME ASC";
         $res = mysql_query($qry) or die(mysql_error()." error in active broker list");
         $arrActiveBrokerlist = array();
         if(mysql_num_rows($res)>0){
