@@ -72,8 +72,10 @@
             $city = " AND HQ = $cityId";
         if( $broker != '' )
             $brokerName = " AND BROKER_NAME LIKE '%$broker%'";
-        if( $mobile != '' )
+        if( $mobile != '' ){
+            $mobile = ltrim($mobile,"0");
             $mobileNumber = " AND BROKER_MOBILE LIKE '%$mobile%'";
+        }
  
         $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE STATUS = '1' $city $brokerName $mobileNumber ORDER BY BROKER_NAME ASC";
         $res = mysql_query($qry) or die(mysql_error()." error in active broker list");
