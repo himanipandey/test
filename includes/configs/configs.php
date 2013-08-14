@@ -670,5 +670,6 @@ $smarty->assign("imgDisplayPath", $imgDisplayPath);
 $analytics_credential=array("username"=>"cms","password"=>"Cms123!");
 
 include("authConstents.php");
-    
+
+define("MAX_PRIORITY",100);
 ?>
