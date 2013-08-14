@@ -86,7 +86,7 @@
         return $arrActiveBrokerlist;
     }
     function getBrokerByProject($projectId){
-        $qry = "SELECT * FROM ".BROKER_PROJECT_MAPPING." 
+        $qry = "SELECT * FROM broker_project_mapping 
                 WHERE PROJECT_ID = '".$projectId."'";
         $res = mysql_query($qry) or die(mysql_error()." error in  broker list by project id");
         $arrBrokerByProject = array();
@@ -98,7 +98,7 @@
         return $arrBrokerByProject;
     }
     function deleteAllBrokerOfProject($projectId){
-        $del = "DELETE FROM ".BROKER_PROJECT_MAPPING." WHERE PROJECT_ID = '".$projectId."'";
+        $del = "DELETE FROM broker_project_mapping WHERE PROJECT_ID = '".$projectId."'";
         $res = mysql_query($del) or die(mysql_error());
         if($res)
             return true;
@@ -109,7 +109,7 @@
     function getProjectByBroker($brokerId){
        $qry = "SELECT a.PROJECT_ID,a.BROKER_ID,b.PROJECT_NAME 
                 FROM
-                    ".BROKER_PROJECT_MAPPING." a
+                    broker_project_mapping a
                 LEFT JOIN
                     ".RESI_PROJECT." b
                 ON

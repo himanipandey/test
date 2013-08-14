@@ -23,7 +23,7 @@
         if(count($_REQUEST)>3){
             $del = deleteAllBrokerOfProject($projectId);
             if($del){
-                $qryIns = "INSERT INTO BROKER_PROJECT_MAPPING (ID,PROJECT_ID,BROKER_ID,ACTION_DATE)
+                $qryIns = "INSERT INTO broker_project_mapping (ID,PROJECT_ID,BROKER_ID,ACTION_DATE)
                             VALUES ";
                 $cnt = 1;
                 $comma = ',';
