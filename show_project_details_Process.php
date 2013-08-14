@@ -132,18 +132,19 @@ $qry = "SELECT p.PHASE_NAME,p.LAUNCH_DATE,p.COMPLETION_DATE, a.*
 				LEFT JOIN resi_project_phase p
 				       on (p.PHASE_ID = a.PHASE_ID)";
 
-$res = mysql_query($qry) or die(mysql_error());
+//$res = mysql_query($qry) or die(mysql_error());
+$res = ProjectSupply::projectSupplyForProjectPage($projectId);
+
 $arrPhaseCount = array();
 $arrPhaseTypeCount = array();
-if (mysql_num_rows($res) > 0) {
-    while ($data = mysql_fetch_assoc($res)) {
-        if ($data['PHASE_NAME'] == '')
-            $data['PHASE_NAME'] = 'noPhase';
-        $supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
-        $arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
-        $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
-    }
+
+foreach ($res as $data) {
+    if ($data['PHASE_NAME'] == '')$data['PHASE_NAME'] = 'noPhase';
+    $supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
+    $arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
+    $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 }
+
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);

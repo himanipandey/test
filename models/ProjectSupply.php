@@ -22,4 +22,26 @@ class ProjectSupply extends ActiveRecord\Model {
         $query = "select project_type UNIT_TYPE, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', supply, ':', launched)) as AGG from " . self::table_name() . " where project_id = '$projectId' and phase_id = '$phaseId' group by project_type;";
         return self::find_by_sql($query);
     }
+    
+    function projectSupplyForProjectPage($projectId){
+        $result = array();
+        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, pa.availability, pa.comment, pa.effective_month, ps.project_type from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id inner join (select max(pa.id) id from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id where ps.project_id = $projectId group by ps.id) t on pa.id=t.id left join " . ResiProjectPhase::table_name() . " rpp on ps.phase_id = rpp.PHASE_ID";
+        $data = self::find_by_sql($query);
+        foreach ($data as $value) {
+            $entry = array();
+            $entry['PHASE_NAME'] = $value->phase_name;
+            $entry['LAUNCH_DATE'] = $value->launch_date;
+            $entry['COMPLETION_DATE'] = $value->completion_date;
+            $entry['PROJECT_ID'] = $value->project_id;
+            $entry['PHASE_ID'] = $value->phase_id;
+            $entry['NO_OF_BEDROOMS'] = $value->no_of_bedroom;
+            $entry['NO_OF_FLATS'] = $value->supply;
+            $entry['AVAILABLE_NO_FLATS'] = $value->availability; 
+            $entry['EDIT_REASON'] = $value->comment;
+            $entry['SUBMITTED_DATE'] = $value->effective_month;
+            $entry['PROJECT_TYPE'] = $value->project_type;
+            $result[] = $entry;
+        }
+        return $result;
+    }
 }
