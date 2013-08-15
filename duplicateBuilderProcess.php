@@ -22,8 +22,9 @@ $table_to_id_map = array(
         "proptiger.BUILDER_AGREEMENT" =>  array( "key" => "ID"),
         "project.resi_project"      =>  array( "key" => "PROJECT_ID",
                                     "col"   => "BUILDER_NAME"),
+        "project.builder_contact_info" => array( "key" => "ID"),
         "proptiger.ORDERS"            =>  array( "key" => "ORDER_ID"),
-        "proptiger.ORDERS1"           =>  array( "key" => "ORDER_ID"),
+//        "proptiger.ORDERS1"           =>  array( "key" => "ORDER_ID"),
         "proptiger.ORDERS_ARCH"       =>  array( "key" => "ORDER_ID"),
         "project.project_plan_images"=> array( "key" => "PROJECT_PLAN_ID"),
         "proptiger.PROJ_INVOICE"      =>  array( "key" => "PROJ_INVOICE_ID"),
@@ -105,7 +106,7 @@ function fetchBuilderData($orig_builderId, $dup_builderId){
 
     global $orig_builder;
     global $dup_builder;
-    $query = "select B.BUILDER_ID, B.URL, B.BUILDER_NAME, CONCAT(REPLACE (B.URL, '.php' , ''), '-in-', LOWER(C.LABEL), '.php') AS CITY_URL from project.resi_builder as B INNER JOIN project.resi_project AS P ON B.BUILDER_ID = P.BUILDER_ID INNER JOIN project.city AS C ON P.CITY_ID = C.CITY_ID WHERE P.BUILDER_ID IS NOT NULL AND P.ACTIVE =  '1' AND B.BUILDER_ID in (".$orig_builderId.",".$dup_builderId.")";
+    $query = "select B.BUILDER_ID, B.DISPLAY_ORDER, B.URL, B.BUILDER_NAME, CONCAT(REPLACE (B.URL, '.php' , ''), '-in-', LOWER(C.LABEL), '.php') AS CITY_URL from project.resi_builder as B INNER JOIN project.resi_project AS P ON B.BUILDER_ID = P.BUILDER_ID INNER JOIN project.city AS C ON P.CITY_ID = C.CITY_ID WHERE P.BUILDER_ID IS NOT NULL AND P.ACTIVE =  '1' AND B.BUILDER_ID in (".$orig_builderId.",".$dup_builderId.")";
     $res = mysql_query($query) or die(mysql_error());
 	while($row = mysql_fetch_array($res)){
 		if($row['BUILDER_ID'] == $orig_builderId){
@@ -113,12 +114,14 @@ function fetchBuilderData($orig_builderId, $dup_builderId){
             $orig_builder['URL'] = $row['URL'];
             $orig_builder['NAME']= $row['BUILDER_NAME'];
             $orig_builder['CITY_URL']= $row['CITY_URL'];
+            $orig_builder['DISPLAY_ORDER'] = $row['DISPLAY_ORDER'];
         }
         if($row['BUILDER_ID'] == $dup_builderId){
             $dup_builder['ID'] = $row['BUILDER_ID'];
             $dup_builder['URL'] = $row['URL'];
             $dup_builder['NAME']= $row['BUILDER_NAME'];
             $dup_builder['CITY_URL']= $row['CITY_URL'];
+            $dup_builder['DISPLAY_ORDER'] = $row['DISPLAY_ORDER'];
         }
 	}
 };
@@ -186,21 +189,30 @@ function updateSEOTags(){
     builderId   :   duplicate builder id
     query to disable/enable duplicate builder
  */
-function disableOldBuilderURL($builderId){
-
+function updateBuilderTable($orig_builderId, $dup_builderId){
+    global $orig_builder;
+    global $dup_builder;
     global $updateSQLs;
     global $restoreSQLs;
-    $updateSQL = "update project.resi_builder set ACTIVE = 0 where BUILDER_ID in (".$builderId.")";
-    array_push($updateSQLs, $updateSQL);
-    
-    $restoreSQL = "update project.resi_builder set ACTIVE = 1 where BUILDER_ID in (".$builderId.")";
-    array_push($restoreSQLs,$restoreSQL);
 
-    //echo "<pre>";
-    //echo json_encode($updateSQLs);
-    //echo "</pre><pre>";
-    //echo json_encode($restoreSQLs);
-    //echo "</pre>";
+    if($dup_builder['DISPLAY_ORDER'] > $orig_builder['DISPLAY_ORDER']){
+        $updateSQL = "update project.resi_builder set DISPLAY_ORDER= ".$dup_builder['DISPLAY_ORDER']." where BUILDER_ID in (".$orig_builderId.")";
+        array_push($updateSQLs, $updateSQL);
+        $restoreSQL = "update project.resi_builder set DISPLAY_ORDER= ".$orig_builder['DISPLAY_ORDER']." where BUILDER_ID in (".$orig_builderId.")";
+        array_push($restoreSQLs, $restoreSQL);
+    }
+
+    $updateSQL = "update project.resi_builder set ACTIVE = 0 where BUILDER_ID in (".$dup_builderId.")";
+    array_push($updateSQLs, $updateSQL);
+   
+    $restoreSQL = "update project.resi_builder set ACTIVE = 1 where BUILDER_ID in (".$dup_builderId.")";
+    array_push($restoreSQLs,$restoreSQL); 
+    
+    echo "<pre>";
+    echo json_encode($updateSQLs);
+    echo "</pre><pre>";
+    echo json_encode($restoreSQLs);
+    echo "</pre>";
 };
 
 /*
@@ -251,6 +263,9 @@ function main(){
     global $table_to_id_map;
     global $orig_builderId;
     global $dup_builderId;
+    global $orig_builder;
+    global $dup_builder;
+
 
     fetchBuilderData($orig_builderId, $dup_builderId);
 
@@ -262,11 +277,14 @@ function main(){
             updateBuilderInfo($table_name, $orig_builderId, $dup_builderId, $rows);
         }
 
-        redirectOldBuildersURL($orig_builderId, $dup_builderId);
+        //to avoid cyclic redirection
+        if($orig_builder['URL'] != $dup_builder['URL']){
+            redirectOldBuildersURL($orig_builderId, $dup_builderId);
+        }
 
-        disableOldBuilderURL($dup_builderId);
+        updateBuilderTable($orig_builderId, $dup_builderId);
 
-        executeTnxQuery();
+        //executeTnxQuery();
     }
 };
 

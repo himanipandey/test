@@ -48,7 +48,7 @@
                 	<select name="correct_builderId" id="correct_builder">
                   	<option value="-1">Select Builder</option>
                     {section name=bldr loop=$builderList}
-                    	<option rel="{$builderList[bldr].BUILDER_IMAGE}" value={$builderList[bldr].BUILDER_ID}>{$builderList[bldr].BUILDER_NAME}-{$builderList[bldr].BUILDER_ID} ({$builderList[bldr].ENTITY})</option>
+                    	<option rel="{$builderList[bldr].BUILDER_IMAGE}" value={$builderList[bldr].BUILDER_ID}>{$builderList[bldr].BUILDER_ID}-{$builderList[bldr].BUILDER_NAME} ({$builderList[bldr].ENTITY})</option>
                 		{/section}
                 	</select>
 								</td>
@@ -61,7 +61,7 @@
 					 				<select name="duplicate_builderId" id="duplicate_builder">
 										<option value="-1">Select Builder</option>
                     {section name=bldr loop=$builderList}
-                    	<option rel="{$builderList[bldr].BUILDER_IMAGE}" value={$builderList[bldr].BUILDER_ID}>{$builderList[bldr].BUILDER_NAME}-{$builderList[bldr].BUILDER_ID} ({$builderList[bldr].ENTITY})</option>
+                    	<option rel="{$builderList[bldr].BUILDER_IMAGE}" value={$builderList[bldr].BUILDER_ID}>{$builderList[bldr].BUILDER_ID}-{$builderList[bldr].BUILDER_NAME} ({$builderList[bldr].ENTITY})</option>
                     {/section} 
                   </select>
 								</span>
