@@ -126,6 +126,30 @@ function fetchBuilderData($orig_builderId, $dup_builderId){
 	}
 };
 
+function createUpdateSqls($fromURL, $toURL){
+    global $updateSQLs; 
+    global $restoreSQLs;
+
+    //to avoid cyclic redirection
+    if($fromURL == $toURL) return;
+
+    $query = "select * from project.redirect_url_map where FROM_URL ='".$fromURL."'";
+    $res = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($res);
+    if($row && $row['TO_URL'] != ''){
+        $updateSQL = "update project.redirect_url_map set TO_URL ='".$toURL."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$fromURL."'";
+        array_push($updateSQLs, $updateSQL);
+
+        $restoreSQL = "update project.redirect_url_map set TO_URL ='".$row['TO_URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$fromURL."'";
+        array_push($restoreSQLs, $restoreSQL);
+    } else {
+        $updateSQL = "insert into project.redirect_url_map (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$fromURL."','".$toURL."', NOW(), ".$_SESSION['adminId'].")";
+        array_push($updateSQLs, $updateSQL);
+
+        $restoreSQL = "delete from project.redirect_url_map where FROM_URL = '".$fromURL."' and TO_URL = '".$toURL."'";
+        array_push($restoreSQLs, $restoreSQL);
+    }
+};
 
 /*
     orig_builderId  :   correct builder id
@@ -133,34 +157,12 @@ function fetchBuilderData($orig_builderId, $dup_builderId){
     query to insert redirect builder urls and builder-city urls in REDIRECT_URL_MAP table
  */
 function redirectOldBuildersURL($orig_builderId, $dup_builderId){
-
-    global $updateSQLs;
-    global $restoreSQLs;
     global $orig_builder;
     global $dup_builder;
 
-    $query = "select * from project.redirect_url_map where FROM_URL ='".$dup_builder['URL']."'";
-    $res = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($res);
-    if($row && $row['TO_URL'] != ''){
-        $updateSQL = "update project.redirect_url_map set TO_URL ='".$orig_builder['URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$dup_builder['URL']."'";
-        array_push($updateSQLs, $updateSQL);
+    createUpdateSqls($dup_builder['URL'], $orig_builder['URL']);
 
-        $restoreSQL = "update project.redirect_url_map set TO_URL ='".$row['TO_URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$dup_builder['URL']."'";
-        array_push($restoreSQLs, $restoreSQL);
-    } else {
-        $updateSQL = "insert into project.redirect_url_map (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$dup_builder['URL']."','".$orig_builder['URL']."', NOW(), ".$_SESSION['adminId'].")";
-        array_push($updateSQLs, $updateSQL);
-   
-        $restoreSQL = "delete from project.redirect_url_map where FROM_URL = '".$dup_builder['URL']."' and TO_URL = '".$orig_builder['URL']."'";
-        array_push($restoreSQLs, $restoreSQL);
-    }
-    
-    $updateSQL = "insert into project.redirect_url_map (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$dup_builder['CITY_URL']."','".$orig_builder['CITY_URL']."', NOW(), ".$_SESSION['adminId'].")";
-    array_push($updateSQLs, $updateSQL);
-    
-    $restoreSQL = "delete from project.redirect_url_map where FROM_URL = '".$dup_builder['CITY_URL']."' and TO_URL = '".$orig_builder['CITY_URL']."'";
-    array_push($restoreSQLs, $restoreSQL); 
+    createUpdateSqls($dup_builder['CITY_URL'], $orig_builder['CITY_URL']);
 };
 
 function updateSEOTags(){
@@ -208,11 +210,11 @@ function updateBuilderTable($orig_builderId, $dup_builderId){
     $restoreSQL = "update project.resi_builder set ACTIVE = 1 where BUILDER_ID in (".$dup_builderId.")";
     array_push($restoreSQLs,$restoreSQL); 
     
-    echo "<pre>";
-    echo json_encode($updateSQLs);
-    echo "</pre><pre>";
-    echo json_encode($restoreSQLs);
-    echo "</pre>";
+    //echo "<pre>";
+    //echo json_encode($updateSQLs);
+    //echo "</pre><pre>";
+    //echo json_encode($restoreSQLs);
+    //echo "</pre>";
 };
 
 /*
@@ -263,9 +265,6 @@ function main(){
     global $table_to_id_map;
     global $orig_builderId;
     global $dup_builderId;
-    global $orig_builder;
-    global $dup_builder;
-
 
     fetchBuilderData($orig_builderId, $dup_builderId);
 
@@ -277,14 +276,11 @@ function main(){
             updateBuilderInfo($table_name, $orig_builderId, $dup_builderId, $rows);
         }
 
-        //to avoid cyclic redirection
-        if($orig_builder['URL'] != $dup_builder['URL']){
-            redirectOldBuildersURL($orig_builderId, $dup_builderId);
-        }
+        redirectOldBuildersURL($orig_builderId, $dup_builderId);
 
         updateBuilderTable($orig_builderId, $dup_builderId);
 
-        //executeTnxQuery();
+        executeTnxQuery();
     }
 };
 
