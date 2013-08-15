@@ -5,7 +5,7 @@ function cmp($value1, $value2)
     global $orderBy;
     if($orderBy == 'ASC')
     {
-        if($value1['PRIORITY'] == $value2['PRIORITY'])
+        if($value1['PRIORITY'] == $value2['PRIORITY'] && $value1['LABEL'] < $value2['LABEL'])
             return 0;
         else if( ($value1['PRIORITY'] < $value2['PRIORITY'] && $value1['PRIORITY'] > 0) || $value2['PRIORITY'] < 1)
             return -1;
@@ -14,7 +14,7 @@ function cmp($value1, $value2)
     }
     if($orderBy == 'DESC')
     {
-        if($value1['PRIORITY'] == $value2['PRIORITY'])
+        if($value1['PRIORITY'] == $value2['PRIORITY']  && $value1['LABEL'] < $value2['LABEL'])
             return 0;
         else if( ($value1['PRIORITY'] > $value2['PRIORITY'] && $value1['PRIORITY'] > 0) || $value2['PRIORITY'] < 1)
             return -1;
@@ -40,7 +40,9 @@ function getSubLocData($cityId, $order) {
         $row1['ID'] = $row1['LOCALITY_ID'];
         array_push($arraySubLoc, $row1);
     }
+    //echo "<pre>";print_r($arraySubLoc);    
     uasort($arraySubLoc, "cmp");
+    //echo "<pre>";print_r($arraySubLoc);
     return $arraySubLoc;
 }
 function getLastValidPriority($arraySubLoc = array()){
