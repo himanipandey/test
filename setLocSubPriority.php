@@ -20,15 +20,19 @@ jQuery(document).ready(function(){
 });
 jQuery(document).ready(function(){
     $( "#priority_form").submit(function() {
-        if($('#suburbsearch').val() === '' && $('#localitysearch').val() === ''){
-            alert("Please add suburb/priority");
-            return false;
-        }
         var sub         = $('#suburbsearch').val();
         var loc         = $('#localitysearch').val();
         var prior       = $('#priority').val();
         var cityId      = $('#cityId').val();
         var autoadjust  = $("#autoadjust").is(':checked') ? 1 : 0;
+        if($('#suburbsearch').val() === '' && $('#localitysearch').val() === ''){
+            alert("Please add suburb/priority");
+            return false;
+        }
+        if(isNaN(prior)){
+            alert("Priority should be numeric");
+            return false;
+        }
         $.ajax({
             type: "POST",
             url: '/savePriority.php',
@@ -43,7 +47,7 @@ jQuery(document).ready(function(){
   });
 });
 function show_loc_inst(){
-    var w = window.open("Surprise", "_blank",'width=300,height=120');
+    var w = window.open("Surprise", "_blank",'width=300,height=120,top=350,left=500');
     var d = w.document.open();
     d.write("<!DOCTYPE html><html><body>Check the checkbox to auto shift the priorities, if desired.If this is not selected, then multiple areas  could be at the same priority(which is fine, if that is what you want)</body></html>");
     d.close();
@@ -69,7 +73,7 @@ li.ui-menu-item { font-size:12px !important; }
     </TR>
     <TR>
         <TD class=whiteTxt width=12% align="right">Priority:</TD>
-        <TD class=whiteTxt width=15% align="left"><input type="text" id="priority" value="<?php echo $highPrio;?>" /></TD>
+        <TD class=whiteTxt width=15% align="left"><input type="text" id="priority" value="<?php if($_GET['mode']=='edit'){ echo $_GET['priority'];}else{ echo $highPrio;}?>" /></TD>
     </TR>
     <TR>
         <TD class=whiteTxt width=12% align="right"><input type="checkbox" name="autoadjust" id="autoadjust" value="" /></TD>
@@ -84,9 +88,3 @@ li.ui-menu-item { font-size:12px !important; }
   </TBODY>
 </FORM>
 </TABLE>
-
-<div id="inline2" style="display: none;">
-	<p>
-		<img src="instruction_locality.png" /> &nbsp;&nbsp; <a href="javascript:;" onclick="$.fancybox.close();">Close</a>
-	</p>
-</div>

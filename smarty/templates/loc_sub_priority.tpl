@@ -21,13 +21,13 @@ function openLocSubPriorityAdd()
     })
 }
 
-function openLocSubPriorityEdit(id,type)
+function openLocSubPriorityEdit(id,type,priority)
 {
     $.fancybox({
         'width'                :720,
         'height'               :200,
         'scrolling'            : 'yes',
-        'href'                 : '/setLocSubPriority.php?cityId={$cityId}&type='+type+'&id='+id+'&mode=edit',
+        'href'                 : '/setLocSubPriority.php?cityId={$cityId}&type='+type+'&id='+id+'&priority='+priority+'&mode=edit',
         'type'                : 'iframe'
     })
 }
@@ -149,7 +149,7 @@ function show_loc_inst(){
                               <TD align=center class=td-border>{$v.ID}</TD>
                               <TD align=center class=td-border>{$type}</TD>
                               <TD align=center class=td-border>{$v.PRIORITY}</TD>
-                              <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openLocSubPriorityEdit('{$v.ID}','{$type}');">Edit</a> | <a href="javascript:void(0);" onclick="return openLocSubPriorityDelete('{$v.ID}','{$type}');">Reset</a></TD>
+                              <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openLocSubPriorityEdit('{$v.ID}','{$type}','{$v.PRIORITY}');">Edit</a> | <a href="javascript:void(0);" onclick="return openLocSubPriorityDelete('{$v.ID}','{$type}');">Reset</a></TD>
                             </TR>
                       {/foreach}
                       <TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>
