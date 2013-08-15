@@ -4,10 +4,10 @@
     include("dbConfig.php");
     include("includes/configs/configs.php");
     include("builder_function.php");
-    //AdminAuthentication();
+    AdminAuthentication();
  
-$orig_localityId = 128;//$_POST['correct_localityId'];
-$dup_localityId = 136;//$_POST['duplicate_localityId'];
+$orig_localityId = $_POST['correct_localityId'];
+$dup_localityId = $_POST['duplicate_localityId'];
 
 $updateSQLs = array();
 $restoreSQLs = array();
@@ -299,11 +299,11 @@ function updateLocalityTable($orig_localityId, $dup_localityId){
     $restoreSQL = "update proptiger.LOCALITY set ACTIVE = 1 where LOCALITY_ID in (".$dup_localityId.")";
     array_push($restoreSQLs,$restoreSQL);
                                          
-    echo "<pre>";
-    echo json_encode($updateSQLs);
-    echo "</pre><pre>";
-    echo json_encode($restoreSQLs);
-    echo "</pre>";
+    //echo "<pre>";
+    //echo json_encode($updateSQLs);
+    //echo "</pre><pre>";
+    //echo json_encode($restoreSQLs);
+    //echo "</pre>";
 };
 
 /*
@@ -371,7 +371,7 @@ function main(){
 
         updateLocalityTable($orig_localityId, $dup_localityId);
 
-//        executeTnxQuery();
+        executeTnxQuery();
     }
 };
 
