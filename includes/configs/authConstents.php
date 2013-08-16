@@ -40,6 +40,9 @@
     $brokerAuth = isUserPermitted('broker', 'manage');
     $smarty->assign("brokerAuth", $brokerAuth);
     
+    $myProjectsAuth = isUserPermitted('my-projects', 'read');
+    $smarty->assign("myProjectsAuth", $myProjectsAuth);
+    
     $urlEditAuth = isUserPermitted('url-edit', 'url-edit');
     $smarty->assign("urlEditAuth", $urlEditAuth);
      $urlEditAccess = 0;
