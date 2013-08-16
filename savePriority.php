@@ -11,33 +11,46 @@ AdminAuthentication();
 $priority   = $_POST['prio'];
 $cityId     = $_POST['cityId'];
 $sub        = $_POST['sub'];
-$loc        = $_POST['loc']; 
+$loc        = $_POST['loc'];
+$autoadjust = $_POST['autoadjust'];
 if(!empty($_POST['projectId']))
 {
     $projectId    = $_POST['projectId'];
-    if($priority>15){
-        $priority = MAX_PRIORITY;
+    if($priority > 15){
+        $priority = PROJECT_MAX_PRIORITY;
     }
     if(!empty($sub)){
-        if($_POST['autoadjust']){
+        if($autoadjust){
             autoAdjustProjPrio($sub, $priority, 'suburb');
+        }
+        if(getProjectCount($sub, 'suburb') >= 15)
+        {
+            autoAdjustMaxCountProjPrio($sub, $priority, 'suburb');
         }
         updateProj($projectId, $priority, 'suburb', $sub);
     }else if(!empty ($loc)){
-        if($_POST['autoadjust']){
+        if($autoadjust){
             autoAdjustProjPrio($loc, $priority, 'locality');
+        }
+        if(getProjectCount($loc, 'locality') >= 15)
+        {
+           autoAdjustMaxCountProjPrio($loc, $priority, 'locality'); 
         }
         updateProj($projectId, $priority, 'locality', $loc);
     }else{
-        if($_POST['autoadjust']){
+        if($autoadjust){
             autoAdjustProjPrio($cityId, $priority, 'city');
+        }
+        if(getProjectCount($cityId, 'city') >= 15)
+        {
+           autoAdjustMaxCountProjPrio($cityId, $priority, 'city'); 
         }
         updateProj($projectId, $priority, 'city', $cityId);
     }
 }
 else
 {
-    if($_POST['autoadjust'])
+    if($autoadjust)
     {
         autoAdjustPrio(SUBURB, $cityId, $priority);
         autoAdjustPrio(LOCALITY, $cityId, $priority);

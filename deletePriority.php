@@ -16,11 +16,11 @@ if(!empty($_POST['mode']))
     $suburbid = $_POST['suburbid'];
     $type = $_POST['type'];
     if($type == 'DISPLAY_ORDER_SUBURB'  && !empty($projectId)){
-        updateProj($projectId, MAX_PRIORITY, 'suburb', $suburbid);
+        updateProj($projectId, PROJECT_MAX_PRIORITY, 'suburb', $suburbid);
     }else if($type=='DISPLAY_ORDER_LOCALITY' && !empty($projectId)){
-        updateProj($projectId, MAX_PRIORITY, 'locality', $localityid);
-    }else if($type=='DISPLAY_FLAG' && !empty($projectId)){
-        updateProj($projectId, MAX_PRIORITY, 'city', $cityId);
+        updateProj($projectId, PROJECT_MAX_PRIORITY, 'locality', $localityid);
+    }else if($type=='DISPLAY_ORDER' && !empty($projectId)){
+        updateProj($projectId, PROJECT_MAX_PRIORITY, 'city', $cityId);
     }
 }
 else

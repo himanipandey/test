@@ -169,7 +169,7 @@ function show_loc_inst(){
                                 {else if isset($localityId)}
                                     {$type = DISPLAY_ORDER_LOCALITY}
                                 {else}
-                                    {$type = DISPLAY_FLAG}
+                                    {$type = DISPLAY_ORDER}
                                 {/if}
                                 {foreach from=$projectArr key=k item=v}
                                     {$i=$i+1}
