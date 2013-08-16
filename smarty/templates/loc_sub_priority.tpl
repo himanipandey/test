@@ -56,7 +56,12 @@ function openLocSubPriorityDelete(id,type)
     
 }
 function show_loc_inst(){
-    window.open("images/instruction_locality.png","_blank",'width=300,height=500');
+    var wid = screen.width/3;
+    var hei = (screen.height/2+20);
+    var w = window.open("Surprise1", "_blank","toolbar=no ,left=300, top=200, scrollbar=yes, location=0, status=no,titlebar=no,menubar=no,width="+wid +",height=" +hei);
+    var d = w.document.open();
+    d.write("<!DOCTYPE html><html><body><h1>Instructions</h1><p>1. Select the city to see the current priority order of areas.</p><p>2. Click 'Add locality/suburb' to add a  area. In that popup box, type in either area name, or area id to insert that area.</p>2.1. Type in the priority in the priority field.Lower numeric value is higher priority.</p><p>2.2. Check the checkbox to auto shift the priorities, if desired. If this is selected, then areas at and below specified priority are shifted down 1 priority level. If this is not selected, then multiple areas could be at the same priority(which is fine, if that is what you want.)</p></body></html>");
+    d.close();
 }
 </script>
 </TD>
