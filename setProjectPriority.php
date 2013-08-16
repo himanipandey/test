@@ -9,23 +9,36 @@ include("builder_function.php");
 include("function/functions_priority.php");
 AdminAuthentication();
 $cityId = $_GET['cityId'];
-$highPrio = getAvaiHighPriority($cityId);
+$localityid = $_GET['localityid'];
+$suburbid = $_GET['suburbid'];
+$highPrio = getAvaiHighProjectPriority($cityId, $localityid, $suburbid);
 ?>
 <script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script> 
 <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
 <script type="text/javascript"> 
-jQuery(document).ready(function(){
-    $('#suburbsearch').autocomplete({source:"suggest_auto.php?type=suburb&cityId=<?php echo $cityId?>", minLength:2});
-    $('#localitysearch').autocomplete({source:"suggest_auto.php?type=locality&cityId=<?php echo $cityId?>", minLength:2});
+jQuery(document).ready(function(){ 
+    var cityId          = $('#cityId').val();
+    var localityid      = $('#localityid').val();
+    var suburbid        = $('#suburbid').val();
+    if(suburbid!=''){
+       $('#projectsearch').autocomplete({source:"suggest_auto.php?mode=suburb&type=project&id="+suburbid, minLength:1});
+    }
+    else if(localityid!=''){
+       $('#projectsearch').autocomplete({source:"suggest_auto.php?mode=locality&type=project&id="+localityid, minLength:1});
+    }
+    else{
+        $('#projectsearch').autocomplete({source:"suggest_auto.php?mode=city&type=project&id="+cityId, minLength:1});
+    }
 });
 jQuery(document).ready(function(){
     $( "#priority_form").submit(function() {
-        var sub         = $('#suburbsearch').val();
-        var loc         = $('#localitysearch').val();
+        var projectId   = $('#projectsearch').val();
         var prior       = $('#priority').val();
         var cityId      = $('#cityId').val();
+        var localityid  = $('#localityid').val();
+        var suburbid    = $('#suburbid').val();
         var autoadjust  = $("#autoadjust").is(':checked') ? 1 : 0;
-        if($('#suburbsearch').val() === '' && $('#localitysearch').val() === ''){
+        if($('#projectsearch').val() === ''){
             alert("Please add suburb/priority");
             return false;
         }
@@ -36,7 +49,7 @@ jQuery(document).ready(function(){
         $.ajax({
             type: "POST",
             url: '/savePriority.php',
-            data: { sub: sub, loc: loc, prio:prior, autoadjust:autoadjust, cityId:cityId },
+            data: { projectId: projectId, prio:prior, autoadjust:autoadjust, cityId:cityId, loc:localityid, sub:suburbid },
             success:function(msg){
                if(msg == 1){
                    alert("Priority Successfully updated");
@@ -64,23 +77,23 @@ li.ui-menu-item { font-size:12px !important; }
 <form id="priority_form" onsubmit="return false;">
   <TBODY>
     <TR class = "headingrowcolor">
-        <TD class=whiteTxt width=12% align="right">Suburb Name or Id:</TD>
-        <TD class=whiteTxt width=15% align="left"><input type="text" id="suburbsearch" value="<?php if($_GET['mode']=='edit' && $_GET['type']=='SUBURB'){ echo $_GET['id'];}?>" /></TD>
-    </TR>
-    <TR>
-        <TD class=whiteTxt width=12% align="right">Locality Name or Id:</TD>
-        <TD class=whiteTxt width=15% align="left"><input type="text" id="localitysearch" value="<?php if($_GET['mode']=='edit' && $_GET['type']=='LOCALITY'){ echo $_GET['id'];}?>" /></TD>
+        <TD class=whiteTxt width=12% align="right">Project Name or ID:</TD>
+        <TD class=whiteTxt width=15% align="left"><input type="text" id="projectsearch" value="<?php if(!empty($_GET['mode'])){ echo $_GET['id'];}?>" /></TD>
     </TR>
     <TR>
         <TD class=whiteTxt width=12% align="right">Priority:</TD>
-        <TD class=whiteTxt width=15% align="left"><input type="text" id="priority" value="<?php if($_GET['mode']=='edit'){ echo $_GET['priority'];}else{ echo $highPrio;}?>" /></TD>
+        <TD class=whiteTxt width=15% align="left"><input type="text" id="priority" value="<?php if(!empty($_GET['mode'])){ echo $_GET['priority'];}else{ echo $highPrio+1;}?>" /></TD>
     </TR>
     <TR>
         <TD class=whiteTxt width=12% align="right"><input type="checkbox" name="autoadjust" id="autoadjust" value="" /></TD>
         <TD class=whiteTxt width=15% align="left">Auto Adjust Priorities&nbsp;<img src="images/exclamation.png" id="autoimg" border="0" onclick="show_loc_inst();" style="cursor:pointer;" /></TD>
     </TR>
     <TR>
-        <TD class=whiteTxt width=12% align="center"><input type="hidden" name="cityId" id="cityId" value="<?php echo $cityId;?>" /></TD>
+        <TD class=whiteTxt width=12% align="center">
+            <input type="hidden" name="cityId" id="cityId" value="<?php echo $cityId;?>" />
+            <input type="hidden" name="localityid" id="localityid" value="<?php echo $localityid;?>" />
+            <input type="hidden" name="suburbid" id="suburbid" value="<?php echo $suburbid;?>" />
+        </TD>
         <TD class=whiteTxt width=15% align="center"><input type="submit" id="submit" name="submit" value="Add Priority" /></TD>
     </TR>
     

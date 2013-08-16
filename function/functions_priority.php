@@ -5,7 +5,7 @@ function cmp($value1, $value2)
     global $orderBy;
     if($orderBy == 'ASC')
     {
-        if($value1['PRIORITY'] == $value2['PRIORITY'])
+        if($value1['PRIORITY'] == $value2['PRIORITY'] && $value1['LABEL'] < $value2['LABEL'])
             return 0;
         else if( ($value1['PRIORITY'] < $value2['PRIORITY'] && $value1['PRIORITY'] > 0) || $value2['PRIORITY'] < 1)
             return -1;
@@ -14,7 +14,7 @@ function cmp($value1, $value2)
     }
     if($orderBy == 'DESC')
     {
-        if($value1['PRIORITY'] == $value2['PRIORITY'])
+        if($value1['PRIORITY'] == $value2['PRIORITY']  && $value1['LABEL'] < $value2['LABEL'])
             return 0;
         else if( ($value1['PRIORITY'] > $value2['PRIORITY'] && $value1['PRIORITY'] > 0) || $value2['PRIORITY'] < 1)
             return -1;
@@ -27,20 +27,24 @@ function getSubLocData($cityId, $order) {
     global $orderBy;
     $orderBy = $order;
     $arraySubLoc = array();
-    $querySub = "SELECT SUBURB_ID, LABEL, PRIORITY FROM ".SUBURB." WHERE CITY_ID ='".$cityId ."' AND PRIORITY < ".MAX_PRIORITY." ORDER BY LABEL ASC";
+    $queryLessThenMax = "";
+    $queryLessThenMax = " AND PRIORITY < ".MAX_PRIORITY;
+    $querySub = "SELECT SUBURB_ID, LABEL, PRIORITY FROM ".SUBURB." WHERE CITY_ID ='".$cityId ."'".$queryLessThenMax." ORDER BY LABEL ASC";
     $queryExecuteSub 	= mysql_query($querySub) or die(mysql_error());
     while ($row = mysql_fetch_assoc($queryExecuteSub)) {
         $row['ID'] = $row['SUBURB_ID'];
         array_push($arraySubLoc, $row);
     }
 
-    $queryLoc = "SELECT LOCALITY_ID, LABEL, PRIORITY FROM ".LOCALITY." WHERE CITY_ID ='".$cityId ."' AND PRIORITY < ".MAX_PRIORITY." ORDER BY LABEL ASC";
+    $queryLoc = "SELECT LOCALITY_ID, LABEL, PRIORITY FROM ".LOCALITY." WHERE CITY_ID ='".$cityId ."'".$queryLessThenMax." ORDER BY LABEL ASC";
     $queryExecuteLoc 	= mysql_query($queryLoc) or die(mysql_error());
     while ($row1 = mysql_fetch_assoc($queryExecuteLoc)) {
         $row1['ID'] = $row1['LOCALITY_ID'];
         array_push($arraySubLoc, $row1);
     }
+    //echo "<pre>";print_r($arraySubLoc);    
     uasort($arraySubLoc, "cmp");
+    //echo "<pre>";print_r($arraySubLoc);
     return $arraySubLoc;
 }
 function getLastValidPriority($arraySubLoc = array()){
@@ -107,5 +111,108 @@ function autoAdjustPrio($tablename, $cityID = null, $priority = null)
 {
     $query = "UPDATE ".$tablename." SET PRIORITY = (PRIORITY+1) WHERE CITY_ID='".$cityID."' AND PRIORITY >=".$priority." AND PRIORITY <".MAX_PRIORITY;
     mysql_query($query) or die(mysql_error());
+}
+/* * ******suburb list with id************* */
+function localityArr($cityId) {
+    $qry = "SELECT LOCALITY_ID,LABEL FROM " . LOCALITY . " WHERE CITY_ID = '" . $cityId . "' ORDER BY LABEL ASC";
+    $res = mysql_query($qry);
+    $arrCity = array();
+    while ($data = mysql_fetch_assoc($res)) {
+        $arrCity[$data['LOCALITY_ID']] = $data['LABEL'];
+    }
+    return $arrCity;
+}
+function getProjectArr($Id, $type, $order){
+    global $orderBy;
+    $orderBy = $order;
+    $queryLessThenMax = "";
+    switch($type)
+    {
+        case "city":
+            $queryLessThenMax = " AND DISPLAY_FLAG > 0 AND DISPLAY_FLAG < ".MAX_PRIORITY;
+            $where = "CITY_ID = '" . $Id . "'" .$queryLessThenMax;
+            $orderby = "ORDER BY DISPLAY_FLAG $orderBy, PROJECT_NAME ASC";
+            break;
+        case "suburb":
+            $queryLessThenMax = " AND DISPLAY_ORDER_SUBURB > 0 AND DISPLAY_ORDER_SUBURB < ".MAX_PRIORITY;
+            $where = "SUBURB_ID = '" . $Id . "'" .$queryLessThenMax;
+            $orderby = "ORDER BY DISPLAY_ORDER_SUBURB $orderBy, PROJECT_NAME ASC";
+            break;
+        case "locality":
+            $queryLessThenMax = " AND DISPLAY_ORDER_LOCALITY > 0 AND DISPLAY_ORDER_LOCALITY < ".MAX_PRIORITY;
+            $where = "LOCALITY_ID = '" . $Id . "'" .$queryLessThenMax;
+            $orderby = "ORDER BY DISPLAY_ORDER_LOCALITY $orderBy, PROJECT_NAME ASC";
+            break;
+    }
+    $qry = "SELECT PROJECT_NAME, PROJECT_ID, CITY_ID, SUBURB_ID, LOCALITY_ID, DISPLAY_FLAG, DISPLAY_ORDER_LOCALITY, DISPLAY_ORDER_SUBURB FROM " . RESI_PROJECT . " WHERE ".$where." ".$orderby;
+    $res = mysql_query($qry) or die(mysql_error());
+    $arr = array();
+    while ($data = mysql_fetch_assoc($res)) {
+        array_push($arr, $data);
+    }
+    //echo "<pre>";print_r($arr);
+    return $arr;
+}
+function updateProj($projectId = null, $priority = null, $mode = null, $modeid = null)
+{
+    switch($mode)
+    {
+        case "city":
+            $where = "CITY_ID = '" . $modeid . "'";
+            $update = "DISPLAY_FLAG = '$priority'";
+            break;
+        case "suburb":
+            $where = "SUBURB_ID = '" . $modeid . "'";
+            $update = "DISPLAY_ORDER_SUBURB = '$priority'";
+            break;
+        case "locality":
+            $where = "LOCALITY_ID = '" . $modeid . "'";
+            $update = "DISPLAY_ORDER_LOCALITY = '$priority'";
+            break;
+    }
+    $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where." AND PROJECT_ID = '".$projectId."'";
+    $res = mysql_query($qry);
+    if($res > 0){
+        echo "1";
+    }
+}
+function getAvaiHighProjectPriority($cityId = null, $localityid = null, $suburbid = null)
+{
+    global $orderBy;
+    $arr = array();
+    $reversed = array();
+    if(!empty($suburbid)){
+       $arr = getProjectArr($suburbid, 'suburb', $orderBy);
+       $reversed = array_reverse($arr);
+       return $reversed['0']['DISPLAY_ORDER_SUBURB'];
+    }else if(!empty($localityid)){
+       $arr = getProjectArr($localityid, 'locality', $orderBy);
+       $reversed = array_reverse($arr);
+       return $reversed['0']['DISPLAY_ORDER_LOCALITY'];
+    }else if(!empty($cityId)){
+       $arr = getProjectArr($cityId, 'city', $orderBy);
+       $reversed = array_reverse($arr);
+       return $reversed['0']['DISPLAY_FLAG'];
+    }
+}
+function autoAdjustProjPrio($id = null, $priority = null, $type = null)
+{
+    switch($type)
+    {
+        case "city":
+            $where = "CITY_ID = '" . $id . "' AND DISPLAY_FLAG >= ".$priority." AND DISPLAY_FLAG < ".MAX_PRIORITY;
+            $update = "DISPLAY_FLAG = '".($priority+1)."'";
+            break;
+        case "suburb":
+            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".MAX_PRIORITY;
+            $update = "DISPLAY_ORDER_SUBURB = '".($priority+1)."'";
+            break;
+        case "locality":
+            $where = "LOCALITY_ID = '" . $id . "' AND DISPLAY_ORDER_LOCALITY >= ".$priority." AND DISPLAY_ORDER_LOCALITY < ".MAX_PRIORITY;
+            $update = "DISPLAY_ORDER_LOCALITY = '".($priority+1)."'";
+            break;
+    }
+    $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where;
+    $res = mysql_query($qry) or die(mysql_error());
 }
 ?>
