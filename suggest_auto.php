@@ -40,6 +40,28 @@ else if($_REQUEST['type'] == 'locality')
         }
     }
 }
+else if($_REQUEST['type'] == 'project')
+{
+    if($_GET['mode'] == 'city'){
+        $where = "CITY_ID=".$_REQUEST['id']." AND ";
+    }else if($_GET['mode'] == 'suburb'){
+        $where = "SUBURB_ID=".$_REQUEST['id']." AND ";
+    }else if($_GET['mode'] == 'locality'){
+        $where = "LOCALITY_ID=".$_REQUEST['id']." AND ";
+    }
+    
+    $rs = mysql_query("select PROJECT_NAME, PROJECT_ID FROM ".RESI_PROJECT." where ".$where." (PROJECT_NAME like '". mysql_real_escape_string($_REQUEST['term']) ."%'  OR PROJECT_ID like '". mysql_real_escape_string($_REQUEST['term']) ."%')  order by PROJECT_NAME ASC limit 0,10");
+    if ($rs && mysql_num_rows($rs) )
+    {
+        while( $row = mysql_fetch_array($rs, MYSQL_ASSOC) )
+        {
+            $data[] = array(
+                'label' => $row['PROJECT_NAME'] .' - '. $row['PROJECT_ID'],
+                'value' => $row['PROJECT_ID']
+            );
+        }
+    }
+}
 echo json_encode($data);
 flush();
 ?>  

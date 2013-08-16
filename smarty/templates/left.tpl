@@ -222,6 +222,13 @@
                 <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
                 <td align="left" height="22"><a class="leftnav" href="loc_sub_priority.php"><font color = "#f15a22">Suburb/Locality Priority</font></a></td>
             </tr>
+            <tr>
+                <td class="thinline" align="left" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="project_priority.php"><font color = "#f15a22">Project Priority</font></a></td>
+            </tr>
         </table>
     </td></tr>
             
