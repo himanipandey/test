@@ -71,19 +71,23 @@ function refreshimg(ct)
 				   <td width="30%" align="left" >
 					<select name = "PType">
 						<option value =''>Select Type</option>
-						<option value ='Project Image'>Project Image</option>
-						<option value ='Location Plan'>Location Plan</option>
-						<option value ='Layout Plan'>Layout Plan</option>
-						<option value ='Site Plan'>Site Plan</option>
-						<option value ='Master Plan'>Master Plan</option>
-						<option value ='Cluster Plan'>Cluster Plan</option>
-						<option value ='Construction Status'>Construction Status</option>
-						<option value ='Payment Plan'>Payment Plan</option>
-						<option value ='Specification'>Specification</option>
-						<option value ='Price List'>Price List</option>
-						<option value ='Application Form'>Application Form</option>
-						
-					</select>				  
+                                                {if $linkShowHide == 0}
+                                                    <option value ='Project Image'>Project Image</option>
+                                                    <option value ='Location Plan'>Location Plan</option>
+                                                    <option value ='Layout Plan'>Layout Plan</option>
+                                                    <option value ='Site Plan'>Site Plan</option>
+                                                    <option value ='Master Plan'>Master Plan</option>
+                                                    <option value ='Cluster Plan'>Cluster Plan</option>
+                                                    <option value ='Construction Status'>Construction Status</option>
+                                                    <option value ='Payment Plan'>Payment Plan</option>
+                                                    <option value ='Specification'>Specification</option>
+                                                    <option value ='Price List'>Price List</option>
+                                                    <option value ='Application Form'>Application Form</option>
+						{else}
+                                                    <option value ='Construction Status'>Construction Status</option>
+                                                {/if}
+					</select>	
+                                        <input type="hidden" name = "linkShowHide" value="{$linkShowHide}">
 				  </td>
 				 
 				</tr>

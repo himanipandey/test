@@ -37,13 +37,13 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 	{
 
 		$txtProjectName				=	trim($_POST['txtProjectName']);
-		$builderId					=	trim($_POST['builderId']);
-		$cityId						=	trim($_POST['cityId']);
-		$suburbId					=	trim($_POST['suburbId']);
-		$localityId					=	trim($_POST['localityId']);
-		$txtProjectDescription		=	trim($_POST['txtProjectDescription']);
+            $builderId					=	trim($_POST['builderId']);
+            $cityId					=	trim($_POST['cityId']);
+            $suburbId					=	trim($_POST['suburbId']);
+            $localityId					=	trim($_POST['localityId']);
+		$txtProjectDescription                  =	trim($_POST['txtProjectDescription']);
 		$txtProjectRemark			=	trim($_POST['txtProjectRemark']);
-		$txtAddress					=	trim($_POST['txtProjectAddress']);
+		$txtAddress				=	trim($_POST['txtProjectAddress']);
 		$txtProjectDesc				=	trim($_POST['txtProjectDesc']);
 		$txtProjectSource			=	trim($_POST['txtProjectSource']);
 		$project_type				=	trim($_POST['project_type']);
@@ -211,7 +211,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		
 		$cityDetail	=	ViewCityDetails($cityId);
 		$cityName   =   $cityDetail['LABEL'];
-				
+		$ErrorMsg = array();		
 		if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 		}
@@ -259,91 +259,180 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
                 {
                     if($project_type != $_REQUEST['project_type_hidden'])
                     {
-                        $ErrorMsgType['showTypeError'] = 'style = "display:block;"';
+                        $ErrorMsgType['showTypeError'] = 'You can not update project type!';
                          $ErrorMsg['showTypeError'] = 'error';
                     }
                     else
                     {
-                        $ErrorMsgType['showTypeError'] = 'style = "display:none;"'; 
+                        $ErrorMsgType['showTypeError'] = ''; 
                     }
                 }
             }
+            
+            if( $exp_launch_date != '' && $exp_launch_date != '0000-00-00' ) {
+                 $retdt  = ((strtotime($exp_launch_date)-strtotime(date("Y-m-d")))/(60*60*24));
+		if( $retdt <= 0 ) {
+                    $ErrorMsg['supplyDate'] = 'Expected supply date should be future date!';
+		}
+            }
+            
+            /**code for new launch and completion date diff and if In case PROJECT_STATUS = Pre Launch then Pre_launch_date cannot be empty In case PROJECT_STATUS = Occupied or Ready For Possession then  ****/  
+            $launchDt = $eff_date_to;
+            $promisedDt = $eff_date_to_prom;
+            $preLaunchDt = $pre_launch_date;
+            
+            if( $launchDt == '0000-00-00 00:00:00' )    
+                $launchDt = '';
+            else {
+                $exp = explode(" 00:",$launchDt);
+                $launchDt = $exp[0];
+            }
+            if( $preLaunchDt == '0000-00-00 00:00:00' )
+                $preLaunchDt = '';
+            else {
+                $exp = explode(" 00:",$preLaunchDt);
+                $preLaunchDt = $exp[0];
+            }
+            if( $promisedDt == '0000-00-00 00:00:00' )
+                $promisedDt = '';
+            else {
+                $exp = explode(" 00:",$promisedDt);
+                $promisedDt = $exp[0];
+            }
+            
+            if( $launchDt != '' && $promisedDt !='' ) {
+                $retdt  = ((strtotime($promisedDt)-strtotime($launchDt))/(60*60*24));
+		if( $retdt <= 0 ) {
+                    $ErrorMsg['CompletionDateGreater'] = 'Completion date to be always greater than launch date';
+		}
+            }
+            
+            if( $preLaunchDt != '' && $launchDt !='' ) {
+                $retdt  = ((strtotime($launchDt) - strtotime($preLaunchDt)) / (60*60*24));
+                if( $retdt <= 0 ) {
+                    $ErrorMsg['launchDateGreater'] = "Launch date to be always greater than Pre Launch date";
+                }
+            }
+            
+            if( $preLaunchDt != '' && $promisedDt !='' ) {
+                $retdt  = ((strtotime($promisedDt) - strtotime($preLaunchDt)) / (60*60*24));
+                if( $retdt <= 0 ) {
+                    $ErrorMsg['completionDateGreater'] = "Completion date to be always greater than Pre Launch date";
+                }
+           }
+           
+           if( $Status == 'Pre Launch' && $preLaunchDt == '' ) {
+               $ErrorMsg['preLaunchDate'] = "Pre Launch date cant empty";
+           }
+           
+           if( $Status == 'Pre Launch' && $launchDt != '' ) {
+               $ErrorMsg['launchDate'] = "Launch date should be blank/zero";
+           }
+          
+           if( $Status == 'Occupied' || $Status == 'Ready for Possession' ) {
+               $yearExp = explode("-",$promisedDt);
+             
+               if( $yearExp[0] == date("Y") ) {
+                   if( intval($yearExp[1]) > intval(date("m"))) {
+                     $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+                   }    
+               } 
+               else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                   $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+               }
+           }
+           
+           if( $Status == 'Under Construction' ) {
+               
+               $yearExp = explode("-",$launchDt);
+               if( $yearExp[0] == date("Y") ) {
+                   if( intval($yearExp[1]) > intval(date("m"))) {
+                     $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
+                   }    
+               } 
+               else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                   $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
+               }
+           }
+           
            $smarty->assign("projectTypeOld",$_REQUEST['project_type_hidden']);
            $smarty->assign("ErrorMsgType", $ErrorMsgType);
            $smarty->assign("ErrorMsg", $ErrorMsg);
-	   if(is_array($ErrorMsg)) {
+           //die;
+           
+	   if(count($ErrorMsg)>0) {
 		// Do Nothing
 	   }
 	   else
 		{
-			$app = '';
-			if($application == 'app_form')
-			{
-				$app = $app_form;
-			}
-			else if($application == 'app_form_pdf')
-			{
-					$dir		=	"application_form/";
-					$pdf_path	=	$dir.str_replace(" ","",$txtProjectName).$_FILES['app_pdf']['name'];
-					$move		=	move_uploaded_file($_FILES['app_pdf']['tmp_name'],$pdf_path);
-					if($move == TRUE)
-					{
-						$app	=   $pdf_path;
-					}
-			}
+                    $app = '';
+                    if($application == 'app_form')
+                    {
+                            $app = $app_form;
+                    }
+                    else if($application == 'app_form_pdf')
+                    {
+                        $dir = "application_form/";
+                        $pdf_path =	$dir.str_replace(" ","",$txtProjectName).$_FILES['app_pdf']['name'];
+                        $move = move_uploaded_file($_FILES['app_pdf']['tmp_name'],$pdf_path);
+                        if($move == TRUE)
+                        {
+                            $app = $pdf_path;
+                        }
+                    }
 
-			$price1 = '';
-			if($price_list_chk == 'price_list')
-			{
-				$price1 = $price_list;
-			}
-			else if($price_list_chk == 'price_list_pdf')
-			{
-					$dir		=	"price_list/";
-					$pdf_path	=	$dir.str_replace(" ","",$txtProjectName).$_FILES['price_list_pdf']['name'];
-					$move		=	move_uploaded_file($_FILES['price_list_pdf']['tmp_name'],$pdf_path);
-					if($move == TRUE)
-					{
-						$price1	=   $pdf_path;
-					}
-			}
+                    $price1 = '';
+                    if($price_list_chk == 'price_list')
+                    {
+                            $price1 = $price_list;
+                    }
+                    else if($price_list_chk == 'price_list_pdf')
+                    {
+                        $dir = "price_list/";
+                        $pdf_path = $dir.str_replace(" ","",$txtProjectName).$_FILES['price_list_pdf']['name'];
+                        $move = move_uploaded_file($_FILES['price_list_pdf']['tmp_name'],$pdf_path);
+                        if($move == TRUE)
+                        {
+                            $price1	= $pdf_path;
+                        }
+                    }
 
-			$payment1 = '';
-			//echo $payment_chk;
-			if($payment_chk == 'payment')
-			{
-				echo"",$payment1 = $payment;
-			}
-			else if($payment_chk == 'payment_pdf')
-			{
-				$dir		=	"payment_plan/";
-				$pdf_path	=	$dir.str_replace(" ","",$txtProjectName).$_FILES['payment_pdf']['name'];
-				$move		=	move_uploaded_file($_FILES['payment_pdf']['tmp_name'],$pdf_path);
-				if($move == TRUE)
-				{
-					$payment1	=   $pdf_path;
-				}
+                    $payment1 = '';
+                    //echo $payment_chk;
+                    if($payment_chk == 'payment')
+                    {
+                            echo"",$payment1 = $payment;
+                    }
+                    else if($payment_chk == 'payment_pdf')
+                    {
+                        $dir = "payment_plan/";
+                        $pdf_path = $dir.str_replace(" ","",$txtProjectName).$_FILES['payment_pdf']['name'];
+                        $move = move_uploaded_file($_FILES['payment_pdf']['tmp_name'],$pdf_path);
+                        if($move == TRUE)
+                        {
+                            $payment1 = $pdf_path;
+                        }
 
-			}
+                    }
 			
 		   if ($projectId == '')
 		   {
 		   		
-				$projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
-				header("Location:project_img_add.php?projectId=".$projectId);
-			}
-			else
-			{
-				//echo $price1."==".$payment1;
-				$projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
-				if($txtProjectURL != $txtProjectURLOld)
-					insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
-				if($preview == 'true')
-					header("Location:show_project_details.php?projectId=".$projectId);
-				else
-					header("Location:ProjectList.php?projectId=".$projectId);
-				
-			}
+                        $projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
+                        header("Location:project_img_add.php?projectId=".$projectId);
+                    }
+                    else
+                    {
+                        //echo $price1."==".$payment1;
+                        $projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits);
+                        if($txtProjectURL != $txtProjectURLOld)
+                                insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
+                        if($preview == 'true')
+                                header("Location:show_project_details.php?projectId=".$projectId);
+                        else
+                                header("Location:ProjectList.php?projectId=".$projectId);
+
+                    }
 		}
 	}
 	else if($_POST['btnExit'] == "Exit")

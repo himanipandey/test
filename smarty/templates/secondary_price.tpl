@@ -223,6 +223,7 @@ function builder_contact(builderId,buildernm)
 
                                     <tr class="headingrowcolor" height="30px;">
                                         <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
+                                        <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Broker Name</td>
                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
@@ -239,6 +240,10 @@ function builder_contact(builderId,buildernm)
                                     <tr {$color} height="25px;">
                                         <td nowrap="nowrap" width="10%" align="center">
                                                 {$key+1}
+                                        </td>
+                                        <td nowrap="nowrap" width="10%" align="center">
+                                                {$brokerDetail = getBrokerDetailById($item['BROKER_ID'])}
+                                                {$brokerDetail[0]['BROKER_NAME']}
                                         </td>
                                         <td width ="15%">
                                                 {$item['FNAME']}

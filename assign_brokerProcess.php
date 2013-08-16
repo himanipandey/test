@@ -4,6 +4,13 @@
     if( $brokerAuth == false )
       die("No Access");
     
+    $projectId    = $_REQUEST['projectId'];
+    $projectName  = $_REQUEST['projectName'];
+    $cityId       = $_REQUEST['cityId'];
+    
+    $smarty->assign("projectId", $projectId);
+    $smarty->assign("projectName", $projectName);
+    $firstTimeSearch = 0;
     if(isset($_REQUEST['exit'])){
        ?>
         <script type="text/javascript">
@@ -16,7 +23,7 @@
         if(count($_REQUEST)>3){
             $del = deleteAllBrokerOfProject($projectId);
             if($del){
-                $qryIns = "INSERT INTO BROKER_PROJECT_MAPPING (ID,PROJECT_ID,BROKER_ID,ACTION_DATE)
+                $qryIns = "INSERT INTO broker_project_mapping (ID,PROJECT_ID,BROKER_ID,ACTION_DATE)
                             VALUES ";
                 $cnt = 1;
                 $comma = ',';
@@ -48,17 +55,27 @@
             </script>
             <?php
         }
-    }else{
-        $projectId    = $_REQUEST['projectId'];
-        $projectName  = $_REQUEST['projectName'];
-        $cityId       = $_REQUEST['cityId'];
-        $arrAllActiveBrokerList = getActiveBrokerList($cityId);
+    }else if( isset($_REQUEST['search']) ) {
+        $broker = $_REQUEST['broker'];
+        $mobile = $_REQUEST['mobile'];
+        $errorMsg = array();
+        if( $mobile == '' && $broker == '' ) {
+            $errorMsg['oneSelection'] = "<font color = 'red'>please select atleast one field</font>";
+        }
+        $arrAllActiveBrokerList = array();
+        $allBrokerByProject = array();
+        if( count($errorMsg) == 0 ) {
+            $arrAllActiveBrokerList = getActiveBrokerList($cityId, $broker, $mobile);
+        }
         include("dbConfig.php");
         $allBrokerByProject   = getBrokerByProject($projectId);
-        $smarty->assign("projectId", $projectId);
+        
+        $smarty->assign("errorMsg", $errorMsg);
+        $smarty->assign("broker", $broker);
+        $smarty->assign("mobile", $mobile);
         $smarty->assign("allBrokerByProject", $allBrokerByProject);
-        $smarty->assign("projectName", $projectName);
         $smarty->assign("arrAllActiveBrokerList", $arrAllActiveBrokerList);
+        $firstTimeSearch = 1;
     }
-
+    $smarty->assign("firstTimeSearch", $firstTimeSearch);
 ?>

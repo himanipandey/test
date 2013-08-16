@@ -606,9 +606,12 @@ function selectedBuilderValue(builderId) {
                                             <option value = "add_supply_inventory.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Availability(Supply)</option>
                                             <option value = "add_tower_construction_status.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Tower Construction</option>
                                             <option value = "add_project_construction.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Project Construction</option>
+                                            <option value = "project_img_add.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit">Add Construction Image</option>
                                             {if $projectDataArr[data].PROJECT_STAGE == 'secondaryPriceCycle'}
                                              <option value = "secondary_price.php?projectId={$projectDataArr[data].PROJECT_ID}">Update Project Secondary Price</option>
                                             {/if}
+                                        {else}
+                                            <option value = "project_img_add.php?projectId={$projectDataArr[data].PROJECT_ID}&edit=edit&auth=auth">Add Construction Image</option>
                                         {/if}
                                 </select>
 

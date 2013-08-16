@@ -96,7 +96,7 @@
             if($flag == 1) {
                 $cnt = 1;
                 $comma = ',';
-                $qryIns = "INSERT IGNORE INTO BROKER_PROJECT_MAPPING (PROJECT_ID,BROKER_ID,ACTION_DATE) VALUES ";
+                $qryIns = "INSERT IGNORE INTO broker_project_mapping (PROJECT_ID,BROKER_ID,ACTION_DATE) VALUES ";
                 if( count($arrProjectListValid) > 0) {
                     foreach($arrProjectListValid as $val) {
                         if($cnt == count($arrProjectListValid))

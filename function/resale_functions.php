@@ -64,11 +64,20 @@
         else
             return false;
     }
-    function getActiveBrokerList($cityId=''){
+    function getActiveBrokerList($cityId='', $broker='', $mobile=''){
         $city = '';
-        if($cityId !='')
+        $brokerName = '';
+        $mobileNumber = '';
+        if( $cityId !='' )
             $city = " AND HQ = $cityId";
-        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE STATUS = '1' $city ORDER BY BROKER_NAME ASC";
+        if( $broker != '' )
+            $brokerName = " AND BROKER_NAME LIKE '%$broker%'";
+        if( $mobile != '' ){
+            $mobile = ltrim($mobile,"0");
+            $mobileNumber = " AND BROKER_MOBILE LIKE '%$mobile%'";
+        }
+ 
+        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE STATUS = '1' $city $brokerName $mobileNumber ORDER BY BROKER_NAME ASC";
         $res = mysql_query($qry) or die(mysql_error()." error in active broker list");
         $arrActiveBrokerlist = array();
         if(mysql_num_rows($res)>0){
@@ -79,7 +88,7 @@
         return $arrActiveBrokerlist;
     }
     function getBrokerByProject($projectId){
-        $qry = "SELECT * FROM ".BROKER_PROJECT_MAPPING." 
+        $qry = "SELECT * FROM broker_project_mapping 
                 WHERE PROJECT_ID = '".$projectId."'";
         $res = mysql_query($qry) or die(mysql_error()." error in  broker list by project id");
         $arrBrokerByProject = array();
@@ -91,7 +100,7 @@
         return $arrBrokerByProject;
     }
     function deleteAllBrokerOfProject($projectId){
-        $del = "DELETE FROM ".BROKER_PROJECT_MAPPING." WHERE PROJECT_ID = '".$projectId."'";
+        $del = "DELETE FROM broker_project_mapping WHERE PROJECT_ID = '".$projectId."'";
         $res = mysql_query($del) or die(mysql_error());
         if($res)
             return true;
@@ -102,7 +111,7 @@
     function getProjectByBroker($brokerId){
        $qry = "SELECT a.PROJECT_ID,a.BROKER_ID,b.PROJECT_NAME 
                 FROM
-                    ".BROKER_PROJECT_MAPPING." a
+                    broker_project_mapping a
                 LEFT JOIN
                     ".RESI_PROJECT." b
                 ON
