@@ -74,7 +74,12 @@ function projectPriorityDelete(id,type)
     
 }
 function show_loc_inst(){
-    window.open("images/instruction_locality.png","_blank",'width=300,height=500');
+    var wid = screen.width/3;
+    var hei = (screen.height/2+25);
+    var w = window.open("Surprise1", "_blank","toolbar=no ,left=300, top=200, scrollbar=yes, location=0, status=no,titlebar=no,menubar=no,width="+wid +",height=" +hei);
+    var d = w.document.open();
+    d.write("<!DOCTYPE html><html><body><h1>Instructions</h1><p>1. Select the city and optinally locality and suburb to see the current projects in that area.</p><p>2. You can set at the max 15 projects for a given area.</p><p>3. Click Add Project to add a project.In that popup box, type in either project name, or project id to insert that project. </p><p>3.1. Type in the priority in the priority field.Lower numeric value is higher priority.</p><p>3.2. Check the checkbox to auto shift the projects, if desired.If this is selected, then projects at and below specified priority are shifted down 1 priority level. If this is not selected, then multiple projects could be at the same priority(which is fine, if that is what you want.)</p><p>4. Projects after first 15 would be  automatically reset to default priority.</p></body></html>");
+    d.close();
 }
 </script>
 </TD>
