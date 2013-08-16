@@ -2163,7 +2163,7 @@ function curlFetch($url)
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 	curl_setopt($ch, CURLOPT_NOBODY, FALSE); // show the body 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
 	$obj=curl_exec($ch);
