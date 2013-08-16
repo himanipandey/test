@@ -2163,7 +2163,7 @@ function curlFetch($url)
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 	curl_setopt($ch, CURLOPT_NOBODY, FALSE); // show the body 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
 	$obj=curl_exec($ch);
@@ -2182,7 +2182,7 @@ function getPrevMonthProjectData($projectId)
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
 	//$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
-	$url="http://cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	$url="http://localhost:3002/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
