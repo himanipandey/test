@@ -33,6 +33,15 @@ $table_to_id_map = array(
     "proptiger.SEO_LISTINGS"    => array(   "key"   =>  "ID")
 );
 
+
+function specialCharChk($str=''){                                                                                                               
+    if($str == '') return false;
+
+    if(!preg_match('/[\'^£$%&*}{@#~?><>,|=_+¬]/', $str)) return true;
+
+    return false;
+}
+
 /*
     orig_localityId  :   correct locality id
     dup_localityId   :   duplicate locality id
@@ -172,7 +181,10 @@ function updateLocalityInfo($table, $orig_localityId, $dup_localityId, $rowIds){
 function createUpdateSqls($fromURL, $toURL){
     global $updateSQLs;
     global $restoreSQLs;
-    
+   
+    //TODO:need to verify this logic
+    if(!specialCharChk($fromURL) || !specialCharChk($toURL)) return;
+
     //to avoid cyclic redirection
     if($fromURL == $toURL) return;
 
@@ -180,11 +192,12 @@ function createUpdateSqls($fromURL, $toURL){
     $res = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($res);                                                                                                               
     if($row && $row['TO_URL'] != ''){
-        $updateSQL = "update proptiger.REDIRECT_URL_MAP set TO_URL ='".$toURL."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$fromURL."'";
+        //talked to chandan singh..do not update if a redirect exists coz existing one is correct..
+        /*$updateSQL = "update proptiger.REDIRECT_URL_MAP set TO_URL ='".$toURL."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$fromURL."'";
         array_push($updateSQLs, $updateSQL);
 
         $restoreSQL = "update proptiger.REDIRECT_URL_MAP set TO_URL ='".$row['TO_URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$fromURL."'";
-        array_push($restoreSQLs, $restoreSQL);
+        array_push($restoreSQLs, $restoreSQL);*/
     } else {
         $updateSQL = "insert into proptiger.REDIRECT_URL_MAP (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$fromURL."','".$toURL."', NOW(), ".$_SESSION['adminId'].")";
         array_push($updateSQLs, $updateSQL);

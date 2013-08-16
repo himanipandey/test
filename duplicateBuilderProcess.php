@@ -44,6 +44,15 @@ $table_to_id_map = array(
  
         );
 
+function specialCharChk($str=''){
+    if($str == '') return false;
+    
+    if(!preg_match('/[\'^£$%&*}{@#~?><>,|=_+¬]/', $str)) return true;
+
+    return false;
+}
+
+
 /*
     table       :   database table name 
     builderId   :   duplicate builder id
@@ -110,25 +119,25 @@ function fetchBuilderData($orig_builderId, $dup_builderId){
     $res = mysql_query($query) or die(mysql_error());
 	while($row = mysql_fetch_array($res)){
 		if($row['BUILDER_ID'] == $orig_builderId){
-            $orig_builder['ID'] = $row['BUILDER_ID'];
-            $orig_builder['URL'] = $row['URL'];
-            $orig_builder['NAME']= $row['BUILDER_NAME'];
-            $orig_builder['CITY_URL']= $row['CITY_URL'];
-            $orig_builder['DISPLAY_ORDER'] = $row['DISPLAY_ORDER'];
+            $obj = &$orig_builder;
         }
         if($row['BUILDER_ID'] == $dup_builderId){
-            $dup_builder['ID'] = $row['BUILDER_ID'];
-            $dup_builder['URL'] = $row['URL'];
-            $dup_builder['NAME']= $row['BUILDER_NAME'];
-            $dup_builder['CITY_URL']= $row['CITY_URL'];
-            $dup_builder['DISPLAY_ORDER'] = $row['DISPLAY_ORDER'];
+            $obj = &$dup_builder;
         }
-	}
+        $obj['ID'] = $row['BUILDER_ID'];
+        $obj['URL'] = $row['URL'];
+        $obj['NAME']= $row['BUILDER_NAME'];
+        $obj['CITY_URL']= $row['CITY_URL'];
+        $obj['DISPLAY_ORDER'] = $row['DISPLAY_ORDER'];
+    }
 };
 
 function createUpdateSqls($fromURL, $toURL){
     global $updateSQLs; 
     global $restoreSQLs;
+
+    //TODO:need to check this behavior
+    if(!specialCharChk($fromURL) || !specialCharChk($toURL)) return;
 
     //to avoid cyclic redirection
     if($fromURL == $toURL) return;
@@ -137,11 +146,12 @@ function createUpdateSqls($fromURL, $toURL){
     $res = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($res);
     if($row && $row['TO_URL'] != ''){
-        $updateSQL = "update project.redirect_url_map set TO_URL ='".$toURL."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$fromURL."'";
+        //talked to chandan singh..he dont want to update if a redirect already exists....
+        /*$updateSQL = "update project.redirect_url_map set TO_URL ='".$toURL."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$fromURL."'";
         array_push($updateSQLs, $updateSQL);
 
         $restoreSQL = "update project.redirect_url_map set TO_URL ='".$row['TO_URL']."', MODIFIIED_DATE = NOW(), MODIFIIED_BY=".$_SESSION['adminId']." where FROM_URL = '".$fromURL."'";
-        array_push($restoreSQLs, $restoreSQL);
+        array_push($restoreSQLs, $restoreSQL);*/
     } else {
         $updateSQL = "insert into project.redirect_url_map (FROM_URL,TO_URL,SUBMITTED_DATE,SUBMITTED_BY) value('".$fromURL."','".$toURL."', NOW(), ".$_SESSION['adminId'].")";
         array_push($updateSQLs, $updateSQL);
