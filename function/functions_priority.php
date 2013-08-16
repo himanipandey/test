@@ -129,17 +129,17 @@ function getProjectArr($Id, $type, $order){
     switch($type)
     {
         case "city":
-            $queryLessThenMax = " AND DISPLAY_ORDER > 0 AND DISPLAY_ORDER < ".MAX_PRIORITY;
+            $queryLessThenMax = " AND DISPLAY_ORDER > 0 AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
             $where = "CITY_ID = '" . $Id . "'" .$queryLessThenMax;
             $orderby = "ORDER BY DISPLAY_ORDER $orderBy, PROJECT_NAME ASC";
             break;
         case "suburb":
-            $queryLessThenMax = " AND DISPLAY_ORDER_SUBURB > 0 AND DISPLAY_ORDER_SUBURB < ".MAX_PRIORITY;
+            $queryLessThenMax = " AND DISPLAY_ORDER_SUBURB > 0 AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
             $where = "SUBURB_ID = '" . $Id . "'" .$queryLessThenMax;
             $orderby = "ORDER BY DISPLAY_ORDER_SUBURB $orderBy, PROJECT_NAME ASC";
             break;
         case "locality":
-            $queryLessThenMax = " AND DISPLAY_ORDER_LOCALITY > 0 AND DISPLAY_ORDER_LOCALITY < ".MAX_PRIORITY;
+            $queryLessThenMax = " AND DISPLAY_ORDER_LOCALITY > 0 AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
             $where = "LOCALITY_ID = '" . $Id . "'" .$queryLessThenMax;
             $orderby = "ORDER BY DISPLAY_ORDER_LOCALITY $orderBy, PROJECT_NAME ASC";
             break;
@@ -199,19 +199,60 @@ function autoAdjustProjPrio($id = null, $priority = null, $type = null)
     switch($type)
     {
         case "city":
-            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".$priority." AND DISPLAY_ORDER < ".MAX_PRIORITY;
-            $update = "DISPLAY_ORDER = '".($priority+1)."'";
+            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".$priority." AND DISPLAY_ORDER < ".PROJECT_MAX_VALID_PRIORITY;
+            $update = "DISPLAY_ORDER = (DISPLAY_ORDER+1)";
             break;
         case "suburb":
-            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".MAX_PRIORITY;
-            $update = "DISPLAY_ORDER_SUBURB = '".($priority+1)."'";
+            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_VALID_PRIORITY;
+            $update = "DISPLAY_ORDER_SUBURB = (DISPLAY_ORDER_SUBURB+1)";
             break;
         case "locality":
-            $where = "LOCALITY_ID = '" . $id . "' AND DISPLAY_ORDER_LOCALITY >= ".$priority." AND DISPLAY_ORDER_LOCALITY < ".MAX_PRIORITY;
-            $update = "DISPLAY_ORDER_LOCALITY = '".($priority+1)."'";
+            $where = "LOCALITY_ID = '" . $id . "' AND DISPLAY_ORDER_LOCALITY >= ".$priority." AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_VALID_PRIORITY;
+            $update = "DISPLAY_ORDER_LOCALITY = (DISPLAY_ORDER_LOCALITY+1)";
             break;
     }
     $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where;
+    $res = mysql_query($qry) or die(mysql_error());
+}
+function getProjectCount($Id, $type){
+    switch($type)
+    {
+        case "city":
+            $queryLessThenMax = " AND DISPLAY_ORDER > 0 AND DISPLAY_ORDER <= ".PROJECT_MAX_VALID_PRIORITY;
+            $where = "CITY_ID = '" . $Id . "'";
+            break;
+        case "suburb":
+            $queryLessThenMax = " AND DISPLAY_ORDER_SUBURB > 0 AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_VALID_PRIORITY;
+            $where = "SUBURB_ID = '" . $Id . "'";
+            break;
+        case "locality":
+            $queryLessThenMax = " AND DISPLAY_ORDER_LOCALITY > 0 AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_VALID_PRIORITY;
+            $where = "LOCALITY_ID = '" . $Id . "'";
+            break;
+    }
+    $qry = "SELECT COUNT(*) AS CNT FROM " . RESI_PROJECT . " WHERE ".$where;
+    $res = mysql_query($qry) or die(mysql_error());
+    $data = mysql_fetch_assoc($res);
+    return $data['CNT'];
+}
+function autoAdjustMaxCountProjPrio($id = null, $priority = null, $type = null)
+{
+    switch($type)
+    {
+        case "city":
+            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
+            $update = "DISPLAY_ORDER = ".PROJECT_MAX_PRIORITY;
+            break;
+        case "suburb":
+            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
+            $update = "DISPLAY_ORDER_SUBURB = ".PROJECT_MAX_PRIORITY;
+            break;
+        case "locality":
+            $where = "LOCALITY_ID = '" . $id . "' AND DISPLAY_ORDER_LOCALITY >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
+            $update = "DISPLAY_ORDER_LOCALITY = ".PROJECT_MAX_PRIORITY;
+            break;
+    }
+    $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where." LIMIT 1";
     $res = mysql_query($qry) or die(mysql_error());
 }
 ?>

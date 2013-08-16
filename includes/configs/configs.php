@@ -672,4 +672,6 @@ $analytics_credential=array("username"=>"cms","password"=>"Cms123!");
 include("authConstents.php");
 
 define("MAX_PRIORITY",100);
+define("PROJECT_MAX_PRIORITY",999);
+define("PROJECT_MAX_VALID_PRIORITY",15);
 ?>
