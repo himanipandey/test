@@ -129,9 +129,9 @@ function getProjectArr($Id, $type, $order){
     switch($type)
     {
         case "city":
-            $queryLessThenMax = " AND DISPLAY_FLAG > 0 AND DISPLAY_FLAG < ".MAX_PRIORITY;
+            $queryLessThenMax = " AND DISPLAY_ORDER > 0 AND DISPLAY_ORDER < ".MAX_PRIORITY;
             $where = "CITY_ID = '" . $Id . "'" .$queryLessThenMax;
-            $orderby = "ORDER BY DISPLAY_FLAG $orderBy, PROJECT_NAME ASC";
+            $orderby = "ORDER BY DISPLAY_ORDER $orderBy, PROJECT_NAME ASC";
             break;
         case "suburb":
             $queryLessThenMax = " AND DISPLAY_ORDER_SUBURB > 0 AND DISPLAY_ORDER_SUBURB < ".MAX_PRIORITY;
@@ -144,13 +144,12 @@ function getProjectArr($Id, $type, $order){
             $orderby = "ORDER BY DISPLAY_ORDER_LOCALITY $orderBy, PROJECT_NAME ASC";
             break;
     }
-    $qry = "SELECT PROJECT_NAME, PROJECT_ID, CITY_ID, SUBURB_ID, LOCALITY_ID, DISPLAY_FLAG, DISPLAY_ORDER_LOCALITY, DISPLAY_ORDER_SUBURB FROM " . RESI_PROJECT . " WHERE ".$where." ".$orderby;
+    $qry = "SELECT PROJECT_NAME, PROJECT_ID, CITY_ID, SUBURB_ID, LOCALITY_ID, DISPLAY_ORDER, DISPLAY_ORDER_LOCALITY, DISPLAY_ORDER_SUBURB FROM " . RESI_PROJECT . " WHERE ".$where." ".$orderby;
     $res = mysql_query($qry) or die(mysql_error());
     $arr = array();
     while ($data = mysql_fetch_assoc($res)) {
         array_push($arr, $data);
     }
-    //echo "<pre>";print_r($arr);
     return $arr;
 }
 function updateProj($projectId = null, $priority = null, $mode = null, $modeid = null)
@@ -159,7 +158,7 @@ function updateProj($projectId = null, $priority = null, $mode = null, $modeid =
     {
         case "city":
             $where = "CITY_ID = '" . $modeid . "'";
-            $update = "DISPLAY_FLAG = '$priority'";
+            $update = "DISPLAY_ORDER = '$priority'";
             break;
         case "suburb":
             $where = "SUBURB_ID = '" . $modeid . "'";
@@ -192,7 +191,7 @@ function getAvaiHighProjectPriority($cityId = null, $localityid = null, $suburbi
     }else if(!empty($cityId)){
        $arr = getProjectArr($cityId, 'city', $orderBy);
        $reversed = array_reverse($arr);
-       return $reversed['0']['DISPLAY_FLAG'];
+       return $reversed['0']['DISPLAY_ORDER'];
     }
 }
 function autoAdjustProjPrio($id = null, $priority = null, $type = null)
@@ -200,8 +199,8 @@ function autoAdjustProjPrio($id = null, $priority = null, $type = null)
     switch($type)
     {
         case "city":
-            $where = "CITY_ID = '" . $id . "' AND DISPLAY_FLAG >= ".$priority." AND DISPLAY_FLAG < ".MAX_PRIORITY;
-            $update = "DISPLAY_FLAG = '".($priority+1)."'";
+            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".$priority." AND DISPLAY_ORDER < ".MAX_PRIORITY;
+            $update = "DISPLAY_ORDER = '".($priority+1)."'";
             break;
         case "suburb":
             $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".MAX_PRIORITY;
