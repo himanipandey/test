@@ -122,24 +122,26 @@ function localityArr($cityId) {
     }
     return $arrCity;
 }
-function getProjectArr($Id, $type){
+function getProjectArr($Id, $type, $order){
+    global $orderBy;
+    $orderBy = $order;
     $queryLessThenMax = "";
     switch($type)
     {
         case "city":
             $queryLessThenMax = " AND DISPLAY_FLAG > 0 AND DISPLAY_FLAG < ".MAX_PRIORITY;
             $where = "CITY_ID = '" . $Id . "'" .$queryLessThenMax;
-            $orderby = "ORDER BY DISPLAY_FLAG, PROJECT_NAME ASC";
+            $orderby = "ORDER BY DISPLAY_FLAG $orderBy, PROJECT_NAME ASC";
             break;
         case "suburb":
             $queryLessThenMax = " AND DISPLAY_ORDER_SUBURB > 0 AND DISPLAY_ORDER_SUBURB < ".MAX_PRIORITY;
             $where = "SUBURB_ID = '" . $Id . "'" .$queryLessThenMax;
-            $orderby = "ORDER BY DISPLAY_ORDER_SUBURB, PROJECT_NAME ASC";
+            $orderby = "ORDER BY DISPLAY_ORDER_SUBURB $orderBy, PROJECT_NAME ASC";
             break;
         case "locality":
             $queryLessThenMax = " AND DISPLAY_ORDER_LOCALITY > 0 AND DISPLAY_ORDER_LOCALITY < ".MAX_PRIORITY;
             $where = "LOCALITY_ID = '" . $Id . "'" .$queryLessThenMax;
-            $orderby = "ORDER BY DISPLAY_ORDER_LOCALITY, PROJECT_NAME ASC";
+            $orderby = "ORDER BY DISPLAY_ORDER_LOCALITY $orderBy, PROJECT_NAME ASC";
             break;
     }
     $qry = "SELECT PROJECT_NAME, PROJECT_ID, CITY_ID, SUBURB_ID, LOCALITY_ID, DISPLAY_FLAG, DISPLAY_ORDER_LOCALITY, DISPLAY_ORDER_SUBURB FROM " . RESI_PROJECT . " WHERE ".$where." ".$orderby;
@@ -148,6 +150,7 @@ function getProjectArr($Id, $type){
     while ($data = mysql_fetch_assoc($res)) {
         array_push($arr, $data);
     }
+    //echo "<pre>";print_r($arr);
     return $arr;
 }
 function updateProj($projectId = null, $priority = null, $mode = null, $modeid = null)
@@ -175,18 +178,19 @@ function updateProj($projectId = null, $priority = null, $mode = null, $modeid =
 }
 function getAvaiHighProjectPriority($cityId = null, $localityid = null, $suburbid = null)
 {
+    global $orderBy;
     $arr = array();
     $reversed = array();
     if(!empty($suburbid)){
-       $arr = getProjectArr($suburbid, 'suburb');
+       $arr = getProjectArr($suburbid, 'suburb', $orderBy);
        $reversed = array_reverse($arr);
        return $reversed['0']['DISPLAY_ORDER_SUBURB'];
     }else if(!empty($localityid)){
-       $arr = getProjectArr($localityid, 'locality');
+       $arr = getProjectArr($localityid, 'locality', $orderBy);
        $reversed = array_reverse($arr);
        return $reversed['0']['DISPLAY_ORDER_LOCALITY'];
     }else if(!empty($cityId)){
-       $arr = getProjectArr($cityId, 'city');
+       $arr = getProjectArr($cityId, 'city', $orderBy);
        $reversed = array_reverse($arr);
        return $reversed['0']['DISPLAY_FLAG'];
     }

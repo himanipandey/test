@@ -49,13 +49,16 @@ function projectPriorityEdit(id,type,priority)
 
 function projectPriorityDelete(id,type)
 {
-    var r=confirm("Are you sure you want to delete");
-    if (r==true)
+    var cityid      = $('#citydd').val();
+    var localityid  = $('#loc').val();
+    var suburbid    = $('#sub').val();
+    var r = confirm("Are you sure you want to reset");
+    if (r == true)
     {
         $.ajax({
           type: "POST",
           url: '/deletePriority.php',
-          data: { id : id,type:type },
+          data: { mode:'project', cityId:cityid, localityid:localityid, suburbid: suburbid, type:type, id:id },
           success:function(msg){
             if(msg == 1){
                  alert("Priority Successfully deleted");
@@ -139,48 +142,48 @@ function show_loc_inst(){
                     </tr>
                   </table>
                     <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0>
-                    <form name="form1" method="post" action="">
-                      <TBODY>
-                      <TR class = "headingrowcolor">
-                        <TD class=whiteTxt width=2% align="center">S.No.</TD>
-                        <TD class=whiteTxt width=5% align="center">Name</TD>
-                        <TD class=whiteTxt width=2% align="center">Id</TD>
-                        <TD class=whiteTxt width=5% align="center">Priority
-                        {if $smarty.post.desc_x!='' || (!isset($smarty.post))}
-                            <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
-                        {else}
-                            <span style="clear:both;margin-left:10px"><input type="image" name="desc" value="desc" src="images/arrow-down.png"></span>
-                        {/if}
-                        </TD> 
-                        <TD class=whiteTxt width=5% align="center">&nbsp;</TD>
-                      </TR>
-                      <TR><TD colspan=12 class=td-border>&nbsp;</TD></TR>
-                        {$i=0}
-                        {if isset($suburbId)}
-                            {$type = DISPLAY_ORDER_SUBURB}
-                        {else if isset($localityId)}
-                            {$type = DISPLAY_ORDER_LOCALITY}
-                        {else}
-                            {$type = DISPLAY_FLAG}
-                        {/if}
-                        {foreach from=$projectArr key=k item=v}
-                            {$i=$i+1}
-                            {if $i%2 == 0}
-                              {$color = "bgcolor = '#F7F7F7'"}
-                            {else}                       			
-                              {$color = "bgcolor = '#FCFCFC'"}
-                            {/if}
-                            <TR {$color}>
-                              <TD align=center class=td-border>{$i}</TD>
-                              <TD align=center class=td-border>{$v.PROJECT_NAME}</TD>
-                              <TD align=center class=td-border>{$v.PROJECT_ID}</TD>
-                              <TD align=center class=td-border>{$v.$type}</TD>
-                              <TD align=center class=td-border><a href="javascript:void(0);" onclick="return projectPriorityEdit('{$v.PROJECT_ID}','{$type}','{$v.$type}');">Edit</a> | <a href="javascript:void(0);" onclick="return projectPriorityDelete('{$v.PROJECT_ID}','{$type}');">Reset</a></TD>
-                            </TR>
-                        {/foreach}
-                            <TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>
-                      </TBODY>
-                    </FORM>
+                        <form name="form1" method="post" action="">
+                          <TBODY>
+                                <TR class = "headingrowcolor">
+                                  <TD class=whiteTxt width=2% align="center">S.No.</TD>
+                                  <TD class=whiteTxt width=5% align="center">Name</TD>
+                                  <TD class=whiteTxt width=2% align="center">Id</TD>
+                                  <TD class=whiteTxt width=5% align="center">Priority
+                                  {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
+                                      <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
+                                  {else}
+                                      <span style="clear:both;margin-left:10px"><input type="image" name="desc" value="desc" src="images/arrow-down.png"></span>
+                                  {/if}
+                                  </TD> 
+                                  <TD class=whiteTxt width=5% align="center">&nbsp;</TD>
+                                </TR>
+                                <TR><TD colspan=12 class=td-border>&nbsp;</TD></TR>
+                                {$i=0}
+                                {if isset($suburbId)}
+                                    {$type = DISPLAY_ORDER_SUBURB}
+                                {else if isset($localityId)}
+                                    {$type = DISPLAY_ORDER_LOCALITY}
+                                {else}
+                                    {$type = DISPLAY_FLAG}
+                                {/if}
+                                {foreach from=$projectArr key=k item=v}
+                                    {$i=$i+1}
+                                    {if $i%2 == 0}
+                                      {$color = "bgcolor = '#F7F7F7'"}
+                                    {else}                       			
+                                      {$color = "bgcolor = '#FCFCFC'"}
+                                    {/if}
+                                <TR {$color}>
+                                  <TD align=center class=td-border>{$i}</TD>
+                                  <TD align=center class=td-border>{$v.PROJECT_NAME}</TD>
+                                  <TD align=center class=td-border>{$v.PROJECT_ID}</TD>
+                                  <TD align=center class=td-border>{$v.$type}</TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return projectPriorityEdit('{$v.PROJECT_ID}','{$type}','{$v.$type}');">Edit</a> | <a href="javascript:void(0);" onclick="return projectPriorityDelete('{$v.PROJECT_ID}','{$type}');">Reset</a></TD>
+                                </TR>
+                                {/foreach}
+                                <TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>
+                          </TBODY>
+                        </form>
                     </TABLE>
                  </TD>
             </TR>

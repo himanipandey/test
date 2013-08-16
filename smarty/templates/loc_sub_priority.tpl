@@ -34,7 +34,7 @@ function openLocSubPriorityEdit(id,type,priority)
 
 function openLocSubPriorityDelete(id,type)
 {
-    var r=confirm("Are you sure you want to delete");
+    var r=confirm("Are you sure you want to reset");
     if (r==true)
     {
         $.ajax({

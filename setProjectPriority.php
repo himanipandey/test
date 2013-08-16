@@ -78,11 +78,11 @@ li.ui-menu-item { font-size:12px !important; }
   <TBODY>
     <TR class = "headingrowcolor">
         <TD class=whiteTxt width=12% align="right">Project Name or ID:</TD>
-        <TD class=whiteTxt width=15% align="left"><input type="text" id="projectsearch" value="<?php if($_GET['mode']=='edit'){ echo $_GET['id'];}?>" /></TD>
+        <TD class=whiteTxt width=15% align="left"><input type="text" id="projectsearch" value="<?php if(!empty($_GET['mode'])){ echo $_GET['id'];}?>" /></TD>
     </TR>
     <TR>
         <TD class=whiteTxt width=12% align="right">Priority:</TD>
-        <TD class=whiteTxt width=15% align="left"><input type="text" id="priority" value="<?php if($_GET['mode']=='edit'){ echo $_GET['priority'];}else{ echo $highPrio+1;}?>" /></TD>
+        <TD class=whiteTxt width=15% align="left"><input type="text" id="priority" value="<?php if(!empty($_GET['mode'])){ echo $_GET['priority'];}else{ echo $highPrio+1;}?>" /></TD>
     </TR>
     <TR>
         <TD class=whiteTxt width=12% align="right"><input type="checkbox" name="autoadjust" id="autoadjust" value="" /></TD>

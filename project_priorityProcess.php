@@ -20,21 +20,21 @@ $locArr = localityArr($cityId);
 $smarty->assign('localityArr',$locArr);
 
 $projectArr = array();
-if(isset($_REQUEST['citydd']))
-{
-    $projectArr = getProjectArr($cityId,'city');
-}
-if(isset($_REQUEST['suburb']))
+if(!empty($_REQUEST['suburb']))
 {
     $suburbId = $_REQUEST['suburb'];
     $smarty->assign('suburbId',$suburbId);
-    $projectArr = getProjectArr($suburbId,'suburb');
+    $projectArr = getProjectArr($suburbId,'suburb',$orderby);
 }
-if(isset($_REQUEST['locality']))
+else if(!empty($_REQUEST['locality']))
 {
     $localityId = $_REQUEST['locality'];
     $smarty->assign('localityId',$localityId);
-    $projectArr = getProjectArr($localityId,'locality');
+    $projectArr = getProjectArr($localityId,'locality',$orderby);
+}
+else if(!empty($cityId))
+{
+    $projectArr = getProjectArr($cityId,'city',$orderby);
 }
 $smarty->assign('projectArr',$projectArr);
 ?>
