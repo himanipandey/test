@@ -2182,7 +2182,7 @@ function getPrevMonthProjectData($projectId)
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
 	//$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
-	$url="http://localhost:3002/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	$url="http://cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
