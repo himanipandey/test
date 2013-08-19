@@ -169,7 +169,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 {
                     if($_REQUEST['typeid_edit'][$key] == '')
                     {
-                        $insertlist.= "('$projectId', '$txtUnitName', '$unitType', '$txtSize', 'sq ft', '$txtPricePerUnitArea', '$txtPricePerUnitAreaDp','$status',  '$bed', now(), '$bathrooms' ,'$txtPricePerUnitHigh','$txtPricePerUnitLow','$txtNoOfFloor','$txtVillaPlotArea','$txtVillaFloors','$txtVillaTerraceArea','$txtVillaGardenArea','$Balconys','$studyrooms','$servantrooms','$poojarooms', '$txtSizeLen','$txtSizeBre', '$txtPlotArea')   ,   ";
+                        $insertlist.= "('$projectId', '$txtUnitName', '$unitType', '$txtSize', 'sq ft', '$txtPricePerUnitArea', '$txtPricePerUnitAreaDp','$status',  '$bed', DATE_FORMAT(NOW() ,'%Y-%m-01 00:00:00'), '$bathrooms' ,'$txtPricePerUnitHigh','$txtPricePerUnitLow','$txtNoOfFloor','$txtVillaPlotArea','$txtVillaFloors','$txtVillaTerraceArea','$txtVillaGardenArea','$Balconys','$studyrooms','$servantrooms','$poojarooms', '$txtSizeLen','$txtSizeBre', '$txtPlotArea')   ,   ";
                     }
                     else
                     {

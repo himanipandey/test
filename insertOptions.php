@@ -69,7 +69,7 @@
                             `LENGTH_OF_PLOT`           =	'".$txtSizeLen."',
                             `BREADTH_OF_PLOT`           =	'".$txtSizeBre."',
 							`CLP_VISIBLE`				=	'1',
-							`CREATED_DATE`				=	now(),
+							`CREATED_DATE`				=	DATE_FORMAT(NOW() ,'%Y-%m-01 00:00:00'),
 							 `STATUS`					=	'".$status."'";
 
 		$res=mysql_query($sql) or die(mysql_error());
