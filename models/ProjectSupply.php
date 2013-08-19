@@ -20,7 +20,10 @@ class ProjectSupply extends ActiveRecord\Model {
     }
     
     function projectTypeGroupedQuantityForPhase($projectId, $phaseId){
-        $query = "select project_type UNIT_TYPE, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', supply, ':', launched)) as AGG from " . self::table_name() . " where project_id = '$projectId' and phase_id = '$phaseId' group by project_type;";
+        $query = "select project_type UNIT_TYPE, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', supply, ':', launched)) as AGG from " . self::table_name() . " where project_id = '$projectId' and phase_id ";
+        if ($phaseId == '0')$query .= ' is NULL ';
+        else $query .= " ='$phaseId' ";
+        $query .= ' group by project_type;';
         return self::find_by_sql($query);
     }
     
