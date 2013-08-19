@@ -10,6 +10,15 @@
         $('select#phaseSelect').val(pid);
         toggle_supply_and_option();
     });
+    
+    $(document).ready(function(){
+        $('#isLaunchUnitPhase').change(function(){
+            $('.launched').each(function(){
+                if($('#isLaunchUnitPhase')[0].checked)$(this).removeAttr('disabled');
+                else $(this).attr('disabled', 'true');
+            });
+        });
+    });
 
     function updateURLParameter(url, param, paramVal) {
         var newAdditionalURL = "";
@@ -223,7 +232,7 @@
                                         <tr>
                                             <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
                                                         <td width="30%" align="left">
-                                                            <input name = "phaseLaunched" type = "checkbox" value = "1" {if $phaseLaunched == 1} checked {/if}>
+                                                            <input name = "isLaunchUnitPhase" id="isLaunchUnitPhase" type = "checkbox" value = "1" {if $isLaunchUnitPhase == 1} checked {/if} {if  $isInventoryCreated}disabled="true"{/if}>
                                                         </td>
                                                         <td width="50%" align="left"></td>
                                                         </tr>
@@ -256,7 +265,7 @@
                                                                                                             <label for="flat_bed_{$num}">{$num} Bedroom(s)</label>
                                                                                                             <input id="flat_bed_{$num}" name="flat_bed_{$num}[supply]" style="width: 50px;" value="{$FlatsQuantity[$num]['supply']}" />
                                                                                                             <label>Launched</label>
-                                                                                                            <input id="flat_bed_{$num}" name="flat_bed_{$num}[launched]" style="width: 50px;" value="{$FlatsQuantity[$num]['launched']}" />
+                                                                                                            <input id="flat_bed_{$num}" {if !$isLaunchUnitPhase || $isInventoryCreated}disabled="true"{/if} name="flat_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$FlatsQuantity[$num]['launched']}" />
                                                                                                             <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
                                                                                                                 {foreach $OptionsDetails as $option}
                                                                                                                     {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Apartment' and in_array($option.OPTIONS_ID, $option_ids)}
@@ -302,7 +311,7 @@
                                                                                                                                             <label for="villa_bed_{$num}">{$num} Bedroom(s)</label>
                                                                                                                                             <input id="villa_bed_{$num}" name="villa_bed_{$num}[supply]" style="width: 50px;" value="{$VillasQuantity[$num]['supply']}" />
                                                                                                                                             <label>Launched</label>
-                                                                                                                                            <input id="villa_bed_{$num}" name="villa_bed_{$num}[launched]" style="width: 50px;" value="{$VillasQuantity[$num]['launched']}" />
+                                                                                                                                            <input id="villa_bed_{$num}" {if !$isLaunchUnitPhase || $isInventoryCreated}disabled="true"{/if} name="villa_bed_{$num}[launched]" style="width: 50px;" value="{$VillasQuantity[$num]['launched']}" />
                                                                                                                                             <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
                                                                                                                                                 {foreach $OptionsDetails as $option}
                                                                                                                                                     {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Villa' and in_array($option.OPTIONS_ID, $option_ids)}
@@ -328,7 +337,7 @@
                                                                                                                                 <td width="30%" align="left" nowrap>
                                                                                                                                     <input type='text' name='supply' id='supply' value='{$PlotQuantity[0]['supply']}'>
                                                                                                                                     <label>Launched</label>
-                                                                                                                                    <input id="supply" name="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
+                                                                                                                                    <input id="supply" {if !$isLaunchUnitPhase || $isInventoryCreated}disabled="true"{/if} name="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
                                                                                                                                 </td>
                                                                                                                                 <td width="50%" align="left">
                                                                                                                                     <font color="red"><span id = "err_supply" style = "display:none;">Enter the supply for Plot</span></font>
@@ -372,8 +381,9 @@
                                                                                                                                     </tr>
 
                                                                                                                                     </table>
-                                                                                                                                    {if isset($phaseId) and !in_array($phaseId, array('-1', '0'))}
-                                                                                                                                        <script type="text/javascript">
+
+<script type="text/javascript">                                                                                                                                    {if isset($phaseId) and !in_array($phaseId, array('-1', '0'))}
+                                                                                                                              
         var cals_dict = {
             "launch_date_trigger": "launch_date",
             "completion_date_trigger": "completion_date"
@@ -390,5 +400,4 @@
                 showsTime: true
             });
         });
-                                                                                                                                        {/if}
-                                                                                                                                    </script>
+                                                                                                                                        {/if}                                                                                                                            </script>

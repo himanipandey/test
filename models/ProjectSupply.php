@@ -2,6 +2,8 @@
 
 class ProjectSupply extends ActiveRecord\Model {
     
+    static $before_save = array('launchedValidation');
+    
     function deleteSupplyForPhase($projectId, $phaseId){
         self::table()->delete(array('project_id'=>$projectId, 'phase_id'=>$phaseId));
     }
@@ -47,5 +49,25 @@ class ProjectSupply extends ActiveRecord\Model {
             $result[] = $entry;
         }
         return $result;
+    }
+    
+    function isLaunchUnitPhase($projectId, $phaseId){
+        $sql = "select * from " . self::table_name() . " where project_id = '$projectId' and ";
+        if($phaseId == '0') $sql .= " phase_id is null ";
+        else $sql .= " phase_id = '$phaseId' ";
+        $sql .= ' and supply > launched;';
+        return count(self::find_by_sql($sql));
+    }
+    
+    function isInventoryAdded($projectId, $phaseId){
+        $sql = "select count(*) count from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() ." pa on ps.id = pa.project_supply_id where ps.project_id = '$projectId' and ";
+        if($phaseId == '0') $sql .= " ps.phase_id is null ";
+        else $sql .= " ps.phase_id = '$phaseId' ";
+        $result = self::find_by_sql($sql);
+        return $result[0]->count;
+    }
+    
+    function launchedValidation(){
+        return intval($this->launched)<=intval($this->supply);
     }
 }

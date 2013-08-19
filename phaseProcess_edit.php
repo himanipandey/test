@@ -48,7 +48,6 @@ if (isset($phaseId) && $phaseId != -1){
         }
     }
     $option_ids = array();
-//    /print_r($option_ids);
     foreach($phase_options_temp as $options) array_push($option_ids, $options->options_id);
     $bedrooms = ResiProjectOptions::optionwise_bedroom_details($option_ids);
     $bedrooms_hash = array();
@@ -89,6 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $phase_quantity = ProjectSupply::projectTypeGroupedQuantityForPhase($projectId, $phaseId);
     $phase_quantity_hash = array();
     foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->agg;
+    $isLaunchUnitPhase = ProjectSupply::isLaunchUnitPhase($projectId, $phaseId);
+    $isInventoryCreated = ProjectSupply::isInventoryAdded($projectId, $phaseId);
+    $smarty->assign("isInventoryCreated", $isInventoryCreated);
+    $smarty->assign("isLaunchUnitPhase", $isLaunchUnitPhase);
     $smarty->assign("FlatsQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['apartment']));
     $smarty->assign("VillasQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['villa']));
     $smarty->assign("PlotQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['plot']));
@@ -198,7 +201,7 @@ if (isset($_POST['btnSave'])) {
             array_push($phases, $p);
         }
         $smarty->assign("phases", $phases);
-        $loc = "Location:phase_edit.php?projectId=" . $projectId;
+        $loc = "Location:phase_edit.php?projectId=$projectId";
         if($preview == 'true') $loc = $loc."&preview=true";
         header($loc);
     }
