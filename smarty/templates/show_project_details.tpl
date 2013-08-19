@@ -1863,7 +1863,8 @@ function getDateNow(){
                         {if $inner_key == 0}
                         <td rowspan="{$count}" bgcolor="#ccc" align="center">
                             {$phase_name} <br>
-                            {$date = $PreviousMonthsData['current'][$projectId][$hash_key][0]["effective_date"]}
+                            {$date = array_shift(array_values($PreviousMonthsData['current'][$projectId]))}
+                            {$date = $date[0]["effective_date"]}
                             {if $date != ''}
                                 {$date = date_parse_from_format('Y-m-dTH:i:sZ', $date)}
                                 <strong>Effective Date: {$date["month"]}/{$date["year"]}</strong>
