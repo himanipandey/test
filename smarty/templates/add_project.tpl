@@ -609,17 +609,7 @@
                                                                 <td width="50%" align="left"><font color="red">{$ErrorMsg['supplyDate']}</font></td>
                                                             </tr>
 							   
-							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Display Order:</b> </td>
-								  <td width="30%" align="left">
-								     <input type='text' name='display_order' id='display_order' class='field' value='{$display_order}'>
-								  </td>
-								  {if $ErrorMsg["display_order"] != ''}
-								  <td width="50%" align="left"><font color="red">{$ErrorMsg["display_order"]}</font></td>
-								  {else}
-								  <td width="50%" align="left"></td>
-								  {/if}
-							   </tr>
+							   
 
 								 <tr>
 								  <td width="20%" align="right" valign="top"><b><b>Bank List:</b> </td><td width="30%" align="left">
