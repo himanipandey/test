@@ -42,7 +42,7 @@
         var flat_bed = true;
         var villa_bed = true;
 
-        var phasename = $('#phaseName').val();
+        {*var phasename = $('#phaseName').val();
         if (!phasename) {
             $('#err_phase_name').show();
             name_flag = false;
@@ -50,7 +50,7 @@
         else {
             $('#err_phase_name').hide();
             name_flag = true;
-        }
+        }*}
 
         $('li.flat_bed').each(function() {
             var intRegex = /^\d+$/;
@@ -178,6 +178,7 @@
                                         <td width="30%" align="left">
                                             <select id="phaseSelect" name="phaseSelect" onchange="change_phase();">
                                                 <option value="-1">Select Phase</option>
+                                                <option value="0">No Phase</option>
                                                 {foreach $phases as $p}
                                                     <option value="{$p.id}">{$p.name}</option>
                                                 {/foreach}
@@ -188,34 +189,36 @@
 
 
                                     {if isset($phaseId) and $phaseId != -1}
-                                        <tr>
-                                            <td width="20%" align="right"><font color ="red">*</font><b>Phase Name :</b> </td>
-                                            <td width="30%" align="left">
-                                                <input id="phaseName" name="phaseName" value="{$phasename}" />
-                                            </td>
-                                            <td width="50%" align="left">
-                                                <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
-                                            </td>
-                                        </tr>
+                                        {if $phaseId != '0'}
+                                            <tr>
+                                                <td width="20%" align="right"><font color ="red">*</font><b>Phase Name :</b> </td>
+                                                <td width="30%" align="left">
+                                                    <input id="phaseName" name="phaseName" value="{$phasename}" />
+                                                </td>
+                                                <td width="50%" align="left">
+                                                    <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
+                                                </td>
+                                            </tr>
 
-                                        <tr>
-                                            <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
-                                            <td width="30%" align="left">
-                                                <input name="launch_date" value="{$launch_date}" type="text" class="formstyle2" id="launch_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="launch_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
-                                            </td>
-                                            <td width="50%" align="left">
-                                                <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="20%" align="right" valign="top"><b>Completion Date :</b> </td>
-                                            <td width="30%" align="left">
-                                                <input name="completion_date" value="{$completion_date}" type="text" class="formstyle2" id="completion_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="completion_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
-                                            </td>
-                                            <td width="50%" align="left">
-                                                <font color="red"><span id = "err_completion_date" style = "display:none;">Enter Completion Date</span></font>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
+                                                <td width="30%" align="left">
+                                                    <input name="launch_date" value="{$launch_date}" type="text" class="formstyle2" id="launch_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="launch_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                </td>
+                                                <td width="50%" align="left">
+                                                    <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%" align="right" valign="top"><b>Completion Date :</b> </td>
+                                                <td width="30%" align="left">
+                                                    <input name="completion_date" value="{$completion_date}" type="text" class="formstyle2" id="completion_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="completion_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                </td>
+                                                <td width="50%" align="left">
+                                                    <font color="red"><span id = "err_completion_date" style = "display:none;">Enter Completion Date</span></font>
+                                                </td>
+                                            </tr>
+                                        {/if}
 
                                         <tr>
                                             <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
@@ -244,7 +247,7 @@
                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==1 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
                                                                             <tr class="supply_select">
                                                                                 <td width="20%" align="right" valign="top"><b><b><b>Supply of Flats :</b> </td>
-                                                                                            <td width="30%" align="left">
+                                                                                            <td width="50%" align="left">
                                                                                                 <ul id="flats_config">
                                                                                                     {foreach $bedrooms_hash['Apartment'] as $num}
                                                                                                         <li class="flat_bed">
@@ -265,24 +268,27 @@
                                                                                                     {/foreach}
                                                                                                 </ul>
                                                                                             </td>
-                                                                                            <td width="50%" align="left">
-                                                                                                <button class="reset_option_and_supply supply_button">Change to options</button>
-                                                                                            </td>
+                                                                                            {if $phaseId != '0'}
+                                                                                                <td width="50%" align="left">
+                                                                                                    <button class="reset_option_and_supply supply_button">Change to options</button>
+                                                                                                </td>
+                                                                                            {/if}
                                                                                             </tr>
-
-                                                                                            <tr>
-                                                                                                <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
-                                                                                                            <td width="30%" align="left">
-                                                                                                                <select name="towers[]" id="towers" multiple="multiple" style="width: 150px; height: 110px;">
-                                                                                                                    <option value="-1">Select Towers</option>
-                                                                                                                    {foreach $TowerDetails as $tower}
-                                                                                                                        <option value="{$tower.TOWER_ID}" {if $tower.PHASE_ID eq $phaseId}selected{/if}>{$tower.TOWER_NAME}</option>
-                                                                                                                    {/foreach}
-                                                                                                                </select>
-                                                                                                            </td>
-                                                                                                            <td width="50%" align="left"></td>
-                                                                                                            </tr>
-                                                                                                        {/if}
+                                                                                            {if $phaseId != '0'}
+                                                                                                <tr>
+                                                                                                    <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
+                                                                                                        <td width="30%" align="left">
+                                                                                                            <select name="towers[]" id="towers" multiple="multiple" style="width: 150px; height: 110px;">
+                                                                                                                <option value="-1">Select Towers</option>
+                                                                                                                {foreach $TowerDetails as $tower}
+                                                                                                                    <option value="{$tower.TOWER_ID}" {if $tower.PHASE_ID eq $phaseId}selected{/if}>{$tower.TOWER_NAME}</option>
+                                                                                                                {/foreach}
+                                                                                                            </select>
+                                                                                                        </td>
+                                                                                                        <td width="50%" align="left"></td>
+                                                                                                </tr>
+                                                                                            {/if}
+                                                                                        {/if}
 
                                                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==2 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5}
                                                                                                             <tr class="supply_select">
@@ -308,8 +314,11 @@
                                                                                                                                     {/foreach}
                                                                                                                                 </ul>
                                                                                                                             </td>
+                                                                                                                            
+                                                                                                                            {if $phaseId != '0'}
                                                                                                                             <td width="50%" align="left">
                                                                                                                                 <button class="reset_option_and_supply supply_button">Change to options</button>
+                                                                                                                            {/if}
                                                                                                                             </td>
                                                                                                                             </tr>
                                                                                                                         {/if}
@@ -327,6 +336,7 @@
                                                                                                                             </tr>
                                                                                                                             <input type='hidden' name='plotvilla' id='plotvilla' value='Plot'>
                                                                                                                         {/if}  
+                                                                                                                        {if $phaseId != '0'}
                                                                                                                         <tr>
                                                                                                                             <td width="20%" align="right" valign="top"><b><b><b>Remarks :</b> </td>
                                                                                                                                         <td width="30%" align="left">
@@ -334,6 +344,7 @@
                                                                                                                                         </td>
                                                                                                                                         <td width="50%" align="left"></td>
                                                                                                                                         </tr>
+                                                                                                                                        {/if}
 
                                                                                                                                         <tr>
                                                                                                                                             <td>&nbsp;</td>
@@ -361,7 +372,7 @@
                                                                                                                                     </tr>
 
                                                                                                                                     </table>
-                                                                                                                                    {if isset($phaseId) and $phaseId != -1}
+                                                                                                                                    {if isset($phaseId) and !in_array($phaseId, array('-1', '0'))}
                                                                                                                                         <script type="text/javascript">
         var cals_dict = {
             "launch_date_trigger": "launch_date",

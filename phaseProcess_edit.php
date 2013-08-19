@@ -35,16 +35,20 @@ $phaseDetail = fetch_phaseDetails($projectId);
 $optionsDetails = ProjectOptionDetail($projectId);
 $smarty->assign("OptionsDetails", $optionsDetails);
 $options = $project->options;
+//print_r($options);die;
 $smarty->assign("options", $options);
 if (isset($phaseId) && $phaseId != -1){
-    $phase = ResiProjectPhase::find($phaseId);
-    $smarty->assign("phase", $phase);
-    $phase_options = $phase->options();
-    $phase_options_temp = $phase_options;
-    if (count($phase_options_temp) <= 0){
-        $phase_options_temp = $options;
+    $phase_options_temp = $options;
+    if($phaseId != '0'){
+        $phase = ResiProjectPhase::find($phaseId);//die;
+        $smarty->assign("phase", $phase);
+        $phase_options = $phase->options();
+        if (count($phase_options) > 0){
+            $phase_options_temp = $phase_options;
+        }
     }
     $option_ids = array();
+//    /print_r($option_ids);
     foreach($phase_options_temp as $options) array_push($option_ids, $options->options_id);
     $bedrooms = ResiProjectOptions::optionwise_bedroom_details($option_ids);
     $bedrooms_hash = array();
@@ -66,9 +70,9 @@ foreach ($phaseDetail as $k => $val) {
     }
     array_push($phases, $p);
 }
+$smarty->assign("phases", $phases);
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $smarty->assign("phases", $phases);
     $current_phase = phaseDetailsForId($phaseId);
 
     // Assign vars for smarty
@@ -136,24 +140,25 @@ if (isset($_POST['btnSave'])) {
         ############## Transaction ##############
         ResiProjectPhase::transaction(function(){
             global $projectId, $phaseId, $phasename, $launch_date, $completion_date, $remark, $phaseLaunched, $towers;
+            if($phaseId != '0'){
+                //          Updating existing phase
+                $phase = ResiProjectPhase::find($phaseId);
+                $phase->project_id = $projectId;
+                $phase->phase_name = $phasename;
+                $phase->launch_date = $launch_date;
+                $phase->completion_date = $completion_date;
+                $phase->remarks = $remark;
+                $phase->launched = $phaseLaunched;
+                $phase->save();
 
-            //          Updating existing phase
-            $phase = ResiProjectPhase::find($phaseId);
-            $phase->project_id = $projectId;
-            $phase->phase_name = $phasename;
-            $phase->launch_date = $launch_date;
-            $phase->completion_date = $completion_date;
-            $phase->remarks = $remark;
-            $phase->launched = $phaseLaunched;
-            $phase->save();
-
-            if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
-                ResiProjectTowerDetails::update_towers_for_project_and_phase($projectId, $phase->phase_id, $towers);
-            }
-            if(isset($_POST['options'])){
-                $arr = $_POST['options'];
-                $arr = array_diff($arr, array(-1));
-                $phase->reset_options($arr);
+                if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
+                    ResiProjectTowerDetails::update_towers_for_project_and_phase($projectId, $phase->phase_id, $towers);
+                }
+                if(isset($_POST['options'])){
+                    $arr = $_POST['options'];
+                    $arr = array_diff($arr, array(-1));
+                    $phase->reset_options($arr);
+                }
             }
         });
         #########################################

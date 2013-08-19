@@ -606,7 +606,7 @@ function fetch_towerDetails_for_phase($projectId) {
 }
 
 function fetch_phaseDetails($projectId) {
-    $qrySel = "SELECT PHASE_ID, PHASE_NAME FROM " . RESI_PROJECT_PHASE . "  WHERE PROJECT_ID = '" . $projectId . "' GROUP BY PHASE_NAME ORDER BY PHASE_NAME ASC";
+    $qrySel = "SELECT PHASE_ID, PHASE_NAME FROM " . RESI_PROJECT_PHASE . "  WHERE PROJECT_ID = '" . $projectId . "' ORDER BY PHASE_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
