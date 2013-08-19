@@ -62,11 +62,12 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$txtDisclaimer				=	trim($_POST['txtDisclaimer']);
 		$no_of_towers				=	trim($_POST['no_of_towers']);
 		$no_of_flats				=	trim($_POST['no_of_flats']);
-		$pre_launch_date                        =	trim($_POST['pre_launch_date']);
-                $exp_launch_date                        =	trim($_POST['exp_launch_date']);
+		$pre_launch_date            =	trim($_POST['pre_launch_date']);
+        $exp_launch_date            =	trim($_POST['exp_launch_date']);
 		$eff_date_to				=	trim($_POST['eff_date_to']);
 		$special_offer				=	trim($_POST['special_offer']);
-		$display_order				=	trim($_POST['display_order']);
+		//$display_order			=	trim($_POST['display_order']);
+        $display_order				=   PROJECT_MAX_PRIORITY;
 		$oldbuilderId				=	trim($_POST['oldbuilderId']);
 		$youtube_link				=	trim($_POST['youtube_link']);
 
@@ -162,7 +163,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("no_of_towers", $no_of_towers);
 		$smarty->assign("no_of_flats", $no_of_flats);
 		$smarty->assign("pre_launch_date", $pre_launch_date);
-                $smarty->assign("exp_launch_date", $exp_launch_date);
+        $smarty->assign("exp_launch_date", $exp_launch_date);
 		$smarty->assign("eff_date_to", $eff_date_to);
 		$smarty->assign("special_offer", $special_offer);
 		$smarty->assign("display_order", $display_order);
@@ -234,7 +235,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 	     	$ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
 	     }
 
-	     if(empty($display_order) || $display_order < 1 || $display_order > 999 || ($display_order > 15 && $display_order < 101))
+	     /*if(empty($display_order) || $display_order < 1 || $display_order > 999 || ($display_order > 15 && $display_order < 101))
 	     {
 	         $ErrorMsg["display_order"] = "Please put in display order (1-15 for city page), (101-998 for locality page), 999 for default";
 	     }
@@ -243,7 +244,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 	         if ($numProjects >= 15) {
 	             $ErrorMsg["display_order"] = "Already $numProjects projects have been assigned city page level editorial priority. Please edit them out of the range (1-15) first.";
 	         }
-	     }
+	     }*/
 
 	     if($txtProjectURL!='')
 	     {
