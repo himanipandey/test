@@ -240,15 +240,27 @@ function autoAdjustMaxCountProjPrio($id = null, $priority = null, $type = null)
     switch($type)
     {
         case "city":
-            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
+            $result = mysql_query("SELECT DISPLAY_ORDER FROM " . RESI_PROJECT . " WHERE DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY. " ORDER BY DISPLAY_ORDER DESC LIMIT 1");
+            $data = mysql_fetch_assoc($result);
+            $highest_valid_priority = $data['DISPLAY_ORDER'];
+            
+            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".$highest_valid_priority." AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
             $update = "DISPLAY_ORDER = ".PROJECT_MAX_PRIORITY;
             break;
         case "suburb":
-            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
+            $result = mysql_query("SELECT DISPLAY_ORDER_SUBURB FROM " . RESI_PROJECT . " WHERE DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY. " ORDER BY DISPLAY_ORDER_SUBURB DESC LIMIT 1");
+            $data = mysql_fetch_assoc($result);
+            $highest_valid_priority = $data['DISPLAY_ORDER_SUBURB'];
+            
+            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".$highest_valid_priority." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
             $update = "DISPLAY_ORDER_SUBURB = ".PROJECT_MAX_PRIORITY;
             break;
         case "locality":
-            $where = "LOCALITY_ID = '" . $id . "' AND DISPLAY_ORDER_LOCALITY >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
+            $result = mysql_query("SELECT DISPLAY_ORDER_LOCALITY FROM " . RESI_PROJECT . " WHERE DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY. " ORDER BY DISPLAY_ORDER_LOCALITY DESC LIMIT 1");
+            $data = mysql_fetch_assoc($result);
+            $highest_valid_priority = $data['DISPLAY_ORDER_LOCALITY'];
+            
+            $where = "LOCALITY_ID = '" . $id . "' AND DISPLAY_ORDER_LOCALITY >= ".$highest_valid_priority." AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
             $update = "DISPLAY_ORDER_LOCALITY = ".PROJECT_MAX_PRIORITY;
             break;
     }
