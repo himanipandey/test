@@ -7,10 +7,6 @@ $smarty->assign("accessDataCollection",$accessDataCollection);
 
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
-if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER'))){
-    header("Location: project_desktop.php");
-}
-
 if($_POST['submit']==='Get'){
     $_SESSION[$_SERVER['PHP_SELF']]['dateFrom'] = $_POST['dateFrom'];
     $_SESSION[$_SERVER['PHP_SELF']]['dateTo'] = $_POST['dateTo'];
