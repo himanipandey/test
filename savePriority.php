@@ -20,32 +20,50 @@ if(!empty($_POST['projectId']))
         $priority = PROJECT_MAX_PRIORITY;
     }
     if(!empty($sub)){
-        if($autoadjust){
-            autoAdjustProjPrio($sub, $priority, 'suburb');
-        }
-        if(getProjectCount($sub, 'suburb') >= 15)
+        $count = checkProjAvail($projectId, $priority, 'suburb', $sub);
+        if($count > 0)
         {
-            autoAdjustMaxCountProjPrio($sub, $priority, 'suburb');
+            if($autoadjust){
+                autoAdjustProjPrio($sub, $priority, 'suburb');
+            }
+            if(getProjectCount($sub, 'suburb') >= 15)
+            {
+                autoAdjustMaxCountProjPrio($sub, $priority, 'suburb');
+            }
+            updateProj($projectId, $priority, 'suburb', $sub);
+        }else{
+            echo "2";
         }
-        updateProj($projectId, $priority, 'suburb', $sub);
     }else if(!empty ($loc)){
-        if($autoadjust){
-            autoAdjustProjPrio($loc, $priority, 'locality');
-        }
-        if(getProjectCount($loc, 'locality') >= 15)
+        $count = checkProjAvail($projectId, $priority, 'locality', $loc);
+        if($count > 0)
         {
-           autoAdjustMaxCountProjPrio($loc, $priority, 'locality'); 
+            if($autoadjust){
+                autoAdjustProjPrio($loc, $priority, 'locality');
+            }
+            if(getProjectCount($loc, 'locality') >= 15)
+            {
+               autoAdjustMaxCountProjPrio($loc, $priority, 'locality'); 
+            }
+            updateProj($projectId, $priority, 'locality', $loc);
+        }else{
+            echo "2";
         }
-        updateProj($projectId, $priority, 'locality', $loc);
     }else{
-        if($autoadjust){
-            autoAdjustProjPrio($cityId, $priority, 'city');
-        }
-        if(getProjectCount($cityId, 'city') >= 15)
+        $count = checkProjAvail($projectId, $priority, 'city', $cityId);
+        if($count > 0)
         {
-           autoAdjustMaxCountProjPrio($cityId, $priority, 'city'); 
+            if($autoadjust){
+                autoAdjustProjPrio($cityId, $priority, 'city');
+            }
+            if(getProjectCount($cityId, 'city') >= 15)
+            {
+               autoAdjustMaxCountProjPrio($cityId, $priority, 'city'); 
+            }
+            updateProj($projectId, $priority, 'city', $cityId);
+        }else{
+            echo "2";
         }
-        updateProj($projectId, $priority, 'city', $cityId);
     }
 }
 else
