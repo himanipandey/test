@@ -55,6 +55,10 @@ jQuery(document).ready(function(){
                    alert("Priority Successfully updated");
                    parent.location.reload(true); 
                }
+               if(msg == 2){
+                   alert("Error Wrong ProjectID selected");
+                   return false;
+               }
             }
         })
   });
