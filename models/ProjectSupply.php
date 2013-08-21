@@ -31,7 +31,7 @@ class ProjectSupply extends ActiveRecord\Model {
     
     function projectSupplyForProjectPage($projectId){
         $result = array();
-        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, ps.launched, pa.availability, pa.comment, pa.effective_month, ps.project_type from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id inner join (select max(pa.id) id from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id where ps.project_id = $projectId group by ps.id) t on pa.id=t.id left join " . ResiProjectPhase::table_name() . " rpp on ps.phase_id = rpp.PHASE_ID";
+        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, ps.launched, pa.availability, pa.comment, pa.effective_month, ps.project_type from " . self::table_name() . " ps left join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id inner join (select max(pa.id) id from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id where ps.project_id = $projectId group by ps.id) t on pa.id=t.id left join " . ResiProjectPhase::table_name() . " rpp on ps.phase_id = rpp.PHASE_ID";
         $data = self::find_by_sql($query);
         foreach ($data as $value) {
             $entry = array();
