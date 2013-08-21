@@ -1632,67 +1632,18 @@ $$arrProjectAudit = array();
 $arrProjectSupply = array();
 
 function fetchColumnChanges($projectId, $stageName, $phasename, &$arrProjectPriceAuditOld, &$arrProjectAudit, &$arrProjectSupply) {
-    $arrTblName = array("resi_project", "resi_project_options", "resi_proj_supply");
+    $arrTblName = array("resi_project", "resi_project_options", "project_availabilities");
     $arrFields = array("_t_transaction_id", "_t_transaction_date", "_t_operation", "_t_user_id");
 
     foreach ($arrTblName as $table) {
         $auditTbl = "_t_$table";
-        if ($auditTbl == '_t_resi_proj_supply') {
+        if ($auditTbl == '_t_project_availabilities') {
             $startTime = fetchStartTime($stageName, $phasename, $projectId);
-            $fstDataSupply = array();
-            $lstDataSupply = array();
-            $qrySupply = "SELECT a.PROJECT_TYPE,a.NO_OF_BEDROOMS,a.PHASE_ID
-							FROM resi_proj_supply a
-							JOIN (SELECT PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS, MAX(PROJ_SUPPLY_ID) AS LATEST_PROJ_SUPPLY_ID
-							         FROM resi_proj_supply
-							         WHERE PROJECT_ID = $projectId
-							         GROUP BY PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS) b
-							ON (a.PROJ_SUPPLY_ID = b.LATEST_PROJ_SUPPLY_ID)";
-            $resSupply = mysql_query($qrySupply);
-            while ($supply = mysql_fetch_assoc($resSupply)) {
-                if ($startTime == NULL) {
-                    $qryStartTime = "SELECT MIN(_t_transaction_date) as  _t_transaction_date
-									FROM
-										$auditTbl
-									WHERE
-										PROJECT_ID = $projectId
-									AND
-										PROJECT_TYPE = '" . $supply['PROJECT_TYPE'] . "'
-									AND
-										PHASE_ID = '" . $supply['PHASE_ID'] . "'
-									AND
-										NO_OF_BEDROOMS = '" . $supply['NO_OF_BEDROOMS'] . "'";
-                    $resStartTime = mysql_query($qryStartTime) or die(mysql_error());
-                    $dataStartTime = mysql_fetch_assoc($resStartTime);
-                    $startTime = $dataStartTime['_t_transaction_date'];
-                }
-
-                $fstQrySupply = "SELECT a._t_transaction_id,a.PROJ_SUPPLY_ID,a.PHASE_ID,a.NO_OF_BEDROOMS,a.NO_OF_FLATS,a.AVAILABLE_NO_FLATS,a.EDIT_REASON,a.SOURCE_OF_INFORMATION,a.ACCURATE_NO_OF_FLATS_FLAG,
-								   a.PROJECT_TYPE,a.SUBMITTED_DATE,a.ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG,b.PHASE_NAME
-								FROM
-									$auditTbl a 
-								LEFT JOIN 
-								   resi_project_phase b
-								ON
-								   a.PHASE_ID = b.PHASE_ID
-								WHERE
-									a.PROJECT_ID = $projectId
-								AND
-									a.PROJECT_TYPE = '" . $supply['PROJECT_TYPE'] . "'
-								AND
-									a._t_transaction_date<='$startTime'
-								AND
-									a.PHASE_ID = '" . $supply['PHASE_ID'] . "'
-								AND
-									a.NO_OF_BEDROOMS = '" . $supply['NO_OF_BEDROOMS'] . "'
-								
-								ORDER BY
-									a._t_transaction_id DESC";
-                $fstResSupply = mysql_query($fstQrySupply) or die(mysql_error());
-                $fstDataSupply = mysql_fetch_assoc($fstResSupply);
-                if ($fstDataSupply['PHASE_NAME'] == '' || $fstDataSupply['PHASE_NAME'] == NULL)
-                    $fstDataSupply['PHASE_NAME'] = 'noPhase';
-                $arrProjectSupply[$fstDataSupply['PHASE_NAME']][$fstDataSupply['PROJECT_TYPE']][] = $fstDataSupply;
+            $inventoryEditHistory = ProjectAvailability::getProjectEditHistoryBeforeDate($projectId, $startTime);
+            foreach ($inventoryEditHistory as $history) {
+                if ($history['PHASE_NAME'] == '' || $history['PHASE_NAME'] == NULL)
+                    $history['PHASE_NAME'] = 'noPhase';
+                $arrProjectSupply[$history[PHASE_NAME]][$history[PROJECT_TYPE]][] = $history;
 
                 if (trim($phasename) == 'newProject' AND trim($stageName) == 'newProject')
                     $startTime = NULL;

@@ -122,7 +122,7 @@ if ($_REQUEST['phaseId'] != -1)
 
 /* * *****supply code start here********* */
 $supplyAllArray = array();
-$res = ProjectSupply::projectSupplyForProjectPage($projectId);die;
+$res = ProjectSupply::projectSupplyForProjectPage($projectId);
 
 $arrPhaseCount = array();
 $arrPhaseTypeCount = array();
