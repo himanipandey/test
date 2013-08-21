@@ -15,8 +15,8 @@ $highPrio = getAvaiHighPriority($cityId);
 <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
 <script type="text/javascript"> 
 jQuery(document).ready(function(){
-    $('#suburbsearch').autocomplete({source:"suggest_auto.php?type=suburb&cityId=<?php echo $cityId?>", minLength:2});
-    $('#localitysearch').autocomplete({source:"suggest_auto.php?type=locality&cityId=<?php echo $cityId?>", minLength:2});
+    $('#suburbsearch').autocomplete({source:"suggest_auto.php?type=suburb&cityId=<?php echo $cityId?>", minLength:1});
+    $('#localitysearch').autocomplete({source:"suggest_auto.php?type=locality&cityId=<?php echo $cityId?>", minLength:1});
 });
 jQuery(document).ready(function(){
     $( "#priority_form").submit(function() {

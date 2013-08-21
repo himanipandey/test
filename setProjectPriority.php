@@ -56,7 +56,7 @@ jQuery(document).ready(function(){
                    parent.location.reload(true); 
                }
                if(msg == 2){
-                   alert("Error Wrong ProjectID selected");
+                   alert("Error Wrong ProjectId selected");
                    return false;
                }
             }
