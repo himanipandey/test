@@ -171,11 +171,11 @@ function updateProj($projectId = null, $priority = null, $mode = null, $modeid =
     }
     $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where." AND PROJECT_ID = '".$projectId."'";
     $res = mysql_query($qry);
-    if(mysql_affected_rows()){
+    if(mysql_affected_rows()>0){
         echo "1";
     }
     else{
-        echo "2";
+        echo "3";
     }
 }
 function getAvaiHighProjectPriority($cityId = null, $localityid = null, $suburbid = null)
@@ -233,7 +233,7 @@ function getProjectCount($Id, $type){
             $where = "LOCALITY_ID = '" . $Id . "'";
             break;
     }
-    $qry = "SELECT COUNT(*) AS CNT FROM " . RESI_PROJECT . " WHERE ".$where;
+    $qry = "SELECT COUNT(*) AS CNT FROM " . RESI_PROJECT . " WHERE ".$where.$queryLessThenMax;
     $res = mysql_query($qry) or die(mysql_error());
     $data = mysql_fetch_assoc($res);
     return $data['CNT'];
@@ -243,19 +243,22 @@ function autoAdjustMaxCountProjPrio($id = null, $priority = null, $type = null)
     switch($type)
     {
         case "city":
-            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
+            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".$priority." AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
             $update = "DISPLAY_ORDER = ".PROJECT_MAX_PRIORITY;
+            $orderby = " ORDER BY DISPLAY_ORDER DESC";
             break;
         case "suburb":
-            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
+            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
             $update = "DISPLAY_ORDER_SUBURB = ".PROJECT_MAX_PRIORITY;
+            $orderby = " ORDER BY DISPLAY_ORDER_SUBURB DESC";
             break;
         case "locality":
-            $where = "LOCALITY_ID = '" . $id . "' AND DISPLAY_ORDER_LOCALITY >= ".PROJECT_MAX_VALID_PRIORITY." AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
+            $where = "LOCALITY_ID = '" . $id . "' AND DISPLAY_ORDER_LOCALITY >= ".$priority." AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
             $update = "DISPLAY_ORDER_LOCALITY = ".PROJECT_MAX_PRIORITY;
+            $orderby = " ORDER BY DISPLAY_ORDER_LOCALITY DESC";
             break;
     }
-    $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where." LIMIT 1";
+    $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where.$orderby." LIMIT 1";
     $res = mysql_query($qry) or die(mysql_error());
 }
 function checkProjAvail($projectId = null, $priority = null, $mode = null, $modeid = null)
