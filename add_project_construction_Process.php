@@ -1,5 +1,4 @@
 <?php
-	
 	$projectId		=	$_REQUEST['projectId'];
 	$effectiveDt	=  ($_REQUEST['eff_date']!='') ? $_REQUEST['eff_date'] : date('Y-m-d');
 	$fetch_projectDetail	=	ProjectDetail($projectId);
@@ -7,9 +6,6 @@
 
 	$costDetail	=	costructionDetail($projectId);
 	$smarty->assign("costDetail", $costDetail); 
-
-	$arrAudit   = AuditTblDataByTblName('resi_proj_supply',$projectId);
-	$smarty->assign("arrAudit", $arrAudit); 
 
 	if(isset($_POST['btnSave']))
 	{

@@ -122,18 +122,7 @@ if ($_REQUEST['phaseId'] != -1)
 
 /* * *****supply code start here********* */
 $supplyAllArray = array();
-$qry = "SELECT p.PHASE_NAME,p.LAUNCH_DATE,p.COMPLETION_DATE, a.*
-				FROM resi_proj_supply a
-				JOIN (SELECT PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS, MAX(PROJ_SUPPLY_ID) AS LATEST_PROJ_SUPPLY_ID
-				         FROM resi_proj_supply
-				         WHERE PROJECT_ID = $projectId
-				         GROUP BY PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS) b
-				ON (a.PROJ_SUPPLY_ID = b.LATEST_PROJ_SUPPLY_ID)
-				LEFT JOIN resi_project_phase p
-				       on (p.PHASE_ID = a.PHASE_ID)";
-
-//$res = mysql_query($qry) or die(mysql_error());
-$res = ProjectSupply::projectSupplyForProjectPage($projectId);
+$res = ProjectSupply::projectSupplyForProjectPage($projectId);die;
 
 $arrPhaseCount = array();
 $arrPhaseTypeCount = array();

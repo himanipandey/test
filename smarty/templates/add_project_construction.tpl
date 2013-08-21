@@ -37,20 +37,6 @@
 			 
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 					 <form method="post" id="formss" enctype="multipart/form-data">
-							 
-							 {if count($arrAudit)>0}
-								   <tr>
-									  <td width="20%" align="right"><font color ="red">*</font><b>Last Updated Date :</b> </td>
-									  <td width="30%" align="left">
-										 <input type = "text" name = "updated_date" readonly value = "{$arrAudit[0]['ACTION_DATE']}"
-										 <div id="imgPathRefresh"></div>
-									  </td>
-									  <td width="50%" align="left">
-										  <font color="red"><span id = "err_bed_name" style = "display:none;">Please select Type of Bedrooms !</span></font>
-									  </td>
-								   </tr>
-							   {/if}
-							 
 							 <tr>
 								   <td width="20%" align="right" valign="top" nowrap><b><font color ="red">*</font>Expected Completion Date :</b> </td>
 								   <td width="30%" align="left">
