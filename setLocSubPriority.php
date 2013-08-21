@@ -26,7 +26,11 @@ jQuery(document).ready(function(){
         var cityId      = $('#cityId').val();
         var autoadjust  = $("#autoadjust").is(':checked') ? 1 : 0;
         if($('#suburbsearch').val() === '' && $('#localitysearch').val() === ''){
-            alert("Please add suburb/priority");
+            alert("Please add suburb or locality");
+            return false;
+        }
+        if($('#suburbsearch').val() !='' && $('#localitysearch').val() !=''){
+            alert("Please add either suburb or locality not both");
             return false;
         }
         if(isNaN(prior)){

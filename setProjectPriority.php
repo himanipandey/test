@@ -51,7 +51,7 @@ jQuery(document).ready(function(){
             url: '/savePriority.php',
             data: { projectId: projectId, prio:prior, autoadjust:autoadjust, cityId:cityId, loc:localityid, sub:suburbid },
             success:function(msg){
-               if(msg == 1){
+               if(msg == 1 || msg ==3){
                    alert("Priority Successfully updated");
                    parent.location.reload(true); 
                }
