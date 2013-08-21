@@ -1,7 +1,14 @@
 <?php
 
 if (isset($_GET['error'])) {
-    $smarty->assign("error_msg", "This phase already exists!");
+    switch ($_GET['error']) {
+        case '1':
+            $smarty->assign("error_msg", "This phase already exists!");
+            break;
+        case '2':
+            $smarty->assign("error_msg", "Phase Config Mapping Cant be Changed. Inventory already added!");
+            break;
+    }
 }
 
 $projectId = $_REQUEST['projectId'];
@@ -119,7 +126,7 @@ if (isset($_POST['btnSave'])) {
 
     $PhaseExists = searchPhase($phaseDetail, $phasename);
     if ($PhaseExists != -1 && $phasename != $old_phase_name) {
-        header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=true");
+        header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=1");
     } else {
         // Flats Config
         $flats_config = array();
@@ -158,6 +165,10 @@ if (isset($_POST['btnSave'])) {
                     ResiProjectTowerDetails::update_towers_for_project_and_phase($projectId, $phase->phase_id, $towers);
                 }
                 if(isset($_POST['options'])){
+                    if(ProjectSupply::isInventoryAdded($projectId, $phaseId)){
+                        header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=2");
+                        exit;
+                    }
                     $arr = $_POST['options'];
                     $arr = array_diff($arr, array(-1));
                     $phase->reset_options($arr);
