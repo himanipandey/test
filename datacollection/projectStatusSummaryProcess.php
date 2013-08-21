@@ -6,9 +6,6 @@ if( $dataCollectionFlowAuth == false )
 $smarty->assign("accessDataCollection",$accessDataCollection);
 
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
-if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER'))){
-    header("Location: project_desktop.php");
-}
 
 if(isset($_POST['cityId']) && !empty($_POST['cityId'])){
     unset($_SESSION[$_SERVER['PHP_SELF']]);
