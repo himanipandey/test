@@ -232,7 +232,7 @@
                                         <tr>
                                             <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
                                                         <td width="30%" align="left">
-                                                            <input name = "isLaunchUnitPhase" id="isLaunchUnitPhase" type = "checkbox" value = "1" {if $isLaunchUnitPhase == 1} checked {/if} {if  $isInventoryCreated}readonly="true"{/if}>
+                                                            <input name = "isLaunchUnitPhase" id="isLaunchUnitPhase" type = "checkbox" value = "1" {if $isLaunchUnitPhase == 1} checked {/if} {if $isInventoryCreated}disabled="true"{/if}>
                                                         </td>
                                                         <td width="50%" align="left"></td>
                                                         </tr>
