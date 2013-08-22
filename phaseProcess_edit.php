@@ -165,12 +165,17 @@ if (isset($_POST['btnSave'])) {
                     ResiProjectTowerDetails::update_towers_for_project_and_phase($projectId, $phase->phase_id, $towers);
                 }
                 if(isset($_POST['options'])){
-                    if(ProjectSupply::isInventoryAdded($projectId, $phaseId)){
-                        header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=2");
-                        exit;
-                    }
                     $arr = $_POST['options'];
                     $arr = array_diff($arr, array(-1));
+                    
+                    if(ProjectSupply::isInventoryAdded($projectId, $phaseId)){
+                        $existingOptions = ProjectOptionsPhases::optionsForPhase($phaseId);
+                        $removedOptions = array_diff($existingOptions, $arr);
+                        if(empty($existingOptions) || !empty($removedOptions)){
+                            header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=2");
+                            exit;
+                        }
+                    }
                     $phase->reset_options($arr);
                 }
             }
