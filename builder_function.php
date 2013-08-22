@@ -392,76 +392,22 @@ function insert_phase($projectId, $phasename, $launch_date, $completion_date, $r
     }
 }
 
-function set_phase_quantity($phaseId, $unit_type, $bedrooms, $quantity, $projectId = '') {
-    $qry_select = "
-			      SELECT COUNT(*) as count FROM " . RESI_PROJECT_PHASE_QUANTITY . "
-                    WHERE
-					PHASE_ID     =  '" . $phaseId . "' AND
-                	UNIT_TYPE	 =	'" . $unit_type . "' AND
-                	BEDROOMS  	 =	'" . $bedrooms . "'";
-    $res_Sel = mysql_query($qry_select);
-    $row = mysql_fetch_assoc($res_Sel);
-    if ($row['count'] > 0) {
-        $qry_update = "
-				      UPDATE " . RESI_PROJECT_PHASE_QUANTITY . "
-	                  SET
-	                    QUANTITY  	 =	'" . $quantity . "'
-	                    WHERE
-						PHASE_ID     =  '" . $phaseId . "' AND
-	                	UNIT_TYPE	 =	'" . $unit_type . "' AND
-	                	BEDROOMS  	 =	'" . $bedrooms . "'";
-        $res_update = mysql_query($qry_update) OR DIE(mysql_error());
-        if ($projectId != '') {
-            if ($quantity == '')
-                $quantity = 0;
-            $ins = "UPDATE resi_proj_supply SET NO_OF_FLATS='" . $quantity . "' WHERE PROJECT_ID='" . $projectId . "' AND PHASE_ID='" . $phaseId . "' AND NO_OF_BEDROOMS='" . $bedrooms . "' AND PROJECT_TYPE='" . $unit_type . "' ORDER BY PROJ_SUPPLY_ID DESC LIMIT 1";
-            mysql_query($ins);
-
-            $returnAvailability = computeAvailability($projectId);
-            if ($returnAvailability) {
-                $updateProject = updateAvailability($projectId, $returnAvailability);
-            }
-            audit_insert($projectId, 'update', 'resi_project', $projectId);
-        }
-    } else {
-        $qry_insert = "
-			      INSERT INTO " . RESI_PROJECT_PHASE_QUANTITY . "
-                  SET
-                    PHASE_ID     =  '" . $phaseId . "',
-                	UNIT_TYPE	 =	'" . $unit_type . "',
-                	BEDROOMS  	 =	'" . $bedrooms . "',
-                	QUANTITY  	 =	'" . $quantity . "'";
-        $res_insert = mysql_query($qry_insert) OR DIE(mysql_error());
-        if ($projectId != '') {
-            if ($quantity == '')
-                $quantity = 0;
-            $ins = "INSERT INTO resi_proj_supply (PROJECT_ID,PHASE_ID,NO_OF_BEDROOMS,NO_OF_FLATS,SUBMITTED_DATE,PROJECT_TYPE)
-					VALUES ('" . $projectId . "','" . $phaseId . "','" . $bedrooms . "','" . $quantity . "','" . date('Y-m-d H:i:s') . "','" . $unit_type . "')";
-            mysql_query($ins);
-        }
-    }
-}
-
-function get_phase_quantity($phaseId) {
-    $qrySel = "SELECT UNIT_TYPE, GROUP_CONCAT(CONCAT(BEDROOMS, ':', QUANTITY)) as AGG from " . RESI_PROJECT_PHASE_QUANTITY . " WHERE PHASE_ID='" . $phaseId . "' GROUP BY UNIT_TYPE";
-    $res_Sel = mysql_query($qrySel);
-    $arrDetail = array();
-    while ($data = mysql_fetch_assoc($res_Sel)) {
-        array_push($arrDetail, $data);
-    }
-    $details = array();
-    foreach ($arrDetail as $result) {
-        $details[$result['UNIT_TYPE']] = $result['AGG'];
-    }
-    return $details;
-}
-
 function explode_bedroom_quantity($val) {
     $arr = array();
     $bedrooms = explode(',', $val);
     foreach ($bedrooms as $value) {
         $v = explode(':', $value);
         $arr[$v[0]] = $v[1];
+    }
+    return $arr;
+}
+
+function explodeBedroomSupplyLaunched($val) {
+    $arr = array();
+    $bedrooms = explode(',', $val);
+    foreach ($bedrooms as $value) {
+        $v = explode(':', $value);
+        $arr[$v[0]] = array('supply'=>$v[1], 'launched'=>$v[2]);
     }
     return $arr;
 }
@@ -493,31 +439,6 @@ function update_towers_for_project_and_phase($projectId, $phaseId, $tower_array)
     if ($res_ins) {
         $last_id = mysql_insert_id();
         audit_insert($last_id, 'update', 'resi_project_tower_details', $projectId);
-        return 1;
-    }
-}
-
-function insert_supplyandinventoryDetail($projectId, $config, $no_of_flats, $accuracy_flats, $avilable_no_of_flats, $accuracy_avilable_flats, $edit_reson, $source_of_information, $effDt, $projectType, $phaseid = '') {
-
-    $qry_ins = "
-				INSERT INTO " . RESI_PROJ_SUPPLY . "
-				SET
-					PROJECT_ID								=	'" . $projectId . "',
-					NO_OF_BEDROOMS							=	'" . $config . "',
-					NO_OF_FLATS		    					=	'" . $no_of_flats . "',
-					ACCURATE_NO_OF_FLATS_FLAG				=	'" . $accuracy_flats . "',
-					AVAILABLE_NO_FLATS						=	'" . $avilable_no_of_flats . "',
-					ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG		=	'" . $accuracy_avilable_flats . "',
-					EDIT_REASON								=	'" . $edit_reson . "',
-					SOURCE_OF_INFORMATION					=	'" . $source_of_information . "',
-					PROJECT_TYPE							=	'" . $projectType . "',
-					SUBMITTED_DATE							=	'" . $effDt . "',
-					PHASE_ID								=	'" . $phaseid . "'";
-
-    $res_ins = mysql_query($qry_ins) OR DIE(mysql_error());
-    if ($res_ins) {
-        $last_id = mysql_insert_id();
-        audit_insert($last_id, 'insert', 'resi_proj_supply', $projectId);
         return 1;
     }
 }
@@ -685,7 +606,7 @@ function fetch_towerDetails_for_phase($projectId) {
 }
 
 function fetch_phaseDetails($projectId) {
-    $qrySel = "SELECT PHASE_ID, PHASE_NAME FROM " . RESI_PROJECT_PHASE . "  WHERE PROJECT_ID = '" . $projectId . "' GROUP BY PHASE_NAME ORDER BY PHASE_NAME ASC";
+    $qrySel = "SELECT PHASE_ID, PHASE_NAME FROM " . RESI_PROJECT_PHASE . "  WHERE PROJECT_ID = '" . $projectId . "' ORDER BY PHASE_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -851,8 +772,6 @@ function ProjectAmenities($projectId, &$arrNotninty, &$arrDetail, &$arrninty) {
             $cnt++;
         }
     }
-    //print_r($arrNotninty);
-    //return $arrDetail;
 }
 
 function deleteAmenities($projectId) {
@@ -1098,26 +1017,6 @@ function update_towerDetail($projectId, $TowerId, $no_of_floors, $stilt, $no_of_
         audit_insert($last_id, 'insert', 'resi_project_tower_details', $projectId);
         return 1;
     }
-}
-
-function getfrom_phase_quantity($phaseId, $bedId, $unit_type = '') {
-    if ($phaseId == '' || $phaseId == '0')
-        return false;
-    $sql = "
-				SELECT QUANTITY
-					FROM resi_phase_quantity
-				WHERE					
-					BEDROOMS='" . $bedId . "'
-					AND PHASE_ID ='" . $phaseId . "' 
-					AND UNIT_TYPE = '" . $unit_type . "'
-				ORDER BY QID DESC ";
-
-    $data = mysql_query($sql) or die(mysql_error());
-    $arr = array();
-    while ($dataarr = mysql_fetch_assoc($data)) {
-        $arr[] = $dataarr;
-    }
-    return $arr;
 }
 
 /* * *************tower of a project************ */
@@ -1654,93 +1553,6 @@ function BuilderContactInfo($builderid) {
     return $arrContact;
 }
 
-/* * ********function for calculate supply availability********* */
-
-function computeAvailability($projectId) {
-    $qryPhase = "SELECT PHASE_ID FROM resi_project_phase WHERE PROJECT_ID = $projectId";
-    $resPhase = mysql_query($qryPhase);
-    $arrPhaseId = array();
-    if (mysql_num_rows($resPhase) > 0) {
-        while ($PhaseId = mysql_fetch_assoc($resPhase)) {
-            $arrPhaseId[] = $PhaseId['PHASE_ID'];
-        }
-    }
-    if (count($arrPhaseId) > 0) {
-        $qry = "select a.*, rps.available_no_flats from
-				(SELECT rp.project_id, unit_type, bedrooms
-				FROM resi_project rp
-					JOIN resi_project_options rpo
-				ON (rp.project_id = rpo.project_id)
-				WHERE rp.project_id = $projectId
-				GROUP BY rp.project_id, unit_type, bedrooms) a
-				left join
-					(select rps.project_id, rps.phase_id, rps.project_type, rps.no_of_bedrooms, max(proj_supply_id) as proj_supply_id
-					 from resi_proj_supply rps
-					where rps.project_id = $projectId 
-							and rps.phase_id != 0
-							and submitted_date >
-							(select STR_TO_DATE(CONCAT(MONTH(max(submitted_date)), '-', YEAR(max(submitted_date))), '%m-%Y')
-							from resi_project rp
-							join resi_proj_supply rps
-								on (rp.project_id = rps.project_id)
-							where rp.project_id = $projectId
-							and rps.phase_id != 0)
-					group by rps.project_id, rps.phase_id, rps.project_type, rps.no_of_bedrooms) b
-				on (a.project_id = b.project_id and a.unit_type = b.project_type and a.bedrooms = b.no_of_bedrooms)
-				left join resi_proj_supply rps
-					on (rps.proj_supply_id = b.proj_supply_id)";
-    } else {
-        $qry = "select a.*, rps.available_no_flats from
-				(SELECT rp.project_id, unit_type, bedrooms
-				FROM resi_project rp
-					JOIN resi_project_options rpo
-				ON (rp.project_id = rpo.project_id)
-				WHERE rp.project_id = $projectId
-				GROUP BY rp.project_id, unit_type, bedrooms) a
-				left join
-					(select rps.project_id, rps.project_type, rps.no_of_bedrooms, max(proj_supply_id) as proj_supply_id from resi_proj_supply rps
-				where rps.project_id = $projectId and submitted_date >
-				(select STR_TO_DATE(CONCAT(MONTH(max(submitted_date)), '-', YEAR(max(submitted_date))), '%m-%Y')
-				from resi_project rp
-				join resi_proj_supply rps
-				on (rp.project_id = rps.project_id)
-				where rp.project_id = $projectId)
-				group by rps.project_id, rps.project_type, rps.no_of_bedrooms) b
-				on (a.project_id = b.project_id and a.unit_type = b.project_type and a.bedrooms = b.no_of_bedrooms)
-				left join resi_proj_supply rps
-				on (rps.proj_supply_id = b.proj_supply_id)";
-    }
-
-    $res = mysql_query($qry) or die(mysql_error());
-
-    $sum = 0;
-    while ($data = mysql_fetch_assoc($res)) {
-        if ($data['available_no_flats'] != NULL)
-            $sum += $data['available_no_flats'];
-        else
-            return NULL;
-    }
-
-    return $sum;
-}
-
-/* * ********function for update resi project supply availability********** */
-
-function updateAvailability($projectId, $returnAvailability) {
-    $value = $returnAvailability === NULL ? 'NULL' : $returnAvailability;
-
-    $qryUp = "UPDATE resi_project
-			  SET 
-			  	 AVAILABLE_NO_FLATS = $value
-			  WHERE
-				 PROJECT_ID = '" . $projectId . "'";
-    $resUp = mysql_query($qryUp) or die(mysql_error() . " error here");
-    if ($resUp) {
-        audit_insert($projectId, 'update', 'resi_project', $projectId);
-        return 1;
-    }
-}
-
 /* * ************function for calculate width and height of a image*********** */
 
 function scaleDimensions($orig_width, $orig_height, $max_width, $max_height) {
@@ -1814,86 +1626,24 @@ function fetchProjectCallingLinks($projectId, $projectType, $audioLinkChk = '') 
     return $arrCallLink;
 }
 
-function getLastUpdatedTime($projectId) {
-    $qry = "SELECT MAX(_t_transaction_date) as _t_transaction_date
-	FROM
-	_t_resi_proj_supply
-	WHERE
-	PROJECT_ID  = $projectId
-	AND
-	_t_operation = 'I'";
-    $res = mysql_query($qry) or die(mysql_query());
-    $data = mysql_fetch_assoc($res);
-    return $data['_t_transaction_date'];
-}
-
 /* * ********Fetch history for all tables******** */
 $arrProjectPriceAuditOld = array();
 $$arrProjectAudit = array();
 $arrProjectSupply = array();
 
 function fetchColumnChanges($projectId, $stageName, $phasename, &$arrProjectPriceAuditOld, &$arrProjectAudit, &$arrProjectSupply) {
-    $arrTblName = array("resi_project", "resi_project_options", "resi_proj_supply");
+    $arrTblName = array("resi_project", "resi_project_options", "project_availabilities");
     $arrFields = array("_t_transaction_id", "_t_transaction_date", "_t_operation", "_t_user_id");
 
     foreach ($arrTblName as $table) {
         $auditTbl = "_t_$table";
-        if ($auditTbl == '_t_resi_proj_supply') {
+        if ($auditTbl == '_t_project_availabilities') {
             $startTime = fetchStartTime($stageName, $phasename, $projectId);
-            $fstDataSupply = array();
-            $lstDataSupply = array();
-            $qrySupply = "SELECT a.PROJECT_TYPE,a.NO_OF_BEDROOMS,a.PHASE_ID
-							FROM resi_proj_supply a
-							JOIN (SELECT PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS, MAX(PROJ_SUPPLY_ID) AS LATEST_PROJ_SUPPLY_ID
-							         FROM resi_proj_supply
-							         WHERE PROJECT_ID = $projectId
-							         GROUP BY PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS) b
-							ON (a.PROJ_SUPPLY_ID = b.LATEST_PROJ_SUPPLY_ID)";
-            $resSupply = mysql_query($qrySupply);
-            while ($supply = mysql_fetch_assoc($resSupply)) {
-                if ($startTime == NULL) {
-                    $qryStartTime = "SELECT MIN(_t_transaction_date) as  _t_transaction_date
-									FROM
-										$auditTbl
-									WHERE
-										PROJECT_ID = $projectId
-									AND
-										PROJECT_TYPE = '" . $supply['PROJECT_TYPE'] . "'
-									AND
-										PHASE_ID = '" . $supply['PHASE_ID'] . "'
-									AND
-										NO_OF_BEDROOMS = '" . $supply['NO_OF_BEDROOMS'] . "'";
-                    $resStartTime = mysql_query($qryStartTime) or die(mysql_error());
-                    $dataStartTime = mysql_fetch_assoc($resStartTime);
-                    $startTime = $dataStartTime['_t_transaction_date'];
-                }
-
-                $fstQrySupply = "SELECT a._t_transaction_id,a.PROJ_SUPPLY_ID,a.PHASE_ID,a.NO_OF_BEDROOMS,a.NO_OF_FLATS,a.AVAILABLE_NO_FLATS,a.EDIT_REASON,a.SOURCE_OF_INFORMATION,a.ACCURATE_NO_OF_FLATS_FLAG,
-								   a.PROJECT_TYPE,a.SUBMITTED_DATE,a.ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG,b.PHASE_NAME
-								FROM
-									$auditTbl a 
-								LEFT JOIN 
-								   resi_project_phase b
-								ON
-								   a.PHASE_ID = b.PHASE_ID
-								WHERE
-									a.PROJECT_ID = $projectId
-								AND
-									a.PROJECT_TYPE = '" . $supply['PROJECT_TYPE'] . "'
-								AND
-									a._t_transaction_date<='$startTime'
-								AND
-									a.PHASE_ID = '" . $supply['PHASE_ID'] . "'
-								AND
-									a.NO_OF_BEDROOMS = '" . $supply['NO_OF_BEDROOMS'] . "'
-								
-								ORDER BY
-									a._t_transaction_id DESC";
-                $fstResSupply = mysql_query($fstQrySupply) or die(mysql_error());
-                $fstDataSupply = mysql_fetch_assoc($fstResSupply);
-                if ($fstDataSupply['PHASE_NAME'] == '' || $fstDataSupply['PHASE_NAME'] == NULL)
-                    $fstDataSupply['PHASE_NAME'] = 'noPhase';
-                $arrProjectSupply[$fstDataSupply['PHASE_NAME']][$fstDataSupply['PROJECT_TYPE']][] = $fstDataSupply;
+            $inventoryEditHistory = ProjectAvailability::getProjectEditHistoryBeforeDate($projectId, $startTime);
+            foreach ($inventoryEditHistory as $history) {
+                if ($history['PHASE_NAME'] == '' || $history['PHASE_NAME'] == NULL)
+                    $history['PHASE_NAME'] = 'noPhase';
+                $arrProjectSupply[$history[PHASE_NAME]][$history[PROJECT_TYPE]][] = $history;
 
                 if (trim($phasename) == 'newProject' AND trim($stageName) == 'newProject')
                     $startTime = NULL;
@@ -2201,7 +1951,7 @@ function getFlatAvailability($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	 $url="http://cms.proptiger.com/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	 $url=$_SERVER['HTTP_HOST']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	//$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
 	$url=$url.'&project_ids[]='.$projectId;
 

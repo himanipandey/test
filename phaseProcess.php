@@ -28,11 +28,6 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     $completion_date = $_REQUEST['completion_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
-    if (isset($_REQUEST["phaseLaunched"])) {
-        $phaseLaunched = $_REQUEST["phaseLaunched"];
-    } else {
-        $phaseLaunched = 0;
-    }
 
     // Flats Config
     $flats_config = array();
@@ -58,7 +53,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     } else {
         ############## Transaction ##############
         ResiProjectPhase::transaction(function(){
-            global $projectId, $phasename, $launch_date, $completion_date, $remark, $phaseLaunched, $towers;
+            global $projectId, $phasename, $launch_date, $completion_date, $remark, $towers;
 
 //          Creating a new phase
             $phase = new ResiProjectPhase();
@@ -67,7 +62,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
             $phase->launch_date = $launch_date;
             $phase->completion_date = $completion_date;
             $phase->remarks = $remark;
-            $phase->launched = $phaseLaunched;
+            $phase->launched = 0;
             $phase->save();
 
             if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {

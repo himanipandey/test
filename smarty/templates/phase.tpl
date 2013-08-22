@@ -181,14 +181,6 @@
 							   </tr>
 							   
 							   <tr>
-								  <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
-								  <td width="30%" align="left">
-								  	<input name = "phaseLaunched" type = "checkbox" value = "1" {if $phaseLaunched == 1} checked {/if}>
-								  </td>
-								  <td width="50%" align="left"></td>
-							   </tr>
-							   
-							   <tr>
 								  <td>&nbsp;</td>
 								  <td align="left" style="padding-left:0px;">
 								  <input type="submit" name="btnAddMore" id="btnAddMore" value="Add More" onclick="return validate_phase();" />

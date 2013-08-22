@@ -13,7 +13,6 @@ $stageName = '';
 $phasename = '';
 $changedValueArr = array();
 if (isset($_REQUEST['stageName']) && isset($_REQUEST['phasename']) && isset($_REQUEST['projectId'])) {
-    $arrTableName = array("resi_project" => "Project", "resi_project_options" => "project Configuration", "resi_proj_supply" => "Project Supply");
     $smarty->assign("changedValueArr", $changedValueArr);
     $stageName = $_REQUEST['stageName'];
     $phasename = $_REQUEST['phasename'];
@@ -123,28 +122,18 @@ if ($_REQUEST['phaseId'] != -1)
 
 /* * *****supply code start here********* */
 $supplyAllArray = array();
-$qry = "SELECT p.PHASE_NAME,p.LAUNCH_DATE,p.COMPLETION_DATE, a.*
-				FROM resi_proj_supply a
-				JOIN (SELECT PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS, MAX(PROJ_SUPPLY_ID) AS LATEST_PROJ_SUPPLY_ID
-				         FROM resi_proj_supply
-				         WHERE PROJECT_ID = $projectId
-				         GROUP BY PROJECT_ID, PHASE_ID, PROJECT_TYPE, NO_OF_BEDROOMS) b
-				ON (a.PROJ_SUPPLY_ID = b.LATEST_PROJ_SUPPLY_ID)
-				LEFT JOIN resi_project_phase p
-				       on (p.PHASE_ID = a.PHASE_ID)";
+$res = ProjectSupply::projectSupplyForProjectPage($projectId);
 
-$res = mysql_query($qry) or die(mysql_error());
 $arrPhaseCount = array();
 $arrPhaseTypeCount = array();
-if (mysql_num_rows($res) > 0) {
-    while ($data = mysql_fetch_assoc($res)) {
-        if ($data['PHASE_NAME'] == '')
-            $data['PHASE_NAME'] = 'noPhase';
-        $supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
-        $arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
-        $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
-    }
+
+foreach ($res as $data) {
+    if ($data['PHASE_NAME'] == '')$data['PHASE_NAME'] = 'noPhase';
+    $supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
+    $arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
+    $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 }
+
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
@@ -173,7 +162,7 @@ if ($phaseId) {
         array_push($arrTower, $val['TOWER_ID']);
     }
     $smarty->assign("arrTower", $arrTower);
-    $phase_quantity = get_phase_quantity($phaseId);
+    $phase_quantity = ProjectSupply::projectTypeGroupedQuantityForPhase($projectId, $phaseId);
     $smarty->assign("FlatsQuantity", explode_bedroom_quantity($phase_quantity['Apartment']));
     $smarty->assign("VillasQuantity", explode_bedroom_quantity($phase_quantity['Villa']));
     $smarty->assign("PlotQuantity", explode_bedroom_quantity($phase_quantity['Plot']));
