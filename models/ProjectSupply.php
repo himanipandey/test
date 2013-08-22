@@ -3,6 +3,7 @@
 class ProjectSupply extends ActiveRecord\Model {
     
     static $before_save = array('launchedValidation');
+    static $after_save = array('save_total_flat_count');
     
     function deleteSupplyForPhase($projectId, $phaseId){
         self::table()->delete(array('project_id'=>$projectId, 'phase_id'=>$phaseId));
@@ -70,5 +71,36 @@ class ProjectSupply extends ActiveRecord\Model {
     
     function launchedValidation(){
         return intval($this->launched)<=intval($this->supply);
+    }
+
+    
+    function save_total_flat_count($project_id = NULL){
+        if($project_id == NULL) $project_id = $this->project_id;
+        $project = ResiProject::find($project_id);
+        $phases = ResiProjectPhase::all(array('conditions' => 'project_id = '.$project->id));
+        $project_options = ResiProjectOptions::all(array('conditions' => 'project_id = '.$project->id));
+        $conditions = array();
+        if(count($phases) == 0){
+            foreach($project_options as $option){
+                $set = "'".$project->project_id."__".$option->bedrooms."_".$option->unit_type."'";
+                array_push($conditions, $set);
+            }
+        }
+        else{
+            foreach($phases as $phase){
+                $options = $phase->options();
+                if (count($options) == 0) $options = $project_options;
+                foreach($options as $option){
+                    $set = "'".$project->project_id."_".$phase->phase_id."_".$option->bedrooms."_".$option->unit_type."'";
+                    array_push($conditions, $set);
+                }
+            }
+        }
+
+
+        $total_count = ProjectSupply::find_by_sql("select project_id, sum(supply) TOTAL_SUPPLY from project_supplies where CONCAT(project_id,'_',COALESCE(phase_id,''),'_',no_of_bedroom,'_',project_type)
+                    in (".implode(",", $conditions).") group by project_id");
+        $project->no_of_flats = $total_count[0]->total_supply;
+        $project->save();
     }
 }
