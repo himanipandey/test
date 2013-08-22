@@ -6,7 +6,7 @@ class ProjectAvailability extends ActiveRecord\Model {
         $allAvailability = self::findAvailabilityForPhase($projectId, $phaseId);
         $ids = array();
         foreach ($allAvailability as $value) {
-            $ids[] = $value->ID;
+            $ids[] = $value->id;
         }
         if(!empty($ids)) self::table()->delete(array('id'=>$ids));
     }
