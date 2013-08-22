@@ -5,6 +5,7 @@ include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
 include("includes/configs/configs.php");
+include("modelsConfig.php");
 include("builder_function.php");
 AdminAuthentication();
 
@@ -15,14 +16,12 @@ $result = mysql_query($sql);
 $row = mysql_fetch_array($result);
 $agentId = $row['CLOUDAGENT_ID'];
 $projectType = $_REQUEST['projectType'];
-$sql = "INSERT INTO CallDetails (AgentID,PROJECT_TYPE) VALUES (". $aID .",'".$projectType."');";
-
-mysql_query($sql);
-$callId= mysql_insert_id();
-
 $contactNo = $_REQUEST['contactNo'];
-
 $campaign = $_REQUEST['campaign'];
+
+$callDetail = new CallDetails(array('AgentID'=>$aID, 'PROJECT_TYPE'=>$projectType, 'ContactNumber'=>$contactNo, 'CampaignName'=>$campaign));
+$callDetail->save();
+$callId= $callDetail->CallId;
 
 $url = "http://Kookoo.in/propTiger/manualDial.php?api_key=KK6553cb21f45e304ffb6c8c92a279fde5&customerNumber=" . $contactNo . "&uui=" . $callId . "&campaignName=" . $campaign . "&agentID=" . $agentId . "&username=proptiger";
 
@@ -37,5 +36,3 @@ if ($callId)
 else
   echo "Fail - $response";
 ?>
-
-
