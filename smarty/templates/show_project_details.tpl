@@ -1779,6 +1779,7 @@ function getDateNow(){
 											</a>
 											<br>
 										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
+                                        <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({$ImageDataListingArrFloor[data].SIZE} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
 									</div>
 								</td>
 								{$cnt = $cnt+1} 		

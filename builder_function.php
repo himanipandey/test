@@ -896,7 +896,7 @@ function allProjectImages($projectId) {
 /* * *****Fetch all floor plans images of a project***** */
 
 function allProjectFloorImages($projectId) {
-    $qryOpt = "SELECT OPTIONS_ID,UNIT_NAME,SIZE,MEASURE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+    $qryOpt = "SELECT OPTIONS_ID,UNIT_NAME,SIZE,MEASURE,UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
     $resOpt = mysql_query($qryOpt);
 
     $ImageDataListingArr = array();
@@ -908,6 +908,7 @@ function allProjectFloorImages($projectId) {
             $dataListingArr['SIZE'] = $dataOpt['SIZE'];
             $dataListingArr['UNIT_NAME'] = $dataOpt['UNIT_NAME'];
             $dataListingArr['MEASURE'] = $dataOpt['MEASURE'];
+            $dataListingArr['UNIT_TYPE'] = $dataOpt['UNIT_TYPE'];
             $ImageDataListingArr[] = $dataListingArr;
         }
     }
