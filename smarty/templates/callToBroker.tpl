@@ -40,7 +40,7 @@
       var callId = $('#callId_'+id).val();
        var mobile = $('#mobile').val();
       
-      if (callId) {
+      if ( callId ) {
 
 	 window.location = "callToBroker.php?&callId="+callId+"&status="+status+"&remark="+projectRemark+"&mobile="+mobile;
       }
@@ -92,7 +92,7 @@
                             {/if}
                             <tr style="height:25px;background-color:#f2f2f2;">
                                 <td align ="left"><b>Mobile:</b></td>
-                                <td align ="left"><input type="text" name = "mobile" value="{$mobile}" id = "mobile" maxlength="14"></td>
+                                <td align ="left"><input type="text" name = "mobile" value="{$mobile}" id = "mobile" maxlength="11"></td>
                             </tr>
                             <tr style="height:25px;background-color:#c2c2c2;">
                                 <td align ="left"><b>Campaign Name:</b></td>
