@@ -6,7 +6,7 @@
         $status  = $_REQUEST['status'];
         $remark  = $_REQUEST['remark'];
         $mobile  = $_REQUEST['mobile'];
-        if( $status === 'Success' ) {
+        if( $status === 'success' ) {
             $ins = "UPDATE 
                         CallDetails
                     SET
