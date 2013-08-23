@@ -97,13 +97,23 @@
                 $cnt = 1;
                 $comma = ',';
                 $qryIns = "INSERT IGNORE INTO broker_project_mapping (PROJECT_ID,BROKER_ID,ACTION_DATE) VALUES ";
+                if( isset($_REQUEST['callId']) ) {
+                    $qryCallProject = 'INSERT INTO CallProject (CallId, ProjectId, BROKER_ID) VALUES ';
+                }
                 if( count($arrProjectListValid) > 0) {
                     foreach($arrProjectListValid as $val) {
                         if($cnt == count($arrProjectListValid))
                             $comma = '';
                         $qryIns .= "($val,$brokerIdFormapping, now())$comma";
+                        
+                        if( isset($_REQUEST['callId']) ) {
+                            $qryCallProject .= "(".$_REQUEST['callId'].",$val, $brokerIdFormapping)$comma";
+                        }
+                        
                         $cnt++;
                     }
+                    $resInsCall = mysql_query($qryCallProject) or die(mysql_error()." call detail");
+                    
                     $resIns = mysql_query($qryIns) or die(mysql_error());
                     if($resIns)
                         $ErrorMsg['success'] = "Data has been inserted successfully!";
@@ -125,6 +135,10 @@
             header("Location:brokerList.php?page=1&sort=all"); 
         }
         /**********end code project add******************/        
+    }
+    else if( $_REQUEST['callId'] ) {
+        $smarty->assign("mobile", $_REQUEST['mobile']);
+        $smarty->assign("callId", $_REQUEST['callId']);
     }
     else {
         $brokerDetail = getBrokerDetailById($brokerId);

@@ -132,6 +132,7 @@
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:152px;" >
 				  <input type="hidden" name="brokerId" value="{$brokerId}" />
+                                  <input type="hidden" name="callId" value="{$callId}" />
 				  <input type="submit" name="btnSave" id="btnSave" value="Save">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit">
 				  </td>
