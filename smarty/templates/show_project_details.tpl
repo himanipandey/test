@@ -1367,6 +1367,7 @@ function getDateNow(){
                                              <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
                                              <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
                                              <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
+                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Contact No</td>
                                              <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
                                              <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
                                     </tr>
@@ -1378,10 +1379,10 @@ function getDateNow(){
                                                     {$color = "bgcolor='#f2f2f2'"}
                                             {/if}
                                     <tr {$color} height="25px;">
-                                            <td nowrap="nowrap" width="10%" align="center">
+                                            <td nowrap="nowrap" width="5%" align="center">
                                                     {$key+1}
                                             </td>
-                                            <td width ="15%">
+                                            <td width ="10%">
                                                     {$item['FNAME']}
                                             </td>
                                             <td width ="15%">
@@ -1389,6 +1390,9 @@ function getDateNow(){
                                             </td>
                                             <td width ="15%">
                                                     {$item['EndTime']}
+                                            </td>
+                                            <td width ="10%" nowrap>
+                                                    {$item['ContactNumber']}
                                             </td>
                                             <td width ="30%" nowrap>
                                                     <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
