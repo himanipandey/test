@@ -3,7 +3,7 @@
 class ProjectSupply extends ActiveRecord\Model {
     
     static $before_save = array('launchedValidation');
-    static $after_save = array('save_total_flat_count');
+//    static $after_save = array('save_total_flat_count');
     
     function deleteSupplyForPhase($projectId, $phaseId){
         self::table()->delete(array('project_id'=>$projectId, 'phase_id'=>$phaseId));

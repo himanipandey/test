@@ -28,7 +28,7 @@ class ResiProjectPhase extends ActiveRecord\Model
             $map->option_id = $id;
             $map->phase_id = $this->phase_id;
             $map->save();
-            ProjectSupply::save_total_flat_count($this->project_id);
+//            ProjectSupply::save_total_flat_count($this->project_id);
         }
     }
 
