@@ -1,9 +1,6 @@
 <?php
-
-	//die("here");
-	include("dbConfig.php");
-	//include("includes/configs/configs.php");
 	include("builder_function.php");
+  include("dbConfig.php");
 	
 	$builderId		=	$_REQUEST['builderId'];
 
@@ -68,8 +65,8 @@
 								  EMAIL      = '".$exp_email[$key]."', 
 								  PROJECTS   = '".str_replace(',','#', $projects)."',
 								  BUILDER_ID = '".$builderId."'";
-					$resIns = mysql_query($resIns) or die(mysql_erro());
-					if($resins)
+					$resIns = mysql_query($resIns) or die(mysql_error());
+					if($resIns)
 						$msg = 1;
 					else
 						$msg = 0;
