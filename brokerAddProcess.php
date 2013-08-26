@@ -1,5 +1,4 @@
 <?php
-    
     $accessBroker = '';
     if( $brokerAuth == false )
        $accessBroker = "No Access";
@@ -28,17 +27,22 @@
         $smarty->assign("email", $email);
         $smarty->assign("hq", $hq);
         $smarty->assign("status", $status);
+        $smarty->assign("callId", $_REQUEST['callId']);
         if(!preg_match('/^[a-zA-z0-9 ]+$/', $brokerName)){
                 $ErrorMsg["brokerName"] = "Special characters are not allowed";
          }
-        if(count(checkBrokerByName($brokerName))>0 && $brokerId ==''){
-            $ErrorMsg["brokerName"] = "Broker already exists!";
+        
+        $brokerChk = checkBrokerByName($brokerName);
+        if(count($brokerChk)>0 && $brokerId ==''){
+            $ErrorMsg["brokerName"] = "Broker already exists( Mobile:".$brokerChk[0]['BROKER_MOBILE']." )!";
         }
         if( $brokerName == ''){
              $ErrorMsg["brokerName"] = "Please enter Broker name.";
          }
-        if(!preg_match('/^[0-9 ]+$/', $mobile)){
-             $ErrorMsg["mobile"] = "Please enter valid mobile number";
+         
+        $brokerMobileChk = checkBrokerByName($brokerName, $mobile); 
+        if(count($brokerMobileChk)>0){
+             $ErrorMsg["mobile"] = "This mobile number alreay exists ( Broker: ".$brokerMobileChk[0]['BROKER_NAME']." )";
         }
         if(!$hq) {
              $ErrorMsg["hq"] = "Please select city.";
@@ -112,6 +116,7 @@
                         
                         $cnt++;
                     }
+                    
                     $resInsCall = mysql_query($qryCallProject) or die(mysql_error()." call detail");
                     
                     $resIns = mysql_query($qryIns) or die(mysql_error());

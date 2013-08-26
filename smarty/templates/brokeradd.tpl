@@ -36,7 +36,7 @@
                                   <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["dataInsertionError"]}</font></td></tr>
                                   {/if}
                                   {if $ErrorMsg["success"] != ''}
-                                  <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["success"]}</font></td></tr>
+                                  <tr><td colspan = "2" align ="center"><font color = "green">{$ErrorMsg["success"]}</font></td></tr>
                                   {/if}
                                   {if $ErrorMsg["wrongPId"] != ''}
                                   <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["wrongPId"]}</font></td></tr>
