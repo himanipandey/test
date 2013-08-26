@@ -8,13 +8,10 @@
             return false;
         } 
     } 
-    function checkBrokerByName($brokerName, $mobile = ''){
-        $qryAdd = '';
-        if( $mobile != '' ) {
-            $qryAdd = " OR BROKER_MOBILE = '$mobile'";
-        }
+    function checkBrokerByName($brokerName){
+        
         include $_SERVER['DOCUMENT_ROOT'].'/dbConfig_crm.php';
-        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE BROKER_NAME = '".$brokerName."' $qryAdd";
+        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE BROKER_NAME = '".$brokerName."'";
         $res = mysql_query($qry) or die(mysql_error()." error in broker fectch by name");
         $arrBrokerByName = array();
         if(mysql_num_rows($res)>0)

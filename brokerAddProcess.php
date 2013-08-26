@@ -40,10 +40,6 @@
              $ErrorMsg["brokerName"] = "Please enter Broker name.";
          }
          
-        $brokerMobileChk = checkBrokerByName($brokerName, $mobile); 
-        if(count($brokerMobileChk)>0){
-             $ErrorMsg["mobile"] = "This mobile number alreay exists ( Broker: ".$brokerMobileChk[0]['BROKER_NAME']." )";
-        }
         if(!$hq) {
              $ErrorMsg["hq"] = "Please select city.";
         }
