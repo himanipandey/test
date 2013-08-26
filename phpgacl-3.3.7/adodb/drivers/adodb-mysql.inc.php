@@ -373,9 +373,9 @@ class ADODB_mysql extends ADOConnection {
 		if (!empty($this->port)) $argHostname .= ":".$this->port;
 		
 		if (ADODB_PHPVER >= 0x4300)
-			$this->_connectionID = mysql_pconnect($argHostname,$argUsername,$argPassword,$this->clientFlags);
+			$this->_connectionID = mysql_connect($argHostname,$argUsername,$argPassword,false,$this->clientFlags);
 		else
-			$this->_connectionID = mysql_pconnect($argHostname,$argUsername,$argPassword);
+			$this->_connectionID = mysql_connect($argHostname,$argUsername,$argPassword);
 		if ($this->_connectionID === false) return false;
 		if ($this->autoRollback) $this->RollbackTrans();
 		if ($argDatabasename) return $this->SelectDB($argDatabasename);

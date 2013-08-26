@@ -15,8 +15,8 @@ debug 			= FALSE
 ;
 db_type 		= "mysql"
 db_host			= "localhost"
-db_user			= "root"
-db_password		= "root"
+db_user			= "gacl"
+db_password		= "gacl"
 db_name			= "gacl"
 db_table_prefix		= ""
 
