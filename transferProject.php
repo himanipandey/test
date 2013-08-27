@@ -253,7 +253,7 @@
 			$QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].")";
 	
 		}
-		$QueryMember2	= $QueryMember2. $QueryMember . " GROUP BY PROJECT_PHASE,PROJECT_STAGE ORDER BY PROJECT_STAGE";
+		$QueryMember2	= $QueryMember2. $QueryMember." $and SKIP_UPDATION_CYCLE = '0' GROUP BY PROJECT_PHASE,PROJECT_STAGE ORDER BY PROJECT_STAGE";
 	}
 	
 	
