@@ -1,9 +1,6 @@
 <?php
 
 include_once dirname(__FILE__) . '/phpgacl-3.3.7/gacl.class.php';
-$gacl = new gacl(array());
-
-
 
 function isPermitted($username, $resource, $action) {
 
@@ -13,9 +10,25 @@ function isPermitted($username, $resource, $action) {
     return $isAllowed;
 }
 
-$resource = $_REQUEST['resource'];
-$username = $_REQUEST['username'];
-$action = $_REQUEST['action'];
+
+$gacl = new gacl(array());
+$error = $gacl->db->_errorMsg;
+$json = array();
+if($error){
+    $json["status"] = "error";
+    $json["message"] = $error;
+    $json["value"] = false;
+}
+else{
+    $resource = $_REQUEST['resource'];
+    $username = $_REQUEST['username'];
+    $action = $_REQUEST['action'];
+    $is_permitted = isPermitted($username, $resource, $action);
+    $json["status"] = "success";
+    $json["message"] = "successfully authenticated";
+    $json["value"] = $is_permitted;
+}
+
 
 header('Content-Type: application/json');
-echo json_encode(array("status" =>isPermitted($username, $resource, $action)));
+echo json_encode($json);
