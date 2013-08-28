@@ -11,22 +11,41 @@ class ProjectSupply extends ActiveRecord\Model {
     
     function addEditSupply($projectId, $phaseId, $projectType, $noOfBedroom, $supply, $launchedUnit){
         if($phaseId=='0') $phaseId = NULL;
-        $attributes = array('project_id'=>$projectId, 'phase_id'=>$phaseId, 'no_of_bedroom'=>$noOfBedroom, 'project_type'=>$projectType, 'supply'=>$supply, 'launched'=>$launchedUnit, 'updated_by'=>$_SESSION['adminId']);
-        $supply = self::find(array('project_id'=>$projectId, 'phase_id'=>$phaseId, 'no_of_bedroom'=>$noOfBedroom, 'project_type'=>$projectType));
-        if($supply){
-            $supply->update_attributes($attributes);
+        $supply_new = self::find(array('project_id'=>$projectId, 'phase_id'=>$phaseId, 'no_of_bedroom'=>$noOfBedroom, 'project_type'=>$projectType));
+        if($supply_new){
+            $isInventoryAdded = self::isInventoryAdded($projectId, $phaseId);
+            if($supply_new->edited_supply!=$supply || $supply_new->edited_launched != $launchedUnit){
+                $attributes['updated_by']=$_SESSION['adminId'];
+                if ($isInventoryAdded){
+                    $attributes['edit_stage']='callCenterEdit';
+                    if($supply_new->edited_supply != $supply) $attributes['edited_supply']=$supply;
+                    if($supply_new->edited_launched != $launchedUnit) $attributes['edited_launched']=$launchedUnit;
+                }
+                else{
+                    if($supply_new->edited_supply!=$supply){
+                        $attributes['supply']=$supply;
+                        $attributes['edited_supply']=$supply;
+                    }
+                    if($supply_new->edited_launched!=$launchedUnit){
+                        $attributes['launched']=$launchedUnit;
+                        $attributes['edited_launched']=$launchedUnit;
+                    }
+                }
+                $supply_new->update_attributes($attributes);
+            }
         }
         else{
-            $supply = self::create($attributes);
+            $attributes = array('project_id'=>$projectId, 'phase_id'=>$phaseId, 'no_of_bedroom'=>$noOfBedroom, 'project_type'=>$projectType, 'supply'=>$supply, 'edited_supply'=>$supply, 'launched'=>$launchedUnit, 'edited_launched'=>$launchedUnit, 'updated_by'=>$_SESSION['adminId'], 'edit_stage'=>'approved');
+            $supply_new = self::create($attributes);
+            $supply_new->save();
         }
-        $supply->save();
     }
     
     function projectTypeGroupedQuantityForPhase($projectId, $phaseId){
-        $query = "select project_type UNIT_TYPE, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', supply, ':', launched)) as AGG from " . self::table_name() . " where project_id = '$projectId' and phase_id ";
+        $query = "select project_type UNIT_TYPE, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', supply, ':', launched)) as AGG, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', edited_supply, ':', edited_launched)) as EDITED_AGG from " . self::table_name() . " where project_id = '$projectId' and phase_id ";
         if ($phaseId == '0')$query .= ' is NULL ';
         else $query .= " ='$phaseId' ";
-        $query .= ' group by project_type;';
+        $query .= ' group by project_type;';echo $sql;
         return self::find_by_sql($query);
     }
     
@@ -65,7 +84,7 @@ class ProjectSupply extends ActiveRecord\Model {
     
     function isInventoryAdded($projectId, $phaseId){
         $sql = "select count(*) count from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() ." pa on ps.id = pa.project_supply_id where ps.project_id = '$projectId' and ";
-        if($phaseId == '0') $sql .= " ps.phase_id is null ";
+        if($phaseId == '0' || $phaseId == NULL) $sql .= " ps.phase_id is null ";
         else $sql .= " ps.phase_id = '$phaseId' ";
         $result = self::find_by_sql($sql);
         return $result[0]->count;
