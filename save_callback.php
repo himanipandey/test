@@ -3,6 +3,7 @@
     include_once("dbConfig.php");
     include_once ("send_mail_amazon.php");
     $test = $_REQUEST['data'];
+    error_log("JSON_CALLBACK ==== ".$test);
     $data = json_decode($test, true);
 
     $audio   = "'" . $data['AudioFile'] . "'";
