@@ -174,7 +174,7 @@ function BankList() {
 
 /* * ********project insert************** */
 
-function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtProjectRemark, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $txtCallingRemark, $txtAuditRemark, $launchedUnits, $reasonUnlaunchedUnits) {
+function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtProjectRemark, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $txtCallingRemark, $txtAuditRemark, $launchedUnits, $reasonUnlaunchedUnits, $identifyTownShip) {
 
     if ($project_type == '1') {
         $no_of_towers = $no_of_towers;
@@ -258,7 +258,7 @@ function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
 							SOURCE_OF_INFORMATION		=	'" . $txtProjectSource . "',
 							RESIDENTIAL					=	'" . $residential . "',
 							TOWNSHIP					=	'" . $township . "',
-                            NO_OF_PLOTS					=	'" . $plot . "',
+                                                        NO_OF_PLOTS					=	'" . $plot . "',
 							OPEN_SPACE					=	'" . $open_space . "',
 							BOOKING_STATUS 				=	'" . $Booking_Status . "',
 							SHOULD_DISPLAY_PRICE        =     $shouldDisplayPrice,
@@ -266,6 +266,7 @@ function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
 							AUDIT_REMARK				=	'" . $txtAuditRemark . "',
 							LAUNCHED_UNITS				=	'" . $launchedUnits . "',
 							REASON_UNLAUNCHED_UNITS		=   '" . $reasonUnlaunchedUnits . "',
+                                                        SKIP_UPDATION_CYCLE  =  '$identifyTownShip',
 							PROJECT_SMALL_IMAGE			=   '/on-request/sagar-kunj-apartments/defaultprojectsearchimage-small.png'";
 
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertProject()');
@@ -656,7 +657,7 @@ function localityList($cityid, $suburbId) {
 
 /* * ********project insert************** */
 
-function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtProjectRemark, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $ProjectId, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $txtCallingRemark, $txtAuditRemark, $launchedUnits, $reasonUnlaunchedUnits) {
+function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtProjectRemark, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $ProjectId, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $txtCallingRemark, $txtAuditRemark, $launchedUnits, $reasonUnlaunchedUnits, $identifyTownShip) {
     $Completion = " Onwards";
     $Sql = "UPDATE " . RESI_PROJECT . "
 				SET
@@ -715,6 +716,7 @@ function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
 					CALLING_REMARK				=	'" . $txtCallingRemark . "',
 					LAUNCHED_UNITS				=	'" . $launchedUnits . "',
 					REASON_UNLAUNCHED_UNITS		=   '" . $reasonUnlaunchedUnits . "',
+                                        SKIP_UPDATION_CYCLE  =  '$identifyTownShip',    
 					AUDIT_REMARK				=	'" . $txtAuditRemark . "'";
     $Sql.= " WHERE PROJECT_ID = '" . $ProjectId . "'";
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function UpdateProject()');

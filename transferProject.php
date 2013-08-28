@@ -247,15 +247,15 @@
                             $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
                             $and  = ' AND ';
                         }
+                        $QueryMember .= $and ." SKIP_UPDATION_CYCLE = '0'";
 		}
 		else
 		{
-			$QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].")";
+			$QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND SKIP_UPDATION_CYCLE = '0'";
 	
 		}
-		$QueryMember2	= $QueryMember2. $QueryMember . " GROUP BY PROJECT_PHASE,PROJECT_STAGE ORDER BY PROJECT_STAGE";
+		$QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE,PROJECT_STAGE ORDER BY PROJECT_STAGE";
 	}
-	
 	
 	if($transfer != '')
 	{
@@ -349,11 +349,11 @@
 		}
 		
 	}
-	
-	if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
+
+        if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
 	{
 		$QueryExecute 	= mysql_query($QueryMember2) or die(mysql_error());
-		$NumRows 		= mysql_num_rows($QueryExecute);
+		$NumRows 	= mysql_num_rows($QueryExecute);
 		
 		if($NumRows)
 		{
