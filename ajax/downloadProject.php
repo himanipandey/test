@@ -178,14 +178,14 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>PROJECT ID</td>
 <td>BUILDER NAME</td>
 <td>PROJECT NAME</td>
-<td>PHASE</td>
-<td>STAGE</td>
 <td>CITY</td>
 <td>LOCALITY</td>
 <td>PROJECT STATUS</td>
 <td>BOOKING STATUS</td>
-<td>STATE MOVEMENT DATE</td>
-<td>STATE MOVEMENT DONE BY</td>
+<td>PHASE</td>
+<td>STAGE</td>
+<td>STAGE MOVEMENT DATE</td>
+<td>STAGE MOVEMENT DONE BY</td>
 <td>UPDATION LABEL</td></tr>
 ";
 $cnt = 1;
@@ -213,12 +213,12 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	<td>".$projid."</td>
 	<td>".$builder."</td>
 	<td>".$projname."</td>
-	<td>".$phase."</td>
-	<td>".$stage."</td>
-	<td>".$cityname."</td>
+        <td>".$cityname."</td>
         <td>".$localityname."</td>    
 	<td>".$proj_status."</td>
 	<td>".$booking_status."</td>
+        <td>".$phase."</td>
+	<td>".$stage."</td>
         <td>".$date_time."</td>
         <td>".$stage_move_by."</td>            
 	<td>".$updation_label."</td>
