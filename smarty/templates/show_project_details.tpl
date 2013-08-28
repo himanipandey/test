@@ -1325,31 +1325,44 @@ function getDateNow(){
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Residential:</b>
-							</td>
-							<td>
-							  {if $projectDetails[0].RESIDENTIAL == 0}
-								  	Residential
-							  {/if}
-							  
-							  {if $projectDetails[0].RESIDENTIAL == 1}
-							  Non	Residential
-							  {/if}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Residential:</b>
+                                                    </td>
+                                                    <td>
+                                                      {if $projectDetails[0].RESIDENTIAL == 0}
+                                                                    Residential
+                                                      {/if}
+
+                                                      {if $projectDetails[0].RESIDENTIAL == 1}
+                                                      Non	Residential
+                                                      {/if}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Township:</b>
-							</td>
-							<td>
-								{if $projectDetails[0].TOWNSHIP != ''}
-									{$projectDetails[0].TOWNSHIP}
-								{else}
-									--
-								{/if}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Township:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].TOWNSHIP != ''}
+                                                                {$projectDetails[0].TOWNSHIP}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Skip Updation Cycle: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].SKIP_UPDATION_CYCLE == '0'}
+                                                                No
+                                                        {else}
+                                                               Yes
+                                                        {/if}
+                                                    </td>
 						</tr>
 						
 					</table>
