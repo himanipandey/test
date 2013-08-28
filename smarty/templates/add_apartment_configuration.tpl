@@ -385,7 +385,8 @@
                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Plot Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Terrace Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Garden Area</td>
-
+                              <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Construction Cost</td>
+                              <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Land Cost</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Balcony</td>
 
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
@@ -508,6 +509,15 @@
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtVillaGardenArea[] tempName="txtVillaGardenArea"  id=txtVillaGardenArea value="{$txtVillaGardenArea_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
 
                               </td>
+                              <td>
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtVillaConstructionCost[] tempName="txtVillaConstructionCost"  id=txtVillaConstructionCost value="{$txtVillaConstructionCost_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+
+                              </td>
+
+                                <td>
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtVillaPlotCost[] tempName="txtVillaPlotCost"  id=txtVillaPlotCost value="{$txtVillaPlotCost_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+
+                                </td>
 
                                <td>
                                      <select tempName="Balconys" name = Balconys[] style="border:1px solid #c3c3c3;">
