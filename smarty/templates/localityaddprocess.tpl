@@ -65,12 +65,18 @@
 				</tr>
                                 
 				<tr>
-				  <td width="20%" align="right">Visible In CMS : {$visibleInCms}</td>
+				  <td width="20%" align="right">Visible In CMS :</td>
 				  <td width="30%" align="left" >
+                                  {if $specialAccess == 1}
 				    <select name = "visibleInCms" id="visibleInCms" style="width:150px;"> 
-					  <option value = "0" {if $visibleInCms == '0'}  selected {/if}>Not Visible</option>
-                                          <option value = "1" {if $visibleInCms == '1'}  selected {/if}>Visible</option>		
-					 </select>
+                                        <option value = "0" {if $visibleInCms == '0'}  selected {/if}>Not Visible</option>
+                                        <option value = "1" {if $visibleInCms == '1'}  selected {/if}>Visible</option>		
+                                    </select>
+                                  {else}
+                                      <input type="hidden" name = "visibleInCms" value="{$visibleInCms}">
+                                      {if $visibleInCms == '0'}  Not Visible {/if}
+                                      {if $visibleInCms == '1'}  Visible {/if}
+                                  {/if}
 				 </td>				   
 				 <td width="50%" align="left"></td>
 				</tr>
