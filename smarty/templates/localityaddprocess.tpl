@@ -62,8 +62,19 @@
 					 </select>
 				 </td>				   
 				 <td width="50%" align="left"></td>
-				</tr>				
-				
+				</tr>
+                                
+				<tr>
+				  <td width="20%" align="right">Visible In CMS : {$visibleInCms}</td>
+				  <td width="30%" align="left" >
+				    <select name = "visibleInCms" id="visibleInCms" style="width:150px;"> 
+					  <option value = "0" {if $visibleInCms == '0'}  selected {/if}>Not Visible</option>
+                                          <option value = "1" {if $visibleInCms == '1'}  selected {/if}>Visible</option>		
+					 </select>
+				 </td>				   
+				 <td width="50%" align="left"></td>
+				</tr>
+                                
 				<tr>
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
