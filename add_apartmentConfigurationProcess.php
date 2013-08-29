@@ -169,46 +169,47 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 {
                     if($_REQUEST['typeid_edit'][$key] == '')
                     {
-                        $insertlist.= "('$projectId', '$txtUnitName', '$unitType', '$txtSize', 'sq ft', '$txtPricePerUnitArea', '$txtPricePerUnitAreaDp','$status',  '$bed', DATE_FORMAT(NOW() ,'%Y-%m-01 00:00:00'), '$bathrooms' ,'$txtPricePerUnitHigh','$txtPricePerUnitLow','$txtNoOfFloor','$txtVillaPlotArea','$txtVillaFloors','$txtVillaTerraceArea','$txtVillaGardenArea','$Balconys','$studyrooms','$servantrooms','$poojarooms', '$txtSizeLen','$txtSizeBre', '$txtPlotArea')   ,   ";
+                        $option = new ResiProjectOptions();
+                        $option->project_id = $projectId;
+                        $option->measure = "sq ft";
+                        $option->created_date = date("Y-m-d");
+                        $action = "insert";
                     }
                     else
                     {
                         if($txtPlotArea != 0)
                            $txtPlotArea = $txtSize;
-                         $qryUpdate = "UPDATE ".RESI_PROJECT_OPTIONS."
-                            SET
-                               UNIT_NAME		=	'".$txtUnitName."',
-                               UNIT_TYPE		=	'".$unitType."',
-                               SIZE			=	'".$txtSize."',
-                               PRICE_PER_UNIT_AREA	=	'".$txtPricePerUnitArea."',
-                               PRICE_PER_UNIT_AREA_DP	=	'".$txtPricePerUnitAreaDp."',
-                               STATUS			=	'".$status."',
-                               BEDROOMS			=	'".$bed."',
-                               BATHROOMS		=	'".$bathrooms."',
-                               PRICE_PER_UNIT_HIGH	=	'".$txtPricePerUnitHigh."',
-                               PRICE_PER_UNIT_LOW	=	'".$txtPricePerUnitLow."',
-                               NO_OF_FLOORS		=	'".$txtNoOfFloor."',
-                               VILLA_PLOT_AREA		=	'".$txtVillaPlotArea."',
-                               VILLA_NO_FLOORS		=	'".$txtVillaFloors."',
-                               VILLA_TERRACE_AREA	=	'".$txtVillaTerraceArea."',
-                               VILLA_GARDEN_AREA	=	'".$txtVillaGardenArea."',
-                               TOTAL_PLOT_AREA		=	'".$txtPlotArea."',
-                               BALCONY			=	'".$Balconys."',
-                               STUDY_ROOM		=	'".$studyrooms."',
-                               SERVANT_ROOM		=	'".$servantrooms."',
-                               POOJA_ROOM	        =	'".$poojarooms."',
-                               LENGTH_OF_PLOT           =	'".$txtSizeLen."',
-                               BREADTH_OF_PLOT          =	'".$txtSizeBre."'
-                            WHERE
-                                   OPTIONS_ID	= '".$_REQUEST['typeid_edit'][$key]."'
-                           AND
-                                   PROJECT_ID	= '".$projectId."'";
-                        $resUpdate = mysql_query($qryUpdate) or die(mysql_error());
-                        if($resUpdate)
-                        {
-                            audit_insert($_REQUEST[$key]['typeid_edit'],'update','resi_project_options',$projectId);
-                            $flg_edit = 1;
-                        }
+                        //Break
+                        $option_id = $_REQUEST['typeid_edit'][$key];
+                        $option = ResiProjectOptions::find($option_id);
+                        $action = "update";
+                    }
+                    $option->unit_type = $unitType;
+                    $option->unit_name = $txtUnitName;
+                    $option->size = $txtSize;
+                    $option->price_per_unit_area = $txtPricePerUnitArea;
+                    $option->price_per_unit_area_dp = $txtPricePerUnitAreaDp;
+                    $option->status = $status;
+                    $option->bedrooms = $bed;
+                    $option->bathrooms = $bathrooms;
+                    $option->price_per_unit_high = $txtPricePerUnitHigh;
+                    $option->price_per_unit_low = $txtPricePerUnitLow;
+                    $option->no_of_floors = $txtNoOfFloor;
+                    $option->villa_plot_area = $txtVillaPlotArea;
+                    $option->villa_no_floors = $txtVillaFloors;
+                    $option->villa_terrace_area = $txtVillaTerraceArea;
+                    $option->villa_garden_area = $txtVillaGardenArea;
+                    $option->total_plot_area = $txtPlotArea;
+                    $option->balcony = $Balconys;
+                    $option->study_room = $studyrooms;
+                    $option->servant_room = $servantrooms;
+                    $option->pooja_room = $poojarooms;
+                    $option->length_of_plot = $txtSizeLen;
+                    $option->breadth_of_plot = $txtSizeBre;
+                    $result = $option->save();
+                    if($result){
+                        audit_insert($option->options_id,$action,'resi_project_options',$option->project_id);
+                        $flg_edit = 1;
                     }
                 }
                 else
@@ -239,36 +240,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         }
     }
 
-    $exp = explode("   ,   ",$insertlist);
-    $contqry = count($exp);
-    if($contqry == 2)
-    {
-        $qrylast = $exp[0];
-
-    }
-    else
-    {
-        $i = 0;
-        //print_r($exp);
-        foreach($exp as $val)
-        {
-            if($i == 0)
-            {
-                $qrylast .= $val;
-            }
-            else if ($i == (count($exp)-1))
-            {
-                $qrylast .= '';
-            }
-            else
-            {
-                $qrylast .= ','.$val;
-            }
-            $i++;
-        }
-        $smarty->assign("projectId", $projectId);
-    }
-
     if(($flgins == 0) && (count($_REQUEST['bed']) == 15))
     {
         $ErrorMsg1 = 'Please select atleast one unit name';
@@ -276,8 +247,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 
     if(!is_array($ErrorMsg) && $ErrorMsg1 == '')
     {
-        if($qrylast != '')
-                $returnval = InsertProjectType($qrylast,$projectId);
         if($flg_edit == 1)
         {
             if($preview == 'true')

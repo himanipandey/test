@@ -385,7 +385,6 @@
                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Plot Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Terrace Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Garden Area</td>
-
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Balcony</td>
 
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
