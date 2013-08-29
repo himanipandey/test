@@ -61,8 +61,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $txtVillaFloors			=	$_REQUEST['txtVillaFloors'][$key];
                 $txtVillaTerraceArea		=	$_REQUEST['txtVillaTerraceArea'][$key];
                 $txtVillaGardenArea		=	$_REQUEST['txtVillaGardenArea'][$key];
-                $txtVillaConstructionCost		=	$_REQUEST['txtVillaConstructionCost'][$key];
-                $txtVillaPlotCost		=	$_REQUEST['txtVillaPlotCost'][$key];
                 $bed				=	$_REQUEST['bed'][$key];
                 $Balconys			=	$_REQUEST['Balconys'][$key];
 
@@ -201,8 +199,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->villa_no_floors = $txtVillaFloors;
                     $option->villa_terrace_area = $txtVillaTerraceArea;
                     $option->villa_garden_area = $txtVillaGardenArea;
-                    $option->villa_construction_cost = $txtVillaConstructionCost;
-                    $option->villa_plot_cost = $txtVillaPlotCost;
                     $option->total_plot_area = $txtPlotArea;
                     $option->balcony = $Balconys;
                     $option->study_room = $studyrooms;
@@ -330,8 +326,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("txtVillaFloors_VA", $arrProjectType_VA['VILLA_NO_FLOORS']);
         $smarty->assign("txtVillaTerraceArea_VA", $arrProjectType_VA['VILLA_TERRACE_AREA']);
         $smarty->assign("txtVillaGardenArea_VA", $arrProjectType_VA['VILLA_GARDEN_AREA']);
-        $smarty->assign("txtVillaConstructionCost_VA", $arrProjectType_VA['VILLA_CONSTRUCTION_COST']);
-        $smarty->assign("txtVillaPlotCost_VA", $arrProjectType_VA['VILLA_PLOT_COST']);
         $smarty->assign("bedval_VA", $arrProjectType_VA['BEDROOMS']);
         $smarty->assign("bathroomsval_VA",$arrProjectType_VA['BATHROOMS']);
         $smarty->assign("balconysval_VA",$arrProjectType_VA['BALCONY']);

@@ -880,8 +880,6 @@ function ProjectType($projectId) {
             $arrProjectType_VA['PRICE_PER_UNIT_HIGH'][] = $data['PRICE_PER_UNIT_HIGH'];
             $arrProjectType_VA['NO_OF_FLOORS'][] = $data['NO_OF_FLOORS'];
             $arrProjectType_VA['RESALE_PRICE'][] = $data['RESALE_PRICE'];
-            $arrProjectType_VA['VILLA_CONSTRUCTION_COST'][] = $data['VILLA_CONSTRUCTION_COST'];
-            $arrProjectType_VA['VILLA_PLOT_COST'][] = $data['VILLA_PLOT_COST'];
         }
     }
 }
