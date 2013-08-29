@@ -97,7 +97,7 @@
   		if($city != '')
   		{
                     $localityArr = Array();
-                    $sql = "SELECT LOCALITY_ID, LABEL FROM ".LOCALITY." AS A WHERE CITY_ID = '" . $city."' ORDER BY LABEL ASC";		
+                    $sql = "SELECT LOCALITY_ID, LABEL FROM ".LOCALITY." AS A WHERE CITY_ID = '" . $city."' AND VISIBLE_IN_CMS = '1' ORDER BY LABEL ASC";		
                     $data = mysql_query($sql);
                     if(mysql_num_rows($data)>0)
                     {

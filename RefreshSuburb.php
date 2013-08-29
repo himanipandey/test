@@ -13,8 +13,10 @@
 		{
 			$suburbArr = Array();
 			$sql = "SELECT A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".SUBURB." AS A WHERE A.CITY_ID = " . $city_id . "";
-			$data = mysql_query($sql);
-			while ($dataArr = mysql_fetch_array($data))
+
+			$data = mysql_query($sql);
+
+			while ($dataArr = mysql_fetch_array($data))
 			 {
 				array_push($suburbArr, $dataArr);
 			 }
@@ -33,10 +35,11 @@
     if($suburb_id != '')	
     {
     	$localityArr = Array();
-		$sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".LOCALITY." AS A WHERE A.CITY_ID = " . $city_id;
+		$sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".LOCALITY." AS A WHERE A.CITY_ID = " . $city_id." AND VISIBLE_IN_CMS = '1'";
 		if ($suburb_id != null) {
 		$sql .= " AND A.SUBURB_ID = " . $suburb_id;
-		}	
+		}
+	
 		$data = mysql_query($sql);
 		while ($dataArr = mysql_fetch_array($data))
 		 {

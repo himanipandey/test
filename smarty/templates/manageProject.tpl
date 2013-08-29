@@ -507,7 +507,6 @@ function selectedBuilderValue(builderId) {
 						<TD class="whiteTxt" width=20%>Phase, Stage & Label</TD>
                         <TD class="whiteTxt" width=20% nowrap>Builder Name</TD>
                         <TD class="whiteTxt" width=10%>Address</TD>
-                        <TD class="whiteTxt" width=15%>Location</TD>
                         <TD class="whiteTxt" width=15%>Active</TD>
 
                         <TD class="whiteTxt" width=13% align ="center">Action</TD>
@@ -571,12 +570,10 @@ function selectedBuilderValue(builderId) {
                                 <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
                         {/if}
                         <TD align=left class=td-border nowrap>{$projectDataArr[data].BUILDER_NAME}</TD>
-                        <TD align=left class=td-border>
+                        <TD align=left class=td-border nowrap>
                         	{$projectDataArr[data].PROJECT_ADDRESS}
                         </TD>
-                        <TD align=left class=td-border nowrap valign = "top">
-                        	{$projectDataArr[data].OPTIONS_DESC} 
-                        </TD>
+                       
                         <td align=left class=td-border nowrap valign = "top"> 
                             {if $projectDataArr[data].ACTIVE == 0}Inactive on both Website and IS DB{/if}
                             {if $projectDataArr[data].ACTIVE == 1}Active on both Website and IS DB{/if}

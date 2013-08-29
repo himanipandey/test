@@ -638,7 +638,7 @@ function insert_towerconstructionStatus($towerId, $no_of_floors_completed, $rema
 
 function localityList($cityid, $suburbId) {
     $localitySelect = Array();
-    $sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM " . LOCALITY . " AS A WHERE A.CITY_ID = " . $cityid;
+    $sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM " . LOCALITY . " AS A WHERE A.CITY_ID = " . $cityid." AND VISIBLE_IN_CMS = '1'";
 
     if ($suburbId != '') {
         $sql .= " AND A.SUBURB_ID = " . $suburbId;
@@ -1344,6 +1344,7 @@ function ViewLocalityDetails($localityID) {
         $ResDetails['ACTIVE'] = $Res['ACTIVE'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
+        $ResDetails['VISIBLE_IN_CMS'] = $Res['VISIBLE_IN_CMS'];
         return $ResDetails;
     } else {
         return 0;

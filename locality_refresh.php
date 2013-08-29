@@ -7,7 +7,7 @@
 	AdminAuthentication();
 
 	$cityid		=	$_REQUEST['cityid'];
-	$qrybid		=	"SELECT LOCALITY_ID,LABEL FROM ".LOCALITY." WHERE CITY_ID = '".$cityid."' ORDER BY LABEL ASC";
+	$qrybid		=	"SELECT LOCALITY_ID,LABEL FROM ".LOCALITY." WHERE CITY_ID = '".$cityid."' AND VISIBLE_IN_CMS = '1' ORDER BY LABEL ASC";
 	$resbid		=	mysql_query($qrybid) or die(mysql_error."Error in builder select query");
 	$arr		=	array();
 	while($data = mysql_fetch_assoc($resbid))
