@@ -8,9 +8,11 @@
     if($ctid != '')	
     {
     	$localityArr = Array();
-		$sql = "SELECT A.LOCALITY_ID, A.LABEL FROM locality AS A WHERE A.CITY_ID = " . $ctid." GROUP BY A.LABEL ORDER BY A.LABEL ASC";
+		$sql = "SELECT A.LOCALITY_ID, A.LABEL FROM locality AS A WHERE A.CITY_ID = " . $ctid." AND VISIBLE_IN_CMS = '1' GROUP BY A.LABEL ORDER BY A.LABEL ASC";
+
 		
-		$data = mysql_query($sql) or die(mysql_error());
+		$data = mysql_query($sql) or die(mysql_error());
+
 		while ($dataArr = mysql_fetch_array($data))
 		 {
 			array_push($localityArr, $dataArr);

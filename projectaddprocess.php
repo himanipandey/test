@@ -77,7 +77,7 @@ if ($_POST['btnSave'] == "Save")
 	/***************Query for Locality selected************/
 
 		$localitySelect = Array();
-		$sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM LOCALITY AS A WHERE A.CITY_ID = " . $_POST['cityId'];
+		$sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM LOCALITY AS A WHERE A.CITY_ID = " . $_POST['cityId']." AND VISIBLE_IN_CMS = '1'";
 		if ($suburbId != null) {
 		$sql .= " AND A.SUBURB_ID = " . $suburbId;
 		}
