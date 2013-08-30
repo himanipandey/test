@@ -6,34 +6,36 @@
     include("dbConfig.php");
     include("includes/configs/configs.php");
     include("common/function.php");
-    
-    $accessPhoto = '';
-    if( $imageAuth == false )
-       $accessPhoto = "No Access";
-    $smarty->assign("accessPhoto",$accessPhoto);
-    
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 
-    $selectedAreaType = array(
-        'locality' => '',
-        'suburb' => '',
-        'city' => ''
-    );
-    $areaId = "";
-
     if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
+        //echo "<pre>"; print_r( $_REQUEST ); print_r( $_FILES ); die();
+        $city     = !empty( $_REQUEST['cityId'] ) ? $_REQUEST['cityId'] : 0;
+        $suburb   = !empty( $_REQUEST['suburbId'] ) ? $_REQUEST['suburbId'] : 0;
+        $locality = !empty( $_REQUEST['localityId'] ) ? $_REQUEST['localityId'] : 0;
+
         $errMsg = "";
         $columnName = "";
-        $areaType = isset( $_REQUEST['areaType'] ) ? trim( $_REQUEST['areaType'] ) : "";
-        if ( in_array( $areaType, array( 'city', 'locality', 'suburb' ) ) ) {
+        //$areaType = isset( $_REQUEST['areaType'] ) ? trim( $_REQUEST['areaType'] ) : "";
+        if ( $city || $suburb || $locality ) {
             $selectedAreaType[ $areaType ] = "selected";
             $columnName = strtoupper( $areaType )."_ID";
-            if ( isset( $_REQUEST['areaId'] ) && $_REQUEST['areaId'] > 0 ) {
-                $areaId = trim( $_REQUEST['areaId'] );
+
+            if ( $locality > 0 ) {
+                $columnName = "LOCALITY_ID";
+                $areaType = 'locality';
+                $areaId = $locality;
+            }
+            elseif ( $suburb > 0 ) {
+                $columnName = "SUBURB_ID";
+                $areaType = 'suburb';
+                $areaId = $suburb;
             }
             else {
-                $errMsg = "Please select a ".$_REQUEST['areaType'];
+                $columnName = "CITY_ID";
+                $areaType = 'city';
+                $areaId = $city;
             }
         }
         else {
@@ -111,14 +113,13 @@
         $smarty->assign( 'message', $message );
     }
 
-    $areaType = isset( $_REQUEST['areaType'] ) ? trim( $_REQUEST['areaType'] ) : "";
+    $response = getListing();   //  get City List
 
-    $data = getListing( $areaType );
-    if ( is_array( $data ) && count( $data ) ) {
-        $smarty->assign( 'areaList', $data );
+    $cityList = !empty( $response['city'] ) ? $response['city'] : "";
+
+    if ( is_array( $cityList ) && count( $cityList ) ) {
+        $smarty->assign( 'cityList', $cityList );
     }
-    $smarty->assign( 'selectedAreaType', $selectedAreaType );
-    $smarty->assign( 'areaId', $areaId );
 
     $smarty->assign( 'photoCSS', 1 );
 

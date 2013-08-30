@@ -15,8 +15,14 @@ $json = array(
     'data' => ''
 );
 
-$areaType = isset( $_REQUEST['areaType'] ) ? trim( $_REQUEST['areaType'] ) : "";
-$data = getListing( $areaType );
+$data = array();
+if ( !empty( $_REQUEST['city'] ) ) {
+    $data['city'] = $_REQUEST['city'];
+}
+if ( !empty( $_REQUEST['suburb'] ) ) {
+    $data['suburb'] = $_REQUEST['suburb'];
+}
+$data = getListing( $data );
 if ( is_array( $data ) && count( $data ) ) {
     $json['result'] = TRUE;
     $json['data'] = $data;

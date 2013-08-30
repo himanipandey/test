@@ -15,7 +15,6 @@
                     </td>
                     <td vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</td>
                     <td vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
-                         {if $accessPhoto == ''}
                         <table id="upload-tbl" cellSpacing=1 cellPadding=0 border=0>
                             <tbody>
                                 <tr>
@@ -36,46 +35,57 @@
                                 <form method="post" onsubmit="return verifyPhotoFormData();" enctype="multipart/form-data">
                                 <tr>
                                     <td>
-                                        <label> Select a Locality/Suburb/City </label>
+                                        <label> Select a City </label>
                                     </td>
                                     <td style="width: 375px;">
-                                        <input type="hidden" name="upImg" value="1">
-                                        <select name="areaType" id="area-type" onchange="areaTypeChanged()">
-                                            <option {$selectedAreaType.locality} value="locality">Locality</option>
-                                            <option {$selectedAreaType.suburb} value="suburb">Suburb</option>
-                                            <option {$selectedAreaType.city} value="city">City</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                {if count($areaList)>0}
-                                <tr>
-                                    <td>
-                                        <label> Choose the area for which<br /> pictures are to be uploaded </label>
-                                    </td>
-                                    <td>
-                                       <select id="area-list" name="areaId">
-                                            {foreach from=$areaList key=id item=areaName}
-                                                <option {if $areaId==$areaName.id}selected{/if} value="{$areaName.id}">
-                                                    <span>{$areaName.name}</span>
-                                                    {if isset($areaName.city)}
-                                                    <span> ,  </span>
-                                                    <span>{$areaName.city}</span>
-                                                    {/if}
+                                        <select id="city-list" name="cityId" onchange="areaTypeChanged('city')">
+                                            {foreach from=$cityList key=id item=cityName}
+                                                <option {if $cityId==$cityName.id}selected{/if} value="{$cityName.id}" id="drp-dwn-city-{$cityName.id}">
+                                                    <span>{$cityName.name}</span>
                                                 </option>
                                             {/foreach}
                                         </select>
                                     </td>
                                 </tr>
-                                    <tr>
-                                        <td>
-                                            <label>Upload Pictures</label>
-                                        </td>
-                                        <td>
-                                            <input id="area-img" type="file" name="img[]" multiple>
-                                        </td>
-                                    </tr>
-                                {/if}
-                                    <tr>
+                                <tr>
+                                    <td>
+                                        <label> Select a Suburb </label>
+                                    </td>
+                                    <td style="width: 375px;">
+                                        <input type="hidden" name="upImg" value="1">
+                                        <select name="suburbId" id="area-type-sub" onchange="areaTypeChanged('suburb')">
+
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label> Select a Locality </label>
+                                    </td>
+                                    <td style="width: 375px;">
+                                        <input type="hidden" name="upImg" value="1">
+                                        <select name="localityId" id="area-type-loc" onchange="updateDisplayLocation()">
+
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Upload Pictures for</label>
+                                    </td>
+                                    <td>
+                                        <span id="area-txt-name"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Upload Pictures</label>
+                                    </td>
+                                    <td>
+                                        <input id="area-img" type="file" name="img[]" multiple>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td colspan="0">
                                         <div style="height: 31px; float: left">
                                             <button>Upload</button>
@@ -85,19 +95,10 @@
                                 </form>
                             </tbody>
                         </table>
-                        {else}
-                           <font color="red">No Access</font>
-                       {/if}           
                     </td>
                 </tr>
             </tbody>
-        </table>                           
+        </table>
     </td>
 </tr>
- </TBODY></TABLE>
-        </TD>
-      </TR>
-    </TBODY></TABLE>
-  </TD>
-</TR>
 <script type="text/javascript" src="js/photo.js"></script>
