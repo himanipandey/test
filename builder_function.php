@@ -804,6 +804,7 @@ function ProjectType($projectId) {
             $arrProjectType['UNIT_NAME'][] = $data['UNIT_NAME'];
             $arrProjectType['UNIT_TYPE'][] = $data['UNIT_TYPE'];
             $arrProjectType['SIZE'][] = $data['SIZE'];
+            $arrProjectType['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
             $arrProjectType['MEASURE'][] = $data['MEASURE'];
             $arrProjectType['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
             $arrProjectType['PRICE_PER_UNIT_AREA_DP'][] = $data['PRICE_PER_UNIT_AREA_DP'];
@@ -850,6 +851,7 @@ function ProjectType($projectId) {
             $arrProjectType_VA['UNIT_NAME'][] = $data['UNIT_NAME'];
             $arrProjectType_VA['UNIT_TYPE'][] = $data['UNIT_TYPE'];
             $arrProjectType_VA['SIZE'][] = $data['SIZE'];
+            $arrProjectType_VA['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
             $arrProjectType_VA['MEASURE'][] = $data['MEASURE'];
             $arrProjectType_VA['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
             $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP'][] = $data['PRICE_PER_UNIT_AREA_DP'];

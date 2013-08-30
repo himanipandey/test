@@ -51,6 +51,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 //$projectId				=	$val;
                 $txtUnitName			=	$_REQUEST['txtUnitName'][$key];
                 $txtSize			=	$_REQUEST['txtSize'][$key];
+                $txtCarpetAreaInfo  =   (int)($_REQUEST['txtCarpetAreaInfo_'.$key] == "on");
                 $txtPricePerUnitArea		=	$_REQUEST['txtPricePerUnitArea'][$key];
                 $txtPricePerUnitAreaDp		=	$_REQUEST['txtPricePerUnitAreaDp'][$key];
                 $txtPricePerUnitHigh		=	$_REQUEST['txtPricePerUnitHigh'][$key];
@@ -187,6 +188,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->unit_type = $unitType;
                     $option->unit_name = $txtUnitName;
                     $option->size = $txtSize;
+                    $option->carpet_area_info = $txtCarpetAreaInfo;
                     $option->price_per_unit_area = $txtPricePerUnitArea;
                     $option->price_per_unit_area_dp = $txtPricePerUnitAreaDp;
                     $option->status = $status;
@@ -206,6 +208,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->pooja_room = $poojarooms;
                     $option->length_of_plot = $txtSizeLen;
                     $option->breadth_of_plot = $txtSizeBre;
+                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
                     $result = $option->save();
                     if($result){
                         audit_insert($option->options_id,$action,'resi_project_options',$option->project_id);
@@ -287,6 +290,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("TYPE_ID", $arrProjectType['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval", $arrProjectType['UNIT_NAME']);
         $smarty->assign("txtSizeval", $arrProjectType['SIZE']);
+        $smarty->assign("txtCarpetAreaInfo", $arrProjectType['CARPET_AREA_INFO']);
         $smarty->assign("txtPricePerUnitAreaval", $arrProjectType['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPricePerUnitAreaDpval", $arrProjectType['PRICE_PER_UNIT_AREA_DP']);
         $smarty->assign("txtPricePerUnitHighval", $arrProjectType['PRICE_PER_UNIT_HIGH']);
@@ -318,6 +322,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['UNIT_NAME']);
         $smarty->assign("txtSizeval_VA", $arrProjectType_VA['SIZE']);
+        $smarty->assign("txtCarpetAreaInfo_VA", $arrProjectType_VA['CARPET_AREA_INFO']);
         $smarty->assign("txtPricePerUnitAreaval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPricePerUnitAreaDpval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP']);
         $smarty->assign("txtPricePerUnitHighval_VA", $arrProjectType_VA['PRICE_PER_UNIT_HIGH']);
