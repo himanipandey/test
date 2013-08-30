@@ -75,7 +75,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $bathrooms					=	$_REQUEST['bathrooms'][$key];
                 $unitType					=	$_REQUEST['unitType'][$key];
 
-                $status						=	'Available';
+                $status						=	$_REQUEST['propstatus'][$key];
                 $pid[]						=	trim($txtUnitName);
                 $txtUnitNameval[]			=	trim($txtUnitName);
                 $txtSizeval[]				=	trim($txtSize);
@@ -89,7 +89,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $servantroomsval[]			=	$servantrooms;
                 $poojaroomsval[]			=	$poojarooms;
                 $statusval[]				=	$status;
-
+                
                 $smarty->assign("pid", $pid);
 
                 $smarty->assign("txtUnitNameval", $txtUnitNameval);
@@ -115,6 +115,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("servantroomsval",$servantroomsval);
                 $smarty->assign("poojaroomsval",$poojaroomsval);
                 $smarty->assign("statusval",$statusval);
+                
 
                 if ($_REQUEST['unitType'][$key]!='Plot') {
                     if(trim($txtSize) == '' OR (!is_numeric(trim($txtSize))))
@@ -305,7 +306,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("studyroomsval",$arrProjectType['STUDY_ROOM']);
         $smarty->assign("servantroomsval",$arrProjectType['SERVANT_ROOM']);
         $smarty->assign("poojaroomsval",$arrProjectType['POOJA_ROOM']);
-        $smarty->assign("statusval",'Available');
+        $smarty->assign("statusval",$arrProjectType['STATUS']);
         $smarty->assign("txtNoOfFloor",$arrProjectType['NO_OF_FLOORS']);
 
         //echo "<pre>";print_r($arrProjectType_P);
@@ -318,6 +319,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("txtPlotArea_P", $arrProjectType_P['TOTAL_PLOT_AREA']);
         $smarty->assign("txtSizeLenval_P", $arrProjectType_P['LENGTH_OF_PLOT']);
         $smarty->assign("txtSizeBreval_P", $arrProjectType_P['BREADTH_OF_PLOT']);
+        $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);
 
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['UNIT_NAME']);
@@ -338,7 +340,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("servantroomsval_VA",$arrProjectType_VA['SERVANT_ROOM']);
         $smarty->assign("poojaroomsval_VA",$arrProjectType_VA['POOJA_ROOM']);
         $smarty->assign("unitType_VA",$arrProjectType_VA['UNIT_TYPE']);
-		$smarty->assign("no_of_floors_VA",$arrProjectType_VA['NO_OF_FLOORS']);
+	$smarty->assign("no_of_floors_VA",$arrProjectType_VA['NO_OF_FLOORS']);
+        $smarty->assign("statusval_VA",$arrProjectType_VA['STATUS']);
 
         /***************query for project name display if edit********************/
     }

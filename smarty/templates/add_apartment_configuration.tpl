@@ -165,6 +165,7 @@
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Pooja Room</td>
+                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Property Status</td>
 
                         </tr>
 
@@ -338,6 +339,13 @@
                                     <option {if $poojaroomsval[{$smarty.section.foo.index}] == '10'} value = "10" selected = 'selected' {else} value = "10" {/if}>10</option>
                                 </select>
                           </td>
+                    <td>
+                      <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
+                          <option value = "Available">Select</option>
+                          <option {if $statusval[{$smarty.section.foo.index}] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
+                          <option {if $statusval[{$smarty.section.foo.index}] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
+                      </select>
+                    </td>
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid #FF0000"  maxlength = "10">
@@ -394,6 +402,7 @@
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
                                 <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Pooja Room</td>
+                                <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td>
 
                             </tr>
 
@@ -583,6 +592,13 @@
                                     </select>
 
                               </td>
+                              <td>
+                      <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
+                          <option value = "Available">Select</option>
+                          <option {if $statusval_VA[$new_index] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
+                          <option {if $statusval_VA[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
+                      </select>
+                    </td>
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
 
@@ -616,6 +632,7 @@
                                 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Plot Size(Breadth)</td>
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Plot Area</td>
+                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Property Status</td>
                             </tr>
 
                             {section name=foo start= {$looprange} loop={$looprange+15} step=1}
@@ -662,6 +679,13 @@
                               </td>
                               <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                              </td>
+                              <td>
+                                <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
+                                    <option value = "Available">Select</option>
+                                    <option {if $statusval_P[$new_index] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
+                                    <option {if $statusval_P[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
+                                </select>
                               </td>
                             </tr>
                         {/section}

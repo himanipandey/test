@@ -846,6 +846,7 @@ function ProjectType($projectId) {
             $arrProjectType_P['TOTAL_PLOT_AREA'][] = $data['TOTAL_PLOT_AREA'];
             $arrProjectType_P['LENGTH_OF_PLOT'][] = $data['LENGTH_OF_PLOT'];
             $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
+            $arrProjectType_P['STATUS'][] = $data['STATUS'];
         } else {
             $arrProjectType_VA['OPTIONS_ID'][] = $data['OPTIONS_ID'];
             $arrProjectType_VA['UNIT_NAME'][] = $data['UNIT_NAME'];
