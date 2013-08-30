@@ -44,9 +44,9 @@ $dailyEmail = array(
 		'sendifnodata'=> 0
 	),
         array(
-            'sql'=>"select cd.CallId, cd.CallStatus, cd.ApiResponse, cd.AudioLink, cd.CreationTime, pa.USERNAME, GROUP_CONCAT(cp.ProjectId) PROJECTS from CallDetails cd left join CallProject cp on cd.CallId=cp.CallId inner join proptiger_admin pa on cd.AgentId = pa.ADMINID where ApiResponse = 'queued successfully' and (AudioLink is null or AudioLink = '') and TIME_TO_SEC(TIMEDIFF(NOW(), CreationTime))>300 and CreationTime > DATE_SUB(NOW(), INTERVAL 1 DAY) group by cd.CallId;",
+            'sql'=>"select cd.CallId, cd.CallStatus, cd.ApiResponse, cd.CallbackJson, cd.CreationTime, pa.USERNAME, GROUP_CONCAT(cp.ProjectId) PROJECTS from CallDetails cd left join CallProject cp on cd.CallId=cp.CallId inner join proptiger_admin pa on cd.AgentId = pa.ADMINID where ApiResponse = 'queued successfully' and (CallbackJson is null or CallbackJson = '') and Date(CreationTime) = Date(DATE_SUB(NOW(), INTERVAL 1 DAY)) group by cd.CallId;",
             'subject'=>'Calls With No Response',
-            'recipients'=>array('ankur.dhawan@proptiger.com','ravi.srivastava@proptiger.com'), 
+            'recipients'=>array('ankur.dhawan@proptiger.com','ravi.srivastava@proptiger.com', 'azitabh.ajit@proptiger.com'), 
             'attachmentname'=>'missing_data',
             'sendifnodata'=>0
         )
