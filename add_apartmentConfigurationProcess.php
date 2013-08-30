@@ -181,7 +181,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     {
                         if($txtPlotArea != 0)
                            $txtPlotArea = $txtSize;
-                        //Break
                         $option_id = $_REQUEST['typeid_edit'][$key];
                         $option = ResiProjectOptions::find($option_id);
                         $action = "update";
