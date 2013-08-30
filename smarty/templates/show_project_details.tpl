@@ -1840,11 +1840,11 @@ function getDateNow(){
                          <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
-                         <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                         <td nowrap="nowrap" width="9%" align="left" class=whiteTxt>Size</td>
+                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area</td>
                          {$pmd_keys=array_keys($PreviousMonthsData)}
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
+                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
+                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
                          <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
                          <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
                          <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
@@ -1893,7 +1893,7 @@ function getDateNow(){
                         {if $option_obj->total_plot_area != 0}
                             {(int)$option_obj->total_plot_area}
                         {else}
-                            {(int)$option_obj->size}
+                            {(int)$option_obj->size} {if $option_obj->carpet_area_info}(Carpet Area){/if}
                         {/if}
                         </td>
                       <td>
