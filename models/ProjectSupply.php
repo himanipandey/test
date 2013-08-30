@@ -128,6 +128,6 @@ class ProjectSupply extends ActiveRecord\Model {
     function isSupplyLaunchEdited($projectId){
         $sql = "select count(*) count from project_supplies where project_id = '$projectId' and edit_stage = 'callCenterEdit';";
         $result = self::find_by_sql($sql);
-        return (intval($result[0]->count)>1);
+        return (intval($result[0]->count)>0);
     }
 }
