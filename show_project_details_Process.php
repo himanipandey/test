@@ -4,9 +4,8 @@ $ProjectTypeArr = ProjectTypeArr();
 $BankListArr = BankList();
 $enum_value = enum_value();
 $AmenitiesArr = AmenitiesList();
-$BankListArr = BankList();
 
-$projectId = $_GET['projectId'];
+$projectId = $_REQUEST['projectId'];
 
 /* * *******code for audit tables******** */
 $stageName = '';
@@ -16,15 +15,10 @@ if (isset($_REQUEST['stageName']) && isset($_REQUEST['phasename']) && isset($_RE
     $smarty->assign("changedValueArr", $changedValueArr);
     $stageName = $_REQUEST['stageName'];
     $phasename = $_REQUEST['phasename'];
-    $projectId = $_REQUEST['projectId'];
     fetchColumnChanges($projectId, $stageName, $phasename, $arrProjectPriceAuditOld, $arrProjectAudit, $arrProjectSupply);
 }
 $smarty->assign("stageName", $stageName);
 $smarty->assign("phasename", $phasename);
-//echo "<pre>";
-//print_r($arrProjectAudit);
-//echo "</pre>";
-// var_dump($arrProjectSupply);
 $smarty->assign("arrProjectSupply", $arrProjectSupply);
 $smarty->assign("arrProjectPriceAuditOld", $arrProjectPriceAuditOld);
 $smarty->assign("changedValueArr", $arrProjectAudit);
@@ -134,13 +128,15 @@ foreach ($res as $data) {
     $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 }
 
+$isSupplyLaunchEdited = ProjectSupply::isSupplyLaunchEdited($projectId);
+
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
+$smarty->assign("isSupplyLaunchEdited", $isSupplyLaunchEdited);
 
 
 // Project Phases
-$projectId = $_REQUEST['projectId'];
 $phaseDetail = fetch_phaseDetails($projectId);
 $bedroomDetails = ProjectBedroomDetail($projectId);
 $smarty->assign("BedroomDetails", $bedroomDetails);
@@ -184,9 +180,6 @@ if ($_REQUEST['towerId'] != '') {
     $smarty->assign("towerId", $_GET['towerId']);
 
     $towerDetailForId = towerDetailsForId($_GET['towerId']);
-    //echo "<pre>";
-    //print_r($towerDetailForId);
-    //echo "</pre>";
     $smarty->assign("towerId", $_GET['towerId']);
     $smarty->assign("no_of_floors", $towerDetailForId[0]['NO_OF_FLOORS']);
     $smarty->assign("stilt", $towerDetailForId[0]['STILT']);
