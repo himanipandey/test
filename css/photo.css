@@ -52,3 +52,17 @@ table td .valueField {display:block; float:left;}
     background-color: #dff0d8;
     border-color: #d6e9c6;
 }
+
+.img-wrap {
+    float:left;
+}
+
+.img-dtls {
+    float:right;
+    margin:0px 0px 0px 10px;
+}
+
+.image-block {
+    float:left;
+    margin:10px;
+}

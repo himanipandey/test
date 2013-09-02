@@ -98,12 +98,12 @@
                         </table>
                         <form method="POST" action="">
                             <input type="hidden" name="updateImg" value="1">
-                            <div class="image-block" style="float:left; margin:10px;">
+                            <div class="image-block">
                                 {if isset($uploadedImage)}
                                     {foreach from=$uploadedImage item=row}
                                         <div style="padding:5px; border:solid 1px #ccc; display:inline-block;">
-                                            <div class="img-wrap" style="float:left;"> <img src="http://git.proptiger.com/images/locality/thumb_{$row.IMAGE_NAME}" /> </div>
-                                            <div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">
+                                            <div class="img-wrap"> <img src="{$WEBSITE_BASE_PATH}images/locality/thumb_{$row.IMAGE_NAME}" /> </div>
+                                            <div class="img-dtls">
                                                 <select name="imgCate[{$row.IMAGE_ID}]">
                                                     <option value="">Category</option>
                                                     <option value="Mall">Mall</option>
