@@ -9,11 +9,33 @@
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 
-    if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
+    if ( !empty( $_REQUEST['updateImg'] ) ) {
+        $modifyData = array();
+        foreach( $_REQUEST['imgCate'] as $__imgId => $__imgCategory ) {
+
+            $modifyData['IMAGE_ID'] = $__imgId;
+            $modifyData['IMAGE_CATEGORY'] = trim( $_REQUEST['imgCate'][ $__imgId ] );
+            $modifyData['IMAGE_DISPLAY_NAME'] = trim( $_REQUEST['imgName'][ $__imgId ] );
+            $modifyData['IMAGE_DESCRIPTION'] = trim( $_REQUEST['imgDesc'][ $__imgId ] );
+
+            updateThisPhotoProperty( $modifyData );
+        }
+    }
+    elseif ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         //echo "<pre>"; print_r( $_REQUEST ); print_r( $_FILES ); die();
         $city     = !empty( $_REQUEST['cityId'] ) ? $_REQUEST['cityId'] : 0;
         $suburb   = !empty( $_REQUEST['suburbId'] ) ? $_REQUEST['suburbId'] : 0;
         $locality = !empty( $_REQUEST['localityId'] ) ? $_REQUEST['localityId'] : 0;
+
+        if ( $city ) {
+            $smarty->assign( 'cityId', $city );
+        }
+        if ( $suburb ) {
+            $smarty->assign( 'suburbId', $suburb );
+        }
+        if ( $locality ) {
+            $smarty->assign( 'localityId', $locality );
+        }
 
         $errMsg = "";
         $columnName = "";
@@ -49,6 +71,7 @@
             $imageCount = count( $IMG['name'] );
             include("SimpleImage.php");
             $thumb = new SimpleImage();
+            $addedImgIdArr = array();
             for( $__imgCnt = 0; $__imgCnt < $imageCount; $__imgCnt++ ) {
                 if ( $IMG['error'][ $__imgCnt ] == 0 ) {
                     $extension = explode( "/", $IMG['type'][ $__imgCnt ] );
@@ -82,7 +105,7 @@
                         $thumb->resize( $__thumbWidth, $__thumbHeight );
                         $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
                         //  add image to DB
-                        addImageToDB( $columnName, $areaId, $imgName );
+                        $addedImgIdArr[] = addImageToDB( $columnName, $areaId, $imgName );
                         $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
                     }
                 }
@@ -103,6 +126,12 @@
                 'type' => 'success-msg',
                 'content' => $str
             );
+            if ( count( $addedImgIdArr ) ) {
+                $imgData = getPhotoById( $addedImgIdArr );
+                if ( count( $imgData ) ) {
+                    $smarty->assign( 'uploadedImage', $imgData );
+                }
+            }
         }
         else {
             $message = array(

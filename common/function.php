@@ -54,6 +54,65 @@ function getListing( $dataArr = array() ) {
     return $dataSet;
 }
 
+function getPhoto( $data = array() ) {
+    $column = "";
+    $id = "";
+    if ( !empty( $data['locality'] ) ) {
+        $column = "LOCALITY_ID";
+        $id = $data['locality'];
+    }
+    elseif ( !empty( $data['suburb'] ) ) {
+        $column = "SUBURB_ID";
+        $id = $data['suburb'];
+    }
+    elseif ( !empty( $data['city'] ) ) {
+        $column = "CITY_ID";
+        $id = $data['city'];
+    }
+    else {
+        return NULL;
+    }
+    $query = "SELECT IMAGE_ID, $column, IMAGE_NAME, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION FROM locality_image WHERE $column = $id";
+    $data = dbQuery( $query );
+    return $data;
+}
+
+function getPhotoById( $id ) {
+    if ( !$id ) {
+        return null;
+    }
+    $query = "";
+    if ( is_array( $id ) && count( $id ) ) {
+        $id = implode( ', ', $id );
+        $query = "SELECT * FROM locality_image WHERE IMAGE_ID IN ( $id )";
+    }
+    else {
+        $query = "SELECT * FROM locality_image WHERE IMAGE_ID = $id ";
+    }
+    $data = dbQuery( $query );
+    return $data;
+}
+
+function updateThisPhotoProperty( $data = array() ) {
+    if ( empty( $data['IMAGE_ID'] ) ) {
+        return null;
+    }
+    else {
+        $__id = $data['IMAGE_ID'];
+        $setField = array();
+        foreach( $data as $__columnName => $__columnValue ) {
+            if ( $__columnName != 'IMAGE_ID' ) {
+                $setField[] = "$__columnName = '".mysql_real_escape_string( $__columnValue )."'";
+            }
+        }
+        if ( count( $setField ) > 0 ) {
+            $setField = implode( ', ', $setField );
+            $query = "UPDATE locality_image SET $setField WHERE IMAGE_ID = $__id";
+            dbExecute( $query );
+        }
+    }
+}
+
 function addImageToDB( $columnName, $areaId, $imageName ) {
     if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID' ) ) ) {
 
@@ -65,4 +124,5 @@ function addImageToDB( $columnName, $areaId, $imageName ) {
     $insertQuery = "INSERT INTO `locality_image` ( `$columnName`, `IMAGE_NAME` ) VALUES ( '$areaId', '$imageName' )";
 
     dbExecute( $insertQuery );
+    return mysql_insert_id();
 }
