@@ -102,7 +102,7 @@
                                 {if isset($uploadedImage)}
                                     {foreach from=$uploadedImage item=row}
                                         <div style="padding:5px; border:solid 1px #ccc; display:inline-block;">
-                                            <div class="img-wrap"> <img src="{$WEBSITE_BASE_PATH}images/locality/thumb_{$row.IMAGE_NAME}" /> </div>
+                                            <div class="img-wrap"> <img src="/images_new/locality/thumb_{$row.IMAGE_NAME}" /> </div>
                                             <div class="img-dtls">
                                                 <select name="imgCate[{$row.IMAGE_ID}]">
                                                     <option value="">Category</option>

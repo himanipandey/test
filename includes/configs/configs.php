@@ -58,8 +58,6 @@ define('FORUM_POPUP_IMAGE_PATH','images/');
 define('FORUM_TEMPLATE_PATH','smarty/templates/admin/forum/');
 define('FORUM_FRONT_TEMPLATE_PATH','smarty/templates/forum/');
 
-$smarty->assign("WEBSITE_BASE_PATH","http://www.proptiger.com/");
-
 define('FORUM_TABLE_PREFIX','FORUM_');
 
 $smarty->assign("FORUM_INTERNET_PATH", FORUM_INTERNET_PATH);
