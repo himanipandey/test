@@ -28,16 +28,72 @@
 
         $result = $option->save();
         if($result) {
+?>
+     
+    <tr class="latLong">
+       <td width="20%" align="right">Max Latitude  : </td>
+       <td width="30%" align="left" >
+           <?php echo max($arrLatitude); ?>
+           <input type = "hidden" name ="maxLatitude" value="<?php echo max($arrLatitude); ?>">
+      </td>				   
+      <td width="50%" align="left">&nbsp;</td>
+     </tr>
 
-            echo "<font color = 'green'>Latitude/Longitude has been cleaned successfully.<br>&nbsp;&nbsp;".
-                "Max Latitide = ".   max($arrLatitude) ."&nbsp;&nbsp;
-                 Min Latitide = ".   min($arrLatitude) ."<br>   
-                 Max Longitude = ".   max($arrLongitude) ."&nbsp;&nbsp;
-                 Min Longitude = ".   min($arrLongitude)."</font>" ;
+     <tr class="latLong">
+       <td width="20%" align="right">Min Latitude  : </td>
+       <td width="30%" align="left" >
+           <?php echo min($arrLatitude); ?>
+           <input type = "hidden" name ="minLatitude" value="<?php echo min($arrLatitude); ?>">
+      </td>				   
+      <td width="50%" align="left">&nbsp;</td>
+     </tr>
+
+     <tr class="latLong">
+       <td width="20%" align="right">Max Longitude  : </td>
+       <td width="30%" align="left" >
+           <?php echo max($arrLongitude); ?>
+           <input type = "hidden" name ="maxLongitude" value="<?php echo max($arrLongitude); ?>">
+      </td>				   
+      <td width="50%" align="left">&nbsp;</td>
+     </tr>
+
+      <tr class="latLong">
+       <td width="20%" align="right">Min Longitude  : </td>
+       <td width="30%" align="left" >
+           <?php echo min($arrLongitude); ?>
+           <input type = "hidden" name ="minLongitude" value="<?php echo min($arrLongitude); ?>">
+      </td>				   
+      <td width="50%" align="left">&nbsp;</td>
+     </tr>
+<?php
         }
     }
-    else {
-        echo "<font color = 'red'>No recond found in project table</font>";
-    }
+    else {        
+        ?>
+        <tr class="latLong">
+       <td width="20%" align="right">Max Latitude  : </td>
+       <td width="30%" align="left" >No Entry</td>				   
+      <td width="50%" align="left">&nbsp;</td>
+     </tr>
+
+     <tr class="latLong">
+       <td width="20%" align="right">Min Latitude  : </td>
+       <td width="30%" align="left" >No Entry</td>				   
+      <td width="50%" align="left">&nbsp;</td>
+     </tr>
+
+     <tr class="latLong">
+       <td width="20%" align="right">Max Longitude  : </td>
+       <td width="30%" align="left" >No Entry</td>				   
+      <td width="50%" align="left">&nbsp;</td>
+     </tr>
+
+      <tr class="latLong">
+       <td width="20%" align="right">Min Longitude  : </td>
+       <td width="30%" align="left" >No Entry</td>				   
+      <td width="50%" align="left">&nbsp;</td>
+     </tr>
+     <?php 
+        }
      
   ?>

@@ -52,7 +52,13 @@ $dailyEmail = array(
             'sendifnodata'=>0
         ),
         array(
-            'sql'=>"select l.LABEL LOCALITY_NAME,l.LOCALITY_ID, rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, l.MIN_LATITUDE, l.MAX_LLATITUDE, l.MIN_LONGITUDE, l.MAX_LONGITUDE, rp.LONGITUDE, rp.LATITUDE from locality l inner join resi_project rp on l.LOCALITY_ID = rp.LOCALITY_ID where l.LOCALITY_CLEANED = '1' and (rp.LONGITUDE not between l.MIN_LONGITUDE and l.MAX_LONGITUDE) or (rp.LATITUDE not between l.MIN_LATITUDE and l.MAX_LATITUDE) and rp.LATITUDE not in($latLongList) and rp.LONGITUDE not in($latLongList));",
+            'sql'=>"select l.LABEL as LOCALITY_NAME,l.LOCALITY_ID, rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, l.MIN_LATITUDE, l.MAX_LATITUDE, l.MIN_LONGITUDE, l.MAX_LONGITUDE,rp.LATITUDE, rp.LONGITUDE 
+            from locality l inner join resi_project rp 
+            on l.LOCALITY_ID = rp.LOCALITY_ID
+             where 
+            l.LOCALITY_CLEANED = '1' 
+            and ((rp.LONGITUDE not between l.MIN_LONGITUDE and l.MAX_LONGITUDE) or (rp.LATITUDE not between l.MIN_LATITUDE and l.MAX_LATITUDE))
+             and (rp.LATITUDE not in($latLongList) or rp.LONGITUDE not in($latLongList));",
             'subject'=>'Lat Long Beyond Limits',
             'recipients'=>array('ankur.dhawan@proptiger.com'), 
             'attachmentname'=>'Latitude_longitude_beyond_limit',
