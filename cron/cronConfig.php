@@ -4,6 +4,7 @@ $docroot = dirname(__FILE__) . "/../";
 require_once $docroot.'dbConfig.php';
 require_once 'cronFunctions.php';
 require_once $docroot.'includes/send_mail_amazon.php';
+
 $latLongList = '0,1,2,3,4,5,6,7,8,9';
 $dailyEmail = array(
 	array(
