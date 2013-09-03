@@ -4,7 +4,7 @@ $docroot = dirname(__FILE__) . "/../";
 require_once $docroot.'dbConfig.php';
 require_once 'cronFunctions.php';
 require_once $docroot.'includes/send_mail_amazon.php';
-
+$latLongList = '0,1,2,3,4,5,6,7,8,9';
 $dailyEmail = array(
 	array(
 		'sql'=>"SELECT 
@@ -48,6 +48,13 @@ $dailyEmail = array(
             'subject'=>'Calls With No Response',
             'recipients'=>array('ankur.dhawan@proptiger.com','ravi.srivastava@proptiger.com'), 
             'attachmentname'=>'missing_data',
+            'sendifnodata'=>0
+        ),
+        array(
+            'sql'=>"select l.LABEL LOCALITY_NAME,l.LOCALITY_ID, rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, l.MIN_LATITUDE, l.MAX_LLATITUDE, l.MIN_LONGITUDE, l.MAX_LONGITUDE, rp.LONGITUDE, rp.LATITUDE from locality l inner join resi_project rp on l.LOCALITY_ID = rp.LOCALITY_ID where l.LOCALITY_CLEANED = '1' and (rp.LONGITUDE not between l.MIN_LONGITUDE and l.MAX_LONGITUDE) or (rp.LATITUDE not between l.MIN_LATITUDE and l.MAX_LATITUDE) and rp.LATITUDE not in($latLongList) and rp.LONGITUDE not in($latLongList));",
+            'subject'=>'Lat Long Beyond Limits',
+            'recipients'=>array('ankur.dhawan@proptiger.com'), 
+            'attachmentname'=>'Latitude_longitude_beyond_limit',
             'sendifnodata'=>0
         )
 );
