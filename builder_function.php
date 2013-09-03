@@ -1348,6 +1348,11 @@ function ViewLocalityDetails($localityID) {
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
         $ResDetails['VISIBLE_IN_CMS'] = $Res['VISIBLE_IN_CMS'];
+        $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
+        $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
+        $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
+        $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
+        $ResDetails['LOCALITY_CLEANED'] = $Res['LOCALITY_CLEANED'];
         return $ResDetails;
     } else {
         return 0;

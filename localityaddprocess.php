@@ -15,7 +15,6 @@
     if(isset($_POST['btnExit'])){
             header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
     }
-
     if (isset($_POST['btnSave'])) {
 
                     $txtCityName	=	trim($_POST['txtCityName']);
@@ -27,7 +26,13 @@
                     $desc		=	trim($_POST['desc']);
                     $old_loc_url	=	trim($_POST['old_loc_url']);
                     $visibleInCms	=	trim($_POST['visibleInCms']);
-
+                    
+                    $localityDetailsArray =   ViewLocalityDetails($localityid);
+                    $maxLatitude = trim($localityDetailsArray['MAX_LATITUDE']);
+                    $minLatitude = trim($localityDetailsArray['MAX_LATITUDE']);
+                    $maxLongitude = trim($localityDetailsArray['MAX_LATITUDE']);
+                    $minLongitude = trim($localityDetailsArray['MAX_LATITUDE']);
+                    
                     $smarty->assign("txtCityName", $txtCityName);
                     $smarty->assign("old_loc_url", $old_loc_url);
                     $smarty->assign("txtMetaTitle", $txtMetaTitle);
@@ -36,6 +41,10 @@
                     $smarty->assign("status", $status);	
                     $smarty->assign("desc", $desc);
                     $smarty->assign("visibleInCms", $visibleInCms);
+                    $smarty->assign("maxLatitude", $maxLatitude);
+                    $smarty->assign("minLatitude", $minLatitude);
+                    $smarty->assign("maxLongitude", $maxLongitude);	
+                    $smarty->assign("minLongitude", $minLongitude);
 
                       if( $txtCityName == '')   {
                              $ErrorMsg["txtCityName"] = "Please enter locality name.";
@@ -116,6 +125,20 @@
             $status		  =	trim($localityDetailsArray['ACTIVE']);
             $desc		  =	trim($localityDetailsArray['DESCRIPTION']);
             $visibleInCms	  =	trim($localityDetailsArray['VISIBLE_IN_CMS']);
+            
+            $maxLatitude	  =	trim($localityDetailsArray['MAX_LATITUDE']);
+            if($maxLatitude == '')
+                $maxLatitude = 'No Entry';
+            $minLatitude	  =	trim($localityDetailsArray['MIN_LATITUDE']);
+            if($minLatitude == '')
+                $minLatitude = 'No Entry';
+            $maxLongitude	  =	trim($localityDetailsArray['MAX_LONGITUDE']);
+            if($maxLongitude == '')
+                $maxLongitude = 'No Entry';
+            $minLongitude	  =	trim($localityDetailsArray['MIN_LONGITUDE']);
+            if($minLongitude == '')
+                $minLongitude = 'No Entry';
+            $localityCleaned	  =	trim($localityDetailsArray['LOCALITY_CLEANED']);
 
             $smarty->assign("txtCityName", $txtCityName);
             $smarty->assign("txtMetaTitle", $txtMetaTitle);
@@ -124,6 +147,10 @@
             $smarty->assign("status", $status);	
             $smarty->assign("desc", $desc);
             $smarty->assign("visibleInCms", $visibleInCms);
+            $smarty->assign("maxLatitude", $maxLatitude);
+            $smarty->assign("minLatitude", $minLatitude);
+            $smarty->assign("maxLongitude", $maxLongitude);	
+            $smarty->assign("minLongitude", $minLongitude);
     }
  
 ?>
