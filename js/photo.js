@@ -173,7 +173,7 @@ function showThisPhoto( imgData ) {
     imgData['IMAGE_CATEGORY'] = imgData['IMAGE_CATEGORY'] == null ? "" : imgData['IMAGE_CATEGORY'];
     imgData['IMAGE_DESCRIPTION'] = imgData['IMAGE_DESCRIPTION'] == null ? "" : imgData['IMAGE_DESCRIPTION'];
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
-                        '<div class="img-wrap" style="float:left;"> <img src="http://git.proptiger.com/images/locality/thumb_'+imgData['IMAGE_NAME']+'" /> </div>'+
+                        '<div class="img-wrap" style="float:left;"> <img src="/images_new/locality/thumb_'+imgData['IMAGE_NAME']+'" /> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
                             '<select name="imgCate['+imgData['IMAGE_ID']+']">'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == '' ? 'selected' : '' ) +' value="">Category</option>'+

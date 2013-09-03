@@ -39,11 +39,7 @@
 
         $errMsg = "";
         $columnName = "";
-        //$areaType = isset( $_REQUEST['areaType'] ) ? trim( $_REQUEST['areaType'] ) : "";
         if ( $city || $suburb || $locality ) {
-            $selectedAreaType[ $areaType ] = "selected";
-            $columnName = strtoupper( $areaType )."_ID";
-
             if ( $locality > 0 ) {
                 $columnName = "LOCALITY_ID";
                 $areaType = 'locality';
