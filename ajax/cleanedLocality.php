@@ -24,6 +24,7 @@
         $option->max_longitude = max($arrLongitude);
         $option->min_latitude = min($arrLatitude);
         $option->min_longitude = min($arrLongitude);
+        $option->locality_cleaned = '1';
 
         $result = $option->save();
         if($result) {
