@@ -337,7 +337,7 @@
                                                                                                                                 <td width="30%" align="left" nowrap>
                                                                                                                                     <input type='text' name='supply' id='supply' value='{$PlotQuantity[0]['supply']}'>
                                                                                                                                     <label>Launched</label>
-                                                                                                                                    <input id="supply" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
+                                                                                                                                    <input id="supply" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched" class="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
                                                                                                                                 </td>
                                                                                                                                 <td width="50%" align="left">
                                                                                                                                     <font color="red"><span id = "err_supply" style = "display:none;">Enter the supply for Plot</span></font>
