@@ -15,7 +15,9 @@ class S3Upload {
             $this->original_name = $file;
         else
             $this->original_name = $name;
-        $this->name = $this->add_timestamp_to_name($this->remove_special_characters($this->original_name));
+        $this->name = $this->remove_special_characters($this->original_name);
+        $this->remove_forward_slash();
+        $this->add_defined_path();
         $this->max_file_size = $this->covert_to_bytes(self::$max_file_size);
         $this->errors = array();
         $this->response = null;
@@ -52,8 +54,8 @@ class S3Upload {
 
     function validate_file(){
         $ext = $this->get_file_extension($this->original_name);
-        $original_ext = $this->get_file_extension($this->file);
-        if($ext != $original_ext) $this->add_errors("Extensions of both file do not match");
+//        $original_ext = $this->get_file_extension($this->file);
+//        if($ext != $original_ext) $this->add_errors("Extensions of both file do not match");
         if(!file_exists($this->file)) $this->add_errors("File does not exist");
         if(!in_array($ext, self::$supported_formats)) $this->add_errors("Not a valid format, got .{$ext} ");
     }
@@ -93,6 +95,17 @@ class S3Upload {
     function add_timestamp_to_name($name){
         $pos = strpos($name, ".");
         return substr_replace($name, "_".time(), $pos, 0);
+    }
+
+    function add_defined_path(){
+        if(defined("S3_STORAGE_PATH")) $this->name = S3_STORAGE_PATH.$this->name;
+    }
+
+    function remove_forward_slash(){
+        if($this->name[0] == "/"){
+            $length = strlen($this->name);
+            $this->name = substr($this->name, 1, $length);
+        }
     }
 
 }
