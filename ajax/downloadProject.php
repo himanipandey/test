@@ -67,7 +67,17 @@ $selectdata		= 	$_POST['dwnld_selectdata'];
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
-	$QueryMember1 = "SELECT RP.PROJECT_ID,RP.BUILDER_NAME,RP.PROJECT_NAME,RP.PROJECT_PHASE,RP.PROJECT_STAGE,C.LABEL AS CITY_NAME, RP.PROJECT_STATUS,RP.BOOKING_STATUS,UC.LABEL UPDATION_LABEL FROM resi_project RP LEFT JOIN city C ON RP.CITY_ID=C.CITY_ID LEFT JOIN updation_cycle UC ON RP.UPDATION_CYCLE_ID=UC.UPDATION_CYCLE_ID";
+	$QueryMember1 = "SELECT RP.PROJECT_ID,RP.BUILDER_NAME,RP.PROJECT_NAME,RP.PROJECT_PHASE,RP.PROJECT_STAGE,C.LABEL AS CITY_NAME, RP.PROJECT_STATUS,RP.BOOKING_STATUS, L.LABEL LOCALITY, PSH.DATE_TIME, PA.FNAME, UC.LABEL UPDATION_LABEL
+                         FROM
+                            resi_project RP LEFT JOIN city C ON RP.CITY_ID=C.CITY_ID 
+                         LEFT JOIN
+                            updation_cycle UC ON RP.UPDATION_CYCLE_ID=UC.UPDATION_CYCLE_ID
+                         LEFT JOIN
+                             locality L ON RP.LOCALITY_ID = L.LOCALITY_ID
+                         LEFT JOIN
+                             project_stage_history PSH ON RP.MOVEMENT_HISTORY_ID = PSH.HISTORY_ID
+                         LEFT JOIN 
+                             proptiger_admin PA ON PSH.ADMIN_ID = PA.ADMINID";
 
 	$and = " WHERE ";
 
@@ -153,7 +163,6 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 
 	}
 }
-
 $arrPropId = array();
 $QueryMember1 = $QueryMember1 . $QueryMember;
 
@@ -169,11 +178,14 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>PROJECT ID</td>
 <td>BUILDER NAME</td>
 <td>PROJECT NAME</td>
-<td>PHASE</td>
-<td>STAGE</td>
 <td>CITY</td>
+<td>LOCALITY</td>
 <td>PROJECT STATUS</td>
 <td>BOOKING STATUS</td>
+<td>PHASE</td>
+<td>STAGE</td>
+<td>STAGE MOVEMENT DATE</td>
+<td>STAGE MOVEMENT DONE BY</td>
 <td>UPDATION LABEL</td></tr>
 ";
 $cnt = 1;
@@ -187,6 +199,9 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	$projname = $ob1['PROJECT_NAME'];
 	
 	$cityname = $ob1['CITY_NAME'];
+        $date_time = $ob1['DATE_TIME'];
+        $stage_move_by = $ob1['FNAME'];
+        $localityname = $ob1['LOCALITY'];
 	
 	$proj_status = $ob1['PROJECT_STATUS'];
 	$booking_status = $ob1['BOOKING_STATUS'];
@@ -198,12 +213,16 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	<td>".$projid."</td>
 	<td>".$builder."</td>
 	<td>".$projname."</td>
-	<td>".$phase."</td>
-	<td>".$stage."</td>
-	<td>".$cityname."</td>
+        <td>".$cityname."</td>
+        <td>".$localityname."</td>    
 	<td>".$proj_status."</td>
 	<td>".$booking_status."</td>
+        <td>".$phase."</td>
+	<td>".$stage."</td>
+        <td>".$date_time."</td>
+        <td>".$stage_move_by."</td>            
 	<td>".$updation_label."</td>
+
 	</tr>
 ";
 	$cnt++;

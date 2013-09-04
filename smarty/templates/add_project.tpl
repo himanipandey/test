@@ -829,6 +829,18 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
+                                                           
+                                                           <tr>
+                                                                <td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
+                                                                    <select name="identifyTownShip">
+                                                                              <option value="0" {if $identifyTownShip == 0} selected = selected {/if}>No</option>
+                                                                              <option value="1" {if $identifyTownShip == 1} selected = selected {/if}>Yes</option>
+                                                                      </select>
+
+                                                                </td>
+                                                                <td width="50%" align="left"><font color="red"></font></td>
+							   </tr>
+                                                           
 							   <tr>
 
 								  <td>&nbsp;</td>

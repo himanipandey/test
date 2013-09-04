@@ -25,7 +25,8 @@
 			["event13", "project_other_price.php", true],
                         ["event14", "secondary_price.php", true],
                         ["event15", "insertSecondaryPrice.php", true],
-                        ["event16", "updateSecondaryPrice.php", true]
+                        ["event16", "updateSecondaryPrice.php", true],
+                        ["event17", "/new/supply-validation", true]
 		]; 
 
 		for(var i=0; i< eventArray.length; i++){
@@ -1325,31 +1326,44 @@ function getDateNow(){
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Residential:</b>
-							</td>
-							<td>
-							  {if $projectDetails[0].RESIDENTIAL == 0}
-								  	Residential
-							  {/if}
-							  
-							  {if $projectDetails[0].RESIDENTIAL == 1}
-							  Non	Residential
-							  {/if}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Residential:</b>
+                                                    </td>
+                                                    <td>
+                                                      {if $projectDetails[0].RESIDENTIAL == 0}
+                                                                    Residential
+                                                      {/if}
+
+                                                      {if $projectDetails[0].RESIDENTIAL == 1}
+                                                      Non	Residential
+                                                      {/if}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Township:</b>
-							</td>
-							<td>
-								{if $projectDetails[0].TOWNSHIP != ''}
-									{$projectDetails[0].TOWNSHIP}
-								{else}
-									--
-								{/if}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Township:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].TOWNSHIP != ''}
+                                                                {$projectDetails[0].TOWNSHIP}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Skip Updation Cycle: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].SKIP_UPDATION_CYCLE == '0'}
+                                                                No
+                                                        {else}
+                                                               Yes
+                                                        {/if}
+                                                    </td>
 						</tr>
 						
 					</table>
@@ -1827,11 +1841,11 @@ function getDateNow(){
                          <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
-                         <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                         <td nowrap="nowrap" width="9%" align="left" class=whiteTxt>Size</td>
+                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area</td>
                          {$pmd_keys=array_keys($PreviousMonthsData)}
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
+                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
+                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
                          <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
                          <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
                          <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
@@ -1880,7 +1894,7 @@ function getDateNow(){
                         {if $option_obj->total_plot_area != 0}
                             {(int)$option_obj->total_plot_area}
                         {else}
-                            {(int)$option_obj->size}
+                            {(int)$option_obj->size} {if $option_obj->carpet_area_info}(Carpet Area){/if}
                         {/if}
                         </td>
                       <td>
@@ -2481,7 +2495,7 @@ function getDateNow(){
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
-							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button></td>
+							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}</td>
 							</tr>
 						{/if}
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
@@ -2510,7 +2524,9 @@ function getDateNow(){
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
 											<td class="whiteTxt" align = "center" nowrap><b>No of Flats</b></td>
+                                                                                        <td class="whiteTxt" align = "center" nowrap><b>Edited No of Flats</b></td>
                                                                                         <td class="whiteTxt" align = "center" nowrap><b>Launched Units</b></td>
+                                                                                        <td class="whiteTxt" align = "center" nowrap><b>Edited Launched Units</b></td>
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$arrAvaiPreviousMonthData[0]}</b></td>
@@ -2524,18 +2540,24 @@ function getDateNow(){
 										{$olderValuePhase = ''}
 										{$cnt = 0}
 										{$totalSumFlat = 0}
+                                                                                {$totalEditedSumFlat = 0}
                                                                                 {$totalLaunchedFlat = 0}
+                                                                                {$totalEditedLaunchedFlat = 0}
 										{$totalSumflatAvail = 0}
 										{foreach from = $supplyAllArray key=key item = item}
 											{$totalNoOfFlatsPPhase = 0}
+                                                                                        {$totalEditedNoOfFlatsPPhase = 0}
                                                                                         {$totalLaunchedFlatsPPhase = 0}
+                                                                                        {$totalEditedLaunchedFlatsPPhase = 0}
 											{$availableoOfFlatsPPhase = 0}
 											
 											{$olderValueType = ''}
 											{foreach from = $item key = keyInner item = innerItem}
 												
 												{$totalNoOfFlatsPtype = 0}
+                                                                                                {$totalEditedNoOfFlatsPtype = 0}
                                                                                                 {$totalLaunchedFlatsPtype = 0}
+                                                                                                {$totalEditedLaunchedFlatsPtype = 0}
 												{$availableoOfFlatsPtype = 0}
 												
 												{foreach from = $innerItem key = keylast item = lastItem}
@@ -2577,12 +2599,18 @@ function getDateNow(){
 													</td>
 													<td valign ="top" align="center" >{$lastItem['NO_OF_FLATS']}
 														{$totalNoOfFlatsPtype = $totalNoOfFlatsPtype+$lastItem['NO_OF_FLATS']}
+                                                                                                                {$totalEditedNoOfFlatsPtype = $totalEditedNoOfFlatsPtype+$lastItem['EDITED_NO_OF_FLATS']}
                                                                                                                 {$totalLaunchedFlatsPtype = $totalLaunchedFlatsPtype+$lastItem['LAUNCHED']}
+                                                                                                                {$totalEditedLaunchedFlatsPtype = $totalEditedLaunchedFlatsPtype+$lastItem['EDITED_LAUNCHED']}
 														{$totalNoOfFlatsPPhase = $totalNoOfFlatsPPhase+$lastItem['NO_OF_FLATS']}
+                                                                                                                {$totalEditedNoOfFlatsPPhase = $totalEditedNoOfFlatsPPhase+$lastItem['EDITED_NO_OF_FLATS']}
                                                                                                                 {$totalLaunchedFlatsPPhase = $totalLaunchedFlatsPPhase+$lastItem['LAUNCHED']}
+                                                                                                                {$totalEditedLaunchedFlatsPPhase = $totalEditedLaunchedFlatsPPhase+$lastItem['EDITED_LAUNCHED']}
 														{if $key != 'noPhase'}
 															{$totalSumFlat = $totalSumFlat+$lastItem['NO_OF_FLATS']}
+                                                                                                                        {$totalEditedSumFlat = $totalEditedSumFlat+$lastItem['EDITED_NO_OF_FLATS']}
                                                                                                                         {$totalLaunchedFlat = $totalLaunchedFlat+$lastItem['LAUNCHED']}
+                                                                                                                        {$totalEditedLaunchedFlat = $totalEditedLaunchedFlat+$lastItem['EDITED_LAUNCHED']}
 															{$totalSumflatAvail = $totalSumflatAvail+$lastItem['AVAILABLE_NO_FLATS']}																	
 														{/if}
 														{if $phasename != '' && $stageName != ''}
@@ -2593,7 +2621,13 @@ function getDateNow(){
 														{/if}
 													</td>
                                                                                                         <td valign ="top" align="center">
+                                                                                                            {$lastItem['EDITED_NO_OF_FLATS']}
+                                                                                                        </td>
+                                                                                                        <td valign ="top" align="center">
                                                                                                             {$lastItem['LAUNCHED']}
+                                                                                                        </td>
+                                                                                                        <td valign ="top" align="center">
+                                                                                                            {$lastItem['EDITED_LAUNCHED']}
                                                                                                         </td>
 														<!-- $key->phase_id -->
 														<!-- if key==mykey -->
@@ -2708,7 +2742,9 @@ function getDateNow(){
 													<tr bgcolor ="#FBF2EF" height="30px;">
 														<td align ="right" colspan ="4" nowrap><b>SubTotal {$lastItem['PROJECT_TYPE']}</b></td>
 														<td align ="center"><b> {$totalNoOfFlatsPtype}</b></td>
+                                                                                                                <td align ="center"><b> {$totalEditedNoOfFlatsPtype}</b></td>
                                                                                                                 <td align ="center"><b> {$totalLaunchedFlatsPtype}</b></td>
+                                                                                                                <td align ="center"><b> {$totalEditedLaunchedFlatsPtype}</b></td>
 														<td  align ="center"><b> {$availableoOfFlatsPtype}</b></td>
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
@@ -2721,8 +2757,10 @@ function getDateNow(){
 												<tr bgcolor ="#F6D8CE" height="30px;">
 													<td align ="right" colspan ="4" nowrap><b>SubTotal {ucfirst($key)}</b></td>
 													<td align ="center"><b> {$totalNoOfFlatsPPhase}</b></td>
+                                                                                                        <td align ="center"><b> {$totalEditedNoOfFlatsPPhase}</b></td>
                                                                                                         <td align ="center"><b> {$totalLaunchedFlatsPPhase}</b></td>
-													<td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
+                                                                                                        <td align ="center"><b> {$totalEditedLaunchedFlatsPPhase}</b></td>
+                                                                                                        <td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
 													{if ucfirst($key) == 'NoPhase'}
 														<td  align ="left" colspan ="5"><b> 
 														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
@@ -2744,7 +2782,9 @@ function getDateNow(){
 												<tr bgcolor ="#F2F2F2" height="30px;">
 													<td align ="right" colspan ="4" nowrap><b>Grand Total {$flafHideGrandTot}</b></td>
 													<td align ="center"><b> {$totalSumFlat}</b></td>
+                                                                                                        <td align ="center"><b> {$totalEditedSumFlat}</b></td>
                                                                                                         <td align ="center"><b> {$totalLaunchedFlat}</b></td>
+                                                                                                        <td align ="center"><b> {$totalEditedLaunchedFlat}</b></td>
 													<td align ="center"><b>{$totalSumflatAvail}</b></td>
 													<td  align ="left" colspan ="5"><b> 
 														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;

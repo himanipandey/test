@@ -71,30 +71,32 @@ function selectCity(value){
                         <TD class=whiteTxt width=16% align="center">META TITLE</TD>
                          <TD class=whiteTxt width=18% align="center">META KEYWORDS</TD>
                          <TD class=whiteTxt width=15% align="center">URL</TD>                          
-						 <TD class=whiteTxt width=10% align="center">STATUS</TD>
+			 <TD class=whiteTxt width=10% align="left">STATUS</TD>
+                         <TD class=whiteTxt width=10% align="left">Visible in CMS</TD>
                         <TD class=whiteTxt width=12% align="center">ACTION</TD>
                       </TR>
                       <TR><TD colspan=12 class=td-border>&nbsp;</TD></TR>
-                      {$count = 0}
-					  {section name=data loop=$localityDataArr}
-					  
-					  {$count = $count+1}
-					  {if $count%2 == 0}
-                       			
-						{$color = "bgcolor = '#F7F7F7'"}
-					  {else}                       			
-						{$color = "bgcolor = '#FCFCFC'"}
-					 {/if}	
+                        {$count = 0}
+                        {section name=data loop=$localityDataArr}
+
+                        {$count = $count+1}
+                        {if $count%2 == 0}
+
+                              {$color = "bgcolor = '#F7F7F7'"}
+                        {else}                       			
+                              {$color = "bgcolor = '#FCFCFC'"}
+                       {/if}	
                       <TR {$color}>
 
-						<TD align=left class=td-border>{if $localityDataArr[data].LABEL!=''}{$localityDataArr[data].LABEL}{else}-{/if}</TD>
-						<TD align=left class=td-border>{if $localityDataArr[data].META_TITLE!=''}{$localityDataArr[data].META_TITLE}{else}-{/if}</TD>
+                        <TD align=left class=td-border>{if $localityDataArr[data].LABEL!=''}{$localityDataArr[data].LABEL}{else}-{/if}</TD>
+                        <TD align=left class=td-border>{if $localityDataArr[data].META_TITLE!=''}{$localityDataArr[data].META_TITLE}{else}-{/if}</TD>
 
-						<TD align=left class=td-border>{if $localityDataArr[data].META_KEYWORDS!=''}{$localityDataArr[data].META_KEYWORDS}{else}-{/if}</TD>
+                        <TD align=left class=td-border>{if $localityDataArr[data].META_KEYWORDS!=''}{$localityDataArr[data].META_KEYWORDS}{else}-{/if}</TD>
 
-						<TD align=left class=td-border>{if $localityDataArr[data].URL!=''}{$localityDataArr[data].URL}{else}-{/if}</TD>
+                        <TD align=left class=td-border>{if $localityDataArr[data].URL!=''}{$localityDataArr[data].URL}{else}-{/if}</TD>
 
-						<TD align=left class=td-border>{if $localityDataArr[data].ACTIVE!=''}{$statusArray[$localityDataArr[data].ACTIVE]}{else}-{/if}</TD>
+                        <TD align=left class=td-border>{if $localityDataArr[data].ACTIVE!=''}{$statusArray[$localityDataArr[data].ACTIVE]}{else}-{/if}</TD>
+                        <TD align=left class=td-border>{if $localityDataArr[data].VISIBLE_IN_CMS}Yes{else} No{/if}</TD>
 
                         <TD  class="td-border" align=left>
 						<a href="localityadd.php?localityid={$localityDataArr[data].LOCALITY_ID}&c={$cityId}" title="Edit">Edit </a>|
@@ -103,12 +105,12 @@ function selectCity(value){
                       </TR>
                        {/section}
                         {if $NumRows<=0}
-							{if $cityId!="select"}
-								<TR><TD colspan="9" class="td-border" align="left">Sorry, no records found.</TD></TR>
-							
-							{else if $cityId=="" || $cityId=="select"}
-								<TR><TD colspan="9" class="td-border" align="left">Please select atleast one option.</TD></TR>
-							{/if}
+                            {if $cityId!="select"}
+                                    <TR><TD colspan="9" class="td-border" align="left">Sorry, no records found.</TD></TR>
+
+                            {else if $cityId=="" || $cityId=="select"}
+                                    <TR><TD colspan="9" class="td-border" align="left">Please select atleast one option.</TD></TR>
+                            {/if}
                         {/if}
                          
                       <TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD>
@@ -117,7 +119,7 @@ function selectCity(value){
                       </TBODY>
                     </FORM>
                     </TABLE>
- {if $NumRows>0}
+               {if $NumRows>0}
                   <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>

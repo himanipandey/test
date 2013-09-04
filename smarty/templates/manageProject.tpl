@@ -313,6 +313,7 @@ function selectedBuilderValue(builderId) {
 							<tr>
 								<td height="25" align="center" colspan= "2">
 									<span id = "errmsg" style = "display:none;"><font color = "red">Please select atleast one field</font></span>
+                                                                        {if $errorMsg} {$errorMsg} {/if}
 								</td>
 							</tr>
 							<tr>
@@ -506,7 +507,7 @@ function selectedBuilderValue(builderId) {
 						<TD class="whiteTxt" width=20%>Phase, Stage & Label</TD>
                         <TD class="whiteTxt" width=20% nowrap>Builder Name</TD>
                         <TD class="whiteTxt" width=10%>Address</TD>
-                        <TD class="whiteTxt" width=15%>Location</TD>
+                        <TD class="whiteTxt" width=15%>Active</TD>
 
                         <TD class="whiteTxt" width=13% align ="center">Action</TD>
                       </TR>                    
@@ -569,12 +570,16 @@ function selectedBuilderValue(builderId) {
                                 <TD align=left class=td-border nowrap>{$projectDataArr[data].PROJECT_STAGE} - {$projectDataArr[data].PROJECT_PHASE} - No Label</TD>
                         {/if}
                         <TD align=left class=td-border nowrap>{$projectDataArr[data].BUILDER_NAME}</TD>
-                        <TD align=left class=td-border>
+                        <TD align=left class=td-border nowrap>
                         	{$projectDataArr[data].PROJECT_ADDRESS}
                         </TD>
-                        <TD align=left class=td-border>
-                        	{$projectDataArr[data].PROJECT_ADDRESS}
-                        </TD>
+                       
+                        <td align=left class=td-border nowrap valign = "top"> 
+                            {if $projectDataArr[data].ACTIVE == 0}Inactive on both Website and IS DB{/if}
+                            {if $projectDataArr[data].ACTIVE == 1}Active on both Website and IS DB{/if}
+                            {if $projectDataArr[data].ACTIVE == 2}Deleted{/if}
+                            {if $projectDataArr[data].ACTIVE == 3}Active on IS but inactive on website{/if}
+                        </td>
 
                         <TD  class="td-border" align=left nowrap = 'nowrap'>
 

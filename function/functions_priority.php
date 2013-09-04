@@ -114,7 +114,7 @@ function autoAdjustPrio($tablename, $cityID = null, $priority = null)
 }
 /* * ******suburb list with id************* */
 function localityArr($cityId) {
-    $qry = "SELECT LOCALITY_ID,LABEL FROM " . LOCALITY . " WHERE CITY_ID = '" . $cityId . "' ORDER BY LABEL ASC";
+    $qry = "SELECT LOCALITY_ID,LABEL FROM " . LOCALITY . " WHERE CITY_ID = '" . $cityId . "' AND VISIBLE_IN_CMS = '1' ORDER BY LABEL ASC";
     $res = mysql_query($qry);
     $arrCity = array();
     while ($data = mysql_fetch_assoc($res)) {

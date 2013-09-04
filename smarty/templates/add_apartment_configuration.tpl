@@ -153,6 +153,7 @@
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
+                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
 
@@ -164,6 +165,7 @@
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Pooja Room</td>
+                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Property Status</td>
 
                         </tr>
 
@@ -240,6 +242,9 @@
                           </td>
                           <td align="left" >
                                 <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizeval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                          </td>
+                          <td>
+                                <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtCarpetAreaInfo[{$smarty.section.foo.index}]} checked="checked"{/if}>
                           </td>
                           <td>
                               <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea_{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea" value="{$txtPricePerUnitAreaval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtPricePerUnitAreaval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};" readonly=""  maxlength = "10">
@@ -334,6 +339,13 @@
                                     <option {if $poojaroomsval[{$smarty.section.foo.index}] == '10'} value = "10" selected = 'selected' {else} value = "10" {/if}>10</option>
                                 </select>
                           </td>
+                    <td>
+                      <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
+                          <option value = "Available">Select</option>
+                          <option {if $statusval[{$smarty.section.foo.index}] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
+                          <option {if $statusval[{$smarty.section.foo.index}] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
+                      </select>
+                    </td>
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid #FF0000"  maxlength = "10">
@@ -376,6 +388,7 @@
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                               <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
+                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
 
@@ -385,12 +398,12 @@
                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Plot Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Terrace Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Garden Area</td>
-
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Balcony</td>
 
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
                                 <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Pooja Room</td>
+                                <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td>
 
                             </tr>
 
@@ -469,6 +482,9 @@
                               </td>
                               <td align="left" >
                                     <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval_VA[$new_index]} == '') OR !is_numeric({$txtSizeval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                              </td>
+                              <td>
+                                    <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtCarpetAreaInfo_VA[{$smarty.section.foo.index}]} checked="checked"{/if}>
                               </td>
                               <td>
                                     <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea_{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea" value="{$txtPricePerUnitAreaval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval_VA[$new_index]} == '') OR !is_numeric({$txtPricePerUnitAreaval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" readonly="">
@@ -577,6 +593,13 @@
                                     </select>
 
                               </td>
+                              <td>
+                      <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
+                          <option value = "Available">Select</option>
+                          <option {if $statusval_VA[$new_index] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
+                          <option {if $statusval_VA[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
+                      </select>
+                    </td>
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
 
@@ -610,6 +633,7 @@
                                 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Plot Size(Breadth)</td>
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Plot Area</td>
+                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Property Status</td>
                             </tr>
 
                             {section name=foo start= {$looprange} loop={$looprange+15} step=1}
@@ -656,6 +680,13 @@
                               </td>
                               <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                              </td>
+                              <td>
+                                <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
+                                    <option value = "Available">Select</option>
+                                    <option {if $statusval_P[$new_index] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
+                                    <option {if $statusval_P[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
+                                </select>
                               </td>
                             </tr>
                         {/section}

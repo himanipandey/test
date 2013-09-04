@@ -56,4 +56,11 @@
     if($specialAccessAuth == true)
         $specialAccess = 1;
     $smarty->assign("specialAccess",$specialAccess);
+    
+    $localityCleanedAuth = isUserPermitted('locality-cleaned', 'access');
+
+    $localityCleanedAccess = 0;
+    if($localityCleanedAuth == true)
+        $localityCleanedAccess = 1;
+    $smarty->assign("localityCleanedAccess",$localityCleanedAccess);
 ?>

@@ -232,7 +232,7 @@
                                         <tr>
                                             <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
                                                         <td width="30%" align="left">
-                                                            <input name = "isLaunchUnitPhase" id="isLaunchUnitPhase" type = "checkbox" value = "1" {if $isLaunchUnitPhase == 1} checked {/if} {if $isInventoryCreated}disabled="true"{/if}>
+                                                            <input name = "isLaunchUnitPhase" id="isLaunchUnitPhase" type = "checkbox" value = "1" {if $isLaunchUnitPhase == 1} checked {/if}>
                                                         </td>
                                                         <td width="50%" align="left"></td>
                                                         </tr>
@@ -265,7 +265,7 @@
                                                                                                             <label for="flat_bed_{$num}">{$num} Bedroom(s)</label>
                                                                                                             <input id="flat_bed_{$num}" name="flat_bed_{$num}[supply]" style="width: 50px;" value="{$FlatsQuantity[$num]['supply']}" />
                                                                                                             <label>Launched</label>
-                                                                                                            <input id="flat_bed_{$num}" {if !$isLaunchUnitPhase || $isInventoryCreated}readonly="true"{/if} name="flat_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$FlatsQuantity[$num]['launched']}" />
+                                                                                                            <input id="flat_bed_{$num}" {if !$isLaunchUnitPhase}readonly="true"{/if} name="flat_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$FlatsQuantity[$num]['launched']}" />
                                                                                                             <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
                                                                                                                 {foreach $OptionsDetails as $option}
                                                                                                                     {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Apartment' and in_array($option.OPTIONS_ID, $option_ids)}
@@ -311,7 +311,7 @@
                                                                                                                                             <label for="villa_bed_{$num}">{$num} Bedroom(s)</label>
                                                                                                                                             <input id="villa_bed_{$num}" name="villa_bed_{$num}[supply]" style="width: 50px;" value="{$VillasQuantity[$num]['supply']}" />
                                                                                                                                             <label>Launched</label>
-                                                                                                                                            <input id="villa_bed_{$num}" {if !$isLaunchUnitPhase || $isInventoryCreated}readonly="true"{/if} name="villa_bed_{$num}[launched]" style="width: 50px;" value="{$VillasQuantity[$num]['launched']}" />
+                                                                                                                                            <input id="villa_bed_{$num}" {if !$isLaunchUnitPhase}readonly="true"{/if} name="villa_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$VillasQuantity[$num]['launched']}" />
                                                                                                                                             <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
                                                                                                                                                 {foreach $OptionsDetails as $option}
                                                                                                                                                     {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Villa' and in_array($option.OPTIONS_ID, $option_ids)}
@@ -337,7 +337,7 @@
                                                                                                                                 <td width="30%" align="left" nowrap>
                                                                                                                                     <input type='text' name='supply' id='supply' value='{$PlotQuantity[0]['supply']}'>
                                                                                                                                     <label>Launched</label>
-                                                                                                                                    <input id="supply" {if !$isLaunchUnitPhase || $isInventoryCreated}readonly="true"{/if} name="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
+                                                                                                                                    <input id="supply" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched" class="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
                                                                                                                                 </td>
                                                                                                                                 <td width="50%" align="left">
                                                                                                                                     <font color="red"><span id = "err_supply" style = "display:none;">Enter the supply for Plot</span></font>

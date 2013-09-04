@@ -62,17 +62,75 @@
 					 </select>
 				 </td>				   
 				 <td width="50%" align="left"></td>
-				</tr>				
-				
+				</tr>
+                                
 				<tr>
+				  <td width="20%" align="right">Visible In CMS :</td>
+				  <td width="30%" align="left" >
+                                  {if $specialAccess == 1}
+				    <select name = "visibleInCms" id="visibleInCms" style="width:150px;"> 
+                                        <option value = "0" {if $visibleInCms == '0'}  selected {/if}>Not Visible</option>
+                                        <option value = "1" {if $visibleInCms == '1'}  selected {/if}>Visible</option>		
+                                    </select>
+                                  {else}
+                                      <input type="hidden" name = "visibleInCms" value="{$visibleInCms}">
+                                      {if $visibleInCms == '0'}  Not Visible {/if}
+                                      {if $visibleInCms == '1'}  Visible {/if}
+                                  {/if}
+				 </td>				   
+				 <td width="50%" align="left"></td>
+				</tr>
+                                {if $localityCleanedAccess == 1}
+                                <tr>
+				  <td width="20%" align="right">Locality Cleaned  : </td>
+				  <td width="30%" align="left" >
+                                      <input type = "button" name ="localityCleaned" onclick = "cleanedLocality({$localityid});" value="Click To Save">
+				 </td>				   
+				 <td width="50%" align="left">&nbsp;</td>
+				</tr>
+                                <tr class="latLong">
+                                  <td width="20%" align="right">Max Latitude  : </td>
+                                  <td width="30%" align="left" >
+                                      {$maxLatitude}
+                                      <input type = "hidden" name ="maxLatitude" value="{$maxLatitude}">
+                                 </td>				   
+                                 <td width="50%" align="left">&nbsp;</td>
+                                </tr>
+
+                                <tr class="latLong">
+                                  <td width="20%" align="right">Min Latitude  : </td>
+                                  <td width="30%" align="left" >
+                                      {$minLatitude}
+                                      <input type = "hidden" name ="minLatitude" value="{$minLatitude}">
+                                 </td>				   
+                                 <td width="50%" align="left">&nbsp;</td>
+                                </tr>
+
+                                <tr class="latLong">
+                                  <td width="20%" align="right">Max Longitude  : </td>
+                                  <td width="30%" align="left" >
+                                      {$maxLongitude}
+                                      <input type = "hidden" name ="maxLongitude" value="{$maxLongitude}">
+                                 </td>				   
+                                 <td width="50%" align="left">&nbsp;</td>
+                                </tr>
+
+                                 <tr class="latLong">
+                                  <td width="20%" align="right">Min Longitude  : </td>
+                                  <td width="30%" align="left" >
+                                      {$minLongitude}
+                                      <input type = "hidden" name ="minLongitude" value="{$minLongitude}">
+                                 </td>				   
+                                 <td width="50%" align="left">&nbsp;</td>
+                                </tr>
+                                {/if}
+                                <tr class="save_row">
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
-				  <input type="hidden" name="catid" value="<?php echo $catid ?>" />
 				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
 				  </td>
 				</tr>
-			      </div>
 			    </form>
 			    </TABLE>
 <!--			</fieldset>-->
@@ -155,5 +213,26 @@ jQuery(document).ready(function(){
 	});
 
 });
+
+function cleanedLocality(localityId) {
+
+$.ajax({
+         type: "POST",
+         url: 'ajax/cleanedLocality.php',
+         data: { localityId:localityId },
+         success:function(msg){
+           if(msg){
+             if(msg.length > 823) {
+                alert("New locality boundaries have been saved");
+             }
+             else{
+                alert("No valid record in project table");
+             }
+              $(".latLong").remove();
+              $(msg).insertBefore($('.save_row'));
+            }
+         }
+     })
+}
 
 </script>

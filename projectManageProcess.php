@@ -97,7 +97,7 @@
   		if($city != '')
   		{
                     $localityArr = Array();
-                    $sql = "SELECT LOCALITY_ID, LABEL FROM ".LOCALITY." AS A WHERE CITY_ID = '" . $city."' ORDER BY LABEL ASC";		
+                    $sql = "SELECT LOCALITY_ID, LABEL FROM ".LOCALITY." AS A WHERE CITY_ID = '" . $city."' AND VISIBLE_IN_CMS = '1' ORDER BY LABEL ASC";		
                     $data = mysql_query($sql);
                     if(mysql_num_rows($data)>0)
                     {
@@ -254,16 +254,21 @@
 		}
 		$QueryMember	.= " ORDER BY PROJECT_NAME,BUILDER_NAME DESC";
 		//echo $QueryMember;//die;
-		$QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
-		$NumRows 	= mysql_num_rows($QueryExecute);
+                if( strlen($QueryMember)>73 ) { 
+                    $QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
+                    $NumRows 	= mysql_num_rows($QueryExecute);
 
-		if($NumRows)
-		{
-                    while($data = mysql_fetch_assoc($QueryExecute))
+                    if($NumRows)
                     {
-                        array_push($projectDataArr,$data);
+                        while($data = mysql_fetch_assoc($QueryExecute))
+                        {
+                            array_push($projectDataArr,$data);
+                        }
                     }
-		}
+                }else {
+                     $errorMsg = '<font color = red>Please select atleast one field</font>';
+                }
+                $smarty->assign("errorMsg", $errorMsg);
                 
 	}
 	$smarty->assign("city", $city);
