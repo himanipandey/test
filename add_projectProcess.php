@@ -525,7 +525,7 @@ elseif ($projectId!='')
 
 		$smarty->assign("bank_arr", $bank_arr);
 
-		$suburbSelect = SuburbArr($ProjectDetail[0]['CITY_ID']);
+		$suburbSelect = SuburbArr($ProjectDetail[0]['CITY_ID'], $ProjectDetail[0]['LOCALITY_ID']);
 		 $smarty->assign("suburbSelect", $suburbSelect);
 
 		if($ProjectDetail[0]['SUBURB_ID'] != null)
@@ -533,7 +533,7 @@ elseif ($projectId!='')
 		else
 			$suburbId  = '';
 
-		$localitySelect = localityList($ProjectDetail[0]['CITY_ID'],$suburbId);
+		$localitySelect = localityList($ProjectDetail[0]['CITY_ID'],"");
 		$smarty->assign("localitySelect", $localitySelect);
 	 }
 

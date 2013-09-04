@@ -46,16 +46,15 @@ if($deletesubcity != '')
 
 else
 {
+    require $_SERVER['DOCUMENT_ROOT'].'/dbConfig.php';
     $qryCity = "SELECT LABEL FROM ".CITY." WHERE CITY_ID = $cityid";
-    $resCity = mysql_query($qryCity);
+    $resCity = mysql_query($qryCity) or die(mysql_error());
     $dataCity = mysql_fetch_assoc($resCity);
-    mysql_free_result($resCity);
     $subcityval = trim($subcityval);
     $url = createLocalityURL($subcityval, $dataCity['LABEL']);
-    var_dump($dataCity);
     if($subcityval!='' && $id!='')
 	{		
-		$seldata = "UPDATE ".SUBURB." SET LABEL = '".$subcityval."', URL = '$url'  WHERE SUBURB_ID='".$id."'";
+                $seldata = "UPDATE ".SUBURB." SET LABEL = '".$subcityval."', URL = '$url'  WHERE SUBURB_ID='".$id."'";
 		$resdata = mysql_query($seldata);
 		$c = mysql_affected_rows();
 	}

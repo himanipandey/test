@@ -127,7 +127,7 @@ function BuilderEntityArr()
 /* * ******city list with id************* */
 
 function CityArr() {
-    $qryBuilder = "SELECT CITY_ID,LABEL FROM " . CITY . " ORDER BY LABEL ASC";
+    $qryBuilder = "SELECT CITY_ID,LABEL FROM " . CITY . " WHERE ACTIVE = 1 ORDER BY LABEL ASC";
     $resBuilder = mysql_query($qryBuilder);
     $arrCity = array();
     while ($data = mysql_fetch_assoc($resBuilder)) {
@@ -138,8 +138,12 @@ function CityArr() {
 
 /* * ******suburb list with id************* */
 
-function SuburbArr($cityId) {
-    $qryBuilder = "SELECT SUBURB_ID,LABEL FROM " . SUBURB . " WHERE CITY_ID = '" . $cityId . "' ORDER BY LABEL ASC";
+function SuburbArr($cityId, $localityId = "") {
+    if($localityId=="") {
+        $qryBuilder = "SELECT SUBURB_ID,LABEL FROM " . SUBURB . " WHERE CITY_ID = '" . $cityId . "' ORDER BY LABEL ASC";
+    }else{
+         $qryBuilder = "SELECT A.SUBURB_ID, B.LABEL FROM ".LOCALITY." AS A INNER JOIN ".SUBURB." AS B ON (A.SUBURB_ID = B.SUBURB_ID) WHERE A.LOCALITY_ID = '" . $localityId."' ORDER BY B.LABEL ASC";
+    }
     $resBuilder = mysql_query($qryBuilder);
     $arrCity = array();
     while ($data = mysql_fetch_assoc($resBuilder)) {
