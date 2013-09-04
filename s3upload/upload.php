@@ -12,10 +12,10 @@ class S3Upload {
         $this->file = $file;
         $this->size = filesize($file);
         if($name == null)
-            $this->name = $file;
+            $this->original_name = $file;
         else
-            $this->name = $name;
-        $this->name = $this->remove_special_characters($this->name);
+            $this->original_name = $name;
+        $this->name = $this->add_timestamp_to_name($this->remove_special_characters($this->original_name));
         $this->max_file_size = $this->covert_to_bytes(self::$max_file_size);
         $this->errors = array();
         $this->response = null;
@@ -51,7 +51,7 @@ class S3Upload {
     }
 
     function validate_file(){
-        $ext = $this->get_file_extension($this->name);
+        $ext = $this->get_file_extension($this->original_name);
         $original_ext = $this->get_file_extension($this->file);
         if($ext != $original_ext) $this->add_errors("Extensions of both file do not match");
         if(!file_exists($this->file)) $this->add_errors("File does not exist");
@@ -87,7 +87,12 @@ class S3Upload {
     }
 
     function remove_special_characters($str){
-        return  preg_replace('/[^a-zA-Z0-9_\-\/]/s', '', $str);
+        return  preg_replace('/[^a-zA-Z0-9_\-\/\.]/s', '', $str);
+    }
+
+    function add_timestamp_to_name($name){
+        $pos = strpos($name, ".");
+        return substr_replace($name, "_".time(), $pos, 0);
     }
 
 }

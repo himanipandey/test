@@ -9,8 +9,6 @@ class AwsFileManager
         if($region == null) $region = $s3::REGION_APAC_SE1;
 		$s3->set_region($region);
         $s3->use_ssl = 0;
-//		$response = $s3->create_object($bucket_name, $destination, array('fileUpload'=>$source));
-//		print_r($response);
         return $s3;
 	}
 }
