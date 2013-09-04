@@ -1243,14 +1243,19 @@ function getDateNow(){
 								<b>Bank List:</b>
 							</td>
 							<td>
-								{assign var=bank_arr value=","|explode:$projectDetails[0].BANK_LIST} 
-								{if count($bank_arr)>1}
-									{foreach from = $BankListArr key = key item = value}
-										{if in_array($key,$bank_arr)} {$value} {/if}
-									{/foreach}
-								{else}
-									--
-								{/if}
+                                                            {$bank_arr = array()}
+                                                           {if strlen($projectDetails[0].BANK_LIST) == 1}
+								{$bank_arr[0] =  $projectDetails[0].BANK_LIST}
+                                                           {elseif strlen($projectDetails[0].BANK_LIST) != ''}
+                                                               {assign var=bank_arr value=","|explode:$projectDetails[0].BANK_LIST}
+                                                           {/if}
+                                                            {if count($bank_arr)>0}
+                                                                {foreach from = $BankListArr key = key item = value}
+                                                                        {if in_array($key,$bank_arr)} {$value} {/if}
+                                                                {/foreach}
+                                                            {else}
+                                                                    --
+                                                            {/if}
 								
 							</td>
 						</tr>
