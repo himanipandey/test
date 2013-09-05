@@ -96,37 +96,35 @@
                                 </form>
                             </tbody>
                         </table>
-                        <form method="POST" action="">
-                            <input type="hidden" name="updateImg" value="1">
-                            <div class="image-block">
-                                {if isset($uploadedImage)}
-                                    {foreach from=$uploadedImage item=row}
-                                        <div style="padding:5px; border:solid 1px #ccc; display:inline-block;">
-                                            <div class="img-wrap"> <img src="/images_new/locality/thumb_{$row.IMAGE_NAME}" /> </div>
-                                            <div class="img-dtls">
-                                                <select name="imgCate[{$row.IMAGE_ID}]">
-                                                    <option value="">Category</option>
-                                                    <option value="Mall">Mall</option>
-                                                    <option value="Hospital">Hospital</option>
-                                                    <option value="School">School</option>
-                                                    <option value="Road">Road</option>
-                                                    <option value="Other">Other</option>
-                                                </select><br />
-                                                <input type="text" name="imgName[{$row.IMAGE_ID}]" placeholder="Enter Name"><br />
-                                                <input type="text" name="imgDesc[{$row.IMAGE_ID}]" placeholder="Enter Description" />
-                                            </div>
-                                            <div class="clearfix" style="clear:both;"></div>
-                                        </div>
-                                    {/foreach}
-                                {/if}
-                            </div>
-                            <div class="clearfix" style="clear:both;"></div>
+
+                        <div class="image-block">
                             {if isset($uploadedImage)}
-                                <button class="btn-save" style="border:solid 1px #000; padding:5px 10px; background:#333; border-radius:5px; color:#fff; font:bold 12px Arial; text-decoration:none; " id="s-btn">SAVE</button>
-                            {else}
-                                <button class="btn-save" style="display:none; border:solid 1px #000; padding:5px 10px; background:#333; border-radius:5px; color:#fff; font:bold 12px Arial; text-decoration:none; " id="s-btn">SAVE</button>
+                                {foreach from=$uploadedImage item=row}
+                                    <div style="padding:5px; border:solid 1px #ccc; display:inline-block;">
+                                        <div class="img-wrap"> <img src="/images_new/locality/thumb_{$row.IMAGE_NAME}" /> </div>
+                                        <div class="img-dtls">
+                                            <select name="imgCate_{$row.IMAGE_ID}">
+                                                <option value="">Category</option>
+                                                <option value="Mall">Mall</option>
+                                                <option value="Hospital">Hospital</option>
+                                                <option value="School">School</option>
+                                                <option value="Road">Road</option>
+                                                <option value="Other">Other</option>
+                                            </select><br />
+                                            <input type="text" name="imgName_{$row.IMAGE_ID}" placeholder="Enter Name"><br />
+                                            <input type="text" name="imgDesc_{$row.IMAGE_ID}" placeholder="Enter Description" />
+                                        </div>
+                                        <div class="clearfix" style="clear:both;"></div>
+                                    </div>
+                                {/foreach}
                             {/if}
-                        </form>
+                        </div>
+                        <div class="clearfix" style="clear:both;"></div>
+                        {if isset($uploadedImage)}
+                            <button class="btn-save" style="border:solid 1px #000; padding:5px 10px; background:#333; border-radius:5px; color:#fff; font:bold 12px Arial; text-decoration:none; " id="s-btn" onclick="saveDetails(); return false;">SAVE</button>
+                        {else}
+                            <button class="btn-save" style="display:none; border:solid 1px #000; padding:5px 10px; background:#333; border-radius:5px; color:#fff; font:bold 12px Arial; text-decoration:none; " id="s-btn" onclick="saveDetails(); return false;">SAVE</button>
+                        {/if}
                     </td>
                 </tr>
             </tbody>
