@@ -124,7 +124,6 @@
 							//unlink($oldpath);
 
 							$txtlocationplan 	= move_uploaded_file($_FILES["img"]["tmp_name"][$key], $img_path);
-                            (new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath,"",$img_path)))->upload();
 							if(!$txtlocationplan)
 							{
 								$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
@@ -150,23 +149,18 @@
 														$image = new SimpleImage();
 														$path=$createFolder."/".$file;
 														$image->load($path);
-                                                        $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
-														$image->save($imgdestpath);
-                                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath)))->upload();
+														$image->save($newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file));
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);		
 														/**********Working for watermark*******************/
 														$img = new Zubrag_watermark($path);
 														$img->ApplyWatermark($watermark_path);
 														$img->SaveAsFile($path);
-                                                        (new S3Upload($s3, $bucket, $path, str_replace($newImagePath,"",$path)))->upload();
 														$img->Free(); 
 														/************Resize and large to small*************/
 														$image->resize(485,320);
 														$newimg	=	str_replace('floor-plan','floor-plan-rect-img',$file);
-                                                        $imgdestpath = $createFolder."/".$newimg;
-														$image->save($imgdestpath);
-                                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath)))->upload();
+														$image->save($createFolder."/".$newimg);
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 														/**********Working for watermark*******************/
@@ -178,23 +172,18 @@
 														$img = new Zubrag_watermark($image_path);
 														$img->ApplyWatermark($watermark_path);
 														$img->SaveAsFile($imgdestpath);
-                                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath)))->upload();
 														$img->Free();  				 						
 														/************Resize and large to small*************/
 														$image->resize(95,65);
 														$newimg	=	str_replace('floor-plan','floor-plan-sm-rect-img',$file);
-                                                        $imgdestpath = $createFolder."/".$newimg;
-														$image->save($imgdestpath);
-                                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath)))->upload();
+														$image->save($createFolder."/".$newimg);
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 														/************Resize and large to thumb*************/
 														$image->resize(77,70);
 														$newimg	=	str_replace('floor-plan','floor-plan-thumb',$file);
-                                                        $imgdestpath = $createFolder."/".$newimg;
-														$image->save($imgdestpath);
-                                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath)))->upload();
+														$image->save($createFolder."/".$newimg);
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 												}																						
@@ -208,7 +197,7 @@
 									$builderfolder=strtolower($BuilderName);
 									$destBuilderFolder = '';
 									$sourceBuilderFolder = "public_html/images_new/$builderfolder";
-//									$result = upload_file_to_img_server_using_ftp($sourceBuilderFolder,$destBuilderFolder,4);
+									$result = upload_file_to_img_server_using_ftp($sourceBuilderFolder,$destBuilderFolder,4);
 								
 								}				
 								if($projectFolderCreated==1)
@@ -217,11 +206,11 @@
 									$projectNameFolder=strtolower($ProjectName);					
 									$destProjectFolder = '';
 									$sourceProjectFolder = "public_html/images_new/$builderfolder/$projectNameFolder";
-//									$result = upload_file_to_img_server_using_ftp($sourceProjectFolder,$destProjectFolder,4);
+									$result = upload_file_to_img_server_using_ftp($sourceProjectFolder,$destProjectFolder,4);					
 
 								}							
 											
-//								$result = upload_file_to_img_server_using_ftp($source,$dest,1);
+								$result = upload_file_to_img_server_using_ftp($source,$dest,1);
 								
 								$imgPathDb = explode("/images_new",$img_path);
 								$qry	=	"UPDATE ".RESI_FLOOR_PLANS." 
