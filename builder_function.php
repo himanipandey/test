@@ -1936,15 +1936,13 @@ function curlFetch($url)
 function getPrevMonthProjectData($projectId)
 {
 	global $analytics_credential;
-	// global $_SERVER['SERVER_NAME'];
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
-	//$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
-	$url="http://cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	$url=$_SERVER['HTTP_HOST']."/analytics/apis/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1957,14 +1955,12 @@ function getPrevMonthProjectData($projectId)
 function getFlatAvailability($projectId)
 {
 	global $analytics_credential;
-	// global $_SERVER['SERVER_NAME'];
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	 $url=$_SERVER['HTTP_HOST']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
-	//$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	 $url=$_SERVER['HTTP_HOST']."/analytics/apis/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
