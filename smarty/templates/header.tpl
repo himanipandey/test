@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -14,6 +16,7 @@
 	<script language="javascript" src="{$FORUM_SERVER_PATH}js/picker.js"></script>
 
  -->
+	
 </head>
 <body >
 <table border="0" cellpadding="0" cellspacing="0" width="100%">

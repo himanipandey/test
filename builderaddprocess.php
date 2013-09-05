@@ -183,9 +183,7 @@
                             $foldername		=	str_replace(' ','-',strtolower($txtBuilderName));
                             $createFolder	=	 $newImagePath.$foldername;
                             mkdir($createFolder, 0777);
-                            $imgdestpath = $createFolder."/" . $name;
-                            $return 	= move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], $imgdestpath);
-                           (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
+                            $return 	= move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], "".$createFolder."/" . $name);
                             if($return)
                             {				
                                 $imgurl	=   "/".$foldername."/".$name;
@@ -209,9 +207,8 @@
 
                                             $image->resize(477,247);
 
-                                            $imgdestpath = $createFolder."/". str_replace('.jpg','-rect.jpg',$file);
-                                            $image->save($imgdestpath);
-                                            (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
+                                            $image->save($createFolder."/". str_replace('.jpg','-rect.jpg',$file));
+
                                             /************Resize and large to small*************/
                                             $image->resize(95,65);
                                             $newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
@@ -219,9 +216,7 @@
 
                                             $image->resize(80,36);
                                             $newimg	=	str_replace('.jpg','-thumb.jpg',$file);
-                                            $imgdestpath = $createFolder."/".$newimg;
-                                            $image->save($imgdestpath);
-                                            (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
+                                            $image->save($createFolder."/".$newimg);
                                             /**********Working for watermark*******************/
                                             // Image path
                                                     $image_path = $createFolder."/".$file;
@@ -231,7 +226,6 @@
                                             $img = new Zubrag_watermark($image_path);
                                             $img->ApplyWatermark($watermark_path);
                                             $img->SaveAsFile($imgdestpath);
-                                            (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
                                             $img->Free();
                                         }	
                                     } 
@@ -258,9 +252,7 @@
 
                 if (($_FILES["txtBuilderImg"]["type"]))
                 {
-                        $imgdestpath = $newfold."/" . $name;
-                        $return  =	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], $imgdestpath);
-                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
+                        $return  =	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], "".$newfold."/" . $name);
                         if($return)
                         {
                             $imgurl = "/".$cutpath[1]."/".$name;
@@ -289,21 +281,16 @@
 
                                         /************Working for large Img Backup***********************/
                                         $image->resize(477,247);
-                                        $imgdestpath = $newImagePath.$cutpath[1]."/". str_replace('.jpg','-rect.jpg',$file);
-                                        $image->save($imgdestpath);
-                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
+                                        $image->save($newImagePath.$cutpath[1]."/". str_replace('.jpg','-rect.jpg',$file));
                                          /************Resize and large to small*************/
                                         $image->resize(95,65);
                                         $newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
-                                        $imgdestpath = $newImagePath.$cutpath[1]."/".$newimg;
-                                        $image->save($imgdestpath);
-                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
+                                        $image->save($newImagePath.$cutpath[1]."/".$newimg);
 
                                         $image->resize(80,36);
                                         $newimg	=	str_replace('.jpg','-thumb.jpg',$file);
-                                        $imgdestpath = $createFolder."/".$newimg;
-                                        $image->save($imgdestpath);
-                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
+                                        $image->save($createFolder."/".$newimg);
+
                                         /**********Working for watermark*******************/
                                         // Image path
                                         $image_path =$newImagePath.$cutpath[1]."/".$file;
@@ -313,7 +300,6 @@
                                         $img = new Zubrag_watermark($image_path);
                                         $img->ApplyWatermark($watermark_path);
                                         $img->SaveAsFile($imgdestpath);
-                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
                                         $img->Free();
                                     }	
                                 }	 		
