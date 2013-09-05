@@ -505,6 +505,12 @@ if (isset($_POST['Next']))
 										$image_path =$createFolder."/".$newimg;
 										// Where to save watermarked image
 										$imgdestpath = $createFolder."/".$newimg;
+										// Watermark image
+										$img = new Zubrag_watermark($image_path);
+										$img->ApplyWatermark($watermark_path);
+										$img->SaveAsFile($imgdestpath);
+                                        (new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath)))->upload();
+										$img->Free();
 										/************Resize and large to small*************/
 										//echo $image->getWidth($imgdestpath);
 										if($image->getWidth($imgdestpath)>630)
