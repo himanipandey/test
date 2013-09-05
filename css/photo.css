@@ -27,9 +27,11 @@ table td.hdng {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#e9e9ce',GradientType=0 ); /* IE6-9 */
 }
 table td label {
-    width:200px!important;
     font:normal 13px Arial;
 }
+table td label.lbl {display:block; float:left; width:150px; }
+table td .valueField {display:block; float:left;}
+.stronger {font:bold 14px Arial; color:#333;}
 .msg {
     padding: 8px 35px 8px 14px;
     margin-bottom: 20px;
@@ -49,4 +51,18 @@ table td label {
     color: #468847;
     background-color: #dff0d8;
     border-color: #d6e9c6;
+}
+
+.img-wrap {
+    float:left;
+}
+
+.img-dtls {
+    float:right;
+    margin:0px 0px 0px 10px;
+}
+
+.image-block {
+    float:left;
+    margin:10px;
 }
