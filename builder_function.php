@@ -804,6 +804,7 @@ function ProjectType($projectId) {
             $arrProjectType['UNIT_NAME'][] = $data['UNIT_NAME'];
             $arrProjectType['UNIT_TYPE'][] = $data['UNIT_TYPE'];
             $arrProjectType['SIZE'][] = $data['SIZE'];
+            $arrProjectType['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
             $arrProjectType['MEASURE'][] = $data['MEASURE'];
             $arrProjectType['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
             $arrProjectType['PRICE_PER_UNIT_AREA_DP'][] = $data['PRICE_PER_UNIT_AREA_DP'];
@@ -845,11 +846,13 @@ function ProjectType($projectId) {
             $arrProjectType_P['TOTAL_PLOT_AREA'][] = $data['TOTAL_PLOT_AREA'];
             $arrProjectType_P['LENGTH_OF_PLOT'][] = $data['LENGTH_OF_PLOT'];
             $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
+            $arrProjectType_P['STATUS'][] = $data['STATUS'];
         } else {
             $arrProjectType_VA['OPTIONS_ID'][] = $data['OPTIONS_ID'];
             $arrProjectType_VA['UNIT_NAME'][] = $data['UNIT_NAME'];
             $arrProjectType_VA['UNIT_TYPE'][] = $data['UNIT_TYPE'];
             $arrProjectType_VA['SIZE'][] = $data['SIZE'];
+            $arrProjectType_VA['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
             $arrProjectType_VA['MEASURE'][] = $data['MEASURE'];
             $arrProjectType_VA['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
             $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP'][] = $data['PRICE_PER_UNIT_AREA_DP'];
@@ -1345,6 +1348,11 @@ function ViewLocalityDetails($localityID) {
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
         $ResDetails['VISIBLE_IN_CMS'] = $Res['VISIBLE_IN_CMS'];
+        $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
+        $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
+        $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
+        $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
+        $ResDetails['LOCALITY_CLEANED'] = $Res['LOCALITY_CLEANED'];
         return $ResDetails;
     } else {
         return 0;

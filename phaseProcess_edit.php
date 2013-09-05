@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $phase_quantity = ProjectSupply::projectTypeGroupedQuantityForPhase($projectId, $phaseId);
     $phase_quantity_hash = array();
-    foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->agg;
+    foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->edited_agg;
     $isLaunchUnitPhase = ProjectSupply::isLaunchUnitPhase($projectId, $phaseId);
     $isInventoryCreated = ProjectSupply::isInventoryAdded($projectId, $phaseId);
     $smarty->assign("isInventoryCreated", $isInventoryCreated);
@@ -203,7 +203,7 @@ if (isset($_POST['btnSave'])) {
 
         $phase_quantity = ProjectSupply::projectTypeGroupedQuantityForPhase($projectId, $phaseId);
         $phase_quantity_hash = array();
-        foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->agg;
+        foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->edited_agg;
         $smarty->assign("FlatsQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['apartment']));
         $smarty->assign("VillasQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['villa']));
         $smarty->assign("PlotQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['plot']));

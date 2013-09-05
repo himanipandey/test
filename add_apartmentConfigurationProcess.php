@@ -51,6 +51,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 //$projectId				=	$val;
                 $txtUnitName			=	$_REQUEST['txtUnitName'][$key];
                 $txtSize			=	$_REQUEST['txtSize'][$key];
+                $txtCarpetAreaInfo  =   (int)($_REQUEST['txtCarpetAreaInfo_'.$key] == "on");
                 $txtPricePerUnitArea		=	$_REQUEST['txtPricePerUnitArea'][$key];
                 $txtPricePerUnitAreaDp		=	$_REQUEST['txtPricePerUnitAreaDp'][$key];
                 $txtPricePerUnitHigh		=	$_REQUEST['txtPricePerUnitHigh'][$key];
@@ -74,7 +75,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $bathrooms					=	$_REQUEST['bathrooms'][$key];
                 $unitType					=	$_REQUEST['unitType'][$key];
 
-                $status						=	'Available';
+                $status						=	$_REQUEST['propstatus'][$key];
                 $pid[]						=	trim($txtUnitName);
                 $txtUnitNameval[]			=	trim($txtUnitName);
                 $txtSizeval[]				=	trim($txtSize);
@@ -88,7 +89,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $servantroomsval[]			=	$servantrooms;
                 $poojaroomsval[]			=	$poojarooms;
                 $statusval[]				=	$status;
-
+                
                 $smarty->assign("pid", $pid);
 
                 $smarty->assign("txtUnitNameval", $txtUnitNameval);
@@ -114,6 +115,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("servantroomsval",$servantroomsval);
                 $smarty->assign("poojaroomsval",$poojaroomsval);
                 $smarty->assign("statusval",$statusval);
+                
 
                 if ($_REQUEST['unitType'][$key]!='Plot') {
                     if(trim($txtSize) == '' OR (!is_numeric(trim($txtSize))))
@@ -179,7 +181,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     {
                         if($txtPlotArea != 0)
                            $txtPlotArea = $txtSize;
-                        //Break
                         $option_id = $_REQUEST['typeid_edit'][$key];
                         $option = ResiProjectOptions::find($option_id);
                         $action = "update";
@@ -187,6 +188,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->unit_type = $unitType;
                     $option->unit_name = $txtUnitName;
                     $option->size = $txtSize;
+                    $option->carpet_area_info = $txtCarpetAreaInfo;
                     $option->price_per_unit_area = $txtPricePerUnitArea;
                     $option->price_per_unit_area_dp = (int)$txtPricePerUnitAreaDp;
                     $option->status = $status;
@@ -206,6 +208,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->pooja_room = (int)$poojarooms;
                     $option->length_of_plot = (int)$txtSizeLen;
                     $option->breadth_of_plot = (int)$txtSizeBre;
+                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
                     $result = $option->save();
                     if($result){
                         audit_insert($option->options_id,$action,'resi_project_options',$option->project_id);
@@ -287,6 +290,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("TYPE_ID", $arrProjectType['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval", $arrProjectType['UNIT_NAME']);
         $smarty->assign("txtSizeval", $arrProjectType['SIZE']);
+        $smarty->assign("txtCarpetAreaInfo", $arrProjectType['CARPET_AREA_INFO']);
         $smarty->assign("txtPricePerUnitAreaval", $arrProjectType['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPricePerUnitAreaDpval", $arrProjectType['PRICE_PER_UNIT_AREA_DP']);
         $smarty->assign("txtPricePerUnitHighval", $arrProjectType['PRICE_PER_UNIT_HIGH']);
@@ -301,7 +305,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("studyroomsval",$arrProjectType['STUDY_ROOM']);
         $smarty->assign("servantroomsval",$arrProjectType['SERVANT_ROOM']);
         $smarty->assign("poojaroomsval",$arrProjectType['POOJA_ROOM']);
-        $smarty->assign("statusval",'Available');
+        $smarty->assign("statusval",$arrProjectType['STATUS']);
         $smarty->assign("txtNoOfFloor",$arrProjectType['NO_OF_FLOORS']);
 
         //echo "<pre>";print_r($arrProjectType_P);
@@ -314,10 +318,12 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("txtPlotArea_P", $arrProjectType_P['TOTAL_PLOT_AREA']);
         $smarty->assign("txtSizeLenval_P", $arrProjectType_P['LENGTH_OF_PLOT']);
         $smarty->assign("txtSizeBreval_P", $arrProjectType_P['BREADTH_OF_PLOT']);
+        $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);
 
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['UNIT_NAME']);
         $smarty->assign("txtSizeval_VA", $arrProjectType_VA['SIZE']);
+        $smarty->assign("txtCarpetAreaInfo_VA", $arrProjectType_VA['CARPET_AREA_INFO']);
         $smarty->assign("txtPricePerUnitAreaval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPricePerUnitAreaDpval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP']);
         $smarty->assign("txtPricePerUnitHighval_VA", $arrProjectType_VA['PRICE_PER_UNIT_HIGH']);
@@ -333,7 +339,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("servantroomsval_VA",$arrProjectType_VA['SERVANT_ROOM']);
         $smarty->assign("poojaroomsval_VA",$arrProjectType_VA['POOJA_ROOM']);
         $smarty->assign("unitType_VA",$arrProjectType_VA['UNIT_TYPE']);
-		$smarty->assign("no_of_floors_VA",$arrProjectType_VA['NO_OF_FLOORS']);
+	$smarty->assign("no_of_floors_VA",$arrProjectType_VA['NO_OF_FLOORS']);
+        $smarty->assign("statusval_VA",$arrProjectType_VA['STATUS']);
 
         /***************query for project name display if edit********************/
     }
