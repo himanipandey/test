@@ -26,7 +26,8 @@
                         ["event14", "secondary_price.php", true],
                         ["event15", "insertSecondaryPrice.php", true],
                         ["event16", "updateSecondaryPrice.php", true],
-                        ["event17", "/new/supply-validation", true]
+                        ["event17", "/new/supply-validation", true],
+                        ["event18", "/new/bulk_price_inventory/", true]
 		]; 
 
 		for(var i=0; i< eventArray.length; i++){
@@ -40,7 +41,7 @@
 						else{
 							var str="";
 						}
-                                                if(eventArray[i][0]=='event8'){
+                                                if(eventArray[i][0]=='event8' || eventArray[i][0]=='event18'){
                                                     var url = eventArray[i][1]+ projectId + "/edit";    
                                                 }else{
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
@@ -2500,7 +2501,7 @@ function getDateNow(){
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
-							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}</td>
+							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}<button class="clickbutton" onclick="$(this).trigger('event18');">Edit Historical Price-Inventory</button></td>
 							</tr>
 						{/if}
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
