@@ -81,9 +81,7 @@ function chkConfirm()
                         <TD align=left class=td-border>{$cityDataArr[data].URL}</TD>
 						<TD align=center class=td-border>{$statusArray[$cityDataArr[data].ACTIVE]}</TD> 
                         <TD  class="td-border" align=left>
-						<a href="cityadd.php?cityid={$cityDataArr[data].CITY_ID}" title="Edit">Edit </a>|
-                          <a href="cityDetail.php?cityid={$cityDataArr[data].CITY_ID}" title="{$cityDataArr[data].LAVEL}">View</a> |
-                          <a href="?cityid={$cityDataArr[data].CITY_ID}&mode=delete&page={$page}&sort={$sort}" title="Delete City" onClick="return chkConfirm();">Delete</a></TD>
+			  <a href="cityadd.php?cityid={$cityDataArr[data].CITY_ID}" title="Edit">Edit </a></TD>
                       </TR>
                        {/section}
                        

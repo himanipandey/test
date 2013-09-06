@@ -96,9 +96,8 @@ function chkConfirm()
                         <TD align=left class=td-border>{$builderDataArr[data].META_KEYWORDS}</TD>
                         <TD align=center class=td-border>{$builderDataArr[data].DISPLAY_ORDER}</TD>
                         <TD  class="td-border" align=center nowrap>
-						  <a href="builderadd.php?builderid={$builderDataArr[data].BUILDER_ID}&mode=edit&page={$page}&sort={$sort}" title="{$builderDataArr[data].BUILDER_NAME}">Edit </a>|
-                          <a href="builderDetail.php?builderid={$builderDataArr[data].BUILDER_ID}" title="{$builderDataArr[data].BUILDER_NAME}">View</a> |
-                          <a href="?builderid={$builderDataArr[data].BUILDER_ID}&mode=delete&page={$page}&sort={$sort}" title="Delete Member" onClick="return chkConfirm();">Delete</a></TD>
+			   <a href="builderadd.php?builderid={$builderDataArr[data].BUILDER_ID}&mode=edit&page={$page}&sort={$sort}" title="{$builderDataArr[data].BUILDER_NAME}">Edit </a>
+                        </TD>
                       </TR>
                        {/section}
                         {if $NumRows<=0}
