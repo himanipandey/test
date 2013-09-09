@@ -27,6 +27,13 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 	ini_set('log_errors','0');
 	define("BEANSTALK_SERVER", '208.109.190.204');
 	define("BEANSTALK_PORT", '11300');
+
+	//  Curl call URL
+	define("SERVER_URL", "http://www.proptiger.com");
+	define("SEND_EMAIL", TRUE);
+	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
+	define("RESALE_GROUP_EMAIL", "projects@proptiger.com");
+
 }
 else{
 	$myDocRoot = dirname(__FILE__);
