@@ -95,7 +95,7 @@ function getPhotoById( $id ) {
 
 function updateThisPhotoProperty( $data = array() ) {
     if ( empty( $data['IMAGE_ID'] ) ) {
-        return null;
+        return false;
     }
     else {
         $__id = $data['IMAGE_ID'];
@@ -111,6 +111,7 @@ function updateThisPhotoProperty( $data = array() ) {
             dbExecute( $query );
         }
     }
+    return true;
 }
 
 function addImageToDB( $columnName, $areaId, $imageName ) {

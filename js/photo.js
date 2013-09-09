@@ -175,7 +175,7 @@ function showThisPhoto( imgData ) {
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
                         '<div class="img-wrap" style="float:left;"> <img src="/images_new/locality/thumb_'+imgData['IMAGE_NAME']+'" /> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
-                            '<select name="imgCate['+imgData['IMAGE_ID']+']">'+
+                            '<select name="imgCate_'+imgData['IMAGE_ID']+'">'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == '' ? 'selected' : '' ) +' value="">Category</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Mall' ? 'selected' : '' ) +' value="Mall">Mall</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Hospital' ? 'selected' : '' ) +' value="Hospital">Hospital</option>'+
@@ -183,8 +183,8 @@ function showThisPhoto( imgData ) {
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Road' ? 'selected' : '' ) +' value="Road">Road</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Other' ? 'selected' : '' ) +' value="Other">Other</option>'+
                             '</select><br />'+
-                            '<input type="text" name="imgName['+imgData['IMAGE_ID']+']" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
-                            '<input type="text" name="imgDesc['+imgData['IMAGE_ID']+']" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'">'+
+                            '<input type="text" name="imgName_'+imgData['IMAGE_ID']+'" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
+                            '<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'">'+
                         '</div>'+
                         '<div class="clearfix" style="clear:both;"></div>'+
                     '</div>';
@@ -221,4 +221,41 @@ function getPhotosFromDB() {
         }
     });
     return res;
+}
+
+function saveDetails() {
+    var cateList = $('[name^="imgCate"]'),
+        nameList = $('[name^="imgName"]'),
+        descList = $('[name^="imgDesc"]'),
+        data     = {},
+        res      = null;
+    for( var __cnt = 0; __cnt < cateList.length; __cnt++ ) {
+        var __id = cateList[ __cnt ].name.split('_')[1];
+        var __data = {
+            'IMAGE_ID'          : __id,
+            'IMAGE_CATEGORY'    : cateList[ __cnt ].value.trim(),
+            'IMAGE_DESCRIPTION' : descList[ __cnt ].value.trim(),
+            'IMAGE_DISPLAY_NAME': nameList[ __cnt ].value.trim()
+        };
+        data[ __cnt ] = __data;
+    }
+
+    $.ajax({
+        async: false,
+        type : 'GET',
+        url  : '/ajax/photo.php',
+        data : "upPh="+JSON.stringify( data ),
+        success: function( json ) {
+            var __json = JSON.parse( json );
+            if ( __json['result'] == true ) {
+                alert('data saved');
+            }
+            else {
+                alert('unable to save the complete data');
+            }
+        }
+    });
+
+    //  reloading the photos and their corresponding data
+    getPhotos();
 }
