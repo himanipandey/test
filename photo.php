@@ -9,19 +9,7 @@
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 
-    if ( !empty( $_REQUEST['updateImg'] ) ) {
-        $modifyData = array();
-        foreach( $_REQUEST['imgCate'] as $__imgId => $__imgCategory ) {
-
-            $modifyData['IMAGE_ID'] = $__imgId;
-            $modifyData['IMAGE_CATEGORY'] = trim( $_REQUEST['imgCate'][ $__imgId ] );
-            $modifyData['IMAGE_DISPLAY_NAME'] = trim( $_REQUEST['imgName'][ $__imgId ] );
-            $modifyData['IMAGE_DESCRIPTION'] = trim( $_REQUEST['imgDesc'][ $__imgId ] );
-
-            updateThisPhotoProperty( $modifyData );
-        }
-    }
-    elseif ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
+    if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         //echo "<pre>"; print_r( $_REQUEST ); print_r( $_FILES ); die();
         $city     = !empty( $_REQUEST['cityId'] ) ? $_REQUEST['cityId'] : 0;
         $suburb   = !empty( $_REQUEST['suburbId'] ) ? $_REQUEST['suburbId'] : 0;
