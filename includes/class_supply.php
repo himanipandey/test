@@ -65,7 +65,7 @@ class Supply {
   }
 
   public function AddInventoryToDB( $inputParam ) {
-    if ( !empty( $inputParam ) && isset( $_SESSION['CRMadminId'] ) ) {
+    if ( !empty( $inputParam ) && isset( $_SESSION['adminId'] ) ) {
       $query = "INSERT INTO RESALE_INVENTORY (
                 ADDED_BY,
                 CONTACT_TYPE,
@@ -95,7 +95,7 @@ class Supply {
                 TOWER_ID,
                 CREATION_DATE
             ) VALUES (
-                '".$_SESSION['CRMadminId']."',
+                '".$_SESSION['adminId']."',
                 '".$inputParam['CONTACT_TYPE']."',
                 '".mysql_escape_string( $inputParam['CONTACT_NAME'] )."',
                 '".mysql_escape_string( $inputParam['CONTACT_EMAIL'] )."',
@@ -259,11 +259,11 @@ class Supply {
     $result = $this->DBCRM->Query( $query );
     return $result[0]['STATUS'];
   }
-  /* function getUsers($id) { */
-  /*   $query = "SELECT USERNAME,ADMINID FROM PROPTIGER_ADMIN_NS WHERE ADMINID=$id"; */
-  /*   $result = $this->DBCRM->Query( $query ); */
-  /*   return $result;    */
-  /* } */
+  function getUsers($id) {
+    $query = "SELECT USERNAME,ADMINID FROM proptiger_admin WHERE ADMINID=$id";
+    $result = $this->DBCRM->Query( $query );
+    return $result;
+  }
 }
 
 ?>

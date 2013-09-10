@@ -6,6 +6,7 @@
  * Time: 12:33 AM
  * To change this template use File | Settings | File Templates.
  */
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -159,7 +160,6 @@ AdminAuthentication();
 require_once("includes/class_supply.php");
 require_once("includes/class_project.php");
 require_once("common/start.php");
-
 if ( $_REQUEST['new_broker'] == 1 ) {
     $supObj = new Supply( $db_project );
     $name = trim( $_REQUEST['br_name'] );
