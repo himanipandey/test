@@ -17,7 +17,6 @@ $projObj= new Project($db_project);
 $supObj = new Supply($db_project);
 
 $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
-
 ?>
 <link href="/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
 <script language="javascript" src="/js/jquery/jquery-1.8.3.min.js"></script>
@@ -33,7 +32,6 @@ $brokerList = $supObj->GetBrokerList();
 if($_REQUEST && $_REQUEST['edit']>0) {
     $id=$_REQUEST['edit'];
     $readonly="yes";
-
     $listing=$supObj->getListingByID($_REQUEST['edit']);
     $optionData=$projObj->getOptionDetails($listing[0]['PROPERTY_OPTION_ID']);
     $citylocality=$projObj->getProjectCityLocality($listing[0]['PROJECT_ID']);
@@ -336,7 +334,8 @@ else if ( $_REQUEST && $_REQUEST['submit_supply_entry'] == 1 ) {
                 $subject = "Resale Entry Added #".$inventoryId;
                 $resaleDetail = $supObj->GetInventoryForMail( $inventoryId );
                 $body = getBody( $resaleDetail );
-                require_once ("send_mail_amazon.php");
+                require_once ("includes/send_mail_amazon.php");
+		
                 sendRawEmailFromAmazon($to, $from, $cc, $subject, $body, '', '', array($to, $cc));
             }
 
@@ -409,6 +408,7 @@ function getBody( $info ) {
             </table><br /><br />
             To view all the details, please login in CRM.<br /><br />Regards,<br />CRM Team";
 }
+
 ?>
 <div class="main-container">
 

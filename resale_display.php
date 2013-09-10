@@ -290,7 +290,7 @@ function searcher(){
 	    // $('#dump').append(result);
 	    $('.searchResults').remove();
 	    //$('#dump').append(result);
-	    var userid="<?php echo $_SESSION['CRMadminId'] ?>";
+	    var userid="<?php echo $_SESSION['adminId'] ?>";
 	    var obj=JSON.parse(result);					
 	    var x=1;
 	    if(obj['result']!=null && obj['result'].length!=0) {
