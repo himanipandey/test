@@ -175,7 +175,6 @@ DEFINE("RESI_PROJECT_PHASE","resi_project_phase");
 DEFINE("RESI_PROJ_TOWER_CONSTRUCTION_STATUS","resi_proj_tower_construction_status");
 DEFINE("RESI_PROJ_SPECIFICATION","resi_proj_specification");
 DEFINE("RESI_SOURCEOFINFORMATION","resi_sourceofinformation");
-DEFINE("RESI_PROJECT_OPTIONS_ARC","resi_project_options_arc");
 DEFINE("RESI_PROJ_EXPECTED_COMPLETION","resi_proj_expected_completion");
 DEFINE("LOCALITY","locality");
 DEFINE("BUILDER_CONTACT_INFO","builder_contact_info");
