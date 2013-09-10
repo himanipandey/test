@@ -1117,18 +1117,6 @@ function DeleteBuilder($ID) {
     return 1;
 }
 
-/* * *****function for fetch last inserted data in resi project option arc table ************ */
-
-function lastUpdatedData($projectId) {
-    $qry = "SELECT * from " . RESI_PROJECT_OPTIONS_ARC . " WHERE PROJECT_ID = '" . $projectId . "' ORDER BY SUBMITTED_DATE DESC";
-    $res = mysql_query($qry);
-    $arrOptionArc = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrOptionArc, $data);
-    }
-    return $arrOptionArc;
-}
-
 /* * *****function for fetch last inserted or updated data in audit table ************ */
 
 function AuditTblDataByTblName($tblName, $projectId) {
