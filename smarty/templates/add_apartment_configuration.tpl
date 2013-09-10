@@ -388,6 +388,7 @@
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                               <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
+                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
 
