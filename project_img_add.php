@@ -7,6 +7,7 @@ include("appWideConfig.php");
 include("dbConfig.php");
 include("includes/configs/configs.php");
 include("builder_function.php");
+include("s3upload/s3_config.php");
 include("SimpleImage.php");
 include("watermark_image.class.php");
 AdminAuthentication();

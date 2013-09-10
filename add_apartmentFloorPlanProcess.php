@@ -94,6 +94,8 @@
 							if($flrplan != '')
 							{
 								$txtlocationplan 	= move_uploaded_file($_FILES["imgurl"]["tmp_name"][$key], "".$createFolder."/" . $imgurl1);
+                                $s3upload = new S3Upload($s3, $bucket, "".$createFolder."/" .$imgurl1, $projecttbl."/".$imgurl1 );
+                                $s3upload->upload();
 
 								if(!$txtlocationplan)
 								{
@@ -119,8 +121,11 @@
 											$image = new SimpleImage();
 											$path=$createFolder."/".$file;
 											$image->load($path);
-												
+											$local_path = $BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
+                                            $absolute_path = $newImagePath.$local_path;
 											$image->save($newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file));
+                                            $s3upload = new S3Upload($s3, $bucket, $absolute_path, $local_path);
+                                            $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" .str_replace('floor-plan','floor-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 												/**********Working for watermark*******************/
@@ -131,6 +136,8 @@
 												$img = new Zubrag_watermark($image_path);
 												$img->ApplyWatermark($watermark_path);
 												$img->SaveAsFile($imgdestpath);
+                                                $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                                                $s3upload->upload();
 												$img->Free();  				 						
 
 												/************Resize and rect img*************/
@@ -152,26 +159,39 @@
 												$img = new Zubrag_watermark($image_path);
 												$img->ApplyWatermark($watermark_path);
 												$img->SaveAsFile($imgdestpath);
-												$img->Free();  				 						
+                                                $s3upload =new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                                                $s3upload->upload();
+												$img->Free();
 
 												/************Resize and large to small*************/
 												$image->resize(95,65);
 												$newimg	=	str_replace('floor-plan','floor-plan-sm-rect-img',$file);
-												$image->save($createFolder."/".$newimg);
+                                                $s3upload =new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                                                $s3upload->upload();
+                                                $imgdestpath = $createFolder."/".$newimg;
+												$image->save($imgdestpath);
+                                                $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                                                $s3upload->upload();
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 												$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 												/************Resize and large to small*************/
 												$image->resize(80,36);
 												$newimg	=	str_replace('floor-plan','floor-plan-small',$file);
-												$image->save($createFolder."/".$newimg);
+                                                $imgdestpath = $createFolder."/".$newimg;
+												$image->save($imgdestpath);
+                                                $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                                                $s3upload->upload();
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 												$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 												/************Resize and large to thumb*************/
 												$image->resize(77,70);
 												$newimg	=	str_replace('floor-plan','floor-plan-thumb',$file);
-												$image->save($createFolder."/".$newimg);
+                                                $imgdestpath = $createFolder."/".$newimg;
+                                                $image->save($imgdestpath);
+                                                $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                                                $s3upload->upload();
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 												$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											}		
