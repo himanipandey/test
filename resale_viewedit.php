@@ -96,7 +96,7 @@ $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 				<th>Contact Person Type</th>
 				<td><?php if (intval($listing[0]['CONTACT_TYPE'])==0) echo "Owner"; else echo "Broker" ?></td>
 			</tr>
-			<?php if($listing[0]['ADDED_BY']==$_SESSION['CRMadminId']) { ?>
+			<?php if($listing[0]['ADDED_BY']==$_SESSION['adminId']) { ?>
 			<tr>
 				<th>Broker Name</th>
 				<td><?php echo $listing[0]['CONTACT_NAME']?></td>
