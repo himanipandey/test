@@ -1,12 +1,14 @@
 <?php
-        if($labelAuth == false)
-            die("No Access");
 	error_reporting(1);
 	ini_set('display_errors','1');
 	include("smartyConfig.php");
 	include("appWideConfig.php");
 	include("dbConfig.php");
 	include("includes/configs/configs.php");
+        
+        if($labelAuth == false)
+            die("No Access");
+        
 	include("builder_function.php");
 	AdminAuthentication();
 	
