@@ -41,7 +41,7 @@
 						else{
 							var str="";
 						}
-                                                if(eventArray[i][0]=='event8' || eventArray[i][0]=='event18'){
+                                                if(eventArray[i][0]=='event8' || eventArray[i][0]=='event19'){
                                                     var url = eventArray[i][1]+ projectId + "/edit";    
                                                 }else{
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
