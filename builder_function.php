@@ -1808,7 +1808,8 @@ function insertUpdateInRedirectTbl($toUrl, $fromUrl) {
     $action = '';
     if ($fromUrl == $toUrl)
         return $action;
-
+    else if( $fromUrl == '' )
+        return $action;
     $qrySel = "SELECT * FROM redirect_url_map WHERE FROM_URL = '$fromUrl'";
     $resSel = mysql_query($qrySel) or die(mysql_error() . " error");
 
