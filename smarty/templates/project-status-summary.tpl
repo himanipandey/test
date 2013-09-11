@@ -52,12 +52,20 @@
                                             <form method="post" onsubmit="return verifyDataGetForm();">
                                                 <select name="cityId" id = "cityId" class="cityId" onchange="updateSuburbDropdown(this.value, 'suburbId');" STYLE="width: 150px">
                                                         <option value =''>Select City</option>
+                                                        <option value ='-1' {if $selectedCity == -1}selected="selected"{/if}>All City</option>
                                                         {foreach from = $CityDataArr key=key item = item}
                                                         <option {if $selectedCity == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
                                                         {/foreach}
                                                 </select>
                                                 <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
                                             </form>
+                                        </div>
+                                        <div style="float: left; height: 31px;margin-left: 18px">
+                                            <a href="?download=true" >
+                                                <button>
+                                                    Download Excel
+                                                </button>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
