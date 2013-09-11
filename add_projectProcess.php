@@ -464,8 +464,9 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
                         
                         $ProjectDetail 	= ProjectDetail($projectId);
                         CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $ProjectDetail[0]['PROJECT_STAGE']);
-                        if($txtProjectURL != $txtProjectURLOld)
+                        if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
                                 insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
+                        }
                         if($preview == 'true')
                                 header("Location:show_project_details.php?projectId=".$projectId);
                         else

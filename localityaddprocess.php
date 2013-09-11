@@ -103,9 +103,9 @@
                                     $up = mysql_query($updateQry);
                                     if($up)
                                     {
-                                            if($txtCityUrl != $old_loc_url)
-                                                    insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
-                                            header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+                                        if( $txtCityUrl != $old_loc_url && $old_loc_url != '' )
+                                                insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
+                                        header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
                                     }
                     }
                     else
