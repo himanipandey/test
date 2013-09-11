@@ -17,7 +17,7 @@
     }
 
     if (isset($_POST['btnSave'])) {
-
+        echo "<pre>";print_r($_REQUEST);die();
                     $txtCityName			=	trim($_POST['txtCityName']);
                     $txtMetaTitle			=	trim($_POST['txtMetaTitle']);
                     $txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
@@ -25,6 +25,7 @@
                     $status					=	trim($_POST['status']);
                     $desc					=	trim($_POST['desc']);	
                     $old_sub_url			=	trim($_POST['old_sub_url']);
+                    $old_sub_name			=	trim($_POST['old_sub_name']);
 
                     $smarty->assign("txtCityName", $txtCityName);
                     $smarty->assign("txtMetaTitle", $txtMetaTitle);
@@ -72,8 +73,15 @@
                                                       DESCRIPTION			=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
 
                             mysql_query($updateQry);
+
+                            if ( $old_sub_name != $txtCityName ) {
+                                //  add to name change log
+                                addToNameChangeLog( 'suburb', $suburbid, $old_sub_name, $txtCityName );
+                            }
+                        /*
                             if($txtCityUrl != $old_sub_url)
                                     insertUpdateInRedirectTbl($txtCityUrl,$old_sub_url);
+                        //*/
                             header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
                     }
                     else
