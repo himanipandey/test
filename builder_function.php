@@ -1814,6 +1814,17 @@ function fetchStartTime($stageName, $phasename, $projectId) {
     return $data['DATE_TIME'];
 }
 
+function addToLocalityChangeLog( $localityId, $oldLocalityName, $newLocalityName ) {
+    $checkQuery = "SELECT COUNT(*) AS PRESENT FROM `locality_change_log` WHERE `locality_id` = '$localityId' AND `old_name` = '$oldLocalityName' AND `new_name` = '$newLocalityName'";
+    $res = mysql_query( $checkQuery ) or die( mysql_error() );
+    $count = mysql_fetch_assoc( $res );
+    if ( $count['PRESENT'] == 0 ) {
+        //  add entry to database
+        $insertQuery = "INSERT INTO `locality_change_log` (locality_id, old_name, new_name, created_at) VALUES ('$localityId', '$oldLocalityName', '$newLocalityName', NOW())";
+        mysql_query( $insertQuery ) or die( mysql_error() );
+    }
+}
+
 /* * *****Insert update in redirect url table if update any url in builder,project,city,suburb and locality tables******** */
 
 function insertUpdateInRedirectTbl($toUrl, $fromUrl) {
