@@ -103,7 +103,7 @@
                                     $up = mysql_query($updateQry);
                                     if($up)
                                     {
-                                        if ( $txtCityName != trim( $localityDetailsArray['LABEL'] ) || 1 ) {
+                                        if ( $txtCityName != trim( $localityDetailsArray['LABEL'] ) ) {
                                             //  locality name modified
                                             addToLocalityChangeLog( $localityid, $localityDetailsArray['LABEL'], $txtCityName );
                                         }
