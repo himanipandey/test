@@ -266,6 +266,14 @@ $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
 
+/******code for project comment fetch from commeny history table*****/
+$cycleId = $projectDetails[0]['PROJECT_STAGE'];
+$projectComments = CommentsHistory::getCommentHistoryByProjectIdCycleId($projectId, $cycleId);
+$smarty->assign("projectComments", $projectComments);
+
+$projectOldComments = CommentsHistory::getOldCommentHistoryByProjectId($projectId);
+$smarty->assign("projectOldComments", $projectOldComments);
+/******end code for project comment fetch from commeny history table*****/
 if (!isset($_GET['towerId']))
     $_GET['towerId'] = '';
 if ($_GET['towerId'] != '') {
