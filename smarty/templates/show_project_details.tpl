@@ -28,7 +28,7 @@
                         ["event16", "updateSecondaryPrice.php", true],
                         ["event17", "/new/supply-validation", true],
                         ["event18", "allCommentHistory.php"],
-                        ["event18", "/new/bulk_price_inventory/", true]
+                        ["event19", "/new/bulk_price_inventory/", true]
 		]; 
 		for(var i=0; i< eventArray.length; i++){
 			$('.clickbutton').bind(eventArray[i][0], function(event){
@@ -2606,7 +2606,7 @@ function getDateNow(){
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
-							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}<button class="clickbutton" onclick="$(this).trigger('event18');">Edit Historical Price-Inventory</button></td>
+							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>
 							</tr>
 						{/if}
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
