@@ -1,0 +1,204 @@
+@charset "utf-8";
+
+.main-container {
+    margin: 2%;
+    border: 1px solid;	/*remove this afterwards*/
+    overflow: hidden;
+}
+
+.form-container {
+    margin: 2%;
+    float: left;
+    width: 70%;
+}
+
+.add-bro {
+    margin-top: 2%;
+    float: right;
+    width: 26%;
+}
+/*
+.main-form {
+    border: 1px solid;
+}
+*/
+.main-form-table {
+    width: 100%;
+}
+
+.b-input-name {
+    text-align: left;
+    width: 26%;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.b-input {
+    border-radius: 2px;
+}
+
+.f-input {
+    width: 55%;
+    border-radius: 2px;
+}
+
+.t-input-value {
+    width: 70%;
+    padding-left: 5%;
+    font-size: 12px;
+}
+
+.t-input-name {
+    text-align: right;
+    width: 30%;
+    padding-right: 5%;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.t1-input-name {
+    text-align: right;
+    padding-right: 1%;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.t1-input-value {
+    padding-left: 1%;
+    font-size: 12px;
+}
+
+.t-input {
+    height: 25px;
+    border-radius: 2px;
+    width: 55%;
+}
+
+.t1-input {
+    height: 25px;
+    border-radius: 2px;
+}
+
+.t2-input {
+    height: 25px;
+    border-radius: 2px;
+    width: 30%;
+}
+
+.c-input {
+    padding-left: 1%;
+}
+
+.c-text {
+    border-radius: 2px;
+}
+
+.hr-separator {
+    margin: 0% 5% 0% 4%;
+}
+
+.spacer2 {
+    margin-top: 2%;
+}
+
+.sec-head {
+    margin-left: 5%;
+    font-family: Arial, Tahoma,Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+}
+
+.frm-btn {
+    margin-left: 30%;
+    width: 25%;
+}
+
+.suc {
+    color: green;
+}
+
+.err {
+    color: red;
+    border-color: red;
+}
+
+.auto-sug {
+    overflow: hidden;
+    position: absolute;
+    border: 1px solid;
+    width: 23%;
+    border-radius: 4px;
+    margin-top: 1px;
+    font-size: 14;
+}
+
+.auto-sug a:hover {
+    font-weight: bold;
+    font-size: 16;
+    cursor: pointer;
+}
+
+.auto-sug-el {
+
+}
+
+.conf-tab {
+    border: 1px solid;
+    width: 80%;
+    overflow: auto;
+    border-radius: 3px;
+    max-height: 150px;
+    min-height: 40px;
+}
+
+.conf-sub-tab {
+    width: 49%;
+    display: block;
+    float: left;
+    border: 1px solid;
+    border-color: #efefef;
+}
+
+.prop-type {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.bgw {
+    background-color: #f5f5f5;
+}
+
+.tabset {
+    padding:0;
+    margin:0 0 16px;
+    list-style:none;
+    font-size:12px;
+    line-height:20px;
+    font-weight:bold;
+}
+.tabset li {
+    float:left;
+    margin:0 -1px 0 0;
+}
+.tabset a {
+    float:left;
+    background:#e7e7e7;
+    text-align:center;
+    border:1px solid #d1d1d1;
+    border-bottom:none;
+    color:#333;
+    padding:5px 8px 7px;
+    text-decoration: none;
+}
+.tabset a:focus {text-decoration:none;}
+.tabset .active a,
+.tabset a:hover {
+    text-decoration:none;
+    background:#fff;
+    margin-top:-2px;
+    padding-top:7px;
+}

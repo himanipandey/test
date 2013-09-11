@@ -97,9 +97,8 @@ function selectCity(value){
 						<TD align=left class=td-border>{if $localityDataArr[data].ACTIVE!=''}{$statusArray[$localityDataArr[data].ACTIVE]}{else}-{/if}</TD>
 
 						 <TD  class="td-border" align=left>
-						<a href="suburbadd.php?suburbid={$localityDataArr[data].SUBURB_ID}&c={$cityId}" title="Edit">Edit</a> |
-                         <!-- <a href="localityDetail.php?localityid={$localityDataArr[data].LOCALITY_ID}" title="{$localityDataArr[data].LAVEL}">View</a> |-->
-                          <a href="?suburbid={$localityDataArr[data].SUBURB_ID} &mode=delete&page={$page}&sort={$sort}&citydd={$cityId}" title="Delete Suburb" onClick="return chkConfirm();">Delete</a></TD>
+                                                    <a href="suburbadd.php?suburbid={$localityDataArr[data].SUBURB_ID}&c={$cityId}" title="Edit">Edit</a>
+                                                </TD>
                       </TR>
                        {/section}
                         {if $NumRows<=0}

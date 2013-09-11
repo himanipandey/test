@@ -1111,18 +1111,6 @@ function DeleteBuilder($ID) {
     return 1;
 }
 
-/* * *****function for fetch last inserted data in resi project option arc table ************ */
-
-function lastUpdatedData($projectId) {
-    $qry = "SELECT * from " . RESI_PROJECT_OPTIONS_ARC . " WHERE PROJECT_ID = '" . $projectId . "' ORDER BY SUBMITTED_DATE DESC";
-    $res = mysql_query($qry);
-    $arrOptionArc = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrOptionArc, $data);
-    }
-    return $arrOptionArc;
-}
-
 /* * *****function for fetch last inserted or updated data in audit table ************ */
 
 function AuditTblDataByTblName($tblName, $projectId) {
@@ -1814,8 +1802,6 @@ function insertUpdateInRedirectTbl($toUrl, $fromUrl) {
     $action = '';
     if ($fromUrl == $toUrl)
         return $action;
-    if($fromUrl == '')
-        return $action;
     $qrySel = "SELECT * FROM redirect_url_map WHERE FROM_URL = '$fromUrl'";
     $resSel = mysql_query($qrySel) or die(mysql_error() . " error");
 
@@ -1931,15 +1917,13 @@ function curlFetch($url)
 function getPrevMonthProjectData($projectId)
 {
 	global $analytics_credential;
-	// global $_SERVER['SERVER_NAME'];
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
-	//$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
-	$url="http://cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	$url=$_SERVER['HTTP_HOST']."/analytics/apis/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1952,14 +1936,12 @@ function getPrevMonthProjectData($projectId)
 function getFlatAvailability($projectId)
 {
 	global $analytics_credential;
-	// global $_SERVER['SERVER_NAME'];
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	 $url=$_SERVER['HTTP_HOST']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
-	//$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	 $url=$_SERVER['HTTP_HOST']."/analytics/apis/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
