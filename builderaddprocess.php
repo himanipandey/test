@@ -272,7 +272,7 @@
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                             if($rt)
                             {
-                                if($txtBuilderUrl != $txtBuilderUrlOld)
+                                if( $txtBuilderUrl != $txtBuilderUrlOld && $txtBuilderUrlOld != '' )
                                         insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
                                 header("Location:BuilderList.php?page=1&sort=all");
                             }

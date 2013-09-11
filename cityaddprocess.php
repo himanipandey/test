@@ -89,24 +89,24 @@
 
             } 
             else if ($cityid == '') {	
-                    InsertCity($txtCityName, $txtCityUrl, $DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$status,$desc);
-                    header("Location:CityList.php?page=1&sort=all");
+                InsertCity($txtCityName, $txtCityUrl, $DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$status,$desc);
+                header("Location:CityList.php?page=1&sort=all");
 
             }else if($cityid!= ''){
 
-                    $updateQry = "UPDATE ".CITY." SET 
-                                              LABEL					=	'".$txtCityName."',
-                                              META_TITLE			=	'".$txtMetaTitle."',
-                                              META_KEYWORDS		    =	'".$txtMetaKeywords."',
-                                              META_DESCRIPTION		=	'".$txtMetaDescription."',
-                                              ACTIVE				=	'".$status."',
-                                              URL					=	'".$txtCityUrl."',
-                                              DISPLAY_ORDER			=	'".$DisplayOrder."',
-                                              DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
-                    mysql_query($updateQry);
-                    if($url != $txtCityUrlOld)
-                            insertUpdateInRedirectTbl($txtCityUrl,$txtCityUrlOld);
-                    header("Location:CityList.php?page=1&sort=all");
+                $updateQry = "UPDATE ".CITY." SET 
+                            LABEL		=	'".$txtCityName."',
+                            META_TITLE	=	'".$txtMetaTitle."',
+                            META_KEYWORDS     =	'".$txtMetaKeywords."',
+                            META_DESCRIPTION	=	'".$txtMetaDescription."',
+                            ACTIVE		=	'".$status."',
+                            URL		=	'".$txtCityUrl."',
+                            DISPLAY_ORDER	=	'".$DisplayOrder."',
+                            DESCRIPTION	=	'".$desc."' WHERE CITY_ID='".$cityid."'";
+                mysql_query($updateQry);
+                if( $txtCityUrl != $txtCityUrlOld && $txtCityUrlOld != '' )
+                        insertUpdateInRedirectTbl($txtCityUrl,$txtCityUrlOld);
+                header("Location:CityList.php?page=1&sort=all");
             }	
 
     }

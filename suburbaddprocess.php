@@ -63,16 +63,16 @@
 
                             $updateQry = "UPDATE ".SUBURB." SET 
 
-                                                      LABEL 				=	'".$txtCityName."',
-                                                      META_TITLE			=	'".$txtMetaTitle."',		
-                                                      META_KEYWORDS		    =	'".$txtMetaKeywords."',
-                                                      META_DESCRIPTION		=	'".$txtMetaDescription."',
-                                                      ACTIVE				=	'".$status."',
-                                                      URL					=	'".$txtCityUrl."',
-                                                      DESCRIPTION			=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
+                                        LABEL 		=	'".$txtCityName."',
+                                        META_TITLE	=	'".$txtMetaTitle."',		
+                                        META_KEYWORDS	=	'".$txtMetaKeywords."',
+                                        META_DESCRIPTION	=	'".$txtMetaDescription."',
+                                        ACTIVE		=	'".$status."',
+                                        URL		=	'".$txtCityUrl."',
+                                        DESCRIPTION	=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
 
                             mysql_query($updateQry);
-                            if($txtCityUrl != $old_sub_url)
+                            if( $txtCityUrl != $old_sub_url && $old_sub_url != '' )
                                     insertUpdateInRedirectTbl($txtCityUrl,$old_sub_url);
                             header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
                     }
