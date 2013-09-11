@@ -43,6 +43,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
             $localityId					=	trim($_POST['localityId']);
 		$txtProjectDescription                  =	trim($_POST['txtProjectDescription']);
 		$txtProjectRemark			=	trim($_POST['txtProjectRemark']);
+                $txtProjectRemarkDisplay		=	trim($_POST['txtProjectRemarkDisplay']);
 		$txtAddress				=	trim($_POST['txtProjectAddress']);
 		$txtProjectDesc				=	trim($_POST['txtProjectDesc']);
 		$txtProjectSource			=	trim($_POST['txtProjectSource']);
@@ -112,10 +113,16 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$Booking_Status             =	trim($_POST['Booking_Status']);
 		$shouldDisplayPrice         =   trim($_POST['shouldDisplayPrice']);	
 		$txtCallingRemark         	=   trim($_POST['txtCallingRemark']);
+                $txtCallingRemarkDisplay     	=   trim($_POST['txtCallingRemarkDisplay']);
 		$txtAuditRemark         	=   trim($_POST['txtAuditRemark']);
+                $txtAuditRemarkDisplay         	=   trim($_POST['txtAuditRemarkDisplay']);
 		$launchedUnits         		=   trim($_POST['launchedUnits']);
 		$reasonUnlaunchedUnits     	=   trim($_POST['reasonUnlaunchedUnits']);
                 $identifyTownShip = trim($_POST['identifyTownShip']);
+                $secondaryRemark =  trim($_POST["secondaryRemark"]);
+                $secondaryRemarkDisplay =  trim($_POST["secondaryRemarkDisplay"]);
+                $fieldSurveyRemark =  trim($_POST["fieldSurveyRemark"]);
+                $fieldSurveyRemarkDisplay =  trim($_POST["fieldSurveyRemarkDisplay"]);
 		
 		if(isset($_POST['bank_list']))
 			$bank_list = implode(",",$_POST['bank_list']);//die("here");
@@ -144,6 +151,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("localityId", $localityId);
 		$smarty->assign("txtProjectDescription", $txtProjectDescription);
 		$smarty->assign("txtProjectRemark", $txtProjectRemark);
+                $smarty->assign("txtProjectRemarkDisplay", $txtProjectRemarkDisplay);
 		$smarty->assign("txtAddress", $txtAddress);
 		$smarty->assign("txtProjectDesc", $txtProjectDesc);
 		$smarty->assign("txtSourceofInfo", $txtProjectSource);
@@ -201,10 +209,16 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$smarty->assign("shouldDisplayPrice", $_POST['shouldDisplayPrice']);
 		
 		$smarty->assign("txtCallingRemark", $_POST['txtCallingRemark']);
+                $smarty->assign("txtCallingRemarkDisplay", $_POST['txtCallingRemarkDisplay']);
 		$smarty->assign("txtAuditRemark", $_POST['txtAuditRemark']);
+                $smarty->assign("txtAuditRemarkDisplay", $_POST['txtAuditRemarkDisplay']);
 		$smarty->assign("launchedUnits", $_POST['launchedUnits']);
 		$smarty->assign("reasonUnlaunchedUnits", $_POST['reasonUnlaunchedUnits']);
                 $smarty->assign("identifyTownShip", $identifyTownShip);
+                $smarty->assign("secondaryRemark", $secondaryRemark);
+                $smarty->assign("secondaryRemarkDisplay", $secondaryRemarkDisplay);
+                $smarty->assign("fieldSurveyRemark", $fieldSurveyRemark);
+                $smarty->assign("fieldSurveyRemarkDisplay", $fieldSurveyRemarkDisplay);
 
 		/***********Folder name**********/
 		$builderDetail	=	fetch_builderDetail($builderId);
@@ -418,17 +432,38 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
                         }
 
                     }
-			
+		   /*code for comment save in saperate comment table**/
+                    $arrCommentTypeValue = array();
+                    if( $txtProjectRemark != '' ) {
+                        $arrCommentTypeValue['Project'] = $txtProjectRemark;
+                    }
+                    if( $txtCallingRemark != '' ) {
+                        $arrCommentTypeValue['Calling'] = $txtCallingRemark;
+                    }
+                    if( $txtAuditRemark != '' ) {
+                        $arrCommentTypeValue['Audit'] = $txtAuditRemark;
+                    }
+                    if( $fieldSurveyRemark != '' ) {
+                        $arrCommentTypeValue['FieldSurvey'] = $fieldSurveyRemark;
+                    }
+                    if( $secondaryRemark != '' ) {
+                        $arrCommentTypeValue['Secondary'] = $secondaryRemark;
+                    }
+                     /*end code for comment save in saperate comment table*/
 		   if ($projectId == '')
 		   {
-		   		
-                        $projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits,$identifyTownShip);
+                        $projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$launchedUnits,$reasonUnlaunchedUnits,$identifyTownShip);
+                        
+                        CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, 'newProject');
+                        
                         header("Location:project_img_add.php?projectId=".$projectId);
                     }
                     else
                     {
-                        //echo $price1."==".$payment1;
-                        $projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtProjectRemark,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$txtCallingRemark,$txtAuditRemark,$launchedUnits,$reasonUnlaunchedUnits,$identifyTownShip);
+                        $projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$launchedUnits,$reasonUnlaunchedUnits,$identifyTownShip);
+                        
+                        $ProjectDetail 	= ProjectDetail($projectId);
+                        CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $ProjectDetail[0]['PROJECT_STAGE']);
                         if($txtProjectURL != $txtProjectURLOld)
                                 insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
                         if($preview == 'true')
@@ -437,6 +472,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
                                 header("Location:ProjectList.php?projectId=".$projectId);
 
                     }
+                    
 		}
 	}
 	else if($_POST['btnExit'] == "Exit")
@@ -452,11 +488,9 @@ elseif ($projectId!='')
 	{
 		
 		$ProjectDetail 	= ProjectDetail($projectId);
-		//print_r($ProjectDetail);die("here");
 		 $smarty->assign("txtProjectName", stripslashes($ProjectDetail[0]['PROJECT_NAME']));
 		 $smarty->assign("txtAddress", stripslashes($ProjectDetail[0]['PROJECT_ADDRESS']));
 		 $smarty->assign("txtProjectDescription", stripslashes($ProjectDetail[0]['PROJECT_DESCRIPTION']));
-		 $smarty->assign("txtProjectRemark", stripslashes($ProjectDetail[0]['PROJECT_REMARK']));
 		 $smarty->assign("txtAddress", stripslashes($ProjectDetail[0]['PROJECT_ADDRESS']));
 		 $smarty->assign("builderId", stripslashes($ProjectDetail[0]['BUILDER_ID']));
 		 $smarty->assign("cityId", stripslashes($ProjectDetail[0]['CITY_ID']));
@@ -489,7 +523,6 @@ elseif ($projectId!='')
 		$smarty->assign("txtSourceofInfo", stripslashes($ProjectDetail[0]['SOURCE_OF_INFORMATION']));
 		$smarty->assign("project_type", stripslashes($ProjectDetail[0]['PROJECT_TYPE_ID']));
                 $smarty->assign("projectTypeOld", stripslashes($ProjectDetail[0]['PROJECT_TYPE_ID']));
-                
 		$smarty->assign("approvals", stripslashes($ProjectDetail[0]['APPROVALS']));
 		$smarty->assign("project_size", stripslashes($ProjectDetail[0]['PROJECT_SIZE']));
 		$smarty->assign("no_of_lift", stripslashes($ProjectDetail[0]['NO_OF_LIFTS_PER_TOWER']));
@@ -508,8 +541,6 @@ elseif ($projectId!='')
 		$smarty->assign("open_space", stripslashes($ProjectDetail[0]['OPEN_SPACE']));
 		$smarty->assign("Booking_Status", stripslashes($ProjectDetail[0]['BOOKING_STATUS']));
 		$smarty->assign("shouldDisplayPrice", stripslashes($ProjectDetail[0]['SHOULD_DISPLAY_PRICE']));
-		$smarty->assign("txtCallingRemark", stripslashes($ProjectDetail[0]['CALLING_REMARK']));
-		$smarty->assign("txtAuditRemark", stripslashes($ProjectDetail[0]['AUDIT_REMARK']));
 		$smarty->assign("launchedUnits", stripslashes($ProjectDetail[0]['LAUNCHED_UNITS']));
 		$smarty->assign("reasonUnlaunchedUnits", stripslashes($ProjectDetail[0]['REASON_UNLAUNCHED_UNITS']));
                 $smarty->assign("identifyTownShip", stripslashes($ProjectDetail[0]['SKIP_UPDATION_CYCLE']));
@@ -548,5 +579,19 @@ elseif ($projectId!='')
 	      
 	     return $numProjects;
 	 }
-
+         
+         $userDepartment = $_SESSION['DEPARTMENT'];
+         $smarty->assign("userDepartment", $userDepartment);
+         
+         if( $projectId != '' ) {
+              /******code for project comment in seperate table*****/
+                $ProjectDetail 	= ProjectDetail($projectId);
+                $cycleId = $ProjectDetail[0]['PROJECT_STAGE'];
+                $projectComments = CommentsHistory::getCommentHistoryByProjectIdCycleId($projectId, $cycleId);
+                $smarty->assign("projectComments", $projectComments);
+                
+                $projectOldComments = CommentsHistory::getOldCommentHistoryByProjectId($projectId);
+                $smarty->assign("projectOldComments", $projectOldComments);
+                /******end code for project comment in seperate table*****/
+         }
 ?>
