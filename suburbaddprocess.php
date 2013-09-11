@@ -17,7 +17,6 @@
     }
 
     if (isset($_POST['btnSave'])) {
-        echo "<pre>";print_r($_REQUEST);die();
                     $txtCityName			=	trim($_POST['txtCityName']);
                     $txtMetaTitle			=	trim($_POST['txtMetaTitle']);
                     $txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
