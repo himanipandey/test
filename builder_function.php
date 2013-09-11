@@ -1207,7 +1207,9 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function UpdateBuilder()');
     
     if( $ExecSql ) {
-        if( $txtBuilderName != $oldbuilder ) { //code for update resi_project if builder name updates 
+        if( $txtBuilderName != $oldbuilder ) { //code for update resi_project if builder name updates
+            //  add entry to name change log
+            addToNameChangeLog( 'builder', $builderid, $oldbuilder, $txtBuilderName );
             $qryProject ="UPDATE 
                             resi_project
                           SET
@@ -1814,13 +1816,13 @@ function fetchStartTime($stageName, $phasename, $projectId) {
     return $data['DATE_TIME'];
 }
 
-function addToLocalityChangeLog( $localityId, $oldLocalityName, $newLocalityName ) {
-    $checkQuery = "SELECT COUNT(*) AS PRESENT FROM `locality_change_log` WHERE `locality_id` = '$localityId' AND `old_name` = '$oldLocalityName' AND `new_name` = '$newLocalityName'";
+function addToNameChangeLog( $type, $id, $oldName, $newName ) {
+    $checkQuery = "SELECT COUNT(*) AS PRESENT FROM `name_change_log` WHERE `$type` = '$id' AND `old_name` = '$oldName' AND `new_name` = '$newName'";
     $res = mysql_query( $checkQuery ) or die( mysql_error() );
     $count = mysql_fetch_assoc( $res );
     if ( $count['PRESENT'] == 0 ) {
         //  add entry to database
-        $insertQuery = "INSERT INTO `locality_change_log` (locality_id, old_name, new_name, created_at) VALUES ('$localityId', '$oldLocalityName', '$newLocalityName', NOW())";
+        $insertQuery = "INSERT INTO `name_change_log` ($type, old_name, new_name, created_at) VALUES ('$id', '$oldName', '$newName', NOW())";
         mysql_query( $insertQuery ) or die( mysql_error() );
     }
 }

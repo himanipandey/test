@@ -105,7 +105,7 @@
                                     {
                                         if ( $txtCityName != trim( $localityDetailsArray['LABEL'] ) ) {
                                             //  locality name modified
-                                            addToLocalityChangeLog( $localityid, $localityDetailsArray['LABEL'], $txtCityName );
+                                            addToNameChangeLog( 'locality', $localityid, $localityDetailsArray['LABEL'], $txtCityName );
                                         }
                                             if($txtCityUrl != $old_loc_url)
                                                     insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
