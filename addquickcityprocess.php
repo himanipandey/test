@@ -192,7 +192,7 @@ else if ($bannerid!='')
  /*****************City Data************/
 	$CityDataArr	=	array();
  	
- 	$qry	=	"SELECT CITY_ID,LABEL FROM ".CITY." ORDER BY LABEL ASC";
+ 	$qry	=	"SELECT CITY_ID,LABEL FROM ".CITY." WHERE ACTIVE = 1 ORDER BY LABEL ASC";
  	$res = mysql_query($qry,$db);
  	
  	while($data	=	mysql_fetch_array($res))

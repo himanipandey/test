@@ -7,9 +7,9 @@ include_once("builder_function.php");
 include_once("function/locality_functions.php");
 
 AdminAuthentication();
-
-$subcityval = $_GET['subcityval'];
-$subcityval = str_replace("@","&",$subcityval);
+require $_SERVER['DOCUMENT_ROOT'].'/dbConfig.php';
+$subcityvalnew = $_GET['subcityval'];
+$subcityval = str_replace("@","&",$subcityvalnew);
 
 $id = $_GET['id'];
 $cityid = $_GET['cityid'];
