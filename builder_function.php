@@ -178,7 +178,7 @@ function BankList() {
 
 /* * ********project insert************** */
 
-function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtProjectRemark, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $txtCallingRemark, $txtAuditRemark, $launchedUnits, $reasonUnlaunchedUnits, $identifyTownShip) {
+function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $launchedUnits, $reasonUnlaunchedUnits, $identifyTownShip) {
 
     if ($project_type == '1') {
         $no_of_towers = $no_of_towers;
@@ -214,64 +214,61 @@ function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
 
     $Completion = " Onwards";
     $Sql = "INSERT INTO " . RESI_PROJECT . " SET
-							PROJECT_NAME  	      		= '" . d_($txtProjectName) . "',
-							PROJECT_DESCRIPTION 	  	= '" . d_($txtProjectDescription) . "',
-							PROJECT_REMARK 	  			= '" . d_($txtProjectRemark) . "',
-							PROJECT_ADDRESS	 	  		= '" . d_($txtAddress) . "',
-							BUILDER_ID 	      			= '" . d_($builderId) . "',
-							BUILDER_NAME 	      		= '" . d_($BuilderName) . "',
-							CITY_ID	      				= '" . d_($cityId) . "',
-							SUBURB_ID		 	      	= '" . d_($suburbId) . "',
-							LOCALITY_ID		 	      	= '" . d_($localityId) . "',
-							OPTIONS_DESC 	      		= '" . d_($txtProjectDesc) . "',
-							PROJECT_TYPE_ID	      		= '" . d_($project_type) . "',
-							LOCATION_DESC	 	      	= '" . d_($txtProjectLocation) . "',
-							LATITUDE			 	    = '" . d_($txtProjectLattitude) . "',
-							LONGITUDE		 	      	= '" . d_($txtProjectLongitude) . "',
-							META_TITLE		 	      	= '" . d_($txtProjectMetaTitle) . "',
-							META_KEYWORDS	 	      	= '" . d_($txtMetaKeywords) . "',
-							META_DESCRIPTION 	      	= '" . d_($txtMetaDescription) . "',
-							ACTIVE			 	      	= '" . d_($Active) . "',
-							PROJECT_STATUS 	      		= '" . d_($Status) . "',
-							PROJECT_URL		 	      	= '" . d_($txtProjectURL) . "',
-							FEATURED			 	    = '" . d_($Featured) . "',
-							COMPLETION_DATE	      		= '" . d_($Completion) . "',
-							PRICE_DISCLAIMER 	      	= '" . d_($txtDisclaimer) . "',
-							PAYMENT_PLAN				=	'" . $payment . "',
-							NO_OF_TOWERS				=	'" . $no_of_towers . "',
-							NO_OF_FLATS					=	'" . $no_of_flats . "',
-							PRE_LAUNCH_DATE             =   '" . $pre_launch_date . "',
-                                                        EXPECTED_SUPPLY_DATE             =   '" . $exp_launch_date . "',
-							LAUNCH_DATE					=	'" . $eff_date_to . "',
-							BANK_LIST					=	'" . $bank_list . "',
-							YOUTUBE_VIDEO				=	'" . $youtube_link . "',
-							PRICE_LIST					=	'" . addslashes($price) . "',
-							APPLICATION_FORM			=	'" . addslashes($app) . "',
-							OFFER						=	'" . $special_offer . "',
-							DISPLAY_ORDER				=	'" . $display_order . "',
-							OFFER_HEADING				=	'" . $offer_heading . "',
-							OFFER_DESC					=	'" . $offer_desc . "',
-							APPROVALS					=	'" . $approvals . "',
-							PROJECT_SIZE				=	'" . $project_size . "',
-							NO_OF_LIFTS_PER_TOWER		=	'" . $no_of_lift . "',
-							POWER_BACKUP				=	'" . $powerBackup . "',
-							ARCHITECT_NAME				=	'" . $architect . "',
-							POWER_BACKUP_CAPACITY		=	'" . $power_backup_capacity . "',
-							NO_OF_VILLA					=	'" . $no_of_villa . "',
-							PROMISED_COMPLETION_DATE	=	'" . $eff_date_to_prom . "',
-							SOURCE_OF_INFORMATION		=	'" . $txtProjectSource . "',
-							RESIDENTIAL					=	'" . $residential . "',
-							TOWNSHIP					=	'" . $township . "',
-                                                        NO_OF_PLOTS					=	'" . $plot . "',
-							OPEN_SPACE					=	'" . $open_space . "',
-							BOOKING_STATUS 				=	'" . $Booking_Status . "',
-							SHOULD_DISPLAY_PRICE        =     $shouldDisplayPrice,
-							CALLING_REMARK				=	'" . $txtCallingRemark . "',
-							AUDIT_REMARK				=	'" . $txtAuditRemark . "',
-							LAUNCHED_UNITS				=	'" . $launchedUnits . "',
-							REASON_UNLAUNCHED_UNITS		=   '" . $reasonUnlaunchedUnits . "',
-                                                        SKIP_UPDATION_CYCLE  =  '$identifyTownShip',
-							PROJECT_SMALL_IMAGE			=   '/on-request/sagar-kunj-apartments/defaultprojectsearchimage-small.png'";
+        PROJECT_NAME  	      		= '" . d_($txtProjectName) . "',
+        PROJECT_DESCRIPTION 	  	= '" . d_($txtProjectDescription) . "',
+        PROJECT_ADDRESS	 	  		= '" . d_($txtAddress) . "',
+        BUILDER_ID 	      			= '" . d_($builderId) . "',
+        BUILDER_NAME 	      		= '" . d_($BuilderName) . "',
+        CITY_ID	      				= '" . d_($cityId) . "',
+        SUBURB_ID		 	      	= '" . d_($suburbId) . "',
+        LOCALITY_ID		 	      	= '" . d_($localityId) . "',
+        OPTIONS_DESC 	      		= '" . d_($txtProjectDesc) . "',
+        PROJECT_TYPE_ID	      		= '" . d_($project_type) . "',
+        LOCATION_DESC	 	      	= '" . d_($txtProjectLocation) . "',
+        LATITUDE			 	    = '" . d_($txtProjectLattitude) . "',
+        LONGITUDE		 	      	= '" . d_($txtProjectLongitude) . "',
+        META_TITLE		 	      	= '" . d_($txtProjectMetaTitle) . "',
+        META_KEYWORDS	 	      	= '" . d_($txtMetaKeywords) . "',
+        META_DESCRIPTION 	      	= '" . d_($txtMetaDescription) . "',
+        ACTIVE			 	      	= '" . d_($Active) . "',
+        PROJECT_STATUS 	      		= '" . d_($Status) . "',
+        PROJECT_URL		 	      	= '" . d_($txtProjectURL) . "',
+        FEATURED			 	    = '" . d_($Featured) . "',
+        COMPLETION_DATE	      		= '" . d_($Completion) . "',
+        PRICE_DISCLAIMER 	      	= '" . d_($txtDisclaimer) . "',
+        PAYMENT_PLAN				=	'" . $payment . "',
+        NO_OF_TOWERS				=	'" . $no_of_towers . "',
+        NO_OF_FLATS					=	'" . $no_of_flats . "',
+        PRE_LAUNCH_DATE             =   '" . $pre_launch_date . "',
+        EXPECTED_SUPPLY_DATE             =   '" . $exp_launch_date . "',
+        LAUNCH_DATE					=	'" . $eff_date_to . "',
+        BANK_LIST					=	'" . $bank_list . "',
+        YOUTUBE_VIDEO				=	'" . $youtube_link . "',
+        PRICE_LIST					=	'" . addslashes($price) . "',
+        APPLICATION_FORM			=	'" . addslashes($app) . "',
+        OFFER						=	'" . $special_offer . "',
+        DISPLAY_ORDER				=	'" . $display_order . "',
+        OFFER_HEADING				=	'" . $offer_heading . "',
+        OFFER_DESC					=	'" . $offer_desc . "',
+        APPROVALS					=	'" . $approvals . "',
+        PROJECT_SIZE				=	'" . $project_size . "',
+        NO_OF_LIFTS_PER_TOWER		=	'" . $no_of_lift . "',
+        POWER_BACKUP				=	'" . $powerBackup . "',
+        ARCHITECT_NAME				=	'" . $architect . "',
+        POWER_BACKUP_CAPACITY		=	'" . $power_backup_capacity . "',
+        NO_OF_VILLA					=	'" . $no_of_villa . "',
+        PROMISED_COMPLETION_DATE	=	'" . $eff_date_to_prom . "',
+        SOURCE_OF_INFORMATION		=	'" . $txtProjectSource . "',
+        RESIDENTIAL					=	'" . $residential . "',
+        TOWNSHIP					=	'" . $township . "',
+        NO_OF_PLOTS					=	'" . $plot . "',
+        OPEN_SPACE					=	'" . $open_space . "',
+        BOOKING_STATUS 				=	'" . $Booking_Status . "',
+        SHOULD_DISPLAY_PRICE        =     $shouldDisplayPrice,
+        LAUNCHED_UNITS				=	'" . $launchedUnits . "',
+        REASON_UNLAUNCHED_UNITS		=   '" . $reasonUnlaunchedUnits . "',
+        SKIP_UPDATION_CYCLE  =  '$identifyTownShip',
+        PROJECT_SMALL_IMAGE			=   '/on-request/sagar-kunj-apartments/defaultprojectsearchimage-small.png'";
 
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertProject()');
     $pid = mysql_insert_id();
@@ -661,67 +658,64 @@ function localityList($cityid, $suburbId) {
 
 /* * ********project insert************** */
 
-function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtProjectRemark, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $ProjectId, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $txtCallingRemark, $txtAuditRemark, $launchedUnits, $reasonUnlaunchedUnits, $identifyTownShip) {
+function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $ProjectId, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $launchedUnits, $reasonUnlaunchedUnits, $identifyTownShip) {
     $Completion = " Onwards";
     $Sql = "UPDATE " . RESI_PROJECT . "
-				SET
-					PROJECT_NAME  	      		= '" . d_($txtProjectName) . "',
-					PROJECT_DESCRIPTION 	  	= '" . d_($txtProjectDescription) . "',
-					PROJECT_REMARK 	  			= '" . d_($txtProjectRemark) . "',
-					PROJECT_ADDRESS	 	  		= '" . d_($txtAddress) . "',
-					BUILDER_ID 	      			= '" . d_($builderId) . "',
-					BUILDER_NAME 	      		= '" . d_($BuilderName) . "',
-					CITY_ID	      				= '" . d_($cityId) . "',
-					SUBURB_ID		 	      	= '" . d_($suburbId) . "',
-					LOCALITY_ID		 	      	= '" . d_($localityId) . "',
-					OPTIONS_DESC 	      		= '" . d_($txtProjectDesc) . "',
-					PROJECT_TYPE_ID	      		= '" . d_($project_type) . "',
-					LOCATION_DESC	 	      	= '" . d_($txtProjectLocation) . "',
-					LATITUDE			 	    = '" . d_($txtProjectLattitude) . "',
-					LONGITUDE		 	      	= '" . d_($txtProjectLongitude) . "',
-					META_TITLE		 	      	= '" . d_($txtProjectMetaTitle) . "',
-					META_KEYWORDS	 	      	= '" . d_($txtMetaKeywords) . "',
-					META_DESCRIPTION 	      	= '" . d_($txtMetaDescription) . "',
-					ACTIVE			 	      	= '" . d_($Active) . "',
-					DISPLAY_ORDER			 	= $display_order,
-					PROJECT_STATUS 	      		= '" . d_($Status) . "',
-					PROJECT_URL		 	      	= '" . d_($txtProjectURL) . "',
-					FEATURED			 	    = '" . d_($Featured) . "',
-					COMPLETION_DATE	      		= '" . d_($Completion) . "',
-					PRICE_DISCLAIMER 	      	= '" . d_($txtDisclaimer) . "',
-					PAYMENT_PLAN				=	'" . $payment . "',
-					NO_OF_TOWERS				=	'" . $no_of_towers . "',
-					NO_OF_FLATS					=	'" . $no_of_flats . "',
-					PRE_LAUNCH_DATE                         =   '" . $pre_launch_date . "',
-                                        EXPECTED_SUPPLY_DATE                    =   '" . $exp_launch_date . "',
-					LAUNCH_DATE					=	'" . $eff_date_to . "',
-					BANK_LIST					=	'" . $bank_list . "',
-					YOUTUBE_VIDEO				=	'" . $youtube_link . "',
-					PRICE_LIST					=	'" . addslashes($price) . "',
-					APPLICATION_FORM			=	'" . addslashes($app) . "',
-					OFFER						=	'" . $special_offer . "',
-					OFFER_HEADING				=	'" . $offer_heading . "',
-					OFFER_DESC					=	'" . $offer_desc . "',
-					APPROVALS					=	'" . $approvals . "',
-					PROJECT_SIZE				=	'" . $project_size . "',
-					NO_OF_LIFTS_PER_TOWER		=	'" . $no_of_lift . "',
-					POWER_BACKUP				=	'" . $powerBackup . "',
-					ARCHITECT_NAME				=	'" . $architect . "',
-					POWER_BACKUP_CAPACITY		=	'" . $power_backup_capacity . "',
-					NO_OF_VILLA					=	'" . $no_of_villa . "',
-					PROMISED_COMPLETION_DATE	=	'" . $eff_date_to_prom . "',
-					SOURCE_OF_INFORMATION		=	'" . $txtProjectSource . "',
-					RESIDENTIAL					=	'" . $residential . "',
-					TOWNSHIP					=	'" . $township . "',
-                                        NO_OF_PLOTS					=	'" . $plot . "',
-					OPEN_SPACE					=	'" . $open_space . "',
-					BOOKING_STATUS 				=	'" . $Booking_Status . "',
-					SHOULD_DISPLAY_PRICE        =   '" . $shouldDisplayPrice . "',
-					CALLING_REMARK				=	'" . $txtCallingRemark . "',
-					LAUNCHED_UNITS				=	'" . $launchedUnits . "',
-					REASON_UNLAUNCHED_UNITS		=   '" . $reasonUnlaunchedUnits . "',
-                                        SKIP_UPDATION_CYCLE  =  '$identifyTownShip',    
-					AUDIT_REMARK				=	'" . $txtAuditRemark . "'";
+            SET
+                PROJECT_NAME  	      		= '" . d_($txtProjectName) . "',
+                PROJECT_DESCRIPTION 	  	= '" . d_($txtProjectDescription) . "',
+                PROJECT_ADDRESS	 	  		= '" . d_($txtAddress) . "',
+                BUILDER_ID 	      			= '" . d_($builderId) . "',
+                BUILDER_NAME 	      		= '" . d_($BuilderName) . "',
+                CITY_ID	      				= '" . d_($cityId) . "',
+                SUBURB_ID		 	      	= '" . d_($suburbId) . "',
+                LOCALITY_ID		 	      	= '" . d_($localityId) . "',
+                OPTIONS_DESC 	      		= '" . d_($txtProjectDesc) . "',
+                PROJECT_TYPE_ID	      		= '" . d_($project_type) . "',
+                LOCATION_DESC	 	      	= '" . d_($txtProjectLocation) . "',
+                LATITUDE			 	    = '" . d_($txtProjectLattitude) . "',
+                LONGITUDE		 	      	= '" . d_($txtProjectLongitude) . "',
+                META_TITLE		 	      	= '" . d_($txtProjectMetaTitle) . "',
+                META_KEYWORDS	 	      	= '" . d_($txtMetaKeywords) . "',
+                META_DESCRIPTION 	      	= '" . d_($txtMetaDescription) . "',
+                ACTIVE			 	      	= '" . d_($Active) . "',
+                DISPLAY_ORDER			 	= $display_order,
+                PROJECT_STATUS 	      		= '" . d_($Status) . "',
+                PROJECT_URL		 	      	= '" . d_($txtProjectURL) . "',
+                FEATURED			 	    = '" . d_($Featured) . "',
+                COMPLETION_DATE	      		= '" . d_($Completion) . "',
+                PRICE_DISCLAIMER 	      	= '" . d_($txtDisclaimer) . "',
+                PAYMENT_PLAN				=	'" . $payment . "',
+                NO_OF_TOWERS				=	'" . $no_of_towers . "',
+                NO_OF_FLATS					=	'" . $no_of_flats . "',
+                PRE_LAUNCH_DATE                         =   '" . $pre_launch_date . "',
+                EXPECTED_SUPPLY_DATE                    =   '" . $exp_launch_date . "',
+                LAUNCH_DATE					=	'" . $eff_date_to . "',
+                BANK_LIST					=	'" . $bank_list . "',
+                YOUTUBE_VIDEO				=	'" . $youtube_link . "',
+                PRICE_LIST					=	'" . addslashes($price) . "',
+                APPLICATION_FORM			=	'" . addslashes($app) . "',
+                OFFER						=	'" . $special_offer . "',
+                OFFER_HEADING				=	'" . $offer_heading . "',
+                OFFER_DESC					=	'" . $offer_desc . "',
+                APPROVALS					=	'" . $approvals . "',
+                PROJECT_SIZE				=	'" . $project_size . "',
+                NO_OF_LIFTS_PER_TOWER		=	'" . $no_of_lift . "',
+                POWER_BACKUP				=	'" . $powerBackup . "',
+                ARCHITECT_NAME				=	'" . $architect . "',
+                POWER_BACKUP_CAPACITY		=	'" . $power_backup_capacity . "',
+                NO_OF_VILLA					=	'" . $no_of_villa . "',
+                PROMISED_COMPLETION_DATE	=	'" . $eff_date_to_prom . "',
+                SOURCE_OF_INFORMATION		=	'" . $txtProjectSource . "',
+                RESIDENTIAL					=	'" . $residential . "',
+                TOWNSHIP					=	'" . $township . "',
+                NO_OF_PLOTS					=	'" . $plot . "',
+                OPEN_SPACE					=	'" . $open_space . "',
+                BOOKING_STATUS 				=	'" . $Booking_Status . "',
+                SHOULD_DISPLAY_PRICE        =   '" . $shouldDisplayPrice . "',
+                LAUNCHED_UNITS				=	'" . $launchedUnits . "',
+                REASON_UNLAUNCHED_UNITS		=   '" . $reasonUnlaunchedUnits . "',
+                SKIP_UPDATION_CYCLE  =  '$identifyTownShip'";
     $Sql.= " WHERE PROJECT_ID = '" . $ProjectId . "'";
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function UpdateProject()');
 
@@ -1121,18 +1115,6 @@ function DeleteBuilder($ID) {
     return 1;
 }
 
-/* * *****function for fetch last inserted data in resi project option arc table ************ */
-
-function lastUpdatedData($projectId) {
-    $qry = "SELECT * from " . RESI_PROJECT_OPTIONS_ARC . " WHERE PROJECT_ID = '" . $projectId . "' ORDER BY SUBMITTED_DATE DESC";
-    $res = mysql_query($qry);
-    $arrOptionArc = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrOptionArc, $data);
-    }
-    return $arrOptionArc;
-}
-
 /* * *****function for fetch last inserted or updated data in audit table ************ */
 
 function AuditTblDataByTblName($tblName, $projectId) {
@@ -1352,6 +1334,11 @@ function ViewLocalityDetails($localityID) {
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
         $ResDetails['VISIBLE_IN_CMS'] = $Res['VISIBLE_IN_CMS'];
+        $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
+        $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
+        $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
+        $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
+        $ResDetails['LOCALITY_CLEANED'] = $Res['LOCALITY_CLEANED'];
         return $ResDetails;
     } else {
         return 0;
@@ -1819,7 +1806,6 @@ function insertUpdateInRedirectTbl($toUrl, $fromUrl) {
     $action = '';
     if ($fromUrl == $toUrl)
         return $action;
-
     $qrySel = "SELECT * FROM redirect_url_map WHERE FROM_URL = '$fromUrl'";
     $resSel = mysql_query($qrySel) or die(mysql_error() . " error");
 
@@ -1935,15 +1921,13 @@ function curlFetch($url)
 function getPrevMonthProjectData($projectId)
 {
 	global $analytics_credential;
-	// global $_SERVER['SERVER_NAME'];
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 
-	//$url = $_SERVER['SERVER_NAME']."/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken.'&timestamp='.$tmstmp;//http://cms.proptiger.com
-	$url="http://cms.proptiger.com/analytics/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	$url=$_SERVER['HTTP_HOST']."/analytics/apis/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1956,14 +1940,12 @@ function getPrevMonthProjectData($projectId)
 function getFlatAvailability($projectId)
 {
 	global $analytics_credential;
-	// global $_SERVER['SERVER_NAME'];
 	$usrn=$analytics_credential["username"];
 	$psswd=$analytics_credential["password"];
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	 $url=$_SERVER['HTTP_HOST']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
-	//$url =$_SERVER['SERVER_NAME']."/analytics/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;//http://cms.proptiger.com
+	 $url=$_SERVER['HTTP_HOST']."/analytics/apis/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);

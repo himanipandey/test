@@ -1,3 +1,4 @@
+
 <?php
 require_once "$_SERVER[DOCUMENT_ROOT]/includes/session.php";
 
@@ -26,6 +27,13 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 	ini_set('log_errors','0');
 	define("BEANSTALK_SERVER", '208.109.190.204');
 	define("BEANSTALK_PORT", '11300');
+
+	//  Curl call URL
+	define("SERVER_URL", "http://www.proptiger.com");
+	define("SEND_EMAIL", TRUE);
+	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
+	define("RESALE_GROUP_EMAIL", "projects@proptiger.com");
+
 }
 else{
 	$myDocRoot = dirname(__FILE__);
@@ -54,5 +62,19 @@ else{
 
 	define("BEANSTALK_SERVER", 'localhost');
 	define("BEANSTALK_PORT", '11300');
+	
+	
+	//  CRM Database
+	
+	define("DB_CRM_HOST", "208.109.190.204");
+	define("DB_CRM_USER", "root");
+	define("DB_CRM_PASS", "PropTiger1");
+	define("DB_CRM_NAME", "ptigercrm");
+
+	//  Curl call URL
+	define("SERVER_URL", "http://www.proptiger.com");
+	define("SEND_EMAIL", TRUE);
+	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
+	define("RESALE_GROUP_EMAIL", "projects@proptiger.com");
 }
 ?>

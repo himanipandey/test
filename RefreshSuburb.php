@@ -67,7 +67,9 @@
             $sql = "SELECT A.SUBURB_ID, A.LABEL FROM ".SUBURB." AS A INNER JOIN ".LOCALITY." AS B ON (A.SUBURB_ID = B.SUBURB_ID) WHERE B.LOCALITY_ID = '".$locality."' AND B.CITY_ID = " . $cityid ;
             $data = mysql_query($sql);
             $response = mysql_fetch_assoc($data);
-            echo $response['SUBURB_ID'].'@@'.$response['LABEL'];
+            $json = array($response['SUBURB_ID'], $response['LABEL']);
+            header('Content-Type: application/json');
+            echo json_encode($json);            
             
         }else {
             $city_id		=	$_REQUEST["id"];

@@ -319,11 +319,9 @@ function displocality(localityid)
             data: dataStrAutofill,
             cache: false,
             success: function(suburbArr) {
-            var newsuburbArr = suburbArr.split("@@");
-                //alert(newsuburbArr);
-                $("#suburbId option[value='" + newsuburbArr["0"] + "']").attr("selected","selected");
-                //$('select[name="suburbId"]').find('option:contains("' + suburbname.trim() + '")').attr("selected", true);
-                $('#subcity_txtbox').val(newsuburbArr["1"]);
+            var newsuburbArr = suburbArr;
+                $("#suburbId option[value='" + newsuburbArr[0] + "']").attr("selected","selected");
+                $('#subcity_txtbox').val(newsuburbArr[1]);
               }
 	});
        }

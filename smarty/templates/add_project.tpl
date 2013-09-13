@@ -310,8 +310,19 @@
 									  <font color="red"><span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
 								 </td>
 							   </tr>
-
-							   <tr>
+                                                           {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
+                                                            {if array_key_exists('projectRemark',$projectComments)}   
+                                                            <tr>
+                                                                <td width="20%" align="right" valign="top"><b>Project Old Remark :</b> </td>
+                                                                <td width="30%" align="left" colspan="2">{$projectComments['projectRemark']->comment_text}</td>
+                                                            </tr>
+                                                            {else if array_key_exists('projectRemark',$projectOldComments)}
+                                                              <tr>
+                                                                <td width="20%" align="right" valign="top"><b>Project Old Remark :</b> </td>
+                                                                <td width="30%" align="left" colspan="2">{$projectOldComments['projectRemark']->comment_text}</td>
+                                                             </tr>
+                                                            {/if}
+                                                           <tr>
 								  <td width="20%" align="right" valign="top"><b>Project Remark :</b> </td>
 								  <td width="30%" align="left">
 									 <textarea name="txtProjectRemark" rows="10" cols="45" id = "txtProjectRemark">{$txtProjectRemark}</textarea>
@@ -320,7 +331,19 @@
 									  &nbsp;
 								 </td>
 							   </tr>
-							   
+							   {/if}
+                                                           {if $userDepartment == 'CALLCENTER' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('callingRemark',$projectComments)}   
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Calling Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['callingRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('callingRemark',$projectOldComments)}   
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Calling Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['callingRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
 							    <tr>
 								  <td width="20%" align="right" valign="top"><b>Calling Team Remark :</b> </td>
 								  <td width="30%" align="left">
@@ -330,7 +353,19 @@
 									  &nbsp;
 								 </td>
 							   </tr>
-							   
+							   {/if}
+                                                           {if $userDepartment == 'AUDIT-1' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('auditRemark',$projectComments)}    
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Audit Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['auditRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('auditRemark',$projectOldComments)}    
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Audit Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['auditRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
 							    <tr>
 								  <td width="20%" align="right" valign="top"><b>Audit Team Remark :</b> </td>
 								  <td width="30%" align="left">
@@ -340,7 +375,51 @@
 									  &nbsp;
 								 </td>
 							   </tr>
-
+                                                           {/if}
+                                                           {if $userDepartment == 'RESALE-CALLCENTER' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('secondaryRemark',$projectComments)}   
+                                                                <tr>
+                                                                    <td nowrap width="20%" align="right" valign="top"><b>Secondary Calling Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['secondaryRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('secondaryRemark',$projectOldComments)}   
+                                                                <tr>
+                                                                    <td nowrap width="20%" align="right" valign="top"><b>Secondary Calling Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['secondaryRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
+                                                           <tr>
+								  <td width="20%" align="right" valign="top"><b>Secondary Calling Team Remark :</b> </td>
+								  <td width="30%" align="left">
+									 <textarea name="secondaryRemark" rows="10" cols="45" id = "secondaryRemark">{$secondaryRemark}</textarea>
+								  </td>
+								  <td width="50%" align="left">
+									  &nbsp;
+								 </td>
+							   </tr>
+                                                           {/if}
+                                                           {if $userDepartment == 'SURVEY' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('fieldSurveyRemark',$projectComments)}   
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Field Survey Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['fieldSurveyRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('fieldSurveyRemark',$projectOldComments)}   
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Field Survey Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['fieldSurveyRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
+                                                           <tr>
+								  <td width="20%" align="right" valign="top"><b>Field Survey Team Remark :</b> </td>
+								  <td width="30%" align="left">
+									 <textarea name="fieldSurveyRemark" rows="10" cols="45" id = "fieldSurveyRemark">{$fieldSurveyRemark}</textarea>
+								  </td>
+								  <td width="50%" align="left">
+									  &nbsp;
+								 </td>
+							   </tr>
+                                                           {/if}
 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Address :</b> </td>
