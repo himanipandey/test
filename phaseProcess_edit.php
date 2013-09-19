@@ -195,7 +195,7 @@ if (isset($_POST['btnSave'])) {
 
         if ($_POST['plotvilla'] != '') {
             $supply = $_POST['supply'];
-            ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', $key, $_POST['supply'], $_POST['launched']);
+            ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $_POST['supply'], $_POST['launched']);
         }
 
         $towerDetail = fetch_towerDetails_for_phase($projectId);
