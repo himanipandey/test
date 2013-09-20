@@ -63,4 +63,11 @@
     if($localityCleanedAuth == true)
         $localityCleanedAccess = 1;
     $smarty->assign("localityCleanedAccess",$localityCleanedAccess);
+    
+    $isMetricsAuth = isUserPermitted('is-metrics', 'read');
+
+    $isMetricsAccess = 0;
+    if($isMetricsAuth == true)
+        $isMetricsAccess = 1;
+    $smarty->assign("isMetricsAccess",$isMetricsAccess);
 ?>
