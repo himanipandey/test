@@ -351,7 +351,7 @@ if ($_POST['forwardFlag'] == 'no') {
     }
 //  if old history is not found
     else{
-        $lastAssignemnt = [];
+        $lastAssignemnt = array();
     }
 
 
