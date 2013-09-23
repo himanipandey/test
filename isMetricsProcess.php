@@ -14,8 +14,10 @@
     $newAddedProject = ResiProject::find('all',array('joins' => $joinProject, 'conditions'=>$conditions, "select" => "count(*) as NEW_PROJECT_COUNT"));
    
    /******code for get all project which have master plans***/
+    $arrPlanType = "'Master Plan', 'Site Plan', 'Layout Plan'";
     $join = 'LEFT JOIN project_plan_images a ON( resi_project.project_id = a.project_id )';
-    $conditionsMaster = array("(resi_project.active = '1' OR resi_project.active = '3') AND resi_project.residential = '0' AND resi_project.city_id in ($cityList) AND a.plan_type = 'Master Plan'");
+    $conditionsMaster = array("(resi_project.active = '1' OR resi_project.active = '3') AND resi_project.residential = '0' AND resi_project.city_id in ($cityList) 
+        AND a.plan_type in ($arrPlanType) ");
     $masterPlan = ResiProject::find('all',array('joins' => $join, 'conditions'=>$conditionsMaster, "select" => "count(*) as MASTER_PLAN_COUNT"));
     
     $percentProjectWithMasterPlan = ($masterPlan[0]->master_plan_count/$activeProject[0]->project_count)*100;
