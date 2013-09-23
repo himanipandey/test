@@ -1193,7 +1193,9 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function UpdateBuilder()');
     
     if( $ExecSql ) {
-        if( $txtBuilderName != $oldbuilder ) { //code for update resi_project if builder name updates 
+        if( $txtBuilderName != $oldbuilder ) { //code for update resi_project if builder name updates
+            //  add entry to name change log
+            addToNameChangeLog( 'builder', $builderid, $oldbuilder, $txtBuilderName );
             $qryProject ="UPDATE 
                             resi_project
                           SET
@@ -1798,6 +1800,31 @@ function fetchStartTime($stageName, $phasename, $projectId) {
     $res = mysql_query($qry) or die(mysql_error());
     $data = mysql_fetch_assoc($res);
     return $data['DATE_TIME'];
+}
+
+function addToNameChangeLog( $type, $id, $oldName, $newName ) {
+    $checkQuery = "SELECT COUNT(*) AS PRESENT FROM `name_change_log` WHERE `$type` = '$id' AND `old_name` = '$oldName' AND `new_name` = '$newName'";
+    $res = mysql_query( $checkQuery ) or die( mysql_error() );
+    $count = mysql_fetch_assoc( $res );
+    if ( $count['PRESENT'] == 0 ) {
+        //  before adding delete entries will will create a loop in the table
+        deleteLoop( $id, $oldName, $newName );
+
+        //  add entry to database
+        $insertQuery = "INSERT INTO `name_change_log` ($type, old_name, new_name, created_at) VALUES ('$id', '$oldName', '$newName', NOW())";
+        mysql_query( $insertQuery ) or die( mysql_error() );
+    }
+}
+
+function deleteLoop( $id, $oldName, $newName ) {
+    $deleteQuery = "SELECT id FROM `name_change_log` WHERE id = '$id' AND old_name = '$newName' AND new_name = '$oldName'";
+    $res = mysql_query( $deleteQuery );
+    $idList = array();
+    while( $__id = mysql_fetch_assoc( $res ) ) {
+        $idList[] = $__id['id'];
+    }
+    $idList = implode( ', ', $idList );
+    mysql_query( "DELETE FROM `name_change_log` WHERE id IN ( $idList )" );
 }
 
 /* * *****Insert update in redirect url table if update any url in builder,project,city,suburb and locality tables******** */
