@@ -342,7 +342,7 @@ if ($_POST['forwardFlag'] == 'no') {
 
 //  Get back older history
     $history = ProjectStageHistory::find("all", array("conditions" => "project_id = {$projectId} and project_phase in
-    (\"dcCallCenter\",\"dataCollection\", \"revert\")", "limit" => 1, "order" => "date_time desc"));
+    (\"dcCallCenter\",\"dataCollection\", \"revert\") and project_stage = '{$projectStage}'", "limit" => 1, "order" => "date_time desc"));
 //  If old history is found
     if(count($history) > 0){
         $history = $history[0];
