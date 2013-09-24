@@ -112,7 +112,7 @@
                   and residential flag = 0 and city =(CITY = (Bangalore, Chennai, Noida,
     Gurgaon, Ghaziabad, Faridabad, Delhi, Mumbai, Pune, Kolkatta, Hyderabad, Ahmedabad)");
    
-    $newProjectAddedLog = ResiProject::find('all',array('conditions'=>array("(active = 1 OR active = 3) AND residential = '0' AND city_id in ($cityList)"),
+    $newProjectAddedLog = ResiProject::find('all',array('conditions'=>array("($active) AND residential = '0' AND city_id in ($cityList)"),
         "select" => "project_id"));
    $projectIdList = '';
     foreach($newProjectAddedLog as $value) {
