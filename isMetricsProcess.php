@@ -1,7 +1,8 @@
 <?php
 
     $cityList = "1,2,5,6,8,11,12,16,18,20,21";
-    $activeProject = ResiProject::find('all',array('conditions'=>array("(active = 1 OR active = 3) AND residential = '0' AND city_id in ($cityList)"),
+    $active = "resi_project.active = 1 OR resi_project.active = 3";
+    $activeProject = ResiProject::find('all',array('conditions'=>array("($active) AND residential = '0' AND city_id in ($cityList)"),
         "select" => "count(*) as PROJECT_COUNT"));
     
     /******code for get all projects which was added in last n number of days***/
@@ -9,32 +10,34 @@
     $newDate = date('Y-m-d',$dt);
     $joinProject = 'LEFT JOIN _t_resi_project a ON(resi_project.project_id = a.project_id)';
     $conditions = array("a._t_operation = 'I' AND a._t_transaction_date >= '$newDate' 
-        AND (resi_project.active = 1 OR resi_project.active = 3) AND resi_project.residential = '0'");
+        AND ($active) AND resi_project.residential = '0'");
     
     $newAddedProject = ResiProject::find('all',array('joins' => $joinProject, 'conditions'=>$conditions, "select" => "count(*) as NEW_PROJECT_COUNT"));
    
    /******code for get all project which have master plans***/
+    $arrPlanType = "'Master Plan', 'Site Plan', 'Layout Plan'";
     $join = 'LEFT JOIN project_plan_images a ON( resi_project.project_id = a.project_id )';
-    $conditionsMaster = array("(resi_project.active = '1' OR resi_project.active = '3') AND resi_project.residential = '0' AND resi_project.city_id in ($cityList) AND a.plan_type = 'Master Plan'");
+    $conditionsMaster = array("($active) AND resi_project.residential = '0' AND resi_project.city_id in ($cityList) 
+        AND a.plan_type in ($arrPlanType) ");
     $masterPlan = ResiProject::find('all',array('joins' => $join, 'conditions'=>$conditionsMaster, "select" => "count(*) as MASTER_PLAN_COUNT"));
     
     $percentProjectWithMasterPlan = ($masterPlan[0]->master_plan_count/$activeProject[0]->project_count)*100;
     
     /******code for get all project which have location maps***/
-    $conditionsLocation = array("(resi_project.active = '1' OR resi_project.active = '3') AND resi_project.residential = '0' AND resi_project.city_id in ($cityList) AND a.plan_type = 'Location Plan'");
+    $conditionsLocation = array("($active) AND resi_project.residential = '0' AND resi_project.city_id in ($cityList) AND a.plan_type = 'Location Plan'");
     $locationPlan = ResiProject::find('all',array('joins' => $join, 'conditions'=>$conditionsLocation, "select" => "count(*) as LOCATION_PLAN_COUNT"));
     
     $percentProjectWithLocationPlan = ($locationPlan[0]->location_plan_count/$activeProject[0]->project_count)*100;
     
     /*******count of project floor plan**************/
-    $conditionsFloor = array("(b.active = '1' OR b.active = '3') AND b.residential = '0' AND b.city_id in ($cityList)");
+    $conditionsFloor = array("($active) AND resi_project.residential = '0' AND resi_project.city_id in ($cityList)");
      $joinFloor = 'LEFT JOIN resi_project_options a ON( resi_floor_plans.option_id = a.options_id ) 
-                   LEFT JOIN resi_project b ON(a.project_id = b.project_id)';
+                   LEFT JOIN resi_project ON(a.project_id = resi_project.project_id)';
     $floorPlans = ResiFloorPlans::find('all',array('joins' => $joinFloor, 'conditions'=>$conditionsFloor,"select" => "count(*) as FLOOR_PLAN_COUNT"));
     
     $joinProjectWithFloor = 'INNER JOIN resi_project_options a ON( resi_project.project_id = a.project_id ) 
                    INNER JOIN resi_floor_plans b ON(a.options_id = b.floor_plan_id)';
-    $conditionsProjectWithFloor = array("(resi_project.active = '1' OR resi_project.active = '3') AND resi_project.residential = '0' AND resi_project.city_id in ($cityList)");
+    $conditionsProjectWithFloor = array("($active) AND resi_project.residential = '0' AND resi_project.city_id in ($cityList)");
     
     $projectWithFoorPlans = ResiProject::find('all',array('joins' => $joinProjectWithFloor, 'conditions'=>$conditionsProjectWithFloor,
         'group' => 'resi_project.project_id',"select" => "count(*) as PROJECT_COUNT_WITH_FLOOR"));
@@ -42,7 +45,7 @@
     $avrgNumOfFloorPlanPerProj = $floorPlans[0]->floor_plan_count/$activeProject[0]->project_count;
    
     /********Percentage of under const project with const images**************/
-    $conditionsConstImg = array("(resi_project.active = '1' OR resi_project.active = '3') AND resi_project.residential = '0' 
+    $conditionsConstImg = array("($active) AND resi_project.residential = '0' 
                             AND resi_project.city_id in ($cityList) AND a.plan_type = 'Construction Status'");
     $projectCountOfConstImg = ResiProject::find('all',array('joins' => $join, 'conditions'=>$conditionsConstImg,
         "select" => "count(DISTINCT resi_project.project_id) as PROJECT_COUNT_OF_CONSTRUCTION_IMAGES"));
@@ -54,16 +57,18 @@
    /*Prect of project with launch date > oct 2012 and project_status = ('launch' or uncer_cons)*/
     $joinOptions = "INNER JOIN resi_project_options as b on ( resi_project.project_id = b.project_id )";
    $projectWithLaunchGrtrOct2012 = ResiProject::find('all',array('joins' => $joinOptions, 
-        'conditions'=>array("(resi_project.active = '1' OR resi_project.active = '3') 
+        'conditions'=>array("($active) 
             AND resi_project.residential = '0' AND resi_project.city_id in ($cityList) 
-                AND  (resi_project.project_status = 'Launch' OR resi_project.project_status = 'Under Construction') 
+                AND  resi_project.project_status in ('Launch', 'Under Construction') 
                 AND resi_project.launch_date >= 2012-10-01 AND b.size = 0" ), "select" => "count(distinct b.project_id) as PROJECT_COUNT"));
-   $percntProjectWithSize = (100-($projectWithLaunchGrtrOct2012[0]->project_count/$activeProjectWithUnderConst[0]->project_count)*100);
+    $activeProjectWithUnderConstNLaunch = ResiProject::find('all',array('conditions'=>array("(active = '1' OR active = '3') AND residential = '0' AND city_id in ($cityList) AND  project_status in( 'Under Construction','Launch' )" ),
+        "select" => "count(*) as PROJECT_COUNT"));
+   $percntProjectWithSize = (100-($projectWithLaunchGrtrOct2012[0]->project_count/$activeProjectWithUnderConstNLaunch[0]->project_count)*100);
    
    /* % of project with lat long */
    $latLongList = '0,1,2,3,4,5,6,7,8,9';    
    $latLongWithProject = ResiProject::find('all', array('conditions' => array("(latitude in($latLongList) 
-                    OR longitude in($latLongList)) and (active = '1' OR active = '3') AND residential = '0' 
+                    OR longitude in($latLongList)) and ($active) AND residential = '0' 
                             AND city_id in ($cityList)"), "select" => "count(*) as PROJECT_COUNT"));
    $percntProjWithGeo = (100-($latLongWithProject[0]->project_count/$activeProject[0]->project_count)*100);
    /*Project_availability = yes and CITY = (Bangalore, Chennai, Noida,
@@ -75,7 +80,7 @@
    $query = "select count(*) as project_count from (SELECT a.project_id as PROJECT_COUNT FROM `resi_project` 
                 LEFT JOIN resi_project_options a ON( resi_project.project_id = a.project_id ) 
                 LEFT JOIN resi_project_options_prices b ON(a.options_id = b.option_id)
-               WHERE (resi_project.active = '1' OR resi_project.active = '3') 
+               WHERE ($active) 
                  AND resi_project.residential = '0' 
                  AND resi_project.city_id in ($cityList) 
                  AND resi_project.available_no_flats != 0 group by a.project_id 
@@ -107,7 +112,7 @@
                   and residential flag = 0 and city =(CITY = (Bangalore, Chennai, Noida,
     Gurgaon, Ghaziabad, Faridabad, Delhi, Mumbai, Pune, Kolkatta, Hyderabad, Ahmedabad)");
    
-    $newProjectAddedLog = ResiProject::find('all',array('conditions'=>array("(active = 1 OR active = 3) AND residential = '0' AND city_id in ($cityList)"),
+    $newProjectAddedLog = ResiProject::find('all',array('conditions'=>array("($active) AND residential = '0' AND city_id in ($cityList)"),
         "select" => "project_id"));
    $projectIdList = '';
     foreach($newProjectAddedLog as $value) {
