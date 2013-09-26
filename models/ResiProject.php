@@ -6,8 +6,8 @@ class ResiProject extends Objects
 {
     static $table_name = 'resi_project';
     static $default_scope = array("version" => "cms");
+    static $virtual_primary_key = 'project_id';
 
-    static $virtual_primary_key = 'resi_project';
     static $has_many = array(
         array('resi_amenities', 'class_name' => "ResiProjectAmenities", "foreign_key" => "PROJECT_ID"),
         array('audits', 'class_name' => "Audit", "foreign_key" => "PROJECT_ID"),
