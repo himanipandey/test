@@ -1,9 +1,13 @@
 <?php
 
 // Model integration for bank list
-class ResiProject extends ActiveRecord\Model
+require_once "support/objects.php";
+class ResiProject extends Objects
 {
     static $table_name = 'resi_project';
+    static $default_scope = array("version" => "cms");
+    static $virtual_primary_key = 'PROJECT_ID';
+
     static $has_many = array(
         array('resi_amenities', 'class_name' => "ResiProjectAmenities", "foreign_key" => "PROJECT_ID"),
         array('audits', 'class_name' => "Audit", "foreign_key" => "PROJECT_ID"),

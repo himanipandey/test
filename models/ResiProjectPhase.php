@@ -1,9 +1,13 @@
 <?php
 
 // Model integration for bank list
-class ResiProjectPhase extends ActiveRecord\Model
+require_once "support/objects.php";
+class ResiProjectPhase extends Objects
 {
     static $table_name = 'resi_project_phase';
+    static $default_scope = array("version" => "cms");
+    static $virtual_primary_key = 'PHASE_ID';
+
     static $after_create = array('insert_audit_create');
     static $after_update = array('insert_audit_save');
 
