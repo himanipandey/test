@@ -12,16 +12,15 @@ class Objects extends ActiveRecord\Model{
 //      Get arguments specified in function
         $args = func_get_args();
 
+        // if only one argument is there the we add an additional argument
+        if(count($args) == 1) $args[1] = array();
+
         // skip_default_scope skips the default scope
         if(!array_key_exists("skip_default_scope", $args[1])){
             $args[1]["skip_default_scope"] = false;
         }
         // if args are in custom methods
         if(in_array($args[0], static::$custom_methods)){
-
-            // if only one argument is there the we add an additional argument
-            if(count($args) == 1) $args[1] = array();
-
             // adding default scopes on when it is not skipped
             if(!$args[1]["skip_default_scope"])
                 $args[1]["conditions"] = static::add_custom_conditions($args[1], static::$default_scope);
