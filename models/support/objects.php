@@ -12,23 +12,25 @@ class Objects extends ActiveRecord\Model{
 //      Get arguments specified in function
         $args = func_get_args();
 
+        // skip_default_scope skips the default scope
+        if(!array_key_exists("skip_default_scope", $args[1])){
+            $args[1]["skip_default_scope"] = false;
+        }
         // if args are in custom methods
         if(in_array($args[0], static::$custom_methods)){
 
             // if only one argument is there the we add an additional argument
             if(count($args) == 1) $args[1] = array();
 
-            // skip_default_scope skips the default scope
-            if(!array_key_exists("skip_default_scope", $args[1])){
-                $args[1]["skip_default_scope"] = false;
-            }
-
             // adding default scopes on when it is not skipped
             if(!$args[1]["skip_default_scope"])
                 $args[1]["conditions"] = static::add_custom_conditions($args[1], static::$default_scope);
 
-            unset($args[1]["skip_default_scope"]);
         }
+        unset($args[1]["skip_default_scope"]);
+
+        // Avoids to give empty options array as they create problems
+        if (count($args[1]) == 0) unset($args[1]);
         return call_user_func_array('parent::find',$args);
     }
 
@@ -44,7 +46,11 @@ class Objects extends ActiveRecord\Model{
             $args[1]["conditions"] = static::add_custom_conditions($args[1], array($primary_key => $args[0]));
             $args[0] = "all";
         }
-        return call_user_func_array('static::find',$args);
+        $object = call_user_func_array('static::find',$args);
+        if(count($object) == 0){
+            $object[0] = NULL;
+        }
+        return $object[0];
 
     }
 
