@@ -1,7 +1,11 @@
 <?php
 
-class ProjectAvailability extends ActiveRecord\Model {
-    
+require_once "support/objects.php";
+class ProjectAvailability extends Objects {
+
+    static $default_scope = array("version" => "cms");
+    static $virtual_primary_key = 'project_supply_id';
+
     function deleteAvailabilityForPhase($projectId, $phaseId){
         $allAvailability = self::findAvailabilityForPhase($projectId, $phaseId);
         $ids = array();
