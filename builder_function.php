@@ -112,70 +112,6 @@ function BuilderArr() {
     return $arrBuilder;
 }
 
-function BuilderEntityArr()
-    {
-        $qryBuilder	=	"SELECT BUILDER_ID, ENTITY FROM ".RESI_BUILDER." ORDER BY ENTITY ASC";
-        $resBuilder	=	mysql_query($qryBuilder);
-        $arrBuilder	=	array();
-        while($data = mysql_fetch_assoc($resBuilder))
-        {
-                $arrBuilder[$data['BUILDER_ID']] = $data['ENTITY'];
-        }
-        return $arrBuilder;
-    }
-
-/* * ******city list with id************* */
-
-function CityArr() {
-    $qryBuilder = "SELECT CITY_ID,LABEL FROM " . CITY . " WHERE ACTIVE = 1 ORDER BY LABEL ASC";
-    $resBuilder = mysql_query($qryBuilder);
-    $arrCity = array();
-    while ($data = mysql_fetch_assoc($resBuilder)) {
-        $arrCity[$data['CITY_ID']] = $data['LABEL'];
-    }
-    return $arrCity;
-}
-
-/* * ******suburb list with id************* */
-
-function SuburbArr($cityId, $localityId = "") {
-    if($localityId=="") {
-        $qryBuilder = "SELECT SUBURB_ID,LABEL FROM " . SUBURB . " WHERE CITY_ID = '" . $cityId . "' ORDER BY LABEL ASC";
-    }else{
-         $qryBuilder = "SELECT A.SUBURB_ID, B.LABEL FROM ".LOCALITY." AS A INNER JOIN ".SUBURB." AS B ON (A.SUBURB_ID = B.SUBURB_ID) WHERE A.LOCALITY_ID = '" . $localityId."' ORDER BY B.LABEL ASC";
-    }
-    $resBuilder = mysql_query($qryBuilder);
-    $arrCity = array();
-    while ($data = mysql_fetch_assoc($resBuilder)) {
-        $arrCity[$data['SUBURB_ID']] = $data['LABEL'];
-    }
-    return $arrCity;
-}
-
-/* * ******Project Type list with id************* */
-
-function ProjectTypeArr() {
-    $qrType = "SELECT * FROM " . RESI_PROJECT_TYPE . " ORDER BY TYPE_NAME ASC";
-    $resType = mysql_query($qrType) or die(mysql_error());
-    $arrType = array();
-    while ($data = mysql_fetch_assoc($resType)) {
-        $arrType[$data['PROJECT_TYPE_ID']] = $data['TYPE_NAME'];
-    }
-    return $arrType;
-}
-
-/* * ******bank list************* */
-
-function BankList() {
-    $qrBank = "SELECT * FROM " . BANK_LIST . " ORDER BY BANK_NAME ASC";
-    $resBank = mysql_query($qrBank) or die(mysql_error());
-    $arrBank = array();
-    while ($data = mysql_fetch_assoc($resBank)) {
-        $arrBank[$data['BANK_ID']] = $data['BANK_NAME'];
-    }
-    return $arrBank;
-}
-
 /* * ********project insert************** */
 
 function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $launchedUnits, $reasonUnlaunchedUnits, $identifyTownShip) {
@@ -329,14 +265,6 @@ function ProjectDetail($projectId) {
     return $arrDetail;
 }
 
-/* * *****************function for fetch builder detail by builder id**************** */
-
-function fetch_builderDetail($builderId) {
-    $qrybuild = "SELECT * FROM " . RESI_BUILDER . " WHERE BUILDER_ID = '" . $builderId . "'";
-    $resbuild = mysql_query($qrybuild) or die(mysql_error());
-    $databuild = mysql_fetch_assoc($resbuild);
-    return $databuild;
-}
 
 /* * *****************function for fetch project options detail by project id**************** */
 
@@ -465,34 +393,6 @@ function RoomCategoryList() {
         $arrroomCategory[$data['ROOM_CATEGORY_ID']] = $data['CATEGORY_NAME'];
     }
     return $arrroomCategory;
-}
-
-/* * ****function for fetch enum in resi project************* */
-
-function enum_value() {
-
-    $qry = "SELECT COLUMN_TYPE
-			FROM INFORMATION_SCHEMA.COLUMNS
-			WHERE TABLE_NAME = '" . RESI_PROJECT . "'
-			  AND COLUMN_NAME = 'PROJECT_STATUS'";
-    $res = mysql_query($qry);
-    $arrValue = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrValue, $data);
-    }
-    $i = 0;
-    $str = explode("','", $arrValue[$i]['COLUMN_TYPE']);
-    $arrStatus = array();
-    foreach ($str as $val) {
-        if (strstr($val, "enum('")) {
-            $val = str_replace("enum('", "", $val);
-        }
-        if (strstr($val, "')")) {
-            $val = str_replace("')", "", $val);
-        }
-        array_push($arrStatus, $val);
-    }
-    return $arrStatus;
 }
 
 /* * *************function for insert specification********** */
@@ -633,27 +533,6 @@ function insert_towerconstructionStatus($towerId, $no_of_floors_completed, $rema
         audit_insert($last_id, 'insert', 'resi_proj_tower_construction_status', $projectId);
         return 1;
     }
-}
-
-/* * *************Query for Locality selected*********** */
-
-function localityList($cityid, $suburbId) {
-    $localitySelect = Array();
-    $sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM " . LOCALITY . " AS A WHERE A.CITY_ID = " . $cityid." AND VISIBLE_IN_CMS = '1'";
-
-    if ($suburbId != '') {
-        $sql .= " AND A.SUBURB_ID = " . $suburbId;
-    }
-
-    $sql .= " AND A.ACTIVE=1 ";
-
-    $data = mysql_query($sql);
-
-    while ($dataArr = mysql_fetch_assoc($data)) {
-        $localitySelect[$dataArr['LOCALITY_ID']] = $dataArr['LABEL'];
-    }
-    return $localitySelect;
-    /*     * *************end Query for Locality selected*********** */
 }
 
 /* * ********project insert************** */
@@ -1317,34 +1196,6 @@ function getAllCities() {
         $allCityArr[] = $cityArr;
     }
     return $allCityArr;
-}
-
-function ViewLocalityDetails($localityID) {
-    $Sql = "SELECT * FROM " . LOCALITY . " WHERE LOCALITY_ID ='" . $localityID . "'";
-    $ExecSql = mysql_query($Sql);
-
-    if (mysql_num_rows($ExecSql) == 1) {
-
-        $Res = mysql_fetch_assoc($ExecSql);
-        $ResDetails['LOCALITY_ID'] = $Res['LOCALITY_ID'];
-        $ResDetails['CITY_ID'] = $Res['CITY_ID'];
-        $ResDetails['LABEL'] = $Res['LABEL'];
-        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
-        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
-        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
-        $ResDetails['URL'] = $Res['URL'];
-        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
-        $ResDetails['VISIBLE_IN_CMS'] = $Res['VISIBLE_IN_CMS'];
-        $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
-        $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
-        $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
-        $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
-        $ResDetails['LOCALITY_CLEANED'] = $Res['LOCALITY_CLEANED'];
-        return $ResDetails;
-    } else {
-        return 0;
-    }
 }
 
 function ViewSuburbDetails($suburbID) {

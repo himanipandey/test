@@ -600,7 +600,7 @@
 								  <td width="30%" align="left" valign = "top">
 									 <select name="Status" id="Status" class="fieldState">
 										<option value="">Select</option>
-										{foreach from = $enum_value key = key item = value}
+										{foreach from = $projectStatus key = key item = value}
 											<option value="{$value}" {if $value == $Status} selected {/if}>{$value} </option>
 										{/foreach}
 

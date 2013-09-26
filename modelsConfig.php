@@ -6,7 +6,7 @@ ActiveRecord\Config::initialize(function($cfg)
 {
   $cfg->set_model_directory(".");
   $cfg->set_connections(array('development' =>
-    'mysql://root:root@localhost/project'));
+    'mysql://root:root@localhost/project_new'));
 });
 
 // Includes whole model directory

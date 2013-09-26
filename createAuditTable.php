@@ -23,10 +23,10 @@
 		$tblName = $data['TABLE_NAME'];		
 		$arrName[] = $tblName;
 	}
-	$arrName[] = 'city';
-	$arrName[] = 'resi_builder';
-	$arrName[] = 'locality';
-	$arrName[] = 'suburb';
+	$arrName[] = 'comments_history';
+	//$arrName[] = 'resi_builder';
+	//$arrName[] = 'locality';
+	//$arrName[] = 'suburb';
 	foreach($arrName as $val)
 	{
 		createTableStructure($val,$dbName);
