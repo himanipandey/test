@@ -191,7 +191,7 @@
                                 $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
                                 $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                     "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
-                                    "image_type" => "main", "object_id" => $builder_id));
+                                    "image_type" => "builder_image", "object_id" => $builder_id));
                                 $s3upload->upload();
                                 $createFolder = $newImagePath.$foldername;
                                 if ($handle = opendir($createFolder))
@@ -272,7 +272,7 @@
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                             $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
-                                "image_type" => "main","object_id" => $builder_id));
+                                "image_type" => "builder_image","object_id" => $builder_id));
                             $s3upload->upload();
                             if($rt)
                             {

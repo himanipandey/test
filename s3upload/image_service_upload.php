@@ -2,10 +2,11 @@
 
 class ImageServiceUpload{
 
-    static $image_upload_url = "http://192.168.1.207:8080/data/v1/entity/image";
+    static $image_upload_url = "http://nightly.proptiger-ws.com:8080/data/v1/entity/image";
     static $object_types = array("project" => "project",
         "option" => "property",
-        "builder" => "builder"
+        "builder" => "builder",
+        "locality" => "locality"
     );
 
     static $image_types = array(
@@ -23,7 +24,8 @@ class ImageServiceUpload{
             "project_image" => "project_image"
         ),
         "option" => array("floor_plan" => "floor_plan"),
-        "builder" => array("main" => "main"));
+        "builder" => array("builder_image" => "builder_image"),
+        "locality" => array("locality_image" => "locality_image"));
 
     function __construct($image, $object, $object_id, $image_type){
         $this->image = $image;
@@ -45,9 +47,9 @@ class ImageServiceUpload{
         curl_setopt($ch, CURLOPT_POST,1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         $response= curl_exec($ch);
-//        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-//        $header = substr($response, 0, $header_size);
-//        $body = substr($response, $header_size);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $this->response_header = substr($response, 0, $header_size);
+        $this->response_body = json_decode(substr($response, $header_size));
         $this->status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close ($ch);
         $this->verify_status();
@@ -72,7 +74,13 @@ class ImageServiceUpload{
 
     function verify_status(){
         if((int)$this->status != 200){
-            $this->add_errors("Got response code ".$this->status);
+            $this->add_errors("Got response code ".$this->status.": ".$this->response_body->error->msg);
+        }
+        else{
+            if(property_exists($this, "error")){
+                $this->add_errors("Got error: ".$this->response_body->error->msg);
+            }
+
         }
     }
 
