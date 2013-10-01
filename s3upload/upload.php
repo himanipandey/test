@@ -18,7 +18,7 @@ class S3Upload {
         $this->name = $this->remove_special_characters($this->original_name);
         $this->remove_forward_slash();
         $this->add_defined_path();
-        $this->max_file_size = $this->covert_to_bytes(self::$max_file_size);
+        $this->max_file_size_for_obj = $this->covert_to_bytes(static::$max_file_size);
         $this->errors = array();
         $this->response = null;
     }
