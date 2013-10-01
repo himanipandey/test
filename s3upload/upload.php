@@ -56,7 +56,7 @@ class S3Upload {
         $ext = $this->get_file_extension($this->original_name);
 //        $original_ext = $this->get_file_extension($this->file);
 //        if($ext != $original_ext) $this->add_errors("Extensions of both file do not match");
-        if(!file_exists($this->file)) $this->add_errors("File does not exist");
+        if(!file_exists($this->file)) $this->add_errors("File does not exist {$this->file}");
         if(!in_array($ext, self::$supported_formats)) $this->add_errors("Not a valid format, got .{$ext} ");
     }
 

@@ -124,7 +124,9 @@
 											$local_path = $BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
                                             $absolute_path = $newImagePath.$local_path;
 											$image->save($newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file));
-                                            $s3upload = new S3Upload($s3, $bucket, $absolute_path, $local_path);
+                                            $s3upload = new ImageUpload($absolute_path,array("s3" => $s3,
+                                                "image_path" => $local_path, "object" => "option",
+                                                "image_type" => "floor_plan", "object_id" => $option_id));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" .str_replace('floor-plan','floor-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);

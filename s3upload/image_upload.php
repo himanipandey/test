@@ -43,7 +43,7 @@ class ImageUpload{
 
     function validate_image(){
         $ext = $this->get_file_extension($this->image);
-        if(!file_exists($this->image)) $this->add_errors("File does not exist");
+        if(!file_exists($this->image)) $this->add_errors("File does not exist: {$this->image}");
         if(!in_array($ext, static::$supported_formats)) $this->add_errors("Not a valid format, got .{$ext} ");
     }
 

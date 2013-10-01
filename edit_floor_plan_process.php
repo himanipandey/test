@@ -153,7 +153,10 @@
 														$image->load($path);
                                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 														$image->save($imgdestpath);
-                                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                                            "image_path" => str_replace($newImagePath,"",$imgdestpath),
+                                                            "object" => "option", "image_type" => "floor_plan",
+                                                            "object_id" => $arrOptionId[$key]));
                                                         $s3upload->upload();
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);		

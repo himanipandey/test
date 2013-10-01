@@ -1102,7 +1102,7 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
         }
         $cnt++;
     }
-    return 1;
+    return mysql_insert_id();
 }
 
 /* * *****delete builders******** */

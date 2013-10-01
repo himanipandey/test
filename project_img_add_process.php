@@ -144,7 +144,10 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                                "object" => "project", "object_id" => $projectId,
+                                                "image_type" => "location_plan"));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
@@ -207,7 +210,10 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                                "object" => "project", "object_id" => $projectId,
+                                                "image_type" => "layout_plan"));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
@@ -270,7 +276,10 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                                "object" => "project", "object_id" => $projectId,
+                                                "image_type" => "site_plan"));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
@@ -333,7 +342,10 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                                "object" => "project", "object_id" => $projectId,
+                                                "image_type" => "master_plan"));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
@@ -396,7 +408,10 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                                "object" => "project", "object_id" => $projectId,
+                                                "image_type" => "cluster_plan"));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
@@ -459,7 +474,10 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                            "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                            "object" => "project", "object_id" => $projectId,
+                                            "image_type" => "construction_status"));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
@@ -531,7 +549,10 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                            "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                            "object" => "project", "object_id" => $projectId,
+                                            "image_type" => "payment_plan"));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);
@@ -589,7 +610,10 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                            "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                            "object" => "project", "object_id" => $projectId,
+                                            "image_type" => "specification"));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
@@ -654,7 +678,10 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                            "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                            "object" => "project", "object_id" => $projectId,
+                                            "image_type" => "price_list"));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
@@ -719,7 +746,10 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('app-form','app-form-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                            "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                            "object" => "project", "object_id" => $projectId,
+                                            "image_type" => "application_form"));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('app-form','app-form-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('app-form','app-form-bkp',$file);
@@ -787,7 +817,10 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $imgdestpath),
+                                                "object" => "project", "object_id" => $projectId,
+                                                "image_type" => "project_image"));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);

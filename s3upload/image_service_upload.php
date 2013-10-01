@@ -3,6 +3,27 @@
 class ImageServiceUpload{
 
     static $image_upload_url = "http://192.168.1.207:8080/data/v1/entity/image";
+    static $object_types = array("project" => "project",
+        "option" => "property",
+        "builder" => "builder"
+    );
+
+    static $image_types = array(
+        "project" => array(
+            "location_plan" => "location_plan",
+            "layout_plan" => "layout_plan",
+            "site_plan" => "site_plan",
+            "master_plan" => "master-plan",
+            "cluster_plan" => "cluster_plan",
+            "construction_status" => "construction_status",
+            "payment_plan" => "payment_plan",
+            "specification" => "specification",
+            "price_list" => "price_list",
+            "application_form" => "application_form",
+            "project_image" => "project_image"
+        ),
+        "option" => array("floor_plan" => "floor_plan"),
+        "builder" => array("main" => "main"));
 
     function __construct($image, $object, $object_id, $image_type){
         $this->image = $image;
@@ -10,6 +31,7 @@ class ImageServiceUpload{
         $this->object_id = $object_id;
         $this->image_type = $image_type;
         $this->errors = array();
+        $this->validate();
     }
 
     function upload(){
@@ -30,6 +52,22 @@ class ImageServiceUpload{
         curl_close ($ch);
         $this->verify_status();
         $this->raise_errors_if_any();
+    }
+
+    function validate(){
+        $this->validate_keys();
+        $this->raise_errors_if_any();
+    }
+
+    function validate_keys(){
+        if(!array_key_exists($this->object, static::$object_types)){
+            $this->add_errors($this->object." object not found");
+        }
+        else{
+            if(!array_key_exists($this->image_type, static::$image_types[$this->object])){
+                $this->add_errors($this->image_type." image type does not exist in hash.");
+            }
+        }
     }
 
     function verify_status(){

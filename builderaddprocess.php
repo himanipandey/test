@@ -185,12 +185,14 @@
                             mkdir($createFolder, 0777);
                             $imgdestpath = $createFolder."/" . $name;
                             $return 	= move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], $imgdestpath);
-                           $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                           $s3upload->upload();
                             if($return)
                             {				
                                 $imgurl	=   "/".$foldername."/".$name;
-                                InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
+                                $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                                $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
+                                    "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
+                                    "image_type" => "main", "object_id" => $builder_id));
+                                $s3upload->upload();
                                 $createFolder = $newImagePath.$foldername;
                                 if ($handle = opendir($createFolder))
                                 {
@@ -264,12 +266,14 @@
                 {
                         $imgdestpath = $newfold."/" . $name;
                         $return  =	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], $imgdestpath);
-                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                        $s3upload->upload();
                         if($return)
                         {
                             $imgurl = "/".$cutpath[1]."/".$name;
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
+                            $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
+                                "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
+                                "image_type" => "main","object_id" => $builder_id));
+                            $s3upload->upload();
                             if($rt)
                             {
                                 if( $txtBuilderUrl != $txtBuilderUrlOld && $txtBuilderUrlOld != '' )
