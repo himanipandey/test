@@ -97,5 +97,60 @@ class Objects extends ActiveRecord\Model{
         }
         return $conditions;
     }
-
+    
+//  Save objects in virtual domain
+    function virtual_save() {           
+        $primary_key = static::$virtual_primary_key;                
+        if( !$this->$primary_key ) {            
+         $this->generate_virtual_id();   
+        }        
+        else{
+            $this->find_id_for_virtual_id();
+        }
+        $scopes = static::$default_scope;
+        foreach($scopes as $key=>$val){
+            $this->$key = $val;
+        }      
+        $this->save();    
+    }
+    
+//  The virtual id is generated
+//  Needs model with name Ids appended
+    function generate_virtual_id(){
+//      try to use try catch and return false on failure
+        $className = get_called_class();        
+        $primary_key = static::$virtual_primary_key;                
+        $id_class_model = $className."Ids";    
+        $insertId = new $id_class_model();
+        $insertId->save();
+        $this->$primary_key = $insertId->id;
+        return true;                        
+    }
+    
+//  Find the id for virtaul id
+    function find_id_for_virtual_id(){
+        $primary_key = static::$virtual_primary_key;
+        $object = static::virtual_find($this->$primary_key);
+        $this->id = $object->id;
+        return true;
+    }
+    /****function for default date for created at field* for referance**************/
+    /*function createdAt()  {
+        $className = get_called_class();
+        $tableName = static::$table_name;
+        $allColumns = $className::connection()->columns($tableName);
+        if( array_key_exists('created_at',$allColumns) ) {
+            if(!$this->created_at){
+                echo "got you";
+                die;
+                $this->created_at = date('m/d/Y h:i:s');   
+            }                   
+        }
+        if( array_key_exists('updated_at',$allColumns) ) {
+            if(!$this->updated_at){
+                $this->updated_at = date('m/d/Y h:i:s', time());   
+            }                   
+        }
+    }  
+    */
 }
