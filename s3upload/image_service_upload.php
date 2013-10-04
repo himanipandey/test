@@ -37,8 +37,8 @@ class ImageServiceUpload{
     }
 
     function upload(){
-        $post = array('image'=>'@'.$this->image,'objectType'=>$this->object,
-            'objectId' => $this->object_id, 'imageType' => $this->image_type);
+        $post = array('image'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
+            'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,static::$image_upload_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
