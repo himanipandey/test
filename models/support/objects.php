@@ -240,7 +240,8 @@ class Objects extends ActiveRecord\Model{
         $updated_by = static::$updated_by;
 //      Setting additional attributes
         $this->set_extra_attributes();
-        $existing_attributes = static::get_extra_values($this->get_primary_key());
+        $existing_attributes = static::get_extra_values(array($this->get_primary_key()));
+        $existing_attributes = $existing_attributes[$this->get_primary_key()];
         foreach($this->$extra_attributes as $attr){
          if(isset($this->$attr)){
              if(array_key_exists($attr, $existing_attributes)){
