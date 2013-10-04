@@ -51,6 +51,13 @@ class Objects extends ActiveRecord\Model{
         if(!array_key_exists("skip_default_scope", $args[1])){
             $args[1]["skip_default_scope"] = false;
         }
+
+        if(!array_key_exists("get_extra_scope", $args[1])){
+            $args[1]["get_extra_scope"] = false;
+        }
+
+        $extra_scope = $args[1]["get_extra_scope"];
+
         // if args are in custom methods
         if(in_array($args[0], static::$custom_methods)){
             // adding default scopes on when it is not skipped
@@ -59,10 +66,18 @@ class Objects extends ActiveRecord\Model{
 
         }
         unset($args[1]["skip_default_scope"]);
+        unset($args[1]["get_extra_scope"]);
 
         // Avoids to give empty options array as they create problems
         if (count($args[1]) == 0) unset($args[1]);
-        return call_user_func_array('parent::find',$args);
+        $objects =  call_user_func_array('parent::find',$args);
+
+        // Fetching extra values from auxillary table
+        if($extra_scope){
+            $objects = static::fetch_extra_values($objects);
+        }
+
+        return $objects;
     }
 
 
@@ -279,11 +294,30 @@ class Objects extends ActiveRecord\Model{
     }
 
 
-    static function fetch_extra_values(){
-        $existing_attributes = static::get_extra_values();
-        foreach($existing_attributes as $key=>$val){
-            $this->$key = $val->attribute_value;
+    static function fetch_extra_values($objects){
+        $single_object = !is_array($objects);
+
+        if($single_object) $objects = array($objects);
+        $object_ids = array();
+        foreach($objects as $object) array_push($object_ids, $object->get_primary_key_value());
+
+        $existing_attributes = static::get_extra_values($object_ids);
+        $stored_objects = array();
+
+        foreach($objects as $object){
+            $primary_key_value = $object->get_primary_key_value();
+            if(array_key_exists($primary_key_value, $existing_attributes))
+                $attributes = $existing_attributes[$primary_key_value];
+            else
+                $attributes = array();
+            foreach($attributes as $key=>$val){
+                $object->$key = $val->attribute_value;
+            }
+            array_push($stored_objects, $object);
         }
+
+        if ($single_object) $stored_objects = $stored_objects[0];
+        return $stored_objects;
     }
     /****function for default date for created at field* for referance**************/
     /*function createdAt()  {
