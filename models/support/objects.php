@@ -85,7 +85,7 @@ class Objects extends ActiveRecord\Model{
 
     }
 
-    function add_custom_conditions($options, $custom_conditions){
+    static function add_custom_conditions($options, $custom_conditions){
         if(is_array($options)){
             // check if key exist
             if(!array_key_exists("conditions", $options)) $options["conditions"] = array();
@@ -112,12 +112,12 @@ class Objects extends ActiveRecord\Model{
     }
 
     // function takes a string and add new values in it
-    function string_condition_manipulation($string, $key, $value){
+    static function string_condition_manipulation($string, $key, $value){
         return "{$string} and {$key} = {$value}";
     }
 
     // Function performs array manipulation for conditions
-    function array_condition_manipulation($conditions, $scopes){
+    static function array_condition_manipulation($conditions, $scopes){
         if(count($conditions) > 0 && array_key_exists(0, $conditions) && strpos($conditions[0],"?") !=NULL){
             foreach($scopes as $key=>$val){
                 $conditions[0] = static::string_condition_manipulation($conditions[0],$key,"?");
@@ -131,8 +131,8 @@ class Objects extends ActiveRecord\Model{
     }
 
 //  Save function overridden
-    function save(){
-        $result = parent::save();
+    public function save($validate = true){
+        $result = parent::save($validate);
         $this->set_extra_values();
         return $result;
     }
@@ -192,7 +192,7 @@ class Objects extends ActiveRecord\Model{
 
 //  Gives the value for primary key of objects
 //  Checks if given value is primary key or virtual_primary_key
-    function get_primary_key(){
+    function get_primary_key_value(){
         if(static::$virtual_primary_key != NULL){
             $primary_key = static::$virtual_primary_key;
         }
@@ -240,7 +240,7 @@ class Objects extends ActiveRecord\Model{
         $updated_by = static::$updated_by;
 //      Setting additional attributes
         $this->set_extra_attributes();
-        $primary_key_value = $this->get_primary_key();
+        $primary_key_value = $this->get_primary_key_value();
         $existing_attributes = static::get_extra_values(array($primary_key_value));
         if(array_key_exists($primary_key_value, $existing_attributes))
             $existing_attributes = $existing_attributes[$primary_key_value];
@@ -254,7 +254,7 @@ class Objects extends ActiveRecord\Model{
              else{
                  $table_attribute = new TableAttributes();
                  $table_attribute->table_name = static::$table_name;
-                 $table_attribute->table_id = $this->get_primary_key();
+                 $table_attribute->table_id = $this->get_primary_key_value();
                  $table_attribute->attribute_name = $attr;
              }
 
@@ -279,8 +279,8 @@ class Objects extends ActiveRecord\Model{
     }
 
 
-    function fetch_extra_values(){
-        $existing_attributes = $this->get_extra_values();
+    static function fetch_extra_values(){
+        $existing_attributes = static::get_extra_values();
         foreach($existing_attributes as $key=>$val){
             $this->$key = $val->attribute_value;
         }
