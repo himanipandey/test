@@ -1,11 +1,43 @@
 <?php
 
+require_once(dirname(__FILE__)."/table_attribute_mappings.php"); // auxilary functions mapping
+require_once(dirname(__FILE__)."/table_attributes.php"); // auxilary functions mapping
 class Objects extends ActiveRecord\Model{
 //    public static $virtual_primary_key;
 
     static $custom_methods = array("all", "first", "last");
 
     static $default_scope = array();
+
+    static $extra_attributes = "_extra_attributes";
+
+    static $extra_values = "_extra_values";
+
+    static $updated_by = "_updated_by";
+
+    static $virtual_primary_key = NULL;
+
+    static function get_extra_params(){
+        return array(static::$extra_values, static::$extra_attributes, static::$updated_by);
+    }
+
+    public function __set($name, $value){
+        $extra_params = static::get_extra_params();
+        $extra_attributes = static::$extra_attributes;
+
+        if(in_array($name, $extra_params)){
+            $this->$name = $value;
+            return $value;
+        }
+        $this->set_extra_attributes();
+
+        if(in_array($name, $this->$extra_attributes)){
+            $this->$name = $value;
+            return $value;
+        }
+
+        parent::__set($name, $value);
+    }
 
     // find function overidden for default scope
     static function find(/*$id, $option*/){
@@ -97,15 +129,19 @@ class Objects extends ActiveRecord\Model{
         }
         return $conditions;
     }
-    
+
+//  Save function overridden
+    function save(){
+        $result = parent::save();
+        $this->set_extra_values();
+        return $result;
+    }
+
 //  Save objects in virtual domain
     function virtual_save() {           
         $primary_key = static::$virtual_primary_key;                
         if( !$this->$primary_key ) {            
          $this->generate_virtual_id();   
-        }        
-        else{
-            $this->find_id_for_virtual_id();
         }
         $scopes = static::$default_scope;
         foreach($scopes as $key=>$val){
@@ -126,13 +162,123 @@ class Objects extends ActiveRecord\Model{
         $this->$primary_key = $insertId->id;
         return true;                        
     }
-    
-//  Find the id for virtaul id
-    function find_id_for_virtual_id(){
-        $primary_key = static::$virtual_primary_key;
-        $object = static::virtual_find($this->$primary_key);
-        $this->id = $object->id;
-        return true;
+
+    static function create_or_update($options = array()){
+        if(static::$virtual_primary_key != NULL){
+            $primary_key = static::$virtual_primary_key;
+            $find = "virtual_find";
+            $save = "virtual_save";
+        }
+        else{
+            $primary_key = static::$primary_key;
+            $find = "find";
+            $save = "save";
+        }
+
+        if(array_key_exists($primary_key, $options) && $options[$primary_key]){
+            $object = static::$find($options[$primary_key]);
+        }
+        else{
+            $object = new static();
+        }
+
+        foreach($options as $key=>$val){
+            $object->$key = $val;
+        }
+
+        $object->$save();
+    }
+
+//  Gives the value for primary key of objects
+//  Checks if given value is primary key or virtual_primary_key
+    function get_primary_key(){
+        if(static::$virtual_primary_key != NULL){
+            $primary_key = static::$virtual_primary_key;
+        }
+        else{
+            $primary_key = static::$primary_key;
+        }
+        return $table_id = $this->$primary_key;
+    }
+
+//  Fetch all auxilary fields
+    static function get_extra_attributes(){
+        $table_name = static::$table_name;
+        $conditions = array("table_name" => $table_name);
+        $columns = array();
+        $table_objects = TableAttributeMappings::find("all", array("conditions" => $conditions));
+        foreach($table_objects as $obj){
+            array_push($columns, $obj->attribute_name);
+        }
+        return $columns;
+    }
+
+//  Get value from extra attributes
+    function get_extra_values(){
+        $table_name = static::$table_name;
+        $table_id = $this->get_primary_key();
+        $conditions = array("table_name" => $table_name, "table_id" => $table_id);
+        $table_variables = array();
+        $auxilary_results = TableAttributes::find("all", array("conditions" => $conditions));
+        foreach($auxilary_results as $result){
+            $table_variables[$result->attribute_name] = $result;
+        }
+        return $table_variables;
+    }
+
+//  Sets the extra attributes
+    function set_extra_attributes(){
+        $extra_attributes = static::$extra_attributes;
+        if(!isset($this->$extra_attributes)){
+            $this->$extra_attributes = static::get_extra_attributes();
+        }
+    }
+
+//  Sets values in extra attributes
+    function set_extra_values(){
+        $extra_attributes = static::$extra_attributes;
+        $updated_by = static::$updated_by;
+//      Setting additional attributes
+        $this->set_extra_attributes();
+        $existing_attributes = $this->get_extra_values();
+        foreach($this->$extra_attributes as $attr){
+         if(isset($this->$attr)){
+             if(array_key_exists($attr, $existing_attributes)){
+                 $table_attribute = $existing_attributes[$attr];
+             }
+             else{
+                 $table_attribute = new TableAttributes();
+                 $table_attribute->table_name = static::$table_name;
+                 $table_attribute->table_id = $this->get_primary_key();
+                 $table_attribute->attribute_name = $attr;
+             }
+
+             $table_attribute->attribute_value = $this->$attr;
+             $table_attribute->updated_by = $this->$updated_by;
+             $table_attribute->save();
+             unset($this->$attr);
+         }
+        }
+    }
+
+    function unset_extra_params(){
+        $extra_params = static::get_extra_params();
+        foreach($extra_params as $params){
+            if(isset($this->$params)) unset($this->$params);
+        }
+    }
+
+    function set_updated_by($id){
+        $updated_by = static::$updated_by;
+        $this->$updated_by = $id;
+    }
+
+
+    function fetch_extra_values(){
+        $existing_attributes = $this->get_extra_values();
+        foreach($existing_attributes as $key=>$val){
+            $this->$key = $val->attribute_value;
+        }
     }
     /****function for default date for created at field* for referance**************/
     /*function createdAt()  {
@@ -143,14 +289,14 @@ class Objects extends ActiveRecord\Model{
             if(!$this->created_at){
                 echo "got you";
                 die;
-                $this->created_at = date('m/d/Y h:i:s');   
-            }                   
+                $this->created_at = date('m/d/Y h:i:s');
+            }
         }
         if( array_key_exists('updated_at',$allColumns) ) {
             if(!$this->updated_at){
-                $this->updated_at = date('m/d/Y h:i:s', time());   
-            }                   
+                $this->updated_at = date('m/d/Y h:i:s', time());
+            }
         }
-    }  
+    }
     */
 }
