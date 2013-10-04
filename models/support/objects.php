@@ -215,13 +215,13 @@ class Objects extends ActiveRecord\Model{
     }
 
 //  Get value from extra attributes
-    function get_extra_values($ids = array()){
+    static function get_extra_values($ids = array()){
         $table_name = static::$table_name;
         $conditions = array("table_name" => $table_name, "table_id" => $ids);
         $table_variables = array();
         $auxilary_results = TableAttributes::find("all", array("conditions" => $conditions));
         foreach($auxilary_results as $result){
-            $table_variables[$result->attribute_name] = $result;
+            $table_variables[$result->table_id][$result->attribute_name] = $result;
         }
         return $table_variables;
     }
@@ -240,7 +240,7 @@ class Objects extends ActiveRecord\Model{
         $updated_by = static::$updated_by;
 //      Setting additional attributes
         $this->set_extra_attributes();
-        $existing_attributes = $this->get_extra_values();
+        $existing_attributes = static::get_extra_values($this->get_primary_key());
         foreach($this->$extra_attributes as $attr){
          if(isset($this->$attr)){
              if(array_key_exists($attr, $existing_attributes)){
