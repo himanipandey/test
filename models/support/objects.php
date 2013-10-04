@@ -187,6 +187,7 @@ class Objects extends ActiveRecord\Model{
         }
 
         $object->$save();
+        return $object;
     }
 
 //  Gives the value for primary key of objects
@@ -214,10 +215,9 @@ class Objects extends ActiveRecord\Model{
     }
 
 //  Get value from extra attributes
-    function get_extra_values(){
+    function get_extra_values($ids = array()){
         $table_name = static::$table_name;
-        $table_id = $this->get_primary_key();
-        $conditions = array("table_name" => $table_name, "table_id" => $table_id);
+        $conditions = array("table_name" => $table_name, "table_id" => $ids);
         $table_variables = array();
         $auxilary_results = TableAttributes::find("all", array("conditions" => $conditions));
         foreach($auxilary_results as $result){
