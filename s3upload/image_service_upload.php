@@ -14,18 +14,18 @@ class ImageServiceUpload{
             "location_plan" => "location_plan",
             "layout_plan" => "layout_plan",
             "site_plan" => "site_plan",
-            "master_plan" => "master-plan",
+            "master_plan" => "master_plan",
             "cluster_plan" => "cluster_plan",
             "construction_status" => "construction_status",
             "payment_plan" => "payment_plan",
             "specification" => "specification",
             "price_list" => "price_list",
             "application_form" => "application_form",
-            "project_image" => "project_image"
+            "project_image" => "main"
         ),
         "option" => array("floor_plan" => "floor_plan"),
-        "builder" => array("builder_image" => "builder_image"),
-        "locality" => array("locality_image" => "locality_image"));
+        "builder" => array("builder_image" => "logo"),
+        "locality" => array("locality_image" => "main"));
 
     function __construct($image, $object, $object_id, $image_type){
         $this->image = $image;
