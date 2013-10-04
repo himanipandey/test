@@ -142,9 +142,6 @@ class Objects extends ActiveRecord\Model{
         $primary_key = static::$virtual_primary_key;                
         if( !$this->$primary_key ) {            
          $this->generate_virtual_id();   
-        }        
-        else{
-            $this->find_id_for_virtual_id();
         }
         $scopes = static::$default_scope;
         foreach($scopes as $key=>$val){
@@ -165,13 +162,31 @@ class Objects extends ActiveRecord\Model{
         $this->$primary_key = $insertId->id;
         return true;                        
     }
-    
-//  Find the id for virtaul id
-    function find_id_for_virtual_id(){
-        $primary_key = static::$virtual_primary_key;
-        $object = static::virtual_find($this->$primary_key);
-        $this->id = $object->id;
-        return true;
+
+    static function create_or_update($options = array()){
+        if(static::$virtual_primary_key != NULL){
+            $primary_key = static::$virtual_primary_key;
+            $find = "virtual_find";
+            $save = "virtual_save";
+        }
+        else{
+            $primary_key = static::$primary_key;
+            $find = "find";
+            $save = "save";
+        }
+
+        if(array_key_exists($primary_key, $options) && $options[$primary_key]){
+            $object = static::$find($options[$primary_key]);
+        }
+        else{
+            $object = new static();
+        }
+
+        foreach($options as $key=>$val){
+            $object->$key = $val;
+        }
+
+        $object->$save();
     }
 
 //  Gives the value for primary key of objects
@@ -258,6 +273,13 @@ class Objects extends ActiveRecord\Model{
         $this->$updated_by = $id;
     }
 
+
+    function fetch_extra_values(){
+        $existing_attributes = $this->get_extra_values();
+        foreach($existing_attributes as $key=>$val){
+            $this->$key = $val->attribute_value;
+        }
+    }
     /****function for default date for created at field* for referance**************/
     /*function createdAt()  {
         $className = get_called_class();
