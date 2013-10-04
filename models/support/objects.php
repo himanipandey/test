@@ -268,7 +268,7 @@ class Objects extends ActiveRecord\Model{
         }
     }
 
-    function set_updated_by($id){
+    function set_attr_updated_by($id){
         $updated_by = static::$updated_by;
         $this->$updated_by = $id;
     }
