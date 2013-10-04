@@ -77,7 +77,7 @@ class ImageServiceUpload{
             $this->add_errors("Got response code ".$this->status.": ".$this->response_body->error->msg);
         }
         else{
-            if(property_exists($this, "error")){
+            if(property_exists($this->response_body, "error")){
                 $this->add_errors("Got error: ".$this->response_body->error->msg);
             }
 
