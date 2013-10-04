@@ -598,6 +598,7 @@ define('VILLA_APARTMENTS','3');
 define('PLOTS','4');
 define('PLOT_VILLAS','5');
 define('PLOT_APARTMENTS','6');
+define('COMMERCIAL','7');
 
 
 $ARR_PROJ_EDIT_PERMISSION = array(
