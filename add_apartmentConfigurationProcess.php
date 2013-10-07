@@ -10,6 +10,7 @@
 	$smarty->assign("typeP", PLOTS);
 	$smarty->assign("typePV", PLOT_VILLAS);
 	$smarty->assign("typePA", PLOT_APARTMENTS);
+    $smarty->assign("typeC", COMMERCIAL);
 
 	$smarty->assign("RoomCategoryArr",$RoomCategoryArr);
 	
