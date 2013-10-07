@@ -252,7 +252,7 @@ class Objects extends ActiveRecord\Model{
         $objects =  call_user_func_array('parent::find',$args);
 
         // Fetching extra values from auxillary table
-        if($extra_scope){
+        if($extra_scope and count($objects) > 0){
             $objects = static::fetch_extra_values($objects);
         }
 
