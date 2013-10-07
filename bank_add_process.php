@@ -18,6 +18,11 @@
 								BANK_LOGO	=	'".$logo_name."',
 								BANK_DETAIL	=	'".$bank_detail."'";
 				$res	=	mysql_query($qry) or die(mysql_error()." Error in data insertion");
+                $bank_id = mysql_insert_id();
+                $s3upload = new ImageUpload($dest, array("s3" =>$s3,
+                    "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
+                    "image_type" => "logo", "object_id" => $bank_id));
+                $s3upload->upload();
 				header("Location:bank_list.php?page=1&sort=all");
 			}
 		}
