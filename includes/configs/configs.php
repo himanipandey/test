@@ -638,8 +638,10 @@ $arrCampaign =
 	"Bangalore_2",
 	"Bangalore_3",
   	"Pune_New",
-    "Delhi_Resale1",
-    "Delhi_Resale2"
+        "Delhi_Resale1",
+        "Delhi_Resale2",
+        "Chennai_Campaign2",
+        "Kolkata_Campaign2"
 	);
 
 /**************Authentication*************/
