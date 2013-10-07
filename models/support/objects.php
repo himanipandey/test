@@ -61,15 +61,25 @@ class Objects extends ActiveRecord\Model{
     }
 
     // function takes a string and add new values in it as conditions
-    static private function string_condition_manipulation($string, $key, $value){
-        return "{$string} and {$key} = {$value}";
+    static private function string_condition_manipulation($string, $key, $value, $operation = '='){
+        if($value != "?" && $value != "(?)" && !is_array($value))
+            $value = "'{$value}'";
+        return "{$string} and {$key} {$operation} {$value}";
     }
 
     // Function performs array manipulation for conditions
     static private function array_condition_manipulation($conditions, $scopes){
         if(count($conditions) > 0 && array_key_exists(0, $conditions) && strpos($conditions[0],"?") !=NULL){
             foreach($scopes as $key=>$val){
-                $conditions[0] = static::string_condition_manipulation($conditions[0],$key,"?");
+                if(is_array($val)){
+                    $operator = "in";
+                    $operand  = "(?)";
+                }
+                else{
+                    $operator = "=";
+                    $operand  = "?";
+                }
+                $conditions[0] = static::string_condition_manipulation($conditions[0],$key,$operand, $operator);
                 array_push($conditions, $val);
             }
         }
