@@ -11,19 +11,19 @@ class ImageServiceUpload{
 
     static $image_types = array(
         "project" => array(
-            "location_plan" => "location_plan",
-            "layout_plan" => "layout_plan",
-            "site_plan" => "site_plan",
-            "master_plan" => "master_plan",
-            "cluster_plan" => "cluster_plan",
-            "construction_status" => "construction_status",
-            "payment_plan" => "payment_plan",
+            "location_plan" => "locationPlan",
+            "layout_plan" => "layoutPlan",
+            "site_plan" => "sitePlan",
+            "master_plan" => "masterPlan",
+            "cluster_plan" => "clusterPlan",
+            "construction_status" => "constructionStatus",
+            "payment_plan" => "paymentPlan",
             "specification" => "specification",
-            "price_list" => "price_list",
-            "application_form" => "application_form",
+            "price_list" => "priceList",
+            "application_form" => "applicationForm",
             "project_image" => "main"
         ),
-        "option" => array("floor_plan" => "floor_plan"),
+        "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
         "locality" => array("locality_image" => "main"));
 
