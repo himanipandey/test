@@ -69,7 +69,7 @@ class Objects extends ActiveRecord\Model{
 
     // Function performs array manipulation for conditions
     static private function array_condition_manipulation($conditions, $scopes){
-        if(count($conditions) > 0 && array_key_exists(0, $conditions) && strpos($conditions[0],"?") !=NULL){
+        if(count($conditions) > 0 && array_key_exists(0, $conditions)){
             foreach($scopes as $key=>$val){
                 if(is_array($val)){
                     $operator = "in";
