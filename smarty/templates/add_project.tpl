@@ -22,7 +22,7 @@
 		   data: dataString,
 		   cache: false,
 		   success: function(html)   {
-				$(".localityId").html(html);
+				$(".suburbId").html(html);
 			}
 	   });
 
@@ -31,11 +31,11 @@
 	});
 
 	   $(document).ready(function()   {
-			 $(".localityId").change(function()  {
+			 $(".suburbId").change(function()  {
 
-				var locality_id = $(this).val();
+				var suburb_id = $(this).val();
 				var cid = $(".cityId").val();				
-				var dataString = 'part=refreshLoc&locality_id='+ locality_id +"&id = "+cid;
+				var dataString = 'part=refreshLoc&suburb_id='+ suburb_id +"&id = "+cid;
 
 	   $.ajax  ({
 			type: "POST",
@@ -43,7 +43,7 @@
 			data: dataString,
 			cache: false,
 			success: function(html)  {
-				$(".suburbId").html(html);
+				$(".localityId").html(html);
 			}
 	   });
 	  });
@@ -77,109 +77,7 @@
 			document.getElementById("app_form_pdf").style.display = '';
 		}
 	}
-
-	function change_type_price(type_val)
-	{
-		if(type_val == 'price_list')
-		{
-			document.getElementById("price_list").style.display = '';
-			document.getElementById("price_list_pdf").style.display = 'none';
-		}
-		else
-		{
-			document.getElementById("price_list").style.display = 'none';
-			document.getElementById("price_list_pdf").style.display = '';
-		}
-	}
-
-	function change_type_payment(type_val)
-	{
-		if(type_val == 'payment')
-		{
-			document.getElementById("payment").style.display = '';
-			document.getElementById("payment_pdf").style.display = 'none';
-		}
-		else
-		{
-			document.getElementById("payment").style.display = 'none';
-			document.getElementById("payment_pdf").style.display = '';
-		}
-	}
-
-	function show_hide(id)
-	{
-        if(id == '2' || id == '3')
-		{
-			jQuery("#no_of_villa").show();
-			
-			
-			jQuery("#no_of_plot").val('');
-            jQuery("#no_of_plot").hide();
-
-			jQuery("#no_of_towers").val('');
-			jQuery("#no_of_flats").val('');
-           
-		}
-        else if(id == '4' || id == '5' || id =='6')
-        {
-            jQuery("#no_of_plot").show();
-            if(id == '5'){
-                jQuery("#no_of_villa").show();
-
-				jQuery("#no_of_towers").val('');
-				jQuery("#no_of_flats").val('');
-				jQuery("#no_of_plot").val('');
-
-            }
-            if(id == '6' || id == '4'){
-				jQuery("#no_of_villa").val('');
-                jQuery("#no_of_villa").hide();
-
-				jQuery("#no_of_towers").val('');
-				jQuery("#no_of_flats").val('');
-				jQuery("#no_of_plot").val('');
-                
-            }
-        }
-		else
-		{
-			jQuery("#no_of_villa").val('');
-			jQuery("#no_of_villa").hide();
-			jQuery("#no_of_plot").val('');
-            jQuery("#no_of_plot").hide();
-
-
-			jQuery("#no_of_towers").val('');
-			jQuery("#no_of_flats").val('');
-           
-		}
-
-		if(id == '1' || id == '3' || id == '6')
-		{
-			jQuery("#no_of_towers").show();
-            //jQuery("#no_of_towera").val('');
-            jQuery("#no_of_flats").show();
-           // jQuery("#no_of_flats").val('');
-
-		    jQuery("#no_of_villa").val('');
-			jQuery("#no_of_flats").val('');
-			jQuery("#no_of_plot").val('');
-
-		}
-		else
-		{
-			jQuery("#no_of_towers").val('');
-			jQuery("#no_of_towers").hide();
-			jQuery("#no_of_flats").val('');
-            jQuery("#no_of_flats").hide();
-
-			jQuery("#no_of_villa").val('');
-			jQuery("#no_of_plot").val('');
-            
-		}
-
-	}
-
+	
   function isNumberKey(evt)
   {
  	 var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -269,30 +167,15 @@
 								  </td>
                                                                    
 							   </tr>
-							   
-							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Locality :</b> </td>
-								  <td width="30%" align="left">
-									 <select name="localityId" class="localityId" style="width:230px;">
-										<option value="">Select Locality</option>
-										{foreach from=$localitySelect key=k item=v}
-											<option {if $localityId == $k} value = "{$k}" selected="selected" {else}  value = "{$k}" {/if}>{$v}</option>
-										{/foreach}
-									 </select>
-								  </td>
-								 <td width="50%" align="left">
-									  <font color="red"><span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
-								 </td>
-							   </tr>
                                                            
                                                            <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Suburbs :</b> </td>
 								  <td width="30%" align="left">
                                                                         <select name="suburbId" class="suburbId" style="width:230px;">
-                                                                               <option value="">Select Suburb</option>
-                                                                               {foreach from=$suburbSelect key=k item=v}
-                                                                                       <option {if $suburbId == $k} value = "{$k}" selected="selected" {else}  value = "{$k}" {/if}>{$v}</option>
-                                                                               {/foreach}
+                                                                            <option value="">Select Suburb</option>
+                                                                            {foreach from=$suburbSelect key=k item=v}
+                                                                                    <option {if $suburbId == $k} selected {/if} value = "{$k}">{$v}</option>
+                                                                            {/foreach}
 
                                                                         </select>
 								  </td>
@@ -300,15 +183,39 @@
 									  <font color="red"><span id = "err_suburb_id" style = "display:none;">Please select Suburb!</span></font>
 								  </td>
 							   </tr>
+							   
+							   <tr>
+                                                                <td width="20%" align="right"><font color ="red">*</font><b>Locality :</b> </td>
+                                                                <td width="30%" align="left">
+                                                                       <select name="localityId" class="localityId" style="width:230px;">
+                                                                              <option value="">Select Locality</option>
+                                                                              {foreach from=$getLocalityBySuburb key=k item=v}
+                                                                                      <option {if $localityId == $k} value = "{$k}" selected="selected" {else}  value = "{$k}" {/if}>{$v}</option>
+                                                                              {/foreach}
+                                                                       </select>
+                                                                </td>
+                                                               <td width="50%" align="left">
+                                                                        <font color="red"><span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
+                                                               </td>
+							   </tr>
                                                            
 							   <tr>
-								  <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
-								  <td width="30%" align="left">
-									 <textarea name="txtProjectDescription" rows="10" cols="45" id = "txtProjectDescription">{$txtProjectDescription}</textarea>
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
-								 </td>
+                                                                <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
+                                                                <td width="30%" align="left">
+                                                                       <textarea name="txtProjectDescription" rows="10" cols="45" id = "txtProjectDescription">{$txtProjectDescription}</textarea>
+                                                                </td>
+                                                                <td width="50%" align="left">
+                                                                        <font color="red"><span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
+                                                               </td>
+							   </tr>
+                                                           <tr>
+                                                                <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Comments :</b> </td>
+                                                                <td width="30%" align="left">
+                                                                       <textarea name="comments" rows="10" cols="45" id = "comments">{$comments}</textarea>
+                                                                </td>
+                                                                <td width="50%" align="left">
+                                                                        <font color="red"><span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
+                                                               </td>
 							   </tr>
                                                            {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
                                                             {if array_key_exists('projectRemark',$projectComments)}   
@@ -448,7 +355,7 @@
 							    <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project type :</b> </td>
 								  <td width="30%" align="left">
-									<select name = "project_type" class = "project_type" onchange = "show_hide(this.value);">
+									<select name = "project_type">
 										<option value =''>Project Type</option>
 										{foreach from=$ProjectTypeArr key=k item=v}
 										<option value = "{$k}" {if $k == $project_type} selected {/if} >{ucwords($v|lower)|replace:'_':' '}</option>
@@ -459,66 +366,6 @@
 									  <font color="red"><span id = "err_project_type" style ="display:none;">Please select project type!</span></font>	
 									  {if $project_type != '' && $project_type != 0}<font color="red"><span id = "err_project_typeChk">{$ErrorMsgType['showTypeError']}</span></font>{/if}	  
 								  </td>
-							   </tr>
-
-							   <tr id = "no_of_villa" {if ($project_type == '2' || $project_type == '3' || $project_type == '5')}  {else} style = "display:none;" {/if}>
-								  <td width="20%" align="right"><b>Number of Villa :</b> </td>
-								  <td width="30%" align="left">
-								  	<input type = "text" name = "no_of_villa" id = "no_of_villa" value = "{$no_of_villa}" onkeypress = "return isNumberKey(event);">
-									
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_type" style = "display:none;">Please select project type!</span></font>
-								  </td>
-							   </tr>
-
-                               <tr id = "no_of_plot" {if ($project_type == '4' || $project_type =='5' || $project_type == '6')} {else} style = "display:none;" {/if}>
-								  <td width="20%" align="right"><b>Number of Plots :</b> </td>
-								  <td width="30%" align="left">
-									
-									<input type = "text" name = "no_of_plot" id = "no_of_plot" value = "{$no_of_plot}" onkeypress = "return isNumberKey(event);">
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_type" style = "display:none;">Please select project type!</span></font>
-								  </td>
-							   </tr>
-
-							    <tr id = "no_of_towers" {if ($project_type == '1' || $project_type =='3' || $project_type == '6')}  {else} style = "display:none;" {/if}>
-								  <td width="20%" align="right" valign="top"><b>No Of Towers :</b> </td>
-								  <td width="30%" align="left">
-
-								  	<input type = "text" name="no_of_towers" id="no_of_towers" class="field" value = "{$no_of_towers}" onkeypress = "return isNumberKey(event);">
-								  </td>
-								  <td width="50%" align="left">
-										 <font color="red"><span id = "err_no_of_towers" style = "display:none;">Please select no of towers!</span></font>
-								  </td>
-							   </tr>
-							   <tr id = "no_of_flats" {if ($project_type == '1' || $project_type =='3' || $project_type == '6')}  {else} style = "display:none;" {/if}>
-								  <td width="20%" align="right" valign="top"><b>No Of Flats :</b> </td>
-								  <td width="30%" align="left">
-
-								  	<input type = "text" name="no_of_flats" id="no_of_flats" class="field" value = "{$no_of_flats}" onkeypress = "return isNumberKey(event);">
-
-								  </td>
-								  <td width="50%" align="left"></td>
-							   </tr>
-							   
-							   <tr>
-								  <td width="20%" align="right" valign ="top"><b> Launched Units:</b> </td><td width="30%" align="left">
-
-									 <input type = "text" name = "launchedUnits" id = "launchedUnits" value = "{$launchedUnits}" style ="width:360px;">
-
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-							   
-							    <tr>
-								  <td width="20%" align="right" valign ="top"><b> Reason For UnLaunched Units:</b> </td><td width="30%" align="left">
-
-									 <textarea name = "reasonUnlaunchedUnits" id = "reasonUnlaunchedUnits" rows="10" cols="45">{$reasonUnlaunchedUnits}</textarea>
-
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 								
 							   <tr>
@@ -545,48 +392,22 @@
 									  <font color="red"><span id = "err_project_long" style = "display:none;">Please enter project longitude</span></font>
 								  </td>
 							   </tr>
-							   <tr>
-								  <td width="20%" align="right"><b>Project Meta Title :</b> </td>
-								  <td width="30%" align="left"><input type="text" name="txtProjectMetaTitle" id="txtProjectMetaTitle" value="{$txtProjectMetaTitle}" style="width:360px;" /></td>
-								  <td width="50%" align="left">
-									 
-								  </td>
-							   </tr>
-							   <tr>
-								  <td width="20%" align="right" valign="top"><b>Meta Keywords :</b> </td>
-								  <td width="30%" align="left">
-									 <textarea name="txtMetaKeywords" rows="10" cols="45" id = "txtMetaKeywords">{$txtMetaKeywords}</textarea>
-								  </td>
-								  <td width="50%" align="left">
-									  
-								  </td>
-							   </tr>
-							   <tr>
-								  <td width="20%" align="right" valign="top"><b>Meta Description :</b> </td>
-								  <td width="30%" align="left">
-									 <textarea name="txtMetaDescription" rows="10" cols="45" id = "txtMetaDescription">{$txtMetaDescription}</textarea>
-								  </td>
-								  <td width="50%" align="left">
-									 
-								  </td>
-							   </tr>
+							  
 							   <tr>
 								  <td width="20%" align="right"><b>Active :</b> </td>
 								  <td width="30%" align="left">
 								  {if $specialAccess == 0 AND $projectId != ''}
-								 	 {if $Active == 0}Inactive on both Website and IS DB{/if}
-								 	 {if $Active == 1}Active on both Website and IS DB{/if}
-								 	 {if $Active == 2}Deleted{/if}
-								 	 {if $Active == 3}Active on IS but inactive on website{/if}
+								 	 {if $Active == 'Inactive'}Inactive on both Website and IS DB{/if}
+								 	 {if $Active == 'Active'}Active on both Website and IS DB{/if}
+								 	 {if $Active == 'ActiveInCms'}Active In Cms{/if}
 								 	 <input type = "hidden"  name="Active" value = "{$Active}">
 								  {else}
-                                                                      {if $Active == ''}{$Active =1}{/if}
+                                                                      {if $Active == ''}{$Active ='Active'}{/if}
 								  	<select name="Active" id="Active" class="field">
 									  <option value ="" >Select</option>
-									  <option {if $Active == 0}  value="0" selected="selected" {else} value="0"{/if}>Inactive on both Website and IS DB</option>
-									 <option {if $Active == 1} value="1" selected="selected" {else} value="1" {/if}>Active on both Website and IS DB</option>
-									 <option {if $Active == 2}  value="2" selected="selected" {else} value="2"{/if}>Deleted</option>
-									 <option {if $Active == 3} value="3" selected="selected" {else} value="3" {/if}>Active on IS but inactive on website</option>
+									  <option {if $Active == 'Inactive'} selected {/if} value="Inactive">Inactive on both Website and IS DB</option>
+									 <option {if $Active == 'Active'} selected {/if} value="Active">Active on both Website and IS DB</option>
+									 <option {if $Active == 'ActiveInCms'} selected{/if}  value="ActiveInCms">Active In Cms</option>
 									 </select>
 								  {/if}
 									 
@@ -601,7 +422,7 @@
 									 <select name="Status" id="Status" class="fieldState">
 										<option value="">Select</option>
 										{foreach from = $projectStatus key = key item = value}
-											<option value="{$value}" {if $value == $Status} selected {/if}>{$value} </option>
+											<option value="{$key}" {if $key == $Status} selected {/if}>{$value} </option>
 										{/foreach}
 
 
@@ -649,20 +470,6 @@
 									   <span id = "err_project_url" style = "display:none;">Please enter project url!</span></font>
 								  </td>
 							   </tr>
-							   <tr>
-								  <td width="20%" align="right"><b>Featured :</b> </td>
-								  <td width="30%" align="left">
-									 <select name="Featured" id="Featured" class="field">
-									 <option {if $Featured == 0} value="0" selected="selected" {else} value="0" {/if}>0</option>
-									 <option {if $Featured == 1} value="1" selected="selected" {else} value="1" {/if}>1</option>
-									 </select>
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["projectFeatured"] != ''} {$ErrorMsg["projectFeatured"]} {/if}
-									   <span id = "err_project_featured" style = "display:none;"></span></font>
-								  </td>
-							   </tr>
-
 							   <tr>
 								  <td width="20%" align="right" valign="top"><b>Price Disclaimer :</b></td>
 								  <td width="30%" align="left">
@@ -756,53 +563,6 @@
 								  {/if}
 							   </tr>
 
-							   <tr>
-								  <td width="100%" align="left" valign ="top" colspan ="3">
-									<input type = "radio" name = "price_list_chk" value = "price_list" checked = "checked" onclick = "change_type_price(this.value);"><b>Price List in html</b>
-									 <input type = "radio" name = "price_list_chk" value = "price_list_pdf" onclick = "change_type_price(this.value);"><b>Price List in pdf</b>
-								  </td>
-							   </tr>
-
-							   <tr>
-								  <td width="20%" align="right" valign ="top"><b>Price List (in html):</b> </td><td width="30%" align="left">
-									 <span id = "price_list">
-										<textarea name = "price_list" id = "price_list_text" rows="10" cols="45">{$price_list}</textarea>
-									</span>
-									<span id = "price_list_pdf" style = "display:none;">
-										<input type = "file" name = "price_list_pdf">
-									</span>
-								  </td>
-								  {if $ErrorMsg["price_list"] != ''}
-								  <td width="50%" align="left"><font color="red">{$ErrorMsg["price_list"]}</font></td>
-								  {else}
-								  <td width="50%" align="left"></td>
-								  {/if}
-							   </tr>
-
-
-							    <tr>
-								  <td width="100%" align="left" valign ="top" colspan ="3">
-									<input type = "radio" name = "payment_chk" value = "payment" checked = "checked" onclick = "change_type_payment(this.value);"><b>payment Plan in html</b>
-									 <input type = "radio" name = "payment_chk" value = "payment_pdf" onclick = "change_type_payment(this.value);"><b>Payment Plan in pdf</b>
-								  </td>
-							   </tr>
-
-							   <tr>
-								  <td width="20%" align="right" valign ="top"><b>Payment Plan (in html):</b> </td><td width="30%" align="left">
-									 <span id = "price_list">
-										<textarea name = "payment" id = "payment" rows="10" cols="45">{$payment}</textarea>
-									</span>
-									<span id = "payment_pdf" style = "display:none;">
-										<input type = "file" name = "payment_pdf">
-									</span>
-								  </td>
-								  {if $ErrorMsg["payment"] != ''}
-								  <td width="50%" align="left"><font color="red">{$ErrorMsg["payment"]}</font></td>
-								  {else}
-								  <td width="50%" align="left"></td>
-								  {/if}
-							   </tr>
-
 							    <tr>
 								  <td width="20%" align="right"><b>Approvals:</b> </td><td width="30%" align="left">
 									 <input type = "text" name = "approvals" value = "{$approvals}" style ="width:360px;">
@@ -830,15 +590,6 @@
 									 <span style = "font-size:10px">in Percentage(%)</span>
 								  </td>
 								  <td width="50%" align="left"></td>
-							   </tr>
-
-							    <tr>
-								  <td width="20%" align="right"><b>No Of Lifts Per Tower:</b> </td><td width="30%" align="left">
-
-								  	<input type = "text" name = "no_of_lift" value = "{$no_of_lift}" onkeypress = "return isNumberKey(event);">
-
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 
 							   <tr>
@@ -869,53 +620,31 @@
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 
-								<tr>
-								   <td width="20%" align="right" valign="top"><b><b>Heighlight :</b> </td>
-								   <td width="30%" align="left">
-								   <select name="special_offer">
-								   <option {if $special_offer == 'none'} value="none" selected = "selected" {else}  value ='none' {/if} >No Offer</option>
-								   <option {if $special_offer == 'nl'} value="nl" selected = "selected"{else}  value ='nl'  {/if}>New Launch</option>
-								   <option {if $special_offer == 'so'} value="so" selected = "selected"{else}  value ='so' {/if}>Sold Out</option>
-								   </select>
-								   </td>
-							   <td width="50%" align="left"></td>
-							   </tr>
-							   
-							    <tr>
-								  <td width="20%" align="right" valign ="top"><b>Offer Heading:</b> </td><td width="30%" align="left">
-									 
-									 <input maxlength = "13" type = "text" name = "offer_heading" id = "offer_heading" value ="{$offer_heading}" style ="width:360px;">
-								  </td>
-								  <td width="50%" align="left"><font color="red"><span id = "offerHeading"></span></font></td>
-							   </tr>
+							   <tr>
+                                                                <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
 
-							    <tr>
-								  <td width="20%" align="right" valign ="top"><b>Offer Description:</b> </td><td width="30%" align="left">
-									<input maxlength = "40" type = "text" name = "offer_desc" id = "offer_desc" value ="{$offer_desc}" style ="width:360px;">
-								  </td>
-								  <td width="50%" align="left"><font color="red"><span id = "offerDesc"></span></font></td>
+                                                                    <select name="residential" id="residential" class="residential">
+                                                                            <option value="">Select </option>
+                                                                            <option value="residential" {if $residential == 'residential'} selected = selected {/if}>Residential </option>
+                                                                            <option value="nonResidential" {if $residential == 'nonResidential'} selected = selected {/if}>Non Residential </option>
+                                                                    </select>
+
+                                                                </td>
+                                                                <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 
 							   <tr>
-								  <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
-
-									<select name="residential" id="residential" class="residential">
-										<option value="">Select </option>
-										<option value="0" {if $residential == 0} selected = selected {/if}>Residential </option>
-										<option value="1" {if $residential == 1} selected = selected {/if}>Non Residential </option>
-									</select>
-
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-
-							   <tr>
-								  <td width="20%" align="right" valign ="top"><b> Township:</b> </td><td width="30%" align="left">
-
-									 <input type = "text" name = "township" id = "township" value = "{$township}" style ="width:360px;">
-
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
+                                                                <td width="20%" align="right" valign ="top"><b> <font color ="red">*</font>Township:</b> </td><td width="30%" align="left">
+                                                                    <select name = "township">
+                                                                        <option value="">Select Options</option>
+                                                                        {foreach from = $allTownships item = item}
+                                                                            <option value="{$item->id}" {if $item->id == $township}selected{/if}>
+                                                                                {$item->name}
+                                                                            </option>
+                                                                        {/foreach}
+                                                                    </select>
+                                                                </td>
+                                                                <td width="50%" align="left"><font color="red">{$ErrorMsg['township']}</font></td>
 							   </tr>
 							   
 							   <tr>
@@ -928,17 +657,6 @@
 								  
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-                                                           
-                                                           <tr>
-                                                                <td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
-                                                                    <select name="identifyTownShip">
-                                                                              <option value="0" {if $identifyTownShip == 0} selected = selected {/if}>No</option>
-                                                                              <option value="1" {if $identifyTownShip == 1} selected = selected {/if}>Yes</option>
-                                                                      </select>
-
-                                                                </td>
-                                                                <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
                                                            
 							   <tr>

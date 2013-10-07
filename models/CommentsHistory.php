@@ -5,10 +5,11 @@ class CommentsHistory extends ActiveRecord\Model
 {
     static $table_name = 'comments_history';
     static function insertUpdateComments( $projectId, $arrCommentTypeValue, $updationCycleId ) {
-            
+        $updationCycleId = $updationCycleId."_".date("M-y");     
         foreach( $arrCommentTypeValue as $key=>$value ) {
-            $updationCycleId = $updationCycleId."_".date("M-y");
-                 $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? ", $projectId, $key, $updationCycleId);
+
+            $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? ",
+                $projectId, $key, $updationCycleId);
 
             $getComments = CommentsHistory::find('all', array("conditions" => $conditions));   
 
@@ -33,7 +34,6 @@ class CommentsHistory extends ActiveRecord\Model
         
         $cycleId = date("M-y");
         $conditions = array("project_id = ? AND updation_cycle like ? ", $projectId, "%".$cycleId."%");
-        
         $join = 'LEFT JOIN proptiger_admin a ON(comments_history.user_id = a.adminid)';
 
         $getComments = CommentsHistory::find('all',array('joins' => $join, 

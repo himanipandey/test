@@ -335,8 +335,8 @@ function selectedBuilderValue(builderId) {
 								<span id = "LocalityList">
 									<select name = 'locality' id = "locality">
 										<option value = "">Select Locality</option>
-										{foreach from = $localityArr key = key item = val}
-											<option value = "{$key}" {if $locality == $key} selected  {else}{/if}>{$val}</option>
+										{foreach from = $localityArr item = value}
+											<option value = "{$value->locality_id}" {if $locality == $value->locality_id} selected {/if}>{$value->label}</option>
 										{/foreach}
 									</select>
 								</span>
@@ -395,7 +395,6 @@ function selectedBuilderValue(builderId) {
 								</td>
 							  </tr>
 							 <tr><td>&nbsp;</td></tr>
-							
 							  <tr>
                                                                 <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Availability:</b></td>
                                                                 <td width="50" align="left" style = "padding-left:20px;">
@@ -410,7 +409,6 @@ function selectedBuilderValue(builderId) {
                                                                  </select>
                                                                 </td>
 							  </tr>
-	
 							<tr><td>&nbsp;</td></tr>
 	
 							  <tr>
@@ -444,8 +442,8 @@ function selectedBuilderValue(builderId) {
 								<td align="left" style = "padding-left:20px;">
 									<select name="Status[]" id="Status" class="fieldState" multiple>
 										<option value="">Select</option>
-										{foreach from = $enum_value key = key item = value}
-											<option value="{$value}" {if in_array($value,$Status)} selected {else} {/if}>{$value} </option>
+										{foreach from = $projectStatus key = key item = value}
+											<option value="{$key}" {if $key == $Status} selected {/if}>{$value} </option>
 										{/foreach}
 									 </select>
 								</td>

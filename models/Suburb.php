@@ -12,4 +12,8 @@ class Suburb extends ActiveRecord\Model
         }
         return $arrSuburb;
     }
+    static function getSuburbById($suburbId) {
+        $suburbDetail = Suburb::find('all',array('conditions'=>array("suburb_id = $suburbId")));
+        return $suburbDetail;
+    }
 }

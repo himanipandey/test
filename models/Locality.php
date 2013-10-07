@@ -13,7 +13,15 @@ class Locality extends ActiveRecord\Model
         return $arrLocality;
     }
     static function getLocalityById($localityId) {
-        $localityDetail = Locality::find('all',array('conditions'=>array("locality_id = $localityID")));
+        $localityDetail = Locality::find('all',array('conditions'=>array("locality_id = $localityId")));
         return $localityDetail;
+    }
+    static function getLocalityByCity($ctid) {
+        $conditions = array("a.city_id = ? and a.status = ?", $ctid, 'active');
+        $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
+
+        $getLocality = Locality::find('all',array('joins' => $join, 
+               "conditions" => $conditions, "select" => "locality.locality_id,locality.label"));
+        return $getLocality;
     }
 }

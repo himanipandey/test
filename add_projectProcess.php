@@ -1,16 +1,17 @@
 <?php        
-
 $BuilderDataArr	= ResiBuilder::BuilderEntityArr();
 $CityDataArr = City::CityArr();
 $ProjectTypeArr	= ResiProjectType::ProjectTypeArr();
 $BankListArr = BankList::arrBank();
 $projectStatus = ResiProject::projectStatusMaster();
+$allTownships = Townships::getAllTownships();
 
 $smarty->assign("BuilderDataArr",$BuilderDataArr);
 $smarty->assign("CityDataArr",$CityDataArr);
 $smarty->assign("ProjectTypeArr",$ProjectTypeArr);
 $smarty->assign("BankListArr",$BankListArr);
 $smarty->assign("projectStatus",$projectStatus);
+$smarty->assign("allTownships",$allTownships);
 $smarty->assign("display_order", 999);
 
 /*************************************/
@@ -24,10 +25,10 @@ $projectId = $_REQUEST['projectId'];
 $smarty->assign("projectId", $projectId);
 
 if(!isset($_REQUEST['preview']))
-        $_REQUEST['preview'] = '';
+    $_REQUEST['preview'] = '';
 $preview = $_REQUEST['preview'];
 $smarty->assign("preview", $preview);
-        
+      
 if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	if ( $_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save" ) {
 	    $txtProjectName = trim($_POST['txtProjectName']);
@@ -36,6 +37,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $suburbId =	trim($_POST['suburbId']);
             $localityId	= trim($_POST['localityId']);
             $txtProjectDescription = trim($_POST['txtProjectDescription']);
+            $comments = trim($_POST['comments']);
             $txtProjectRemark =	trim($_POST['txtProjectRemark']);
             $txtProjectRemarkDisplay = trim($_POST['txtProjectRemarkDisplay']);
             $txtAddress	= trim($_POST['txtProjectAddress']);
@@ -45,32 +47,21 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $txtProjectLocation	= trim($_POST['txtProjectLocation']);
             $txtProjectLattitude = trim($_POST['txtProjectLattitude']);
             $txtProjectLongitude = trim($_POST['txtProjectLongitude']);
-            $txtProjectMetaTitle = trim($_POST['txtProjectMetaTitle']);
-            $txtMetaKeywords = trim($_POST['txtMetaKeywords']);
-            $txtMetaDescription	= trim($_POST['txtMetaDescription']);
+           
             $DisplayOrder = '';
             $Active = trim($_POST['Active']);
             $Status = trim($_POST['Status']);
             $txtProjectURL = trim($_POST['txtProjectURL']);
             $txtProjectURLOld =	trim($_POST['txtProjectURLOld']);
-            $Featured =	trim($_POST['Featured']);
             $txtDisclaimer = trim($_POST['txtDisclaimer']);
-            $no_of_towers = trim($_POST['no_of_towers']);
-            $no_of_flats = trim($_POST['no_of_flats']);
+           
             $pre_launch_date = trim($_POST['pre_launch_date']);
             $exp_launch_date = trim($_POST['exp_launch_date']);
 	    $eff_date_to = trim($_POST['eff_date_to']);
-	    $special_offer = trim($_POST['special_offer']);
             $display_order = PROJECT_MAX_PRIORITY;
 	    $oldbuilderId = trim($_POST['oldbuilderId']);
 	    $youtube_link = trim($_POST['youtube_link']);
-            $price_list_chk = trim($_POST['price_list_chk']);
-            $price_list	= trim($_POST['price_list']);
-
-            if(isset($_POST['price_list_pdf']))
-                $price_list_pdf = trim($_POST['price_list_pdf']);
-            else
-               $price_list_pdf	= '';
+            
             $application = trim($_POST['application']);
             $app_form =	trim($_POST['app_form']);
 
@@ -78,22 +69,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $app_form_pdf = trim($_POST['app_form_pdf']);
             else
                 $app_form_pdf = '';
-            $payment_chk = trim($_POST['payment_chk']);
-            $payment = trim($_POST['payment']);
-
-            if(isset($_POST['payment_pdf']))
-                $payment_pdf = trim($_POST['payment_pdf']);
-            else
-                $payment_pdf = '';
             $approvals = trim($_POST['approvals']);
             $project_size = trim($_POST['project_size']);
-            $no_of_lift = trim($_POST['no_of_lift']);
             $powerBackup = trim($_POST['powerBackup']);
             $architect = trim($_POST['architect']);
-            $offer_heading = trim($_POST['offer_heading']);
-            $offer_desc = trim($_POST['offer_desc']);
             $power_backup_capacity = trim($_POST['power_backup_capacity']);
-            $no_of_villa = trim($_POST['no_of_villa']);
             $eff_date_to_prom =	trim($_POST['eff_date_to_prom']);
             $residential = trim($_POST['residential']);
             $township =	trim($_POST['township']);
@@ -106,18 +86,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $txtCallingRemarkDisplay = trim($_POST['txtCallingRemarkDisplay']);
             $txtAuditRemark = trim($_POST['txtAuditRemark']);
             $txtAuditRemarkDisplay = trim($_POST['txtAuditRemarkDisplay']);
-            $launchedUnits = trim($_POST['launchedUnits']);
-            $reasonUnlaunchedUnits = trim($_POST['reasonUnlaunchedUnits']);
-            $identifyTownShip = trim($_POST['identifyTownShip']);
             $secondaryRemark = trim($_POST["secondaryRemark"]);
             $secondaryRemarkDisplay = trim($_POST["secondaryRemarkDisplay"]);
             $fieldSurveyRemark = trim($_POST["fieldSurveyRemark"]);
             $fieldSurveyRemarkDisplay = trim($_POST["fieldSurveyRemarkDisplay"]);
-
-            if(isset($_POST['bank_list']))
-               $bank_list = implode(",",$_POST['bank_list']);//die("here");
-            else
-               $bank_list = '';
+            
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
                $suburbSelect = Suburb::SuburbArr($_POST['cityId']);
@@ -127,18 +100,18 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                   $suburbId  = $suburbId;
                else
                   $suburbId  = '';
-
-                  $localitySelect = localityList($_POST['cityId'],$suburbId);
-                  $smarty->assign("localitySelect", $localitySelect);
+               
+                  $getLocalityBySuburb =  Locality::localityList($suburbId);
+                  $smarty->assign("getLocalityBySuburb", $getLocalityBySuburb);
             }
             /***************end Query for Locality selected************/
-
             $smarty->assign("txtProjectName", $txtProjectName);
             $smarty->assign("builderId", $builderId);
             $smarty->assign("cityId", $cityId);
             $smarty->assign("suburbId", $suburbId);
             $smarty->assign("localityId", $localityId);
             $smarty->assign("txtProjectDescription", $txtProjectDescription);
+            $smarty->assign("comments", $comments);
             $smarty->assign("txtProjectRemark", $txtProjectRemark);
             $smarty->assign("txtProjectRemarkDisplay", $txtProjectRemarkDisplay);
             $smarty->assign("txtAddress", $txtAddress);
@@ -148,22 +121,16 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("txtProjectLocation", $txtProjectLocation);
             $smarty->assign("txtProjectLattitude", $txtProjectLattitude);
             $smarty->assign("txtProjectLongitude", $txtProjectLongitude);
-            $smarty->assign("txtProjectMetaTitle", $txtProjectMetaTitle);
-            $smarty->assign("txtMetaKeywords", $txtMetaKeywords);
-            $smarty->assign("txtMetaDescription", $txtMetaDescription);
+           
             $smarty->assign("DisplayOrder", $DisplayOrder);
             $smarty->assign("Active", $Active);
             $smarty->assign("Status", $Status);
             $smarty->assign("txtProjectURL", $txtProjectURL);
             $smarty->assign("txtProjectURLOld", $txtProjectURLOld);
-            $smarty->assign("Featured", $Featured);
             $smarty->assign("txtDisclaimer", $txtDisclaimer);
-            $smarty->assign("no_of_towers", $no_of_towers);
-            $smarty->assign("no_of_flats", $no_of_flats);
             $smarty->assign("pre_launch_date", $pre_launch_date);
             $smarty->assign("exp_launch_date", $exp_launch_date);
-            $smarty->assign("eff_date_to", $eff_date_to);
-            $smarty->assign("special_offer", $special_offer);
+            $smarty->assign("eff_date_to", $eff_date_to);   
             $smarty->assign("display_order", $display_order);
             $smarty->assign("youtube_link", $youtube_link);
 
@@ -171,22 +138,14 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $smarty->assign("bank_arr", $_POST['bank_list']);
             else
                $smarty->assign("bank_arr", '');
-
-            $smarty->assign("price_list_chk", $price_list_chk);
-            $smarty->assign("price_list", $_POST['price_list']);
+            
             $smarty->assign("application", $application);
             $smarty->assign("app_form", $_POST['app_form']);
-            $smarty->assign("payment_chk", $payment_chk);
-            $smarty->assign("payment", $_POST['payment']);
             $smarty->assign("approvals", $_POST['approvals']);
             $smarty->assign("project_size", $_POST['project_size']);
-            $smarty->assign("no_of_lift", $_POST['no_of_lift']);
             $smarty->assign("powerBackup", $_POST['powerBackup']);
             $smarty->assign("architect", $_POST['architect']);
-            $smarty->assign("offer_heading", $_POST['offer_heading']);
-            $smarty->assign("offer_desc", $_POST['offer_desc']);
             $smarty->assign("power_backup_capacity", $_POST['power_backup_capacity']);
-            $smarty->assign("no_of_villa", $_POST['no_of_villa']);
             $smarty->assign("eff_date_to_prom", $_POST['eff_date_to_prom']);
             $smarty->assign("residential", $_POST['residential']);
             $smarty->assign("township", $_POST['township']);
@@ -198,8 +157,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("txtAuditRemark", $_POST['txtAuditRemark']);
             $smarty->assign("txtAuditRemarkDisplay", $_POST['txtAuditRemarkDisplay']);
             $smarty->assign("launchedUnits", $_POST['launchedUnits']);
-            $smarty->assign("reasonUnlaunchedUnits", $_POST['reasonUnlaunchedUnits']);
-            $smarty->assign("identifyTownShip", $identifyTownShip);
             $smarty->assign("secondaryRemark", $secondaryRemark);
             $smarty->assign("secondaryRemarkDisplay", $secondaryRemarkDisplay);
             $smarty->assign("fieldSurveyRemark", $fieldSurveyRemark);
@@ -216,8 +173,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
                $ErrorMsg["txtProjectName"] = "Special characters are not allowed";
             }
-            
-            $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId, $cityId);
+           
+            $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId);
             
             if( $projectId == '' ) {
                if(count($projectChk) >0)
@@ -226,10 +183,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                }
             }
             $projectUrlChk = ResiProject::projectUrlExist($txtProjectURL, $projectId);
-          
-          if( count($projectUrlChk)>0 ) {
-            $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
-          }
+            if( count($projectUrlChk)>0 ) {
+              $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
+            }
          if( $txtProjectURL!='' ) {
             if(!preg_match('/^p-[a-z0-9\-]+\.php$/',$txtProjectURL)){
                $ErrorMsg["txtProjectURL"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
@@ -250,7 +206,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 }
             }
         }
-
         if( $exp_launch_date != '' && $exp_launch_date != '0000-00-00' ) {
              $retdt  = ((strtotime($exp_launch_date)-strtotime(date("Y-m-d")))/(60*60*24));
             if( $retdt <= 0 ) {
@@ -262,19 +217,19 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
         $promisedDt = $eff_date_to_prom;
         $preLaunchDt = $pre_launch_date;
 
-        if( $launchDt == '0000-00-00 00:00:00' )    
+        if( $launchDt == '0000-00-00' )    
             $launchDt = '';
         else {
             $exp = explode(" 00:",$launchDt);
             $launchDt = $exp[0];
         }
-        if( $preLaunchDt == '0000-00-00 00:00:00' )
+        if( $preLaunchDt == '0000-00-00' )
             $preLaunchDt = '';
         else {
             $exp = explode(" 00:",$preLaunchDt);
             $preLaunchDt = $exp[0];
         }
-        if( $promisedDt == '0000-00-00 00:00:00' )
+        if( $promisedDt == '0000-00-00' )
             $promisedDt = '';
         else {
             $exp = explode(" 00:",$promisedDt);
@@ -321,7 +276,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
        }
 
        if( $Status == 'Under Construction' ) {
-
            $yearExp = explode("-",$launchDt);
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
@@ -332,66 +286,30 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
            }
        }
-
+       if($township == '') {
+           $ErrorMsg['township'] = "Please select township .";
+       }
        $smarty->assign("projectTypeOld",$_REQUEST['project_type_hidden']);
        $smarty->assign("ErrorMsgType", $ErrorMsgType);
        $smarty->assign("ErrorMsg", $ErrorMsg);
-       //die;
-
        if(count($ErrorMsg)>0) {
             // Do Nothing
        }
-       else
-        {
+       else {
             $app = '';
-            if($application == 'app_form')
-            {
-                    $app = $app_form;
+            if($application == 'app_form') {
+               $app = $app_form;
             }
-            else if($application == 'app_form_pdf')
-            {
+            else if($application == 'app_form_pdf') {
                 $dir = "application_form/";
-                $pdf_path =	$dir.str_replace(" ","",$txtProjectName).$_FILES['app_pdf']['name'];
+                $pdf_path = $dir.str_replace(" ","",$txtProjectName).$_FILES['app_pdf']['name'];
                 $move = move_uploaded_file($_FILES['app_pdf']['tmp_name'],$pdf_path);
-                if($move == TRUE)
-                {
+                if($move == TRUE) {
                     $app = $pdf_path;
                 }
             }
-
-            $price1 = '';
-            if($price_list_chk == 'price_list')
-            {
-                    $price1 = $price_list;
-            }
-            else if($price_list_chk == 'price_list_pdf')
-            {
-                $dir = "price_list/";
-                $pdf_path = $dir.str_replace(" ","",$txtProjectName).$_FILES['price_list_pdf']['name'];
-                $move = move_uploaded_file($_FILES['price_list_pdf']['tmp_name'],$pdf_path);
-                if($move == TRUE)
-                {
-                    $price1	= $pdf_path;
-                }
-            }
-
-            $payment1 = '';
-            //echo $payment_chk;
-            if($payment_chk == 'payment')
-            {
-                    echo"",$payment1 = $payment;
-            }
-            else if($payment_chk == 'payment_pdf')
-            {
-                $dir = "payment_plan/";
-                $pdf_path = $dir.str_replace(" ","",$txtProjectName).$_FILES['payment_pdf']['name'];
-                $move = move_uploaded_file($_FILES['payment_pdf']['tmp_name'],$pdf_path);
-                if($move == TRUE)
-                {
-                    $payment1 = $pdf_path;
-                }
-
-            }
+           
+            
            /*code for comment save in saperate comment table**/
             $arrCommentTypeValue = array();
             if( $txtProjectRemark != '' ) {
@@ -410,17 +328,61 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrCommentTypeValue['Secondary'] = $secondaryRemark;
             }
              /*end code for comment save in saperate comment table*/
+            $arrInsertUpdateProject = array();
+            $arrInsertUpdateProject['project_id'] =$projectId;
+            $arrInsertUpdateProject['project_name'] =$projName;
+            $arrInsertUpdateProject['builder_id'] = $builderId;
+            $arrInsertUpdateProject['locality_id'] = $localityId;
+            $arrInsertUpdateProject['project_description'] = $txtProjectDescription;
+            $arrInsertUpdateProject['comments'] = $comments;
+            $arrInsertUpdateProject['project_address'] = $txtProjectDesc;
+            $arrInsertUpdateProject['latitude'] = $txtProjectLattitude;
+            $arrInsertUpdateProject['longitude'] = $txtProjectLongitude;
+            $arrInsertUpdateProject['display_order'] = $DisplayOrder;
+            $arrInsertUpdateProject['status'] = $Active;
+            $arrInsertUpdateProject['project_url'] = $txtProjectURL;
+            $arrInsertUpdateProject['price_disclaimer'] = $txtDisclaimer;
+            $arrInsertUpdateProject['pre_launch_date'] = $pre_launch_date;
+            $arrInsertUpdateProject['launch_date'] = $eff_date_to;
+            $arrInsertUpdateProject['source_of_information'] = $txtProjectSource;
+            $arrInsertUpdateProject['youtube_video'] = $youtube_link;
+            $arrInsertUpdateProject['application_form'] =  $app;
+            $arrInsertUpdateProject['approvals'] = $approvals;
+            $arrInsertUpdateProject['project_size'] = $project_size;
+            $arrInsertUpdateProject['power_backup'] = $powerBackup;
+            $arrInsertUpdateProject['project_type_id'] = $project_type;
+            $arrInsertUpdateProject['architect_name'] = $architect;
+            $arrInsertUpdateProject['power_backup_capacity'] = $power_backup_capacity;
+            $arrInsertUpdateProject['promised_completion_date'] = $eff_date_to_prom;
+            $arrInsertUpdateProject['residential_flag'] = $residential;
+            $arrInsertUpdateProject['township_id'] = $township;
+            $arrInsertUpdateProject['open_space'] = $open_space;
+            $arrInsertUpdateProject['project_status_id'] = $Status;
+            $arrInsertUpdateProject['booking_status'] = $Booking_Status;
+            $arrInsertUpdateProject['should_display_price'] = $shouldDisplayPrice;
+            $arrInsertUpdateProject['expected_supply_date'] = $exp_launch_date;
+            $arrInsertUpdateProject['display_order'] = $display_order;
+            $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
+            $arrInsertUpdateProject['location_desc'] = $txtProjectLocation;
+            $arrInsertUpdateProject['option_desc'] = $txtProjectDesc;
+            
+            $arrOx = array();
+           // $arrOx = 
+           $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
+           if( isset($_POST['bank_list']) ) {
+               ProjectBanks::projectBankDeleteInsert($_POST['bank_list'],$returnProject->project_id);
+           } 
            if ($projectId == '')
            {
-                $projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$launchedUnits,$reasonUnlaunchedUnits,$identifyTownShip);
-                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, 'newProject');
-                header("Location:project_img_add.php?projectId=".$projectId);
+               if( $returnProject->project_id ) {
+                 CommentsHistory::insertUpdateComments($returnProject->project_id, $arrCommentTypeValue, 'newProject');
+                 header("Location:project_img_add.php?projectId=".$projectId);
+               }
             }
             else
             {
-                $projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$launchedUnits,$reasonUnlaunchedUnits,$identifyTownShip);
-                $ProjectDetail = ProjectDetail($projectId);
-                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $ProjectDetail[0]['PROJECT_STAGE']);
+                $ProjectDetail = ResiProject::virtual_find($projectId);
+                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $ProjectDetail->project_stage);
                 if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
                    insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
                 }
@@ -440,79 +402,62 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
     }
 }
 elseif ($projectId!='') {
-		
-    $ProjectDetail = ProjectDetail($projectId);
-    $smarty->assign("txtProjectName", stripslashes($ProjectDetail[0]['PROJECT_NAME']));
-    $smarty->assign("txtAddress", stripslashes($ProjectDetail[0]['PROJECT_ADDRESS']));
-    $smarty->assign("txtProjectDescription", stripslashes($ProjectDetail[0]['PROJECT_DESCRIPTION']));
-    $smarty->assign("txtAddress", stripslashes($ProjectDetail[0]['PROJECT_ADDRESS']));
-    $smarty->assign("builderId", stripslashes($ProjectDetail[0]['BUILDER_ID']));
-    $smarty->assign("cityId", stripslashes($ProjectDetail[0]['CITY_ID']));
-    $smarty->assign("suburbId", stripslashes($ProjectDetail[0]['SUBURB_ID']));
-    $smarty->assign("localityId", stripslashes($ProjectDetail[0]['LOCALITY_ID']));
-    $smarty->assign("BUILDER_NAME", stripslashes($ProjectDetail[0]['BUILDER_NAME']));
-    $smarty->assign("txtProjectLocation", stripslashes($ProjectDetail[0]['LOCATION_DESC']));
-    $smarty->assign("txtProjectLattitude", stripslashes($ProjectDetail[0]['LATITUDE']));
-    $smarty->assign("txtProjectLongitude", stripslashes($ProjectDetail[0]['LONGITUDE']));
-    $smarty->assign("txtProjectMetaTitle", stripslashes($ProjectDetail[0]['META_TITLE']));
-    $smarty->assign("txtMetaKeywords", stripslashes($ProjectDetail[0]['META_KEYWORDS']));
-    $smarty->assign("txtMetaDescription", stripslashes($ProjectDetail[0]['META_DESCRIPTION']));
-    $smarty->assign("DisplayOrder", stripslashes($ProjectDetail[0]['DISPLAY_ORDER']));
-    $smarty->assign("Active", stripslashes($ProjectDetail[0]['ACTIVE']));
-    $smarty->assign("Status", stripslashes($ProjectDetail[0]['PROJECT_STATUS']));
-    $smarty->assign("txtProjectURL", stripslashes($ProjectDetail[0]['PROJECT_URL']));
-    $smarty->assign("txtProjectURLOld", stripslashes($ProjectDetail[0]['PROJECT_URL']));
-    $smarty->assign("Featured", stripslashes($ProjectDetail[0]['FEATURED']));
-    $smarty->assign("txtDisclaimer", stripslashes($ProjectDetail[0]['PRICE_DISCLAIMER']));
-    $smarty->assign("payment", stripslashes($ProjectDetail[0]['PAYMENT_PLAN']));
-    $smarty->assign("no_of_towers", stripslashes($ProjectDetail[0]['NO_OF_TOWERS']));
-    $smarty->assign("no_of_flats", stripslashes($ProjectDetail[0]['NO_OF_FLATS']));
-    $smarty->assign("eff_date_to", stripslashes($ProjectDetail[0]['LAUNCH_DATE']));
-    $smarty->assign("special_offer", stripslashes($ProjectDetail[0]['OFFER']));
-    $smarty->assign("display_order", $ProjectDetail[0]['DISPLAY_ORDER']);
-    $smarty->assign("youtube_link", stripslashes($ProjectDetail[0]['YOUTUBE_VIDEO']));
-    $smarty->assign("price_list", stripslashes($ProjectDetail[0]['PRICE_LIST']));
-    $smarty->assign("app_form", stripslashes($ProjectDetail[0]['APPLICATION_FORM']));
-    $smarty->assign("txtProjectDesc", stripslashes($ProjectDetail[0]['OPTIONS_DESC']));
-    $smarty->assign("txtSourceofInfo", stripslashes($ProjectDetail[0]['SOURCE_OF_INFORMATION']));
-    $smarty->assign("project_type", stripslashes($ProjectDetail[0]['PROJECT_TYPE_ID']));
-    $smarty->assign("projectTypeOld", stripslashes($ProjectDetail[0]['PROJECT_TYPE_ID']));
-    $smarty->assign("approvals", stripslashes($ProjectDetail[0]['APPROVALS']));
-    $smarty->assign("project_size", stripslashes($ProjectDetail[0]['PROJECT_SIZE']));
-    $smarty->assign("no_of_lift", stripslashes($ProjectDetail[0]['NO_OF_LIFTS_PER_TOWER']));
-    $smarty->assign("power_backup_capacity", stripslashes($ProjectDetail[0]['POWER_BACKUP_CAPACITY']));
-    $smarty->assign("powerBackup", stripslashes($ProjectDetail[0]['POWER_BACKUP']));
-    $smarty->assign("architect", stripslashes($ProjectDetail[0]['ARCHITECT_NAME']));
-    $smarty->assign("offer_heading", stripslashes($ProjectDetail[0]['OFFER_HEADING']));
-    $smarty->assign("offer_desc", stripslashes($ProjectDetail[0]['OFFER_DESC']));
-    $smarty->assign("eff_date_to_prom", stripslashes($ProjectDetail[0]['PROMISED_COMPLETION_DATE']));
-    $smarty->assign("residential", stripslashes($ProjectDetail[0]['RESIDENTIAL']));
-    $smarty->assign("township", stripslashes($ProjectDetail[0]['TOWNSHIP']));
-    $smarty->assign("pre_launch_date", stripslashes($ProjectDetail[0]['PRE_LAUNCH_DATE']));
-    $smarty->assign("exp_launch_date", stripslashes($ProjectDetail[0]['EXPECTED_SUPPLY_DATE']));
-    $smarty->assign("no_of_villa", stripslashes($ProjectDetail[0]['NO_OF_VILLA']));
-    $smarty->assign("no_of_plot", stripslashes($ProjectDetail[0]['NO_OF_PLOTS']));
-    $smarty->assign("open_space", stripslashes($ProjectDetail[0]['OPEN_SPACE']));
-    $smarty->assign("Booking_Status", stripslashes($ProjectDetail[0]['BOOKING_STATUS']));
-    $smarty->assign("shouldDisplayPrice", stripslashes($ProjectDetail[0]['SHOULD_DISPLAY_PRICE']));
-    $smarty->assign("launchedUnits", stripslashes($ProjectDetail[0]['LAUNCHED_UNITS']));
-    $smarty->assign("reasonUnlaunchedUnits", stripslashes($ProjectDetail[0]['REASON_UNLAUNCHED_UNITS']));
-    $smarty->assign("identifyTownShip", stripslashes($ProjectDetail[0]['SKIP_UPDATION_CYCLE']));
+    $ProjectDetail = ResiProject::virtual_find($projectId);
+    $smarty->assign("txtProjectName", stripslashes($ProjectDetail->project_name));
+    $smarty->assign("txtAddress", stripslashes($ProjectDetail->project_address));
+    $smarty->assign("txtProjectDescription", stripslashes($ProjectDetail->project_description));
+    $smarty->assign("txtAddress", stripslashes($ProjectDetail->project_address));
+    $smarty->assign("builderId", stripslashes($ProjectDetail->builder_id));
 
-    if( isset($ProjectDetail[0]['BANK_LIST']) )
+    /****start city locality and suburb**********/
+    $smarty->assign("localityId", $ProjectDetail->locality_id);
+    $localityDetail = Locality::getLocalityById($ProjectDetail->locality_id); 
+    $suburbDetail = Suburb::getSuburbById($localityDetail[0]->suburb_id);
+    $suburbSelect =  Suburb::SuburbArr($suburbDetail[0]->city_id);
+    $smarty->assign("suburbSelect", $suburbSelect);
+    $smarty->assign("suburbId", $localityDetail[0]->suburb_id);
+    $smarty->assign("cityId", $suburbDetail[0]->city_id);
+    $localitySelect =  Locality::localityList($localityDetail[0]->suburb_id);
+    $smarty->assign("getLocalityBySuburb", $localitySelect);
+   /****end city locality and suburb**********/
+    $smarty->assign("txtProjectLattitude", stripslashes($ProjectDetail->latitude));
+    $smarty->assign("txtProjectLongitude", stripslashes($ProjectDetail->longitude));
+    $smarty->assign("DisplayOrder", stripslashes($ProjectDetail->display_order));
+    $smarty->assign("Active", stripslashes($ProjectDetail->status));
+    $smarty->assign("Status", stripslashes($ProjectDetail->project_status_id));
+    $smarty->assign("txtProjectURL", stripslashes($ProjectDetail->project_url));
+    $smarty->assign("txtProjectURLOld", stripslashes($ProjectDetail->project_url));
+    $smarty->assign("txtDisclaimer", stripslashes($ProjectDetail->price_disclaimer));
+    $smarty->assign("eff_date_to", stripslashes($ProjectDetail->launch_date));
+    $smarty->assign("display_order", $ProjectDetail->display_order);
+    $smarty->assign("youtube_link", stripslashes($ProjectDetail->youtube_video));
+    $smarty->assign("app_form", stripslashes($ProjectDetail->application_form));
+    $smarty->assign("txtSourceofInfo", stripslashes($ProjectDetail->source_of_information));
+    $smarty->assign("project_type", stripslashes($ProjectDetail->project_type_id));
+    $smarty->assign("projectTypeOld", stripslashes($ProjectDetail->project_type_id));
+    $smarty->assign("approvals", stripslashes($ProjectDetail->approvals));
+    $smarty->assign("project_size", stripslashes($ProjectDetail->project_size));
+    $smarty->assign("power_backup_capacity", stripslashes($ProjectDetail->power_backup_capacity));
+    $smarty->assign("powerBackup", stripslashes($ProjectDetail->power_backup));
+    $smarty->assign("architect", stripslashes($ProjectDetail->architect_name));
+    $smarty->assign("residential", stripslashes($ProjectDetail->residential_flag));
+    $smarty->assign("township", stripslashes($ProjectDetail->township_id ));
+    $smarty->assign("pre_launch_date", stripslashes($ProjectDetail->pre_launch_date));
+    $smarty->assign("exp_launch_date", stripslashes($ProjectDetail->expected_supply_date));
+    $smarty->assign("open_space", stripslashes($ProjectDetail->open_space));
+    $smarty->assign("Booking_Status", stripslashes($ProjectDetail->booking_status));
+    $smarty->assign("shouldDisplayPrice", stripslashes($ProjectDetail->should_display_price));
+    $smarty->assign("eff_date_to_prom", stripslashes($ProjectDetail->promised_completion_date));
+    $smarty->assign("comments", stripslashes($ProjectDetail->comments));
+    $smarty->assign("txtProjectLocation", $txtProjectLocation);
+    $smarty->assign("txtProjectDesc", $txtProjectDesc);
+
+  /*  if( isset($ProjectDetail['BANK_LIST']) )
         $bank_arr = explode(",",$ProjectDetail[0]['BANK_LIST']);
     else
-        $bank_arr = '';
+        $bank_arr = '';*/
+    $bank_arr = array(1,2);
     $smarty->assign("bank_arr", $bank_arr);
-
-    $suburbSelect = SuburbArr($ProjectDetail[0]['CITY_ID'], $ProjectDetail[0]['LOCALITY_ID']);
-    $smarty->assign("suburbSelect", $suburbSelect);
-    if($ProjectDetail[0]['SUBURB_ID'] != null)
-       $suburbId = $ProjectDetail[0]['SUBURB_ID'];
-    else
-       $suburbId  = '';
-    $localitySelect = localityList($ProjectDetail[0]['CITY_ID'],"");
-    $smarty->assign("localitySelect", $localitySelect);
  }
 
 function getNumProjectsUnderDisplayOrder($displayOrder, $cityId, $projectId) {
