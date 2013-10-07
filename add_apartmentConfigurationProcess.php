@@ -118,7 +118,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("statusval",$statusval);
                 
 
-                if ($_REQUEST['unitType'][$key]!='Plot') {
+                if ($_REQUEST['unitType'][$key]!='Plot' && $_REQUEST['unitType'][$key]!='Commercial') {
                     if(trim($txtSize) == '' OR (!is_numeric(trim($txtSize))))
                     {
                         $ErrorMsg[$key] .= "<br>Please enter unit size";
