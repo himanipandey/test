@@ -1,12 +1,30 @@
 <?php
-	$RoomCategoryArr	=	RoomCategoryList();
+	$RoomCategoryArr	=	RoomCategory::categoryList();
 	$projectId			=	$_REQUEST['projectId'];
-	$projectDetail1		=	ProjectDetail($projectId);
+	$projectDetail1		=	ResiProject::virtual_find($projectId);
+    $projectDetail1     =   $projectDetail1->to_array();
+    foreach($projectDetail1 as $key=>$value){
+        $projectDetail1[strtoupper($key)] = $value;
+        unset($projectDetail1[$key]);
+    }
+    $projectDetail1     =   array($projectDetail1);
+	$towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));//fetch_towerDetails($projectId); //fetch all tower details
+    $towerDetail        =   array();
+    foreach($towerDetail_object as $s){
+        $s = $s->to_array();
+        foreach($s as $key=>$value){
+            $s[strtoupper($key)] = $value;
+            unset($s[$key]);
+        }
+            array_push($towerDetail, $s);
+    }
 
-	$towerDetail		=	fetch_towerDetails($projectId); //fetch all tower details
 
+/////////////////////////////////////////LFN////////////////////////////////////////////////////////////////////
 	$arrAudit   = AuditTblDataByTblName('resi_project_tower_details',$projectId); //last updated date 
-	$smarty->assign("arrAudit", $arrAudit); 
+	$smarty->assign("arrAudit", $arrAudit);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 	if($_GET['totRow'] != '')
 	{
@@ -31,110 +49,50 @@
 	$smarty->assign("projectId", $projectId);
 	
 	$fetch_towerName = fetch_towerName($projectId);
+
+    $finalFlg = 0;
+
 	if ($_POST['btnSave'] == "Save")
 	{
-
-		$flgDel = 0;
-		$flgUp = 0;
-		$flgInsert = 0;
-		$towerIdList	=	'';
 		foreach($_REQUEST['tower_name'] as $key=>$val)
 		{
+            ResiProjectTowerDetails::transaction(function(){
+                global $key;
+                global $val;
+                global $projectId;
+                $tower_name 		= 	$val;
+                $no_of_floor 		= 	$_REQUEST['no_of_floor'][$key];
+                $tower_id 			= 	$_REQUEST['tower_id'][$key];
+                $no_of_flats 		= 	$_REQUEST['no_of_flats'][$key];
+                $remark 			= 	$_REQUEST['remark'][$key];
+                $face 				= 	$_REQUEST['face'][$key];
+                $stilt 				= 	$_REQUEST['stilt'][$key];
+                $eff_date 			= 	$_REQUEST['eff_date'][$key];
 
-			$tower_nanme 		= 	$val;
-			$no_of_floor 		= 	$_REQUEST['no_of_floor'][$key];
-			$tower_id 			= 	$_REQUEST['tower_id'][$key];
-			$no_of_flats 		= 	$_REQUEST['no_of_flats'][$key];
-			$remark 			= 	$_REQUEST['remark'][$key];
-			$face 				= 	$_REQUEST['face'][$key];
-			$stilt 				= 	$_REQUEST['stilt'][$key];
-			$eff_date 			= 	$_REQUEST['eff_date'][$key];
+                $update_array = array(
+                    "tower_name" => $tower_name,
+                    "project_id" => $projectId,
+                    "tower_id" => $tower_id,
+                    "no_of_flats" => $no_of_flats,
+                    "remarks" => $remark,
+                    "no_of_floors" => $no_of_floor,
+                    "tower_facing_direction" =>$face,
+                    "stilt" => $stilt,
+                    "actual_completion_date" => $eff_date,
+                    "updated_by" => $_SESSION["adminId"]
+                );
 
-			$tower_name_old		= 	$_REQUEST['tower_name_old'][$key];
-			$no_of_floor_old 	= 	$_REQUEST['no_of_floor_old'][$key];
-			$no_of_flats_old 	= 	$_REQUEST['no_of_flats_old'][$key];
-			$remark_old 		= 	$_REQUEST['remark_old'][$key];
-			$face_old 			= 	$_REQUEST['face_old'][$key];
-			$stilt_old 			= 	$_REQUEST['stilt_old'][$key];
-			$eff_date_old 		= 	$_REQUEST['eff_date_old'][$key];
+                if($tower_name != '') $tower_obj = ResiProjectTowerDetails::create_or_update($update_array);
 
-			if(($val != '') AND (!array_key_exists($tower_id,$fetch_towerName)))
-			{
-				//code for insert tower detail if not exists
-				$insertlist.=	 "('','$projectId', '$tower_nanme', '$no_of_floor', '$remark', '$stilt', '$no_of_flats', '$face','$eff_date'),";
-				$flgInsert  = 1;
-			}
-			else
-			{
-				//code for update tower detail
-				if(
-					trim($tower_nanme) 	    != $tower_name_old 
-					|| trim($no_of_floor)   != $no_of_floor_old 
-					|| trim($no_of_flats)   != $no_of_flats_old 
-					|| trim($remark) 		!= $remark_old 
-					|| trim($face)   		!= $face_old
-					|| trim($stilt) 	    != $stilt_old
-					|| trim($eff_date) 	    != $eff_date_old 
-				 )
-				{
-					$qryUp	=	"UPDATE ".RESI_PROJECT_TOWER_DETAILS."
-								
-								SET	
-									TOWER_NAME      		=	'".$tower_nanme."',
-									NO_OF_FLOORS      		=	'".$no_of_floor."',
-									REMARKS      			=	'".$remark."',
-									STILT      				=	'".$stilt."',
-									NO_OF_FLATS      		=	'".$no_of_flats."',
-									TOWER_FACING_DIRECTION  =	'".$face."',
-									ACTUAL_COMPLETION_DATE  =	'".$eff_date."'
-								WHERE
-									PROJECT_ID = '".$projectId."'
-								AND
-									TOWER_ID   = '".$tower_id."'";
-					$resUp	=	mysql_query($qryUp) or die(mysql_error());
-					if($resUp)
-					{
-						audit_insert($tower_id,'update','resi_project_tower_details',$projectId);
-						$flgUp  = 1;
-					}
-
-				}		
-				//end code for update tower detail
-
-				//code for delete tower detail
-				$deleteKey = "delete_".($key+1);
-				if($_REQUEST[$deleteKey] == on)
-				{
-
-					//$towerId = array_search($towernanme, $fetch_towerName); // find array key;
-					if(array_key_exists($tower_id, $fetch_towerName))
-					{
-						$towerIdList .= $tower_id.',';
-						$flgDel = 1;
-					}
-				}
-			}
-		}
-		$finalFlg = 0;
-		if($flgInsert == 1)
-		{
-
-			$insertlist = substr($insertlist,0,-1);
-			$insert     = insert_towerDetail($insertlist,$projectId); //Insertt tower detail call
-			if($insert)
-				$finalFlg = 1;
+                $deleteKey = "delete_".($key+1);
+                if($_REQUEST[$deleteKey] == on)
+                {
+                    $tower_obj->delete();
+                }
+            });
 		}
 
-		if($flgDel == 1)
-		{
-			$towerIdList= substr($towerIdList,0,-1);
-			$deleteReturn = deleteTowerDetail($projectId,$towerIdList); //delete tower detail call
-			if($deleteReturn)
-				$finalFlg = 1;
-		}
-
-		if($finalFlg == 1 || $flgUp == 1)	
-			header("Location:ProjectList.php?projectId=".$projectId);
+        header("Location:ProjectList.php?projectId=".$projectId);
 
 	}
     else if($_POST['btnExit'] == "Exit")

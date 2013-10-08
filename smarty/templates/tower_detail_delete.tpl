@@ -178,7 +178,6 @@
 
                               {$tower_name      = $towerDetail[$cnt]['TOWER_NAME']}
                               {$tower_id        = $towerDetail[$cnt]['TOWER_ID']}
-                              {$tower_id        = $towerDetail[$cnt]['TOWER_ID']}
                               {$no_of_floor     = $towerDetail[$cnt]['NO_OF_FLOORS']}
                               {$no_of_flats     = $towerDetail[$cnt]['NO_OF_FLATS']}
                               {$remarks         = $towerDetail[$cnt]['REMARKS']}                              
@@ -234,8 +233,8 @@
                                     
                                     <select name="stilt[]" class="stilt" id = "stilt_{$smarty.section.rowLoop.index}">
                                       <option value="">Choose Atleast One</option>
-                                      <option value="1" {if $stilt == '1'} selected {/if}>Yes</option>
-                                      <option value="0" {if $stilt == '0'} selected {/if}>No</option>
+                                      <option value="True" {if $stilt === 'True'} selected {/if}>Yes</option>
+                                      <option value="False" {if $stilt === 'False'} selected {/if}>No</option>
                                     </select>
                                     <input type = "hidden" name = "stilt_old[]" value = "{$stilt}" style = "width:150px">
                               </td>
