@@ -279,6 +279,11 @@ class Objects extends ActiveRecord\Model{
 
     }
 
+    // Gives the primary key for table
+    static public function  primary_key_column(){
+        return static::table()->pk[0];
+    }
+
     //  Function takes array of values and create new entry if  model is not already present else
     //  update the existing row
     static public function create_or_update($options = array()){
@@ -288,7 +293,7 @@ class Objects extends ActiveRecord\Model{
             $save = "virtual_save";
         }
         else{
-            $primary_key = static::$primary_key;
+            $primary_key = static::primary_key_column();
             $find = "find";
             $save = "save";
         }
@@ -360,7 +365,7 @@ class Objects extends ActiveRecord\Model{
             $primary_key = static::$virtual_primary_key;
         }
         else{
-            $primary_key = static::$primary_key;
+            $primary_key = static::primary_key_column();
         }
         return $table_id = $this->$primary_key;
     }
