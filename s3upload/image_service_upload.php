@@ -26,7 +26,14 @@ class ImageServiceUpload{
         ),
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
-        "locality" => array("locality_image" => "main"),
+        "locality" => array(
+            "locality_image" => "main",
+            "other" => "other",
+            "mall" => "mall",
+            "road" => "road",
+            "school" => "school",
+            "hospital" => "hospital"
+        ),
         "bank" => array("logo" => "logo"));
 
     function __construct($image, $object, $object_id, $image_type){

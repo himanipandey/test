@@ -92,7 +92,7 @@
                         $source = $newImagePath.$dest;
                         $s3upload = new ImageUpload($source, array("s3" => $s3,
                             "image_path" => $dest, "object" => "locality","object_id" => $areaId,
-                            "image_type" => "locality_image"));
+                            "image_type" => "other"));
                         $s3upload->upload();
                         $thumb->resize( $__thumbWidth, $__thumbHeight );
                         $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
