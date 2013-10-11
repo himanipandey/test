@@ -375,6 +375,16 @@ class Objects extends ActiveRecord\Model{
         $this->$updated_by = $id;
     }
 
+    // Gives the object in array format
+    public function to_custom_array(){
+        $object_array = $this->to_array();
+        foreach($object_array as $key=>$value){
+            $object_array[strtoupper($key)] = $value;
+            unset($object_array[$key]);
+        }
+        return $object_array;
+    }
+
 /****************************************** End of Public Instance Methods ********************************************/
 
 }
