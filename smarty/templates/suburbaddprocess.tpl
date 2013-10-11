@@ -31,6 +31,7 @@
                 {if $accessSuburb == ''}
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" enctype="multipart/form-data" id="frmcity" name="frmcity">
+			      <input type="hidden" name="old_sub_name" value="{$txtCityName}">
 			      <div>
 				<tr>
 				  <td width="20%" align="right" >*Suburb Name : </td>

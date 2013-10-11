@@ -22,6 +22,10 @@ if(isset($_SESSION[$_SERVER['PHP_SELF']]['city']) && !empty($_SESSION[$_SERVER['
 
 $CityDataArr = CityArr();
 
+if(isset($projectSummary) && $_REQUEST['download'] == 'true'){
+    download_xls_file($projectSummary);
+}
+
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("projectSummary", $projectSummary);
 $smarty->assign("projectSummaryTotal", $projectSummaryTotal);
@@ -34,7 +38,7 @@ function prepareDisplayData($data){
         $aAssignedTo = explode('|', $value['ASSIGNED_TO']);
         $aAssignedToDep = explode('|', $value['DEPARTMENT']);
         $assignmentType = '';
-        if($value['PREV_PROJECT_PHASE'] == 'audit1') $assignmentType .= 'Reverted-';
+        if($value['PREV_PROJECT_PHASE'] == 'audit1' || $value['PREV_PROJECT_PHASE'] == 'audit2') $assignmentType .= 'Reverted-';
         if($aAssignedToDep[count($aAssignedToDep)-1] === 'SURVEY')$assignmentType .= 'Field';
         elseif(empty($aAssignedTo[0])) $assignmentType .= 'Unassigned';
         else{
@@ -48,5 +52,33 @@ function prepareDisplayData($data){
         $result['total'][$stage][$completionStatus] += 1;
     }
     return $result;
+}
+
+function download_xls_file($projectSummary){
+    $filename = "/tmp/data_collection_summary_".time().".xls";
+    $newProjectSummaryStorage = array();
+    foreach($projectSummary as $key=>$summary){
+        foreach($summary as $pkey => $val){
+            $val['AssignmentType'] = $key;
+            $val['Stage'] = $pkey;
+            $val = enter_missing_keys($val);
+            array_push($newProjectSummaryStorage, $val);
+        }
+    }
+    excel_file_download($newProjectSummaryStorage, $filename);
+}
+
+function enter_missing_keys($arr){
+    $val = array();
+    $keys = array("AssignmentType","Stage","total","incomplete","doneExceptInventory","notAttempted");
+    foreach($keys as $key){
+        if(array_key_exists($key, $arr)){
+            $val[$key] = $arr[$key];
+        }
+        else{
+            $val[$key] = NULL;
+        }
+    }
+    return $val;
 }
 ?>

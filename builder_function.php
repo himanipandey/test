@@ -127,7 +127,7 @@ function BuilderEntityArr()
 /* * ******city list with id************* */
 
 function CityArr() {
-    $qryBuilder = "SELECT CITY_ID,LABEL FROM " . CITY . " ORDER BY LABEL ASC";
+    $qryBuilder = "SELECT CITY_ID,LABEL FROM " . CITY . " WHERE ACTIVE = 1 ORDER BY LABEL ASC";
     $resBuilder = mysql_query($qryBuilder);
     $arrCity = array();
     while ($data = mysql_fetch_assoc($resBuilder)) {
@@ -138,8 +138,12 @@ function CityArr() {
 
 /* * ******suburb list with id************* */
 
-function SuburbArr($cityId) {
-    $qryBuilder = "SELECT SUBURB_ID,LABEL FROM " . SUBURB . " WHERE CITY_ID = '" . $cityId . "' ORDER BY LABEL ASC";
+function SuburbArr($cityId, $localityId = "") {
+    if($localityId=="") {
+        $qryBuilder = "SELECT SUBURB_ID,LABEL FROM " . SUBURB . " WHERE CITY_ID = '" . $cityId . "' ORDER BY LABEL ASC";
+    }else{
+         $qryBuilder = "SELECT A.SUBURB_ID, B.LABEL FROM ".LOCALITY." AS A INNER JOIN ".SUBURB." AS B ON (A.SUBURB_ID = B.SUBURB_ID) WHERE A.LOCALITY_ID = '" . $localityId."' ORDER BY B.LABEL ASC";
+    }
     $resBuilder = mysql_query($qryBuilder);
     $arrCity = array();
     while ($data = mysql_fetch_assoc($resBuilder)) {
@@ -675,7 +679,6 @@ function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
                 META_KEYWORDS	 	      	= '" . d_($txtMetaKeywords) . "',
                 META_DESCRIPTION 	      	= '" . d_($txtMetaDescription) . "',
                 ACTIVE			 	      	= '" . d_($Active) . "',
-                DISPLAY_ORDER			 	= $display_order,
                 PROJECT_STATUS 	      		= '" . d_($Status) . "',
                 PROJECT_URL		 	      	= '" . d_($txtProjectURL) . "',
                 FEATURED			 	    = '" . d_($Featured) . "',
@@ -1189,7 +1192,9 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function UpdateBuilder()');
     
     if( $ExecSql ) {
-        if( $txtBuilderName != $oldbuilder ) { //code for update resi_project if builder name updates 
+        if( $txtBuilderName != $oldbuilder ) { //code for update resi_project if builder name updates
+            //  add entry to name change log
+            addToNameChangeLog( 'builder', $builderid, $oldbuilder, $txtBuilderName );
             $qryProject ="UPDATE 
                             resi_project
                           SET
@@ -1794,6 +1799,31 @@ function fetchStartTime($stageName, $phasename, $projectId) {
     $res = mysql_query($qry) or die(mysql_error());
     $data = mysql_fetch_assoc($res);
     return $data['DATE_TIME'];
+}
+
+function addToNameChangeLog( $type, $id, $oldName, $newName ) {
+    $checkQuery = "SELECT COUNT(*) AS PRESENT FROM `name_change_log` WHERE `$type` = '$id' AND `old_name` = '$oldName' AND `new_name` = '$newName'";
+    $res = mysql_query( $checkQuery ) or die( mysql_error() );
+    $count = mysql_fetch_assoc( $res );
+    if ( $count['PRESENT'] == 0 ) {
+        //  before adding delete entries will will create a loop in the table
+        deleteLoop( $id, $oldName, $newName );
+
+        //  add entry to database
+        $insertQuery = "INSERT INTO `name_change_log` ($type, old_name, new_name, created_at) VALUES ('$id', '$oldName', '$newName', NOW())";
+        mysql_query( $insertQuery ) or die( mysql_error() );
+    }
+}
+
+function deleteLoop( $id, $oldName, $newName ) {
+    $deleteQuery = "SELECT id FROM `name_change_log` WHERE id = '$id' AND old_name = '$newName' AND new_name = '$oldName'";
+    $res = mysql_query( $deleteQuery );
+    $idList = array();
+    while( $__id = mysql_fetch_assoc( $res ) ) {
+        $idList[] = $__id['id'];
+    }
+    $idList = implode( ', ', $idList );
+    mysql_query( "DELETE FROM `name_change_log` WHERE id IN ( $idList )" );
 }
 
 /* * *****Insert update in redirect url table if update any url in builder,project,city,suburb and locality tables******** */

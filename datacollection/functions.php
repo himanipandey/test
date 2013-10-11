@@ -29,7 +29,11 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
 }
 
 function getProjectListForManagers($cityId, $suburbId = ''){
-    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, rp.BOOKING_STATUS, rp.PROJECT_STATUS, c.LABEL CITY, l.LABEL LOCALITY, max(pa.UPDATION_TIME) as LAST_WORKED_AT, rp.PROJECT_STAGE, rp.PROJECT_PHASE, pshp.PROJECT_STAGE PREV_PROJECT_STAGE, pshp.PROJECT_PHASE PREV_PROJECT_PHASE, rp.MOVEMENT_HISTORY_ID, GROUP_CONCAT(pa1.USERNAME order by pa.ID asc separator '|') ASSIGNED_TO, GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') DEPARTMENT, GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT, GROUP_CONCAT(pa.STATUS order by pa.ID asc separator '|') STATUS, GROUP_CONCAT(pa.EXECUTIVE_REMARK order by pa.ID asc separator '|') REMARK, if(uc.LABEL is null, 'No Label', uc.LABEL) LABEL from resi_project rp inner join city c on rp.CITY_ID = c.CITY_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join project_stage_history psh on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID left join project_stage_history pshp on psh.PREV_HISTORY_ID = pshp.HISTORY_ID left join project_assignment pa on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where ((rp.PROJECT_STAGE='newProject' and rp.PROJECT_PHASE='dcCallCenter') or (rp.PROJECT_STAGE='updationCycle' and rp.PROJECT_PHASE='dataCollection')) and rp.MOVEMENT_HISTORY_ID is not NULL and rp.ACTIVE in (1,3) and rp.CITY_ID=$cityId ";
+    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, rp.BOOKING_STATUS, rp.PROJECT_STATUS, psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY, max(pa.UPDATION_TIME) as LAST_WORKED_AT, rp.PROJECT_STAGE, rp.PROJECT_PHASE, pshp.PROJECT_STAGE PREV_PROJECT_STAGE, pshp.PROJECT_PHASE PREV_PROJECT_PHASE, rp.MOVEMENT_HISTORY_ID, GROUP_CONCAT(pa1.USERNAME order by pa.ID asc separator '|') ASSIGNED_TO, GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') DEPARTMENT, GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT, GROUP_CONCAT(pa.STATUS order by pa.ID asc separator '|') STATUS, GROUP_CONCAT(pa.EXECUTIVE_REMARK order by pa.ID asc separator '|') REMARK, if(uc.LABEL is null, 'No Label', uc.LABEL) LABEL from resi_project rp inner join city c on rp.CITY_ID = c.CITY_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join project_stage_history psh on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID left join project_stage_history pshp on psh.PREV_HISTORY_ID = pshp.HISTORY_ID left join project_assignment pa on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where ((rp.PROJECT_STAGE='newProject' and rp.PROJECT_PHASE='dcCallCenter') or (rp.PROJECT_STAGE='updationCycle' and rp.PROJECT_PHASE='dataCollection')) and rp.MOVEMENT_HISTORY_ID is not NULL and rp.ACTIVE in (1,3) ";
+    // city id = -1 denotes all cities
+    if((int)$cityId != -1){
+    $sql = $sql." and rp.CITY_ID=$cityId";
+    }
     if($suburbId!=''){
         $sql = $sql . " and rp.SUBURB_ID=$suburbId ";
     }
@@ -40,7 +44,7 @@ function getProjectListForManagers($cityId, $suburbId = ''){
 function getAssignedProjectsFromPIDs($pids){
     $res = array();
     if(!empty($pids)){
-        $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, c.LABEL CITY, l.LABEL LOCALITY, max(pa.UPDATION_TIME) as LAST_WORKED_AT, rp.PROJECT_STAGE, rp.PROJECT_PHASE, pshp.PROJECT_STAGE PREV_PROJECT_STAGE, pshp.PROJECT_PHASE PREV_PROJECT_PHASE, rp.MOVEMENT_HISTORY_ID, GROUP_CONCAT(pa1.USERNAME order by pa.ID asc separator '|') ASSIGNED_TO, GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') DEPARTMENT, GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT, GROUP_CONCAT(pa.STATUS order by pa.ID asc separator '|') STATUS, GROUP_CONCAT(pa.EXECUTIVE_REMARK order by pa.ID asc separator '|') REMARK from resi_project rp inner join city c on rp.CITY_ID = c.CITY_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join project_stage_history psh on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID left join project_stage_history pshp on psh.PREV_HISTORY_ID = pshp.HISTORY_ID left join project_assignment pa on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on pa.ASSIGNED_TO = pa1.ADMINID where ((rp.PROJECT_STAGE='newProject' and rp.PROJECT_PHASE='dcCallCenter') or (rp.PROJECT_STAGE='updationCycle' and rp.PROJECT_PHASE='dataCollection')) and rp.MOVEMENT_HISTORY_ID is not NULL and rp.ACTIVE in (1,3) and rp.PROJECT_ID in (" .  implode(',', $pids) . ") group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
+        $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, rp.BOOKING_STATUS, rp.PROJECT_STATUS, c.LABEL CITY, l.LABEL LOCALITY, psh.DATE_TIME MOVEMENT_DATE, max(pa.UPDATION_TIME) as LAST_WORKED_AT, rp.PROJECT_STAGE, rp.PROJECT_PHASE, pshp.PROJECT_STAGE PREV_PROJECT_STAGE, pshp.PROJECT_PHASE PREV_PROJECT_PHASE, rp.MOVEMENT_HISTORY_ID, GROUP_CONCAT(pa1.USERNAME order by pa.ID asc separator '|') ASSIGNED_TO, GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') DEPARTMENT, GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT, GROUP_CONCAT(pa.STATUS order by pa.ID asc separator '|') STATUS, GROUP_CONCAT(pa.EXECUTIVE_REMARK order by pa.ID asc separator '|') REMARK from resi_project rp inner join city c on rp.CITY_ID = c.CITY_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join project_stage_history psh on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID left join project_stage_history pshp on psh.PREV_HISTORY_ID = pshp.HISTORY_ID left join project_assignment pa on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on pa.ASSIGNED_TO = pa1.ADMINID where ((rp.PROJECT_STAGE='newProject' and rp.PROJECT_PHASE='dcCallCenter') or (rp.PROJECT_STAGE='updationCycle' and rp.PROJECT_PHASE='dataCollection')) and rp.MOVEMENT_HISTORY_ID is not NULL and rp.ACTIVE in (1,3) and rp.PROJECT_ID in (" .  implode(',', $pids) . ") group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
         $res = dbQuery($sql);
     }
     return $res;
@@ -96,23 +100,13 @@ function assignProject($projectId, $adminId){
         $sql = "update project_assignment set ASSIGNED_TO = $adminId, ASSIGNED_BY = $_SESSION[adminId], CREATION_TIME = NOW()  where ID = $lastAssignmentId;";
         $flag = dbExecute($sql);
     }
-    elseif($count < 3){
+    else{
         if($assignmentHistory[$count-1]['ASSIGNED_TO'] == $adminId){
             $error = 'alreadyAssignedToSameId';
         }
         else{
             $sql = "insert into project_assignment (MOVEMENT_HISTORY_ID, ASSIGNED_TO, ASSIGNED_BY, STATUS, CREATION_TIME, UPDATION_TIME) values($movementId, $adminId, $_SESSION[adminId], 'notAttempted', NOW(), NOW());";
             $flag = dbExecute($sql);
-        }
-    }
-    elseif($count>=3){
-        $adminDetail = AdminDetail($adminId);
-        if($adminDetail['DEPARTMENT'] === 'SURVEY'){
-            $sql = "insert into project_assignment (MOVEMENT_HISTORY_ID, ASSIGNED_TO, ASSIGNED_BY, STATUS, CREATION_TIME, UPDATION_TIME) values($movementId, $adminId, $_SESSION[adminId], 'notAttempted', NOW(), NOW());";
-            $flag = dbExecute($sql);
-        }
-        else{
-            $error = 'assignmentCountReached';
         }
     }
     dbExecute('commit');
@@ -177,5 +171,21 @@ function getRevertCountForExecs($startTime = '0', $endTime = NULL){
     if(is_null($endTime)) $endTime = strftime('%Y-%m-%d %T', time());
     $sql = "select t2.ADMIN_ID, count(*) REVERT_COUNT from project_stage_history t1 inner join project_stage_history t2 on t1.PREV_HISTORY_ID = t2.HISTORY_ID where t1.PROJECT_PHASE = 'revert' and t2.PROJECT_PHASE = 'audit1' and t2.DATE_TIME between '" . $startTime . "' and '" . $endTime . "' group by t2.ADMIN_ID";
     return dbQuery($sql);
+}
+
+function excel_file_download($data, $filename){
+    require_once dirname(__FILE__).'/../cron/cronFunctions.php';
+    putResultsInFile($data, $filename);
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename='.basename($filename));
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($filename));
+    ob_clean();
+    flush();
+    readfile($filename);
 }
 ?>
