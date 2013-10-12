@@ -629,10 +629,10 @@
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
 								  <td width="30%" align="left">
 								  	{if $projectId != '' && $urlEditAccess == 0}
-								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
+								  		<input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
 								  	{else}
-								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
-								  		<br><span style = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</font>
+								  		<input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
+								  		<br><span style = "font-size:10px">Like:noida/sector-50/dlf-group</font>
 								  	{/if}
 								  	
 								  	<input type = "hidden" name = "txtProjectURLOld" value = "{$txtProjectURLOld}">

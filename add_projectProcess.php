@@ -6,6 +6,7 @@ $ProjectTypeArr	=	ProjectTypeArr();
 $BankListArr	=	BankList();
 $enum_value	=	enum_value();
 
+include_once('./function/locality_functions.php');
 $smarty->assign("BuilderDataArr",$BuilderDataArr);
 $smarty->assign("CityDataArr",$CityDataArr);
 $smarty->assign("ProjectTypeArr",$ProjectTypeArr);
@@ -57,7 +58,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$DisplayOrder				=	'';
 		$Active						=	trim($_POST['Active']);
 		$Status						=	trim($_POST['Status']);
-		$txtProjectURL				=	trim($_POST['txtProjectURL']);
+		$txtProjectURL				=	'';
 		$txtProjectURLOld			=	trim($_POST['txtProjectURLOld']);
 		$Featured					=	trim($_POST['Featured']);
 		$txtDisclaimer				=	trim($_POST['txtDisclaimer']);
@@ -237,20 +238,17 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		$qryprojectchk	=	"SELECT PROJECT_NAME,PROJECT_SMALL_IMAGE FROM ".RESI_PROJECT." WHERE PROJECT_NAME = '".$txtProjectName."' AND BUILDER_ID = '".$builderId."' AND LOCALITY_ID = '".$localityId."' AND CITY_ID = '".$cityId."'";
 		$resprojectchk	=	mysql_query($qryprojectchk);
 		
-		if($projectId=='')
-		 {
-		   if(mysql_num_rows($resprojectchk) >0)
-		   {
-			   $ErrorMsg["txtProjectName"] = "Project already exist.";
+		if($projectId==''){
+		   if(mysql_num_rows($resprojectchk) >0){
+			   $ErrorMsg["txtProjectName"] = "Project with same name already exist.";
 		   }
-	     }
-             
-	     $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_URL = '".$txtProjectURL."' and project_id != '$projectId'";
-	     $resUrl = mysql_query($qryUrl) or die(mysql_error());
-	     if(mysql_num_rows($resUrl)>0)
-	     {
-	     	$ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
-	     }
+        
+	        $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE CITY_ID = ".$cityId." and LOCALITY_ID =".$localityId." and PROJECT_NAME='".$txtProjectName."'";
+	        $resUrl = mysql_query($qryUrl) or die(mysql_error());
+	        if(mysql_num_rows($resUrl)>0){
+	     	    $ErrorMsg["txtProjectUrlDuplicate"] = "This project already exist.";
+	        }
+         }
 
 	     /*if(empty($display_order) || $display_order < 1 || $display_order > 999 || ($display_order > 15 && $display_order < 101))
 	     {
@@ -454,26 +452,28 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		   {
                         $projectId = InsertProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$launchedUnits,$reasonUnlaunchedUnits,$identifyTownShip);
                         
+		                //create new project url
+		                $txtProjectURL = createProjectURL($cityName, $localityName, $BuilderName, $txtProjectName, $projectId);
+		                $updateQuery = 'UPDATE '.RESI_PROJECT.' set PROJECT_URL="'.$txtProjectURL.'" where PROJECT_ID='.$projectId;
+		                $resUrl = mysql_query($updateQuery) or die(mysql_error());
+
                         CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, 'newProject');
                         
                         header("Location:project_img_add.php?projectId=".$projectId);
                     }
                     else
                     {
+                        $txtProjectURL = createProjectURL($cityName, $localityName, $BuilderName, $txtProjectName, $projectId);
                         $projectId = UpdateProject($projName, $builderId, $cityId,$suburbId,$localityId,$txtProjectDescription,$txtAddress,$txtProjectDesc,$txtProjectSource,$project_type,$txtProjectLocation,$txtProjectLattitude,$txtProjectLongitude,$txtProjectMetaTitle,$txtMetaKeywords,$txtMetaDescription,$DisplayOrder,$Active,$Status,$txtProjectURL,$Featured,$txtDisclaimer,$payment1,$no_of_towers,$no_of_flats,$pre_launch_date,$exp_launch_date,$eff_date_to,$special_offer,$display_order,$youtube_link,$bank_list,$price1,$app,$approvals,$project_size,$no_of_lift,$powerBackup,$architect,$offer_heading,$offer_desc,$BuilderName,$power_backup_capacity,$no_of_villa,$eff_date_to_prom,$projectId,$residential,$township,$no_of_plot,$open_space,$Booking_Status,$shouldDisplayPrice,$launchedUnits,$reasonUnlaunchedUnits,$identifyTownShip);
                         
                         $ProjectDetail 	= ProjectDetail($projectId);
                         CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $ProjectDetail[0]['PROJECT_STAGE']);
-                        if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
-                                insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
-                        }
                         if($preview == 'true')
                                 header("Location:show_project_details.php?projectId=".$projectId);
                         else
                                 header("Location:ProjectList.php?projectId=".$projectId);
 
                     }
-                    
 		}
 	}
 	else if($_POST['btnExit'] == "Exit")

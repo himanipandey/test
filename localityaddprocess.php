@@ -54,7 +54,7 @@
                             $ErrorMsg["txtCityName"] = "Special characters are not allowed";
                        }
 
-                       $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL']);
+                       $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $localityid);
 
                        if( $txtMetaTitle == '')   {
                             $ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
@@ -67,16 +67,16 @@
                              $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
                        }
                     /*******locality url already exists**********/
-                       if($localityid == '')
-                       {
-                                    $qryLocality = "SELECT * FROM ".LOCALITY." WHERE LABEL = '".$txtCityName."'";
-
-                                    $res     = mysql_query($qryLocality) or die(mysql_error());
-                                    if(mysql_num_rows($res)>0)
-                                    {
-                                            $ErrorMsg["txtCityName"] = "This Locality Already exists";
-                                    }
-                       }
+                        $locURL = ""
+                        if($localityid != ''){
+                            $locURL = " and LOCALITY_ID!=".$localityid;    
+                        }
+                        $qryLocality = "SELECT * FROM ".LOCALITY." WHERE LABEL = '".$txtCityName."'".$locURL;         
+                        $res     = mysql_query($qryLocality) or die(mysql_error());
+                        if(mysql_num_rows($res)>0){
+                            $ErrorMsg["txtCityName"] = "This Locality Already exists";
+                        }
+ 
                     /*******end locality url already exists*******/ 
 
                        if(!is_array($ErrorMsg))
@@ -85,7 +85,7 @@
                            $resCity = mysql_query($qryCity);
                            $dataCity = mysql_fetch_assoc($resCity);
                            mysql_free_result($resCity);
-                           $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL']);
+                           $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $localityid);
 
                                      $updateQry = "UPDATE ".LOCALITY." SET 
 
