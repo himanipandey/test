@@ -196,7 +196,6 @@
                                         <td width="50%" align="left"></td>
                                     </tr>
 
-
                                     {if isset($phaseId) and $phaseId != -1}
                                         {if $phaseId != '0'}
                                             <tr>
@@ -207,6 +206,19 @@
                                                 <td width="50%" align="left">
                                                     <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
                                                 </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td width="20%" align="right"><b>Booking Status :</b> </td>
+                                                <td width="30%" align="left">
+                                                    <select id="bookingStatus" name="bookingStatus">
+                                                        <option value="-1">Select Status</option>
+                                                        {foreach $bookingStatuses as $b}
+                                                            <option value="{$b->id}" {if $b->id == $bookingStatus}selected="selected" {/if}>{$b->display_name}</option>
+                                                        {/foreach}
+                                                    </select>
+                                                </td>
+                                                <td width="50%" align="left"></td>
                                             </tr>
 
                                             <tr>
@@ -229,60 +241,7 @@
                                             </tr>
                                         {/if}
 
-                                        <tr>
-                                            <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
-                                                        <td width="30%" align="left">
-                                                            <input name = "isLaunchUnitPhase" id="isLaunchUnitPhase" type = "checkbox" value = "1" {if $isLaunchUnitPhase == 1} checked {/if}>
-                                                        </td>
-                                                        <td width="50%" align="left"></td>
-                                                        </tr>
-
-                                                        <tr class="options_select" style="display: none">
-                                                            <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
-                                                                        <td width="30%" align="left">
-                                                                            <select name="options[]" id="options" multiple="multiple" style="width: 236px; height: 210px;" disabled>
-                                                                                <option value="-1" {if count($phase_options) <= 0}selected="selected"{/if}>Select Option</option>
-                                                                                {foreach $options as $option}
-                                                                                    <option {if in_array($option->options_id, $option_ids) && count($phase_options) > 0}selected="selected"{/if} value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure} - {$option->unit_type}</option>
-                                                                                {/foreach}
-                                                                            </select>
-                                                                        </td>
-                                                                        <td width="50%" align="left">
-                                                                            <button class="reset_option_and_supply option_button">Change to supply</button>
-                                                                            <br><br><strong>Select all options:</strong> <input type="checkbox" class="select_all_options">
-                                                                        </td>
-                                                                        </tr>
-
                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==1 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
-                                                                            <tr class="supply_select">
-                                                                                <td width="20%" align="right" valign="top"><b><b><b>Supply of Flats :</b> </td>
-                                                                                            <td width="50%" align="left">
-                                                                                                <ul id="flats_config">
-                                                                                                    {foreach $bedrooms_hash['Apartment'] as $num}
-                                                                                                        <li class="flat_bed">
-                                                                                                            <font color="red"><span class = "err_flat_bed" style = "display:none;">Integer expected</span>
-                                                                                                            <br/></font>
-                                                                                                            <label for="flat_bed_{$num}">{$num} Bedroom(s)</label>
-                                                                                                            <input id="flat_bed_{$num}" name="flat_bed_{$num}[supply]" style="width: 50px;" value="{$FlatsQuantity[$num]['supply']}" />
-                                                                                                            <label>Launched</label>
-                                                                                                            <input id="flat_bed_{$num}" {if !$isLaunchUnitPhase}readonly="true"{/if} name="flat_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$FlatsQuantity[$num]['launched']}" />
-                                                                                                            <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
-                                                                                                                {foreach $OptionsDetails as $option}
-                                                                                                                    {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Apartment' and in_array($option.OPTIONS_ID, $option_ids)}
-                                                                                                                        <option value="{$option.UNIT_NAME}">{$option.UNIT_NAME}</option>
-                                                                                                                    {/if}
-                                                                                                                {/foreach}
-                                                                                                            </select>
-                                                                                                        </li>
-                                                                                                    {/foreach}
-                                                                                                </ul>
-                                                                                            </td>
-                                                                                            {if $phaseId != '0'}
-                                                                                                <td width="50%" align="left">
-                                                                                                    <button class="reset_option_and_supply supply_button">Change to options</button>
-                                                                                                </td>
-                                                                                            {/if}
-                                                                                            </tr>
                                                                                             {if $phaseId != '0'}
                                                                                                 <tr>
                                                                                                     <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
@@ -298,53 +257,6 @@
                                                                                                 </tr>
                                                                                             {/if}
                                                                                         {/if}
-
-                                                                                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']==2 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5}
-                                                                                                            <tr class="supply_select">
-                                                                                                                <td width="20%" align="right" valign="top"><b><b><b>Supply of Villas :</b> </td>
-                                                                                                                            <td width="30%" align="left">
-                                                                                                                                <ul id="villa_config">
-                                                                                                                                    {foreach $bedrooms_hash['Villa'] as $num}
-                                                                                                                                        <li class="villa_bed">
-                                                                                                                                            <font color="red"><span class = "err_villa_bed" style = "display:none;">Integer expected</span>
-                                                                                                                                            <br/></font>
-                                                                                                                                            <label for="villa_bed_{$num}">{$num} Bedroom(s)</label>
-                                                                                                                                            <input id="villa_bed_{$num}" name="villa_bed_{$num}[supply]" style="width: 50px;" value="{$VillasQuantity[$num]['supply']}" />
-                                                                                                                                            <label>Launched</label>
-                                                                                                                                            <input id="villa_bed_{$num}" {if !$isLaunchUnitPhase}readonly="true"{/if} name="villa_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$VillasQuantity[$num]['launched']}" />
-                                                                                                                                            <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
-                                                                                                                                                {foreach $OptionsDetails as $option}
-                                                                                                                                                    {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Villa' and in_array($option.OPTIONS_ID, $option_ids)}
-                                                                                                                                                        <option value="{$option.UNIT_NAME}">{$option.UNIT_NAME}</option>
-                                                                                                                                                    {/if}
-                                                                                                                                                {/foreach}
-                                                                                                                                            </select>
-                                                                                                                                        </li>
-                                                                                                                                    {/foreach}
-                                                                                                                                </ul>
-                                                                                                                            </td>
-                                                                                                                            
-                                                                                                                            {if $phaseId != '0'}
-                                                                                                                            <td width="50%" align="left">
-                                                                                                                                <button class="reset_option_and_supply supply_button">Change to options</button>
-                                                                                                                            {/if}
-                                                                                                                            </td>
-                                                                                                                            </tr>
-                                                                                                                        {/if}
-                                                                                                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
-                                                                                                                            <tr>
-                                                                                                                                <td width="20%" align="right" valign="top"><b>Supply of Plot  :</b> </td>
-                                                                                                                                <td width="30%" align="left" nowrap>
-                                                                                                                                    <input type='text' name='supply' id='supply' value='{$PlotQuantity[0]['supply']}'>
-                                                                                                                                    <label>Launched</label>
-                                                                                                                                    <input id="supply" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched" class="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
-                                                                                                                                </td>
-                                                                                                                                <td width="50%" align="left">
-                                                                                                                                    <font color="red"><span id = "err_supply" style = "display:none;">Enter the supply for Plot</span></font>
-                                                                                                                                </td>
-                                                                                                                            </tr>
-                                                                                                                            <input type='hidden' name='plotvilla' id='plotvilla' value='Plot'>
-                                                                                                                        {/if}  
                                                                                                                         {if $phaseId != '0'}
                                                                                                                         <tr>
                                                                                                                             <td width="20%" align="right" valign="top"><b><b><b>Remarks :</b> </td>
