@@ -61,7 +61,7 @@ $CityDataArr = CityArr();
 $executiveList = getCallCenterExecutiveWorkLoad();
 
 if(isset($projectList) && $_REQUEST['download'] == 'true'){
-    download_xls_file($projectList);
+    download_xls_file($projectList,$projectLastAuditDate);
 }
 
 $smarty->assign("CityDataArr", $CityDataArr);
@@ -117,10 +117,12 @@ function extractPIDs($pidString){
     return $result;
 }
 
-function download_xls_file($projectList){
+function download_xls_file($projectList, $projectLastAuditDate){
     $filename = "/tmp/data_collection_".time().".xls";
     foreach ($projectList as $pkey => $project){
         // For first three assignments
+        $projectList[$pkey]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];
+
         foreach(array(1,2,3) as $a){
             $projectList[$pkey]["ASSIGNED_TO_{$a}"] = $projectList[$pkey]["ASSIGNED_TO"][$a-1];
             $projectList[$pkey]["ASSIGNED_AT_{$a}"] = $projectList[$pkey]["ASSIGNED_AT"][$a-1];

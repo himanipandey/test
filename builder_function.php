@@ -679,7 +679,6 @@ function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
                 META_KEYWORDS	 	      	= '" . d_($txtMetaKeywords) . "',
                 META_DESCRIPTION 	      	= '" . d_($txtMetaDescription) . "',
                 ACTIVE			 	      	= '" . d_($Active) . "',
-                DISPLAY_ORDER			 	= $display_order,
                 PROJECT_STATUS 	      		= '" . d_($Status) . "',
                 PROJECT_URL		 	      	= '" . d_($txtProjectURL) . "',
                 FEATURED			 	    = '" . d_($Featured) . "',
