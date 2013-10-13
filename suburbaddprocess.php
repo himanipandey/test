@@ -59,7 +59,7 @@
                         $resCity = mysql_query($qryCity);
                         $dataCity = mysql_fetch_assoc($resCity);
                         mysql_free_result($resCity);
-                        $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $suburbid);
+                        $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $suburbid, 'suburb');
 
                             $updateQry = "UPDATE ".SUBURB." SET 
 
