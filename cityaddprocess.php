@@ -59,14 +59,14 @@ if (isset($_POST['btnSave'])) {
 		   }  
 		   
         /*******city url already exists**********/
-        $cityURL = ""
+        $cityURL = "";
         if ($cityid != '') {
             $cityURL = "and CITY_ID!=".$cityid;       
         }		   
         $qryCityUrl = "SELECT * FROM ".CITY." WHERE LABEL = '".$txtCityName."'".$cityURL;
         $resUrl     = mysql_query($qryCityUrl);
 	    if(mysql_num_rows($resUrl)>0){
-		    $ErrorMsg["CtUrl"] = "This city Already exists";
+		    $ErrorMsg["txtCityName"] = "This city Already exists";
 		}
     
 		/*******end city url already exists*******/ 

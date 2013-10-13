@@ -107,14 +107,14 @@ if ($_POST['btnSave'] == "Save")
 	     $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
 	   } 
 	    /******code for builder url already exists******/
-        $bldrURL = ""
+        $bldrURL = "";
         if($builderid != ''){
             $bldrURL = " and BUILDER_ID!=".$builderid;
         }
 	    $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE BUILDER_NAME = '".$txtBuilderName."'".$bldrURL;
 	    $resUrl = mysql_query($qryUrl) or die(mysql_error());
 	    if(mysql_num_rows($resUrl)>0){
-	 	    $ErrorMsg["BuilderUrlExists"] = "This Builder already exists.";
+	 	    $ErrorMsg["txtBuilderName"] = "This Builder already exists.";
 	    }
 	    /******end code for builder url already exists******/
 	//  die; 

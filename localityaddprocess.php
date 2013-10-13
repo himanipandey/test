@@ -67,7 +67,7 @@
                              $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
                        }
                     /*******locality url already exists**********/
-                        $locURL = ""
+                        $locURL = "";
                         if($localityid != ''){
                             $locURL = " and LOCALITY_ID!=".$localityid;    
                         }
