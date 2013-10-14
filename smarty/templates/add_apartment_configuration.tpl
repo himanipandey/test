@@ -142,7 +142,7 @@
                           {/foreach}
 
                         <tr><td colspan="17"><b><span style='font-size:15px;'>APARTMENTS</span></b></td></tr>
-                        <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
+                            <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
                         <tr class = "headingrowcolor" >
                           <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >
                              Delete
