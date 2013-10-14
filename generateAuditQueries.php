@@ -10,8 +10,8 @@
 	
 	if(isset($_REQUEST['dbName']) AND isset($_REQUEST['tblName']))
 	{
-		echo$dbName  = $_REQUEST['dbName'];
-		echo$tblName = $_REQUEST['tblName'];
+		echo $dbName  = $_REQUEST['dbName'];
+		echo $tblName = $_REQUEST['tblName'];
 		echo "<br><br>";
 		createTableStructure($tblName,$dbName);
 
@@ -19,7 +19,7 @@
 	else
 	{
 		echo "Please provide table name and DB name in url like:<br>
-				http://proptiger.com/admin_cms/project_add/generateAuditQueries.php?dbName={x}&tblName={y}";
+				http://cms.proptiger.com/admin_cms/project_add/generateAuditQueries.php?dbName={x}&tblName={y}";
 	}
 	
 	
@@ -30,8 +30,8 @@
 		WHERE
 		table_name = '$tblName' AND  TABLE_SCHEMA = '$dbName'";
 		$res  = mysql_query($qry) or die(mysql_error());
-	
-	
+                
+        $validUpdateCondition = getValidUpdateCondition($dbName, $tblName);
 	
 		$strTriger = "CREATE TRIGGER after_".$tblName."_update <br>
     			  AFTER UPDATE ON  ".$tblName."
@@ -63,29 +63,29 @@
 			if($data['COLUMN_DEFAULT'] == '')
 				$dflt = '';
 			else
-				$dflt = "DEFAULT '".$data['COLUMN_DEFAULT']."'";
+				$dflt = ($data['COLUMN_DEFAULT']=='CURRENT_TIMESTAMP') ? "DEFAULT ".$data['COLUMN_DEFAULT'] : "DEFAULT '".$data['COLUMN_DEFAULT']."'";
 	
 			$qryStr .= $data['COLUMN_NAME']." ".$data['COLUMN_TYPE']." ".$nl." ".$dflt.",<br>";
 			$columns[] = $data['COLUMN_NAME'];
 		}
 		$qryStr .="_t_transaction_date DATETIME,
 				 <br> _t_operation enum('U', 'I', 'D'),
-				 <br>_t_user_id INT(0)";
+                                 <br>_t_mysql_user varchar(100)";
 		//echo $qryStr = $qryStr." )";
 	
 		$strTriger .= "&nbsp;&nbsp;&nbsp;_t_transaction_date = NOW(),<br>
 			      &nbsp;&nbsp;&nbsp;_t_operation = 'U',<br>
-			      &nbsp;&nbsp;&nbsp;_t_user_id   = '0'";
+			      &nbsp;&nbsp;&nbsp;_t_mysql_user = current_user()";
 	
 		$trigerForInsert .= "&nbsp;&nbsp;&nbsp;_t_transaction_date = NOW(),<br>
 					     &nbsp;&nbsp;&nbsp;_t_operation = 'I',<br>
-					     &nbsp;&nbsp;&nbsp;_t_user_id   = '0'";
+                                             &nbsp;&nbsp;&nbsp;_t_mysql_user = current_user()";
 	
 		$strForTrgrInsrt = implode(",", $columns);
 		$newInsertQry = "INSERT INTO
-		$tblName ( $strForTrgrInsrt,_t_transaction_date,_t_operation,_t_user_id)
+		$tblName ( $strForTrgrInsrt,_t_transaction_date,_t_operation,_t_mysql_user)
 		SELECT
-		$strForTrgrInsrt,NOW(),'I','0'
+		$strForTrgrInsrt,NOW(),'I', current_user()
 		FROM ".str_replace("_t_","",$tblName);
 	
 		$trigerForDelete = str_replace("_update","_delete",$strTriger);
@@ -93,12 +93,31 @@
 		$trigerForDelete = str_replace("operation = 'U'","operation = 'D'",$trigerForDelete);
 		$trigerForDelete = str_replace("NEW.","OLD.",$trigerForDelete);
 		echo "-- ".$cnt." Here are audit table/triger and starting insert statement for ".str_replace("_t_","",$tblName)." Table<br><br>";
+                
+        echo "DROP TABLE IF EXISTS $tblName;<br>";
 		echo $qryStr = $qryStr." );<br><br>";
+                
+        $tblName = str_replace("_t_","",$tblName);
+                
+        echo "DROP TRIGGER IF EXISTS after_".$tblName."_update;<br>";
 		echo $strTriger.";<br><br>";
-		echo $trigerForInsert.";<br><br>";
+                
+        echo "DROP TRIGGER IF EXISTS after_".$tblName."_insert;<br>";
+		echo $trigerForInsert.";<br><br>";                
+                
+        echo "DROP TRIGGER IF EXISTS after_".$tblName."_delete;<br>";
 		echo $trigerForDelete.";<br><br>";
+               
 		echo $newInsertQry.";<br><br><br><br>";
+        
+        echo "CONDITION TO SKIP DUPLICATE INERT IN TRIGGER TABLE <br> $validUpdateCondition";
+                
 	}
-	
-	
+        
+    function getValidUpdateCondition($dbName, $tableName){
+        mysql_query('SET SESSION group_concat_max_len = 1000000;');
+        $sql = "select GROUP_CONCAT(a SEPARATOR ' OR ') cond from (select CONCAT('OLD.', COLUMN_NAME, '<>NEW.', COLUMN_NAME) a from information_schema.COLUMNS where TABLE_SCHEMA = '$dbName' and TABLE_NAME = '$tableName') t";
+        $res = mysql_fetch_assoc(mysql_query($sql));
+        return $res['cond'];
+    }
 ?>
