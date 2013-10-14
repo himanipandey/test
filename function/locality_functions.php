@@ -4,9 +4,9 @@
 function createLocalityURL($localityLabel, $cityLabel, $id, $type) {
     $localityLabel = trim(strtolower($localityLabel));
     $cityLabel = trim(strtolower($cityLabel));
-    $cleanLocalityLabel = preg_replace( '/\s+/', '-', $localityLabel);
     $id = getIdByType( $id, $type );
-    return $cityLabel."/"."property-sale-".$localityLabel.'-'.$id;
+    $url = preg_replace( '/\s+/', '-', $cityLabel."/"."property-sale-".$localityLabel.'-'.$id);
+    return $url;
 }
 
 function createProjectURL($city, $locality, $builderName, $projectName, $projectId){
@@ -16,14 +16,16 @@ function createProjectURL($city, $locality, $builderName, $projectName, $project
     $project = trim(strtolower($projectName));
     $projectId = getIdByType($projectId, 'project');
     $projectURL = $city.'/'.$locality.'/'.$builder.'-'.$project.'-'.$projectId;
-    return preg_replace( '/\s+/', '-', $projectURL);
+    $url = preg_replace( '/\s+/', '-', $projectURL);
+    return $url;
 }
 
 function createBuilderURL($builderName, $builderId){
     $builder = trim(strtolower($builderName));
     $builderId = getIdByType($builderId, 'builder');
     $builderURL = $builder.'-'.$builderId;
-    return preg_replace( '/\s+/', '-', $builderURL);
+    $url = preg_replace( '/\s+/', '-', $builderURL);
+    return $url;
 }   
 
 function getIdByType( $id, $id_type ) {

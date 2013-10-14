@@ -71,7 +71,7 @@ if (isset($_POST['btnSave'])) {
     
 		/*******end city url already exists*******/ 
 	
-    $txtCityUrl = $txtCityName.'-real-estate';
+    $txtCityUrl = preg_replace( '/\s+/', '-', $txtCityName.'-real-estate');
 	$smarty->assign("ErrorMsg", $ErrorMsg);
 	if(is_array($ErrorMsg)) {
 		
