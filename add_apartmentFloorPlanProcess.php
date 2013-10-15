@@ -4,8 +4,10 @@
 	include("ftp.new.php");
 	$watermark_path = 'images/pt_shadow1.png';
 	$projectId				=	$_REQUEST['projectId'];
-	$projectDetail			=	ProjectDetail($projectId);
-	$builderDetail			=	fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
+    $projectDetail = ResiProject::virtual_find($projectId);
+    $projectDetail = array($projectDetail->to_custom_array());
+	$builderDetail			= ResiBuilder::find($projectDetail[0]['BUILDER_ID']);
+    $builderDetail = $builderDetail->to_custom_array();
 	$ProjectOptionDetail	=	ProjectOptionDetail($projectId);
 
 	$smarty->assign("projectId", $projectId);
@@ -222,16 +224,14 @@
 		}
 		if($ErrorMsg1 == '' AND $insertlist != '')
 		{
-			
+
 			$qry	 =  "INSERT INTO ".RESI_FLOOR_PLANS." (OPTION_ID,NAME,IMAGE_URL,DISPLAY_ORDER) VALUES ";
 			$str	 = $qry.$insertlist;
 			$fullQry =  substr($str,0,-1);
 			$res	 =	mysql_query($fullQry) or die(mysql_error());
 			$lastid  =  mysql_insert_id();	
 			if($res)
-			{
-				audit_insert($lastid,'insert','resi_floor_plans',$projectId);
-
+			{				
 				if($_POST['Next'] == 'Add More')
 				{
 					if($_GET['edit'] != '')

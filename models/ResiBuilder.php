@@ -1,6 +1,7 @@
 <?php
 
-class ResiBuilder extends ActiveRecord\Model
+require_once "support/objects.php";
+class ResiBuilder extends Objects
 {
     static $table_name = 'resi_builder';
     static function BuilderEntityArr() {
