@@ -107,19 +107,12 @@ if (isset($_POST['btnSave'])) {
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $bookingStatus = $_REQUEST['bookingStatus'];
-    if (isset($_REQUEST["phaseLaunched"])) {
-        $phaseLaunched = $_REQUEST["phaseLaunched"];
-    } else {
-        $phaseLaunched = 0;
-    }
-    $phaseLaunched = $phaseLaunched;
 
     // Assign vars for smarty
     $smarty->assign("phasename", $phasename);
     $smarty->assign("launch_date", $launch_date);
     $smarty->assign("completion_date", $completion_date);
     $smarty->assign("remark", $remark);
-    $smarty->assign("phaseLaunched", $phaseLaunched);
 
     $PhaseExists = searchPhase($phaseDetail, $phasename);
     if ($PhaseExists != -1 && $phasename != $old_phase_name) {
