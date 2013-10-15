@@ -123,6 +123,8 @@ class Objects extends ActiveRecord\Model{
         $object_ids = array();
         foreach($objects as $object) array_push($object_ids, $object->get_primary_key_value());
 
+        $extra_attributes = static::get_extra_attributes();
+        
         $existing_attributes = static::get_extra_values($object_ids);
         $stored_objects = array();
 
@@ -132,8 +134,13 @@ class Objects extends ActiveRecord\Model{
                 $attributes = $existing_attributes[$primary_key_value];
             else
                 $attributes = array();
-            foreach($attributes as $key=>$val){
-                $object->$key = $val->attribute_value;
+            foreach($extra_attributes as $key){                
+                if(array_key_exists($key, $attributes)){
+                 $val = $attributes[$key];   
+                 $object->$key = $val->attribute_value;   
+                }                    
+                else
+                    $object->$key = NULL;
             }
             array_push($stored_objects, $object);
         }

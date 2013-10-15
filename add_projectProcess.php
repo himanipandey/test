@@ -376,7 +376,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             else
             {
                 $ProjectDetail = ResiProject::virtual_find($projectId);
-                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $ProjectDetail->project_stage);
+                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $ProjectDetail->project_stage_id);
                 if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
                    insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
                 }
@@ -396,7 +396,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
     }
 }
 elseif ($projectId!='') {
-    $ProjectDetail = ResiProject::virtual_find($projectId);
+    $ProjectDetail = ResiProject::virtual_find($projectId,array('get_extra_scope'=>true));
     $smarty->assign("txtProjectName", stripslashes($ProjectDetail->project_name));
     $smarty->assign("txtAddress", stripslashes($ProjectDetail->project_address));
     $smarty->assign("txtProjectDescription", stripslashes($ProjectDetail->project_description));
@@ -432,7 +432,7 @@ elseif ($projectId!='') {
     $smarty->assign("approvals", stripslashes($ProjectDetail->approvals));
     $smarty->assign("project_size", stripslashes($ProjectDetail->project_size));
     $smarty->assign("power_backup_capacity", stripslashes($ProjectDetail->power_backup_capacity));
-    $smarty->assign("powerBackup", stripslashes($ProjectDetail->power_backup));
+    $smarty->assign("powerBackup", stripslashes($ProjectDetail->POWER_BACKUP));
     $smarty->assign("architect", stripslashes($ProjectDetail->architect_name));
     $smarty->assign("residential", stripslashes($ProjectDetail->residential_flag));
     $smarty->assign("township", stripslashes($ProjectDetail->township_id ));
