@@ -111,10 +111,10 @@ if ($_POST['btnSave'] == "Save")
         if($builderid != ''){
             $bldrURL = " and BUILDER_ID!=".$builderid;
         }
-	    $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE BUILDER_NAME = '".$txtBuilderName."'".$bldrURL;
+	    $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE ENTITY = '".$legalEntity."'".$bldrURL;
 	    $resUrl = mysql_query($qryUrl) or die(mysql_error());
 	    if(mysql_num_rows($resUrl)>0){
-	 	    $ErrorMsg["txtBuilderName"] = "This Builder already exists.";
+	 	    $ErrorMsg["legalEntity"] = "This Builder already exists.";
 	    }
 	    /******end code for builder url already exists******/
 	//  die; 
@@ -262,11 +262,15 @@ if ($_POST['btnSave'] == "Save")
                         if($return)
                         {				
                             $imgurl = "/".$cutpath[1]."/".$name;
-                            $newBuilderId = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
-                            $txtBuilderUrl = createBuilderURL($txtBuilderName, $newBuilderId);
-                            $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$newBuilderId;
-                            mysql_query($updateQuery) or die(mysql_error());
-
+                            $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
+                            if($rt){
+                                $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
+                                $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
+                                mysql_query($updateQuery) or die(mysql_error());
+                                header("Location:BuilderList.php?page=1&sort=all");
+                            } else
+                                $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
+                            /*************Resize images code***************************/
                             $createFolder = $newImagePath.$cutpath[1];//die
                             if ($handle = opendir($createFolder))
                             {
@@ -328,7 +332,10 @@ if ($_POST['btnSave'] == "Save")
                     $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                     if($return)
                     {
-                       header("Location:BuilderList.php?page=1&sort=all");
+                        $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
+                        $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
+                        mysql_query($updateQuery) or die(mysql_error());
+                        header("Location:BuilderList.php?page=1&sort=all");
                     }
                     else
                         $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";	
