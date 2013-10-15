@@ -448,15 +448,15 @@ function ProjectBedroomDetail($projectId) {
 }
 
 function ProjectOptionDetail($projectId) {
-    $columns = "P.OPTIONS_ID,P.PROJECT_ID,P.UNIT_NAME,P.UNIT_TYPE,P.SIZE,P.MEASURE,P.PRICE_PER_UNIT_AREA,P.PRICE_PER_UNIT_AREA_DP,P.PRICE_PER_UNIT_AREA_FP,P.STATUS,P.BEDROOMS,P.CLP_VISIBLE,P.DP_VISIBLE,P.FP_VISIBLE,P.DISCLAIMER_CLP,P.DISCLAIMER_DP,P.DISCLAIMER_FP,P.BATHROOMS,P.CREATED_DATE,P.STUDY_ROOM,P.SERVANT_ROOM,P.BALCONY,P.POOJA_ROOM,P.NO_OF_FLATS,P.AVAILABLE_NO_OF_FLATS,P.VILLA_PLOT_AREA,P.VILLA_NO_FLOORS,P.VILLA_TERRACE_AREA,P.VILLA_GARDEN_AREA,P.CARPET_AREA,P.PLOT_AREA_MEASURE,P.PRICE_PER_UNIT_LOW,P.PRICE_PER_UNIT_HIGH,P.RESALE_PRICE,P.EDIT_REASON,P.ACCURATE_FLAG,P.SOURCE_OF_INFORMATION,P.LENGTH_OF_PLOT,P.BREADTH_OF_PLOT,P.TOTAL_PLOT_AREA,P.PRICE_TYPE,P.NO_OF_FLOORS";
-    $qrySel = "SELECT 
+    $columns = "P.OPTIONS_ID,P.PROJECT_ID,P.OPTION_NAME,P.OPTION_TYPE,P.SIZE,P.BEDROOMS,P.BATHROOMS,P.CREATED_AT,P.STUDY_ROOM,P.SERVANT_ROOM,P.BALCONY,P.POOJA_ROOM,P.VILLA_PLOT_AREA,P.VILLA_NO_FLOORS,P.VILLA_TERRACE_AREA,P.VILLA_GARDEN_AREA,P.CARPET_AREA,P.PLOT_AREA_MEASURE,P.PRICE_PER_UNIT_LOW,P.PRICE_PER_UNIT_HIGH,P.RESALE_PRICE,P.EDIT_REASON,P.ACCURATE_FLAG,P.SOURCE_OF_INFORMATION,P.LENGTH_OF_PLOT,P.BREADTH_OF_PLOT,P.TOTAL_PLOT_AREA,P.PRICE_TYPE,P.NO_OF_FLOORS";
+    $qrySel = "SELECT
 					$columns,
-					GROUP_CONCAT(O.IMAGE_URL) FLOOR_IMAGES 
-					FROM 
+					GROUP_CONCAT(O.IMAGE_URL) FLOOR_IMAGES
+					FROM
 					   " . RESI_PROJECT_OPTIONS . " P
 					LEFT JOIN " . RESI_FLOOR_PLANS . " O
 					ON
-						P.OPTIONS_ID = O.OPTION_ID	
+						P.OPTIONS_ID = O.OPTION_ID
 				   WHERE P.PROJECT_ID = '" . $projectId . "'
 				   GROUP BY $columns
 				   ORDER BY P.SIZE ASC";
@@ -469,13 +469,13 @@ function ProjectOptionDetail($projectId) {
 }
 
 function fetch_towerDetails($projectId) {
-    $qrySel = "SELECT 
-							t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME  
-						FROM 
-							" . RESI_PROJECT_TOWER_DETAILS . " t LEFT JOIN resi_project_phase p 
-						ON   
+    $qrySel = "SELECT
+							t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME
+						FROM
+							" . RESI_PROJECT_TOWER_DETAILS . " t LEFT JOIN resi_project_phase p
+						ON
 							t.PHASE_ID = p.PHASE_ID
-						WHERE 
+						WHERE
 							t.PROJECT_ID = '" . $projectId . "' ORDER BY t.TOWER_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
@@ -677,90 +677,51 @@ function ProjectType($projectId) {
     $res = mysql_query($qry);
 
     while ($data = mysql_fetch_assoc($res)) {
-        if ($data['UNIT_TYPE'] == 'Apartment') {
+        if ($data['OPTION_TYPE'] == 'Apartment') {
             $arrProjectType['OPTIONS_ID'][] = $data['OPTIONS_ID'];
-            $arrProjectType['UNIT_NAME'][] = $data['UNIT_NAME'];
-            $arrProjectType['UNIT_TYPE'][] = $data['UNIT_TYPE'];
+            $arrProjectType['OPTION_NAME'][] = $data['OPTION_NAME'];
+            $arrProjectType['OPTION_TYPE'][] = $data['OPTION_TYPE'];
             $arrProjectType['SIZE'][] = $data['SIZE'];
-            $arrProjectType['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
-            $arrProjectType['MEASURE'][] = $data['MEASURE'];
-            $arrProjectType['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
-            $arrProjectType['PRICE_PER_UNIT_AREA_DP'][] = $data['PRICE_PER_UNIT_AREA_DP'];
-            $arrProjectType['PRICE_PER_UNIT_AREA_FP'][] = $data['PRICE_PER_UNIT_AREA_FP'];
-            $arrProjectType['STATUS'][] = $data['STATUS'];
+//            $arrProjectType['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
             $arrProjectType['BEDROOMS'][] = $data['BEDROOMS'];
-            $arrProjectType['CLP_VISIBLE'][] = $data['CLP_VISIBLE'];
-            $arrProjectType['DP_VISIBLE'][] = $data['DP_VISIBLE'];
-            $arrProjectType['FP_VISIBLE'][] = $data['FP_VISIBLE'];
-            $arrProjectType['DISCLAIMER_CLP'][] = $data['DISCLAIMER_CLP'];
-            $arrProjectType['DISCLAIMER_DP'][] = $data['DISCLAIMER_DP'];
-            $arrProjectType['DISCLAIMER_FP'][] = $data['DISCLAIMER_FP'];
             $arrProjectType['BATHROOMS'][] = $data['BATHROOMS'];
-            $arrProjectType['CREATED_DATE'][] = $data['CREATED_DATE'];
+            $arrProjectType['CREATED_AT'][] = $data['CREATED_AT'];
             $arrProjectType['STUDY_ROOM'][] = $data['STUDY_ROOM'];
             $arrProjectType['SERVANT_ROOM'][] = $data['SERVANT_ROOM'];
             $arrProjectType['BALCONY'][] = $data['BALCONY'];
             $arrProjectType['POOJA_ROOM'][] = $data['POOJA_ROOM'];
-            $arrProjectType['NO_OF_FLATS'][] = $data['NO_OF_FLATS'];
-            $arrProjectType['AVAILABLE_NO_OF_FLATS'][] = $data['AVAILABLE_NO_OF_FLATS'];
             $arrProjectType['VILLA_PLOT_AREA'][] = $data['VILLA_PLOT_AREA'];
             $arrProjectType['VILLA_NO_FLOORS'][] = $data['VILLA_NO_FLOORS'];
             $arrProjectType['VILLA_TERRACE_AREA'][] = $data['VILLA_TERRACE_AREA'];
             $arrProjectType['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType['CARPET_AREA'][] = $data['CARPET_AREA'];
-            $arrProjectType['PLOT_AREA_MEASURE'][] = $data['PLOT_AREA_MEASURE'];
-            $arrProjectType['PRICE_PER_UNIT_LOW'][] = $data['PRICE_PER_UNIT_LOW'];
-            $arrProjectType['PRICE_PER_UNIT_HIGH'][] = $data['PRICE_PER_UNIT_HIGH'];
-            $arrProjectType['NO_OF_FLOORS'][] = $data['NO_OF_FLOORS'];
-            $arrProjectType['RESALE_PRICE'][] = $data['RESALE_PRICE'];
-        } else if ($data['UNIT_TYPE'] == 'Plot') {
+        } else if ($data['OPTION_TYPE'] == 'Plot') {
             $arrProjectType_P['OPTIONS_ID'][] = $data['OPTIONS_ID'];
-            $arrProjectType_P['UNIT_NAME'][] = $data['UNIT_NAME'];
-            $arrProjectType_P['UNIT_TYPE'][] = $data['UNIT_TYPE'];
-            $arrProjectType_P['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
+            $arrProjectType_P['OPTION_NAME'][] = $data['OPTION_NAME'];
+            $arrProjectType_P['OPTION_TYPE'][] = $data['OPTION_TYPE'];
             $arrProjectType_P['SIZE'][] = $data['SIZE'];
-            $arrProjectType_P['MEASURE'][] = $data['MEASURE'];
-            $arrProjectType_P['CREATED_DATE'][] = $data['CREATED_DATE'];
-            $arrProjectType_P['TOTAL_PLOT_AREA'][] = $data['TOTAL_PLOT_AREA'];
+            $arrProjectType_P['CREATED_AT'][] = $data['CREATED_AT'];
             $arrProjectType_P['LENGTH_OF_PLOT'][] = $data['LENGTH_OF_PLOT'];
             $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
             $arrProjectType_P['STATUS'][] = $data['STATUS'];
         } else {
             $arrProjectType_VA['OPTIONS_ID'][] = $data['OPTIONS_ID'];
-            $arrProjectType_VA['UNIT_NAME'][] = $data['UNIT_NAME'];
-            $arrProjectType_VA['UNIT_TYPE'][] = $data['UNIT_TYPE'];
+            $arrProjectType_VA['OPTION_NAME'][] = $data['OPTION_NAME'];
+            $arrProjectType_VA['OPTION_TYPE'][] = $data['OPTION_TYPE'];
             $arrProjectType_VA['SIZE'][] = $data['SIZE'];
-            $arrProjectType_VA['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
-            $arrProjectType_VA['MEASURE'][] = $data['MEASURE'];
-            $arrProjectType_VA['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
-            $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP'][] = $data['PRICE_PER_UNIT_AREA_DP'];
-            $arrProjectType_VA['PRICE_PER_UNIT_AREA_FP'][] = $data['PRICE_PER_UNIT_AREA_FP'];
-            $arrProjectType_VA['STATUS'][] = $data['STATUS'];
+//            $arrProjectType_VA['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
             $arrProjectType_VA['BEDROOMS'][] = $data['BEDROOMS'];
-            $arrProjectType_VA['CLP_VISIBLE'][] = $data['CLP_VISIBLE'];
-            $arrProjectType_VA['DP_VISIBLE'][] = $data['DP_VISIBLE'];
-            $arrProjectType_VA['FP_VISIBLE'][] = $data['FP_VISIBLE'];
-            $arrProjectType_VA['DISCLAIMER_CLP'][] = $data['DISCLAIMER_CLP'];
-            $arrProjectType_VA['DISCLAIMER_DP'][] = $data['DISCLAIMER_DP'];
-            $arrProjectType_VA['DISCLAIMER_FP'][] = $data['DISCLAIMER_FP'];
             $arrProjectType_VA['BATHROOMS'][] = $data['BATHROOMS'];
-            $arrProjectType_VA['CREATED_DATE'][] = $data['CREATED_DATE'];
+            $arrProjectType_VA['CREATED_AT'][] = $data['CREATED_AT'];
             $arrProjectType_VA['STUDY_ROOM'][] = $data['STUDY_ROOM'];
             $arrProjectType_VA['SERVANT_ROOM'][] = $data['SERVANT_ROOM'];
             $arrProjectType_VA['BALCONY'][] = $data['BALCONY'];
             $arrProjectType_VA['POOJA_ROOM'][] = $data['POOJA_ROOM'];
-            $arrProjectType_VA['NO_OF_FLATS'][] = $data['NO_OF_FLATS'];
-            $arrProjectType_VA['AVAILABLE_NO_OF_FLATS'][] = $data['AVAILABLE_NO_OF_FLATS'];
             $arrProjectType_VA['VILLA_PLOT_AREA'][] = $data['VILLA_PLOT_AREA'];
             $arrProjectType_VA['VILLA_NO_FLOORS'][] = $data['VILLA_NO_FLOORS'];
             $arrProjectType_VA['VILLA_TERRACE_AREA'][] = $data['VILLA_TERRACE_AREA'];
             $arrProjectType_VA['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType_VA['CARPET_AREA'][] = $data['CARPET_AREA'];
-            $arrProjectType_VA['PLOT_AREA_MEASURE'][] = $data['PLOT_AREA_MEASURE'];
-            $arrProjectType_VA['PRICE_PER_UNIT_LOW'][] = $data['PRICE_PER_UNIT_LOW'];
-            $arrProjectType_VA['PRICE_PER_UNIT_HIGH'][] = $data['PRICE_PER_UNIT_HIGH'];
-            $arrProjectType_VA['NO_OF_FLOORS'][] = $data['NO_OF_FLOORS'];
-            $arrProjectType_VA['RESALE_PRICE'][] = $data['RESALE_PRICE'];
         }
     }
 }

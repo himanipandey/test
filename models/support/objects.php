@@ -61,15 +61,25 @@ class Objects extends ActiveRecord\Model{
     }
 
     // function takes a string and add new values in it as conditions
-    static private function string_condition_manipulation($string, $key, $value){
-        return "{$string} and {$key} = {$value}";
+    static private function string_condition_manipulation($string, $key, $value, $operation = '='){
+        if($value != "?" && $value != "(?)" && !is_array($value))
+            $value = "'{$value}'";
+        return "{$string} and {$key} {$operation} {$value}";
     }
 
     // Function performs array manipulation for conditions
     static private function array_condition_manipulation($conditions, $scopes){
-        if(count($conditions) > 0 && array_key_exists(0, $conditions) && strpos($conditions[0],"?") !=NULL){
+        if(count($conditions) > 0 && array_key_exists(0, $conditions)){
             foreach($scopes as $key=>$val){
-                $conditions[0] = static::string_condition_manipulation($conditions[0],$key,"?");
+                if(is_array($val)){
+                    $operator = "in";
+                    $operand  = "(?)";
+                }
+                else{
+                    $operator = "=";
+                    $operand  = "?";
+                }
+                $conditions[0] = static::string_condition_manipulation($conditions[0],$key,$operand, $operator);
                 array_push($conditions, $val);
             }
         }
@@ -242,7 +252,7 @@ class Objects extends ActiveRecord\Model{
         $objects =  call_user_func_array('parent::find',$args);
 
         // Fetching extra values from auxillary table
-        if($extra_scope){
+        if($extra_scope and count($objects) > 0){
             $objects = static::fetch_extra_values($objects);
         }
 
@@ -269,6 +279,11 @@ class Objects extends ActiveRecord\Model{
 
     }
 
+    // Gives the primary key for table
+    static public function  primary_key_column(){
+        return static::table()->pk[0];
+    }
+
     //  Function takes array of values and create new entry if  model is not already present else
     //  update the existing row
     static public function create_or_update($options = array()){
@@ -278,7 +293,7 @@ class Objects extends ActiveRecord\Model{
             $save = "virtual_save";
         }
         else{
-            $primary_key = static::$primary_key;
+            $primary_key = static::primary_key_column();
             $find = "find";
             $save = "save";
         }
@@ -350,7 +365,7 @@ class Objects extends ActiveRecord\Model{
             $primary_key = static::$virtual_primary_key;
         }
         else{
-            $primary_key = static::$primary_key;
+            $primary_key = static::primary_key_column();
         }
         return $table_id = $this->$primary_key;
     }
@@ -358,6 +373,16 @@ class Objects extends ActiveRecord\Model{
     public function set_attr_updated_by($id){
         $updated_by = static::$updated_by;
         $this->$updated_by = $id;
+    }
+
+    // Gives the object in array format
+    public function to_custom_array(){
+        $object_array = $this->to_array();
+        foreach($object_array as $key=>$value){
+            $object_array[strtoupper($key)] = $value;
+            unset($object_array[$key]);
+        }
+        return $object_array;
     }
 
 /****************************************** End of Public Instance Methods ********************************************/

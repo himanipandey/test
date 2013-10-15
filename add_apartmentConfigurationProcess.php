@@ -1,7 +1,9 @@
 <?php
-	$RoomCategoryArr	=	RoomCategoryList();
+	$RoomCategoryArr	=	RoomCategory::categoryList();
 	$projectId			=	$_REQUEST['projectId'];
-	$projectDetail		=	ProjectDetail($projectId);
+    $project = ResiProject::virtual_find($projectId);
+	$projectDetail		=	$project->to_custom_array();
+    $projectDetail = array($projectDetail);
 
 	$smarty->assign("ProjectDetail", $projectDetail);
 	$smarty->assign("typeA", APARTMENTS);
@@ -173,8 +175,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     {
                         $option = new ResiProjectOptions();
                         $option->project_id = $projectId;
-                        $option->measure = "sq ft";
-                        $option->created_date = date("Y-m-d");
                         $action = "insert";
                     }
                     else
@@ -185,35 +185,32 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         $option = ResiProjectOptions::find($option_id);
                         $action = "update";
                     }
-                    $option->unit_type = $unitType;
-                    $option->unit_name = $txtUnitName;
+                    $option->option_type = $unitType;
+                    $option->option_name = $txtUnitName;
                     $option->size = $txtSize;
-                    $option->carpet_area_info = $txtCarpetAreaInfo;
-                    $option->price_per_unit_area = $txtPricePerUnitArea;
-                    $option->price_per_unit_area_dp = (int)$txtPricePerUnitAreaDp;
-                    $option->status = $status;
+//                    $option->carpet_area_info = $txtCarpetAreaInfo;
+//                    $option->price_per_unit_area = $txtPricePerUnitArea;
+//                    $option->price_per_unit_area_dp = (int)$txtPricePerUnitAreaDp;
+//                    $option->status = $status;
                     $option->bedrooms = (int)$bed;
                     $option->bathrooms = (int)$bathrooms;
-                    $option->price_per_unit_high = $txtPricePerUnitHigh;
-                    $option->price_per_unit_low = $txtPricePerUnitLow;
-                    $option->no_of_floors = $txtNoOfFloor;
+//                    $option->price_per_unit_high = $txtPricePerUnitHigh;
+//                    $option->price_per_unit_low = $txtPricePerUnitLow;
+//                    $option->no_of_floors = $txtNoOfFloor;
                     $option->villa_plot_area = (int)$txtVillaPlotArea;
                     $option->villa_no_floors = (int)$txtVillaFloors;
                     $option->villa_terrace_area = (int)$txtVillaTerraceArea;
                     $option->villa_garden_area = (int)$txtVillaGardenArea;
-                    $option->total_plot_area = (int)$txtPlotArea;
+//                    $option->total_plot_area = (int)$txtPlotArea;
                     $option->balcony = (int)$Balconys;
                     $option->study_room = (int)$studyrooms;
                     $option->servant_room = (int)$servantrooms;
                     $option->pooja_room = (int)$poojarooms;
                     $option->length_of_plot = (int)$txtSizeLen;
                     $option->breadth_of_plot = (int)$txtSizeBre;
-                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
+                    $option->updated_by = $_SESSION["adminId"];
+//                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
                     $result = $option->save();
-                    if($result){
-                        audit_insert($option->options_id,$action,'resi_project_options',$option->project_id);
-                        $flg_edit = 1;
-                    }
                 }
                 else
                 {
@@ -276,7 +273,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         //echo "</pre>";
         $smarty->assign("edit_project", $projectId);
         $smarty->assign("TYPE_ID", $arrProjectType['OPTIONS_ID']);
-        $smarty->assign("txtUnitNameval", $arrProjectType['UNIT_NAME']);
+        $smarty->assign("txtUnitNameval", $arrProjectType['OPTION_NAME']);
         $smarty->assign("txtSizeval", $arrProjectType['SIZE']);
         $smarty->assign("txtCarpetAreaInfo", $arrProjectType['CARPET_AREA_INFO']);
         $smarty->assign("txtPricePerUnitAreaval", $arrProjectType['PRICE_PER_UNIT_AREA']);

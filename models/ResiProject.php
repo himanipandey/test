@@ -85,4 +85,11 @@ class ResiProject extends Objects
        return $projectSearch;
    }
 
+
+    public function get_all_towers(){
+        $phase_ids = array();
+        $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $this->project_id)));
+        foreach($phases as $phase) array_push($phase_ids, $phase->phase_id);
+        return ResiProjectPhase::get_towers_for_phases($phase_ids);
+    }
 }

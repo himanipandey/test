@@ -6,10 +6,10 @@ class ResiProjectPhase extends Objects
 {
     static $table_name = 'resi_project_phase';
     static $default_scope = array("version" => "cms");
-    static $virtual_primary_key = 'PHASE_ID';
+    static $virtual_primary_key = 'phase_id';
 
-    static $after_create = array('insert_audit_create');
-    static $after_update = array('insert_audit_save');
+//    static $after_create = array('insert_audit_create');
+//    static $after_update = array('insert_audit_save');
 
     public function options(){
         $join = "LEFT JOIN project_options_phases p on (resi_project_options.OPTIONS_ID = p.option_id)";
@@ -67,5 +67,33 @@ class ResiProjectPhase extends Objects
         $phase_option_hash[0] = $options;
         return array($phases, $phase_option_hash);
     }
+
+    public function towers(){
+        return static::get_towers_for_phases($this->phase_id);
+    }
+
+    static function get_towers_for_phases($phase_ids){
+        if(!is_array($phase_ids) || count($phase_ids) > 0){
+            $join = "LEFT JOIN phase_tower_mappings p on (resi_project_tower_details.TOWER_ID = p.tower_id)";
+            return ResiProjectTowerDetails::all(array("joins" => $join, "conditions" => array("p.phase_id in (?)",
+                $phase_ids)));
+        }
+        return array();
+    }
+
+    public function add_towers($tower_ids){
+        ResiProjectTowerDetails::query("delete from phase_tower_mappings where tower_id in (".implode(',',$tower_ids).
+        ") and phase_id = ".$this->phase_id);
+        $this->new_towers($tower_ids);
+    }
+
+    private function new_towers($tower_ids){
+        $condArray = array();
+        foreach($tower_ids as $id){
+            array_push($condArray,"({$this->phase_id},{$id})");
+        }
+        return ResiProjectTowerDetails::query("insert into phase_tower_mappings(phase_id,tower_id) values ".implode(",",$condArray));
+    }
+
 
 }
