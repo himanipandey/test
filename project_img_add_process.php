@@ -624,16 +624,6 @@ if (isset($_POST['Next']))
                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
                                         $s3upload->upload();
 										$img->Free();
-										$image_path =$createFolder."/".$newimg;
-										// Where to save watermarked image
-										$imgdestpath = $createFolder."/".$newimg;
-										// Watermark image
-										$img = new Zubrag_watermark($image_path);
-										$img->ApplyWatermark($watermark_path);
-										$img->SaveAsFile($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                        $s3upload->upload();
-										$img->Free();
 										/************Resize and large to small*************/
 										//echo $image->getWidth($imgdestpath);
 										if($image->getWidth($imgdestpath)>630)
@@ -692,16 +682,6 @@ if (isset($_POST['Next']))
                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
                                         $s3upload->upload();
 										$img->Free();
-										$image_path =$createFolder."/".$newimg;
-										// Where to save watermarked image
-										$imgdestpath = $createFolder."/".$newimg;
-										// Watermark image
-										$img = new Zubrag_watermark($image_path);
-										$img->ApplyWatermark($watermark_path);
-										$img->SaveAsFile($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                        $s3upload->upload();
-										$img->Free();
 										/************Resize and large to small*************/
 										//echo $image->getWidth($imgdestpath);
 										if($image->getWidth($imgdestpath)>630)
@@ -758,16 +738,6 @@ if (isset($_POST['Next']))
 										$img->ApplyWatermark($watermark_path);
 										$img->SaveAsFile($path);
                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
-                                        $s3upload->upload();
-										$img->Free();
-										$image_path =$createFolder."/".$newimg;
-										// Where to save watermarked image
-										$imgdestpath = $createFolder."/".$newimg;
-										// Watermark image
-										$img = new Zubrag_watermark($image_path);
-										$img->ApplyWatermark($watermark_path);
-										$img->SaveAsFile($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
 										$img->Free();
 										/************Resize and large to small*************/
