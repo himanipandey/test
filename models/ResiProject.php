@@ -37,43 +37,52 @@ class ResiProject extends Objects
            array('conditions'=>$conditionsProjectUrl));
         return $projectUrlChk;
    } 
-   static function getAllSearchResult($arrSearchFields) {
-  
-       $arrSearchFieldsValue = '';
+   static function getAllSearchResult($arrSearch) {
+       $arrSearchFields = '';
+       $arrSearchFieldsValue = array();
        $date = '';
-       $cnt = 0;
-       
-       foreach($arrSearchFields as $key => $value ) {
+       $cnt = 0;  
+       foreach($arrSearch as $key => $value ) {
            $cnt++;
-           $and = ' in ? and ';
+           $and = ' in (?) and ';
            $comma = ' ,';
-           if( count($arrSearchFields) == $cnt ) {
-               $and = '';
+           if( count($arrSearch) == $cnt ) {
                $comma = '';
+               $and = 'in (?) ';
            }
+           if( count($arrSearch) < $cnt )
+               $and = '';
            if( $key == 'expected_supply_date_between_from_to' ) {
-               $twoDates = explode('_',$value);
-               $date = "date('expected_supply_date') between '$towDate[0]' and '$towDate[1]'";
+               $twoDate = explode('_',$value);
+               $date = "date('expected_supply_date') between '".$twoDate[0]."' and '".$twoDate[1]."'";
+               $arrSearchFields .= 'expected_supply_date between (?)';
+               array_push($arrSearchFieldsValue, $date);  
            }
            else if( $key == 'expected_supply_date_between_from' ) {
                $date = "expected_supply_date >= '$value'";
+               $arrSearchFields .= 'expected_supply_date = (?)';
+               array_push($arrSearchFieldsValue, $date);
            }
            else if( $key == 'expected_supply_date_between_to' ) {
                $date = "expected_supply_date <= '$value'";
+               $arrSearchFields .= 'expected_supply_date = (?)';
+               array_push($arrSearchFieldsValue, $date);
            }
            else {
-               $arrSearchFields = "$key $and";
-               $arrSearchFieldsValue = "($value) $comma";
+               $arrSearchFields .= "resi_project.$key $and";
+               array_push($arrSearchFieldsValue, $value);
            }
        }
-       echo $arrSearchFields."<br>";
-       echo $arrSearchFieldsValue;
-      // $conditionsProject = array("project_name = ? and builder_id = ? 
-         //  and locality_id = ?",$txtProjectName, $builderId,$localityId);
+       $conditions = array_merge(array($arrSearchFields), $arrSearchFieldsValue);
+       $join = " inner join resi_builder b on resi_project.builder_id = b.builder_id
+                 inner join master_project_phases phases 
+                    on resi_project.project_phase_id = phases.id
+                 inner join master_project_stages stages
+                    on resi_project.project_stage_id = stages.id";
        $projectSearch = ResiProject::find('all',
-           array('conditions'=>array($arrSearchFields,$arrSearchFieldsValue)));
-       echo "<pre>";
-       print_r($projectSearch);die;
+           array('joins' => $join,'conditions'=>$conditions,'select' => 
+                    'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name'));
+       return $projectSearch;
    }
 
 }

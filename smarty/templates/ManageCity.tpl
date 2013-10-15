@@ -79,7 +79,7 @@ function chkConfirm()
                         <TD align=left class=td-border>{$cityDataArr[data].META_TITLE}</TD>
                         <TD align=left class=td-border>{$cityDataArr[data].META_KEYWORDS}</TD>
                         <TD align=left class=td-border>{$cityDataArr[data].URL}</TD>
-						<TD align=center class=td-border>{$statusArray[$cityDataArr[data].ACTIVE]}</TD> 
+			<TD align=center class=td-border>{$cityDataArr[data].STATUS}</TD> 
                         <TD  class="td-border" align=left>
 			  <a href="cityadd.php?cityid={$cityDataArr[data].CITY_ID}" title="Edit">Edit </a></TD>
                       </TR>

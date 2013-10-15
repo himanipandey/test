@@ -235,12 +235,12 @@
 				<tr>
 				  <td width="20%" align="right" >City : </td>
 				  <td width="30%" align="left">
-						<select name = "city" class="city">
-							<option value =''>Select City</option>
-							 {section name=data loop=$CityDataArr}
-							 	<option {if $city == {$CityDataArr[data].LABEL}} value ='{$city}' selected="selected" {else} value ='{$CityDataArr[data].LABEL}' {/if}>{$CityDataArr[data].LABEL}</option>
-							 {/section}	
-						</select>				  
+                                    <select name = "city" class="city">
+                                        <option value =''>Select City</option>
+                                        {foreach from = $CityDataArr key = key item = item}
+                                           <option {if $city == {$key}} selected {/if} value = {$key}>{$item}</option>
+                                         {/foreach}	
+                                    </select>				  
 				  </td>
 				  <td width="50%" align="left"></td>
 				</tr>

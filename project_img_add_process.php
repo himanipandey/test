@@ -873,10 +873,6 @@ if (isset($_POST['Next']))
 														TITLE	   = '".$arrTitle[$key]."'
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								$res	=	mysql_query($qry);
-								if($res)
-								{
-									audit_insert('','update','project_plan_images',$projectId);
-								}
 							}
 							else
 							{
@@ -888,11 +884,6 @@ if (isset($_POST['Next']))
 													TITLE			=	'".$arrTitle[$key]."',
 													SUBMITTED_DATE	=	now()";
 								$resinsert	=	mysql_query($qryinsert);
-								$lastId		=	mysql_insert_id();
-								if($resinsert)
-								{
-									audit_insert($lastId,'insert','project_plan_images',$projectId);
-								}
 							}
 					if($flag==1)
 					{

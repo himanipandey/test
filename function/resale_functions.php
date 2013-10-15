@@ -122,7 +122,7 @@
                     ".RESI_PROJECT." b
                 ON
                     a.PROJECT_ID = b.PROJECT_ID
-                WHERE a.BROKER_ID = '".$brokerId."'
+                WHERE a.BROKER_ID = '".$brokerId."' and b.version = 'cms'
                 ORDER BY b.PROJECT_NAME ASC";
         $res = mysql_query($qry) or die(mysql_error()." error in  project list by broker id");
         $arrProjectByBroker = array();

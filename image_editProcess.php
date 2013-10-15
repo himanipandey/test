@@ -5,8 +5,8 @@
 		$ErrorMsg='';
 
 		$watermark_path = 'pt_shadow1.png';
-		 $projectId		=	$_GET['projectId'];
-		$projectDetail	=	ProjectDetail($projectId);
+		 $projectId = $_GET['projectId'];
+		$projectDetail	= ProjectDetail($projectId);
 		$smarty->assign("ProjectDetail", $projectDetail);
 		$ImageDataListingArr = allProjectImages($projectId);
 		$builderDetail	= fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
@@ -29,14 +29,14 @@
 			if (isset($_POST['btnSave'])) 
 			{
 				$smarty->assign("projectId", $projectId);		
-				$folderName		=	$projectDetail[0]['PROJECT_NAME'];
+				$folderName = $projectDetail[0]['PROJECT_NAME'];
 				
 				/***********Folder name**********/
-				$builderNamebuild		=	explode("/",$builderDetail['BUILDER_IMAGE']);
+				$builderNamebuild = explode("/",$builderDetail['BUILDER_IMAGE']);
 
 				/********************************/		
-				$BuilderName		=	$builderNamebuild[1];
-				$ProjectName		=	str_replace(" ","-",$projectDetail[0]['PROJECT_NAME']);	
+				$BuilderName = $builderNamebuild[1];
+				$ProjectName = str_replace(" ","-",$projectDetail[0]['PROJECT_NAME']);	
 				
 				$arrValue = array();
 				$arrTitle = array();
@@ -72,15 +72,11 @@
 						{
 							/********delete image from db if checked but not browes new image*********/
 							$qry	=	"DELETE FROM ".PROJECT_PLAN_IMAGES." 
-										 WHERE 
-											PROJECT_ID = '".$projectId."'
-											AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."'
-											AND PLAN_IMAGE = '".$_REQUEST['property_image_path'][$k]."'";
-							$res	=	mysql_query($qry);
-							if($res)
-							{
-								audit_insert($projectId,'delete','project_plan_images',$projectId);
-							}
+                                                                         WHERE 
+                                                                               PROJECT_ID = '".$projectId."'
+                                                                               AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."'
+                                                                               AND PLAN_IMAGE = '".$_REQUEST['property_image_path'][$k]."'";
+							$res	=	mysql_query($qry);		
 						}
 					}
 				}
@@ -877,10 +873,6 @@
 													TITLE	   = '".$arrTitle[$key]."'
 												WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$key]."' AND PLAN_IMAGE = '".$oldpath."'";
 									$res	=	mysql_query($qry);
-									if($res)
-									{
-										audit_insert($projectId,'update','project_plan_images',$projectId);
-									}
 
 								if($flag==1)
 								{
@@ -912,10 +904,10 @@
 			}
 			else if(isset($_POST['btnExit']))
 			{
-				 if($preview == 'true')
-					header("Location:show_project_details.php?projectId=".$projectId);
-				else
-					header("Location:ProjectList.php?projectId=".$projectId);
+                            if($preview == 'true')
+                                   header("Location:show_project_details.php?projectId=".$projectId);
+                           else
+                                   header("Location:ProjectList.php?projectId=".$projectId);
 
 			}
 

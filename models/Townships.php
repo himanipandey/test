@@ -6,7 +6,7 @@ class Townships extends Objects
 {
     static $table_name = 'townships';
     static function getTownshipByName($townshipName) {
-        $township = Townships::find('all',array('conditions' => array('name = ?', $townshipName)));
+        $township = Townships::find('all',array('conditions' => array('township_name = ?', $townshipName)));
         return $township;      
     }
     static function getTownShipsById($townshipsId) {

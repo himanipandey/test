@@ -198,16 +198,7 @@
                                                                         <font color="red"><span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
                                                                </td>
 							   </tr>
-                                                           
-							   <tr>
-                                                                <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
-                                                                <td width="30%" align="left">
-                                                                       <textarea name="txtProjectDescription" rows="10" cols="45" id = "txtProjectDescription">{$txtProjectDescription}</textarea>
-                                                                </td>
-                                                                <td width="50%" align="left">
-                                                                        <font color="red"><span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
-                                                               </td>
-							   </tr>
+							   
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Comments :</b> </td>
                                                                 <td width="30%" align="left">
@@ -367,16 +358,6 @@
 									  {if $project_type != '' && $project_type != 0}<font color="red"><span id = "err_project_typeChk">{$ErrorMsgType['showTypeError']}</span></font>{/if}	  
 								  </td>
 							   </tr>
-								
-							   <tr>
-								  <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Location Desc :</b> </td>
-								  <td width="30%" align="left">
-									 <textarea name="txtProjectLocation" rows="10" cols="45" id = "txtProjectLocation">{$txtProjectLocation}</textarea>
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_loc_desc" style = "display:none;">Please enter project location description!</span></font>
-								  </td>
-							   </tr>
 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Latitude :</b> </td>
@@ -432,20 +413,7 @@
 									  <font color="red"><span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
-
-							    <tr>
-								  <td width="20%" align="right"><b>Booking Status :</b> </td>
-								  <td width="30%" align="left">
-									 <select name="Booking_Status" id="Booking_Status" class="fieldState">
-										<option value="">Select</option>
-										<option value="Available" {if $Booking_Status == 'Available'} selected {/if}>Available</option>
-										<option value="On Hold" {if $Booking_Status == 'On Hold'} selected {/if}>On Hold</option>
-										<option value="Sold out" {if $Booking_Status == 'Sold out'} selected {/if}>Sold Out</option>
-									 </select>
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
-								  </td>
+                                                           
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
 								  <td width="30%" align="left">
@@ -549,12 +517,12 @@
 
 							   <tr>
 								  <td width="32%" align="right" valign ="top"><b>Application Form (in html):</b> </td><td width="30%" align="left">
-									 <span id = "app_form">
-										<textarea name = "app_form" id = "app_form" rows="10" cols="45">{$app_form}</textarea>
-									</span>
-									<span id = "app_form_pdf" style = "display:none;">
-										<input type = "file" name = "app_pdf">
-									</span>
+                                                                        <span id = "app_form">
+                                                                               <textarea name = "app_form" id = "app_form" rows="10" cols="45">{$app_form}</textarea>
+                                                                       </span>
+                                                                       <span id = "app_form_pdf" style = "display:none;">
+                                                                               <input type = "file" name = "app_pdf">
+                                                                       </span>
 								  </td>
 								  {if $ErrorMsg["app_form"] != ''}
 								  <td width="50%" align="left"><font color="red">{$ErrorMsg["app_form"]}</font></td>
@@ -564,43 +532,46 @@
 							   </tr>
 
 							    <tr>
-								  <td width="20%" align="right"><b>Approvals:</b> </td><td width="30%" align="left">
-									 <input type = "text" name = "approvals" value = "{$approvals}" style ="width:360px;">
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
+                                                                <td width="20%" align="right"><b>Approvals:</b> </td><td width="30%" align="left">
+                                                                       <input type = "text" name = "approvals" value = "{$approvals}" style ="width:360px;">
+                                                                </td>
+                                                                <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 
 							    <tr>
 								  <td width="20%" align="right"><b>Project Size:</b> </td><td width="30%" align="left">
-									 <input type = "text" name = "project_size" id = "project_size" value = "{$project_size}" style ="width:360px;"  onkeypress='return isNumberKey(event)'><br>
-									 <span style = "font-size:10px">in acres</span>
+                                                                    <input type = "text" name = "project_size" id = "project_size" value = "{$project_size}" style ="width:360px;"  onkeypress='return isNumberKey(event)'><br>
+                                                                    <span style = "font-size:10px">in acres</span>
 								  </td>
 								  <td width="50%" align="left" nowrap>
-								  		<font color="red">
-								  		   <span id = "err_project_size" style = "display:none;">
-								  		   	Project Size should be less than 500
-								  		   </span>
-										</font>
+                                                                    <font color="red">
+                                                                       <span id = "err_project_size" style = "display:none;">
+                                                                            Project Size should be less than 500
+                                                                       </span>
+                                                                    </font>
 								</td>
 							   </tr>
 
 							   <tr>
-								  <td width="20%" align="right"><b>Open Space:</b> </td><td width="30%" align="left">
-									 <input type = "text" name = "open_space" value = "{$open_space}" style ="width:360px;"  onkeypress='return isNumberKey(event)'><br>
-									 <span style = "font-size:10px">in Percentage(%)</span>
-								  </td>
-								  <td width="50%" align="left"></td>
+                                                                <td width="20%" align="right"><b>Open Space:</b> </td><td width="30%" align="left">
+                                                                    <input type = "text" name = "open_space" value = "{$open_space}" style ="width:360px;"  onkeypress='return isNumberKey(event)'><br>
+                                                                    <span style = "font-size:10px">in Percentage(%)</span>
+                                                                </td>
+                                                                <td width="50%" align="left"></td>
 							   </tr>
 
 							   <tr>
-								  <td width="20%" align="right"><b>Power Backup:</b> </td><td width="30%" align="left">
-									 <select name = "powerBackup">
-										<option value = "No">No</option>
-										<option value = "Only Common Areas" {if $powerBackup == 'Only Common Areas'} selected {/if}>Only Common Areas</option>
-										<option value = "Common Area + Apartments" {if $powerBackup == 'Common Area + Apartments'} selected {/if}>Common Area + Apartments</option>
-									 </select>
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
+                                                                <td width="20%" align="right"><b>Power Backup:</b> </td><td width="30%" align="left">
+                                                                  <select name = "powerBackup">
+                                                                      <option value="">Select Power Backup<option>
+                                                                      {foreach from = $getPowerBackupTypes item = value}
+                                                                         <option value = "{$value->id}" {if $powerBackup == $value->id} selected {/if}>
+                                                                            {$value->name}
+                                                                         </option>
+                                                                      {/foreach}
+                                                                  </select>
+                                                                </td>
+                                                                <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 
 							   <tr>
@@ -634,17 +605,17 @@
 							   </tr>
 
 							   <tr>
-                                                                <td width="20%" align="right" valign ="top"><b> <font color ="red">*</font>Township:</b> </td><td width="30%" align="left">
+                                                                <td width="20%" align="right" valign ="top"><b>Township:</b> </td><td width="30%" align="left">
                                                                     <select name = "township">
                                                                         <option value="">Select Options</option>
                                                                         {foreach from = $allTownships item = item}
                                                                             <option value="{$item->id}" {if $item->id == $township}selected{/if}>
-                                                                                {$item->name}
+                                                                                {$item->township_name}
                                                                             </option>
                                                                         {/foreach}
                                                                     </select>
                                                                 </td>
-                                                                <td width="50%" align="left"><font color="red">{$ErrorMsg['township']}</font></td>
+                                                                <td width="50%" align="left">&nbsp;</td>
 							   </tr>
 							   
 							   <tr>

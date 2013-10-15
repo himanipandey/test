@@ -256,7 +256,8 @@ function DeleteProject($projectId) {
 /* * *********function for fetch project detail************** */
 
 function ProjectDetail($projectId) {
-    $qrySel = "SELECT * FROM " . RESI_PROJECT . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qrySel = "SELECT * FROM " . RESI_PROJECT . " 
+               WHERE PROJECT_ID = '" . $projectId . "' and version = 'cms'";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -933,7 +934,7 @@ function costructionDetail($projectId) {
 
 /* * *********Builder management************* */
 
-function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
+function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
     $Sql = "INSERT INTO " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
                                 ENTITY  	   	     = '" . d_($legalEntity) . "',
@@ -941,12 +942,9 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				URL	 	  	     = '" . d_($txtBuilderUrl) . "',
 				BUILDER_IMAGE 		     = '" . d_($imgname) . "',
 				DISPLAY_ORDER		     = '" . d_($DisplayOrder) . "',
-				META_TITLE	 	     = '" . d_($txtMetaTitle) . "',
-				META_KEYWORDS	 	     = '" . d_($txtMetaKeywords) . "',
 				ADDRESS			     = '" . d_($address) . "',
-				CITY			     = '" . d_($city) . "',
+				CITY_ID			     = '" . d_($city) . "',
 				PINCODE			     = '" . d_($pincode) . "',
-				META_DESCRIPTION	     = '" . d_($txtMetaDescription) . "',
 				CEO_MD_NAME                  = '" . d_($ceo) . "',
 				TOTAL_NO_OF_EMPL             = '" . d_($employee) . "',
 				TOTAL_NO_OF_DELIVERED_PROJECT= '" . $delivered_project . "',
@@ -955,7 +953,9 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				WEBSITE			     ='" . $website . "',
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
-				ESTABLISHED_DATE	     = '" . $date . "'";
+				ESTABLISHED_DATE	     = '" . $date . "',
+                                updated_by                   = $_SESSION[adminId],
+                                created_at                   = now()";
 
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertBuilder()');
     $lastId = mysql_insert_id();
@@ -981,7 +981,7 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
         }
         $cnt++;
     }
-    return 1;
+    return $lastId;
 }
 
 /* * *****delete builders******** */
@@ -1018,7 +1018,7 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 /* * ******update builder if already exists************** */
 
-function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder) {
+function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder) {
     $Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
                                 ENTITY  	   	     = '" . d_($legalEntity) . "',				
@@ -1026,12 +1026,9 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				URL	 	  	     = '" . d_($txtBuilderUrl) . "',
 				BUILDER_IMAGE 	   	     = '" . d_($imgname) . "',
 				DISPLAY_ORDER		     = '" . d_($DisplayOrder) . "',
-				META_TITLE	 	     = '" . d_($txtMetaTitle) . "',
-				META_KEYWORDS	 	     = '" . d_($txtMetaKeywords) . "',
 				ADDRESS			     = '" . d_($address) . "',
-				CITY			     = '" . d_($city) . "',
+				CITY_ID			     = '" . d_($city) . "',
 				PINCODE			     = '" . d_($pincode) . "',
-				META_DESCRIPTION	     = '" . d_($txtMetaDescription) . "',
 				ESTABLISHED_DATE	     = '" . d_($established) . "',
 				CEO_MD_NAME		     = '" . d_($ceo) . "',
 				TOTAL_NO_OF_DELIVERED_PROJECT= '" . $delivered_project . "',
@@ -1227,7 +1224,12 @@ function DeleteBank($bank_id) {
 }
 
 function project_list($builderId) {
-    $sql = "SELECT PROJECT_ID,PROJECT_NAME FROM " . RESI_PROJECT . " WHERE BUILDER_ID = '" . $builderId . "' AND PROJECT_NAME != '' ORDER BY PROJECT_NAME ASC";
+    $sql = "SELECT PROJECT_ID,PROJECT_NAME FROM " . RESI_PROJECT . " 
+            WHERE 
+                BUILDER_ID = '" . $builderId . "' 
+                AND PROJECT_NAME != ''
+                and version = 'cms'
+                ORDER BY PROJECT_NAME ASC";
     $res = mysql_query($sql) or die(mysql_error());
     $arrBuilder = array();
     while ($data = mysql_fetch_assoc($res)) {
@@ -1853,6 +1855,15 @@ function projectDetailById($projectId){
         array_push($projectDetails, $data);
     }
     return $projectDetails;
+}
+
+/* * *****************function for fetch builder detail by builder id**************** */
+
+function fetch_builderDetail($builderId) {
+    $qrybuild = "SELECT * FROM " . RESI_BUILDER . " WHERE BUILDER_ID = '" . $builderId . "'";
+    $resbuild = mysql_query($qrybuild) or die(mysql_error());
+    $databuild = mysql_fetch_assoc($resbuild);
+    return $databuild;
 }
 ?>
 

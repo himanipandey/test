@@ -190,7 +190,15 @@
                             if($return)
                             {				
                                 $imgurl	=   "/".$foldername."/".$name;
-                                InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
+                                $seoData['meta_title'] = $txtMetaTitle;
+                                $seoData['meta_keywords'] = $txtMetaKeywords;
+                                $seoData['meta_description'] = $txtMetaDescription;
+                                $seoData['table_name'] = 'resi_builder';
+                                $seoData['updated_by'] = $_SESSION['adminId'];
+                                $returnBuilder = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
+                                $seoData['updated_by'] = $_SESSION['adminId'];
+                                $seoData['table_id'] = $returnBuilder;
+                                SeoData::insetUpdateSeoData($seoData);
                                 $createFolder = $newImagePath.$foldername;
                                 if ($handle = opendir($createFolder))
                                 {
@@ -269,9 +277,16 @@
                         if($return)
                         {
                             $imgurl = "/".$cutpath[1]."/".$name;
-                            $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
+                            $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                             if($rt)
                             {
+                                $seoData['meta_title'] = $txtMetaTitle;
+                                $seoData['meta_keywords'] = $txtMetaKeywords;
+                                $seoData['meta_description'] = $txtMetaDescription;
+                                $seoData['table_id'] = $builderid;
+                                $seoData['table_name'] = 'resi_builder';
+                                $seoData['updated_by'] = $_SESSION['adminId'];
+                                SeoData::insetUpdateSeoData($seoData);
                                 if( $txtBuilderUrl != $txtBuilderUrlOld && $txtBuilderUrlOld != '' )
                                         insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
                                 header("Location:BuilderList.php?page=1&sort=all");
@@ -336,9 +351,16 @@
                 }
                 else 
                 {
-                    $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
+                    $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                     if($return)
                     {
+                        $seoData['meta_title'] = $txtMetaTitle;
+                        $seoData['meta_keywords'] = $txtMetaKeywords;
+                        $seoData['meta_description'] = $txtMetaDescription;
+                        $seoData['table_id'] = $builderid;
+                        $seoData['table_name'] = 'resi_builder';
+                        $seoData['updated_by'] = $_SESSION['adminId'];
+                        SeoData::insetUpdateSeoData($seoData);
                         if($txtBuilderUrl != $txtBuilderUrlOld)
                                 insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
                         header("Location:BuilderList.php?page=1&sort=all");
@@ -355,6 +377,7 @@
             $qryedit	=	"SELECT * FROM ".RESI_BUILDER." WHERE BUILDER_ID = '".$builderid."'";
             $resedit	=	mysql_query($qryedit);
             $dataedit	=	mysql_fetch_array($resedit);
+            $getSeoData = SeoData::getSeoData($builderid, 'resi_builder');
 
             $smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
             $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
@@ -363,14 +386,14 @@
             $smarty->assign("txtBuilderUrl", $dataedit['URL']);
             $smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
             $smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER'] ? $dataedit['DISPLAY_ORDER'] : 100);
-            $smarty->assign("txtMetaTitle", $dataedit['META_TITLE']);
-            $smarty->assign("txtMetaKeywords", $dataedit['META_KEYWORDS']);
-            $smarty->assign("txtMetaDescription", $dataedit['META_DESCRIPTION']);
+            $smarty->assign("txtMetaTitle", $getSeoData[0]->meta_title);
+            $smarty->assign("txtMetaKeywords", $getSeoData[0]->meta_keywords);
+            $smarty->assign("txtMetaDescription", $getSeoData[0]->meta_description);
             $smarty->assign("img", $dataedit['BUILDER_IMAGE']);
             $smarty->assign("imgedit", $dataedit['BUILDER_IMAGE']);
             $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
             $smarty->assign("address", $dataedit['ADDRESS']);
-            $smarty->assign("city", $dataedit['CITY']);
+            $smarty->assign("city", $dataedit['CITY_ID']);
             $smarty->assign("pincode", $dataedit['PINCODE']);
             $smarty->assign("ceo", $dataedit['CEO_MD_NAME']);
             $smarty->assign("employee", $dataedit['TOTAL_NO_OF_EMPL']);
@@ -394,18 +417,8 @@
 
 
      /*****************City Data************/
-            $CityDataArr	=	array();
-
-            $qry	=	"SELECT CITY_ID,LABEL FROM ".CITY." WHERE ACTIVE = 1 ORDER BY LABEL ASC";
-            $res = mysql_query($qry,$db);
-
-            while($data	=	mysql_fetch_array($res))
-            {
-                    $CityDataArr[]	=	$data;		
-            }
-            $smarty->assign("CityDataArr", $CityDataArr);
-
-
+    $CityDataArr = City::CityArr();
+    $smarty->assign("CityDataArr", $CityDataArr);
        /***************Project dropdown*************/
             $Project	=	array();
             $qry	=	"SELECT PROJECT_ID,PROJECT_NAME FROM ".PROJECT." ORDER BY PROJECT_NAME ASC";
@@ -426,17 +439,4 @@
             $BuilderDataArr[]	=	$data;		
      }
      $smarty->assign("BuilderDataArr", $BuilderDataArr);
-
-
-
-
-      /*****************City Data************/
-     $CityDataArr	=	array();
-     $qry	=	"SELECT CITY_ID,LABEL FROM ".CITY;
-     $res = mysql_query($qry,$db);
-     while($data	=	mysql_fetch_array($res))
-     {
-            $CityDataArr[]	=	$data;		
-     }
-     $smarty->assign("CityDataArr", $CityDataArr);
 ?>

@@ -12,7 +12,7 @@
 	if(isset($_REQUEST['submit']))
 	{
 		
-		$qryChkUrl = "SELECT COUNT(*) as cnt FROM resi_project WHERE  PROJECT_URL  = '".$toUrl."'";
+		$qryChkUrl = "SELECT COUNT(*) as cnt FROM resi_project WHERE  PROJECT_URL  = '".$toUrl."' and version = 'cms'";
 		$resChkUrl = mysql_query($qryChkUrl);
 		$dataChkUrl= mysql_fetch_assoc($resChkUrl);
 		

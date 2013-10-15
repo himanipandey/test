@@ -8,7 +8,7 @@
      $ctid = $_REQUEST["ctid"];
     if($ctid != '') {             
         $getLocality = Locality::getLocalityByCity($ctid);
-        echo  "<select name = 'locality' id = 'locality'>";
+        echo  "<select name = 'locality' id = 'locality' onchange = 'localitySelect(this.value);'>";
         echo  "<option value=''>Select locality</option>";  	
         foreach( $getLocality as $value )
         {
