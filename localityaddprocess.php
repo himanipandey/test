@@ -71,7 +71,7 @@
                         if($localityid != ''){
                             $locURL = " and LOCALITY_ID!=".$localityid;    
                         }
-                        $qryLocality = "SELECT * FROM ".LOCALITY." WHERE LABEL = '".$txtCityName."'".$locURL;         
+                        $qryLocality = "SELECT * FROM ".LOCALITY." WHERE LABEL = '".$txtCityName."' and city_id=".$cityId.$locURL;         
                         $res     = mysql_query($qryLocality) or die(mysql_error());
                         if(mysql_num_rows($res)>0){
                             $ErrorMsg["txtCityName"] = "This Locality Already exists";
