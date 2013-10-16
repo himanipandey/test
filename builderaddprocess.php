@@ -1,6 +1,6 @@
 
 <?php
-
+include_once('./function/locality_functions.php');
     $accessBuilder = '';
     //if( $builderAuth == false )
      //  $accessBuilder = "No Access";
@@ -8,128 +8,117 @@
     
     $builderid = $_REQUEST['builderid'];
 
-    include("ftp.new.php");
-    $watermark_path = 'images/pt_shadow1.png';
-    //echo $_REQUEST['suburb'];die("here");
-    $smarty->assign("builderid", $builderid);
-    $ProjectList = project_list($builderid);
-    $smarty->assign("ProjectList", $ProjectList);
-    if ($_POST['btnExit'] == "Exit")
-    {
-            header("Location:BuilderList.php");
-    }
-    if ($_POST['btnSave'] == "Save")
-    {
-            $txtBuilderName			=	trim($_POST['txtBuilderName']);
-            $legalEntity			=	trim($_POST['legalEntity']);
-            $txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
-            $txtBuilderUrl			=	trim($_POST['txtBuilderUrl']);
-            $txtBuilderUrlOld		=	trim($_POST['txtBuilderUrlOld']);
-            $DisplayOrder			=	trim($_POST['DisplayOrder']);
-            $txtMetaTitle			=	trim($_POST['txtMetaTitle']);
-            $txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
-            $txtMetaDescription		=	trim($_POST['txtMetaDescription']);
-            $img				=	trim($_POST['img']);
-            $oldbuilder			=	trim($_POST['oldbuilder']);
-            $imgedit			=	trim($_POST['imgedit']);
-            $address			=	trim($_POST['address']);
-            $city				=	trim($_POST['city']);
-            $pincode			=	trim($_POST['pincode']);
-            $ceo				=	trim($_POST['ceo']);
-            $employee			=	trim($_POST['employee']);
-            $established			=	trim($_POST['established']);
+include("ftp.new.php");
+$watermark_path = 'images/pt_shadow1.png';
+//echo $_REQUEST['suburb'];die("here");
+$smarty->assign("builderid", $builderid);
+$ProjectList = project_list($builderid);
+$smarty->assign("ProjectList", $ProjectList);
+if ($_POST['btnExit'] == "Exit")
+{
+	header("Location:BuilderList.php");
+}
+if ($_POST['btnSave'] == "Save")
+{
+	$txtBuilderName			=	trim($_POST['txtBuilderName']);
+        $legalEntity			=	trim($_POST['legalEntity']);
+	$txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
+	$txtBuilderUrl			=	'';
+	$txtBuilderUrlOld		=	trim($_POST['txtBuilderUrlOld']);
+	$DisplayOrder			=	trim($_POST['DisplayOrder']);
+	$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
+	$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
+	$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
+        $img				=	trim($_POST['img']);
+        $oldbuilder			=	trim($_POST['oldbuilder']);
+        $imgedit			=	trim($_POST['imgedit']);
+        $address			=	trim($_POST['address']);
+        $city				=	trim($_POST['city']);
+        $pincode			=	trim($_POST['pincode']);
+        $ceo				=	trim($_POST['ceo']);
+        $employee			=	trim($_POST['employee']);
+	$established			=	trim($_POST['established']);
 
-            $employee			=	trim($_POST['employee']);
-            $delivered_project		=	trim($_POST['delivered_project']);
-            $area_delivered			=	trim($_POST['area_delivered']);
-            $ongoing_project		=	trim($_POST['ongoing_project']);
-            $website			=	trim($_POST['website']);
-            $revenue			=	trim($_POST['revenue']);
-            $debt				=	trim($_POST['debt']);
+	$employee			=	trim($_POST['employee']);
+	$delivered_project		=	trim($_POST['delivered_project']);
+	$area_delivered			=	trim($_POST['area_delivered']);
+	$ongoing_project		=	trim($_POST['ongoing_project']);
+	$website			=	trim($_POST['website']);
+	$revenue			=	trim($_POST['revenue']);
+	$debt				=	trim($_POST['debt']);
+	
+	$smarty->assign("txtBuilderName", $txtBuilderName);
+        $smarty->assign("legalEntity", $legalEntity);
+	$smarty->assign("txtBuilderDescription", $txtBuilderDescription);
+	$smarty->assign("txtBuilderUrl", $txtBuilderUrl);
+	$smarty->assign("txtBuilderUrlOld", $txtBuilderUrlOld);
+	$smarty->assign("DisplayOrder", $DisplayOrder);
+	$smarty->assign("txtMetaTitle", $txtMetaTitle);
+	$smarty->assign("txtMetaKeywords", $txtMetaKeywords);
+	$smarty->assign("txtMetaDescription", $txtMetaDescription);	
+	$smarty->assign("img", $img);	
+	$smarty->assign("oldval", $oldbuilder);	
+	$smarty->assign("imgedit", $imgedit);	
+	$smarty->assign("address", $address);	
+	$smarty->assign("city", $city);	
+	$smarty->assign("pincode", $pincode);	
+	$smarty->assign("ceo", $ceo);	
+	$smarty->assign("employee", $employee);
+	$smarty->assign("established", $established);
+	$smarty->assign("employee", $employee);	
+	$smarty->assign("delivered_project", $delivered_project);	
+	$smarty->assign("area_delivered", $area_delivered);	
+	$smarty->assign("ongoing_project", $ongoing_project);	
+	$smarty->assign("website", $website);	
+	$smarty->assign("revenue", $revenue);
+	$smarty->assign("debt", $debt);
 
-            $smarty->assign("txtBuilderName", $txtBuilderName);
-            $smarty->assign("legalEntity", $legalEntity);
-            $smarty->assign("txtBuilderDescription", $txtBuilderDescription);
-            $smarty->assign("txtBuilderUrl", $txtBuilderUrl);
-            $smarty->assign("txtBuilderUrlOld", $txtBuilderUrlOld);
-            $smarty->assign("DisplayOrder", $DisplayOrder);
-            $smarty->assign("txtMetaTitle", $txtMetaTitle);
-            $smarty->assign("txtMetaKeywords", $txtMetaKeywords);
-            $smarty->assign("txtMetaDescription", $txtMetaDescription);	
-            $smarty->assign("img", $img);	
-            $smarty->assign("oldval", $oldbuilder);	
-            $smarty->assign("imgedit", $imgedit);	
-            $smarty->assign("address", $address);	
-            $smarty->assign("city", $city);	
-            $smarty->assign("pincode", $pincode);	
-            $smarty->assign("ceo", $ceo);	
-            $smarty->assign("employee", $employee);
-            $smarty->assign("established", $established);
-            $smarty->assign("employee", $employee);	
-            $smarty->assign("delivered_project", $delivered_project);	
-            $smarty->assign("area_delivered", $area_delivered);	
-            $smarty->assign("ongoing_project", $ongoing_project);	
-            $smarty->assign("website", $website);	
-            $smarty->assign("revenue", $revenue);
-            $smarty->assign("debt", $debt);
+	if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)){
+		$ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
+	 }
+	
+        if( $txtBuilderName == '') 
+	   {
+	     $ErrorMsg["txtBuilderName"] = "Please enter Builder name.";
+	   }
+         if( $legalEntity == '') 
+	   {
+	     $ErrorMsg["legalEntity"] = "Please enter legal entity name.";
+	   }
+	if( $txtBuilderDescription == '') 
+	   {
+	     $ErrorMsg["txtBuilderDescription"] = "Please enter Builder description.";
+	   }   
 
-            if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)){
-                    $ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
-             }
-
-            if( $txtBuilderName == '') 
-               {
-                 $ErrorMsg["txtBuilderName"] = "Please enter Builder name.";
-               }
-             if( $legalEntity == '') 
-               {
-                 $ErrorMsg["legalEntity"] = "Please enter legal entity name.";
-               }
-            if( $txtBuilderDescription == '') 
-               {
-                 $ErrorMsg["txtBuilderDescription"] = "Please enter Builder description.";
-               }   
-
-               if( $txtBuilderUrl == '')
-               {
-                    $ErrorMsg["txtBuilderUrl"] = "Please enter Builder URL.";
-               }
-               if($txtBuilderUrl!='')
-               {
-                    if(!preg_match('/^b-[a-z0-9\-]+\.php$/',$txtBuilderUrl)){
-                            $ErrorMsg["txtBuilderUrl"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
-                    }
-               }
-            if( $DisplayOrder == '') 
-               {
-                 $ErrorMsg["DisplayOrder"] = "Please enter Builder Display Order.";
-               }
-            if( $txtMetaTitle == '') 
-               {
-                 $ErrorMsg["txtMetaTitle"] = "Please enter Builder meta title.";
-               }
-            if( $txtMetaKeywords == '') 
-               {
-                 $ErrorMsg["txtMetaKeywords"] = "Please enter Builder meta keywords.";
-               }
-            if( $txtMetaDescription == '') 
-               {
-                 $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
-               } 
-
-            /******code for builder url already exists******/
-             $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE URL = '".$txtBuilderUrl."'";
-             if($builderid != '')
-                    $qryUrl .= " AND BUILDER_ID != $builderid";
-             //echo $qryUrl ;
-             $resUrl = mysql_query($qryUrl) or die(mysql_error());
-             if(mysql_num_rows($resUrl)>0)
-             {
-                    $ErrorMsg["BuilderUrlExists"] = "This URL already exists.";
-             }
-             /******end code for builder url already exists******/
-            //  die; 
-            if($_FILES['txtBuilderImg']['type'] != '')
+	if( $DisplayOrder == '') 
+	   {
+	     $ErrorMsg["DisplayOrder"] = "Please enter Builder Display Order.";
+	   }
+	if( $txtMetaTitle == '') 
+	   {
+	     $ErrorMsg["txtMetaTitle"] = "Please enter Builder meta title.";
+	   }
+	if( $txtMetaKeywords == '') 
+	   {
+	     $ErrorMsg["txtMetaKeywords"] = "Please enter Builder meta keywords.";
+	   }
+	if( $txtMetaDescription == '') 
+	   {
+	     $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
+	   } 
+	    /******code for builder url already exists******/
+        $bldrURL = "";
+        if($builderid != ''){
+            $bldrURL = " and BUILDER_ID!=".$builderid;
+        }
+	    $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE ENTITY = '".$legalEntity."'".$bldrURL;
+	    $resUrl = mysql_query($qryUrl) or die(mysql_error());
+	    if(mysql_num_rows($resUrl)>0){
+	 	    $ErrorMsg["legalEntity"] = "This Builder already exists.";
+	    }
+	    /******end code for builder url already exists******/
+	//  die; 
+	if($_FILES['txtBuilderImg']['type'] != '')
             {
                 if(!in_array(strtolower($_FILES['txtBuilderImg']['type']), $arrImg))
                 {
@@ -190,7 +179,11 @@
                             if($return)
                             {				
                                 $imgurl	=   "/".$foldername."/".$name;
-                                InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);			
+                                $newBuilderId = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);		
+                                $txtBuilderUrl = createBuilderURL($txtBuilderName, $newBuilderId);
+                                $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$newBuilderId;
+                                mysql_query($updateQuery) or die(mysql_error());
+
                                 $createFolder = $newImagePath.$foldername;
                                 if ($handle = opendir($createFolder))
                                 {
@@ -267,19 +260,18 @@
                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                         $s3upload->upload();
                         if($return)
-                        {
+                        {				
                             $imgurl = "/".$cutpath[1]."/".$name;
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
-                            if($rt)
-                            {
-                                if( $txtBuilderUrl != $txtBuilderUrlOld && $txtBuilderUrlOld != '' )
-                                        insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
+                            if($rt){
+                                $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
+                                $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
+                                mysql_query($updateQuery) or die(mysql_error());
                                 header("Location:BuilderList.php?page=1&sort=all");
-                            }
-                            else
-                                    $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
+                            } else
+                                $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
                             /*************Resize images code***************************/
-                            $createFolder = $newImagePath.$cutpath[1];//die;
+                            $createFolder = $newImagePath.$cutpath[1];//die
                             if ($handle = opendir($createFolder))
                             {
                                 rewinddir($handle);
@@ -336,11 +328,13 @@
                 }
                 else 
                 {
+                    $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
                     $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                     if($return)
                     {
-                        if($txtBuilderUrl != $txtBuilderUrlOld)
-                                insertUpdateInRedirectTbl($txtBuilderUrl,$txtBuilderUrlOld);
+                        $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
+                        $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
+                        mysql_query($updateQuery) or die(mysql_error());
                         header("Location:BuilderList.php?page=1&sort=all");
                     }
                     else

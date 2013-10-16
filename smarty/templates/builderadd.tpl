@@ -131,9 +131,9 @@
 
 					<td width="30%" align="left" >
 						{if $builderid != ''  && $urlEditAccess == 0}
-							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;" readonly>
+							<input type=text disabled name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;" readonly>
 						{else}
-							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;">
+							<input type=text disabled name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;">
 						{/if}
 						<input type = "hidden" name = "txtBuilderUrlOld" value = "{$txtBuilderUrlOld}">
 						

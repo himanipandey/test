@@ -1101,7 +1101,7 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
         }
         $cnt++;
     }
-    return 1;
+    return $lastId;
 }
 
 /* * *****delete builders******** */
