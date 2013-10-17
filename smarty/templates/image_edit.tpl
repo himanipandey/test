@@ -164,7 +164,7 @@ $(".pt_reqflrplan").fancybox();
 														STYLE="width: 165px;border:1px solid #c3c3c3;">
 
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
-                                                        <input type="hidden" value="{$ImageDataListingArr[data].IMAGE_ID}" name="service_image_id[{$cnt}]" />
+                                                        <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
 														Image Title:<input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
 														Delete/Edit:<input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
 														New Image?:<input type="file" name="img[{$cnt}]"/>

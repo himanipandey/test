@@ -229,7 +229,7 @@
 		if($ErrorMsg1 == '' AND $insertlist != '')
 		{
 			
-			$qry	 =  "INSERT INTO ".RESI_FLOOR_PLANS." (OPTION_ID,NAME,IMAGE_URL,DISPLAY_ORDER,IMAGE_ID) VALUES ";
+			$qry	 =  "INSERT INTO ".RESI_FLOOR_PLANS." (OPTION_ID,NAME,IMAGE_URL,DISPLAY_ORDER,SERVICE_IMAGE_ID) VALUES ";
 			$str	 = $qry.$insertlist;
 			$fullQry =  substr($str,0,-1);
 			$res	 =	mysql_query($fullQry) or die(mysql_error());

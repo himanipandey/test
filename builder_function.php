@@ -1139,7 +1139,7 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 /* * ******update builder if already exists************** */
 
-function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = '') {
+function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL') {
     $Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
                                 ENTITY  	   	     = '" . d_($legalEntity) . "',				
@@ -1162,7 +1162,7 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
 				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "',
-				IMAGE_ID                 = ".$image_id.",
+				SERVICE_IMAGE_ID                 = ".$image_id."
 			WHERE	
 				BUILDER_ID = '" . $builderid . "'"; //die("here");
 

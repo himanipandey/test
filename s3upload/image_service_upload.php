@@ -37,13 +37,14 @@ class ImageServiceUpload{
         ),
         "bank" => array("logo" => "logo"));
 
-    function __construct($image, $object, $object_id, $image_type, $method, $image_id = NULL){
+    function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;
         $this->object = $object;
         $this->object_id = $object_id;
         $this->image_type = $image_type;
         $this->image_id = $image_id;
         $this->method = trim($method);
+        $this->extra_params = $extra_params;
         $this->errors = array();
         $this->validate();
     }
@@ -51,6 +52,8 @@ class ImageServiceUpload{
     function upload(){
         $params = array('image'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
             'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
+        $extra_params = $this->extra_params;
+        $params = array_merge($params, $extra_params);
         if($this->method == "DELETE")
             $response = static::delete($this->image_id, $params);
         elseif($this->method == "PUT")
@@ -83,7 +86,8 @@ class ImageServiceUpload{
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$method);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        if($method == "POST" || $method == "PUT")
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         $response= curl_exec($ch);
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $response_header = substr($response, 0, $header_size);
@@ -111,7 +115,15 @@ class ImageServiceUpload{
         if($this->method != "DELETE"){
             $this->validate_keys();
         }
+        $this->check_extra_params();
         $this->raise_errors_if_any();
+    }
+
+
+    function check_extra_params(){
+        if(!is_array($this->extra_params)){
+            $this->add_errors("Extra params should be array");
+        }
     }
 
     function validate_keys(){

@@ -102,30 +102,38 @@ class ImageUpload{
     }
 
     function upload_service(){
-        $options = $this->options;
-        $object = $options["object"];
-        $object_id = $options["object_id"];
-        $image_type = $options["image_type"];
-        $service_object = new ImageServiceUpload($this->image, $object, $object_id, $image_type, "POST");
-        $service_object->upload();
-        return $service_object;
+        return $this->send_service_request("POST");
     }
 
     function update_service(){
-        $options = $this->options;
-        $object = $options["object"];
-        $object_id = $options["object_id"];
-        $image_type = $options["image_type"];
-        $image_id = $options["service_image_id"];
-        $service_object = new ImageServiceUpload($this->image, $object, $object_id, $image_type, "PUT", $image_id);
-        $service_object->upload();
-        return $service_object;
+        return $this->send_service_request("PUT");
     }
 
     function delete_service(){
+        return $this->send_service_request("DELETE");
+    }
+
+    function send_service_request($request_type){
         $options = $this->options;
-        $image_id = $options["service_image_id"];
-        $service_object = new ImageServiceUpload($this->image, NULL, NULL, NULL, "DELETE", $image_id);
+        if($request_type != "DELETE"){
+            $object = $options["object"];
+            $object_id = $options["object_id"];
+            $image_type = $options["image_type"];
+        }
+        else{
+            $object = NULL;
+            $object_id = NULL;
+            $image_type = NULL;
+        }
+
+        $extra_params = array();
+        $image_id = NULL;
+        if(array_key_exists("service_extra_params", $options)) $extra_params = $options["service_extra_params"];
+        if(array_key_exists("service_image_id", $options)) $image_id = $options["service_image_id"];
+
+
+
+        $service_object = new ImageServiceUpload($this->image, $object, $object_id, $image_type,  $extra_params, $request_type, $image_id);
         $service_object->upload();
         return $service_object;
     }

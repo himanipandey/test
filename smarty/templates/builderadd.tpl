@@ -176,9 +176,12 @@
 				  
 				</tr>
 				{/if}
-				<tr>
+				<tr {if $builderid == ''} style="display:none" {/if}>
 				  <td width="20%" align="right" ><font color = "red">*</font>Builder Image : </td>
-				  <td width="30%" align="left"><input type=file name='txtBuilderImg'  style="width:400px;"></td>
+				  <td width="30%" align="left">
+                      <input type=file name='txtBuilderImg'  style="width:400px;">
+                      <input type="hidden" name="serviceImageId" value="{$service_image_id}">
+                  </td>
 				    <td width="50%" align="left" nowrap>
 				    	{if $ErrorMsg["ImgError"] != ''}
 				    	

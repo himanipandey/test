@@ -172,92 +172,15 @@
                     // Do Nothing
             } 	
             else if ($builderid == '')
-            {		
-                    if (($_FILES["txtBuilderImg"]["type"]))
-                    {   
-
-                       $name    =	$_FILES["txtBuilderImg"]["name"];
-                       if(!preg_match('/^[a-zA-Z0-9\-_\.]+$/',$name)){
-                            $ErrorMsg['ImgError']='Only letters [A-Z, a-z, 0-9, -, ., _] are allowed';
-                       }else{
-                            $foldername		=	str_replace(' ','-',strtolower($txtBuilderName));
-                            $createFolder	=	 $newImagePath.$foldername;
-                            mkdir($createFolder, 0777);
-                            $imgdestpath = $createFolder."/" . $name;
-                            $return 	= move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], $imgdestpath);
-                            if($return)
-                            {				
-                                $imgurl	=   "/".$foldername."/".$name;
-                                $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
-                                $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
-                                    "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
-                                    "image_type" => "builder_image", "object_id" => $builder_id));
-                                // Image id updation (next three lines could be written in single line but broken
-                                // in three lines due to limitation of php 5.3)
-                                $response = $s3upload->upload();
-                                $image_id = $response["service"]->data();
-                                $image_id = $image_id->id;
-                                $createFolder = $newImagePath.$foldername;
-                                if ($handle = opendir($createFolder))
-                                {
-                                    rewinddir($handle);
-                                    while (false !== ($file = readdir($handle)))
-                                    {
-                                        /************Working for large***********************/
-
-                                        if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
-                                        {
-                                            $image = new SimpleImage();
-                                            $path	=	$createFolder."/".$file;
-                                            $image->load($path);
-
-                                            /************Working for large Img Backup***********************/
-                                            $image->load($path);
-
-                                            $image->resize(477,247);
-
-                                            $imgdestpath = $createFolder."/". str_replace('.jpg','-rect.jpg',$file);
-                                            $image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                            $s3upload->upload();
-                                            /************Resize and large to small*************/
-                                            $image->resize(95,65);
-                                            $newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
-                                            $image->save($createFolder."/".$newimg);
-
-                                            $image->resize(80,36);
-                                            $newimg	=	str_replace('.jpg','-thumb.jpg',$file);
-                                            $imgdestpath = $createFolder."/".$newimg;
-                                            $image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                            $s3upload->upload();
-                                            /**********Working for watermark*******************/
-                                            // Image path
-                                                    $image_path = $createFolder."/".$file;
-                                                    // Where to save watermarked image
-                                                    $imgdestpath = $createFolder."/".$file;
-                                             // Watermark image
-                                            $img = new Zubrag_watermark($image_path);
-                                            $img->ApplyWatermark($watermark_path);
-                                            $img->SaveAsFile($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                            $s3upload->upload();
-                                            $img->Free();
-                                        }	
-                                    } 
-
-                                    header("Location:BuilderList.php");
-                                }	
-                            }	
-                            else 
-                            {
-                                $ErrorMsg['ImgError'] = "Problem in image upload";
-                            }
-                        }
-                    }
-                    else {
-                            $ErrorMsg['ImgError'] = "Please insert image";
-                    }	
+            {
+                $foldername		=	str_replace(' ','-',strtolower($txtBuilderName));
+                $createFolder	=	 $newImagePath.$foldername;
+                mkdir($createFolder, 0777);
+                $imgurl = 'NULL';
+                $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                if($builder_id){
+                    header("Location:BuilderList.php");
+                }
             }
             else
             {
@@ -275,10 +198,11 @@
                             $imgurl = "/".$cutpath[1]."/".$name;
                             $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
-                                "image_type" => "builder_image","object_id" => $builderid));
+                                "image_type" => "builder_image","object_id" => $builderid, "service_image_id" => $_REQUEST["serviceImageId"],
+                                "service_extra_params" => array("addWaterMark" => "false")));
                             // Image id updation (next three lines could be written in single line but broken
                             // in three lines due to limitation of php 5.3)
-                            $response = $s3upload->upload();
+                            $response = $s3upload->update();
                             $image_id = $response["service"]->data();
                             $image_id = $image_id->id;
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder, $image_id);
@@ -394,6 +318,7 @@
             $smarty->assign("website", $dataedit['WEBSITE']);
             $smarty->assign("revenue", $dataedit['REVENUE']);
             $smarty->assign("debt", $dataedit['DEBT']);
+            $smarty->assign("service_image_id", $dataedit['SERVICE_IMAGE_ID']);
 
             $arrContact = BuilderContactInfo($builderid);
             $smarty->assign("Contact", count($arrContact));

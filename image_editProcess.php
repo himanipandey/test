@@ -50,7 +50,7 @@
 						if(!in_array(strtolower($_FILES['img']['type'][$k]), $arrImg))
 						{
 							$ErrorMsg["ImgError"] = "You can upload only ".ucwords(implode(" / ",$arrImg))." images.";
-						} 
+						}
 						
 						foreach($arrType  as $planType=>$imgNamePart)
 						{
@@ -967,7 +967,7 @@
 												SET 
 													PLAN_IMAGE = '".$dbpath[1]."',
 													TITLE	   = '".$arrTitle[$key]."',
-													IMAGE_ID   = ".$image_id."
+													SERVICE_IMAGE_ID   = ".$image_id."
 												WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$key]."' AND PLAN_IMAGE = '".$oldpath."'";
 									$res	=	mysql_query($qry);
 									if($res)

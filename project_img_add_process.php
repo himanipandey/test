@@ -918,7 +918,7 @@ if (isset($_POST['Next']))
 													SET
 														PLAN_IMAGE = '".$imgDbPath[1]."',
 														TITLE	   = '".$arrTitle[$key]."',
-                                                        IMAGE_ID   = ".$image_id."
+                                                        SERVICE_IMAGE_ID   = ".$image_id."
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								$res	=	mysql_query($qry);
 								if($res)
@@ -933,7 +933,7 @@ if (isset($_POST['Next']))
 													PROJECT_ID		=	'".$projectId."',
 													PLAN_TYPE		=	'".$_REQUEST['PType']."',
 													    BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
-													IMAGE_ID        =    ".$image_id.",
+													SERVICE_IMAGE_ID        =    ".$image_id.",
 													TITLE			=	'".$arrTitle[$key]."',
 													SUBMITTED_DATE	=	now()";
 								$resinsert	=	mysql_query($qryinsert);
