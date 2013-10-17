@@ -15,10 +15,11 @@
 			{
 				$qry	=	"INSERT INTO ".BANK_LIST." SET 
 								BANK_NAME	=	'".$bankname."',
-								BANK_LOGO	=	'".$logo_name."',
+								BANK_LOGO	=	'NULL',
 								BANK_DETAIL	=	'".$bank_detail."'";
 				$res	=	mysql_query($qry) or die(mysql_error()." Error in data insertion");
                 $bank_id = mysql_insert_id();
+                $bank = BankList::find($bank_id);
                 $s3upload = new ImageUpload($dest, array("s3" =>$s3,
                     "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
                     "image_type" => "logo", "object_id" => $bank_id));
@@ -27,6 +28,9 @@
                 $response = $s3upload->upload();
                 $image_id = $response["service"]->data();
                 $image_id = $image_id->id;
+                $bank->bank_logo = $logo_name;
+                $bank->service_image_id = $image_id;
+                $bank->save();
 				header("Location:bank_list.php?page=1&sort=all");
 			}
 		}
