@@ -192,7 +192,11 @@
                                 $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                     "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
                                     "image_type" => "builder_image", "object_id" => $builder_id));
-                                $s3upload->upload();
+                                // Image id updation (next three lines could be written in single line but broken
+                                // in three lines due to limitation of php 5.3)
+                                $response = $s3upload->upload();
+                                $image_id = $response["service"]->data();
+                                $image_id = $image_id->id;
                                 $createFolder = $newImagePath.$foldername;
                                 if ($handle = opendir($createFolder))
                                 {
@@ -269,11 +273,15 @@
                         if($return)
                         {
                             $imgurl = "/".$cutpath[1]."/".$name;
-                            $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                             $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
                                 "image_type" => "builder_image","object_id" => $builderid));
-                            $s3upload->upload();
+                            // Image id updation (next three lines could be written in single line but broken
+                            // in three lines due to limitation of php 5.3)
+                            $response = $s3upload->upload();
+                            $image_id = $response["service"]->data();
+                            $image_id = $image_id->id;
+                            $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder, $image_id);
                             if($rt)
                             {
                                 if( $txtBuilderUrl != $txtBuilderUrlOld && $txtBuilderUrlOld != '' )

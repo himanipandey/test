@@ -71,6 +71,9 @@
 						else
 						{
 							/********delete image from db if checked but not browes new image*********/
+                            $service_image_id = $_REQUEST['service_image_id'][$k];
+                            $s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
+                            $response = $s3upload->delete();
 							$qry	=	"DELETE FROM ".PROJECT_PLAN_IMAGES." 
 										 WHERE 
 											PROJECT_ID = '".$projectId."'
@@ -122,7 +125,8 @@
 							
 							$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 							$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
-							$oldpath		=	$_REQUEST['property_image_path'][$key]; 
+							$oldpath		=	$_REQUEST['property_image_path'][$key];
+                            $service_image_id = $_REQUEST["service_image_id"][$key];
 
 							//unlink($oldpath);
 
@@ -159,8 +163,13 @@
                                                         $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                             "object" => "project", "object_id" => $projectId,
-                                                            "image_type" => "location_plan"));
-                                                        $s3upload->upload();
+                                                            "image_type" => "location_plan",
+                                                            "service_image_id" => $service_image_id));
+                                                        $response = $s3upload->update();
+                                                        // Image id updation (next three lines could be written in single line but broken
+                                                        // in three lines due to limitation of php 5.3)
+                                                        $image_id = $response["service"]->data();
+                                                        $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);		
 														/**********Working for watermark*******************/
@@ -225,8 +234,13 @@
                                                         $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                             "object" => "project", "object_id" => $projectId,
-                                                            "image_type" => "layout_plan"));
-                                                        $s3upload->upload();
+                                                            "image_type" => "layout_plan",
+                                                            "service_image_id" => $service_image_id));
+                                                        $response = $s3upload->update();
+                                                        // Image id updation (next three lines could be written in single line but broken
+                                                        // in three lines due to limitation of php 5.3)
+                                                        $image_id = $response["service"]->data();
+                                                        $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
 														/**********Working for watermark*******************/									
@@ -291,8 +305,13 @@
                                                         $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                             "object" => "project", "object_id" => $projectId,
-                                                            "image_type" => "site_plan"));
-                                                        $s3upload->upload();
+                                                            "image_type" => "site_plan",
+                                                            "service_image_id" => $service_image_id));
+                                                        $response = $s3upload->update();
+                                                        // Image id updation (next three lines could be written in single line but broken
+                                                        // in three lines due to limitation of php 5.3)
+                                                        $image_id = $response["service"]->data();
+                                                        $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
 														/**********Working for watermark*******************/
@@ -357,8 +376,13 @@
                                                         $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                             "object" => "project", "object_id" => $projectId,
-                                                            "image_type" => "master_plan"));
-                                                        $s3upload->upload();
+                                                            "image_type" => "master_plan",
+                                                            "service_image_id" => $service_image_id));
+                                                        $response = $s3upload->update();
+                                                        // Image id updation (next three lines could be written in single line but broken
+                                                        // in three lines due to limitation of php 5.3)
+                                                        $image_id = $response["service"]->data();
+                                                        $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
 														/**********Working for watermark*******************/
@@ -423,8 +447,13 @@
                                                         $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                             "object" => "project", "object_id" => $projectId,
-                                                            "image_type" => "cluster_plan"));
-                                                        $s3upload->upload();
+                                                            "image_type" => "cluster_plan",
+                                                            "service_image_id" => $service_image_id));
+                                                        $response = $s3upload->update();
+                                                        // Image id updation (next three lines could be written in single line but broken
+                                                        // in three lines due to limitation of php 5.3)
+                                                        $image_id = $response["service"]->data();
+                                                        $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);										
 														/**********Working for watermark*******************/									
@@ -489,8 +518,13 @@
                                                     $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                         "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                         "object" => "project", "object_id" => $projectId,
-                                                        "image_type" => "construction_status"));
-                                                    $s3upload->upload();
+                                                        "image_type" => "construction_status",
+                                                        "service_image_id" => $service_image_id));
+                                                    $response = $s3upload->update();
+                                                    // Image id updation (next three lines could be written in single line but broken
+                                                    // in three lines due to limitation of php 5.3)
+                                                    $image_id = $response["service"]->data();
+                                                    $image_id = $image_id->id;
 													$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 													$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);	
 													/**********Working for watermark*******************/
@@ -564,8 +598,13 @@
                                                     $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                         "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                         "object" => "project", "object_id" => $projectId,
-                                                        "image_type" => "payment_plan"));
-                                                    $s3upload->upload();
+                                                        "image_type" => "payment_plan",
+                                                        "service_image_id" => $service_image_id));
+                                                    $response = $s3upload->update();
+                                                    // Image id updation (next three lines could be written in single line but broken
+                                                    // in three lines due to limitation of php 5.3)
+                                                    $image_id = $response["service"]->data();
+                                                    $image_id = $image_id->id;
 													$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);
 													$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);	
 													/**********Working for watermark*******************/
@@ -625,8 +664,13 @@
                                                     $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                         "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                         "object" => "project", "object_id" => $projectId,
-                                                        "image_type" => "specification"));
-                                                    $s3upload->upload();
+                                                        "image_type" => "specification",
+                                                        "service_image_id" => $service_image_id));
+                                                    $response = $s3upload->update();
+                                                    // Image id updation (next three lines could be written in single line but broken
+                                                    // in three lines due to limitation of php 5.3)
+                                                    $image_id = $response["service"]->data();
+                                                    $image_id = $image_id->id;
 													$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
 													$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
 													/**********Working for watermark*******************/
@@ -693,8 +737,13 @@
                                                     $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                         "image_path" => str_replace(SERVER_PATH."/images_new/", "", $imgdestpath),
                                                         "object" => "project", "object_id" => $projectId,
-                                                        "image_type" => "price_list"));
-                                                    $s3upload->upload();
+                                                        "image_type" => "price_list",
+                                                        "service_image_id" => $service_image_id));
+                                                    $response = $s3upload->update();
+                                                    // Image id updation (next three lines could be written in single line but broken
+                                                    // in three lines due to limitation of php 5.3)
+                                                    $image_id = $response["service"]->data();
+                                                    $image_id = $image_id->id;
 													$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
 													$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
 													/**********Working for watermark*******************/
@@ -761,8 +810,13 @@
                                                     $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                         "image_path" => str_replace(SERVER_PATH."/images_new/", "", $imgdestpath),
                                                         "object" => "project", "object_id" => $projectId,
-                                                        "image_type" => "application_form"));
-                                                    $s3upload->upload();
+                                                        "image_type" => "application_form",
+                                                        "service_image_id" => $service_image_id));
+                                                    $response = $s3upload->update();
+                                                    // Image id updation (next three lines could be written in single line but broken
+                                                    // in three lines due to limitation of php 5.3)
+                                                    $image_id = $response["service"]->data();
+                                                    $image_id = $image_id->id;
 													$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('app-form','app-form-bkp',$file);
 													$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('app-form','app-form-bkp',$file);
 													/**********Working for watermark*******************/
@@ -832,8 +886,13 @@
                                                         $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                             "object" => "project", "object_id" => $projectId,
-                                                            "image_type" => "project_image"));
-                                                        $s3upload->upload();
+                                                            "image_type" => "project_image",
+                                                            "service_image_id" => $service_image_id));
+                                                        $response = $s3upload->update();
+                                                        // Image id updation (next three lines could be written in single line but broken
+                                                        // in three lines due to limitation of php 5.3)
+                                                        $image_id = $response["service"]->data();
+                                                        $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 														/************Resize and large to small*************/
@@ -907,7 +966,8 @@
 									$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 												SET 
 													PLAN_IMAGE = '".$dbpath[1]."',
-													TITLE	   = '".$arrTitle[$key]."'
+													TITLE	   = '".$arrTitle[$key]."',
+													IMAGE_ID   = ".$image_id."
 												WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$key]."' AND PLAN_IMAGE = '".$oldpath."'";
 									$res	=	mysql_query($qry);
 									if($res)

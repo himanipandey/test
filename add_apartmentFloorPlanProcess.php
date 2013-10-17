@@ -127,7 +127,11 @@
                                             $s3upload = new ImageUpload($absolute_path,array("s3" => $s3,
                                                 "image_path" => $local_path, "object" => "option",
                                                 "image_type" => "floor_plan", "object_id" => $option_id));
-                                            $s3upload->upload();
+                                            $response = $s3upload->upload();
+                                            // Image id updation (next three lines could be written in single line but broken
+                                            // in three lines due to limitation of php 5.3)
+                                            $image_id = $response["service"]->data();
+                                            $image_id = $image_id->id;
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" .str_replace('floor-plan','floor-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 												/**********Working for watermark*******************/
@@ -196,11 +200,11 @@
                                                 $s3upload->upload();
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 												$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-											}		
+											}
 										}
 									} 
 								}
-									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8','1'),";
+									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8','1', $image_id),";
 							}
 							}
 								
@@ -225,7 +229,7 @@
 		if($ErrorMsg1 == '' AND $insertlist != '')
 		{
 			
-			$qry	 =  "INSERT INTO ".RESI_FLOOR_PLANS." (OPTION_ID,NAME,IMAGE_URL,DISPLAY_ORDER) VALUES ";
+			$qry	 =  "INSERT INTO ".RESI_FLOOR_PLANS." (OPTION_ID,NAME,IMAGE_URL,DISPLAY_ORDER,IMAGE_ID) VALUES ";
 			$str	 = $qry.$insertlist;
 			$fullQry =  substr($str,0,-1);
 			$res	 =	mysql_query($fullQry) or die(mysql_error());

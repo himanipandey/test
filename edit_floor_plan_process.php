@@ -157,7 +157,11 @@
                                                             "image_path" => str_replace($newImagePath,"",$imgdestpath),
                                                             "object" => "option", "image_type" => "floor_plan",
                                                             "object_id" => $arrOptionId[$key]));
-                                                        $s3upload->upload();
+                                                        $response = $s3upload->upload();
+                                                        // Image id updation (next three lines could be written in single line but broken
+                                                        // in three lines due to limitation of php 5.3)
+                                                        $image_id = $response["service"]->data();
+                                                        $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);		
 														/**********Working for watermark*******************/
@@ -237,7 +241,8 @@
 								$qry	=	"UPDATE ".RESI_FLOOR_PLANS." 
 												SET 
 													IMAGE_URL = '".$imgPathDb[1]."',
-													NAME	  = '".$arrTitle[$key]."'
+													NAME	  = '".$arrTitle[$key]."',
+													IMAGE_ID  =  ".$image_id."
 												WHERE 
 													FLOOR_PLAN_ID = '".$arrplanId[$key]."'
 												AND 

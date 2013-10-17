@@ -14,7 +14,6 @@ class ImageUpload{
         $this->options = $options;
         $this->size = filesize($image);
         $this->errors = array();
-        $this->validate();
     }
 
 
@@ -48,9 +47,33 @@ class ImageUpload{
     }
 
     function upload(){
-        $this->upload_s3();
-        $this->upload_service();
+        $this->validate();
+        $s3_object = $this->upload_s3();
+        $service_object = $this->upload_service();
+        return array("s3" => $s3_object, "service" => $service_object);
     }
+
+    function update(){
+        $this->validate();
+        $options = $this->options;
+        $s3_object = $this->upload_s3();
+        if($options["service_image_id"])
+            $service_object = $this->update_service();
+        else
+            $service_object = $this->upload_service();
+        return array("s3" => $s3_object, "service" => $service_object);
+    }
+
+
+    function delete(){
+        $options = $this->options;
+        $service_object = array();
+        if($options["service_image_id"])
+            $service_object = $this->delete_service();
+        return array("service" => $service_object);
+    }
+
+
 
     function covert_to_bytes($size) {
         return $size * 1024 * 1024;
@@ -75,6 +98,7 @@ class ImageUpload{
         $new_file_name = $this->options["image_path"];
         $s3_object = new S3Upload($s3, static::$s3_bucket, $this->image, $new_file_name);
         $s3_object->upload();
+        return $s3_object;
     }
 
     function upload_service(){
@@ -82,7 +106,27 @@ class ImageUpload{
         $object = $options["object"];
         $object_id = $options["object_id"];
         $image_type = $options["image_type"];
-        $service_object = new ImageServiceUpload($this->image, $object, $object_id, $image_type);
+        $service_object = new ImageServiceUpload($this->image, $object, $object_id, $image_type, "POST");
         $service_object->upload();
+        return $service_object;
+    }
+
+    function update_service(){
+        $options = $this->options;
+        $object = $options["object"];
+        $object_id = $options["object_id"];
+        $image_type = $options["image_type"];
+        $image_id = $options["service_image_id"];
+        $service_object = new ImageServiceUpload($this->image, $object, $object_id, $image_type, "PUT", $image_id);
+        $service_object->upload();
+        return $service_object;
+    }
+
+    function delete_service(){
+        $options = $this->options;
+        $image_id = $options["service_image_id"];
+        $service_object = new ImageServiceUpload($this->image, NULL, NULL, NULL, "DELETE", $image_id);
+        $service_object->upload();
+        return $service_object;
     }
 }
