@@ -113,6 +113,8 @@
                                             </select><br />
                                             <input type="text" name="imgName_{$row.IMAGE_ID}" placeholder="Enter Name"><br />
                                             <input type="text" name="imgDesc_{$row.IMAGE_ID}" placeholder="Enter Description" />
+                                            <input type="hidden" name="img_path_{$row.IMAGE_ID}" value="{$row.IMAGE_NAME}" />
+                                            <input type="hidden" name="img_service_id_{$row.IMAGE_ID}" value="{$row.SERVICE_IMAGE_ID}" />
                                         </div>
                                         <div class="clearfix" style="clear:both;"></div>
                                     </div>
