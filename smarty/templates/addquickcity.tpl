@@ -376,10 +376,10 @@ function addupdatelocality()
 		var returnval=xmlHttpadd1.responseText;
 		if(xmlHttpadd1)
 		{
-			document.getElementById('mainlocality').innerHTML = returnval;
-			var localityselid=$("#localityId :selected").val();
-			displocality(localityselid);
-			alert("The record has been successfully updated.");
+                    document.getElementById('mainlocality').innerHTML = returnval;
+                    var localityselid=$("#localityId :selected").val();
+                    displocality(localityselid);
+                    alert("The record has been successfully updated.");
 		}
 	}
 
