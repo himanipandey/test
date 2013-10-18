@@ -19,31 +19,30 @@ $sel_id = $_GET['id'];
 $ins = 0;
 $c = 0;
 
-$deleteloc		=	$_GET['localitydelete'];
-$deletect		=	$_GET['cid'];
-$deletesub		=	$_GET['subiddelete'];
+$deleteloc = $_GET['localitydelete'];
+$deletect = $_GET['cid'];
+$deletesub = $_GET['subiddelete'];
 
 if($deleteloc != '')
 {
-    $qry	=	"DELETE FROM ".LOCALITY." WHERE LOCALITY_ID = '".$deleteloc."'";
-    $res	=	mysql_query($qry) or die(mysql_error());
+    $qry = "DELETE FROM ".LOCALITY." WHERE LOCALITY_ID = '".$deleteloc."'";
+    $res = mysql_query($qry) or die(mysql_error());
     if($res)
     {
-
-             $selqry = "SELECT LOCALITY_ID,LABEL FROM ".LOCALITY." WHERE CITY_ID = '".$deletect."' AND SUBURB_ID = '".$deletesub."'  ORDER BY LABEL";
-            $ressel = mysql_query($selqry);
-            ?>
-            <select name="localityId" id = "localityId" class="localityId" onchange="displocality(this.value,1);" STYLE="width: 150px">
-            <option value =''>Select Locality</option>
+        $selqry = "SELECT LOCALITY_ID,LABEL FROM ".LOCALITY." WHERE CITY_ID = '".$deletect."' AND SUBURB_ID = '".$deletesub."'  ORDER BY LABEL";
+        $ressel = mysql_query($selqry);
+        ?>
+        <select name="localityId" id = "localityId" class="localityId" onchange="displocality(this.value,1);" STYLE="width: 150px">
+        <option value =''>Select Locality</option>
+    <?php
+        while($data = mysql_fetch_array($ressel))
+        {
+        ?>
+            <option  value ='<?php echo $data['LOCALITY_ID']; ?>'><?php echo $data['LABEL']; ?></option>
         <?php
-                while($data	=	mysql_fetch_array($ressel))
-                {
-                ?>
-                    <option  value ='<?php echo $data['LOCALITY_ID']; ?>'><?php echo $data['LABEL']; ?></option>
-                <?php
-                }
-                ?>
-        </select>
+        }
+        ?>
+    </select>
 <?php
        }
 }
@@ -66,7 +65,7 @@ else
             $c = mysql_affected_rows();
 	}
 
-	$seldata = "SELECT LABEL FROM ".LOCALITY." WHERE LABEL = '".$localityval."' AND CITY_ID='".$cityid."' AND SUBURB_ID='".$subcityval."'";
+	$seldata = "SELECT LABEL FROM ".LOCALITY." WHERE LABEL = '".$localityval."' AND CITY_ID='".$cityid."'";
 	$resdata = mysql_query($seldata);
 	$ins = mysql_num_rows($resdata);
 

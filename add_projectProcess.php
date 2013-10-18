@@ -37,7 +37,8 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 	if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 	{
 
-		$txtProjectName				=	trim($_POST['txtProjectName']);
+	    $txtProjectName				=	trim($_POST['txtProjectName']);
+            $projectNameOld                             =       trim($_POST['projectNameOld']);
             $builderId					=	trim($_POST['builderId']);
             $cityId					=	trim($_POST['cityId']);
             $suburbId					=	trim($_POST['suburbId']);
@@ -146,6 +147,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		/***************end Query for Locality selected************/
 
 		$smarty->assign("txtProjectName", $txtProjectName);
+                $smarty->assign("projectNameOld", $projectNameOld);
 		$smarty->assign("builderId", $builderId);
 		$smarty->assign("cityId", $cityId);
 		$smarty->assign("suburbId", $suburbId);
@@ -234,22 +236,18 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 		}
-		
-		$qryprojectchk	=	"SELECT PROJECT_NAME,PROJECT_SMALL_IMAGE FROM ".RESI_PROJECT." WHERE PROJECT_NAME = '".$txtProjectName."' AND BUILDER_ID = '".$builderId."' AND LOCALITY_ID = '".$localityId."' AND CITY_ID = '".$cityId."'";
-		$resprojectchk	=	mysql_query($qryprojectchk);
-		
-		if($projectId==''){
-		   if(mysql_num_rows($resprojectchk) >0){
-			   $ErrorMsg["txtProjectName"] = "Project with same name already exist.";
-		   }
-        
-	        $qryUrl = "SELECT * FROM ".RESI_PROJECT." WHERE CITY_ID = ".$cityId." and LOCALITY_ID =".$localityId." and PROJECT_NAME='".$txtProjectName."'";
-	        $resUrl = mysql_query($qryUrl) or die(mysql_error());
-	        if(mysql_num_rows($resUrl)>0){
-	     	    $ErrorMsg["txtProjectUrlDuplicate"] = "This project already exist.";
-	        }
-         }
-
+                if( ($projectId == '') OR ( ( trim($projectNameOld) != trim($txtProjectName)) && $projectId != '' ) ) {
+                    $qryprojectchk = "SELECT PROJECT_NAME FROM ".RESI_PROJECT." 
+                        WHERE 
+                            PROJECT_NAME = '".$txtProjectName."' 
+                            AND BUILDER_ID = '".$builderId."' 
+                            AND LOCALITY_ID = '".$localityId."' 
+                            AND CITY_ID = '".$cityId."'";
+                    $resprojectchk = mysql_query($qryprojectchk);
+                    if(mysql_num_rows($resprojectchk) >0){
+                         $ErrorMsg["txtProjectName"] = "Project with same name already exist.";
+                    }
+                }
 	     /*if(empty($display_order) || $display_order < 1 || $display_order > 999 || ($display_order > 15 && $display_order < 101))
 	     {
 	         $ErrorMsg["display_order"] = "Please put in display order (1-15 for city page), (101-998 for locality page), 999 for default";
@@ -490,6 +488,7 @@ elseif ($projectId!='')
 		
 		$ProjectDetail 	= ProjectDetail($projectId);
 		 $smarty->assign("txtProjectName", stripslashes($ProjectDetail[0]['PROJECT_NAME']));
+                 $smarty->assign("projectNameOld", stripslashes($ProjectDetail[0]['PROJECT_NAME']));
 		 $smarty->assign("txtAddress", stripslashes($ProjectDetail[0]['PROJECT_ADDRESS']));
 		 $smarty->assign("txtProjectDescription", stripslashes($ProjectDetail[0]['PROJECT_DESCRIPTION']));
 		 $smarty->assign("txtAddress", stripslashes($ProjectDetail[0]['PROJECT_ADDRESS']));

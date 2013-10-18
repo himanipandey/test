@@ -228,7 +228,10 @@
 							<div>
 							   <tr>
                                                                 <td width="30%" align="right"><font color ="red">*</font><b>Project Name :</b> </td>
-								  <td width="30%" align="left"><input type="text" name="txtProjectName" id="txtProjectName" value="{$txtProjectName}" style="width:357px;" /></td>
+								  <td width="30%" align="left">
+                                                                      <input type="text" name="txtProjectName" id="txtProjectName" value="{$txtProjectName}" style="width:357px;" />
+                                                                      <input type="hidden" name = "projectNameOld" value="{$projectNameOld}">
+                                                                  </td>
 
 								  <td width="50%" align="left">
 									  <font color="red">{if $ErrorMsg["txtProjectName"] != ''} {$ErrorMsg["txtProjectName"]} {/if}<span id = "err_project_name" style = "display:none;">Please enter project name!</span></font>

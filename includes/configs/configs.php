@@ -609,7 +609,7 @@ $ARR_PROJ_EDIT_PERMISSION = array(
 	"AUDIT-1"=>array('audit1','dailymis'),
 	"NEWPROJECTAUDIT"=>array('newProject'),
 	"AUDIT-2"=>array('audit2'),
-	"SURVEY"=>array('dataCollection','newProject')
+	"SURVEY"=>array('dataCollection','newProject','dcCallCenter')
 );
 $dept = $_SESSION['DEPARTMENT'];
 if(!isset($ARR_PROJ_EDIT_PERMISSION[$dept]))
