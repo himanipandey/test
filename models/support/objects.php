@@ -389,6 +389,12 @@ class Objects extends ActiveRecord\Model{
             $object_array[strtoupper($key)] = $value;
             unset($object_array[$key]);
         }
+        if( property_exists($this,static::$extra_attributes)){
+            $extra_columns = static::get_extra_attributes();
+            foreach($extra_columns as $column){
+                $object_array[$column] = $this->$column;
+            }
+        }
         return $object_array;
     }
 
