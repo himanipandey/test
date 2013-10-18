@@ -617,11 +617,15 @@
                     </TABLE>
                     {/if}
 
-                    {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeP || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV}
+                    {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeP || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV || $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeC}
+                        {$typeName = 'Plot'}
+                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeC}
+                            {$typeName = 'Commercial'}
+                        {/if}
                       <br />
                       <TABLE cellSpacing=2 cellPadding=4 width="60%" align="left" style="border:1px solid #c2c2c2;" border="0">
                         <div>
-                            <tr><td colspan="7"><b><span style='font-size:15px;'>PLOTS</span></b></td></tr>
+                            <tr><td colspan="7"><b><span style='font-size:15px;'>{$typeName}</span></b></td></tr>
 
                             <tr><td colspan="7"></td></tr>
 
@@ -629,10 +633,10 @@
                                  <td  nowrap="nowrap" width="1%" align="center" class="whiteTxt">Delete</td>
                                 <td nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                                 <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
-                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Plot Size(Length)</td>
-                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Plot Size(Breadth)</td>
+                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size(Length)</td>
+                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size(Breadth)</td>
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
-                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Plot Area</td>
+                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Area</td>
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Property Status</td>
                             </tr>
 
@@ -665,7 +669,7 @@
                               </td>-->
                               <td>
                                     <input type='hidden' value={$projectId} name='projectId' tempName="projectId"   />
-                                    <input type='hidden' value="Plot" name='unitType[]' tempName="unitType"   />
+                                    <input type='hidden' value='{$typeName}' name='unitType[]' tempName="unitType"   />
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
                                     <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
                               </td>
