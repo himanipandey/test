@@ -1,8 +1,14 @@
 <?php
 
     $cityList = "1,2,5,6,8,11,12,16,18,20,21";
-    $active = "resi_project.active = 1 OR resi_project.active = 3";
-    $activeProject = ResiProject::find('all',array('conditions'=>array("($active) AND residential = '0' AND city_id in ($cityList)"),
+    $joinLocSub = 'INNER JOIN suburb a ON(locality.locality_id = a.locality_id)
+                   INNER JOIN city c on (a.suburb_id = c.suburb_id)';
+    $locIdList = Locality::find('all',array('join'=>$joinLocSub,
+        'conditions' => "c.city_id in ($cityList)", array("select => c.city_id")));
+    
+    
+    $active = "resi_project.status = 'Active' OR resi_project.status = 'ActiveInCms'";
+    $activeProject = ResiProject::virtual_find('all',array('conditions'=>array("($active) AND residential_flag = 'Residential' AND locality_id in ($locIdList)"),
         "select" => "count(*) as PROJECT_COUNT"));
     
     /******code for get all projects which was added in last n number of days***/

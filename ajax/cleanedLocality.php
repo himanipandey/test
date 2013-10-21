@@ -9,7 +9,7 @@
     $localityId	= $_REQUEST['localityId'];
     
     $allProject = ResiProject::find('all', array('conditions' => array("latitude not in($latLongList) 
-                    and longitude not in($latLongList) and locality_id = '".$localityId."'"),'order' => 'LONGITUDE,LATITUDE ASC'));
+                    and longitude not in($latLongList) and locality_id = '".$localityId."' and version = 'cms'"),'order' => 'LONGITUDE,LATITUDE ASC'));
     //print_r($allProject->latitude);
     if( count($allProject)>0 ) {
         $arrLatitude = array();

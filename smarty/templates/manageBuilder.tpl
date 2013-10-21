@@ -92,8 +92,16 @@ function chkConfirm()
                         <TD align=center class=td-border>{$builderDataArr[data].BUILDER_NAME}  </TD>
                         <TD align=center class=td-border>{$builderDataArr[data].ENTITY}  </TD>
                         <TD align=center class=td-border>{$builderDataArr[data].URL}</TD>
-                        <TD align=left class=td-border>{$builderDataArr[data].META_TITLE}</TD>
-                        <TD align=left class=td-border>{$builderDataArr[data].META_KEYWORDS}</TD>
+                        <TD align=left class=td-border>
+                            {if $builderDataArr[data].META_TITLE != '0'} 
+                                {$builderDataArr[data].META_TITLE}
+                            {/if}
+                        </TD>
+                        <TD align=left class=td-border>
+                            {if $builderDataArr[data].META_KEYWORDS != '0'} 
+                                {$builderDataArr[data].META_KEYWORDS}
+                            {/if}
+                        </TD>
                         <TD align=center class=td-border>{$builderDataArr[data].DISPLAY_ORDER}</TD>
                         <TD  class="td-border" align=center nowrap>
 			   <a href="builderadd.php?builderid={$builderDataArr[data].BUILDER_ID}&mode=edit&page={$page}&sort={$sort}" title="{$builderDataArr[data].BUILDER_NAME}">Edit </a>

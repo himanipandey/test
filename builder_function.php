@@ -270,11 +270,11 @@ function ProjectDetail($projectId) {
 /* * *****************function for fetch project options detail by project id**************** */
 
 function fetch_projectOptions($projectId) {
-    $qryopt = "SELECT DISTINCT(BEDROOMS),UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qryopt = "SELECT DISTINCT(BEDROOMS),OPTION_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "'";
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
     while ($data = mysql_fetch_assoc($resopt)) {
-        $bedroom = $data['UNIT_TYPE'] . "-" . $data['BEDROOMS'];
+        $bedroom = $data['OPTION_TYPE'] . "-" . $data['BEDROOMS'];
         array_push($arrOptions, $bedroom);
     }
     return $arrOptions;
@@ -896,7 +896,7 @@ function costructionDetail($projectId) {
 /* * *********Builder management************* */
 
 function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
-    $Sql = "INSERT INTO " . RESI_BUILDER . " SET
+   echo $Sql = "INSERT INTO " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
                                 ENTITY  	   	     = '" . d_($legalEntity) . "',
 				DESCRIPTION 	  	     = '" . d_($txtBuilderDescription) . "',
@@ -916,7 +916,7 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				DEBT			     ='" . $debt . "',
 				ESTABLISHED_DATE	     = '" . $date . "',
                                 updated_by                   = $_SESSION[adminId],
-                                created_at                   = now()";
+                                created_at                   = now()";die;
 
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertBuilder()');
     $lastId = mysql_insert_id();
@@ -1825,6 +1825,34 @@ function fetch_builderDetail($builderId) {
     $resbuild = mysql_query($qrybuild) or die(mysql_error());
     $databuild = mysql_fetch_assoc($resbuild);
     return $databuild;
+}
+
+function ViewLocalityDetails($localityID) {
+    $Sql = "SELECT * FROM " . LOCALITY . " WHERE LOCALITY_ID ='" . $localityID . "'";
+    $ExecSql = mysql_query($Sql);
+
+    if (mysql_num_rows($ExecSql) == 1) {
+
+        $Res = mysql_fetch_assoc($ExecSql);
+        $ResDetails['LOCALITY_ID'] = $Res['LOCALITY_ID'];
+        $ResDetails['CITY_ID'] = $Res['CITY_ID'];
+        $ResDetails['LABEL'] = $Res['LABEL'];
+        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
+        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
+        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
+        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
+        $ResDetails['URL'] = $Res['URL'];
+        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
+        $ResDetails['VISIBLE_IN_CMS'] = $Res['VISIBLE_IN_CMS'];
+        $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
+        $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
+        $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
+        $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
+        $ResDetails['LOCALITY_CLEANED'] = $Res['LOCALITY_CLEANED'];
+        return $ResDetails;
+    } else {
+        return 0;
+    }
 }
 ?>
 

@@ -54,9 +54,10 @@
             $twoMonthAgoPrice[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
          }
      }
-     
-     $projectDetails = projectDetailById($projectId);
-     
+     $project = ResiProject::virtual_find($projectId);
+     $projectDetails = $project->to_custom_array();
+     $projectDetails = array($projectDetails);
+
      $smarty->assign("latestMonthAllBrokerPrice", $latestMonthAllBrokerPrice);
      $smarty->assign("oneMonthAgoPrice", $oneMonthAgoPrice);
      $smarty->assign("twoMonthAgoPrice", $twoMonthAgoPrice);
@@ -70,6 +71,13 @@
      $smarty->assign("projectDetails", $projectDetails);
      $smarty->assign("arrCampaign", $arrCampaign);
      $smarty->assign("projectId", $projectId);
+     $builderName = ResiBuilder::getBuilderById($projectDetails[0]['BUILDER_ID']);
+     $smarty->assign("builderName", $builderName[0]->builder_name);
+     $locality = Locality::getLocalityById($projectDetails[0]['LOCALITY_ID']);
+     $suburb = Suburb::getSuburbById($locality[0]->suburb_id);
+     $city = City::getCityById($suburb[0]->city_id);
+     $smarty->assign("cityName", $city[0]->label);
+     $smarty->assign("localityName", $locality[0]->label);
      
      //code for distinct unit for a project
     $arrProjectType = fetch_projectOptions($projectId);

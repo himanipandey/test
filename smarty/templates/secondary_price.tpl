@@ -124,17 +124,17 @@ function builder_contact(builderId,buildernm)
                           </tr>
                           <tr style="height:25px;">
                               <td align ="left"><b>Builder Name:</b></td>
-                              <td align ="left">{$projectDetails[0].BUILDER_NAME}</td>
+                              <td align ="left">{$builderName}</td>
                           </tr>
                           <tr>
                               <td align ="left" style="height:25px;"><b>City:</b></td>
-                              {$city = ViewCityDetails($projectDetails[0].CITY_ID)}
-                              <td align ="left">{$city['LABEL']}</td>
+                                
+                              <td align ="left">{$cityName}</td>
                           </tr>
                           <tr>
                               <td align ="left" style="height:25px;"><b>Locality:</b></td>
-                              {$locality = ViewLocalityDetails($projectDetails[0].LOCALITY_ID)}
-                              <td align ="left">{$locality['LABEL']}</td>
+                              
+                              <td align ="left">{$localityName}</td>
                           </tr>               
                       </table>
                   </td>

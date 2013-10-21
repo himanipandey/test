@@ -36,7 +36,16 @@ function getSubLocData($cityId, $order) {
         array_push($arraySubLoc, $row);
     }
 
-    $queryLoc = "SELECT LOCALITY_ID, LABEL, PRIORITY FROM ".LOCALITY." WHERE CITY_ID ='".$cityId ."'".$queryLessThenMax." ORDER BY LABEL ASC";
+    $queryLessThenMaxLoc = "";
+    $queryLessThenMaxLoc = " AND a.PRIORITY < ".MAX_PRIORITY;
+    $queryLoc = "SELECT a.LOCALITY_ID, a.LABEL, a.PRIORITY 
+                FROM ".LOCALITY." a
+                inner join suburb b
+                  on a.suburb_id = b.suburb_id
+                inner join city c
+                  on b.city_id = c.city_id
+                WHERE
+                  c.CITY_ID ='".$cityId ."'".$queryLessThenMaxLoc." ORDER BY a.LABEL ASC";
     $queryExecuteLoc 	= mysql_query($queryLoc) or die(mysql_error());
     while ($row1 = mysql_fetch_assoc($queryExecuteLoc)) {
         $row1['ID'] = $row1['LOCALITY_ID'];
@@ -109,12 +118,32 @@ function updateLocality($locID = null, $priority = null)
 }
 function autoAdjustPrio($tablename, $cityID = null, $priority = null)
 {
-    $query = "UPDATE ".$tablename." SET PRIORITY = (PRIORITY+1) WHERE CITY_ID='".$cityID."' AND PRIORITY >=".$priority." AND PRIORITY <".MAX_PRIORITY;
+    if( $tablename == 'locality' ) {
+        $sub = "select suburb_id from suburb where city_id = $cityID";
+        $resSub = mysql_query($sub);
+        while($subId = mysql_fetch_assoc($resSub)) {
+            $loc = "select locality_id from locality where suburb_id = ".$subId['suburb_id'];
+            $resLoc = mysql_query($loc);
+            while($locId = mysql_fetch_assoc($resLoc)) {
+                $query = "UPDATE ".$tablename." SET PRIORITY = (PRIORITY+1) WHERE LOCALITY_ID='".$locId['locality_id']."' AND PRIORITY >=".$priority." AND PRIORITY <".MAX_PRIORITY;
+            }
+        }  
+    }
+    else {
+       $query = "UPDATE ".$tablename." SET PRIORITY = (PRIORITY+1) WHERE CITY_ID='".$cityID."' AND PRIORITY >=".$priority." AND PRIORITY <".MAX_PRIORITY; 
+    }
     mysql_query($query) or die(mysql_error());
 }
 /* * ******suburb list with id************* */
 function localityArr($cityId) {
-    $qry = "SELECT LOCALITY_ID,LABEL FROM " . LOCALITY . " WHERE CITY_ID = '" . $cityId . "' AND VISIBLE_IN_CMS = '1' ORDER BY LABEL ASC";
+    $qry = "SELECT a.LOCALITY_ID,a.LABEL FROM " . LOCALITY . " a
+              inner join suburb b
+                on a.suburb_id = b.suburb_id
+              inner join city c
+                on b.suburb_id = c.suburb_id
+             WHERE 
+                c.CITY_ID = '" . $cityId . "' 
+            ORDER BY a.LABEL ASC";
     $res = mysql_query($qry);
     $arrCity = array();
     while ($data = mysql_fetch_assoc($res)) {
@@ -129,22 +158,60 @@ function getProjectArr($Id, $type, $order){
     switch($type)
     {
         case "city":
-            $queryLessThenMax = " AND DISPLAY_ORDER > 0 AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
-            $where = "CITY_ID = '" . $Id . "'" .$queryLessThenMax;
-            $orderby = "ORDER BY DISPLAY_ORDER $orderBy, PROJECT_NAME ASC";
+           $locList = "select l.locality_id from locality l 
+                        inner join suburb s on l.suburb_id = s.suburb_id
+                        inner join city c on s.city_id = c.city_id 
+                        where c.city_id = $Id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $comma = ',';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+              $cnt++;
+            }
+            $queryLessThenMax = " AND rp.DISPLAY_ORDER > 0 AND rp.DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
+            $where = "rp.locality_id in ($listLoc)" .$queryLessThenMax;
+            $orderby = "ORDER BY rp.DISPLAY_ORDER $orderBy, rp.PROJECT_NAME ASC";
             break;
         case "suburb":
-            $queryLessThenMax = " AND DISPLAY_ORDER_SUBURB > 0 AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
-            $where = "SUBURB_ID = '" . $Id . "'" .$queryLessThenMax;
-            $orderby = "ORDER BY DISPLAY_ORDER_SUBURB $orderBy, PROJECT_NAME ASC";
+            $locList = "select l.locality_id from locality l 
+                        inner join suburb s on l.suburb_id = s.suburb_id
+                        where s.suburb_id = $Id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $comma = ',';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $queryLessThenMax = " AND rp.DISPLAY_ORDER_SUBURB > 0 AND rp.DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
+            $where = "rp.locality_id in ($listLoc)" .$queryLessThenMax;
+            $orderby = "ORDER BY rp.DISPLAY_ORDER_SUBURB $orderBy, rp.PROJECT_NAME ASC";
             break;
         case "locality":
-            $queryLessThenMax = " AND DISPLAY_ORDER_LOCALITY > 0 AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
-            $where = "LOCALITY_ID = '" . $Id . "'" .$queryLessThenMax;
-            $orderby = "ORDER BY DISPLAY_ORDER_LOCALITY $orderBy, PROJECT_NAME ASC";
+            $queryLessThenMax = " AND rp.DISPLAY_ORDER_LOCALITY > 0 AND rp.DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
+            $where = "rp.LOCALITY_ID = '" . $Id . "'" .$queryLessThenMax;
+            $orderby = "ORDER BY rp.DISPLAY_ORDER_LOCALITY $orderBy, rp.PROJECT_NAME ASC";
             break;
     }
-    $qry = "SELECT PROJECT_NAME, PROJECT_ID, CITY_ID, SUBURB_ID, LOCALITY_ID, DISPLAY_ORDER, DISPLAY_ORDER_LOCALITY, DISPLAY_ORDER_SUBURB FROM " . RESI_PROJECT . " WHERE ".$where." ".$orderby;
+    $qry = "SELECT rp.PROJECT_NAME, rp.PROJECT_ID, c.CITY_ID, s.SUBURB_ID, l.LOCALITY_ID, rp.DISPLAY_ORDER, rp.DISPLAY_ORDER_LOCALITY, rp.DISPLAY_ORDER_SUBURB 
+            FROM " . RESI_PROJECT . " rp 
+            inner join locality l on rp.locality_id = l.locality_id
+            inner join suburb s on l.suburb_id = s.suburb_id
+            inner join city c on s.city_id = c.city_id
+            WHERE ".$where." ".$orderby;
     $res = mysql_query($qry) or die(mysql_error());
     $arr = array();
     while ($data = mysql_fetch_assoc($res)) {
@@ -157,11 +224,42 @@ function updateProj($projectId = null, $priority = null, $mode = null, $modeid =
     switch($mode)
     {
         case "city":
-            $where = "CITY_ID = '" . $modeid . "'";
+            $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                inner join city c on s.city_id = c.city_id 
+                where c.city_id = $modeid";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $where = "LOCALITY_ID in ($listLoc)";
             $update = "DISPLAY_ORDER = '$priority'";
             break;
         case "suburb":
-            $where = "SUBURB_ID = '" . $modeid . "'";
+            $locList = "select l.locality_id from locality l 
+                        inner join suburb s on l.suburb_id = s.suburb_id
+                        where s.suburb_id = $modeid";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $where = "LOCALITY_ID in ($listLoc)";
             $update = "DISPLAY_ORDER_SUBURB = '$priority'";
             break;
         case "locality":
@@ -170,7 +268,7 @@ function updateProj($projectId = null, $priority = null, $mode = null, $modeid =
             break;
     }
     $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where." AND PROJECT_ID = '".$projectId."'";
-    $res = mysql_query($qry);
+    mysql_query($qry);
     if(mysql_affected_rows()>0){
         echo "1";
     }
@@ -202,11 +300,42 @@ function autoAdjustProjPrio($id = null, $priority = null, $type = null)
     switch($type)
     {
         case "city":
-            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".$priority." AND DISPLAY_ORDER < ".PROJECT_MAX_VALID_PRIORITY;
+            $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                inner join city c on s.city_id = c.city_id 
+                where c.city_id = $id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $where = "LOCALITY_ID in ($listLoc) AND DISPLAY_ORDER >= ".$priority." AND DISPLAY_ORDER < ".PROJECT_MAX_VALID_PRIORITY;
             $update = "DISPLAY_ORDER = (DISPLAY_ORDER+1)";
             break;
         case "suburb":
-            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_VALID_PRIORITY;
+            $locList = "select l.locality_id from locality l 
+                        inner join suburb s on l.suburb_id = s.suburb_id
+                        where s.suburb_id = $id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $where = "LOCALITY_ID in ($listLoc) AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_VALID_PRIORITY;
             $update = "DISPLAY_ORDER_SUBURB = (DISPLAY_ORDER_SUBURB+1)";
             break;
         case "locality":
@@ -215,18 +344,49 @@ function autoAdjustProjPrio($id = null, $priority = null, $type = null)
             break;
     }
     $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where;
-    $res = mysql_query($qry) or die(mysql_error());
+    mysql_query($qry) or die(mysql_error());
 }
 function getProjectCount($Id, $type){
     switch($type)
     {
         case "city":
+            $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                inner join city c on s.city_id = c.city_id 
+                where c.city_id = $Id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
             $queryLessThenMax = " AND DISPLAY_ORDER > 0 AND DISPLAY_ORDER <= ".PROJECT_MAX_VALID_PRIORITY;
-            $where = "CITY_ID = '" . $Id . "'";
+            $where = "LOCALITY_ID IN ($listLoc)";
             break;
         case "suburb":
+            $locList = "select l.locality_id from locality l 
+                        inner join suburb s on l.suburb_id = s.suburb_id
+                        where s.suburb_id = $Id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
             $queryLessThenMax = " AND DISPLAY_ORDER_SUBURB > 0 AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_VALID_PRIORITY;
-            $where = "SUBURB_ID = '" . $Id . "'";
+            $where = "LOCALITY_ID IN ($listLoc)";
             break;
         case "locality":
             $queryLessThenMax = " AND DISPLAY_ORDER_LOCALITY > 0 AND DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_VALID_PRIORITY;
@@ -243,12 +403,43 @@ function autoAdjustMaxCountProjPrio($id = null, $priority = null, $type = null)
     switch($type)
     {
         case "city":
-            $where = "CITY_ID = '" . $id . "' AND DISPLAY_ORDER >= ".$priority." AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
+            $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                inner join city c on s.city_id = c.city_id 
+                where c.city_id = $id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $where = "LOCALITY_ID IN ($listLoc) AND DISPLAY_ORDER >= ".$priority." AND DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
             $update = "DISPLAY_ORDER = ".PROJECT_MAX_PRIORITY;
             $orderby = " ORDER BY DISPLAY_ORDER DESC";
             break;
         case "suburb":
-            $where = "SUBURB_ID = '" . $id . "' AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
+             $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                where s.suburb_id = $id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $where = "LOCALITY_ID in ($listLoc) AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
             $update = "DISPLAY_ORDER_SUBURB = ".PROJECT_MAX_PRIORITY;
             $orderby = " ORDER BY DISPLAY_ORDER_SUBURB DESC";
             break;
@@ -266,10 +457,41 @@ function checkProjAvail($projectId = null, $priority = null, $mode = null, $mode
     switch($mode)
     {
         case "city":
-            $where = "CITY_ID = '" . $modeid . "'";
+            $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                inner join city c on s.city_id = c.city_id 
+                where c.city_id = $modeid";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $where = "LOCALITY_ID in ($listLoc)";
             break;
         case "suburb":
-            $where = "SUBURB_ID = '" . $modeid . "'";
+             $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                where s.suburb_id = $modeid";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+           $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            $where = "LOCALITY_ID in ($listLoc)";
             break;
         case "locality":
             $where = "LOCALITY_ID = '" . $modeid . "'";

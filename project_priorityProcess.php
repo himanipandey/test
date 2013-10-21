@@ -1,6 +1,6 @@
 <?php
 //calling function for all the cities
-$cityArray = CityArr();
+$cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 $smarty->assign('dirname',$dirName);
 
@@ -12,11 +12,11 @@ $cityId = $_REQUEST['citydd'];
 $smarty->assign('cityId',$cityId);
 
 $suburbArr = array();
-$suburbArr = SuburbArr($cityId);
+$suburbArr = Suburb::SuburbArr($cityId);
 $smarty->assign('suburbArr',$suburbArr);
 
 $locArr = array();
-$locArr = localityArr($cityId);
+$locArr = Locality::getLocalityByCity($cityId);
 $smarty->assign('localityArr',$locArr);
 
 $projectArr = array();

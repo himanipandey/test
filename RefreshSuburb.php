@@ -37,12 +37,17 @@
             }		
         } else if($_REQUEST['part']=='addquickcity') {
             
-            $city_id        =   $_REQUEST["id"];
+            $city_id = $_REQUEST["id"];
             //$locality_id    =   $_REQUEST["locality_id"];
             
                 if($city_id != '') {
                     if($_REQUEST['flg'] == 'locality')  {
-                       $sql = "SELECT A.LOCALITY_ID, A.CITY_ID, A.LABEL FROM ".LOCALITY." AS A WHERE A.CITY_ID = " . $city_id ." ORDER BY A.LABEL ASC";
+                       $sql = "SELECT A.LOCALITY_ID, c.CITY_ID, A.LABEL 
+                            FROM ".LOCALITY." AS A
+                            inner join suburb s on A.suburb_id = s.suburb_id
+                            inner join city c on s.city_id = c.city_id
+                           WHERE 
+                           c.CITY_ID = " . $city_id ." ORDER BY A.LABEL ASC";
                        $data = mysql_query($sql);
                        ?>
                        <option value=''>Select</option>
@@ -66,7 +71,7 @@
         } else if ($_REQUEST['part']=='autofillsub'){
             $locality = $_REQUEST['loc'];
             $cityid = $_REQUEST['cityid'];
-            $sql = "SELECT A.SUBURB_ID, A.LABEL FROM ".SUBURB." AS A INNER JOIN ".LOCALITY." AS B ON (A.SUBURB_ID = B.SUBURB_ID) WHERE B.LOCALITY_ID = '".$locality."' AND B.CITY_ID = " . $cityid ;
+            $sql = "SELECT A.SUBURB_ID, A.LABEL FROM ".SUBURB." AS A INNER JOIN ".LOCALITY." AS B ON (A.SUBURB_ID = B.SUBURB_ID) WHERE B.LOCALITY_ID = '".$locality."' AND A.CITY_ID = " . $cityid ;
             $data = mysql_query($sql);
             $response = mysql_fetch_assoc($data);
             $json = array($response['SUBURB_ID'], $response['LABEL']);
@@ -74,25 +79,25 @@
             echo json_encode($json);            
             
         }else {
-            $city_id		=	$_REQUEST["id"];
-            $suburb_id          =	$_REQUEST["suburb_id"];
+            $city_id = $_REQUEST["id"];
+            $suburb_id = $_REQUEST["suburb_id"];
             if($suburb_id == '')  {
                    if($city_id != '')
                    {
-                           $suburbArr = Array();
-                           $sql = "SELECT A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".SUBURB." AS A WHERE A.CITY_ID = " . $city_id . " ORDER BY A.LABEL ASC";
+                        $suburbArr = Array();
+                        $sql = "SELECT A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".SUBURB." AS A WHERE A.CITY_ID = " . $city_id . " ORDER BY A.LABEL ASC";
 
-                           $data = mysql_query($sql);
+                        $data = mysql_query($sql);
 
-                           while ($dataArr = mysql_fetch_array($data))
-                            {
-                                   array_push($suburbArr, $dataArr);
-                            }
-                           echo "<option value=''>Select</option>";
-                           foreach($suburbArr as $val)
-                           {
-                            echo "<option value=".$val["SUBURB_ID"].">".$val["LABEL"] . "</option>";
-                           }
+                        while ($dataArr = mysql_fetch_array($data))
+                         {
+                                array_push($suburbArr, $dataArr);
+                         }
+                        echo "<option value=''>Select</option>";
+                        foreach($suburbArr as $val)
+                        {
+                         echo "<option value=".$val["SUBURB_ID"].">".$val["LABEL"] . "</option>";
+                        }
                     }
                    else
                         echo "<option value=''>Select</option>"; 
@@ -100,7 +105,12 @@
         if($suburb_id != '')	
         {
            $localityArr = Array();
-                   $sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".LOCALITY." AS A WHERE A.CITY_ID = " . $city_id." AND VISIBLE_IN_CMS = '1'";
+                   $sql = "SELECT A.LOCALITY_ID, s.SUBURB_ID, s.CITY_ID, A.LABEL 
+                       FROM ".LOCALITY." AS A
+                       inner join suburb s on A.suburb_id = s.suburb_id
+                       inner join city c on s.city_id = c.city_id
+                       WHERE
+                        c.CITY_ID = " . $city_id;
                    if ($suburb_id != null) {
                    $sql .= " AND A.SUBURB_ID = " . $suburb_id;
                    }

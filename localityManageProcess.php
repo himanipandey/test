@@ -59,11 +59,11 @@
 
 
     if ($_GET['sort'] == "1") {
-        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE LABEL BETWEEN '0' AND '9' AND DELETED_FLAG='1' AND CITY_ID ='".$cityId ."' ORDER BY LOCALITY_ID DESC";
+        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE LABEL BETWEEN '0' AND '9'  AND CITY_ID ='".$cityId ."' ORDER BY LOCALITY_ID DESC";
     } else if ($_GET['sort'] == "all") {
-        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE DELETED_FLAG='1' AND  CITY_ID ='".$cityId ."'  ORDER BY LOCALITY_ID DESC";
+        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE  CITY_ID ='".$cityId ."'  ORDER BY LOCALITY_ID DESC";
     } else {
-        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE  LEFT(LABEL,1)='".$_GET['sort']."' AND DELETED_FLAG='1'  AND  CITY_ID ='".$cityId ."' ORDER BY LOCALITY_ID DESC";
+        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE  LEFT(LABEL,1)='".$_GET['sort']."' AND  CITY_ID ='".$cityId ."' ORDER BY LOCALITY_ID DESC";
     }
 
     //echo $QueryMember;
