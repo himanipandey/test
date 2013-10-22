@@ -134,6 +134,8 @@
 		if($StatusValue!="") $StatusValue = $StatusValue;
 
                 $arrSearchFields = array();
+		$city_localalies = array();
+		
 		if($_GET['projectId'] == '')
 		{
                     if($_REQUEST['project_name'] != '')
@@ -164,6 +166,12 @@
                         $arrSearchFields['project_status_id'] = $StatusValue;
                     if($_REQUEST['locality'] != '')
                         $arrSearchFields['locality_id'] = $_REQUEST['locality'];
+		    elseif(isset($city) && !empty($city)){ //if only city selected
+			foreach($getLocality as $item => $value)
+                    		$city_locality .= $value->locality_id.",";
+			
+			$arrSearchFields['locality_id'] = substr($city_locality,0,strlen($city_locality)-1);  
+		    }
                     if( $_REQUEST['builder'] != '' ) 
                         $arrSearchFields['builder_id'] = $_REQUEST['builder'];
                     if($_REQUEST['phase'] != '')
@@ -182,6 +190,8 @@
 		}
 		else
                     $arrSearchFields['project_id'] = $_REQUEST['projectId'];
+
+		//print "==><pre>".print_r($arrSearchFields,1)."<pre>";
                 if( count($arrSearchFields) > 0 ) { 
                     $getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
                     $NumRows = count($getSearchResult);
