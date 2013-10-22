@@ -52,6 +52,7 @@
                                             <form method="post" onsubmit="return verifyDataGetForm();">
                                                 <select name="cityId" id = "cityId" class="cityId" onchange="updateSuburbDropdown(this.value, 'suburbId');" STYLE="width: 150px">
                                                         <option value =''>Select City</option>
+                                                        <option value ='-1' {if $selectedCity == -1} selected="selected" {/if}>All City</option>
                                                         {foreach from = $CityDataArr key=key item = item}
                                                         <option {if $selectedCity == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
                                                         {/foreach}
@@ -87,6 +88,13 @@
                                                 <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
                                             </form>
                                         </div>
+                                        <div style="float: left; height: 31px;margin-left: 18px">
+                                            <a href="?download=true" >
+                                                <button>
+                                                    Download Excel
+                                                </button>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -103,12 +111,14 @@
                                                             <th style="font-size: 12px">PID</td>
                                                             <th style="font-size: 12px">Project Name</th>
                                                             <th style="font-size: 12px">Builder Name</th>
+                                                            <th style="font-size: 12px">City</th>
                                                             <th style="font-size: 12px">Locality</th>
                                                             <th style="font-size: 12px">Booking Status</th>
                                                             <th style="font-size: 12px">Project Status</th>
                                                             <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px">Label</th>
                                                             <th style="font-size: 12px">Project Phase</th>
                                                             <th style="font-size: 12px">Project Stage</th>
+                                                            <th style="font-size: 12px">Last AuditDate</th>
                                                             <th style="font-size: 12px">Last Worked At</th>
                                                             <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px">Assignment Type</th>
                                                             <th style="font-size: 12px">1st Assigned To</th>
@@ -120,6 +130,10 @@
                                                             <th style="font-size: 12px">Status</th>
                                                             <th style="font-size: 12px">Remark</th>
                                                             <th style="font-size: 12px">3rd Assignment</th>
+                                                            <th style="font-size: 12px">Assigned On</th>
+                                                            <th style="font-size: 12px">Status</th>
+                                                            <th style="font-size: 12px">Remark</th>
+                                                            <th style="font-size: 12px">Last Assignment</th>
                                                             <th style="font-size: 12px">Assigned On</th>
                                                             <th style="font-size: 12px">Status</th>
                                                             <th style="font-size: 12px">Remark</th>
@@ -153,12 +167,14 @@
                                                             <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
                                                             <td>{$item['PROJECT_NAME']}</td>
                                                             <td>{$item['BUILDER_NAME']}</td>
+                                                            <td>{$item['CITY']}</td>
                                                             <td>{$item['LOCALITY']}</td>
                                                             <td>{$item['BOOKING_STATUS']}</td>
                                                             <td>{$item['PROJECT_STATUS']}</td>
                                                             <td>{$item['LABEL']}</td>
                                                             <td>{$item['PROJECT_PHASE']}</td>
                                                             <td>{$item['PROJECT_STAGE']}</td>
+                                                            <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
                                                             <td>{$item['LAST_WORKED_AT']}</td>
                                                             <td>{$item['ASSIGNMENT_TYPE']}</td>
                                                             <td>{$item['ASSIGNED_TO'][0]}</td>
@@ -173,6 +189,10 @@
                                                             <td>{$item['ASSIGNED_AT'][2]}</td>
                                                             <td>{$item['STATUS'][2]}</td>
                                                             <td>{$item['REMARK'][2]}</td>
+                                                            <td>{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}</td>
+                                                            <td>{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}</td>
+                                                            <td>{$item['STATUS'][count($item['STATUS']) -1]}</td>
+                                                            <td>{$item['REMARK'][count($item['REMARK']) -1]}</td>
                                                         </tr>
                                                         {/foreach}
                                                     </tbody>

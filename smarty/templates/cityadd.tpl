@@ -39,7 +39,7 @@
 				</tr>
 								<tr>
 				  <td width="20%" align="right" >*City URL : </td>
-				  <td width="30%" align="left" ><input type=text name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;"></td>				   
+				  <td width="30%" align="left" ><input type=text disabled name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;"></td>				   
 					<input type = "hidden" name = "txtCityUrlOld" value = "{$txtCityUrlOld}">
 				 
 				  	<td width="50%" align="left" >
@@ -147,15 +147,6 @@ jQuery(document).ready(function(){
 			return false;
 		}else{
 			jQuery('#errmsgname').html('');
-		}
-		
-		 if(CityUrl==''){
-		
-			jQuery('#errmsgurl').html('<font color="red">Please enter City url</font>');
-			jQuery("#txtCityUrl").focus();
-			return false;
-		}else{
-			jQuery('#errmsgurl').html('');
 		}
 		
 		if(DisplayOrder==''){

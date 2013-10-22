@@ -17,7 +17,6 @@
     }
 
     if (isset($_POST['btnSave'])) {
-
                     $txtCityName			=	trim($_POST['txtCityName']);
                     $txtMetaTitle			=	trim($_POST['txtMetaTitle']);
                     $txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
@@ -25,6 +24,7 @@
                     $status					=	trim($_POST['status']);
                     $desc					=	trim($_POST['desc']);	
                     $old_sub_url			=	trim($_POST['old_sub_url']);
+                    $old_sub_name			=	trim($_POST['old_sub_name']);
 
                     $smarty->assign("txtCityName", $txtCityName);
                     $smarty->assign("txtMetaTitle", $txtMetaTitle);
@@ -59,21 +59,28 @@
                         $resCity = mysql_query($qryCity);
                         $dataCity = mysql_fetch_assoc($resCity);
                         mysql_free_result($resCity);
-                        $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL']);
+                        $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $suburbid, 'suburb');
 
                             $updateQry = "UPDATE ".SUBURB." SET 
 
-                                                      LABEL 				=	'".$txtCityName."',
-                                                      META_TITLE			=	'".$txtMetaTitle."',		
-                                                      META_KEYWORDS		    =	'".$txtMetaKeywords."',
-                                                      META_DESCRIPTION		=	'".$txtMetaDescription."',
-                                                      ACTIVE				=	'".$status."',
-                                                      URL					=	'".$txtCityUrl."',
-                                                      DESCRIPTION			=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
+                                        LABEL 		=	'".$txtCityName."',
+                                        META_TITLE	=	'".$txtMetaTitle."',		
+                                        META_KEYWORDS	=	'".$txtMetaKeywords."',
+                                        META_DESCRIPTION	=	'".$txtMetaDescription."',
+                                        ACTIVE		=	'".$status."',
+                                        URL		=	'".$txtCityUrl."',
+                                        DESCRIPTION	=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
 
                             mysql_query($updateQry);
+
+                            if ( $old_sub_name != $txtCityName ) {
+                                //  add to name change log
+                                addToNameChangeLog( 'suburb', $suburbid, $old_sub_name, $txtCityName );
+                            }
+                        /*
                             if($txtCityUrl != $old_sub_url)
                                     insertUpdateInRedirectTbl($txtCityUrl,$old_sub_url);
+                        //*/
                             header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
                     }
                     else

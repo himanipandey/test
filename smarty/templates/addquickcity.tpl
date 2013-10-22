@@ -31,8 +31,8 @@ return xmlHttp;
 <script>
 function dispcity(cityId)
 {
-	id=$("#cityId").val();
-	var dataString = 'id='+ id;
+	var id = $("#cityId").val();
+	var dataString = 'part=addquickcity&flg=suburb&id='+ id;
 
 	$("#city_txtbox_hidden").val(id);
 
@@ -69,6 +69,20 @@ function dispcity(cityId)
 			$(".suburbId").html(html);
 		}
 	});
+        
+        var dataStringSub = 'part=addquickcity&flg=locality&id='+id;
+
+	$.ajax
+	({
+		type: "POST",
+		url: "RefreshSuburb.php",
+		data: dataStringSub,
+		cache: false,
+		success: function(html)
+		{
+			$(".localityId").html(html);
+		}
+	});
 }
 
 function addupdatecity()
@@ -102,7 +116,7 @@ function addupdatecity()
 		if(xmlHttpadd1)
 		{
 			document.getElementById('maincity').innerHTML = returnval;
-			cityselid=$("#cityId :selected").val();
+			var cityselid=$("#cityId :selected").val();
 			dispcity(cityselid);
 			alert("The record has been successfully updated.");
 		}
@@ -158,20 +172,17 @@ function deletecity()
 
 function dispsubcity(subcityid)
 {
-	id=$("#suburbId").val();
-	cityid=$("#cityId").val();
+	var id = $("#suburbId").val();
+	var cityid = $("#cityId").val();
+        $("#subcity_txtbox_hidden").val(id);
 
-	var dataString = 'id='+ id;
-
-	$("#subcity_txtbox_hidden").val(id);
-
-	$("#locality_txtbox_hidden").val('');
-	$("#locality_txtbox").val('');
+	//$("#locality_txtbox_hidden").val('');
+	//$("#locality_txtbox").val('');
 
 
 	if(id!='')
 	{
-		cTxt=$("#suburbId :selected").text();
+		var cTxt=$("#suburbId :selected").text();
 		$('#subcity_txtbox').attr('readonly',false);
 		$("#subcity_txtbox").val(cTxt);
 		//$('#subcity_txtbox').attr('readonly',true);
@@ -184,20 +195,7 @@ function dispsubcity(subcityid)
 		$("#subcity_txtbox").css('background','#ffffff');
 	}
 
-	var suburb_id = id;
-	var dataString = 'suburb_id='+id+"&id="+cityid;
-
-	$.ajax
-	({
-		type: "POST",
-		url: "RefreshSuburb.php",
-		data: dataString,
-		cache: false,
-		success: function(html)
-		{
-			$(".localityId").html(html);
-		}
-	});
+	
 }
 
 function addupdatesubcity()
@@ -290,17 +288,17 @@ function deletesubcity()
 
 function displocality(localityid)
 {
-	id=$("#localityId").val();
-	cityid=$("#cityId").val();
-	suburbId=$("#suburbId").val();
+	var id=$("#localityId").val();
+	var cityid=$("#cityId").val();
+	var suburbId=$("#suburbId").val();
 
-	var dataString = 'id='+ id;
+	//var dataString = 'id='+ id;
 
 	$("#locality_txtbox_hidden").val(id);
 
 	if(id!='')
 	{
-		cTxt=$("#localityId :selected").text();
+		var cTxt=$("#localityId :selected").text();
 		$('#locality_txtbox').attr('readonly',false);
 		$("#locality_txtbox").val(cTxt);
 		//$('#locality_txtbox').attr('readonly',true);
@@ -312,18 +310,35 @@ function displocality(localityid)
 		$("#locality_txtbox").val('');
 		$("#locality_txtbox").css('background','#ffffff');
 	}
+        
+       if(id!='' && cityid!=''){
+       var dataStrAutofill = 'part=autofillsub&loc='+id+'&cityid='+cityid;
+        $.ajax 	({
+            type: "POST",
+            url: "RefreshSuburb.php",
+            data: dataStrAutofill,
+            cache: false,
+            success: function(suburbArr) {
+            var newsuburbArr = suburbArr;
+                $("#suburbId option[value='" + newsuburbArr[0] + "']").attr("selected","selected");
+                $('#subcity_txtbox').val(newsuburbArr[1]);
+              }
+	});
+       }
 
 }
 
 function addupdatelocality()
 {
-	id = $("#locality_txtbox_hidden").val();
-	label = $("#locality_txtbox").val();
-	label = label.replace("&", "@");
-	cityid = $("#cityId").val();
-	suburbId = $("#suburbId").val();
+	var id = $("#locality_txtbox_hidden").val();
+	var label = $("#locality_txtbox").val();
+	var label = label.replace("&", "@");
+	var cityid = $("#cityId").val();
+	var suburbId = $("#suburbId").val();
+        
+        //alert(id+'--'+label+'--'+cityid+'--'+suburbId);
 	
-	xmlHttpadd1=GetXmlHttpObject();
+	var xmlHttpadd1=GetXmlHttpObject();
 	if (xmlHttpadd1==null)
 	{
 		alert ("Browser does not support HTTP Request");
@@ -356,14 +371,13 @@ function addupdatelocality()
 	{
 		var url="addnewlocality.php?cityid="+cityid+"&subcityval="+suburbId+"&localityval="+label+"&id="+id;
 
-
 		xmlHttpadd1.open("GET",url,false);
 		xmlHttpadd1.send(null);
 		var returnval=xmlHttpadd1.responseText;
 		if(xmlHttpadd1)
 		{
 			document.getElementById('mainlocality').innerHTML = returnval;
-			localityselid=$("#localityId :selected").val();
+			var localityselid=$("#localityId :selected").val();
 			displocality(localityselid);
 			alert("The record has been successfully updated.");
 		}
@@ -404,6 +418,7 @@ function deletelocality()
 				localityselid=$("#localityId :selected").val();
 				displocality(localityselid);
 				alert("The record has been successfully deleted.");
+                                location.reload();
 			}
 		}
 
@@ -516,31 +531,7 @@ function specialCharacterValidation(fieldVal)
             </td>
     </tr>
     <tr ><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
-    <tr>
-    <td  height="25" align="left" style="padding-left:5px;">
-    Add Suburb:
-                            </td>
-                            <td height="50%" align="left">
-                            <div id="mainsubcity">
-                            <select name="suburbId" id = "suburbId" class="suburbId" onchange="dispsubcity(this.value,1);" STYLE="width: 150px">
-                            <option value="">Select Suburb</option>
-                            {if count($suburbSelect) gt 0}
-                                    {section name=data loop=$suburbSelect}
-                                    <option {if $suburbId == {$suburbSelect[data].SUBURB_ID}} value = "{$suburbSelect[data].SUBURB_ID}" selected="selected" {else}  value = "{$suburbSelect[data].SUBURB_ID}" {/if}>{$suburbSelect[data].LABEL}</option>
-                                    {/section}
-                            {/if}
-                            </select>
-                            </div>
-                            </td>
-                            <td height="25" align="left">
-                            <div id="mainsubcity_txtbox">
-                                    <input type="hidden" name="subcity_txtbox_hidden" id="subcity_txtbox_hidden">
-                                    <input type="text" name="subcity_txtbox" id="subcity_txtbox" maxLength="40">
-                                    <a href="#" onclick="addupdatesubcity();"><b>Save</b></a>  | 
-                                    <a href="#" onclick="return deletesubcity();">Delete</a>
-                            </div>
-                            </tr>
-    <tr><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
+    
     <tr>
     <td  height="25" align="left" style="padding-left:5px;">
     Add locality:
@@ -568,7 +559,31 @@ function specialCharacterValidation(fieldVal)
                             </div>
                     </tr>
     <tr><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
-
+     <tr>
+    <td  height="25" align="left" style="padding-left:5px;">
+    Add Suburb:
+                            </td>
+                            <td height="50%" align="left">
+                            <div id="mainsubcity">
+                            <select name="suburbId" id = "suburbId" class="suburbId" onchange="dispsubcity(this.value,1);" STYLE="width: 150px">
+                            <option value="">Select Suburb</option>
+                            {if count($suburbSelect) gt 0}
+                                    {section name=data loop=$suburbSelect}
+                                    <option {if $suburbId == {$suburbSelect[data].SUBURB_ID}} value = "{$suburbSelect[data].SUBURB_ID}" selected="selected" {else}  value = "{$suburbSelect[data].SUBURB_ID}" {/if}>{$suburbSelect[data].LABEL}</option>
+                                    {/section}
+                            {/if}
+                            </select>
+                            </div>
+                            </td>
+                            <td height="25" align="left">
+                            <div id="mainsubcity_txtbox">
+                                    <input type="hidden" name="subcity_txtbox_hidden" id="subcity_txtbox_hidden">
+                                    <input type="text" name="subcity_txtbox" id="subcity_txtbox" maxLength="40">
+                                    <a href="#" onclick="addupdatesubcity();"><b>Save</b></a>  | 
+                                    <a href="#" onclick="return deletesubcity();">Delete</a>
+                            </div>
+                            </tr>
+    <tr><th class=whiteTxt colspan="3" align="center" height="5px"></th></tr>
                             </form>
     </table>
 {else}

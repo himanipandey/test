@@ -1,5 +1,5 @@
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/common.js?version=1"></script>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
@@ -14,7 +14,7 @@
 	   $(document).ready(function()   {
 	   $(".cityId").change(function()   {
 			id=$(this).val();
-			var dataString = 'id='+ id;
+			var dataString = 'part=refreshLoc&id='+ id;
 
 	   $.ajax   ({
 		   type: "POST",
@@ -22,7 +22,7 @@
 		   data: dataString,
 		   cache: false,
 		   success: function(html)   {
-				$(".suburbId").html(html);
+				$(".localityId").html(html);
 			}
 	   });
 
@@ -31,11 +31,11 @@
 	});
 
 	   $(document).ready(function()   {
-			 $(".suburbId").change(function()  {
+			 $(".localityId").change(function()  {
 
-				var suburb_id=$(this).val();
-				cid = $(".cityId").val();				
-				var dataString = 'suburb_id='+ suburb_id+"&id="+cid;
+				var locality_id = $(this).val();
+				var cid = $(".cityId").val();				
+				var dataString = 'part=refreshLoc&locality_id='+ locality_id +"&id = "+cid;
 
 	   $.ajax  ({
 			type: "POST",
@@ -43,11 +43,25 @@
 			data: dataString,
 			cache: false,
 			success: function(html)  {
-				$(".localityId").html(html);
+				$(".suburbId").html(html);
 			}
 	   });
 	  });
-
+          
+          $(".builderId").change(function(){
+            var builderid = $(this).val();
+            $.ajax  ({
+                type: "POST",
+                url: "getBuilderImage.php",
+                data: 'part=builderImage&builderid='+ builderid,
+                 dataType : "html",
+                 success: function(responsedata)  {
+                    //alert(responsedata);
+                    var splitArr = responsedata.split("@@");
+                      $("#builderbox").html('<img alt='+splitArr[0]+' src='+splitArr[1]+' align="left" style="width: 100px; height: 40px; margin-right:10px; border:solid 1px #CCC;">');
+                }
+	   });
+          });
 	});
 
 	function change_type(type_val)
@@ -213,18 +227,20 @@
 					 <form method="post" enctype="multipart/form-data" action = ''>
 							<div>
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Project Name :</b> </td>
+                                                                <td width="30%" align="right"><font color ="red">*</font><b>Project Name :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectName" id="txtProjectName" value="{$txtProjectName}" style="width:357px;" /></td>
 
 								  <td width="50%" align="left">
 									  <font color="red">{if $ErrorMsg["txtProjectName"] != ''} {$ErrorMsg["txtProjectName"]} {/if}<span id = "err_project_name" style = "display:none;">Please enter project name!</span></font>
 								  </td>
-
+                                                                 <span id="builderbox" style="clear:both;float:right"></span>
 
 							   </tr>
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Builder Name :</b> </td>
+								
+                                                               <td width="20%" align="right"><font color ="red">*</font><b> Builder Name :</b> </td>
 								  <td width="30%" align="left">
+                                                                      
 									 <select name="builderId" class="builderId">
 										<option value="">Select Builder</option>
 										{foreach from=$BuilderDataArr key=k item=v}
@@ -236,11 +252,12 @@
 								  <td width="50%" align="left">
 									  <font color="red"><span id = "err_builder_id" style = "display:none;">Please select builder name!</span></font>
 								  </td>
+                                                                  
 							   </tr>
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>City :</b> </td>
 								  <td width="30%" align="left">
-									 <select name="cityId" class="cityId">
+									 <select name="cityId" class="cityId" style="width:230px;">
 										<option value="">Select City</option>
 										{foreach from=$CityDataArr key=k item=v}
 										<option  value ='{$k}' {if $cityId == $k} selected="selected" {/if}>{$v}</option>
@@ -250,26 +267,13 @@
 								  <td width="50%" align="left">
 									  <font color="red"><span id = "err_city_id" style = "display:none;">Please select city!</span></font>
 								  </td>
+                                                                   
 							   </tr>
-							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Suburbs :</b> </td>
-								  <td width="30%" align="left">
-									 <select name="suburbId" class="suburbId">
-										<option value="">Select Suburb</option>
-										{foreach from=$suburbSelect key=k item=v}
-											<option {if $suburbId == $k} value = "{$k}" selected="selected" {else}  value = "{$k}" {/if}>{$v}</option>
-										{/foreach}
-
-									 </select>
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_suburb_id" style = "display:none;">Please select Suburb!</span></font>
-								  </td>
-							   </tr>
+							   
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Locality :</b> </td>
 								  <td width="30%" align="left">
-									 <select name="localityId" class="localityId">
+									 <select name="localityId" class="localityId" style="width:230px;">
 										<option value="">Select Locality</option>
 										{foreach from=$localitySelect key=k item=v}
 											<option {if $localityId == $k} value = "{$k}" selected="selected" {else}  value = "{$k}" {/if}>{$v}</option>
@@ -280,6 +284,23 @@
 									  <font color="red"><span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
 								 </td>
 							   </tr>
+                                                           
+                                                           <tr>
+								  <td width="20%" align="right"><font color ="red">*</font><b>Suburbs :</b> </td>
+								  <td width="30%" align="left">
+                                                                        <select name="suburbId" class="suburbId" style="width:230px;">
+                                                                               <option value="">Select Suburb</option>
+                                                                               {foreach from=$suburbSelect key=k item=v}
+                                                                                       <option {if $suburbId == $k} value = "{$k}" selected="selected" {else}  value = "{$k}" {/if}>{$v}</option>
+                                                                               {/foreach}
+
+                                                                        </select>
+								  </td>
+								  <td width="50%" align="left">
+									  <font color="red"><span id = "err_suburb_id" style = "display:none;">Please select Suburb!</span></font>
+								  </td>
+							   </tr>
+                                                           
 							   <tr>
 								  <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
 								  <td width="30%" align="left">
@@ -289,8 +310,19 @@
 									  <font color="red"><span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
 								 </td>
 							   </tr>
-
-							   <tr>
+                                                           {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
+                                                            {if array_key_exists('projectRemark',$projectComments)}   
+                                                            <tr>
+                                                                <td width="20%" align="right" valign="top"><b>Project Old Remark :</b> </td>
+                                                                <td width="30%" align="left" colspan="2">{$projectComments['projectRemark']->comment_text}</td>
+                                                            </tr>
+                                                            {else if array_key_exists('projectRemark',$projectOldComments)}
+                                                              <tr>
+                                                                <td width="20%" align="right" valign="top"><b>Project Old Remark :</b> </td>
+                                                                <td width="30%" align="left" colspan="2">{$projectOldComments['projectRemark']->comment_text}</td>
+                                                             </tr>
+                                                            {/if}
+                                                           <tr>
 								  <td width="20%" align="right" valign="top"><b>Project Remark :</b> </td>
 								  <td width="30%" align="left">
 									 <textarea name="txtProjectRemark" rows="10" cols="45" id = "txtProjectRemark">{$txtProjectRemark}</textarea>
@@ -299,7 +331,19 @@
 									  &nbsp;
 								 </td>
 							   </tr>
-							   
+							   {/if}
+                                                           {if $userDepartment == 'CALLCENTER' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('callingRemark',$projectComments)}   
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Calling Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['callingRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('callingRemark',$projectOldComments)}   
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Calling Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['callingRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
 							    <tr>
 								  <td width="20%" align="right" valign="top"><b>Calling Team Remark :</b> </td>
 								  <td width="30%" align="left">
@@ -309,7 +353,19 @@
 									  &nbsp;
 								 </td>
 							   </tr>
-							   
+							   {/if}
+                                                           {if $userDepartment == 'AUDIT-1' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('auditRemark',$projectComments)}    
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Audit Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['auditRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('auditRemark',$projectOldComments)}    
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Audit Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['auditRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
 							    <tr>
 								  <td width="20%" align="right" valign="top"><b>Audit Team Remark :</b> </td>
 								  <td width="30%" align="left">
@@ -319,7 +375,51 @@
 									  &nbsp;
 								 </td>
 							   </tr>
-
+                                                           {/if}
+                                                           {if $userDepartment == 'RESALE-CALLCENTER' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('secondaryRemark',$projectComments)}   
+                                                                <tr>
+                                                                    <td nowrap width="20%" align="right" valign="top"><b>Secondary Calling Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['secondaryRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('secondaryRemark',$projectOldComments)}   
+                                                                <tr>
+                                                                    <td nowrap width="20%" align="right" valign="top"><b>Secondary Calling Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['secondaryRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
+                                                           <tr>
+								  <td width="20%" align="right" valign="top"><b>Secondary Calling Team Remark :</b> </td>
+								  <td width="30%" align="left">
+									 <textarea name="secondaryRemark" rows="10" cols="45" id = "secondaryRemark">{$secondaryRemark}</textarea>
+								  </td>
+								  <td width="50%" align="left">
+									  &nbsp;
+								 </td>
+							   </tr>
+                                                           {/if}
+                                                           {if $userDepartment == 'SURVEY' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('fieldSurveyRemark',$projectComments)}   
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Field Survey Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['fieldSurveyRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('fieldSurveyRemark',$projectOldComments)}   
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Field Survey Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['fieldSurveyRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
+                                                           <tr>
+								  <td width="20%" align="right" valign="top"><b>Field Survey Team Remark :</b> </td>
+								  <td width="30%" align="left">
+									 <textarea name="fieldSurveyRemark" rows="10" cols="45" id = "fieldSurveyRemark">{$fieldSurveyRemark}</textarea>
+								  </td>
+								  <td width="50%" align="left">
+									  &nbsp;
+								 </td>
+							   </tr>
+                                                           {/if}
 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Address :</b> </td>
@@ -529,10 +629,10 @@
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
 								  <td width="30%" align="left">
 								  	{if $projectId != '' && $urlEditAccess == 0}
-								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
+								  		<input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
 								  	{else}
-								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
-								  		<br><span style = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</font>
+								  		<input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
+								  		<br><span style = "font-size:10px">Like:noida/sector-50/dlf-group</font>
 								  	{/if}
 								  	
 								  	<input type = "hidden" name = "txtProjectURLOld" value = "{$txtProjectURLOld}">

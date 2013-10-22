@@ -10,6 +10,7 @@
 	$smarty->assign("typeP", PLOTS);
 	$smarty->assign("typePV", PLOT_VILLAS);
 	$smarty->assign("typePA", PLOT_APARTMENTS);
+    $smarty->assign("typeC", COMMERCIAL);
 
 	$smarty->assign("RoomCategoryArr",$RoomCategoryArr);
 	
@@ -117,7 +118,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("statusval",$statusval);
                 
 
-                if ($_REQUEST['unitType'][$key]!='Plot') {
+                if ($_REQUEST['unitType'][$key]!='Plot' && $_REQUEST['unitType'][$key]!='Commercial') {
                     if(trim($txtSize) == '' OR (!is_numeric(trim($txtSize))))
                     {
                         $ErrorMsg[$key] .= "<br>Please enter unit size";
@@ -224,18 +225,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     AND
                         PROJECT_ID = '".$projectId."'";
                     $resDel	= mysql_query($qryDel) or die(mysql_error()." error in deletion");
-                    if($resDel)
-                    {
-
-                        $updateArc = "UPDATE ".RESI_PROJECT_OPTIONS_ARC." 
-                            SET 
-                                IS_DELETED = '1'
-                            WHERE
-                                OPTIONS_ID = '".$_REQUEST['typeid_edit'][$key]."'
-                            AND
-                                PROJECT_ID	= '".$projectId."'";
-                        $resArc = mysql_query($updateArc) or die(mysql_error()." error in arc table updation");
-                    }
                     $flg_delete = 1;
                 }
             }  

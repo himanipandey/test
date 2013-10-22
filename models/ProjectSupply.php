@@ -11,6 +11,7 @@ class ProjectSupply extends ActiveRecord\Model {
     
     function addEditSupply($projectId, $phaseId, $projectType, $noOfBedroom, $supply, $launchedUnit){
         if($phaseId=='0') $phaseId = NULL;
+        if($projectType == 'plot') $noOfBedroom = 0;
         $supply_new = self::find(array('project_id'=>$projectId, 'phase_id'=>$phaseId, 'no_of_bedroom'=>$noOfBedroom, 'project_type'=>$projectType));
         if($supply_new){
             $isInventoryAdded = self::isInventoryAdded($projectId, $phaseId);
