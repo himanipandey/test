@@ -1,3 +1,8 @@
 *.idea/
 fabfile.pyc
 nbproject/
+.buildpath
+.project
+.settings/
+images_new
+.gitignore
