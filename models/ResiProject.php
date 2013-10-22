@@ -73,7 +73,9 @@ class ResiProject extends Objects
                array_push($arrSearchFieldsValue, $value);
            }
        }
+	
        $conditions = array_merge(array($arrSearchFields), $arrSearchFieldsValue);
+	
        $join = " inner join resi_builder b on resi_project.builder_id = b.builder_id
                  inner join master_project_phases phases 
                     on resi_project.project_phase_id = phases.id
@@ -81,7 +83,7 @@ class ResiProject extends Objects
                     on resi_project.project_stage_id = stages.id";
        $projectSearch = ResiProject::find('all',
            array('joins' => $join,'conditions'=>$conditions,'select' => 
-                    'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name'));
+                    'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name','limit'=>25));
        return $projectSearch;
    }
 

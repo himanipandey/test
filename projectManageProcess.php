@@ -72,7 +72,9 @@
 		if(!isset($_REQUEST['phase']))
 			$_REQUEST['phase'] = '';
 		$phase = $_REQUEST['phase'];
-                
+                if(!isset($_REQUEST['stage']))
+			$_REQUEST['stage'] = '';
+		$stage = $_REQUEST['stage'];
 		if(!isset($_REQUEST['updationCycle']))
 			$_REQUEST['updationCycle'] = '';
 		$updationCycle = $_REQUEST['updationCycle'];
@@ -137,7 +139,7 @@
 		if($_GET['projectId'] == '')
 		{
                     if($_REQUEST['project_name'] != '')
-                        $arrSearchFields['project_name'] = $_REQUEST['project_name'];
+                        $arrSearchFields['project_name'] = trim($_REQUEST['project_name']);
                     if($_REQUEST['Residential'] != '')
                         $arrSearchFields['residential_flag'] = $_REQUEST['Residential'];
 
@@ -177,8 +179,8 @@
                         $arrSearchFields['project_phase_id'] = $_REQUEST['phase'];
                     if($stage != '')
                         $arrSearchFields['project_stage_id'] = $stage;
-                    if($tag != '')
-                        $arrSearchFields['updation_cycle_id'] = $tag;
+                    if($updationCycle != '')
+                        $arrSearchFields['updation_cycle_id'] = $updationCycle;
                     if($exp_supply_date_to != '' && $exp_supply_date_from != '') {
                         $arrSearchFields['expected_supply_date_between_from_to'] = $exp_supply_date_from."_".$exp_supply_date_to;
                     }
@@ -189,8 +191,8 @@
 		}
 		else
                     $arrSearchFields['project_id'] = $_REQUEST['projectId'];
-
-	        if( count($arrSearchFields) > 0 ) { 
+		
+	    	if( count($arrSearchFields) > 0 ) { 
                     $getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
                     $NumRows = count($getSearchResult);
                     if(count($getSearchResult) == 0)
