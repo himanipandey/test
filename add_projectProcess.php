@@ -24,7 +24,6 @@ if(!isset($_REQUEST['projectId']))
         $_REQUEST['projectId'] = '';
 $projectId = $_REQUEST['projectId'];
 $smarty->assign("projectId", $projectId);
-
 if(!isset($_REQUEST['preview']))
     $_REQUEST['preview'] = '';
 $preview = $_REQUEST['preview'];
@@ -75,7 +74,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $architect = trim($_POST['architect']);
             $power_backup_capacity = trim($_POST['power_backup_capacity']);
             $eff_date_to_prom =	trim($_POST['eff_date_to_prom']);
-            $residential = trim($_POST['residential']);
+            $residential = (trim($_POST['residential']))?$_POST['residential']:'residential'; //setting up defualt value if empty
             $township =	trim($_POST['township']);
             $projName =	trim($_POST['txtProjectName']);
             $no_of_plot = trim($_POST['no_of_plot']);
@@ -160,14 +159,22 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("fieldSurveyRemarkDisplay", $fieldSurveyRemarkDisplay);
 
             /***********Folder name**********/
-            $builderDetail = ResiBuilder::getBuilderById($builderId);
-            $BuilderName = $builderDetail->builder_name;
-            $localityDetail = Locality::getLocalityById($localityId);
-            $localityName = $localityDetail->label;
-            $cityDetail = City::getCityById($cityId);
-            $cityName = $cityDetail->label;
-            $ErrorMsg = array();		
-            if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
+            if(!empty($builderId)){
+	    	$builderDetail = ResiBuilder::getBuilderById($builderId);
+            	$BuilderName = $builderDetail->builder_name;
+	    }
+	    if(!empty($localityId)){
+            	$localityDetail = Locality::getLocalityById($localityId);
+            	$localityName = $localityDetail->label;
+            }
+	    if(!empty($cityId)){
+	    	$cityDetail = City::getCityById($cityId);
+            	$cityName = $cityDetail->label;
+	    }
+            $ErrorMsg = array();
+	    if(empty($txtProjectName)){
+               $ErrorMsg["txtProjectName"] = "Project name should not be blank.";
+            }elseif(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
                $ErrorMsg["txtProjectName"] = "Special characters are not allowed";
             }
            
@@ -361,6 +368,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['display_order'] = $display_order;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
             $arrOx = array();
+	    
            // $arrOx = 
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
            if( isset($_POST['bank_list']) ) {
