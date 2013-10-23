@@ -180,12 +180,12 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            
             $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId);
             
-            if( $projectId == '' ) {
+            //if( $projectId == '' ) {
                if(count($projectChk) >0)
                {
                     $ErrorMsg["txtProjectName"] = "Project already exist.";
                }
-            }
+           // }
             $projectUrlChk = ResiProject::projectUrlExist($txtProjectURL, $projectId);
             if( count($projectUrlChk)>0 ) {
               $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
