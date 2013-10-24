@@ -80,7 +80,7 @@ class ResiProject extends Objects
        }
 	
        $conditions = array_merge(array($arrSearchFields), $arrSearchFieldsValue);
-	print "<pre>".print_r($conditions,1);
+	
        $join = " left join resi_builder b on resi_project.builder_id = b.builder_id
                  left join master_project_phases phases 
                     on resi_project.project_phase_id = phases.id
@@ -90,7 +90,7 @@ class ResiProject extends Objects
            array('joins' => $join,'conditions'=>$conditions,'select' => 
                     'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name'));
 	
-	print "<pre>".print_r($projectSearch,1)."</pre>";
+	
 	
        return $projectSearch;
    }
