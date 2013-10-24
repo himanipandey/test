@@ -24,7 +24,6 @@ if(!isset($_REQUEST['projectId']))
         $_REQUEST['projectId'] = '';
 $projectId = $_REQUEST['projectId'];
 $smarty->assign("projectId", $projectId);
-
 if(!isset($_REQUEST['preview']))
     $_REQUEST['preview'] = '';
 $preview = $_REQUEST['preview'];
@@ -37,7 +36,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $cityId = trim($_POST['cityId']);
             $suburbId =	trim($_POST['suburbId']);
             $localityId	= trim($_POST['localityId']);
-            $txtProjectDescription = trim($_POST['txtProjectDescription']);
+            $txtProjectDescription = trim($_POST['txtProjectDesc']);
             $comments = trim($_POST['comments']);
             $txtProjectRemark =	trim($_POST['txtProjectRemark']);
             $txtProjectRemarkDisplay = trim($_POST['txtProjectRemarkDisplay']);
@@ -75,7 +74,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $architect = trim($_POST['architect']);
             $power_backup_capacity = trim($_POST['power_backup_capacity']);
             $eff_date_to_prom =	trim($_POST['eff_date_to_prom']);
-            $residential = trim($_POST['residential']);
+            $residential = (trim($_POST['residential']))?$_POST['residential']:'residential'; //setting up defualt value if empty
             $township =	trim($_POST['township']);
             $projName =	trim($_POST['txtProjectName']);
             $no_of_plot = trim($_POST['no_of_plot']);
@@ -160,29 +159,81 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("fieldSurveyRemarkDisplay", $fieldSurveyRemarkDisplay);
 
             /***********Folder name**********/
-            $builderDetail = ResiBuilder::getBuilderById($builderId);
-            $BuilderName = $builderDetail->builder_name;
-            $localityDetail = Locality::getLocalityById($localityId);
-            $localityName = $localityDetail->label;
-            $cityDetail = City::getCityById($cityId);
-            $cityName = $cityDetail->label;
-            $ErrorMsg = array();		
-            if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
-               $ErrorMsg["txtProjectName"] = "Special characters are not allowed";
+            if(!empty($builderId)){
+	    	$builderDetail = ResiBuilder::getBuilderById($builderId);
+            	$BuilderName = $builderDetail->builder_name;
+	    }
+	    if(!empty($localityId)){
+            	$localityDetail = Locality::getLocalityById($localityId);
+            	$localityName = $localityDetail->label;
             }
-           
-            $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId);
+	    if(!empty($cityId)){
+	    	$cityDetail = City::getCityById($cityId);
+            	$cityName = $cityDetail->label;
+	    }
+            $ErrorMsg = array();
+	    if(empty($txtProjectName)){
+               $ErrorMsg["txtProjectName"] = "Project name must not be blank.";
+            }elseif(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
+               $ErrorMsg["txtProjectName"] = "Special characters are not allowed.";
+            }
+	    if(empty($builderId)){
+               $ErrorMsg["txtBuilder"] = "Builder name must be selected.";
+            }
+	    if(empty($cityId)){
+               $ErrorMsg["txtCity"] = "City must be selected.";
+            }
+	    if(empty($localityId)){
+               $ErrorMsg["txtLocality"] = "Locality must be selected.";
+            }
+	    if(empty($suburbId)){
+               $ErrorMsg["txtSuburbs"] = "Suburbs must be selected.";
+            }
+	    if(empty($comments)){
+               $ErrorMsg["txtComments"] = "Please enter comment.";
+            }
+	    if(empty($txtAddress)){
+               $ErrorMsg["txtAddress"] = "Please enter project address.";
+            }
+	    if(empty($txtProjectDescription)){
+               $ErrorMsg["txtDesc"] = "Please enter Option description.";
+            }
+	    if(empty($txtProjectSource)){
+		$ErrorMsg["txtSource"] = "Please enter project source of information.";
+	    }
+	    if(empty($project_type)){
+		$ErrorMsg["txtProject_type"] = "Please select project type.";
+	    }
+	    if(empty($txtProjectLattitude)){
+		$ErrorMsg["txtLattitude"] = "Please enter project lattitude.";
+	    }
+	    if(empty($txtProjectLongitude)){
+		$ErrorMsg["txtLongitude"] = "Please enter project longitude.";
+	    }
+	    if(empty($Status)){
+		$ErrorMsg["txtStatus"] = "Please select project status.";
+	    }
+	    if(!is_numeric($open_space) || $open_space > 100){
+		$ErrorMsg["txtopen_space"] = "Open Space must be numeric and less than 100.";
+	    }
+	    if(!is_numeric($project_size) || $project_size > 500){
+		$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
+	    }
+
+            $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId, $projectId);
             
-            if( $projectId == '' ) {
-               if(count($projectChk) >0)
-               {
-                    $ErrorMsg["txtProjectName"] = "Project already exist.";
-               }
+            if(count($projectChk) >0)
+            {
+               $ErrorMsg["txtProjectName"] = "Project already exist.";
             }
-            $projectUrlChk = ResiProject::projectUrlExist($txtProjectURL, $projectId);
-            if( count($projectUrlChk)>0 ) {
-              $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
-            }
+           if( $txtProjectURL == '' )
+		$ErrorMsg["txtProjectUrlDuplicate"] = "URL field must not be blank."; 
+	   else{
+              $projectUrlChk = ResiProject::projectUrlExist($txtProjectURL, $projectId);
+              if( count($projectUrlChk)>0 ) {
+                $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
+              }
+	    }
          if( $txtProjectURL!='' ) {
             if(!preg_match('/^p-[a-z0-9\-]+\.php$/',$txtProjectURL)){
                $ErrorMsg["txtProjectURL"] = "Please enter a valid url that contains only small characters, numerics & hyphen";
@@ -361,6 +412,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['display_order'] = $display_order;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
             $arrOx = array();
+	    
            // $arrOx = 
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
            if( isset($_POST['bank_list']) ) {

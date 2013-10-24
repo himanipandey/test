@@ -24,10 +24,15 @@ class ResiProject extends Objects
        }
        return $arrStatus;
    }
-   static function projectAlreadyExist($txtProjectName, $builderId, $localityId) {
-        $conditionsProject = array("project_name = ? and builder_id = ? 
+   static function projectAlreadyExist($txtProjectName, $builderId, $localityId, $projectId='') {
+	if($projectId == '')
+	 $conditionsProject = array("project_name = ? and builder_id = ? 
            and locality_id = ?",$txtProjectName, $builderId,$localityId);
-        $projectChk = ResiProject::virtual_find('all',
+	else
+	$conditionsProject = array("project_name = ? and builder_id = ? 
+           and locality_id = ? and project_id != ?" ,$txtProjectName, $builderId,$localityId,$projectId);
+        
+	$projectChk = ResiProject::virtual_find('all',
            array('conditions'=>$conditionsProject, "select" => "project_name, project_small_image"));
         return $projectChk;
    }
@@ -78,14 +83,17 @@ class ResiProject extends Objects
 	
        $conditions = array_merge(array($arrSearchFields), $arrSearchFieldsValue);
 	
-       $join = " inner join resi_builder b on resi_project.builder_id = b.builder_id
-                 inner join master_project_phases phases 
+       $join = " left join resi_builder b on resi_project.builder_id = b.builder_id
+                 left join master_project_phases phases 
                     on resi_project.project_phase_id = phases.id
-                 inner join master_project_stages stages
+                 left join master_project_stages stages
                     on resi_project.project_stage_id = stages.id";
        $projectSearch = ResiProject::find('all',
            array('joins' => $join,'conditions'=>$conditions,'select' => 
-                    'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name','limit'=>25));
+                    'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name'));
+	
+	
+	
        return $projectSearch;
    }
 

@@ -56,7 +56,7 @@ class CommentsHistory extends ActiveRecord\Model
         
         $oldMonthCycle = date('M-y', strtotime("last month"));
         $qry = "SELECT ch.*,pa.fname FROM 
-            project.comments_history as ch 
+            project_new.comments_history as ch 
             left join 
             proptiger_admin pa
             on 
@@ -66,7 +66,7 @@ class CommentsHistory extends ActiveRecord\Model
                and 
                 updation_cycle like 
                     '%$oldMonthCycle'";
-        
+
         $getOldComments = CommentsHistory::find_by_sql($qry); 
         $arrProjectOldComment = array();
         $commentTypeMap = array("Project" => 'projectRemark',
