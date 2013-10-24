@@ -5,8 +5,8 @@
 		$ErrorMsg='';
 
 		$watermark_path = 'images/pt_shadow1.png';
-		 $projectId		=	$_GET['projectId'];
-		$projectDetail	=	ProjectDetail($projectId);
+		 $projectId = $_GET['projectId'];
+		$projectDetail = ProjectDetail($projectId);
 		$smarty->assign("ProjectDetail", $projectDetail);
 		$ImageDataListingArr = allProjectFloorImages($projectId);
 
@@ -66,23 +66,19 @@
 						
 						if($_FILES['img']['name'][$k] != '')
 						{
-							$arrValue[$k]	= $_FILES['img']['name'][$k];
-							$arrTitle[$k]	= $_REQUEST['title'][$k];
-							$arrplanId[$k]	= $_REQUEST['plan_id'][$k];
-							$arrOptionId[$k]= $_REQUEST['option_id'][$k];
+                                                    $arrValue[$k]	= $_FILES['img']['name'][$k];
+                                                    $arrTitle[$k]	= $_REQUEST['title'][$k];
+                                                    $arrplanId[$k]	= $_REQUEST['plan_id'][$k];
+                                                    $arrOptionId[$k]= $_REQUEST['option_id'][$k];
 						}
 						else
 						{
-							/********delete image from db if checked but not browes new image*********/
-							$qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
-											WHERE 
-												FLOOR_PLAN_ID	= '".$_REQUEST['plan_id'][$k]."'
-												AND OPTION_ID	= '".$_REQUEST['option_id'][$k]."'";
-							$res	=	mysql_query($qry);
-							if($res)
-							{
-								audit_insert($_REQUEST['option_id'][$k],'delete','resi_floor_plans',$projectId);
-							}
+                                                    /********delete image from db if checked but not browes new image*********/
+                                                    $qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
+                                                                        WHERE 
+                                                                                FLOOR_PLAN_ID	= '".$_REQUEST['plan_id'][$k]."'
+                                                                                AND OPTION_ID	= '".$_REQUEST['option_id'][$k]."'";
+                                                    $res	=	mysql_query($qry);
 						}
 					}
 				}
@@ -118,9 +114,9 @@
 						foreach($arrValue as $key=>$val)
 						{
 							
-							$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
-							$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
-							$oldpath		=	$_REQUEST['property_image_path'][$key]; 
+							$img_path = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
+							$createFolder = $newImagePath.$BuilderName."/".strtolower($ProjectName);
+							$oldpath = $_REQUEST['property_image_path'][$key]; 
 							//unlink($oldpath);
 
 							$txtlocationplan 	= move_uploaded_file($_FILES["img"]["tmp_name"][$key], $img_path);
@@ -231,16 +227,16 @@
 //								$result = upload_file_to_img_server_using_ftp($source,$dest,1);
 								
 								$imgPathDb = explode("/images_new",$img_path);
-								$qry	=	"UPDATE ".RESI_FLOOR_PLANS." 
-												SET 
-													IMAGE_URL = '".$imgPathDb[1]."',
-													NAME	  = '".$arrTitle[$key]."'
-												WHERE 
-													FLOOR_PLAN_ID = '".$arrplanId[$key]."'
-												AND 
-													OPTION_ID	= '".$arrOptionId[$key]."'";
+								$qry = "UPDATE ".RESI_FLOOR_PLANS." 
+                                                                        SET 
+                                                                                IMAGE_URL = '".$imgPathDb[1]."',
+                                                                                NAME	  = '".$arrTitle[$key]."'
+                                                                        WHERE 
+                                                                                FLOOR_PLAN_ID = '".$arrplanId[$key]."'
+                                                                        AND 
+                                                                                OPTION_ID	= '".$arrOptionId[$key]."'";
 
-								$res	=	mysql_query($qry);
+								$res = mysql_query($qry);
 							
 								if($res)
 								{

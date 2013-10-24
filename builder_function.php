@@ -740,7 +740,7 @@ function allProjectImages($projectId) {
 /* * *****Fetch all floor plans images of a project***** */
 
 function allProjectFloorImages($projectId) {
-    $qryOpt = "SELECT OPTIONS_ID,UNIT_NAME,SIZE,MEASURE,UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+    $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,MEASURE,OPTION_TYPE as UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
     $resOpt = mysql_query($qryOpt);
 
     $ImageDataListingArr = array();
@@ -1826,7 +1826,6 @@ function fetch_builderDetail($builderId) {
     $databuild = mysql_fetch_assoc($resbuild);
     return $databuild;
 }
-
 function ViewLocalityDetails($localityID) {
     $Sql = "SELECT * FROM " . LOCALITY . " WHERE LOCALITY_ID ='" . $localityID . "'";
     $ExecSql = mysql_query($Sql);
@@ -1838,17 +1837,13 @@ function ViewLocalityDetails($localityID) {
         $ResDetails['CITY_ID'] = $Res['CITY_ID'];
         $ResDetails['LABEL'] = $Res['LABEL'];
         $ResDetails['META_TITLE'] = $Res['META_TITLE'];
-        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
-        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
+        $ResDetails['status'] = $Res['status'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
-        $ResDetails['VISIBLE_IN_CMS'] = $Res['VISIBLE_IN_CMS'];
         $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
         $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
         $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
         $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
-        $ResDetails['LOCALITY_CLEANED'] = $Res['LOCALITY_CLEANED'];
         return $ResDetails;
     } else {
         return 0;

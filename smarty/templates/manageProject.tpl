@@ -301,10 +301,10 @@ $(function() {
                                         <td align="right" style = "padding-left:20px;"><b>Stage</b></td>
                                         <td align="left" style = "padding-left:20px;">
                                             <span id = "BuilderList">
-                                            <select name = 'phase' id = "phase" >
+                                            <select name = 'stage' id = "stage" >
                                                 <option value = "">Select Stage</option>
                                                 {foreach from = $getProjectStages item = stages}
-                                                    <option value="{$stages->id}" {if $phase == $stages->name} selected{/if}>
+                                                    <option value="{$stages->id}" {if $stage == $stages->id} selected{/if}>
                                                        {$stages->name}
                                                     </option>
                                                 {/foreach}
@@ -320,7 +320,7 @@ $(function() {
                                               <option value="">Select Updation Cycle</option>
                                               {foreach from=$UpdationArr key=k item=v}
                                               <option value = "{$v->updation_cycle_id}" 
-                                                  {if "{$updationCycle}" == "{$v-updation_cycle_id}"}
+                                                  {if "{$updationCycle}" == "{$v->updation_cycle_id}"}
                                                      selected {/if} > {$v->cycle_type}Cycle - {$v->label}
                                               </option>
                                              {/foreach}
@@ -333,10 +333,10 @@ $(function() {
                                           <td align="right" style = "padding-left:20px;"><b>Phase:</b></td>
                                           <td align="left" style = "padding-left:20px;">
                                               <span id = "BuilderList">
-                                              <select name = 'stage' id = "stage" >
+                                              <select name = 'phase' id = "phase" >
                                                   <option value=''>Select Phase</option>
                                               {foreach from = $getProjectPhases item = phases}
-                                                  <option value="{$phases->id}" {if $phase == $phases->name} selected{/if}>
+                                                  <option value="{$phases->id}" {if $phase == $phases->id} selected{/if}>
                                                      {$phases->name}
                                                   </option>
                                               {/foreach}
@@ -491,7 +491,7 @@ $(function() {
                     <TD align=left class=td-border style="background:{$BG};">
                         <a style="color:black" href="show_project_details.php?projectId={$value->project_id}"
                            title='{$value->stage_name}' alt='{$value->stage_name}'>
-                            {$value->stage_name}  </a> </TD>
+                            {$value->project_name}  </a> </TD>
                                                                                                                                                             {else}
                     <TD align=left class=td-border style="background:{$BG};">{$value->project_name}</TD>
                                                                                                                                                                             {/if}
