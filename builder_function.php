@@ -270,7 +270,7 @@ function ProjectDetail($projectId) {
 /* * *****************function for fetch project options detail by project id**************** */
 
 function fetch_projectOptions($projectId) {
-    $qryopt = "SELECT DISTINCT(BEDROOMS),UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qryopt = "SELECT DISTINCT(BEDROOMS),OPTION_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "'";
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
     while ($data = mysql_fetch_assoc($resopt)) {
@@ -740,7 +740,7 @@ function allProjectImages($projectId) {
 /* * *****Fetch all floor plans images of a project***** */
 
 function allProjectFloorImages($projectId) {
-    $qryOpt = "SELECT OPTIONS_ID,UNIT_NAME,SIZE,MEASURE,UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+    $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,MEASURE,OPTION_TYPE as UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
     $resOpt = mysql_query($qryOpt);
 
     $ImageDataListingArr = array();
@@ -1825,6 +1825,29 @@ function fetch_builderDetail($builderId) {
     $resbuild = mysql_query($qrybuild) or die(mysql_error());
     $databuild = mysql_fetch_assoc($resbuild);
     return $databuild;
+}
+function ViewLocalityDetails($localityID) {
+    $Sql = "SELECT * FROM " . LOCALITY . " WHERE LOCALITY_ID ='" . $localityID . "'";
+    $ExecSql = mysql_query($Sql);
+
+    if (mysql_num_rows($ExecSql) == 1) {
+
+        $Res = mysql_fetch_assoc($ExecSql);
+        $ResDetails['LOCALITY_ID'] = $Res['LOCALITY_ID'];
+        $ResDetails['CITY_ID'] = $Res['CITY_ID'];
+        $ResDetails['LABEL'] = $Res['LABEL'];
+        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
+        $ResDetails['status'] = $Res['status'];
+        $ResDetails['URL'] = $Res['URL'];
+        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
+        $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
+        $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
+        $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
+        $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
+        return $ResDetails;
+    } else {
+        return 0;
+    }
 }
 ?>
 

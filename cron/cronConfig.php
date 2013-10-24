@@ -9,21 +9,21 @@ $latLongList = '0,1,2,3,4,5,6,7,8,9';
 $dailyEmail = array(
 	array(
 		'sql'=>"SELECT 
-					rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, rp.PROJECT_URL, c.LABEL as CITY 
-				FROM
-				   (resi_project rp INNER JOIN city c 
-			    ON 
-					rp.CITY_ID = c.CITY_ID)
-				LEFT JOIN
-					audit a
-				ON
-				   rp.PROJECT_ID = a.PROJECT_ID
-			    WHERE
-					a.ACTION = 'insert'
-			    AND
-					a.TABLE_NAME = 'resi_project'
-			    AND
-				    DATE(a.ACTION_DATE) = DATE(subdate(current_date, 1))", 
+                                rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, rp.PROJECT_URL, c.LABEL as CITY 
+                            FROM
+                               (resi_project rp INNER JOIN city c 
+                        ON 
+                                    rp.CITY_ID = c.CITY_ID)
+                            LEFT JOIN
+                                    audit a
+                            ON
+                               rp.PROJECT_ID = a.PROJECT_ID
+                        WHERE
+                                    a.ACTION = 'insert'
+                        AND
+                                    a.TABLE_NAME = 'resi_project'
+                        AND
+                                DATE(a.ACTION_DATE) = DATE(subdate(current_date, 1))", 
 		'subject'=>'Projects inserted yesterday', 
 		'recipients'=>array('ankur.dhawan@proptiger.com','chandan.singh@proptiger.com'), 
 		'attachmentname'=>'projects', 

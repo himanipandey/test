@@ -7,10 +7,8 @@
     $arrBrokerList = array();
     $arrProjectByBroker = array();
     foreach($allBrokerByProject as $key=>$val){
-        include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
-         include("dbConfig.php");
          $arrProjectByBroker[$key] = getProjectByBroker($key);
     }
      $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
@@ -55,8 +53,11 @@
          }
      }
      
-     $projectDetails = projectDetailById($projectId);
-     
+     $projectDetails = ResiProject::virtual_find($projectId);
+     $builderName = ResiBuilder::getBuilderById($projectDetails->builder_id);
+     $localityName = Locality::getLocalityById($projectDetails->locality_id);
+     $smarty->assign("builderName", $builderName);
+     $smarty->assign("localityName", $localityName);
      $smarty->assign("latestMonthAllBrokerPrice", $latestMonthAllBrokerPrice);
      $smarty->assign("oneMonthAgoPrice", $oneMonthAgoPrice);
      $smarty->assign("twoMonthAgoPrice", $twoMonthAgoPrice);

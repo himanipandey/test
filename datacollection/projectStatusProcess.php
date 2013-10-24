@@ -4,7 +4,6 @@ $accessDataCollection = '';
 if( $dataCollectionFlowAuth == false )
    $accessDataCollection = "No Access";
 $smarty->assign("accessDataCollection",$accessDataCollection);
-
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER'))){
@@ -24,11 +23,10 @@ elseif(isset($_POST['projectIds']) && !empty($_POST['projectIds'])){
     unset($_SESSION['project-status']);
     $_SESSION['project-status']['projectIds'] = $_REQUEST['projectIds'];
 }
-
 if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
     $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $_SESSION['project-status']['suburb']);
     $projectList = prepareDisplayData($projectsfromDB);
-    $suburbDataArr = SuburbArr($_SESSION['project-status']['city']);
+    $suburbDataArr = Suburb::SuburbArr($_SESSION['project-status']['city']);
 }elseif(isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
     $projectsAssignedToExec = getAssignedProjects($_SESSION['project-status']['executive']);
     $projectIds = getProjectIdsFromProjectDetails($projectsAssignedToExec);
@@ -39,7 +37,6 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
     $projectsfromDB = getAssignedProjectsFromPIDs($projectIds);
     $projectList = prepareDisplayData($projectsfromDB);
 }
-
 $project_ids = array();
 foreach($projectList as $p){
     array_push($project_ids, $p['PROJECT_ID']);
@@ -57,7 +54,7 @@ if(isset($_SESSION['project-status']['assignmentError'])){
     unset($_SESSION['project-status']['assignmentError']);
 }
 
-$CityDataArr = CityArr();
+$CityDataArr = City::CityArr();
 $executiveList = getCallCenterExecutiveWorkLoad();
 
 if(isset($projectList) && $_REQUEST['download'] == 'true'){

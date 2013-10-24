@@ -47,7 +47,7 @@
         if(!empty($ErrorMsg)) {
                 // Do Nothing
         } 
-        else if (empty ($brokerId)){		
+        else if (empty ($brokerId)){	
             $lastBrokerId = insertBroker($brokerName, $contactPerson, $address,$mobile,$email,$hq,$status);
             if($lastBrokerId != false) {
                 $brokerIdFormapping = $lastBrokerId;
@@ -73,7 +73,6 @@
             $arrProjectListInValid = array();
             $arrProjectListValid = array();
             $flag = 0;
-            include("dbConfig.php");
             $projectList = getProjectByBroker($brokerIdFormapping);
             $projectExist = array();
              foreach($projectList as $key=>$val) {
@@ -97,7 +96,7 @@
                 $cnt = 1;
                 $comma = ',';
                 $qryIns = "INSERT IGNORE INTO broker_project_mapping (PROJECT_ID,BROKER_ID,ACTION_DATE) VALUES ";
-                if( isset($_REQUEST['callId']) ) {
+                if( !empty($_REQUEST['callId']) ) {
                     $qryCallProject = 'INSERT INTO CallProject (CallId, ProjectId, BROKER_ID) VALUES ';
                 }
                 if( count($arrProjectListValid) > 0) {
@@ -106,15 +105,15 @@
                             $comma = '';
                         $qryIns .= "($val,$brokerIdFormapping, now())$comma";
                         
-                        if( isset($_REQUEST['callId']) ) {
+                        if( !empty($_REQUEST['callId']) ) {
                             $qryCallProject .= "(".$_REQUEST['callId'].",$val, $brokerIdFormapping)$comma";
                         }
                         
                         $cnt++;
                     }
-                    
-                    $resInsCall = mysql_query($qryCallProject) or die(mysql_error()." call detail");
-                    
+                    if( !empty($_REQUEST['callId']) ) {
+                        $resInsCall = mysql_query($qryCallProject) or die(mysql_error()." call detail");
+                    }
                     $resIns = mysql_query($qryIns) or die(mysql_error());
                     if($resIns)
                         $ErrorMsg['success'] = "Data has been inserted successfully!";
