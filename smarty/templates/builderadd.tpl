@@ -133,7 +133,7 @@
 						{if $builderid != ''  && $urlEditAccess == 0}
 							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;" readonly>
 						{else}
-							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;">
+							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;"><br><span style = "font-size:10px">Like:b-xyz-abc.php</font>
 						{/if}
 						<input type = "hidden" name = "txtBuilderUrlOld" value = "{$txtBuilderUrlOld}">
 						
@@ -233,7 +233,7 @@
                  <td width="50%" align="left" </td>
 				</tr>
 				<tr>
-				  <td width="20%" align="right" >City : </td>
+				  <td width="20%" align="right" ><font color = "red">*</font>City : </td>
 				  <td width="30%" align="left">
                                     <select name = "city" class="city">
                                         <option value =''>Select City</option>
@@ -242,7 +242,7 @@
                                          {/foreach}	
                                     </select>				  
 				  </td>
-				  <td width="50%" align="left"></td>
+				  {if $ErrorMsg["txtCity"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCity"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 
 				<tr>

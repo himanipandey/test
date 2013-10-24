@@ -116,7 +116,10 @@
                {
                  $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
                } 
-
+	     if( $city == '') 
+               {
+                 $ErrorMsg["txtCity"] = "Please select City.";
+               }
             /******code for builder url already exists******/
              $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE URL = '".$txtBuilderUrl."'";
              if($builderid != '')
