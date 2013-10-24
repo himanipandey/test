@@ -148,7 +148,7 @@
 									 <div id="imgPathRefresh"></div>
 								  </td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_builder_id" style = "display:none;">Please select builder name!</span></font>
+									  <font color="red">{if $ErrorMsg["txtBuilder"] != ''} {$ErrorMsg["txtBuilder"]} {/if}<span id = "err_builder_id" style = "display:none;">Please select builder name!</span></font>
 								  </td>
                                                                   
 							   </tr>
@@ -163,7 +163,7 @@
 									 </select>
 								  </td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_city_id" style = "display:none;">Please select city!</span></font>
+									  <font color="red">{if $ErrorMsg["txtCity"] != ''} {$ErrorMsg["txtCity"]} {/if}<span id = "err_city_id" style = "display:none;">Please select city!</span></font>
 								  </td>
                                                                    
 							   </tr>
@@ -179,8 +179,7 @@
 
                                                                         </select>
 								  </td>
-								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_suburb_id" style = "display:none;">Please select Suburb!</span></font>
+								  <td width="50%" align="left">						  <font color="red">{if $ErrorMsg["txtSuburbs"] != ''} {$ErrorMsg["txtSuburbs"]} {/if}<span id = "err_suburb_id" style = "display:none;">Please select Suburb!</span></font>
 								  </td>
 							   </tr>
 							   
@@ -195,7 +194,7 @@
                                                                        </select>
                                                                 </td>
                                                                <td width="50%" align="left">
-                                                                        <font color="red"><span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
+                                                                        <font color="red">{if $ErrorMsg["txtLocality"] != ''} {$ErrorMsg["txtLocality"]} {/if}<span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
                                                                </td>
 							   </tr>
 							   
@@ -205,7 +204,7 @@
                                                                        <textarea name="comments" rows="10" cols="45" id = "comments">{$comments}</textarea>
                                                                 </td>
                                                                 <td width="50%" align="left">
-                                                                        <font color="red"><span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
+                                                                        <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
                                                                </td>
 							   </tr>
                                                            {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
@@ -323,15 +322,15 @@
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Address :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectAddress" id="txtProjectAddress" value="{$txtAddress}" style="width:360px;" /></td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_address" style = "display:none;">Please enter project address!</span></font>
+									  <font color="red">{if $ErrorMsg["txtAddress"] != ''} {$ErrorMsg["txtAddress"]} {/if}<span id = "err_project_address" style = "display:none;">Please enter project address!</span></font>
 								  </td>
 							   </tr>
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Options Description :</b> </td>
-								  <td width="30%" align="left"><input type="text" name="txtProjectDesc" id="txtProjectDesc" value="{$txtProjectDesc}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
+								  <td width="30%" align="left"><input type="text" name="txtProjectDesc" id="txtProjectDesc" value="{$txtProjectDescription}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
 
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_bhk" style = "display:none;">Please enter project types!</span></font>
+									  <font color="red">{if $ErrorMsg["txtDesc"] != ''} {$ErrorMsg["txtDesc"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Option Description!</span></font>
 								  </td>
 							   </tr>
 
@@ -339,7 +338,7 @@
 								  <td width="20%" align="right"><font color ="red">*</font><b>Source of Information :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectSource" id="txtProjectSource" value="{$txtSourceofInfo}" style="width:360px;" /></td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_source" style = "display:none;">Please enter project source of information!</span></font>
+									  <font color="red">{if $ErrorMsg["txtSource"] != ''} {$ErrorMsg["txtSource"]} {/if}<span id = "err_project_source" style = "display:none;">Please enter project source of information!</span></font>
 								  </td>
 							   </tr>
 								
@@ -354,7 +353,7 @@
 									</select>
 								  </td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_type" style ="display:none;">Please select project type!</span></font>	
+									  <font color="red">{if $ErrorMsg["txtProject_type"] != ''} {$ErrorMsg["txtProject_type"]} {/if}<span id = "err_project_type" style ="display:none;">Please select project type!</span></font>	
 									  {if $project_type != '' && $project_type != 0}<font color="red"><span id = "err_project_typeChk">{$ErrorMsgType['showTypeError']}</span></font>{/if}	  
 								  </td>
 							   </tr>
@@ -363,14 +362,14 @@
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Latitude :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectLattitude" id="txtProjectLattitude" value="{$txtProjectLattitude}" style="width:360px;" /></td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_latt" style = "display:none;">Please enter project lattitude!</span></font>
+									  <font color="red">{if $ErrorMsg["txtLattitude"] != ''} {$ErrorMsg["txtLattitude"]} {/if}<span id = "err_project_latt" style = "display:none;">Please enter project lattitude!</span></font>
 								  </td>
 							   </tr>
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Longitude :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectLongitude" id="txtProjectLongitude" value="{$txtProjectLongitude}" style="width:360px;" /></td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_long" style = "display:none;">Please enter project longitude</span></font>
+									  <font color="red">{if $ErrorMsg["txtLongitude"] != ''} {$ErrorMsg["txtLongitude"]} {/if}<span id = "err_project_long" style = "display:none;">Please enter project longitude</span></font>
 								  </td>
 							   </tr>
 							  
@@ -410,7 +409,7 @@
 									 </select>
 								  </td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
+									  <font color="red">{if $ErrorMsg["txtStatus"] != ''} {$ErrorMsg["txtStatus"]} {/if}<span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
                                                            
@@ -545,6 +544,7 @@
 								  </td>
 								  <td width="50%" align="left" nowrap>
                                                                     <font color="red">
+									{if $ErrorMsg["txtproject_size"] != ''} {$ErrorMsg["txtproject_size"]} {/if}
                                                                        <span id = "err_project_size" style = "display:none;">
                                                                             Project Size should be less than 500
                                                                        </span>
@@ -557,7 +557,9 @@
                                                                     <input type = "text" name = "open_space" value = "{$open_space}" style ="width:360px;"  onkeypress='return isNumberKey(event)'><br>
                                                                     <span style = "font-size:10px">in Percentage(%)</span>
                                                                 </td>
-                                                                <td width="50%" align="left"></td>
+                                                                <td width="50%" align="left">
+									  <font color="red">{if $ErrorMsg["txtopen_space"] != ''} {$ErrorMsg["txtopen_space"]} {/if}</font>
+								  </td>
 							   </tr>
 
 							   <tr>
