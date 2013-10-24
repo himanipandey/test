@@ -213,13 +213,21 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    if(empty($Status)){
 		$ErrorMsg["txtStatus"] = "Please select project status.";
 	    }
-	    if(!is_numeric($open_space) || $open_space > 100){
-		$ErrorMsg["txtopen_space"] = "Open Space must be numeric and less than 100.";
+	    if(!empty($open_space)){
+	    	if(!is_numeric($open_space) || $open_space > 100){
+			$ErrorMsg["txtopen_space"] = "Open Space must be numeric and less than 100.";
+	    	}
 	    }
-	    if(!is_numeric($project_size) || $project_size > 500){
-		$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
+	    if(!empty($project_size)){
+	    	if(!is_numeric($project_size) || $project_size > 500){
+			$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
+	    	}
 	    }
-
+	   if(!empty($power_backup_capacity)){
+	    	if(!is_numeric($power_backup_capacity) || $power_backup_capacity > 10){
+			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";
+	    	}
+	    }
             $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId, $projectId);
             
             if(count($projectChk) >0)

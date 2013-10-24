@@ -167,11 +167,8 @@
                     if($_REQUEST['locality'] != '')
                         $arrSearchFields['locality_id'] = $_REQUEST['locality'];
 		    elseif(isset($city) && !empty($city)){ //if only city selected
-			$city_locality = '';
-			foreach($getLocality as $item => $value)
-                    		$city_locality .= $value->locality_id.",";
 			
-			$arrSearchFields['locality_id'] = substr($city_locality,0,strlen($city_locality)-1);  
+			$arrSearchFields['city_id'] = $city;
 		    }
                     if( $_REQUEST['builder'] != '' ) 
                         $arrSearchFields['builder_id'] = $_REQUEST['builder'];
@@ -192,7 +189,10 @@
 		else
                     $arrSearchFields['project_id'] = $_REQUEST['projectId'];
 		
-	    	if( count($arrSearchFields) > 0 ) { 
+		if(date($exp_supply_date_to) < date($exp_supply_date_from)){
+			$errorMsg = '<font color = red>To Date must be greater than From Date.</font>';		
+		}
+	    	else if( count($arrSearchFields) > 0 ) { 
                     $getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
                     $NumRows = count($getSearchResult);
                     if(count($getSearchResult) == 0)
