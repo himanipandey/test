@@ -67,18 +67,20 @@ class ResiProject extends Objects
 	   }
            else if( $key == 'expected_supply_date_between_from_to' ) {
                $twoDate = explode('_',$value);
-               $date = "date('expected_supply_date') between '".$twoDate[0]."' and '".$twoDate[1]."'";
-               $arrSearchFields .= 'expected_supply_date between (?)';
-               array_push($arrSearchFieldsValue, $date);  
+               $arrSearchFields .= 'expected_supply_date >= ? and ';
+               array_push($arrSearchFieldsValue, $twoDate[0]);  
+               
+               $arrSearchFields .= 'expected_supply_date <= ?';
+               array_push($arrSearchFieldsValue, $twoDate[1]);  
            }
-           else if( $key == 'expected_supply_date_between_from' ) {
-               $date = "expected_supply_date >= '$value'";
-               $arrSearchFields .= 'expected_supply_date = (?)';
+           else if( $key == 'expected_supply_date_from' ) {
+               $date = "$value";
+               $arrSearchFields .= 'expected_supply_date >= ?';
                array_push($arrSearchFieldsValue, $date);
            }
-           else if( $key == 'expected_supply_date_between_to' ) {
-               $date = "expected_supply_date <= '$value'";
-               $arrSearchFields .= 'expected_supply_date = (?)';
+           else if( $key == 'expected_supply_date_to' ) {
+               $date = "$value";
+               $arrSearchFields .= 'expected_supply_date <= ?';
                array_push($arrSearchFieldsValue, $date);
            }
            else {

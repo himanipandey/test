@@ -20,7 +20,7 @@ if(isset($_SESSION[$_SERVER['PHP_SELF']]['city']) && !empty($_SESSION[$_SERVER['
     unset($projectSummary['total']);
 }
 
-$CityDataArr = CityArr();
+$CityDataArr = City::CityArr();
 
 if(isset($projectSummary) && $_REQUEST['download'] == 'true'){
     download_xls_file($projectSummary);
