@@ -894,28 +894,26 @@ function costructionDetail($projectId) {
 
 /* * *********Builder management************* */
 
-function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
-   echo $Sql = "INSERT INTO " . RESI_BUILDER . " SET
-				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
-                                ENTITY  	   	     = '" . d_($legalEntity) . "',
-				DESCRIPTION 	  	     = '" . d_($txtBuilderDescription) . "',
-				URL	 	  	     = '" . d_($txtBuilderUrl) . "',
-				BUILDER_IMAGE 		     = '" . d_($imgname) . "',
-				DISPLAY_ORDER		     = '" . d_($DisplayOrder) . "',
-				ADDRESS			     = '" . d_($address) . "',
-				CITY_ID			     = '" . d_($city) . "',
-				PINCODE			     = '" . d_($pincode) . "',
-				CEO_MD_NAME                  = '" . d_($ceo) . "',
-				TOTAL_NO_OF_EMPL             = '" . d_($employee) . "',
-				TOTAL_NO_OF_DELIVERED_PROJECT= '" . $delivered_project . "',
-				AREA_DELIVERED		     ='" . $area_delivered . "',
-				ONGOING_PROJECTS	     = '" . $ongoing_project . "',
-				WEBSITE			     ='" . $website . "',
-				REVENUE			     ='" . $revenue . "',
-				DEBT			     ='" . $debt . "',
-				ESTABLISHED_DATE	     = '" . $date . "',
-                                updated_by                   = $_SESSION[adminId],
-                                created_at                   = now()";die;
+function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
+  $Sql = "INSERT INTO " . RESI_BUILDER . " SET
+        BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
+        ENTITY  	   	     = '" . d_($legalEntity) . "',
+        DESCRIPTION 	  	     = '" . d_($txtBuilderDescription) . "',
+        DISPLAY_ORDER		     = '" . d_($DisplayOrder) . "',
+        ADDRESS			     = '" . d_($address) . "',
+        CITY_ID			     = '" . d_($city) . "',
+        PINCODE			     = '" . d_($pincode) . "',
+        CEO_MD_NAME                  = '" . d_($ceo) . "',
+        TOTAL_NO_OF_EMPL             = '" . d_($employee) . "',
+        TOTAL_NO_OF_DELIVERED_PROJECT= '" . $delivered_project . "',
+        AREA_DELIVERED		     ='" . $area_delivered . "',
+        ONGOING_PROJECTS	     = '" . $ongoing_project . "',
+        WEBSITE			     ='" . $website . "',
+        REVENUE			     ='" . $revenue . "',
+        DEBT			     ='" . $debt . "',
+        ESTABLISHED_DATE	     = '" . $date . "',
+        updated_by                   = ".$_SESSION['adminId'].",
+        created_at                   = now()";
 
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertBuilder()');
     $lastId = mysql_insert_id();
@@ -930,13 +928,13 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
             $projects = $contactArr['Projects'][$cnt];
 
             $qry = "INSERT INTO " . BUILDER_CONTACT_INFO . "
-						SET
-							NAME			=	'" . $name . "',
-							BUILDER_ID		=	'" . $lastId . "',
-							PHONE			=	'" . $phone . "',
-							EMAIL			=	'" . $email . "',
-							PROJECTS		=	'" . $projects . "',
-							SUBMITTED_DATE	=	now()";
+                    SET
+                            NAME			=	'" . $name . "',
+                            BUILDER_ID		=	'" . $lastId . "',
+                            PHONE			=	'" . $phone . "',
+                            EMAIL			=	'" . $email . "',
+                            PROJECTS		=	'" . $projects . "',
+                            SUBMITTED_DATE	=	now()";
             $res = mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
         }
         $cnt++;
@@ -1677,6 +1675,7 @@ function insertUpdateInRedirectTbl($toUrl, $fromUrl) {
 					FROM_URL		=	'$fromUrl',
 					TO_URL			=	'$toUrl',
 					SUBMITTED_DATE	=	now(),
+                                        modified_by	=	" . $_SESSION['adminId'].",
 					SUBMITTED_BY	=	" . $_SESSION['adminId'];
         $action = 'Insertion';
     } else {

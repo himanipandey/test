@@ -10,7 +10,6 @@ include_once('./function/locality_functions.php');
 
 include("ftp.new.php");
 $watermark_path = 'images/pt_shadow1.png';
-//echo $_REQUEST['suburb'];die("here");
 $smarty->assign("builderid", $builderid);
 $ProjectList = project_list($builderid);
 $smarty->assign("ProjectList", $ProjectList);
