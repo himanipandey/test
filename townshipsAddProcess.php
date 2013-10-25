@@ -34,7 +34,7 @@ if (isset($_POST['btnSave'])) {
         else
             $townshipsInsert = new Townships();
   
-        $townshipsInsert->name = $townshipsName;
+        $townshipsInsert->township_name = $townshipsName;
         $townshipsInsert->updated_by = $_SESSION['adminId'];                
         if( $townshipsInsert->save() )
            header("Location:townships.php?page=1&sort=all");
@@ -42,7 +42,7 @@ if (isset($_POST['btnSave'])) {
 }
 elseif($townshipsId!=''){
     $townShipsDetail = Townships::getTownShipsById($townshipsId);
-    $townshipsName = $townShipsDetail[0]->name;
+    $townshipsName = $townShipsDetail[0]->township_name;
     $townshipsId = $townShipsDetail[0]->id;
     $smarty->assign("townshipsName", $townshipsName);
     $smarty->assign("townshipsId", $townshipsId);

@@ -78,7 +78,7 @@
                       <TR {$color}>
                           
 			<TD align=center class=td-border>{$count}</TD>
-                        <TD align=left class=td-border>{$item->name}</TD>
+                        <TD align=left class=td-border>{$item->township_name}</TD>
                         <TD align=left class=td-border>{$item->fname}</TD>
                         <TD align=left class=td-border>{$item->created_at|date_format}</TD>
                         <TD align=left class=td-border>{$item->updated_at|date_format}</TD>

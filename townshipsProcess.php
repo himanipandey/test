@@ -21,12 +21,12 @@
     }
      $brokerDataArr = array();
     if($name != null)
-        $conditionsTownships = array("name like '$name%'");
+        $conditionsTownships = array("township_name like '$name%'");
     else
         $conditionsTownships = '';
     $join = " LEFT JOIN proptiger_admin pa on townships.updated_by = pa.adminid";
     $townshipsDetail = Townships::find('all',
-           array('joins' => $join,'conditions'=>$conditionsTownships,'order' => 'name asc',
+           array('joins' => $join,'conditions'=>$conditionsTownships,'order' => 'township_name asc',
                 'limit' => "$RowsPerPage","offset" => "$Offset","select" => "townships.*, pa.fname"));
     $NumRows 	  = count($townshipsDetail);
     $townshipsArr = array();
