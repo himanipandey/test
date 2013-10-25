@@ -77,21 +77,36 @@ if (isset($_POST['btnSave'])) {
 		
 	} 
 	else if ($cityid == '') {	
-		InsertCity($txtCityName, $txtCityUrl, $DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$status,$desc);
+		$city_id = InsertCity($txtCityName, $txtCityUrl, $DisplayOrder,$status,$desc);
+		if($city_id){
+                    $seoData['meta_title'] = $txtMetaTitle;
+                    $seoData['meta_keywords'] = $txtMetaKeywords;
+                    $seoData['meta_description'] = $txtMetaDescription;
+                    $seoData['table_id'] = $city_id;
+                    $seoData['table_name'] = 'city';
+                    $seoData['updated_by'] = $_SESSION['adminId'];
+                    SeoData::insetUpdateSeoData($seoData);
+        }
 		header("Location:CityList.php?page=1&sort=all");
 		
 	}else if($cityid!= ''){
 	
 		$updateQry = "UPDATE ".CITY." SET 
 					  LABEL					=	'".$txtCityName."',
-					  META_TITLE			=	'".$txtMetaTitle."',
-					  META_KEYWORDS		    =	'".$txtMetaKeywords."',
-					  META_DESCRIPTION		=	'".$txtMetaDescription."',
-					  ACTIVE				=	'".$status."',
+					  STATUS				=	'".$status."',
 					  URL					=	'".$txtCityUrl."',
 					  DISPLAY_ORDER			=	'".$DisplayOrder."',
 					  DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
-		mysql_query($updateQry);
+		$rt = mysql_query($updateQry);
+		if($rt){
+                    $seoData['meta_title'] = $txtMetaTitle;
+                    $seoData['meta_keywords'] = $txtMetaKeywords;
+                    $seoData['meta_description'] = $txtMetaDescription;
+                    $seoData['table_id'] = $cityid;
+                    $seoData['table_name'] = 'city';
+                    $seoData['updated_by'] = $_SESSION['adminId'];
+                    SeoData::insetUpdateSeoData($seoData);
+        }
 		header("Location:CityList.php?page=1&sort=all");
 	}	
 	
@@ -104,11 +119,14 @@ elseif($cityid!=''){
 	$txtCityUrl				=	trim($cityDetailsArray['URL']);
 	$txtCityUrlOld			=	trim($cityDetailsArray['URL']);
 	$DisplayOrder			=	trim($cityDetailsArray['DISPLAY_ORDER']);
-	$txtMetaTitle			=	trim($cityDetailsArray['META_TITLE']);
-	$txtMetaKeywords		=	trim($cityDetailsArray['META_KEYWORDS']);
-	$txtMetaDescription		=	trim($cityDetailsArray['META_DESCRIPTION']);
-	$status					=	trim($cityDetailsArray['ACTIVE']);
+	$status					=	trim($cityDetailsArray['STATUS']);
 	$desc					=	trim($cityDetailsArray['DESCRIPTION']);
+	
+	//getting meta data
+	$getSeoData = SeoData::getSeoData($cityid, 'city');
+	$txtMetaTitle			=	trim($getSeoData[0]->meta_title);
+	$txtMetaKeywords		=	trim($getSeoData[0]->meta_keywords);
+	$txtMetaDescription		=	trim($getSeoData[0]->meta_description);
 	
 	$smarty->assign("txtCityName", $txtCityName);
 	$smarty->assign("txtCityUrl", $txtCityUrl);

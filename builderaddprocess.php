@@ -207,7 +207,7 @@ if ($_POST['btnSave'] == "Save")
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder, $image_id);
                             if($rt)
                             {
-				$seoData['meta_title'] = $txtMetaTitle;
+								$seoData['meta_title'] = $txtMetaTitle;
                                 $seoData['meta_keywords'] = $txtMetaKeywords;
                                 $seoData['meta_description'] = $txtMetaDescription;
                                 $seoData['table_id'] = $builderid;
