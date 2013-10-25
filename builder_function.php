@@ -1100,19 +1100,18 @@ function changeLabel($pID, $val) {
 
 /* * ************City management********************* */
 
-function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $status, $desc) {
+function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
 
     $Sql = "INSERT INTO " . CITY . " SET
 			LABEL 	   			= '" . d_($txtCityName) . "',
-			META_TITLE   		= '" . d_($txtMetaTitle) . "',
-			META_KEYWORDS  		= '" . d_($txtMetaKeywords) . "',
-			META_DESCRIPTION	= '" . d_($txtMetaDescription) . "',
-			ACTIVE 	   			= '" . d_($status) . "',
+			STATUS 	   			= '" . d_($status) . "',
 			URL					= '" . d_($txtCityUrl) . "',
 			DISPLAY_ORDER		= '" . d_($DisplayOrder) . "',
-			DESCRIPTION			=	'" . d_($desc) . "'"; //die();
+			DESCRIPTION			= '" . d_($desc) . "',
+			updated_by			= '" .$_SESSION['adminId']."'";
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertCity()');
-    return 1;
+    $lastId = mysql_insert_id();
+    return $lastId;
 }
 
 function DeleteCity($ID) {
@@ -1131,10 +1130,7 @@ function ViewCityDetails($cityID) {
         $Res = mysql_fetch_assoc($ExecSql);
         $ResDetails['CITY_ID'] = $Res['CITY_ID'];
         $ResDetails['LABEL'] = $Res['LABEL'];
-        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
-        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
-        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
+        $ResDetails['STATUS'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DISPLAY_ORDER'] = $Res['DISPLAY_ORDER'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
