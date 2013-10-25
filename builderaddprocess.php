@@ -6,8 +6,7 @@ include_once('./function/locality_functions.php');
      //  $accessBuilder = "No Access";
     $smarty->assign("accessBuilder",$accessBuilder);
     
-    $builderid = $_REQUEST['builderid'];
-
+$builderid = $_REQUEST['builderid'];
 include("ftp.new.php");
 $watermark_path = 'images/pt_shadow1.png';
 $smarty->assign("builderid", $builderid);

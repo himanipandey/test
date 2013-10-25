@@ -236,7 +236,7 @@
                  <td width="50%" align="left" </td>
 				</tr>
 				<tr>
-				  <td width="20%" align="right" >City : </td>
+				  <td width="20%" align="right" ><font color = "red">*</font>City : </td>
 				  <td width="30%" align="left">
                                     <select name = "city" class="city">
                                         <option value =''>Select City</option>
@@ -245,7 +245,7 @@
                                          {/foreach}	
                                     </select>				  
 				  </td>
-				  <td width="50%" align="left"></td>
+				  {if $ErrorMsg["txtCity"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCity"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 
 				<tr>

@@ -214,14 +214,35 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    if(empty($Status)){
 		$ErrorMsg["txtStatus"] = "Please select project status.";
 	    }
-	    if(!is_numeric($open_space) || $open_space > 100){
-		$ErrorMsg["txtopen_space"] = "Open Space must be numeric and less than 100.";
+	    if(!empty($open_space)){
+	    	if(!is_numeric($open_space) || $open_space > 100){
+			$ErrorMsg["txtopen_space"] = "Open Space must be numeric and less than 100.";
+	    	}
 	    }
-	    if(!is_numeric($project_size) || $project_size > 500){
-		$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
+	    if(!empty($project_size)){
+	    	if(!is_numeric($project_size) || $project_size > 500){
+			$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
+	    	}
 	    }
-
+	   if(!empty($power_backup_capacity)){
+	    	if(!is_numeric($power_backup_capacity) || $power_backup_capacity > 10){
+			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";
+	    	}
+	    }
+            $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId, $projectId);
             
+            if(count($projectChk) >0)
+            {
+               $ErrorMsg["txtProjectName"] = "Project already exist.";
+            }
+           if( $txtProjectURL == '' )
+		$ErrorMsg["txtProjectUrlDuplicate"] = "URL field must not be blank."; 
+	   else{
+              $projectUrlChk = ResiProject::projectUrlExist($txtProjectURL, $projectId);
+              if( count($projectUrlChk)>0 ) {
+                $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
+              }
+	    }
          if( $txtProjectURL!='' ) {
             if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 				$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
@@ -416,6 +437,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['display_order'] = $display_order;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
             $arrOx = array();
+	    
            // $arrOx = 
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
            //create new project url

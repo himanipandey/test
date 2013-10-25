@@ -83,15 +83,6 @@
                             $service_image_id = $_REQUEST['service_image_id'][$k];
                             $s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
                             $s3upload->delete();
-							$qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
-											WHERE 
-												FLOOR_PLAN_ID	= '".$_REQUEST['plan_id'][$k]."'
-												AND OPTION_ID	= '".$_REQUEST['option_id'][$k]."'";
-							$res	=	mysql_query($qry);
-							if($res)
-							{
-								audit_insert($_REQUEST['option_id'][$k],'delete','resi_floor_plans',$projectId);
-							}
 						}
 					}
 				}
@@ -130,12 +121,7 @@
 							$img_path = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 							$createFolder = $newImagePath.$BuilderName."/".strtolower($ProjectName);
 							$oldpath = $_REQUEST['property_image_path'][$key]; 
-							//unlink($oldpath);
-							$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
-							$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
-							$oldpath		=	$_REQUEST['property_image_path'][$key];
                             $service_image_id = $_REQUEST['service_image_id'][$key];
-                                //unlink($oldpath);
 
 							$txtlocationplan 	= move_uploaded_file($_FILES["img"]["tmp_name"][$key], $img_path);
                             $s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath,"",$img_path));
@@ -260,16 +246,6 @@
                                                                                 FLOOR_PLAN_ID = '".$arrplanId[$key]."'
                                                                         AND 
                                                                                 OPTION_ID	= '".$arrOptionId[$key]."'";
-								$qry	=	"UPDATE ".RESI_FLOOR_PLANS." 
-												SET 
-													IMAGE_URL = '".$imgPathDb[1]."',
-													NAME	  = '".$arrTitle[$key]."',
-													SERVICE_IMAGE_ID  =  ".$image_id."
-												WHERE 
-													FLOOR_PLAN_ID = '".$arrplanId[$key]."'
-												AND 
-													OPTION_ID	= '".$arrOptionId[$key]."'";
-
 								$res = mysql_query($qry);
 							
 								if($res)

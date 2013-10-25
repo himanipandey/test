@@ -46,18 +46,26 @@ class ResiProject extends Objects
        $arrSearchFields = '';
        $arrSearchFieldsValue = array();
        $date = '';
-       $cnt = 0;  
+       $cnt = 0;
+	if(count($arrSearch) > 1) 
+		$city_and = ' and ';
+	else
+		$city_and = '';
        foreach($arrSearch as $key => $value ) {
            $cnt++;
            $and = ' in (?) and ';
-           $comma = ' ,';
+	   $comma = ' ,';
            if( count($arrSearch) == $cnt ) {
                $comma = '';
                $and = 'in (?) ';
            }
            if( count($arrSearch) < $cnt )
                $and = '';
-           if( $key == 'expected_supply_date_between_from_to' ) {
+	   if( $key == 'city_id' ){
+		$arrSearchFields .= "city.city_id = ? ".$city_and;
+               array_push($arrSearchFieldsValue, $value);
+	   }
+           else if( $key == 'expected_supply_date_between_from_to' ) {
                $twoDate = explode('_',$value);
                $arrSearchFields .= 'expected_supply_date >= ? and ';
                array_push($arrSearchFieldsValue, $twoDate[0]);  
@@ -82,18 +90,20 @@ class ResiProject extends Objects
        }
 	
        $conditions = array_merge(array($arrSearchFields), $arrSearchFieldsValue);
-	
        $join = " left join resi_builder b on resi_project.builder_id = b.builder_id
                  left join master_project_phases phases 
                     on resi_project.project_phase_id = phases.id
                  left join master_project_stages stages
-                    on resi_project.project_stage_id = stages.id";
+                    on resi_project.project_stage_id = stages.id
+                 left join locality
+                    on resi_project.locality_id = locality.locality_id
+                 left join suburb 
+                    on locality.suburb_id = suburb.suburb_id
+                 left join city
+                    on suburb.city_id = city.city_id";
        $projectSearch = ResiProject::find('all',
            array('joins' => $join,'conditions'=>$conditions,'select' => 
-                    'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name'));
-	
-	
-	
+                    'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name','limit' => 25));		
        return $projectSearch;
    }
 

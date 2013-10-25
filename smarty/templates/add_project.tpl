@@ -584,7 +584,9 @@
 									 <input type = "text" name = "power_backup_capacity" id = "power_backup_capacity" value = "{$power_backup_capacity}" style ="width:360px;"  onkeypress='return isNumberKey(event)'>
 
 								  </td>
-								  <td width="50%" align="left" nowrap><font color="red"><span id = "err_power_bkpKba" style = "display:none;">Power Backup should be in Numeric!</span>
+								  <td width="50%" align="left" nowrap><font color="red">
+{if $ErrorMsg["txtpower_backup_capacity"] != ''} {$ErrorMsg["txtpower_backup_capacity"]} {/if}
+<span id = "err_power_bkpKba" style = "display:none;">Power Backup should be in Numeric!</span>
 								  	<span id = "err_power_bkpKba_10" style = "display:none;">Power Backup should be less then 10!</span></font>
 								  </td>
 							   </tr>

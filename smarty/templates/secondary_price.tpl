@@ -133,7 +133,6 @@ function builder_contact(builderId,buildernm)
                           </tr>
                           <tr>
                               <td align ="left" style="height:25px;"><b>Locality:</b></td>
-                              
                               <td align ="left">{$localityName}</td>
                           </tr>               
                       </table>
