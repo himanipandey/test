@@ -43,7 +43,7 @@
 		}
 		if($fromUrl!='')
 		{
-			if(!preg_match('/^[a-z0-9\-]+\.php$/',$fromUrl)){
+			if(!preg_match('/^[a-z0-9\/\-]+$/',$fromUrl)){
 				$msg = "<font color = 'red'>Please enter a valid From url that contains only small characters, numerics & hyphen</font>";
 			}
 		}
@@ -57,7 +57,7 @@
 		}
 		if($toUrl != '')
 		{
-			if(!preg_match('/^[a-z0-9\-]+\.php$/',$toUrl)){
+			if(!preg_match('/^[a-z0-9\/\-]+$/',$toUrl)){
 				$msg = "<font color = 'red'>Please enter a valid To url that contains only small characters, numerics & hyphen</font>";
 			}
 		}

@@ -51,10 +51,11 @@ else
     $resCity = mysql_query($qryCity) or die(mysql_error());
     $dataCity = mysql_fetch_assoc($resCity);
     $subcityval = trim($subcityval);
-    $url = createLocalityURL($subcityval, $dataCity['LABEL']);
+    $url = "";
     if($subcityval!='' && $id!='')
-	{		
-                $seldata = "UPDATE ".SUBURB." SET LABEL = '".$subcityval."', URL = '$url'  WHERE SUBURB_ID='".$id."'";
+	{	
+        $url = createLocalityURL($subcityval, $dataCity['LABEL'], $id, 'suburb'); 
+        $seldata = "UPDATE ".SUBURB." SET LABEL = '".$subcityval."', URL = '$url'  WHERE SUBURB_ID='".$id."'";
 		$resdata = mysql_query($seldata);
 		$c = mysql_affected_rows();
 	}
@@ -70,6 +71,10 @@ else
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;
+
+        $url = createLocalityURL($subcityval, $dataCity['LABEL'], $ctid, 'suburb');
+        $seldata = "UPDATE ".SUBURB." SET URL = '$url'  WHERE SUBURB_ID='".$ctid."'";
+        $resdata = mysql_query($seldata);
 	}
 
 

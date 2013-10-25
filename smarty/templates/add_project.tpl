@@ -1,5 +1,5 @@
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/common.js?version=1"></script>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
@@ -126,7 +126,10 @@
 							<div>
 							   <tr>
                                                                 <td width="30%" align="right"><font color ="red">*</font><b>Project Name :</b> </td>
-								  <td width="30%" align="left"><input type="text" name="txtProjectName" id="txtProjectName" value="{$txtProjectName}" style="width:357px;" /></td>
+								  <td width="30%" align="left">
+                                                                      <input type="text" name="txtProjectName" id="txtProjectName" value="{$txtProjectName}" style="width:357px;" />
+                                                                      <input type="hidden" name = "projectNameOld" value="{$projectNameOld}">
+                                                                  </td>
 
 								  <td width="50%" align="left">
 									  <font color="red">{if $ErrorMsg["txtProjectName"] != ''} {$ErrorMsg["txtProjectName"]} {/if}<span id = "err_project_name" style = "display:none;">Please enter project name!</span></font>
@@ -417,10 +420,10 @@
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
 								  <td width="30%" align="left">
 								  	{if $projectId != '' && $urlEditAccess == 0}
-								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
+								  		<input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
 								  	{else}
-								  		<input type="text" name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
-								  		<br><span style = "font-size:10px">Like:p-logix-neo-world-noida-sector-150.php</font>
+								  		<input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
+								  		<br><span style = "font-size:10px">Like:noida/sector-50/dlf-group</font>
 								  	{/if}
 								  	
 								  	<input type = "hidden" name = "txtProjectURLOld" value = "{$txtProjectURLOld}">

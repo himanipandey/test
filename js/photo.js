@@ -172,6 +172,7 @@ function showThisPhoto( imgData ) {
     imgData['IMAGE_DISPLAY_NAME'] = imgData['IMAGE_DISPLAY_NAME'] == null ? "" : imgData['IMAGE_DISPLAY_NAME'];
     imgData['IMAGE_CATEGORY'] = imgData['IMAGE_CATEGORY'] == null ? "" : imgData['IMAGE_CATEGORY'];
     imgData['IMAGE_DESCRIPTION'] = imgData['IMAGE_DESCRIPTION'] == null ? "" : imgData['IMAGE_DESCRIPTION'];
+    imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
                         '<div class="img-wrap" style="float:left;"> <img src="/images_new/locality/thumb_'+imgData['IMAGE_NAME']+'" /> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
@@ -185,6 +186,8 @@ function showThisPhoto( imgData ) {
                             '</select><br />'+
                             '<input type="text" name="imgName_'+imgData['IMAGE_ID']+'" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
                             '<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'">'+
+                            '<input type="hidden" name="img_path_'+imgData['IMAGE_ID']+'" value="'+imgData['IMAGE_NAME']+'">'+
+                            '<input type="hidden" name="img_service_id_'+imgData['IMAGE_ID']+'" value="'+imgData['SERVICE_IMAGE_ID']+'">'+
                         '</div>'+
                         '<div class="clearfix" style="clear:both;"></div>'+
                     '</div>';
@@ -227,6 +230,8 @@ function saveDetails() {
     var cateList = $('[name^="imgCate"]'),
         nameList = $('[name^="imgName"]'),
         descList = $('[name^="imgDesc"]'),
+        pathList = $('[name^="img_path"]'),
+        serviceIdList = $('[name^="img_service_id"]'),
         data     = {},
         res      = null;
     for( var __cnt = 0; __cnt < cateList.length; __cnt++ ) {
@@ -235,7 +240,9 @@ function saveDetails() {
             'IMAGE_ID'          : __id,
             'IMAGE_CATEGORY'    : cateList[ __cnt ].value.trim(),
             'IMAGE_DESCRIPTION' : descList[ __cnt ].value.trim(),
-            'IMAGE_DISPLAY_NAME': nameList[ __cnt ].value.trim()
+            'IMAGE_DISPLAY_NAME': nameList[ __cnt ].value.trim(),
+            'IMAGE_NAME'        : pathList[ __cnt ].value.trim(),
+            'SERVICE_IMAGE_ID': serviceIdList[ __cnt ].value.trim()
         };
         data[ __cnt ] = __data;
     }

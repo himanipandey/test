@@ -598,6 +598,7 @@ define('VILLA_APARTMENTS','3');
 define('PLOTS','4');
 define('PLOT_VILLAS','5');
 define('PLOT_APARTMENTS','6');
+define('COMMERCIAL','7');
 
 
 $ARR_PROJ_EDIT_PERMISSION = array(
@@ -608,7 +609,7 @@ $ARR_PROJ_EDIT_PERMISSION = array(
 	"AUDIT-1"=>array('audit1','dailymis'),
 	"NEWPROJECTAUDIT"=>array('newProject'),
 	"AUDIT-2"=>array('audit2'),
-	"SURVEY"=>array('dataCollection','newProject')
+	"SURVEY"=>array('dataCollection','newProject','dcCallCenter')
 );
 $dept = $_SESSION['DEPARTMENT'];
 if(!isset($ARR_PROJ_EDIT_PERMISSION[$dept]))
@@ -637,8 +638,10 @@ $arrCampaign =
 	"Bangalore_2",
 	"Bangalore_3",
   	"Pune_New",
-    "Delhi_Resale1",
-    "Delhi_Resale2"
+        "Delhi_Resale1",
+        "Delhi_Resale2",
+        "Chennai_Campaign2",
+        "Kolkata_Campaign2"
 	);
 
 /**************Authentication*************/
