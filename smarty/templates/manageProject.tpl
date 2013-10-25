@@ -280,8 +280,7 @@ $(function() {
                                               </select>
                                           </span>
                                           </td>
-                                    <input type="hidden" name = "locality" id = "localitySelectText" value="{$locality}">
-                                    </tr>
+                                   </tr>
                                      <tr><td>&nbsp;</td></tr>
                                      <tr>
                                           <td align="right" style = "padding-left:20px;"><b>Builder:</b></td>
@@ -391,7 +390,7 @@ $(function() {
                                                   <select name="Status[]" id="Status" class="fieldState" multiple>
                                                           <option value="">Select</option>
                                                           {foreach from = $projectStatus key = key item = value}
-                                                                  <option value="{$key}" {if $key == $Status} selected {/if}>{$value} </option>
+                                                                  <option value="{$key}" {if in_array($key,$Status)} selected {/if}>{$value} </option>
                                                           {/foreach}
                                                    </select>
                                           </td>
