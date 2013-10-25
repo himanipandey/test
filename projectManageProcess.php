@@ -138,7 +138,12 @@
                 $arrSearchFields = array();
 		if($_GET['projectId'] == '')
 		{
-                    if($_REQUEST['project_name'] != '')
+                    if($_REQUEST['locality'] != '')
+                        $arrSearchFields['locality_id'] = $_REQUEST['locality'];
+					elseif(isset($city) && !empty($city)){ //if only city selected		
+						$arrSearchFields['city_id'] = $city;
+					}
+					if($_REQUEST['project_name'] != '')
                         $arrSearchFields['project_name'] = trim($_REQUEST['project_name']);
                     if($_REQUEST['Residential'] != '')
                         $arrSearchFields['residential_flag'] = $_REQUEST['Residential'];
@@ -161,14 +166,9 @@
                         $QueryMember .= ")";
                     }*/
                     if($ActiveValue != '')
-                        $arrSearchFields['status'] = $ActiveValue;
+                        $arrSearchFields['status'] = $_REQUEST['Active'];
                     if($StatusValue != '')
-                        $arrSearchFields['project_status_id'] = $StatusValue;
-                    if($_REQUEST['locality'] != '')
-                        $arrSearchFields['locality_id'] = $_REQUEST['locality'];
-		    elseif(isset($city) && !empty($city)){ //if only city selected		
-			$arrSearchFields['city_id'] = $city;
-		    }
+                        $arrSearchFields['project_status_id'] = $_REQUEST['Status'];
                     if( $_REQUEST['builder'] != '' ) 
                         $arrSearchFields['builder_id'] = $_REQUEST['builder'];
                     if($_REQUEST['phase'] != '')

@@ -51,43 +51,43 @@ class ResiProject extends Objects
 		$city_and = ' and ';
 	else
 		$city_and = '';
-       foreach($arrSearch as $key => $value ) {
-           $cnt++;
-           $and = ' in (?) and ';
-	   $comma = ' ,';
-           if( count($arrSearch) == $cnt ) {
-               $comma = '';
-               $and = 'in (?) ';
-           }
-           if( count($arrSearch) < $cnt )
-               $and = '';
-	   if( $key == 'city_id' ){
+    foreach($arrSearch as $key => $value ) {
+      $cnt++;
+      $and = ' in (?) and ';
+	  $comma = ' ,';
+      if( count($arrSearch) == $cnt ) {
+          $comma = '';
+          $and = 'in (?) ';
+      }
+      if( count($arrSearch) < $cnt )
+          $and = '';
+	  if( $key == 'city_id' ){
 		$arrSearchFields .= "city.city_id = ? ".$city_and;
-               array_push($arrSearchFieldsValue, $value);
-	   }
-           else if( $key == 'expected_supply_date_between_from_to' ) {
-               $twoDate = explode('_',$value);
-               $arrSearchFields .= 'expected_supply_date >= ? and ';
-               array_push($arrSearchFieldsValue, $twoDate[0]);  
+        array_push($arrSearchFieldsValue, $value);
+	  }
+      else if( $key == 'expected_supply_date_between_from_to' ) {
+          $twoDate = explode('_',$value);
+          $arrSearchFields .= 'expected_supply_date >= ? and ';
+          array_push($arrSearchFieldsValue, $twoDate[0]);  
                
-               $arrSearchFields .= 'expected_supply_date <= ?';
-               array_push($arrSearchFieldsValue, $twoDate[1]);  
-           }
-           else if( $key == 'expected_supply_date_from' ) {
-               $date = "$value";
-               $arrSearchFields .= 'expected_supply_date >= ?';
-               array_push($arrSearchFieldsValue, $date);
-           }
-           else if( $key == 'expected_supply_date_to' ) {
-               $date = "$value";
-               $arrSearchFields .= 'expected_supply_date <= ?';
-               array_push($arrSearchFieldsValue, $date);
-           }
-           else {
-               $arrSearchFields .= "resi_project.$key $and";
-               array_push($arrSearchFieldsValue, $value);
-           }
-       }
+          $arrSearchFields .= 'expected_supply_date <= ?';
+          array_push($arrSearchFieldsValue, $twoDate[1]);  
+      }
+      else if( $key == 'expected_supply_date_from' ) {
+          $date = "$value";
+          $arrSearchFields .= 'expected_supply_date >= ?';
+          array_push($arrSearchFieldsValue, $date);
+      }
+      else if( $key == 'expected_supply_date_to' ) {
+           $date = "$value";
+           $arrSearchFields .= 'expected_supply_date <= ?';
+           array_push($arrSearchFieldsValue, $date);
+      }
+      else {
+           $arrSearchFields .= "resi_project.$key $and";
+           array_push($arrSearchFieldsValue, $value);
+      }
+    }
 	
        $conditions = array_merge(array($arrSearchFields), $arrSearchFieldsValue);
        $join = " left join resi_builder b on resi_project.builder_id = b.builder_id
@@ -101,6 +101,7 @@ class ResiProject extends Objects
                     on locality.suburb_id = suburb.suburb_id
                  left join city
                     on suburb.city_id = city.city_id";
+                    
        $projectSearch = ResiProject::find('all',
            array('joins' => $join,'conditions'=>$conditions,'select' => 
                     'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name','limit' => 25));		

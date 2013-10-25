@@ -94,8 +94,8 @@
 				  <td width="20%" align="right">*Status  : </td>
 				  <td width="30%" align="left" >
 				    <select name = "status" id="status" style="width:150px;"> 
-					  <option {if $status == 'Inactive'} value = "0" selected = 'selected' {else} value = "0" {/if}>Inactive</option>
-					  <option {if $status == 'Active'} value = "1" selected = 'selected' {else} value = "1" {/if}>Active</option>		
+					  <option {if $status == 'Inactive'} value = "Inactive" selected = 'selected' {else} value = "Inactive" {/if}>Inactive</option>
+					  <option {if $status == 'Active'} value = "Active" selected = 'selected' {else} value = "Active" {/if}>Active</option>		
 					 </select>
 				 </td>				   
 				 <td width="50%" align="left"></td>
