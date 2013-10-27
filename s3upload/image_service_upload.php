@@ -108,7 +108,7 @@ class ImageServiceUpload{
 
     static function update($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
-        return static::curl_request($post, 'PUT', $url);
+        return static::curl_request($post, 'POST', $url);
     }
 
     function validate(){
