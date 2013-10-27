@@ -21,7 +21,7 @@
        $projectId    = $_REQUEST['projectId'];      
         include("dbConfig.php");
         if(count($_REQUEST)>3){
-            $del = deleteAllBrokerOfProject($projectId);
+            $del = 1; //deleteAllBrokerOfProject($projectId);
             if($del){
                 $qryIns = "INSERT INTO broker_project_mapping (ID,PROJECT_ID,BROKER_ID,ACTION_DATE)
                             VALUES ";
@@ -33,6 +33,7 @@
                     $qryIns .= "('','".$projectId."','".$v."',now())$comma";
                     $cnt++;
                 }
+                error_log("ERRORLOG-$qryIns");
                 $resIns = mysql_query($qryIns) or die(mysql_error());
                 if($resIns){
                     ?>

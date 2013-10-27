@@ -74,6 +74,9 @@
 						else
 						{
 							/********delete image from db if checked but not browes new image*********/
+                            $service_image_id = $_REQUEST['service_image_id'][$k];
+                            $s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
+                            $s3upload->delete();
 							$qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
 											WHERE 
 												FLOOR_PLAN_ID	= '".$_REQUEST['plan_id'][$k]."'
@@ -120,8 +123,9 @@
 							
 							$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 							$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
-							$oldpath		=	$_REQUEST['property_image_path'][$key]; 
-							//unlink($oldpath);
+							$oldpath		=	$_REQUEST['property_image_path'][$key];
+                            $service_image_id = $_REQUEST['service_image_id'][$key];
+                                //unlink($oldpath);
 
 							$txtlocationplan 	= move_uploaded_file($_FILES["img"]["tmp_name"][$key], $img_path);
                             $s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath,"",$img_path));
@@ -153,8 +157,15 @@
 														$image->load($path);
                                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 														$image->save($imgdestpath);
-                                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
-                                                        $s3upload->upload();
+                                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                                            "image_path" => str_replace($newImagePath,"",$imgdestpath),
+                                                            "object" => "option", "image_type" => "floor_plan",
+                                                            "object_id" => $arrOptionId[$key], "service_image_id" => $service_image_id));
+                                                        $response = $s3upload->update();
+                                                        // Image id updation (next three lines could be written in single line but broken
+                                                        // in three lines due to limitation of php 5.3)
+                                                        $image_id = $response["service"]->data();
+                                                        $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);		
 														/**********Working for watermark*******************/
@@ -234,7 +245,8 @@
 								$qry	=	"UPDATE ".RESI_FLOOR_PLANS." 
 												SET 
 													IMAGE_URL = '".$imgPathDb[1]."',
-													NAME	  = '".$arrTitle[$key]."'
+													NAME	  = '".$arrTitle[$key]."',
+													SERVICE_IMAGE_ID  =  ".$image_id."
 												WHERE 
 													FLOOR_PLAN_ID = '".$arrplanId[$key]."'
 												AND 
