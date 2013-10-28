@@ -118,6 +118,6 @@
         mysql_query('SET SESSION group_concat_max_len = 1000000;');
         $sql = "select GROUP_CONCAT(a SEPARATOR ' OR ') cond from (select CONCAT('OLD.', COLUMN_NAME, '<>NEW.', COLUMN_NAME) a from information_schema.COLUMNS where TABLE_SCHEMA = '$dbName' and TABLE_NAME = '$tableName') t";
         $res = mysql_fetch_assoc(mysql_query($sql));
-        return $res['cond'];
+        return 'IF '.$res['cond'].' THEN';
     }
 ?>
