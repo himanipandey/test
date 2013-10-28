@@ -105,6 +105,10 @@ if ($_POST['btnSave'] == "Save")
 	   {
 	     $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
 	   } 
+	if( $city == '') 
+	   {
+	     $ErrorMsg["txtCity"] = "Please select City.";
+	   } 
 	    /******code for builder url already exists******/
         $bldrURL = "";
         if($builderid != ''){
@@ -157,7 +161,7 @@ if ($_POST['btnSave'] == "Save")
             /**code for duplicate builder name or entity name***/
 
             if(is_array($ErrorMsg)) {
-                    // Do Nothing
+                    // Do Nothing 
             } 	
             else if ($builderid == '')
             {
@@ -183,7 +187,7 @@ if ($_POST['btnSave'] == "Save")
             }
             else
             {
-
+			
                 $name	=	$_FILES["txtBuilderImg"]["name"];
                 $cutpath	=	explode("/",$imgedit);
                 $newfold	=	$newImagePath.$cutpath[1];

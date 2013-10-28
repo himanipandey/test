@@ -976,7 +976,8 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 /* * ******update builder if already exists************** */
 
-function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL') {
+function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL')
+ {
     $Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
                                 ENTITY  	   	     = '" . d_($legalEntity) . "',				
@@ -995,8 +996,8 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				WEBSITE			     ='" . $website . "',
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
-				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "',
-				SERVICE_IMAGE_ID             = ".$image_id."
+				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "'
+				
 			WHERE	
 				BUILDER_ID = '" . $builderid . "'"; //die("here");
 
@@ -1844,5 +1845,17 @@ function ViewLocalityDetails($localityID) {
         return 0;
     }
 }
+function projectBankList($projectId){
+	
+	$projectList = array();
+	$Sql = "SELECT BANK_ID FROM " . PROJECT_BANKS . " WHERE PROJECT_ID = ".$projectId;
+	$ExecSql = mysql_query($Sql);
+	while($bank = mysql_fetch_array($ExecSql))
+		$projectList[] = $bank['BANK_ID'];
+	
+	return  $projectList;
+	
+}
+
 ?>
 

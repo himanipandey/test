@@ -31,7 +31,7 @@
     }else{
         $qryFlg = "1";
     }
-    $QueryMember = "Select * FROM ptigercrm.".BROKER_LIST." WHERE  ".$qryFlg."  ORDER BY BROKER_ID DESC";
+    $QueryMember = "Select * FROM ".BROKER_LIST." WHERE  ".$qryFlg."  ORDER BY BROKER_ID DESC";
     $QueryExecute = mysql_query($QueryMember) or die(mysql_error());
     $NumRows 	  = mysql_num_rows($QueryExecute);
     $PagingQuery = "LIMIT $Offset, $RowsPerPage";

@@ -163,7 +163,7 @@ DEFINE("AMENITIES_MASTER","amenities_master");
 DEFINE("PROJECT_OPTIONS","resi_project_options");
 DEFINE("ROOM_CATEGORY","room_category");
 
-
+DEFINE("BROKER_LIST","broker_list");
 
 
 DEFINE("PROJECT_PLAN_IMAGES","project_plan_images");
@@ -181,6 +181,7 @@ DEFINE("BUILDER_CONTACT_INFO","builder_contact_info");
 DEFINE("RESI_PROJECT_OTHER_PRICING","resi_project_other_pricing");
 DEFINE("CALLDETAILS","CallDetails");
 DEFINE("CALLPROJECT","CallProject");
+DEFINE("PROJECT_BANKS","project_banks");
 
 
 /**************This always put at the end of define tables*******************/
@@ -663,7 +664,7 @@ if(in_array($_SESSION['adminId'],$arrForce))
 $smarty->assign("forceMigrateModule", $forceMigrateModule);
 
 //$newImagePath = "/home/sysadmin/public_html/images_new/";
-$newImagePath = "/home/vimlesh/public_html/images_new/";
+$newImagePath = "images_new";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
 

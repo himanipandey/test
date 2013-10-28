@@ -275,7 +275,13 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
         }
         if( $exp_launch_date != '' && $exp_launch_date != '0000-00-00' ) {
              $retdt  = ((strtotime($exp_launch_date)-strtotime(date("Y-m-d")))/(60*60*24));
-            if( $retdt <= 0 ) {
+            if($pre_launch_date !='' && $pre_launch_date != '0000-00-00' && date($pre_launch_date) > date($exp_launch_date)){
+				$ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Pre-Launch Date!';
+			}elseif($eff_date_to !='' && $eff_date_to != '0000-00-00' && date($eff_date_to) > date($exp_launch_date)){
+				$ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Launch Date!';
+			}elseif($eff_date_to_prom !='' && $eff_date_to_prom != '0000-00-00' && date($eff_date_to_prom) > date($exp_launch_date)){
+				$ErrorMsg['supplyDate'] = 'Expected supply date should be greater than  Promised Completion Date!';
+			}elseif( $retdt <= 0 ) {
                 $ErrorMsg['supplyDate'] = 'Expected supply date should be future date!';
             }
         }
@@ -510,9 +516,9 @@ elseif ($projectId!='') {
     $smarty->assign("approvals", stripslashes($ProjectDetail->approvals));
     $smarty->assign("project_size", stripslashes($ProjectDetail->project_size));
     $smarty->assign("power_backup_capacity", stripslashes($ProjectDetail->power_backup_capacity));
-    $smarty->assign("powerBackup", stripslashes($ProjectDetail->POWER_BACKUP));
+    $smarty->assign("powerBackup", stripslashes($ProjectDetail->power_backup_type_id));
     $smarty->assign("architect", stripslashes($ProjectDetail->architect_name));
-    $smarty->assign("residential", stripslashes($ProjectDetail->residential_flag));
+    $smarty->assign("residential", strtolower(stripslashes($ProjectDetail->residential_flag)));
     $smarty->assign("township", stripslashes($ProjectDetail->township_id ));
     $smarty->assign("pre_launch_date", stripslashes($ProjectDetail->pre_launch_date));
     $smarty->assign("exp_launch_date", stripslashes($ProjectDetail->expected_supply_date));
@@ -521,13 +527,7 @@ elseif ($projectId!='') {
     $smarty->assign("eff_date_to_prom", stripslashes($ProjectDetail->promised_completion_date));
     $smarty->assign("comments", stripslashes($ProjectDetail->comments));
     $smarty->assign("txtProjectLocation", $txtProjectLocation);
-
-  /*  if( isset($ProjectDetail['BANK_LIST']) )
-        $bank_arr = explode(",",$ProjectDetail[0]['BANK_LIST']);
-    else
-        $bank_arr = '';*/
-    $bank_arr = array(1,2);
-    $smarty->assign("bank_arr", $bank_arr);
+    $smarty->assign("bank_arr", projectBankList($projectId));
  }
 
 function getNumProjectsUnderDisplayOrder($displayOrder, $cityId, $projectId) {

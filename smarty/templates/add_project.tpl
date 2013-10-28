@@ -568,7 +568,7 @@
 							   <tr>
                                                                 <td width="20%" align="right"><b>Power Backup:</b> </td><td width="30%" align="left">
                                                                   <select name = "powerBackup">
-                                                                      <option value="">Select Power Backup<option>
+                                                                      <option value="">Select Power Backup</option>
                                                                       {foreach from = $getPowerBackupTypes item = value}
                                                                          <option value = "{$value->id}" {if $powerBackup == $value->id} selected {/if}>
                                                                             {$value->name}
@@ -604,7 +604,7 @@
                                                                     <select name="residential" id="residential" class="residential">
                                                                             <option value="">Select </option>
                                                                             <option value="residential" {if $residential == 'residential'} selected = selected {/if}>Residential </option>
-                                                                            <option value="nonResidential" {if $residential == 'nonResidential'} selected = selected {/if}>Non Residential </option>
+                                                                            <option value="nonResidential" {if $residential == 'nonresidential'} selected = selected {/if}>Non Residential </option>
                                                                     </select>
 
                                                                 </td>
