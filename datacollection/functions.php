@@ -96,12 +96,13 @@ function assignProject($projectId, $adminId){
     $movementId = $assignmentHistory[0]['MOVEMENT_HISTORY_ID'];
     $count = count($assignmentHistory);
     $lastAssignmentId = $assignmentHistory[$count-1]['ID'];
+    $assignedToAll = getAllAssignedToFromAssignmentHistory($assignmentHistory);
     if($assignmentHistory[$count-1]['STATUS'] === 'notAttempted'){
         $sql = "update project_assignment set ASSIGNED_TO = $adminId, ASSIGNED_BY = $_SESSION[adminId], CREATION_TIME = NOW()  where ID = $lastAssignmentId;";
         $flag = dbExecute($sql);
     }
     else{
-        if($assignmentHistory[$count-1]['ASSIGNED_TO'] == $adminId){
+        if(in_array($adminId, $assignedToAll)){
             $error = 'alreadyAssignedToSameId';
         }
         else{
@@ -112,6 +113,14 @@ function assignProject($projectId, $adminId){
     dbExecute('commit');
     if ($flag) return $flag;
     return $error;
+}
+
+function getAllAssignedToFromAssignmentHistory($assignmentHistory){
+    $assignedTo = array();
+    foreach ($assignmentHistory as $value) {
+        $assignedTo[] = $value['ASSIGNED_TO'];
+    }
+    return $assignedTo;
 }
 
 function getMultipleProjectDetails($projectIds){
