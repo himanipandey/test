@@ -4,6 +4,7 @@ include("appWideConfig.php");
 include("dbConfig.php");
 include("includes/configs/configs.php");
 include("builder_function.php");
+include_once("function/locality_functions.php");
 AdminAuthentication();
 
 
@@ -60,6 +61,10 @@ else
 		$res = mysql_query($qry);
 		$ctid = mysql_insert_id();
 		$sel_id = $ctid;
+		
+		$url = createLocalityURL($cityval, $dataCity['LABEL'], $ctid, 'city');
+		$qry = "UPDATE ".CITY." SET URL = '".addslashes($url)."' WHERE CITY_ID=".$ctid;
+        $res = mysql_query($qry);
 	}
 
 
