@@ -45,7 +45,9 @@ jQuery(document).ready(function(){
                if(msg == 1){
                    alert("Priority Successfully updated");
                    parent.location.reload(true); 
-               }
+               } else if(msg == 2){
+					alert("Please enter valid Priority!");
+				}
             }
         })
   });

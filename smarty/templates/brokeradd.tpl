@@ -158,13 +158,13 @@
 <script type="text/javascript">
     function addMoreProject(ct) {
 
-        for(i=1;i<=ct;i++)
+        for(i=1;i<=99;i++)
         {
          document.getElementById('addId_'+i).style.display='none';
         }	
         for(i=1;i<=ct;i++)
         {
-         document.getElementById('addId_'+i).style.display='';
+         document.getElementById('addId_'+i).style.display='block';
         }		
     }
     function isNumberKey(evt){

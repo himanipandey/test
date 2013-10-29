@@ -57,8 +57,6 @@ function chkConfirm()
                       <TBODY>
                       <TR class = "headingrowcolor">
                         <TD class=whiteTxt width=13% align="center">CITY NAME</TD>
-                        <TD class=whiteTxt width=18% align="center">META TITLE</TD>
-                         <TD class=whiteTxt width=18% align="center">META KEYWORDS</TD>
                          <TD class=whiteTxt width=15% align="center">URL</TD>                          
 						 <TD class=whiteTxt width=10% align="center">STATUS</TD>
                         <TD class=whiteTxt width=15% align="center">ACTION</TD>
@@ -76,8 +74,6 @@ function chkConfirm()
 					 {/if}	
                       <TR {$color}>
                         <TD align=left class=td-border>{$cityDataArr[data].LABEL}</TD>
-                        <TD align=left class=td-border>{$cityDataArr[data].META_TITLE}</TD>
-                        <TD align=left class=td-border>{$cityDataArr[data].META_KEYWORDS}</TD>
                         <TD align=left class=td-border>{$cityDataArr[data].URL}</TD>
 			<TD align=center class=td-border>{$cityDataArr[data].STATUS}</TD> 
                         <TD  class="td-border" align=left>

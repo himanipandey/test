@@ -125,12 +125,12 @@ function autoAdjustPrio($tablename, $cityID = null, $priority = null)
             $loc = "select locality_id from locality where suburb_id = ".$subId['suburb_id'];
             $resLoc = mysql_query($loc);
             while($locId = mysql_fetch_assoc($resLoc)) {
-                $query = "UPDATE ".$tablename." SET PRIORITY = (PRIORITY+1) WHERE LOCALITY_ID='".$locId['locality_id']."' AND PRIORITY >=".$priority." AND PRIORITY <".MAX_PRIORITY;
+                $query = "UPDATE ".$tablename." SET PRIORITY = (PRIORITY+1) WHERE PRIORITY >=".$priority." AND PRIORITY < 15";
             }
         }  
     }
     else {
-       $query = "UPDATE ".$tablename." SET PRIORITY = (PRIORITY+1) WHERE CITY_ID='".$cityID."' AND PRIORITY >=".$priority." AND PRIORITY <".MAX_PRIORITY; 
+       $query = "UPDATE ".$tablename." SET PRIORITY = (PRIORITY+1) WHERE CITY_ID='".$cityID."' AND PRIORITY >=".$priority." AND PRIORITY < 15"; 
     }
     mysql_query($query) or die(mysql_error());
 }

@@ -68,14 +68,18 @@ if(!empty($_POST['projectId']))
 }
 else
 {
+	if($priority > 15){
+        $priority = MAX_PRIORITY;
+    }elseif($priority < 1 || trim($priority) == ''){
+	     echo 2; return;
+	}
+    
     if($autoadjust)
     {
         autoAdjustPrio(SUBURB, $cityId, $priority);
         autoAdjustPrio(LOCALITY, $cityId, $priority);
     }
-    if($priority>=100){
-        $priority = MAX_PRIORITY;
-    }
+    
     if(!empty($sub)){
         updateSuburb($sub, $priority);
     }else if(!empty ($loc)){
