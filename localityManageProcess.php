@@ -9,13 +9,6 @@
     $smarty->assign("page",$_GET['page']);
     $cityId = $_REQUEST['citydd'];
     $smarty->assign('cityId',$cityId);
-
-    if ($_GET['mode'] == 'delete') {
-
-        $localityID = $_GET['localityid'];
-            $delQry = "UPDATE ".LOCALITY." SET DELETED_FLAG='0' WHERE LOCALITY_ID='".$localityID."'";
-            mysql_query( $delQry);
-    }
     /***********************************************************/
     /**
      * *********************************
@@ -59,11 +52,16 @@
 
 
     if ($_GET['sort'] == "1") {
-        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE LABEL BETWEEN '0' AND '9'  AND CITY_ID ='".$cityId ."' ORDER BY LOCALITY_ID DESC";
+        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id
+            inner join city c on s.city_id = s.city_id
+           WHERE l.LABEL BETWEEN '0' AND '9'  AND c.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
     } else if ($_GET['sort'] == "all") {
-        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE  CITY_ID ='".$cityId ."'  ORDER BY LOCALITY_ID DESC";
+        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id
+            inner join city c on s.city_id = s.city_id where c.CITY_ID ='".$cityId ."'  ORDER BY l.LOCALITY_ID DESC";
     } else {
-        $QueryMember = "SELECT * FROM ".LOCALITY." WHERE  LEFT(LABEL,1)='".$_GET['sort']."' AND  CITY_ID ='".$cityId ."' ORDER BY LOCALITY_ID DESC";
+        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id
+            inner join city c on s.city_id = s.city_id WHERE  LEFT(l.LABEL,1)='".$_GET['sort']."' 
+                AND  c.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
     }
 
     //echo $QueryMember;

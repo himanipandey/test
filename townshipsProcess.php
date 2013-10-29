@@ -33,8 +33,6 @@
     foreach ($townshipsDetail as $value){	
             array_push($townshipsArr, $value);
     }
-    echo "<pre>";
-   // print_r($townshipsArr);
     $link ='';
     if($name != '')	{				
             $link .="&townshipsName=".$name."";

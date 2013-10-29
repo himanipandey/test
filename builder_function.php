@@ -430,7 +430,9 @@ function InsertSpecification($projectId, $master_bedroom_flooring, $other_bedroo
 /* * ***************** */
 
 function ProjectBedroomDetail($projectId) {
-    $qrySel = "SELECT UNIT_TYPE, GROUP_CONCAT(Distinct BEDROOMS) as BEDS FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' GROUP BY UNIT_TYPE ORDER BY UNIT_TYPE";
+    $qrySel = "SELECT OPTION_TYPE as UNIT_TYPE, GROUP_CONCAT(Distinct BEDROOMS) as BEDS FROM 
+        " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' 
+            GROUP BY OPTION_TYPE ORDER BY OPTION_TYPE";
     $res_Sel = mysql_query($qrySel);
     $sqlResults = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -470,13 +472,13 @@ function ProjectOptionDetail($projectId) {
 
 function fetch_towerDetails($projectId) {
     $qrySel = "SELECT
-							t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME
-						FROM
-							" . RESI_PROJECT_TOWER_DETAILS . " t LEFT JOIN resi_project_phase p
-						ON
-							t.PHASE_ID = p.PHASE_ID
-						WHERE
-							t.PROJECT_ID = '" . $projectId . "' ORDER BY t.TOWER_NAME ASC";
+                        t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME
+                FROM
+                        " . RESI_PROJECT_TOWER_DETAILS . " t LEFT JOIN resi_project_phase p
+                ON
+                        t.PHASE_ID = p.PHASE_ID
+                WHERE
+                        t.PROJECT_ID = '" . $projectId . "' ORDER BY t.TOWER_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -485,8 +487,10 @@ function fetch_towerDetails($projectId) {
     return $arrDetail;
 }
 
-function fetch_towers_in_phase($projectId, $phaseId) {
-    $qrySel = "SELECT TOWER_NAME,TOWER_ID,PHASE_ID FROM " . RESI_PROJECT_TOWER_DETAILS . "  WHERE PROJECT_ID = '" . $projectId . "' AND PHASE_ID=" . $phaseId . " GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";
+function fetch_towers_in_phase($projectId) {
+    $qrySel = "SELECT TOWER_NAME,TOWER_ID FROM " . RESI_PROJECT_TOWER_DETAILS . "
+        WHERE PROJECT_ID = '" . $projectId . "' 
+            GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -509,7 +513,8 @@ function fetch_towerDetails_for_phase($projectId) {
 }
 
 function fetch_phaseDetails($projectId) {
-    $qrySel = "SELECT PHASE_ID, PHASE_NAME FROM " . RESI_PROJECT_PHASE . "  WHERE PROJECT_ID = '" . $projectId . "' ORDER BY PHASE_NAME ASC";
+    $qrySel = "SELECT PHASE_ID, PHASE_NAME FROM " . RESI_PROJECT_PHASE . "  WHERE 
+        PROJECT_ID = '" . $projectId . "' and version = 'Cms' ORDER BY PHASE_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -605,7 +610,8 @@ function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
 }
 
 function specification($projectId) {
-    $qrySel = "SELECT * FROM " . RESI_PROJ_SPECIFICATION . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qrySel = "SELECT * FROM 
+        seo_data WHERE table_id = '".$projectId ."' and table_name = 'resi_project'";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -726,7 +732,8 @@ function ProjectType($projectId) {
 }
 
 function allProjectImages($projectId) {
-    $sqlListingImages = "SELECT *  FROM " . PROJECT_PLAN_IMAGES . " WHERE  PROJECT_ID = " . $projectId . "";
+    $sqlListingImages = "SELECT *  FROM " . PROJECT_PLAN_IMAGES . " WHERE  
+        PROJECT_ID = " . $projectId . "";
 
     $data = mysql_query($sqlListingImages);
     $ImageDataListingArr = array();
@@ -739,7 +746,8 @@ function allProjectImages($projectId) {
 /* * *****Fetch all floor plans images of a project***** */
 
 function allProjectFloorImages($projectId) {
-    $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,MEASURE,OPTION_TYPE as UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+    $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,MEASURE,OPTION_TYPE as 
+        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
     $resOpt = mysql_query($qryOpt);
 
     $ImageDataListingArr = array();
@@ -788,8 +796,8 @@ function searchPhase($phaseArray, $newPhaseName) {
 
 function phaseDetailsForId($phaseId) {
     $sql = "SELECT * FROM " . RESI_PROJECT_PHASE . "
-                        WHERE
-                        PHASE_ID ='" . $phaseId . "'";
+            WHERE
+            PHASE_ID ='" . $phaseId . "' and version = 'Cms'";
 
     $data = mysql_query($sql);
     $arr = array();
@@ -1196,61 +1204,68 @@ function project_list($builderId) {
 
 /* * ***********Query for insert other price********************** */
 
-function InsertOtherPrice($arr) {
-
-    $Sql = "INSERT INTO " . RESI_PROJECT_OTHER_PRICING . " SET
-				PROJECT_ID  	   					= '" . d_($arr['projectId']) . "',
-				EDC_IDC 	  						= '" . d_($arr['edc_idc_val1']) . "',
-				EDC_IDC_TYPE	 	  				= '" . d_($arr['edc_idc']) . "',
-				EDC_IDC_MEND_OPT 					= '" . d_($arr['edc_idc_type1']) . "',
-				LEASE_RENT							= '" . d_($arr['lease_rent_val1']) . "',
-				LEASE_RENT_TYPE	 					= '" . d_($arr['lease_rent']) . "',
-				LEASE_RENT_MEND_OPT	 				= '" . d_($arr['lease_rent_type1']) . "',
-				OPEN_CAR_PARKING			 		= '" . d_($arr['open_car_parking1']) . "',
-				OPEN_CAR_PARKING_TYPE			 	= '" . d_($arr['open_car_parking']) . "',
-				OPEN_CAR_PARKING_MEND_OPT			= '" . d_($arr['open_car_parking_type1']) . "',
-				CLOSE_CAR_PARKING					= '" . d_($arr['close_car_parking1']) . "',
-				CLOSE_CAR_PARKING_TYPE				= '" . d_($arr['close_car_parking']) . "',
-				CLOSE_CAR_PARKING_MEND_OPT			= '" . d_($arr['close_car_parking_type1']) . "',
-				SEMI_CLOSE_CAR_PARKING				= '" . d_($arr['semi_close_car_parking1']) . "',
-				SEMI_CLOSE_CAR_PARKING_TYPE			= '" . d_($arr['semi_close_car_parking']) . "',
-				SEMI_CLOSE_CAR_PARKING_MEND_OPT		= '" . d_($arr['semi_close_car_parking_type1']) . "',
-				CLUB_HOUSE							= '" . d_($arr['club_house1']) . "',
-				CLUB_HOUSE_PSF_FIXED				= '" . d_($arr['club_house']) . "',
-				CLUB_HOUSE_MEND_OPT					= '" . d_($arr['club_house_type1']) . "',
-				IFMS								= '" . d_($arr['ifms1']) . "',
-				IFMS_PSF_FIXED						= '" . d_($arr['ifms']) . "',
-				IFMS_MEND_OPT						= '" . d_($arr['ifms_type1']) . "',
-				POWER_BACKUP						= '" . d_($arr['power_backup1']) . "',
-				POWER_BACKUP_PSF_FIXED				= '" . d_($arr['power_backup']) . "',
-				POWER_BACKUP_MEND_OPT				= '" . d_($arr['power_backup_type1']) . "',
-				LEGAL_FEES							= '" . d_($arr['legal_fees1']) . "',
-				LEGAL_FEES_PSF_FIXED				= '" . d_($arr['legal_fees']) . "',
-				LEGAL_FEES_MEND_OPT					= '" . d_($arr['legal_fees_type1']) . "',
-				POWER_WATER							= '" . d_($arr['power_and_water1']) . "',
-				POWER_WATER_PSF_FIXED				= '" . d_($arr['power_and_water']) . "',
-				POWER_WATER_MEND_OPT				= '" . d_($arr['power_and_water_type1']) . "',
-				MAINTENANCE_ADVANCE					= '" . d_($arr['maintenance_advance1']) . "',
-				MAINTENANCE_ADVANCE_PSF_FIXED		= '" . d_($arr['maintenance_advance']) . "',
-				MAINTENANCE_ADVANCE_MEND_OPT		= '" . d_($arr['maintenance_advance_type1']) . "',
-				MAINTENANCE_ADVANCE_MONTHS			= '" . d_($arr['maintenance_advance_months']) . "',
-				PLC									= '" . d_($arr['plc']) . "',
-				FLOOR_RISE							= '" . d_($arr['floor_rise']) . "',
-				OTHERS								= '" . d_($arr['other']) . "'";
-
-    $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertOtherPrice()');
-
-    if ($ExecSql) {
-        $last_id = mysql_insert_id();
-        audit_insert($last_id, 'insert', 'resi_project_other_pricing', $arr['projectId']);
-        return 1;
+function InsertUpdateOtherPrice($arr,$projectId) {
+    echo "<pre>";
+    print_r($arr);
+    $arrInsertUpdateProject = array();
+    $arrInsertUpdateProject['EDC_IDC'] = $arr['edc_idc_val1'];
+    $arrInsertUpdateProject['EDC_IDC_TYPE'] = $arr['edc_idc'];
+    $arrInsertUpdateProject['EDC_IDC_MEND_OPT'] = $arr['edc_idc_type1'];
+    $arrInsertUpdateProject['LEASE_RENT'] = $arr['lease_rent_val1'];
+    $arrInsertUpdateProject['LEASE_RENT_TYPE'] = $arr['lease_rent'];
+    $arrInsertUpdateProject['LEASE_RENT_MEND_OPT'] = $arr['lease_rent'];
+    $arrInsertUpdateProject['OPEN_CAR_PARKING'] = $arr['open_car_parking1'];
+    $arrInsertUpdateProject['OPEN_CAR_PARKING_TYPE'] = $arr['open_car_parking'];
+    $arrInsertUpdateProject['OPEN_CAR_PARKING_MEND_OPT'] = $arr['open_car_parking_type1'];
+    $arrInsertUpdateProject['CLOSE_CAR_PARKING'] = $arr['close_car_parking1'];
+    $arrInsertUpdateProject['CLOSE_CAR_PARKING_TYPE'] = $arr['close_car_parking_type1'];
+    $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING'] = $arr['close_car_parking_type'];
+    $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_TYPE'] = $arr['semi_close_car_parking'];
+    $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_MEND_OPT'] = $arr['semi_close_car_parking_type1'];
+    $arrInsertUpdateProject['CLUB_HOUSE'] = $arr['club_house1'];
+    $arrInsertUpdateProject['CLUB_HOUSE_PSF_FIXED'] = $arr['club_house'];
+    $arrInsertUpdateProject['CLUB_HOUSE_MEND_OPT'] = $arr['club_house_type1'];
+    $arrInsertUpdateProject['IFMS'] = $arr['ifms1'];
+    $arrInsertUpdateProject['IFMS_PSF_FIXED'] = $arr['ifms'];
+    $arrInsertUpdateProject['IFMS_MEND_OPT'] = $arr['ifms_type1'];
+    $arrInsertUpdateProject['POWER_BACKUP'] = $arr['power_backup1'];
+    $arrInsertUpdateProject['POWER_BACKUP_PSF_FIXED'] = $arr['power_backup'];
+    $arrInsertUpdateProject['POWER_BACKUP_MEND_OPT'] = $arr['power_backup_type1'];
+    $arrInsertUpdateProject['LEGAL_FEES'] = $arr['legal_fees1'];
+    $arrInsertUpdateProject['LEGAL_FEES_PSF_FIXED'] = $arr['legal_fees'];
+    $arrInsertUpdateProject['LEGAL_FEES_MEND_OPT']  = $arr['legal_fees_type1'];
+    $arrInsertUpdateProject['POWER_WATER'] = $arr['power_and_water1'];
+    $arrInsertUpdateProject['POWER_WATER_PSF_FIXED'] = $arr['power_and_water'];
+    $arrInsertUpdateProject['POWER_WATER_MEND_OPT'] = $arr['power_and_water_type1'];
+    $arrInsertUpdateProject['MAINTENANCE_ADVANCE'] = $arr['maintenance_advance1'];
+    $arrInsertUpdateProject['MAINTENANCE_ADVANCE_PSF_FIXED'] = $arr['maintenance_advance'];
+    $arrInsertUpdateProject['MAINTENANCE_ADVANCE_MEND_OPT'] = $arr['maintenance_advance_type1'];
+    $arrInsertUpdateProject['MAINTENANCE_ADVANCE_MONTHS'] = $arr['maintenance_advance_months'];
+    $arrInsertUpdateProject['PLC'] = $arr['plc'];
+    $arrInsertUpdateProject['FLOOR_RISE'] = $arr['floor_rise'];
+    $arrInsertUpdateProject['OTHER_PRICING'] = $arr['other'];
+    $insert = 'insert into table_attributes (table_name,table_id,attribute_name,attribute_value,
+                updated_by) values ';
+    $cnt = 0;
+    foreach($arrInsertUpdateProject as $key=>$val) {
+        $cnt++;
+     if($cnt == count($arrInsertUpdateProject))
+        $insert .= "('resi_project', $projectId, '".$key."', '".$val."',".$_SESSION['adminId'].") ";
+     else
+         $insert .= "('resi_project', $projectId, '".$key."', '".$val."',".$_SESSION['adminId']."), ";
     }
+    $ins = mysql_query($insert) or die(mysql_error()." error in other pricing insert");
+    if($ins)
+        return true;
+    else
+        return false;
 }
 
 /* * *****function to fetch project other pricing******* */
 
 function fetch_other_price($projectId) {
-    $qry = "SELECT * FROM " . RESI_PROJECT_OTHER_PRICING . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qry = "SELECT * FROM 
+        seo_data WHERE table_id = '".$projectId ."' and table_name = 'resi_project'";
     $res = mysql_query($qry) or die(mysql_error());
     $arrOtherPrice = array();
     while ($data = mysql_fetch_assoc($res)) {
@@ -1823,23 +1838,19 @@ function fetch_builderDetail($builderId) {
     return $databuild;
 }
 function ViewLocalityDetails($localityID) {
-    $Sql = "SELECT * FROM " . LOCALITY . " WHERE LOCALITY_ID ='" . $localityID . "'";
+    $Sql = "SELECT l.locality_id,l.status,l.description,l.url,l.label,s.city_id 
+            FROM " . LOCALITY . " l inner join suburb s on l.suburb_id = s.suburb_id 
+                WHERE LOCALITY_ID ='" . $localityID . "'";
     $ExecSql = mysql_query($Sql);
 
     if (mysql_num_rows($ExecSql) == 1) {
-
         $Res = mysql_fetch_assoc($ExecSql);
-        $ResDetails['LOCALITY_ID'] = $Res['LOCALITY_ID'];
-        $ResDetails['CITY_ID'] = $Res['CITY_ID'];
-        $ResDetails['LABEL'] = $Res['LABEL'];
-        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
+        $ResDetails['LOCALITY_ID'] = $Res['locality_id'];
+        $ResDetails['CITY_ID'] = $Res['city_id'];
+        $ResDetails['LABEL'] = $Res['label'];
         $ResDetails['status'] = $Res['status'];
-        $ResDetails['URL'] = $Res['URL'];
-        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
-        $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
-        $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
-        $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
-        $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
+        $ResDetails['URL'] = $Res['url'];
+        $ResDetails['DESCRIPTION'] = $Res['description'];
         return $ResDetails;
     } else {
         return 0;

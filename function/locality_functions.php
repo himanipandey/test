@@ -5,7 +5,10 @@ function createLocalityURL($localityLabel, $cityLabel, $id, $type) {
     $localityLabel = trim(strtolower($localityLabel));
     $cityLabel = trim(strtolower($cityLabel));
     $id = getIdByType( $id, $type );
-    $url = preg_replace( '/\s+/', '-', $cityLabel."/"."property-sale-".$localityLabel.'-'.$id);
+    if( $cityLabel != '' )
+        $url = preg_replace( '/\s+/', '-', $cityLabel."/"."property-sale-".$localityLabel.'-'.$id);
+    else
+        $url = preg_replace( '/\s+/', '-',"property-sale-".$localityLabel.'-'.$id);
     return $url;
 }
 

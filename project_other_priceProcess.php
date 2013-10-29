@@ -1,6 +1,6 @@
 <?php
 	
-	$projectId			=	$_REQUEST['projectId'];
+	$projectId = $_REQUEST['projectId'];
 	$projectDetail		=	ProjectDetail($projectId);
 	
 	$smarty->assign("ProjectDetailArr", $projectDetail);
@@ -16,17 +16,17 @@
 	$smarty->assign("OtherPrice", $OtherPrice);
 	if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Submit")
 	{
-		if($_REQUEST['edit'] == 0)
-			$return = InsertOtherPrice($_REQUEST);
-		else
-			$return = UpdateOtherPrice($_REQUEST);
-		if($return)
-		{
-			if($_POST['btnSave'] == 'Submit')
-				header("Location:ProjectList.php?projectId=".$projectId);
-			else
-			header("Location:new/availability/".$projectId."/edit");
-	}
+            $return = InsertUpdateOtherPrice($_REQUEST,$projectId);
+            if($return == true)
+            {
+                if($_POST['btnSave'] == 'Submit')
+                    header("Location:ProjectList.php?projectId=".$projectId);
+                else
+                    header("Location:new/availability/".$projectId."/edit");
+            }
+            else {
+                die("error in other price insertion");
+            }
 	}
 	else if($_REQUEST['btnExit'] == "Exit")
     {

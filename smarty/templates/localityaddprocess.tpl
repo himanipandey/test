@@ -58,13 +58,14 @@
 				  <td width="20%" align="right">*Status  : </td>
 				  <td width="30%" align="left" >
 				    <select name = "status" id="status" style="width:150px;"> 
-					  <option {if $status == '0'} value = "0" selected = 'selected' {else} value = "0" {/if}>Inactive</option>					<option {if $status == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>Active</option>		
+					  <option  value = "Active" {if $status == 'Active'}selected{/if}>Active</option>
+                                          <option  value = "Inactive" {if $status == 'Inactive'}selected{/if}>Inactive</option>		
 					 </select>
 				 </td>				   
 				 <td width="50%" align="left"></td>
 				</tr>
                                 
-				<tr>
+				<!--<tr>
 				  <td width="20%" align="right">Visible In CMS :</td>
 				  <td width="30%" align="left" >
                                   {if $specialAccess == 1}
@@ -88,6 +89,7 @@
 				 </td>				   
 				 <td width="50%" align="left">&nbsp;</td>
 				</tr>
+                                   
                                 <tr class="latLong">
                                   <td width="20%" align="right">Max Latitude  : </td>
                                   <td width="30%" align="left" >
@@ -122,7 +124,7 @@
                                       <input type = "hidden" name ="minLongitude" value="{$minLongitude}">
                                  </td>				   
                                  <td width="50%" align="left">&nbsp;</td>
-                                </tr>
+                                </tr>-->
                                 {/if}
                                 <tr class="save_row">
 				  <td >&nbsp;</td>
@@ -214,6 +216,7 @@ jQuery(document).ready(function(){
 
 });
 
+/*
 function cleanedLocality(localityId) {
 
 $.ajax({
@@ -233,6 +236,6 @@ $.ajax({
             }
          }
      })
-}
+}*/
 
 </script>

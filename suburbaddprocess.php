@@ -62,17 +62,20 @@
                         $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $suburbid, 'suburb');
 
                             $updateQry = "UPDATE ".SUBURB." SET 
-
-                                        LABEL 		=	'".$txtCityName."',
-                                        META_TITLE	=	'".$txtMetaTitle."',		
-                                        META_KEYWORDS	=	'".$txtMetaKeywords."',
-                                        META_DESCRIPTION	=	'".$txtMetaDescription."',
-                                        ACTIVE		=	'".$status."',
-                                        URL		=	'".$txtCityUrl."',
-                                        DESCRIPTION	=	'".$desc."' WHERE SUBURB_ID ='".$suburbid."'";
+                            LABEL 		=	'".$txtCityName."',
+                            STATUS		=	'".$status."',
+                            URL		=	'".$txtCityUrl."',
+                            DESCRIPTION	=	'".$desc."'
+                            WHERE SUBURB_ID ='".$suburbid."'";
 
                             mysql_query($updateQry);
-
+                            $seoData['meta_title'] = $txtMetaTitle;
+                            $seoData['meta_keywords'] = $txtMetaKeywords;
+                            $seoData['meta_description'] = $txtMetaDescription;
+                            $seoData['table_id'] = $suburbid;
+                            $seoData['table_name'] = 'suburb';
+                            $seoData['updated_by'] = $_SESSION['adminId'];
+                            SeoData::insetUpdateSeoData($seoData);
                             if ( $old_sub_name != $txtCityName ) {
                                 //  add to name change log
                                 addToNameChangeLog( 'suburb', $suburbid, $old_sub_name, $txtCityName );
@@ -91,13 +94,15 @@
 
     else if($suburbid!=''){
 
-            $localityDetailsArray	=   ViewSuburbDetails($suburbid);
-            $txtCityName			=	trim($localityDetailsArray['LABEL']);
-            $txtMetaTitle			=	trim($localityDetailsArray['META_TITLE']);
-            $txtMetaKeywords		=	trim($localityDetailsArray['META_KEYWORDS']);
-            $txtMetaDescription		=	trim($localityDetailsArray['META_DESCRIPTION']);
-            $status					=	trim($localityDetailsArray['ACTIVE']);
-            $desc					=	trim($localityDetailsArray['DESCRIPTION']);
+            $localityDetailsArray =   ViewSuburbDetails($suburbid);
+            $getSeoData           =   SeoData::getSeoData($suburbid, 'suburb');
+            $txtCityName	  =	trim($localityDetailsArray['LABEL']);
+            $txtMetaTitle	  =	$getSeoData[0]->meta_title;
+            $txtMetaKeywords	  =	$getSeoData[0]->meta_keywords;
+            $txtMetaDescription	  =	$getSeoData[0]->meta_description;
+            $txtCityName	  =	trim($localityDetailsArray['LABEL']);
+            $status		  =	trim($localityDetailsArray['status']);
+            $desc		  =	trim($localityDetailsArray['DESCRIPTION']);
 
             $smarty->assign("txtCityName", $txtCityName);
             $smarty->assign("txtMetaTitle", $txtMetaTitle);
