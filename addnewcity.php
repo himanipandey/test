@@ -3,6 +3,7 @@ include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
 include("includes/configs/configs.php");
+include("function/locality_functions.php");
 include("builder_function.php");
 AdminAuthentication();
 
@@ -58,13 +59,16 @@ else
     }
 
     if($c==0 && $ins==0){
-        echo $qry = "INSERT INTO ".CITY." 
+        $qry = "INSERT INTO ".CITY." 
             (LABEL, status, updated_by )
             value
             ('".$cityval."','Active',".$_SESSION['adminId'].")";
         $res = mysql_query($qry) or die(mysql_error());
         $ctid = mysql_insert_id();
         $sel_id = $ctid;
+        $txtCityUrl = createLocalityURL($cityval,'', $ctid, 'city');
+        $urlUpdate = "update city set url = '$txtCityUrl' where city_id = $ctid";
+        $urlUp = mysql_query($urlUpdate) or die(mysql_error());
     }
 
 
@@ -74,7 +78,7 @@ else
     <select name="cityId" id = "cityId" class="cityId" onchange="dispcity(this.value,1);" STYLE="width: 150px">
     <option value =''>Select City</option>
     <?php
-    while($data	=	mysql_fetch_array($ressel))
+    while($data	= mysql_fetch_array($ressel))
     {
     ?>
     <option  value ='<?php echo $data['CITY_ID']; ?>' <?php if( $data['CITY_ID'] == $sel_id ) echo "selected='selected'"; ?>><?php echo $data['LABEL']; ?></option>

@@ -43,7 +43,10 @@ class ProjectSupply extends ActiveRecord\Model {
     }
     
     function projectTypeGroupedQuantityForPhase($projectId, $phaseId){
-        $query = "select project_type UNIT_TYPE, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', supply, ':', launched)) as AGG, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', edited_supply, ':', edited_launched)) as EDITED_AGG from " . self::table_name() . " where project_id = '$projectId' and phase_id ";
+        $query = "select project_type UNIT_TYPE, GROUP_CONCAT(CONCAT(no_of_bedroom, ':', supply,
+            ':', launched)) as AGG, GROUP_CONCAT(CONCAT(no_of_bedroom, ':',
+            edited_supply, ':', edited_launched)) as EDITED_AGG from " . self::table_name() . " 
+                where project_id = '$projectId' and phase_id ";
         if ($phaseId == '0')$query .= ' is NULL ';
         else $query .= " ='$phaseId' ";
         $query .= ' group by project_type;';echo $sql;
@@ -52,7 +55,9 @@ class ProjectSupply extends ActiveRecord\Model {
     
     function projectSupplyForProjectPage($projectId){
         $result = array();
-        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply, ps.launched, ps.edited_launched, pa.availability, pa.comment, pa.effective_month, ps.project_type from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id inner join (select ps.id, max(pa.effective_month) mon from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id where ps.project_id = $projectId group by ps.id) t on ps.id=t.id and pa.effective_month=t.mon left join " . ResiProjectPhase::table_name() . " rpp on ps.phase_id = rpp.PHASE_ID union select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply, ps.launched, ps.edited_launched, pa.availability, pa.comment, pa.effective_month, ps.project_type from project_supplies ps left join project_availabilities pa on ps.id=pa.project_supply_id left join resi_project_phase rpp on ps.phase_id = rpp.PHASE_ID where pa.id is null and ps.project_id = $projectId";
+        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, 
+            ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply, ps.launched, ps.edited_launched, 
+            pa.availability, pa.comment, pa.effective_month, ps.project_type from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id inner join (select ps.id, max(pa.effective_month) mon from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id where ps.project_id = $projectId group by ps.id) t on ps.id=t.id and pa.effective_month=t.mon left join " . ResiProjectPhase::table_name() . " rpp on ps.phase_id = rpp.PHASE_ID union select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply, ps.launched, ps.edited_launched, pa.availability, pa.comment, pa.effective_month, ps.project_type from project_supplies ps left join project_availabilities pa on ps.id=pa.project_supply_id left join resi_project_phase rpp on ps.phase_id = rpp.PHASE_ID where pa.id is null and ps.project_id = $projectId";
         $data = self::find_by_sql($query);
         foreach ($data as $value) {
             $entry = array();
@@ -120,14 +125,16 @@ class ProjectSupply extends ActiveRecord\Model {
         }
 
 
-        $total_count = ProjectSupply::find_by_sql("select project_id, sum(supply) TOTAL_SUPPLY from project_supplies where CONCAT(project_id,'_',COALESCE(phase_id,''),'_',no_of_bedroom,'_',project_type)
+        $total_count = ProjectSupply::find_by_sql("select project_id, sum(supply) TOTAL_SUPPLY 
+            from project_supplies where version = 'Cms' and CONCAT(project_id,'_',COALESCE(phase_id,''),'_',no_of_bedroom,'_',project_type)
                     in (".implode(",", $conditions).") group by project_id");
         $project->no_of_flats = $total_count[0]->total_supply;
         $project->save();
     }
     
     function isSupplyLaunchEdited($projectId){
-        $sql = "select count(*) count from project_supplies where project_id = '$projectId' and edit_stage = 'callCenterEdit';";
+        $sql = "select count(*) count from project_supplies where 
+                project_id = '$projectId' and edit_stage = 'callCenterEdit' and version = 'Cms';";
         $result = self::find_by_sql($sql);
         return (intval($result[0]->count)>0);
     }

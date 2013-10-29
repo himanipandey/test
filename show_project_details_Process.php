@@ -1,38 +1,19 @@
 <?php
-$CityDataArr = CityArr();
-$ProjectTypeArr = ProjectTypeArr();
-$BankListArr = BankList();
-$enum_value = enum_value();
+$CityDataArr = City::CityArr();
+$ProjectTypeArr = ResiProjectType::ProjectTypeArr();
+$BankListArr = BankList::arrBank();
+$enum_value = ResiProject::projectStatusMaster();
 $AmenitiesArr = AmenitiesList();
 
 $projectId = $_REQUEST['projectId'];
-
-/* * *******code for audit tables******** */
-$stageName = '';
-$phasename = '';
-$changedValueArr = array();
-if (isset($_REQUEST['stageName']) && isset($_REQUEST['phasename']) && isset($_REQUEST['projectId'])) {
-    $smarty->assign("changedValueArr", $changedValueArr);
-    $stageName = $_REQUEST['stageName'];
-    $phasename = $_REQUEST['phasename'];
-    fetchColumnChanges($projectId, $stageName, $phasename, $arrProjectPriceAuditOld, $arrProjectAudit, $arrProjectSupply);
-}
-$smarty->assign("stageName", $stageName);
-$smarty->assign("phasename", $phasename);
-$smarty->assign("arrProjectSupply", $arrProjectSupply);
-$smarty->assign("arrProjectPriceAuditOld", $arrProjectPriceAuditOld);
-$smarty->assign("changedValueArr", $arrProjectAudit);
-
-/* * *******end code for audit tables******** */
-
 if (!isset($_REQUEST['btnExit']))
     $_REQUEST['btnExit'] = '';
 if ($_REQUEST['btnExit'] == "Exit") {
     header("Location:ProjectList.php?projectId=" . $projectId);
 }
 
-$lastUpdatedDetail = lastUpdatedAuditDetail($projectId);
-$smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);
+$lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //to be delete
+$smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//to be delete
 
 $arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
 $smarty->assign("arrCalingPrimary", $arrCalingPrimary);
@@ -69,8 +50,8 @@ foreach($PreviousMonthsAvailability as $k=>$v) {
 $smarty->assign("arrAvaiPreviousMonthData",$arrAvaiPreviousMonthData);
 
 
-$ProjectAmenities	=	ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
-$arrSpecification	=	specification($projectId);
+$ProjectAmenities = ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
+$arrSpecification = specification($projectId);
 
 $smarty->assign("arrNotninty", $arrNotninty);
 $smarty->assign("arrDetail", $arrDetail);
@@ -102,8 +83,8 @@ foreach ($towerDetail as $val) {
 }
 
 $smarty->assign("towerDetail", array_merge($towerNoPh, $towerDtlPhWise));
-
-$arrAudit = AuditTblDataByTblName('resi_project_tower_details', $projectId);
+//To Do
+$arrAudit = AuditTblDataByTblName('resi_project_tower_details', $projectId); 
 $smarty->assign("arrAudit", $arrAudit);
 
 $fetch_projectOptions = fetch_projectOptions($projectId);
@@ -151,7 +132,7 @@ $smarty->assign("phases", $phases);
 $smarty->assign("phaseId", $phaseId);
 if ($phaseId) {
     $current_phase = phaseDetailsForId($phaseId);
-    $phase_towers = fetch_towers_in_phase($projectId, $phaseId);
+    $phase_towers = fetch_towers_in_phase($projectId);
 
     $arrTower = array();
     foreach ($phase_towers as $key => $val) {
