@@ -235,8 +235,16 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             {
                $ErrorMsg["txtProjectName"] = "Project already exist.";
             }
-        
-	    if( $txtProjectURL!='' ) {
+
+           if( $txtProjectURL == '' && $projectId != '')
+		$ErrorMsg["txtProjectUrlDuplicate"] = "URL field must not be blank."; 
+	   else{
+              $projectUrlChk = ResiProject::projectUrlExist($txtProjectURL, $projectId);
+              if( count($projectUrlChk)>0 ) {
+                $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
+              }
+	    }
+         if( $txtProjectURL!='' ) {
             if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 				$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 			}

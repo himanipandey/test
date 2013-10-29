@@ -13,7 +13,7 @@ function GetXmlHttpObject()
 	}
 	catch (e)
 	{
-		//Internet Explorer
+		//Interne   t Explorer
 	try
 	{
 		xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
