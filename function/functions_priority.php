@@ -134,6 +134,32 @@ function autoAdjustPrio($tablename, $cityID = null, $priority = null)
     }
     mysql_query($query) or die(mysql_error());
 }
+function checkSubLocInCity($type,$cityId,$typeId){
+
+	if($type == 'suburb')
+	{
+		$rs = mysql_query('select count(*) as cnt FROM '.SUBURB.' where CITY_ID="'.$cityId.'" and SUBURB_ID ="'.$typeId.'"');
+		if ($rs && mysql_num_rows($rs) )
+			return true;
+			
+	}elseif($type == 'locality')
+	{
+		$qry = 'select a.LABEL, a.PRIORITY, a.LOCALITY_ID 
+            FROM '.LOCALITY.' a 
+            inner join suburb b
+               on a.suburb_id = b.suburb_id
+            inner join city c
+               on b.city_id = c.city_id
+          where b.CITY_ID="'.$cityId.'" 
+           AND a.LOCALITY_ID = "'. $typeId .'"';
+	   $rs = mysql_query($qry) or die(mysql_error());
+		if ($rs && mysql_num_rows($rs) )
+			return true;
+	}
+	
+	return false;
+	
+}
 /* * ******suburb list with id************* */
 function localityArr($cityId) {
     $qry = "SELECT a.LOCALITY_ID,a.LABEL FROM " . LOCALITY . " a
@@ -233,11 +259,12 @@ function updateProj($projectId = null, $priority = null, $mode = null, $modeid =
             $cnt = 1;
             $rowCount = mysql_num_rows($LocId);
             while($locList = mysql_fetch_assoc($LocId)) {
+				$comma = ',';
                 if($cnt != $rowCount)
                     $listLoc .= $locList['locality_id'].$comma;
                 else
                     $listLoc .= $locList['locality_id'];
-                $comma = ',';
+                
              $cnt++;
             }
             $where = "LOCALITY_ID in ($listLoc)";
@@ -252,11 +279,12 @@ function updateProj($projectId = null, $priority = null, $mode = null, $modeid =
             $cnt = 1;
             $rowCount = mysql_num_rows($LocId);
             while($locList = mysql_fetch_assoc($LocId)) {
+				$comma = ',';
                 if($cnt != $rowCount)
                     $listLoc .= $locList['locality_id'].$comma;
                 else
                     $listLoc .= $locList['locality_id'];
-                $comma = ',';
+                
              $cnt++;
             }
             $where = "LOCALITY_ID in ($listLoc)";
@@ -432,11 +460,12 @@ function autoAdjustMaxCountProjPrio($id = null, $priority = null, $type = null)
             $cnt = 1;
             $rowCount = mysql_num_rows($LocId);
             while($locList = mysql_fetch_assoc($LocId)) {
+				$comma = ',';
                 if($cnt != $rowCount)
                     $listLoc .= $locList['locality_id'].$comma;
                 else
                     $listLoc .= $locList['locality_id'];
-                $comma = ',';
+                
              $cnt++;
             }
             $where = "LOCALITY_ID in ($listLoc) AND DISPLAY_ORDER_SUBURB >= ".$priority." AND DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
@@ -484,11 +513,12 @@ function checkProjAvail($projectId = null, $priority = null, $mode = null, $mode
            $cnt = 1;
             $rowCount = mysql_num_rows($LocId);
             while($locList = mysql_fetch_assoc($LocId)) {
+                $comma = ',';
                 if($cnt != $rowCount)
                     $listLoc .= $locList['locality_id'].$comma;
                 else
                     $listLoc .= $locList['locality_id'];
-                $comma = ',';
+                
              $cnt++;
             }
             $where = "LOCALITY_ID in ($listLoc)";

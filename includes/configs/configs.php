@@ -158,7 +158,7 @@ DEFINE("RESI_PROJECT_TYPE","resi_project_type");
 DEFINE("BANK_LIST","bank_list");
 DEFINE("AUDIT","audit");
 DEFINE("RESI_PROJECT_OPTIONS","resi_project_options");
-
+DEFINE("BROKER_LIST","BROKER_LIST");
 DEFINE("AMENITIES_MASTER","amenities_master");
 DEFINE("PROJECT_OPTIONS","resi_project_options");
 DEFINE("ROOM_CATEGORY","room_category");

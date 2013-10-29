@@ -51,7 +51,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $DisplayOrder = '';
             $Active = trim($_POST['Active']);
             $Status = trim($_POST['Status']);
-            $txtProjectURL = '';
+            $txtProjectURL = trim($_POST['txtProjectURLOld']);
             $txtProjectURLOld =	trim($_POST['txtProjectURLOld']);
             $txtDisclaimer = trim($_POST['txtDisclaimer']);
            
@@ -244,12 +244,12 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
               }
 	    }
-         if( $txtProjectURL!='' ) {
+         if( $txtProjectURL != '') {
             if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 				$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 			}
 
-			if( ($projectId == '') OR ( ( trim($projectNameOld) != trim($txtProjectName)) && $projectId != '' ) ) {
+			if( ($projectId == '') ) {
                     $qryprojectchk = "SELECT rp.PROJECT_NAME FROM ".RESI_PROJECT." rp
                         inner join locality l on rp.locality_id = l.locality_id
                         inner join suburb s on l.suburb_id = s.suburb_id

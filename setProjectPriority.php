@@ -60,6 +60,10 @@ jQuery(document).ready(function(){
                    alert("Error Wrong ProjectId selected");
                    return false;
                }
+               if(msg == 4){
+                   alert("Please enter valid Priority!");
+                   return false;
+               }
             }
         })
   });
