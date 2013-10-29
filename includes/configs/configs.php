@@ -177,7 +177,7 @@ DEFINE("RESI_PROJ_SPECIFICATION","resi_proj_specification");
 DEFINE("RESI_SOURCEOFINFORMATION","resi_sourceofinformation");
 DEFINE("RESI_PROJ_EXPECTED_COMPLETION","resi_proj_expected_completion");
 DEFINE("LOCALITY","locality");
-DEFINE("BUILDER_CONTACT_INFO","builder_contact_info");
+DEFINE("BUILDER_CONTACT_INFO","builder_contacts");
 DEFINE("RESI_PROJECT_OTHER_PRICING","resi_project_other_pricing");
 DEFINE("CALLDETAILS","CallDetails");
 DEFINE("CALLPROJECT","CallProject");
@@ -603,14 +603,14 @@ define('COMMERCIAL','7');
 
 
 $ARR_PROJ_EDIT_PERMISSION = array(
-	"ADMINISTRATOR"=>array('dataCollection','newProject','audit1','audit2','complete','bulkupdate','dailymis','dcCallCenter','noPhase','noStage'),
-	"DATAENTRY"=>array('dataCollection'),
-	"CALLCENTER"=>array('dataCollection','dailymis','dcCallCenter'),
-        "RESALE-CALLCENTER"=>array('dataCollection','dailymis'),
-	"AUDIT-1"=>array('audit1','dailymis'),
-	"NEWPROJECTAUDIT"=>array('newProject'),
-	"AUDIT-2"=>array('audit2'),
-	"SURVEY"=>array('dataCollection','newProject','dcCallCenter')
+	"ADMINISTRATOR"=>array('DataCollection','NewProject','Audit1','Audit2','Complete','bulkupdate','dailymis','DcCallCenter','noPhase','noStage'),
+	"DATAENTRY"=>array('DataCollection'),
+	"CALLCENTER"=>array('DataCollection','dailymis','DcCallCenter'),
+        "RESALE-CALLCENTER"=>array('DataCollection','dailymis'),
+	"AUDIT-1"=>array('Audit1','dailymis'),
+	"NEWPROJECTAUDIT"=>array('NewProject'),
+	"AUDIT-2"=>array('Audit2'),
+	"SURVEY"=>array('AataCollection','NewProject','DcCallCenter')
 );
 $dept = $_SESSION['DEPARTMENT'];
 if(!isset($ARR_PROJ_EDIT_PERMISSION[$dept]))

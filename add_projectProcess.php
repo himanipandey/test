@@ -235,16 +235,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             {
                $ErrorMsg["txtProjectName"] = "Project already exist.";
             }
-
-           if( $txtProjectURL == '' && $projectId != '')
-		$ErrorMsg["txtProjectUrlDuplicate"] = "URL field must not be blank."; 
-	   else{
-              $projectUrlChk = ResiProject::projectUrlExist($txtProjectURL, $projectId);
-              if( count($projectUrlChk)>0 ) {
-                $ErrorMsg["txtProjectUrlDuplicate"] = "This URL already exist.";
-              }
-	    }
-         if( $txtProjectURL != '') {
+          
+         if( $txtProjectName!='' ) {
             if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 				$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 			}
@@ -553,7 +545,7 @@ $userDepartment = $_SESSION['DEPARTMENT'];
 $smarty->assign("userDepartment", $userDepartment);
 
 if( $projectId != '' ) {
-     /******code for project comment in seperate table*****/
+    /******code for project comment in seperate table*****/
     $ProjectDetail 	= ProjectDetail($projectId);
     $cycleId = $ProjectDetail[0]['PROJECT_STAGE'];
     $projectComments = CommentsHistory::getCommentHistoryByProjectIdCycleId($projectId, $cycleId);

@@ -521,10 +521,8 @@ $(function() {
                     </td>
 
                     <TD  class="td-border" align=left nowrap = 'nowrap'>
-
-
                             <select name = "option_value" onchange = "updatelink(this.value);" style='width:180px;'>
-                                <option value = "">Select Option</option>
+                             <option value = "">Select Option</option>
                             {if $value->stage_name!="noStage"}
                                     <option value = "show_project_details.php?projectId={$value->project_id}">View Project</option>
                             {/if}

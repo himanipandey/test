@@ -1008,10 +1008,16 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				
 			WHERE	
 				BUILDER_ID = '" . $builderid . "'"; //die("here");
-
-    $list = '';
-    $del = "DELETE FROM " . BUILDER_CONTACT_INFO . " WHERE BUILDER_ID = '" . $builderid . "'";
-    $resDel = mysql_query($del) or die(mysql_error());
+          $qrySelect = "select * from project_builder_contact_mappings where builder_contact_id in (
+        select id from builder_contacts where builder_id = $builderid )";
+          $resSelect = mysql_query($qrySelect) or die(mysql_error());
+          if( mysql_num_rows($resSelect) > 0) {
+             $qrydel = "delete from project_builder_contact_mappings where builder_contact_id in (
+             select id from builder_contacts where builder_id = $builderid)";
+            mysql_query($qrydel) or die(mysql_error());
+            $del = "DELETE from " . BUILDER_CONTACT_INFO . " WHERE BUILDER_ID = '" . $builderid . "'";
+            mysql_query($del) or die(mysql_error());
+          }
     $cnt = 0;
 
     foreach ($contactArr['Name'] as $k => $v) {
@@ -1022,14 +1028,22 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
             $projects = $contactArr['Projects'][$cnt];
 
             $qry = "INSERT INTO " . BUILDER_CONTACT_INFO . "
-						SET
-							NAME			=	'" . $name . "',
-							BUILDER_ID		=	'" . $builderid . "',
-							PHONE			=	'" . $phone . "',
-							EMAIL			=	'" . $email . "',
-							PROJECTS		=	'" . $projects . "',
-							SUBMITTED_DATE	=	now()";
-            $res = mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
+                    SET
+                            NAME		=	'" . $name . "',
+                            BUILDER_ID		=	'" . $builderid . "',
+                            PHONE		=	'" . $phone . "',
+                            EMAIL		=	'" . $email . "',
+                            SUBMITTED_DATE	=	now()";
+            mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
+            $lastId = mysql_insert_id();
+            $projectId = explode("#",$projects);
+            if( count($projectId) >1 ) {
+                foreach($projectId as $val) {
+                    $qryIns = "insert into project_builder_contact_mappings
+                               set project_id = $val,builder_contact_id = $lastId";
+                    mysql_query($qryIns) or die(mysql_error());
+                }
+            }
         }
         $cnt++;
     }
@@ -1244,17 +1258,24 @@ function InsertUpdateOtherPrice($arr,$projectId) {
     $arrInsertUpdateProject['PLC'] = $arr['plc'];
     $arrInsertUpdateProject['FLOOR_RISE'] = $arr['floor_rise'];
     $arrInsertUpdateProject['OTHER_PRICING'] = $arr['other'];
-    $insert = 'insert into table_attributes (table_name,table_id,attribute_name,attribute_value,
-                updated_by) values ';
-    $cnt = 0;
+    
     foreach($arrInsertUpdateProject as $key=>$val) {
-        $cnt++;
-     if($cnt == count($arrInsertUpdateProject))
-        $insert .= "('resi_project', $projectId, '".$key."', '".$val."',".$_SESSION['adminId'].") ";
-     else
-         $insert .= "('resi_project', $projectId, '".$key."', '".$val."',".$_SESSION['adminId']."), ";
+        $select = "select attribute_name from table_attributes 
+            where table_name = 'resi_project' and table_id = $projectId and attribute_name = '$key'";
+        $qrySelect = mysql_query($select) or die(mysql_error());
+        $insertUpdate = '';
+        if(mysql_num_rows($qrySelect) > 0){
+            $insertUpdate = "update table_attributes 
+            set attribute_value = '$val' 
+            where table_name = 'resi_project' and table_id = '$projectId' and attribute_name = '$key'";
+        }
+        else {
+        $insertUpdate = "insert into table_attributes (table_name,table_id,attribute_name,attribute_value,
+                updated_by) values ('resi_project', $projectId, '$key', '$val',".$_SESSION['adminId'].")";
+        }
+        $ins = mysql_query($insertUpdate) or die(mysql_error()." error in other pricing insert");
     }
-    $ins = mysql_query($insert) or die(mysql_error()." error in other pricing insert");
+    
     if($ins)
         return true;
     else
@@ -1265,11 +1286,11 @@ function InsertUpdateOtherPrice($arr,$projectId) {
 
 function fetch_other_price($projectId) {
     $qry = "SELECT * FROM 
-        seo_data WHERE table_id = '".$projectId ."' and table_name = 'resi_project'";
+        table_attributes WHERE table_id = '".$projectId ."' and table_name = 'resi_project'";
     $res = mysql_query($qry) or die(mysql_error());
     $arrOtherPrice = array();
     while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrOtherPrice, $data);
+        $arrOtherPrice[0][$data['attribute_name']] = $data['attribute_value'];
     }
     return $arrOtherPrice;
 }

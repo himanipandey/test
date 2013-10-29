@@ -340,8 +340,10 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("service_image_id", $dataedit['SERVICE_IMAGE_ID']);
 
             $arrContact = BuilderContactInfo($builderid);
+            $arrContactProjectMapping = builderContactProjectMapping($builderid);
             $smarty->assign("Contact", count($arrContact));
             $smarty->assign("arrContact", $arrContact);
+            $smarty->assign("arrContactProjectMapping", $arrContactProjectMapping);
 
     }
     else {
@@ -372,4 +374,16 @@ if ($_POST['btnSave'] == "Save")
             $BuilderDataArr[]	=	$data;		
      }
      $smarty->assign("BuilderDataArr", $BuilderDataArr);
+     
+     function builderContactProjectMapping($builderId) {
+         $qry = "select * from project_builder_contact_mappings 
+             where builder_contact_id in 
+             (select id from builder_contacts where builder_id = $builderId)";
+         $res = mysql_query($qry) or die(mysql_error());
+         $arrContact = array();
+         while($data = mysql_fetch_assoc($res)) {
+             $arrContact[$data['builder_contact_id']] = $data;
+         }
+         return $arrContact;
+     }
 ?>

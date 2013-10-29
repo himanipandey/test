@@ -130,9 +130,9 @@
                                       <input type = "hidden" name ="minLongitude" value="{$minLongitude}">
                                  </td>				   
                                  <td width="50%" align="left">&nbsp;</td>
+<<<<<<< Updated upstream
                                 </tr>-->
                                 {/if}
-                       
 			    </form>
 			    </TABLE>
 <!--			</fieldset>-->

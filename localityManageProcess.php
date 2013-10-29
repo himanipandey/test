@@ -63,7 +63,6 @@
     //echo $QueryMember;
     $QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
     $NumRows 		= mysql_num_rows($QueryExecute);
-    print "-->".$NumRows;
     $smarty->assign("NumRows",$NumRows);
 
     /**

@@ -353,7 +353,7 @@
 									>
 										<td width="10%" align="right" valign ="top" nowrap>
 											Contact Name {$start}:</td>
-										<td width="90%" align="left" valign ="top">	<input type = "text" name = "contact_name[]" value = "{$arrContact[$cnt]['NAME']}">
+										<td width="90%" align="left" valign ="top"><input type = "text" name = "contact_name[]" value = "{$arrContact[$cnt]['NAME']}">
 										</td>
 									</tr>
 									<tr class = "detail{$start}" 
@@ -415,7 +415,9 @@
 											<select name = "projects_{$start}[]" multiple>
 												<option value = "">Select Project</option>
 												{foreach from = $ProjectList key = key item = item}
-													<option value = "{$item['PROJECT_ID']}" {if strstr($arrContact[$cnt]['PROJECTS'],$item['PROJECT_ID'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+                                                                                                    <option value = "{$item['PROJECT_ID']}" 
+                                                                                                    {if strstr($arrContactProjectMapping[$arrContact[$cnt]['ID']],$item['PROJECT_ID'])} selected {/if}>
+                                                                                                    {$item['PROJECT_NAME']}</option>
 												{/foreach}
 												</option>
 											</select>
