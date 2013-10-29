@@ -1172,7 +1172,7 @@ function ViewSuburbDetails($suburbID) {
         $ResDetails['META_TITLE'] = $Res['META_TITLE'];
         $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
         $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
+        $ResDetails['ACTIVE'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
         return $ResDetails;

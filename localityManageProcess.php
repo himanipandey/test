@@ -52,21 +52,18 @@
 
 
     if ($_GET['sort'] == "1") {
-        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id
-            inner join city c on s.city_id = s.city_id
-           WHERE l.LABEL BETWEEN '0' AND '9'  AND c.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
+        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id  WHERE l.LABEL BETWEEN '0' AND '9'  AND s.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
     } else if ($_GET['sort'] == "all") {
-        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id
-            inner join city c on s.city_id = s.city_id where c.CITY_ID ='".$cityId ."'  ORDER BY l.LOCALITY_ID DESC";
+        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id where s.CITY_ID ='".$cityId ."'  ORDER BY l.LOCALITY_ID DESC";
     } else {
-        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id
-            inner join city c on s.city_id = s.city_id WHERE  LEFT(l.LABEL,1)='".$_GET['sort']."' 
-                AND  c.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
+        $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id WHERE  LEFT(l.LABEL,1)='".$_GET['sort']."' 
+                AND  s.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
     }
 
     //echo $QueryMember;
     $QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
     $NumRows 		= mysql_num_rows($QueryExecute);
+    print "-->".$NumRows;
     $smarty->assign("NumRows",$NumRows);
 
     /**

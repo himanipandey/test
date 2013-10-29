@@ -51,7 +51,7 @@
                   </td>{if $ErrorMsg["txtMetaDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaDescription"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetades"></td>{/if}
 				</tr>									
 				<tr>
-				  <td width="20%" align="right" valign = top >*Description  : </td>
+				  <td width="20%" align="right" valign = top >Description  : </td>
 				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea></td>
 				</tr>
 				<tr>
@@ -64,7 +64,13 @@
 				 </td>				   
 				 <td width="50%" align="left"></td>
 				</tr>
-                                
+                                <tr class="save_row">
+				  <td >&nbsp;</td>
+				  <td align="left" style="padding-left:50px;" >
+				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer">
+				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
+				  </td>
+				</tr>         
 				<!--<tr>
 				  <td width="20%" align="right">Visible In CMS :</td>
 				  <td width="30%" align="left" >
@@ -126,13 +132,7 @@
                                  <td width="50%" align="left">&nbsp;</td>
                                 </tr>-->
                                 {/if}
-                                <tr class="save_row">
-				  <td >&nbsp;</td>
-				  <td align="left" style="padding-left:50px;" >
-				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer">
-				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
-				  </td>
-				</tr>
+                       
 			    </form>
 			    </TABLE>
 <!--			</fieldset>-->

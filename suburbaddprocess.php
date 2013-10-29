@@ -101,9 +101,8 @@
             $txtMetaKeywords	  =	$getSeoData[0]->meta_keywords;
             $txtMetaDescription	  =	$getSeoData[0]->meta_description;
             $txtCityName	  =	trim($localityDetailsArray['LABEL']);
-            $status		  =	trim($localityDetailsArray['status']);
+            $status		  =	trim($localityDetailsArray['ACTIVE']);
             $desc		  =	trim($localityDetailsArray['DESCRIPTION']);
-
             $smarty->assign("txtCityName", $txtCityName);
             $smarty->assign("txtMetaTitle", $txtMetaTitle);
             $smarty->assign("txtMetaKeywords", $txtMetaKeywords);

@@ -52,7 +52,7 @@
                   </td>{if $ErrorMsg["txtMetaDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaDescription"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetades"></td>{/if}
 				</tr>									
 				<tr>
-				  <td width="20%" align="right" valign = top >*Description  : </td>
+				  <td width="20%" align="right" valign = top >Description  : </td>
 				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea></td>
 				</tr>
 				<tr>

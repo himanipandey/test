@@ -56,16 +56,17 @@
 
                        $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $localityid, 'locality');
 
-                       if( $txtMetaTitle == '')   {
+                       if( trim($txtMetaTitle) == '')   {
                             $ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
                        }
 
-                    if( $txtMetaKeywords == '')  {
+                    if( trim($txtMetaKeywords) == '')  {
                              $ErrorMsg["txtMetaKeywords"] = "Please enter meta keywords.";
                        }
-                    if( $txtMetaDescription == '')  {
+                    if( trim($txtMetaDescription) == '')  {
                              $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
                        }
+                        
                     /*******locality url already exists**********/
                         $locURL = "";
                         if($localityid != ''){
