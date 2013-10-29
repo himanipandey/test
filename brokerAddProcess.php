@@ -44,6 +44,17 @@
              $ErrorMsg["hq"] = "Please select city.";
         }
         
+        if(trim($mobile) == '' || empty($mobile)) {
+             $ErrorMsg["mobile"] = "Please enter mobile number.";
+        }elseif(!is_numeric($mobile)) {
+             $ErrorMsg["mobile"] = "Mobile number must be numeric.";
+        }elseif(!preg_match("/^[0-9]{10}$/",$mobile)) {
+			$ErrorMsg["mobile"] = "Please enter a valid mobile number.";
+		}
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			$ErrorMsg["email"] = "Please enter a valid email.";
+		}
+		
         if(!empty($ErrorMsg)) {
                 // Do Nothing
         } 
