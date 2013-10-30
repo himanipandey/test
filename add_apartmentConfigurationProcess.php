@@ -1,4 +1,5 @@
 <?php
+
 	$RoomCategoryArr	=	RoomCategory::categoryList();
 	$projectId			=	$_REQUEST['projectId'];
     $project = ResiProject::virtual_find($projectId);
@@ -210,7 +211,9 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->length_of_plot = (int)$txtSizeLen;
                     $option->breadth_of_plot = (int)$txtSizeBre;
                     $option->updated_by = $_SESSION["adminId"];
+                    $option->display_carpet_area = $txtCarpetAreaInfo;
 //                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
+				
                     $result = $option->save();
                 }
                 else
@@ -233,6 +236,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     {
         $ErrorMsg1 = 'Please select atleast one unit name';
     }
+    
+    
 
     if(!is_array($ErrorMsg) && $ErrorMsg1 == '')
     {
@@ -293,6 +298,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("poojaroomsval",$arrProjectType['POOJA_ROOM']);
         $smarty->assign("statusval",$arrProjectType['STATUS']);
         $smarty->assign("txtNoOfFloor",$arrProjectType['NO_OF_FLOORS']);
+        $smarty->assign("txtDisplayCarpetArea",$arrProjectType['DISPLAY_CARPET_AREA']);
 
         //echo "<pre>";print_r($arrProjectType_P);
 
@@ -307,9 +313,9 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);
 
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
-        $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['UNIT_NAME']);
+        $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['OPTION_NAME']);
         $smarty->assign("txtSizeval_VA", $arrProjectType_VA['SIZE']);
-        $smarty->assign("txtCarpetAreaInfo_VA", $arrProjectType_VA['CARPET_AREA_INFO']);
+        $smarty->assign("txtCarpetAreaInfo_VA", $arrProjectType_VA['DISPLAY_CARPET_AREA']);
         $smarty->assign("txtPricePerUnitAreaval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPricePerUnitAreaDpval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP']);
         $smarty->assign("txtPricePerUnitHighval_VA", $arrProjectType_VA['PRICE_PER_UNIT_HIGH']);
@@ -330,7 +336,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 
         /***************query for project name display if edit********************/
     }
-
+//print "<pre>--".print_r($ErrorMsg,1); die;
     $smarty->assign("ErrorMsg", $ErrorMsg);
     $smarty->assign("ErrorMsg1", $ErrorMsg1);
     $smarty->assign("projecteror", $projecteror);

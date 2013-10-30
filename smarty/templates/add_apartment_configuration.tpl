@@ -148,25 +148,24 @@
                              Delete
                           </td>  
                           <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
-                          <td nowrap="nowrap" width="2%" align="left" class=whiteTxt>Room Sizes</td>
+                          <!-- <td nowrap="nowrap" width="2%" align="left" class=whiteTxt>Room Sizes</td > -->
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bedrooms</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
-                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                          <!-- <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
 
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit High</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt >Price Per Unit Low</td>
-
+							-->
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Number of Floors</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Balcony</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Pooja Room</td>
-                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Property Status</td>
-
+                      
                         </tr>
 
                         {$var = 0}
@@ -192,9 +191,9 @@
                           <td align="center">
                                  {($smarty.section.foo.index+1)}
                           </td>
-                           <td align="center">
+                           <!-- td align="center">
                                  <span  {if ($txtUnitNameval[$smarty.section.foo.index] =='') && ($edit_project != '')} style = "display:none;" {/if}  id = "add_{($smarty.section.foo.index+1)}" class="insertProject" rel="{($smarty.section.foo.index+1)}"><a href='#' >Add</a></span>
-                          </td>
+                          </td -->
                           <td align="center">
 
                                 <select id="bed_{($smarty.section.foo.index+1)}"  onchange = "show_add({$smarty.section.foo.index}); fillUnitName({$smarty.section.foo.index});" tempName="bed" name = 'bed[]' style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$bedval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$bedval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
@@ -244,8 +243,9 @@
                                 <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizeval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                           </td>
                           <td>
-                                <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtCarpetAreaInfo[{$smarty.section.foo.index}]} checked="checked"{/if}>
+                                <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtDisplayCarpetArea[{$smarty.section.foo.index}]} checked="checked"{/if}>
                           </td>
+                          <!--
                           <td>
                               <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea_{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea" value="{$txtPricePerUnitAreaval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtPricePerUnitAreaval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};" readonly=""  maxlength = "10">
                           </td>
@@ -260,13 +260,13 @@
                            <td>
                                 <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitLow[] tempName="txtPricePerUnitLow"  id="txtPricePerUnitLow_{($smarty.section.foo.index+1)}" value="{$txtPricePerUnitLowval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10"  readonly="">
 
-                          </td>
+                          </td> 
 
 						  <td>
                                 <input onkeypress="return isNumberKey(event)" type=text name=txtNoOfFloor[] tempName="txtNoOfFloor"  id="txtNoOfFloor" value="{$txtNoOfFloor[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;" maxlength = "5">
 
                           </td>
-
+							-->
                                 <input onkeypress="return isNumberKey(event)" type="hidden" name=txtVillaPlotArea[] tempName="txtVillaPlotArea"  id=txtVillaPlotArea value="{$txtVillaPlotArea[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
 
 
@@ -339,13 +339,6 @@
                                     <option {if $poojaroomsval[{$smarty.section.foo.index}] == '10'} value = "10" selected = 'selected' {else} value = "10" {/if}>10</option>
                                 </select>
                           </td>
-                    <td>
-                      <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
-                          <option value = "Available">Select</option>
-                          <option {if $statusval[{$smarty.section.foo.index}] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
-                          <option {if $statusval[{$smarty.section.foo.index}] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
-                      </select>
-                    </td>
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid #FF0000"  maxlength = "10">
@@ -363,10 +356,11 @@
                     {/if}
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeV || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV}
                       <TABLE cellSpacing=2 cellPadding=4 width="93%" align="center"  style="border:1px solid #c2c2c2;">
+						  <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
 
                       <div>
 
-                            <!--  {foreach from = $errormsg  key=k item = datafirst}
+                              {foreach from = $ErrorMsg  key=k item = datafirst}
                                 <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                         <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
                                         {else if $k == 3} Fourth row errors {else if $k == 4} Fifth row errors {else if $k == 5} Sixth row errors {else if $k == 6} Seventh row errors
@@ -374,27 +368,27 @@
 
                                 </tr>
 
-                            <tr id="row_{$k}" style="display:none;"><td colspan="15"><font color="red">{$datafirst}</font></td></tr>
+                            <tr id="row_{$k}" ><td colspan="15"><font color="red">{$datafirst}</font></td></tr>
 
 
-                              {/foreach} -->
+                              {/foreach}
                             <tr><td colspan="16"><b><span style='font-size:15px;'>VILLAS</span></b></td></tr>
                             <tr><td colspan="16"></td></tr>
                             <tr class = "headingrowcolor" >
                               <td  nowrap="nowrap" width="1%" align="center" class="whiteTxt">Delete</td>
                               <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
-                              <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Room Sizes</td>
+                              <!-- <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Room Sizes</td> -->
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bedrooms</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                               <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
-                              <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                              <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
 
                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit High</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Price Per Unit Low</td>
-                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa floors</td>
+                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa floors</td> -->
                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Plot Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Terrace Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Garden Area</td>
@@ -403,7 +397,7 @@
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
                                 <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Pooja Room</td>
-                                <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td>
+                             <!--   <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td> -->
 
                             </tr>
 
@@ -425,6 +419,7 @@
                               <td align="center">
                                      {($smarty.section.foo.index+1)}
                               </td>
+                              <!--
                                <td align="center">
                                {if $flg != 0}
                                     {$new_index = $smarty.section.foo.index-15}
@@ -432,7 +427,7 @@
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
                                      <span {if ($txtUnitNameval_VA[$new_index] =='') && ($edit_project == '')}style = "display:none;" {/if} id = "add_{($smarty.section.foo.index+1)}" class="insertProject" rel="{($smarty.section.foo.index+1)}"><a href='#' >Add</a></span>
-                              </td>
+                              </td> -->
                               <td align="center">
 
                                     <select id="bed_{($smarty.section.foo.index+1)}"  onchange = "show_add({$smarty.section.foo.index}); fillUnitName({$smarty.section.foo.index});" tempName="bed" name = 'bed[]' style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$bedval_VA[$new_index]} == '') OR !is_numeric({$bedval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
@@ -486,6 +481,7 @@
                               <td>
                                     <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtCarpetAreaInfo_VA[{$smarty.section.foo.index}]} checked="checked"{/if}>
                               </td>
+                              <!--
                               <td>
                                     <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea_{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea" value="{$txtPricePerUnitAreaval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval_VA[$new_index]} == '') OR !is_numeric({$txtPricePerUnitAreaval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" readonly="">
                               </td>
@@ -494,7 +490,7 @@
                               </td>
 
                                <td>
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitHigh[] tempName="txtPricePerUnitHigh" id=txtPricePerUnitHigh value="{$txtPricePerUnitHighval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10" readonly="">
+                                    <input onkeypress=11"return isNumberKey(event)" type=text name=txtPricePerUnitHigh[] tempName="txtPricePerUnitHigh" id=txtPricePerUnitHigh value="{$txtPricePerUnitHighval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10" readonly="">
 
                               </td>
                                <td   >
@@ -505,7 +501,7 @@
 							  <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtVillaFloors[] tempName="txtVillaFloors"  id=txtVillaFloors value="{$txtVillaFloors_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
 
-                          </td>
+                          </td> -->
 
                                     <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtVillaPlotArea[] tempName="txtVillaPlotArea"  id=txtVillaPlotArea value="{$txtVillaPlotArea_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
@@ -594,11 +590,11 @@
 
                               </td>
                               <td>
-                      <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
+                    <!--  <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
                           <option value = "Available">Select</option>
                           <option {if $statusval_VA[$new_index] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
                           <option {if $statusval_VA[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
-                      </select>
+                      </select> -->
                     </td>
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
@@ -642,7 +638,7 @@
 
                             {section name=foo start= {$looprange} loop={$looprange+15} step=1}
                                 {$var	=$var+1}
-                                {if $var%2 == 0}
+                                {if $var%2 == 0}http://cms.localhost/add_apartmentConfiguration.php?projectId=5001369&edit=edit
                                     {$color = "bgcolor = '#F7F7F7'"}
                                 {else}
                                     {$color = "bgcolor = '#FCFCFC'"}
