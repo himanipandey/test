@@ -8,7 +8,7 @@ function getAssignedProjects($adminId=NULL){
         inner join locality l on rp.locality_id = l.locality_id
         inner join suburb s on l.suburb_id = s.suburb_id
         inner join city c on s.CITY_ID = c.CITY_ID 
-        where pa.ASSIGNED_TO = ".$adminId." and pa.STATUS = 'notAttempted' and rp.version = 'cms';";
+        where pa.ASSIGNED_TO = ".$adminId." and pa.STATUS = 'notAttempted' and rp.version = 'Cms';";
     return dbQuery($sql);
 }
 
@@ -40,7 +40,7 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
                inner join resi_project rp on pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID 
                where 
                ((PROJECT_STAGE_ID = '6' and PROJECT_PHASE_ID = '11') 
-               or (PROJECT_STAGE_ID = '7' and PROJECT_PHASE_ID = '9') and rp.version ='cms') 
+               or (PROJECT_STAGE_ID = '7' and PROJECT_PHASE_ID = '9') and rp.version ='Cms') 
                and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
                where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY')  group by pa.ADMINID order by WORKLOAD;";
@@ -52,7 +52,7 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
             from project_assignment pa 
             inner join resi_project rp on pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID 
             where ((PROJECT_STAGE_ID = '6' and PROJECT_PHASE_ID = '11') or 
-            (PROJECT_STAGE_ID = '7' and PROJECT_PHASE_ID = '9') and rp.version = 'cms') 
+            (PROJECT_STAGE_ID = '7' and PROJECT_PHASE_ID = '9') and rp.version = 'Cms') 
             and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
             inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
             where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY') and pa.ADMINID in 
@@ -87,7 +87,7 @@ function getProjectListForManagers($cityId, $suburbId = ''){
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
          = uc.UPDATION_CYCLE_ID where ((rp.PROJECT_STAGE_ID='6' and rp.PROJECT_PHASE_ID='11') 
          or (rp.PROJECT_STAGE_ID='7' and rp.PROJECT_PHASE_ID='9')) and 
-         rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'cms' ";
+         rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms' ";
     // city id = -1 denotes all cities
     if((int)$cityId != -1){
     $sql = $sql." and c.CITY_ID=$cityId";
@@ -127,7 +127,7 @@ function getAssignedProjectsFromPIDs($pids){
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
          = uc.UPDATION_CYCLE_ID where ((rp.PROJECT_STAGE_ID='6' and rp.PROJECT_PHASE_ID='11') 
          or (rp.PROJECT_STAGE_ID='7' and rp.PROJECT_PHASE_ID='9')) and 
-         rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'cms'
+         rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'
             and rp.PROJECT_ID in (" .  implode(',', $pids) . ") 
                 group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
         $res = dbQuery($sql);

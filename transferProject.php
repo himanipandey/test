@@ -277,15 +277,15 @@
 
                     if($arrUpdatePhase[0] == 'NoStage' || $arrUpdatePhase[0] == 'NoPhase' )
                     {
-                        $SetQry .= $SET . " PROJECT_PHASE_ID = '15' ";
+                        $SetQry .= $SET . " PROJECT_PHASE_ID = '7' ";
                         $SET = ',';
-                        $arrProjectPhase = 15;
+                        $arrProjectPhase = 7;
                     }
                     else
                     {
-                        $SetQry .= $SET . " PROJECT_PHASE_ID = '9' ";
+                        $SetQry .= $SET . " PROJECT_PHASE_ID = '1' ";
                         $SET = ',';
-                        $arrProjectPhase = 9;
+                        $arrProjectPhase = 1;
                     }
 
                 }

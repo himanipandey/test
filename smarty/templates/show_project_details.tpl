@@ -119,7 +119,7 @@ function towerSelect(towerId)
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
 		var flgChk = 0;	
-		if(dir != 'backward' && val == 'Y' && ((phase == 'dataCollection' && stg == 'updationCycle') || (phase == 'dcCallCenter' && stg == 'newProject')))
+		if(dir != 'backward' && val == 'Y' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')))
 		{
 			if(phaseId != '')
 			{
@@ -245,10 +245,7 @@ function getDateNow(){
               mySelections += ","+this.value;
             }
               });
-
           projects1 +="--"+mySelections;
-
-
           id+="--"+($("#"+idd).val());
             rowChk = 1;
         }
@@ -277,7 +274,6 @@ function getDateNow(){
               success:function(dt){
                         window.location.href = "show_project_details.php?projectId="+pid;
                     // jQuery("#update_insert_delete").show();
-
               }
 
             }
@@ -363,8 +359,8 @@ function getDateNow(){
   {
   	if(plsmns == 'plus')
   	{
-	  	document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
-	  	document.getElementById("builder_showHide").style.display = '';
+            document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
+            document.getElementById("builder_showHide").style.display = '';
   	}
   	else
   	{
@@ -396,32 +392,30 @@ function getDateNow(){
 
 <div>
 	<div class="state"> 
-		<span>	Current Phase : </span>
-		<span> {ucfirst($projectDetails[0].PROJECT_STAGE)}</span>
-		
+            <span>	Current Phase : </span>
+            <span> {ucfirst($projectDetails[0].PROJECT_STAGE)}</span>
 	</div>
-	
 	<div>
 	<div class="state"> 
 		<span>	Current Stage : </span>
-		{if $projectDetails[0].PROJECT_PHASE=="dataCollection"}
+		{if $projectDetails[0].PROJECT_PHASE=="DataCollection"}
 		<span> Data Collection</span>
 		{/if}
 		
-		{if $projectDetails[0].PROJECT_PHASE=="dcCallCenter"}
+		{if $projectDetails[0].PROJECT_PHASE=="DcCallCenter"}
 		<span> Data Collection Call Center</span>
 		{/if}
 		
-		{if $projectDetails[0].PROJECT_PHASE=="newProject"}
+		{if $projectDetails[0].PROJECT_PHASE=="NewProject"}
 		<span> New Project Audit</span>
 		{/if}
-		{if $projectDetails[0].PROJECT_PHASE=="audit1"}
+		{if $projectDetails[0].PROJECT_PHASE=="Audit1"}
 		<span> Audit 1</span>
 		{/if}
-		{if $projectDetails[0].PROJECT_PHASE=="audit2"}
+		{if $projectDetails[0].PROJECT_PHASE=="Audit2"}
 		<span> Audit 2</span>
 		{/if}
-		{if $projectDetails[0].PROJECT_PHASE=="complete"}
+		{if $projectDetails[0].PROJECT_PHASE=="Complete"}
 		<span> Audit Completed</span>
 		{/if}
 	</div>
@@ -429,7 +423,7 @@ function getDateNow(){
 	Label: {$projectLabel}
 	<br>
 {/if}
-{if $projectDetails[0].PROJECT_STAGE != 'noStage'}
+{if $projectDetails[0].PROJECT_STAGE != 'NoStage'}
 
 	{$projectStatus = $projectDetails[0]['PROJECT_STATUS']}
 	{$promisedCompletionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE']}
@@ -439,42 +433,41 @@ function getDateNow(){
 	{$stageProject = $projectDetails[0].PROJECT_STAGE}
 	
 	{if count($accessModule)>0}
-		<span>
-			Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
-												<input type = "radio" name = "validationChk" value = "N">No<br>
-		</span>
+            <span>
+                Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
+                <input type = "radio" name = "validationChk" value = "N">No<br>
+            </span>
 	{else}
-		<span style = "display:none;"><input type = "radio" name = "validationChk" value = "Y" checked></span>
+	   <span style = "display:none;"><input type = "radio" name = "validationChk" value = "Y" checked></span>
 	{/if}
-	{if $projectDetails[0].PROJECT_STAGE=='newProject'}
-		{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-			<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
-		{/if}
+	{if $projectDetails[0].PROJECT_STAGE=='NewProject'}
+            {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+                 <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
+            {/if}
 	{else}
-		{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-			<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','updation','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
-		{/if}
+            {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+                <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','updation','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
+            {/if}
 	{/if}
 
-	{if $projectDetails[0].PROJECT_PHASE!="dataCollection" && $projectDetails[0].PROJECT_PHASE!="complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+	{if $projectDetails[0].PROJECT_PHASE!="DataCollection" && $projectDetails[0].PROJECT_PHASE!="Complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Revert	</button>
 	{/if}
 {/if}
-	<br>
-	{if $projectDetails[0].PROJECT_PHASE!="complete"}
-		<textarea name="comments" id="comments" placeholder="
-			{if $projectDetails[0].AUDIT_COMMENTS}
-			{else}
-				Please put your comments here
-			{/if}
-		" cols="40" rows="5"
-		>
-			{if $projectDetails[0].AUDIT_COMMENTS}
-				{$projectDetails[0].AUDIT_COMMENTS}
-			{/if}
-		</textarea>
-	{/if}
-										
+<br>
+{if $projectDetails[0].PROJECT_PHASE!="Complete"}
+    <textarea name="comments" id="comments" placeholder="
+        {if $projectDetails[0].AUDIT_COMMENTS}
+        {else}
+                Please put your comments here
+        {/if}
+    " cols="40" rows="5"
+    >
+        {if $projectDetails[0].AUDIT_COMMENTS}
+                {$projectDetails[0].AUDIT_COMMENTS}
+        {/if}
+    </textarea>
+{/if}								
 <div> 
 
   <TR>
@@ -485,10 +478,9 @@ function getDateNow(){
           <TD width=10>&nbsp;</TD>
           <TD width=866>&nbsp;</TD>
 	</TR>
-	
 	 <TR>
           <TD class=paddingltrt10 vAlign=top align=middle bgColor=#ffffff>
-	   		{include file="{$PROJECT_ADD_TEMPLATE_PATH}left.tpl"}
+	     {include file="{$PROJECT_ADD_TEMPLATE_PATH}left.tpl"}
 	  </TD>
           <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
           <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
@@ -496,37 +488,33 @@ function getDateNow(){
               <TR>
                 <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0>
-					<TBODY>
-						<TR>
-						  <TD class="h1" width="67%"><img height="18" hspace="5" src="images/arrow.gif" width="18">   {$projectDetails[0].PROJECT_NAME} </TD>
-						  <TD width="33%" align ="right"></TD>
-						</TR>
-						
-						
-					</TBODY>
-				  </TABLE>
-				</TD>
+                    <TBODY>
+                        <TR>
+                          <TD class="h1" width="67%"><img height="18" hspace="5" src="images/arrow.gif" width="18">   {$projectDetails[0].PROJECT_NAME} </TD>
+                          <TD width="33%" align ="right"></TD>
+                        </TR>
+                    </TBODY>
+                  </TABLE>
+                </TD>
 	      </TR>
 	      
 	      <TD vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
-			 
-				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
+		<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 	      <div>
 	      <tr>
 	      <td style = "padding-left:30px;">
-	      		<b>Project {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}<button class="clickbutton" onclick="$(this).trigger('event1');">Edit</button>{/if}
-				
-				&nbsp;&nbsp;&nbsp;&nbsp;
-				
-				{if 
-				(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'newProject')
-				OR
-				(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')
-				OR
-				(trim($projectDetails[0].PROJECT_STAGE) == 'updationCycle' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')}
-					<input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID});">
-				{/if}
-			<!-- Project Phases -->
+                <b>Project {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}<button class="clickbutton" onclick="$(this).trigger('event1');">Edit</button>{/if}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {if 
+                    (trim($projectDetails[0].PROJECT_STAGE) == 'NewProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'NewProject')
+                    OR
+                    (trim($projectDetails[0].PROJECT_STAGE) == 'NewProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'Audit1')
+                    OR
+                    (trim($projectDetails[0].PROJECT_STAGE) == 'UpdationCycle' AND trim($projectDetails[0].PROJECT_PHASE) == 'Audit1')}
+                      <input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID});">
+                    {/if}
+            <!-- Project Phases -->
             &nbsp;&nbsp;&nbsp;&nbsp;
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
             &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
@@ -539,52 +527,52 @@ function getDateNow(){
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						
 						<tr>
-							<td align="left" colspan='4'>
-								<div id = "projectOldVal">
-									{if count($changedValueArr)>0}
-										<table style = "border:1px solid #c2c2c2;" align = "left" width ="60%">
-											{foreach from = $changedValueArr key=key item = item}
-												<tr><td>&nbsp;</td></tr>
-												<tr>
-													<td align ="left" nowrap><b>Old Value for Project Detail</b></td>
-												</tr>
-												
-												<tr class="headingrowcolor" height="30px;">
-													 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt>Field Name</td>
-													 <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>New Value</td>
-													 <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>Old Value</td>	
-												</tr>
-												{$cnt =0}
-												{foreach from = $item key=keyInner item = itemInner}
-													{if ($cnt+1)%2 == 0}
-														{$color = "bgcolor='#F7F8E0'"}
-													{else}
-														{$color = "bgcolor='#f2f2f2'"}
-													{/if}
-												<tr {$color} height="25px;">
-													<td width="10%" align="left">{ucwords(strtolower(str_replace("_"," ",$keyInner)))}</td>
-													<td width="10%" align="left">
-															{if $itemInner['new'] != ''}
-																{$itemInner['new']} 
-															{else}
-																--
-															{/if}
-													</td>
-													<td width="10%" align="left">
-															{if $itemInner['old'] != ''}
-																{$itemInner['old']} 
-															{else}
-																--
-															{/if}
-													</td>
-												</tr>
-												{$cnt = $cnt+1}
-												{/foreach}
-											{/foreach}
-										</table>
-									{/if}
-								</div>
-							</td>
+                                                    <td align="left" colspan='4'>
+                                                        <div id = "projectOldVal">
+                                                            {if count($changedValueArr)>0}
+                                                                <table style = "border:1px solid #c2c2c2;" align = "left" width ="60%">
+                                                                    {foreach from = $changedValueArr key=key item = item}
+                                                                            <tr><td>&nbsp;</td></tr>
+                                                                            <tr>
+                                                                                    <td align ="left" nowrap><b>Old Value for Project Detail</b></td>
+                                                                            </tr>
+
+                                                                            <tr class="headingrowcolor" height="30px;">
+                                                                                     <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt>Field Name</td>
+                                                                                     <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>New Value</td>
+                                                                                     <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>Old Value</td>	
+                                                                            </tr>
+                                                                            {$cnt =0}
+                                                                            {foreach from = $item key=keyInner item = itemInner}
+                                                                                    {if ($cnt+1)%2 == 0}
+                                                                                            {$color = "bgcolor='#F7F8E0'"}
+                                                                                    {else}
+                                                                                            {$color = "bgcolor='#f2f2f2'"}
+                                                                                    {/if}
+                                                                            <tr {$color} height="25px;">
+                                                                                    <td width="10%" align="left">{ucwords(strtolower(str_replace("_"," ",$keyInner)))}</td>
+                                                                                    <td width="10%" align="left">
+                                                                                                    {if $itemInner['new'] != ''}
+                                                                                                            {$itemInner['new']} 
+                                                                                                    {else}
+                                                                                                            --
+                                                                                                    {/if}
+                                                                                    </td>
+                                                                                    <td width="10%" align="left">
+                                                                                                    {if $itemInner['old'] != ''}
+                                                                                                            {$itemInner['old']} 
+                                                                                                    {else}
+                                                                                                            --
+                                                                                                    {/if}
+                                                                                    </td>
+                                                                            </tr>
+                                                                            {$cnt = $cnt+1}
+                                                                            {/foreach}
+                                                                    {/foreach}
+                                                                </table>
+                                                            {/if}
+                                                        </div>
+                                                    </td>
 						</tr>
 						<tr bgcolor = "#c2c2c2">
 							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"><b>Last Updated Detail</b></br>
@@ -600,19 +588,18 @@ function getDateNow(){
 						  
 						</tr>
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Project Name:</b></td>
-
-							  <td>
-							  		{$projectDetails[0].PROJECT_NAME}
-							</td>
+                                                    <td  nowrap="nowrap" width="1%" align="left"><b>Project Name:</b></td>
+                                                    <td>
+                                                     {$projectDetails[0].PROJECT_NAME}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Builder Name:</b></td>
+                                                    <td  nowrap="nowrap" width="1%" align="left"><b>Builder Name:</b></td>
 
-							  <td>
-                                                              {$builderDetail['ENTITY']}
-							</td>
+                                                    <td>
+                                                        {$builderDetail['ENTITY']}
+                                                  </td>
 						</tr>
 
 						<tr height="25px;">
@@ -914,39 +901,25 @@ function getDateNow(){
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>City:</b></td>
-
-							  <td>
-							  	{foreach from=$CityDataArr key=k item=v}
-								 {if $projectDetails[0].CITY_ID == $k}
-								 	{$v}
-								 {/if}
-								{/foreach}
-							</td>
+                                                    <td  nowrap="nowrap" width="1%" align="left"><b>City:</b></td>
+                                                    <td>
+                                                       {$city}
+                                                  </td>
 						</tr>
 
 						<tr height="25px;">
 							  <td  nowrap="nowrap" width="1%" align="left"><b>Suburb:</b></td>
-
 							  <td>
-							  {foreach from=$suburbSelect key=k item=v}
-								 {if $projectDetails[0].SUBURB_ID == $k}
-								 	{$v}
-								 {/if}
-								{/foreach}
+							  {$suburb}
 							</td>
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Locality:</b></td>
+                                                    <td  nowrap="nowrap" width="1%" align="left"><b>Locality:</b></td>
 
-							  <td>
-							  	{foreach from=$localitySelect key=k item=v}
-								 {if $projectDetails[0].LOCALITY_ID == $k}
-								 	{$v}
-								 {/if}
-								{/foreach}
-							</td>
+                                                    <td>
+                                                          {$locality}
+                                                  </td>
 						</tr>
 
 						<tr height="25px;">
@@ -962,14 +935,6 @@ function getDateNow(){
 
 							  <td>
 							  	{$projectDetails[0].PROJECT_ADDRESS}
-							</td>
-						</tr>
-
-						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Option Description:</b></td>
-
-							  <td>
-							  	{$projectDetails[0].OPTIONS_DESC}
 							</td>
 						</tr>
 
@@ -991,125 +956,20 @@ function getDateNow(){
 								  	{/if} 
 								{/foreach}
 							</td>
-						</tr>
-
-						{if $projectDetails[0].PROJECT_TYPE_ID != '1' && $projectDetails[0].PROJECT_TYPE_ID != '4'}
-						<tr height="25px;">
-							 <td  nowrap="nowrap" width="1%" align="left"><b>
-							 	Number of 
-									{foreach from=$ProjectTypeArr key=k item=v}
-									  	{if $k == $projectDetails[0].PROJECT_TYPE_ID}  
-									  		{if strstr($v,'PLOT APARTMENTS')}
-									  			Apartment
-									  		{else}
-										  		{if strstr($v,'PLOT VILLA')}
-										  			Villa
-										  		{else}
-											  		{if strstr($v,'VILLA APARTMENTS')}
-											  			Villa
-											  		{else}
-											  			{ucwords($v|lower)|replace:'_':' '}
-											  		{/if}
-											  	{/if}
-											 {/if}
-									  	{/if} 
-									{/foreach}
-							 </b>
-							 </td>
-							<td>
-								{if $phaseId != ''}
-									{if count($VillasQuantity)>0}
-										{array_sum($VillasQuantity)}	
-									{else}
-										--
-									{/if}
-								{else}
-									{$projectDetails[0].NO_OF_VILLA}
-								{/if}
-							</td>
-						</tr>
-						{/if}
-
-						{if $projectDetails[0].PROJECT_TYPE_ID == '4' || $projectDetails[0].PROJECT_TYPE_ID == '6' || $projectDetails[0].PROJECT_TYPE_ID == '5'}
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Number of Plots:</b>
-							</td>
-							<td>
-								{if $phaseId != ''}
-									{if count($PlotQuantity)>0}
-										{array_sum($PlotQuantity)}	
-									{else}
-										--
-									{/if}
-								{else}
-									{$projectDetails[0].NO_OF_PLOTS}
-								{/if}
-							</td>
-						</tr>
-						{/if}
-						
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>No Of Towers:</b>
-							</td>
-							<td>
-								{if $phaseId != ''}
-									{if count($phase_towers)>0}
-										{count($phase_towers)}
-									{else}
-										--
-									{/if}
-								{else}
-									{$projectDetails[0].NO_OF_TOWERS}
-								{/if}
-							</td>
-						</tr>
-
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>No Of Flats:</b>
-							</td>
-							<td>
-								{if $phaseId != ''}
-									{if count($FlatsQuantity)>0}
-										{array_sum($FlatsQuantity)}
-									{else}
-										--
-									{/if}
-								{else}
-									{$projectDetails[0].NO_OF_FLATS}
-								{/if}
-							</td>
-						</tr>
-						
-						
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Launched Units:</b>
-							</td>
-							<td>
-								{if $projectDetails[0].LAUNCHED_UNITS != ''}
-									{$projectDetails[0].LAUNCHED_UNITS}
-								{else}
-									--
-								{/if}
-							</td>
-						</tr>
-						
-						<tr height="25px;">
+						</tr>						
+						<!--<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left" valign ="top">
-								<b>Reason For UnLaunched Units:</b>
+                                                            <b>Reason For UnLaunched Units:</b>
 							</td>
 							<td>
-								{if $projectDetails[0].REASON_UNLAUNCHED_UNITS != ''}
-									{$projectDetails[0].REASON_UNLAUNCHED_UNITS}
-								{else}
-									--
-								{/if}
+                                                            {if $projectDetails[0].REASON_UNLAUNCHED_UNITS != ''}
+                                                                    {$projectDetails[0].REASON_UNLAUNCHED_UNITS}
+                                                            {else}
+                                                                    --
+                                                            {/if}
 							</td>
-						</tr>
-
+						</tr>-->
+                                                <!--
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Project Location Desc:</b>
@@ -1118,7 +978,7 @@ function getDateNow(){
 								{$projectDetails[0].LOCATION_DESC}
 							</td>
 						</tr>
-
+                                                -->
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Project Latitude:</b>
@@ -1142,26 +1002,26 @@ function getDateNow(){
 								<b>Active:</b>
 							</td>
 							<td>
-								{$projectDetails[0].ACTIVE}
+								{$projectDetails[0].STATUS}
 							</td>
 						</tr>
-
+                                                <!--
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Booking Status:</b>
 							</td>
 							<td>
-								{$projectDetails[0].BOOKING_STATUS}
+                                                            {$projectDetails[0].BOOKING_STATUS}
 							</td>
 						</tr>
-
+                                                -->
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Project Status:</b>
-							</td>
-							<td>
-								{$projectDetails[0].PROJECT_STATUS}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Project Status:</b>
+                                                    </td>
+                                                    <td>
+                                                     {$projectDetails[0].display_name}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
@@ -1190,127 +1050,116 @@ function getDateNow(){
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Launch Date:</b>
-							</td>
-							<td>
-								{$projectDetails[0].LAUNCH_DATE}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Launch Date:</b>
+                                                    </td>
+                                                    <td>
+                                                            {$projectDetails[0].LAUNCH_DATE}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Promised Completion Date:</b>
-							</td>
-							<td>
-								{$completionDate}&nbsp;&nbsp;<button class="clickbutton" onclick="$(this).trigger('event10');">Update Completion Date</button>
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Promised Completion Date:</b>
+                                                    </td>
+                                                    <td>
+                                                            {$completionDate}&nbsp;&nbsp;<button class="clickbutton" onclick="$(this).trigger('event10');">Update Completion Date</button>
+                                                    </td>
 						</tr>
 						
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Bank List:</b>
-							</td>
-							<td>
-                                                            {$bank_arr = array()}
-                                                           {if strlen($projectDetails[0].BANK_LIST) == 1}
-								{$bank_arr[0] =  $projectDetails[0].BANK_LIST}
-                                                           {elseif strlen($projectDetails[0].BANK_LIST) != ''}
-                                                               {assign var=bank_arr value=","|explode:$projectDetails[0].BANK_LIST}
-                                                           {/if}
-                                                            {if count($bank_arr)>0}
-                                                                {foreach from = $BankListArr key = key item = value}
-                                                                        {if in_array($key,$bank_arr)} {$value} {/if}
-                                                                {/foreach}
-                                                            {else}
-                                                                    --
-                                                            {/if}
-								
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Bank List:</b>
+                                                    </td>
+                                                    <td>
+
+                                                        {if count($bankList)>0}
+                                                            {foreach from = $bankList key = key item = value}
+                                                                    {$value->bank_name}
+                                                            {/foreach}
+                                                        {else}
+                                                                --
+                                                        {/if}
+
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>YouTube Video Key:</b>
-							</td>
-							<td>
-								{if $projectDetails[0].YOUTUBE_VIDEO!=""}
-								 <a href = "{$projectDetails[0].YOUTUBE_VIDEO}"><a>
-								  	Youtube Link 
-								  {else}
-								  	No link available
-								{/if}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>YouTube Video Key:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].YOUTUBE_VIDEO!=""}
+                                                         <a href = "{$projectDetails[0].YOUTUBE_VIDEO}"><a>
+                                                                Youtube Link 
+                                                          {else}
+                                                                No link available
+                                                        {/if}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Approvals:</b>
-							</td>
-							<td>
-								{$projectDetails[0].APPROVALS}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Approvals:</b>
+                                                    </td>
+                                                    <td>
+                                                            {$projectDetails[0].APPROVALS}
+                                                    </td>
 						</tr>
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>No Of Lifts Per Tower:</b>
-							</td>
-							<td>
-								{$projectDetails[0].NO_OF_LIFTS_PER_TOWER}
-							</td>
+						<!--<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>No Of Lifts Per Tower:</b>
+                                                    </td>
+                                                    <td>
+                                                            {$projectDetails[0].NO_OF_LIFTS_PER_TOWER}
+                                                    </td>
 						</tr>
-
+                                               
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Power Backup Available:</b>
-							</td>
-							<td>
-								{$projectDetails[0].POWER_BACKUP}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Power Backup Available:</b>
+                                                    </td>
+                                                    <td>
+                                                            {$projectDetails[0].POWER_BACKUP}
+                                                    </td>
 						</tr>
 
 						{if {$projectDetails[0].POWER_BACKUP}!="No"}		 
 						<tr height="25px;">
 
-							<td nowrap="nowrap" width="6%" align="left">
-								Power Backup Available
-							</td>
-							<td>
-								 {$projectDetails[0].POWER_BACKUP_CAPACITY}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            Power Backup Available
+                                                    </td>
+                                                    <td>
+                                                             {$projectDetails[0].POWER_BACKUP_CAPACITY}
+                                                    </td>
 						</tr>	
 						{/if}
-
+                                                 -->
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Architect Name:</b>
-							</td>
-							<td>
-								{$projectDetails[0].ARCHITECT_NAME}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b>Architect Name:</b>
+                                                    </td>
+                                                    <td>
+                                                        {$projectDetails[0].ARCHITECT_NAME}
+                                                    </td>
 						</tr>
-
+                                                <!--
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Special Offer Description:</b>
-							</td>
-							<td>
-								{$projectDetails[0].OFFER_DESC}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Special Offer Description:</b>
+                                                    </td>
+                                                    <td>
+                                                            {$projectDetails[0].OFFER_DESC}
+                                                    </td>
 						</tr>
-
+                                                -->
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b>Residential:</b>
                                                     </td>
                                                     <td>
-                                                      {if $projectDetails[0].RESIDENTIAL == 0}
-                                                                    Residential
-                                                      {/if}
-
-                                                      {if $projectDetails[0].RESIDENTIAL == 1}
-                                                      Non	Residential
-                                                      {/if}
+                                                      {$projectDetails[0].RESIDENTIAL_FLAG}
                                                     </td>
 						</tr>
 
@@ -1319,14 +1168,14 @@ function getDateNow(){
                                                             <b>Township:</b>
                                                     </td>
                                                     <td>
-                                                        {if $projectDetails[0].TOWNSHIP != ''}
-                                                                {$projectDetails[0].TOWNSHIP}
+                                                        {if $projectDetails[0].township_name != ''}
+                                                                {$projectDetails[0].township_name}
                                                         {else}
                                                                 --
                                                         {/if}
                                                     </td>
 						</tr>
-                                                
+                                                <!--
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Skip Updation Cycle: </b>
@@ -1339,7 +1188,7 @@ function getDateNow(){
                                                         {/if}
                                                     </td>
 						</tr>
-						
+						-->
 					</table>
 				</td>
 			</tr>
@@ -1802,14 +1651,14 @@ function getDateNow(){
 							  </tr>
 
 							   <tr>
-								  <td nowrap="nowrap" width="6%" align="left"><b>Others : </b></td>
-								  <td>
-								  	{if $arrSpecification[0]['OTHERS'] != ''}
-								  		{$arrSpecification[0]['OTHERS']}
-								  	{else}
-								  		--
-								  	{/if}
-								  </td> 
+                                                                <td nowrap="nowrap" width="6%" align="left"><b>Others : </b></td>
+                                                                <td>
+                                                                    {if $arrSpecification[0]['OTHER_SPECIFICATIONS'] != ''}
+                                                                        {$arrSpecification[0]['OTHER_SPECIFICATIONS']}
+                                                                    {else}
+                                                                        --
+                                                                    {/if}
+                                                                </td> 
 							  </tr>
 					  </table>
 				</td>

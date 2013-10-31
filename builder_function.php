@@ -270,7 +270,8 @@ function ProjectDetail($projectId) {
 /* * *****************function for fetch project options detail by project id**************** */
 
 function fetch_projectOptions($projectId) {
-    $qryopt = "SELECT DISTINCT(BEDROOMS),OPTION_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qryopt = "SELECT DISTINCT(BEDROOMS),OPTION_TYPE FROM " . RESI_PROJECT_OPTIONS . " 
+        WHERE PROJECT_ID = '" . $projectId . "'";
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
     while ($data = mysql_fetch_assoc($resopt)) {
@@ -451,18 +452,21 @@ function ProjectBedroomDetail($projectId) {
 }
 
 function ProjectOptionDetail($projectId) {
-    $columns = "P.OPTIONS_ID,P.PROJECT_ID,P.OPTION_NAME,P.OPTION_TYPE,P.SIZE,P.BEDROOMS,P.BATHROOMS,P.CREATED_AT,P.STUDY_ROOM,P.SERVANT_ROOM,P.BALCONY,P.POOJA_ROOM,P.VILLA_PLOT_AREA,P.VILLA_NO_FLOORS,P.VILLA_TERRACE_AREA,P.VILLA_GARDEN_AREA,P.CARPET_AREA,P.LENGTH_OF_PLOT,P.BREADTH_OF_PLOT";
+    $columns = "P.OPTIONS_ID,P.PROJECT_ID,P.OPTION_NAME,P.OPTION_TYPE,P.SIZE,P.BEDROOMS,P.BATHROOMS,
+        P.CREATED_AT,P.STUDY_ROOM,P.SERVANT_ROOM,P.BALCONY,P.POOJA_ROOM,P.VILLA_PLOT_AREA,
+        P.VILLA_NO_FLOORS,P.VILLA_TERRACE_AREA,P.VILLA_GARDEN_AREA,P.CARPET_AREA,P.LENGTH_OF_PLOT,
+        P.BREADTH_OF_PLOT";
     $qrySel = "SELECT
-					$columns,
-					GROUP_CONCAT(O.IMAGE_URL) FLOOR_IMAGES
-					FROM
-					   " . RESI_PROJECT_OPTIONS . " P
-					LEFT JOIN " . RESI_FLOOR_PLANS . " O
-					ON
-						P.OPTIONS_ID = O.OPTION_ID
-				   WHERE P.PROJECT_ID = '" . $projectId . "'
-				   GROUP BY $columns
-				   ORDER BY P.SIZE ASC";
+                    $columns,
+                    GROUP_CONCAT(O.IMAGE_URL) FLOOR_IMAGES
+                    FROM
+                       " . RESI_PROJECT_OPTIONS . " P
+                    LEFT JOIN " . RESI_FLOOR_PLANS . " O
+                    ON
+                            P.OPTIONS_ID = O.OPTION_ID
+               WHERE P.PROJECT_ID = '" . $projectId . "'
+               GROUP BY $columns
+               ORDER BY P.SIZE ASC";
     $res_Sel = mysql_query($qrySel) or die(mysql_error());
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -473,11 +477,12 @@ function ProjectOptionDetail($projectId) {
 
 function fetch_towerDetails($projectId) {
     $qrySel = "SELECT
-                        t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME
+                   t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,
+                   t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME
                 FROM
-                        " . RESI_PROJECT_TOWER_DETAILS . " t LEFT JOIN resi_project_phase p
+                   " . RESI_PROJECT_TOWER_DETAILS . " t LEFT JOIN resi_project_phase p
                 ON
-                        t.PHASE_ID = p.PHASE_ID
+                   t.PHASE_ID = p.PHASE_ID
                 WHERE
                         t.PROJECT_ID = '" . $projectId . "' ORDER BY t.TOWER_NAME ASC";
     $res_Sel = mysql_query($qrySel);
@@ -814,8 +819,8 @@ function phaseDetailsForId($phaseId) {
 
 function towerDetailsForId($towerId) {
     $sql = "SELECT *  FROM " . RESI_PROJECT_TOWER_DETAILS . "
-					WHERE
-					TOWER_ID ='" . $towerId . "'";
+            WHERE
+            TOWER_ID ='" . $towerId . "'";
 
     $data = mysql_query($sql);
     $arr = array();
@@ -1073,39 +1078,44 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 
 /*********************************/
 
-function updateProjectPhase($pID, $phase, $reviews, $stage = '', $revert = FALSE) {
-    if ($phase != "complete") {
+function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
+    if ($phase != 6) {
         mysql_query('begin');
-        $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE = '" . $phase . "', AUDIT_COMMENTS = '" . $reviews . "' WHERE PROJECT_ID = '" . $pID . "';";
+        $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE_ID = '" . $phase . "' 
+            WHERE PROJECT_ID = '" . $pID . "' and version = 'Cms';";
     } else {
-        $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE = '" . $phase . "', PROJECT_STAGE = 'noStage', UPDATION_CYCLE_ID = NULL, AUDIT_COMMENTS = '" . $reviews . "' WHERE PROJECT_ID = '" . $pID . "';";
+        $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE_ID = '" . $phase . "', PROJECT_STAGE_ID = 1,
+            UPDATION_CYCLE_ID = NULL WHERE PROJECT_ID = '" . $pID . "' and version = 'Cms';";
     }
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function updateProjectPhase()');
     if ($revert == TRUE)
-        $phase = 'revert';
+        $phase = 8;
 
     $sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = $pID";
     $res = mysql_query($sql);
     $res = mysql_fetch_assoc($res);
     $last_hist_id = $res['ID'];
+    
     if (!empty($last_hist_id)) {
         $ins = "
-				INSERT INTO 
-						project_stage_history 
-							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
-				VALUES 
-							(NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "','" . $last_hist_id . "')";
+        INSERT INTO 
+        project_stage_history 
+        (HISTORY_ID,PROJECT_ID,PROJECT_PHASE_ID,PROJECT_STAGE_ID,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
+        VALUES 
+        (NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "','" . $last_hist_id . "')";
     } else {
         $ins = "
-				INSERT INTO 
-						project_stage_history 
-							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
-				VALUES 
-							(NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "', NULL)";
+        INSERT INTO 
+        project_stage_history 
+        (HISTORY_ID,PROJECT_ID,PROJECT_PHASE_ID,PROJECT_STAGE_ID,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
+        VALUES 
+        (NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "', NULL)";
     }
+   
     $r = mysql_query($ins);
-    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " where PROJECT_ID = $pID;";
-    mysql_query($sql);
+    echo $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " 
+        where PROJECT_ID = $pID and version = 'Cms';";
+    mysql_query($sql) or die(mysql_error());
     mysql_query('commit');
     return 1;
 }
@@ -1451,19 +1461,19 @@ function fetchProjectCallingLinks($projectId, $projectType, $audioLinkChk = '') 
     else
         $and = "";
     $qry = "SELECT 
-                    d.AudioLink,a.FNAME,d.Remark,d.ContactNumber,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
-                FROM 
-                   (" . CALLDETAILS . " d LEFT JOIN " . CALLPROJECT . " p 
-                ON
-                   d.CallId = p.CallId)
-                LEFT JOIN
-                   " . ADMIN . " a
-                ON 
-                   d.AgentId = a.ADMINID
-                WHERE
-                   p.ProjectId = $projectId
-                AND
-                   d.PROJECT_TYPE = '$projectType'";
+               d.AudioLink,a.FNAME,d.Remark,d.ContactNumber,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
+            FROM 
+               (" . CALLDETAILS . " d LEFT JOIN " . CALLPROJECT . " p 
+            ON
+               d.CallId = p.CallId)
+            LEFT JOIN
+               " . ADMIN . " a
+            ON 
+               d.AgentId = a.ADMINID
+            WHERE
+               p.ProjectId = $projectId
+            AND
+               d.PROJECT_TYPE = '$projectType'";
     $res = mysql_query($qry) or die(mysql_error());
     $arrCallLink = array();
     if (mysql_num_rows($res) > 0) {
@@ -1843,7 +1853,7 @@ function getFlatAvailability($projectId)
 	return $final_list;
 }
 function projectDetailById($projectId){
-    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."'";
+    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."' where version = 'Cms'";
     $res = mysql_query($qry) or die(mysql_error());
     $projectDetails = array();
     while ($data = mysql_fetch_array($res)) {

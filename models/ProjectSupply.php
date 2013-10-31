@@ -57,7 +57,18 @@ class ProjectSupply extends ActiveRecord\Model {
         $result = array();
         $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, 
             ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply, ps.launched, ps.edited_launched, 
-            pa.availability, pa.comment, pa.effective_month, ps.project_type from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id inner join (select ps.id, max(pa.effective_month) mon from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id=pa.project_supply_id where ps.project_id = $projectId group by ps.id) t on ps.id=t.id and pa.effective_month=t.mon left join " . ResiProjectPhase::table_name() . " rpp on ps.phase_id = rpp.PHASE_ID union select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply, ps.launched, ps.edited_launched, pa.availability, pa.comment, pa.effective_month, ps.project_type from project_supplies ps left join project_availabilities pa on ps.id=pa.project_supply_id left join resi_project_phase rpp on ps.phase_id = rpp.PHASE_ID where pa.id is null and ps.project_id = $projectId";
+            pa.availability, pa.comment, pa.effective_month, ps.project_type 
+            from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " 
+           pa on ps.id=pa.project_supply_id inner join (select ps.id, max(pa.effective_month) mon 
+           from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa 
+           on ps.id=pa.project_supply_id where ps.project_id = $projectId group by ps.id) t 
+           on ps.id=t.id and pa.effective_month=t.mon left join " . ResiProjectPhase::table_name() . " 
+          rpp on ps.phase_id = rpp.PHASE_ID union select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
+          rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply,
+          ps.launched, ps.edited_launched, pa.availability, pa.comment, pa.effective_month, 
+          ps.project_type from project_supplies ps left join project_availabilities pa 
+          on ps.id=pa.project_supply_id left join resi_project_phase rpp on ps.phase_id = rpp.PHASE_ID 
+          where pa.id is null and ps.project_id = $projectId";
         $data = self::find_by_sql($query);
         foreach ($data as $value) {
             $entry = array();
@@ -133,8 +144,12 @@ class ProjectSupply extends ActiveRecord\Model {
     }
     
     function isSupplyLaunchEdited($projectId){
-        $sql = "select count(*) count from project_supplies where 
-                project_id = '$projectId' and edit_stage = 'callCenterEdit' and version = 'Cms';";
+        $sql = "select count(*) count from project_supplies ps inner join listings l
+                on ps.listing_id = l.id
+                inner join resi_project_options rpo on l.option_id = rpo.options_id
+                where 
+                rpo.project_id = '$projectId' and version = 'Cms';";
+        //rpo.project_id = '$projectId' and edit_stage = 'callCenterEdit' and version = 'Cms';"; To Do
         $result = self::find_by_sql($sql);
         return (intval($result[0]->count)>0);
     }
