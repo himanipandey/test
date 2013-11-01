@@ -37,10 +37,12 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
             (select pa.ADMINID, 0 TOTAL from proptiger_admin pa 
               where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, 
                count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
-               inner join resi_project rp on pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID 
+               inner join resi_project rp on pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID
+               inner join master_project_phases mpp on rp.project_phase_id = mpp.id
+               inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
                where 
-               ((PROJECT_STAGE_ID = '6' and PROJECT_PHASE_ID = '11') 
-               or (PROJECT_STAGE_ID = '7' and PROJECT_PHASE_ID = '9') and rp.version ='Cms') 
+               ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
+               or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."') and rp.version ='Cms') 
                and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
                where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY')  group by pa.ADMINID order by WORKLOAD;";
@@ -51,8 +53,10 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
             where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, count(rp.MOVEMENT_HISTORY_ID) TOTAL 
             from project_assignment pa 
             inner join resi_project rp on pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID 
-            where ((PROJECT_STAGE_ID = '6' and PROJECT_PHASE_ID = '11') or 
-            (PROJECT_STAGE_ID = '7' and PROJECT_PHASE_ID = '9') and rp.version = 'Cms') 
+            inner join master_project_phases mpp on rp.project_phase_id = mpp.id
+               inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
+            where ((mpstg.name = '".NewProject_stage."' and mpp = '".DcCallCenter_phase."') or 
+            (mpstg.name = '".UpdationCycle_stage."' and mpp = '".DataCollection_phase."') and rp.version = 'Cms') 
             and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
             inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
             where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY') and pa.ADMINID in 
@@ -85,8 +89,8 @@ function getProjectListForManagers($cityId, $suburbId = ''){
          left join project_assignment pa 
          on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
-         = uc.UPDATION_CYCLE_ID where ((rp.PROJECT_STAGE_ID='6' and rp.PROJECT_PHASE_ID='11') 
-         or (rp.PROJECT_STAGE_ID='7' and rp.PROJECT_PHASE_ID='9')) and 
+         = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
+            (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms' ";
     // city id = -1 denotes all cities
     if((int)$cityId != -1){
@@ -125,8 +129,8 @@ function getAssignedProjectsFromPIDs($pids){
          left join project_assignment pa 
          on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
-         = uc.UPDATION_CYCLE_ID where ((rp.PROJECT_STAGE_ID='6' and rp.PROJECT_PHASE_ID='11') 
-         or (rp.PROJECT_STAGE_ID='7' and rp.PROJECT_PHASE_ID='9')) and 
+         = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
+            (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'
             and rp.PROJECT_ID in (" .  implode(',', $pids) . ") 
                 group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";

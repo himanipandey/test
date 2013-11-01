@@ -460,7 +460,10 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             else
             {
                 $ProjectDetail = ResiProject::virtual_find($projectId);
-                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $ProjectDetail->project_stage_id);
+                $qryStg = "select * from master_project_stages where id = '".$ProjectDetail->project_stage_id."'";
+                $resStg = mysql_query($qryStg) or die(mysql_error());
+                $stageId = mysql_fetch_assoc($resStg);
+                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name']);
                 if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
                    insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
                 }
