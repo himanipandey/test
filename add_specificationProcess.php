@@ -10,7 +10,7 @@
 	$flag=0;
 	$projectFolderCreated=0;
 	$projectId  = $_REQUEST['projectId'];
-	$edit		= $_REQUEST['edit'];
+	$edit = $_REQUEST['edit'];
 	if($edit != '')
 	{
             $ProjectAmenities = ProjectAmenities($projectId,$arrNotninty,$arrDetail,$arrninty);
@@ -84,7 +84,7 @@
                                             $qryIns .= "('".$projectId."','".addslashes(str_replace("_"," ",$val))."','99'),";
                                     }
                             }
-
+                            echo $qryIns_one.$qryIns;//die("here");
                             if($qryIns != '')
                             {
                                 $qryIns = $qryIns_one.$qryIns;

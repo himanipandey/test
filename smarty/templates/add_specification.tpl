@@ -2,17 +2,16 @@
 
 <script type="text/javascript">
 
-	function refreshother(ct)
-	{   	
+function refreshother(ct)
+{   	
 
-		$(".hiderow").hide();
-		
-		for(i=1;i<=ct;i++)
-		{
-			var id = 'other'+i;
-		 document.getElementById(id).style.display='';
-		}		
-	}
+    $(".hiderow").hide();
+    for(i=1;i<=ct;i++)
+    {
+        var id = 'other'+i;
+        document.getElementById(id).style.display='';
+    }		
+}
 </script>
   <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -59,18 +58,17 @@
 							{foreach from=$AmenitiesArr key=k item=v} 
 								{if $k != 99}
 								<tr>
-									 <td  align="right">{$v}</td>
-									
-									 {if array_key_exists($k,$arrNotninty)}
-                                                                            <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'   checked='checked'/> Yes </td>
-                                                                            <td> <input type='radio' name="{$v}#{$k}" value='0'/> No   </td>
-                                                                            <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" ></td>	
-									 {else}
-                                                                            <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
-                                                                            <td> <input type='radio' name="{$v}#{$k}" value='0'  checked='checked'/> No   </td>
-                                                                            <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" ></td>	
-									 {/if}
-										 
+                                                                    <td  align="right">{$v}</td>
+
+                                                                    {if array_key_exists($k,$arrNotninty)}
+                                                                       <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'   checked='checked'/> Yes </td>
+                                                                       <td> <input type='radio' name="{$v}#{$k}" value='0'/> No   </td>
+                                                                       <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" ></td>	
+                                                                    {else}
+                                                                       <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
+                                                                       <td> <input type='radio' name="{$v}#{$k}" value='0'  checked='checked'/> No   </td>
+                                                                       <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" ></td>	
+                                                                    {/if}		 
 								</tr>
 								{/if}
 							 {/foreach}

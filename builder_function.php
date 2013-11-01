@@ -656,7 +656,7 @@ function ProjectAmenities($projectId, &$arrNotninty, &$arrDetail, &$arrninty) {
     $cnt = 1;
     while ($data = mysql_fetch_assoc($res_Sel)) {
         array_push($arrDetail, $data);
-        if ($data['AMENITY_ID'] <= 6) {
+        if ($data['AMENITY_ID'] != 99) {
             $arrNotninty[$data['AMENITY_ID']] = $data['AMENITY_DISPLAY_NAME'];
         } else {
             $arrninty[$cnt] = $data['AMENITY_DISPLAY_NAME'];
