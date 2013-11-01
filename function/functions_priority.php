@@ -138,8 +138,8 @@ function checkSubLocInCity($type,$cityId,$typeId){
 
 	if($type == 'suburb')
 	{
-		$rs = mysql_query('select count(*) as cnt FROM '.SUBURB.' where CITY_ID="'.$cityId.'" and SUBURB_ID ="'.$typeId.'"');
-		if ($rs && mysql_num_rows($rs) )
+		$rs = mysql_fetch_object(mysql_query('select count(*) as cnt FROM '.SUBURB.' where CITY_ID="'.$cityId.'" and SUBURB_ID ="'.$typeId.'"'));
+		if ($rs->cnt)
 			return true;
 			
 	}elseif($type == 'locality')

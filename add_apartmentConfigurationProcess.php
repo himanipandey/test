@@ -274,8 +274,9 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         /**********************Query for select values according project type for update**********************/
     	
         $ProjectType = ProjectType($projectId);
+        
         //echo "<pre>";
-        //print_r($arrProjectType_P);
+        //($arrProjectType_V);
         //echo "</pre>";
         $smarty->assign("edit_project", $projectId);
         $smarty->assign("TYPE_ID", $arrProjectType['OPTIONS_ID']);
@@ -300,14 +301,14 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("txtNoOfFloor",$arrProjectType['NO_OF_FLOORS']);
         $smarty->assign("txtDisplayCarpetArea",$arrProjectType['DISPLAY_CARPET_AREA']);
 
-        //echo "<pre>";print_r($arrProjectType_P);
+        //echo "<pre>";print_r($arrProjectType_P); die;
 
         $smarty->assign("TYPE_ID_P", $arrProjectType_P['OPTIONS_ID']);
         $smarty->assign("unitType_P", $arrProjectType_P['UNIT_TYPE']);
-        $smarty->assign("txtUnitNameval_P", $arrProjectType_P['UNIT_NAME']);
+        $smarty->assign("txtUnitNameval_P", $arrProjectType_P['OPTION_NAME']);
         $smarty->assign("txtSizeval_P", $arrProjectType_P['SIZE']);
         $smarty->assign("txtPricePerUnitAreaval_P", $arrProjectType_P['PRICE_PER_UNIT_AREA']);
-        $smarty->assign("txtPlotArea_P", $arrProjectType_P['TOTAL_PLOT_AREA']);
+        $smarty->assign("txtPlotArea_P", $arrProjectType_P['SIZE']);
         $smarty->assign("txtSizeLenval_P", $arrProjectType_P['LENGTH_OF_PLOT']);
         $smarty->assign("txtSizeBreval_P", $arrProjectType_P['BREADTH_OF_PLOT']);
         $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);

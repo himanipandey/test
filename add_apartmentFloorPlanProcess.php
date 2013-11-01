@@ -9,7 +9,6 @@
 	$builderDetail			= ResiBuilder::find($projectDetail[0]['BUILDER_ID']);
     $builderDetail = $builderDetail->to_custom_array();
 	$ProjectOptionDetail	=	ProjectOptionDetail($projectId);
-
 	$smarty->assign("projectId", $projectId);
 	$smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
 	$smarty->assign("ProjectDetail", $projectDetail);

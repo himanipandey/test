@@ -294,12 +294,12 @@
                                                         {$se_audit = $se_audit+$value['SecondaryPriceCycle']['Audit1']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                        {$value['secondaryPriceCycle']['Audit2']}
-                                                        {$se_audit2 = $se_audit2+$value['SecondaryPriceCycle']['Audit2']}
+                                                        {$value['SecondaryPriceCycle']['Audit2']}
+                                                        {$se_audit2 = $se_audit2 + $value['SecondaryPriceCycle']['Audit2']}
                                                      </td>
                                                      <td nowrap align = "center">
                                                        {$value['SecondaryPriceCycle']['Revert']}
-                                                       {$se_revert = $se_revert+$value['SecondaryPriceCycle']['Revert']}
+                                                       {$se_revert = $se_revert + $value['SecondaryPriceCycle']['Revert']}
                                                      </td>
                                                     </tr>
                                                   {/foreach} 

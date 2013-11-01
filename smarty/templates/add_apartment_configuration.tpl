@@ -638,12 +638,7 @@
 
                             {section name=foo start= {$looprange} loop={$looprange+15} step=1}
                                 {$var	=$var+1}
-                                {if $var%2 == 0}http://cms.localhost/add_apartmentConfiguration.php?projectId=5001369&edit=edit
-                                    {$color = "bgcolor = '#F7F7F7'"}
-                                {else}
-                                    {$color = "bgcolor = '#FCFCFC'"}
-                                {/if}
-
+                                
                             <tr {$color} id="row_{($smarty.section.foo.index+1)}">
                                <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}"></td>
                                {$globalDelete = $globalDelete+1}

@@ -120,6 +120,7 @@ elseif($cityid!=''){
 	$txtCityUrlOld			=	trim($cityDetailsArray['URL']);
 	$DisplayOrder			=	trim($cityDetailsArray['DISPLAY_ORDER']);
 	$status					=	trim($cityDetailsArray['STATUS']);
+	print "--> ".$status;
 	$desc					=	trim($cityDetailsArray['DESCRIPTION']);
 	
 	//getting meta data

@@ -139,9 +139,7 @@
                                
                             </td>
                             <td align = "center" nowrap><b>Last Updated Date:</b>
-                                {if count($arrAudit)>0} 
-                                  {$arrAudit[0]['ACTION_DATE']}
-                                {/if}
+                                {$last_updated_date}
                            </td>
                         </tr>
 

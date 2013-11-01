@@ -69,11 +69,11 @@ if(!empty($_POST['projectId']))
 else
 {
 	if(!empty($sub)){
-		if(!checkSubLocInCity('suburb',$cityId,$sub)){
+		if(!checkSubLocInCity('suburb',$cityId,$sub) || !is_numeric($sub)){
 			echo 3; return;
 		}
-    }else if(!empty ($loc)){
-		if(!checkSubLocInCity('locality',$cityId,$loc)){
+    }else if(!empty ($loc) ){
+		if(!checkSubLocInCity('locality',$cityId,$loc) || !is_numeric($loc)){
 			echo 3; return;
 		}
     }

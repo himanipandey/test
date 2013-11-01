@@ -982,8 +982,8 @@ function AuditTblDataByTblName($tblName, $projectId) {
 						 	PROJECT_ID = '" . $projectId . "'
 					ORDER BY
 						ACTION_DATE DESC LIMIT 1";
-
-    $res = mysql_query($qry);
+						
+	$res = mysql_query($qry);
     $arrAudit = array();
     $data = mysql_fetch_assoc($res);
     array_push($arrAudit, $data);
@@ -1238,14 +1238,19 @@ function InsertUpdateOtherPrice($arr,$projectId) {
     $arrInsertUpdateProject['EDC_IDC'] = $arr['edc_idc_val1'];
     $arrInsertUpdateProject['EDC_IDC_TYPE'] = $arr['edc_idc'];
     $arrInsertUpdateProject['EDC_IDC_MEND_OPT'] = $arr['edc_idc_type1'];
+    
     $arrInsertUpdateProject['LEASE_RENT'] = $arr['lease_rent_val1'];
     $arrInsertUpdateProject['LEASE_RENT_TYPE'] = $arr['lease_rent'];
-    $arrInsertUpdateProject['LEASE_RENT_MEND_OPT'] = $arr['lease_rent'];
+    $arrInsertUpdateProject['LEASE_RENT_MEND_OPT'] = $arr['lease_rent_type1'];
+    
     $arrInsertUpdateProject['OPEN_CAR_PARKING'] = $arr['open_car_parking1'];
     $arrInsertUpdateProject['OPEN_CAR_PARKING_TYPE'] = $arr['open_car_parking'];
     $arrInsertUpdateProject['OPEN_CAR_PARKING_MEND_OPT'] = $arr['open_car_parking_type1'];
+    
+    $arrInsertUpdateProject['CLOSE_CAR_PARKING_MEND_OPT'] = $arr['close_car_parking_type1'];
     $arrInsertUpdateProject['CLOSE_CAR_PARKING'] = $arr['close_car_parking1'];
-    $arrInsertUpdateProject['CLOSE_CAR_PARKING_TYPE'] = $arr['close_car_parking_type1'];
+    $arrInsertUpdateProject['CLOSE_CAR_PARKING_TYPE'] = $arr['close_car_parking'];
+    
     $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING'] = $arr['close_car_parking_type'];
     $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_TYPE'] = $arr['semi_close_car_parking'];
     $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_MEND_OPT'] = $arr['semi_close_car_parking_type1'];
@@ -1270,7 +1275,7 @@ function InsertUpdateOtherPrice($arr,$projectId) {
     $arrInsertUpdateProject['MAINTENANCE_ADVANCE_MONTHS'] = $arr['maintenance_advance_months'];
     $arrInsertUpdateProject['PLC'] = $arr['plc'];
     $arrInsertUpdateProject['FLOOR_RISE'] = $arr['floor_rise'];
-    $arrInsertUpdateProject['OTHER_PRICING'] = $arr['other'];
+    $arrInsertUpdateProject['OTHER_PRICING'] = trim($arr['other']);
     
     foreach($arrInsertUpdateProject as $key=>$val) {
         $select = "select attribute_name from table_attributes 

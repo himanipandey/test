@@ -355,9 +355,7 @@
 						
 					<td align="right" valign ="top"><b>PLC:</b></td>
 					<td align="left" colspan = "2">
-						<textarea name = "plc" id = "plc" rows="6" cols = "55">
-							{trim($OtherPrice[0]['PLC'])}
-						</textarea>
+						<textarea name = "plc" id = "plc" rows="6" cols = "55">{trim($OtherPrice[0]['PLC'])}</textarea>
 					</td>
 					
 				</tr>
@@ -365,9 +363,7 @@
 						
 					<td align="right" valign ="top"><b>Floor Rise:</b></td>
 					<td align="left" colspan = "2">
-						<textarea name = "floor_rise" id = "floor_rise" rows="6" cols = "55">
-							{trim($OtherPrice[0]['FLOOR_RISE'])}
-						</textarea>
+						<textarea name = "floor_rise" id = "floor_rise" rows="6" cols = "55">{trim($OtherPrice[0]['FLOOR_RISE'])}</textarea>
 					</td>
 					
 				</tr>
@@ -375,9 +371,7 @@
 						
 					<td align="right" valign ="top"><b>Other:</b></td>
 					<td align="left" colspan = "2">
-						<textarea name = "other" id = "other" rows="6" cols = "55">
-							{trim($OtherPrice[0]['OTHERS'])}
-						</textarea>
+						<textarea name = "other" id = "other" rows="6" cols = "55">{trim($OtherPrice[0]['OTHER_PRICING'])}</textarea>
 					</td>
 					
 				</tr>
