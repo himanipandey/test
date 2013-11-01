@@ -1160,8 +1160,8 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				WEBSITE			     ='" . $website . "',
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
-				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "',
-				SERVICE_IMAGE_ID                 = ".$image_id."
+				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "'
+				" . (($image_id == 'NULL') ? "" : ",SERVICE_IMAGE_ID                 = $image_id") . "
 			WHERE	
 				BUILDER_ID = '" . $builderid . "'"; //die("here");
 

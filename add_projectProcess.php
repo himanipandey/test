@@ -236,7 +236,7 @@ if(isset($_POST['btnSave']) || isset($_POST['btnExit']))
 		if(!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)){
 			$ErrorMsg["txtProjectName"] = "Special characters are not allowed";
 		}
-                if( ($projectId == '') OR ( ( trim($projectNameOld) != trim($txtProjectName)) && $projectId != '' ) ) {
+                if( ($projectId == '') OR ( ( strtolower(trim($projectNameOld)) != strtolower(trim($txtProjectName))) && $projectId != '' ) ) {
                     $qryprojectchk = "SELECT PROJECT_NAME FROM ".RESI_PROJECT." 
                         WHERE 
                             PROJECT_NAME = '".$txtProjectName."' 
