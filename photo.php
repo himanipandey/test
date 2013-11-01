@@ -6,6 +6,7 @@
     include("dbConfig.php");
     include("includes/configs/configs.php");
     include("common/function.php");
+    include("s3upload/s3_config.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 
@@ -84,10 +85,21 @@
                         $__thumbHeight = "68";
                         $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension );
                         $thumb->load( $IMG['tmp_name'][ $__imgCnt ] );
+
                         $thumb->resize( $__width, $__height );
                         $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
+                        $dest = 'locality/'.$imgName;
+                        $source = $newImagePath.$dest;
+                        $s3upload = new ImageUpload($source, array("s3" => $s3,
+                            "image_path" => $dest, "object" => "locality","object_id" => $areaId,
+                            "image_type" => "other"));
+                        $s3upload->upload();
                         $thumb->resize( $__thumbWidth, $__thumbHeight );
                         $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
+                        $dest = 'locality/thumb_'.$imgName;
+                        $source = $newImagePath.$dest;
+                        $s3upload = new S3Upload($s3, $bucket, $source, $dest);
+                        $s3upload->upload();
                         //  add image to DB
                         $addedImgIdArr[] = addImageToDB( $columnName, $areaId, $imgName );
                         $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";

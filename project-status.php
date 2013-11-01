@@ -4,6 +4,7 @@
     include("smartyConfig.php");
     include("appWideConfig.php");
     include("dbConfig.php");
+    include("modelsConfig.php");
     include("includes/configs/configs.php");
     include("builder_function.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";

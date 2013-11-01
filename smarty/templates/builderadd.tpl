@@ -31,6 +31,23 @@
 
 	 return true;
   }
+  $(document).ready(function(){
+      $("#txtBuilderName").change(function(){
+        var builderid = $(this).val();
+        $.ajax  ({
+            type: "POST",
+            url: "getBuilderImage.php",
+            data: 'part=builderImage&builderid='+ builderid,
+             dataType : "html",
+             success: function(responsedata)  {
+                //alert(responsedata);
+                var splitArr = responsedata.split("@@");
+                  $("#builderBox").html('<img alt='+splitArr[0]+' src='+splitArr[1]+' align="left" style="width: 100px; height: 40px; margin-right:10px; border:solid 1px #CCC;">');
+            }
+       });
+      });
+  });
+
 </script>
 
 <script type="text/javascript" src="jscal/calendar.js"></script>
@@ -77,6 +94,18 @@
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" enctype="multipart/form-data">
 			      <div>
+                                  <tr style="">
+                                    <td width="20%" align="right" ><font color = "red"></font>Check if builder exist already : </td>
+                                    <td width="30%" align="left" colspan="2">
+                                        <select name=txtBuilderName id= "txtBuilderName" style="width:357px;">
+                                           <option value="See Builders">See Builders</option>
+                                            {foreach $BuilderDataArr as $k => $v}
+                                                <option value="{$v["BUILDER_ID"]}">{$v["BUILDER_NAME"]}</option>
+                                            {/foreach}
+                                        </select>
+                                        <div style="height:40px; float:right; margin:-15px 5px 0px 0px;" id="builderBox"></div>
+                                    </td>
+                                  </tr>
 				<tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Builder Display Name : </td>
                                     <input type=hidden name="oldbuilder" id="oldbuilder" value="{$oldval}" style="width:357px;">
@@ -102,9 +131,9 @@
 
 					<td width="30%" align="left" >
 						{if $builderid != ''  && $urlEditAccess == 0}
-							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;" readonly>
+							<input type=text disabled name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;" readonly>
 						{else}
-							<input type=text name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;">
+							<input type=text disabled name=txtBuilderUrl id=txtProjectUrl value="{$txtBuilderUrl}" style="width:360px;">
 						{/if}
 						<input type = "hidden" name = "txtBuilderUrlOld" value = "{$txtBuilderUrlOld}">
 						
@@ -147,9 +176,12 @@
 				  
 				</tr>
 				{/if}
-				<tr>
+				<tr {if $builderid == ''} style="display:none" {/if}>
 				  <td width="20%" align="right" ><font color = "red">*</font>Builder Image : </td>
-				  <td width="30%" align="left"><input type=file name='txtBuilderImg'  style="width:400px;"></td>
+				  <td width="30%" align="left">
+                      <input type=file name='txtBuilderImg'  style="width:400px;">
+                      <input type="hidden" name="serviceImageId" value="{$service_image_id}">
+                  </td>
 				    <td width="50%" align="left" nowrap>
 				    	{if $ErrorMsg["ImgError"] != ''}
 				    	

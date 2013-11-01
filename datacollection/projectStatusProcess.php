@@ -40,6 +40,11 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
     $projectList = prepareDisplayData($projectsfromDB);
 }
 
+$project_ids = array();
+foreach($projectList as $p){
+    array_push($project_ids, $p['PROJECT_ID']);
+}
+$projectLastAuditDate = ProjectStageHistory::get_last_audit_date($project_ids);
 if(isset($_SESSION['project-status']['assignmentError'])){
     if(empty($_SESSION['project-status']['assignmentError'])){
         $msg['type'] = 'success';
@@ -55,6 +60,10 @@ if(isset($_SESSION['project-status']['assignmentError'])){
 $CityDataArr = CityArr();
 $executiveList = getCallCenterExecutiveWorkLoad();
 
+if(isset($projectList) && $_REQUEST['download'] == 'true'){
+    download_xls_file($projectList,$projectLastAuditDate);
+}
+
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("executiveList", $executiveList);
 $smarty->assign("projectList", $projectList);
@@ -65,17 +74,17 @@ $smarty->assign("selectedExecutive", $_SESSION['project-status']['executive']);
 $smarty->assign("selectedProjectIds", $_SESSION['project-status']['projectIds']);
 $smarty->assign("SuburbDataArr", $suburbDataArr);
 $smarty->assign("message", $msg);
-
+$smarty->assign("projectLastAuditDate", $projectLastAuditDate);
 
 
 function prepareDisplayData($data){ 
     $result = array();
     foreach ($data as $value) {
-        $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'], 'LABEL'=>$value['LABEL']);
+        $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 'CITY' => $value['CITY'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'MOVEMENT_DATE' => $value['MOVEMENT_DATE'], 'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'], 'LABEL'=>$value['LABEL']);
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
         $assignment_type = '';
-        if($value['PREV_PROJECT_PHASE'] == 'audit1') $assignment_type .= 'Reverted-';
+        if($value['PREV_PROJECT_PHASE'] == 'audit1' || $value['PREV_PROJECT_PHASE'] == 'audit2') $assignment_type .= 'Reverted-';
         if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY')$assignment_type .= 'Field';
         elseif(empty($assigned_to[0])) $assignment_type .= 'Unassigned';
         else{
@@ -106,5 +115,25 @@ function extractPIDs($pidString){
         $result[] = trim($value);
     }
     return $result;
+}
+
+function download_xls_file($projectList, $projectLastAuditDate){
+    $filename = "/tmp/data_collection_".time().".xls";
+    foreach ($projectList as $pkey => $project){
+        // For first three assignments
+        $projectList[$pkey]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];
+
+        foreach(array(1,2,3) as $a){
+            $projectList[$pkey]["ASSIGNED_TO_{$a}"] = $projectList[$pkey]["ASSIGNED_TO"][$a-1];
+            $projectList[$pkey]["ASSIGNED_AT_{$a}"] = $projectList[$pkey]["ASSIGNED_AT"][$a-1];
+            $projectList[$pkey]["STATUS_{$a}"] = $projectList[$pkey]["STATUS"][$a-1];
+            $projectList[$pkey]["REMARK_{$a}"] = $projectList[$pkey]["REMARK"][$a-1];
+        }
+        unset($projectList[$pkey]["ASSIGNED_TO"]);
+        unset($projectList[$pkey]["ASSIGNED_AT"]);
+        unset($projectList[$pkey]["STATUS"]);
+        unset($projectList[$pkey]["REMARK"]);
+    }
+    excel_file_download($projectList, $filename);
 }
 ?>

@@ -27,9 +27,9 @@
                         ["event15", "insertSecondaryPrice.php", true],
                         ["event16", "updateSecondaryPrice.php", true],
                         ["event17", "/new/supply-validation", true],
-                        ["event18", "/new/bulk_price_inventory/", true]
+                        ["event18", "allCommentHistory.php"],
+                        ["event19", "/new/bulk_price_inventory/", true]
 		]; 
-
 		for(var i=0; i< eventArray.length; i++){
 			$('.clickbutton').bind(eventArray[i][0], function(event){
 				
@@ -41,12 +41,16 @@
 						else{
 							var str="";
 						}
-                                                if(eventArray[i][0]=='event8' || eventArray[i][0]=='event18'){
+                                                if(eventArray[i][0]=='event8' || eventArray[i][0]=='event19'){
                                                     var url = eventArray[i][1]+ projectId + "/edit";    
                                                 }else{
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
                                                 }
-                                                $(location).attr('href',url);
+                                                if( eventArray[i][1] == 'allCommentHistory.php' ) {
+                                                    window.open(url,'All Comment List','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
+                                                }
+                                                else 
+                                                    $(location).attr('href',url);
 					}
 				}
         	});
@@ -954,42 +958,6 @@ function getDateNow(){
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Project Entry Remark:</b></td>
-
-							  <td>
-							  	{if $projectDetails[0].PROJECT_REMARK == ''}
-							  		--
-							  	{else}
-							  		{$projectDetails[0].PROJECT_REMARK}
-							  	{/if}
-							</td>
-						</tr>
-						
-						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Calling Team Remark:</b></td>
-
-							  <td>
-							  	{if $projectDetails[0].CALLING_REMARK == ''}
-							  		--
-							  	{else}
-							  		{$projectDetails[0].CALLING_REMARK}
-							  	{/if}
-							</td>
-						</tr>
-						
-						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Audit Team Remark:</b></td>
-
-							  <td>
-							  	{if $projectDetails[0].AUDIT_REMARK == ''}
-							  		--
-							  	{else}
-							  		{$projectDetails[0].AUDIT_REMARK}
-							  	{/if}
-							</td>
-						</tr>
-
-						<tr height="25px;">
 							  <td  nowrap="nowrap" width="1%" align="left"><b>Project Address:</b></td>
 
 							  <td>
@@ -1375,7 +1343,144 @@ function getDateNow(){
 					</table>
 				</td>
 			</tr>
-			
+                        <tr>
+                            <td width = "100%" align = "left" colspan = "16" style="padding-left: 30px;">
+                                <button class="clickbutton" onclick="$(this).trigger('event18');">Show All Comments History</button>
+                            </td>
+                        </tr>
+			{if count($projectOldComments)>0}
+                        <tr>
+                            <td width = "100%" align = "left" colspan = "16" style="padding-left: 30px;">
+                                <b>Project Old Remarks:</b>
+                                <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+                                   {if array_key_exists('projectRemark',$projectOldComments)}
+                                    <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Project Entry Remark:</b></td>
+
+                                            <td>
+                                                {$projectOldComments['projectRemark']->comment_text}
+                                                  &nbsp;<b>By </b>{$projectOldComments['projectRemark']->fname} on {($projectOldComments['projectRemark']->date_time)|date_format:'%b-%y'}
+                                          </td>
+                                      </tr>
+                                     {/if}
+                                     {if array_key_exists('callingRemark',$projectOldComments)}
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Calling Team Remark:</b></td>
+
+                                            <td>
+                                                {$projectOldComments['callingRemark']->comment_text}
+                                                 &nbsp;<b>By </b>{$projectOldComments['callingRemark']->fname} on {($projectOldComments['callingRemark']->date_time)|date_format:'%b-%y'} 
+                                          </td>
+                                      </tr>
+                                      {/if}
+                                      {if array_key_exists('auditRemark',$projectOldComments)}    
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Audit Team Remark:</b></td>
+
+                                            <td>
+                                                {$projectOldComments['auditRemark']->comment_text}
+                                                &nbsp;<b>By </b>{$projectOldComments['auditRemark']->fname} on {($projectOldComments['auditRemark']->date_time)|date_format:'%b-%y'}
+                                          </td>
+                                      </tr>
+                                      {/if}
+                                      {if array_key_exists('fieldSurveyRemark',$projectOldComments)}
+                                      <tr height="25px;">
+                                          <td  nowrap="nowrap" width="1%" align="left"><b>Field Survey Team Remark:</b></td>
+
+                                          <td>
+                                            {$projectOldComments['fieldSurveyRemark']->comment_text}
+                                            &nbsp;<b>By </b>{$projectOldComments['fieldSurveyRemark']->fname} on {($projectOldComments['fieldSurveyRemark']->date_time)|date_format:'%b-%y'}
+                                        </td>
+                                      </tr>
+                                      {/if}
+                                      {if array_key_exists('secondaryRemark',$projectOldComments)}
+                                       <tr height="25px;">
+                                          <td  nowrap="nowrap" width="1%" align="left"><b>Secondary Calling Team Remark:</b></td>
+
+                                          <td>
+                                            {$projectOldComments['secondaryRemark']->comment_text}
+                                            &nbsp;<b>By </b>{$projectOldComments['secondaryRemark']->fname} on {($projectOldComments['secondaryRemark']->date_time)|date_format:'%b-%y'} 
+                                        </td>
+                                      </tr>
+                                     {/if}
+                                </table>
+                            
+                            </td>
+                        </tr>
+                        {/if}
+                        <tr>
+                            <td width = "100%" align = "left" colspan = "16" style="padding-left: 30px;">
+                                <b>Project Remarks:</b>
+                                <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+                                    <tr height="25px;">
+                                        <td  nowrap="nowrap" width="1%" align="left"><b>Project Entry Remark:</b></td>
+
+                                        <td>
+                                            {if array_key_exists('projectRemark',$projectComments)}   
+                                                {$projectComments['projectRemark']->comment_text}
+                                                  &nbsp;<b>By </b>{$projectComments['projectRemark']->fname} on {($projectComments['projectRemark']->date_time)|date_format:'%b-%y'}
+                                            {else}
+                                                --
+                                            {/if}
+                                      </td>
+                                      </tr>
+
+                                      <tr height="25px;">
+                                        <td  nowrap="nowrap" width="1%" align="left"><b>Calling Team Remark:</b></td>
+
+                                        <td>
+                                            {if array_key_exists('callingRemark',$projectComments)}
+                                                 {$projectComments['callingRemark']->comment_text}
+                                                  &nbsp;<b>By </b>{$projectComments['callingRemark']->fname} on {($projectComments['callingRemark']->date_time)|date_format:'%b-%y'}
+                                            {else}
+                                                   --
+                                            {/if}
+                                      </td>
+                                      </tr>
+
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Audit Team Remark:</b></td>
+
+                                            <td>
+                                                {if array_key_exists('auditRemark',$projectComments)}
+                                                      {$projectComments['auditRemark']->comment_text}
+                                                      &nbsp;<b>By </b>{$projectComments['auditRemark']->fname} on {($projectComments['auditRemark']->date_time)|date_format:'%b-%y'}
+                                                {else}
+                                                       --
+                                                {/if}
+                                          </td>
+                                      </tr>
+
+                                      <tr height="25px;">
+                                          <td  nowrap="nowrap" width="1%" align="left"><b>Field Survey Team Remark:</b></td>
+
+                                          <td>
+                                            {if array_key_exists('fieldSurveyRemark',$projectComments)}
+                                                    {$projectComments['fieldSurveyRemark']->comment_text}
+                                                    &nbsp;<b>By </b>{$projectComments['fieldSurveyRemark']->fname} on {($projectComments['fieldSurveyRemark']->date_time)|date_format:'%b-%y'} 
+                                            {else}
+                                                   --
+                                            {/if}
+                                        </td>
+                                      </tr>
+
+                                      <tr height="25px;">
+                                          <td  nowrap="nowrap" width="1%" align="left"><b>Secondary Calling Team Remark:</b></td>
+
+                                          <td>
+                                            {if array_key_exists('secondaryRemark',$projectComments)}
+                                                      {$projectComments['secondaryRemark']->comment_text}
+                                                      &nbsp;<b>By </b>{$projectComments['secondaryRemark']->fname} on {($projectComments['secondaryRemark']->date_time)|date_format:'%b-%y'} 
+                                            {else}
+                                                   --
+                                            {/if}
+                                        </td>
+                                      </tr>
+                                
+                                </table>
+                            
+                            </td>
+                        </tr>
 			{*code start for calling records primry*}
 			{if count($arrCalingPrimary)>0}
 			<tr>
@@ -2501,7 +2606,7 @@ function getDateNow(){
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
-							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}<button class="clickbutton" onclick="$(this).trigger('event18');">Edit Historical Price-Inventory</button></td>
+							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>
 							</tr>
 						{/if}
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}

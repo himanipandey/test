@@ -266,6 +266,14 @@ $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
 
+/******code for project comment fetch from commeny history table*****/
+$cycleId = $projectDetails[0]['PROJECT_STAGE'];
+$projectComments = CommentsHistory::getCommentHistoryByProjectIdCycleId($projectId, $cycleId);
+$smarty->assign("projectComments", $projectComments);
+
+$projectOldComments = CommentsHistory::getOldCommentHistoryByProjectId($projectId);
+$smarty->assign("projectOldComments", $projectOldComments);
+/******end code for project comment fetch from commeny history table*****/
 if (!isset($_GET['towerId']))
     $_GET['towerId'] = '';
 if ($_GET['towerId'] != '') {
@@ -326,13 +334,42 @@ if ($_POST['forwardFlag'] == 'no') {
       }
       } */
 
-    if ($_REQUEST['returnStage'] == 'newProject' AND $_REQUEST['currentPhase'] == 'audit1')
+    // Reverted back from audit
+    if ($_REQUEST['returnStage'] == 'newProject' AND ($_REQUEST['currentPhase'] == 'audit1' OR $_REQUEST['currentPhase'] == 'audit2'))
         $phaseName = 'dcCallCenter';
     else
         $phaseName = 'dataCollection';
 
+//  Get back older history
+    $history = ProjectStageHistory::find("all", array("conditions" => "project_id = {$projectId} and project_phase in
+    (\"dcCallCenter\",\"dataCollection\", \"revert\") and project_stage = '{$projectStage}'", "limit" => 1, "order" => "date_time desc"));
+//  If old history is found
+    if(count($history) > 0){
+        $history = $history[0];
+        $lastAssignemnt = ProjectAssignment::find("all", array("conditions" => array("movement_history_id" => $history->history_id),
+            "limit" => 1, "order" => "UPDATION_TIME desc"));
+    }
+//  if old history is not found
+    else{
+        $lastAssignemnt = array();
+    }
+
+
     updateProjectPhase($projectId, $phaseName, $reviews, $projectStage, TRUE);
 
+//  Assigning back to same user if assignment is found
+    if(count($lastAssignemnt) > 0){
+        $lastAssignemnt = $lastAssignemnt[0];
+        $newAssignment = new ProjectAssignment();
+        $project = ResiProject::find($projectId);
+        $newAssignment->movement_history_id = $project->movement_history_id;
+        $newAssignment->assigned_to = $lastAssignemnt->assigned_to;
+        $newAssignment->assigned_by = $lastAssignemnt->assigned_by;
+        $newAssignment->status = "notAttempted";
+        $newAssignment->creation_time = Date('Y-m-d H:i:s');
+        $newAssignment->updation_time = Date('Y-m-d H:i:s');
+        $newAssignment->save();
+    }
 
     header("Location:$returnURLPID");
 }

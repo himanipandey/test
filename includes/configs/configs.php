@@ -175,7 +175,6 @@ DEFINE("RESI_PROJECT_PHASE","resi_project_phase");
 DEFINE("RESI_PROJ_TOWER_CONSTRUCTION_STATUS","resi_proj_tower_construction_status");
 DEFINE("RESI_PROJ_SPECIFICATION","resi_proj_specification");
 DEFINE("RESI_SOURCEOFINFORMATION","resi_sourceofinformation");
-DEFINE("RESI_PROJECT_OPTIONS_ARC","resi_project_options_arc");
 DEFINE("RESI_PROJ_EXPECTED_COMPLETION","resi_proj_expected_completion");
 DEFINE("LOCALITY","locality");
 DEFINE("BUILDER_CONTACT_INFO","builder_contact_info");
@@ -599,6 +598,7 @@ define('VILLA_APARTMENTS','3');
 define('PLOTS','4');
 define('PLOT_VILLAS','5');
 define('PLOT_APARTMENTS','6');
+define('COMMERCIAL','7');
 
 
 $ARR_PROJ_EDIT_PERMISSION = array(
@@ -609,7 +609,7 @@ $ARR_PROJ_EDIT_PERMISSION = array(
 	"AUDIT-1"=>array('audit1','dailymis'),
 	"NEWPROJECTAUDIT"=>array('newProject'),
 	"AUDIT-2"=>array('audit2'),
-	"SURVEY"=>array('dataCollection','newProject')
+	"SURVEY"=>array('dataCollection','newProject','dcCallCenter')
 );
 $dept = $_SESSION['DEPARTMENT'];
 if(!isset($ARR_PROJ_EDIT_PERMISSION[$dept]))
@@ -638,8 +638,10 @@ $arrCampaign =
 	"Bangalore_2",
 	"Bangalore_3",
   	"Pune_New",
-    "Delhi_Resale1",
-    "Delhi_Resale2"
+        "Delhi_Resale1",
+        "Delhi_Resale2",
+        "Chennai_Campaign2",
+        "Kolkata_Campaign2"
 	);
 
 /**************Authentication*************/
