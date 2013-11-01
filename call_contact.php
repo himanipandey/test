@@ -9,6 +9,15 @@ include("modelsConfig.php");
 include("builder_function.php");
 AdminAuthentication();
 
+function getAgentContact($agentid) {
+  $sql = "SELECT USERNAME FROM proptiger_admin WHERE ADMINID = $agentid";
+  $res = mysql_query($sql) or die(mysql_error());
+  $row = mysql_fetch_array($res);
+  $uname = str_replace('.', '0', $row[0]);
+  return $uname;
+}
+
+
 $aID = $_SESSION['adminId'];
 
 /* $sql = "SELECT CLOUDAGENT_ID FROM proptiger_admin WHERE ADMINID=" . $aID . ";"; */
@@ -20,6 +29,7 @@ $projectType = $_REQUEST['projectType'];
 $contactNo = $_REQUEST['contactNo'];
 $campaign = $_REQUEST['campaign'];
 
+
 $callDetail = new CallDetails(array('AgentId'=>$aID, 'PROJECT_TYPE'=>$projectType, 'ContactNumber'=>$contactNo, 'CampaignName'=>$campaign));
 $callDetail->save();
 $callId= $callDetail->callid;
@@ -29,7 +39,7 @@ $params = array();
 
 $params["apiKey"] = "KK6553cb21f45e304ffb6c8c92a279fde5";
 $params["did"] = "$did";
-$params["phoneName"] = "";
+$params["phoneName"] = getAgentContact($aID);
 $params["custNumber"] = $contactNo;
 $params["uui"] = $callId;
 $params["userName"] = "proptiger";
@@ -46,8 +56,8 @@ $message = $xml->message;
 $sql = "update CallDetails set ApiResponse = '" . $message . "' where CallId = " . $callId;
 mysql_query($sql);
 
-if ($callId && $status == "queued") 
+if ($callId) 
   echo "call_" . $callId . "_" . $agentId;
 else
-  echo "Fail - $response";
+  echo "Fail - $message";
 ?>
