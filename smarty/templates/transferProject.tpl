@@ -270,6 +270,7 @@ $(function() {
                                           <tr>
                                             <td height="25" align="center" colspan= "2">
                                                 <span id = "errmsg" style = "display:none;"><font color = "red">Please select atleast one field</font></span>
+                                                 {if $errorMsg}<br/><span id = "errmsg" ><font color = "red"> {$errorMsg} </font></span>{/if}
                                             </td>
                                           </tr>
                                           <tr>
@@ -315,10 +316,10 @@ $(function() {
                                   <tr>
                                     <td align="right" style = "padding-left:20px;" height='35'><b>Stage:</b></td>
                                     <td align="left" style = "padding-left:20px;" height='35'>
-                                        <select name = 'phase' id = "phase" onchange = "refreshUpdationCycle(this.value);">
+                                        <select name = 'stage' id = "stage" onchange = "refreshUpdationCycle(this.value);">
                                           <option value = "">Select Stage</option>
                                           {foreach from = $getProjectStages item = stages}
-                                              <option value="{$stages->id}" {if $phase == $stages->name} selected{/if}>
+                                              <option value="{$stages->id}" {if $stage == $stages->name} selected{/if}>
                                                  {$stages->name}
                                               </option>
                                           {/foreach}
@@ -342,7 +343,7 @@ $(function() {
                                   <tr bgcolor='#fcfcfc'>
                                       <td align="right" style = "padding-left:20px;" height='35'><b>Phase:</b></td>
                                       <td align="left" style = "padding-left:20px;" height='35'>
-                                         <select name = 'stage' id = "stage"  style='width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;'>
+                                         <select name = 'phase' id = "phase"  style='width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;'>
                                             <option value = "">Select Phase</option>
                                            {foreach from = $getProjectPhases item = phases}
                                                <option value="{$phases->id}" {if $phase == $phases->name} selected{/if}>
@@ -433,7 +434,7 @@ $(function() {
                                </center>
                                <center>
                                <table width="502" align="left" cellpadding="0" cellspacing="1" bgColor="#c2c2c2" style = "margin: 20px;border:1px solid #c2c2c2;">
-                               <tr bgcolor='#ffffff'><td height=28 width='40'>&nbsp;</td><td align='center'><b>SNo</b></td><td align='center'><b>Count</b></td><td align='center'><b>Project Phase</b></td><td align='center'><b>Project Stage</b></td><td align='center'><b>Download</b></td></tr>
+                               <tr bgcolor='#ffffff'><td height=28 width='40'>&nbsp;</td><td align='center'><b>SNo</b></td><td align='center'><b>Count</b></td><td align='center'><b>Project Stage</b></td><td align='center'><b>Project Phase</b></td><td align='center'><b>Download</b></td></tr>
                                {$ctrl = 1}
                                {$flagcheck=0}
                                {$totcnt = 0}

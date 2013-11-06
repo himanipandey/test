@@ -52,6 +52,14 @@
     if(!isset($_REQUEST['exp_supply_date_to']))
     $_REQUEST['city'] = '';
     $exp_supply_date_to = $_REQUEST['exp_supply_date_to'];
+    
+    $errorMsg = '';
+    if(isset($_REQUEST['exp_supply_date_from']) && isset($_REQUEST['exp_supply_date_to'])){
+			if(date($exp_supply_date_from) > date($exp_supply_date_to)){
+				$errorMsg = "To date should be greater than the From Date.";
+				$smarty->assign("errorMsg", $errorMsg);
+			}
+	}
 
 
     if(count($_REQUEST['Active'])>0)
@@ -77,9 +85,7 @@
     $smarty->assign("getProjectStages", $getProjectStages);
     $getProjectPhases = ProjectPhase::getProjectPhases();
     $smarty->assign("getProjectPhases", $getProjectPhases);
-    if($_POST['projectId'] != '') 
-        $ProjectDetail =  ResiProject::virtual_find($_POST['projectId']);
-
+    
     $transfer = $_REQUEST['transfer'];
     $search = $_REQUEST['search'];
     $city = $_REQUEST['city'];
@@ -115,10 +121,7 @@
 
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
     {
-        if($_POST['projectId'] != '')
-            $project_name= $ProjectDetail->project_name;
-        else
-            $project_name= $_REQUEST['project_name'];
+		$project_name= $_REQUEST['project_name'];
 
         $smarty->assign("locality", $locality);
         $smarty->assign("phase", $phase);
@@ -133,10 +136,13 @@
 
         $QueryMember1 = "Select p.PROJECT_ID,p.PROJECT_PHASE_ID,p.PROJECT_STAGE_ID,ph.name as PROJECT_PHASE, 
                 st.name as PROJECT_STAGE 
-                FROM ".RESI_PROJECT." p inner join master_project_phases ph 
-                on p.project_phase_id = ph.id 
-                 inner join 
-                master_project_stages st on p.project_stage_id = st.id ";
+                FROM ".RESI_PROJECT." p 
+                left join  master_project_phases ph on p.project_phase_id = ph.id 
+                left join  master_project_stages st on p.project_stage_id = st.id 
+                left join locality on p.locality_id = locality.locality_id
+                left join suburb on locality.suburb_id = suburb.suburb_id
+                left join city on suburb.city_id = city.city_id";
+
         $QueryMember2 = "Select COUNT(p.PROJECT_ID) CNT,p.PROJECT_PHASE_ID,p.PROJECT_STAGE_ID,
                 ph.name as PROJECT_PHASE, st.name as PROJECT_STAGE 
                 FROM ".RESI_PROJECT." p 
@@ -188,7 +194,7 @@
 
              if($ActiveValue != '')
              {
-                 $QueryMember .=  $and." STATUS IN('".$ActiveValue."')";
+                 $QueryMember .=  $and." p.STATUS IN('".$ActiveValue."')";
                  $and  = ' AND ';
              }
 
@@ -210,14 +216,12 @@
              }
              if($_REQUEST['phase'] != '')
              {
-                 $getProjectPhase = ProjectPhase::getPhaseByName($_REQUEST['phase']);
-                 $QueryMember .= $and." PROJECT_PHASE_ID = '".$getProjectPhase[0]->id."'";
+                 $QueryMember .= $and." PROJECT_PHASE_ID = '".$_REQUEST['phase']."'";
                  $and  = ' AND ';
              }
              if($stage != '')
              {
-                 $getProjectStage = ProjectPhase::getStageByName($stage);
-                 $QueryMember .= $and." PROJECT_STAGE_ID = '".$getProjectStage[0]->id."'";
+                 $QueryMember .= $and." PROJECT_STAGE_ID = '".$stage."'";
                  $and  = ' AND ';
              }
              if($tag != '')
@@ -278,7 +282,7 @@
                 $SET = ' SET ';
                 $SetQry = '';
                 if($arrUpdatePhase[0] != '') {
-                    $getProjectStage = ProjectStage::getStageByName($arrUpdatePhase[0]);
+					$getProjectStage = ProjectStage::getStageByName($arrUpdatePhase[0]);
                     $SetQry .= $SET . " PROJECT_STAGE_ID = '".$getProjectStage[0]->id."' ";
                     $SET = ',';
 
