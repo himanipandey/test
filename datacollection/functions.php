@@ -18,7 +18,7 @@ function saveStatusUpdateByExecutive($projectID, $status, $remark){
         inner join project_assignment pa on rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID 
         where rp.PROJECT_ID = $projectID 
             and pa.ASSIGNED_TO = $_SESSION[adminId] 
-            and rp.version = 'cms'
+            and rp.version = 'Cms'
             and pa.STATUS = 'notAttempted' for update;";
     $result = dbQuery($sql);
     if(count($result)==1){
@@ -42,7 +42,7 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
                where 
                ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
-               or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."') and rp.version ='Cms') 
+               or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
                and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
                where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY')  group by pa.ADMINID order by WORKLOAD;";
@@ -56,7 +56,7 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
             inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
             where ((mpstg.name = '".NewProject_stage."' and mpp = '".DcCallCenter_phase."') or 
-            (mpstg.name = '".UpdationCycle_stage."' and mpp = '".DataCollection_phase."') and rp.version = 'Cms') 
+            (mpstg.name = '".UpdationCycle_stage."' and mpp = '".DataCollection_phase."')) and rp.version = 'Cms' 
             and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
             inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
             where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY') and pa.ADMINID in 
@@ -183,7 +183,7 @@ function assignProject($projectId, $adminId){
     $sql = "select rp.PROJECT_ID, rp.MOVEMENT_HISTORY_ID, pa.ASSIGNED_TO, pa.STATUS, pa.ID 
          from resi_project rp left join project_assignment pa on 
          rp.MOVEMENT_HISTORY_Id = pa.MOVEMENT_HISTORY_Id 
-         where PROJECT_ID = $projectId and rp.version = 'cms' order by pa.ID for update;";
+         where PROJECT_ID = $projectId and rp.version = 'Cms' order by pa.ID for update;";
     $assignmentHistory = dbQuery($sql);
     $movementId = $assignmentHistory[0]['MOVEMENT_HISTORY_ID'];
     $count = count($assignmentHistory);
@@ -208,7 +208,7 @@ function assignProject($projectId, $adminId){
 
 function getMultipleProjectDetails($projectIds){
     if (empty($projectIds)) return array();
-        $sql = "select * from " . RESI_PROJECT . " where PROJECT_ID in (".  implode(',', $projectIds).") and version ='cms'";
+        $sql = "select * from " . RESI_PROJECT . " where PROJECT_ID in (".  implode(',', $projectIds).") and version ='Cms'";
     return $result = dbQuery($sql);
 }
 
