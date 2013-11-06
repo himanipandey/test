@@ -450,7 +450,7 @@ $(function() {
                                                     > 
                                                     {$flagcheck=1}
                                                 {else}
-                                                    {if $arrVal['PROJECT_STAGE'] == 'noStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'Audit2'} 
+                                                    {if $arrVal['PROJECT_STAGE'] == 'NoStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'Audit2'} 
                                                         {$phaseName = $arrVal['PROJECT_PHASE']}
                                                         {$stageName = $arrVal['PROJECT_STAGE']}
                                                         <input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName');" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
@@ -465,7 +465,7 @@ $(function() {
                                              <td align='center'>{$ctrl}</td>
                                              <td align='center'>{$arrVal['CNT']}</td>
                                              <td style='padding-left:5px;'>
-                                                     {if $arrVal['PROJECT_STAGE']=='noStage'} 
+                                                     {if $arrVal['PROJECT_STAGE']=='NoStage'} 
                                                         noPhase 
                                                      {else}
                                                         {$arrVal['PROJECT_STAGE']} 

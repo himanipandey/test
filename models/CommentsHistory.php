@@ -54,8 +54,8 @@ class CommentsHistory extends ActiveRecord\Model
     
     function getOldCommentHistoryByProjectId($projectId) {
         
-        $oldMonthCycle = date('M-y', strtotime("last month"));
-        $qry = "SELECT ch.*,pa.fname FROM 
+       $oldMonthCycle = date('M-y', strtotime("last month"));
+       $qry = "SELECT ch.*,pa.fname FROM 
             project_new.comments_history as ch 
             left join 
             proptiger_admin pa
@@ -78,6 +78,35 @@ class CommentsHistory extends ActiveRecord\Model
         
         foreach($getOldComments as $value) {
             $arrProjectOldComment[$commentTypeMap[$value->comment_type]] = $value;
+        }
+        if(count($arrProjectOldComment) == 0) {
+            
+            $oldMonthCycle = date('M-y', strtotime("-2 month"));
+            $qry = "SELECT ch.*,pa.fname FROM 
+            project_new.comments_history as ch 
+            left join 
+            proptiger_admin pa
+            on 
+             ch.user_id = pa.adminid
+            where 
+                project_id = $projectId 
+               and 
+                updation_cycle like 
+                    '%$oldMonthCycle'";
+
+            $getOldComments = CommentsHistory::find_by_sql($qry); 
+            $arrProjectOldComment = array();
+            $commentTypeMap = array("Project" => 'projectRemark',
+                       "Calling" => 'callingRemark', 
+                       'Audit' => 'auditRemark',
+                       'Secondary' => 'secondaryRemark',
+                       'FieldSurvey' => 'fieldSurveyRemark'
+                        );
+
+            foreach($getOldComments as $value) {
+                $arrProjectOldComment[$commentTypeMap[$value->comment_type]] = $value;
+            }
+            return $arrProjectOldComment;
         }
         return $arrProjectOldComment;
     }

@@ -14,4 +14,17 @@
     define("NewProject_phase","NewProject");
     define("NoStage_phase","NoStage");
     define("Revert_phase","Revert");
+    /**************phases ids constant*******/
+    define("phaseId_1","1");   //DataCollection
+    define("phaseId_2","2"); //NewProject
+    define("phaseId_3","3"); //DcCallCenter
+    define("phaseId_4","4");  //Audit1
+    define("phaseId_5","5"); //Audit2
+    define("phaseId_6","6"); //Complete
+    define("phaseId_7","7"); //NoStage
+    define("phaseId_8","8"); //Revert
+    
+    
+    define("NoStage_phase","NoStage");
+    define("Revert_phase","Revert");
 ?>

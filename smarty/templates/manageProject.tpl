@@ -466,18 +466,18 @@ $(function() {
                             {$color = "bgcolor = '#FCFCFC'"}
                        {/if}
 
-                        {if $value->stage_name == 'newProject'}
+                        {if $value->stage_name == 'NewProject'}
 
                         {$BG = 'green'}
                             {$phse = 'newP'}
-                        {else if $value->stage_name=='noStage'}
+                        {else if $value->stage_name=='NoStage'}
                             {$BG = 'white'}
                             {$phse = 'noS'}
-                        {else if $value->stage_name=='secondaryPriceCycle'}
+                        {else if $value->stage_name=='SecondaryPriceCycle'}
                             {$BG = '#A9A9F5'}
                             {$phse = 'updation'}
 
-                        {else if $value->stage_name=='updationCycle'}
+                        {else if $value->stage_name=='UpdationCycle'}
                             {$BG = 'yellow'}
                             {$phse = 'updation'}
                         {/if}
@@ -523,7 +523,7 @@ $(function() {
                     <TD  class="td-border" align=left nowrap = 'nowrap'>
                             <select name = "option_value" onchange = "updatelink(this.value);" style='width:180px;'>
                              <option value = "">Select Option</option>
-                            {if $value->stage_name!="noStage"}
+                            {if $value->stage_name!="NoStage"}
                                     <option value = "show_project_details.php?projectId={$value->project_id}">View Project</option>
                             {/if}
                             {if in_array($value->phase_name,$arrProjEditPermission)}
@@ -549,7 +549,7 @@ $(function() {
                                         <option value = "add_tower_construction_status.php?projectId={$value->project_id}">Update Tower Construction</option>
                                         <option value = "add_project_construction.php?projectId={$value->project_id}">Update Project Construction</option>
                                         <option value = "project_img_add.php?projectId={$value->project_id}&edit=edit">Add Construction Image</option>
-                                        {if $value->stage_name == 'secondaryPriceCycle'}
+                                        {if $value->stage_name == 'SecondaryPriceCycle'}
                                          <option value = "secondary_price.php?projectId={$value->project_id}">Update Project Secondary Price</option>
                                         {/if}
                                     {else}

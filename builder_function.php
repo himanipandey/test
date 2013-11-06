@@ -1079,7 +1079,7 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 /*********************************/
 
 function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
-    if ($phase != 6) {
+    if ($phase != phaseId_6) {
         mysql_query('begin');
         $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE_ID = '" . $phase . "' 
             WHERE PROJECT_ID = '" . $pID . "' and version = 'Cms';";
@@ -1089,7 +1089,7 @@ function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
     }
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function updateProjectPhase()');
     if ($revert == TRUE)
-        $phase = 8;
+        $phase = phaseId_8;
 
     $sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = $pID";
     $res = mysql_query($sql);
@@ -1113,7 +1113,7 @@ function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
     }
    
     $r = mysql_query($ins);
-    echo $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " 
+    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " 
         where PROJECT_ID = $pID and version = 'Cms';";
     mysql_query($sql) or die(mysql_error());
     mysql_query('commit');

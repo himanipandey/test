@@ -234,11 +234,11 @@
                  $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
                  $and  = ' AND ';
              }
-             $QueryMember .= $and ." version = 'cms'";
+             $QueryMember .= $and ." version = 'Cms'";
         }
         else
         {
-                $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'cms'";
+                $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms'";
 
         }
         $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
@@ -277,15 +277,15 @@
 
                     if($arrUpdatePhase[0] == 'NoStage' || $arrUpdatePhase[0] == 'NoPhase' )
                     {
-                        $SetQry .= $SET . " PROJECT_PHASE_ID = '7' ";
+                        $SetQry .= $SET . " PROJECT_PHASE_ID = ".phaseId_7." ";
                         $SET = ',';
-                        $arrProjectPhase = 7;
+                        $arrProjectPhase = phaseId_7;
                     }
                     else
                     {
-                        $SetQry .= $SET . " PROJECT_PHASE_ID = '1' ";
+                        $SetQry .= $SET . " PROJECT_PHASE_ID = ".phaseId_1." ";
                         $SET = ',';
-                        $arrProjectPhase = 1;
+                        $arrProjectPhase = phaseId_7;
                     }
 
                 }
@@ -303,7 +303,7 @@
                             WHERE 
                             PROJECT_STAGE_ID='".$stageId[0]->id."' 
                             AND PROJECT_PHASE_ID='".$phaseId[0]->id."' 
-                            AND PROJECT_ID IN (".$getProjectId.") AND version = 'cms'";
+                            AND PROJECT_ID IN (".$getProjectId.") AND version = 'Cms'";
                     $QueryExecute = mysql_query($Qry) or die(mysql_error());
                     $tot_affected_rows = mysql_affected_rows($Qry);		
 

@@ -309,7 +309,7 @@ if ($_POST['forwardFlag'] == 'yes') {
     $currentPhase = $_POST['currentPhase'];
     $reviews = $_POST['reviews'];
     foreach ($newPhase as $k => $v) {
-        $qry = "select * from master_project_phases where name = '".$v."'";
+        $qry = "select * from master_project_phases where name = '".$k."'";
         $res = mysql_query($qry) or die(mysql_error());
         $phaseId = mysql_fetch_assoc($res);
         
@@ -317,18 +317,21 @@ if ($_POST['forwardFlag'] == 'yes') {
         $resStg = mysql_query($qryStg) or die(mysql_error());
         $stageId = mysql_fetch_assoc($resStg);
         
-        $qryCurrent = "select * from master_project_phases where name = '".$v."'";
+        $qryCurrent = "select * from master_project_phases where name = '".$currentPhase."'";
         $resCurrent = mysql_query($qryCurrent) or die(mysql_error());
         $phaseIdCurrent = mysql_fetch_assoc($resCurrent);
+        
+        $qryNext = "select * from master_project_phases where name = '".$v."'";
+        $resNext = mysql_query($qryNext) or die(mysql_error());
+        $phaseIdNext = mysql_fetch_assoc($resNext);
         if ($phaseIdCurrent['id'] == $phaseId['id']) {
-            updateProjectPhase($projectId, $phaseId['id'], $stageId['id']);
+            updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
             $arrCommentTypeValue['Audit'] = $reviews;
             CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $projectStage);
         }
     }
     header("Location:$returnURLPID");
 }
-
 if ($_POST['forwardFlag'] == 'update') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
