@@ -71,9 +71,9 @@
      $smarty->assign("projectDetails", $projectDetails);
      $smarty->assign("arrCampaign", $arrCampaign);
      $smarty->assign("projectId", $projectId);
-     $builderName = ResiBuilder::getBuilderById($projectDetails[0]['BUILDER_ID']);
+     $builderName = ResiBuilder::getBuilderById($projectDetails->builder_id);
      $smarty->assign("builderName", $builderName[0]->builder_name);
-     $locality = Locality::getLocalityById($projectDetails[0]['LOCALITY_ID']);
+     $locality = Locality::getLocalityById($projectDetails->locality_id);
      $suburb = Suburb::getSuburbById($locality[0]->suburb_id);
      $city = City::getCityById($suburb[0]->city_id);
      $smarty->assign("cityName", $city[0]->label);
