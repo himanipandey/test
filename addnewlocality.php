@@ -77,7 +77,8 @@ else
 		$sel_id = $ctid;
 
         $url = createLocalityURL($localityval, $dataCity['LABEL'], $ctid, 'locality');
-        $qry = "UPDATE ".LOCALITY." SET URL = '$url' WHERE LOCALITY_ID='".$ctid;
+        
+        $qry = "UPDATE ".LOCALITY." SET URL = '".addslashes($url)."' WHERE LOCALITY_ID=".$ctid;
         $res = mysql_query($qry);
 	}
 

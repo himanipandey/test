@@ -73,7 +73,7 @@ else
 		$sel_id = $ctid;
 
         $url = createLocalityURL($subcityval, $dataCity['LABEL'], $ctid, 'suburb');
-        $seldata = "UPDATE ".SUBURB." SET URL = '$url'  WHERE SUBURB_ID='".$ctid."'";
+        $seldata = "UPDATE ".SUBURB." SET URL = '".addslashes($url)."'  WHERE SUBURB_ID='".$ctid."'";
         $resdata = mysql_query($seldata);
 	}
 
