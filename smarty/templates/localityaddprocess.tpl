@@ -64,13 +64,7 @@
 				 </td>				   
 				 <td width="50%" align="left"></td>
 				</tr>
-                                <tr class="save_row">
-				  <td >&nbsp;</td>
-				  <td align="left" style="padding-left:50px;" >
-				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer">
-				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
-				  </td>
-				</tr>         
+                                         
 				<!--<tr>
 				  <td width="20%" align="right">Visible In CMS :</td>
 				  <td width="30%" align="left" >
@@ -132,6 +126,14 @@
                                  <td width="50%" align="left">&nbsp;</td>
                                 </tr>
                                 {/if}
+                                
+                                <tr class="save_row">
+				  <td >&nbsp;</td>
+				  <td align="left" style="padding-left:50px;" >
+				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer">
+				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
+				  </td>
+				</tr>
 			    </form>
 			    </TABLE>
 <!--			</fieldset>-->
