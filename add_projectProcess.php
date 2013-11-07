@@ -90,6 +90,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $fieldSurveyRemark = trim($_POST["fieldSurveyRemark"]);
             $fieldSurveyRemarkDisplay = trim($_POST["fieldSurveyRemarkDisplay"]);
             
+            $special_offer = trim($_POST["special_offer"]);
+            $offer_heading = trim($_POST["offer_heading"]);
+            $offer_desc = trim($_POST["offer_desc"]);
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
                $suburbSelect = Suburb::SuburbArr($_POST['cityId']);
@@ -158,6 +161,10 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("secondaryRemarkDisplay", $secondaryRemarkDisplay);
             $smarty->assign("fieldSurveyRemark", $fieldSurveyRemark);
             $smarty->assign("fieldSurveyRemarkDisplay", $fieldSurveyRemarkDisplay);
+            
+            $smarty->assign("special_offer", $special_offer);
+            $smarty->assign("offer_heading", $offer_heading);
+            $smarty->assign("offer_desc", $offer_desc);
 
             /***********Folder name**********/
             if(!empty($builderId)){
@@ -445,7 +452,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $builderDetail = ResiBuilder::getBuilderById($builderId);
                 $txtProjectURL = createProjectURL($cityDetail[0]->label, $localityDetail[0]->label, $builderDetail[0]->builder_name, $txtProjectName, $returnProject->project_id);
                 $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
-                                where PROJECT_ID=$returnProject->project_id and version = 'cms'";
+                                where PROJECT_ID=$returnProject->project_id and version = 'Cms'";
                 $resUrl = mysql_query($updateQuery) or die(mysql_error());
                 $_POST['bank_list'] = array_values(array_filter($_POST['bank_list']));
                 if( isset($_POST['bank_list']) ) {
@@ -454,7 +461,16 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            if ($projectId == '')
            {
                if( $returnProject->project_id ) {
-                 CommentsHistory::insertUpdateComments($returnProject->project_id, $arrCommentTypeValue, 'newProject');
+                 //insert code for offer heading and desc
+                 $qryOffer = "insert into project_offers 
+                    set
+                     OFFER = '".$special_offer."',
+                     OFFER_HEADING = '".$offer_heading."',
+                     OFFER_DESC = '".$offer_desc."',
+                     updated_by = '".$_SESSION['adminId']."',
+                     project_id = '".$returnProject->project_id."'";
+                  $insOffer = mysql_query($qryOffer) or die(mysql_error());
+                 CommentsHistory::insertUpdateComments($returnProject->project_id, $arrCommentTypeValue, 'NewProject');
                  header("Location:project_img_add.php?projectId=".$returnProject->project_id);
                }
             }
@@ -468,6 +484,16 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
                    insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
                 }
+                //update code for offer heading and desc
+                $qryOfferUpdate = "update project_offers 
+                set
+                    OFFER = '".$special_offer."',
+                    OFFER_HEADING = '".$offer_heading."',
+                    OFFER_DESC = '".$offer_desc."',
+                    updated_by = '".$_SESSION['adminId']."'
+                where
+                    project_id = $projectId";
+                mysql_query($qryOfferUpdate) or die(mysql_error());
                 if($preview == 'true')
                    header("Location:show_project_details.php?projectId=".$projectId);
                 else
@@ -502,6 +528,18 @@ elseif ($projectId!='') {
     $localitySelect =  Locality::localityList($localityDetail[0]->suburb_id);
     $smarty->assign("getLocalityBySuburb", $localitySelect);
    /****end city locality and suburb**********/
+    
+    /**start code for fetch offer heading and desc from db**/
+    $qryOfferFetch = "select * from project_offers where project_id = $projectId";
+    $resOfferFetch = mysql_query($qryOfferFetch) or die(mysql_error());
+    $dataOffer = mysql_fetch_assoc($resOfferFetch);
+    $special_offer = $dataOffer['OFFER'];
+    $offer_heading = $dataOffer['OFFER_HEADING'];
+    $offer_desc = $dataOffer['OFFER_DESC'];
+    $smarty->assign("special_offer", $special_offer);
+    $smarty->assign("offer_heading", $offer_heading);
+    $smarty->assign("offer_desc", $offer_desc);
+    /**end code for fetch offer heading and desc from db**/
     $smarty->assign("txtProjectLattitude", stripslashes($ProjectDetail->latitude));
     $smarty->assign("txtProjectLongitude", stripslashes($ProjectDetail->longitude));
     $smarty->assign("DisplayOrder", stripslashes($ProjectDetail->display_order));

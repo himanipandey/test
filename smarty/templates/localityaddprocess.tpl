@@ -86,7 +86,7 @@
                                   {/if}
 				 </td>				   
 				 <td width="50%" align="left"></td>
-				</tr>
+				</tr>-->
                                 {if $localityCleanedAccess == 1}
                                 <tr>
 				  <td width="20%" align="right">Locality Cleaned  : </td>
@@ -130,8 +130,7 @@
                                       <input type = "hidden" name ="minLongitude" value="{$minLongitude}">
                                  </td>				   
                                  <td width="50%" align="left">&nbsp;</td>
-<<<<<<< Updated upstream
-                                </tr>-->
+                                </tr>
                                 {/if}
 			    </form>
 			    </TABLE>
@@ -216,7 +215,7 @@ jQuery(document).ready(function(){
 
 });
 
-/*
+
 function cleanedLocality(localityId) {
 
 $.ajax({
@@ -236,6 +235,6 @@ $.ajax({
             }
          }
      })
-}*/
+}
 
 </script>

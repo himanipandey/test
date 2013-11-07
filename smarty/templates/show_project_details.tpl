@@ -1175,6 +1175,42 @@ function getDateNow(){
                                                         {/if}
                                                     </td>
 						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Heighlight:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $special_offer != ''}
+                                                                {$special_offer}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Offer Heading:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $offer_heading != ''}
+                                                                {$offer_heading}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Offer Description:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $offer_desc != ''}
+                                                                {$offer_desc}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
                                                 <!--
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
