@@ -245,11 +245,13 @@
                  $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
                  $and  = ' AND ';
              }
-             $QueryMember .= $and ." version = 'Cms' and updation_cycle_id != ".skipUpdationCycle_Id;
+             $QueryMember .= $and ." version = 'Cms' 
+                 and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null)";
         }
         else
         {
-                $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' and updation_cycle_id != ".skipUpdationCycle_Id;
+                $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' 
+                    and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null)";
 
         }
         $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
