@@ -1026,6 +1026,12 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
             $del = "DELETE from " . BUILDER_CONTACT_INFO . " WHERE BUILDER_ID = '" . $builderid . "'";
             mysql_query($del) or die(mysql_error());
           }
+          $query_cont_ids = mysql_query("SELECT bc.ID FROM  " . BUILDER_CONTACT_INFO . "  bc INNER JOIN project_builder_contact_mappings bcm on bc.ID != bcm.builder_contact_id where builder_id = $builderid");
+          
+			while($row_ids = mysql_fetch_object($query_cont_ids)){
+					mysql_query("delete from  " . BUILDER_CONTACT_INFO . " where ID = ".$row_ids->ID);
+			}
+          
     $cnt = 0;
 
     foreach ($contactArr['Name'] as $k => $v) {

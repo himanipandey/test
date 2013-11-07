@@ -147,13 +147,11 @@ if ($_POST['btnSave'] == "Save")
             if($builderid == '' && $txtBuilderName != '' && $legalEntity != '') {
                 $qryBuilder = "SELECT * FROM ".RESI_BUILDER." 
                                 WHERE
-                                    BUILDER_NAME = '".$txtBuilderName."' OR ENTITY = '".$legalEntity."'";
+                                   ENTITY = '".$legalEntity."'";
                 $resBuilder = mysql_query($qryBuilder);
                 $dataBuilder = mysql_fetch_assoc($resBuilder);
 
                 if(count($dataBuilder)>0) {
-                    if($txtBuilderName == $dataBuilder['BUILDER_NAME'])
-                         $ErrorMsg["txtBuilderName"] = "This builder already exists.";
                     if($legalEntity == $dataBuilder['ENTITY'])
                          $ErrorMsg["legalEntity"] = "This entity already exists.";
                 }
