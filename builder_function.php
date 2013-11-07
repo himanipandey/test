@@ -1254,6 +1254,7 @@ function InsertUpdateOtherPrice($arr,$projectId) {
     $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING'] = $arr['close_car_parking_type'];
     $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_TYPE'] = $arr['semi_close_car_parking'];
     $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_MEND_OPT'] = $arr['semi_close_car_parking_type1'];
+    
     $arrInsertUpdateProject['CLUB_HOUSE'] = $arr['club_house1'];
     $arrInsertUpdateProject['CLUB_HOUSE_PSF_FIXED'] = $arr['club_house'];
     $arrInsertUpdateProject['CLUB_HOUSE_MEND_OPT'] = $arr['club_house_type1'];

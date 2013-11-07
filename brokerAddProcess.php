@@ -33,6 +33,8 @@
          }
         
         $brokerChk = checkBrokerByName($brokerName);
+        if($brokerChk[0]['BROKER_ID'] != $brokerId && count($brokerChk)>0)
+			$ErrorMsg["brokerName"] = "Broker already exists( Mobile:".$brokerChk[0]['BROKER_MOBILE']." )!";
         if(count($brokerChk)>0 && $brokerId ==''){
             $ErrorMsg["brokerName"] = "Broker already exists( Mobile:".$brokerChk[0]['BROKER_MOBILE']." )!";
         }
@@ -51,7 +53,7 @@
         }elseif(!preg_match("/^[0-9]{10}$/",$mobile)) {
 			$ErrorMsg["mobile"] = "Please enter a valid mobile number.";
 		}
-		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		if ($email != '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 			$ErrorMsg["email"] = "Please enter a valid email.";
 		}
 		

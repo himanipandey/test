@@ -68,7 +68,8 @@
                             DESCRIPTION	=	'".$desc."'
                             WHERE SUBURB_ID ='".$suburbid."'";
 
-                            mysql_query($updateQry);
+                          $update_flag = mysql_query($updateQry);
+                          if($update_flag){ 
                             $seoData['meta_title'] = $txtMetaTitle;
                             $seoData['meta_keywords'] = $txtMetaKeywords;
                             $seoData['meta_description'] = $txtMetaDescription;
@@ -85,6 +86,10 @@
                                     insertUpdateInRedirectTbl($txtCityUrl,$old_sub_url);
                         //*/
                             header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
+						}else{
+							$ErrorMsg["txtCityName"] = "Suburb Name already exist.";
+							$smarty->assign("ErrorMsg", $ErrorMsg);
+						}
                     }
                     else
                     {

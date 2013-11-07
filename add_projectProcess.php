@@ -461,9 +461,10 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
                                 where PROJECT_ID=$returnProject->project_id and version = 'Cms'";
                 $resUrl = mysql_query($updateQuery) or die(mysql_error());
+                $_POST['bank_list'] = array_values(array_filter($_POST['bank_list']));
                 if( isset($_POST['bank_list']) ) {
-               ProjectBanks::projectBankDeleteInsert($_POST['bank_list'],$returnProject->project_id);
-           } 
+					ProjectBanks::projectBankDeleteInsert($_POST['bank_list'],$returnProject->project_id);
+				} 
            if ($projectId == '')
            {
                if( $returnProject->project_id ) {

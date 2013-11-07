@@ -46,7 +46,7 @@ jQuery(document).ready(function(){
                    alert("Priority Successfully updated");
                    parent.location.reload(true); 
                } else if(msg == 2){
-					alert("Please enter valid Priority!");
+					alert("Please enter valid Priority. Priority should be numeric and between 0 to 16.");
 					return false;
 				} else if(msg == 3){
 					alert("Locality or Suburb does not exist in the selected city!");

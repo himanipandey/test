@@ -63,7 +63,7 @@
 
 
     if(count($_REQUEST['Active'])>0)
-        $ActiveValue  = implode(",", $_REQUEST['Active']);
+        $ActiveValue  = implode("','", $_REQUEST['Active']);
     else
         $ActiveValue = '';
     
