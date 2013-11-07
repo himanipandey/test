@@ -602,9 +602,10 @@
                                                                 <td width="20%" align="right" valign="top"><b><b>Heighlight :</b> </td>
                                                                 <td width="30%" align="left">
                                                                     <select name="special_offer">
-                                                                    <option value ='NoEmi' {if $special_offer == 'NoEmi'}selected{/if}>No Offer</option>
-                                                                    <option value ='NewLaunch' {if $special_offer == 'NewLaunch'}selected{/if}>New Launch</option>
-                                                                    <option value ='SoldOut' {if $special_offer == 'SoldOut'}selected{/if}>Sold Out</option>
+                                                                    <option value =''>No OFFER</option>
+                                                                    <option value ='NoEmi' {if $special_offer == 'NoEmi'}selected{/if}>No EMI</option>
+                                                                    <option value ='NewLaunch' {if $special_offer == 'NewLaunch'}selected{/if}>NEW LAUNCH</option>
+                                                                    <option value ='SoldOut' {if $special_offer == 'SoldOut'}selected{/if}>SOLD OUT</option>
                                                                     </select>
                                                                 </td>
                                                                 <td width="50%" align="left"></td>
@@ -661,7 +662,15 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-                                                           
+                                                           <tr>
+								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
+                                                                    <select name="skipUpdationCycle">
+                                                                        <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
+                                                                        <option value="{$skipUpdationCycle_Id}" {if $skipUpdationCycle == {$skipUpdationCycle_Id}} selected {/if}>Yes</option>
+                                                                    </select>
+                                                                </td>
+								<td width="50%" align="left"><font color="red"></font></td>
+							   </tr>
 							   <tr>
 
 								  <td>&nbsp;</td>

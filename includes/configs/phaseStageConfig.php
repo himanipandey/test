@@ -27,4 +27,8 @@
     
     define("NoStage_phase","NoStage");
     define("Revert_phase","Revert");
+    
+    /********skip updation cycle id define*****/
+    define('skipUpdationCycle_Id', 13);
+    $smarty->assign("skipUpdationCycle_Id", skipUpdationCycle_Id);
 ?>

@@ -1211,20 +1211,18 @@ function getDateNow(){
                                                         {/if}
                                                     </td>
 						</tr>
-                                                <!--
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Skip Updation Cycle: </b>
                                                     </td>
                                                     <td>
-                                                        {if $projectDetails[0].SKIP_UPDATION_CYCLE == '0'}
-                                                                No
-                                                        {else}
+                                                        {if $projectDetails[0].UPDATION_CYCLE_ID == {$skipUpdationCycle_Id}}
                                                                Yes
+                                                        {else}
+                                                               No
                                                         {/if}
                                                     </td>
 						</tr>
-						-->
 					</table>
 				</td>
 			</tr>

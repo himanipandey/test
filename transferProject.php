@@ -55,10 +55,10 @@
     
     $errorMsg = '';
     if(isset($_REQUEST['exp_supply_date_from']) && isset($_REQUEST['exp_supply_date_to'])){
-			if(date($exp_supply_date_from) > date($exp_supply_date_to)){
-				$errorMsg = "To date should be greater than the From Date.";
-				$smarty->assign("errorMsg", $errorMsg);
-			}
+            if(date($exp_supply_date_from) > date($exp_supply_date_to)){
+                $errorMsg = "To date should be greater than the From Date.";
+                $smarty->assign("errorMsg", $errorMsg);
+            }
 	}
 
 
@@ -245,11 +245,11 @@
                  $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
                  $and  = ' AND ';
              }
-             $QueryMember .= $and ." version = 'Cms'";
+             $QueryMember .= $and ." version = 'Cms' and updation_cycle_id != ".skipUpdationCycle_Id;
         }
         else
         {
-                $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms'";
+                $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' and updation_cycle_id != ".skipUpdationCycle_Id;
 
         }
         $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
@@ -331,7 +331,7 @@
                               (select PROJECT_ID, max(HISTORY_ID) HISTORY_ID from project_stage_history where PROJECT_ID in ($projId_History)
                                 group by PROJECT_ID) t
                                 on rp.PROJECT_ID = t.PROJECT_Id 
-                                set rp.MOVEMENT_HISTORY_ID = t.HISTORY_ID where rp.version = 'cms';";
+                                set rp.MOVEMENT_HISTORY_ID = t.HISTORY_ID where rp.version = 'Cms';";
                         mysql_query($qRecordHistoryId)  or die(mysql_error());
                     }
                     mysql_query('commit');

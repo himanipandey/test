@@ -93,6 +93,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $special_offer = trim($_POST["special_offer"]);
             $offer_heading = trim($_POST["offer_heading"]);
             $offer_desc = trim($_POST["offer_desc"]);
+            $skipUpdationCycle = $_POST["skipUpdationCycle"];
+            
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
                $suburbSelect = Suburb::SuburbArr($_POST['cityId']);
@@ -165,7 +167,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("special_offer", $special_offer);
             $smarty->assign("offer_heading", $offer_heading);
             $smarty->assign("offer_desc", $offer_desc);
-
+            $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
             /***********Folder name**********/
             if(!empty($builderId)){
 	    	$builderDetail = ResiBuilder::getBuilderById($builderId);
@@ -258,7 +260,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                         AND rp.BUILDER_ID = '".$builderId."' 
                         AND rp.LOCALITY_ID = '".$localityId."' 
                         AND c.CITY_ID = '".$cityId."'
-			AND rp.version = 'cms'";
+			AND rp.version = 'Cms'";
                 $resprojectchk = mysql_query($qryprojectchk);
                 if(mysql_num_rows($resprojectchk) >0){
                      $ErrorMsg["txtProjectName"] = "Project with same name already exist.";
@@ -442,6 +444,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['expected_supply_date'] = $exp_launch_date;
             $arrInsertUpdateProject['display_order'] = $display_order;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
+            //echo $skipUpdationCycle ."==". skipUpdationCycle_Id;die;
+            if($skipUpdationCycle == skipUpdationCycle_Id)
+                $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
+            else
+                $arrInsertUpdateProject['updation_cycle_id'] = null;
             $arrOx = array();
 	    
            // $arrOx = 
@@ -461,14 +468,16 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            {
                if( $returnProject->project_id ) {
                  //insert code for offer heading and desc
-                 $qryOffer = "insert into project_offers 
+                   if($special_offer != '' || $offer_heading != '' || $offer_desc != ''){
+                    $qryOffer = "insert into project_offers 
                     set
-                     OFFER = '".$special_offer."',
-                     OFFER_HEADING = '".$offer_heading."',
-                     OFFER_DESC = '".$offer_desc."',
-                     updated_by = '".$_SESSION['adminId']."',
-                     project_id = '".$returnProject->project_id."'";
-                  $insOffer = mysql_query($qryOffer) or die(mysql_error());
+                        OFFER = '".$special_offer."',
+                        OFFER_HEADING = '".$offer_heading."',
+                        OFFER_DESC = '".$offer_desc."',
+                        updated_by = '".$_SESSION['adminId']."',
+                        project_id = '".$returnProject->project_id."'";
+                    $insOffer = mysql_query($qryOffer) or die(mysql_error());
+                   }
                  CommentsHistory::insertUpdateComments($returnProject->project_id, $arrCommentTypeValue, 'NewProject');
                  header("Location:project_img_add.php?projectId=".$returnProject->project_id);
                }
@@ -484,15 +493,17 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                    insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
                 }
                 //update code for offer heading and desc
-                $qryOfferUpdate = "update project_offers 
-                set
-                    OFFER = '".$special_offer."',
-                    OFFER_HEADING = '".$offer_heading."',
-                    OFFER_DESC = '".$offer_desc."',
-                    updated_by = '".$_SESSION['adminId']."'
-                where
-                    project_id = $projectId";
-                mysql_query($qryOfferUpdate) or die(mysql_error());
+                if($special_offer != '' || $offer_heading != '' || $offer_desc != ''){
+                    $qryOfferUpdate = "update project_offers 
+                    set
+                        OFFER = '".$special_offer."',
+                        OFFER_HEADING = '".$offer_heading."',
+                        OFFER_DESC = '".$offer_desc."',
+                        updated_by = '".$_SESSION['adminId']."'
+                    where
+                        project_id = $projectId";
+                    mysql_query($qryOfferUpdate) or die(mysql_error());
+                }
                 if($preview == 'true')
                    header("Location:show_project_details.php?projectId=".$projectId);
                 else
@@ -567,6 +578,7 @@ elseif ($projectId!='') {
     $smarty->assign("shouldDisplayPrice", stripslashes($ProjectDetail->should_display_price));
     $smarty->assign("eff_date_to_prom", stripslashes($ProjectDetail->promised_completion_date));
     $smarty->assign("comments", stripslashes($ProjectDetail->comments));
+    $smarty->assign("skipUpdationCycle", $ProjectDetail->updation_cycle_id);
     $smarty->assign("txtProjectLocation", $txtProjectLocation);
     $smarty->assign("bank_arr", projectBankList($projectId));
  }
