@@ -55,12 +55,18 @@ class ResiProject extends Objects
       $cnt++;
       $and = ' in (?) and ';
 	  $comma = ' ,';
+	  $proj_nam_and = ' like ? and ';
       if( count($arrSearch) == $cnt ) {
           $comma = '';
           $and = 'in (?) ';
+          $proj_nam_and = ' like ? ';
       }
-      if( count($arrSearch) < $cnt )
+      if( count($arrSearch) < $cnt ){
           $and = '';
+          $proj_nam_and = '';
+      
+      }
+          
 	  if( $key == 'city_id' ){
 		$arrSearchFields .= "city.city_id = ? ".$city_and;
         array_push($arrSearchFieldsValue, $value);
@@ -83,11 +89,17 @@ class ResiProject extends Objects
            $arrSearchFields .= 'expected_supply_date <= ?';
            array_push($arrSearchFieldsValue, $date);
       }
-      else {
+      elseif( $key == 'project_name' ){
+		  
+		  $arrSearchFields .= "resi_project.$key  $proj_nam_and";
+           array_push($arrSearchFieldsValue, $value.'%');
+		  
+	  }else {
            $arrSearchFields .= "resi_project.$key $and";
            array_push($arrSearchFieldsValue, $value);
       }
     }
+	
 	
        $conditions = array_merge(array($arrSearchFields), $arrSearchFieldsValue);
        $join = " left join resi_builder b on resi_project.builder_id = b.builder_id

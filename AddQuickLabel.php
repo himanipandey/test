@@ -62,7 +62,7 @@ return xmlHttp;
 <script>
 function addlabel()
 {
-	label = $("#label_txtbox").val();
+	label = $.trim($("#label_txtbox").val());
 	if(label == '')
 	{
 		alert("Please enter the label");

@@ -61,7 +61,7 @@ jQuery(document).ready(function(){
                    return false;
                }
                if(msg == 4){
-                   alert("Please enter valid Priority!");
+                   alert("Please enter valid Priority. Priority should be numeric and between 0 to 16.");
                    return false;
                }
             }

@@ -159,8 +159,8 @@
 
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit High</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt >Price Per Unit Low</td>
-							-->
-                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Number of Floors</td>
+							
+                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Number of Floors</td>-->
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Balcony</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
@@ -479,7 +479,7 @@
                                     <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval_VA[$new_index]} == '') OR !is_numeric({$txtSizeval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                               </td>
                               <td>
-                                    <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtCarpetAreaInfo_VA[{$smarty.section.foo.index}]} checked="checked"{/if}>
+                                    <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtCarpetAreaInfo_VA[{$new_index}]} checked="checked"{/if}>
                               </td>
                               <!--
                               <td>
@@ -620,7 +620,19 @@
                         {/if}
                       <br />
                       <TABLE cellSpacing=2 cellPadding=4 width="60%" align="left" style="border:1px solid #c2c2c2;" border="0">
-                        <div>
+                        <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
+                        <div>  {foreach from = $ErrorMsg  key=k item = datafirst}
+                                <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
+                                        <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
+                                        {else if $k == 3} Fourth row errors {else if $k == 4} Fifth row errors {else if $k == 5} Sixth row errors {else if $k == 6} Seventh row errors
+                                        {else if $k == 7} Eighth row errors {else if $k == 8} Ninth row errors {else if $k == 9} Tenth row errors {/if}</font></th>
+
+                                </tr>
+
+                            <tr id="row_{$k}" ><td colspan="15"><font color="red">{$datafirst}</font></td></tr>
+
+
+                              {/foreach}
                             <tr><td colspan="7"><b><span style='font-size:15px;'>{$typeName}</span></b></td></tr>
 
                             <tr><td colspan="7"></td></tr>
@@ -631,9 +643,9 @@
                                 <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                                 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size(Length)</td>
                                 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size(Breadth)</td>
-                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                                <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td> -->
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Area</td>
-                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Property Status</td>
+                                <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Property Status</td> -->
                             </tr>
 
                             {section name=foo start= {$looprange} loop={$looprange+15} step=1}
@@ -670,12 +682,15 @@
                               <td align="left" >
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeBreval_P[$new_index]} == '') OR !is_numeric({$txtSizeBreval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                               </td>
+                              <!--
                               <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea_P" value="{$txtPricePerUnitAreaval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval_P[$new_index]} == '') OR !is_numeric({$txtPricePerUnitAreaval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" readonly="">
                               </td>
+                              -->
                               <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
                               </td>
+                              <!--
                               <td>
                                 <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
                                     <option value = "Available">Select</option>
@@ -683,6 +698,7 @@
                                     <option {if $statusval_P[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
                                 </select>
                               </td>
+                              -->
                             </tr>
                         {/section}
 
