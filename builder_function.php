@@ -1859,7 +1859,7 @@ function getFlatAvailability($projectId)
 	return $final_list;
 }
 function projectDetailById($projectId){
-    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."' where version = 'Cms'";
+    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."' and version = 'Cms'";
     $res = mysql_query($qry) or die(mysql_error());
     $projectDetails = array();
     while ($data = mysql_fetch_array($res)) {
