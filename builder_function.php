@@ -1824,8 +1824,7 @@ function getPrevMonthProjectData($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-
-	$url=$_SERVER['HTTP_HOST']."/analytics/apis/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+        $url=$_SERVER['HTTP_HOST']."/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1843,7 +1842,7 @@ function getFlatAvailability($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	 $url=$_SERVER['HTTP_HOST']."/analytics/apis/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+	 $url=$_SERVER['HTTP_HOST']."/app/v1/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);

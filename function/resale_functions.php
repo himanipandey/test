@@ -89,7 +89,7 @@
         return $arrActiveBrokerlist;
     }
     function getBrokerByProject($projectId){
-        $qry = "SELECT * FROM broker_project_mapping 
+       $qry = "SELECT * FROM broker_project_mapping 
                 WHERE PROJECT_ID = '".$projectId."'";
         $res = mysql_query($qry) or die(mysql_error()." error in  broker list by project id");
         $arrBrokerByProject = array();

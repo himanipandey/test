@@ -81,11 +81,9 @@
     $allBrokerByProject   = getBrokerByProject($projectId);
     $arrBrokerList = array();
      foreach($allBrokerByProject as $key=>$val){
-         include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
      }
-     include("dbConfig.php");
      $arrLatestMinPrice = '';
      $arrLatestMaxPrice = '';
      $arrEffectvDtLatest = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
