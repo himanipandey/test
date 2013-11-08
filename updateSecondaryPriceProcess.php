@@ -99,11 +99,9 @@
     $allBrokerByProject   = getBrokerByProject($projectId);
     $arrBrokerList = array();
      foreach($allBrokerByProject as $key=>$val){
-         include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
      }
-     include("dbConfig.php");
      $smarty->assign("allBrokerByProject", $arrBrokerList);
      $projectDetails = array();
      $projectDetails = projectDetailById($projectId);
