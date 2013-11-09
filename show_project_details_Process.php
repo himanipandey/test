@@ -18,17 +18,64 @@ if ($_REQUEST['btnExit'] == "Exit") {
 $arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
 $smarty->assign("arrCalingPrimary", $arrCalingPrimary);
 
-/* * ****start display other pricing***** */
+/* * ****start display other pricing******/
 $otherPricing = fetch_other_price($projectId);
 $smarty->assign("otherPricing", $otherPricing);
 /* * ****end display other pricing***** */
 
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
+$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id) 
+    join resi_project_options o on (o.options_id = option_id)",'conditions' => 
+    array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual'"), "select" => 
+    "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
+$uptionDetailWithPrice = array();
+
+foreach($optionsDetails as $key => $value) {
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
+    
+}
+
 $PhaseOptionHash = $ProjectPhases[1];
 $ProjectPhases = $ProjectPhases[0];
-$ProjectOptionDetail	=	ProjectOptionDetail($projectId);
-$PreviousMonthsData	=	getPrevMonthProjectData($projectId);
+$ProjectOptionDetail = ProjectOptionDetail($projectId);
+$PreviousMonthsData = getPrevMonthProjectData($projectId);
 $PreviousMonthsAvailability = getFlatAvailability($projectId);
+//echo "<pre>";
+//print_r($uptionDetailWithPrice);
+$arrPriceListData = array();
+$cnt = 0;
+$arrPrevMonthDate = array();
+$arrPhase = array();
+foreach ($PreviousMonthsData as $k => $v) {
+    if($cnt > 1) {
+        foreach($v as $keyMiddle => $vMiddle) {
+            foreach( $vMiddle as $kLast => $vLast ) {
+                $vLast['phase_name'] = $uptionDetailWithPrice[$vLast['phase_id']][$vLast['options_id']]['phase_name'];
+                if($cnt == 2) {
+                    $uptionDetailWithPrice[$vLast['phase_id']][$vLast['options_id']]['latestPrice'] = $vLast['price'];
+                }
+                if($cnt == 3) {
+                    $uptionDetailWithPrice[$vLast['phase_id']][$vLast['options_id']]['prevMonthPrice'] = $vLast['price'];
+                }
+                if($cnt == 4) {
+                    $uptionDetailWithPrice[$vLast['phase_id']][$vLast['options_id']]['prevPrevMonthPrice'] = $vLast['price'];
+                }
+            }
+        } 
+    }
+    if( $cnt >2 and  $cnt <=4)
+        $arrPrevMonthDate[] = $k;
+    $cnt++;
+}
+//echo "<pre>";
+//print_r($PreviousMonthsAvailability);
+$smarty->assign("arrPrevMonthDate",$arrPrevMonthDate);
+$smarty->assign("uptionDetailWithPrice",$uptionDetailWithPrice);
+
 $smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
 $smarty->assign("PreviousMonthsData",$PreviousMonthsData);
 $smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
@@ -47,6 +94,8 @@ foreach($PreviousMonthsAvailability as $k=>$v) {
     if( $k != 'current' && $k != 'latest')
         $arrAvaiPreviousMonthData[] = $k;
 }
+//echo "<pre>";
+//print_r($PreviousMonthsAvailability);
 $smarty->assign("arrAvaiPreviousMonthData",$arrAvaiPreviousMonthData);
 
 
@@ -99,10 +148,9 @@ if ($_REQUEST['phaseId'] != -1)
     $phaseId = $_REQUEST['phaseId'];
 
 /* * *****supply code start here********* */
-/******* To Do
+/******* To Do ***/
 $supplyAllArray = array();
 $res = ProjectSupply::projectSupplyForProjectPage($projectId);
-die("ASDFGHJKL");
 $arrPhaseCount = array();
 $arrPhaseTypeCount = array();
 
@@ -112,12 +160,13 @@ foreach ($res as $data) {
     $arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
     $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 }
-*/
+//echo "<pre>";
+//print_r($supplyAllArray);
 $isSupplyLaunchEdited = ProjectSupply::isSupplyLaunchEdited($projectId);
 
-//$smarty->assign("arrPhaseCount", $arrPhaseCount);
-//$smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
-//$smarty->assign("supplyAllArray", $supplyAllArray);
+$smarty->assign("arrPhaseCount", $arrPhaseCount);
+$smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
+$smarty->assign("supplyAllArray", $supplyAllArray);
 $smarty->assign("isSupplyLaunchEdited", $isSupplyLaunchEdited);
 
 
@@ -186,7 +235,7 @@ $smarty->assign("enum_value", $enum_value);
 $smarty->assign("AmenitiesArr", $AmenitiesArr);
 
 $projectDetails = array();
- $qry = "SELECT rp.*,ps.project_status,ps.display_name,t.township_name,mps.name as PROJECT_STAGE,
+$qry = "SELECT rp.*,ps.project_status,ps.display_name,t.township_name,mps.name as PROJECT_STAGE,
     mpp.name as PROJECT_PHASE
     FROM " . RESI_PROJECT . " rp
     left join project_status_master ps on rp.project_status_id = ps.id

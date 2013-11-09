@@ -55,20 +55,35 @@ class ProjectSupply extends ActiveRecord\Model {
     
     function projectSupplyForProjectPage($projectId){
         $result = array();
-        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, ps.project_id, 
-            ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply, ps.launched, ps.edited_launched, 
-            pa.availability, pa.comment, pa.effective_month, ps.project_type 
-            from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " 
-           pa on ps.id=pa.project_supply_id inner join (select ps.id, max(pa.effective_month) mon 
-           from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa 
-           on ps.id=pa.project_supply_id where ps.project_id = $projectId group by ps.id) t 
-           on ps.id=t.id and pa.effective_month=t.mon left join " . ResiProjectPhase::table_name() . " 
-          rpp on ps.phase_id = rpp.PHASE_ID union select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
-          rpp.COMPLETION_DATE, ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.supply, ps.edited_supply,
-          ps.launched, ps.edited_launched, pa.availability, pa.comment, pa.effective_month, 
-          ps.project_type from project_supplies ps left join project_availabilities pa 
-          on ps.id=pa.project_supply_id left join resi_project_phase rpp on ps.phase_id = rpp.PHASE_ID 
-          where pa.id is null and ps.project_id = $projectId";
+        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, rpp.project_id, 
+            ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply, ps.launched, 
+            pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type 
+            from 
+             " . self::table_name() . " ps 
+             inner join " . ProjectAvailability::table_name() . "  pa on ps.id=pa.project_supply_id
+             inner join listings ls on ps.listing_id = ls.id
+             inner join resi_project_options rpo on rpo.options_id = ls.option_id    
+             inner join 
+                (select ps.id, max(pa.effective_month) mon 
+                    from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa 
+                    on ps.id=pa.project_supply_id
+                    inner join listings ls on ps.listing_id = ls.id  
+                    left join " . ResiProjectPhase::table_name() . " rpp on ls.phase_id = rpp.PHASE_ID 
+                    where rpp.project_id = $projectId group by ps.id
+                 ) t 
+                on ps.id=t.id and pa.effective_month=t.mon 
+             left join " . ResiProjectPhase::table_name() . "  rpp on ls.phase_id = rpp.PHASE_ID 
+          union 
+            select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
+                rpp.COMPLETION_DATE, rpp.project_id, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
+                ps.launched, pa.availability, pa.comment, pa.effective_month, 
+                rpo.option_type as project_type 
+            from 
+                project_supplies ps left join project_availabilities pa on ps.id=pa.project_supply_id
+            inner join listings ls on ps.listing_id = ls.id            
+            left join resi_project_phase rpp on ls.phase_id = rpp.PHASE_ID
+            inner join resi_project_options rpo on rpo.options_id = ls.option_id
+          where pa.id is null and rpp.project_id = $projectId";
         $data = self::find_by_sql($query);
         foreach ($data as $value) {
             $entry = array();
@@ -79,9 +94,7 @@ class ProjectSupply extends ActiveRecord\Model {
             $entry['PHASE_ID'] = $value->phase_id;
             $entry['NO_OF_BEDROOMS'] = $value->no_of_bedroom;
             $entry['NO_OF_FLATS'] = $value->supply;
-            $entry['EDITED_NO_OF_FLATS'] = $value->edited_supply;
             $entry['LAUNCHED'] = $value->launched;
-            $entry['EDITED_LAUNCHED'] = $value->edited_launched;
             $entry['AVAILABLE_NO_FLATS'] = $value->availability; 
             $entry['EDIT_REASON'] = $value->comment;
             $entry['SUBMITTED_DATE'] = $value->effective_month;

@@ -1060,10 +1060,10 @@ function getDateNow(){
 
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>Promised Completion Date:</b>
+                                                        <b>Promised Completion Date:</b>
                                                     </td>
                                                     <td>
-                                                            {$completionDate}&nbsp;&nbsp;<button class="clickbutton" onclick="$(this).trigger('event10');">Update Completion Date</button>
+                                                       {$completionDate}
                                                     </td>
 						</tr>
 						
@@ -1831,105 +1831,60 @@ function getDateNow(){
 							  
 						  </tr>
 						{/if}
+                            {/if}
                     <tr class="headingrowcolor" height="30px;">
                          <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
-                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase</td>
+                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase Name</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
                          <td nowrap="nowrap" width="9%" align="left" class=whiteTxt>Size</td>
-                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area</td>
-                         {$pmd_keys=array_keys($PreviousMonthsData)}
-                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
-                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
-                         <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
-                         <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Number of Floors</td>
+                         <td nowrap="nowrap" width="20%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                         <td nowrap="nowrap" width="17%" align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
+                         <td nowrap="nowrap" width="17%" align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
                          <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Villa Floors</td>
 
                     </tr>
-                    {$cntAudit = 0}
-                    {if count($ProjectPhases) == 0}
-                        {$ProjectPhases = array(0)}
-                    {/if}
-                    {foreach from = $ProjectPhases key=key item = phase_obj}
-                        {if (gettype($phase_obj) == "integer")}
-                            {$phase_id = $phase_obj}
-                            {$phase_name = "No Phase"}
-                        {else}
-                            {$phase_id = $phase_obj->phase_id}
-                            {$phase_name = $phase_obj->phase_name}
-                        {/if}
-                        {$count = count($PhaseOptionHash[$phase_id])}
-                        {foreach from = $PhaseOptionHash[$phase_id] key=inner_key item=option_obj}
-                        {$hash_key = $phase_id|cat:"_"|cat:$option_obj->options_id}
-                        {if ($cntAudit+1)%2 == 0}
+                    {$cntPrice = 0}
+                    {foreach from = $uptionDetailWithPrice key=key item = value}
+                        {foreach from = $value key=keyInner item = valueInner}
+                        {if ($cntPrice+1)%2 == 0}
                             {$color = "bgcolor='#F7F8E0'"}
                         {else}
                             {$color = "bgcolor='#f2f2f2'"}
                         {/if}
                         <tr {$color}>
-                        <td align = "center">{$cntAudit+1}</td>
-                        {if $inner_key == 0}
-                        <td rowspan="{$count}" bgcolor="#ccc" align="center">
-                            {$phase_name} <br>
-                            {$date = array_shift(array_values($PreviousMonthsData['current'][$projectId]))}
-                            {$date = $date[0]["effective_date"]}
-                            {if $date != ''}
-                                {$date = date_parse_from_format('Y-m-dTH:i:sZ', $date)}
-                                <strong>Effective Date: {$date["month"]}/{$date["year"]}</strong>
-                            {/if}
-                        </td>
-                        {/if}
+                        <td align = "center">{$cntPrice+1}</td>
+                        <td align = "left" rowspan="">{$valueInner['phase_name']}</td>
                         <td>
                              <input type='hidden' value='{$projectId}' name='projectId' />
-                            {$option_obj->unit_name}
+                            {$valueInner['option_name']}
                       </td>
                       <td>
-                        {if $option_obj->total_plot_area != 0}
-                            {(int)$option_obj->total_plot_area}
-                        {else}
-                            {(int)$option_obj->size} {if $option_obj->carpet_area_info}(Carpet Area){/if}
-                        {/if}
-                        </td>
+                         {if isset($valueInner['size'])} {$valueInner['size']} {else} -- {/if}
+                      </td>
                       <td>
-                        {$price_per_unit_area = $PreviousMonthsData['current'][$projectId][$hash_key][0]["price"]}
-                        {if $price_per_unit_area !== ''}
-                            {(int)$price_per_unit_area}
-                        {else}
-                            --
-                        {/if}
+                        {if isset($valueInner['latestPrice'])} {$valueInner['latestPrice']} {else} -- {/if}
                       </td>
                         <td>
-                            {$monkey=print_r(date('Y-m', strtotime("-1 month")),true)}
-                            {if substr($PreviousMonthsData[$monkey][$projectId][$hash_key][0]['effective_date'],0,7)==$monkey}
-                                {$PreviousMonthsData[$monkey][$projectId][$hash_key][0]['price']}
+                            {if isset($valueInner['prevMonthPrice'])}
+                                {$valueInner['prevMonthPrice']}
                             {else}
                                 {"Not Applicable"}
                             {/if}
                         </td>
                         <td>
-                            {$monkey=print_r(date('Y-m', strtotime("-2 month")),true)}
-                            {if substr($PreviousMonthsData[$monkey][$projectId][$hash_key][0]['effective_date'],0,7)==$monkey}
-                                {$PreviousMonthsData[$monkey][$projectId][$hash_key][0]['price']}
+                            {if isset($valueInner['prevPrevMonthPrice'])}
+                                {$valueInner['prevPrevMonthPrice']}
                             {else}
                                 {"Not Applicable"}
                             {/if}
                         </td>
-                       <td>
-                            {$option_obj->no_of_floors}
-                      </td>
                       <td>
-                            {$option_obj->villa_no_floors}
+                            {$valueInner['villa_no_floors']}
                       </td>
-                    </tr>
-                    {$cntAudit = $cntAudit+1}
-                    {/foreach}
-                    {/foreach}
-					</table>
-				{/if}
-				</td>
+                    {$cntPrice = $cntPrice+1}
 		   </tr>
-                   
+                    {/foreach}
+                   {/foreach}
                    {*code start for calling records secondary*}
                     {if count($arrCalingSecondary)>0}
                         {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
@@ -2482,7 +2437,6 @@ function getDateNow(){
 				{/if}
 				</td>
 		   </tr>
-		   
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 				{if is_array($supplyAllArray)}

@@ -1824,7 +1824,8 @@ function getPrevMonthProjectData($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-        $url=$_SERVER['HTTP_HOST']."/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+        //$url=$_SERVER['HTTP_HOST']."/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+        $url="http://staging.cms.proptiger.com/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1832,7 +1833,6 @@ function getPrevMonthProjectData($projectId)
 	$months=$json['prices'];
 	return $months;
 }
-
 
 function getFlatAvailability($projectId)
 {
@@ -1842,7 +1842,8 @@ function getFlatAvailability($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	 $url=$_SERVER['HTTP_HOST']."/app/v1/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+	//$url=$_SERVER['HTTP_HOST']."/app/v1/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+        $url="staging.cms.proptiger.com/app/v1/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
