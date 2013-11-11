@@ -363,13 +363,12 @@ $updatePhase = array(
     "Audit1" => "Audit2",
     "Audit2" => "Complete",
 );
-
 if (!isset($_POST['forwardFlag']))
     $_POST['forwardFlag'] = '';
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
-    $reviews = $_POST['reviews'];
+    $reviews = trim($_POST['reviews']);
     foreach ($newPhase as $k => $v) {
         $qry = "select * from master_project_phases where name = '".$k."'";
         $res = mysql_query($qry) or die(mysql_error());
@@ -389,7 +388,8 @@ if ($_POST['forwardFlag'] == 'yes') {
         if ($phaseIdCurrent['id'] == $phaseId['id']) {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
             $arrCommentTypeValue['Audit'] = $reviews;
-            CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $projectStage);
+            if( $reviews != '' )
+                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $projectStage);
         }
     }
     header("Location:$returnURLPID");
@@ -397,7 +397,7 @@ if ($_POST['forwardFlag'] == 'yes') {
 if ($_POST['forwardFlag'] == 'update') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
-    $reviews = $_POST['reviews'];
+    $reviews = trim($_POST['reviews']);
     foreach ($updatePhase as $k => $v) {
         if ($currentPhase == $k) {
             
@@ -409,7 +409,8 @@ if ($_POST['forwardFlag'] == 'update') {
             $stageId = mysql_fetch_assoc($resStg);
             updateProjectPhase($projectId, $phaseId['id'], $stageId['id']);
             $arrCommentTypeValue['Audit'] = $reviews;
-            CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $projectStage);
+            if( $reviews != '' )
+                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $projectStage);
         }
     }
     header("Location:$returnURLPID");
@@ -418,7 +419,7 @@ if ($_POST['forwardFlag'] == 'update') {
 if ($_POST['forwardFlag'] == 'no') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
-    $reviews = $_POST['reviews'];
+    $reviews = trim($_POST['reviews']);
     /* foreach ($newPhase as $k => $v) {
       if($currentPhase == $newPhase[$k]){
       updateProjectPhase($projectId, $k);
@@ -526,6 +527,9 @@ foreach ($arrBrokerPriceByProject as $k => $v) {
     }
 }
 
+$noPhasePhase = ResiProjectPhase::getNoPhaseForProject($projectId);
+$noPhasePhaseId = $noPhasePhase->phase_id;
+
 $smarty->assign("latestMonthAllBrokerPrice", $latestMonthAllBrokerPrice);
 $smarty->assign("oneMonthAgoPrice", $oneMonthAgoPrice);
 $smarty->assign("oneMonthAgoDt", $oneMonthAgoDt);
@@ -539,6 +543,7 @@ $smarty->assign("brokerIdList", $brokerIdList);
 $smarty->assign("maxEffectiveDt", $maxEffectiveDt);
 
 $smarty->assign("arrCampaign", $arrCampaign);
+$smarty->assign("noPhasePhaseId", $noPhasePhaseId);
 
 //code for distinct unit for a project
 $arrProjectType = fetch_projectOptions($projectId);

@@ -478,11 +478,12 @@ function ProjectOptionDetail($projectId) {
 function fetch_towerDetails($projectId) {
     $qrySel = "SELECT
                    t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,
-                   t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME
+                   t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,p.PHASE_ID,p.PHASE_NAME
                 FROM
-                   " . RESI_PROJECT_TOWER_DETAILS . " t LEFT JOIN resi_project_phase p
-                ON
-                   t.PHASE_ID = p.PHASE_ID
+                   " . RESI_PROJECT_TOWER_DETAILS . " t 
+                inner join phase_tower_mappings ptm
+                on t.tower_id = ptm.tower_id
+                inner join resi_project_phase p on ptm.phase_id = p.phase_id
                 WHERE
                         t.PROJECT_ID = '" . $projectId . "' ORDER BY t.TOWER_NAME ASC";
     $res_Sel = mysql_query($qrySel);

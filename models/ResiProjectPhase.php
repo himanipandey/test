@@ -95,5 +95,8 @@ class ResiProjectPhase extends Objects
         return ResiProjectTowerDetails::query("insert into phase_tower_mappings(phase_id,tower_id) values ".implode(",",$condArray));
     }
 
+    static function getNoPhaseForProject($projectId){
+        return self::find(array('conditions'=>array('PROJECT_ID'=>$projectId)));
+    }
 
 }

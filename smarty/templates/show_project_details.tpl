@@ -7,6 +7,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var pid = '{$phaseId}';
+        var noPhasePhaseId = '{$noPhasePhaseId}';
         $('select#phaseName').val(pid);
         var projectId = $('#projectId').val();
         eventArray = [
@@ -26,7 +27,7 @@
                         ["event14", "secondary_price.php", true],
                         ["event15", "insertSecondaryPrice.php", true],
                         ["event16", "updateSecondaryPrice.php", true],
-                        ["event17", "/new/supply-validation", true],
+                        ["event17", "/new/supply-validation/", true],
                         ["event18", "allCommentHistory.php"],
                         ["event19", "/new/bulk_price_inventory/", true]
 		]; 
@@ -41,8 +42,12 @@
 						else{
 							var str="";
 						}
-                                                if(eventArray[i][0]=='event8' || eventArray[i][0]=='event19'){
+                                                if(eventArray[i][0]=='event19'){
                                                     var url = eventArray[i][1]+ projectId + "/edit";    
+                                                }else if(eventArray[i][0]=='event8'){
+                                                    var url = eventArray[i][1]+ noPhasePhaseId + "/edit";
+                                                }else if(eventArray[i][0]=='event17'){
+                                                    var url = eventArray[i][1]+ projectId;
                                                 }else{
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
                                                 }
@@ -2090,8 +2095,8 @@ function getDateNow(){
 										<td align="center">{$innerItem['REMARKS']}</td>
 										<td align="center">{$innerItem['TOWER_FACING_DIRECTION']}</td>
 										<td align ="center">
-											{if $innerItem['STILT'] == '1'} Yes {/if}
-											{if $innerItem['STILT'] == '0'} No {/if}
+											{if $innerItem['STILT'] == 'True'} Yes {/if}
+											{if $innerItem['STILT'] == 'False'} No {/if}
 										</td>
 										<td align = "center">{$innerItem['ACTUAL_COMPLETION_DATE']}</td>
 											
@@ -2428,7 +2433,7 @@ function getDateNow(){
 									
 								<td align="right" valign ="top"><b>Other:</b></td>
 								<td  align="left" style = "padding-left:30px;">
-									{if $otherPricing[0]['OTHERS'] != ''}{$otherPricing[0]['OTHERS']}{else} -- {/if}
+									{if $otherPricing[0]['OTHER_PRICING'] != ''}{$otherPricing[0]['OTHER_PRICING']}{else} -- {/if}
 								</td>
 								<td>&nbsp;</td>
 								
