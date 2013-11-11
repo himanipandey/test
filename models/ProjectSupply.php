@@ -26,7 +26,7 @@ class ProjectSupply extends ActiveRecord\Model {
             if (empty($options)) {
                 $option = new ResiProjectOptions();
                 $option->project_id = $projectId;
-                $option->option_category = 'Actual';
+                $option->option_category = 'Logical';
                 $option->option_type = $projectType;
                 $option->bedrooms = $noOfBedroom;
                 $option->updated_at = date('Y-m-d H:i:s');
