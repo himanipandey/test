@@ -928,11 +928,10 @@ function getDateNow(){
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Project Description:</b></td>
-
-							  <td>
-							  	{$projectDetails[0].PROJECT_DESCRIPTION}
-							</td>
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Project Description:</b></td>
+                                                    <td>
+                                                      {$projectDetails[0].PROJECT_DESCRIPTION}
+                                                  </td>
 						</tr>
 
 						<tr height="25px;">
@@ -950,7 +949,26 @@ function getDateNow(){
 							  	{$projectDetails[0].SOURCE_OF_INFORMATION}
 							</td>
 						</tr>
-
+                                                <tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Price Disclaimer:</b></td>
+                                                    <td>
+                                                      {if $projectDetails[0].PRICE_DISCLAIMER != ''}
+                                                          {$projectDetails[0].PRICE_DISCLAIMER}
+                                                      {else}
+                                                          --
+                                                      {/if}
+                                                  </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Open Space:</b></td>
+                                                    <td>
+                                                      {if $projectDetails[0].OPEN_SPACE != ''}
+                                                          {$projectDetails[0].OPEN_SPACE}
+                                                      {else}
+                                                          --
+                                                      {/if}
+                                                  </td>
+						</tr>
 						<tr height="25px;">
 							  <td  nowrap="nowrap" width="1%" align="left"><b>Project type:</b></td>
 
@@ -974,16 +992,16 @@ function getDateNow(){
                                                             {/if}
 							</td>
 						</tr>-->
-                                                <!--
+                                               
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
-								<b>Project Location Desc:</b>
+								<b>Number Of Towers:</b>
 							</td>
 							<td>
-								{$projectDetails[0].LOCATION_DESC}
+								{$projectDetails[0].NO_OF_TOWERS}
 							</td>
 						</tr>
-                                                -->
+                                                
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Project Latitude:</b>
@@ -1111,36 +1129,7 @@ function getDateNow(){
                                                             {$projectDetails[0].APPROVALS}
                                                     </td>
 						</tr>
-						<!--<tr height="25px;">
-                                                    <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>No Of Lifts Per Tower:</b>
-                                                    </td>
-                                                    <td>
-                                                            {$projectDetails[0].NO_OF_LIFTS_PER_TOWER}
-                                                    </td>
-						</tr>
-                                               
-						<tr height="25px;">
-                                                    <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>Power Backup Available:</b>
-                                                    </td>
-                                                    <td>
-                                                            {$projectDetails[0].POWER_BACKUP}
-                                                    </td>
-						</tr>
-
-						{if {$projectDetails[0].POWER_BACKUP}!="No"}		 
-						<tr height="25px;">
-
-                                                    <td nowrap="nowrap" width="6%" align="left">
-                                                            Power Backup Available
-                                                    </td>
-                                                    <td>
-                                                             {$projectDetails[0].POWER_BACKUP_CAPACITY}
-                                                    </td>
-						</tr>	
-						{/if}
-                                                 -->
+						
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                         <b>Architect Name:</b>
@@ -1149,16 +1138,7 @@ function getDateNow(){
                                                         {$projectDetails[0].ARCHITECT_NAME}
                                                     </td>
 						</tr>
-                                                <!--
-						<tr height="25px;">
-                                                    <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>Special Offer Description:</b>
-                                                    </td>
-                                                    <td>
-                                                            {$projectDetails[0].OFFER_DESC}
-                                                    </td>
-						</tr>
-                                                -->
+                                               
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b>Residential:</b>
@@ -1216,6 +1196,18 @@ function getDateNow(){
                                                         {/if}
                                                     </td>
 						</tr>
+                                                 <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Application Form:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].APPLICATION_FORM != ''}
+                                                                {$projectDetails[0].APPLICATION_FORM}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Skip Updation Cycle: </b>
@@ -1228,6 +1220,43 @@ function getDateNow(){
                                                         {/if}
                                                     </td>
 						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b> Price Display On Website: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].SHOULD_DISPLAY_PRICE == 1}
+                                                               Yes
+                                                        {else}
+                                                               No
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Power backup: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].power_backup != ''}
+                                                               {$projectDetails[0].power_backup}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Power Backup Capacity: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].POWER_BACKUP_CAPACITY != ''}
+                                                               {$projectDetails[0].POWER_BACKUP_CAPACITY}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
 					</table>
 				</td>
 			</tr>
@@ -1462,7 +1491,7 @@ function getDateNow(){
 					  {section name=nm start=1 loop=20 step=1}
 											
 						<tr{if ($smarty.section.nm.index != 1) && (!array_key_exists($smarty.section.nm.index,$arrninty))} style = "display:none;"{/if}>
-							<td nowrap="nowrap" width="6%" align="left"><b>Other Amenitiy:</b></td>
+							<td nowrap="nowrap" width="6%" align="left"><b>Other Amenities:</b></td>
 							<td nowrap>
 								{if array_key_exists($smarty.section.nm.index,$arrninty)}
 									{$arrninty[$smarty.section.nm.index]}
