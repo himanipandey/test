@@ -6,8 +6,8 @@
         $status  = $_REQUEST['status'];
         $remark  = $_REQUEST['remark'];
         $mobile  = $_REQUEST['mobile'];
-        if( $status === 'success' ) {
-            $ins = "UPDATE 
+         
+         $ins = "UPDATE 
                         CallDetails
                     SET
                         Remark = '".$remark."',
@@ -15,6 +15,8 @@
                     WHERE
                         CallId = $callId";
             $res = mysql_query($ins) or die(mysql_error());
+            
+        if( $status === 'success' ) {
             if($res)
                 header("Location:brokeradd.php?callId=$callId&mobile=$mobile");
             else
