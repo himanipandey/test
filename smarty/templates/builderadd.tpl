@@ -415,9 +415,8 @@
 											<select name = "projects_{$start}[]" multiple>
 												<option value = "">Select Project</option>
 												{foreach from = $ProjectList key = key item = item}
-                                                                                                    <option value = "{$item['PROJECT_ID']}" 
-                                                                                                    {if strstr($arrContactProjectMapping[$arrContact[$cnt]['ID']],$item['PROJECT_ID'])} selected {/if}>
-                                                                                                    {$item['PROJECT_NAME']}</option>
+                                                   <option value = "{$item['PROJECT_ID']}"                                     {if in_array($item['PROJECT_ID'],$arrContactProjectMapping[$arrContact[$cnt]['ID']])} selected {/if}>
+                                                    {$item['PROJECT_NAME']}</option>
 												{/foreach}
 												</option>
 											</select>

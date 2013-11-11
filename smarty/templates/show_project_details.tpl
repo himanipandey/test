@@ -277,7 +277,7 @@ function getDateNow(){
               url:"submit_builder_contact.php",
               data:"name="+str1+"&phone="+phone1+"&email="+email1+"&builderId="+builderId+"&deleteval="+deleteval+"&id="+id+"&projects="+projects1,
               success:function(dt){
-                        window.location.href = "show_project_details.php?projectId="+pid;
+                       window.location.href = "show_project_details.php?projectId="+pid;
                     // jQuery("#update_insert_delete").show();
               }
 
@@ -717,7 +717,7 @@ function getDateNow(){
 							                  <select name = "projects_call_{$start}[]" id = "projects_call_{$smarty.section.rowLoop.index}" multiple>
 							                        <option value = "">Select Project</option>
 							                        {foreach from = $ProjectList key = key item = item}
-							                          <option value = "{$item['PROJECT_ID']}" {if strstr($arrContact[$cnt]['PROJECTS'],$item['PROJECT_ID'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+							                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 							                        {/foreach}
 							                        </option>
 							                   </select>
@@ -742,7 +742,7 @@ function getDateNow(){
 									    <select name = "projects_{$start}[]" id = "projects_{$smarty.section.rowLoop.index}" multiple>
 									      <option value = "">Select Project</option>
 									      {foreach from = $ProjectList key = key item = item}
-									      <option value = "{$item['PROJECT_ID']}" {if strstr($arrContact[$cnt]['PROJECTS'],$item['PROJECT_ID'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+									      <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 									      {/foreach}
 									    </option>
 									  </select>
@@ -785,7 +785,7 @@ function getDateNow(){
 								                  <select name = "projects_call_{$start}[]" id = "projects_call_{$cnt}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>
@@ -807,7 +807,7 @@ function getDateNow(){
 								                  <select name = "projects_{$start}[]" id = "projects_{$cnt}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>
@@ -848,7 +848,7 @@ function getDateNow(){
 								                  <select name = "projects_call_{$start}[]" id = "projects_call_{$cnt+1}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>
@@ -873,7 +873,7 @@ function getDateNow(){
 								                  <select name = "projects_{$start}[]" id = "projects_{$cnt+1}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>

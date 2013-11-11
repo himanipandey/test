@@ -50,7 +50,7 @@
                                     $exp = explode(',', $projects);
                                     if(count($exp)>1) {
                                         foreach($exp as $val) {
-                                         $qryIns = "insert into project_builder_contact_mappings set 
+                                        print $qryIns = "insert into project_builder_contact_mappings set 
                                          project_id = $val,builder_contact_id = '".$exp_id[$key]."'";
                                         $resIns = mysql_query($qryIns) or die(mysql_error());
                                         }

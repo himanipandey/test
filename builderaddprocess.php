@@ -379,8 +379,8 @@ if ($_POST['btnSave'] == "Save")
              (select id from builder_contacts where builder_id = $builderId)";
          $res = mysql_query($qry) or die(mysql_error());
          $arrContact = array();
-         while($data = mysql_fetch_assoc($res)) {
-             $arrContact[$data['builder_contact_id']] = $data;
+         while($data = mysql_fetch_object($res)) {
+             $arrContact[$data->builder_contact_id][] = $data->project_id;
          }
          return $arrContact;
      }
