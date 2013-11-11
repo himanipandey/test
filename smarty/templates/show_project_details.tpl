@@ -974,16 +974,16 @@ function getDateNow(){
                                                             {/if}
 							</td>
 						</tr>-->
-                                                <!--
+                                               
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
-								<b>Project Location Desc:</b>
+								<b>Number Of Towers:</b>
 							</td>
 							<td>
-								{$projectDetails[0].LOCATION_DESC}
+								{$projectDetails[0].NO_OF_TOWERS}
 							</td>
 						</tr>
-                                                -->
+                                                
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Project Latitude:</b>

@@ -94,6 +94,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $offer_heading = trim($_POST["offer_heading"]);
             $offer_desc = trim($_POST["offer_desc"]);
             $skipUpdationCycle = $_POST["skipUpdationCycle"];
+            $numberOfTowers = $_POST["numberOfTowers"];
             
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
@@ -168,6 +169,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("offer_heading", $offer_heading);
             $smarty->assign("offer_desc", $offer_desc);
             $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
+            $smarty->assign("numberOfTowers", $numberOfTowers);
             /***********Folder name**********/
             if(!empty($builderId)){
 	    	$builderDetail = ResiBuilder::getBuilderById($builderId);
@@ -444,13 +446,13 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['expected_supply_date'] = $exp_launch_date;
             $arrInsertUpdateProject['display_order'] = $display_order;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
+            $arrInsertUpdateProject['no_of_towers'] = $numberOfTowers;
             //echo $skipUpdationCycle ."==". skipUpdationCycle_Id;die;
             if($skipUpdationCycle == skipUpdationCycle_Id)
                 $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
             else
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
             $arrOx = array();
-	    
            // $arrOx = 
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
            //create new project url
@@ -582,6 +584,7 @@ elseif ($projectId!='') {
     $smarty->assign("skipUpdationCycle", $ProjectDetail->updation_cycle_id);
     $smarty->assign("txtProjectLocation", $txtProjectLocation);
     $smarty->assign("bank_arr", projectBankList($projectId));
+    $smarty->assign("numberOfTowers", $ProjectDetail->no_of_towers);
  }
 
 function getNumProjectsUnderDisplayOrder($displayOrder, $cityId, $projectId) {
