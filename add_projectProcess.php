@@ -447,7 +447,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['display_order'] = $display_order;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
             $arrInsertUpdateProject['no_of_towers'] = $numberOfTowers;
-            //echo $skipUpdationCycle ."==". skipUpdationCycle_Id;die;
             if($skipUpdationCycle == skipUpdationCycle_Id)
                 $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
             else
@@ -455,7 +454,21 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrOx = array();
            // $arrOx = 
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
-           //create new project url
+
+           if (ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
+           {
+               $phase = new ResiProjectPhase();
+               $phase->project_id = $returnProject->project_id;
+               $phase->phase_name = 'No Phase';
+               $phase->phase_type = 'Logical';
+               $phase->status     = 'Active';
+               $phase->created_at = date('Y-m-d H:i:s');
+               $phase->updated_at = date('Y-m-d H:i:s');
+               $phase->updated_by = $_SESSION['adminId'];
+               $phase->virtual_save();
+           }
+
+            //create new project url
             $localityDetail = Locality::getLocalityById($localityId); 
             $cityDetail = City::getCityById($cityId);
             $builderDetail = ResiBuilder::getBuilderById($builderId);

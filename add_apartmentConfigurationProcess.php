@@ -215,6 +215,18 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 //                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
 				
                     $result = $option->save();
+                    if ($action == 'insert') {
+                        $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
+                        $listing = new Listings();
+                        $listing->option_id = $result->options_id;;
+                        $listing->phase_id = $phases[0]->phase_id;
+                        $listing->listing_category = 'Primary';
+                        $listing->status = 'Active';
+                        $listing->updated_at = date('Y-m-d H:i:s');
+                        $listing->updated_by = $_SESSION['adminId'];
+                        $listing->created_at = date('Y-m-d H:i:s');
+                        $listing->save();
+                    }
                 }
                 else
                 {
