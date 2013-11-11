@@ -236,12 +236,13 @@ $smarty->assign("AmenitiesArr", $AmenitiesArr);
 
 $projectDetails = array();
 $qry = "SELECT rp.*,ps.project_status,ps.display_name,t.township_name,mps.name as PROJECT_STAGE,
-    mpp.name as PROJECT_PHASE
+    mpp.name as PROJECT_PHASE,mpbt.display_name as power_backup
     FROM " . RESI_PROJECT . " rp
     left join project_status_master ps on rp.project_status_id = ps.id
     left join townships t on rp.township_id = t.id
     left join master_project_stages mps on rp.project_stage_id = mps.id
     left join master_project_phases mpp on rp.project_phase_id = mpp.id
+    left join master_power_backup_types mpbt on rp.power_backup_type_id = mpbt.id
     WHERE rp.PROJECT_ID = '" . $projectId . "' and rp.version = 'Cms'";
 $res = mysql_query($qry) or die(mysql_error());
 if (!mysql_num_rows($res) > 0) {
