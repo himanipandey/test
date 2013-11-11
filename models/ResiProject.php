@@ -89,7 +89,7 @@ class ResiProject extends Objects
            $arrSearchFields .= 'expected_supply_date <= ?';
            array_push($arrSearchFieldsValue, $date);
       }
-      elseif( $key == 'project_name' ){
+     elseif( $key == 'project_name' ){
 		  
 		  $arrSearchFields .= "resi_project.$key  $proj_nam_and";
            array_push($arrSearchFieldsValue, $value.'%');

@@ -1049,11 +1049,13 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
                             SUBMITTED_DATE	=	now()";
             mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
             $lastId = mysql_insert_id();
+                        
             $projectId = explode("#",$projects);
-            if( count($projectId) >1 ) {
+            
+            if( count($projectId) >0 && !empty($projects)) {
+				
                 foreach($projectId as $val) {
-                    $qryIns = "insert into project_builder_contact_mappings
-                               set project_id = $val,builder_contact_id = $lastId";
+					$qryIns = "insert into project_builder_contact_mappings(project_id,builder_contact_id) values($val,$lastId)";
                     mysql_query($qryIns) or die(mysql_error());
                 }
             }
@@ -1415,8 +1417,16 @@ function BuilderContactInfo($builderid) {
     $resContact = mysql_query($qry_contact_info);
     $arrContact = array();
     while ($dataContact = mysql_fetch_array($resContact)) {
+		$qry = "select * from project_builder_contact_mappings 
+             where builder_contact_id = '".$dataContact['ID']."'";
+         $res = mysql_query($qry) or die(mysql_error());
+		while($row_ids = mysql_fetch_object($res))
+			$dataContact['PROJECTS'][] = $row_ids->project_id; 
+		
         array_push($arrContact, $dataContact);
+        
     }
+            
     return $arrContact;
 }
 
