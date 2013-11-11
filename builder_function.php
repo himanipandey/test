@@ -1238,8 +1238,6 @@ function project_list($builderId) {
 /* * ***********Query for insert other price********************** */
 
 function InsertUpdateOtherPrice($arr,$projectId) {
-    echo "<pre>";
-    print_r($arr);
     $arrInsertUpdateProject = array();
     $arrInsertUpdateProject['EDC_IDC'] = $arr['edc_idc_val1'];
     $arrInsertUpdateProject['EDC_IDC_TYPE'] = $arr['edc_idc'];
@@ -1257,7 +1255,7 @@ function InsertUpdateOtherPrice($arr,$projectId) {
     $arrInsertUpdateProject['CLOSE_CAR_PARKING'] = $arr['close_car_parking1'];
     $arrInsertUpdateProject['CLOSE_CAR_PARKING_TYPE'] = $arr['close_car_parking'];
     
-    $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING'] = $arr['close_car_parking_type'];
+    $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING'] = $arr['semi_close_car_parking1'];
     $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_TYPE'] = $arr['semi_close_car_parking'];
     $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_MEND_OPT'] = $arr['semi_close_car_parking_type1'];
     

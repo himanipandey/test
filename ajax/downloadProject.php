@@ -144,6 +144,11 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
             $QueryMember .= $and." RP.LOCALITY_ID = '".$_POST['dwnld_locality']."'";
             $and  = ' AND ';
         }
+        if($_POST['dwnld_city'] != '')
+        {
+            $QueryMember .= $and." sub.CITY_ID = '".$_POST['dwnld_city']."'";
+            $and  = ' AND ';
+        }
         if($_POST['dwnld_builder'] != '')
         {
             $QueryMember .= $and." RP.BUILDER_ID = '".$_POST['dwnld_builder']."'";

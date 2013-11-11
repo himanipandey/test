@@ -206,7 +206,7 @@
 
              if($_REQUEST['locality'] != '')
              {
-                 $QueryMember .= $and." LOCALITY_ID = '".$_REQUEST['locality']."'";
+                 $QueryMember .= $and." locality.LOCALITY_ID = '".$_REQUEST['locality']."'";
                  $and  = ' AND ';
              }
              if($_REQUEST['builder'] != '')
