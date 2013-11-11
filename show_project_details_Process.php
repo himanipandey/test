@@ -526,6 +526,9 @@ foreach ($arrBrokerPriceByProject as $k => $v) {
     }
 }
 
+$noPhasePhase = ResiProjectPhase::getNoPhaseForProject($projectId);
+$noPhasePhaseId = $noPhasePhase->phase_id;
+
 $smarty->assign("latestMonthAllBrokerPrice", $latestMonthAllBrokerPrice);
 $smarty->assign("oneMonthAgoPrice", $oneMonthAgoPrice);
 $smarty->assign("oneMonthAgoDt", $oneMonthAgoDt);
@@ -539,6 +542,7 @@ $smarty->assign("brokerIdList", $brokerIdList);
 $smarty->assign("maxEffectiveDt", $maxEffectiveDt);
 
 $smarty->assign("arrCampaign", $arrCampaign);
+$smarty->assign("noPhasePhaseId", $noPhasePhaseId);
 
 //code for distinct unit for a project
 $arrProjectType = fetch_projectOptions($projectId);

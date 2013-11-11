@@ -7,6 +7,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var pid = '{$phaseId}';
+        var noPhasePhaseId = '{$noPhasePhaseId}';
         $('select#phaseName').val(pid);
         var projectId = $('#projectId').val();
         eventArray = [
@@ -26,7 +27,7 @@
                         ["event14", "secondary_price.php", true],
                         ["event15", "insertSecondaryPrice.php", true],
                         ["event16", "updateSecondaryPrice.php", true],
-                        ["event17", "/new/supply-validation", true],
+                        ["event17", "/new/supply-validation/", true],
                         ["event18", "allCommentHistory.php"],
                         ["event19", "/new/bulk_price_inventory/", true]
 		]; 
@@ -41,8 +42,12 @@
 						else{
 							var str="";
 						}
-                                                if(eventArray[i][0]=='event8' || eventArray[i][0]=='event19'){
+                                                if(eventArray[i][0]=='event19'){
                                                     var url = eventArray[i][1]+ projectId + "/edit";    
+                                                }else if(eventArray[i][0]=='event8'){
+                                                    var url = eventArray[i][1]+ noPhasePhaseId + "/edit";
+                                                }else if(eventArray[i][0]=='event17'){
+                                                    var url = eventArray[i][1]+ projectId;
                                                 }else{
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
                                                 }
