@@ -1951,7 +1951,7 @@ function getDateNow(){
                     <td align ="left">&nbsp;</td>
                 </tr>
                 
-                {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
+                {if $projectDetails[0].PROJECT_STAGE == 'SecondaryPriceCycle'}
                     <tr>
                        <td align ="left" valign ="top" colspan="2"  style = "padding-left:30px;">
                            <button class="clickbutton" onclick="$(this).trigger('event15');">Update Secondary Price</button>&nbsp;&nbsp;
