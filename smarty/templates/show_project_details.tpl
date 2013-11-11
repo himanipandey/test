@@ -2090,8 +2090,8 @@ function getDateNow(){
 										<td align="center">{$innerItem['REMARKS']}</td>
 										<td align="center">{$innerItem['TOWER_FACING_DIRECTION']}</td>
 										<td align ="center">
-											{if $innerItem['STILT'] == '1'} Yes {/if}
-											{if $innerItem['STILT'] == '0'} No {/if}
+											{if $innerItem['STILT'] == 'True'} Yes {/if}
+											{if $innerItem['STILT'] == 'False'} No {/if}
 										</td>
 										<td align = "center">{$innerItem['ACTUAL_COMPLETION_DATE']}</td>
 											
@@ -2428,7 +2428,7 @@ function getDateNow(){
 									
 								<td align="right" valign ="top"><b>Other:</b></td>
 								<td  align="left" style = "padding-left:30px;">
-									{if $otherPricing[0]['OTHERS'] != ''}{$otherPricing[0]['OTHERS']}{else} -- {/if}
+									{if $otherPricing[0]['OTHER_PRICING'] != ''}{$otherPricing[0]['OTHER_PRICING']}{else} -- {/if}
 								</td>
 								<td>&nbsp;</td>
 								
