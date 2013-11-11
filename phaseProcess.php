@@ -3,7 +3,7 @@
 
 $projectId = $_REQUEST['projectId'];
 $project = ResiProject::virtual_find($projectId);
-$options = $project->options;
+$options = $project->get_all_options();
 $smarty->assign("options", $options);
 $projectDetail = array($project->to_custom_array());
 $smarty->assign("ProjectDetail", $projectDetail);
@@ -21,6 +21,12 @@ $towerDetail = array();
 foreach($towers as $t) array_push($towerDetail, $t->to_custom_array());
 $smarty->assign("TowerDetails", $towerDetail);
 
+// Project Options and Bedroom Details
+$optionsDetails = ProjectOptionDetail($projectId);
+$smarty->assign("OptionsDetails", $optionsDetails);
+$bedroomDetails = ProjectBedroomDetail($projectId);
+$smarty->assign("BedroomDetails", $bedroomDetails);
+
 /* * ********************************** */
 if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     // Vars
@@ -30,13 +36,33 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $bookingStatus = $_REQUEST['bookingStatus'];
+
+    // Flats Config
+    $flats_config = array();
+    foreach ($_REQUEST as $key => $value) {
+        if (substr($key, 0, 9) == "flat_bed_") {
+            $beds = substr($key, 9);
+            $flats_config[$beds] = $value;
+        }
+    }
+
+    // Villas Config
+    $villas_config = array();
+    foreach ($_REQUEST as $key => $value) {
+        if (substr($key, 0, 10) == "villa_bed_") {
+            $beds = substr($key, 10);
+            $villas_config[$beds] = $value;
+        }
+    }
+
     $PhaseExists = searchPhase($phaseDetail, $phasename);
+    $phase = null;
     if ($PhaseExists != -1) {
         header("Location:phase.php?projectId=" . $projectId . "&error=true");
     } else {
         ############## Transaction ##############
         ResiProjectPhase::transaction(function(){
-            global $projectId, $phasename, $launch_date, $completion_date, $remark, $towers, $bookingStatus;
+            global $projectId, $phasename, $launch_date, $completion_date, $remark, $towers, $bookingStatus, $phase;
 
 //          Creating a new phase
             $phase = new ResiProjectPhase();
@@ -45,6 +71,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
             $phase->launch_date = $launch_date;
             $phase->completion_date = $completion_date;
             $phase->remarks = $remark;
+            $phase->status = 'Active';
             $phase->booking_status_id = $bookingStatus;
             $phase->updated_by = $_SESSION["adminId"];
             $phase->virtual_save();
@@ -53,7 +80,13 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 $phase->add_towers($towers);
             }
         });
-        #########################################
+
+            if(isset($_POST['options'])){
+                $arr = $_POST['options'];
+                $arr = array_diff($arr, array(-1));
+                $phase->reset_options($arr);
+            }
+            
         if (isset($_POST['btnSave']))
             header("Location:ProjectList.php?projectId=" . $projectId);
         else if (isset($_POST['btnAddMore']))

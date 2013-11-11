@@ -11,9 +11,9 @@ class ResiProjectPhase extends Objects
 //    static $after_create = array('insert_audit_create');
 //    static $after_update = array('insert_audit_save');
 
-    public function options(){
-        $join = "LEFT JOIN project_options_phases p on (resi_project_options.OPTIONS_ID = p.option_id)";
-        return ResiProjectOptions::all(array("joins" => $join, "conditions" => array("phase_id = ?", $this->phase_id)));
+    public function get_all_options(){
+        $join = "JOIN listings l on (l.option_id = resi_project_options.options_id and l.listing_category = 'Primary' and l.status = 'Active' and option_category = 'Actual')";
+        return ResiProjectOptions::all(array("joins" => $join, "conditions" => array("l.phase_id = ?", $this->phase_id)));
     }
 
     public function add_options($option_ids){
@@ -22,18 +22,27 @@ class ResiProjectPhase extends Objects
     }
 
     public function reset_options($option_ids){
-        ProjectOptionsPhases::table()->delete(array('phase_id' => $this->phase_id));
+        Listings::update_all(array('conditions' => array('phase_id' => $this->phase_id, 'listing_category' => 'Primary'), 'set' => array('status' => 'Inactive')));
         $this->new_options($option_ids);
     }
 
-    private function new_options($option_ids){
-        foreach($option_ids as $id){
-            $map = new ProjectOptionsPhases();
-            $map->option_id = $id;
-            $map->phase_id = $this->phase_id;
-            $map->save();
-//            ProjectSupply::save_total_flat_count($this->project_id);
+    private function new_options($option_ids) {
+        foreach ($option_ids as $id) {
+            $existingListings = Listings::find('all', array("joins" => "join resi_project_options o on (o.options_id = option_id and o.option_category = 'Actual')", "conditions" => array("listing_category = 'Primary' and option_id = ? and phase_id = ?", $id, $this->phase_id)));
+            if (empty($existingListings)) {
+                $map = new Listings();
+                $map->option_id = $id;
+                $map->phase_id = $this->phase_id;
+                $map->listing_category = 'Primary';
+                $map->status = 'Active';
+                $map->updated_at = date('Y-m-d H:i:s');
+                $map->updated_by = $_SESSION['adminId'];
+                $map->created_at = date('Y-m-d H:i:s');
+                $map->save();
+            }
         }
+
+        Listings::update_all(array("joins" => "join resi_project_options o on (o.options_id = option_id and o.option_category = 'Actual')", 'conditions' => array('phase_id' => $this->phase_id, 'listing_category' => 'Primary', 'option_id' => $option_ids), 'set' => array('status' => 'Active')));
     }
 
     public function insert_audit($action){
@@ -72,8 +81,8 @@ class ResiProjectPhase extends Objects
         return static::get_towers_for_phases($this->phase_id);
     }
 
-    static function get_towers_for_phases($phase_ids){
-        if(!is_array($phase_ids) || count($phase_ids) > 0){
+    static function get_towers_for_phases($phase_ids) {
+        if(!is_array($phase_ids) || count($phase_ids) > 0) {
             $join = "LEFT JOIN phase_tower_mappings p on (resi_project_tower_details.TOWER_ID = p.tower_id)";
             return ResiProjectTowerDetails::all(array("joins" => $join, "conditions" => array("p.phase_id in (?)",
                 $phase_ids)));
@@ -82,17 +91,19 @@ class ResiProjectPhase extends Objects
     }
 
     public function add_towers($tower_ids){
-        ResiProjectTowerDetails::query("delete from phase_tower_mappings where tower_id in (".implode(',',$tower_ids).
-        ") and phase_id = ".$this->phase_id);
-        $this->new_towers($tower_ids);
+        ResiProjectTowerDetails::query("delete from phase_tower_mappings where phase_id = ".$this->phase_id);
+        if (!empty($tower_ids)) {
+            $this->new_towers($tower_ids);
+        }
     }
 
     private function new_towers($tower_ids){
         $condArray = array();
         foreach($tower_ids as $id){
+            if ($id == -1) return;
             array_push($condArray,"({$this->phase_id},{$id})");
         }
-        return ResiProjectTowerDetails::query("insert into phase_tower_mappings(phase_id,tower_id) values ".implode(",",$condArray));
+        ResiProjectTowerDetails::query("insert into phase_tower_mappings(phase_id,tower_id) values ".implode(",",$condArray));
     }
 
     static function getNoPhaseForProject($projectId){

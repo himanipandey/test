@@ -465,6 +465,7 @@ function ProjectOptionDetail($projectId) {
                     ON
                             P.OPTIONS_ID = O.OPTION_ID
                WHERE P.PROJECT_ID = '" . $projectId . "'
+               AND OPTION_CATEGORY = 'Actual'
                GROUP BY $columns
                ORDER BY P.SIZE ASC";
     $res_Sel = mysql_query($qrySel) or die(mysql_error());
@@ -506,11 +507,11 @@ function fetch_towers_in_phase($projectId) {
     return $arrDetail;
 }
 
-function fetch_towerDetails_for_phase($projectId) {
+function fetch_towerDetails_for_phase($projectId, $phaseId = 0) {
     // Returns towers that are available for phase to select. So, if tower1 is selected in phase1 and tower2 is selected by no other phase,
     // in that case - both tower1 and tower2 are available to phase1 to select from.
 
-    $qrySel = "SELECT TOWER_NAME,TOWER_ID,PHASE_ID FROM " . RESI_PROJECT_TOWER_DETAILS . "  WHERE PROJECT_ID = '" . $projectId . "' GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";
+    $qrySel = "SELECT TOWER_NAME,a.TOWER_ID,PHASE_ID FROM " . RESI_PROJECT_TOWER_DETAILS . " a LEFT JOIN phase_tower_mappings b on (b.TOWER_ID = a.TOWER_ID and b.PHASE_ID = $phaseId) WHERE PROJECT_ID = $projectId ORDER BY TOWER_NAME";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
