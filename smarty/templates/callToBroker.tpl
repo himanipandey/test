@@ -14,7 +14,7 @@
 		return;
 	  }
 	  
-      if( !isNaN(phNo) && $('#mobile').val().indexOf('+') == -1 && $('#mobile').val().indexOf('-') == -1) {
+      if( !isNaN(phNo) && $('#mobile').val().indexOf('+') == -1 && $('#mobile').val().indexOf('-') == -1 && phNo.toString().length == 10) {
         $.ajax(
 	  {
 	      type:"get",
