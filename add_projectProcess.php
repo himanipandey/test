@@ -455,7 +455,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            // $arrOx = 
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
 
-           if (ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
+           if (!ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
            {
                $phase = new ResiProjectPhase();
                $phase->project_id = $returnProject->project_id;
