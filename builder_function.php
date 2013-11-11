@@ -949,7 +949,6 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $D
                             BUILDER_ID		=	'" . $lastId . "',
                             PHONE			=	'" . $phone . "',
                             EMAIL			=	'" . $email . "',
-                            PROJECTS		=	'" . $projects . "',
                             SUBMITTED_DATE	=	now()";
             $res = mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
         }
