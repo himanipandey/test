@@ -994,11 +994,10 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL')
  {
-    $Sql = "UPDATE " . RESI_BUILDER . " SET
+	$Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
                                 ENTITY  	   	     = '" . d_($legalEntity) . "',				
                                 DESCRIPTION 	  	     = '" . d_($txtBuilderDescription) . "',
-				URL	 	  	     = '" . d_($txtBuilderUrl) . "',
 				BUILDER_IMAGE 	   	     = '" . d_($imgname) . "',
 				DISPLAY_ORDER		     = '" . d_($DisplayOrder) . "',
 				ADDRESS			     = '" . d_($address) . "',

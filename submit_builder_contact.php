@@ -40,7 +40,7 @@
                                     SET 
                                       NAME    = '".$val."',
                                       PHONE   = '".$exp_phone[$key]."',
-                                      EMAIL   = '".$exp_email[$key]."',
+                                      EMAIL   = '".$exp_email[$key]."'
                                     WHERE
                                       ID      = '".$exp_id[$key]."'";
                             $resUp = mysql_query($resUp);
