@@ -56,7 +56,7 @@ class CommentsHistory extends ActiveRecord\Model
         
        $oldMonthCycle = date('M-y', strtotime("last month"));
        $qry = "SELECT ch.*,pa.fname FROM 
-            project_new.comments_history as ch 
+            comments_history as ch 
             left join 
             proptiger_admin pa
             on 
@@ -83,7 +83,7 @@ class CommentsHistory extends ActiveRecord\Model
             
             $oldMonthCycle = date('M-y', strtotime("-2 month"));
             $qry = "SELECT ch.*,pa.fname FROM 
-            project_new.comments_history as ch 
+            comments_history as ch 
             left join 
             proptiger_admin pa
             on 
