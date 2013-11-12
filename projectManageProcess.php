@@ -108,8 +108,10 @@
 
 		$smarty->assign("Residential", $_REQUEST['Residential']);
 
-		if(!isset($_REQUEST['Availability']))
-                    $_REQUEST['Availability'] = '';
+		if(count($_REQUEST['Availability'])>0)
+                    $Availability  = implode(",", $_REQUEST['Availability']);
+		else
+                    $Availability = '';
 
 		$smarty->assign("Availability", $_REQUEST['Availability']);
 
@@ -148,23 +150,23 @@
                     if($_REQUEST['Residential'] != '')
                         $arrSearchFields['residential_flag'] = $_REQUEST['Residential'];
 
-                   /* if($_REQUEST['Availability'] != '')
+                    if($Availability != '')
                     {
-                        $QueryMember .= "$and (1 = 0 ";
-                        if(in_array(0,$_REQUEST['Availability']))
-                        {
-                                $QueryMember .=  " OR AVAILABLE_NO_FLATS = 0";
-                        }
+                        $QueryMember = 'D_AVAILABILITY = -1';
                         if(in_array(1,$_REQUEST['Availability']))
                         {
-                                $QueryMember .=  " OR AVAILABLE_NO_FLATS > 0";
+                                $QueryMember .=  " OR D_AVAILABILITY = 0";
                         }
                         if(in_array(2,$_REQUEST['Availability']))
                         {
-                                $QueryMember .=  " OR AVAILABLE_NO_FLATS IS NULL ";
+                                $QueryMember .=  " OR D_AVAILABILITY > 0";
                         }
-                        $QueryMember .= ")";
-                    }*/
+                        if(in_array(3,$_REQUEST['Availability']))
+                        {
+                                $QueryMember .=  " OR D_AVAILABILITY IS NULL ";
+                        }
+                       $arrSearchFields['D_AVAILABILITY'] = $QueryMember;
+                    }
                     if($ActiveValue != '')
                         $arrSearchFields['status'] = $_REQUEST['Active'];
                     if($StatusValue != '')
@@ -187,6 +189,7 @@
 		}
 		else
                     $arrSearchFields['project_id'] = $_REQUEST['projectId'];
+                 
 		if(date($exp_supply_date_to) < date($exp_supply_date_from)){
 			$errorMsg = '<font color = red>To Date must be greater than From Date.</font>';		
 		}

@@ -47,20 +47,24 @@ class ResiProject extends Objects
        $arrSearchFieldsValue = array();
        $date = '';
        $cnt = 0;
+       $conditions = '';
 	if(count($arrSearch) > 1) 
 		$city_and = ' and ';
 	else
 		$city_and = '';
     foreach($arrSearch as $key => $value ) {
+      
       $cnt++;
-      $and = ' in (?) and ';
+      $and = ' and ';
 	  $comma = ' ,';
-	  $proj_nam_and = ' like ? and ';
+	  $proj_nam_and = ' and ';
+	  
       if( count($arrSearch) == $cnt ) {
           $comma = '';
-          $and = 'in (?) ';
-          $proj_nam_and = ' like ? ';
+          $and = ' ';
+          $proj_nam_and = ' ';
       }
+      
       if( count($arrSearch) < $cnt ){
           $and = '';
           $proj_nam_and = '';
@@ -68,41 +72,43 @@ class ResiProject extends Objects
       }
           
 	  if( $key == 'city_id' ){
-		$arrSearchFields .= "city.city_id = ? ".$city_and;
-        array_push($arrSearchFieldsValue, $value);
-	  }
+		$conditions .=  "city.city_id = $value ".$city_and;
+   	  }
       else if( $key == 'expected_supply_date_between_from_to' ) {
           $twoDate = explode('_',$value);
-          $arrSearchFields .= 'expected_supply_date >= ? and ';
-          array_push($arrSearchFieldsValue, $twoDate[0]);  
-               
-          $arrSearchFields .= 'expected_supply_date <= ?';
-          array_push($arrSearchFieldsValue, $twoDate[1]);  
+          $conditions .= 'expected_supply_date >= '.$twoDate[0].' and ';
+          $conditions .= 'expected_supply_date <= '.$twoDate[1];
       }
       else if( $key == 'expected_supply_date_from' ) {
           $date = "$value";
-          $arrSearchFields .= 'expected_supply_date >= ?';
-          array_push($arrSearchFieldsValue, $date);
-      }
+          $conditions .= 'expected_supply_date >= $date';
+	  }
       else if( $key == 'expected_supply_date_to' ) {
            $date = "$value";
-           $arrSearchFields .= 'expected_supply_date <= ?';
-           array_push($arrSearchFieldsValue, $date);
+           $conditions .= 'expected_supply_date <= $date';
       }
      elseif( $key == 'project_name' ){
-		  
-		  $arrSearchFields .= "resi_project.$key  $proj_nam_and";
-           array_push($arrSearchFieldsValue, $value.'%');
-		  
-	  }else {
-           $arrSearchFields .= "resi_project.$key $and";
-           array_push($arrSearchFieldsValue, $value);
+		   $conditions .= "resi_project.$key  like '$value%' $proj_nam_and";          
+	 }
+	 elseif($key == 'D_AVAILABILITY'){
+		
+		 if(is_array($value))
+		   $value = implode("','",$value);
+		   
+		 $conditions .= "($value) $and";
+	
+	 }
+	 else {
+		 if(is_array($value))
+		   $value = implode("','",$value);
+		 $conditions .= "resi_project.$key in ('$value') $and";
+          
       }
     }
 	
-	
-       $conditions = array_merge(array($arrSearchFields), $arrSearchFieldsValue);
-       $join = " left join resi_builder b on resi_project.builder_id = b.builder_id
+	 $query = "SELECT resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name FROM `resi_project` 
+				left join resi_builder b 
+					on resi_project.builder_id = b.builder_id
                  left join master_project_phases phases 
                     on resi_project.project_phase_id = phases.id
                  left join master_project_stages stages
@@ -112,11 +118,11 @@ class ResiProject extends Objects
                  left join suburb 
                     on locality.suburb_id = suburb.suburb_id
                  left join city
-                    on suburb.city_id = city.city_id";
-                    
-       $projectSearch = ResiProject::find('all',
-           array('joins' => $join,'conditions'=>$conditions,'select' => 
-                    'resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name','limit' => 25));		
+                    on suburb.city_id = city.city_id WHERE ".
+						$conditions." and version = 'Cms' LIMIT 25";
+						
+       $projectSearch = ResiProject::find_by_sql($query);  
+                  	
        return $projectSearch;
    }
 
