@@ -48,7 +48,7 @@
                             {
                                 if(strlen($projects)>0){
                                     $exp = explode(',', $projects);
-                                    if(count($exp)>1) {
+                                    if(count($exp)>0 && !empty($projects)) {
                                         foreach($exp as $val) {
                                         print $qryIns = "insert into project_builder_contact_mappings set 
                                          project_id = $val,builder_contact_id = '".$exp_id[$key]."'";
@@ -74,7 +74,7 @@
                             if($resIns){
                                     if(strlen($projects)>0){
                                     $exp = explode(',', $projects);
-                                    if(count($exp)>1) {
+                                    if(count($exp)>0 && !empty($projects)) {
                                         foreach($exp as $val) {
                                         $qryIns = "insert into project_builder_contact_mappings set 
                                         project_id = $val,builder_contact_id = '".$contactId."'";
