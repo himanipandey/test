@@ -76,16 +76,14 @@ class ResiProject extends Objects
    	  }
       else if( $key == 'expected_supply_date_between_from_to' ) {
           $twoDate = explode('_',$value);
-          $conditions .= 'expected_supply_date >= '.$twoDate[0].' and ';
-          $conditions .= 'expected_supply_date <= '.$twoDate[1];
+          $conditions .= "expected_supply_date >= '".$twoDate[0]."' and ";
+          $conditions .= "expected_supply_date <= '".$twoDate[1]."' ";
       }
       else if( $key == 'expected_supply_date_from' ) {
-          $date = "$value";
-          $conditions .= 'expected_supply_date >= $date';
+          $conditions .= "expected_supply_date >= '$value'";
 	  }
       else if( $key == 'expected_supply_date_to' ) {
-           $date = "$value";
-           $conditions .= 'expected_supply_date <= $date';
+           $conditions .= "expected_supply_date <= '$value'";
       }
      elseif( $key == 'project_name' ){
 		   $conditions .= "resi_project.$key  like '$value%' $proj_nam_and";          

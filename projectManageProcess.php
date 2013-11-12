@@ -51,11 +51,11 @@
 	if($search != '' OR $_GET['projectId'] != '')
 	{
 		if(!isset($_REQUEST['exp_supply_date_from']))
-		$_REQUEST['exp_supply_date_from'] = '';
+			$_REQUEST['exp_supply_date_from'] = '';
 		$exp_supply_date_from = $_REQUEST['exp_supply_date_from'];
                 
-                if(!isset($_REQUEST['exp_supply_date_to']))
-		$_REQUEST['city'] = '';
+        if(!isset($_REQUEST['exp_supply_date_to']))
+			$_REQUEST['city'] = '';
 		$exp_supply_date_to = $_REQUEST['exp_supply_date_to'];
                 
                 if(!isset($_REQUEST['city']))
@@ -190,8 +190,9 @@
 		else
                     $arrSearchFields['project_id'] = $_REQUEST['projectId'];
                  
-		if(date($exp_supply_date_to) < date($exp_supply_date_from)){
-			$errorMsg = '<font color = red>To Date must be greater than From Date.</font>';		
+		if($exp_supply_date_to != '' && $exp_supply_date_from != ''){
+			if(date($exp_supply_date_to) < date($exp_supply_date_from))
+				$errorMsg = '<font color = red>To Date must be greater than From Date.</font>';		
 		}
 	    	else if( count($arrSearchFields) > 0 ) { 
                     $getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
