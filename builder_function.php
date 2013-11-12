@@ -795,7 +795,7 @@ function searchTower($towerArray, $newTower) {
 
 function searchPhase($phaseArray, $newPhaseName) {
     foreach ($phaseArray as $k => $val) {
-        if ($newPhaseName == $val['PHASE_NAME']) {
+        if (strtolower($newPhaseName) == strtolower($val['PHASE_NAME'])) {
             return $k;
         }
     }
