@@ -28,6 +28,8 @@ class ResiProjectPhase extends Objects
 
     private function new_options($option_ids) {
         foreach ($option_ids as $id) {
+            if ($id == -1) return;
+                
             $existingListings = Listings::find('all', array("joins" => "join resi_project_options o on (o.options_id = option_id and o.option_category = 'Actual')", "conditions" => array("listing_category = 'Primary' and option_id = ? and phase_id = ?", $id, $this->phase_id)));
             if (empty($existingListings)) {
                 $map = new Listings();
@@ -42,7 +44,9 @@ class ResiProjectPhase extends Objects
             }
         }
 
-        Listings::update_all(array("joins" => "join resi_project_options o on (o.options_id = option_id and o.option_category = 'Actual')", 'conditions' => array('phase_id' => $this->phase_id, 'listing_category' => 'Primary', 'option_id' => $option_ids), 'set' => array('status' => 'Active')));
+        if (!empty($option_ids)) {
+            Listings::update_all(array("joins" => "join resi_project_options o on (o.options_id = option_id and o.option_category = 'Actual')", 'conditions' => array('phase_id' => $this->phase_id, 'listing_category' => 'Primary', 'option_id' => $option_ids), 'set' => array('status' => 'Active')));
+        }
     }
 
     public function insert_audit($action){

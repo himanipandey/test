@@ -197,7 +197,7 @@
 
 
                                     {if isset($phaseId) and $phaseId != -1}
-                                        {if $phaseId != '0'}
+                                        {if $phaseObject.PHASE_TYPE != 'Logical'}
                                             <tr>
                                                 <td width="20%" align="right"><font color ="red">*</font><b>Phase Name :</b> </td>
                                                 <td width="30%" align="left">
@@ -401,14 +401,16 @@
         };
 
         $.each(cals_dict, function(k, v) {
-            Calendar.setup({
-                inputField: v, // id of the input field
-                //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
-                ifFormat: "%Y-%m-%d", // format of the input field
-                button: k, // trigger for the calendar (button ID)
-                align: "Tl", // alignment (defaults to "Bl")
-                singleClick: true,
-                showsTime: true
-            });
+            if ($('#' + k).length > 0) {
+                Calendar.setup({
+                    inputField: v, // id of the input field
+                    //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
+                    ifFormat: "%Y-%m-%d", // format of the input field
+                    button: k, // trigger for the calendar (button ID)
+                    align: "Tl", // alignment (defaults to "Bl")
+                    singleClick: true,
+                    showsTime: true
+                });
+            }
         });
                                                                                                                                         {/if}                                                                                                                            </script>
