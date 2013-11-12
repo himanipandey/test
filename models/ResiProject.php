@@ -86,6 +86,7 @@ class ResiProject extends Objects
            $conditions .= "expected_supply_date <= '$value'";
       }
      elseif( $key == 'project_name' ){
+
 		   $conditions .= "resi_project.$key  like '$value%' $proj_nam_and";          
 	 }
 	 elseif($key == 'D_AVAILABILITY'){
@@ -100,7 +101,7 @@ class ResiProject extends Objects
 		 if(is_array($value))
 		   $value = implode("','",$value);
 		 $conditions .= "resi_project.$key in ('$value') $and";
-          
+
       }
     }
 	

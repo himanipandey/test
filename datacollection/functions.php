@@ -106,7 +106,7 @@ function getProjectListForManagers($cityId, $suburbId = ''){
 function getAssignedProjectsFromPIDs($pids){
     $res = array();
     if(!empty($pids)){
-        $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,
+       $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,
          psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
          max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE, pphs.name as PROJECT_PHASE, 
          pstg.name as PREV_PROJECT_STAGE, pphs.name PREV_PROJECT_PHASE,
@@ -124,8 +124,8 @@ function getAssignedProjectsFromPIDs($pids){
          inner join project_stage_history psh 
          on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID left join project_stage_history pshp 
          on psh.PREV_HISTORY_ID = pshp.HISTORY_ID 
-         inner join master_project_stages pstg on psh.project_stage_id = pstg.id
-         inner join master_project_phases pphs on psh.project_phase_id = pphs.id
+         inner join master_project_stages pstg on rp.PROJECT_STAGE_ID = pstg.id
+         inner join master_project_phases pphs on rp.PROJECT_PHASE_ID = pphs.id
          left join project_assignment pa 
          on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
