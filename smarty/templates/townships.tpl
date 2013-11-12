@@ -65,6 +65,7 @@
                         <TD class=whiteTxt width=15% align="left">Created By</TD>
                         <TD class=whiteTxt width=25% align="left">Created At</TD>
                         <TD class=whiteTxt width=25% align="left">Updated At</TD>
+                        <TD class=whiteTxt width=25% align="left">Action</TD>
                       </TR>
                       <TR><TD colspan=12 class=td-border></TD></TR>
                       {$count = 0}
@@ -82,6 +83,7 @@
                         <TD align=left class=td-border>{$item->fname}</TD>
                         <TD align=left class=td-border>{$item->created_at|date_format}</TD>
                         <TD align=left class=td-border>{$item->updated_at|date_format}</TD>
+                         <TD align=left class=td-border><a href="townshipsAdd.php?townshipsId={$item->id}mode=edit&page={$page}&sort={$sort}" title="{$item->township_name}">EDIT </a></TD>
                         
                       </TR>
                        {/foreach}

@@ -72,4 +72,5 @@
     $smarty->assign("NumRows",$NumRows);
     $smarty->assign("townshipsName",$name);
     $smarty->assign("townshipsArr", $townshipsArr);
+    
 ?>
