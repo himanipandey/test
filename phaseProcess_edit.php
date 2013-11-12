@@ -23,7 +23,7 @@ $smarty->assign("bookingStatuses", $bookingStatuses);
 if (isset($_REQUEST['delete'])) {
     $phase = ResiProjectPhase::virtual_find($phaseId);
     $phase->status = 'Inactive';
-    $resDelete = $phase->save();
+    $resDelete = $phase->virtual_save();
     if ($resDelete) {
         if ($preview == 'true')
             header("Location:show_project_details.php?projectId=" . $projectId);
@@ -38,7 +38,7 @@ $projectDetail = $projectDetail->to_custom_array();
 $smarty->assign("ProjectDetail", array($projectDetail));
 
 $phaseDetail = array();
-$phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId), "order" => "phase_name asc"));
+$phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active'), "order" => "phase_name asc"));
 foreach($phases as $p){
     array_push($phaseDetail, $p->to_custom_array());
 }
@@ -86,6 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $current_phase = phaseDetailsForId($phaseId);
 
     // Assign vars for smarty
+    $smarty->assign("phaseObject", $current_phase[0]);
+    $smarty->assign("bookingStatus", $current_phase[0]['BOOKING_STATUS_ID']);
     $smarty->assign("phasename", $current_phase[0]['PHASE_NAME']);
     $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
     $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
@@ -112,6 +114,7 @@ if (isset($_POST['btnSave'])) {
     $completion_date = $_REQUEST['completion_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
+    $isLaunchedUnitPhase = $_REQUEST['isLaunchUnitPhase'];
 
     // Assign vars for smarty
     $smarty->assign("phasename", $phasename);
@@ -144,7 +147,7 @@ if (isset($_POST['btnSave'])) {
         // Update
         ############## Transaction ##############
         ResiProjectPhase::transaction(function(){
-            global $projectId, $phaseId, $phasename, $launch_date, $completion_date, $remark, $phaseLaunched, $towers;
+            global $projectId, $phaseId, $phasename, $launch_date, $completion_date, $remark, $towers;
             if($phaseId != '0'){
                 //          Updating existing phase
                 $phase = ResiProjectPhase::virtual_find($phaseId);
@@ -153,6 +156,7 @@ if (isset($_POST['btnSave'])) {
                 $phase->launch_date = $launch_date;
                 $phase->completion_date = $completion_date;
                 $phase->remarks = $remark;
+                $phase->booking_status_id = (($_REQUEST['bookingStatus'] != -1) ? $_REQUEST['bookingStatus'] : null);
                 $phase->save();
 
                 if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
@@ -178,12 +182,12 @@ if (isset($_POST['btnSave'])) {
         // Phase Quantity
         if (sizeof($flats_config) > 0) {
             foreach ($flats_config as $key => $value) {
-                ProjectSupply::addEditSupply($projectId, $phaseId, 'apartment', $key, $value['supply'], $value['launched']);
+                ProjectSupply::addEditSupply($projectId, $phaseId, 'apartment', $key, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']);
             }
         }
         if (sizeof($villas_config) > 0) {
             foreach ($villas_config as $key => $value) {
-                ProjectSupply::addEditSupply($projectId, $phaseId, 'villa', $key, $value['supply'], $value['launched']);
+                ProjectSupply::addEditSupply($projectId, $phaseId, 'villa', $key, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']);
             }
         }
 

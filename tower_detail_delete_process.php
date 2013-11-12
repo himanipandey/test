@@ -80,7 +80,18 @@
                     "updated_by" => $_SESSION["adminId"]
                 );
 
-                if($tower_name != '') $tower_obj = ResiProjectTowerDetails::create_or_update($update_array);
+                if($tower_name != '') {
+                    $tower_obj = ResiProjectTowerDetails::create_or_update($update_array);
+                    $project = ResiProject::virtual_find($projectId);
+                    $towerIds = array();
+
+                    foreach ($project->get_all_towers() as $tower) {
+                        $towerIds[] = $tower->tower_id;
+                    }
+                    
+                    $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
+                    $phases[0]->add_towers($towerIds);
+                }
 
                 $deleteKey = "delete_".($key+1);
                 if($_REQUEST[$deleteKey] == on)

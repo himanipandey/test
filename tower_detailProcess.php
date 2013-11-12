@@ -47,6 +47,7 @@
 		 else
 		 {
 			insert_towerDetail($projectId,$towername,$no_of_floors,$stilt,$no_of_flats_per_floor,$towerface,$completion_date,$remark);
+				
 			if($_POST['btnSave'] == 'Next')
 				header("Location:add_tower_construction_status.php?projectId=".$projectId); // need to modify 
 			else if($_POST['btnSave'] == 'Submit')
