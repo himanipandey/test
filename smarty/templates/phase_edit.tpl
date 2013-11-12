@@ -187,7 +187,6 @@
                                         <td width="30%" align="left">
                                             <select id="phaseSelect" name="phaseSelect" onchange="change_phase();">
                                                 <option value="-1">Select Phase</option>
-                                                <option value="0">No Phase</option>
                                                 {foreach $phases as $p}
                                                     <option value="{$p.id}">{$p.name}</option>
                                                 {/foreach}
