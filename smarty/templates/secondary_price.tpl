@@ -20,6 +20,11 @@ function builder_contact(builderId,buildernm)
       var phNo = $('#'+phId).html(); 
       var compgnId = 'campaignName_'+id;
       var campaign = $("#"+compgnId).val();
+      if(campaign == 'Select'){
+		alert("Please select Campaign!");
+		return;
+	  }
+	 
       $.ajax(
 	  {
 	      type:"get",

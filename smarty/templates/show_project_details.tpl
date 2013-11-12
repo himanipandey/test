@@ -316,8 +316,13 @@ function getDateNow(){
       var phId = 'phone_' + id;
       var phNo = $('#'+phId).val(); 
       var campaign = $('#'+'campaignName_'+id).val();
-      $.ajax(
-	  {
+       if(campaign == 'Select'){
+		alert("Please select Campaign!");
+		return;
+	  }
+	 if( !isNaN(phNo) && $("#"+phId).val().indexOf('+') == -1 && $("#"+phId).val().indexOf('-') == -1 && phNo.toString().length == 10) {
+		$.ajax(
+		{
 	      type:"get",
 	      url:"call_contact.php",
 	      data:"contactNo="+phNo+"&campaign="+campaign+"&projectType=primary",
@@ -331,8 +336,10 @@ function getDateNow(){
 		      alert("Error in calling");
 		  
 	      }
-	  }
-      );
+		});
+      }
+      else
+        alert("Please enter valid mobile number");
   };
 
   function setStatus(obj) {
@@ -696,7 +703,7 @@ function getDateNow(){
 								        </td>
 
 								         <td align="center" valign = "top">
-									   <input type = "text" name = "phone[]" id = "phone_{$smarty.section.rowLoop.index}" class="phone_box" value = "{$phone}" style = "width:120px"  onkeypress = "return isNumberKey(event);" maxlength = "13">
+									   <input type = "text" name = "phone[]" id = "phone_{$smarty.section.rowLoop.index}" class="phone_box" value = "{$phone}" style = "width:120px"  onkeypress = "return isNumberKey(event);" maxlength = "10">
 
 									     <input type = "hidden" name = "phone_old[]" value = "{$phone}" style = "width:150px">
 								        </td>
@@ -717,7 +724,7 @@ function getDateNow(){
 							                  <select name = "projects_call_{$start}[]" id = "projects_call_{$smarty.section.rowLoop.index}" multiple>
 							                        <option value = "">Select Project</option>
 							                        {foreach from = $ProjectList key = key item = item}
-							                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+							                          <option value = "{$item['PROJECT_ID']}" >{$item['PROJECT_NAME']}</option>
 							                        {/foreach}
 							                        </option>
 							                   </select>
