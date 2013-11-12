@@ -91,7 +91,7 @@ class ResiProject extends Objects
       }
      elseif( $key == 'project_name' ){
 		  
-		  $arrSearchFields .= "resi_project.$key  $proj_nam_and";
+           $arrSearchFields .= "resi_project.$key  $proj_nam_and";
            array_push($arrSearchFieldsValue, $value.'%');
 		  
 	  }else {

@@ -940,7 +940,12 @@ function getDateNow(){
                                                       {$projectDetails[0].PROJECT_DESCRIPTION}
                                                   </td>
 						</tr>
-
+                                                <tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Project Comments:</b></td>
+                                                    <td>
+                                                      {$projectDetails[0].COMMENTS}
+                                                  </td>
+						</tr>
 						<tr height="25px;">
 							  <td  nowrap="nowrap" width="1%" align="left"><b>Project Address:</b></td>
 
