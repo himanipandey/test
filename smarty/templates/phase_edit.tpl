@@ -288,13 +288,13 @@
                                                                                                     {/foreach}
                                                                                                 </ul>
                                                                                             </td>
-                                                                                            {if $phaseId != '0'}
+                                                                                            {if $phaseObject['PHASE_TYPE'] != 'Logical'}
                                                                                                 <td width="50%" align="left">
                                                                                                     <button class="reset_option_and_supply supply_button">Change to options</button>
                                                                                                 </td>
                                                                                             {/if}
                                                                                             </tr>
-                                                                                            {if $phaseId != '0'}
+                                                                                            {if $phaseObject['PHASE_TYPE'] != 'Logical'}
                                                                                                 <tr>
                                                                                                     <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
                                                                                                         <td width="30%" align="left">
@@ -372,7 +372,7 @@
                                                                                                                                             <td align="left" style="padding-left:0px;">
                                                                                                                                                 <input type="submit" name="btnSave" id="btnSave" value="Submit" onclick="return validate_phase();" />
 
-                                                                                                                                                {if $specialAccess == 1}
+                                                                                                                                                {if $specialAccess == 1 && $phaseObject.PHASE_TYPE != 'Logical'}
                                                                                                                                                     &nbsp;&nbsp;<input type="submit" name="delete" value="Delete" onclick = "return deletePhase();" />
                                                                                                                                                 {/if}
                                                                                                                                                 &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />

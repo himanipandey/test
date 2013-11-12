@@ -218,7 +218,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     if ($action == 'insert') {
                         $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
                         $listing = new Listings();
-                        $listing->option_id = $option->options_id;;
+                        $listing->option_id = $option->options_id;
                         $listing->phase_id = $phases[0]->phase_id;
                         $listing->listing_category = 'Primary';
                         $listing->status = 'Active';
