@@ -1927,5 +1927,13 @@ function projectBankList($projectId){
 	
 }
 
+function checkForDuplicateOption($bedroom,$bathroom,$option_name,$size){
+	
+	print $bedroom."->".$bathroom."->".$option_name."->".$size;
+	
+	die;
+	
+}
+
 ?>
 
