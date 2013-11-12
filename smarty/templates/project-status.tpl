@@ -114,6 +114,7 @@
                                                             <th style="font-size: 12px" nowrap>City</th>
                                                             <th style="font-size: 12px" nowrap>Locality</th>
                                                             <th style="font-size: 12px" nowrap>Project Status</th>
+                                                            <th style="font-size: 12px" nowrap>Booking Status</th>
                                                             <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px" nowrap>Label</th>
                                                             <th style="font-size: 12px" nowrap>Project Phase</th>
                                                             <th style="font-size: 12px" nowrap>Project Stage</th>
@@ -168,6 +169,7 @@
                                                             <td>{$item['CITY']}</td>
                                                             <td nowrap>{$item['LOCALITY']}</td>
                                                             <td>{$item['PROJECT_STATUS']}</td>
+                                                            <td>{$item['BOOKING_STATUS']}</td>
                                                             <td>{$item['LABEL']}</td>
                                                             <td>{$item['PROJECT_PHASE']}</td>
                                                             <td>{$item['PROJECT_STAGE']}</td>

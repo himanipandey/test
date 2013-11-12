@@ -60,7 +60,6 @@ $executiveList = getCallCenterExecutiveWorkLoad();
 if(isset($projectList) && $_REQUEST['download'] == 'true'){
     download_xls_file($projectList,$projectLastAuditDate);
 }
-
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("executiveList", $executiveList);
 $smarty->assign("projectList", $projectList);
@@ -77,7 +76,11 @@ $smarty->assign("projectLastAuditDate", $projectLastAuditDate);
 function prepareDisplayData($data){ 
     $result = array();
     foreach ($data as $value) {
-        $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 'CITY' => $value['CITY'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'MOVEMENT_DATE' => $value['MOVEMENT_DATE'], 'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'], 'LABEL'=>$value['LABEL']);
+        $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 
+            'CITY' => $value['CITY'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 
+            'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'MOVEMENT_DATE' => $value['MOVEMENT_DATE'],
+            'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'],'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 
+            'LABEL'=>$value['LABEL']);
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
         $assignment_type = '';

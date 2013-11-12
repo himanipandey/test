@@ -55,8 +55,8 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
             inner join resi_project rp on pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID 
             inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
-            where ((mpstg.name = '".NewProject_stage."' and mpp = '".DcCallCenter_phase."') or 
-            (mpstg.name = '".UpdationCycle_stage."' and mpp = '".DataCollection_phase."')) and rp.version = 'Cms' 
+            where ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') or 
+            (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version = 'Cms' 
             and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
             inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
             where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY') and pa.ADMINID in 
@@ -66,7 +66,7 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
 }
 
 function getProjectListForManagers($cityId, $suburbId = ''){
-    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,
+    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,mbst.name as BOOKING_STATUS,
          psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
          max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE, pphs.name as PROJECT_PHASE, 
          pstg.name as PREV_PROJECT_STAGE, pphs.name PREV_PROJECT_PHASE,
@@ -86,6 +86,8 @@ function getProjectListForManagers($cityId, $suburbId = ''){
          on psh.PREV_HISTORY_ID = pshp.HISTORY_ID 
          inner join master_project_stages pstg on psh.project_stage_id = pstg.id
          inner join master_project_phases pphs on psh.project_phase_id = pphs.id
+         inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id
+         inner join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
          left join project_assignment pa 
          on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
@@ -219,12 +221,16 @@ function getSurveyTeamLeads(){
 
 //returns all the cities for which survey team lead is there
 //city id as index and admin id as value
-function getSurveyTeamLeadsForCities(){
-    $sql = "select pac.CITY_ID, pa.ADMINID from proptiger_admin_city pac inner join proptiger_admin pa on pa.ADMINId = pac.ADMIN_ID where pa.DEPARTMENT = 'SURVEY' and ROLE = 'teamLeader';";
+function getSurveyTeamLeadsForLocalities(){
+    $sql = "select l.LOCALITY_ID, pa.ADMINID from proptiger_admin_city pac 
+        inner join proptiger_admin pa on pa.ADMINId = pac.ADMIN_ID 
+        inner join suburb s on pac.city_id = s.city_id
+        inner join locality l on s.suburb_id = l.suburb_id
+        where pa.DEPARTMENT = 'SURVEY' and ROLE = 'teamLeader';";
     $queryRes = dbQuery($sql);
     $result = array();
     foreach ($queryRes as $value) {
-        $result[$value['CITY_ID']] = $value['ADMINID'];
+        $result[$value['LOCALITY_ID']] = $value['ADMINID'];
     }
     return $result;
 }
@@ -232,10 +238,10 @@ function getSurveyTeamLeadsForCities(){
 function assignProjectsToField($projectIds){
     $result = array();
     $projectDetails = getMultipleProjectDetails($projectIds);
-    $fieldTeamLeads  = getSurveyTeamLeadsForCities();
+    $fieldTeamLeads  = getSurveyTeamLeadsForLocalities();
     foreach ($projectDetails as $project) {
-        if(isset($fieldTeamLeads[$project['CITY_ID']])){
-            $res = assignProject($project['PROJECT_ID'], $fieldTeamLeads[$project['CITY_ID']]);
+        if(isset($fieldTeamLeads[$project['LOCALITY_ID']])){
+            $res = assignProject($project['PROJECT_ID'], $fieldTeamLeads[$project['LOCALITY_ID']]);
             if(!is_int($res)){
                 $result[$project['PROJECT_ID']] = $res;
             }
