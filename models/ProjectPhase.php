@@ -5,7 +5,7 @@ class ProjectPhase extends ActiveRecord\Model
 {
     static $table_name = 'master_project_phases';
     static function getProjectPhases() {
-        $getPhases = ProjectPhase::find('all');
+        $getPhases = ProjectPhase::find('all',array('conditions'=>array('name != ?','revert')));
         return $getPhases;
     }
     static function getPhaseByName($phaseName) {

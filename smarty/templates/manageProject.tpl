@@ -549,8 +549,6 @@ $(function() {
                                     {if in_array($value->phase_name,$arrProjEditPermission)}
                                         <option value = "/new/price?projectId={$value->project_id}">Update Price</option>
                                         <option value = "new/availability/{$value->project_id}/edit">Update Availability(Supply)</option>
-                                        <option value = "add_tower_construction_status.php?projectId={$value->project_id}">Update Tower Construction</option>
-                                        <option value = "add_project_construction.php?projectId={$value->project_id}">Update Project Construction</option>
                                         <option value = "project_img_add.php?projectId={$value->project_id}&edit=edit">Add Construction Image</option>
                                         {if $value->stage_name == 'SecondaryPriceCycle'}
                                          <option value = "secondary_price.php?projectId={$value->project_id}">Update Project Secondary Price</option>

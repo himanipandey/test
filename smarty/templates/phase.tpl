@@ -9,6 +9,7 @@
         var name_flag = true;
         var flat_bed = true;
         var villa_bed = true;
+        var date_flag = true;
 
         var phasename	    =	$('#PhaseName').val();
         if(!phasename) {
@@ -19,6 +20,16 @@
             $('#err_phase_name').hide();
             name_flag = true;
         }
+        
+        var launch_date = new Date($('#launch_date').val());
+        var completion_date = new Date($('#completion_date').val());
+        
+        if(launch_date > completion_date){
+			$('#err_launch_date2').show();date_flag = false;
+		}
+		else{
+			$('#err_launch_date2').hide();date_flag = true;
+		}
 
         $('li.flat_bed').each(function() {
           var intRegex = /^\d+$/;
@@ -46,7 +57,7 @@
           }
         });
 
-        return name_flag && flat_bed && villa_bed;
+        return date_flag && name_flag && flat_bed && villa_bed;
     }
 </script>
 
@@ -106,7 +117,7 @@
                                         <input name="launch_date" value="{$launch_date}" type="text" class="formstyle2" id="launch_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="launch_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                     </td>
                                     <td width="50%" align="left">
-                                        <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
+                                        <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span><span id = "err_launch_date2" style = "display:none;">Launched date should be less than the Completion Date.</span></font>
                                     </td>
                                 </tr>
 
