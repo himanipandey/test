@@ -92,6 +92,8 @@ function stateChanged()
 
 function update_locality(ctid)
 {
+	alert("updated");
+	  $("#localitySelectText").val('');
     xmlHttpLoc=GetXmlHttpObject()
     var url="Refreshlocality.php?ctid="+ctid;
     xmlHttpLoc.onreadystatechange=stateChanged
@@ -265,6 +267,7 @@ $(function() {
                                                           {/foreach}
                                                   </select>
                                           </td>
+                                         
                                     </tr>
                                     <tr><td>&nbsp;</td></tr>
                                     <tr>
@@ -280,6 +283,7 @@ $(function() {
                                               </select>
                                           </span>
                                           </td>
+                                           <input id="localitySelectText" type="hidden" name="locality" />
                                    </tr>
                                      <tr><td>&nbsp;</td></tr>
                                      <tr>
