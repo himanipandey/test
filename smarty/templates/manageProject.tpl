@@ -92,7 +92,6 @@ function stateChanged()
 
 function update_locality(ctid)
 {
-	alert("updated");
 	  $("#localitySelectText").val('');
     xmlHttpLoc=GetXmlHttpObject()
     var url="Refreshlocality.php?ctid="+ctid;
