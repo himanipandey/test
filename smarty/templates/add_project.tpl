@@ -329,7 +329,7 @@
 								  </td>
 							   </tr>
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Options Description :</b> </td>
+								  <td width="20%" align="right"><font color ="red">*</font><b>Project Description :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectDesc" id="txtProjectDesc" value="{$txtProjectDescription}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
 
 								  <td width="50%" align="left">

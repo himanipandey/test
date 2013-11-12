@@ -6,7 +6,6 @@ if( $dataCollectionFlowAuth == false )
 $smarty->assign("accessDataCollection",$accessDataCollection);
 
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
-
 if(isset($_POST['cityId']) && !empty($_POST['cityId'])){
     unset($_SESSION[$_SERVER['PHP_SELF']]);
     $_SESSION[$_SERVER['PHP_SELF']]['city'] = $_POST['cityId'];
@@ -38,7 +37,7 @@ function prepareDisplayData($data){
         $aAssignedTo = explode('|', $value['ASSIGNED_TO']);
         $aAssignedToDep = explode('|', $value['DEPARTMENT']);
         $assignmentType = '';
-        if($value['PREV_PROJECT_PHASE'] == 'audit1' || $value['PREV_PROJECT_PHASE'] == 'audit2') $assignmentType .= 'Reverted-';
+        if($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') $assignmentType .= 'Reverted-';
         if($aAssignedToDep[count($aAssignedToDep)-1] === 'SURVEY')$assignmentType .= 'Field';
         elseif(empty($aAssignedTo[0])) $assignmentType .= 'Unassigned';
         else{

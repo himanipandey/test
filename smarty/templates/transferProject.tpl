@@ -363,19 +363,19 @@ $(function() {
                                       </select>
                                       </td>
                                   </tr>
-                                   <!--  <tr bgcolor='#fcfcfc'>
+                                     <tr bgcolor='#fcfcfc'>
                                            <td width="50" align="right" style = "padding-left:20px;" height='35' nowrap><b>Availability:</b></td>
                                            <td width="50" align="left" style = "padding-left:20px;">
                                            <select name="Availability[]" id="Avail" multiple style='width:260px;border:1px solid #c2c2c2;padding:3px;'>
                                                                    <option value="">Select Availability</option>
-                                                                   <option value="0" {if in_array(0,$Availability)}selected{/if}>Inventory Not Available</option>
-                                                                   <option value="1" {if in_array(1,$Availability)}selected{/if}>Inventory Available</option>
-                                                                   <option value="2" {if in_array(2,$Availability)}selected{/if}>Data Not Available</option>
+                                                                   <option value="1" {if in_array(1,$Availability)}selected{/if}>Inventory Not Available</option>
+                                                                   <option value="2" {if in_array(2,$Availability)}selected{/if}>Inventory Available</option>
+                                                                   <option value="3" {if in_array(3,$Availability)}selected{/if}>Data Not Available</option>
 
                                                             </select>
                                            </td>
                                      </tr>					
-                                   -->
+                                   
                                    <tr bgcolor='#fcfcfc'>
                                       <td align="right" style = "padding-left:20px;" height='35' valign ="top"><b>Active:</b></td>
                                       <td align="left" style = "padding-left:20px;">

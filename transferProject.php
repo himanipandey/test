@@ -156,25 +156,25 @@
 
         if($_POST['projectId'] == '')
         {				
-            /* if($_REQUEST['Availability'] != '')
+             if($_REQUEST['Availability'] != '' && !empty($_REQUEST['Availability'][0]))
              {
                      $QueryMember .= $and ." (1 = 0 ";
-                     if(in_array(0,$_REQUEST['Availability']))
-                     {
-                             $QueryMember .=  " OR AVAILABLE_NO_FLATS = 0";
-                     }
                      if(in_array(1,$_REQUEST['Availability']))
                      {
-                             $QueryMember .=  " OR AVAILABLE_NO_FLATS > 0";
+                             $QueryMember .=  " OR D_AVAILABILITY = 0";
                      }
                      if(in_array(2,$_REQUEST['Availability']))
                      {
-                             $QueryMember .=  " OR AVAILABLE_NO_FLATS IS NULL ";
+                             $QueryMember .=  " OR D_AVAILABILITY > 0";
+                     }
+                     if(in_array(3,$_REQUEST['Availability']))
+                     {
+                             $QueryMember .=  " OR D_AVAILABILITY IS NULL ";
                      }
                      $QueryMember .= ")";
                      $and  = ' AND ';
              }
-              */
+              
 
              if($_REQUEST['city'] != '')
              {

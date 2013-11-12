@@ -347,7 +347,7 @@ $(function() {
                                           </td>
                                     </tr>
                                    <tr><td>&nbsp;</td></tr>
-                                   <!-- <tr>
+                                   <tr>
                                           <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Availability:</b></td>
                                           <td width="50" align="left" style = "padding-left:20px;">
                                           <select name="Availability[]" id="Avail" multiple>
@@ -355,13 +355,13 @@ $(function() {
                                               {if !is_array($Availability)}
                                                       {$Availability = array()}
                                               {/if}
-                                              <option value="0" {if in_array(0,$Availability)}selected {else} {/if}>Inventory Not Available</option>
-                                              <option value="1" {if in_array(1,$Availability)}selected {else} {/if}>Inventory Available</option>
-                                              <option value="2" {if in_array(2,$Availability)}selected {else} {/if}>Data Not Available</option>
+                                              <option value="1" {if in_array(1,$Availability)}selected {else} {/if}>Inventory Not Available</option>
+                                              <option value="2" {if in_array(2,$Availability)}selected {else} {/if}>Inventory Available</option>
+                                              <option value="3" {if in_array(3,$Availability)}selected {else} {/if}>Data Not Available</option>
                                            </select>
                                           </td>
                                     </tr>
-                                  <tr><td>&nbsp;</td></tr>-->
+                                  <tr><td>&nbsp;</td></tr>
 
                                     <tr>
                                          <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Residential:</b></td>
