@@ -197,11 +197,10 @@
 
 
                                     {if isset($phaseId) and $phaseId != -1}
-                                        {if $phaseObject.PHASE_TYPE != 'Logical'}
                                             <tr>
                                                 <td width="20%" align="right"><font color ="red">*</font><b>Phase Name :</b> </td>
                                                 <td width="30%" align="left">
-                                                    <input id="phaseName" name="phaseName" value="{$phasename}" />
+                                                    <input id="phaseName" name="phaseName" value="{$phasename}" {if $phaseObject.PHASE_TYPE == 'Logical'} readonly {/if} />
                                                 </td>
                                                 <td width="50%" align="left">
                                                     <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
@@ -219,7 +218,8 @@
                                                 </td>
                                                 <td width="50%" align="left"></td>
                                             </tr>
-                                            
+
+                                         {if $phaseObject.PHASE_TYPE != 'Logical'}
                                             <tr>
                                                 <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
                                                 <td width="30%" align="left">
