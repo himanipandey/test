@@ -486,7 +486,8 @@ function fetch_towerDetails($projectId) {
                 on t.tower_id = ptm.tower_id
                 inner join resi_project_phase p on ptm.phase_id = p.phase_id
                 WHERE
-                        t.PROJECT_ID = '" . $projectId . "' and p.version = 'Cms' and p.status = 'Active' ORDER BY t.TOWER_NAME ASC";
+                  t.PROJECT_ID = '" . $projectId . "' and p.version = 'Cms' 
+                  and p.status = 'Active' ORDER BY t.TOWER_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {

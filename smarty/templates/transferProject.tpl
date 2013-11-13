@@ -226,7 +226,7 @@ $(function() {
 <input type='hidden' name='dwnld_projectId' id='dwnld_projectId' value="{$_POST['projectId']}">
 <input type='hidden' name='dwnld_search' id='dwnld_search' value="{$_POST['search']}">
 <input type='hidden' name='dwnld_transfer' id='dwnld_transfer' value="{$_POST['transfer']}">
-
+<input type='hidden' name='dwnld_updationCycle' id='dwnld_transfer' value="{$_POST['updationCycle']}">
 <input type='hidden' name='current_dwnld_phase' id='current_dwnld_phase' value="">
 <input type='hidden' name='current_dwnld_stage' id='current_dwnld_stage' value="">
 </form>
@@ -328,7 +328,7 @@ $(function() {
                                    <tr>
                                         <td width="50" align="right" style = "padding-left:20px;" height='35' nowrap><b>Updation Cycle:</b></td>
                                         <td width="50" align="left" style = "padding-left:20px;">
-                                            <select name="updationCycle">
+                                            <select name="updationCycle" id = "updationCycle">
                                               <option value="">Select Updation Cycle</option>
                                               {foreach from=$UpdationArr key=k item=v}
                                               <option value = "{$v->updation_cycle_id}" 
