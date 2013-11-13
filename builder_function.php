@@ -686,7 +686,7 @@ function ProjectType($projectId) {
     global $arrProjectType;
     global $arrProjectType_VA;
 
-    $qry = "SELECT * FROM  " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qry = "SELECT * FROM  " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' AND OPTION_CATEGORY = 'Actual'";
     $res = mysql_query($qry);
 
     while ($data = mysql_fetch_assoc($res)) {
