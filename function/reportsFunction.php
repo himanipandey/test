@@ -45,7 +45,7 @@
                     inner join master_project_phases ph on A.PROJECT_PHASE_ID = ph.id
                ".$quryand."
                GROUP BY 
-                   A.PROJECT_PHASE_ID, A.PROJECT_STAGE_ID, ADMIN_ID ORDER BY B.DEPARTMENT, B.FNAME, A.ADMIN_ID";
+                   A.PROJECT_PHASE_ID, A.PROJECT_STAGE_ID ORDER BY B.DEPARTMENT, B.FNAME, A.ADMIN_ID";
        $allData = ProjectStageHistory::find_by_sql($qry);
 
        $finalArr = array();
