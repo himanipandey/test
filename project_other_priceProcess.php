@@ -34,7 +34,9 @@
     }
 	else if($_REQUEST['Skip'] == "Skip")
 	{
-		  header("Location:new/availability/".$projectId."/edit");
+          $noPhasePhase = ResiProjectPhase::getNoPhaseForProject($projectId);
+          $noPhasePhaseId = $noPhasePhase->phase_id;
+		  header("Location:new/availability/".$noPhasePhaseId."/edit");
 	}
 
 ?>
