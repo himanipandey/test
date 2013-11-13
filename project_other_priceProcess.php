@@ -14,6 +14,8 @@
 	
 	$smarty->assign("edit", $edit);
 	$smarty->assign("OtherPrice", $OtherPrice);
+    $noPhasePhase = ResiProjectPhase::getNoPhaseForProject($projectId);
+    $noPhasePhaseId = $noPhasePhase->phase_id;
 	if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Submit")
 	{
             $return = InsertUpdateOtherPrice($_REQUEST,$projectId);
@@ -22,7 +24,7 @@
                 if($_POST['btnSave'] == 'Submit')
                     header("Location:ProjectList.php?projectId=".$projectId);
                 else
-                    header("Location:new/availability/".$projectId."/edit");
+                    header("Location:new/availability/".$noPhasePhaseId."/edit");
             }
             else {
                 die("error in other price insertion");
@@ -34,8 +36,6 @@
     }
 	else if($_REQUEST['Skip'] == "Skip")
 	{
-          $noPhasePhase = ResiProjectPhase::getNoPhaseForProject($projectId);
-          $noPhasePhaseId = $noPhasePhase->phase_id;
 		  header("Location:new/availability/".$noPhasePhaseId."/edit");
 	}
 
