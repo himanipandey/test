@@ -105,7 +105,9 @@ class ResiProject extends Objects
       }
     }
 	
-	 $query = "SELECT resi_project.*,b.builder_name,phases.name as phase_name,stages.name as stage_name FROM `resi_project` 
+	 $query = "SELECT resi_project.*, rpp.PHASE_ID as no_phase_id, b.builder_name,phases.name as phase_name,stages.name as stage_name FROM `resi_project` 
+                inner join resi_project_phase rpp
+                    on resi_project.PROJECT_ID = rpp.PROJECT_ID and rpp.PHASE_TYPE = 'Logical' and rpp.version = 'Cms' 
 				left join resi_builder b 
 					on resi_project.builder_id = b.builder_id
                  left join master_project_phases phases 
@@ -118,7 +120,7 @@ class ResiProject extends Objects
                     on locality.suburb_id = suburb.suburb_id
                  left join city
                     on suburb.city_id = city.city_id WHERE ".
-						$conditions." and version = 'Cms' LIMIT 25";
+						$conditions." and resi_project.version = 'Cms' LIMIT 25";
 						
        $projectSearch = ResiProject::find_by_sql($query);  
                   	

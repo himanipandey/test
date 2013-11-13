@@ -2096,8 +2096,9 @@ function getDateNow(){
 							{$flatChk = 0}
 							{$flatAvailChk = 0}
 								<tr class="headingrowcolor" height="30px;">
-									<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-									<td class="whiteTxt" align = "center" nowrap><b>Tower Name</b></td>
+									<td class="whiteTxt" align = "left" nowrap><b>SNO.</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>Phase Name</b></td>
+                                                                        <td class="whiteTxt" align = "center" nowrap><b>Tower Name</b></td>
 									<td class="whiteTxt" align = "center" nowrap><b>No of floors</b></td>
 									<td class="whiteTxt" align = "center" nowrap><b>No. of Flats</b></td>
 									<td class="whiteTxt" align = "center" nowrap><b>Remarks</b></td>
@@ -2119,8 +2120,9 @@ function getDateNow(){
 										{else}
 											{$color = "bgcolor='#f2f2f2'"}
 										{/if}
-										
+                                                                                
 										<tr {$color}  height ="30px">
+                                                                                    <TD>{$keyInner+1}</TD>
 										{if $olderValue != $key}
 											<td valign ="top" align = "center" rowspan ={count($towerDetail[$key])}>{$key}</td>
 										{/if}
@@ -2745,6 +2747,7 @@ function getDateNow(){
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
                                                                                                                 <td  align ="left" >&nbsp;</td>
+                                                                                                                
 													</tr>
 												{/if}
 											{/foreach}

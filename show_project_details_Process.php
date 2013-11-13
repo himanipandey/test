@@ -432,17 +432,16 @@ if ($_POST['forwardFlag'] == 'no') {
         $phaseName = 'DcCallCenter';
     else
         $phaseName = 'DataCollection';
-
 //  Get back older history
     $qry = "select * from master_project_phases where name = '".$phaseName."'";
     $res = mysql_query($qry) or die(mysql_error());
     $phaseId = mysql_fetch_assoc($res);
     
-    $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
+    echo$qryStg = "select * from master_project_stages where name = '".$projectStage."'";
     $resStg = mysql_query($qryStg) or die(mysql_error());
     $stageId = mysql_fetch_assoc($resStg);
     $history = ProjectStageHistory::find("all", array("conditions" => "project_id = {$projectId} and project_phase_id in
-    (1,3,8) and project_stage_id = {$stageId['id']}", "limit" => 1, "order" => "date_time desc"));
+    (".phaseId_1.",".phaseId_3.",".phaseId_8.") and project_stage_id = {$stageId['id']}", "limit" => 1, "order" => "date_time desc"));
 //  If old history is found
     if(count($history) > 0){
         $history = $history[0];
@@ -461,7 +460,7 @@ if ($_POST['forwardFlag'] == 'no') {
     if(count($lastAssignemnt) > 0){
         $lastAssignemnt = $lastAssignemnt[0];
         $newAssignment = new ProjectAssignment();
-        $project = ResiProject::find($projectId);
+        $project = ResiProject::virtual_find($projectId);
         $newAssignment->movement_history_id = $project->movement_history_id;
         $newAssignment->assigned_to = $lastAssignemnt->assigned_to;
         $newAssignment->assigned_by = $lastAssignemnt->assigned_by;
@@ -470,7 +469,6 @@ if ($_POST['forwardFlag'] == 'no') {
         $newAssignment->updation_time = Date('Y-m-d H:i:s');
         $newAssignment->save();
     }
-
     header("Location:$returnURLPID");
 }
 include('builder_contact_info_process.php');
@@ -481,11 +479,9 @@ $allBrokerByProject = getBrokerByProject($projectId);
 $arrBrokerList = array();
 
 foreach ($allBrokerByProject as $key => $val) {
-    include("dbConfig_crm.php");
     $brikerList = getBrokerDetailById($key);
     $arrBrokerList[$key] = $brikerList;
 }
-include("dbConfig.php");
 $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
 
 $minMaxSum = array();

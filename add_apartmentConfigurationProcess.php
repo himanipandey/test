@@ -42,7 +42,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     $txtVillaFloors				=	'0';
     $txtVillaTerraceArea		=	'0';
     $txtVillaGardenArea			=	'0';
-
+	
+	$option_txt_array = array();
 //echo '<pre>';print_r($_REQUEST);echo "<pre>";exit;
 
     foreach($_REQUEST['txtUnitName'] AS $key=>$val)
@@ -213,9 +214,15 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->updated_by = $_SESSION["adminId"];
                     $option->display_carpet_area = $txtCarpetAreaInfo;
 //                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
-				
-                    $result = $option->save();
-                    if ($action == 'insert') {
+					
+					$optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;
+					
+					if(in_array($optionTxt,$option_txt_array)){
+						$ErrorMsg1 = 'Duplicate Option!';
+					}else{
+					  $option_txt_array[] = $optionTxt;
+					  $result = $option->save();
+                      if ($action == 'insert') {
                         $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
                         $listing = new Listings();
                         $listing->option_id = $option->options_id;
@@ -226,18 +233,34 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         $listing->updated_by = $_SESSION['adminId'];
                         $listing->created_at = date('Y-m-d H:i:s');
                         $listing->save();
-                    }
+                      }
+						
+					}
+                    
                 }
                 else
                 {
+				
                     /**********code for deletion options*************/
-                    $qryDel = "DELETE FROM ".RESI_PROJECT_OPTIONS." 
+                   $qryDel_list = "DELETE FROM ".LISTINGS." 
+                    WHERE
+                        OPTION_ID = '".$_REQUEST['typeid_edit'][$key]."'";
+                    
+                    $resDel_list = mysql_query($qryDel_list);
+                    
+                    if($resDel_list){
+                    
+						$qryDel = "DELETE FROM ".RESI_PROJECT_OPTIONS." 
                     WHERE
                         OPTIONS_ID = '".$_REQUEST['typeid_edit'][$key]."'
                     AND
                         PROJECT_ID = '".$projectId."'";
-                    $resDel	= mysql_query($qryDel) or die(mysql_error()." error in deletion");
-                    $flg_delete = 1;
+						$resDel	= mysql_query($qryDel) or die(mysql_error()." error in deletion");
+						$flg_delete = 1;
+					}else{
+							$ErrorMsg1 = 'Could not delete!';
+					}
+					
                 }
             }  
 

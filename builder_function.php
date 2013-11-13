@@ -1851,7 +1851,7 @@ function getFlatAvailability($projectId)
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
 	//$url=$_SERVER['HTTP_HOST']."/app/v1/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
-        $url="staging.cms.proptiger.com/app/v1/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+        $url="staging.cms.proptiger.com/app/v2/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1924,6 +1924,14 @@ function projectBankList($projectId){
 		$projectList[] = $bank['BANK_ID'];
 	
 	return  $projectList;
+	
+}
+
+function checkForDuplicateOption($bedroom,$bathroom,$option_name,$size){
+	
+	print $bedroom."->".$bathroom."->".$option_name."->".$size;
+	
+	die;
 	
 }
 
