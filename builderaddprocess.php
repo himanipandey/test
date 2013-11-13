@@ -6,11 +6,9 @@ include_once('./function/locality_functions.php');
      //  $accessBuilder = "No Access";
     $smarty->assign("accessBuilder",$accessBuilder);
     
-    $builderid = $_REQUEST['builderid'];
-
+$builderid = $_REQUEST['builderid'];
 include("ftp.new.php");
 $watermark_path = 'images/pt_shadow1.png';
-//echo $_REQUEST['suburb'];die("here");
 $smarty->assign("builderid", $builderid);
 $ProjectList = project_list($builderid);
 $smarty->assign("ProjectList", $ProjectList);
@@ -18,6 +16,7 @@ if ($_POST['btnExit'] == "Exit")
 {
 	header("Location:BuilderList.php");
 }
+
 if ($_POST['btnSave'] == "Save")
 {
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
@@ -106,6 +105,10 @@ if ($_POST['btnSave'] == "Save")
 	   {
 	     $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
 	   } 
+	if( $city == '') 
+	   {
+	     $ErrorMsg["txtCity"] = "Please select City.";
+	   } 
 	    /******code for builder url already exists******/
         $bldrURL = "";
         if($builderid != ''){
@@ -144,13 +147,11 @@ if ($_POST['btnSave'] == "Save")
             if($builderid == '' && $txtBuilderName != '' && $legalEntity != '') {
                 $qryBuilder = "SELECT * FROM ".RESI_BUILDER." 
                                 WHERE
-                                    BUILDER_NAME = '".$txtBuilderName."' OR ENTITY = '".$legalEntity."'";
+                                   ENTITY = '".$legalEntity."'";
                 $resBuilder = mysql_query($qryBuilder);
                 $dataBuilder = mysql_fetch_assoc($resBuilder);
 
                 if(count($dataBuilder)>0) {
-                    if($txtBuilderName == $dataBuilder['BUILDER_NAME'])
-                         $ErrorMsg["txtBuilderName"] = "This builder already exists.";
                     if($legalEntity == $dataBuilder['ENTITY'])
                          $ErrorMsg["legalEntity"] = "This entity already exists.";
                 }
@@ -158,22 +159,33 @@ if ($_POST['btnSave'] == "Save")
             /**code for duplicate builder name or entity name***/
 
             if(is_array($ErrorMsg)) {
-                    // Do Nothing
+                    // Do Nothing 
             } 	
             else if ($builderid == '')
             {
-                $foldername		=	str_replace(' ','-',strtolower($txtBuilderName));
-                $createFolder	=	 $newImagePath.$foldername;
+                $foldername	=	str_replace(' ','-',strtolower($txtBuilderName));
+                $createFolder	=	$newImagePath.$foldername;
                 mkdir($createFolder, 0777);
-                $imgurl = 'NULL';
-                $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
+                $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription,$DisplayOrder,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr);
                 if($builder_id){
+                    $seoData['meta_title'] = $txtMetaTitle;
+                    $seoData['meta_keywords'] = $txtMetaKeywords;
+                    $seoData['meta_description'] = $txtMetaDescription;
+                    $seoData['table_id'] = $builder_id;
+                    $seoData['table_name'] = 'resi_builder';
+                    $seoData['updated_by'] = $_SESSION['adminId'];
+                    SeoData::insetUpdateSeoData($seoData);
+                    
+                    $txtBuilderUrl = createBuilderURL($txtBuilderName, $builder_id);
+                    $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builder_id;
+                    mysql_query($updateQuery) or die(mysql_error());
+                    
                     header("Location:BuilderList.php");
                 }
             }
             else
             {
-
+			
                 $name	=	$_FILES["txtBuilderImg"]["name"];
                 $cutpath	=	explode("/",$imgedit);
                 $newfold	=	$newImagePath.$cutpath[1];
@@ -184,7 +196,7 @@ if ($_POST['btnSave'] == "Save")
                         $return  =	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], $imgdestpath);
                         if($return)
                         {				
-                            $imgurl = "/".$cutpath[1]."/".$name;
+                            $imgurl = "/".$cutpath[1]."/".$name; 
                             $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
                                 "image_type" => "builder_image","object_id" => $builderid, "service_image_id" => $_REQUEST["serviceImageId"],
@@ -194,9 +206,16 @@ if ($_POST['btnSave'] == "Save")
                             $response = $s3upload->update();
                             $image_id = $response["service"]->data();
                             $image_id = $image_id->id;
-                            $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder, $image_id);
+                            $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$imgurl,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder, $image_id);
                             if($rt)
                             {
+								$seoData['meta_title'] = $txtMetaTitle;
+                                $seoData['meta_keywords'] = $txtMetaKeywords;
+                                $seoData['meta_description'] = $txtMetaDescription;
+                                $seoData['table_id'] = $builderid;
+                                $seoData['table_name'] = 'resi_builder';
+                                $seoData['updated_by'] = $_SESSION['adminId'];
+                                SeoData::insetUpdateSeoData($seoData);
                                 $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
                                 $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
                                 mysql_query($updateQuery) or die(mysql_error());
@@ -261,10 +280,16 @@ if ($_POST['btnSave'] == "Save")
                 }
                 else 
                 {
-                    $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
-                    $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$txtMetaTitle,$txtMetaKeywords,$txtMetaDescription,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
+                    $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                     if($return)
                     {
+			$seoData['meta_title'] = $txtMetaTitle;
+                        $seoData['meta_keywords'] = $txtMetaKeywords;
+                        $seoData['meta_description'] = $txtMetaDescription;
+                        $seoData['table_id'] = $builderid;
+                        $seoData['table_name'] = 'resi_builder';
+                        $seoData['updated_by'] = $_SESSION['adminId'];
+                        SeoData::insetUpdateSeoData($seoData);
                         $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
                         $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
                         mysql_query($updateQuery) or die(mysql_error());
@@ -282,6 +307,7 @@ if ($_POST['btnSave'] == "Save")
             $qryedit	=	"SELECT * FROM ".RESI_BUILDER." WHERE BUILDER_ID = '".$builderid."'";
             $resedit	=	mysql_query($qryedit);
             $dataedit	=	mysql_fetch_array($resedit);
+            $getSeoData = SeoData::getSeoData($builderid, 'resi_builder');
 
             $smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
             $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
@@ -290,14 +316,14 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("txtBuilderUrl", $dataedit['URL']);
             $smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
             $smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER'] ? $dataedit['DISPLAY_ORDER'] : 100);
-            $smarty->assign("txtMetaTitle", $dataedit['META_TITLE']);
-            $smarty->assign("txtMetaKeywords", $dataedit['META_KEYWORDS']);
-            $smarty->assign("txtMetaDescription", $dataedit['META_DESCRIPTION']);
+            $smarty->assign("txtMetaTitle", $getSeoData[0]->meta_title);
+            $smarty->assign("txtMetaKeywords", $getSeoData[0]->meta_keywords);
+            $smarty->assign("txtMetaDescription", $getSeoData[0]->meta_description);
             $smarty->assign("img", $dataedit['BUILDER_IMAGE']);
             $smarty->assign("imgedit", $dataedit['BUILDER_IMAGE']);
             $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
             $smarty->assign("address", $dataedit['ADDRESS']);
-            $smarty->assign("city", $dataedit['CITY']);
+            $smarty->assign("city", $dataedit['CITY_ID']);
             $smarty->assign("pincode", $dataedit['PINCODE']);
             $smarty->assign("ceo", $dataedit['CEO_MD_NAME']);
             $smarty->assign("employee", $dataedit['TOTAL_NO_OF_EMPL']);
@@ -312,8 +338,10 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("service_image_id", $dataedit['SERVICE_IMAGE_ID']);
 
             $arrContact = BuilderContactInfo($builderid);
+            $arrContactProjectMapping = builderContactProjectMapping($builderid);
             $smarty->assign("Contact", count($arrContact));
             $smarty->assign("arrContact", $arrContact);
+            $smarty->assign("arrContactProjectMapping", $arrContactProjectMapping);
 
     }
     else {
@@ -322,18 +350,8 @@ if ($_POST['btnSave'] == "Save")
 
 
      /*****************City Data************/
-            $CityDataArr	=	array();
-
-            $qry	=	"SELECT CITY_ID,LABEL FROM ".CITY." WHERE ACTIVE = 1 ORDER BY LABEL ASC";
-            $res = mysql_query($qry,$db);
-
-            while($data	=	mysql_fetch_array($res))
-            {
-                    $CityDataArr[]	=	$data;		
-            }
-            $smarty->assign("CityDataArr", $CityDataArr);
-
-
+    $CityDataArr = City::CityArr();
+    $smarty->assign("CityDataArr", $CityDataArr);
        /***************Project dropdown*************/
             $Project	=	array();
             $qry	=	"SELECT PROJECT_ID,PROJECT_NAME FROM ".PROJECT." ORDER BY PROJECT_NAME ASC";
@@ -354,17 +372,16 @@ if ($_POST['btnSave'] == "Save")
             $BuilderDataArr[]	=	$data;		
      }
      $smarty->assign("BuilderDataArr", $BuilderDataArr);
-
-
-
-
-      /*****************City Data************/
-     $CityDataArr	=	array();
-     $qry	=	"SELECT CITY_ID,LABEL FROM ".CITY;
-     $res = mysql_query($qry,$db);
-     while($data	=	mysql_fetch_array($res))
-     {
-            $CityDataArr[]	=	$data;		
+     
+     function builderContactProjectMapping($builderId) {
+         $qry = "select * from project_builder_contact_mappings 
+             where builder_contact_id in 
+             (select id from builder_contacts where builder_id = $builderId)";
+         $res = mysql_query($qry) or die(mysql_error());
+         $arrContact = array();
+         while($data = mysql_fetch_object($res)) {
+             $arrContact[$data->builder_contact_id][] = $data->project_id;
+         }
+         return $arrContact;
      }
-     $smarty->assign("CityDataArr", $CityDataArr);
 ?>

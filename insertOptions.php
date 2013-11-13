@@ -47,14 +47,10 @@
 		$sql	=	"INSERT INTO  ".PROJECT_OPTIONS."
 						SET
 							`PROJECT_ID`				=	'".$projectId."',
-							`UNIT_NAME`					=	'".$txtUnitName."',
-							`UNIT_TYPE`					=	'".$unitType."',
+							`OPTION_NAME`					=	'".$txtUnitName."',
+							`OPTION_TYPE`					=	'".$unitType."',
 							`SIZE`						=	'".$txtSize."',
 							`MEASURE`					=	'sq ft',
-							`PRICE_PER_UNIT_AREA`		=	'".$txtPricePerUnitArea."',
-							`PRICE_PER_UNIT_AREA_DP`	=	'".$txtPricePerUnitAreaDp."',
-							`PRICE_PER_UNIT_LOW`		=	'".$txtPricePerUnitLow."',
-							`PRICE_PER_UNIT_HIGH`		=	'".$txtPricePerUnitHigh."',
 							`VILLA_PLOT_AREA`			=	'".$txtVillaPlotArea."',
 							`VILLA_NO_FLOORS`			=	'".$txtVillaFloors."',
 							`VILLA_TERRACE_AREA`		=	'".$txtVillaTerraceArea."',
@@ -65,12 +61,10 @@
 							`SERVANT_ROOM`				=	'".$servantrooms."',
 							`BALCONY`					=	'".$balconys."',
 							`POOJA_ROOM`				=	'".$poojarooms."',
-                            `TOTAL_PLOT_AREA`           =	'".$txtPlotArea."',
-                            `LENGTH_OF_PLOT`           =	'".$txtSizeLen."',
-                            `BREADTH_OF_PLOT`           =	'".$txtSizeBre."',
-							`CLP_VISIBLE`				=	'1',
-							`CREATED_DATE`				=	DATE_FORMAT(NOW() ,'%Y-%m-01 00:00:00'),
-							 `STATUS`					=	'".$status."'";
+                                                        `LENGTH_OF_PLOT`           =	'".$txtSizeLen."',
+                                                        `BREADTH_OF_PLOT`           =	'".$txtSizeBre."',
+							`created_at`				=	DATE_FORMAT(NOW() ,'%Y-%m-01 00:00:00'),
+                                                        updated_by = ".$_SESSION['adminId']."";
 
 		$res=mysql_query($sql) or die(mysql_error());
 		$optionId = mysql_insert_id();
@@ -80,13 +74,9 @@
 	{
 		$sql	=	"UPDATE  ".PROJECT_OPTIONS."
 						SET
-							`UNIT_NAME`					=	'".$txtUnitName."',
-							`UNIT_TYPE`					=	'".$unitType."',
+							`OPTION_NAME`					=	'".$txtUnitName."',
+							`OPTION_TYPE`					=	'".$unitType."',
 							`SIZE`						=	'".$txtSize."',
-							`PRICE_PER_UNIT_AREA`		=	'".$txtPricePerUnitArea."',
-							`PRICE_PER_UNIT_AREA_DP`	=	'".$txtPricePerUnitAreaDp."',
-							`PRICE_PER_UNIT_LOW`		=	'".$txtPricePerUnitLow."',
-							`PRICE_PER_UNIT_HIGH`		=	'".$txtPricePerUnitHigh."',
 							`VILLA_PLOT_AREA`			=	'".$txtVillaPlotArea."',
 							`VILLA_NO_FLOORS`			=	'".$txtVillaFloors."',
 							`VILLA_TERRACE_AREA`		=	'".$txtVillaTerraceArea."',
@@ -97,11 +87,11 @@
 							`SERVANT_ROOM`				=	'".$servantrooms."',
 							`BALCONY`					=	'".$balconys."',
 							`POOJA_ROOM`				=	'".$poojarooms."',
-                            `TOTAL_PLOT_AREA`           =	'".$txtPlotArea."',
-                            `LENGTH_OF_PLOT`           =	'".$txtSizeLen."',
-                            `BREADTH_OF_PLOT`           =	'".$txtSizeBre."',
+                                                         `LENGTH_OF_PLOT`           =	'".$txtSizeLen."',
+                                                        `BREADTH_OF_PLOT`           =	'".$txtSizeBre."',
 							`CLP_VISIBLE`				=	'1',
-							 `STATUS`					=	'".$status."'
+							 `STATUS`					=	'".$status."',
+                                                         updated_by = ".$_SESSION['adminId']."
 						WHERE
 								`PROJECT_ID`	=	'".$projectId."'
 							 AND

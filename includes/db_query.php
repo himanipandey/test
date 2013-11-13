@@ -8,7 +8,7 @@
 function dbQuery($sql)
 {
     $result = array();
-    $mysql_res = mysql_query($sql);
+    $mysql_res = mysql_query($sql) or die(mysql_error());
 
     if($mysql_res === FALSE)
     {

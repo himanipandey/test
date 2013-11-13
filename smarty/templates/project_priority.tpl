@@ -135,7 +135,8 @@ function show_loc_inst(){
                                     <select id="loc" name="loc" onchange="selectLocality(this.value)">
                                        <option value=''>select locality</option>
                                        {foreach from=$localityArr key=k item=v}
-                                           <option value="{$k}" {if $localityId==$k}  selected="selected" {/if}>{$v}</option>
+                                           <option value="{$v->locality_id}" {if $localityId==$v->locality_id}
+                                              selected="selected" {/if}>{$v->label}</option>
                                        {/foreach}
                                     </select>
                                 </td>

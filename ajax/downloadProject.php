@@ -1,12 +1,11 @@
 <?php
 include("../dbConfig.php");
+include("../modelsConfig.php");
 include("../appWideConfig.php");
 include("../builder_function.php");
 date_default_timezone_set('Asia/Kolkata');
 
 $dept = $_SESSION['DEPARTMENT'];
-//echo "<pre>";
-//print_r($_POST);
 
 if(!isset($_POST['dwnld_projectId']))
 	$_POST['dwnld_projectId'] = '';
@@ -50,124 +49,139 @@ if($StatusValue!="") $StatusValue = "'".$StatusValue."'";
 $projectDataArr = array();
 $NumRows =  $city = $builder = $project_name = '';
 
-$transfer 		= 	$_POST['dwnld_transfer'];
-$search 		= 	$_POST['dwnld_search'];
-$city		  	=	$_POST['dwnld_city'];
-$locality	 	=	$_POST['dwnld_locality'];
-$builder		=	$_POST['dwnld_builder'];
-$phase 			= 	$_POST['current_dwnld_phase'];
-$arrPhaseTag 		= 	explode('|',$_POST['dwnld_stage']);
-$stage 			= 	$_POST['current_dwnld_stage'];
-$tag 			= 	$arrPhaseTag[1];
-$Status 		= 	$_POST['dwnld_Status'];
-$Active 		= 	$_POST['dwnld_Active'];
-$selectdata		= 	$_POST['dwnld_selectdata'];
-
+$transfer = $_POST['dwnld_transfer'];
+$search = $_POST['dwnld_search'];
+$city =	$_POST['dwnld_city'];
+$locality = $_POST['dwnld_locality'];
+$builder = $_POST['dwnld_builder'];
+$phase = $_POST['current_dwnld_phase'];
+$arrPhaseTag = explode('|',$_POST['dwnld_stage']);
+$stage = $_POST['current_dwnld_stage'];
+$tag = $arrPhaseTag[1];
+$Status = $_POST['dwnld_Status'];
+$Active = $_POST['dwnld_Active'];
+$selectdata = $_POST['dwnld_selectdata'];
 
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
-	$QueryMember1 = "SELECT RP.PROJECT_ID,RP.BUILDER_NAME,RP.PROJECT_NAME,RP.PROJECT_PHASE,RP.PROJECT_STAGE,C.LABEL AS CITY_NAME, RP.PROJECT_STATUS,RP.BOOKING_STATUS, L.LABEL LOCALITY, PSH.DATE_TIME, PA.FNAME, UC.LABEL UPDATION_LABEL
-                         FROM
-                            resi_project RP LEFT JOIN city C ON RP.CITY_ID=C.CITY_ID 
-                         LEFT JOIN
-                            updation_cycle UC ON RP.UPDATION_CYCLE_ID=UC.UPDATION_CYCLE_ID
-                         LEFT JOIN
-                             locality L ON RP.LOCALITY_ID = L.LOCALITY_ID
-                         LEFT JOIN
-                             project_stage_history PSH ON RP.MOVEMENT_HISTORY_ID = PSH.HISTORY_ID
-                         LEFT JOIN 
-                             proptiger_admin PA ON PSH.ADMIN_ID = PA.ADMINID";
+    $QueryMember1 = "SELECT RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,PP.name as PROJECT_PHASE,
+                PS.name as PROJECT_STAGE,ct.LABEL AS CITY_NAME, psm.project_status as 
+                    PROJECT_STATUS,
+                L.LABEL LOCALITY, PSH.DATE_TIME, PA.FNAME, UC.LABEL UPDATION_LABEL
+                 FROM
+                    resi_project RP
+                 LEFT JOIN
+                    updation_cycle UC ON RP.UPDATION_CYCLE_ID=UC.UPDATION_CYCLE_ID
+                 LEFT JOIN
+                     locality L ON RP.LOCALITY_ID = L.LOCALITY_ID
+                 INNER JOIN
+                     suburb sub ON L.SUBURB_ID = sub.SUBURB_ID
+                 LEFT JOIN
+                     city ct ON sub.CITY_ID = ct.CITY_ID    
+                 LEFT JOIN
+                     project_stage_history PSH ON RP.MOVEMENT_HISTORY_ID = PSH.HISTORY_ID
+                 LEFT JOIN 
+                     proptiger_admin PA ON PSH.ADMIN_ID = PA.ADMINID
+                 INNER JOIN 
+                     resi_builder RB on RP.BUILDER_ID = RB.BUILDER_ID
+                 INNER JOIN
+                     master_project_stages PS ON RP.project_stage_id = PS.id
+                 INNER JOIN
+                     master_project_phases PP on RP.project_phase_id = PP.id
+                 INNER JOIN
+                    project_status_master psm on RP.PROJECT_STATUS_ID = psm.id";
 
-	$and = " WHERE ";
+    $and = " WHERE ";
 
-	if($_POST['dwnld_projectId'] == '')
-	{
-		if($_REQUEST['dwnld_Availability'] != '')
-		{
-			$arrAvalibality = explode(",",$_REQUEST['dwnld_Availability']); 
-			$QueryMember .= $and ." (1 = 0 ";
-			if(in_array(0,$arrAvalibality))
-			{
-				$QueryMember .=  " OR RP.AVAILABLE_NO_FLATS = 0";
-			}
-			if(in_array(1,$arrAvalibality))
-			{
-				$QueryMember .=  " OR RP.AVAILABLE_NO_FLATS > 0";
-			}
-			if(in_array(2,$arrAvalibality))
-			{
-				$QueryMember .=  " OR RP.AVAILABLE_NO_FLATS IS NULL ";
-			}
-			$QueryMember .= ")";
-			$and  = ' AND ';
-		}
-		
-		if($_POST['dwnld_project_name'] != '')
-		{
-			$QueryMember .= $and." RP.PROJECT_NAME LIKE '%".$_POST['dwnld_project_name']."%'";
-			$and  = ' AND ';
-		}
-		if($_POST['dwnld_city'] != '')
-		{
-			$QueryMember .=  $and." RP.CITY_ID = '".$_POST['dwnld_city']."'";
-			$and  = ' AND ';
-		}
-		if($_POST['dwnld_Residential'] != '')
-		{
-			$QueryMember .=  $and." RP.RESIDENTIAL = '".$_POST['dwnld_Residential']."'";
-			$and  = ' AND ';
-		}
+    if($_POST['dwnld_projectId'] == '')
+    {
+       /* if($_REQUEST['dwnld_Availability'] != '')
+        {
+            $arrAvalibality = explode(",",$_REQUEST['dwnld_Availability']); 
+            $QueryMember .= $and ." (1 = 0 ";
+            if(in_array(0,$arrAvalibality))
+            {
+                    $QueryMember .=  " OR RP.AVAILABLE_NO_FLATS = 0";
+            }
+            if(in_array(1,$arrAvalibality))
+            {
+                    $QueryMember .=  " OR RP.AVAILABLE_NO_FLATS > 0";
+            }
+            if(in_array(2,$arrAvalibality))
+            {
+                    $QueryMember .=  " OR RP.AVAILABLE_NO_FLATS IS NULL ";
+            }
+            $QueryMember .= ")";
+            $and  = ' AND ';
+        }*/
 
-		if($ActiveValue != '')
-		{
-			$QueryMember .=  $and." RP.ACTIVE IN(".$ActiveValue.")";
-			$and  = ' AND ';
-		}
+        if($_POST['dwnld_project_name'] != '')
+        {
+            $QueryMember .= $and." RP.PROJECT_NAME LIKE '%".$_POST['dwnld_project_name']."%'";
+            $and  = ' AND ';
+        }
+        if($_POST['dwnld_Residential'] != '')
+        {
+            $QueryMember .=  $and." RP.RESIDENTIAL = '".$_POST['dwnld_Residential']."'";
+            $and  = ' AND ';
+        }
 
-		if($StatusValue != '')
-		{
-			$QueryMember .=  $and." RP.PROJECT_STATUS IN(".$StatusValue.")";
-			$and  = ' AND ';
-		}
+        if($ActiveValue != '')
+        {
+            $QueryMember .=  $and." RP.STATUS IN(".$ActiveValue.")";
+            $and  = ' AND ';
+        }
 
-		if($_POST['dwnld_locality'] != '')
-		{
-			$QueryMember .= $and." RP.LOCALITY_ID = '".$_POST['dwnld_locality']."'";
-			$and  = ' AND ';
-		}
-		if($_POST['dwnld_builder'] != '')
-		{
-			$QueryMember .= $and." RP.BUILDER_ID = '".$_POST['dwnld_builder']."'";
-			$and  = ' AND ';
-		}
-		if($_POST['current_dwnld_phase'] != '')
-		{
-			$QueryMember .= $and." RP.PROJECT_STAGE = '".$_POST['current_dwnld_phase']."'";
-			$and  = ' AND ';
-		}
-		if($stage != '')
-		{
-			$QueryMember .= $and." RP.PROJECT_PHASE = '".$stage."'";
-			$and  = ' AND ';
-		}
-		if($tag != '')
-		{
-			$QueryMember .= $and." RP.UPDATION_CYCLE_ID = '".$tag."'";
-			$and  = ' AND ';
-		}
-	}
-	else
-	{
-		$QueryMember .= $and. " RP.PROJECT_ID IN (".$_POST['dwnld_projectId'].")";
+        if($StatusValue != '')
+        {
+            $QueryMember .=  $and." RP.PROJECT_STATUS_ID IN(".$StatusValue.")";
+            $and  = ' AND ';
+        }
 
-	}
+        if($_POST['dwnld_locality'] != '')
+        {
+            $QueryMember .= $and." RP.LOCALITY_ID = '".$_POST['dwnld_locality']."'";
+            $and  = ' AND ';
+        }
+        if($_POST['dwnld_city'] != '')
+        {
+            $QueryMember .= $and." sub.CITY_ID = '".$_POST['dwnld_city']."'";
+            $and  = ' AND ';
+        }
+        if($_POST['dwnld_builder'] != '')
+        {
+            $QueryMember .= $and." RP.BUILDER_ID = '".$_POST['dwnld_builder']."'";
+            $and  = ' AND ';
+        }
+        if($_POST['current_dwnld_phase'] != '')
+        {
+            $getProjectStage = ProjectStage::getStageByName($_POST['current_dwnld_phase']);
+            $QueryMember .= $and." RP.PROJECT_STAGE_ID = '".$getProjectStage[0]->id."'";
+            $and  = ' AND ';
+        }
+        if($stage != '')
+        {
+            $getProjectPhase = ProjectPhase::getPhaseByName($stage);
+            $QueryMember .= $and." RP.PROJECT_PHASE_ID = '".$getProjectPhase[0]->id."'";
+            $and  = ' AND ';
+        }
+        if($tag != '')
+        {
+            $QueryMember .= $and." RP.UPDATION_CYCLE_ID = '".$tag."'";
+            $and  = ' AND ';
+        }
+    }
+    else
+    {
+        $QueryMember .= $and. " RP.PROJECT_ID IN (".$_POST['dwnld_projectId'].")";
+    }
 }
 $arrPropId = array();
 $QueryMember1 = $QueryMember1 . $QueryMember;
 
-$QueryExecute 	= mysql_query($QueryMember1) or die(mysql_error());
-$NumRows 		= mysql_num_rows($QueryExecute);
+$QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
+$NumRows = mysql_num_rows($QueryExecute);
 
 
 $contents = "";

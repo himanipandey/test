@@ -112,70 +112,6 @@ function BuilderArr() {
     return $arrBuilder;
 }
 
-function BuilderEntityArr()
-    {
-        $qryBuilder	=	"SELECT BUILDER_ID, ENTITY FROM ".RESI_BUILDER." ORDER BY ENTITY ASC";
-        $resBuilder	=	mysql_query($qryBuilder);
-        $arrBuilder	=	array();
-        while($data = mysql_fetch_assoc($resBuilder))
-        {
-                $arrBuilder[$data['BUILDER_ID']] = $data['ENTITY'];
-        }
-        return $arrBuilder;
-    }
-
-/* * ******city list with id************* */
-
-function CityArr() {
-    $qryBuilder = "SELECT CITY_ID,LABEL FROM " . CITY . " WHERE ACTIVE = 1 ORDER BY LABEL ASC";
-    $resBuilder = mysql_query($qryBuilder);
-    $arrCity = array();
-    while ($data = mysql_fetch_assoc($resBuilder)) {
-        $arrCity[$data['CITY_ID']] = $data['LABEL'];
-    }
-    return $arrCity;
-}
-
-/* * ******suburb list with id************* */
-
-function SuburbArr($cityId, $localityId = "") {
-    if($localityId=="") {
-        $qryBuilder = "SELECT SUBURB_ID,LABEL FROM " . SUBURB . " WHERE CITY_ID = '" . $cityId . "' ORDER BY LABEL ASC";
-    }else{
-         $qryBuilder = "SELECT A.SUBURB_ID, B.LABEL FROM ".LOCALITY." AS A INNER JOIN ".SUBURB." AS B ON (A.SUBURB_ID = B.SUBURB_ID) WHERE A.LOCALITY_ID = '" . $localityId."' ORDER BY B.LABEL ASC";
-    }
-    $resBuilder = mysql_query($qryBuilder);
-    $arrCity = array();
-    while ($data = mysql_fetch_assoc($resBuilder)) {
-        $arrCity[$data['SUBURB_ID']] = $data['LABEL'];
-    }
-    return $arrCity;
-}
-
-/* * ******Project Type list with id************* */
-
-function ProjectTypeArr() {
-    $qrType = "SELECT * FROM " . RESI_PROJECT_TYPE . " ORDER BY TYPE_NAME ASC";
-    $resType = mysql_query($qrType) or die(mysql_error());
-    $arrType = array();
-    while ($data = mysql_fetch_assoc($resType)) {
-        $arrType[$data['PROJECT_TYPE_ID']] = $data['TYPE_NAME'];
-    }
-    return $arrType;
-}
-
-/* * ******bank list************* */
-
-function BankList() {
-    $qrBank = "SELECT * FROM " . BANK_LIST . " ORDER BY BANK_NAME ASC";
-    $resBank = mysql_query($qrBank) or die(mysql_error());
-    $arrBank = array();
-    while ($data = mysql_fetch_assoc($resBank)) {
-        $arrBank[$data['BANK_ID']] = $data['BANK_NAME'];
-    }
-    return $arrBank;
-}
-
 /* * ********project insert************** */
 
 function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localityId, $txtProjectDescription, $txtAddress, $txtProjectDesc, $txtProjectSource, $project_type, $txtProjectLocation, $txtProjectLattitude, $txtProjectLongitude, $txtProjectMetaTitle, $txtMetaKeywords, $txtMetaDescription, $DisplayOrder, $Active, $Status, $txtProjectURL, $Featured, $txtDisclaimer, $payment, $no_of_towers, $no_of_flats, $pre_launch_date, $exp_launch_date, $eff_date_to, $special_offer, $display_order, $youtube_link, $bank_list, $price, $app, $approvals, $project_size, $no_of_lift, $powerBackup, $architect, $offer_heading, $offer_desc, $BuilderName, $power_backup_capacity, $no_of_villa, $eff_date_to_prom, $residential, $township, $plot, $open_space, $Booking_Status, $shouldDisplayPrice, $launchedUnits, $reasonUnlaunchedUnits, $identifyTownShip) {
@@ -320,7 +256,8 @@ function DeleteProject($projectId) {
 /* * *********function for fetch project detail************** */
 
 function ProjectDetail($projectId) {
-    $qrySel = "SELECT * FROM " . RESI_PROJECT . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qrySel = "SELECT * FROM " . RESI_PROJECT . " 
+               WHERE PROJECT_ID = '" . $projectId . "' and version = 'cms'";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -329,23 +266,16 @@ function ProjectDetail($projectId) {
     return $arrDetail;
 }
 
-/* * *****************function for fetch builder detail by builder id**************** */
-
-function fetch_builderDetail($builderId) {
-    $qrybuild = "SELECT * FROM " . RESI_BUILDER . " WHERE BUILDER_ID = '" . $builderId . "'";
-    $resbuild = mysql_query($qrybuild) or die(mysql_error());
-    $databuild = mysql_fetch_assoc($resbuild);
-    return $databuild;
-}
 
 /* * *****************function for fetch project options detail by project id**************** */
 
 function fetch_projectOptions($projectId) {
-    $qryopt = "SELECT DISTINCT(BEDROOMS),UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qryopt = "SELECT DISTINCT(BEDROOMS),OPTION_TYPE FROM " . RESI_PROJECT_OPTIONS . " 
+        WHERE PROJECT_ID = '" . $projectId . "'";
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
     while ($data = mysql_fetch_assoc($resopt)) {
-        $bedroom = $data['UNIT_TYPE'] . "-" . $data['BEDROOMS'];
+        $bedroom = $data['OPTION_TYPE'] . "-" . $data['BEDROOMS'];
         array_push($arrOptions, $bedroom);
     }
     return $arrOptions;
@@ -447,6 +377,7 @@ function update_towers_for_project_and_phase($projectId, $phaseId, $tower_array)
 
 function InsertProjectType($qrylast, $projectId) {
     $qry = "INSERT INTO " . PROJECT_OPTIONS . " (`PROJECT_ID`, `UNIT_NAME`, `UNIT_TYPE`, `SIZE`, `MEASURE`, `PRICE_PER_UNIT_AREA`, `PRICE_PER_UNIT_AREA_DP`,  `STATUS`, `BEDROOMS`, `CREATED_DATE`, `BATHROOMS` ,`PRICE_PER_UNIT_HIGH`,`PRICE_PER_UNIT_LOW`,`NO_OF_FLOORS`,`VILLA_PLOT_AREA`,`VILLA_NO_FLOORS`,`VILLA_TERRACE_AREA`,`VILLA_GARDEN_AREA`,`BALCONY`,`STUDY_ROOM`,`SERVANT_ROOM`,`POOJA_ROOM`,`LENGTH_OF_PLOT`,`BREADTH_OF_PLOT`,`TOTAL_PLOT_AREA`) values " . $qrylast; //die("here");
+    
     $res = mysql_query($qry);
     $optionId = mysql_insert_id();
     audit_insert($optionId, 'insert', 'resi_project_options', $projectId);
@@ -465,34 +396,6 @@ function RoomCategoryList() {
         $arrroomCategory[$data['ROOM_CATEGORY_ID']] = $data['CATEGORY_NAME'];
     }
     return $arrroomCategory;
-}
-
-/* * ****function for fetch enum in resi project************* */
-
-function enum_value() {
-
-    $qry = "SELECT COLUMN_TYPE
-			FROM INFORMATION_SCHEMA.COLUMNS
-			WHERE TABLE_NAME = '" . RESI_PROJECT . "'
-			  AND COLUMN_NAME = 'PROJECT_STATUS'";
-    $res = mysql_query($qry);
-    $arrValue = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrValue, $data);
-    }
-    $i = 0;
-    $str = explode("','", $arrValue[$i]['COLUMN_TYPE']);
-    $arrStatus = array();
-    foreach ($str as $val) {
-        if (strstr($val, "enum('")) {
-            $val = str_replace("enum('", "", $val);
-        }
-        if (strstr($val, "')")) {
-            $val = str_replace("')", "", $val);
-        }
-        array_push($arrStatus, $val);
-    }
-    return $arrStatus;
 }
 
 /* * *************function for insert specification********** */
@@ -529,7 +432,9 @@ function InsertSpecification($projectId, $master_bedroom_flooring, $other_bedroo
 /* * ***************** */
 
 function ProjectBedroomDetail($projectId) {
-    $qrySel = "SELECT UNIT_TYPE, GROUP_CONCAT(Distinct BEDROOMS) as BEDS FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' GROUP BY UNIT_TYPE ORDER BY UNIT_TYPE";
+    $qrySel = "SELECT OPTION_TYPE as UNIT_TYPE, GROUP_CONCAT(Distinct BEDROOMS) as BEDS FROM 
+        " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' 
+            GROUP BY OPTION_TYPE ORDER BY OPTION_TYPE";
     $res_Sel = mysql_query($qrySel);
     $sqlResults = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -547,18 +452,22 @@ function ProjectBedroomDetail($projectId) {
 }
 
 function ProjectOptionDetail($projectId) {
-    $columns = "P.OPTIONS_ID,P.PROJECT_ID,P.UNIT_NAME,P.UNIT_TYPE,P.SIZE,P.MEASURE,P.PRICE_PER_UNIT_AREA,P.PRICE_PER_UNIT_AREA_DP,P.PRICE_PER_UNIT_AREA_FP,P.STATUS,P.BEDROOMS,P.CLP_VISIBLE,P.DP_VISIBLE,P.FP_VISIBLE,P.DISCLAIMER_CLP,P.DISCLAIMER_DP,P.DISCLAIMER_FP,P.BATHROOMS,P.CREATED_DATE,P.STUDY_ROOM,P.SERVANT_ROOM,P.BALCONY,P.POOJA_ROOM,P.NO_OF_FLATS,P.AVAILABLE_NO_OF_FLATS,P.VILLA_PLOT_AREA,P.VILLA_NO_FLOORS,P.VILLA_TERRACE_AREA,P.VILLA_GARDEN_AREA,P.CARPET_AREA,P.PLOT_AREA_MEASURE,P.PRICE_PER_UNIT_LOW,P.PRICE_PER_UNIT_HIGH,P.RESALE_PRICE,P.EDIT_REASON,P.ACCURATE_FLAG,P.SOURCE_OF_INFORMATION,P.LENGTH_OF_PLOT,P.BREADTH_OF_PLOT,P.TOTAL_PLOT_AREA,P.PRICE_TYPE,P.NO_OF_FLOORS";
-    $qrySel = "SELECT 
-					$columns,
-					GROUP_CONCAT(O.IMAGE_URL) FLOOR_IMAGES 
-					FROM 
-					   " . RESI_PROJECT_OPTIONS . " P
-					LEFT JOIN " . RESI_FLOOR_PLANS . " O
-					ON
-						P.OPTIONS_ID = O.OPTION_ID	
-				   WHERE P.PROJECT_ID = '" . $projectId . "'
-				   GROUP BY $columns
-				   ORDER BY P.SIZE ASC";
+    $columns = "P.OPTIONS_ID,P.PROJECT_ID,P.OPTION_NAME,P.OPTION_TYPE,P.SIZE,P.BEDROOMS,P.BATHROOMS,
+        P.CREATED_AT,P.STUDY_ROOM,P.SERVANT_ROOM,P.BALCONY,P.POOJA_ROOM,P.VILLA_PLOT_AREA,
+        P.VILLA_NO_FLOORS,P.VILLA_TERRACE_AREA,P.VILLA_GARDEN_AREA,P.CARPET_AREA,P.LENGTH_OF_PLOT,
+        P.BREADTH_OF_PLOT";
+    $qrySel = "SELECT
+                    $columns,
+                    GROUP_CONCAT(O.IMAGE_URL) FLOOR_IMAGES
+                    FROM
+                       " . RESI_PROJECT_OPTIONS . " P
+                    LEFT JOIN " . RESI_FLOOR_PLANS . " O
+                    ON
+                            P.OPTIONS_ID = O.OPTION_ID
+               WHERE P.PROJECT_ID = '" . $projectId . "'
+               AND OPTION_CATEGORY = 'Actual'
+               GROUP BY $columns
+               ORDER BY P.SIZE ASC";
     $res_Sel = mysql_query($qrySel) or die(mysql_error());
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -568,14 +477,16 @@ function ProjectOptionDetail($projectId) {
 }
 
 function fetch_towerDetails($projectId) {
-    $qrySel = "SELECT 
-							t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,t.PHASE_ID,p.PHASE_NAME  
-						FROM 
-							" . RESI_PROJECT_TOWER_DETAILS . " t LEFT JOIN resi_project_phase p 
-						ON   
-							t.PHASE_ID = p.PHASE_ID
-						WHERE 
-							t.PROJECT_ID = '" . $projectId . "' ORDER BY t.TOWER_NAME ASC";
+    $qrySel = "SELECT
+                   t.TOWER_NAME,t.TOWER_ID,t.NO_OF_FLOORS,t.REMARKS,STILT,
+                   t.NO_OF_FLATS,t.TOWER_FACING_DIRECTION,t.ACTUAL_COMPLETION_DATE,p.PHASE_ID,p.PHASE_NAME
+                FROM
+                   " . RESI_PROJECT_TOWER_DETAILS . " t 
+                inner join phase_tower_mappings ptm
+                on t.tower_id = ptm.tower_id
+                inner join resi_project_phase p on ptm.phase_id = p.phase_id
+                WHERE
+                        t.PROJECT_ID = '" . $projectId . "' ORDER BY t.TOWER_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -584,8 +495,10 @@ function fetch_towerDetails($projectId) {
     return $arrDetail;
 }
 
-function fetch_towers_in_phase($projectId, $phaseId) {
-    $qrySel = "SELECT TOWER_NAME,TOWER_ID,PHASE_ID FROM " . RESI_PROJECT_TOWER_DETAILS . "  WHERE PROJECT_ID = '" . $projectId . "' AND PHASE_ID=" . $phaseId . " GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";
+function fetch_towers_in_phase($projectId) {
+    $qrySel = "SELECT TOWER_NAME,TOWER_ID FROM " . RESI_PROJECT_TOWER_DETAILS . "
+        WHERE PROJECT_ID = '" . $projectId . "' 
+            GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -594,11 +507,11 @@ function fetch_towers_in_phase($projectId, $phaseId) {
     return $arrDetail;
 }
 
-function fetch_towerDetails_for_phase($projectId) {
+function fetch_towerDetails_for_phase($projectId, $phaseId = 0) {
     // Returns towers that are available for phase to select. So, if tower1 is selected in phase1 and tower2 is selected by no other phase,
     // in that case - both tower1 and tower2 are available to phase1 to select from.
 
-    $qrySel = "SELECT TOWER_NAME,TOWER_ID,PHASE_ID FROM " . RESI_PROJECT_TOWER_DETAILS . "  WHERE PROJECT_ID = '" . $projectId . "' GROUP BY TOWER_NAME ORDER BY TOWER_NAME ASC";
+    $qrySel = "SELECT TOWER_NAME,a.TOWER_ID,PHASE_ID FROM " . RESI_PROJECT_TOWER_DETAILS . " a LEFT JOIN phase_tower_mappings b on (b.TOWER_ID = a.TOWER_ID and b.PHASE_ID = $phaseId) WHERE PROJECT_ID = $projectId ORDER BY TOWER_NAME";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -608,7 +521,8 @@ function fetch_towerDetails_for_phase($projectId) {
 }
 
 function fetch_phaseDetails($projectId) {
-    $qrySel = "SELECT PHASE_ID, PHASE_NAME FROM " . RESI_PROJECT_PHASE . "  WHERE PROJECT_ID = '" . $projectId . "' ORDER BY PHASE_NAME ASC";
+    $qrySel = "SELECT PHASE_ID, PHASE_NAME FROM " . RESI_PROJECT_PHASE . "  WHERE 
+        PROJECT_ID = '" . $projectId . "' and status = 'Active' and version = 'Cms' ORDER BY PHASE_NAME ASC";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -633,27 +547,6 @@ function insert_towerconstructionStatus($towerId, $no_of_floors_completed, $rema
         audit_insert($last_id, 'insert', 'resi_proj_tower_construction_status', $projectId);
         return 1;
     }
-}
-
-/* * *************Query for Locality selected*********** */
-
-function localityList($cityid, $suburbId) {
-    $localitySelect = Array();
-    $sql = "SELECT A.LOCALITY_ID, A.SUBURB_ID, A.CITY_ID, A.LABEL FROM " . LOCALITY . " AS A WHERE A.CITY_ID = " . $cityid." AND VISIBLE_IN_CMS = '1'";
-
-    if ($suburbId != '') {
-        $sql .= " AND A.SUBURB_ID = " . $suburbId;
-    }
-
-    $sql .= " AND A.ACTIVE=1 ";
-
-    $data = mysql_query($sql);
-
-    while ($dataArr = mysql_fetch_assoc($data)) {
-        $localitySelect[$dataArr['LOCALITY_ID']] = $dataArr['LABEL'];
-    }
-    return $localitySelect;
-    /*     * *************end Query for Locality selected*********** */
 }
 
 /* * ********project insert************** */
@@ -725,7 +618,8 @@ function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
 }
 
 function specification($projectId) {
-    $qrySel = "SELECT * FROM " . RESI_PROJ_SPECIFICATION . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qrySel = "SELECT * FROM 
+        seo_data WHERE table_id = '".$projectId ."' and table_name = 'resi_project'";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -764,7 +658,7 @@ function ProjectAmenities($projectId, &$arrNotninty, &$arrDetail, &$arrninty) {
     $cnt = 1;
     while ($data = mysql_fetch_assoc($res_Sel)) {
         array_push($arrDetail, $data);
-        if ($data['AMENITY_ID'] <= 6) {
+        if ($data['AMENITY_ID'] != 99) {
             $arrNotninty[$data['AMENITY_ID']] = $data['AMENITY_DISPLAY_NAME'];
         } else {
             $arrninty[$cnt] = $data['AMENITY_DISPLAY_NAME'];
@@ -792,100 +686,64 @@ function ProjectType($projectId) {
     global $arrProjectType;
     global $arrProjectType_VA;
 
-    $qry = "SELECT * FROM  " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qry = "SELECT * FROM  " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' AND OPTION_CATEGORY = 'Actual'";
     $res = mysql_query($qry);
 
     while ($data = mysql_fetch_assoc($res)) {
-        if ($data['UNIT_TYPE'] == 'Apartment') {
+        if ($data['OPTION_TYPE'] == 'Apartment') {
             $arrProjectType['OPTIONS_ID'][] = $data['OPTIONS_ID'];
-            $arrProjectType['UNIT_NAME'][] = $data['UNIT_NAME'];
-            $arrProjectType['UNIT_TYPE'][] = $data['UNIT_TYPE'];
+            $arrProjectType['OPTION_NAME'][] = $data['OPTION_NAME'];
+            $arrProjectType['OPTION_TYPE'][] = $data['OPTION_TYPE'];
             $arrProjectType['SIZE'][] = $data['SIZE'];
-            $arrProjectType['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
-            $arrProjectType['MEASURE'][] = $data['MEASURE'];
-            $arrProjectType['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
-            $arrProjectType['PRICE_PER_UNIT_AREA_DP'][] = $data['PRICE_PER_UNIT_AREA_DP'];
-            $arrProjectType['PRICE_PER_UNIT_AREA_FP'][] = $data['PRICE_PER_UNIT_AREA_FP'];
-            $arrProjectType['STATUS'][] = $data['STATUS'];
+//            $arrProjectType['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
             $arrProjectType['BEDROOMS'][] = $data['BEDROOMS'];
-            $arrProjectType['CLP_VISIBLE'][] = $data['CLP_VISIBLE'];
-            $arrProjectType['DP_VISIBLE'][] = $data['DP_VISIBLE'];
-            $arrProjectType['FP_VISIBLE'][] = $data['FP_VISIBLE'];
-            $arrProjectType['DISCLAIMER_CLP'][] = $data['DISCLAIMER_CLP'];
-            $arrProjectType['DISCLAIMER_DP'][] = $data['DISCLAIMER_DP'];
-            $arrProjectType['DISCLAIMER_FP'][] = $data['DISCLAIMER_FP'];
             $arrProjectType['BATHROOMS'][] = $data['BATHROOMS'];
-            $arrProjectType['CREATED_DATE'][] = $data['CREATED_DATE'];
+            $arrProjectType['CREATED_AT'][] = $data['CREATED_AT'];
             $arrProjectType['STUDY_ROOM'][] = $data['STUDY_ROOM'];
             $arrProjectType['SERVANT_ROOM'][] = $data['SERVANT_ROOM'];
             $arrProjectType['BALCONY'][] = $data['BALCONY'];
             $arrProjectType['POOJA_ROOM'][] = $data['POOJA_ROOM'];
-            $arrProjectType['NO_OF_FLATS'][] = $data['NO_OF_FLATS'];
-            $arrProjectType['AVAILABLE_NO_OF_FLATS'][] = $data['AVAILABLE_NO_OF_FLATS'];
             $arrProjectType['VILLA_PLOT_AREA'][] = $data['VILLA_PLOT_AREA'];
             $arrProjectType['VILLA_NO_FLOORS'][] = $data['VILLA_NO_FLOORS'];
             $arrProjectType['VILLA_TERRACE_AREA'][] = $data['VILLA_TERRACE_AREA'];
             $arrProjectType['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType['CARPET_AREA'][] = $data['CARPET_AREA'];
-            $arrProjectType['PLOT_AREA_MEASURE'][] = $data['PLOT_AREA_MEASURE'];
-            $arrProjectType['PRICE_PER_UNIT_LOW'][] = $data['PRICE_PER_UNIT_LOW'];
-            $arrProjectType['PRICE_PER_UNIT_HIGH'][] = $data['PRICE_PER_UNIT_HIGH'];
-            $arrProjectType['NO_OF_FLOORS'][] = $data['NO_OF_FLOORS'];
-            $arrProjectType['RESALE_PRICE'][] = $data['RESALE_PRICE'];
-        } else if ($data['UNIT_TYPE'] == 'Plot') {
+            $arrProjectType['DISPLAY_CARPET_AREA'][] = $data['DISPLAY_CARPET_AREA'];
+        } else if ($data['OPTION_TYPE'] == 'Plot') {
             $arrProjectType_P['OPTIONS_ID'][] = $data['OPTIONS_ID'];
-            $arrProjectType_P['UNIT_NAME'][] = $data['UNIT_NAME'];
-            $arrProjectType_P['UNIT_TYPE'][] = $data['UNIT_TYPE'];
-            $arrProjectType_P['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
+            $arrProjectType_P['OPTION_NAME'][] = $data['OPTION_NAME'];
+            $arrProjectType_P['OPTION_TYPE'][] = $data['OPTION_TYPE'];
             $arrProjectType_P['SIZE'][] = $data['SIZE'];
-            $arrProjectType_P['MEASURE'][] = $data['MEASURE'];
-            $arrProjectType_P['CREATED_DATE'][] = $data['CREATED_DATE'];
-            $arrProjectType_P['TOTAL_PLOT_AREA'][] = $data['TOTAL_PLOT_AREA'];
+            $arrProjectType_P['CREATED_AT'][] = $data['CREATED_AT'];
             $arrProjectType_P['LENGTH_OF_PLOT'][] = $data['LENGTH_OF_PLOT'];
             $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
             $arrProjectType_P['STATUS'][] = $data['STATUS'];
         } else {
             $arrProjectType_VA['OPTIONS_ID'][] = $data['OPTIONS_ID'];
-            $arrProjectType_VA['UNIT_NAME'][] = $data['UNIT_NAME'];
-            $arrProjectType_VA['UNIT_TYPE'][] = $data['UNIT_TYPE'];
+            $arrProjectType_VA['OPTION_NAME'][] = $data['OPTION_NAME'];
+            $arrProjectType_VA['OPTION_TYPE'][] = $data['OPTION_TYPE'];
             $arrProjectType_VA['SIZE'][] = $data['SIZE'];
-            $arrProjectType_VA['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
-            $arrProjectType_VA['MEASURE'][] = $data['MEASURE'];
-            $arrProjectType_VA['PRICE_PER_UNIT_AREA'][] = $data['PRICE_PER_UNIT_AREA'];
-            $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP'][] = $data['PRICE_PER_UNIT_AREA_DP'];
-            $arrProjectType_VA['PRICE_PER_UNIT_AREA_FP'][] = $data['PRICE_PER_UNIT_AREA_FP'];
-            $arrProjectType_VA['STATUS'][] = $data['STATUS'];
+//            $arrProjectType_VA['CARPET_AREA_INFO'][] = $data['CARPET_AREA_INFO'];
             $arrProjectType_VA['BEDROOMS'][] = $data['BEDROOMS'];
-            $arrProjectType_VA['CLP_VISIBLE'][] = $data['CLP_VISIBLE'];
-            $arrProjectType_VA['DP_VISIBLE'][] = $data['DP_VISIBLE'];
-            $arrProjectType_VA['FP_VISIBLE'][] = $data['FP_VISIBLE'];
-            $arrProjectType_VA['DISCLAIMER_CLP'][] = $data['DISCLAIMER_CLP'];
-            $arrProjectType_VA['DISCLAIMER_DP'][] = $data['DISCLAIMER_DP'];
-            $arrProjectType_VA['DISCLAIMER_FP'][] = $data['DISCLAIMER_FP'];
             $arrProjectType_VA['BATHROOMS'][] = $data['BATHROOMS'];
-            $arrProjectType_VA['CREATED_DATE'][] = $data['CREATED_DATE'];
+            $arrProjectType_VA['CREATED_AT'][] = $data['CREATED_AT'];
             $arrProjectType_VA['STUDY_ROOM'][] = $data['STUDY_ROOM'];
             $arrProjectType_VA['SERVANT_ROOM'][] = $data['SERVANT_ROOM'];
             $arrProjectType_VA['BALCONY'][] = $data['BALCONY'];
             $arrProjectType_VA['POOJA_ROOM'][] = $data['POOJA_ROOM'];
-            $arrProjectType_VA['NO_OF_FLATS'][] = $data['NO_OF_FLATS'];
-            $arrProjectType_VA['AVAILABLE_NO_OF_FLATS'][] = $data['AVAILABLE_NO_OF_FLATS'];
             $arrProjectType_VA['VILLA_PLOT_AREA'][] = $data['VILLA_PLOT_AREA'];
             $arrProjectType_VA['VILLA_NO_FLOORS'][] = $data['VILLA_NO_FLOORS'];
             $arrProjectType_VA['VILLA_TERRACE_AREA'][] = $data['VILLA_TERRACE_AREA'];
             $arrProjectType_VA['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType_VA['CARPET_AREA'][] = $data['CARPET_AREA'];
-            $arrProjectType_VA['PLOT_AREA_MEASURE'][] = $data['PLOT_AREA_MEASURE'];
-            $arrProjectType_VA['PRICE_PER_UNIT_LOW'][] = $data['PRICE_PER_UNIT_LOW'];
-            $arrProjectType_VA['PRICE_PER_UNIT_HIGH'][] = $data['PRICE_PER_UNIT_HIGH'];
-            $arrProjectType_VA['NO_OF_FLOORS'][] = $data['NO_OF_FLOORS'];
-            $arrProjectType_VA['RESALE_PRICE'][] = $data['RESALE_PRICE'];
+            $arrProjectType_VA['DISPLAY_CARPET_AREA'][] = $data['DISPLAY_CARPET_AREA'];
         }
     }
 }
 
 function allProjectImages($projectId) {
-    $sqlListingImages = "SELECT *  FROM " . PROJECT_PLAN_IMAGES . " WHERE  PROJECT_ID = " . $projectId . "";
+    $sqlListingImages = "SELECT *  FROM " . PROJECT_PLAN_IMAGES . " WHERE  
+        PROJECT_ID = " . $projectId . "";
 
     $data = mysql_query($sqlListingImages);
     $ImageDataListingArr = array();
@@ -898,7 +756,8 @@ function allProjectImages($projectId) {
 /* * *****Fetch all floor plans images of a project***** */
 
 function allProjectFloorImages($projectId) {
-    $qryOpt = "SELECT OPTIONS_ID,UNIT_NAME,SIZE,MEASURE,UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+    $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,MEASURE,OPTION_TYPE as 
+        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
     $resOpt = mysql_query($qryOpt);
 
     $ImageDataListingArr = array();
@@ -936,7 +795,7 @@ function searchTower($towerArray, $newTower) {
 
 function searchPhase($phaseArray, $newPhaseName) {
     foreach ($phaseArray as $k => $val) {
-        if ($newPhaseName == $val['PHASE_NAME']) {
+        if (strtolower($newPhaseName) == strtolower($val['PHASE_NAME'])) {
             return $k;
         }
     }
@@ -947,8 +806,8 @@ function searchPhase($phaseArray, $newPhaseName) {
 
 function phaseDetailsForId($phaseId) {
     $sql = "SELECT * FROM " . RESI_PROJECT_PHASE . "
-                        WHERE
-                        PHASE_ID ='" . $phaseId . "'";
+            WHERE
+            PHASE_ID ='" . $phaseId . "' and version = 'Cms'";
 
     $data = mysql_query($sql);
     $arr = array();
@@ -962,8 +821,8 @@ function phaseDetailsForId($phaseId) {
 
 function towerDetailsForId($towerId) {
     $sql = "SELECT *  FROM " . RESI_PROJECT_TOWER_DETAILS . "
-					WHERE
-					TOWER_ID ='" . $towerId . "'";
+            WHERE
+            TOWER_ID ='" . $towerId . "'";
 
     $data = mysql_query($sql);
     $arr = array();
@@ -1053,29 +912,26 @@ function costructionDetail($projectId) {
 
 /* * *********Builder management************* */
 
-function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
-    $Sql = "INSERT INTO " . RESI_BUILDER . " SET
-				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
-                                ENTITY  	   	     = '" . d_($legalEntity) . "',
-				DESCRIPTION 	  	     = '" . d_($txtBuilderDescription) . "',
-				URL	 	  	     = '" . d_($txtBuilderUrl) . "',
-				BUILDER_IMAGE 		     = '" . d_($imgname) . "',
-				DISPLAY_ORDER		     = '" . d_($DisplayOrder) . "',
-				META_TITLE	 	     = '" . d_($txtMetaTitle) . "',
-				META_KEYWORDS	 	     = '" . d_($txtMetaKeywords) . "',
-				ADDRESS			     = '" . d_($address) . "',
-				CITY			     = '" . d_($city) . "',
-				PINCODE			     = '" . d_($pincode) . "',
-				META_DESCRIPTION	     = '" . d_($txtMetaDescription) . "',
-				CEO_MD_NAME                  = '" . d_($ceo) . "',
-				TOTAL_NO_OF_EMPL             = '" . d_($employee) . "',
-				TOTAL_NO_OF_DELIVERED_PROJECT= '" . $delivered_project . "',
-				AREA_DELIVERED		     ='" . $area_delivered . "',
-				ONGOING_PROJECTS	     = '" . $ongoing_project . "',
-				WEBSITE			     ='" . $website . "',
-				REVENUE			     ='" . $revenue . "',
-				DEBT			     ='" . $debt . "',
-				ESTABLISHED_DATE	     = '" . $date . "'";
+function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
+  $Sql = "INSERT INTO " . RESI_BUILDER . " SET
+        BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
+        ENTITY  	   	     = '" . d_($legalEntity) . "',
+        DESCRIPTION 	  	     = '" . d_($txtBuilderDescription) . "',
+        DISPLAY_ORDER		     = '" . d_($DisplayOrder) . "',
+        ADDRESS			     = '" . d_($address) . "',
+        CITY_ID			     = '" . d_($city) . "',
+        PINCODE			     = '" . d_($pincode) . "',
+        CEO_MD_NAME                  = '" . d_($ceo) . "',
+        TOTAL_NO_OF_EMPL             = '" . d_($employee) . "',
+        TOTAL_NO_OF_DELIVERED_PROJECT= '" . $delivered_project . "',
+        AREA_DELIVERED		     ='" . $area_delivered . "',
+        ONGOING_PROJECTS	     = '" . $ongoing_project . "',
+        WEBSITE			     ='" . $website . "',
+        REVENUE			     ='" . $revenue . "',
+        DEBT			     ='" . $debt . "',
+        ESTABLISHED_DATE	     = '" . $date . "',
+        updated_by                   = ".$_SESSION['adminId'].",
+        created_at                   = now()";
 
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertBuilder()');
     $lastId = mysql_insert_id();
@@ -1090,13 +946,12 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
             $projects = $contactArr['Projects'][$cnt];
 
             $qry = "INSERT INTO " . BUILDER_CONTACT_INFO . "
-						SET
-							NAME			=	'" . $name . "',
-							BUILDER_ID		=	'" . $lastId . "',
-							PHONE			=	'" . $phone . "',
-							EMAIL			=	'" . $email . "',
-							PROJECTS		=	'" . $projects . "',
-							SUBMITTED_DATE	=	now()";
+                    SET
+                            NAME			=	'" . $name . "',
+                            BUILDER_ID		=	'" . $lastId . "',
+                            PHONE			=	'" . $phone . "',
+                            EMAIL			=	'" . $email . "',
+                            SUBMITTED_DATE	=	now()";
             $res = mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
         }
         $cnt++;
@@ -1128,8 +983,8 @@ function AuditTblDataByTblName($tblName, $projectId) {
 						 	PROJECT_ID = '" . $projectId . "'
 					ORDER BY
 						ACTION_DATE DESC LIMIT 1";
-
-    $res = mysql_query($qry);
+						
+	$res = mysql_query($qry);
     $arrAudit = array();
     $data = mysql_fetch_assoc($res);
     array_push($arrAudit, $data);
@@ -1138,20 +993,17 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 /* * ******update builder if already exists************** */
 
-function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL') {
-    $Sql = "UPDATE " . RESI_BUILDER . " SET
+function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL')
+ {
+	$Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
                                 ENTITY  	   	     = '" . d_($legalEntity) . "',				
                                 DESCRIPTION 	  	     = '" . d_($txtBuilderDescription) . "',
-				URL	 	  	     = '" . d_($txtBuilderUrl) . "',
 				BUILDER_IMAGE 	   	     = '" . d_($imgname) . "',
 				DISPLAY_ORDER		     = '" . d_($DisplayOrder) . "',
-				META_TITLE	 	     = '" . d_($txtMetaTitle) . "',
-				META_KEYWORDS	 	     = '" . d_($txtMetaKeywords) . "',
 				ADDRESS			     = '" . d_($address) . "',
-				CITY			     = '" . d_($city) . "',
+				CITY_ID			     = '" . d_($city) . "',
 				PINCODE			     = '" . d_($pincode) . "',
-				META_DESCRIPTION	     = '" . d_($txtMetaDescription) . "',
 				ESTABLISHED_DATE	     = '" . d_($established) . "',
 				CEO_MD_NAME		     = '" . d_($ceo) . "',
 				TOTAL_NO_OF_DELIVERED_PROJECT= '" . $delivered_project . "',
@@ -1164,10 +1016,22 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				" . (($image_id == 'NULL') ? "" : ",SERVICE_IMAGE_ID                 = $image_id") . "
 			WHERE	
 				BUILDER_ID = '" . $builderid . "'"; //die("here");
-
-    $list = '';
-    $del = "DELETE FROM " . BUILDER_CONTACT_INFO . " WHERE BUILDER_ID = '" . $builderid . "'";
-    $resDel = mysql_query($del) or die(mysql_error());
+          $qrySelect = "select * from project_builder_contact_mappings where builder_contact_id in (
+        select id from builder_contacts where builder_id = $builderid )";
+          $resSelect = mysql_query($qrySelect) or die(mysql_error());
+          if( mysql_num_rows($resSelect) > 0) {
+             $qrydel = "delete from project_builder_contact_mappings where builder_contact_id in (
+             select id from builder_contacts where builder_id = $builderid)";
+            mysql_query($qrydel) or die(mysql_error());
+            $del = "DELETE from " . BUILDER_CONTACT_INFO . " WHERE BUILDER_ID = '" . $builderid . "'";
+            mysql_query($del) or die(mysql_error());
+          }
+          $query_cont_ids = mysql_query("SELECT bc.ID FROM  " . BUILDER_CONTACT_INFO . "  bc INNER JOIN project_builder_contact_mappings bcm on bc.ID != bcm.builder_contact_id where builder_id = $builderid");
+          
+			while($row_ids = mysql_fetch_object($query_cont_ids)){
+					mysql_query("delete from  " . BUILDER_CONTACT_INFO . " where ID = ".$row_ids->ID);
+			}
+          
     $cnt = 0;
 
     foreach ($contactArr['Name'] as $k => $v) {
@@ -1178,14 +1042,24 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
             $projects = $contactArr['Projects'][$cnt];
 
             $qry = "INSERT INTO " . BUILDER_CONTACT_INFO . "
-						SET
-							NAME			=	'" . $name . "',
-							BUILDER_ID		=	'" . $builderid . "',
-							PHONE			=	'" . $phone . "',
-							EMAIL			=	'" . $email . "',
-							PROJECTS		=	'" . $projects . "',
-							SUBMITTED_DATE	=	now()";
-            $res = mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
+                    SET
+                            NAME		=	'" . $name . "',
+                            BUILDER_ID		=	'" . $builderid . "',
+                            PHONE		=	'" . $phone . "',
+                            EMAIL		=	'" . $email . "',
+                            SUBMITTED_DATE	=	now()";
+            mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
+            $lastId = mysql_insert_id();
+                        
+            $projectId = explode("#",$projects);
+            
+            if( count($projectId) >0 && !empty($projects)) {
+				
+                foreach($projectId as $val) {
+					$qryIns = "insert into project_builder_contact_mappings(project_id,builder_contact_id) values($val,$lastId)";
+                    mysql_query($qryIns) or die(mysql_error());
+                }
+            }
         }
         $cnt++;
     }
@@ -1212,39 +1086,44 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 
 /*********************************/
 
-function updateProjectPhase($pID, $phase, $reviews, $stage = '', $revert = FALSE) {
-    if ($phase != "complete") {
+function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
+    if ($phase != phaseId_6) {
         mysql_query('begin');
-        $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE = '" . $phase . "', AUDIT_COMMENTS = '" . $reviews . "' WHERE PROJECT_ID = '" . $pID . "';";
+        $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE_ID = '" . $phase . "' 
+            WHERE PROJECT_ID = '" . $pID . "' and version = 'Cms';";
     } else {
-        $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE = '" . $phase . "', PROJECT_STAGE = 'noStage', UPDATION_CYCLE_ID = NULL, AUDIT_COMMENTS = '" . $reviews . "' WHERE PROJECT_ID = '" . $pID . "';";
+        $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE_ID = '" . $phase . "', PROJECT_STAGE_ID = 1,
+            UPDATION_CYCLE_ID = NULL WHERE PROJECT_ID = '" . $pID . "' and version = 'Cms';";
     }
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function updateProjectPhase()');
     if ($revert == TRUE)
-        $phase = 'revert';
+        $phase = phaseId_8;
 
     $sql = "select max(HISTORY_ID) ID from project_stage_history where PROJECT_ID = $pID";
     $res = mysql_query($sql);
     $res = mysql_fetch_assoc($res);
     $last_hist_id = $res['ID'];
+    
     if (!empty($last_hist_id)) {
         $ins = "
-				INSERT INTO 
-						project_stage_history 
-							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
-				VALUES 
-							(NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "','" . $last_hist_id . "')";
+        INSERT INTO 
+        project_stage_history 
+        (HISTORY_ID,PROJECT_ID,PROJECT_PHASE_ID,PROJECT_STAGE_ID,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
+        VALUES 
+        (NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "','" . $last_hist_id . "')";
     } else {
         $ins = "
-				INSERT INTO 
-						project_stage_history 
-							(HISTORY_ID,PROJECT_ID,PROJECT_PHASE,PROJECT_STAGE,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
-				VALUES 
-							(NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "', NULL)";
+        INSERT INTO 
+        project_stage_history 
+        (HISTORY_ID,PROJECT_ID,PROJECT_PHASE_ID,PROJECT_STAGE_ID,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID)
+        VALUES 
+        (NULL,'" . $pID . "','" . $phase . "','" . $stage . "',NOW(),'" . $_SESSION['adminId'] . "', NULL)";
     }
+   
     $r = mysql_query($ins);
-    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " where PROJECT_ID = $pID;";
-    mysql_query($sql);
+    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " 
+        where PROJECT_ID = $pID and version = 'Cms';";
+    mysql_query($sql) or die(mysql_error());
     mysql_query('commit');
     return 1;
 }
@@ -1265,19 +1144,18 @@ function changeLabel($pID, $val) {
 
 /* * ************City management********************* */
 
-function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $txtMetaTitle, $txtMetaKeywords, $txtMetaDescription, $status, $desc) {
+function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
 
     $Sql = "INSERT INTO " . CITY . " SET
 			LABEL 	   			= '" . d_($txtCityName) . "',
-			META_TITLE   		= '" . d_($txtMetaTitle) . "',
-			META_KEYWORDS  		= '" . d_($txtMetaKeywords) . "',
-			META_DESCRIPTION	= '" . d_($txtMetaDescription) . "',
-			ACTIVE 	   			= '" . d_($status) . "',
+			STATUS 	   			= '" . d_($status) . "',
 			URL					= '" . d_($txtCityUrl) . "',
 			DISPLAY_ORDER		= '" . d_($DisplayOrder) . "',
-			DESCRIPTION			=	'" . d_($desc) . "'"; //die();
+			DESCRIPTION			= '" . d_($desc) . "',
+			updated_by			= '" .$_SESSION['adminId']."'";
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertCity()');
-    return 1;
+    $lastId = mysql_insert_id();
+    return $lastId;
 }
 
 function DeleteCity($ID) {
@@ -1296,10 +1174,7 @@ function ViewCityDetails($cityID) {
         $Res = mysql_fetch_assoc($ExecSql);
         $ResDetails['CITY_ID'] = $Res['CITY_ID'];
         $ResDetails['LABEL'] = $Res['LABEL'];
-        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
-        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
-        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
+        $ResDetails['STATUS'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DISPLAY_ORDER'] = $Res['DISPLAY_ORDER'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
@@ -1319,34 +1194,6 @@ function getAllCities() {
     return $allCityArr;
 }
 
-function ViewLocalityDetails($localityID) {
-    $Sql = "SELECT * FROM " . LOCALITY . " WHERE LOCALITY_ID ='" . $localityID . "'";
-    $ExecSql = mysql_query($Sql);
-
-    if (mysql_num_rows($ExecSql) == 1) {
-
-        $Res = mysql_fetch_assoc($ExecSql);
-        $ResDetails['LOCALITY_ID'] = $Res['LOCALITY_ID'];
-        $ResDetails['CITY_ID'] = $Res['CITY_ID'];
-        $ResDetails['LABEL'] = $Res['LABEL'];
-        $ResDetails['META_TITLE'] = $Res['META_TITLE'];
-        $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
-        $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
-        $ResDetails['URL'] = $Res['URL'];
-        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
-        $ResDetails['VISIBLE_IN_CMS'] = $Res['VISIBLE_IN_CMS'];
-        $ResDetails['MAX_LATITUDE'] = $Res['MAX_LATITUDE'];
-        $ResDetails['MIN_LATITUDE'] = $Res['MIN_LATITUDE'];
-        $ResDetails['MAX_LONGITUDE'] = $Res['MAX_LONGITUDE'];
-        $ResDetails['MIN_LONGITUDE'] = $Res['MIN_LONGITUDE'];
-        $ResDetails['LOCALITY_CLEANED'] = $Res['LOCALITY_CLEANED'];
-        return $ResDetails;
-    } else {
-        return 0;
-    }
-}
-
 function ViewSuburbDetails($suburbID) {
     $Sql = "SELECT * FROM " . SUBURB . " WHERE SUBURB_ID  ='" . $suburbID . "'";
     $ExecSql = mysql_query($Sql);
@@ -1360,7 +1207,7 @@ function ViewSuburbDetails($suburbID) {
         $ResDetails['META_TITLE'] = $Res['META_TITLE'];
         $ResDetails['META_KEYWORDS'] = $Res['META_KEYWORDS'];
         $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
-        $ResDetails['ACTIVE'] = $Res['ACTIVE'];
+        $ResDetails['ACTIVE'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
         return $ResDetails;
@@ -1376,7 +1223,12 @@ function DeleteBank($bank_id) {
 }
 
 function project_list($builderId) {
-    $sql = "SELECT PROJECT_ID,PROJECT_NAME FROM " . RESI_PROJECT . " WHERE BUILDER_ID = '" . $builderId . "' AND PROJECT_NAME != '' ORDER BY PROJECT_NAME ASC";
+    $sql = "SELECT PROJECT_ID,PROJECT_NAME FROM " . RESI_PROJECT . " 
+            WHERE 
+                BUILDER_ID = '" . $builderId . "' 
+                AND PROJECT_NAME != ''
+                and version = 'cms'
+                ORDER BY PROJECT_NAME ASC";
     $res = mysql_query($sql) or die(mysql_error());
     $arrBuilder = array();
     while ($data = mysql_fetch_assoc($res)) {
@@ -1387,65 +1239,83 @@ function project_list($builderId) {
 
 /* * ***********Query for insert other price********************** */
 
-function InsertOtherPrice($arr) {
-
-    $Sql = "INSERT INTO " . RESI_PROJECT_OTHER_PRICING . " SET
-				PROJECT_ID  	   					= '" . d_($arr['projectId']) . "',
-				EDC_IDC 	  						= '" . d_($arr['edc_idc_val1']) . "',
-				EDC_IDC_TYPE	 	  				= '" . d_($arr['edc_idc']) . "',
-				EDC_IDC_MEND_OPT 					= '" . d_($arr['edc_idc_type1']) . "',
-				LEASE_RENT							= '" . d_($arr['lease_rent_val1']) . "',
-				LEASE_RENT_TYPE	 					= '" . d_($arr['lease_rent']) . "',
-				LEASE_RENT_MEND_OPT	 				= '" . d_($arr['lease_rent_type1']) . "',
-				OPEN_CAR_PARKING			 		= '" . d_($arr['open_car_parking1']) . "',
-				OPEN_CAR_PARKING_TYPE			 	= '" . d_($arr['open_car_parking']) . "',
-				OPEN_CAR_PARKING_MEND_OPT			= '" . d_($arr['open_car_parking_type1']) . "',
-				CLOSE_CAR_PARKING					= '" . d_($arr['close_car_parking1']) . "',
-				CLOSE_CAR_PARKING_TYPE				= '" . d_($arr['close_car_parking']) . "',
-				CLOSE_CAR_PARKING_MEND_OPT			= '" . d_($arr['close_car_parking_type1']) . "',
-				SEMI_CLOSE_CAR_PARKING				= '" . d_($arr['semi_close_car_parking1']) . "',
-				SEMI_CLOSE_CAR_PARKING_TYPE			= '" . d_($arr['semi_close_car_parking']) . "',
-				SEMI_CLOSE_CAR_PARKING_MEND_OPT		= '" . d_($arr['semi_close_car_parking_type1']) . "',
-				CLUB_HOUSE							= '" . d_($arr['club_house1']) . "',
-				CLUB_HOUSE_PSF_FIXED				= '" . d_($arr['club_house']) . "',
-				CLUB_HOUSE_MEND_OPT					= '" . d_($arr['club_house_type1']) . "',
-				IFMS								= '" . d_($arr['ifms1']) . "',
-				IFMS_PSF_FIXED						= '" . d_($arr['ifms']) . "',
-				IFMS_MEND_OPT						= '" . d_($arr['ifms_type1']) . "',
-				POWER_BACKUP						= '" . d_($arr['power_backup1']) . "',
-				POWER_BACKUP_PSF_FIXED				= '" . d_($arr['power_backup']) . "',
-				POWER_BACKUP_MEND_OPT				= '" . d_($arr['power_backup_type1']) . "',
-				LEGAL_FEES							= '" . d_($arr['legal_fees1']) . "',
-				LEGAL_FEES_PSF_FIXED				= '" . d_($arr['legal_fees']) . "',
-				LEGAL_FEES_MEND_OPT					= '" . d_($arr['legal_fees_type1']) . "',
-				POWER_WATER							= '" . d_($arr['power_and_water1']) . "',
-				POWER_WATER_PSF_FIXED				= '" . d_($arr['power_and_water']) . "',
-				POWER_WATER_MEND_OPT				= '" . d_($arr['power_and_water_type1']) . "',
-				MAINTENANCE_ADVANCE					= '" . d_($arr['maintenance_advance1']) . "',
-				MAINTENANCE_ADVANCE_PSF_FIXED		= '" . d_($arr['maintenance_advance']) . "',
-				MAINTENANCE_ADVANCE_MEND_OPT		= '" . d_($arr['maintenance_advance_type1']) . "',
-				MAINTENANCE_ADVANCE_MONTHS			= '" . d_($arr['maintenance_advance_months']) . "',
-				PLC									= '" . d_($arr['plc']) . "',
-				FLOOR_RISE							= '" . d_($arr['floor_rise']) . "',
-				OTHERS								= '" . d_($arr['other']) . "'";
-
-    $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertOtherPrice()');
-
-    if ($ExecSql) {
-        $last_id = mysql_insert_id();
-        audit_insert($last_id, 'insert', 'resi_project_other_pricing', $arr['projectId']);
-        return 1;
+function InsertUpdateOtherPrice($arr,$projectId) {
+    $arrInsertUpdateProject = array();
+    $arrInsertUpdateProject['EDC_IDC'] = $arr['edc_idc_val1'];
+    $arrInsertUpdateProject['EDC_IDC_TYPE'] = $arr['edc_idc'];
+    $arrInsertUpdateProject['EDC_IDC_MEND_OPT'] = $arr['edc_idc_type1'];
+    
+    $arrInsertUpdateProject['LEASE_RENT'] = $arr['lease_rent_val1'];
+    $arrInsertUpdateProject['LEASE_RENT_TYPE'] = $arr['lease_rent'];
+    $arrInsertUpdateProject['LEASE_RENT_MEND_OPT'] = $arr['lease_rent_type1'];
+    
+    $arrInsertUpdateProject['OPEN_CAR_PARKING'] = $arr['open_car_parking1'];
+    $arrInsertUpdateProject['OPEN_CAR_PARKING_TYPE'] = $arr['open_car_parking'];
+    $arrInsertUpdateProject['OPEN_CAR_PARKING_MEND_OPT'] = $arr['open_car_parking_type1'];
+    
+    $arrInsertUpdateProject['CLOSE_CAR_PARKING_MEND_OPT'] = $arr['close_car_parking_type1'];
+    $arrInsertUpdateProject['CLOSE_CAR_PARKING'] = $arr['close_car_parking1'];
+    $arrInsertUpdateProject['CLOSE_CAR_PARKING_TYPE'] = $arr['close_car_parking'];
+    
+    $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING'] = $arr['semi_close_car_parking1'];
+    $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_TYPE'] = $arr['semi_close_car_parking'];
+    $arrInsertUpdateProject['SEMI_CLOSE_CAR_PARKING_MEND_OPT'] = $arr['semi_close_car_parking_type1'];
+    
+    $arrInsertUpdateProject['CLUB_HOUSE'] = $arr['club_house1'];
+    $arrInsertUpdateProject['CLUB_HOUSE_PSF_FIXED'] = $arr['club_house'];
+    $arrInsertUpdateProject['CLUB_HOUSE_MEND_OPT'] = $arr['club_house_type1'];
+    $arrInsertUpdateProject['IFMS'] = $arr['ifms1'];
+    $arrInsertUpdateProject['IFMS_PSF_FIXED'] = $arr['ifms'];
+    $arrInsertUpdateProject['IFMS_MEND_OPT'] = $arr['ifms_type1'];
+    $arrInsertUpdateProject['POWER_BACKUP'] = $arr['power_backup1'];
+    $arrInsertUpdateProject['POWER_BACKUP_PSF_FIXED'] = $arr['power_backup'];
+    $arrInsertUpdateProject['POWER_BACKUP_MEND_OPT'] = $arr['power_backup_type1'];
+    $arrInsertUpdateProject['LEGAL_FEES'] = $arr['legal_fees1'];
+    $arrInsertUpdateProject['LEGAL_FEES_PSF_FIXED'] = $arr['legal_fees'];
+    $arrInsertUpdateProject['LEGAL_FEES_MEND_OPT']  = $arr['legal_fees_type1'];
+    $arrInsertUpdateProject['POWER_WATER'] = $arr['power_and_water1'];
+    $arrInsertUpdateProject['POWER_WATER_PSF_FIXED'] = $arr['power_and_water'];
+    $arrInsertUpdateProject['POWER_WATER_MEND_OPT'] = $arr['power_and_water_type1'];
+    $arrInsertUpdateProject['MAINTENANCE_ADVANCE'] = $arr['maintenance_advance1'];
+    $arrInsertUpdateProject['MAINTENANCE_ADVANCE_PSF_FIXED'] = $arr['maintenance_advance'];
+    $arrInsertUpdateProject['MAINTENANCE_ADVANCE_MEND_OPT'] = $arr['maintenance_advance_type1'];
+    $arrInsertUpdateProject['MAINTENANCE_ADVANCE_MONTHS'] = $arr['maintenance_advance_months'];
+    $arrInsertUpdateProject['PLC'] = $arr['plc'];
+    $arrInsertUpdateProject['FLOOR_RISE'] = $arr['floor_rise'];
+    $arrInsertUpdateProject['OTHER_PRICING'] = trim($arr['other']);
+    
+    foreach($arrInsertUpdateProject as $key=>$val) {
+        $select = "select attribute_name from table_attributes 
+            where table_name = 'resi_project' and table_id = $projectId and attribute_name = '$key'";
+        $qrySelect = mysql_query($select) or die(mysql_error());
+        $insertUpdate = '';
+        if(mysql_num_rows($qrySelect) > 0){
+            $insertUpdate = "update table_attributes 
+            set attribute_value = '$val' 
+            where table_name = 'resi_project' and table_id = '$projectId' and attribute_name = '$key'";
+        }
+        else {
+        $insertUpdate = "insert into table_attributes (table_name,table_id,attribute_name,attribute_value,
+                updated_by) values ('resi_project', $projectId, '$key', '$val',".$_SESSION['adminId'].")";
+        }
+        $ins = mysql_query($insertUpdate) or die(mysql_error()." error in other pricing insert");
     }
+    
+    if($ins)
+        return true;
+    else
+        return false;
 }
 
 /* * *****function to fetch project other pricing******* */
 
 function fetch_other_price($projectId) {
-    $qry = "SELECT * FROM " . RESI_PROJECT_OTHER_PRICING . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qry = "SELECT * FROM 
+        table_attributes WHERE table_id = '".$projectId ."' and table_name = 'resi_project'";
     $res = mysql_query($qry) or die(mysql_error());
     $arrOtherPrice = array();
     while ($data = mysql_fetch_assoc($res)) {
-        array_push($arrOtherPrice, $data);
+        $arrOtherPrice[0][$data['attribute_name']] = $data['attribute_value'];
     }
     return $arrOtherPrice;
 }
@@ -1548,8 +1418,16 @@ function BuilderContactInfo($builderid) {
     $resContact = mysql_query($qry_contact_info);
     $arrContact = array();
     while ($dataContact = mysql_fetch_array($resContact)) {
+		$qry = "select * from project_builder_contact_mappings 
+             where builder_contact_id = '".$dataContact['ID']."'";
+         $res = mysql_query($qry) or die(mysql_error());
+		while($row_ids = mysql_fetch_object($res))
+			$dataContact['PROJECTS'][] = $row_ids->project_id; 
+		
         array_push($arrContact, $dataContact);
+        
     }
+            
     return $arrContact;
 }
 
@@ -1569,30 +1447,82 @@ function scaleDimensions($orig_width, $orig_height, $max_width, $max_height) {
 }
 
 /* * *******function for last upldated module date********* */
-
 function lastUpdatedAuditDetail($projectId) {
-    $qry = "   SELECT
-                    b.TABLE_NAME, b.DEPARTMENT, c.FNAME, a.ACTION_DATE
+   $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
                     FROM
-                       audit a
-                           JOIN
-                       (SELECT
-                           a.TABLE_NAME, p.DEPARTMENT, MAX(a.AUDIT_ID) as AUDIT_ID
-                       FROM
-                           audit a
-                       JOIN proptiger_admin p ON a.DONE_BY = p.ADMINID
+                       ".RESI_PROJECT." rp
+                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
                        WHERE
-                           a.PROJECT_ID = $projectId
-                       GROUP BY a.TABLE_NAME , p.DEPARTMENT) b ON (b.audit_id = a.audit_id)
-                           join
-                       proptiger_admin c ON (c.ADMINID = a.DONE_BY)";
-    $res = mysql_query($qry) or die(mysql_error());
+                           rp.PROJECT_ID = $projectId";
+                       
+    $res = mysql_fetch_object(mysql_query($qry));
     $arrData = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        //array_push($arrData,$data);
-        $arrData[$data['TABLE_NAME']][$data['DEPARTMENT']] = $data;
+    
+    if($res->FNAME){
+		$arrData['resi_project']['name'] = $res->FNAME;
+		$arrData['resi_project']['dept'] = $res->DEPARTMENT;
+		$arrData['resi_project']['ACTION_DATE'] = $res->updated_at;
+	}
+    $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+                    FROM
+                       ".RESI_PROJECT_OPTIONS." rp
+                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                       WHERE
+                           rp.PROJECT_ID = $projectId ORDER BY rp.updated_at Desc LIMIT 1";
+    $res = mysql_fetch_object(mysql_query($qry));
+  
+   if($res->FNAME){
+    $arrData['resi_project_options']['name'] = $res->FNAME;
+    $arrData['resi_project_options']['dept'] = $res->DEPARTMENT;
+    $arrData['resi_project_options']['ACTION_DATE'] = $res->updated_at;
+   }
+    
+    $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+                    FROM
+                       ".RESI_PROJECT_TOWER_DETAILS." rp
+                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                       WHERE
+                           rp.PROJECT_ID = $projectId ORDER BY rp.updated_at Desc LIMIT 1";
+                       
+    $res = mysql_fetch_object(mysql_query($qry));
+    if($res->FNAME){
+		$arrData['resi_project_tower_details']['name'] = $res->FNAME;
+		$arrData['resi_project_tower_details']['dept'] = $res->DEPARTMENT;
+		$arrData['resi_project_tower_details']['ACTION_DATE'] = $res->updated_at;
     }
-    return $arrData;
+    
+    $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+                    FROM
+                       ".TABLE_ATTRIBUTES." rp
+                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                       WHERE
+                           rp.TABLE_ID = $projectId ORDER BY rp.updated_at Desc LIMIT 1";
+                       
+    $res = mysql_fetch_object(mysql_query($qry));
+	if($res->FNAME){
+		$arrData['resi_project_other_pricing']['name'] = $res->FNAME;
+		$arrData['resi_project_other_pricing']['dept'] = $res->DEPARTMENT;
+		$arrData['resi_project_other_pricing']['ACTION_DATE'] = $res->updated_at;
+	}
+    
+    
+    $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+                    FROM
+                       ".PROJECT_SUPPLIES." rp
+						  JOIN ".LISTINGS." lst ON rp.LISTING_ID = lst.ID
+						  JOIN ".RESI_PROJECT_OPTIONS." rpo ON lst.OPTION_ID = rpo.OPTIONS_ID
+                          JOIN proptiger_admin p ON rp.UPDATED_BY = p.ADMINID
+                       WHERE
+                           rpo.PROJECT_ID = $projectId ORDER BY rpo.UPDATED_AT Desc LIMIT 1";
+                       
+    $res = mysql_fetch_object(mysql_query($qry));
+	if($res->FNAME){
+		$arrData['resi_proj_supply']['name'] = $res->FNAME;
+		$arrData['resi_proj_supply']['dept'] = $res->DEPARTMENT;
+		$arrData['resi_proj_supply']['ACTION_DATE'] = $res->updated_at;
+	}
+    
+   return $arrData;
 }
 
 /* * ***********function for fetch fetch project calling links**************** */
@@ -1603,19 +1533,19 @@ function fetchProjectCallingLinks($projectId, $projectType, $audioLinkChk = '') 
     else
         $and = "";
     $qry = "SELECT 
-                    d.AudioLink,a.FNAME,d.Remark,d.ContactNumber,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
-                FROM 
-                   (" . CALLDETAILS . " d LEFT JOIN " . CALLPROJECT . " p 
-                ON
-                   d.CallId = p.CallId)
-                LEFT JOIN
-                   " . ADMIN . " a
-                ON 
-                   d.AgentId = a.ADMINID
-                WHERE
-                   p.ProjectId = $projectId
-                AND
-                   d.PROJECT_TYPE = '$projectType'";
+               d.AudioLink,a.FNAME,d.Remark,d.ContactNumber,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
+            FROM 
+               (" . CALLDETAILS . " d LEFT JOIN " . CALLPROJECT . " p 
+            ON
+               d.CallId = p.CallId)
+            LEFT JOIN
+               " . ADMIN . " a
+            ON 
+               d.AgentId = a.ADMINID
+            WHERE
+               p.ProjectId = $projectId
+            AND
+               d.PROJECT_TYPE = '$projectType'";
     $res = mysql_query($qry) or die(mysql_error());
     $arrCallLink = array();
     if (mysql_num_rows($res) > 0) {
@@ -1863,6 +1793,7 @@ function insertUpdateInRedirectTbl($toUrl, $fromUrl) {
 					FROM_URL		=	'$fromUrl',
 					TO_URL			=	'$toUrl',
 					SUBMITTED_DATE	=	now(),
+                                        modified_by	=	" . $_SESSION['adminId'].",
 					SUBMITTED_BY	=	" . $_SESSION['adminId'];
         $action = 'Insertion';
     } else {
@@ -1953,8 +1884,8 @@ function getPrevMonthProjectData($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-
-	$url=$_SERVER['HTTP_HOST']."/analytics/apis/getpricehistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+        //$url=$_SERVER['HTTP_HOST']."/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+        $url=$_SERVER['HTTP_HOST']."/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1962,7 +1893,6 @@ function getPrevMonthProjectData($projectId)
 	$months=$json['prices'];
 	return $months;
 }
-
 
 function getFlatAvailability($projectId)
 {
@@ -1972,7 +1902,8 @@ function getFlatAvailability($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	 $url=$_SERVER['HTTP_HOST']."/analytics/apis/getavailabilityhistory.json?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+	//$url=$_SERVER['HTTP_HOST']."/app/v1/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+        $url=$_SERVER['HTTP_HOST']."/app/v2/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1994,7 +1925,7 @@ function getFlatAvailability($projectId)
 	return $final_list;
 }
 function projectDetailById($projectId){
-    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."'";
+    $qry = "SELECT * FROM ".RESI_PROJECT." WHERE PROJECT_ID = '".$projectId."' and version = 'Cms'";
     $res = mysql_query($qry) or die(mysql_error());
     $projectDetails = array();
     while ($data = mysql_fetch_array($res)) {
@@ -2003,5 +1934,58 @@ function projectDetailById($projectId){
     }
     return $projectDetails;
 }
+
+/* * *****************function for fetch builder detail by builder id**************** */
+
+function fetch_builderDetail($builderId) {
+    $qrybuild = "SELECT * FROM " . RESI_BUILDER . " WHERE BUILDER_ID = '" . $builderId . "'";
+    $resbuild = mysql_query($qrybuild) or die(mysql_error());
+    $databuild = mysql_fetch_assoc($resbuild);
+    return $databuild;
+}
+function ViewLocalityDetails($localityID) {
+    $Sql = "SELECT l.locality_id,l.status,l.description,l.url,l.label,s.city_id,
+            l.max_latitude,l.min_latitude,l.max_longitude,l.min_longitude
+            FROM " . LOCALITY . " l inner join suburb s on l.suburb_id = s.suburb_id 
+                WHERE LOCALITY_ID ='" . $localityID . "'";
+    $ExecSql = mysql_query($Sql);
+
+    if (mysql_num_rows($ExecSql) == 1) {
+        $Res = mysql_fetch_assoc($ExecSql);
+        $ResDetails['LOCALITY_ID'] = $Res['locality_id'];
+        $ResDetails['CITY_ID'] = $Res['city_id'];
+        $ResDetails['LABEL'] = $Res['label'];
+        $ResDetails['status'] = $Res['status'];
+        $ResDetails['URL'] = $Res['url'];
+        $ResDetails['DESCRIPTION'] = $Res['description'];
+        $ResDetails['MAX_LATITUDE'] = $Res['max_latitude'];
+        $ResDetails['MIN_LATITUDE'] = $Res['min_latitude'];
+        $ResDetails['MAX_LONGITUDE'] = $Res['max_longitude'];
+        $ResDetails['MIN_LONGITUDE'] = $Res['min_longitude'];
+        return $ResDetails;
+    } else {
+        return 0;
+    }
+}
+function projectBankList($projectId){
+	
+	$projectList = array();
+	$Sql = "SELECT BANK_ID FROM " . PROJECT_BANKS . " WHERE PROJECT_ID = ".$projectId;
+	$ExecSql = mysql_query($Sql);
+	while($bank = mysql_fetch_array($ExecSql))
+		$projectList[] = $bank['BANK_ID'];
+	
+	return  $projectList;
+	
+}
+
+function checkForDuplicateOption($bedroom,$bathroom,$option_name,$size){
+	
+	print $bedroom."->".$bathroom."->".$option_name."->".$size;
+	
+	die;
+	
+}
+
 ?>
 

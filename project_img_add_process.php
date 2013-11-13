@@ -6,7 +6,7 @@
 	//$projectplansid = $_REQUEST['projectplansid'];
 	$watermark_path = "images/pt_shadow1.png";
 	$projectId = $_REQUEST['projectId'];
-	$projectDetail	=	ProjectDetail($projectId);
+	$projectDetail	= ProjectDetail($projectId);
 	$smarty->assign("ProjectDetail", $projectDetail);
 
         $linkShowHide = 0;
@@ -53,10 +53,10 @@ if (isset($_POST['Next']))
 					{
 					if($_REQUEST['PType'] == $planType)
 					{
-						if(!preg_match("/-".$imgNamePart."\.[a-z]{3,4}$/", $v))
-				{
-							$ErrorMsg["ImgError"] = "The word ".$imgNamePart." should be part of image name at end.";
-					}
+                                            if(!preg_match("/-".$imgNamePart."\.[a-z]{3,4}$/", $v))
+                                            {
+                                               $ErrorMsg["ImgError"] = "The word ".$imgNamePart." should be part of image name at end.";
+                                            }
 					}
 				}
 
@@ -67,12 +67,17 @@ if (isset($_POST['Next']))
 
 	    if(count($arrValue) == 0)
 	    {
-			$ErrorMsg["blankerror"] = "Please select atleast one image.";
+		$ErrorMsg["blankerror"] = "Please select atleast one image.";
 	    }
-		else if( $projectId == '')
+            else if( $projectId == '')
 	    {
 	      $ErrorMsg["projectId"] = "Please select Project name.";
 	    }
+            else if( $_REQUEST['PType'] == '')
+	    {
+	      $ErrorMsg["ptype"] = "Please select project type.";
+	    }
+            $smarty->assign("PType", $_REQUEST['PType']);
 	if(is_array($ErrorMsg)) {
 		// Do Nothing
 	}
@@ -921,10 +926,6 @@ if (isset($_POST['Next']))
                                                         SERVICE_IMAGE_ID   = ".$image_id."
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								$res	=	mysql_query($qry);
-								if($res)
-								{
-									audit_insert('','update','project_plan_images',$projectId);
-								}
 							}
 							else
 							{
@@ -937,11 +938,6 @@ if (isset($_POST['Next']))
 													TITLE			=	'".$arrTitle[$key]."',
 													SUBMITTED_DATE	=	now()";
 								$resinsert	=	mysql_query($qryinsert);
-								$lastId		=	mysql_insert_id();
-								if($resinsert)
-								{
-									audit_insert($lastId,'insert','project_plan_images',$projectId);
-								}
 							}
 					if($flag==1)
 					{

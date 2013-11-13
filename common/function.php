@@ -13,29 +13,30 @@ function getListing( $dataArr = array() ) {
         //  City data as list
         $cityQuery = "SELECT CITY_ID AS id, LABEL AS name
                       FROM city
-                      WHERE ACTIVE=1
+                      WHERE status='Active'
                       ORDER BY name";
     }
     elseif( $cityId ) {
         $suburbQuery = "SELECT A.SUBURB_ID AS id, A.LABEL AS name, C.LABEL AS city
                         FROM suburb AS A
-                        LEFT JOIN city AS C ON C.CITY_ID=A.CITY_ID
-                        WHERE A.ACTIVE=1 AND C.CITY_ID=$cityId
+                        LEFT JOIN city AS C ON A.CITY_ID=C.CITY_ID
+                        WHERE A.status='Active' AND C.CITY_ID=$cityId
                         ORDER BY city";
 
         if ( $suburbId ) {
             $localityQuery = "SELECT A.LOCALITY_ID AS id, A.LABEL AS name, C.LABEL AS city
                               FROM locality AS A
-                              LEFT JOIN city AS C ON C.CITY_ID=A.CITY_ID
-                              LEFT JOIN suburb AS S ON S.SUBURB_ID=A.SUBURB_ID
-                              WHERE A.ACTIVE=1 AND S.SUBURB_ID=$suburbId AND C.CITY_ID=$cityId
+                              LEFT JOIN suburb AS S ON A.SUBURB_ID=S.SUBURB_ID
+                              LEFT JOIN city AS C ON S.CITY_ID=C.CITY_ID
+                              WHERE A.status='Active' AND S.SUBURB_ID=$suburbId AND C.CITY_ID=$cityId
                               ORDER BY city";
         }
         else {
             $localityQuery = "SELECT A.LOCALITY_ID AS id, A.LABEL AS name, C.LABEL AS city
                               FROM locality AS A
-                              LEFT JOIN city AS C ON C.CITY_ID=A.CITY_ID
-                              WHERE A.ACTIVE=1 AND C.CITY_ID=$cityId
+                              LEFT JOIN suburb AS S ON A.SUBURB_ID=S.SUBURB_ID
+                              LEFT JOIN city AS C ON S.CITY_ID=C.CITY_ID
+                              WHERE A.status='Active' AND C.CITY_ID=$cityId
                               ORDER BY city";
         }
     }

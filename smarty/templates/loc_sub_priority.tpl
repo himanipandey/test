@@ -154,7 +154,9 @@ function show_loc_inst(){
                               <TD align=center class=td-border>{$v.ID}</TD>
                               <TD align=center class=td-border>{$type}</TD>
                               <TD align=center class=td-border>{$v.PRIORITY}</TD>
-                              <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openLocSubPriorityEdit('{$v.ID}','{$type}','{$v.PRIORITY}');">Edit</a> | <a href="javascript:void(0);" onclick="return openLocSubPriorityDelete('{$v.ID}','{$type}');">Reset</a></TD>
+                              <TD align=center class=td-border>
+                                  <a href="javascript:void(0);" onclick="return openLocSubPriorityEdit('{$v.ID}','{$type}','{$v.PRIORITY}');">Edit</a>
+                                  | <a href="javascript:void(0);" onclick="return openLocSubPriorityDelete('{$v.ID}','{$type}');">Reset</a></TD>
                             </TR>
                       {/foreach}
                       <TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>

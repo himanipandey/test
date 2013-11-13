@@ -2,17 +2,16 @@
 
 <script type="text/javascript">
 
-	function refreshother(ct)
-	{   	
+function refreshother(ct)
+{   	
 
-		$(".hiderow").hide();
-		
-		for(i=1;i<=ct;i++)
-		{
-			var id = 'other'+i;
-		 document.getElementById(id).style.display='';
-		}		
-	}
+    $(".hiderow").hide();
+    for(i=1;i<=ct;i++)
+    {
+        var id = 'other'+i;
+        document.getElementById(id).style.display='';
+    }		
+}
 </script>
   <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -59,18 +58,17 @@
 							{foreach from=$AmenitiesArr key=k item=v} 
 								{if $k != 99}
 								<tr>
-									 <td  align="right">{$v}</td>
-									
-									 {if array_key_exists($k,$arrNotninty)}
-										<td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'   checked='checked'/> Yes </td>
-										<td> <input type='radio' name="{$v}#{$k}" value='0'/> No   </td>
-										 <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" ></td>	
-									 {else}
-										<td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
-										<td> <input type='radio' name="{$v}#{$k}" value='0'  checked='checked'/> No   </td>
-										 <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" ></td>	
-									 {/if}
-										 
+                                                                    <td  align="right">{$v}</td>
+
+                                                                    {if array_key_exists($k,$arrNotninty)}
+                                                                       <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'   checked='checked'/> Yes </td>
+                                                                       <td> <input type='radio' name="{$v}#{$k}" value='0'/> No   </td>
+                                                                       <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" ></td>	
+                                                                    {else}
+                                                                       <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
+                                                                       <td> <input type='radio' name="{$v}#{$k}" value='0'  checked='checked'/> No   </td>
+                                                                       <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" ></td>	
+                                                                    {/if}		 
 								</tr>
 								{/if}
 							 {/foreach}
@@ -100,36 +98,36 @@
 							  </tr>
 							  <tr>
 									<td align="right" valign ="top">Master Bedroom</td><td colspan='3'>
-									<textarea style="width:357px;height:50px;" name="master_bedroom_flooring">{$arrSpecification[0]['FLOORING_MASTER_BEDROOM']}</textarea>
+									<textarea style="width:357px;height:50px;" name="master_bedroom_flooring">{$arrSpecification['FLOORING_MASTER_BEDROOM']}</textarea>
 							   </tr>
 							   <tr>
 									<td align="right" valign ="top">Other Bedroom</td><td colspan='3'>
-									<textarea style="width:357px;height:50px;" name="other_bedroom_flooring">{$arrSpecification[0]['FLOORING_OTHER_BEDROOM']}</textarea>
+									<textarea style="width:357px;height:50px;" name="other_bedroom_flooring">{$arrSpecification['FLOORING_OTHER_BEDROOM']}</textarea>
 									</td>		  
 							   </tr>
 							    <tr>
 									<td align="right" valign ="top">Living/Dining</td><td colspan='3'>
 
-									<textarea style="width:357px;height:50px;" name="living_room_flooring">{$arrSpecification[0]['FLOORING_LIVING_DINING']}</textarea>
+									<textarea style="width:357px;height:50px;" name="living_room_flooring">{$arrSpecification['FLOORING_LIVING_DINING']}</textarea>
 									</td>		  
 							   </tr>
 							   <tr>
 									<td align="right" valign ="top">Kitchen</td><td colspan='3'>
 
-									<textarea style="width:357px;height:50px;" name="kitchen_flooring">{$arrSpecification[0]['FLOORING_KITCHEN']}</textarea>
+									<textarea style="width:357px;height:50px;" name="kitchen_flooring">{$arrSpecification['FLOORING_KITCHEN']}</textarea>
 									</td>		   
 							   </tr>
 
 							   <tr>
 									<td align="right" valign ="top">Toilets</td><td colspan='3'>
 									
-									<textarea style="width:357px;height:50px;" name="toilets_flooring">{$arrSpecification[0]['FLOORING_TOILETS']}</textarea>
+									<textarea style="width:357px;height:50px;" name="toilets_flooring">{$arrSpecification['FLOORING_TOILETS']}</textarea>
 									</td>		  
 							   </tr>
 
 							    <tr>
 									<td align="right" valign ="top">Balcony</td><td colspan='3'>
-										<textarea style="width:357px;height:50px;" name="balcony_flooring">{$arrSpecification[0]['FLOORING_BALCONY']}</textarea>
+										<textarea style="width:357px;height:50px;" name="balcony_flooring">{$arrSpecification['FLOORING_BALCONY']}</textarea>
 									</td>		  
 							    </tr>
 
@@ -139,25 +137,25 @@
 
 							   <tr>
 									<td align="right" valign ="top">Interior</td><td colspan='3'>
-										<textarea style="width:357px;height:50px;" name="interior_walls">{$arrSpecification[0]['WALLS_INTERIOR']}</textarea>
+										<textarea style="width:357px;height:50px;" name="interior_walls">{$arrSpecification['WALLS_INTERIOR']}</textarea>
 									</td>						
 								</tr>
 							   <tr>
 									<td align="right" valign ="top">Exterior</td><td colspan='3'>
 
-										<textarea style="width:357px;height:50px;" name="exterior_walls">{$arrSpecification[0]['WALLS_EXTERIOR']}</textarea>
+										<textarea style="width:357px;height:50px;" name="exterior_walls">{$arrSpecification['WALLS_EXTERIOR']}</textarea>
 									</td>		  
 							   </tr>
 							    
 							  <tr>
 									<td align="right" valign ="top">Kitchen</td><td colspan='3'>
-										<textarea style="width:357px;height:50px;" name="kitchen_walls">{$arrSpecification[0]['WALLS_KITCHEN']}</textarea>
+										<textarea style="width:357px;height:50px;" name="kitchen_walls">{$arrSpecification['WALLS_KITCHEN']}</textarea>
 									</td>		  
 							  </tr>
 
 							   <tr>
 									<td align="right" valign ="top">Toilets</td><td colspan='3'>
-										<textarea style="width:357px;height:50px;" name="toilets_walls">{$arrSpecification[0]['WALLS_TOILETS']}</textarea>
+										<textarea style="width:357px;height:50px;" name="toilets_walls">{$arrSpecification['WALLS_TOILETS']}</textarea>
 									</td>		  
 							  </tr>
 
@@ -167,13 +165,13 @@
 
 							  <tr>
 								<td align="right" valign ="top">Kitchen</td><td colspan='3'>
-									<textarea style="width:357px;height:50px;" name="kitchen_fixtures">{$arrSpecification[0]['FITTINGS_AND_FIXTURES_KITCHEN']}</textarea>
+									<textarea style="width:357px;height:50px;" name="kitchen_fixtures">{$arrSpecification['FITTINGS_AND_FIXTURES_KITCHEN']}</textarea>
 								</td>						
 								 
 							  </tr>
 							  <tr>
 									<td align="right" valign ="top">Toilets</td><td colspan='3'>
-										<textarea style="width:357px;height:50px;" name="toilets_fixtures">{$arrSpecification[0]['FITTINGS_AND_FIXTURES_TOILETS']}</textarea>
+										<textarea style="width:357px;height:50px;" name="toilets_fixtures">{$arrSpecification['FITTINGS_AND_FIXTURES_TOILETS']}</textarea>
 									
 									</td>		  
 							   </tr>
@@ -183,20 +181,20 @@
 							  <tr>
 									<td align="right" valign ="top">Main</td>
 									<td colspan='3'>
-										<textarea style="width:357px;height:50px;" name="main_doors">{$arrSpecification[0]['DOORS_MAIN']}</textarea>
+										<textarea style="width:357px;height:50px;" name="main_doors">{$arrSpecification['DOORS_MAIN']}</textarea>
 									</td>						
 								 
 							   </tr>
 							   <tr>
 									<td align="right" valign ="top">Internal</td>
 									<td colspan='3'>
-										<textarea style="width:357px;height:50px;" name="internal_doors">{$arrSpecification[0]['DOORS_INTERNAL']}</textarea>
+										<textarea style="width:357px;height:50px;" name="internal_doors">{$arrSpecification['DOORS_INTERNAL']}</textarea>
 									</td> 
 							  </tr>
 							   <tr>
 									<td width="20%" align="left"  valign ="top">Windows : </td>
 									<td colspan='3'>
-										<textarea style="width:357px;height:50px;" name="windows">{$arrSpecification[0]['WINDOWS']}</textarea>
+										<textarea style="width:357px;height:50px;" name="windows">{$arrSpecification['WINDOWS']}</textarea>
 										
 									</td>
 							  </tr>
@@ -205,14 +203,14 @@
 								  <td width="20%" align="left"  valign ="top">Electrical Fitting : </td>
 								  <td colspan='3'>
 								  
-									<textarea style="width:357px;height:50px;" name="electrical_fitting">{$arrSpecification[0]['ELECTRICAL_FITTINGS']}</textarea>
+									<textarea style="width:357px;height:50px;" name="electrical_fitting">{$arrSpecification['ELECTRICAL_FITTINGS']}</textarea>
 								  </td>
 							  </tr>
 
 							   <tr>
 								  <td width="20%" align="left"  valign ="top">Others : </td>
 								  <td colspan='3'>
-									<textarea style="width:357px;height:50px;" name="others">{$arrSpecification[0]['OTHERS']}</textarea>
+									<textarea style="width:357px;height:50px;" name="others">{$arrSpecification['OTHER_SPECIFICATIONS']}</textarea>
 								  </td> 
 							  </tr>
 							   <tr>

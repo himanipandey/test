@@ -7,6 +7,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var pid = '{$phaseId}';
+        var noPhasePhaseId = '{$noPhasePhaseId}';
         $('select#phaseName').val(pid);
         var projectId = $('#projectId').val();
         eventArray = [
@@ -26,7 +27,7 @@
                         ["event14", "secondary_price.php", true],
                         ["event15", "insertSecondaryPrice.php", true],
                         ["event16", "updateSecondaryPrice.php", true],
-                        ["event17", "/new/supply-validation", true],
+                        ["event17", "/new/supply-validation/", true],
                         ["event18", "allCommentHistory.php"],
                         ["event19", "/new/bulk_price_inventory/", true]
 		]; 
@@ -41,8 +42,12 @@
 						else{
 							var str="";
 						}
-                                                if(eventArray[i][0]=='event8' || eventArray[i][0]=='event19'){
+                                                if(eventArray[i][0]=='event19'){
                                                     var url = eventArray[i][1]+ projectId + "/edit";    
+                                                }else if(eventArray[i][0]=='event8'){
+                                                    var url = eventArray[i][1]+ noPhasePhaseId + "/edit";
+                                                }else if(eventArray[i][0]=='event17'){
+                                                    var url = eventArray[i][1]+ projectId;
                                                 }else{
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
                                                 }
@@ -119,7 +124,7 @@ function towerSelect(towerId)
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
 		var flgChk = 0;	
-		if(dir != 'backward' && val == 'Y' && ((phase == 'dataCollection' && stg == 'updationCycle') || (phase == 'dcCallCenter' && stg == 'newProject')))
+		if(dir != 'backward' && val == 'Y' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')))
 		{
 			if(phaseId != '')
 			{
@@ -245,10 +250,7 @@ function getDateNow(){
               mySelections += ","+this.value;
             }
               });
-
           projects1 +="--"+mySelections;
-
-
           id+="--"+($("#"+idd).val());
             rowChk = 1;
         }
@@ -275,9 +277,8 @@ function getDateNow(){
               url:"submit_builder_contact.php",
               data:"name="+str1+"&phone="+phone1+"&email="+email1+"&builderId="+builderId+"&deleteval="+deleteval+"&id="+id+"&projects="+projects1,
               success:function(dt){
-                        window.location.href = "show_project_details.php?projectId="+pid;
+                       window.location.href = "show_project_details.php?projectId="+pid;
                     // jQuery("#update_insert_delete").show();
-
               }
 
             }
@@ -315,8 +316,13 @@ function getDateNow(){
       var phId = 'phone_' + id;
       var phNo = $('#'+phId).val(); 
       var campaign = $('#'+'campaignName_'+id).val();
-      $.ajax(
-	  {
+       if(campaign == 'Select'){
+		alert("Please select Campaign!");
+		return;
+	  }
+	 if( !isNaN(phNo) && $("#"+phId).val().indexOf('+') == -1 && $("#"+phId).val().indexOf('-') == -1 && phNo.toString().length == 10) {
+		$.ajax(
+		{
 	      type:"get",
 	      url:"call_contact.php",
 	      data:"contactNo="+phNo+"&campaign="+campaign+"&projectType=primary",
@@ -330,8 +336,10 @@ function getDateNow(){
 		      alert("Error in calling");
 		  
 	      }
-	  }
-      );
+		});
+      }
+      else
+        alert("Please enter valid mobile number");
   };
 
   function setStatus(obj) {
@@ -363,8 +371,8 @@ function getDateNow(){
   {
   	if(plsmns == 'plus')
   	{
-	  	document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
-	  	document.getElementById("builder_showHide").style.display = '';
+            document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
+            document.getElementById("builder_showHide").style.display = '';
   	}
   	else
   	{
@@ -396,32 +404,30 @@ function getDateNow(){
 
 <div>
 	<div class="state"> 
-		<span>	Current Phase : </span>
-		<span> {ucfirst($projectDetails[0].PROJECT_STAGE)}</span>
-		
+            <span>	Current Phase : </span>
+            <span> {ucfirst($projectDetails[0].PROJECT_STAGE)}</span>
 	</div>
-	
 	<div>
 	<div class="state"> 
 		<span>	Current Stage : </span>
-		{if $projectDetails[0].PROJECT_PHASE=="dataCollection"}
+		{if $projectDetails[0].PROJECT_PHASE=="DataCollection"}
 		<span> Data Collection</span>
 		{/if}
 		
-		{if $projectDetails[0].PROJECT_PHASE=="dcCallCenter"}
+		{if $projectDetails[0].PROJECT_PHASE=="DcCallCenter"}
 		<span> Data Collection Call Center</span>
 		{/if}
 		
-		{if $projectDetails[0].PROJECT_PHASE=="newProject"}
+		{if $projectDetails[0].PROJECT_PHASE=="NewProject"}
 		<span> New Project Audit</span>
 		{/if}
-		{if $projectDetails[0].PROJECT_PHASE=="audit1"}
+		{if $projectDetails[0].PROJECT_PHASE=="Audit1"}
 		<span> Audit 1</span>
 		{/if}
-		{if $projectDetails[0].PROJECT_PHASE=="audit2"}
+		{if $projectDetails[0].PROJECT_PHASE=="Audit2"}
 		<span> Audit 2</span>
 		{/if}
-		{if $projectDetails[0].PROJECT_PHASE=="complete"}
+		{if $projectDetails[0].PROJECT_PHASE=="Complete"}
 		<span> Audit Completed</span>
 		{/if}
 	</div>
@@ -429,7 +435,7 @@ function getDateNow(){
 	Label: {$projectLabel}
 	<br>
 {/if}
-{if $projectDetails[0].PROJECT_STAGE != 'noStage'}
+{if $projectDetails[0].PROJECT_STAGE != 'NoStage'}
 
 	{$projectStatus = $projectDetails[0]['PROJECT_STATUS']}
 	{$promisedCompletionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE']}
@@ -439,42 +445,41 @@ function getDateNow(){
 	{$stageProject = $projectDetails[0].PROJECT_STAGE}
 	
 	{if count($accessModule)>0}
-		<span>
-			Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
-												<input type = "radio" name = "validationChk" value = "N">No<br>
-		</span>
+            <span>
+                Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
+                <input type = "radio" name = "validationChk" value = "N">No<br>
+            </span>
 	{else}
-		<span style = "display:none;"><input type = "radio" name = "validationChk" value = "Y" checked></span>
+	   <span style = "display:none;"><input type = "radio" name = "validationChk" value = "Y" checked></span>
 	{/if}
-	{if $projectDetails[0].PROJECT_STAGE=='newProject'}
-		{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-			<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
-		{/if}
+	{if $projectDetails[0].PROJECT_STAGE=='NewProject'}
+            {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+                 <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
+            {/if}
 	{else}
-		{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-			<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','updation','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
-		{/if}
+            {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+                <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','updation','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
+            {/if}
 	{/if}
 
-	{if $projectDetails[0].PROJECT_PHASE!="dataCollection" && $projectDetails[0].PROJECT_PHASE!="complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+	{if $projectDetails[0].PROJECT_PHASE!="DataCollection" && $projectDetails[0].PROJECT_PHASE!="Complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Revert	</button>
 	{/if}
 {/if}
-	<br>
-	{if $projectDetails[0].PROJECT_PHASE!="complete"}
-		<textarea name="comments" id="comments" placeholder="
-			{if $projectDetails[0].AUDIT_COMMENTS}
-			{else}
-				Please put your comments here
-			{/if}
-		" cols="40" rows="5"
-		>
-			{if $projectDetails[0].AUDIT_COMMENTS}
-				{$projectDetails[0].AUDIT_COMMENTS}
-			{/if}
-		</textarea>
-	{/if}
-										
+<br>
+{if $projectDetails[0].PROJECT_PHASE!="Complete"}
+    <textarea name="comments" id="comments" placeholder="
+        {if $projectDetails[0].AUDIT_COMMENTS}
+        {else}
+                Please put your comments here
+        {/if}
+    " cols="40" rows="5"
+    >
+        {if $projectDetails[0].AUDIT_COMMENTS}
+                {$projectDetails[0].AUDIT_COMMENTS}
+        {/if}
+    </textarea>
+{/if}								
 <div> 
 
   <TR>
@@ -485,10 +490,9 @@ function getDateNow(){
           <TD width=10>&nbsp;</TD>
           <TD width=866>&nbsp;</TD>
 	</TR>
-	
 	 <TR>
           <TD class=paddingltrt10 vAlign=top align=middle bgColor=#ffffff>
-	   		{include file="{$PROJECT_ADD_TEMPLATE_PATH}left.tpl"}
+	     {include file="{$PROJECT_ADD_TEMPLATE_PATH}left.tpl"}
 	  </TD>
           <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
           <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
@@ -496,37 +500,33 @@ function getDateNow(){
               <TR>
                 <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0>
-					<TBODY>
-						<TR>
-						  <TD class="h1" width="67%"><img height="18" hspace="5" src="images/arrow.gif" width="18">   {$projectDetails[0].PROJECT_NAME} </TD>
-						  <TD width="33%" align ="right"></TD>
-						</TR>
-						
-						
-					</TBODY>
-				  </TABLE>
-				</TD>
+                    <TBODY>
+                        <TR>
+                          <TD class="h1" width="67%"><img height="18" hspace="5" src="images/arrow.gif" width="18">   {$projectDetails[0].PROJECT_NAME} </TD>
+                          <TD width="33%" align ="right"></TD>
+                        </TR>
+                    </TBODY>
+                  </TABLE>
+                </TD>
 	      </TR>
 	      
 	      <TD vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
-			 
-				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
+		<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 	      <div>
 	      <tr>
 	      <td style = "padding-left:30px;">
-	      		<b>Project {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}<button class="clickbutton" onclick="$(this).trigger('event1');">Edit</button>{/if}
-				
-				&nbsp;&nbsp;&nbsp;&nbsp;
-				
-				{if 
-				(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'newProject')
-				OR
-				(trim($projectDetails[0].PROJECT_STAGE) == 'newProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')
-				OR
-				(trim($projectDetails[0].PROJECT_STAGE) == 'updationCycle' AND trim($projectDetails[0].PROJECT_PHASE) == 'audit1')}
-					<input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID});">
-				{/if}
-			<!-- Project Phases -->
+                <b>Project {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}<button class="clickbutton" onclick="$(this).trigger('event1');">Edit</button>{/if}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {if 
+                    (trim($projectDetails[0].PROJECT_STAGE) == 'NewProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'NewProject')
+                    OR
+                    (trim($projectDetails[0].PROJECT_STAGE) == 'NewProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'Audit1')
+                    OR
+                    (trim($projectDetails[0].PROJECT_STAGE) == 'UpdationCycle' AND trim($projectDetails[0].PROJECT_PHASE) == 'Audit1')}
+                      <input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID});">
+                    {/if}
+            <!-- Project Phases -->
             &nbsp;&nbsp;&nbsp;&nbsp;
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
             &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
@@ -539,80 +539,78 @@ function getDateNow(){
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						
 						<tr>
-							<td align="left" colspan='4'>
-								<div id = "projectOldVal">
-									{if count($changedValueArr)>0}
-										<table style = "border:1px solid #c2c2c2;" align = "left" width ="60%">
-											{foreach from = $changedValueArr key=key item = item}
-												<tr><td>&nbsp;</td></tr>
-												<tr>
-													<td align ="left" nowrap><b>Old Value for Project Detail</b></td>
-												</tr>
-												
-												<tr class="headingrowcolor" height="30px;">
-													 <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt>Field Name</td>
-													 <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>New Value</td>
-													 <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>Old Value</td>	
-												</tr>
-												{$cnt =0}
-												{foreach from = $item key=keyInner item = itemInner}
-													{if ($cnt+1)%2 == 0}
-														{$color = "bgcolor='#F7F8E0'"}
-													{else}
-														{$color = "bgcolor='#f2f2f2'"}
-													{/if}
-												<tr {$color} height="25px;">
-													<td width="10%" align="left">{ucwords(strtolower(str_replace("_"," ",$keyInner)))}</td>
-													<td width="10%" align="left">
-															{if $itemInner['new'] != ''}
-																{$itemInner['new']} 
-															{else}
-																--
-															{/if}
-													</td>
-													<td width="10%" align="left">
-															{if $itemInner['old'] != ''}
-																{$itemInner['old']} 
-															{else}
-																--
-															{/if}
-													</td>
-												</tr>
-												{$cnt = $cnt+1}
-												{/foreach}
-											{/foreach}
-										</table>
-									{/if}
-								</div>
-							</td>
+                                                    <td align="left" colspan='4'>
+                                                        <div id = "projectOldVal">
+                                                            {if count($changedValueArr)>0}
+                                                                <table style = "border:1px solid #c2c2c2;" align = "left" width ="60%">
+                                                                    {foreach from = $changedValueArr key=key item = item}
+                                                                            <tr><td>&nbsp;</td></tr>
+                                                                            <tr>
+                                                                                    <td align ="left" nowrap><b>Old Value for Project Detail</b></td>
+                                                                            </tr>
+
+                                                                            <tr class="headingrowcolor" height="30px;">
+                                                                                     <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt>Field Name</td>
+                                                                                     <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>New Value</td>
+                                                                                     <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>Old Value</td>	
+                                                                            </tr>
+                                                                            {$cnt =0}
+                                                                            {foreach from = $item key=keyInner item = itemInner}
+                                                                                    {if ($cnt+1)%2 == 0}
+                                                                                            {$color = "bgcolor='#F7F8E0'"}
+                                                                                    {else}
+                                                                                            {$color = "bgcolor='#f2f2f2'"}
+                                                                                    {/if}
+                                                                            <tr {$color} height="25px;">
+                                                                                    <td width="10%" align="left">{ucwords(strtolower(str_replace("_"," ",$keyInner)))}</td>
+                                                                                    <td width="10%" align="left">
+                                                                                                    {if $itemInner['new'] != ''}
+                                                                                                            {$itemInner['new']} 
+                                                                                                    {else}
+                                                                                                            --
+                                                                                                    {/if}
+                                                                                    </td>
+                                                                                    <td width="10%" align="left">
+                                                                                                    {if $itemInner['old'] != ''}
+                                                                                                            {$itemInner['old']} 
+                                                                                                    {else}
+                                                                                                            --
+                                                                                                    {/if}
+                                                                                    </td>
+                                                                            </tr>
+                                                                            {$cnt = $cnt+1}
+                                                                            {/foreach}
+                                                                    {/foreach}
+                                                                </table>
+                                                            {/if}
+                                                        </div>
+                                                    </td>
 						</tr>
 						<tr bgcolor = "#c2c2c2">
 							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"><b>Last Updated Detail</b></br>
 						  	  </br>
-								{foreach from = $lastUpdatedDetail['resi_project'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+																	
+									<b>Department: </b> {$lastUpdatedDetail['resi_project']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project']['ACTION_DATE']}</br></br>
+								
 								
 							  </td>
 						  
 						</tr>
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Project Name:</b></td>
-
-							  <td>
-							  		{$projectDetails[0].PROJECT_NAME}
-							</td>
+                                                    <td  nowrap="nowrap" width="1%" align="left"><b>Project Name:</b></td>
+                                                    <td>
+                                                     {$projectDetails[0].PROJECT_NAME}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Builder Name:</b></td>
+                                                    <td  nowrap="nowrap" width="1%" align="left"><b>Builder Name:</b></td>
 
-							  <td>
-                                                              {$builderDetail['ENTITY']}
-							</td>
+                                                    <td>
+                                                        {$builderDetail['ENTITY']}
+                                                  </td>
 						</tr>
 
 						<tr height="25px;">
@@ -704,7 +702,7 @@ function getDateNow(){
 								        </td>
 
 								         <td align="center" valign = "top">
-									   <input type = "text" name = "phone[]" id = "phone_{$smarty.section.rowLoop.index}" class="phone_box" value = "{$phone}" style = "width:120px"  onkeypress = "return isNumberKey(event);" maxlength = "13">
+									   <input type = "text" name = "phone[]" id = "phone_{$smarty.section.rowLoop.index}" class="phone_box" value = "{$phone}" style = "width:120px"  onkeypress = "return isNumberKey(event);" maxlength = "10">
 
 									     <input type = "hidden" name = "phone_old[]" value = "{$phone}" style = "width:150px">
 								        </td>
@@ -725,7 +723,7 @@ function getDateNow(){
 							                  <select name = "projects_call_{$start}[]" id = "projects_call_{$smarty.section.rowLoop.index}" multiple>
 							                        <option value = "">Select Project</option>
 							                        {foreach from = $ProjectList key = key item = item}
-							                          <option value = "{$item['PROJECT_ID']}" {if strstr($arrContact[$cnt]['PROJECTS'],$item['PROJECT_ID'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+							                          <option value = "{$item['PROJECT_ID']}" >{$item['PROJECT_NAME']}</option>
 							                        {/foreach}
 							                        </option>
 							                   </select>
@@ -750,7 +748,7 @@ function getDateNow(){
 									    <select name = "projects_{$start}[]" id = "projects_{$smarty.section.rowLoop.index}" multiple>
 									      <option value = "">Select Project</option>
 									      {foreach from = $ProjectList key = key item = item}
-									      <option value = "{$item['PROJECT_ID']}" {if strstr($arrContact[$cnt]['PROJECTS'],$item['PROJECT_ID'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+									      <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 									      {/foreach}
 									    </option>
 									  </select>
@@ -793,7 +791,7 @@ function getDateNow(){
 								                  <select name = "projects_call_{$start}[]" id = "projects_call_{$cnt}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>
@@ -815,7 +813,7 @@ function getDateNow(){
 								                  <select name = "projects_{$start}[]" id = "projects_{$cnt}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>
@@ -856,7 +854,7 @@ function getDateNow(){
 								                  <select name = "projects_call_{$start}[]" id = "projects_call_{$cnt+1}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>
@@ -881,7 +879,7 @@ function getDateNow(){
 								                  <select name = "projects_{$start}[]" id = "projects_{$cnt+1}" multiple>
 								                        <option value = "">Select Project</option>
 								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}">{$item['PROJECT_NAME']}</option>
+								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
 								                        {/foreach}
 								                        </option>
 								                      </select>
@@ -914,62 +912,44 @@ function getDateNow(){
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>City:</b></td>
-
-							  <td>
-							  	{foreach from=$CityDataArr key=k item=v}
-								 {if $projectDetails[0].CITY_ID == $k}
-								 	{$v}
-								 {/if}
-								{/foreach}
-							</td>
+                                                    <td  nowrap="nowrap" width="1%" align="left"><b>City:</b></td>
+                                                    <td>
+                                                       {$city}
+                                                  </td>
 						</tr>
 
 						<tr height="25px;">
 							  <td  nowrap="nowrap" width="1%" align="left"><b>Suburb:</b></td>
-
 							  <td>
-							  {foreach from=$suburbSelect key=k item=v}
-								 {if $projectDetails[0].SUBURB_ID == $k}
-								 	{$v}
-								 {/if}
-								{/foreach}
+							  {$suburb}
 							</td>
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Locality:</b></td>
+                                                    <td  nowrap="nowrap" width="1%" align="left"><b>Locality:</b></td>
 
-							  <td>
-							  	{foreach from=$localitySelect key=k item=v}
-								 {if $projectDetails[0].LOCALITY_ID == $k}
-								 	{$v}
-								 {/if}
-								{/foreach}
-							</td>
+                                                    <td>
+                                                          {$locality}
+                                                  </td>
 						</tr>
 
 						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Project Description:</b></td>
-
-							  <td>
-							  	{$projectDetails[0].PROJECT_DESCRIPTION}
-							</td>
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Project Description:</b></td>
+                                                    <td>
+                                                      {$projectDetails[0].PROJECT_DESCRIPTION}
+                                                  </td>
 						</tr>
-
+                                                <tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Project Comments:</b></td>
+                                                    <td>
+                                                      {$projectDetails[0].COMMENTS}
+                                                  </td>
+						</tr>
 						<tr height="25px;">
 							  <td  nowrap="nowrap" width="1%" align="left"><b>Project Address:</b></td>
 
 							  <td>
 							  	{$projectDetails[0].PROJECT_ADDRESS}
-							</td>
-						</tr>
-
-						<tr height="25px;">
-							  <td  nowrap="nowrap" width="1%" align="left"><b>Option Description:</b></td>
-
-							  <td>
-							  	{$projectDetails[0].OPTIONS_DESC}
 							</td>
 						</tr>
 
@@ -980,7 +960,26 @@ function getDateNow(){
 							  	{$projectDetails[0].SOURCE_OF_INFORMATION}
 							</td>
 						</tr>
-
+                                                <tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Price Disclaimer:</b></td>
+                                                    <td>
+                                                      {if $projectDetails[0].PRICE_DISCLAIMER != ''}
+                                                          {$projectDetails[0].PRICE_DISCLAIMER}
+                                                      {else}
+                                                          --
+                                                      {/if}
+                                                  </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Open Space:</b></td>
+                                                    <td>
+                                                      {if $projectDetails[0].OPEN_SPACE != ''}
+                                                          {$projectDetails[0].OPEN_SPACE}
+                                                      {else}
+                                                          --
+                                                      {/if}
+                                                  </td>
+						</tr>
 						<tr height="25px;">
 							  <td  nowrap="nowrap" width="1%" align="left"><b>Project type:</b></td>
 
@@ -991,134 +990,29 @@ function getDateNow(){
 								  	{/if} 
 								{/foreach}
 							</td>
-						</tr>
-
-						{if $projectDetails[0].PROJECT_TYPE_ID != '1' && $projectDetails[0].PROJECT_TYPE_ID != '4'}
-						<tr height="25px;">
-							 <td  nowrap="nowrap" width="1%" align="left"><b>
-							 	Number of 
-									{foreach from=$ProjectTypeArr key=k item=v}
-									  	{if $k == $projectDetails[0].PROJECT_TYPE_ID}  
-									  		{if strstr($v,'PLOT APARTMENTS')}
-									  			Apartment
-									  		{else}
-										  		{if strstr($v,'PLOT VILLA')}
-										  			Villa
-										  		{else}
-											  		{if strstr($v,'VILLA APARTMENTS')}
-											  			Villa
-											  		{else}
-											  			{ucwords($v|lower)|replace:'_':' '}
-											  		{/if}
-											  	{/if}
-											 {/if}
-									  	{/if} 
-									{/foreach}
-							 </b>
-							 </td>
-							<td>
-								{if $phaseId != ''}
-									{if count($VillasQuantity)>0}
-										{array_sum($VillasQuantity)}	
-									{else}
-										--
-									{/if}
-								{else}
-									{$projectDetails[0].NO_OF_VILLA}
-								{/if}
-							</td>
-						</tr>
-						{/if}
-
-						{if $projectDetails[0].PROJECT_TYPE_ID == '4' || $projectDetails[0].PROJECT_TYPE_ID == '6' || $projectDetails[0].PROJECT_TYPE_ID == '5'}
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Number of Plots:</b>
-							</td>
-							<td>
-								{if $phaseId != ''}
-									{if count($PlotQuantity)>0}
-										{array_sum($PlotQuantity)}	
-									{else}
-										--
-									{/if}
-								{else}
-									{$projectDetails[0].NO_OF_PLOTS}
-								{/if}
-							</td>
-						</tr>
-						{/if}
-						
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>No Of Towers:</b>
-							</td>
-							<td>
-								{if $phaseId != ''}
-									{if count($phase_towers)>0}
-										{count($phase_towers)}
-									{else}
-										--
-									{/if}
-								{else}
-									{$projectDetails[0].NO_OF_TOWERS}
-								{/if}
-							</td>
-						</tr>
-
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>No Of Flats:</b>
-							</td>
-							<td>
-								{if $phaseId != ''}
-									{if count($FlatsQuantity)>0}
-										{array_sum($FlatsQuantity)}
-									{else}
-										--
-									{/if}
-								{else}
-									{$projectDetails[0].NO_OF_FLATS}
-								{/if}
-							</td>
-						</tr>
-						
-						
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Launched Units:</b>
-							</td>
-							<td>
-								{if $projectDetails[0].LAUNCHED_UNITS != ''}
-									{$projectDetails[0].LAUNCHED_UNITS}
-								{else}
-									--
-								{/if}
-							</td>
-						</tr>
-						
-						<tr height="25px;">
+						</tr>						
+						<!--<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left" valign ="top">
-								<b>Reason For UnLaunched Units:</b>
+                                                            <b>Reason For UnLaunched Units:</b>
 							</td>
 							<td>
-								{if $projectDetails[0].REASON_UNLAUNCHED_UNITS != ''}
-									{$projectDetails[0].REASON_UNLAUNCHED_UNITS}
-								{else}
-									--
-								{/if}
+                                                            {if $projectDetails[0].REASON_UNLAUNCHED_UNITS != ''}
+                                                                    {$projectDetails[0].REASON_UNLAUNCHED_UNITS}
+                                                            {else}
+                                                                    --
+                                                            {/if}
 							</td>
-						</tr>
-
+						</tr>-->
+                                               
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
-								<b>Project Location Desc:</b>
+								<b>Number Of Towers:</b>
 							</td>
 							<td>
-								{$projectDetails[0].LOCATION_DESC}
+								{$projectDetails[0].NO_OF_TOWERS}
 							</td>
 						</tr>
-
+                                                
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Project Latitude:</b>
@@ -1142,26 +1036,26 @@ function getDateNow(){
 								<b>Active:</b>
 							</td>
 							<td>
-								{$projectDetails[0].ACTIVE}
+								{$projectDetails[0].STATUS}
 							</td>
 						</tr>
-
+                                                <!--
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Booking Status:</b>
 							</td>
 							<td>
-								{$projectDetails[0].BOOKING_STATUS}
+                                                            {$projectDetails[0].BOOKING_STATUS}
 							</td>
 						</tr>
-
+                                                -->
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Project Status:</b>
-							</td>
-							<td>
-								{$projectDetails[0].PROJECT_STATUS}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Project Status:</b>
+                                                    </td>
+                                                    <td>
+                                                     {$projectDetails[0].display_name}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
@@ -1190,127 +1084,78 @@ function getDateNow(){
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Launch Date:</b>
-							</td>
-							<td>
-								{$projectDetails[0].LAUNCH_DATE}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Launch Date:</b>
+                                                    </td>
+                                                    <td>
+                                                            {$projectDetails[0].LAUNCH_DATE}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Promised Completion Date:</b>
-							</td>
-							<td>
-								{$completionDate}&nbsp;&nbsp;<button class="clickbutton" onclick="$(this).trigger('event10');">Update Completion Date</button>
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b>Promised Completion Date:</b>
+                                                    </td>
+                                                    <td>
+                                                       {$completionDate}
+                                                    </td>
 						</tr>
 						
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Bank List:</b>
-							</td>
-							<td>
-                                                            {$bank_arr = array()}
-                                                           {if strlen($projectDetails[0].BANK_LIST) == 1}
-								{$bank_arr[0] =  $projectDetails[0].BANK_LIST}
-                                                           {elseif strlen($projectDetails[0].BANK_LIST) != ''}
-                                                               {assign var=bank_arr value=","|explode:$projectDetails[0].BANK_LIST}
-                                                           {/if}
-                                                            {if count($bank_arr)>0}
-                                                                {foreach from = $BankListArr key = key item = value}
-                                                                        {if in_array($key,$bank_arr)} {$value} {/if}
-                                                                {/foreach}
-                                                            {else}
-                                                                    --
-                                                            {/if}
-								
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Bank List:</b>
+                                                    </td>
+                                                    <td>
+
+                                                        {if count($bankList)>0}
+                                                            {foreach from = $bankList key = key item = value}
+                                                                    {$value->bank_name}
+                                                            {/foreach}
+                                                        {else}
+                                                                --
+                                                        {/if}
+
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>YouTube Video Key:</b>
-							</td>
-							<td>
-								{if $projectDetails[0].YOUTUBE_VIDEO!=""}
-								 <a href = "{$projectDetails[0].YOUTUBE_VIDEO}"><a>
-								  	Youtube Link 
-								  {else}
-								  	No link available
-								{/if}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>YouTube Video Key:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].YOUTUBE_VIDEO!=""}
+                                                         <a href = "{$projectDetails[0].YOUTUBE_VIDEO}"><a>
+                                                                Youtube Link 
+                                                          {else}
+                                                                No link available
+                                                        {/if}
+                                                    </td>
 						</tr>
 
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Approvals:</b>
-							</td>
-							<td>
-								{$projectDetails[0].APPROVALS}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Approvals:</b>
+                                                    </td>
+                                                    <td>
+                                                            {$projectDetails[0].APPROVALS}
+                                                    </td>
 						</tr>
+						
 						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>No Of Lifts Per Tower:</b>
-							</td>
-							<td>
-								{$projectDetails[0].NO_OF_LIFTS_PER_TOWER}
-							</td>
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b>Architect Name:</b>
+                                                    </td>
+                                                    <td>
+                                                        {$projectDetails[0].ARCHITECT_NAME}
+                                                    </td>
 						</tr>
-
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Power Backup Available:</b>
-							</td>
-							<td>
-								{$projectDetails[0].POWER_BACKUP}
-							</td>
-						</tr>
-
-						{if {$projectDetails[0].POWER_BACKUP}!="No"}		 
-						<tr height="25px;">
-
-							<td nowrap="nowrap" width="6%" align="left">
-								Power Backup Available
-							</td>
-							<td>
-								 {$projectDetails[0].POWER_BACKUP_CAPACITY}
-							</td>
-						</tr>	
-						{/if}
-
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Architect Name:</b>
-							</td>
-							<td>
-								{$projectDetails[0].ARCHITECT_NAME}
-							</td>
-						</tr>
-
-						<tr height="25px;">
-							<td nowrap="nowrap" width="6%" align="left">
-								<b>Special Offer Description:</b>
-							</td>
-							<td>
-								{$projectDetails[0].OFFER_DESC}
-							</td>
-						</tr>
-
+                                               
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b>Residential:</b>
                                                     </td>
                                                     <td>
-                                                      {if $projectDetails[0].RESIDENTIAL == 0}
-                                                                    Residential
-                                                      {/if}
-
-                                                      {if $projectDetails[0].RESIDENTIAL == 1}
-                                                      Non	Residential
-                                                      {/if}
+                                                      {$projectDetails[0].RESIDENTIAL_FLAG}
                                                     </td>
 						</tr>
 
@@ -1319,27 +1164,110 @@ function getDateNow(){
                                                             <b>Township:</b>
                                                     </td>
                                                     <td>
-                                                        {if $projectDetails[0].TOWNSHIP != ''}
-                                                                {$projectDetails[0].TOWNSHIP}
+                                                        {if $projectDetails[0].township_name != ''}
+                                                                {$projectDetails[0].township_name}
                                                         {else}
                                                                 --
                                                         {/if}
                                                     </td>
 						</tr>
-                                                
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Heighlight:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $special_offer != ''}
+                                                                {$special_offer}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Offer Heading:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $offer_heading != ''}
+                                                                {$offer_heading}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Offer Description:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $offer_desc != ''}
+                                                                {$offer_desc}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                 <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Application Form:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].APPLICATION_FORM != ''}
+                                                                {$projectDetails[0].APPLICATION_FORM}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Skip Updation Cycle: </b>
                                                     </td>
                                                     <td>
-                                                        {if $projectDetails[0].SKIP_UPDATION_CYCLE == '0'}
-                                                                No
-                                                        {else}
+                                                        {if $projectDetails[0].UPDATION_CYCLE_ID == {$skipUpdationCycle_Id}}
                                                                Yes
+                                                        {else}
+                                                               No
                                                         {/if}
                                                     </td>
 						</tr>
-						
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b> Price Display On Website: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].SHOULD_DISPLAY_PRICE == 1}
+                                                               Yes
+                                                        {else}
+                                                               No
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Power backup: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].power_backup != ''}
+                                                               {$projectDetails[0].power_backup}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Power Backup Capacity: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].POWER_BACKUP_CAPACITY != ''}
+                                                               {$projectDetails[0].POWER_BACKUP_CAPACITY}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
 					</table>
 				</td>
 			</tr>
@@ -1544,12 +1472,9 @@ function getDateNow(){
 						{if array_key_exists("resi_project_amenities",$lastUpdatedDetail)}
 							<tr bgcolor = "#c2c2c2">
 								  <td nowrap="nowrap"  align="left" colspan = "2"><b>Last Updated Detail</b><br></br>
-									{foreach from = $lastUpdatedDetail['resi_project_amenities'] key=key item = item}
-										
-										<b>Department: </b> {$key}</br>
-										<b>Name: </b> {$item['FNAME']}</br>
-										<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-									{/foreach}
+									<b>Department: </b> {$lastUpdatedDetail['resi_project_amenities']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project_amenities']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_amenities']['ACTION_DATE']}</br></br>
 									
 								  </td>
 							  
@@ -1574,7 +1499,7 @@ function getDateNow(){
 					  {section name=nm start=1 loop=20 step=1}
 											
 						<tr{if ($smarty.section.nm.index != 1) && (!array_key_exists($smarty.section.nm.index,$arrninty))} style = "display:none;"{/if}>
-							<td nowrap="nowrap" width="6%" align="left"><b>Other Amenitiy:</b></td>
+							<td nowrap="nowrap" width="6%" align="left"><b>Other Amenities:</b></td>
 							<td nowrap>
 								{if array_key_exists($smarty.section.nm.index,$arrninty)}
 									{$arrninty[$smarty.section.nm.index]}
@@ -1600,13 +1525,9 @@ function getDateNow(){
 						{if array_key_exists('resi_proj_specification',$lastUpdatedDetail)}
 							<tr bgcolor = "#c2c2c2">
 								  <td nowrap="nowrap"  align="left" colspan = "2"><b>Last Updated Detail</b><br></br>
-									{foreach from = $lastUpdatedDetail['resi_project_amenities'] key=key item = item}
-										
-										<b>Department: </b> {$key}</br>
-										<b>Name: </b> {$item['FNAME']}</br>
-										<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-									{/foreach}
-									
+									<b>Department: </b> {$lastUpdatedDetail['resi_proj_specification']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_proj_specification']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_proj_specification']['ACTION_DATE']}</br></br>
 								  </td>
 							  
 							</tr>
@@ -1802,14 +1723,14 @@ function getDateNow(){
 							  </tr>
 
 							   <tr>
-								  <td nowrap="nowrap" width="6%" align="left"><b>Others : </b></td>
-								  <td>
-								  	{if $arrSpecification[0]['OTHERS'] != ''}
-								  		{$arrSpecification[0]['OTHERS']}
-								  	{else}
-								  		--
-								  	{/if}
-								  </td> 
+                                                                <td nowrap="nowrap" width="6%" align="left"><b>Others : </b></td>
+                                                                <td>
+                                                                    {if $arrSpecification[0]['OTHER_SPECIFICATIONS'] != ''}
+                                                                        {$arrSpecification[0]['OTHER_SPECIFICATIONS']}
+                                                                    {else}
+                                                                        --
+                                                                    {/if}
+                                                                </td> 
 							  </tr>
 					  </table>
 				</td>
@@ -1827,13 +1748,9 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['project_plan_images'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['project_plan_images'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
-								
+								<b>Department: </b> {$lastUpdatedDetail['project_plan_images']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['project_plan_images']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['project_plan_images']['ACTION_DATE']}</br></br>
 							  </td>
 							  
 						  </tr>
@@ -1881,12 +1798,9 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['resi_floor_plans'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_floor_plans'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_floor_plans']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_floor_plans']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_floor_plans']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -1937,116 +1851,68 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['resi_project_options'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "9"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_project_options'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>Last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_project_options']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project_options']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_options']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
 						  </tr>
 						{/if}
+                            {/if}
                     <tr class="headingrowcolor" height="30px;">
                          <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
-                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase</td>
+                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase Name</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
                          <td nowrap="nowrap" width="9%" align="left" class=whiteTxt>Size</td>
-                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area</td>
-                         {$pmd_keys=array_keys($PreviousMonthsData)}
-                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-1 month"))}</td>
-                         <td nowrap="nowrap" width="4%" align="left" class=whiteTxt>Price Per Unit Area <br> in {date('Y-m', strtotime("-2 month"))}</td>
-                         <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area Lastest Month</td> -->
-                         <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit DP</td>
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit FP</td> -->
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Number of Floors</td>
+                         <td nowrap="nowrap" width="20%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                         <td nowrap="nowrap" width="17%" align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
+                         <td nowrap="nowrap" width="17%" align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
                          <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Villa Floors</td>
 
                     </tr>
-                    {$cntAudit = 0}
-                    {if count($ProjectPhases) == 0}
-                        {$ProjectPhases = array(0)}
-                    {/if}
-                    {foreach from = $ProjectPhases key=key item = phase_obj}
-                        {if (gettype($phase_obj) == "integer")}
-                            {$phase_id = $phase_obj}
-                            {$phase_name = "No Phase"}
-                        {else}
-                            {$phase_id = $phase_obj->phase_id}
-                            {$phase_name = $phase_obj->phase_name}
-                        {/if}
-                        {$count = count($PhaseOptionHash[$phase_id])}
-                        {foreach from = $PhaseOptionHash[$phase_id] key=inner_key item=option_obj}
-                        {$hash_key = $phase_id|cat:"_"|cat:$option_obj->options_id}
-                        {if ($cntAudit+1)%2 == 0}
+                    {$cntPrice = 0}
+                    {foreach from = $uptionDetailWithPrice key=key item = value}
+                        {foreach from = $value key=keyInner item = valueInner}
+                        {if ($cntPrice+1)%2 == 0}
                             {$color = "bgcolor='#F7F8E0'"}
                         {else}
                             {$color = "bgcolor='#f2f2f2'"}
                         {/if}
                         <tr {$color}>
-                        <td align = "center">{$cntAudit+1}</td>
-                        {if $inner_key == 0}
-                        <td rowspan="{$count}" bgcolor="#ccc" align="center">
-                            {$phase_name} <br>
-                            {$date = array_shift(array_values($PreviousMonthsData['current'][$projectId]))}
-                            {$date = $date[0]["effective_date"]}
-                            {if $date != ''}
-                                {$date = date_parse_from_format('Y-m-dTH:i:sZ', $date)}
-                                <strong>Effective Date: {$date["month"]}/{$date["year"]}</strong>
-                            {/if}
-                        </td>
-                        {/if}
+                        <td align = "center">{$cntPrice+1}</td>
+                        <td align = "left" rowspan="">{$valueInner['phase_name']}</td>
                         <td>
                              <input type='hidden' value='{$projectId}' name='projectId' />
-                            {$option_obj->unit_name}
+                            {$valueInner['option_name']}
                       </td>
                       <td>
-                        {if $option_obj->total_plot_area != 0}
-                            {(int)$option_obj->total_plot_area}
-                        {else}
-                            {(int)$option_obj->size} {if $option_obj->carpet_area_info}(Carpet Area){/if}
-                        {/if}
-                        </td>
+                         {if isset($valueInner['size'])} {$valueInner['size']} {else} -- {/if}
+                      </td>
                       <td>
-                        {$price_per_unit_area = $PreviousMonthsData['current'][$projectId][$hash_key][0]["price"]}
-                        {if $price_per_unit_area !== ''}
-                            {(int)$price_per_unit_area}
-                        {else}
-                            --
-                        {/if}
+                        {if isset($valueInner['latestPrice'])} {$valueInner['latestPrice']} {else} -- {/if}
                       </td>
                         <td>
-                            {$monkey=print_r(date('Y-m', strtotime("-1 month")),true)}
-                            {if substr($PreviousMonthsData[$monkey][$projectId][$hash_key][0]['effective_date'],0,7)==$monkey}
-                                {$PreviousMonthsData[$monkey][$projectId][$hash_key][0]['price']}
+                            {if isset($valueInner['prevMonthPrice'])}
+                                {$valueInner['prevMonthPrice']}
                             {else}
                                 {"Not Applicable"}
                             {/if}
                         </td>
                         <td>
-                            {$monkey=print_r(date('Y-m', strtotime("-2 month")),true)}
-                            {if substr($PreviousMonthsData[$monkey][$projectId][$hash_key][0]['effective_date'],0,7)==$monkey}
-                                {$PreviousMonthsData[$monkey][$projectId][$hash_key][0]['price']}
+                            {if isset($valueInner['prevPrevMonthPrice'])}
+                                {$valueInner['prevPrevMonthPrice']}
                             {else}
                                 {"Not Applicable"}
                             {/if}
                         </td>
-                       <td>
-                            {$option_obj->no_of_floors}
-                      </td>
                       <td>
-                            {$option_obj->villa_no_floors}
+                            {$valueInner['villa_no_floors']}
                       </td>
-                    </tr>
-                    {$cntAudit = $cntAudit+1}
-                    {/foreach}
-                    {/foreach}
-					</table>
-				{/if}
-				</td>
+                    {$cntPrice = $cntPrice+1}
 		   </tr>
-                   
+                    {/foreach}
+                   {/foreach}
                    {*code start for calling records secondary*}
                     {if count($arrCalingSecondary)>0}
                         {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
@@ -2108,7 +1974,7 @@ function getDateNow(){
                     <td align ="left">&nbsp;</td>
                 </tr>
                 
-                {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
+                {if $projectDetails[0].PROJECT_STAGE == 'SecondaryPriceCycle'}
                     <tr>
                        <td align ="left" valign ="top" colspan="2"  style = "padding-left:30px;">
                            <button class="clickbutton" onclick="$(this).trigger('event15');">Update Secondary Price</button>&nbsp;&nbsp;
@@ -2196,12 +2062,9 @@ function getDateNow(){
 						{if array_key_exists('resi_project_tower_details',$lastUpdatedDetail)}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "8"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_project_tower_details'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_project_tower_details']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project_tower_details']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_tower_details']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -2212,8 +2075,9 @@ function getDateNow(){
 							{$flatChk = 0}
 							{$flatAvailChk = 0}
 								<tr class="headingrowcolor" height="30px;">
-									<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-									<td class="whiteTxt" align = "center" nowrap><b>Tower Name</b></td>
+									<td class="whiteTxt" align = "left" nowrap><b>SNO.</b></td>
+									<td class="whiteTxt" align = "center" nowrap><b>Phase Name</b></td>
+                                                                        <td class="whiteTxt" align = "center" nowrap><b>Tower Name</b></td>
 									<td class="whiteTxt" align = "center" nowrap><b>No of floors</b></td>
 									<td class="whiteTxt" align = "center" nowrap><b>No. of Flats</b></td>
 									<td class="whiteTxt" align = "center" nowrap><b>Remarks</b></td>
@@ -2235,8 +2099,9 @@ function getDateNow(){
 										{else}
 											{$color = "bgcolor='#f2f2f2'"}
 										{/if}
-										
+                                                                                
 										<tr {$color}  height ="30px">
+                                                                                    <TD>{$keyInner+1}</TD>
 										{if $olderValue != $key}
 											<td valign ="top" align = "center" rowspan ={count($towerDetail[$key])}>{$key}</td>
 										{/if}
@@ -2252,8 +2117,8 @@ function getDateNow(){
 										<td align="center">{$innerItem['REMARKS']}</td>
 										<td align="center">{$innerItem['TOWER_FACING_DIRECTION']}</td>
 										<td align ="center">
-											{if $innerItem['STILT'] == '1'} Yes {/if}
-											{if $innerItem['STILT'] == '0'} No {/if}
+											{if $innerItem['STILT'] == 'True'} Yes {/if}
+											{if $innerItem['STILT'] == 'False'} No {/if}
 										</td>
 										<td align = "center">{$innerItem['ACTUAL_COMPLETION_DATE']}</td>
 											
@@ -2299,12 +2164,9 @@ function getDateNow(){
 						{if array_key_exists('resi_project_other_pricing',$lastUpdatedDetail)}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "3"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_project_other_pricing'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_project_other_pricing']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project_other_pricing']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_other_pricing']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -2590,7 +2452,7 @@ function getDateNow(){
 									
 								<td align="right" valign ="top"><b>Other:</b></td>
 								<td  align="left" style = "padding-left:30px;">
-									{if $otherPricing[0]['OTHERS'] != ''}{$otherPricing[0]['OTHERS']}{else} -- {/if}
+									{if $otherPricing[0]['OTHER_PRICING'] != ''}{$otherPricing[0]['OTHER_PRICING']}{else} -- {/if}
 								</td>
 								<td>&nbsp;</td>
 								
@@ -2599,7 +2461,6 @@ function getDateNow(){
 				{/if}
 				</td>
 		   </tr>
-		   
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 				{if is_array($supplyAllArray)}
@@ -2612,12 +2473,9 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "8"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_proj_supply'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_proj_supply']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_proj_supply']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_proj_supply']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -2645,7 +2503,6 @@ function getDateNow(){
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Lastest Month</b></td> -->
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
 										</tr>
 										{$olderValuePhase = ''}
@@ -2825,17 +2682,6 @@ function getDateNow(){
 															{/if}
 														{/if}
 													</td>
-													<td valign ="top" align ="center">
-														{$lastItem['SOURCE_OF_INFORMATION']}
-														
-														{if $phasename != '' && $stageName != ''}
-															{if $lastItem['SOURCE_OF_INFORMATION'] != $arrProjectSupply[$key][$keyInner][$keylast]['SOURCE_OF_INFORMATION']}
-																<br>
-																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['SOURCE_OF_INFORMATION']}</span>
-															{/if}
-														{/if}
-													</td>
-													
 													<td valign ="top" align ="center" nowrap>
 														{$lastItem['SUBMITTED_DATE']}
 														
@@ -2862,6 +2708,7 @@ function getDateNow(){
 														<td  align ="left" >&nbsp;</td>
 														<td  align ="left" >&nbsp;</td>
                                                                                                                 <td  align ="left" >&nbsp;</td>
+                                                                                                                
 													</tr>
 												{/if}
 											{/foreach}

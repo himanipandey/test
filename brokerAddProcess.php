@@ -33,6 +33,8 @@
          }
         
         $brokerChk = checkBrokerByName($brokerName);
+        if($brokerChk[0]['BROKER_ID'] != $brokerId && count($brokerChk)>0)
+			$ErrorMsg["brokerName"] = "Broker already exists( Mobile:".$brokerChk[0]['BROKER_MOBILE']." )!";
         if(count($brokerChk)>0 && $brokerId ==''){
             $ErrorMsg["brokerName"] = "Broker already exists( Mobile:".$brokerChk[0]['BROKER_MOBILE']." )!";
         }
@@ -44,10 +46,21 @@
              $ErrorMsg["hq"] = "Please select city.";
         }
         
+        if(trim($mobile) == '' || empty($mobile)) {
+             $ErrorMsg["mobile"] = "Please enter mobile number.";
+        }elseif(!is_numeric($mobile)) {
+             $ErrorMsg["mobile"] = "Mobile number must be numeric.";
+        }elseif(!preg_match("/^[0-9]{10}$/",$mobile)) {
+			$ErrorMsg["mobile"] = "Please enter a valid mobile number.";
+		}
+		if ($email != '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			$ErrorMsg["email"] = "Please enter a valid email.";
+		}
+		
         if(!empty($ErrorMsg)) {
                 // Do Nothing
         } 
-        else if (empty ($brokerId)){		
+        else if (empty ($brokerId)){	
             $lastBrokerId = insertBroker($brokerName, $contactPerson, $address,$mobile,$email,$hq,$status);
             if($lastBrokerId != false) {
                 $brokerIdFormapping = $lastBrokerId;
@@ -73,7 +86,6 @@
             $arrProjectListInValid = array();
             $arrProjectListValid = array();
             $flag = 0;
-            include("dbConfig.php");
             $projectList = getProjectByBroker($brokerIdFormapping);
             $projectExist = array();
              foreach($projectList as $key=>$val) {
@@ -97,7 +109,7 @@
                 $cnt = 1;
                 $comma = ',';
                 $qryIns = "INSERT IGNORE INTO broker_project_mapping (PROJECT_ID,BROKER_ID,ACTION_DATE) VALUES ";
-                if( isset($_REQUEST['callId']) ) {
+                if( !empty($_REQUEST['callId']) ) {
                     $qryCallProject = 'INSERT INTO CallProject (CallId, ProjectId, BROKER_ID) VALUES ';
                 }
                 if( count($arrProjectListValid) > 0) {
@@ -106,15 +118,15 @@
                             $comma = '';
                         $qryIns .= "($val,$brokerIdFormapping, now())$comma";
                         
-                        if( isset($_REQUEST['callId']) ) {
+                        if( !empty($_REQUEST['callId']) ) {
                             $qryCallProject .= "(".$_REQUEST['callId'].",$val, $brokerIdFormapping)$comma";
                         }
                         
                         $cnt++;
                     }
-                    
-                    $resInsCall = mysql_query($qryCallProject) or die(mysql_error()." call detail");
-                    
+                    if( !empty($_REQUEST['callId']) ) {
+                        $resInsCall = mysql_query($qryCallProject) or die(mysql_error()." call detail");
+                    }
                     $resIns = mysql_query($qryIns) or die(mysql_error());
                     if($resIns)
                         $ErrorMsg['success'] = "Data has been inserted successfully!";

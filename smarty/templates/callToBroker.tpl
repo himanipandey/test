@@ -9,7 +9,12 @@
       var phNo = $("#mobile").val(); 
       var compgnId = 'campaignName_'+id;
       var campaign = $("#"+compgnId).val();
-      if( !isNaN(phNo) ) {
+      if(campaign == 'Select'){
+		alert("Please select Campaign!");
+		return;
+	  }
+	  
+      if( !isNaN(phNo) && $('#mobile').val().indexOf('+') == -1 && $('#mobile').val().indexOf('-') == -1 && phNo.toString().length == 10) {
         $.ajax(
 	  {
 	      type:"get",
@@ -92,7 +97,7 @@
                             {/if}
                             <tr style="height:25px;background-color:#f2f2f2;">
                                 <td align ="left"><b>Mobile:</b></td>
-                                <td align ="left"><input type="text" name = "mobile" value="{$mobile}" id = "mobile" maxlength="11"></td>
+                                <td align ="left"><input type="text" name = "mobile" value="{$mobile}" id = "mobile" maxlength="10"></td>
                             </tr>
                             <tr style="height:25px;background-color:#c2c2c2;">
                                 <td align ="left"><b>Campaign Name:</b></td>

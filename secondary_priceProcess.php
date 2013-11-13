@@ -7,10 +7,8 @@
     $arrBrokerList = array();
     $arrProjectByBroker = array();
     foreach($allBrokerByProject as $key=>$val){
-        include("dbConfig_crm.php");
          $brikerList = getBrokerDetailById($key);
          $arrBrokerList[$key] = $brikerList;
-         include("dbConfig.php");
          $arrProjectByBroker[$key] = getProjectByBroker($key);
     }
      $arrBrokerPriceByProject = getBrokerPriceByProject($projectId);
@@ -55,8 +53,11 @@
          }
      }
      
-     $projectDetails = projectDetailById($projectId);
-     
+     $projectDetails = ResiProject::virtual_find($projectId);
+     $builderName = ResiBuilder::getBuilderById($projectDetails->builder_id);
+     $localityName = Locality::getLocalityById($projectDetails->locality_id);
+     $smarty->assign("builderName", $builderName);
+     $smarty->assign("localityName", $localityName);
      $smarty->assign("latestMonthAllBrokerPrice", $latestMonthAllBrokerPrice);
      $smarty->assign("oneMonthAgoPrice", $oneMonthAgoPrice);
      $smarty->assign("twoMonthAgoPrice", $twoMonthAgoPrice);
@@ -70,6 +71,13 @@
      $smarty->assign("projectDetails", $projectDetails);
      $smarty->assign("arrCampaign", $arrCampaign);
      $smarty->assign("projectId", $projectId);
+     $builderName = ResiBuilder::getBuilderById($projectDetails->builder_id);
+     $smarty->assign("builderName", $builderName[0]->builder_name);
+     $locality = Locality::getLocalityById($projectDetails->locality_id);
+     $suburb = Suburb::getSuburbById($locality[0]->suburb_id);
+     $city = City::getCityById($suburb[0]->city_id);
+     $smarty->assign("cityName", $city[0]->label);
+     $smarty->assign("localityName", $locality[0]->label);
      
      //code for distinct unit for a project
     $arrProjectType = fetch_projectOptions($projectId);

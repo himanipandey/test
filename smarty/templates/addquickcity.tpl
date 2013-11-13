@@ -13,7 +13,7 @@ function GetXmlHttpObject()
 	}
 	catch (e)
 	{
-		//Internet Explorer
+		//Interne   t Explorer
 	try
 	{
 		xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
@@ -115,10 +115,10 @@ function addupdatecity()
 		var returnval=xmlHttpadd1.responseText;
 		if(xmlHttpadd1)
 		{
-			document.getElementById('maincity').innerHTML = returnval;
-			var cityselid=$("#cityId :selected").val();
-			dispcity(cityselid);
-			alert("The record has been successfully updated.");
+                    document.getElementById('maincity').innerHTML = returnval;
+                    var cityselid=$("#cityId :selected").val();
+                    dispcity(cityselid);
+                    alert("The record has been successfully updated.");
 		}
 
 	}
@@ -513,10 +513,10 @@ function specialCharacterValidation(fieldVal)
             <td height="50%" align="left">
                     <div id="maincity">
                             <select name="cityId" id = "cityId" class="cityId" onchange="dispcity(this.value);" STYLE="width: 150px">
-                                    <option value =''>Select City</option>
-                                     {section name=data loop=$CityDataArr}
-                                    <option {if $cityId == {$CityDataArr[data].CITY_ID}} value ='{$cityId}' selected="selected" {else} value ='{$CityDataArr[data].CITY_ID}' {/if}>{$CityDataArr[data].LABEL}</option>
-                                     {/section}
+                                <option value =''>Select City</option>
+                                {foreach from = $CityDataArr key = key item = item}
+                                <option {if $cityId == $key} selected {/if} value ="{$key}">{$item}</option>
+                                 {/foreach}
                             </select>
                     </div>
             </td>

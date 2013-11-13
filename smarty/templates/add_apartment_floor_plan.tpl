@@ -104,7 +104,7 @@
 	
 				  <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
 				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
-				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
+				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Unit Type</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt><font color="red">*</font>Floor Plan Name</td>
 			
 				   <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color="red">*</font>Image <span style = "font-size:10px">(image name must content floor-plan)</span></td>
@@ -134,13 +134,13 @@
 				  
 				  <td>
 						  <input type='hidden' value='{$projectId}' name='projectId' />
-						{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_NAME']}
+						{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_NAME']}
 						<input type="hidden" name = "option_id[]" value = "{$ProjectOptionDetail[$smarty.section.foo.index]['OPTIONS_ID']}">		  
 				  
 				  </td>
 				 
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}</td>
-				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['PRICE_PER_UNIT_AREA']}</td>
+				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_TYPE']}</td>
 				  <td><input type = "text" name = "floor_name[]"</td>
 					
 				  <td><input type = "file" name = "imgurl[]"></td> 

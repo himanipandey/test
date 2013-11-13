@@ -1,17 +1,20 @@
 <?php
-	$citylist	=	CityArr();
-	$builderList	=	BuilderEntityArr();
-	if(!isset($_GET['projectId']))
-            $_GET['projectId'] = '';
-
-	$enum_value = enum_value();
-	$smarty->assign("enum_value",$enum_value);
-	$ProjectDetail	= ProjectDetail($_GET['projectId']);
-	$smarty->assign("citylist", $citylist);
-	$smarty->assign("builderList", $builderList);
-	ini_set('max_execution_time',10000000);
-	$UpdationArr = updationCycleTable();
+    $citylist = City::CityArr();
+    $builderList = ResiBuilder::BuilderEntityArr();
+    if(!isset($_GET['projectId']))
+        $_GET['projectId'] = '';
+    $projectStatus = ResiProject::projectStatusMaster();
+    $smarty->assign("projectStatus",$projectStatus);
+    $ProjectDetail = ResiProject::virtual_find($projectId);
+    $smarty->assign("citylist", $citylist);
+    $smarty->assign("builderList", $builderList);
+    ini_set('max_execution_time',10000000);
+    $UpdationArr = UpdationCycle::updationCycleTable();
     $smarty->assign("UpdationArr", $UpdationArr);
+    $getProjectStages = ProjectStage::getProjectStages();
+    $smarty->assign("getProjectStages", $getProjectStages);
+    $getProjectPhases = ProjectPhase::getProjectPhases();
+    $smarty->assign("getProjectPhases", $getProjectPhases);
     
     if(!isset($_REQUEST['Active']))
     {
@@ -29,7 +32,7 @@
 
 	if ($_GET['mode'] == 'delete')
 	{
-		DeleteProject($_GET['projectId']);
+            DeleteProject($_GET['projectId']);
 	}
 
 	if(!isset($_GET['search']))
@@ -48,33 +51,34 @@
 	if($search != '' OR $_GET['projectId'] != '')
 	{
 		if(!isset($_REQUEST['exp_supply_date_from']))
-		$_REQUEST['exp_supply_date_from'] = '';
+			$_REQUEST['exp_supply_date_from'] = '';
 		$exp_supply_date_from = $_REQUEST['exp_supply_date_from'];
                 
-                if(!isset($_REQUEST['exp_supply_date_to']))
-		$_REQUEST['city'] = '';
+        if(!isset($_REQUEST['exp_supply_date_to']))
+			$_REQUEST['city'] = '';
 		$exp_supply_date_to = $_REQUEST['exp_supply_date_to'];
                 
                 if(!isset($_REQUEST['city']))
 		$_REQUEST['city'] = '';
-		$city			=	$_REQUEST['city'];
+		$city =	$_REQUEST['city'];
 
 		if(!isset($_REQUEST['locality']))
 			$_REQUEST['locality'] = '';
 
-		$locality	 	=	$_REQUEST['locality'];
+		$locality = $_REQUEST['locality'];
 		if(!isset($_REQUEST['builder']))
 			$_REQUEST['builder'] = '';
-		$builder		=	$_REQUEST['builder'];
+		$builder = $_REQUEST['builder'];
 		if(!isset($_REQUEST['phase']))
 			$_REQUEST['phase'] = '';
 		$phase = $_REQUEST['phase'];
-		
-                $arrPhase   = 	explode('|',$_REQUEST['stage']);
-                $stage      = 	$arrPhase[0];
-                $tag        =   $arrPhase[1];
-		
-		if(!isset($_REQUEST['Status']))
+                if(!isset($_REQUEST['stage']))
+			$_REQUEST['stage'] = '';
+		$stage = $_REQUEST['stage'];
+		if(!isset($_REQUEST['updationCycle']))
+			$_REQUEST['updationCycle'] = '';
+		$updationCycle = $_REQUEST['updationCycle'];
+                if(!isset($_REQUEST['Status']))
 			$_REQUEST['Status'] = '';
 		if(!isset($_REQUEST['Active']))
 			$_REQUEST['Active'] = '';
@@ -85,32 +89,18 @@
 			$project_name= $ProjectDetail[0]['PROJECT_NAME'];
 		else
 			$project_name= $_REQUEST['project_name'];
-		
 		$smarty->assign("locality", $locality);
 		
 		$smarty->assign("phase", $phase);
 		$smarty->assign("stage", $stage);
-                $smarty->assign("tag", $tag);
+                $smarty->assign("updationCycle", $updationCycle);
                 $smarty->assign("exp_supply_date_from", $exp_supply_date_from);
                 $smarty->assign("exp_supply_date_to", $exp_supply_date_to);
-
   		if($city != '')
   		{
-                    $localityArr = Array();
-                    $sql = "SELECT LOCALITY_ID, LABEL FROM ".LOCALITY." AS A WHERE CITY_ID = '" . $city."' AND VISIBLE_IN_CMS = '1' ORDER BY LABEL ASC";		
-                    $data = mysql_query($sql);
-                    if(mysql_num_rows($data)>0)
-                    {
-                        while ($dataArr = mysql_fetch_array($data))
-                        {
-                            $localityArr[$dataArr['LOCALITY_ID']] =  $dataArr['LABEL'];
-                        }
-                    }
-                    else
-                    {
-                        $localityArr[] =  '';
-                    }
-                    $smarty->assign("localityArr", $localityArr);
+                    $getLocality = Array();
+                    $getLocality = Locality::getLocalityByCity($city);
+                    $smarty->assign("getLocality", $getLocality);
 		}
 
 		if(!isset($_REQUEST['Residential']))
@@ -118,8 +108,10 @@
 
 		$smarty->assign("Residential", $_REQUEST['Residential']);
 
-		if(!isset($_REQUEST['Availability']))
-                    $_REQUEST['Availability'] = '';
+		if(count($_REQUEST['Availability'])>0)
+                    $Availability  = implode(",", $_REQUEST['Availability']);
+		else
+                    $Availability = '';
 
 		$smarty->assign("Availability", $_REQUEST['Availability']);
 
@@ -139,131 +131,75 @@
 		$smarty->assign("Status", $_REQUEST['Status']);
 		
 		if(count($_REQUEST['Status'])>0)
-                    $StatusValue  = implode("','", $_REQUEST['Status']);
+                    $StatusValue  = implode(",", $_REQUEST['Status']);
 		else
                     $StatusValue = '';
  	
-		if($StatusValue!="") $StatusValue = "'".$StatusValue."'";
+		if($StatusValue!="") $StatusValue = $StatusValue;
 
-		$QueryMember = "SELECT * FROM ".RESI_PROJECT." WHERE ";
-
+                $arrSearchFields = array();
 		if($_GET['projectId'] == '')
 		{
-                    $and = " ";
-
-                    if($_REQUEST['project_name'] != '')
-                    {
-                        $QueryMember .= $and." PROJECT_NAME LIKE '%".$_REQUEST['project_name']."%'";
-                        $and  = ' AND ';
-                    }
-                    if($_REQUEST['city'] != '')
-                    {
-                        $QueryMember .=  $and." CITY_ID = '".$_REQUEST['city']."'";
-                        $and  = ' AND ';
-                        //code for builder refresh if city selected
-                        $ctName = ViewCityDetails($_REQUEST['city']);
-                        $sqlBuilder = "SELECT A.ENTITY, A.BUILDER_ID FROM ".RESI_BUILDER." AS A WHERE A.CITY = '" .$ctName['LABEL']."'ORDER BY ENTITY ASC";	
-                        $arrBuilder	=	array();
-                        $resBuilder	=	mysql_query($sqlBuilder);
-                        while($data = mysql_fetch_assoc($resBuilder))
-                        {
-                                $arrBuilder[$data['BUILDER_ID']] = $data['ENTITY'];
-                        }
-                        $smarty->assign("builderList", $arrBuilder);
-                    }
+                    if($_REQUEST['locality'] != '')
+                        $arrSearchFields['locality_id'] = $_REQUEST['locality'];
+					elseif(isset($city) && !empty($city)){ //if only city selected		
+						$arrSearchFields['city_id'] = $city;
+					}
+					if($_REQUEST['project_name'] != '')
+                        $arrSearchFields['project_name'] = trim($_REQUEST['project_name']);
                     if($_REQUEST['Residential'] != '')
-                    {
-                        $QueryMember .=  $and." RESIDENTIAL = '".$_REQUEST['Residential']."'";
-                        $and  = ' AND ';
-                    }
+                        $arrSearchFields['residential_flag'] = $_REQUEST['Residential'];
 
-                    if($_REQUEST['Availability'] != '')
+                    if($Availability != '')
                     {
-                        $QueryMember .= "$and (1 = 0 ";
-                        if(in_array(0,$_REQUEST['Availability']))
-                        {
-                                $QueryMember .=  " OR AVAILABLE_NO_FLATS = 0";
-                        }
+                        $QueryMember = 'D_AVAILABILITY = -1';
                         if(in_array(1,$_REQUEST['Availability']))
                         {
-                                $QueryMember .=  " OR AVAILABLE_NO_FLATS > 0";
+                                $QueryMember .=  " OR D_AVAILABILITY = 0";
                         }
                         if(in_array(2,$_REQUEST['Availability']))
                         {
-                                $QueryMember .=  " OR AVAILABLE_NO_FLATS IS NULL ";
+                                $QueryMember .=  " OR D_AVAILABILITY > 0";
                         }
-                        $QueryMember .= ")";
+                        if(in_array(3,$_REQUEST['Availability']))
+                        {
+                                $QueryMember .=  " OR D_AVAILABILITY IS NULL ";
+                        }
+                       $arrSearchFields['D_AVAILABILITY'] = $QueryMember;
                     }
-
                     if($ActiveValue != '')
-                    {
-                        $QueryMember .=  $and." ACTIVE IN(".$ActiveValue.")";
-                        $and  = ' AND ';
-                    }
-
+                        $arrSearchFields['status'] = $_REQUEST['Active'];
                     if($StatusValue != '')
-                    {
-                        $QueryMember .=  $and." PROJECT_STATUS IN(".$StatusValue.")";
-                        $and  = ' AND ';
-                    }
-
-                    if($_REQUEST['locality'] != '')
-                    {
-                        $QueryMember .= $and." LOCALITY_ID = '".$_REQUEST['locality']."'";
-                        $and  = ' AND ';
-                    }
-                    if($_REQUEST['builder'] != '')
-                    {
-                        $QueryMember .= $and." BUILDER_ID = '".$_REQUEST['builder']."'";
-                        $and  = ' AND ';
-                    }
+                        $arrSearchFields['project_status_id'] = $_REQUEST['Status'];
+                    if( $_REQUEST['builder'] != '' ) 
+                        $arrSearchFields['builder_id'] = $_REQUEST['builder'];
                     if($_REQUEST['phase'] != '')
-                    {
-                        $QueryMember .= $and." PROJECT_PHASE = '".$_REQUEST['phase']."'";
-                        $and  = ' AND ';
-                    }
+                        $arrSearchFields['project_phase_id'] = $_REQUEST['phase'];
                     if($stage != '')
-                    {
-                        $QueryMember .= $and." PROJECT_STAGE = '".$stage."'";
-                        $and  = ' AND ';
-                    }
-                    if($tag != '')
-                    {
-                        $QueryMember .= $and." UPDATION_CYCLE_ID = '".$tag."'";
-                        $and  = ' AND ';
-                    }
-                    if($exp_supply_date_to != '' && $exp_supply_date_from != '')
-                    {
-                        $QueryMember .= $and." EXPECTED_SUPPLY_DATE BETWEEN '".$exp_supply_date_from."' AND '".$exp_supply_date_to."'";
-                        $and  = ' AND ';
+                        $arrSearchFields['project_stage_id'] = $stage;
+                    if($updationCycle != '')
+                        $arrSearchFields['updation_cycle_id'] = $updationCycle;
+                    if($exp_supply_date_to != '' && $exp_supply_date_from != '') {
+                        $arrSearchFields['expected_supply_date_between_from_to'] = $exp_supply_date_from."_".$exp_supply_date_to;
                     }
                     if($exp_supply_date_to != '' && $exp_supply_date_from == '')
-                    {
-                        $QueryMember .= $and." EXPECTED_SUPPLY_DATE <= '".$exp_supply_date_to."'";
-                        $and  = ' AND ';
-                    }
+                        $arrSearchFields['expected_supply_date_to'] = $exp_supply_date_to;
                     if($exp_supply_date_to == '' && $exp_supply_date_from != '')
-                    {
-                        $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
-                        $and  = ' AND ';
-                    }
+                        $arrSearchFields['expected_supply_date_from'] = $exp_supply_date_from;
 		}
 		else
-		{
-                    $QueryMember .=" PROJECT_ID = '".$_REQUEST['projectId']."'";
+                    $arrSearchFields['project_id'] = $_REQUEST['projectId'];
+                 
+		if($exp_supply_date_to != '' && $exp_supply_date_from != ''){
+			if(date($exp_supply_date_to) < date($exp_supply_date_from))
+				$errorMsg = '<font color = red>To Date must be greater than From Date.</font>';		
 		}
-		$QueryMember	.= " ORDER BY PROJECT_NAME,BUILDER_NAME DESC";
-		//echo $QueryMember;//die;
-                if( strlen($QueryMember)>73 ) { 
-                    $QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
-                    $NumRows 	= mysql_num_rows($QueryExecute);
-
-                    if($NumRows)
+	    	else if( count($arrSearchFields) > 0 ) { 
+                    $getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
+                    $NumRows = count($getSearchResult);
+                    if(count($getSearchResult) == 0)
                     {
-                        while($data = mysql_fetch_assoc($QueryExecute))
-                        {
-                            array_push($projectDataArr,$data);
-                        }
+                        $errorMsg = '<font color = red>No result found!</font>';
                     }
                 }else {
                      $errorMsg = '<font color = red>Please select atleast one field</font>';
@@ -276,6 +212,6 @@
 	$smarty->assign("project_name", $project_name);
 	$smarty->assign("projectId", $_GET['projectId']);
 	$smarty->assign("NumRows",$NumRows);
-	$smarty->assign("projectDataArr", $projectDataArr);
+	$smarty->assign("getSearchResult", $getSearchResult);
 
 ?>

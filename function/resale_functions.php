@@ -10,8 +10,7 @@
     } 
     function checkBrokerByName($brokerName){
         
-        include $_SERVER['DOCUMENT_ROOT'].'/dbConfig_crm.php';
-        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE BROKER_NAME = '".$brokerName."'";
+        $qry = "SELECT * FROM ".BROKER_LIST." WHERE BROKER_NAME = '".$brokerName."'";
         $res = mysql_query($qry) or die(mysql_error()." error in broker fectch by name");
         $arrBrokerByName = array();
         if(mysql_num_rows($res)>0)
@@ -19,8 +18,7 @@
         return $arrBrokerByName;
     }
     function getBrokerDetailById($brokerId){
-        include $_SERVER['DOCUMENT_ROOT'].'/dbConfig_crm.php';
-        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE BROKER_ID = '".$brokerId."'";
+        $qry = "SELECT * FROM ".BROKER_LIST." WHERE BROKER_ID = '".$brokerId."'";
         $res = mysql_query($qry) or die(mysql_error()." error in broker fectch");
         $arrBrokerByName = array();
         if(mysql_num_rows($res)>0){
@@ -31,9 +29,8 @@
         return $arrBrokerByName;     
     }
     function insertBroker($brokerName, $contactPerson, $address,$mobile,$email,$hq,$status){
-        include $_SERVER['DOCUMENT_ROOT'].'/dbConfig_crm.php';
         $qryIns =  "INSERT
-                        INTO ptigercrm.".BROKER_LIST." 
+                        INTO ".BROKER_LIST." 
                     SET
                         BROKER_NAME   = '".$brokerName."',
                         BROKER_ADDRESS= '".$address."',
@@ -50,8 +47,7 @@
             return false;
     }
     function updateBroker($brokerName, $contactPerson, $address,$mobile,$email,$hq,$status,$brokerId){
-        include $_SERVER['DOCUMENT_ROOT'].'/dbConfig_crm.php';
-        $qryUp =  "UPDATE ptigercrm.".BROKER_LIST." 
+        $qryUp =  "UPDATE ".BROKER_LIST." 
                     SET
                         BROKER_NAME   = '".$brokerName."',
                         BROKER_ADDRESS= '".$address."',
@@ -70,7 +66,6 @@
             return false;
     }
     function getActiveBrokerList($cityId='', $broker='', $mobile=''){
-        include $_SERVER['DOCUMENT_ROOT'].'/dbConfig_crm.php';
         $city = '';
         $brokerName = '';
         $mobileNumber = '';
@@ -83,7 +78,7 @@
             $mobileNumber = " AND BROKER_MOBILE LIKE '%$mobile%'";
         }
  
-        $qry = "SELECT * FROM ptigercrm.".BROKER_LIST." WHERE STATUS = '1' $city $brokerName $mobileNumber ORDER BY BROKER_NAME ASC";
+        $qry = "SELECT * FROM ".BROKER_LIST." WHERE STATUS = '1' $city $brokerName $mobileNumber ORDER BY BROKER_NAME ASC";
         $res = mysql_query($qry) or die(mysql_error()." error in active broker list");
         $arrActiveBrokerlist = array();
         if(mysql_num_rows($res)>0){
@@ -94,7 +89,7 @@
         return $arrActiveBrokerlist;
     }
     function getBrokerByProject($projectId){
-        $qry = "SELECT * FROM broker_project_mapping 
+       $qry = "SELECT * FROM broker_project_mapping 
                 WHERE PROJECT_ID = '".$projectId."'";
         $res = mysql_query($qry) or die(mysql_error()." error in  broker list by project id");
         $arrBrokerByProject = array();
@@ -122,7 +117,7 @@
                     ".RESI_PROJECT." b
                 ON
                     a.PROJECT_ID = b.PROJECT_ID
-                WHERE a.BROKER_ID = '".$brokerId."'
+                WHERE a.BROKER_ID = '".$brokerId."' and b.version = 'Cms'
                 ORDER BY b.PROJECT_NAME ASC";
         $res = mysql_query($qry) or die(mysql_error()." error in  project list by broker id");
         $arrProjectByBroker = array();

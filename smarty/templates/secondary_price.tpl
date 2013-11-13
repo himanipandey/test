@@ -20,6 +20,11 @@ function builder_contact(builderId,buildernm)
       var phNo = $('#'+phId).html(); 
       var compgnId = 'campaignName_'+id;
       var campaign = $("#"+compgnId).val();
+      if(campaign == 'Select'){
+		alert("Please select Campaign!");
+		return;
+	  }
+	 
       $.ajax(
 	  {
 	      type:"get",
@@ -104,12 +109,12 @@ function builder_contact(builderId,buildernm)
                       <div style="margin-top:10px;margin-bottom:10px">
                           <div>
                                 <a style = " display: block;width: 100px; height: 15px;background: #c2c2c2; padding: 5px; text-align: center; border: 1px;border-radius: 5px;text-decoration: none;color: black;
-                font-weight: bold;" onclick="window.open('assign_broker.php?projectId={$projectDetails[0].PROJECT_ID}&projectName={$projectDetails[0].PROJECT_NAME}&cityId={$projectDetails[0].CITY_ID}','Assign Broker','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');return false;" href="#"><b>&nbsp;&nbsp;Assign Broker&nbsp;&nbsp;</b></a>
+                font-weight: bold;" onclick="window.open('assign_broker.php?projectId={$projectDetails->project_id}&projectName={$projectDetails->project_name}&cityId=','Assign Broker','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');return false;" href="#"><b>&nbsp;&nbsp;Assign Broker&nbsp;&nbsp;</b></a>
                                         </div>
 
                                         <div style="float: left;  margin-left: 294px;  margin-top: -25px;">
                                 <a style = "display: block;width: 100px; height: 15px;background: #c2c2c2; padding: 5px; text-align: center; border: 1px;border-radius: 5px;text-decoration: none;color: black;
-                font-weight: bold;" href ="show_project_details.php?projectId={$projectDetails[0].PROJECT_ID}"><b>&nbsp;&nbsp;Projct Detail&nbsp;&nbsp;</b></a>
+                font-weight: bold;" href ="show_project_details.php?projectId={$projectDetails->project_id}"><b>&nbsp;&nbsp;Projct Detail&nbsp;&nbsp;</b></a>
                            </div>
                       </div>
                 </td>
@@ -120,21 +125,20 @@ function builder_contact(builderId,buildernm)
                       <table align = "left">
                           <tr style="height:25px;">
                               <td align ="left"><b>Project Name:</b></td>
-                              <td align ="left">{ucwords($projectDetails[0].PROJECT_NAME)}</td>
+                              <td align ="left">{ucwords($projectDetails->project_name)}</td>
                           </tr>
                           <tr style="height:25px;">
                               <td align ="left"><b>Builder Name:</b></td>
-                              <td align ="left">{$projectDetails[0].BUILDER_NAME}</td>
+                              <td align ="left">{$builderName}</td>
                           </tr>
                           <tr>
                               <td align ="left" style="height:25px;"><b>City:</b></td>
-                              {$city = ViewCityDetails($projectDetails[0].CITY_ID)}
-                              <td align ="left">{$city['LABEL']}</td>
+                                
+                              <td align ="left">{$cityName}</td>
                           </tr>
                           <tr>
                               <td align ="left" style="height:25px;"><b>Locality:</b></td>
-                              {$locality = ViewLocalityDetails($projectDetails[0].LOCALITY_ID)}
-                              <td align ="left">{$locality['LABEL']}</td>
+                              <td align ="left">{$localityName}</td>
                           </tr>               
                       </table>
                   </td>
@@ -211,7 +215,7 @@ function builder_contact(builderId,buildernm)
                 </tr>
               
                 <!--code for broker calling detail-->
-                {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
+                {if $projectDetails->project_stage_id == 8}
                     {if count($arrCalingSecondary)>0}
                         <tr>
                             <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;"><b>Broker Calling Detail:</b></td>
@@ -283,9 +287,9 @@ function builder_contact(builderId,buildernm)
                     <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
                         <div style="margin-top:10px;margin-bottom:10px">
                             <div><a style = "display: block;width: 200px; height: 15px;background: #c2c2c2; padding: 5px; text-align: center; border: 1px;border-radius: 5px;text-decoration: none;color: black;
-  font-weight: bold;" href = "insertSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Update Secondary Price</b></a></div>
+  font-weight: bold;" href = "insertSecondaryPrice.php?projectId={$projectDetails->project_id}"><b>Update Secondary Price</b></a></div>
                             <div style="float: left;  margin-left: 294px;  margin-top: -25px;"><a style = "display: block;width: 200px; height: 15px;background: #c2c2c2; padding: 5px; text-align: center; border: 1px;border-radius: 5px;text-decoration: none;color: black;
-  font-weight: bold;" href = "updateSecondaryPrice.php?projectId={$projectDetails[0].PROJECT_ID}"><b>Edit Secondary Price</b></a></div>
+  font-weight: bold;" href = "updateSecondaryPrice.php?projectId={$projectDetails->project_id}"><b>Edit Secondary Price</b></a></div>
                         </div>
                     </td>
                     <td align ="left">&nbsp;</td>

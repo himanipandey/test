@@ -245,61 +245,61 @@
                                                      </td> 
 
                                                      <td nowrap align = "center">
-                                                         {$value['newProject']['dataCollection']}
+                                                         {$value['NewProject']['DataCollection']}
                                                          
-                                                         {$np_dataCollection = $np_dataCollection+$value['newProject']['dataCollection']}
+                                                         {$np_dataCollection = $np_dataCollection+$value['NewProject']['DataCollection']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                         {$value['newProject']['newProject']}
-                                                         {$np_newProject = $np_newProject+$value['newProject']['newProject']}
+                                                         {$value['NewProject']['NewProject']}
+                                                         {$np_newProject = $np_newProject+$value['NewProject']['NewProject']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                         {$value['newProject']['dcCallCenter']}
-                                                         {$np_dcCallCenter = $np_dcCallCenter+$value['newProject']['dcCallCenter']}
+                                                         {$value['NewProject']['DcCallCenter']}
+                                                         {$np_dcCallCenter = $np_dcCallCenter+$value['NewProject']['DcCallCenter']}
                                                      </td>
                                                       <td nowrap align = "center">
-                                                       {$value['newProject']['audit1']}
-                                                       {$np_audit = $np_audit+$value['newProject']['audit1']}
+                                                       {$value['NewProject']['Audit1']}
+                                                       {$np_audit = $np_audit+$value['NewProject']['Audit1']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                        {$value['newProject']['audit2']}
-                                                        {$np_audit2 = $np_audit2+$value['newProject']['audit2']}
+                                                        {$value['NewProject']['Audit2']}
+                                                        {$np_audit2 = $np_audit2+$value['NewProject']['Audit2']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                         {$value['newProject']['revert']}
-                                                         {$np_revert = $np_revert+$value['newProject']['revert']}
+                                                         {$value['NewProject']['Revert']}
+                                                         {$np_revert = $np_revert+$value['NewProject']['Revert']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                        {$value['updationCycle']['dataCollection']}
-                                                        {$up_dataCollection = $up_dataCollection+$value['updationCycle']['dataCollection']}
+                                                        {$value['UpdationCycle']['DataCollection']}
+                                                        {$up_dataCollection = $up_dataCollection+$value['UpdationCycle']['DataCollection']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                        {$value['updationCycle']['audit1']}
-                                                        {$up_audit = $up_audit+$value['updationCycle']['audit1']}
+                                                        {$value['UpdationCycle']['Audit1']}
+                                                        {$up_audit = $up_audit+$value['UpdationCycle']['Audit1']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                        {$value['updationCycle']['audit2']}
-                                                        {$up_audit2 = $up_audit2+$value['updationCycle']['audit2']}
+                                                        {$value['UpdationCycle']['Audit2']}
+                                                        {$up_audit2 = $up_audit2+$value['UpdationCycle']['Audit2']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                        {$value['updationCycle']['revert']}
-                                                        {$up_revert = $up_revert+$value['updationCycle']['revert']}
+                                                        {$value['UpdationCycle']['Revert']}
+                                                        {$up_revert = $up_revert+$value['UpdationCycle']['Revert']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                        {$value['secondaryPriceCycle']['dataCollection']}
-                                                        {$se_dataCollection = $se_dataCollection+$value['secondaryPriceCycle']['dataCollection']}
+                                                        {$value['SecondaryPriceCycle']['DataCollection']}
+                                                        {$se_dataCollection = $se_dataCollection+$value['SecondaryPriceCycle']['DataCollection']}
                                                      </td>
                                                     <td nowrap align = "center">
-                                                        {$value['secondaryPriceCycle']['audit1']}
-                                                        {$se_audit = $se_audit+$value['secondaryPriceCycle']['audit1']}
+                                                        {$value['SecondaryPriceCycle']['Audit1']}
+                                                        {$se_audit = $se_audit+$value['SecondaryPriceCycle']['Audit1']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                        {$value['secondaryPriceCycle']['audit2']}
-                                                        {$se_audit2 = $se_audit2+$value['secondaryPriceCycle']['audit2']}
+                                                        {$value['SecondaryPriceCycle']['Audit2']}
+                                                        {$se_audit2 = $se_audit2 + $value['SecondaryPriceCycle']['Audit2']}
                                                      </td>
                                                      <td nowrap align = "center">
-                                                       {$value['secondaryPriceCycle']['revert']}
-                                                       {$se_revert = $se_revert+$value['secondaryPriceCycle']['revert']}
+                                                       {$value['SecondaryPriceCycle']['Revert']}
+                                                       {$se_revert = $se_revert + $value['SecondaryPriceCycle']['Revert']}
                                                      </td>
                                                     </tr>
                                                   {/foreach} 

@@ -5,10 +5,11 @@ class CommentsHistory extends ActiveRecord\Model
 {
     static $table_name = 'comments_history';
     static function insertUpdateComments( $projectId, $arrCommentTypeValue, $updationCycleId ) {
-            
+        $updationCycleId = $updationCycleId."_".date("M-y");     
         foreach( $arrCommentTypeValue as $key=>$value ) {
-            $updationCycleId = $updationCycleId."_".date("M-y");
-                 $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? ", $projectId, $key, $updationCycleId);
+
+            $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? ",
+                $projectId, $key, $updationCycleId);
 
             $getComments = CommentsHistory::find('all', array("conditions" => $conditions));   
 
@@ -33,7 +34,6 @@ class CommentsHistory extends ActiveRecord\Model
         
         $cycleId = date("M-y");
         $conditions = array("project_id = ? AND updation_cycle like ? ", $projectId, "%".$cycleId."%");
-        
         $join = 'LEFT JOIN proptiger_admin a ON(comments_history.user_id = a.adminid)';
 
         $getComments = CommentsHistory::find('all',array('joins' => $join, 
@@ -54,9 +54,9 @@ class CommentsHistory extends ActiveRecord\Model
     
     function getOldCommentHistoryByProjectId($projectId) {
         
-        $oldMonthCycle = date('M-y', strtotime("last month"));
-        $qry = "SELECT ch.*,pa.fname FROM 
-            project.comments_history as ch 
+       $oldMonthCycle = date('M-y', strtotime("last month"));
+       $qry = "SELECT ch.*,pa.fname FROM 
+            comments_history as ch 
             left join 
             proptiger_admin pa
             on 
@@ -66,7 +66,7 @@ class CommentsHistory extends ActiveRecord\Model
                and 
                 updation_cycle like 
                     '%$oldMonthCycle'";
-        
+
         $getOldComments = CommentsHistory::find_by_sql($qry); 
         $arrProjectOldComment = array();
         $commentTypeMap = array("Project" => 'projectRemark',
@@ -79,15 +79,44 @@ class CommentsHistory extends ActiveRecord\Model
         foreach($getOldComments as $value) {
             $arrProjectOldComment[$commentTypeMap[$value->comment_type]] = $value;
         }
+        if(count($arrProjectOldComment) == 0) {
+            
+            $oldMonthCycle = date('M-y', strtotime("-2 month"));
+            $qry = "SELECT ch.*,pa.fname FROM 
+            comments_history as ch 
+            left join 
+            proptiger_admin pa
+            on 
+             ch.user_id = pa.adminid
+            where 
+                project_id = $projectId 
+               and 
+                updation_cycle like 
+                    '%$oldMonthCycle'";
+
+            $getOldComments = CommentsHistory::find_by_sql($qry); 
+            $arrProjectOldComment = array();
+            $commentTypeMap = array("Project" => 'projectRemark',
+                       "Calling" => 'callingRemark', 
+                       'Audit' => 'auditRemark',
+                       'Secondary' => 'secondaryRemark',
+                       'FieldSurvey' => 'fieldSurveyRemark'
+                        );
+
+            foreach($getOldComments as $value) {
+                $arrProjectOldComment[$commentTypeMap[$value->comment_type]] = $value;
+            }
+            return $arrProjectOldComment;
+        }
         return $arrProjectOldComment;
     }
     
     function getAllCommentsByProjectId($projectId, $commentType, $updationCycleId) {
-              
+              //echo $projectId."==". $commentType."==". $updationCycleId;die;
         if( $updationCycleId != '' && $commentType != '') {                
              $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? ", $projectId, $commentType, $updationCycleId);
         }
-        else if( $updationCycleId != '' && $commentType = '' )
+        else if( $updationCycleId != '' && $commentType == '' )
             $conditions = array("project_id = ? AND updation_cycle = ? ", $projectId, $updationCycleId);
         else if( $updationCycleId == '' && $commentType != '' )
              $conditions = array("project_id = ? AND comment_type = ? ", $projectId, $commentType);

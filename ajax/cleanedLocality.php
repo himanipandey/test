@@ -9,7 +9,7 @@
     $localityId	= $_REQUEST['localityId'];
     
     $allProject = ResiProject::find('all', array('conditions' => array("latitude not in($latLongList) 
-                    and longitude not in($latLongList) and locality_id = '".$localityId."'"),'order' => 'LONGITUDE,LATITUDE ASC'));
+                    and longitude not in($latLongList) and locality_id = '".$localityId."' and version = 'Cms'"),'order' => 'LONGITUDE,LATITUDE ASC'));
     //print_r($allProject->latitude);
     if( count($allProject)>0 ) {
         $arrLatitude = array();
@@ -24,7 +24,7 @@
         $option->max_longitude = max($arrLongitude);
         $option->min_latitude = min($arrLatitude);
         $option->min_longitude = min($arrLongitude);
-        $option->locality_cleaned = '1';
+        $option->is_geo_boundary_clean = true;
 
         $result = $option->save();
         if($result) {

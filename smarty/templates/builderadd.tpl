@@ -236,16 +236,16 @@
                  <td width="50%" align="left" </td>
 				</tr>
 				<tr>
-				  <td width="20%" align="right" >City : </td>
+				  <td width="20%" align="right" ><font color = "red">*</font>City : </td>
 				  <td width="30%" align="left">
-						<select name = "city" class="city">
-							<option value =''>Select City</option>
-							 {section name=data loop=$CityDataArr}
-							 	<option {if $city == {$CityDataArr[data].LABEL}} value ='{$city}' selected="selected" {else} value ='{$CityDataArr[data].LABEL}' {/if}>{$CityDataArr[data].LABEL}</option>
-							 {/section}	
-						</select>				  
+                                    <select name = "city" class="city">
+                                        <option value =''>Select City</option>
+                                        {foreach from = $CityDataArr key = key item = item}
+                                           <option {if $city == {$key}} selected {/if} value = {$key}>{$item}</option>
+                                         {/foreach}	
+                                    </select>				  
 				  </td>
-				  <td width="50%" align="left"></td>
+				  {if $ErrorMsg["txtCity"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCity"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 
 				<tr>
@@ -353,7 +353,7 @@
 									>
 										<td width="10%" align="right" valign ="top" nowrap>
 											Contact Name {$start}:</td>
-										<td width="90%" align="left" valign ="top">	<input type = "text" name = "contact_name[]" value = "{$arrContact[$cnt]['NAME']}">
+										<td width="90%" align="left" valign ="top"><input type = "text" name = "contact_name[]" value = "{$arrContact[$cnt]['NAME']}">
 										</td>
 									</tr>
 									<tr class = "detail{$start}" 
@@ -415,7 +415,8 @@
 											<select name = "projects_{$start}[]" multiple>
 												<option value = "">Select Project</option>
 												{foreach from = $ProjectList key = key item = item}
-													<option value = "{$item['PROJECT_ID']}" {if strstr($arrContact[$cnt]['PROJECTS'],$item['PROJECT_ID'])} selected {/if}>{$item['PROJECT_NAME']}</option>
+                                                   <option value = "{$item['PROJECT_ID']}"                                     {if in_array($item['PROJECT_ID'],$arrContactProjectMapping[$arrContact[$cnt]['ID']])} selected {/if}>
+                                                    {$item['PROJECT_NAME']}</option>
 												{/foreach}
 												</option>
 											</select>

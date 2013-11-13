@@ -16,11 +16,15 @@ class ResiProjectOptions extends ActiveRecord\Model
     }
 
 //   gives no of beds corresponding to given option ids
-    function optionwise_bedroom_details($options){
+    function optionwise_bedroom_details($options, $phaseId) {
         if(empty($options)) array_push($options, 'NULL');
-        $query = "SELECT UNIT_TYPE, GROUP_CONCAT(Distinct BEDROOMS) as BEDS
-         FROM ".self::$table_name." WHERE OPTIONS_ID in  ('".join("','", $options)."')
-         GROUP BY UNIT_TYPE ORDER BY UNIT_TYPE, BEDROOMS";
+        $query = "SELECT option_type as UNIT_TYPE, GROUP_CONCAT(Distinct BEDROOMS) as BEDS
+         FROM ".self::$table_name." a 
+         JOIN listings l ON (l.option_id = a.options_id and l.status = 'Active' and l.listing_category = 'Primary')
+         JOIN resi_project_phase rpp ON (rpp.version = 'Cms' and rpp.phase_id = l.phase_id) 
+         WHERE OPTIONS_ID in  ('".join("','", $options)."')
+         GROUP BY UNIT_TYPE
+         ORDER BY UNIT_TYPE, BEDROOMS";
         $beds_per_apartment = ResiProjectOptions::find_by_sql($query);
         return $beds_per_apartment;
     }

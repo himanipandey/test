@@ -16,9 +16,9 @@ $autoadjust = $_POST['autoadjust'];
 if(!empty($_POST['projectId']))
 {
     $projectId    = $_POST['projectId'];
-    if($priority > 15){
-        $priority = PROJECT_MAX_PRIORITY;
-    }
+    if($priority < 1 || trim($priority) == '' || $priority > 15){
+	     echo 4; return;
+	}
     if(!empty($sub)){
         $count = checkProjAvail($projectId, $priority, 'suburb', $sub);
         if($count > 0)
@@ -68,14 +68,26 @@ if(!empty($_POST['projectId']))
 }
 else
 {
+	if(!empty($sub)){
+		if(!checkSubLocInCity('suburb',$cityId,$sub) || !is_numeric($sub)){
+			echo 3; return;
+		}
+    }else if(!empty ($loc) ){
+		if(!checkSubLocInCity('locality',$cityId,$loc) || !is_numeric($loc)){
+			echo 3; return;
+		}
+    }
+		
+    if($priority < 1 || trim($priority) == '' || $priority > 15){
+	     echo 2; return;
+	}
+    
     if($autoadjust)
     {
         autoAdjustPrio(SUBURB, $cityId, $priority);
         autoAdjustPrio(LOCALITY, $cityId, $priority);
     }
-    if($priority>=100){
-        $priority = MAX_PRIORITY;
-    }
+    
     if(!empty($sub)){
         updateSuburb($sub, $priority);
     }else if(!empty ($loc)){

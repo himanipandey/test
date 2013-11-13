@@ -94,27 +94,27 @@
                                                     {foreach from = $projectSummary key=key item = item}
                                                         <tr>
                                                             <td>{$key}</td>
-                                                            <td>{$item['updationCycle']['total']}</td>
-                                                            <td>{$item['updationCycle']['incomplete']}</td>
-                                                            <td>{$item['updationCycle']['doneExceptInventory']}</td>
-                                                            <td>{$item['updationCycle']['notAttempted']}</td>
-                                                            <td>{$item['newProject']['total']}</td>
-                                                            <td>{$item['newProject']['incomplete']}</td>
-                                                            <td>{$item['newProject']['doneExceptInventory']}</td>
-                                                            <td>{$item['newProject']['notAttempted']}</td>
+                                                            <td>{$item['UpdationCycle']['total']}</td>
+                                                            <td>{$item['UpdationCycle']['incomplete']}</td>
+                                                            <td>{$item['UpdationCycle']['doneExceptInventory']}</td>
+                                                            <td>{$item['UpdationCycle']['notAttempted']}</td>
+                                                            <td>{$item['NewProject']['total']}</td>
+                                                            <td>{$item['NewProject']['incomplete']}</td>
+                                                            <td>{$item['NewProject']['doneExceptInventory']}</td>
+                                                            <td>{$item['NewProject']['notAttempted']}</td>
                                                         </tr>
                                                     {/foreach}
                                                     {if !empty($projectSummary)}
                                                         <tr>
                                                             <td>Total</td>
-                                                            <td>{$projectSummaryTotal['updationCycle']['total']}</td>
-                                                            <td>{$projectSummaryTotal['updationCycle']['incomplete']}</td>
-                                                            <td>{$projectSummaryTotal['updationCycle']['doneExceptInventory']}</td>
-                                                            <td>{$projectSummaryTotal['updationCycle']['notAttempted']}</td>
-                                                            <td>{$projectSummaryTotal['newProject']['total']}</td>
-                                                            <td>{$projectSummaryTotal['newProject']['incomplete']}</td>
-                                                            <td>{$projectSummaryTotal['newProject']['doneExceptInventory']}</td>
-                                                            <td>{$projectSummaryTotal['newProject']['notAttempted']}</td>
+                                                            <td>{$projectSummaryTotal['UpdationCycle']['total']}</td>
+                                                            <td>{$projectSummaryTotal['UpdationCycle']['incomplete']}</td>
+                                                            <td>{$projectSummaryTotal['UpdationCycle']['doneExceptInventory']}</td>
+                                                            <td>{$projectSummaryTotal['UpdationCycle']['notAttempted']}</td>
+                                                            <td>{$projectSummaryTotal['NewProject']['total']}</td>
+                                                            <td>{$projectSummaryTotal['NewProject']['incomplete']}</td>
+                                                            <td>{$projectSummaryTotal['NewProject']['doneExceptInventory']}</td>
+                                                            <td>{$projectSummaryTotal['NewProject']['notAttempted']}</td>
                                                         </tr>
                                                     {/if}
                                                 </tbody>

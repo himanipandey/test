@@ -1,7 +1,10 @@
 <?php
-	$RoomCategoryArr	=	RoomCategoryList();
+
+	$RoomCategoryArr	=	RoomCategory::categoryList();
 	$projectId			=	$_REQUEST['projectId'];
-	$projectDetail		=	ProjectDetail($projectId);
+    $project = ResiProject::virtual_find($projectId);
+	$projectDetail		=	$project->to_custom_array();
+    $projectDetail = array($projectDetail);
 
 	$smarty->assign("ProjectDetail", $projectDetail);
 	$smarty->assign("typeA", APARTMENTS);
@@ -39,7 +42,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     $txtVillaFloors				=	'0';
     $txtVillaTerraceArea		=	'0';
     $txtVillaGardenArea			=	'0';
-
+	
+	$option_txt_array = array();
 //echo '<pre>';print_r($_REQUEST);echo "<pre>";exit;
 
     foreach($_REQUEST['txtUnitName'] AS $key=>$val)
@@ -174,8 +178,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     {
                         $option = new ResiProjectOptions();
                         $option->project_id = $projectId;
-                        $option->measure = "sq ft";
-                        $option->created_date = date("Y-m-d");
                         $action = "insert";
                     }
                     else
@@ -186,56 +188,101 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         $option = ResiProjectOptions::find($option_id);
                         $action = "update";
                     }
-                    $option->unit_type = $unitType;
-                    $option->unit_name = $txtUnitName;
+                    $option->option_type = $unitType;
+                    $option->option_name = $txtUnitName;
                     $option->size = $txtSize;
-                    $option->carpet_area_info = $txtCarpetAreaInfo;
-                    $option->price_per_unit_area = $txtPricePerUnitArea;
-                    $option->price_per_unit_area_dp = (int)$txtPricePerUnitAreaDp;
-                    $option->status = $status;
+//                    $option->carpet_area_info = $txtCarpetAreaInfo;
+//                    $option->price_per_unit_area = $txtPricePerUnitArea;
+//                    $option->price_per_unit_area_dp = (int)$txtPricePerUnitAreaDp;
+//                    $option->status = $status;
                     $option->bedrooms = (int)$bed;
                     $option->bathrooms = (int)$bathrooms;
-                    $option->price_per_unit_high = $txtPricePerUnitHigh;
-                    $option->price_per_unit_low = $txtPricePerUnitLow;
-                    $option->no_of_floors = $txtNoOfFloor;
+//                    $option->price_per_unit_high = $txtPricePerUnitHigh;
+//                    $option->price_per_unit_low = $txtPricePerUnitLow;
+//                    $option->no_of_floors = $txtNoOfFloor;
                     $option->villa_plot_area = (int)$txtVillaPlotArea;
                     $option->villa_no_floors = (int)$txtVillaFloors;
                     $option->villa_terrace_area = (int)$txtVillaTerraceArea;
                     $option->villa_garden_area = (int)$txtVillaGardenArea;
-                    $option->total_plot_area = (int)$txtPlotArea;
+//                    $option->total_plot_area = (int)$txtPlotArea;
                     $option->balcony = (int)$Balconys;
                     $option->study_room = (int)$studyrooms;
                     $option->servant_room = (int)$servantrooms;
                     $option->pooja_room = (int)$poojarooms;
                     $option->length_of_plot = (int)$txtSizeLen;
                     $option->breadth_of_plot = (int)$txtSizeBre;
-                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
-                    $result = $option->save();
-                    if($result){
-                        audit_insert($option->options_id,$action,'resi_project_options',$option->project_id);
-                        $flg_edit = 1;
-                    }
+                    $option->updated_by = $_SESSION["adminId"];
+                    $option->display_carpet_area = $txtCarpetAreaInfo;
+//                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
+					
+					$optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;
+					
+					if(in_array($optionTxt,$option_txt_array)){
+						$ErrorMsg1 = 'Duplicate Option!';
+					}else{
+					  $option_txt_array[] = $optionTxt;
+					  $result = $option->save();
+                      if ($action == 'insert') {
+                        $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
+                        $listing = new Listings();
+                        $listing->option_id = $option->options_id;
+                        $listing->phase_id = $phases[0]->phase_id;
+                        $listing->listing_category = 'Primary';
+                        $listing->status = 'Active';
+                        $listing->updated_at = date('Y-m-d H:i:s');
+                        $listing->updated_by = $_SESSION['adminId'];
+                        $listing->created_at = date('Y-m-d H:i:s');
+                        $listing->save();
+                      }
+						
+					}
+                    
                 }
                 else
                 {
-                    /**********code for deletion options*************/
-                    $qryDel = "DELETE FROM ".RESI_PROJECT_OPTIONS." 
+					$list_option_id = $_REQUEST['typeid_edit'][$key]; 
+					
+					//print $list_option_id; die;
+					
+					############## Transaction Start##############
+					ResiProject::transaction(function(){
+						
+						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1;
+																	
+						$list_id = mysql_fetch_object(mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and rpp.phase_type = 'Logical'"));
+																							
+						 $qryDel_list = "DELETE FROM ".LISTINGS." 
                     WHERE
-                        OPTIONS_ID = '".$_REQUEST['typeid_edit'][$key]."'
+                        ID = '".$list_id->id."'";
+                    
+                    $resDel_list = mysql_query($qryDel_list);
+                                                  
+						$qryDel = "DELETE FROM ".RESI_PROJECT_OPTIONS." 
+                    WHERE
+                        OPTIONS_ID = '".$list_option_id."'
                     AND
                         PROJECT_ID = '".$projectId."'";
-                    $resDel	= mysql_query($qryDel) or die(mysql_error()." error in deletion");
-                    $flg_delete = 1;
+						$resDel	= mysql_query($qryDel);
+						$flg_delete = 1;
+						if(!$resDel){
+							$ErrorMsg1 = 'Could not delete!';
+						}
+								
+					});					
+					############## Transaction End ##############
                 }
             }  
 
         }
     }
 
-    if(($flgins == 0) && (count($_REQUEST['bed']) == 15))
+    //if(($flgins == 0) && (count($_REQUEST['bed']) == 15))
+    if($flgins == 0)
     {
         $ErrorMsg1 = 'Please select atleast one unit name';
     }
+    
+    
 
     if(!is_array($ErrorMsg) && $ErrorMsg1 == '')
     {
@@ -272,12 +319,13 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         /**********************Query for select values according project type for update**********************/
     	
         $ProjectType = ProjectType($projectId);
+        
         //echo "<pre>";
-        //print_r($arrProjectType_P);
+        //($arrProjectType_V);
         //echo "</pre>";
         $smarty->assign("edit_project", $projectId);
         $smarty->assign("TYPE_ID", $arrProjectType['OPTIONS_ID']);
-        $smarty->assign("txtUnitNameval", $arrProjectType['UNIT_NAME']);
+        $smarty->assign("txtUnitNameval", $arrProjectType['OPTION_NAME']);
         $smarty->assign("txtSizeval", $arrProjectType['SIZE']);
         $smarty->assign("txtCarpetAreaInfo", $arrProjectType['CARPET_AREA_INFO']);
         $smarty->assign("txtPricePerUnitAreaval", $arrProjectType['PRICE_PER_UNIT_AREA']);
@@ -296,23 +344,24 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("poojaroomsval",$arrProjectType['POOJA_ROOM']);
         $smarty->assign("statusval",$arrProjectType['STATUS']);
         $smarty->assign("txtNoOfFloor",$arrProjectType['NO_OF_FLOORS']);
+        $smarty->assign("txtDisplayCarpetArea",$arrProjectType['DISPLAY_CARPET_AREA']);
 
-        //echo "<pre>";print_r($arrProjectType_P);
+        //echo "<pre>";print_r($arrProjectType_P); die;
 
         $smarty->assign("TYPE_ID_P", $arrProjectType_P['OPTIONS_ID']);
         $smarty->assign("unitType_P", $arrProjectType_P['UNIT_TYPE']);
-        $smarty->assign("txtUnitNameval_P", $arrProjectType_P['UNIT_NAME']);
+        $smarty->assign("txtUnitNameval_P", $arrProjectType_P['OPTION_NAME']);
         $smarty->assign("txtSizeval_P", $arrProjectType_P['SIZE']);
         $smarty->assign("txtPricePerUnitAreaval_P", $arrProjectType_P['PRICE_PER_UNIT_AREA']);
-        $smarty->assign("txtPlotArea_P", $arrProjectType_P['TOTAL_PLOT_AREA']);
+        $smarty->assign("txtPlotArea_P", $arrProjectType_P['SIZE']);
         $smarty->assign("txtSizeLenval_P", $arrProjectType_P['LENGTH_OF_PLOT']);
         $smarty->assign("txtSizeBreval_P", $arrProjectType_P['BREADTH_OF_PLOT']);
         $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);
-
+ //echo "<pre>";print_r($arrProjectType_VA); die;
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
-        $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['UNIT_NAME']);
+        $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['OPTION_NAME']);
         $smarty->assign("txtSizeval_VA", $arrProjectType_VA['SIZE']);
-        $smarty->assign("txtCarpetAreaInfo_VA", $arrProjectType_VA['CARPET_AREA_INFO']);
+        $smarty->assign("txtCarpetAreaInfo_VA", $arrProjectType_VA['DISPLAY_CARPET_AREA']);
         $smarty->assign("txtPricePerUnitAreaval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPricePerUnitAreaDpval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP']);
         $smarty->assign("txtPricePerUnitHighval_VA", $arrProjectType_VA['PRICE_PER_UNIT_HIGH']);
@@ -333,7 +382,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 
         /***************query for project name display if edit********************/
     }
-
+//print "<pre>--".print_r($ErrorMsg,1); die;
     $smarty->assign("ErrorMsg", $ErrorMsg);
     $smarty->assign("ErrorMsg1", $ErrorMsg1);
     $smarty->assign("projecteror", $projecteror);

@@ -29,7 +29,9 @@ if($deleteloc != '')
     $res = mysql_query($qry) or die(mysql_error());
     if($res)
     {
-        $selqry = "SELECT LOCALITY_ID,LABEL FROM ".LOCALITY." WHERE CITY_ID = '".$deletect."' AND SUBURB_ID = '".$deletesub."'  ORDER BY LABEL";
+        $selqry = "SELECT l.LOCALITY_ID,l.LABEL FROM ".LOCALITY." l
+            inner join suburb s on l.suburb_id = s.suburb_id
+            WHERE s.CITY_ID = '".$deletect."' AND l.SUBURB_ID = '".$deletesub."'  ORDER BY l.LABEL";
         $ressel = mysql_query($selqry);
         ?>
         <select name="localityId" id = "localityId" class="localityId" onchange="displocality(this.value,1);" STYLE="width: 150px">
@@ -65,37 +67,41 @@ else
             $c = mysql_affected_rows();
 	}
 
-	$seldata = "SELECT LABEL FROM ".LOCALITY." WHERE LABEL = '".$localityval."' AND CITY_ID='".$cityid."'";
+        $seldata = "SELECT l.LABEL FROM ".LOCALITY." l
+            inner join suburb s on l.suburb_id = s.suburb_id
+            WHERE s.CITY_ID = '".$deletect."' AND l.LABEL = '".$localityval."'";
 	$resdata = mysql_query($seldata);
 	$ins = mysql_num_rows($resdata);
 
 	if($c==0 && $ins==0)
 	{	
-		$qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,SUBURB_ID,ACTIVE,URL) value('".$localityval."','".$cityid."','".$subcityval."','1', '$url')";
-		$res = mysql_query($qry);
-		$ctid = mysql_insert_id();
-		$sel_id = $ctid;
+            $qry = "INSERT INTO ".LOCALITY." (LABEL,SUBURB_ID,status,updated_by)
+                value('".$localityval."','".$subcityval."','Active','".$_SESSION['adminId']."')";
+            $res = mysql_query($qry);
+            $locId = mysql_insert_id();
+            $sel_id = $ctid;
 
-        $url = createLocalityURL($localityval, $dataCity['LABEL'], $ctid, 'locality');
-        
-        $qry = "UPDATE ".LOCALITY." SET URL = '".addslashes($url)."' WHERE LOCALITY_ID=".$ctid;
-        $res = mysql_query($qry);
+        $url = createLocalityURL($localityval, $dataCity['LABEL'], $locId, 'locality');
+        $qry = "UPDATE ".LOCALITY." SET URL = '$url',updated_by = '".$_SESSION['adminId']."'
+            WHERE LOCALITY_ID=".$locId;
+        $res = mysql_query($qry) or die(mysql_error());
 	}
 
-
-	$selqry = "SELECT LOCALITY_ID,LABEL FROM ".LOCALITY." WHERE CITY_ID='".$cityid."' AND  SUBURB_ID='".$subcityval."' ORDER BY LABEL";
-	$ressel = mysql_query($selqry);
+	$selqry = "SELECT l.LABEL,l.locality_id FROM ".LOCALITY." l
+            inner join suburb s on l.suburb_id = s.suburb_id
+            WHERE s.CITY_ID = '".$cityid."' AND l.suburb_id = '".$subcityval."' ORDER BY LABEL";
+        $ressel = mysql_query($selqry);
 	?>
 	<select name="localityId" id = "localityId" class="localityId" onchange="displocality(this.value,1);" STYLE="width: 150px">
 	<option value =''>Select Locality</option>
 	<?php
-		while($data	=	mysql_fetch_array($ressel))
-		{
-		?>
-		<option  value ='<?php echo $data['LOCALITY_ID']; ?>' <?php if( $data['LOCALITY_ID'] == $sel_id ) echo "selected='selected'"; ?>><?php echo $data['LABEL']; ?></option>
-		<?php
-		}
-		?>
+            while($data = mysql_fetch_array($ressel))
+            {
+            ?>
+            <option  value ='<?php echo $data['LOCALITY_ID']; ?>' <?php if( $data['LOCALITY_ID'] == $sel_id ) echo "selected='selected'"; ?>><?php echo $data['LABEL']; ?></option>
+            <?php
+            }
+            ?>
 	</select>
 <?php
 }

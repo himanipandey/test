@@ -74,7 +74,7 @@
 				  <td width="30%" align="left" >
 				   <input type=text name="email" id ="email" rows="10" cols="45" value ="{$email}" style="width:357px;">
                                   </td>
-                                   <td width="50%" align="left" ></td>
+                                   {if $ErrorMsg["email"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["email"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
                                 <tr>
 				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Head Quater :</td>
@@ -158,13 +158,13 @@
 <script type="text/javascript">
     function addMoreProject(ct) {
 
-        for(i=1;i<=ct;i++)
+        for(i=1;i<=99;i++)
         {
          document.getElementById('addId_'+i).style.display='none';
         }	
         for(i=1;i<=ct;i++)
         {
-         document.getElementById('addId_'+i).style.display='';
+         document.getElementById('addId_'+i).style.display='block';
         }		
     }
     function isNumberKey(evt){

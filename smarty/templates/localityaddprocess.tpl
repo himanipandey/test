@@ -51,20 +51,21 @@
                   </td>{if $ErrorMsg["txtMetaDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaDescription"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetades"></td>{/if}
 				</tr>									
 				<tr>
-				  <td width="20%" align="right" valign = top >*Description  : </td>
+				  <td width="20%" align="right" valign = top >Description  : </td>
 				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea></td>
 				</tr>
 				<tr>
 				  <td width="20%" align="right">*Status  : </td>
 				  <td width="30%" align="left" >
 				    <select name = "status" id="status" style="width:150px;"> 
-					  <option {if $status == '0'} value = "0" selected = 'selected' {else} value = "0" {/if}>Inactive</option>					<option {if $status == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>Active</option>		
+					  <option  value = "Active" {if $status == 'Active'}selected{/if}>Active</option>
+                                          <option  value = "Inactive" {if $status == 'Inactive'}selected{/if}>Inactive</option>		
 					 </select>
 				 </td>				   
 				 <td width="50%" align="left"></td>
 				</tr>
-                                
-				<tr>
+                                         
+				<!--<tr>
 				  <td width="20%" align="right">Visible In CMS :</td>
 				  <td width="30%" align="left" >
                                   {if $specialAccess == 1}
@@ -79,7 +80,7 @@
                                   {/if}
 				 </td>				   
 				 <td width="50%" align="left"></td>
-				</tr>
+				</tr>-->
                                 {if $localityCleanedAccess == 1}
                                 <tr>
 				  <td width="20%" align="right">Locality Cleaned  : </td>
@@ -88,6 +89,7 @@
 				 </td>				   
 				 <td width="50%" align="left">&nbsp;</td>
 				</tr>
+                                   
                                 <tr class="latLong">
                                   <td width="20%" align="right">Max Latitude  : </td>
                                   <td width="30%" align="left" >
@@ -124,6 +126,7 @@
                                  <td width="50%" align="left">&nbsp;</td>
                                 </tr>
                                 {/if}
+                                
                                 <tr class="save_row">
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
@@ -213,6 +216,7 @@ jQuery(document).ready(function(){
 	});
 
 });
+
 
 function cleanedLocality(localityId) {
 

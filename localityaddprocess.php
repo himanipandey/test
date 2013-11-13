@@ -56,22 +56,26 @@
 
                        $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $localityid, 'locality');
 
-                       if( $txtMetaTitle == '')   {
+                       if( trim($txtMetaTitle) == '')   {
                             $ErrorMsg["txtMetaTitle"] = "Please enter meta title.";
                        }
 
-                    if( $txtMetaKeywords == '')  {
+                    if( trim($txtMetaKeywords) == '')  {
                              $ErrorMsg["txtMetaKeywords"] = "Please enter meta keywords.";
                        }
-                    if( $txtMetaDescription == '')  {
+                    if( trim($txtMetaDescription) == '')  {
                              $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
                        }
+                        
                     /*******locality url already exists**********/
                         $locURL = "";
                         if($localityid != ''){
                             $locURL = " and LOCALITY_ID!=".$localityid;    
                         }
-                        $qryLocality = "SELECT * FROM ".LOCALITY." WHERE LABEL = '".$txtCityName."' and city_id=".$cityId.$locURL;         
+                        $qryLocality = "SELECT l.* FROM ".LOCALITY." l inner join suburb s
+                             on l.suburb_id = s.suburb_id
+                            WHERE l.LABEL = '".$txtCityName."' 
+                            and s.city_id=".$cityId.$locURL;         
                         $res     = mysql_query($qryLocality) or die(mysql_error());
                         if(mysql_num_rows($res)>0){
                             $ErrorMsg["txtCityName"] = "This Locality Already exists";
@@ -81,28 +85,34 @@
 
                        if(!is_array($ErrorMsg))
                        {
-                           $qryCity = "SELECT C.LABEL FROM locality L join city C on (C.city_id = L.city_id) where L.locality_id = $localityid";
+                           $qryCity = "SELECT C.LABEL FROM locality L 
+                               inner join suburb s on l.suburb_id = s.suburb_id
+                               inner join city C on (C.city_id = s.city_id) 
+                               where L.locality_id = $localityid";
                            $resCity = mysql_query($qryCity);
                            $dataCity = mysql_fetch_assoc($resCity);
                            mysql_free_result($resCity);
                            $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $localityid, 'locality');
 
-                                     $updateQry = "UPDATE ".LOCALITY." SET 
+                              $updateQry = "UPDATE ".LOCALITY." SET 
 
                                               LABEL		=	'".$txtCityName."',
-                                              META_TITLE	=	'".$txtMetaTitle."',		
-                                              META_KEYWORDS	=	'".$txtMetaKeywords."',
-                                              META_DESCRIPTION	=	'".$txtMetaDescription."',
-                                              ACTIVE		=	'".$status."',
+                                              STATUS		=	'".$status."',
                                               URL		=	'".$txtCityUrl."',
-                                              DESCRIPTION	=	'".$desc."',
-                                              VISIBLE_IN_CMS    = '".$visibleInCms."'
+                                              DESCRIPTION	=	'".$desc."'
                                          WHERE
                                             LOCALITY_ID='".$localityid."'";
 
                                     $up = mysql_query($updateQry);
                                     if($up)
                                     {
+                                        $seoData['meta_title'] = $txtMetaTitle;
+                                        $seoData['meta_keywords'] = $txtMetaKeywords;
+                                        $seoData['meta_description'] = $txtMetaDescription;
+                                        $seoData['table_id'] = $localityid;
+                                        $seoData['table_name'] = 'locality';
+                                        $seoData['updated_by'] = $_SESSION['adminId'];
+                                        SeoData::insetUpdateSeoData($seoData);
                                         if ( $txtCityName != trim( $localityDetailsArray['LABEL'] ) ) {
                                             //  locality name modified
                                             addToNameChangeLog( 'locality', $localityid, $localityDetailsArray['LABEL'], $txtCityName );
@@ -122,13 +132,13 @@
     elseif($localityid!=''){
 
             $localityDetailsArray =   ViewLocalityDetails($localityid);
+            $getSeoData           =   SeoData::getSeoData($localityid, 'locality');
             $txtCityName	  =	trim($localityDetailsArray['LABEL']);
-            $txtMetaTitle	  =	trim($localityDetailsArray['META_TITLE']);
-            $txtMetaKeywords	  =	trim($localityDetailsArray['META_KEYWORDS']);
-            $txtMetaDescription	  =	trim($localityDetailsArray['META_DESCRIPTION']);
-            $status		  =	trim($localityDetailsArray['ACTIVE']);
+            $txtMetaTitle	  =	$getSeoData[0]->meta_title;
+            $txtMetaKeywords	  =	$getSeoData[0]->meta_keywords;
+            $txtMetaDescription	  =	$getSeoData[0]->meta_description;
+            $status		  =	trim($localityDetailsArray['status']);
             $desc		  =	trim($localityDetailsArray['DESCRIPTION']);
-            $visibleInCms	  =	trim($localityDetailsArray['VISIBLE_IN_CMS']);
             
             $maxLatitude	  =	trim($localityDetailsArray['MAX_LATITUDE']);
             if($maxLatitude == '')
@@ -142,7 +152,6 @@
             $minLongitude	  =	trim($localityDetailsArray['MIN_LONGITUDE']);
             if($minLongitude == '')
                 $minLongitude = 'No Entry';
-            $localityCleaned	  =	trim($localityDetailsArray['LOCALITY_CLEANED']);
 
             $smarty->assign("txtCityName", $txtCityName);
             $smarty->assign("txtMetaTitle", $txtMetaTitle);
@@ -150,7 +159,6 @@
             $smarty->assign("txtMetaDescription", $txtMetaDescription);
             $smarty->assign("status", $status);	
             $smarty->assign("desc", $desc);
-            $smarty->assign("visibleInCms", $visibleInCms);
             $smarty->assign("maxLatitude", $maxLatitude);
             $smarty->assign("minLatitude", $minLatitude);
             $smarty->assign("maxLongitude", $maxLongitude);	

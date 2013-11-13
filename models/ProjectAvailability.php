@@ -1,7 +1,8 @@
 <?php
 
-class ProjectAvailability extends ActiveRecord\Model {
-    
+use ActiveRecord\Model;
+
+class ProjectAvailability extends Model {
     function deleteAvailabilityForPhase($projectId, $phaseId){
         $allAvailability = self::findAvailabilityForPhase($projectId, $phaseId);
         $ids = array();
@@ -12,12 +13,12 @@ class ProjectAvailability extends ActiveRecord\Model {
     }
     
     function findAvailabilityForPhase($projectId, $phaseId){
-        $sql = "select ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.project_type, pa.* from " . self::table_name() . " pa INNER JOIN project_supplies ps on ps.ID = pa.project_supply_id where ps.project_id = '$projectId' and ps.phase_id = '$phaseId'";
+        $sql = "select ps.project_id, ps.phase_id, ps.no_of_bedroom, ps.project_type, pa.* from " . self::table_name() . " pa INNER JOIN project_supplies ps on (ps.ID = pa.project_supply_id and ps.version = 'Cms') where ps.project_id = '$projectId' and ps.phase_id = '$phaseId'";
         return self::find_by_sql($sql);
     }
     
     function getProjectEditHistoryBeforeDate($projectId, $date){
-        $sql = "select max(tpa.id) id from " . ProjectSupply::table_name() . " ps inner join " . self::table_name() . " pa on ps.id = pa.project_supply_id inner join _t_" . self::table_name() . " tpa on pa.id=tpa.id where ps.project_id = $projectId";
+        $sql = "select max(tpa.id) id from " . ProjectSupply::table_name() . " ps inner join " . self::table_name() . " pa on (ps.id = pa.project_supply_id and ps.version = 'Cms') inner join _t_" . self::table_name() . " tpa on pa.id=tpa.id where ps.project_id = $projectId";
         if(!empty($date))$sql .= " and tpa._t_transaction_date < '$date'";
         $sql .= " group by ps.id";
         $res = self::find_by_sql($sql);
@@ -27,7 +28,7 @@ class ProjectAvailability extends ActiveRecord\Model {
         }
         $result = array();
         if(!empty($ids)){
-            $sql = "select tpa._t_transaction_id, ps.id, ps.phase_id, ps.no_of_bedroom, ps.supply, pa.availability, rpp.PHASE_NAME from " . ProjectSupply::table_name() . " ps left join " . ResiProjectPhase::table_name() ." rpp on ps.phase_id = rpp.PHASE_ID inner join " . self::table_name() . " pa on ps.id = pa.project_supply_id inner join _t_" . self::table_name() . " tpa on pa.id=tpa.id where tpa.id in (" . implode(',', $ids) . ") group by ps.id";
+            $sql = "select tpa._t_transaction_id, ps.id, ps.phase_id, ps.no_of_bedroom, ps.supply, pa.availability, rpp.PHASE_NAME from " . ProjectSupply::table_name() . " ps left join " . ResiProjectPhase::table_name() ." rpp on (ps.phase_id = rpp.PHASE_ID and rpp.version = 'Cms') inner join " . self::table_name() . " pa on (ps.id = pa.project_supply_id and ps.version = 'Cms') inner join _t_" . self::table_name() . " tpa on pa.id=tpa.id where tpa.id in (" . implode(',', $ids) . ") group by ps.id";
             $res = self::find_by_sql($sql);
             foreach ($res as $r) {
                 $result[] = array(

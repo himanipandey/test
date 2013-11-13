@@ -4,6 +4,7 @@ ini_set('display_errors','1');
 include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
+include("modelsConfig.php");
 include("includes/configs/configs.php");
 include("builder_function.php");
 include("function/functions_priority.php");
@@ -57,6 +58,10 @@ jQuery(document).ready(function(){
                }
                if(msg == 2){
                    alert("Error Wrong ProjectId selected");
+                   return false;
+               }
+               if(msg == 4){
+                   alert("Please enter valid Priority. Priority should be numeric and between 0 to 16.");
                    return false;
                }
             }

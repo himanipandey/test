@@ -12,7 +12,7 @@
 	include("builder_function.php");
 	AdminAuthentication();
 	
-	if($_POST['label_txtbox']!='' && $_POST['submit']=='Save'){
+	if(!empty($_POST['label_txtbox']) && trim($_POST['label_txtbox']) !='' && $_POST['submit']=='Save'){
 		echo $QueryMember = "INSERT INTO updation_cycle (TIME_STAMP, LABEL, CYCLE_TYPE) values (now(), '".$_POST['label_txtbox']."', '".$_POST['cycleType']."')";
 		$QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
 		header("location:AddQuickLabel.php?m=1");
@@ -62,7 +62,7 @@ return xmlHttp;
 <script>
 function addlabel()
 {
-	label = $("#label_txtbox").val();
+	label = $.trim($("#label_txtbox").val());
 	if(label == '')
 	{
 		alert("Please enter the label");

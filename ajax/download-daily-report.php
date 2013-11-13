@@ -28,43 +28,51 @@
         $and = ' WHERE ';
         if($fromdate!='')
         {
-            $quryand .= $and." DATE(DATE_TIME)>='".$fromdate."'";
+            $quryand .= $and." DATE(A.DATE_TIME)>='".$fromdate."'";
             $and = ' AND ';
         }
 
         if($todate!='')
         {
-            $quryand .= $and." DATE(DATE_TIME)<='".$todate."'";
+            $quryand .= $and." DATE(A.DATE_TIME)<='".$todate."'";
             $and = ' AND ';
         }
 
         if($_REQUEST['user']!='')
         {
-            $quryand .= $and." ADMIN_ID='".$_REQUEST['user']."'";
+            $quryand .= $and." A.ADMIN_ID='".$_REQUEST['user']."'";
             $and = ' AND ';
         }
         
         if($_REQUEST['team']!='')
         {
-            $quryand .= $and." DEPARTMENT='".$_REQUEST['team']."'";
+            $quryand .= $and." B.DEPARTMENT='".$_REQUEST['team']."'";
             $and = ' AND ';
         }
 
         if($todate == '' && $fromdate == '')
         {
-            $quryand .= $and." DATE(DATE_TIME)>='".$fromdate."' AND DATE(DATE_TIME)<='".$todate."'";
+            $quryand .= $and." DATE(A.DATE_TIME)>='".$fromdate."' AND DATE(A.DATE_TIME)<='".$todate."'";
             $and = ' AND ';
         }
+        $quryand .= $and."C.version = 'cms'";
         #---------------------------------------
         $qry = "SELECT
-                    A.PROJECT_ID,C.PROJECT_NAME,A.PROJECT_PHASE,A.PROJECT_STAGE,B.FNAME,B.DEPARTMENT,C.PROJECT_STATUS,C.BOOKING_STATUS,A.DATE_TIME DT,D.LABEL AS CITY_NAME
+                    A.PROJECT_ID,C.PROJECT_NAME,ph.name as PROJECT_PHASE,st.name as PROJECT_STAGE,
+                    B.FNAME,B.DEPARTMENT,psm.project_status as PROJECT_STATUS,A.DATE_TIME DT,D.LABEL AS CITY_NAME
                 FROM
                     project_stage_history A 
                     LEFT JOIN proptiger_admin B ON A.ADMIN_ID=B.ADMINID
                     LEFT JOIN resi_project C ON A.PROJECT_ID=C.PROJECT_ID
-                    LEFT JOIN city D ON D.CITY_ID=C.CITY_ID 
+                    inner join locality lo on C.LOCALITY_ID = lo.LOCALITY_ID
+                    inner join ".SUBURB." sub on lo.SUBURB_ID = sub.SUBURB_ID
+                    inner join city D ON D.CITY_ID=sub.CITY_ID 
+                    inner join master_project_phases ph ON C.project_phase_id=ph.id
+                    inner join master_project_stages st ON C.project_stage_id=st.id
+                    inner join project_status_master psm on C.project_status_id = psm.id
                     ".$quryand."
-                ORDER BY DATE_TIME ";
+                ORDER BY A.DATE_TIME ";
+                      
         $allData = ResiProject::find_by_sql($qry);
 
         foreach( $allData as $data ) {
@@ -78,14 +86,12 @@
             $projectName = $data->project_name;
 
             $projectStatus = $data->project_status;
-            $bookingStatus = $data->booking_status;
 
             $cityName = $data->city_name;
 
             $arr[] = array(
                         'PROJECT_ID'=>$projectId,
                         'PROJECT_NAME'=>$projectName,
-                        'BOOKING_STATUS'=>$bookingStatus,
                         'PROJECT_STATUS'=>$projectStatus,
                         'FNAME'=> $fname,
                         'DEPARTMENT'=> $team,
@@ -107,7 +113,6 @@
     <td>USER</td>
     <td>PROJECT ID</td>
     <td>PROJECT NAME</td>
-    <td>BOOKING STATUS</td>
     <td>PROJECT STATUS</td>
     <td>PHASE</td>
     <td>STAGE</td>
@@ -124,8 +129,6 @@
         $stage = $ob1['PROJECT_STAGE'];
         $projid = $ob1['PROJECT_ID'];
         $projname = $ob1['PROJECT_NAME'];
-
-        $bookingStatus = $ob1['BOOKING_STATUS'];
         $projectStatus = $ob1['PROJECT_STATUS'];
 
         $cityName = $ob1['CITY_NAME'];
@@ -138,7 +141,6 @@
         <td>".$ex."</td>
         <td>".$projid."</td>
         <td>".$projname."</td>
-        <td>".$bookingStatus."</td>
         <td>".$projectStatus."</td>
         <td>".$phase."</td>
         <td>".$stage."</td>	

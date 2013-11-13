@@ -108,36 +108,35 @@
                                                                 <input type=checkbox onclick="selectAllCheckBoxes('assign[]', this.checked);">
                                                             </th>
                                                             
-                                                            <th style="font-size: 12px">PID</td>
-                                                            <th style="font-size: 12px">Project Name</th>
-                                                            <th style="font-size: 12px">Builder Name</th>
-                                                            <th style="font-size: 12px">City</th>
-                                                            <th style="font-size: 12px">Locality</th>
-                                                            <th style="font-size: 12px">Booking Status</th>
-                                                            <th style="font-size: 12px">Project Status</th>
-                                                            <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px">Label</th>
-                                                            <th style="font-size: 12px">Project Phase</th>
-                                                            <th style="font-size: 12px">Project Stage</th>
-                                                            <th style="font-size: 12px">Last AuditDate</th>
-                                                            <th style="font-size: 12px">Last Worked At</th>
-                                                            <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px">Assignment Type</th>
-                                                            <th style="font-size: 12px">1st Assigned To</th>
-                                                            <th style="font-size: 12px">Assigned On</th>
-                                                            <th style="font-size: 12px">Status</th>
-                                                            <th style="font-size: 12px">Remark</th>
-                                                            <th style="font-size: 12px">2nd Assignment</th>
-                                                            <th style="font-size: 12px">Assigned On</th>
-                                                            <th style="font-size: 12px">Status</th>
-                                                            <th style="font-size: 12px">Remark</th>
-                                                            <th style="font-size: 12px">3rd Assignment</th>
-                                                            <th style="font-size: 12px">Assigned On</th>
-                                                            <th style="font-size: 12px">Status</th>
-                                                            <th style="font-size: 12px">Remark</th>
-                                                            <th style="font-size: 12px">Last Assignment</th>
-                                                            <th style="font-size: 12px">Assigned On</th>
-                                                            <th style="font-size: 12px">Status</th>
-                                                            <th style="font-size: 12px">Remark</th>
-
+                                                            <th style="font-size: 12px" nowrap>PID</td>
+                                                            <th style="font-size: 12px" nowrap>Project Name</th>
+                                                            <th style="font-size: 12px" nowrap>Builder Name</th>
+                                                            <th style="font-size: 12px" nowrap>City</th>
+                                                            <th style="font-size: 12px" nowrap>Locality</th>
+                                                            <th style="font-size: 12px" nowrap>Project Status</th>
+                                                            <th style="font-size: 12px" nowrap>Booking Status</th>
+                                                            <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px" nowrap>Label</th>
+                                                            <th style="font-size: 12px" nowrap>Project Phase</th>
+                                                            <th style="font-size: 12px" nowrap>Project Stage</th>
+                                                            <th style="font-size: 12px" nowrap>Last AuditDate</th>
+                                                            <th style="font-size: 12px" nowrap>Last Worked At</th>
+                                                            <th class="filter-select filter-exact" data-placeholder="Pick One" style="font-size: 12px" nowrap>Assignment Type</th>
+                                                            <th style="font-size: 12px" nowrap>1st Assigned To</th>
+                                                            <th style="font-size: 12px" nowrap>Assigned On</th>
+                                                            <th style="font-size: 12px" nowrap>Status</th>
+                                                            <th style="font-size: 12px" nowrap>Remark</th>
+                                                            <th style="font-size: 12px" nowrap>2nd Assignment</th>
+                                                            <th style="font-size: 12px" nowrap>Assigned On</th>
+                                                            <th style="font-size: 12px" nowrap>Status</th>
+                                                            <th style="font-size: 12px" nowrap>Remark</th>
+                                                            <th style="font-size: 12px" nowrap>3rd Assignment</th>
+                                                            <th style="font-size: 12px" nowrap>Assigned On</th>
+                                                            <th style="font-size: 12px" nowrap>Status</th>
+                                                            <th style="font-size: 12px" nowrap>Remark</th>
+                                                            <th style="font-size: 12px" nowrap>Last Assignment</th>
+                                                            <th style="font-size: 12px" nowrap>Assigned On</th>
+                                                            <th style="font-size: 12px" nowrap>Status</th>
+                                                            <th style="font-size: 12px" nowrap>Remark</th>
                                                         </tr>
                                                     </thead>
                                                     <tfoot>
@@ -168,9 +167,9 @@
                                                             <td>{$item['PROJECT_NAME']}</td>
                                                             <td>{$item['BUILDER_NAME']}</td>
                                                             <td>{$item['CITY']}</td>
-                                                            <td>{$item['LOCALITY']}</td>
-                                                            <td>{$item['BOOKING_STATUS']}</td>
+                                                            <td nowrap>{$item['LOCALITY']}</td>
                                                             <td>{$item['PROJECT_STATUS']}</td>
+                                                            <td>{$item['BOOKING_STATUS']}</td>
                                                             <td>{$item['LABEL']}</td>
                                                             <td>{$item['PROJECT_PHASE']}</td>
                                                             <td>{$item['PROJECT_STAGE']}</td>
@@ -278,7 +277,7 @@ function updateSuburbDropdown(cityId, suburbSelectboxId)
 		cache: false,
 		success: function(html)
 		{
-			$("."+suburbSelectboxId).html('<option value="">All</option>'+html);
+                    $("."+suburbSelectboxId).html('<option value="">All</option>'+html);
 		}
 	});
 }

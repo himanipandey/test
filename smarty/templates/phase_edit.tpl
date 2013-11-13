@@ -187,7 +187,6 @@
                                         <td width="30%" align="left">
                                             <select id="phaseSelect" name="phaseSelect" onchange="change_phase();">
                                                 <option value="-1">Select Phase</option>
-                                                <option value="0">No Phase</option>
                                                 {foreach $phases as $p}
                                                     <option value="{$p.id}">{$p.name}</option>
                                                 {/foreach}
@@ -198,17 +197,29 @@
 
 
                                     {if isset($phaseId) and $phaseId != -1}
-                                        {if $phaseId != '0'}
                                             <tr>
                                                 <td width="20%" align="right"><font color ="red">*</font><b>Phase Name :</b> </td>
                                                 <td width="30%" align="left">
-                                                    <input id="phaseName" name="phaseName" value="{$phasename}" />
+                                                    <input id="phaseName" name="phaseName" value="{$phasename}" {if $phaseObject.PHASE_TYPE == 'Logical'} readonly {/if} />
                                                 </td>
                                                 <td width="50%" align="left">
                                                     <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
                                                 </td>
                                             </tr>
+                                             <tr>
+                                                <td width="20%" align="right"><b>Booking Status :</b> </td>
+                                                <td width="30%" align="left">
+                                                    <select id="bookingStatus" name="bookingStatus">
+                                                        <option value="-1">Select Status</option>
+                                                        {foreach $bookingStatuses as $b}
+                                                            <option value="{$b->id}" {if $b->id == $bookingStatus}selected="selected" {/if}>{$b->display_name}</option>
+                                                        {/foreach}
+                                                    </select>
+                                                </td>
+                                                <td width="50%" align="left"></td>
+                                            </tr>
 
+                                         {if $phaseObject.PHASE_TYPE != 'Logical'}
                                             <tr>
                                                 <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
                                                 <td width="30%" align="left">
@@ -243,7 +254,7 @@
                                                                             <select name="options[]" id="options" multiple="multiple" style="width: 236px; height: 210px;" disabled>
                                                                                 <option value="-1" {if count($phase_options) <= 0}selected="selected"{/if}>Select Option</option>
                                                                                 {foreach $options as $option}
-                                                                                    <option {if in_array($option->options_id, $option_ids) && count($phase_options) > 0}selected="selected"{/if} value="{$option->options_id}">{$option->unit_name} - {$option->size} {$option->measure} - {$option->unit_type}</option>
+                                                                                    <option {if in_array($option->options_id, $option_ids) && count($phase_options) > 0}selected="selected"{/if} value="{$option->options_id}">{$option->option_name} - {$option->size} sqft - {$option->option_type}</option>
                                                                                 {/foreach}
                                                                             </select>
                                                                         </td>
@@ -268,8 +279,8 @@
                                                                                                             <input id="flat_bed_{$num}" {if !$isLaunchUnitPhase}readonly="true"{/if} name="flat_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$FlatsQuantity[$num]['launched']}" />
                                                                                                             <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
                                                                                                                 {foreach $OptionsDetails as $option}
-                                                                                                                    {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Apartment' and in_array($option.OPTIONS_ID, $option_ids)}
-                                                                                                                        <option value="{$option.UNIT_NAME}">{$option.UNIT_NAME}</option>
+                                                                                                                    {if $option.BEDROOMS == $num and $option.OPTION_TYPE == 'Apartment' and in_array($option.OPTIONS_ID, $option_ids)}
+                                                                                                                        <option value="{$option.OPTION_NAME}">{$option.OPTION_NAME}</option>
                                                                                                                     {/if}
                                                                                                                 {/foreach}
                                                                                                             </select>
@@ -277,13 +288,13 @@
                                                                                                     {/foreach}
                                                                                                 </ul>
                                                                                             </td>
-                                                                                            {if $phaseId != '0'}
+                                                                                            {if $phaseObject['PHASE_TYPE'] != 'Logical'}
                                                                                                 <td width="50%" align="left">
                                                                                                     <button class="reset_option_and_supply supply_button">Change to options</button>
                                                                                                 </td>
                                                                                             {/if}
                                                                                             </tr>
-                                                                                            {if $phaseId != '0'}
+                                                                                            {if $phaseObject['PHASE_TYPE'] != 'Logical'}
                                                                                                 <tr>
                                                                                                     <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
                                                                                                         <td width="30%" align="left">
@@ -314,8 +325,8 @@
                                                                                                                                             <input id="villa_bed_{$num}" {if !$isLaunchUnitPhase}readonly="true"{/if} name="villa_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$VillasQuantity[$num]['launched']}" />
                                                                                                                                             <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
                                                                                                                                                 {foreach $OptionsDetails as $option}
-                                                                                                                                                    {if $option.BEDROOMS == $num and $option.UNIT_TYPE == 'Villa' and in_array($option.OPTIONS_ID, $option_ids)}
-                                                                                                                                                        <option value="{$option.UNIT_NAME}">{$option.UNIT_NAME}</option>
+                                                                                                                                                    {if $option.BEDROOMS == $num and $option.OPTION_TYPE == 'Villa' and in_array($option.OPTIONS_ID, $option_ids)}
+                                                                                                                                                        <option value="{$option.OPTION_NAME}">{$option.OPTION_NAME}</option>
                                                                                                                                                     {/if}
                                                                                                                                                 {/foreach}
                                                                                                                                             </select>
@@ -361,7 +372,7 @@
                                                                                                                                             <td align="left" style="padding-left:0px;">
                                                                                                                                                 <input type="submit" name="btnSave" id="btnSave" value="Submit" onclick="return validate_phase();" />
 
-                                                                                                                                                {if $specialAccess == 1}
+                                                                                                                                                {if $specialAccess == 1 && $phaseObject.PHASE_TYPE != 'Logical'}
                                                                                                                                                     &nbsp;&nbsp;<input type="submit" name="delete" value="Delete" onclick = "return deletePhase();" />
                                                                                                                                                 {/if}
                                                                                                                                                 &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
@@ -390,14 +401,16 @@
         };
 
         $.each(cals_dict, function(k, v) {
-            Calendar.setup({
-                inputField: v, // id of the input field
-                //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
-                ifFormat: "%Y-%m-%d", // format of the input field
-                button: k, // trigger for the calendar (button ID)
-                align: "Tl", // alignment (defaults to "Bl")
-                singleClick: true,
-                showsTime: true
-            });
+            if ($('#' + k).length > 0) {
+                Calendar.setup({
+                    inputField: v, // id of the input field
+                    //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
+                    ifFormat: "%Y-%m-%d", // format of the input field
+                    button: k, // trigger for the calendar (button ID)
+                    align: "Tl", // alignment (defaults to "Bl")
+                    singleClick: true,
+                    showsTime: true
+                });
+            }
         });
                                                                                                                                         {/if}                                                                                                                            </script>

@@ -1,7 +1,8 @@
 <?php
 
 // Model integration for bank list
-class ResiProjectTowerDetails extends ActiveRecord\Model
+require_once dirname(__FILE__)."/support/objects.php";
+class ResiProjectTowerDetails extends Objects
 {
     static $table_name = 'resi_project_tower_details';
     function update_towers_for_project_and_phase($projectId, $phaseId, $tower_array){

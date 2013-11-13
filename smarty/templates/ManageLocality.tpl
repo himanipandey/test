@@ -68,11 +68,8 @@ function selectCity(value){
                       <TBODY>
                       <TR class = "headingrowcolor">
                         <TD class=whiteTxt width=15% align="center">LOCALITY NAME</TD>
-                        <TD class=whiteTxt width=16% align="center">META TITLE</TD>
-                         <TD class=whiteTxt width=18% align="center">META KEYWORDS</TD>
                          <TD class=whiteTxt width=15% align="center">URL</TD>                          
 			 <TD class=whiteTxt width=10% align="left">STATUS</TD>
-                         <TD class=whiteTxt width=10% align="left">Visible in CMS</TD>
                         <TD class=whiteTxt width=12% align="center">ACTION</TD>
                       </TR>
                       <TR><TD colspan=12 class=td-border>&nbsp;</TD></TR>
@@ -89,15 +86,11 @@ function selectCity(value){
                       <TR {$color}>
 
                         <TD align=left class=td-border>{if $localityDataArr[data].LABEL!=''}{$localityDataArr[data].LABEL}{else}-{/if}</TD>
-                        <TD align=left class=td-border>{if $localityDataArr[data].META_TITLE!=''}{$localityDataArr[data].META_TITLE}{else}-{/if}</TD>
-
-                        <TD align=left class=td-border>{if $localityDataArr[data].META_KEYWORDS!=''}{$localityDataArr[data].META_KEYWORDS}{else}-{/if}</TD>
-
+                       
                         <TD align=left class=td-border>{if $localityDataArr[data].URL!=''}{$localityDataArr[data].URL}{else}-{/if}</TD>
 
-                        <TD align=left class=td-border>{if $localityDataArr[data].ACTIVE!=''}{$statusArray[$localityDataArr[data].ACTIVE]}{else}-{/if}</TD>
-                        <TD align=left class=td-border>{if $localityDataArr[data].VISIBLE_IN_CMS}Yes{else} No{/if}</TD>
-
+                        <TD align=left class=td-border>{if $localityDataArr[data].STATUS!=''}{$localityDataArr[data].STATUS}{else}-{/if}</TD>
+                       
                         <TD  class="td-border" align=left>
                             <a href="localityadd.php?localityid={$localityDataArr[data].LOCALITY_ID}&c={$cityId}" title="Edit">Edit </a>
                          </TD>

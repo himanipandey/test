@@ -7,7 +7,7 @@
 	date_default_timezone_set('Asia/Kolkata');
 	include("builder_function.php"); 
 	AdminAuthentication();	
-	
+	include("modelsConfig.php");
 	include('projectManageProcess.php');
 
 	//$smarty->display(SERVER_PATH."/smarty/templates/admin/crawler/header.tpl");

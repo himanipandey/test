@@ -4,7 +4,6 @@ $accessDataCollection = '';
 if( $dataCollectionFlowAuth == false )
    $accessDataCollection = "No Access";
 $smarty->assign("accessDataCollection",$accessDataCollection);
-
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER'))){
@@ -24,11 +23,10 @@ elseif(isset($_POST['projectIds']) && !empty($_POST['projectIds'])){
     unset($_SESSION['project-status']);
     $_SESSION['project-status']['projectIds'] = $_REQUEST['projectIds'];
 }
-
 if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
     $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $_SESSION['project-status']['suburb']);
     $projectList = prepareDisplayData($projectsfromDB);
-    $suburbDataArr = SuburbArr($_SESSION['project-status']['city']);
+    $suburbDataArr = Suburb::SuburbArr($_SESSION['project-status']['city']);
 }elseif(isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
     $projectsAssignedToExec = getAssignedProjects($_SESSION['project-status']['executive']);
     $projectIds = getProjectIdsFromProjectDetails($projectsAssignedToExec);
@@ -39,7 +37,6 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
     $projectsfromDB = getAssignedProjectsFromPIDs($projectIds);
     $projectList = prepareDisplayData($projectsfromDB);
 }
-
 $project_ids = array();
 foreach($projectList as $p){
     array_push($project_ids, $p['PROJECT_ID']);
@@ -57,13 +54,12 @@ if(isset($_SESSION['project-status']['assignmentError'])){
     unset($_SESSION['project-status']['assignmentError']);
 }
 
-$CityDataArr = CityArr();
+$CityDataArr = City::CityArr();
 $executiveList = getCallCenterExecutiveWorkLoad();
 
 if(isset($projectList) && $_REQUEST['download'] == 'true'){
     download_xls_file($projectList,$projectLastAuditDate);
 }
-
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("executiveList", $executiveList);
 $smarty->assign("projectList", $projectList);
@@ -80,11 +76,15 @@ $smarty->assign("projectLastAuditDate", $projectLastAuditDate);
 function prepareDisplayData($data){ 
     $result = array();
     foreach ($data as $value) {
-        $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 'CITY' => $value['CITY'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'MOVEMENT_DATE' => $value['MOVEMENT_DATE'], 'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'], 'LABEL'=>$value['LABEL']);
+        $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 
+            'CITY' => $value['CITY'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 
+            'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'MOVEMENT_DATE' => $value['MOVEMENT_DATE'],
+            'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'],'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 
+            'LABEL'=>$value['LABEL']);
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
         $assignment_type = '';
-        if($value['PREV_PROJECT_PHASE'] == 'audit1' || $value['PREV_PROJECT_PHASE'] == 'audit2') $assignment_type .= 'Reverted-';
+        if($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') $assignment_type .= 'Reverted-';
         if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY')$assignment_type .= 'Field';
         elseif(empty($assigned_to[0])) $assignment_type .= 'Unassigned';
         else{

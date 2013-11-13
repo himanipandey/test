@@ -188,7 +188,7 @@
 						
 					<td align="right"><b>Club House:</b></td>
 					<td align="center">
-						{if $OtherPrice[0]['CLUB_HOUSE_PSF_Fixed'] == 'psf'}
+						{if $OtherPrice[0]['CLUB_HOUSE_PSF_FIXED'] == 'psf'}
 							<input name="club_house" id="club_house" value="psf" checked="checked" type="radio"> PSF
 							<input name="club_house" id="club_house" value="Fixed" class="club_house" type="radio"> Fixed
 						{else}
@@ -212,7 +212,7 @@
 						
 					<td align="right"><b>IFMS:</b></td>
 					<td align="center">
-						{if $OtherPrice[0]['IFMS_PSF_Fixed'] == 'psf'}
+						{if $OtherPrice[0]['IFMS_PSF_FIXED'] == 'psf'}
 							<input name="ifms" id="ifms" value="psf" checked="checked" type="radio"> PSF
 							<input name="ifms" id="ifms" value="Fixed" class="ifms" type="radio"> Fixed
 						{else}
@@ -237,7 +237,7 @@
 						
 					<td align="right"><b>Power backup charges:</b></td>
 					<td align="center">
-						{if $OtherPrice[0]['POWER_BACKUP_PSF_Fixed'] == 'psf'}
+						{if $OtherPrice[0]['POWER_BACKUP_PSF_FIXED'] == 'psf'}
 							<input name="power_backup" id="power_backup" value="psf" checked="checked" type="radio"> PSF
 							<input name="power_backup" id="power_backup" value="Fixed" type="radio"> Fixed
 						{else}
@@ -262,7 +262,7 @@
 						
 					<td align="right"><b>Legal Fees:</b></td>
 					<td align="center">
-						{if $OtherPrice[0]['LEGAL_FEES_PSF_Fixed'] == 'psf'}
+						{if $OtherPrice[0]['LEGAL_FEES_PSF_FIXED'] == 'psf'}
 							<input name="legal_fees" id="legal_fees" value="psf" checked="checked" type="radio"> PSF
 							<input name="legal_fees" id="legal_fees" value="Fixed" type="radio"> Fixed 
 						{else}
@@ -287,7 +287,7 @@
 						
 					<td align="right"><b>Power and Water:</b></td>
 					<td align="center">
-						{if $OtherPrice[0]['POWER_WATER_PSF_Fixed'] == 'psf'}
+						{if $OtherPrice[0]['POWER_WATER_PSF_FIXED'] == 'psf'}
 							<input name="power_and_water" id="power_and_water" value="psf" checked="checked" type="radio"> PSF
 							<input name="power_and_water" id="power_and_water" value="Fixed" type="radio"> Fixed
 						{else}
@@ -312,7 +312,7 @@
 						
 					<td align="right"><b>Maintenance Advance:</b></td>
 					<td align="center">
-						{if $OtherPrice[0]['MAINTENANCE_ADVANCE_PSF_Fixed'] == 'psf'}
+						{if $OtherPrice[0]['MAINTENANCE_ADVANCE_PSF_FIXED'] == 'psf'}
 							<input name="maintenance_advance" id="maintenance_advance" value="psf" checked="checked" type="radio"> PSF
 							<input name="maintenance_advance" id="maintenance_advance" value="Fixed" type="radio"> Fixed
 						{else}
@@ -355,9 +355,7 @@
 						
 					<td align="right" valign ="top"><b>PLC:</b></td>
 					<td align="left" colspan = "2">
-						<textarea name = "plc" id = "plc" rows="6" cols = "55">
-							{trim($OtherPrice[0]['PLC'])}
-						</textarea>
+						<textarea name = "plc" id = "plc" rows="6" cols = "55">{trim($OtherPrice[0]['PLC'])}</textarea>
 					</td>
 					
 				</tr>
@@ -365,9 +363,7 @@
 						
 					<td align="right" valign ="top"><b>Floor Rise:</b></td>
 					<td align="left" colspan = "2">
-						<textarea name = "floor_rise" id = "floor_rise" rows="6" cols = "55">
-							{trim($OtherPrice[0]['FLOOR_RISE'])}
-						</textarea>
+						<textarea name = "floor_rise" id = "floor_rise" rows="6" cols = "55">{trim($OtherPrice[0]['FLOOR_RISE'])}</textarea>
 					</td>
 					
 				</tr>
@@ -375,9 +371,7 @@
 						
 					<td align="right" valign ="top"><b>Other:</b></td>
 					<td align="left" colspan = "2">
-						<textarea name = "other" id = "other" rows="6" cols = "55">
-							{trim($OtherPrice[0]['OTHERS'])}
-						</textarea>
+						<textarea name = "other" id = "other" rows="6" cols = "55">{trim($OtherPrice[0]['OTHER_PRICING'])}</textarea>
 					</td>
 					
 				</tr>

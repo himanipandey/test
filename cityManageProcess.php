@@ -58,12 +58,12 @@
         $QueryMember = "Select * FROM ".CITY." WHERE  left(LABEL,1)='".$_GET['sort']."' ORDER BY CITY_ID DESC";
     }
 
-    $QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
-    $NumRows 		= mysql_num_rows($QueryExecute);
+    $QueryExecute = mysql_query($QueryMember) or die(mysql_error());
+    $NumRows = mysql_num_rows($QueryExecute);
     $smarty->assign("NumRows",$NumRows);
 
     /**
-     * *********************************
+     **********************************
      *  Create Next and Previous Button
      * *********************************
      **/
@@ -99,15 +99,9 @@
     $Pagginnation = "<DIV align=\"left\"><font style=\"font-size:11px; color:#000000;\">" . $First . $Prev . " Showing page <strong>$PageNum</strong> of <strong>$MaxPage</strong> pages " . $Next . $Last . "</font></DIV>";
 
     $smarty->assign("Pagginnation", $Pagginnation);
-
-
     $smarty->assign("Sorting", $Sorting);
-
-
-
-
-     $statusArray = array("0"=>"Inactive","1"=>"Active"); 
-      $smarty->assign("statusArray", $statusArray);
+   $statusArray = array("0"=>"Inactive","1"=>"Active"); 
+   $smarty->assign("statusArray", $statusArray);
 
 
 ?>
