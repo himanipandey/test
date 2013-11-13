@@ -94,7 +94,7 @@
     $phase = $_REQUEST['phase'];
     $arrPhase = explode('|',$_REQUEST['stage']);
     $stage = $arrPhase[0];
-    $tag = $arrPhase[1];
+    $updationCycle = $_REQUEST['updationCycle'];
     $Status = $_REQUEST['Status'];
     $Active = $_REQUEST['Active'];
     $Availability = $_REQUEST['Availability'];
@@ -125,7 +125,7 @@
 
         $smarty->assign("locality", $locality);
         $smarty->assign("phase", $phase);
-        $smarty->assign("tag", $tag);
+        $smarty->assign("updationCycle", $updationCycle);
         $smarty->assign("stage", $stage);
 
         if($city != '')
@@ -133,7 +133,6 @@
             $localityArr = Locality::getLocalityByCity($city);
             $smarty->assign("localityArr", $localityArr);
         }
-
         $QueryMember1 = "Select p.PROJECT_ID,p.PROJECT_PHASE_ID,p.PROJECT_STAGE_ID,ph.name as PROJECT_PHASE, 
                 st.name as PROJECT_STAGE 
                 FROM ".RESI_PROJECT." p 
@@ -224,9 +223,9 @@
                  $QueryMember .= $and." PROJECT_STAGE_ID = '".$stage."'";
                  $and  = ' AND ';
              }
-             if($tag != '')
+             if($updationCycle != '')
              {
-                 $QueryMember .= $and." UPDATION_CYCLE_ID = '".$tag."'";
+                 $QueryMember .= $and." UPDATION_CYCLE_ID = '".$updationCycle."'";
                  $and  = ' AND ';
              }
 
@@ -256,7 +255,7 @@
         }
         $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
     }
-
+    
     if($transfer != '')
     {
         $arrPropId = array();

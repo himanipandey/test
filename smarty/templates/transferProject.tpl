@@ -226,7 +226,7 @@ $(function() {
 <input type='hidden' name='dwnld_projectId' id='dwnld_projectId' value="{$_POST['projectId']}">
 <input type='hidden' name='dwnld_search' id='dwnld_search' value="{$_POST['search']}">
 <input type='hidden' name='dwnld_transfer' id='dwnld_transfer' value="{$_POST['transfer']}">
-
+<input type='hidden' name='dwnld_updationCycle' id='dwnld_transfer' value="{$_POST['updationCycle']}">
 <input type='hidden' name='current_dwnld_phase' id='current_dwnld_phase' value="">
 <input type='hidden' name='current_dwnld_stage' id='current_dwnld_stage' value="">
 </form>
@@ -312,14 +312,13 @@ $(function() {
                                          </select>
                                       </td>
                                  </tr>
-
                                   <tr>
-                                    <td align="right" style = "padding-left:20px;" height='35'><b>Stage:</b></td>
+                                    <td align="right" style = "padding-left:20px;" height='35'><b>Phase:</b></td>
                                     <td align="left" style = "padding-left:20px;" height='35'>
                                         <select name = 'stage' id = "stage" onchange = "refreshUpdationCycle(this.value);">
-                                          <option value = "">Select Stage</option>
+                                          <option value = "">Select Phase</option>
                                           {foreach from = $getProjectStages item = stages}
-                                              <option value="{$stages->id}" {if $stage == $stages->name} selected{/if}>
+                                              <option value="{$stages->id}" {if $stage == $stages->id} selected{/if}>
                                                  {$stages->name}
                                               </option>
                                           {/foreach}
@@ -329,7 +328,7 @@ $(function() {
                                    <tr>
                                         <td width="50" align="right" style = "padding-left:20px;" height='35' nowrap><b>Updation Cycle:</b></td>
                                         <td width="50" align="left" style = "padding-left:20px;">
-                                            <select name="updationCycle">
+                                            <select name="updationCycle" id = "updationCycle">
                                               <option value="">Select Updation Cycle</option>
                                               {foreach from=$UpdationArr key=k item=v}
                                               <option value = "{$v->updation_cycle_id}" 
@@ -341,12 +340,12 @@ $(function() {
                                         </td>
                                   </tr>
                                   <tr bgcolor='#fcfcfc'>
-                                      <td align="right" style = "padding-left:20px;" height='35'><b>Phase:</b></td>
+                                      <td align="right" style = "padding-left:20px;" height='35'><b>Stage:</b></td>
                                       <td align="left" style = "padding-left:20px;" height='35'>
                                          <select name = 'phase' id = "phase"  style='width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;'>
-                                            <option value = "">Select Phase</option>
+                                            <option value = "">Select Stage</option>
                                            {foreach from = $getProjectPhases item = phases}
-                                               <option value="{$phases->id}" {if $phase == $phases->name} selected{/if}>
+                                               <option value="{$phases->id}" {if $phase == $phases->id} selected{/if}>
                                                   {$phases->name}
                                                </option>
                                            {/foreach}									
@@ -434,7 +433,7 @@ $(function() {
                                </center>
                                <center>
                                <table width="502" align="left" cellpadding="0" cellspacing="1" bgColor="#c2c2c2" style = "margin: 20px;border:1px solid #c2c2c2;">
-                               <tr bgcolor='#ffffff'><td height=28 width='40'>&nbsp;</td><td align='center'><b>SNo</b></td><td align='center'><b>Count</b></td><td align='center'><b>Project Stage</b></td><td align='center'><b>Project Phase</b></td><td align='center'><b>Download</b></td></tr>
+                               <tr bgcolor='#ffffff'><td height=28 width='40'>&nbsp;</td><td align='center'><b>SNo</b></td><td align='center'><b>Count</b></td><td align='center'><b>Project Phase</b></td><td align='center'><b>Project Stage</b></td><td align='center'><b>Download</b></td></tr>
                                {$ctrl = 1}
                                {$flagcheck=0}
                                {$totcnt = 0}
@@ -499,7 +498,7 @@ $(function() {
                                         <td height="25" align="right" colspan= "2">
                                         {if $tot_affected_rows>0} {$tot_affected_rows} records has been moved{/if}
                                         </td>
-                                      </tr>                                     
+                                      </tr>     
                                     <tr>
                                     <td width="75" align="right" style = "padding-left:20px;"><b>Select Phase:</b></td>
                                     <td width="25" align="left" style = "padding-left:20px;">
@@ -508,7 +507,7 @@ $(function() {
                                             <option value="NoStage|0" {if $updatePhasePost == "NoStage|0"} selected {/if}>No Phase</option>
                                             <option value="NewProject|0" {if $updatePhasePost == "NewProject|0"} selected {/if}>New Project</option>
                                             {foreach from=$UpdationArr key=k item=v}
-                                             {if $v->updation_cycle_id != $skipUpdationCycle_Id}
+                                             {if $v->updation_cycle_id != $skipUpdationCycle_Id and $v->updation_cycle_id != $skipUpdationCycle_Id}
                                                 <option value = "{ucfirst($v->cycle_type)}Cycle|{$v->updation_cycle_id}"
                                                 {if $updatePhasePost == "{ucfirst($v->cycle_type)}Cycle|{$v->updation_cycle_id}"} selected {/if}> 
                                                     {ucfirst($v->cycle_type)}Cycle - {$v->label}

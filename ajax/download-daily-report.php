@@ -57,7 +57,7 @@
         }
         $quryand .= $and."C.version = 'cms'";
         #---------------------------------------
-        $qry = "SELECT
+       $qry = "SELECT
                     A.PROJECT_ID,C.PROJECT_NAME,ph.name as PROJECT_PHASE,st.name as PROJECT_STAGE,
                     B.FNAME,B.DEPARTMENT,psm.project_status as PROJECT_STATUS,A.DATE_TIME DT,D.LABEL AS CITY_NAME
                 FROM
@@ -67,12 +67,11 @@
                     inner join locality lo on C.LOCALITY_ID = lo.LOCALITY_ID
                     inner join ".SUBURB." sub on lo.SUBURB_ID = sub.SUBURB_ID
                     inner join city D ON D.CITY_ID=sub.CITY_ID 
-                    inner join master_project_phases ph ON C.project_phase_id=ph.id
-                    inner join master_project_stages st ON C.project_stage_id=st.id
+                    inner join master_project_phases ph ON A.project_phase_id=ph.id
+                    inner join master_project_stages st ON A.project_stage_id=st.id
                     inner join project_status_master psm on C.project_status_id = psm.id
                     ".$quryand."
                 ORDER BY A.DATE_TIME ";
-                      
         $allData = ResiProject::find_by_sql($qry);
 
         foreach( $allData as $data ) {
@@ -114,8 +113,8 @@
     <td>PROJECT ID</td>
     <td>PROJECT NAME</td>
     <td>PROJECT STATUS</td>
-    <td>PHASE</td>
     <td>STAGE</td>
+    <td>PHASE</td>
     <td>CITY</td>
     </tr>
     ";

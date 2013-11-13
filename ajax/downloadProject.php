@@ -57,15 +57,14 @@ $builder = $_POST['dwnld_builder'];
 $phase = $_POST['current_dwnld_phase'];
 $arrPhaseTag = explode('|',$_POST['dwnld_stage']);
 $stage = $_POST['current_dwnld_stage'];
-$tag = $arrPhaseTag[1];
+$updation_cycle = $_POST['dwnld_updationCycle'];
 $Status = $_POST['dwnld_Status'];
 $Active = $_POST['dwnld_Active'];
 $selectdata = $_POST['dwnld_selectdata'];
-
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
-    $QueryMember1 = "SELECT RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,PP.name as PROJECT_PHASE,
+    $QueryMember1 = "SELECT RP.updation_cycle_id,RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,PP.name as PROJECT_PHASE,
                 PS.name as PROJECT_STAGE,ct.LABEL AS CITY_NAME, psm.project_status as 
                     PROJECT_STATUS,
                 L.LABEL LOCALITY, PSH.DATE_TIME, PA.FNAME, UC.LABEL UPDATION_LABEL
@@ -96,25 +95,25 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 
     if($_POST['dwnld_projectId'] == '')
     {
-       /* if($_REQUEST['dwnld_Availability'] != '')
+        if($_REQUEST['dwnld_Availability'] != '')
         {
             $arrAvalibality = explode(",",$_REQUEST['dwnld_Availability']); 
             $QueryMember .= $and ." (1 = 0 ";
             if(in_array(0,$arrAvalibality))
             {
-                    $QueryMember .=  " OR RP.AVAILABLE_NO_FLATS = 0";
+                    $QueryMember .=  " OR RP.D_AVAILABILITY = 0";
             }
             if(in_array(1,$arrAvalibality))
             {
-                    $QueryMember .=  " OR RP.AVAILABLE_NO_FLATS > 0";
+                    $QueryMember .=  " OR RP.D_AVAILABILITY > 0";
             }
             if(in_array(2,$arrAvalibality))
             {
-                    $QueryMember .=  " OR RP.AVAILABLE_NO_FLATS IS NULL ";
+                    $QueryMember .=  " OR RP.D_AVAILABILITY IS NULL ";
             }
             $QueryMember .= ")";
             $and  = ' AND ';
-        }*/
+        }
 
         if($_POST['dwnld_project_name'] != '')
         {
@@ -166,9 +165,9 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
             $QueryMember .= $and." RP.PROJECT_PHASE_ID = '".$getProjectPhase[0]->id."'";
             $and  = ' AND ';
         }
-        if($tag != '')
+        if($updation_cycle != '')
         {
-            $QueryMember .= $and." RP.UPDATION_CYCLE_ID = '".$tag."'";
+            $QueryMember .= $and." RP.UPDATION_CYCLE_ID = '".$updation_cycle."'";
             $and  = ' AND ';
         }
     }
@@ -196,8 +195,8 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>LOCALITY</td>
 <td>PROJECT STATUS</td>
 <td>BOOKING STATUS</td>
-<td>PHASE</td>
 <td>STAGE</td>
+<td>PHASE</td>
 <td>STAGE MOVEMENT DATE</td>
 <td>STAGE MOVEMENT DONE BY</td>
 <td>UPDATION LABEL</td></tr>

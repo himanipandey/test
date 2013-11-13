@@ -589,12 +589,11 @@ function getDateNow(){
 						<tr bgcolor = "#c2c2c2">
 							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"><b>Last Updated Detail</b></br>
 						  	  </br>
-								{foreach from = $lastUpdatedDetail['resi_project'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+																	
+									<b>Department: </b> {$lastUpdatedDetail['resi_project']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project']['ACTION_DATE']}</br></br>
+								
 								
 							  </td>
 						  
@@ -1473,12 +1472,9 @@ function getDateNow(){
 						{if array_key_exists("resi_project_amenities",$lastUpdatedDetail)}
 							<tr bgcolor = "#c2c2c2">
 								  <td nowrap="nowrap"  align="left" colspan = "2"><b>Last Updated Detail</b><br></br>
-									{foreach from = $lastUpdatedDetail['resi_project_amenities'] key=key item = item}
-										
-										<b>Department: </b> {$key}</br>
-										<b>Name: </b> {$item['FNAME']}</br>
-										<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-									{/foreach}
+									<b>Department: </b> {$lastUpdatedDetail['resi_project_amenities']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project_amenities']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_amenities']['ACTION_DATE']}</br></br>
 									
 								  </td>
 							  
@@ -1529,13 +1525,9 @@ function getDateNow(){
 						{if array_key_exists('resi_proj_specification',$lastUpdatedDetail)}
 							<tr bgcolor = "#c2c2c2">
 								  <td nowrap="nowrap"  align="left" colspan = "2"><b>Last Updated Detail</b><br></br>
-									{foreach from = $lastUpdatedDetail['resi_project_amenities'] key=key item = item}
-										
-										<b>Department: </b> {$key}</br>
-										<b>Name: </b> {$item['FNAME']}</br>
-										<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-									{/foreach}
-									
+									<b>Department: </b> {$lastUpdatedDetail['resi_proj_specification']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_proj_specification']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_proj_specification']['ACTION_DATE']}</br></br>
 								  </td>
 							  
 							</tr>
@@ -1756,13 +1748,9 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['project_plan_images'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['project_plan_images'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
-								
+								<b>Department: </b> {$lastUpdatedDetail['project_plan_images']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['project_plan_images']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['project_plan_images']['ACTION_DATE']}</br></br>
 							  </td>
 							  
 						  </tr>
@@ -1810,12 +1798,9 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['resi_floor_plans'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_floor_plans'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_floor_plans']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_floor_plans']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_floor_plans']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -1866,12 +1851,9 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['resi_project_options'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "9"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_project_options'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>Last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_project_options']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project_options']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_options']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -2080,12 +2062,9 @@ function getDateNow(){
 						{if array_key_exists('resi_project_tower_details',$lastUpdatedDetail)}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "8"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_project_tower_details'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_project_tower_details']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project_tower_details']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_tower_details']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -2185,12 +2164,9 @@ function getDateNow(){
 						{if array_key_exists('resi_project_other_pricing',$lastUpdatedDetail)}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "3"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_project_other_pricing'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_project_other_pricing']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_project_other_pricing']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_other_pricing']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -2497,12 +2473,9 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "8"><b>Last Updated Detail</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_proj_supply'] key=key item = item}
-									
-									<b>Department: </b> {$key}</br>
-									<b>Name: </b> {$item['FNAME']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}
+								<b>Department: </b> {$lastUpdatedDetail['resi_proj_supply']['dept']}</br>
+									<b>Name: </b> {$lastUpdatedDetail['resi_proj_supply']['name']}</br>
+									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_proj_supply']['ACTION_DATE']}</br></br>
 								
 							  </td>
 							  
@@ -2530,7 +2503,6 @@ function getDateNow(){
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Lastest Month</b></td> -->
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
 										</tr>
 										{$olderValuePhase = ''}
@@ -2710,17 +2682,6 @@ function getDateNow(){
 															{/if}
 														{/if}
 													</td>
-													<td valign ="top" align ="center">
-														{$lastItem['SOURCE_OF_INFORMATION']}
-														
-														{if $phasename != '' && $stageName != ''}
-															{if $lastItem['SOURCE_OF_INFORMATION'] != $arrProjectSupply[$key][$keyInner][$keylast]['SOURCE_OF_INFORMATION']}
-																<br>
-																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['SOURCE_OF_INFORMATION']}</span>
-															{/if}
-														{/if}
-													</td>
-													
 													<td valign ="top" align ="center" nowrap>
 														{$lastItem['SUBMITTED_DATE']}
 														

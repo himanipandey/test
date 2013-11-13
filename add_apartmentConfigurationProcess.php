@@ -240,27 +240,36 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 }
                 else
                 {
-				
-                    /**********code for deletion options*************/
-                   $qryDel_list = "DELETE FROM ".LISTINGS." 
+					$list_option_id = $_REQUEST['typeid_edit'][$key]; 
+					
+					//print $list_option_id; die;
+					
+					############## Transaction Start##############
+					ResiProject::transaction(function(){
+						
+						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1;
+																	
+						$list_id = mysql_fetch_object(mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and rpp.phase_type = 'Logical'"));
+																							
+						 $qryDel_list = "DELETE FROM ".LISTINGS." 
                     WHERE
-                        OPTION_ID = '".$_REQUEST['typeid_edit'][$key]."'";
+                        ID = '".$list_id->id."'";
                     
                     $resDel_list = mysql_query($qryDel_list);
-                    
-                    if($resDel_list){
-                    
+                                                  
 						$qryDel = "DELETE FROM ".RESI_PROJECT_OPTIONS." 
                     WHERE
-                        OPTIONS_ID = '".$_REQUEST['typeid_edit'][$key]."'
+                        OPTIONS_ID = '".$list_option_id."'
                     AND
                         PROJECT_ID = '".$projectId."'";
-						$resDel	= mysql_query($qryDel) or die(mysql_error()." error in deletion");
+						$resDel	= mysql_query($qryDel);
 						$flg_delete = 1;
-					}else{
+						if(!$resDel){
 							$ErrorMsg1 = 'Could not delete!';
-					}
-					
+						}
+								
+					});					
+					############## Transaction End ##############
                 }
             }  
 

@@ -12,8 +12,8 @@ if ($_REQUEST['btnExit'] == "Exit") {
     header("Location:ProjectList.php?projectId=" . $projectId);
 }
 
-//$lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
-//$smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
+$lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
+$smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
 
 $arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
 $smarty->assign("arrCalingPrimary", $arrCalingPrimary);
@@ -26,7 +26,7 @@ $smarty->assign("otherPricing", $otherPricing);
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
 $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id) 
     join resi_project_options o on (o.options_id = option_id)",'conditions' => 
-    array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual'"), "select" => 
+    array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active'"), "select" => 
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
 

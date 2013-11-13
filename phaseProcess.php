@@ -11,7 +11,7 @@ if (isset($_GET['error'])) {
     $smarty->assign("error_msg", "This phase already exists!");
 }
 $phaseDetail = array();
-$phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId),
+$phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId,'STATUS' => 'Active'),
     "order" => "phase_name asc"));
 foreach($phases as $p){
     array_push($phaseDetail, $p->to_custom_array());
