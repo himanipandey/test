@@ -49,7 +49,7 @@ $smarty->assign("OptionsDetails", $optionsDetails);
 $options = $project->get_all_options();
 $smarty->assign("options", $options);
 if (isset($phaseId) && $phaseId != -1) {
-    $phase_options_temp = $options;
+    $phase_options_temp = array();
     if($phaseId != '0'){
         $phase = ResiProjectPhase::virtual_find($phaseId);
         $smarty->assign("phase", $phase);
@@ -60,7 +60,7 @@ if (isset($phaseId) && $phaseId != -1) {
     }
     $option_ids = array();
     foreach($phase_options_temp as $options) array_push($option_ids, $options->options_id);
-    $bedrooms = ResiProjectOptions::optionwise_bedroom_details($option_ids);
+    $bedrooms = ResiProjectOptions::optionwise_bedroom_details($option_ids, $phaseId);
     $bedrooms_hash = array();
     foreach($bedrooms as $bed) $bedrooms_hash[$bed->unit_type] = explode(",", $bed->beds);
     $smarty->assign("option_ids", $option_ids);

@@ -1,8 +1,13 @@
 <?php
 
-class ProjectSupply extends ActiveRecord\Model {
-    
+require_once "support/objects.php";
+
+class ProjectSupply extends Objects {
+
     static $before_save = array('launchedValidation');
+    static $default_scope = array("version" => "cms");
+    static $virtual_primary_key = 'id';
+    
 //    static $after_save = array('save_total_flat_count');
     
     function deleteSupplyForPhase($projectId, $phaseId){
@@ -51,6 +56,10 @@ class ProjectSupply extends ActiveRecord\Model {
             }
 
             $attributes = array('listing_id'=>$listings[0]->id, 'supply'=>$supply, 'launched'=>$launchedUnit, 'updated_by'=>$_SESSION['adminId'], 'updated_at'=>date('Y-m-d H:i:s'), 'created_at' => date('Y-m-d H:i:s'));
+            $attributes['version'] = 'Cms';
+            $supply_new = self::create($attributes);
+            $supply_new->save();
+            $attributes['version'] = 'Website';
             $supply_new = self::create($attributes);
             $supply_new->save();
         }
@@ -73,30 +82,36 @@ class ProjectSupply extends ActiveRecord\Model {
             pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type 
             from 
              " . self::table_name() . " ps 
-             inner join " . ProjectAvailability::table_name() . "  pa on ps.id=pa.project_supply_id
+             inner join " . ProjectAvailability::table_name() . " pa on (ps.id=pa.project_supply_id and ps.version = 'Cms')
              inner join listings ls on ps.listing_id = ls.id
              inner join resi_project_options rpo on rpo.options_id = ls.option_id    
              inner join 
                 (select ps.id, max(pa.effective_month) mon 
                     from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa 
                     on ps.id=pa.project_supply_id
-                    inner join listings ls on ps.listing_id = ls.id  
+                    inner join listings ls on (ps.listing_id = ls.id and ls.listing_category = 'Primary' and ls.status = 'Active')  
                     left join " . ResiProjectPhase::table_name() . " rpp on ls.phase_id = rpp.PHASE_ID 
-                    where rpp.project_id = $projectId group by ps.id
+                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'Cms' group by ps.id
                  ) t 
                 on ps.id=t.id and pa.effective_month=t.mon 
-             left join " . ResiProjectPhase::table_name() . "  rpp on ls.phase_id = rpp.PHASE_ID 
-          union 
+             left join " . ResiProjectPhase::table_name() . "  rpp on (ls.phase_id = rpp.PHASE_ID and rpp.version = 'Cms')
+                 order by no_of_bedroom";
+        //deleted join  
+        /**
+         * 
+         * union 
             select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
                 rpp.COMPLETION_DATE, rpp.project_id, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
                 ps.launched, pa.availability, pa.comment, pa.effective_month, 
                 rpo.option_type as project_type 
             from 
-                project_supplies ps left join project_availabilities pa on ps.id=pa.project_supply_id
-            inner join listings ls on ps.listing_id = ls.id            
-            left join resi_project_phase rpp on ls.phase_id = rpp.PHASE_ID
+                project_supplies ps left join project_availabilities pa on (ps.id=pa.project_supply_id and ps.version = 'Cms')
+            inner join listings ls on (ps.listing_id = ls.id  and ls.listing_category = 'Primary' and ls.status = 'Active')          
+            left join resi_project_phase rpp on (ls.phase_id = rpp.PHASE_ID)
             inner join resi_project_options rpo on rpo.options_id = ls.option_id
-          where pa.id is null and rpp.project_id = $projectId";
+          where pa.id is null and rpp.project_id = $projectId and rpp.version = 'Cms'
+         * 
+         * ***/
         $data = self::find_by_sql($query);
         foreach ($data as $value) {
             $entry = array();

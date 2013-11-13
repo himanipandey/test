@@ -2503,7 +2503,6 @@ function getDateNow(){
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Lastest Month</b></td> -->
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Source Of Information</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
 										</tr>
 										{$olderValuePhase = ''}
@@ -2683,17 +2682,6 @@ function getDateNow(){
 															{/if}
 														{/if}
 													</td>
-													<td valign ="top" align ="center">
-														{$lastItem['SOURCE_OF_INFORMATION']}
-														
-														{if $phasename != '' && $stageName != ''}
-															{if $lastItem['SOURCE_OF_INFORMATION'] != $arrProjectSupply[$key][$keyInner][$keylast]['SOURCE_OF_INFORMATION']}
-																<br>
-																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['SOURCE_OF_INFORMATION']}</span>
-															{/if}
-														{/if}
-													</td>
-													
 													<td valign ="top" align ="center" nowrap>
 														{$lastItem['SUBMITTED_DATE']}
 														
