@@ -69,7 +69,7 @@ function getProjectListForManagers($cityId, $suburbId = ''){
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,mbst.name as BOOKING_STATUS,
          psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
          max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE, pphs.name as PROJECT_PHASE, 
-         pstg.name as PREV_PROJECT_STAGE, pphs.name PREV_PROJECT_PHASE,
+         mpsp.name as PREV_PROJECT_STAGE, mppp.name PREV_PROJECT_PHASE,
          rp.MOVEMENT_HISTORY_ID, GROUP_CONCAT(pa1.USERNAME order by pa.ID asc separator '|') ASSIGNED_TO, 
          GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') 
          DEPARTMENT, GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT, 
@@ -81,11 +81,12 @@ function getProjectListForManagers($cityId, $suburbId = ''){
          inner join city c on sub.city_id = c.city_id
          inner join resi_builder rb on rp.builder_id = rb.builder_id
          inner join project_status_master ps on rp.project_status_id = ps.id
-         inner join project_stage_history psh 
-         on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID left join project_stage_history pshp 
-         on psh.PREV_HISTORY_ID = pshp.HISTORY_ID 
+         inner join project_stage_history psh on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID 
+         left join project_stage_history pshp on psh.PREV_HISTORY_ID = pshp.HISTORY_ID 
          inner join master_project_stages pstg on psh.project_stage_id = pstg.id
          inner join master_project_phases pphs on psh.project_phase_id = pphs.id
+         left join master_project_stages mpsp on pshp.PROJECT_STAGE_ID = mpsp.id
+         left join master_project_phases mppp on pshp.PROJECT_PHASE_ID = mppp.id
          inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id
          inner join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
          left join project_assignment pa 
@@ -111,7 +112,7 @@ function getAssignedProjectsFromPIDs($pids){
        $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,
          psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
          max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE, pphs.name as PROJECT_PHASE, 
-         pstg.name as PREV_PROJECT_STAGE, pphs.name PREV_PROJECT_PHASE,
+         mpsp.name as PREV_PROJECT_STAGE, mppp.name PREV_PROJECT_PHASE,
          rp.MOVEMENT_HISTORY_ID, GROUP_CONCAT(pa1.USERNAME order by pa.ID asc separator '|') ASSIGNED_TO, 
          GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') 
          DEPARTMENT, GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT, 
@@ -128,6 +129,8 @@ function getAssignedProjectsFromPIDs($pids){
          on psh.PREV_HISTORY_ID = pshp.HISTORY_ID 
          inner join master_project_stages pstg on rp.PROJECT_STAGE_ID = pstg.id
          inner join master_project_phases pphs on rp.PROJECT_PHASE_ID = pphs.id
+         left join master_project_stages mpsp on pshp.PROJECT_STAGE_ID = mpsp.id
+         left join master_project_phases mppp on pshp.PROJECT_PHASE_ID = mppp.id
          left join project_assignment pa 
          on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
