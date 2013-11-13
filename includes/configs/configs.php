@@ -165,6 +165,7 @@ DEFINE("ROOM_CATEGORY","room_category");
 
 DEFINE("BROKER_LIST","broker_list");
 
+DEFINE( "LISTINGS","listings");
 
 DEFINE("PROJECT_PLAN_IMAGES","project_plan_images");
 DEFINE("RESI_PROJECT_AMENITIES","resi_project_amenities");
