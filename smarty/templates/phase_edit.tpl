@@ -294,8 +294,7 @@
                                                                                                 </td>
                                                                                             {/if}
                                                                                             </tr>
-                                                                                            {if $phaseObject['PHASE_TYPE'] != 'Logical'}
-                                                                                                <tr>
+                                                                                                <tr {if $phaseObject['PHASE_TYPE'] == 'Logical'} style="display: none;" {/if}>
                                                                                                     <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
                                                                                                         <td width="30%" align="left">
                                                                                                             <select name="towers[]" id="towers" multiple="multiple" style="width: 150px; height: 110px;">
@@ -307,7 +306,6 @@
                                                                                                         </td>
                                                                                                         <td width="50%" align="left"></td>
                                                                                                 </tr>
-                                                                                            {/if}
                                                                                         {/if}
 
                                                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==2 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5}
