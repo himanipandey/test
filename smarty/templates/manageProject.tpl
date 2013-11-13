@@ -300,7 +300,7 @@ $(function() {
                                    <tr><td>&nbsp;</td></tr>
 
                                    <tr>
-                                        <td align="right" style = "padding-left:20px;"><b>Stage</b></td>
+                                        <td align="right" style = "padding-left:20px;"><b>Phase</b></td>
                                         <td align="left" style = "padding-left:20px;">
                                             <span id = "BuilderList">
                                             <select name = 'stage' id = "stage" >
@@ -332,7 +332,7 @@ $(function() {
                                    <tr><td>&nbsp;</td></tr>
 
                                            <tr>
-                                          <td align="right" style = "padding-left:20px;"><b>Phase:</b></td>
+                                          <td align="right" style = "padding-left:20px;"><b>Stage:</b></td>
                                           <td align="left" style = "padding-left:20px;">
                                               <span id = "BuilderList">
                                               <select name = 'phase' id = "phase" >
