@@ -1447,30 +1447,82 @@ function scaleDimensions($orig_width, $orig_height, $max_width, $max_height) {
 }
 
 /* * *******function for last upldated module date********* */
-
 function lastUpdatedAuditDetail($projectId) {
-    $qry = "   SELECT
-                    b.TABLE_NAME, b.DEPARTMENT, c.FNAME, a.ACTION_DATE
+   $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
                     FROM
-                       audit a
-                           JOIN
-                       (SELECT
-                           a.TABLE_NAME, p.DEPARTMENT, MAX(a.AUDIT_ID) as AUDIT_ID
-                       FROM
-                           audit a
-                       JOIN proptiger_admin p ON a.DONE_BY = p.ADMINID
+                       ".RESI_PROJECT." rp
+                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
                        WHERE
-                           a.PROJECT_ID = $projectId
-                       GROUP BY a.TABLE_NAME , p.DEPARTMENT) b ON (b.audit_id = a.audit_id)
-                           join
-                       proptiger_admin c ON (c.ADMINID = a.DONE_BY)";
-    $res = mysql_query($qry) or die(mysql_error());
+                           rp.PROJECT_ID = $projectId";
+                       
+    $res = mysql_fetch_object(mysql_query($qry));
     $arrData = array();
-    while ($data = mysql_fetch_assoc($res)) {
-        //array_push($arrData,$data);
-        $arrData[$data['TABLE_NAME']][$data['DEPARTMENT']] = $data;
+    
+    if($res->FNAME){
+		$arrData['resi_project']['name'] = $res->FNAME;
+		$arrData['resi_project']['dept'] = $res->DEPARTMENT;
+		$arrData['resi_project']['ACTION_DATE'] = $res->updated_at;
+	}
+    $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+                    FROM
+                       ".RESI_PROJECT_OPTIONS." rp
+                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                       WHERE
+                           rp.PROJECT_ID = $projectId ORDER BY rp.updated_at Desc LIMIT 1";
+    $res = mysql_fetch_object(mysql_query($qry));
+  
+   if($res->FNAME){
+    $arrData['resi_project_options']['name'] = $res->FNAME;
+    $arrData['resi_project_options']['dept'] = $res->DEPARTMENT;
+    $arrData['resi_project_options']['ACTION_DATE'] = $res->updated_at;
+   }
+    
+    $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+                    FROM
+                       ".RESI_PROJECT_TOWER_DETAILS." rp
+                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                       WHERE
+                           rp.PROJECT_ID = $projectId ORDER BY rp.updated_at Desc LIMIT 1";
+                       
+    $res = mysql_fetch_object(mysql_query($qry));
+    if($res->FNAME){
+		$arrData['resi_project_tower_details']['name'] = $res->FNAME;
+		$arrData['resi_project_tower_details']['dept'] = $res->DEPARTMENT;
+		$arrData['resi_project_tower_details']['ACTION_DATE'] = $res->updated_at;
     }
-    return $arrData;
+    
+    $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+                    FROM
+                       ".TABLE_ATTRIBUTES." rp
+                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                       WHERE
+                           rp.TABLE_ID = $projectId ORDER BY rp.updated_at Desc LIMIT 1";
+                       
+    $res = mysql_fetch_object(mysql_query($qry));
+	if($res->FNAME){
+		$arrData['resi_project_other_pricing']['name'] = $res->FNAME;
+		$arrData['resi_project_other_pricing']['dept'] = $res->DEPARTMENT;
+		$arrData['resi_project_other_pricing']['ACTION_DATE'] = $res->updated_at;
+	}
+    
+    
+    $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+                    FROM
+                       ".PROJECT_SUPPLIES." rp
+						  JOIN ".LISTINGS." lst ON rp.LISTING_ID = lst.ID
+						  JOIN ".RESI_PROJECT_OPTIONS." rpo ON lst.OPTION_ID = rpo.OPTIONS_ID
+                          JOIN proptiger_admin p ON rp.UPDATED_BY = p.ADMINID
+                       WHERE
+                           rpo.PROJECT_ID = $projectId ORDER BY rpo.UPDATED_AT Desc LIMIT 1";
+                       
+    $res = mysql_fetch_object(mysql_query($qry));
+	if($res->FNAME){
+		$arrData['resi_proj_supply']['name'] = $res->FNAME;
+		$arrData['resi_proj_supply']['dept'] = $res->DEPARTMENT;
+		$arrData['resi_proj_supply']['ACTION_DATE'] = $res->updated_at;
+	}
+    
+   return $arrData;
 }
 
 /* * ***********function for fetch fetch project calling links**************** */

@@ -93,12 +93,28 @@
                     $phases[0]->add_towers($towerIds);
                 }
 
+                
+            });
+            
+            ResiProjectTowerDetails::transaction(function(){
+                global $key;
+                global $val;
+                global $projectId;
+             
+                $tower_id 	= 	$_REQUEST['tower_id'][$key];
+               
                 $deleteKey = "delete_".($key+1);
                 if($_REQUEST[$deleteKey] == on)
                 {
-                    $tower_obj->delete();
+					$map_id = mysql_fetch_object(mysql_query("SELECT lst.id from ".PHASE_TOWER_MAPPINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.tower_id = ".$tower_id." and rpp.phase_type = 'Logical'"));
+					
+					mysql_query("delete from ".PHASE_TOWER_MAPPINGS." where id ='".$map_id->id."'");
+					
+                    mysql_query("DELETE FROM `resi_project_tower_details` WHERE `tower_id`='".$tower_id."'");
                 }
-            });
+                
+             });
+               
 		}
 
         header("Location:ProjectList.php?projectId=".$projectId);

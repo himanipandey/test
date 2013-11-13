@@ -12,8 +12,8 @@ if ($_REQUEST['btnExit'] == "Exit") {
     header("Location:ProjectList.php?projectId=" . $projectId);
 }
 
-//$lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
-//$smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
+$lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
+$smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
 
 $arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
 $smarty->assign("arrCalingPrimary", $arrCalingPrimary);

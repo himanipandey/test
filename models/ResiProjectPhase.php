@@ -103,8 +103,9 @@ class ResiProjectPhase extends Objects
 
     private function new_towers($tower_ids){
         $condArray = array();
+       
         foreach($tower_ids as $id){
-            if ($id == -1) return;
+            if ($id == -1) continue;
             array_push($condArray,"({$this->phase_id},{$id})");
         }
         ResiProjectTowerDetails::query("insert into phase_tower_mappings(phase_id,tower_id) values ".implode(",",$condArray));

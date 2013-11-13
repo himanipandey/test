@@ -163,15 +163,18 @@ DEFINE("AMENITIES_MASTER","amenities_master");
 DEFINE("PROJECT_OPTIONS","resi_project_options");
 DEFINE("ROOM_CATEGORY","room_category");
 
+DEFINE("PROJECT_SUPPLIES","project_supplies");
+
 DEFINE("BROKER_LIST","broker_list");
 
 DEFINE( "LISTINGS","listings");
-
+DEFINE( "TABLE_ATTRIBUTES","table_attributes");
 DEFINE("PROJECT_PLAN_IMAGES","project_plan_images");
 DEFINE("RESI_PROJECT_AMENITIES","resi_project_amenities");
 DEFINE("RESI_FLOOR_PLANS","resi_floor_plans");
 
 DEFINE("RESI_PROJECT_TOWER_DETAILS","resi_project_tower_details");
+DEFINE("PHASE_TOWER_MAPPINGS","phase_tower_mappings");
 DEFINE("RESI_PROJECT_PHASE","resi_project_phase");
 DEFINE("RESI_PROJ_TOWER_CONSTRUCTION_STATUS","resi_proj_tower_construction_status");
 DEFINE("RESI_PROJ_SPECIFICATION","resi_proj_specification");
