@@ -114,8 +114,8 @@
     <td>PROJECT ID</td>
     <td>PROJECT NAME</td>
     <td>PROJECT STATUS</td>
-    <td>PHASE</td>
     <td>STAGE</td>
+    <td>PHASE</td>
     <td>CITY</td>
     </tr>
     ";

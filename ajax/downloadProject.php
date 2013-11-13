@@ -196,8 +196,8 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>LOCALITY</td>
 <td>PROJECT STATUS</td>
 <td>BOOKING STATUS</td>
-<td>PHASE</td>
 <td>STAGE</td>
+<td>PHASE</td>
 <td>STAGE MOVEMENT DATE</td>
 <td>STAGE MOVEMENT DONE BY</td>
 <td>UPDATION LABEL</td></tr>
