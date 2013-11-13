@@ -45,6 +45,15 @@ class ResiProjectPhase extends Objects
         }
 
         if (!empty($option_ids)) {
+            $logicalOptionIds = array();
+
+            foreach (ResiProjectOptions::find('all', array('conditions' => array('options_id' => $option_ids))) as $option) {
+                foreach (ResiProjectOptions::find('all', array('conditions' => array('project_id' => $option->project_id, 'bedrooms' => $option->bedrooms, 'option_category' => 'Logical', 'option_type' => $option->option_type))) as $logicalOption) {
+                    $logicalOptionIds[] = $logicalOption->options_id;
+                }
+            }
+
+            $option_ids = array_merge($option_ids, $logicalOptionIds);
             Listings::update_all(array("joins" => "join resi_project_options o on (o.options_id = option_id and o.option_category = 'Actual')", 'conditions' => array('phase_id' => $this->phase_id, 'listing_category' => 'Primary', 'option_id' => $option_ids), 'set' => array('status' => 'Active')));
         }
     }
