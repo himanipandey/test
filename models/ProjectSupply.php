@@ -91,7 +91,7 @@ class ProjectSupply extends Objects {
                     on ps.id=pa.project_supply_id
                     inner join listings ls on (ps.listing_id = ls.id and ls.listing_category = 'Primary' and ls.status = 'Active')  
                     left join " . ResiProjectPhase::table_name() . " rpp on ls.phase_id = rpp.PHASE_ID 
-                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'Cms' group by ps.id
+                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'Cms' and rpp.status = 'Active' group by ps.id
                  ) t 
                 on ps.id=t.id and pa.effective_month=t.mon 
              left join " . ResiProjectPhase::table_name() . "  rpp on (ls.phase_id = rpp.PHASE_ID and rpp.version = 'Cms')
