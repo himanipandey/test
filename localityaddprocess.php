@@ -86,7 +86,7 @@
                        if(!is_array($ErrorMsg))
                        {
                            $qryCity = "SELECT C.LABEL FROM locality L 
-                               inner join suburb s on l.suburb_id = s.suburb_id
+                               inner join suburb s on L.suburb_id = s.suburb_id
                                inner join city C on (C.city_id = s.city_id) 
                                where L.locality_id = $localityid";
                            $resCity = mysql_query($qryCity);

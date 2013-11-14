@@ -757,14 +757,14 @@ function allProjectImages($projectId) {
 /* * *****Fetch all floor plans images of a project***** */
 
 function allProjectFloorImages($projectId) {
-    $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,MEASURE,OPTION_TYPE as 
+    $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
         UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
     $resOpt = mysql_query($qryOpt);
 
     $ImageDataListingArr = array();
     while ($dataOpt = mysql_fetch_assoc($resOpt)) {
         $sqlListingImages = "SELECT *  FROM " . RESI_FLOOR_PLANS . " WHERE  OPTION_ID ='" . $dataOpt['OPTIONS_ID'] . "'";
-
+       
         $data = mysql_query($sqlListingImages);
         while ($dataListingArr = mysql_fetch_assoc($data)) {
             $dataListingArr['SIZE'] = $dataOpt['SIZE'];
@@ -774,7 +774,8 @@ function allProjectFloorImages($projectId) {
             $ImageDataListingArr[] = $dataListingArr;
         }
     }
-    return $ImageDataListingArr;
+    
+   return $ImageDataListingArr;
 }
 
 /* * *******search a tower exists or not in given array************** */

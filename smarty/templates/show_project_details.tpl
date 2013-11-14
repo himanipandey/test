@@ -1863,6 +1863,7 @@ function getDateNow(){
                     <tr class="headingrowcolor" height="30px;">
                          <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase Name</td>
+                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Completion Date</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
                          <td nowrap="nowrap" width="9%" align="left" class=whiteTxt>Size</td>
                          <td nowrap="nowrap" width="20%" align="left" class=whiteTxt>Price Per Unit Area</td>
@@ -1882,6 +1883,7 @@ function getDateNow(){
                         <tr {$color}>
                         <td align = "center">{$cntPrice+1}</td>
                         <td align = "left" rowspan="">{$valueInner['phase_name']}</td>
+                        <td align = "left" rowspan="">{$valueInner['completion_date']}</td>
                         <td>
                              <input type='hidden' value='{$projectId}' name='projectId' />
                             {$valueInner['option_name']}
@@ -2488,7 +2490,7 @@ function getDateNow(){
 								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 										<tr class="headingrowcolor" height="30px;">
 											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date <br> Booking Status</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
@@ -2550,6 +2552,14 @@ function getDateNow(){
 																{else}
 																	--
 																{/if}
+																<br/>
+																{if $lastItem['BOOKING_STATUS_ID'] > 0}
+																	{if $lastItem['BOOKING_STATUS_ID'] == 1}Available{/if}
+																	{if $lastItem['BOOKING_STATUS_ID'] == 2}Sold out{/if}
+																	{if $lastItem['BOOKING_STATUS_ID'] == 3}Sold out{/if}
+																{else}
+																	--
+																{/if}
 															</td>
 														{/if}
 													
@@ -2561,6 +2571,8 @@ function getDateNow(){
 														</td>
 														{/if}
 														{$olderValueType = $keyInner}
+														
+														
 													
 													<td valign ="top" align="center">
 														{$lastItem['NO_OF_BEDROOMS']}BHK
