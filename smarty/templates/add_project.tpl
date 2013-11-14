@@ -13,6 +13,7 @@
 	   var id = 0;
 	   $(document).ready(function()   {
 	   $(".cityId").change(function()   {
+		   $(".suburbId").html('');
 			id=$(this).val();
 			var dataString = 'part=refreshLoc&id='+ id;
 
@@ -22,7 +23,7 @@
 		   data: dataString,
 		   cache: false,
 		   success: function(html)   {
-				$(".suburbId").html(html);
+				$(".localityId").html(html);
 			}
 	   });
 
@@ -31,11 +32,11 @@
 	});
 
 	   $(document).ready(function()   {
-			 $(".suburbId").change(function()  {
+			 $(".localityId").change(function()  {
 
-				var suburb_id = $(this).val();
+				var loc_id = $(this).val();
 				var cid = $(".cityId").val();				
-				var dataString = 'part=refreshLoc&suburb_id='+ suburb_id +"&id = "+cid;
+				var dataString = 'part=refreshLoc&loc_id='+ loc_id +"&id = "+cid;
 
 	   $.ajax  ({
 			type: "POST",
@@ -43,7 +44,7 @@
 			data: dataString,
 			cache: false,
 			success: function(html)  {
-				$(".localityId").html(html);
+				$(".suburbId").html(html);
 			}
 	   });
 	  });
@@ -170,22 +171,7 @@
 								  </td>
                                                                    
 							   </tr>
-                                                           
-                                                           <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Suburbs :</b> </td>
-								  <td width="30%" align="left">
-                                                                        <select name="suburbId" class="suburbId" style="width:230px;">
-                                                                            <option value="">Select Suburb</option>
-                                                                            {foreach from=$suburbSelect key=k item=v}
-                                                                                    <option {if $suburbId == $k} selected {/if} value = "{$k}">{$v}</option>
-                                                                            {/foreach}
-
-                                                                        </select>
-								  </td>
-								  <td width="50%" align="left">						  <font color="red">{if $ErrorMsg["txtSuburbs"] != ''} {$ErrorMsg["txtSuburbs"]} {/if}<span id = "err_suburb_id" style = "display:none;">Please select Suburb!</span></font>
-								  </td>
-							   </tr>
-							   
+                             
 							   <tr>
                                                                 <td width="20%" align="right"><font color ="red">*</font><b>Locality :</b> </td>
                                                                 <td width="30%" align="left">
@@ -199,7 +185,21 @@
                                                                <td width="50%" align="left">
                                                                         <font color="red">{if $ErrorMsg["txtLocality"] != ''} {$ErrorMsg["txtLocality"]} {/if}<span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
                                                                </td>
-							   </tr>							   
+							   </tr>	
+							   <tr>
+								  <td width="20%" align="right"><font color ="red">*</font><b>Suburbs :</b> </td>
+								  <td width="30%" align="left">
+									                                <select name="suburbId" class="suburbId" style="width:230px;" readonly>
+                                                                            <option value="">Select Suburb</option>
+                                                                            {foreach from=$suburbSelect key=k item=v}
+                                                                                    <option {if $suburbId == $k} selected {/if} value = "{$k}">{$v}</option>
+                                                                            {/foreach}
+
+                                                                        </select> 
+								  </td>
+								  <td width="50%" align="left">						  <font color="red">{if $ErrorMsg["txtSuburbs"] != ''} {$ErrorMsg["txtSuburbs"]} {/if}<span id = "err_suburb_id" style = "display:none;">Please select Suburb!</span></font>
+								  </td>
+							   </tr>						   
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
                                                                 <td width="30%" align="left">
@@ -679,6 +679,7 @@
                                                                         <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
                                                                         <option value="{$skipUpdationCycle_Id}" {if $skipUpdationCycle == {$skipUpdationCycle_Id}} selected {/if}>Yes</option>
                                                                     </select>
+                                                                    <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
                                                                 </td>
 								<td width="50%" align="left"><font color="red"></font></td>
 							   </tr>

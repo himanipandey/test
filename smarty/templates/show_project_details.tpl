@@ -524,7 +524,6 @@ function getDateNow(){
                     (trim($projectDetails[0].PROJECT_STAGE) == 'NewProject' AND trim($projectDetails[0].PROJECT_PHASE) == 'Audit1')
                     OR
                     (trim($projectDetails[0].PROJECT_STAGE) == 'UpdationCycle' AND trim($projectDetails[0].PROJECT_PHASE) == 'Audit1')}
-                      <input type = "button" name="oldValueDisplay" value = "Project Old Value Display" onclick = "oldValueShow('{$projectDetails[0].PROJECT_STAGE}','{$projectDetails[0].PROJECT_PHASE}',{$projectDetails[0].PROJECT_ID});">
                     {/if}
             <!-- Project Phases -->
             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -538,54 +537,7 @@ function getDateNow(){
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						
-						<tr>
-                                                    <td align="left" colspan='4'>
-                                                        <div id = "projectOldVal">
-                                                            {if count($changedValueArr)>0}
-                                                                <table style = "border:1px solid #c2c2c2;" align = "left" width ="60%">
-                                                                    {foreach from = $changedValueArr key=key item = item}
-                                                                            <tr><td>&nbsp;</td></tr>
-                                                                            <tr>
-                                                                                    <td align ="left" nowrap><b>Old Value for Project Detail</b></td>
-                                                                            </tr>
-
-                                                                            <tr class="headingrowcolor" height="30px;">
-                                                                                     <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt>Field Name</td>
-                                                                                     <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>New Value</td>
-                                                                                     <td nowrap="nowrap" width="25%" align="left" class=whiteTxt>Old Value</td>	
-                                                                            </tr>
-                                                                            {$cnt =0}
-                                                                            {foreach from = $item key=keyInner item = itemInner}
-                                                                                    {if ($cnt+1)%2 == 0}
-                                                                                            {$color = "bgcolor='#F7F8E0'"}
-                                                                                    {else}
-                                                                                            {$color = "bgcolor='#f2f2f2'"}
-                                                                                    {/if}
-                                                                            <tr {$color} height="25px;">
-                                                                                    <td width="10%" align="left">{ucwords(strtolower(str_replace("_"," ",$keyInner)))}</td>
-                                                                                    <td width="10%" align="left">
-                                                                                                    {if $itemInner['new'] != ''}
-                                                                                                            {$itemInner['new']} 
-                                                                                                    {else}
-                                                                                                            --
-                                                                                                    {/if}
-                                                                                    </td>
-                                                                                    <td width="10%" align="left">
-                                                                                                    {if $itemInner['old'] != ''}
-                                                                                                            {$itemInner['old']} 
-                                                                                                    {else}
-                                                                                                            --
-                                                                                                    {/if}
-                                                                                    </td>
-                                                                            </tr>
-                                                                            {$cnt = $cnt+1}
-                                                                            {/foreach}
-                                                                    {/foreach}
-                                                                </table>
-                                                            {/if}
-                                                        </div>
-                                                    </td>
-						</tr>
+						
 						<tr bgcolor = "#c2c2c2">
 							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"><b>Last Updated Detail</b></br>
 						  	  </br>
