@@ -320,7 +320,7 @@ function getDateNow(){
 		alert("Please select Campaign!");
 		return;
 	  }
-	 if( !isNaN(phNo) && $("#"+phId).val().indexOf('+') == -1 && $("#"+phId).val().indexOf('-') == -1 && phNo.toString().length == 10) {
+	 if( !isNaN(phNo) && $("#"+phId).val().indexOf('+') == -1 && $("#"+phId).val().indexOf('-') == -1) {
 		$.ajax(
 		{
 	      type:"get",
