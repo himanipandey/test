@@ -1863,6 +1863,7 @@ function getDateNow(){
                     <tr class="headingrowcolor" height="30px;">
                          <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase Name</td>
+                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Completion Date</td>
                          <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
                          <td nowrap="nowrap" width="9%" align="left" class=whiteTxt>Size</td>
                          <td nowrap="nowrap" width="20%" align="left" class=whiteTxt>Price Per Unit Area</td>
@@ -1882,6 +1883,7 @@ function getDateNow(){
                         <tr {$color}>
                         <td align = "center">{$cntPrice+1}</td>
                         <td align = "left" rowspan="">{$valueInner['phase_name']}</td>
+                        <td align = "left" rowspan="">{$valueInner['completion_date']}</td>
                         <td>
                              <input type='hidden' value='{$projectId}' name='projectId' />
                             {$valueInner['option_name']}
