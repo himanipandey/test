@@ -679,6 +679,7 @@
                                                                         <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
                                                                         <option value="{$skipUpdationCycle_Id}" {if $skipUpdationCycle == {$skipUpdationCycle_Id}} selected {/if}>Yes</option>
                                                                     </select>
+                                                                    <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
                                                                 </td>
 								<td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
