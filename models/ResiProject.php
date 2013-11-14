@@ -120,7 +120,7 @@ class ResiProject extends Objects
                     on locality.suburb_id = suburb.suburb_id
                  left join city
                     on suburb.city_id = city.city_id WHERE ".
-						$conditions." and resi_project.version = 'Cms' LIMIT 25";
+						$conditions." and resi_project.version = 'Cms'";
 						
        $projectSearch = ResiProject::find_by_sql($query);  
                   	
