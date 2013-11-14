@@ -77,7 +77,7 @@ class ProjectSupply extends Objects {
     
     function projectSupplyForProjectPage($projectId){
         $result = array();
-        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, rpp.project_id, 
+        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, rpp.project_id,  rpp.BOOKING_STATUS_ID,
             ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply, ps.launched, 
             pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type 
             from 
@@ -97,7 +97,7 @@ class ProjectSupply extends Objects {
              left join " . ResiProjectPhase::table_name() . "  rpp on (ls.phase_id = rpp.PHASE_ID and rpp.version = 'Cms')
        union 
             select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
-                rpp.COMPLETION_DATE, rpp.project_id, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
+                rpp.COMPLETION_DATE, rpp.project_id,rpp.BOOKING_STATUS_ID, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
                 ps.launched, pa.availability, pa.comment, pa.effective_month, 
                 rpo.option_type as project_type 
             from 
@@ -121,6 +121,7 @@ class ProjectSupply extends Objects {
             $entry['EDIT_REASON'] = $value->comment;
             $entry['SUBMITTED_DATE'] = $value->effective_month;
             $entry['PROJECT_TYPE'] = $value->project_type;
+            $entry['BOOKING_STATUS_ID'] = $value->booking_status_id;
             $result[] = $entry;
         }
         return $result;
