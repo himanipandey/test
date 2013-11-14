@@ -94,6 +94,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $offer_heading = trim($_POST["offer_heading"]);
             $offer_desc = trim($_POST["offer_desc"]);
             $skipUpdationCycle = $_POST["skipUpdationCycle"];
+            $updationCycleIdOld = $_POST["updationCycleIdOld"];
             $numberOfTowers = $_POST["numberOfTowers"];
             
             /***************Query for suburb selected************/
@@ -169,6 +170,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("offer_heading", $offer_heading);
             $smarty->assign("offer_desc", $offer_desc);
             $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
+            $smarty->assign("updationCycleIdOld", $updationCycleIdOld);
             $smarty->assign("numberOfTowers", $numberOfTowers);
             /***********Folder name**********/
             if(!empty($builderId)){
@@ -449,7 +451,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['no_of_towers'] = $numberOfTowers;
             if($skipUpdationCycle == skipUpdationCycle_Id)
                 $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
-            else
+            else if($skipUpdationCycle == 0 && $updationCycleIdOld == skipUpdationCycle_Id)
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
             $arrOx = array();
            // $arrOx = 
@@ -595,6 +597,7 @@ elseif ($projectId!='') {
     $smarty->assign("eff_date_to_prom", stripslashes($ProjectDetail->promised_completion_date));
     $smarty->assign("comments", stripslashes($ProjectDetail->comments));
     $smarty->assign("skipUpdationCycle", $ProjectDetail->updation_cycle_id);
+    $smarty->assign("updationCycleIdOld", $ProjectDetail->updation_cycle_id);
     $smarty->assign("txtProjectLocation", $txtProjectLocation);
     $smarty->assign("bank_arr", projectBankList($projectId));
     $smarty->assign("numberOfTowers", $ProjectDetail->no_of_towers);

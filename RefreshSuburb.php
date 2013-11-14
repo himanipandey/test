@@ -9,8 +9,8 @@
         if($_REQUEST['part']=='refreshLoc') {
             
             $city_id = $_REQUEST["id"];
-            $suburb_id = $_REQUEST["suburb_id"];
-            if($suburb_id == '')  {
+            $loc_id = $_REQUEST["loc_id"];
+            if($loc_id == '')  {
                 if($city_id != '') {
         
                         $getSub = Suburb::find('all',array('conditions'=>
@@ -18,22 +18,27 @@
                        ?>
                        <option value=''>Select</option>
                        <?php
-                           foreach ($getSub  as $value) { ?>
-                              <option value="<?php echo $value->suburb_id;?>"><?php echo $value->label; ?> </option>;
-                   <?php   }
+                           foreach ($getSub  as $value) { 
+								 $getLocality = Locality::find('all',array('conditions'=>
+                    array('suburb_id = ? and status = ?',$value->suburb_id, 'active'),'order' => 'label asc')); 
+								foreach ($getLocality as $value){
+								?>
+                              <option value="<?php echo $value->locality_id;?>"><?php echo $value->label; ?> </option>;
+                   <?php  		}
+							}
                 }
                 else 
                     echo "<option value=''>Select</option>"; 
             }
 
-            if($suburb_id != '') {
-                $getLocality = Locality::find('all',array('conditions'=>
-                    array('suburb_id = ? and status = ?',$suburb_id, 'active'),'order' => 'label asc'));
-                echo "<option value=''>Select</option>"; 
-                foreach ($getLocality as $value)
-             { ?>
-                     <option value="<?php echo $value->locality_id;?>"><?php echo $value->label; ?> </option>;
-            <?php  }	
+            if($loc_id != '') {
+                 $getLocality = Locality::find('all',array('conditions'=>
+                    array('locality_id = ? and status = ?',$loc_id, 'active'),'order' => 'label asc')); 
+                   $getSub = Suburb::find('all',array('conditions'=>
+                                  array('suburb_id = ? and status = ?',$getLocality[0]->suburb_id, 'active'),'order' => 'label asc'));   
+                      ?>            
+                        <option value="<?php echo $getSub[0]->suburb_id;?>"><?php echo $getSub[0]->label; ?> </option>;           
+                  <?php
             }		
         } else if($_REQUEST['part']=='addquickcity') {
             

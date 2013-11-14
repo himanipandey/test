@@ -27,7 +27,7 @@ $smarty->assign("otherPricing", $otherPricing);
 $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id) 
     join resi_project_options o on (o.options_id = option_id)",'conditions' => 
     array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active'"), "select" => 
-    "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
+    "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors,p.COMPLETION_DATE"));
 $uptionDetailWithPrice = array();
 
 foreach($optionsDetails as $key => $value) {
@@ -36,6 +36,7 @@ foreach($optionsDetails as $key => $value) {
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['completion_date'] = $value->completion_date;
     
 }
 
@@ -149,21 +150,45 @@ if ($_REQUEST['phaseId'] != -1)
 
 /* * *****supply code start here********* */
 /******* To Do ***/
-$supplyAllArray = array();
+$supplyAll = array();
 $res = ProjectSupply::projectSupplyForProjectPage($projectId);
 $arrPhaseCount = array();
 $arrPhaseTypeCount = array();
 
 foreach ($res as $data) {
     if ($data['PHASE_NAME'] == '')$data['PHASE_NAME'] = 'noPhase';
-    $supplyAllArray[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
+    $supplyAll[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
     $arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
     $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 }
-//echo "<pre>";
-//print_r($supplyAllArray);
+$supplyAllArray = array();
 $isSupplyLaunchEdited = ProjectSupply::isSupplyLaunchEdited($projectId);
-
+foreach($supplyAll as $k=>$v) {
+    foreach($v as $kMiddle=>$vMiddle) {
+        foreach($vMiddle as $kLast=>$vLast) {
+            $supplyAllArray[$k][$kMiddle][$kLast]['PHASE_NAME'] = $vLast['PHASE_NAME'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['LAUNCH_DATE'] = $vLast['LAUNCH_DATE'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['COMPLETION_DATE'] = $vLast['COMPLETION_DATE'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_ID'] = $vLast['PROJECT_ID'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['PHASE_ID'] = $vLast['PHASE_ID'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_BEDROOMS'] = $vLast['NO_OF_BEDROOMS'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_NO_OF_FLATS'] = $vLast['NO_OF_FLATS']; 
+            $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_LAUNCHED'] = $vLast['LAUNCHED'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['AVAILABLE_NO_FLATS'] = $vLast['AVAILABLE_NO_FLATS'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['EDIT_REASON'] = $vLast['EDIT_REASON'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['SUBMITTED_DATE'] = $vLast['SUBMITTED_DATE'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_TYPE'] = $vLast['PROJECT_TYPE'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['LISTING_ID'] = $vLast['LISTING_ID'];
+            
+            $qryEditedLaunched = "select supply,launched from project_supplies
+                where listing_id = ".$vLast['LISTING_ID']." and version = 'Website'";
+            $resEditedLaunched = mysql_query($qryEditedLaunched) or die(mysql_error());
+            $dataEditedLaunched = mysql_fetch_assoc($resEditedLaunched);
+            $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_FLATS'] = $dataEditedLaunched['supply'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['LAUNCHED'] = $dataEditedLaunched['launched'];
+        }
+    }
+}
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
@@ -437,7 +462,7 @@ if ($_POST['forwardFlag'] == 'no') {
     $res = mysql_query($qry) or die(mysql_error());
     $phaseId = mysql_fetch_assoc($res);
     
-    echo$qryStg = "select * from master_project_stages where name = '".$projectStage."'";
+    $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
     $resStg = mysql_query($qryStg) or die(mysql_error());
     $stageId = mysql_fetch_assoc($resStg);
     $history = ProjectStageHistory::find("all", array("conditions" => "project_id = {$projectId} and project_phase_id in
