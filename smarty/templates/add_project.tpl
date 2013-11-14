@@ -199,18 +199,17 @@
                                                                <td width="50%" align="left">
                                                                         <font color="red">{if $ErrorMsg["txtLocality"] != ''} {$ErrorMsg["txtLocality"]} {/if}<span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
                                                                </td>
-							   </tr>
-							   
+							   </tr>							   
                                                            <tr>
-                                                                <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Comments :</b> </td>
+                                                                <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
                                                                 <td width="30%" align="left">
-                                                                       <textarea name="comments" rows="10" cols="45" id = "comments">{$comments}</textarea>
+                                                                       <textarea name="txtProjectDesc" rows="10" cols="45" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
                                                                 </td>
                                                                 <td width="50%" align="left">
-                                                                        <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
+                                                                        <font color="red">{if $ErrorMsg["txtDesc"] != ''} {$ErrorMsg["txtDesc"]} {/if}<span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
                                                                </td>
 							   </tr>
-                                                           {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
+							   {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
                                                             {if array_key_exists('projectRemark',$projectComments)}   
                                                             <tr>
                                                                 <td width="20%" align="right" valign="top"><b>Project Old Remark :</b> </td>
@@ -327,13 +326,13 @@
 								  <td width="50%" align="left">
 									  <font color="red">{if $ErrorMsg["txtAddress"] != ''} {$ErrorMsg["txtAddress"]} {/if}<span id = "err_project_address" style = "display:none;">Please enter project address!</span></font>
 								  </td>
-							   </tr>
+							   </tr>							   
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Project Description :</b> </td>
-								  <td width="30%" align="left"><input type="text" name="txtProjectDesc" id="txtProjectDesc" value="{$txtProjectDescription}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
+								  <td width="20%" align="right"><font color ="red">*</font><b>Project Comments :</b> </td>
+								  <td width="30%" align="left"><input type="text" name="comments" id="comments" value="{$comments}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
 
 								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtDesc"] != ''} {$ErrorMsg["txtDesc"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Option Description!</span></font>
+									  <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Option Description!</span></font>
 								  </td>
 							   </tr>
 
