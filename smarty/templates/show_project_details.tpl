@@ -120,6 +120,7 @@ function towerSelect(towerId)
 
 	function changePhase(pId, phase, dir, projectStatus, promisedComDate,launchDate, preLaunchDate,phaseId,stg)
 	{
+		
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
@@ -438,7 +439,8 @@ function getDateNow(){
 {/if}
 {if $projectDetails[0].PROJECT_STAGE != 'NoStage'}
 
-	{$projectStatus = $projectDetails[0]['PROJECT_STATUS']}
+	{$projectStatus = $projectDetails[0]['project_status']}
+	{$phaseId = $projectDetails[0]['PROJECT_PHASE_ID']}
 	{$promisedCompletionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE']}
 	{$promisedCompletionDate = $completionDate}
 	{$launchDate = $projectDetails[0]['LAUNCH_DATE']}
@@ -2429,7 +2431,15 @@ function getDateNow(){
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
-							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>
+							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>
+							  	
+							  	{if $isSupplyLaunchEdited && $isSupplyLaunchVerified}
+									<button class="clickbutton" style="background-color: none" onclick="$(this).trigger('event17');">Verify Supply Change</button>
+								{else}
+									<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>
+								{/if}
+									
+									<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>
 							</tr>
 						{/if}
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}

@@ -190,4 +190,26 @@ class ProjectSupply extends Objects {
         $result = self::find_by_sql($sql);
         return (intval($result[0]->count)>0);
     }
+    function isSupplyLaunchVerified($projectId){
+		
+		$sql1 = "select supply  from project_supplies ps inner join listings l
+                on ps.listing_id = l.id
+                inner join resi_project_options rpo on l.option_id = rpo.options_id
+                where 
+                rpo.project_id = '$projectId' and version = 'CMS'";
+         $result1 = self::find_by_sql($sql1);
+         
+         $sql2 = "select supply  from project_supplies ps inner join listings l
+                on ps.listing_id = l.id
+                inner join resi_project_options rpo on l.option_id = rpo.options_id
+                where 
+                rpo.project_id = '$projectId' and version = 'Website'" ;
+          $result2 = self::find_by_sql($sql2);
+          
+          if($result1[0]->supply == $result2[0]->supply)
+			return 1;
+		  else
+			return 0;
+		
+	}
 }
