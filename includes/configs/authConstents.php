@@ -70,4 +70,11 @@
     if($isMetricsAuth == true)
         $isMetricsAccess = 1;
     $smarty->assign("isMetricsAccess",$isMetricsAccess);
+    
+     $isupplyEditPermissionAuth = isUserPermitted('supplyEditPermission', 'access');
+
+    $supplyEditPermissionAccess = 0;
+    if($isupplyEditPermissionAuth == true)
+        $supplyEditPermissionAccess = 1;
+    $smarty->assign("supplyEditPermissionAccess",$supplyEditPermissionAccess);
 ?>

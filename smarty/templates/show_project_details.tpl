@@ -2089,7 +2089,7 @@ function getDateNow(){
 									{/foreach}	
 									
 									<tr height ="30px" bgcolor="#F6D8CE">
-										<td colspan ="3" align ="right"><b>Sub Total {$key} </b></b></td>
+										<td colspan ="4" align ="right"><b>Sub Total {$key} </b></b></td>
 										<td  align = "center" nowrap><b>{$phaseWiseTotalFlats}</b></td>
 									<td align = "center" nowrap><b></b></td>
 									<td  align = "center" nowrap><b></b></td>
@@ -2100,7 +2100,7 @@ function getDateNow(){
 								{/foreach}
 								
 									<tr height ="30px" bgcolor="#F7F8E0">
-										<td colspan ="3" align ="right"><b>Grand Total </b></b></td>
+										<td colspan ="4" align ="right"><b>Grand Total </b></b></td>
 										<td  align = "center" nowrap><b>{$grandTotalFlats}</b></td>
 									<td align = "center" nowrap><b></b></td>
 									<td  align = "center" nowrap><b></b></td>
@@ -2429,7 +2429,11 @@ function getDateNow(){
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
-							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}<button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>
+                                                            <td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>{if $isSupplyLaunchEdited}
+                                                               {if $supplyEditPermissionAccess == 1} 
+                                                                  <button class="clickbutton" style="background-color: red;" onclick="$(this).trigger('event17');">Verify Supply Change</button>{/if}<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button>
+                                                               {/if}
+                                                            </td>
 							</tr>
 						{/if}
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
@@ -2549,7 +2553,7 @@ function getDateNow(){
                                                                                                                 {$totalEditedNoOfFlatsPPhase = $totalEditedNoOfFlatsPPhase+$lastItem['EDITED_NO_OF_FLATS']}
                                                                                                                 {$totalLaunchedFlatsPPhase = $totalLaunchedFlatsPPhase+$lastItem['LAUNCHED']}
                                                                                                                 {$totalEditedLaunchedFlatsPPhase = $totalEditedLaunchedFlatsPPhase+$lastItem['EDITED_LAUNCHED']}
-														{if $key != 'noPhase'}
+														{if $key != 'No Phase'}
 															{$totalSumFlat = $totalSumFlat+$lastItem['NO_OF_FLATS']}
                                                                                                                         {$totalEditedSumFlat = $totalEditedSumFlat+$lastItem['EDITED_NO_OF_FLATS']}
                                                                                                                         {$totalLaunchedFlat = $totalLaunchedFlat+$lastItem['LAUNCHED']}
