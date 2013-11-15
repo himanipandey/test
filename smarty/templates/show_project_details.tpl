@@ -542,12 +542,13 @@ function getDateNow(){
 						<tr bgcolor = "#c2c2c2">
 							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"><b>Last Updated Detail</b></br>
 						  	  </br>
-																	
-									<b>Department: </b> {$lastUpdatedDetail['resi_project']['dept']}</br>
-									<b>Name: </b> {$lastUpdatedDetail['resi_project']['name']}</br>
-									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project']['ACTION_DATE']}</br></br>
-								
-								
+								{foreach from = $lastUpdatedDetail['resi_project'] key=key item = item}
+									
+									<b>Department: </b> {$item['dept']}</br>
+									<b>Name: </b> {$item['name']}</br>
+									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
+								{/foreach}								
+																
 							  </td>
 						  
 						</tr>
@@ -1804,25 +1805,28 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['resi_project_options'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "9"><b>Last Updated Detail</b><br></br>
-								<b>Department: </b> {$lastUpdatedDetail['resi_project_options']['dept']}</br>
-									<b>Name: </b> {$lastUpdatedDetail['resi_project_options']['name']}</br>
-									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_options']['ACTION_DATE']}</br></br>
-								
+							  {foreach from = $lastUpdatedDetail['resi_project_options'] key=key item = item}
+									
+									<b>Department: </b> {$item['dept']}</br>
+									<b>Name: </b> {$item['name']}</br>
+									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
+								{/foreach}	
+																
 							  </td>
 							  
 						  </tr>
 						{/if}
                             {/if}
                     <tr class="headingrowcolor" height="30px;">
-                         <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
-                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Phase Name</td>
-                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Completion Date</td>
-                         <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
-                         <td nowrap="nowrap" width="9%" align="left" class=whiteTxt>Size</td>
-                         <td nowrap="nowrap" width="20%" align="left" class=whiteTxt>Price Per Unit Area</td>
-                         <td nowrap="nowrap" width="17%" align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
-                         <td nowrap="nowrap" width="17%" align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
-                         <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Villa Floors</td>
+						<td  nowrap="nowrap"  align="center" class=whiteTxt >SNo.</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt>Phase Name</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt>Effecive Date</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt>Unit Name</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt>Size</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt>Price Per Unit Area</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt>Villa Floors</td>
 
                     </tr>
                     {$cntPrice = 0}
@@ -1834,34 +1838,34 @@ function getDateNow(){
                             {$color = "bgcolor='#f2f2f2'"}
                         {/if}
                         <tr {$color}>
-                        <td align = "center">{$cntPrice+1}</td>
-                        <td align = "left" rowspan="">{$valueInner['phase_name']}</td>
-                        <td align = "left" rowspan="">{$valueInner['completion_date']}</td>
-                        <td>
+                        <td align = "center" >{$cntPrice+1}</td>
+                        <td align = "left" >{$valueInner['phase_name']}</td>
+                        <td align = "left" style="width:250px;display:block;" >{$valueInner['effective_date']}</td>
+                        <td >
                              <input type='hidden' value='{$projectId}' name='projectId' />
                             {$valueInner['option_name']}
                       </td>
-                      <td>
+                      <td >
                          {if isset($valueInner['size'])} {$valueInner['size']} {else} -- {/if}
                       </td>
-                      <td>
+                      <td >
                         {if isset($valueInner['latestPrice'])} {$valueInner['latestPrice']} {else} -- {/if}
                       </td>
-                        <td>
+                        <td >
                             {if isset($valueInner['prevMonthPrice'])}
                                 {$valueInner['prevMonthPrice']}
                             {else}
                                 {"Not Applicable"}
                             {/if}
                         </td>
-                        <td>
+                        <td >
                             {if isset($valueInner['prevPrevMonthPrice'])}
                                 {$valueInner['prevPrevMonthPrice']}
                             {else}
                                 {"Not Applicable"}
                             {/if}
                         </td>
-                      <td>
+                      <td >
                             {$valueInner['villa_no_floors']}
                       </td>
                     {$cntPrice = $cntPrice+1}
@@ -2017,9 +2021,12 @@ function getDateNow(){
 						{if array_key_exists('resi_project_tower_details',$lastUpdatedDetail)}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "8"><b>Last Updated Detail</b><br></br>
-								<b>Department: </b> {$lastUpdatedDetail['resi_project_tower_details']['dept']}</br>
-									<b>Name: </b> {$lastUpdatedDetail['resi_project_tower_details']['name']}</br>
-									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_project_tower_details']['ACTION_DATE']}</br></br>
+								 {foreach from = $lastUpdatedDetail['resi_project_tower_details'] key=key item = item}
+									
+									<b>Department: </b> {$item['dept']}</br>
+									<b>Name: </b> {$item['name']}</br>
+									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
+								{/foreach}	
 								
 							  </td>
 							  
@@ -2428,9 +2435,12 @@ function getDateNow(){
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "8"><b>Last Updated Detail</b><br></br>
-								<b>Department: </b> {$lastUpdatedDetail['resi_proj_supply']['dept']}</br>
-									<b>Name: </b> {$lastUpdatedDetail['resi_proj_supply']['name']}</br>
-									<b>last Updated Date: </b> {$lastUpdatedDetail['resi_proj_supply']['ACTION_DATE']}</br></br>
+								{foreach from = $lastUpdatedDetail['resi_proj_supply'] key=key item = item}
+									
+									<b>Department: </b> {$item['dept']}</br>
+									<b>Name: </b> {$item['name']}</br>
+									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
+								{/foreach}	
 								
 							  </td>
 							  
