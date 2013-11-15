@@ -128,7 +128,9 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 
         if($ActiveValue != '')
         {
-            $QueryMember .=  $and." RP.STATUS IN(".$ActiveValue.")";
+			$ActiveValue = explode(",",$ActiveValue);
+			$ActiveValue = implode("','",$ActiveValue);
+		    $QueryMember .=  $and." RP.STATUS IN('".$ActiveValue."')";
             $and  = ' AND ';
         }
 
