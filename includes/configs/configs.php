@@ -607,7 +607,7 @@ define('COMMERCIAL','7');
 
 
 $ARR_PROJ_EDIT_PERMISSION = array(
-	"ADMINISTRATOR"=>array('DataCollection','NewProject','Audit1','Audit2','Complete','bulkupdate','dailymis','DcCallCenter','noPhase','noStage'),
+	"ADMINISTRATOR"=>array('DataCollection','NewProject','Audit1','Audit2','Complete','bulkupdate','dailymis','DcCallCenter','NoPhase','NoStage'),
 	"DATAENTRY"=>array('DataCollection'),
 	"CALLCENTER"=>array('DataCollection','dailymis','DcCallCenter'),
         "RESALE-CALLCENTER"=>array('DataCollection','dailymis'),
