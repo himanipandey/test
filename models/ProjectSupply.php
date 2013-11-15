@@ -5,7 +5,7 @@ require_once "support/objects.php";
 class ProjectSupply extends Objects {
 
     static $before_save = array('launchedValidation');
-    static $default_scope = array("version" => "cms");
+    static $default_scope = array("version" => "Cms");
     static $virtual_primary_key = 'id';
     
 //    static $after_save = array('save_total_flat_count');
@@ -79,7 +79,7 @@ class ProjectSupply extends Objects {
         $result = array();
         $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, rpp.project_id,  rpp.BOOKING_STATUS_ID,
             ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply, ps.launched, 
-            pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type 
+            pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type,ls.id as listing_id
             from 
              " . self::table_name() . " ps 
              inner join " . ProjectAvailability::table_name() . " pa on (ps.id=pa.project_supply_id and ps.version = 'Cms')
@@ -91,7 +91,7 @@ class ProjectSupply extends Objects {
                     on ps.id=pa.project_supply_id
                     inner join listings ls on (ps.listing_id = ls.id and ls.listing_category = 'Primary' and ls.status = 'Active')  
                     left join " . ResiProjectPhase::table_name() . " rpp on ls.phase_id = rpp.PHASE_ID 
-                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'Cms' group by ps.id
+                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'Cms' and rpp.status = 'Active' group by ps.id
                  ) t 
                 on ps.id=t.id and pa.effective_month=t.mon 
              left join " . ResiProjectPhase::table_name() . "  rpp on (ls.phase_id = rpp.PHASE_ID and rpp.version = 'Cms')
@@ -99,7 +99,7 @@ class ProjectSupply extends Objects {
             select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
                 rpp.COMPLETION_DATE, rpp.project_id,rpp.BOOKING_STATUS_ID, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
                 ps.launched, pa.availability, pa.comment, pa.effective_month, 
-                rpo.option_type as project_type 
+                rpo.option_type as project_type,ls.id as listing_id 
             from 
                 project_supplies ps left join project_availabilities pa on (ps.id=pa.project_supply_id and ps.version = 'Cms')
             inner join listings ls on (ps.listing_id = ls.id  and ls.listing_category = 'Primary' and ls.status = 'Active')          
@@ -122,6 +122,7 @@ class ProjectSupply extends Objects {
             $entry['SUBMITTED_DATE'] = $value->effective_month;
             $entry['PROJECT_TYPE'] = $value->project_type;
             $entry['BOOKING_STATUS_ID'] = $value->booking_status_id;
+            $entry['LISTING_ID'] = $value->listing_id;
             $result[] = $entry;
         }
         return $result;

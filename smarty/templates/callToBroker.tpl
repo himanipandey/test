@@ -13,8 +13,10 @@
 		alert("Please select Campaign!");
 		return;
 	  }
+      
+      if(phNo.toString().trim().charAt(0)!=='0')phNo = '0'+phNo;
 	  
-      if( !isNaN(phNo) && $('#mobile').val().indexOf('+') == -1 && $('#mobile').val().indexOf('-') == -1 && phNo.toString().length == 10) {
+      if( !isNaN(phNo) && $('#mobile').val().indexOf('+') == -1 && $('#mobile').val().indexOf('-') == -1) {
         $.ajax(
 	  {
 	      type:"get",

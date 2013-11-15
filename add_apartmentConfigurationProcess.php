@@ -249,8 +249,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						
 						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1;
 																	
-						$list_id = mysql_fetch_object(mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and rpp.phase_type = 'Logical'"));
-																							
+						$list_id = mysql_fetch_object(mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or lst.status = 'Inactive')"));
+																													
 						 $qryDel_list = "DELETE FROM ".LISTINGS." 
                     WHERE
                         ID = '".$list_id->id."'";
