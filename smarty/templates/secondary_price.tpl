@@ -24,8 +24,7 @@ function builder_contact(builderId,buildernm)
 		alert("Please select Campaign!");
 		return;
 	  }
-	 
-      if(phNo.toString().trim().charAt(0)!=='0')phNo = '0'+phNo;
+	  if(phNo.toString().trim().charAt(0)!=='0')phNo = '0'+phNo;
       $.ajax(
 	  {
 	      type:"get",
