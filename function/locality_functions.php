@@ -40,19 +40,19 @@ function getIdByType( $id, $id_type ) {
                 $add_value = 0;
                 break;
             case 'suburb':
-                $add_value = 10000;
+                $add_value = 0;
                 break;
             case 'locality':
-                $add_value = 50000;
+                $add_value = 0;
                 break;
             case 'builder':
-                $add_value = 100000;
+                $add_value = 0;
                 break;
             case 'project':
-                $add_value = 500000;                                                                                                                  
+                $add_value = 0;                                                                                                                  
                 break;
             case 'property':
-                $add_value = 5000000;
+                $add_value = 0;
                 break;
         }
         if ( $add_value != -1 ) {
