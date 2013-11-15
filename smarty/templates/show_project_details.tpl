@@ -440,7 +440,7 @@ function getDateNow(){
 {if $projectDetails[0].PROJECT_STAGE != 'NoStage'}
 
 	{$projectStatus = $projectDetails[0]['project_status']}
-	{$phaseId = $projectDetails[0]['PROJECT_PHASE_ID']}
+	{* $phaseId = $projectDetails[0]['PROJECT_PHASE_ID'] *}
 	{$promisedCompletionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE']}
 	{$promisedCompletionDate = $completionDate}
 	{$launchDate = $projectDetails[0]['LAUNCH_DATE']}
