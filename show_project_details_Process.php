@@ -27,16 +27,22 @@ $smarty->assign("otherPricing", $otherPricing);
 $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id) 
     join resi_project_options o on (o.options_id = option_id)",'conditions' => 
     array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active'"), "select" => 
-    "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors,p.COMPLETION_DATE"));
+    "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
 
 foreach($optionsDetails as $key => $value) {
+	
+	$listing_price = ListingPrices::find('all',array('conditions'=>
+    array('listing_id = ?', $value->id),'select' => 
+                    'effective_date'));
+              	
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
-    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['completion_date'] = $value->completion_date;
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = $listing_price[0]->effective_date;
+    
     
 }
 
