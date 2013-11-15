@@ -76,6 +76,8 @@ $smarty->assign("projectLastAuditDate", $projectLastAuditDate);
 function prepareDisplayData($data){ 
     $result = array();
     foreach ($data as $value) {
+         if($value['LAST_WORKED_AT'] == '')
+            $value['LAST_WORKED_AT'] = 'NA';       
         $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 
             'CITY' => $value['CITY'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 
             'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'MOVEMENT_DATE' => $value['MOVEMENT_DATE'],

@@ -285,7 +285,7 @@ function getCompletionCountByExecs($startTime = '0', $endTime = NULL){
         from 
         project_stage_history 
         where
-        PROJECT_PHASE_ID = '12' and DATE_TIME between '" . $startTime . "' 
+        PROJECT_PHASE_ID = ".phaseId_4." and DATE_TIME between '" . $startTime . "' 
             and '" . $endTime . "' group by ADMIN_ID;";
     return dbQuery($sql);
 }
@@ -296,8 +296,8 @@ function getRevertCountForExecs($startTime = '0', $endTime = NULL){
         inner join project_stage_history t2 
         on t1.PREV_HISTORY_ID = t2.HISTORY_ID 
         where
-        t1.PROJECT_PHASE_ID = '16' 
-        and t2.PROJECT_PHASE_ID = '12' 
+        t1.PROJECT_PHASE_ID = ".phaseId_8." 
+        and t2.PROJECT_PHASE_ID = ".phaseId_4." 
         and t2.DATE_TIME between '" . $startTime . "' 
         and '" . $endTime . "' group by t2.ADMIN_ID";
     return dbQuery($sql);
