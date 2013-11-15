@@ -247,7 +247,7 @@
                                                         </td>
                                                         <td width="50%" align="left"></td>
                                                         </tr>
-
+                                                                                
                                                         <tr class="options_select" style="display: none">
                                                             <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
                                                                         <td width="30%" align="left">
@@ -263,7 +263,6 @@
                                                                             <br><br><strong>Select all options:</strong> <input type="checkbox" class="select_all_options">
                                                                         </td>
                                                                         </tr>
-
                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==1 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
                                                                             <tr class="supply_select">
                                                                                 <td width="20%" align="right" valign="top"><b><b><b>Supply of Flats :</b> </td>
@@ -333,7 +332,7 @@
                                                                                                                                 </ul>
                                                                                                                             </td>
                                                                                                                             
-                                                                                                                            {if $phaseId != '0'}
+                                                                                                                            {if $phaseObject['PHASE_TYPE'] != 'Logical'}
                                                                                                                             <td width="50%" align="left">
                                                                                                                                 <button class="reset_option_and_supply supply_button">Change to options</button>
                                                                                                                             {/if}
