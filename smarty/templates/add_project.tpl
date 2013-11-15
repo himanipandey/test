@@ -556,7 +556,7 @@
                                                            <tr>
 								  <td width="20%" align="right"><b>Open Space:</b> </td><td width="30%" align="left">
                                                                     <input type = "text" name = "open_space" id = "open_space" value = "{$open_space}" style ="width:360px;"  onkeypress='return isNumberKey(event)'><br>
-                                                                    <span style = "font-size:10px">in acres</span>
+                                                                    <span style = "font-size:10px">in percentage</span>
 								  </td>
 								  <td width="50%" align="left" nowrap>
                                                                     <font color="red">
