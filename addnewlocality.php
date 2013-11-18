@@ -67,9 +67,9 @@ else
             $c = mysql_affected_rows();
 	}
 
-        $seldata = "SELECT l.LABEL FROM ".LOCALITY." l
+     $seldata = "SELECT l.LABEL FROM ".LOCALITY." l
             inner join suburb s on l.suburb_id = s.suburb_id
-            WHERE s.CITY_ID = '".$deletect."' AND l.LABEL = '".$localityval."'";
+            WHERE s.CITY_ID = '".$cityid."' AND l.LABEL = '".$localityval."'";
 	$resdata = mysql_query($seldata);
 	$ins = mysql_num_rows($resdata);
 
@@ -85,8 +85,7 @@ else
         $qry = "UPDATE ".LOCALITY." SET URL = '$url',updated_by = '".$_SESSION['adminId']."'
             WHERE LOCALITY_ID=".$locId;
         $res = mysql_query($qry) or die(mysql_error());
-	}
-
+        
 	$selqry = "SELECT l.LABEL,l.locality_id FROM ".LOCALITY." l
             inner join suburb s on l.suburb_id = s.suburb_id
             WHERE s.CITY_ID = '".$cityid."' AND l.suburb_id = '".$subcityval."' ORDER BY LABEL";
@@ -103,6 +102,11 @@ else
             }
             ?>
 	</select>
-<?php
+	<?php
+	}else{
+		print 1;
+	}
+
+
 }
 ?>

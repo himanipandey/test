@@ -83,7 +83,7 @@ else
     $seldata = "UPDATE ".SUBURB." 
         SET URL = '$url',updated_by = '".$_SESSION['adminId']."' WHERE SUBURB_ID='".$ctid."'";
     $resdata = mysql_query($seldata);
-    }
+   
 
    $selqry = "SELECT SUBURB_ID,LABEL FROM ".SUBURB." WHERE CITY_ID='".$cityid."' ORDER BY LABEL";
     $ressel = mysql_query($selqry) or die(mysql_error()." select");
@@ -100,5 +100,8 @@ else
             ?>
     </select>
 <?php
+	}else{
+		print 1;
+	}
 }
 ?>

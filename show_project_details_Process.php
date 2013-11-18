@@ -41,9 +41,8 @@ foreach($optionsDetails as $key => $value) {
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
-    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = $listing_price[0]->effective_date;
-    
-    
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = date('Y-m-d',strtotime($listing_price[0]->effective_date));
+   
 }
 
 $PhaseOptionHash = $ProjectPhases[1];
@@ -332,23 +331,18 @@ $smarty->assign('city',$city[0]->label);
 $builderDetail = fetch_builderDetail($projectDetails[0]['BUILDER_ID']);
 $smarty->assign("builderDetail", $builderDetail);
 /* * ***code for promised completion date******* */
-$expCompletionDate = costructionDetail($projectId);
-$completionDate = '';
-if (count($expCompletionDate['EXPECTED_COMPLETION_DATE']) > 0) {
-    date_default_timezone_set('Asia/Calcutta');
-    $dateProject = new DateTime($projectDetails[0]['PROMISED_COMPLETION_DATE']);
-    $dateConstruct = new DateTime($expCompletionDate['EXPECTED_COMPLETION_DATE']);
-    if ($dateProject < $dateConstruct)
-        $completionDate = $expCompletionDate['EXPECTED_COMPLETION_DATE'];
-    else
-        $completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
-}
-else
-    $completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
-
+$completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
 $smarty->assign("completionDate", $completionDate);
 /* * ***code for promised completion date******* */
 
+
+/********** booking status for project ***********/
+ 
+$projectd = $projectDetails[0]['PROJECT_ID'];
+ $project_booking_status = ResiProjectPhase::find("all", array("conditions" => array("project_id = {$projectId} and phase_type = 'Logical'"),'select' => 
+                    'booking_status_id'));
+$smarty->assign("project_booking_status_id", $project_booking_status[0]->booking_status_id);
+    
 //$smarty->assign("localitySelect", $localitySelect); //To Do
 $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);

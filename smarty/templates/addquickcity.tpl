@@ -234,7 +234,10 @@ function addupdatesubcity()
 		xmlHttpadd1.open("GET",url,false);
 		xmlHttpadd1.send(null);
 		var returnval=xmlHttpadd1.responseText;
-		if(returnval)
+		
+		if(returnval == 1)
+			alert("The Record is already exist!");
+		else if(xmlHttpadd1)
 		{
 			document.getElementById('mainsubcity').innerHTML = returnval;
 			subcityselid=$("#suburbId :selected").val();
@@ -275,6 +278,7 @@ function deletesubcity()
 					document.getElementById('mainsubcity').innerHTML = returnval;
 					dispsubcity(subcityselid);
 					alert("The record has been successfully deleted.");
+					  location.reload();
 				}
 			}
 	}
@@ -374,7 +378,9 @@ function addupdatelocality()
 		xmlHttpadd1.open("GET",url,false);
 		xmlHttpadd1.send(null);
 		var returnval=xmlHttpadd1.responseText;
-		if(xmlHttpadd1)
+		if(returnval == 1)
+			alert("The Record is already exist!");
+		else if(xmlHttpadd1)
 		{
                     document.getElementById('mainlocality').innerHTML = returnval;
                     var localityselid=$("#localityId :selected").val();

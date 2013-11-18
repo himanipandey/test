@@ -52,7 +52,7 @@ function refreshother(ct)
 					{/if}
 				 <form method="post"  action = ''>	
 							   <tr>
-								  <td align="left" colspan='4'><b>Aminities :</td>
+								  <td align="left" colspan='4'><b>Amenities :</td>
 								</tr>
 							
 							{foreach from=$AmenitiesArr key=k item=v} 
