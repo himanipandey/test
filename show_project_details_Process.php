@@ -349,6 +349,14 @@ else
 $smarty->assign("completionDate", $completionDate);
 /* * ***code for promised completion date******* */
 
+
+/********** booking status for project ***********/
+ 
+$projectd = $projectDetails[0]['PROJECT_ID'];
+ $project_booking_status = ResiProjectPhase::find("all", array("conditions" => array("project_id = {$projectId} and phase_type = 'Logical'"),'select' => 
+                    'booking_status_id'));
+$smarty->assign("project_booking_status_id", $project_booking_status[0]->booking_status_id);
+    
 //$smarty->assign("localitySelect", $localitySelect); //To Do
 $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);

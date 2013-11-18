@@ -995,16 +995,22 @@ function getDateNow(){
 								{$projectDetails[0].STATUS}
 							</td>
 						</tr>
-                                                <!--
+                                                
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Booking Status:</b>
 							</td>
 							<td>
-                                                            {$projectDetails[0].BOOKING_STATUS}
+                                                            {if $project_booking_status_id > 0}
+																	{if $project_booking_status_id == 1}Available{/if}
+																	{if $project_booking_status_id == 2}Sold out{/if}
+																	{if $project_booking_status_id == 3}On Hold{/if}
+																{else}
+																	--
+																{/if}
 							</td>
 						</tr>
-                                                -->
+                                                
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b>Project Status:</b>
@@ -2531,7 +2537,7 @@ function getDateNow(){
 																{if $lastItem['BOOKING_STATUS_ID'] > 0}
 																	{if $lastItem['BOOKING_STATUS_ID'] == 1}Available{/if}
 																	{if $lastItem['BOOKING_STATUS_ID'] == 2}Sold out{/if}
-																	{if $lastItem['BOOKING_STATUS_ID'] == 3}Sold out{/if}
+																	{if $lastItem['BOOKING_STATUS_ID'] == 3}On Hold{/if}
 																{else}
 																	--
 																{/if}
