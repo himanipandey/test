@@ -380,9 +380,9 @@ $(function() {
                                       <td align="left" style = "padding-left:20px;">
                                         <select name="Active[]" id="Active" class="field" multiple>
                                             <option value ="" >Select</option>
-                                            <option {if $Active == 'Inactive'} selected {/if} value="Inactive">Inactive on both Website and IS DB</option>
-                                            <option {if $Active == 'Active'} selected {/if} value="Active">Active on both Website and IS DB</option>
-                                            <option {if $Active == 'ActiveInCms'} selected{/if}  value="ActiveInCms">Active In Cms</option>
+                                            <option {if in_array('Inactive',$Active)} selected {/if} value="Inactive">Inactive on both Website and IS DB</option>
+                                            <option {if in_array('Active',$Active)} selected {/if} value="Active">Active on both Website and IS DB</option>
+                                            <option {if in_array('ActiveInCms',$Active)} selected{/if}  value="ActiveInCms">Active In Cms</option>
                                         </select>
                                       </td>
                                      </tr>
@@ -392,7 +392,7 @@ $(function() {
                                           <select name="Status[]" id="Status" class="fieldState" multiple>
                                               <option value="">Select</option>
                                               {foreach from = $projectStatus key = key item = value}
-                                                      <option value="{$key}" {if $key == $Status} selected {/if}>{$value} </option>
+                                                      <option value="{$key}" {if in_array($key,$Status)} selected {/if}>{$value} </option>
                                               {/foreach}
                                          </select>
                                       </td>
