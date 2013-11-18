@@ -120,28 +120,29 @@ function towerSelect(towerId)
 
 	function changePhase(pId, phase, dir, projectStatus, promisedComDate,launchDate, preLaunchDate,phaseId,stg)
 	{
-		
+				
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
 		var flgChk = 0;	
 		if(dir != 'backward' && val == 'Y' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')))
 		{
+			
 			if(phaseId != '')
 			{
 				alert("Please select No Phase!");
 				return false;
 			}							
-			else if((projectStatus == 'Occupied' || projectStatus == 'Ready for Possession') && promisedComDate == '0000-00-00 00:00:00')
+			else if((projectStatus == 'Occupied' || projectStatus == 'ReadyForPossession') && promisedComDate == '0000-00-00 00:00:00')
 			{
 				alert("Promised Completion Date is Mendetory!");
 				return false;
 			}
-			else if((projectStatus == 'Under Construction' || projectStatus == 'Launch'))
+			else if(projectStatus == 'UnderConstruction' || projectStatus == 'Launch')
 			{
-				if(launchDate == '0000-00-00 00:00:00' || promisedComDate == '0000-00-00 00:00:00')
+				if(launchDate == '0000-00-00' || promisedComDate == '0000-00-00')
 				{
-					alert("Launch Date Promised Completion Date are Mendetory!");
+					alert("Launch Date, Promised Completion Date are Mendetory!");
 					return false;
 				}
 				if(flatAvailChk == 1)
@@ -157,7 +158,7 @@ function towerSelect(towerId)
 
 				flgChk = 1;
 			}
-			else if(projectStatus == 'Pre Launch' && preLaunchDate == '0000-00-00 00:00:00')
+			else if(projectStatus == 'PreLaunch' && preLaunchDate == '0000-00-00')
 			{
 				alert("Pre Launch Date is Mendetory!");
 				return false;
