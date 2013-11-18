@@ -25,6 +25,7 @@ if (isset($_REQUEST['delete'])) {
     $phase->status = 'Inactive';
     $resDelete = $phase->virtual_save();
     if ($resDelete) {
+        Listings::update_all(array('conditions' => array('phase_id' => $phaseId, 'listing_category' => 'Primary'), 'set' => array('status' => 'Inactive')));
         if ($preview == 'true')
             header("Location:show_project_details.php?projectId=" . $projectId);
         else

@@ -614,7 +614,7 @@ $ARR_PROJ_EDIT_PERMISSION = array(
 	"AUDIT-1"=>array('Audit1','dailymis'),
 	"NEWPROJECTAUDIT"=>array('NewProject'),
 	"AUDIT-2"=>array('Audit2'),
-	"SURVEY"=>array('AataCollection','NewProject','DcCallCenter')
+	"SURVEY"=>array('DataCollection','DcCallCenter')
 );
 $dept = $_SESSION['DEPARTMENT'];
 if(!isset($ARR_PROJ_EDIT_PERMISSION[$dept]))
@@ -667,8 +667,8 @@ if(in_array($_SESSION['adminId'],$arrForce))
 }
 $smarty->assign("forceMigrateModule", $forceMigrateModule);
 
-//$newImagePath = "/home/sysadmin/public_html/images_new/";
-$newImagePath = "images_new/";
+$newImagePath = "/home/sysadmin/public_html/images_new/";
+// $newImagePath = "images_new/";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
 

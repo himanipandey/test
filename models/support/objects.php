@@ -362,7 +362,7 @@ class Objects extends ActiveRecord\Model{
         foreach($scopes as $key=>$val){
             $this->$key = $val;
         }      
-        $this->save($validate);
+        return $this->save($validate);
     }
 
     //  Gives the value for primary key of objects
