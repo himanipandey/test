@@ -495,11 +495,12 @@ function checkProjAvail($projectId = null, $priority = null, $mode = null, $mode
             $cnt = 1;
             $rowCount = mysql_num_rows($LocId);
             while($locList = mysql_fetch_assoc($LocId)) {
+				$comma = ',';
                 if($cnt != $rowCount)
                     $listLoc .= $locList['locality_id'].$comma;
                 else
                     $listLoc .= $locList['locality_id'];
-                $comma = ',';
+                
              $cnt++;
             }
             $where = "LOCALITY_ID in ($listLoc)";
@@ -530,6 +531,7 @@ function checkProjAvail($projectId = null, $priority = null, $mode = null, $mode
     $qry = "SELECT COUNT(*) AS CNT FROM " . RESI_PROJECT . " WHERE ".$where." AND PROJECT_ID = '".$projectId."'";
     $res = mysql_query($qry);
     $data = mysql_fetch_assoc($res);
+
     return $data['CNT'];
 }
 ?>

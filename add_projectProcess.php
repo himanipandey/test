@@ -58,7 +58,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $pre_launch_date = trim($_POST['pre_launch_date']);
             $exp_launch_date = trim($_POST['exp_launch_date']);
 	    $eff_date_to = trim($_POST['eff_date_to']);
-            $display_order = PROJECT_MAX_PRIORITY;
+			 $display_order = PROJECT_MAX_PRIORITY;
 	    $oldbuilderId = trim($_POST['oldbuilderId']);
 	    $youtube_link = trim($_POST['youtube_link']);
             
@@ -424,7 +424,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['project_address'] = $txtAddress;
             $arrInsertUpdateProject['latitude'] = $txtProjectLattitude;
             $arrInsertUpdateProject['longitude'] = $txtProjectLongitude;
-            $arrInsertUpdateProject['display_order'] = $DisplayOrder;
+            $arrInsertUpdateProject['display_order'] = getDisplayOrder($projectId);
             $arrInsertUpdateProject['status'] = $Active;
             $arrInsertUpdateProject['project_url'] = $txtProjectURL;
             $arrInsertUpdateProject['price_disclaimer'] = $txtDisclaimer;
@@ -446,7 +446,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['project_status_id'] = $Status;
             $arrInsertUpdateProject['should_display_price'] = $shouldDisplayPrice;
             $arrInsertUpdateProject['expected_supply_date'] = $exp_launch_date;
-            $arrInsertUpdateProject['display_order'] = $display_order;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
             $arrInsertUpdateProject['no_of_towers'] = $numberOfTowers;
             if($skipUpdationCycle == skipUpdationCycle_Id)
@@ -613,7 +612,13 @@ function getNumProjectsUnderDisplayOrder($displayOrder, $cityId, $projectId) {
     }
     return $numProjects;
 }
-         
+function getDisplayOrder($projectId) {
+    $numProjects = 0;
+    $qry = "SELECT display_order FROM resi_project WHERE project_id='".$projectId."'";
+    $res = mysql_fetch_object(mysql_query($qry));
+  
+    return  $res->display_order;
+ }        
 $userDepartment = $_SESSION['DEPARTMENT'];
 $smarty->assign("userDepartment", $userDepartment);
 
