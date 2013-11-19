@@ -617,7 +617,7 @@ function getDisplayOrder($projectId) {
     $qry = "SELECT display_order FROM resi_project WHERE project_id='".$projectId."'";
     $res = mysql_fetch_object(mysql_query($qry));
   
-    return  $res->display_order;
+    return  $res->display_order || 999;
  }        
 $userDepartment = $_SESSION['DEPARTMENT'];
 $smarty->assign("userDepartment", $userDepartment);
