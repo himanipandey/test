@@ -576,6 +576,8 @@ foreach ($arrProjectType as $val) {
     if (!in_array(trim($exp[0]), $arrPType))
         array_push($arrPType, trim($exp[0]));
 }
+$updatedTypes = ProjectSecondaryPrice::getSecondryPriceUpdatedTypes($projectId);
+$arrPType = array_unique(array_merge($arrPType, $updatedTypes));
 $smarty->assign("arrPType", $arrPType);
 /* * code for secondary price dispaly*********** */
 ?>
