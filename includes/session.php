@@ -48,7 +48,7 @@ class memcacheSessionHandler{
      * @return boolean True if everything succeed
      */
     public function open($a, $b){
-        $this->lifetime = ini_get('session.gc_maxlifetime');
+        //$this->lifetime = ini_get('session.gc_maxlifetime');
         return true;
     }
 
