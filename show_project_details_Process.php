@@ -186,6 +186,7 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['SUBMITTED_DATE'] = $vLast['SUBMITTED_DATE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_TYPE'] = $vLast['PROJECT_TYPE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LISTING_ID'] = $vLast['LISTING_ID'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['BOOKING_STATUS_ID'] = $vLast['BOOKING_STATUS_ID'];
             
             $qryEditedLaunched = "select supply,launched from project_supplies
                 where listing_id = ".$vLast['LISTING_ID']." and version = 'Website'";

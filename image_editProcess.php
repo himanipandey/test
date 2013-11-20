@@ -966,7 +966,7 @@
 												 }
 										}
 									}
-									$dbpath = explode("images_new/",$img_path);
+									$dbpath = explode("/images_new",$img_path);
 									$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 												SET 
 													PLAN_IMAGE = '".$dbpath[1]."',
