@@ -32,8 +32,13 @@
 
 			$preview = $_REQUEST['preview'];
 			$smarty->assign("preview", $preview);
+			
+		 if( isset($_REQUEST['title']) &&  !array_filter($_REQUEST['title']) )
+	      {
+	        $ErrorMsg["title"] = "Please enter Image Title.";
+	      }
 
-			if (isset($_POST['btnSave'])) 
+			if (isset($_POST['btnSave'])  && !is_array($ErrorMsg)) 
 			{
 				$smarty->assign("projectId", $projectId);		
 				$folderName		=	$projectDetail[0]['PROJECT_NAME'];
@@ -55,17 +60,18 @@
 	
 					if($v != '')
 					{
-						if(!in_array(strtolower($_FILES["img"]["type"][$k]), $arrImg))
-						{
-							$ErrorMsg['ImgError'] = "You can upload only jpg / jpeg gif png images.";
-						} 
-						else if(!preg_match("/-floor-plan\.[a-z]{3,4}$/", $_FILES["img"]["name"][$k]))
-						{
-							$ErrorMsg['ImgError'] = "The word 'floor-plan' should be part of image name at end.";
-						}
+						
 						
 						if($_FILES['img']['name'][$k] != '')
 						{
+							if(!in_array(strtolower($_FILES["img"]["type"][$k]), $arrImg))
+							{
+								$ErrorMsg['ImgError'] = "You can upload only jpg / jpeg gif png images.";
+							} 
+							else if(!preg_match("/-floor-plan\.[a-z]{3,4}$/", $_FILES["img"]["name"][$k]))
+							{
+								$ErrorMsg['ImgError'] = "The word 'floor-plan' should be part of image name at end.";
+							}
                                                     $arrValue[$k]	= $_FILES['img']['name'][$k];
                                                     $arrTitle[$k]	= $_REQUEST['title'][$k];
                                                     $arrplanId[$k]	= $_REQUEST['plan_id'][$k];
@@ -83,6 +89,7 @@
                             $service_image_id = $_REQUEST['service_image_id'][$k];
                             $s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
                             $s3upload->delete();
+                            header("Location:edit_floor_plan.php?projectId=$projectId&edit=edit");
 						}
 					}
 				}
@@ -237,7 +244,7 @@
 											
 //								$result = upload_file_to_img_server_using_ftp($source,$dest,1);
 								
-								$imgPathDb = explode("/images_new",$img_path);
+								$imgPathDb = explode("images_new/",$img_path);
 								$qry = "UPDATE ".RESI_FLOOR_PLANS." 
                                                                         SET 
                                                                                 IMAGE_URL = '".$imgPathDb[1]."',
@@ -254,7 +261,7 @@
 									header("Location:show_project_details.php?projectId=".$projectId);
 								else
 									header("Location:ProjectList.php?projectId=".$projectId);	
-					}
+								}
 							}
 					}
 				

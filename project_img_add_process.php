@@ -76,6 +76,9 @@ if (isset($_POST['Next']))
             else if( $_REQUEST['PType'] == '')
 	    {
 	      $ErrorMsg["ptype"] = "Please select project type.";
+	    }else if( !array_filter($_REQUEST['title']))
+	    {
+	      $ErrorMsg["ptype"] = "Please enter Image Title.";
 	    }
             $smarty->assign("PType", $_REQUEST['PType']);
 	if(is_array($ErrorMsg)) {
@@ -910,7 +913,7 @@ if (isset($_POST['Next']))
 									 }
 							}
 						}
-							$imgDbPath = explode("/images_new",$img_path);
+							$imgDbPath = explode("images_new/",$img_path);
 							$selqry	=	"SELECT PLAN_IMAGE FROM ".PROJECT_PLAN_IMAGES." WHERE PROJECT_ID = '".$projectId."' AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$imgDbPath[1]."'";
 							$selres	=	mysql_query($selqry);
 							if(mysql_num_rows($selres)>0)
