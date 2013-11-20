@@ -180,36 +180,19 @@ class ProjectSupply extends Objects {
         $project->save();
     }
     
-    function isSupplyLaunchEdited($projectId){
-        $sql = "select count(*) count from project_supplies ps inner join listings l
-                on ps.listing_id = l.id
-                inner join resi_project_options rpo on l.option_id = rpo.options_id
-                where 
-                rpo.project_id = '$projectId' and version = 'Cms';";
-        //rpo.project_id = '$projectId' and edit_stage = 'callCenterEdit' and version = 'Cms';"; To Do
-        $result = self::find_by_sql($sql);
-        return (intval($result[0]->count)>0);
-    }
     function isSupplyLaunchVerified($projectId){
 		
-		$sql1 = "select supply  from project_supplies ps inner join listings l
+		$sql = "select l.id from project_supplies ps inner join listings l
                 on ps.listing_id = l.id
                 inner join resi_project_options rpo on l.option_id = rpo.options_id
                 where 
-                rpo.project_id = '$projectId' and version = 'CMS'";
-         $result1 = self::find_by_sql($sql1);
+                rpo.project_id = '$projectId' group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
+         $result = self::find_by_sql($sql);
          
-         $sql2 = "select supply  from project_supplies ps inner join listings l
-                on ps.listing_id = l.id
-                inner join resi_project_options rpo on l.option_id = rpo.options_id
-                where 
-                rpo.project_id = '$projectId' and version = 'Website'" ;
-          $result2 = self::find_by_sql($sql2);
-          
-          if($result1[0]->supply == $result2[0]->supply)
-			return 1;
+          if(count($result)>0)
+			return FALSE;
 		  else
-			return 0;
+			return TRUE;
 		
 	}
 }

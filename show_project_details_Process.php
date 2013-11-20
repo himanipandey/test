@@ -167,7 +167,6 @@ foreach ($res as $data) {
     $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 }
 $supplyAllArray = array();
-$isSupplyLaunchEdited = ProjectSupply::isSupplyLaunchEdited($projectId);
 $isSupplyLaunchVerified = ProjectSupply::isSupplyLaunchVerified($projectId);
 
 foreach($supplyAll as $k=>$v) {
@@ -199,7 +198,6 @@ foreach($supplyAll as $k=>$v) {
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
-$smarty->assign("isSupplyLaunchEdited", $isSupplyLaunchEdited);
 $smarty->assign("isSupplyLaunchVerified", $isSupplyLaunchVerified);
 
 
