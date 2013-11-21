@@ -33,7 +33,7 @@ function refreshother(ct)
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0>
 					<TBODY>
 						<TR>
-						  <TD nowrap class="h1" width="67%"><img height="18" hspace="5" src="../images/arrow.gif" width="18">{if $edit_project != ''} Edit {else}Add New{/if} Specifications and Amenities({$projectDetail[0]['BUILDER_NAME']} {$projectDetail[0]['PROJECT_NAME']})</TD>
+						  <TD nowrap class="h1" width="67%"><img height="18" hspace="5" src="../images/arrow.gif" width="18">{if $edit_project != ''} Edit {else}Add New{/if} Specifications and Amenities({$builderDetail['BUILDER_NAME']} {$projectDetail['PROJECT_NAME']})</TD>
 						  <TD width="33%" align ="right"></TD>
 					   
 						</TR>
