@@ -10,9 +10,6 @@
         $maxPrice = $_REQUEST['maxPrice'];
         $brokerId  = $_REQUEST['brokerId'];
         $flag = 0;
-        $qryStr = '';
-        $comma = ',';
-        $cnt = 0;
         $arrMinPrice = array();
         $arrMaxPrice = array();
         $arrMeanPrice = array();
@@ -20,9 +17,6 @@
         $exp = explode("-",$effectiveDate);
         $effMonthYear = $exp[0]."-".$exp[1]."-01";
         foreach($_REQUEST['unitType'] as $key=>$val){
-            $cnt++;
-            if($cnt == count($_REQUEST['unitType']))
-                $comma = ';';
             $arrMinPrice[] = $_REQUEST['minPrice'][$key];
             $arrMaxPrice[] = $_REQUEST['maxPrice'][$key];
             
@@ -33,11 +27,20 @@
                     $flag = 2;
                 }
                 else {
-                 $minPrice = $_REQUEST['minPrice'][$key];
-                 $maxPrice = $_REQUEST['maxPrice'][$key];
-                 $typeName =   $val;
-                 $qryStr .= "('','".$projectId."','".$typeName."','".$brokerId."','".$minPrice."',
-                             '".$maxPrice."','".$effMonthYear."','".$_SESSION['adminId']."',now())$comma";
+                    $minPrice = $_REQUEST['minPrice'][$key];
+                    $maxPrice = $_REQUEST['maxPrice'][$key];
+                    $typeName =   $val;
+                
+                    $attributes= array(
+                        'project_id'=>$projectId, 
+                        'broker_id'=>$brokerId, 
+                        'unit_type'=>$typeName, 
+                        'effective_date'=>$effMonthYear,
+                        'min_price'=>$minPrice, 
+                        'max_price'=>$maxPrice,
+                        'last_modified_by'=>$_SESSION['adminId'],
+                        'last_modified_date'=>'NOW()'
+                    );
                 }
             }
             else
@@ -45,10 +48,7 @@
         }
         $errorPrice = '';
         if($flag == 0){
-            $ins = "INSERT INTO project_secondary_price 
-                    (ID, PROJECT_ID, UNIT_TYPE, BROKER_ID, MIN_PRICE, MAX_PRICE, EFFECTIVE_DATE,
-                        LAST_MODIFIED_BY, LAST_MODIFIED_DATE) VALUES $qryStr";
-            $res = mysql_query($ins) or die(mysql_error());
+            $res = ProjectSecondaryPrice::insertUpdate($attributes);
             if($res)
                 $errorPrice = "<font color = 'green'>Price has been inserted successfully!</font>";
             else

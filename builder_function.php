@@ -271,7 +271,7 @@ function ProjectDetail($projectId) {
 
 function fetch_projectOptions($projectId) {
     $qryopt = "SELECT DISTINCT(BEDROOMS),OPTION_TYPE FROM " . RESI_PROJECT_OPTIONS . " 
-        WHERE PROJECT_ID = '" . $projectId . "'";
+        WHERE PROJECT_ID = '" . $projectId . "' and OPTION_CATEGORY = 'Actual'";
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
     while ($data = mysql_fetch_assoc($resopt)) {
