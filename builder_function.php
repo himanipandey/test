@@ -271,7 +271,7 @@ function ProjectDetail($projectId) {
 
 function fetch_projectOptions($projectId) {
     $qryopt = "SELECT DISTINCT(BEDROOMS),OPTION_TYPE FROM " . RESI_PROJECT_OPTIONS . " 
-        WHERE PROJECT_ID = '" . $projectId . "'";
+        WHERE PROJECT_ID = '" . $projectId . "' and OPTION_CATEGORY = 'Actual'";
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
     while ($data = mysql_fetch_assoc($resopt)) {
@@ -1450,12 +1450,22 @@ function scaleDimensions($orig_width, $orig_height, $max_width, $max_height) {
 
 /* * *******function for last upldated module date********* */
 function lastUpdatedAuditDetail($projectId) {
-   $qry = " SELECT max(rp.updated_at) as updated_at, p.FNAME, p.DEPARTMENT                   
+                           
+    $qry = "SELECT
+                     b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
-                       _t_resi_project rp
-                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                       _t_resi_project a
+                           JOIN
+                       (SELECT
+                            p.DEPARTMENT, MAX(a._t_transaction_id) as tid
+                       FROM
+                           _t_resi_project a
+                       JOIN proptiger_admin p ON a.updated_by = p.ADMINID
                        WHERE
-                           rp.PROJECT_ID = $projectId GROUP BY p.DEPARTMENT";
+                           a.PROJECT_ID = $projectId
+                       GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
+                           join
+                       proptiger_admin c ON (c.ADMINID = a.updated_by)";
                        
     $result = mysql_query($qry);
     $arrData = array();
@@ -1468,12 +1478,23 @@ function lastUpdatedAuditDetail($projectId) {
 		
 		$count++;
 	}
-    $qry = " SELECT max(rp.updated_at) as updated_at, p.FNAME, p.DEPARTMENT                   
+                     
+     $qry = "SELECT
+                     b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
-                       _t_resi_project_options rp
-                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                       _t_resi_project_options a
+                           JOIN
+                       (SELECT
+                            p.DEPARTMENT, MAX(a._t_transaction_id) as tid
+                       FROM
+                           _t_resi_project_options a
+                       JOIN proptiger_admin p ON a.updated_by = p.ADMINID
                        WHERE
-                           rp.PROJECT_ID = $projectId GROUP BY p.DEPARTMENT";
+                           a.PROJECT_ID = $projectId
+                       GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
+                           join
+                       proptiger_admin c ON (c.ADMINID = a.updated_by)";
+                 
     $result = mysql_query($qry);
 	$count = 0;
     while($res = mysql_fetch_object($result))
@@ -1484,13 +1505,23 @@ function lastUpdatedAuditDetail($projectId) {
 		
 		$count++;
 	}
-	
-	$qry = " SELECT max(rp.updated_at) as updated_at, p.FNAME, p.DEPARTMENT                   
+	                        
+     $qry = "SELECT
+                     b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
-                       _t_resi_project_tower_details rp
-                          JOIN proptiger_admin p ON rp.updated_by = p.ADMINID
+                      _t_resi_project_tower a
+                           JOIN
+                       (SELECT
+                            p.DEPARTMENT, MAX(a._t_transaction_id) as tid
+                       FROM
+                           _t_resi_project_tower a
+                       JOIN proptiger_admin p ON a.updated_by = p.ADMINID
                        WHERE
-                           rp.PROJECT_ID = $projectId GROUP BY p.DEPARTMENT";
+                           a.PROJECT_ID = $projectId
+                       GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
+                           join
+                       proptiger_admin c ON (c.ADMINID = a.updated_by)";
+                       
     $result = mysql_query($qry);
 	$count = 0;
     while($res = mysql_fetch_object($result))
@@ -1536,8 +1567,6 @@ function lastUpdatedAuditDetail($projectId) {
 		$count++;
 	}
         
-    //print "<pre>".print_r($arrData,1)."</pre>";
-    
    return $arrData;
 }
 

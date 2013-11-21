@@ -16,8 +16,7 @@ class ProjectSupply extends Objects {
     
     function addEditSupply($projectId, $phaseId, $projectType, $noOfBedroom, $supply, $launchedUnit) {
         if($phaseId=='0') $phaseId = NULL;
-        if($projectType == 'plot') $noOfBedroom = 0;
-        $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and o.bedrooms=$noOfBedroom and o.option_type='$projectType')"));
+        $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "o.bedrooms is null" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType')"));
         if($supply_new) {
             $supply_new = $supply_new[0];
             $attributes['updated_by']=$_SESSION['adminId'];

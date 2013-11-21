@@ -122,7 +122,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         }
         if($_POST['dwnld_Residential'] != '')
         {
-            $QueryMember .=  $and." RP.RESIDENTIAL = '".$_POST['dwnld_Residential']."'";
+            $QueryMember .=  $and." RP.RESIDENTIAL_FLAG = '".$_POST['dwnld_Residential']."'";
             $and  = ' AND ';
         }
 

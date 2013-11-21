@@ -2555,7 +2555,7 @@ function getDateNow(){
 														
 													
 													<td valign ="top" align="center">
-														{$lastItem['NO_OF_BEDROOMS']}BHK
+														{if $lastItem['NO_OF_BEDROOMS']}{$lastItem['NO_OF_BEDROOMS']}{else}0{/if}BHK
 													</td>
 													<td valign ="top" align="center" >{$lastItem['NO_OF_FLATS']}
 														{$totalNoOfFlatsPtype = $totalNoOfFlatsPtype+$lastItem['NO_OF_FLATS']}
@@ -2711,9 +2711,9 @@ function getDateNow(){
                                                                                                         <td align ="center"><b> {$totalLaunchedFlatsPPhase}</b></td>
                                                                                                         <td align ="center"><b> {$totalEditedLaunchedFlatsPPhase}</b></td>
                                                                                                         <td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
-													{if ucfirst($key) == 'NoPhase'}
+													{if ucfirst($key) == 'No Phase'}
 														<td  align ="left" colspan ="5"><b> 
-														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
+															Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
 															{100-($availableoOfFlatsPPhase*100/$totalNoOfFlatsPPhase)|string_format:"%.2f"}%
 														</b></td>													
 													{else}

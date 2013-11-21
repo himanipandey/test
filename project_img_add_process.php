@@ -76,6 +76,9 @@ if (isset($_POST['Next']))
             else if( $_REQUEST['PType'] == '')
 	    {
 	      $ErrorMsg["ptype"] = "Please select project type.";
+	    }else if( !array_filter($_REQUEST['title']))
+	    {
+	      $ErrorMsg["ptype"] = "Please enter Image Title.";
 	    }
             $smarty->assign("PType", $_REQUEST['PType']);
 	if(is_array($ErrorMsg)) {

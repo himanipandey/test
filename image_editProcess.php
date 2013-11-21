@@ -22,11 +22,17 @@
 		 $path = "";
 		 $smarty->assign("path", $path);
 		 
+			 
+		if( isset($_REQUEST['title']) &&  !array_filter($_REQUEST['title']) )
+	    {
+	      $ErrorMsg["title"] = "Please enter Image Title.";
+	    }
+		
 		 /*********edit images code start here*******************/
 			$source=array();
 			$dest=array();
 
-			if (isset($_POST['btnSave'])) 
+			if (isset($_POST['btnSave']) && !is_array($ErrorMsg)) 
 			{
 				$smarty->assign("projectId", $projectId);		
 				$folderName = $projectDetail[0]['PROJECT_NAME'];
@@ -80,6 +86,8 @@
                                                                                AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."'
                                                                                AND PLAN_IMAGE = '".$_REQUEST['property_image_path'][$k]."'";
 							$res	=	mysql_query($qry);		
+							
+							header("Location:image_edit.php?projectId=649259&edit=edit");
 						}
 					}
 				}

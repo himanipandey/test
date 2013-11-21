@@ -148,38 +148,38 @@ function refreshimg(ct)
 				  
 
 
-				  <div id="img1"><input name="txtlocationplan[]" type="file" id='txtlocationplan1' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img2" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan2' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img3" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan3' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img4" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan4' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img5" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan5' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img6" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan6' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img7" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan7' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img8" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan8' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img9" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan9' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img10" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan10' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img1"><input name="txtlocationplan[]" type="file" id='txtlocationplan1' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img2" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan2' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img3" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan3' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img4" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan4' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img5" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan5' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img6" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan6' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img7" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan7' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img8" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan8' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img9" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan9' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img10" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan10' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
 
-				  <div id="img11" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan11' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img12" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan12' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img13" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan13' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img14" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan14' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img15" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan15' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img16" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan16' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img17" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan17' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img18" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan18' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img19" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan19' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img11" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan11' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img12" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan12' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img13" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan13' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img14" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan14' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img15" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan15' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img16" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan16' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img17" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan17' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img18" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan18' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img19" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan19' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
 
-				  <div id="img20" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan20' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img21" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan21' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img22" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan22' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img20" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan20' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img21" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan21' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img22" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan22' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
 				  <div id="img23" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan23' class="imgup"/></div>
-				  <div id="img24" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan24' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img25" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan25' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img26" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan26' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img27" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan27' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img28" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan28' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img29" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan29' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
-				  <div id="img30" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan30' class="imgup"/>&nbsp;&nbsp;<b>Title:</b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img24" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan24' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img25" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan25' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img26" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan26' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font><font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img27" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan27' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img28" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan28' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img29" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan29' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
+				  <div id="img30" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan30' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]"></div>
 
 				</tr>
 				<tr>
