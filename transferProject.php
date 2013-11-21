@@ -319,24 +319,18 @@
                     $QueryExecute = mysql_query($Qry) or die(mysql_error());
                     $tot_affected_rows = mysql_affected_rows($Qry);		
 
-                    $projId_History = '';
-                    $projId_History = implode(", ",$arrStagePhase[$arrExp[0]][$arrExp[1]]);
-
-                    $finalProjectIds .= implode(", ",$arrStagePhase[$arrExp[0]][$arrExp[1]]);
-                    if($projId_History != '')
-                    {
-                        $qHistory = "";
-                        $qHistory = " INSERT INTO project_stage_history (PROJECT_ID,PROJECT_STAGE_ID,PROJECT_PHASE_ID,DATE_TIME,ADMIN_ID) SELECT PROJECT_ID,'".$arrUpdatePhase[0]."','".$arrProjectPhase."',NOW(),'".$_SESSION['adminId']."' FROM resi_project WHERE PROJECT_ID IN (".$projId_History.") AND version = 'cms' ";
-                        mysql_query($qHistory)  or die(mysql_error().__LINE__);
-                        $qRecordHistoryId = "update resi_project rp inner join 
-                              (select PROJECT_ID, max(HISTORY_ID) HISTORY_ID from project_stage_history where PROJECT_ID in ($projId_History)
+                    
+                    $qHistory = " INSERT INTO project_stage_history (PROJECT_ID,PROJECT_STAGE_ID,PROJECT_PHASE_ID,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID) SELECT PROJECT_ID,'".$stageId[0]->id."','".$phaseId[0]->id."',NOW(),'".$_SESSION['adminId']."', MOVEMENT_HISTORY_ID FROM resi_project WHERE PROJECT_ID IN (".$getProjectId.") AND version = 'cms' ";
+                    mysql_query($qHistory)  or die(mysql_error().__LINE__);
+                    $qRecordHistoryId = "update resi_project rp inner join 
+                              (select PROJECT_ID, max(HISTORY_ID) HISTORY_ID from project_stage_history where PROJECT_ID in ($getProjectId)
                                 group by PROJECT_ID) t
                                 on rp.PROJECT_ID = t.PROJECT_Id 
                                 set rp.MOVEMENT_HISTORY_ID = t.HISTORY_ID where rp.version = 'Cms';";
-                        mysql_query($qRecordHistoryId)  or die(mysql_error());
-                    }
+                    mysql_query($qRecordHistoryId)  or die(mysql_error());
+                    
                     mysql_query('commit');
-                    $smarty->assign("projectIdUpdated",str_replace(',',', ',$finalProjectIds));
+                    $smarty->assign("projectIdUpdated",str_replace($getProjectId));
                     $smarty->assign("tot_affected_rows", $tot_affected_rows);
                 }
             }
