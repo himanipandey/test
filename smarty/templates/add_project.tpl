@@ -684,6 +684,18 @@
 								<td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 							   <tr>
+                                                <td width="20%" align="right"><b>Booking Status :</b> </td>
+                                                <td width="30%" align="left">
+                                                    <select id="bookingStatus" name="bookingStatus">
+                                                        <option value="-1">Select Status</option>
+                                                        {foreach $bookingStatuses as $b}
+                                                            <option value="{$b->id}" {if $b->id == $bookingStatus}selected="selected" {/if}>{$b->display_name}</option>
+                                                        {/foreach}
+                                                    </select>
+                                                </td>
+                                                <td width="50%" align="left"></td>
+                                            </tr>
+							   <tr>
 
 								  <td>&nbsp;</td>
 								  <td align="left" style="padding-left:152px;">

@@ -29,6 +29,8 @@ if(!isset($_REQUEST['preview']))
     $_REQUEST['preview'] = '';
 $preview = $_REQUEST['preview'];
 $smarty->assign("preview", $preview);
+$bookingStatuses = ResiProject::find_by_sql("select * from master_booking_statuses");
+$smarty->assign("bookingStatuses", $bookingStatuses);
       
 if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	if ( $_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save" ) {
@@ -468,7 +470,14 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->updated_by = $_SESSION['adminId'];
                $phase->virtual_save();
            }
-
+           
+				if($_POST['bookingStatus'] > 0)
+					mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID =".$_POST['bookingStatus']." WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
+				else
+					mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID ='' WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
+					
+			
+            		
             //create new project url
             $localityDetail = Locality::getLocalityById($localityId); 
             $cityDetail = City::getCityById($cityId);
@@ -600,6 +609,11 @@ elseif ($projectId!='') {
     $smarty->assign("txtProjectLocation", $txtProjectLocation);
     $smarty->assign("bank_arr", projectBankList($projectId));
     $smarty->assign("numberOfTowers", $ProjectDetail->no_of_towers);
+    $booking_status_id = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical'),'select' => 
+                    'BOOKING_STATUS_ID'));
+    //  print "<pre>".print_r($booking_status_id,1);  die;
+    $smarty->assign("bookingStatus", $booking_status_id[0]->booking_status_id);
+    
  }
 
 function getNumProjectsUnderDisplayOrder($displayOrder, $cityId, $projectId) {
