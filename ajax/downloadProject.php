@@ -66,7 +66,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 
     $QueryMember1 = "SELECT RP.updation_cycle_id,RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,PP.name as PROJECT_PHASE,
                 PS.name as PROJECT_STAGE,ct.LABEL AS CITY_NAME, psm.project_status as 
-                    PROJECT_STATUS,
+                    PROJECT_STATUS,rpp.booking_status_id,
                 L.LABEL LOCALITY, PSH.DATE_TIME, PA.FNAME, UC.LABEL UPDATION_LABEL
                  FROM
                     resi_project RP
@@ -89,7 +89,9 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                  INNER JOIN
                      master_project_phases PP on RP.project_phase_id = PP.id
                  INNER JOIN
-                    project_status_master psm on RP.PROJECT_STATUS_ID = psm.id";
+                    project_status_master psm on RP.PROJECT_STATUS_ID = psm.id
+                  INNER JOIN
+                    resi_project_phase rpp on RP.PROJECT_ID = rpp.PROJECT_ID ";
 
     $and = " WHERE ";
 
@@ -179,7 +181,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
     }
 }
 $arrPropId = array();
-$QueryMember1 = $QueryMember1 . $QueryMember;
+$QueryMember1 = $QueryMember1 . $QueryMember." Group By rpp.PROJECT_ID";
 
 $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
 $NumRows = mysql_num_rows($QueryExecute);
@@ -219,7 +221,16 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         $localityname = $ob1['LOCALITY'];
 	
 	$proj_status = $ob1['PROJECT_STATUS'];
-	$booking_status = $ob1['BOOKING_STATUS'];
+	
+	$booking_status = $ob1['booking_status_id'];
+	if ($booking_status > 0){
+			if ($booking_status == 1) $booking_status = "Available";
+			if ($booking_status == 2) $booking_status = "Sold out";
+			if ($booking_status == 3) $booking_status = "On Hold";
+	}
+	else
+		$booking_status = "-";
+		
 	$updation_label = $ob1['UPDATION_LABEL'];
 	
 	$contents .= "
