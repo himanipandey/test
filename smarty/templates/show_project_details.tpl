@@ -1936,7 +1936,7 @@ function getDateNow(){
                                 {/foreach}
                             </table>
                         </td>
-                    </tr>http://recordings.kookoo.in/proptiger/proptiger_1384866637540276.mp3
+                    </tr>
                     {/if}
                 {*end code start for calling records secondary*}
 
