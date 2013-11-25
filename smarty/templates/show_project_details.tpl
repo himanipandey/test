@@ -1385,6 +1385,7 @@ function getDateNow(){
                                              <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
                                              <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Contact No</td>
                                              <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
+                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Campaign Name</td>
                                              <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
                                     </tr>
 
@@ -1412,6 +1413,9 @@ function getDateNow(){
                                             </td>
                                             <td width ="30%" nowrap>
                                                     <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
+                                            </td>
+                                            <td width ="90%">
+                                                    {$item['CampaignName']}
                                             </td>
                                             <td width ="90%">
                                                     {$item['Remark']}
@@ -1932,7 +1936,7 @@ function getDateNow(){
                                 {/foreach}
                             </table>
                         </td>
-                    </tr>
+                    </tr>http://recordings.kookoo.in/proptiger/proptiger_1384866637540276.mp3
                     {/if}
                 {*end code start for calling records secondary*}
 

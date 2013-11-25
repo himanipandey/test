@@ -87,7 +87,7 @@
                                                                                AND PLAN_IMAGE = '".$_REQUEST['property_image_path'][$k]."'";
 							$res	=	mysql_query($qry);		
 							
-							header("Location:image_edit.php?projectId=649259&edit=edit");
+							header("Location:image_edit.php?projectId=$projectId&edit=edit");
 						}
 					}
 				}
