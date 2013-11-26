@@ -4,7 +4,7 @@
 class ProjectStageHistory extends ActiveRecord\Model
 {
     static $table_name = 'project_stage_history';
-    static $audit_stages = array(phaseId_4, phaseId_5);
+    static $audit_stages = array(phaseId_5);
 
     // Function gives last audit movement date by call center team,
     // excluding movement done by team leader
