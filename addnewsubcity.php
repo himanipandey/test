@@ -50,6 +50,11 @@ else
     $dataCity = mysql_fetch_assoc($resCity);
     $subcityval = trim($subcityval);
     $url = "";
+    $existingSuburb = "select label from suburb where label = '".$subcityval."' and city_id = $cityid";
+    $existingSuburbRes = mysql_query($existingSuburb);
+    $existingSuburbData = mysql_num_rows($existingSuburbRes);
+    if($existingSuburbData > 0)
+        echo 'This suburb already exist#';
     if($subcityval!='' && $id!='')
     {	
     $url = createLocalityURL($subcityval, $dataCity['LABEL'], $id, 'suburb'); 
@@ -100,8 +105,6 @@ else
             ?>
     </select>
 <?php
-	}else{
-		print 1;
 	}
 }
 ?>

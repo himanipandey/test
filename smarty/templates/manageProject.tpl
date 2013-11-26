@@ -339,7 +339,7 @@ $(function() {
                                                   <option value=''>Select Stage</option>
                                               {foreach from = $getProjectPhases item = phases}
                                                   <option value="{$phases->id}" {if $phase == $phases->id} selected{/if}>
-                                                     {$phases->name}
+                                                     {if $phases->name == 'NewProject'} NewProject Audit {else}{$phases->name}{/if}
                                                   </option>
                                               {/foreach}
                                               </select>
@@ -373,7 +373,19 @@ $(function() {
                                        </select>
                                         </td>
                                     </tr>
-                                    <tr><td>&nbsp;</td></tr>		
+                                    <tr><td>&nbsp;</td></tr>
+                                    <tr>
+                                         <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Township:</b></td>
+                                        <td width="50" align="left" style = "padding-left:20px;">
+                                        <select name="townshipId" id="townshipId" >
+                                          <option value="">Select Township</option>
+                                           {foreach from = $arrTownshipDetail key = key item = value}
+                                               <option value="{$key}" {if $key == $townshipId} selected {/if}>{$value} </option>
+                                           {/foreach}
+                                       </select>
+                                        </td>
+                                    </tr>
+                                    <tr><td>&nbsp;</td></tr>
 
                                           <tr>
                                           <td align="right" style = "padding-left:20px;"><b>Active:</b></td>

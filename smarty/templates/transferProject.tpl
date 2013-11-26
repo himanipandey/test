@@ -346,7 +346,7 @@ $(function() {
                                             <option value = "">Select Stage</option>
                                            {foreach from = $getProjectPhases item = phases}
                                                <option value="{$phases->id}" {if $phase == $phases->id} selected{/if}>
-                                                  {$phases->name}
+                                                  {if $phases->name == 'NewProject'} NewProject Audit {else}{$phases->name}{/if}
                                                </option>
                                            {/foreach}									
                                          </select>

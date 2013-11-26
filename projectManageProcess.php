@@ -15,6 +15,13 @@
     $smarty->assign("getProjectStages", $getProjectStages);
     $getProjectPhases = ProjectPhase::getProjectPhases();
     $smarty->assign("getProjectPhases", $getProjectPhases);
+    $township = Townships::getAllTownships();
+    $arrTownshipDetail = array();
+    foreach($township as $value) {
+        $arrTownshipDetail[$value->id] = $value->township_name;
+    }
+    //sort($arrTownshipDetail);
+    $smarty->assign("arrTownshipDetail", $arrTownshipDetail);
     
     if(!isset($_REQUEST['Active']))
     {
@@ -90,8 +97,12 @@
 		else
 			$project_name= $_REQUEST['project_name'];
 		$smarty->assign("locality", $locality);
+                
+                if(!isset($_REQUEST['townshipId']))
+                    $_REQUEST['townshipId'] = '';
 		
-		$smarty->assign("phase", $phase);
+		$smarty->assign("townshipId", $_REQUEST['townshipId']);
+                $smarty->assign("phase", $phase);
 		$smarty->assign("stage", $stage);
                 $smarty->assign("updationCycle", $updationCycle);
                 $smarty->assign("exp_supply_date_from", $exp_supply_date_from);
@@ -175,6 +186,8 @@
                         $arrSearchFields['builder_id'] = $_REQUEST['builder'];
                     if($_REQUEST['phase'] != '')
                         $arrSearchFields['project_phase_id'] = $_REQUEST['phase'];
+                    if($_REQUEST['townshipId'] != '')
+                        $arrSearchFields['township_id'] = $_REQUEST['townshipId'];
                     if($stage != '')
                         $arrSearchFields['project_stage_id'] = $stage;
                     if($updationCycle != '')
