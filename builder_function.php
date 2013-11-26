@@ -1578,7 +1578,7 @@ function fetchProjectCallingLinks($projectId, $projectType, $audioLinkChk = '') 
     else
         $and = "";
     $qry = "SELECT 
-               d.AudioLink,a.FNAME,d.Remark,d.ContactNumber,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
+               d.AudioLink,a.FNAME,d.CampaignName,d.Remark,d.ContactNumber,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
             FROM 
                (" . CALLDETAILS . " d LEFT JOIN " . CALLPROJECT . " p 
             ON
