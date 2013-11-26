@@ -9,21 +9,15 @@ $latLongList = '0,1,2,3,4,5,6,7,8,9';
 $dailyEmail = array(
 	array(
 		'sql'=>"SELECT 
-				   rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, rp.PROJECT_URL, c.LABEL as CITY 
-				FROM
-				   (resi_project rp INNER JOIN city c 
-			    ON 
-					rp.CITY_ID = c.CITY_ID)
-				LEFT JOIN
-					audit a
-				ON
-				   rp.PROJECT_ID = a.PROJECT_ID
-			    WHERE
-					a.ACTION = 'insert'
-			    AND
-					a.TABLE_NAME = 'resi_project'
-			    AND
-				    DATE(a.ACTION_DATE) = DATE(subdate(current_date, 1))", 
+                            rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, rp.PROJECT_URL, c.LABEL as CITY 
+                         FROM
+                            resi_project rp inner join locality l on rp.locality_id = l.locality_id
+                             left join suburb s on l.suburb_id = s.suburb_id
+                             left join city c on s.city_id = c.city_id 
+                             inner join resi_builder rb on rp.builder_id = rb.builder_id
+                        WHERE
+                            DATE(rp.created_at) = DATE(subdate(current_date, 1))
+                            and rp.version = 'Cms'", 
 		'subject'=>'Projects inserted yesterday', 
 		'recipients'=>array('ankur.dhawan@proptiger.com','chandan.singh@proptiger.com'), 
 		'attachmentname'=>'projects', 
@@ -52,11 +46,13 @@ $dailyEmail = array(
             'sendifnodata'=>0
         ),
         array(
-            'sql'=>"select l.LABEL as LOCALITY_NAME,l.LOCALITY_ID, rp.PROJECT_ID, rp.PROJECT_NAME, rp.BUILDER_NAME, l.MIN_LATITUDE, l.MAX_LATITUDE, l.MIN_LONGITUDE, l.MAX_LONGITUDE,rp.LATITUDE, rp.LONGITUDE 
+            'sql'=>"select l.LABEL as LOCALITY_NAME,l.LOCALITY_ID, rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, l.MIN_LATITUDE, l.MAX_LATITUDE, l.MIN_LONGITUDE, l.MAX_LONGITUDE,rp.LATITUDE, rp.LONGITUDE 
             from locality l inner join resi_project rp 
             on l.LOCALITY_ID = rp.LOCALITY_ID
+            inner join resi_builder rb on rp.builder_id = rb.builder_id
              where 
-            l.LOCALITY_CLEANED = '1' 
+            l.IS_GEO_BOUNDARY_CLEAN = 'true'
+            and rp.version = 'Cms'
             and ((rp.LONGITUDE not between l.MIN_LONGITUDE and l.MAX_LONGITUDE) or (rp.LATITUDE not between l.MIN_LATITUDE and l.MAX_LATITUDE))
              and (rp.LATITUDE not in($latLongList) or rp.LONGITUDE not in($latLongList));",
             'subject'=>'Lat Long Beyond Limits',
