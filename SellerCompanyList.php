@@ -12,6 +12,7 @@ include("includes/configs/configs.php");
 date_default_timezone_set('Asia/Kolkata');
 AdminAuthentication();	
 include("modelsConfig.php");
+
 include('sellercompanyManageProcess.php');
 
 $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");

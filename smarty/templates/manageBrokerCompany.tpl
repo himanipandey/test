@@ -50,11 +50,11 @@
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="77%" height="25" align="center" style="padding-top:30px;padding-bottom:10px;">
-                                <form name="frm_build" id="frm_build" method="post" action ="BrokerCompanyList.php?page=1&sort=all">
+                                <!--<form name="frm_build" id="frm_build" method="post" action ="BrokerCompanyList.php?page=1&sort=all">
                                     <label class="fwb">Enter Broker Company Name : </label>
                                     <input name="broker" id="broker" value="{$broker}" class="button" /> &nbsp;&nbsp;&nbsp;
                                     <input type="submit" name="search" id="search" value="Search" class="button" />
-                                </form>
+                                </form>-->
                             </td>
                           </tr>
                         </table>
