@@ -247,10 +247,10 @@ function addupdatesubcity()
                 }
 		else if(xmlHttpadd1)
 		{
-			document.getElementById('mainsubcity').innerHTML = stringSplitSuburb[0];
-			subcityselid=$("#suburbId :selected").val();
-			dispsubcity(subcityselid);
-			alert("The record has been successfully updated.");
+                    document.getElementById('mainsubcity').innerHTML = stringSplitSuburb[0];
+                    subcityselid=$("#suburbId :selected").val();
+                    dispsubcity(subcityselid);
+                    alert("The record has been successfully updated.");
 		}
 
 	}

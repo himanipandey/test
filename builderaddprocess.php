@@ -109,6 +109,10 @@ if ($_POST['btnSave'] == "Save")
 	   {
 	     $ErrorMsg["txtCity"] = "Please select City.";
 	   } 
+        if( $website == '') 
+	   {
+	     $ErrorMsg["website"] = "Please select Website.";
+	   }
 	    /******code for builder url already exists******/
         $bldrURL = "";
         if($builderid != ''){

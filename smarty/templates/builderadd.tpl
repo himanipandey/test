@@ -284,9 +284,9 @@
 				</tr>
 
 				<tr>
-				  <td width="20%" align="right" > Website : </td>
+				  <td width="20%" align="right" > <font color = "red">*</font>Website : </td>
 				  <td width="30%" align="left" ><input type=text name="website" id="website" value="{$website}" style="width:360px;"></td>
-				   <td width="50%" align="left" ></td>
+				  {if $ErrorMsg["website"] != ''} <td nowrap width="50%" align="left" ><font color = "red">{$ErrorMsg["website"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 
 				<tr>

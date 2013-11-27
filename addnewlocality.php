@@ -58,16 +58,8 @@ else
     mysql_free_result($resCity);
     $localityval = trim($localityval);
     $url = "";
-    
-	if($subcityval!='' && $id!='')
-	{		
-            $url = createLocalityURL($localityval, $dataCity['LABEL'], $id, 'locality');
-            $seldata = "UPDATE ".LOCALITY." SET LABEL = '".$localityval."', URL = '$url' WHERE LOCALITY_ID='".$id."' AND SUBURB_ID='".$subcityval."'";
-            $resdata = mysql_query($seldata);
-            $c = mysql_affected_rows();
-	}
-
-        $seldata = "SELECT l.LABEL FROM ".LOCALITY." l
+        //code for duplicate value
+         $seldata = "SELECT l.LABEL FROM ".LOCALITY." l
             inner join suburb s on l.suburb_id = s.suburb_id
             WHERE s.CITY_ID = '".$deletect."' AND l.LABEL = '".$localityval."'";
 	$resdata = mysql_query($seldata);
@@ -78,7 +70,16 @@ else
         $qryLocalityExistsRows = mysql_num_rows($qryLocalityExistsRes);
         if($qryLocalityExistsRows >0)
             echo "Duplicate locality#";
-	if($c==0 && $ins==0)
+        
+	if($subcityval!='' && $id!='' && $qryLocalityExistsRows == 0)
+	{		
+            $url = createLocalityURL($localityval, $dataCity['LABEL'], $id, 'locality');
+            $seldata = "UPDATE ".LOCALITY." SET LABEL = '".$localityval."', URL = '$url' WHERE LOCALITY_ID='".$id."' AND SUBURB_ID='".$subcityval."'";
+            $resdata = mysql_query($seldata);
+            $c = mysql_affected_rows();
+	}
+
+	if($c==0 && $ins==0 && $qryLocalityExistsRows == 0)
 	{	
             $qry = "INSERT INTO ".LOCALITY." (LABEL,SUBURB_ID,status,updated_by)
                 value('".$localityval."','".$subcityval."','Active','".$_SESSION['adminId']."')";

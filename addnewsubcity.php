@@ -88,7 +88,7 @@ else
     $seldata = "UPDATE ".SUBURB." 
         SET URL = '$url',updated_by = '".$_SESSION['adminId']."' WHERE SUBURB_ID='".$ctid."'";
     $resdata = mysql_query($seldata);
-   
+   }
 
    $selqry = "SELECT SUBURB_ID,LABEL FROM ".SUBURB." WHERE CITY_ID='".$cityid."' ORDER BY LABEL";
     $ressel = mysql_query($selqry) or die(mysql_error()." select");
@@ -96,15 +96,15 @@ else
     <select name="suburbId" id = "suburbId" class="suburbId" onchange="dispsubcity(this.value,1);" STYLE="width: 150px">
     <option value =''>Select Suburb</option>
     <?php
-            while($data	=	mysql_fetch_array($ressel))
-            {
-            ?>
-            <option  value ='<?php echo $data['SUBURB_ID']; ?>' <?php if( $data['SUBURB_ID'] == $sel_id ) echo "selected='selected'"; ?>><?php echo $data['LABEL']; ?></option>
-            <?php
-            }
-            ?>
+    while($data	= mysql_fetch_array($ressel))
+    {
+    ?>
+    <option  value ='<?php echo $data['SUBURB_ID']; ?>' <?php if( $data['SUBURB_ID'] == $sel_id ) echo "selected='selected'"; ?>><?php echo $data['LABEL']; ?></option>
+    <?php
+    }
+    ?>
     </select>
 <?php
-	}
+	
 }
 ?>
