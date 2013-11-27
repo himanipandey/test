@@ -468,11 +468,11 @@ $(function() {
                                                      {if $arrVal['PROJECT_STAGE']=='NoStage'} 
                                                         noPhase 
                                                      {else}
-                                                        {if $arrVal['PROJECT_STAGE'] == 'NewProjct'} NewProject Audit {else}{$arrVal['PROJECT_STAGE']}{/if} 
+                                                        {$arrVal['PROJECT_STAGE']} 
                                                      {/if}
                                              </td>
                                              <td style='padding-left:5px;'>
-                                                 {$arrVal['PROJECT_PHASE']}
+                                                {if $arrVal['PROJECT_PHASE'] == 'NewProject'} NewProject Audit {else}{$arrVal['PROJECT_PHASE']}{/if}
                                              </td>
                                              <td align='center' style='padding-left:5px;'>
                                                  <a href='javascript:void(0);' onClick='javascript:downloadExcel("{$arrVal['PROJECT_STAGE']}","{$arrVal['PROJECT_PHASE']}");'><img src='images/excel.png' border='0'></a>
