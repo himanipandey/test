@@ -468,7 +468,7 @@ $(function() {
                                                      {if $arrVal['PROJECT_STAGE']=='NoStage'} 
                                                         noPhase 
                                                      {else}
-                                                        {$arrVal['PROJECT_STAGE']} 
+                                                        {if $arrVal['PROJECT_STAGE'] == 'NewProjct'} NewProject Audit {else}{$arrVal['PROJECT_STAGE']}{/if} 
                                                      {/if}
                                              </td>
                                              <td style='padding-left:5px;'>

@@ -93,18 +93,6 @@ if ($_POST['btnSave'] == "Save")
 	   {
 	     $ErrorMsg["DisplayOrder"] = "Please enter Builder Display Order.";
 	   }
-	if( $txtMetaTitle == '') 
-	   {
-	     $ErrorMsg["txtMetaTitle"] = "Please enter Builder meta title.";
-	   }
-	if( $txtMetaKeywords == '') 
-	   {
-	     $ErrorMsg["txtMetaKeywords"] = "Please enter Builder meta keywords.";
-	   }
-	if( $txtMetaDescription == '') 
-	   {
-	     $ErrorMsg["txtMetaDescription"] = "Please enter Builder meta description.";
-	   } 
 	if( $city == '') 
 	   {
 	     $ErrorMsg["txtCity"] = "Please select City.";

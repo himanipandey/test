@@ -470,7 +470,7 @@ function getDateNow(){
 	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Revert	</button>
 	{/if}
 {/if}
-<br>
+<!--<br>
 {if $projectDetails[0].PROJECT_PHASE!="Complete"}
     <textarea name="comments" id="comments" placeholder="
         {if $projectDetails[0].AUDIT_COMMENTS}
@@ -483,7 +483,7 @@ function getDateNow(){
                 {$projectDetails[0].AUDIT_COMMENTS}
         {/if}
     </textarea>
-{/if}								
+{/if} -->								
 <div> 
 
   <TR>
