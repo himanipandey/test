@@ -429,7 +429,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['display_order'] = getDisplayOrder($projectId);
             $arrInsertUpdateProject['status'] = $Active;
             $arrInsertUpdateProject['project_url'] = $txtProjectURL;
-            $arrInsertUpdateProject['price_disclaimer'] = $txtDisclaimer;
             $arrInsertUpdateProject['pre_launch_date'] = $pre_launch_date;
             $arrInsertUpdateProject['launch_date'] = $eff_date_to;
             $arrInsertUpdateProject['source_of_information'] = $txtProjectSource;
@@ -583,7 +582,6 @@ elseif ($projectId!='') {
     $smarty->assign("Status", stripslashes($ProjectDetail->project_status_id));
     $smarty->assign("txtProjectURL", stripslashes($ProjectDetail->project_url));
     $smarty->assign("txtProjectURLOld", stripslashes($ProjectDetail->project_url));
-    $smarty->assign("txtDisclaimer", stripslashes($ProjectDetail->price_disclaimer));
     $smarty->assign("eff_date_to", stripslashes($ProjectDetail->launch_date));
     $smarty->assign("display_order", $ProjectDetail->display_order);
     $smarty->assign("youtube_link", stripslashes($ProjectDetail->youtube_video));

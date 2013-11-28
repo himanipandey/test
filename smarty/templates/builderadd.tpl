@@ -208,23 +208,23 @@
 				  {if $ErrorMsg["DisplayOrder"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["DisplayOrder"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 				<tr>
-				  <td width="20%" align="right" ><font color = "red">*</font> Meta Title : </td>
+				  <td width="20%" align="right" > Meta Title : </td>
 				  <td width="30%" align="left" ><input type=text name=txtMetaTitle id=txtMetaTitle value="{$txtMetaTitle}" style="width:360px;"></td>
-				   {if $ErrorMsg["txtMetaTitle"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaTitle"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+				   <td width="50%" align="left"<td width="50%" align="left"></td>
 				</tr>
 				<tr>
-				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Meta Keywords :</td>
+				  <td width="20%" align="right" valign="top">Meta Keywords :</td>
 				  <td width="30%" align="left" >
 				  <textarea name="txtMetaKeywords" rows="10" cols="45">{$txtMetaKeywords}</textarea>
                   </td>
-                  {if $ErrorMsg["txtMetaKeywords"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaKeywords"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+                  <td width="50%" align="left"></td>
 				</tr>
 				<tr>
-				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Meta Description :</td>
+				  <td width="20%" align="right" valign="top">Meta Description :</td>
 				  <td width="30%" align="left" >
 				  <textarea name="txtMetaDescription" rows="10" cols="45">{$txtMetaDescription}</textarea>
                   </td>
-                  {if $ErrorMsg["txtMetaDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaDescription"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+                  <td width="50%" align="left"></td>
 				</tr>
 
 				</tr>
@@ -284,9 +284,9 @@
 				</tr>
 
 				<tr>
-				  <td width="20%" align="right" > Website : </td>
+				  <td width="20%" align="right" > <font color = "red">*</font>Website : </td>
 				  <td width="30%" align="left" ><input type=text name="website" id="website" value="{$website}" style="width:360px;"></td>
-				   <td width="50%" align="left" ></td>
+				  {if $ErrorMsg["website"] != ''} <td nowrap width="50%" align="left" ><font color = "red">{$ErrorMsg["website"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
 
 				<tr>
