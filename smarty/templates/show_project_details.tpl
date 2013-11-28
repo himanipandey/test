@@ -180,7 +180,6 @@ function towerSelect(towerId)
 				{
 					$('#forwardFlag').val('yes');
 					$('#currentPhase').val(phase);
-					$('#reviews').val(document.getElementById("comments").value);
 					$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
 					$('#changePhaseForm').submit();
 				}
@@ -192,7 +191,6 @@ function towerSelect(towerId)
 					$('#forwardFlag').val('no');
 					$('#currentPhase').val(phase);
 					$('#returnStage').val(stg);
-					$('#reviews').val(document.getElementById("comments").value);
 					$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
 					$('#changePhaseForm').submit();
 				}	
@@ -203,7 +201,6 @@ function towerSelect(towerId)
 				{
 					$('#forwardFlag').val('update');
 					$('#currentPhase').val(phase);
-					$('#reviews').val(document.getElementById("comments").value);
 					$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
 					$('#changePhaseForm').submit();
 				}	
@@ -469,9 +466,8 @@ function getDateNow(){
 	{if $projectDetails[0].PROJECT_PHASE!="DataCollection" && $projectDetails[0].PROJECT_PHASE!="Complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}','{$promisedCompletionDate}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Revert	</button>
 	{/if}
-{/if}
-<!--<br>
-{if $projectDetails[0].PROJECT_PHASE!="Complete"}
+{/if}<br>
+<!--{if $projectDetails[0].PROJECT_PHASE!="Complete"}
     <textarea name="comments" id="comments" placeholder="
         {if $projectDetails[0].AUDIT_COMMENTS}
         {else}
@@ -483,7 +479,7 @@ function getDateNow(){
                 {$projectDetails[0].AUDIT_COMMENTS}
         {/if}
     </textarea>
-{/if} -->								
+{/if} 	-->							
 <div> 
 
   <TR>
