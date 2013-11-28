@@ -12,63 +12,49 @@ include("modelsConfig.php");
 include("includes/configs/configs.php");
 AdminAuthentication();
 $cityArr = City::CityArr();
-$brokerArr = BrokerCompany::find('all');
+$brokerArr = BrokerCompany::find('all' , array('select' => 'brokers.id,brokers.broker_name'));
+$qualification = SellerCompany::getQualification();
 
 $smarty->assign("cityArr", $cityArr);
-$smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'');
-$smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'');
+$smarty->assign("brokerArr", $brokerArr);
+$smarty->assign("qualification", $qualification);
+$smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'all');
+$smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 
-if(!empty($_GET['brokerCompanyId']))
+if(!empty($_GET['sellerCompanyId']))
 {
-    $brkrDet = BrokerCompany::getById($_GET['brokerCompanyId']);
+    $sellerDet = SellerCompany::getByid($_GET['sellerCompanyId']);
     
-    $cityLocIDArr = BrokerCompanyLocation::CityLocIDArr($_GET['brokerCompanyId']);
-    
-    $citypkidArr = array();
-    if(!empty($cityLocIDArr))
-    foreach($cityLocIDArr as $key => $val)
+    if(!empty($sellerDet))
     {
-        $citypkidArr[] = $val->pkid;
+        $smarty->assign("sellerCompanyId", !empty($sellerDet['id'])?$sellerDet['id']:'');
+        $smarty->assign("status", !empty($sellerDet['status'])?$sellerDet['status']:'');
+        $smarty->assign("broker_id", !empty($sellerDet['broker_id'])?$sellerDet['broker_id']:'');
+        $smarty->assign("brkr_cntct_id", !empty($sellerDet['brkr_cntct_id'])?$sellerDet['brkr_cntct_id']:'');
+        $smarty->assign("qualification_id", !empty($sellerDet['academic_qualification_id'])?$sellerDet['academic_qualification_id']:'');
+        $smarty->assign("rating", !empty($sellerDet['rating'])?$sellerDet['rating']:'');
+        $smarty->assign("rateoption", !empty($sellerDet['rateoption'])?$sellerDet['rateoption']:'');
+        $smarty->assign("seller_type", !empty($sellerDet['seller_type'])?$sellerDet['seller_type']:'');
+        $smarty->assign("copy", !empty($sellerDet['chkAddr'])?$sellerDet['chkAddr']:'');
+        $smarty->assign("active_since", !empty($sellerDet['active_since'])?date('d/m/Y' , strtotime($sellerDet['active_since'])):'');
+        
+        $smarty->assign("seller_name", !empty($sellerDet['name'])?$sellerDet['name']:'');
+        $smarty->assign("addressid", !empty($sellerDet['addressid'])?$sellerDet['addressid']:'');
+        $smarty->assign("addressline1", !empty($sellerDet['address_line_1'])?$sellerDet['address_line_1']:'');
+        $smarty->assign("addressline2", !empty($sellerDet['address_line_2'])?$sellerDet['address_line_2']:'');        
+        $smarty->assign("cityhiddenArr", !empty($sellerDet['city_id'])?$sellerDet['city_id']:'');
+        $smarty->assign("pincode", !empty($sellerDet['pincode'])?$sellerDet['pincode']:'');
+        $smarty->assign("mobile", !empty($sellerDet['mobile'])?$sellerDet['mobile']:'');
+        $smarty->assign("phone1", !empty($sellerDet['phone1'])?$sellerDet['phone1']:'');
+        $smarty->assign("phone2", !empty($sellerDet['phone1'])?$sellerDet['phone2']:'');
+        $smarty->assign("email", !empty($sellerDet['contact_email'])?$sellerDet['contact_email']:'');
     }
-    $smarty->assign("citypkidArr", !empty($citypkidArr)?base64_encode(json_encode($citypkidArr)):'');
-    $smarty->assign("cityLocIDArr", $cityLocIDArr);
-    
-    $contactIDArr = BrokerCompanyContact::ContactArr($_GET['brokerCompanyId']);
-    //print('<pre>');
-//    print_R($contactIDArr);
-//    
+    //print'<pre>';
+//    print_r($sellerDet);
 //    die;
-    $contactIDArr = array_merge($contactIDArr , !empty($brkrDet)?$brkrDet:array());
-    
-    $smarty->assign("name", !empty($contactIDArr['name'])?$contactIDArr['name']:'');
-    $smarty->assign("status", !empty($contactIDArr['status'])?$contactIDArr['status']:'');
-    $smarty->assign("description", !empty($contactIDArr['description'])?$contactIDArr['description']:'');
-    $smarty->assign("pan", !empty($contactIDArr['pan'])?$contactIDArr['pan']:'');
-    $smarty->assign("active_since", !empty($contactIDArr['active_since'])?$contactIDArr['active_since']:'');
-    
-    $smarty->assign("addressline1", !empty($contactIDArr['addressline1'])?$contactIDArr['addressline1']:'');
-    $smarty->assign("addressline2", !empty($contactIDArr['addressline2'])?$contactIDArr['addressline2']:'');
-    $smarty->assign("city_id", !empty($contactIDArr['city_id'])?$contactIDArr['city_id']:'');
-    $smarty->assign("pincode", !empty($contactIDArr['pincode'])?$contactIDArr['pincode']:'');        
-    $smarty->assign("phone1", !empty($contactIDArr['phone1'])?$contactIDArr['phone1']:'');
-    $smarty->assign("phone2", !empty($contactIDArr['phone2'])?$contactIDArr['phone2']:'');
-    $smarty->assign("mobile", !empty($contactIDArr['mobile'])?$contactIDArr['mobile']:'');
-    $smarty->assign("fax", !empty($contactIDArr['fax'])?$contactIDArr['fax']:'');
-    $smarty->assign("email", !empty($contactIDArr['primary_email'])?$contactIDArr['primary_email']:'');
-    $smarty->assign("cc_phone", !empty($contactIDArr['cc_phone'])?$contactIDArr['cc_phone']:'');
-    $smarty->assign("cc_mobile", !empty($contactIDArr['cc_mobile'])?$contactIDArr['cc_mobile']:'');
-    $smarty->assign("cc_fax", !empty($contactIDArr['cc_fax'])?$contactIDArr['cc_fax']:'');
-    $smarty->assign("cc_email", !empty($contactIDArr['cc_email'])?$contactIDArr['cc_email']:'');
-    
-    $smarty->assign("primary_address_id", !empty($contactIDArr['primary_address_id'])?$contactIDArr['primary_address_id']:'');
-    $smarty->assign("fax_number_id", !empty($contactIDArr['fax_number_id'])?$contactIDArr['fax_number_id']:'');
-    $smarty->assign("primary_email", !empty($contactIDArr['primary_email'])?$contactIDArr['primary_email']:'');
-    $smarty->assign("primary_broker_contact_id", !empty($contactIDArr['primary_broker_contact_id'])?$contactIDArr['primary_broker_contact_id']:'');
-    $smarty->assign("primary_contact_number_id", !empty($contactIDArr['primary_contact_number_id'])?$contactIDArr['primary_contact_number_id']:'');
-    
-    $smarty->assign("contactids", $contactIDArr);    
-    $smarty->assign("contacts", !empty($contactIDArr['contacts'])?$contactIDArr['contacts']:'');
 }
+
+
 include('sellercompanyaddProcess.php');
 
 

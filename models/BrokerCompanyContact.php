@@ -99,6 +99,16 @@ class BrokerCompanyContact extends ActiveRecord\Model
         return $contactHqArr;
     }
     
+    static function ContactBroArr($bid = '') {
+        
+        if(empty($bid))
+            return false;
+        
+        $contactHqArr = ContactNumber::ContactBroArr($bid);
+        
+        return $contactHqArr;
+    }
+    
     static function ContactBrkIDFrmCnt($cid = '') {
         
         if(empty($cid))

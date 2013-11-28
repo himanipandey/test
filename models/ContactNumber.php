@@ -16,7 +16,7 @@ class ContactNumber extends ActiveRecord\Model
         if(empty($bid))
             return false;
             
-        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name != 'Headquarter' AND name != 'Customer Care'";
+        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name != 'Headquarter' AND name != 'Customer Care' AND type = 'NAgent'";
         
         $brokerContacts = ContactNumber::find_by_sql($sql);
         $contactId = array();
@@ -51,12 +51,47 @@ class ContactNumber extends ActiveRecord\Model
             
     }
     
+    static function ContactBroArr($bid = '') {
+        
+        if(empty($bid))
+            return false;
+            
+        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name = 'Headquarter' AND type = 'NAgent'";
+        
+        $brokerContacts = ContactNumber::find_by_sql($sql);
+        $contactId = array();
+        $contactNumbers = array();
+        if(!empty($brokerContacts))
+        {
+            foreach($brokerContacts as $key => $val)
+            {
+                $contactNumbers['id'] = $val->id;
+                $contactNumbers['name'] = $val->name;
+                $contactNumbers['email'] = $val->contact_email;
+                $contactId = ContactNumber::find('all' , array('conditions' => "table_id=$val->id AND table_name = 'broker_contacts'" ));
+                if(!empty($contactId))
+                {
+                    foreach($contactId as $k => $v)
+                    {
+                        $contactNumbers[$v->type] = $v->contact_no;
+                    }
+                }
+            }
+        }
+        
+        //print'<pre>';
+//        print_r($contactNumbers);
+//        die;
+        return $contactNumbers;
+            
+    }
+    
     static function ContactHQArr($bid = '') {
         
         if(empty($bid))
             return false;
             
-        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND (name = 'Headquarter' OR name = 'Customer Care')";
+        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND (name = 'Headquarter' OR name = 'Customer Care') AND type = 'NAgent'";
         
         $brokerContacts = ContactNumber::find_by_sql($sql);
         $contactId = array();
@@ -92,7 +127,7 @@ class ContactNumber extends ActiveRecord\Model
         if(empty($bid))
             return false;
             
-        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name = 'Customer Care'";
+        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name = 'Customer Care' AND type = 'NAgent'";
         
         $brokerContacts = ContactNumber::find_by_sql($sql);
         $contactId = array();
@@ -128,7 +163,7 @@ class ContactNumber extends ActiveRecord\Model
         if(empty($bid))
             return false;
             
-        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name = 'Heaquarter'";
+        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name = 'Heaquarter' AND type = 'NAgent'";
         
         $brokerContacts = ContactNumber::find_by_sql($sql);
         $contactId = array();
@@ -164,7 +199,7 @@ class ContactNumber extends ActiveRecord\Model
         if(empty($bid))
             return false;
             
-        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name != 'Headquarter' AND name != 'Customer Care'";
+        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name != 'Headquarter' AND name != 'Customer Care' AND type = 'NAgent'";
         
         $brokerContacts = ContactNumber::find_by_sql($sql);
        

@@ -57,7 +57,7 @@
                             <option value="">--Select Seller Company--</option>
                             {if $brokerArr != ''}
                                     {foreach from= $brokerArr key = k item = val}
-                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{$val->broker_name}</option>
+                                        <option value="{$val->id}">{$val->broker_name}</option>
                                     {/foreach}
                             {/if}
                         </select>
@@ -71,14 +71,14 @@
                     <td width="10%" align="left" valign="top" >
                         <select name="type" id="type">
                             <option value="">--Select Seller Type--</option>
-                            <option value="Broker Agent" {if $seller_type == "Broker Agent"} selected="" {/if}>Broker Agent</option>
+                            <option value="Broker Agent">Broker Agent</option>
                         </select>
                     </td>
                     <td width="10%" align="right">Status :</td>
                     <td width="10%" align="left" >
     				    <select name = "status" id = "status" style="width:90px;">
-                           <option value="Active" {if $status == 'Active'}selected=""{/if}>Active</option>
-                           <option value="Inactive" {if $status == 'Inactive'}selected=""{/if}>Inactive</option>
+                           <option value="Active" {if $status == 'Active'}selected{/if}>Active</option>
+                           <option value="Inactive" {if $status == 'Inactive'}selected{/if}>Inactive</option>
                         </select>
                     </td>
                       
@@ -96,20 +96,20 @@
                 </tr>
                 <tr>
                     <td colspan="8">
-                        <input type="checkbox" name="copy" id="copy" {if $copy == "on"} checked="" {/if}/>&nbsp;Copy Company Address
+                        <input type="checkbox" name="copy" id="copy" />&nbsp;Copy Company Address
                     </td>
                 </tr>
 				<tr>
 				    <td width="20%" align="right" >Address Line 1 : <font color = "red">*</font></td>
                     <td width="30%" align="left" >
-                        <input type=text name="addressline1" class="check" id="addressline1" value="{$addressline1}" {if $copy == "on"} readonly="" {/if} style="width:250px;" />
+                        <input type=text name="addressline1" class="check" id="addressline1" value="{$addressline1}" style="width:250px;" />
                         {if $ErrorMsg["addressline1"] != ''}
                             <font color = "red">{$ErrorMsg["addressline1"]}</font>
                         {/if}
                     </td>
                     <td width="20%" align="right" valign="top">City :<font color = "red">*</font></td>
                     <td width="30%" align="left" >
-				        <select name="city_id" id="city_id" {if $copy == "on"} disabled="" {/if} style="width:250px;">
+				        <select name="city_id" id="city_id" style="width:250px;">
                            <option value="">Select City</option>
                            {foreach from= $cityArr key = k item = val}
                                <option value="{$k}" {if $k == $cityhiddenArr} selected {/if}>{$val}</option>
@@ -122,11 +122,11 @@
                 <tr>
 				    <td width="20%" align="right" >Address Line 2 : </td>
                     <td width="30%" align="left" >
-                        <input type=text name="addressline2" {if $copy == "on"} readonly="" {/if} class="check" id="addressline2" value="{$addressline2}" style="width:250px;" />
+                        <input type=text name="addressline2" class="check" id="addressline2" value="{$addressline2}" style="width:250px;" />
                     </td>
                     <td width="15%" align="right" valign="top" >Pincode : </td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="pincode" class="check" {if $copy == "on"} readonly="" {/if} id="pincode" value="{$pincode}" maxlength="12" style="width:85px;" />
+                        <input type=text name="pincode" class="check" id="pincode" value="{$pincode}" maxlength="12" style="width:85px;" />
                         {if $ErrorMsg["pincode"] != ''}
                             <font color = "red">{$ErrorMsg["pincode"]}</font>
                         {/if}	
@@ -137,7 +137,7 @@
     				<td width="15%" align="right" valign="top" >Office Phone 1 : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                        <input type=text name="phone1" class="check" {if $copy == "on"} readonly="" {/if} id="phone1" value="{$phone1}" maxlength="12" style="width:85px;" />
+                        <input type=text name="phone1" class="check" id="phone1" value="{$phone1}" maxlength="12" style="width:85px;" />
                         {if $ErrorMsg["phone1"] != ''}
                             <font color = "red">{$ErrorMsg["phone1"]}</font>
                         {/if}		
@@ -145,7 +145,7 @@
                     <td width="15%" align="right" valign="top" >Office Phone 2 : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                        <input type=text name="phone2" class="check" {if $copy == "on"} readonly="" {/if} id="phone2" value="{$phone2}" maxlength="12" style="width:85px;" />
+                        <input type=text name="phone2" class="check" id="phone2" value="{$phone2}" maxlength="12" style="width:85px;" />
                         {if $ErrorMsg["phone2"] != ''}
                             <font color = "red">{$ErrorMsg["phone2"]}</font>
                         {/if}		
@@ -195,25 +195,25 @@
                 <tr>
                     <td width="15%" align="right" valign="top" >Seller Rating:</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type="radio" name="rating" id="rating" {if $rateoption == "auto"} checked=""  {/if} value="3.0" />	&nbsp;Auto&nbsp;
+                        <input type="radio" name="rating" id="rating" checked="" value="3.0" />	&nbsp;Auto&nbsp;
                         <input type="auto" name="auto" id="auto" value="3.0" style="width:25px;" readonly="" />
                     </td>
                 </tr>
                 <tr>
                     <td width="15%" align="right" valign="top" >&nbsp;</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type="radio" name="rating" {if $rateoption == "forced"} checked=""  {/if} id="rating" value="" />&nbsp;Forced
+                        <input type="radio" name="rating" id="rating" value="" />&nbsp;Forced
                         <select name="rate" id="rate">
-                            <option value="0.5" {if $rating == "0.5"} selected=""  {/if}>0.5</option>
-                            <option value="1.0" {if $rating == "1.0"} selected=""  {/if}>1.0</option>
-                            <option value="1.5" {if $rating == "1.5"} selected=""  {/if}>1.5</option>
-                            <option value="2.0" {if $rating == "2.0"} selected=""  {/if}>2.0</option>
-                            <option value="2.5" {if $rating == "2.5"} selected=""  {/if}>2.5</option>
-                            <option value="3.0" {if $rating == "3.0"} selected=""  {/if}>3.0</option>
-                            <option value="3.5" {if $rating == "3.5"} selected=""  {/if}>3.5</option>
-                            <option value="4.0" {if $rating == "4.0"} selected=""  {/if}>4.0</option>
-                            <option value="4.5" {if $rating == "4.5"} selected=""  {/if}>4.5</option>
-                            <option value="5.0" {if $rating == "5.0"} selected=""  {/if}>5.0</option>
+                            <option value="0.5">0.5</option>
+                            <option value="1.0">1.0</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2.0">2.0</option>
+                            <option value="2.5">2.5</option>
+                            <option value="3.0">3.0</option>
+                            <option value="3.5">3.5</option>
+                            <option value="4.0">4.0</option>
+                            <option value="4.5">4.5</option>
+                            <option value="5.0">5.0</option>
                         </select>	
                     </td>
                 </tr>
@@ -229,7 +229,7 @@
                         <select name="qualification" id="qualification">
                             <option value="">--Select Qualification--</option>
                             {foreach from= $qualification key = k item = val}
-                               <option value="{$val['id']}" {if $val['id'] == $qualification_id} selected="true" {/if}>{$val['qualification']}</option>
+                               <option value="{$val['id']}" {if $k == $qual_id} selected {/if}>{$val['qualification']}</option>
                             {/foreach}
                         </select>	
                     </td>
@@ -241,8 +241,6 @@
 				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="float:left;" />
 				  &nbsp;&nbsp;<input type="button" name="btnExit" id="btnExit" value="Exit" style="float:right:" />
                   
-                  <input type="hidden" name="addressid" id="addressid" value="{$addressid}" />
-                  <input type="hidden" name="brkr_cntct_id" id="brkr_cntct_id" value="{$brkr_cntct_id}" />
                   <input type="hidden" name="cityhiddenArr" id="cityhiddenArr" value="" />
                   <input type="hidden" name="brokerhiddenArr" id="brokerhiddenArr" value="" />
                   <input type="hidden" name="typehiddenArr" id="typehiddenArr" value="" />
@@ -321,7 +319,7 @@
                             jQuery('#phone1').val(json.phone1);
                             jQuery('#phone2').val(json.phone2);
                             jQuery('#mobile').val(json.mobile);
-                            jQuery('#email').val(json.email);
+                            jQuery('#email').val(json.email);                                                                                                                                                                                                    
                         }
                     }
                     

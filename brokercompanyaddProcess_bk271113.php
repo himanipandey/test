@@ -203,117 +203,137 @@
                  //Do Nothing
         } 
         else if (empty($brokerCompanyId)){	
+            $brokerCommpany = new BrokerCompany();
             
             ResiProject::transaction(function(){
-                global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids;
-            //print'<pre>';
-//            print_r($_POST);
-//            die;
+                
+            
             if(!empty($active_since))
             {
                 $active_since = explode("/" , $active_since);
-                $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];    
+                $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];
+                $brokerCommpany->active_since =  $active_since;    
             }
-            
-            $sql_broker_company = @mysql_query("INSERT INTO `brokers` SET 
+
+            $sql_broker_company = "INSERT INTO `brokers` SET 
                                             `broker_name` = '".$brokerCName."',
                                             `status` = '".$status."',
                                             `description` = '".$description."',
                                             `pan` = '".$pan."',
                                             `primary_email` = '".$email."',
-                                            `active_since` = '".$active_since."',
-                                            `created_at` = '".date('Y-m-d H:i:s')."',
-                                            `updated_by` = '".$_SESSION['adminId']."'
-                                    ")or die(mysql_error());            
+                                            `broker_name` = '".$brokerCName."',
+                                            `broker_name` = '".$brokerCName."',
+                                            `broker_name` = '".$brokerCName."',
+                                            `broker_name` = '".$brokerCName."',
+                                            
+                                    ";            
             
-            $broker_id = @mysql_insert_id();
-            //$broker_id = 4;
-            $primary_email = !empty($email)?$email:'';
-            if($broker_id != false) {
-                $brokerIdFormapping = $broker_id;
+            $brokerCommpany->broker_name =  $brokerCName;
+            $brokerCommpany->status =  $status;
+            $brokerCommpany->description =  $description;
+            $brokerCommpany->pan =  $pan;
+            $brokerCommpany->primary_email = $email;
+            
+            if(!empty($active_since))
+            {
+                $active_since = explode("/" , $active_since);
+                $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];
+                $brokerCommpany->active_since =  $active_since;    
+            }
+            
+            $brokerCommpany->created_at = date('Y-m-d H:i:s');
+            $brokerCommpany->updated_at = '0000-00-00 00:00:00';
+            $brokerCommpany->updated_by = $_SESSION['adminId'];
+            $brokerCommpany->save();
+            
+            //$brokerCommpany->id = 1;
+            
+            if($brokerCommpany->id != false) {
+                $brokerIdFormapping = $brokerCommpany->id;
                 
                 /** -- Primary Address Entry Start -- */
                 /** -- Add the addresses in addresses table -- */
+                $address = new BrokerCompanyLocation();
                 
-                $sql_adresses = @mysql_query("INSERT INTO `addresses` SET 
-                                            `table_name` = 'brokers',
-                                            `table_id` = '".$brokerIdFormapping."',
-                                            `address_line_1` = '".$addressline1."',
-                                            `address_line_2` = '".$addressline2."',
-                                            `city_id` = '".$city_id."',
-                                            `pincode` = '".$pincode."',
-                                            `created_at` = '".date('Y-m-d H:i:s')."',
-                                            `updated_by` = '".$_SESSION['adminId']."'
-                                    ")or die(mysql_error());   
-                $primary_address_id = @mysql_insert_id();
+                $address->table_name = 'brokers';
+                $address->table_id = $brokerIdFormapping;
+                $address->address_line_1 = $addressline1;
+                $address->address_line_2 = $addressline2;
+                $address->city_id = $city_id;
+                $address->pincode = $pincode;
+                $address->created_at = date('Y-m-d H:i:s');
+                $address->updated_by = $_SESSION['adminId'];
+                $address->save();
+                //$primary_addr_id = 1;
                 
-                //$primary_address_id = 7;
+                if(!empty($address->id))
+                    $primary_addr_id = $address->id;
+                $primary_email_id = !empty($email)?$email:'';
                 
                 /** -- Primary Contact Entry in broker_contacts Table -- */
+                $brkrcmpnyContct = new  BrokerCompanyContact();
+                $brkrcmpnyContct->broker_id = $brokerIdFormapping;
+                $brkrcmpnyContct->name = 'Headquarter';
+                $brkrcmpnyContct->contact_email = !empty($email)?$email:'';
+                $brkrcmpnyContct->created_at =  date('Y-m-d H:i:s');
+                $brkrcmpnyContct->updated_by = $_SESSION['adminId'];
+                $brkrcmpnyContct->save();
                 
-                $sql_broker_contact = @mysql_query("INSERT INTO `broker_contacts` SET 
-                                            `broker_id` = '".$brokerIdFormapping."',
-                                            `name` = 'Headquarter',
-                                            `type` = 'NAgent',
-                                            `contact_email` = '".$primary_email."',
-                                            `created_at` = '".date('Y-m-d H:i:s')."',
-                                            `updated_by` = '".$_SESSION['adminId']."'
-                                    ")or die(mysql_error()); 
-                
-                $primary_broker_contact_id = @mysql_insert_id();
-                //$primary_broker_contact_id = 4;
-                
-                if(!empty($primary_broker_contact_id))
+                //$brkrcmpnyContct->id = 1;
+                $primary_broker_contact_id = '';
+                if(!empty($brkrcmpnyContct->id))
                 {
                     $contactID = '';
+                    $primary_broker_contact_id = $brkrcmpnyContct->id;
+                    
                     /** -- This will generate a row in contact_numbers table for phone1 -- */
-                    $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET 
-                                            `table_name` = 'broker_contacts',
-                                            `table_id` = '".$primary_broker_contact_id."',
-                                            `type` = 'phone1',
-                                            `contact_no` = '".$phone1."',
-                                            `created_at` = '".date('Y-m-d H:i:s')."',
-                                            `updated_by` = '".$_SESSION['adminId']."'")or die(mysql_error()); 
-                                    
-                    $primary_contact_number_id = @mysql_insert_id();
-                    //$primary_contact_number_id = 2;
+                    $contctNumber = new ContactNumber();
+                    $contctNumber->table_name = 'broker_contacts';
+                    $contctNumber->table_id = $brkrcmpnyContct->id;
+                    $contctNumber->type = 'phone1';
                     
-                    if(!empty($primary_contact_number_id))
-                        $contactID = $primary_contact_number_id;
+                    if(!empty($phone1))
+                        $contctNumber->contact_no = $phone1;
                     
+                    $contctNumber->created_at =  date('Y-m-d H:i:s');
+                    $contctNumber->updated_by = $_SESSION['adminId'];
+                    $contctNumber->save();
+                    
+                    if(!empty($contctNumber->id))
+                        $contactID = $contctNumber->id;
+                    $primary_contact_number_id = !empty($contactID)?$contactID:'';
                     /** -- This will generate a row in contact_numbers table for phone2 -- */
-                    $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET 
-                                            `table_name` = 'broker_contacts',
-                                            `table_id` = '".$primary_broker_contact_id."',
-                                            `type` = 'phone2',
-                                            `contact_no` = '".$phone2."',
-                                            `created_at` = '".date('Y-m-d H:i:s')."',
-                                            `updated_by` = '".$_SESSION['adminId']."'
-                                    ");
-                    
+                    $contctNumber = new  ContactNumber();
+                    $contctNumber->table_name = 'broker_contacts';
+                    $contctNumber->table_id = $brkrcmpnyContct->id;
+                    $contctNumber->type = 'phone2';
+                    if(!empty($phone2))
+                        $contctNumber->contact_no = $phone2;
+                    $contctNumber->created_at =  date('Y-m-d H:i:s');
+                    $contctNumber->updated_by = $_SESSION['adminId'];
+                    $contctNumber->save();
+                        
                     /** -- This will generate a row in contact_numbers table for fax -- */ 
-                    $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET 
-                                            `table_name` = 'broker_contacts',
-                                            `table_id` = '".$primary_broker_contact_id."',
-                                            `type` = 'fax',
-                                            `contact_no` = '".$fax."',
-                                            `created_at` = '".date('Y-m-d H:i:s')."',
-                                            `updated_by` = '".$_SESSION['adminId']."'
-                                    "); 
+                    $contctNumber = new  ContactNumber();
+                    $contctNumber->table_name = 'broker_contacts';
+                    $contctNumber->table_id = $brkrcmpnyContct->id;
+                    $contctNumber->type = 'fax';
+                    if(!empty($fax))
+                        $contctNumber->contact_no = $fax;
+                    $contctNumber->created_at =  date('Y-m-d H:i:s');
+                    $contctNumber->updated_at =  '000-00-00 00:00:00';
+                    $contctNumber->updated_by = $_SESSION['adminId'];
+                    $contctNumber->save();
                     
-                    
-                    $fax_number_id = @mysql_insert_id();
-                    //$fax_number_id = 5;
-                    
+                    $fax_number_id = $contctNumber->id;
+                    //$contactID = 1;
                     /** -- Update the broker_contacts table with the table->contact_numbers pkid->mobile -- */
-                    $sql_broker_contact = @mysql_query("UPDATE `broker_contacts` SET 
-                                            `contact_number_id` = '".$contactID."',
-                                            `updated_at` = '".date('Y-m-d H:i:s')."',
-                                            `updated_by` = '".$_SESSION['adminId']."' 
-                                            WHERE id = '".$primary_broker_contact_id."'"); 
-                    
-                   
+                    $brkrcmpnyContct = BrokerCompanyContact::find_by_id($brkrcmpnyContct->id);
+                    $brkrcmpnyContct->contact_number_id = $contactID;
+                    $brkrcmpnyContct->updated_at =  date('Y-m-d H:i:s');
+                    $brkrcmpnyContct->save();
                 }
+                
                 
                 /** -- Primary Address Entry End -- */
                 
@@ -322,13 +342,13 @@
                 * Update the brokers Table  
                 */
                 
-                $sql_broker_company = @mysql_query("UPDATE `brokers` SET 
-                                            `primary_address_id` = '".$primary_address_id."',
-                                            `fax_number_id` = '".$fax_number_id."',
-                                            `primary_broker_contact_id` = '".$primary_broker_contact_id."',
-                                            `primary_contact_number_id` = '".$primary_contact_number_id."'
-                                            WHERE id = '".$broker_id."'");
-                
+                $brokerCommpany = BrokerCompany::find_by_id($brokerIdFormapping);
+                $brokerCommpany->primary_address_id =  $primary_addr_id;
+                $brokerCommpany->fax_number_id =  $fax_number_id;
+                $brokerCommpany->primary_email =  $primary_email_id;
+                $brokerCommpany->primary_broker_contact_id = $primary_broker_contact_id;
+                $brokerCommpany->primary_contact_number_id = $primary_contact_number_id;
+                $brokerCommpany->save();
                 
                 /** -- Broker Contacts Entry Start -- */
                 $cp_data = array();
@@ -342,7 +362,6 @@
                     $brkrcmpnyContct->broker_id = $brokerIdFormapping;
                     $brkrcmpnyContct->name = !empty($cp_name->$val)?$cp_name->$val:'';
                     $brkrcmpnyContct->contact_email = !empty($cp_email->$val)?$cp_email->$val:'';
-                    $brkrcmpnyContct->type =  'NAgent';
                     $brkrcmpnyContct->created_at =  date('Y-m-d H:i:s');
                     $brkrcmpnyContct->updated_at =  '000-00-00 00:00:00';
                     $brkrcmpnyContct->updated_by = $_SESSION['adminId'];
@@ -496,8 +515,6 @@
                         $bcmpLocation->save();       
                     }
                 }
-                //echo "herte";
-//                die;
                 /** -- City-Location-Address Entry End -- */
             }
             else{
@@ -513,10 +530,7 @@
         	 
         }
         else {
-            
-           ResiProject::transaction(function(){
-            global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids,$brokerCompanyId;
-            
+           
             $brokerCommpany = BrokerCompany::find_by_id($brokerCompanyId);
             
             $brokerCommpany->broker_name =  $brokerCName;
@@ -836,8 +850,6 @@
             else{
                 $ErrorMsg['dataInsertionError'] = "Please try again there is a problem in data updation";
             } 
-            
-            });
         }
          
             

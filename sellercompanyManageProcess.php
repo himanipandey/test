@@ -5,8 +5,8 @@
  * @copyright 2013
  */
  
-    $sort = '';
-    $page = '';
+    $sort = 'all';
+    $page = '1';
     if(isset($_GET['sort']) && !empty($_GET['sort']))
         $sort = $_GET['sort'];
     
@@ -90,7 +90,7 @@
             $sellerDataArr[$i]['id'] = !empty($val->id)?$val->id:'';
             $sellerDataArr[$i]['seller_cmpny'] = !empty($val->broker_name)?$val->broker_name:'';
             $sellerDataArr[$i]['seller_name'] = !empty($val->name)?$val->name:'';
-            $sellerDataArr[$i]['seller_type'] = !empty($val->type)?$val->type:'';
+            $sellerDataArr[$i]['seller_type'] = !empty($val->seller_type)?$val->seller_type:'';
             $sellerDataArr[$i]['rating'] = !empty($val->rating)?$val->rating:'0';
             $sellerDataArr[$i]['qualification'] = !empty($val->qualification)?$val->qualification:'None';
             $active_since = '';
