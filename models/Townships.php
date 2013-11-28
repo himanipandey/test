@@ -15,7 +15,7 @@ class Townships extends Objects
         return $townshipDetail;
     }
     static function getAllTownships() {
-        $allTownships = Townships::find("all");
+        $allTownships = Townships::find("all",array('order' => 'township_name asc'));
         return $allTownships;
     }
 }
