@@ -14,6 +14,19 @@
             $linkShowHide = 1;
         }
         $smarty->assign("linkShowHide", $linkShowHide);
+    
+    $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
+    $towerDetail        =   array();
+    foreach($towerDetail_object as $s){
+        $s = $s->to_array();
+        foreach($s as $key=>$value){
+            $s[strtoupper($key)] = $value;
+            unset($s[$key]);
+        }
+            array_push($towerDetail, $s);
+    }    
+     $smarty->assign("towerDetail", $towerDetail);
+         
 	$builderDetail = fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
 	if(isset($_REQUEST['edit']))
 		$edit_project = $projectId;
@@ -40,6 +53,8 @@ if (isset($_POST['Next']))
 
 	$arrValue = array();
 	$arrTitle = array();
+	$arrTaggedDate = array();
+	$arrTowerId = array();
 	  	foreach($_FILES['txtlocationplan']['name'] as $k=>$v)
 		{
 			if($v != '')
@@ -62,6 +77,8 @@ if (isset($_POST['Next']))
 
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
+				$arrTaggedDate[$k] = $_REQUEST['txttagged_date'][$k];
+				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
 			}
 		}
 
@@ -79,6 +96,9 @@ if (isset($_POST['Next']))
 	    }else if( !array_filter($_REQUEST['title']))
 	    {
 	      $ErrorMsg["ptype"] = "Please enter Image Title.";
+	    }else if( !array_filter($_REQUEST['txttagged_date']) && $_REQUEST['PType'] == 'Construction Status')
+	    {
+	      $ErrorMsg["ptype"] = "Please enter Tagged Date.";
 	    }
             $smarty->assign("PType", $_REQUEST['PType']);
 	if(is_array($ErrorMsg)) {
@@ -502,10 +522,12 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                       $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                             "object" => "project", "object_id" => $projectId,
-                                            "image_type" => "construction_status"));
+                                            "image_type" => "construction_status",
+                                            "service_extra_params" => array("tagged_date" => $arrTaggedDate[$key])
+                                            ));
                                         $response = $s3upload->upload();
                                         // Image id updation (next three lines could be written in single line but broken
                                         // in three lines due to limitation of php 5.3)
@@ -827,6 +849,7 @@ if (isset($_POST['Next']))
 									{
 										if(strstr($file,$val))
 										{
+										
 											$image = new SimpleImage();
 											$path	=	$createFolder."/".$file;
 											$image->load($path);
@@ -835,17 +858,22 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 											$image->save($imgdestpath);
+											
                                             $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
-                                                "image_type" => "project_image"));
+                                                "image_type" => "project_image",));
+                                                
+										
                                             $response = $s3upload->upload();
+                                     
                                             // Image id updation (next three lines could be written in single line but broken
                                             // in three lines due to limitation of php 5.3)
                                             $image_id = $response["service"]->data();
                                             $image_id = $image_id->id;
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
+											
 											/************Resize and large to small*************/
 											$image->resize(485,320);
 											$newimg	=	str_replace('large','large-rect-img',$file);
@@ -874,8 +902,8 @@ if (isset($_POST['Next']))
 											$newrect	=	str_replace('large','small',$file);
                                             $imgdestpath = $createFolder."/".$newrect;
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                            $s3upload->upload();
+                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newrect;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newrect;
 											/**********Working for watermark*******************/
@@ -887,16 +915,16 @@ if (isset($_POST['Next']))
 											$img = new Zubrag_watermark($image_path);
 											$img->ApplyWatermark($watermark_path);
 											$img->SaveAsFile($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                            $s3upload->upload();
+                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and rect small img*************/
 											$image->resize(95,65);
 											$newsmrect	=	str_replace('large','large-sm-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newsmrect;
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                            $s3upload->upload();
+                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
 
@@ -905,14 +933,17 @@ if (isset($_POST['Next']))
 											$newsmrect	=	str_replace('large','large-thumb',$file);
                                             $imgdestpath = $createFolder."/".$newsmrect;
 											$image->save($imgdestpath);
-                                            $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                            $s3upload->upload();
+                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
 										}
 									 }
 							}
 						}
+							$add_tower = '';
+							if($arrTowerId[$key] > 0)
+									$add_tower = " TOWER_ID = $arrTowerId[$key], ";
 							$imgDbPath = explode("/images_new",$img_path);
 							$selqry	=	"SELECT PLAN_IMAGE FROM ".PROJECT_PLAN_IMAGES." WHERE PROJECT_ID = '".$projectId."' AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$imgDbPath[1]."'";
 							$selres	=	mysql_query($selqry);
@@ -926,21 +957,25 @@ if (isset($_POST['Next']))
 													SET
 														PLAN_IMAGE = '".$imgDbPath[1]."',
 														TITLE	   = '".$arrTitle[$key]."',
-                                                        SERVICE_IMAGE_ID   = ".$image_id."
+                                                        SERVICE_IMAGE_ID   = ".$image_id.",
+                                                        ".$add_towe."
+                                                        TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
-								$res	=	mysql_query($qry);
+								$res	=	mysql_query($qry) or die(mysql_error());
 							}
 							else
 							{
-							 	 $qryinsert = "INSERT INTO ".PROJECT_PLAN_IMAGES."
+								$qryinsert = "INSERT INTO ".PROJECT_PLAN_IMAGES."
 												SET PLAN_IMAGE		=	'".$imgDbPath[1]."',
 													PROJECT_ID		=	'".$projectId."',
 													PLAN_TYPE		=	'".$_REQUEST['PType']."',
 													    BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
 													SERVICE_IMAGE_ID        =    ".$image_id.",
 													TITLE			=	'".$arrTitle[$key]."',
+													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
+													".$add_tower."
 													SUBMITTED_DATE	=	now()";
-								$resinsert	=	mysql_query($qryinsert);
+								$resinsert	=	mysql_query($qryinsert) or die(mysql_error());
 							}
 					if($flag==1)
 					{
