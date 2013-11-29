@@ -232,7 +232,8 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 		$booking_status = "-";
 		
 	$updation_label = $ob1['UPDATION_LABEL'];
-	
+	if($phase == 'NewProject') $phse = 'NewProject Audit';
+        else $phse = $phase;
 	$contents .= "
 	<tr bgcolor='#f2f2f2'>
 	<td>".$cnt."</td>
@@ -243,7 +244,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         <td>".$localityname."</td>    
 	<td>".$proj_status."</td>
 	<td>".$booking_status."</td>
-        <td>".$phase."</td>
+        <td>".$phse."</td>
 	<td>".$stage."</td>
         <td>".$date_time."</td>
         <td>".$stage_move_by."</td>            

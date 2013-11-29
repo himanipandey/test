@@ -113,9 +113,14 @@ function addupdatecity()
 		xmlHttpadd1.open("GET",url,false);
 		xmlHttpadd1.send(null);
 		var returnval=xmlHttpadd1.responseText;
-		if(xmlHttpadd1)
+                var stringSplit = new Array();
+                 stringSplit = returnval.split("#"); 
+                if(stringSplit.length >1) {
+                    alert("This city already exist");
+                }
+                else if(xmlHttpadd1)
 		{
-                    document.getElementById('maincity').innerHTML = returnval;
+                    document.getElementById('maincity').innerHTML = stringSplit[0];
                     var cityselid=$("#cityId :selected").val();
                     dispcity(cityselid);
                     alert("The record has been successfully updated.");
@@ -235,14 +240,17 @@ function addupdatesubcity()
 		xmlHttpadd1.send(null);
 		var returnval=xmlHttpadd1.responseText;
 		
-		if(returnval == 1)
-			alert("The Record is already exist!");
+                var stringSplitSuburb = new Array();
+                 stringSplitSuburb = returnval.split("#"); 
+                if(stringSplitSuburb.length >1) {
+                    alert("This suburb already exist");
+                }
 		else if(xmlHttpadd1)
 		{
-			document.getElementById('mainsubcity').innerHTML = returnval;
-			subcityselid=$("#suburbId :selected").val();
-			dispsubcity(subcityselid);
-			alert("The record has been successfully updated.");
+                    document.getElementById('mainsubcity').innerHTML = stringSplitSuburb[0];
+                    subcityselid=$("#suburbId :selected").val();
+                    dispsubcity(subcityselid);
+                    alert("The record has been successfully updated.");
 		}
 
 	}
@@ -378,11 +386,15 @@ function addupdatelocality()
 		xmlHttpadd1.open("GET",url,false);
 		xmlHttpadd1.send(null);
 		var returnval=xmlHttpadd1.responseText;
-		if(returnval == 1)
-			alert("The Record is already exist!");
+		
+                var stringSplitLocality = new Array();
+                 stringSplitLocality = returnval.split("#"); 
+                if(stringSplitLocality.length >1) {
+                    alert("This locality already exist");
+                }
 		else if(xmlHttpadd1)
 		{
-                    document.getElementById('mainlocality').innerHTML = returnval;
+                    document.getElementById('mainlocality').innerHTML = stringSplitLocality[0];
                     var localityselid=$("#localityId :selected").val();
                     displocality(localityselid);
                     alert("The record has been successfully updated.");

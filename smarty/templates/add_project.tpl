@@ -453,15 +453,6 @@
 									   <span id = "err_project_url" style = "display:none;">Please enter project url!</span></font>
 								  </td>
 							   </tr>
-							   <tr>
-								  <td width="20%" align="right" valign="top"><b>Price Disclaimer :</b></td>
-								  <td width="30%" align="left">
-									 <textarea name="txtDisclaimer" rows="10" cols="45" id = "txtDisclaimer">{$txtDisclaimer}</textarea>
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["projectDisclaimer"] != ''} {$ErrorMsg["projectDisclaimer"]} {/if}</font>
-								  </td>
-							   </tr>
 
 							  
                                <tr>

@@ -171,7 +171,6 @@ function InsertProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
         PROJECT_URL		 	      	= '" . d_($txtProjectURL) . "',
         FEATURED			 	    = '" . d_($Featured) . "',
         COMPLETION_DATE	      		= '" . d_($Completion) . "',
-        PRICE_DISCLAIMER 	      	= '" . d_($txtDisclaimer) . "',
         PAYMENT_PLAN				=	'" . $payment . "',
         NO_OF_TOWERS				=	'" . $no_of_towers . "',
         NO_OF_FLATS					=	'" . $no_of_flats . "',
@@ -257,7 +256,7 @@ function DeleteProject($projectId) {
 
 function ProjectDetail($projectId) {
     $qrySel = "SELECT * FROM " . RESI_PROJECT . " 
-               WHERE PROJECT_ID = '" . $projectId . "' and version = 'cms'";
+               WHERE PROJECT_ID = '" . $projectId . "' and version = 'Cms'";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     while ($data = mysql_fetch_assoc($res_Sel)) {
@@ -577,7 +576,6 @@ function UpdateProject($txtProjectName, $builderId, $cityId, $suburbId, $localit
                 PROJECT_URL		 	      	= '" . d_($txtProjectURL) . "',
                 FEATURED			 	    = '" . d_($Featured) . "',
                 COMPLETION_DATE	      		= '" . d_($Completion) . "',
-                PRICE_DISCLAIMER 	      	= '" . d_($txtDisclaimer) . "',
                 PAYMENT_PLAN				=	'" . $payment . "',
                 NO_OF_TOWERS				=	'" . $no_of_towers . "',
                 NO_OF_FLATS					=	'" . $no_of_flats . "',

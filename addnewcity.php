@@ -47,7 +47,8 @@ else
     $seldata = "SELECT LABEL FROM ".CITY." WHERE LABEL = '".trim($cityval)."'";
     $resdata = mysql_query($seldata);
     $ins = mysql_num_rows($resdata);
-
+    if( $ins > 0 )
+       echo 'This city already exist#';
     if($cityval!='' && $id!='')
     {
         $seldata = "UPDATE ".CITY." 
@@ -61,7 +62,7 @@ else
 
     if($c==0 && $ins==0){
         $qry = "INSERT INTO ".CITY." 
-            (LABEL, status, updated_by )
+            ( LABEL, status, updated_by )
             value
             ('".$cityval."','Active',".$_SESSION['adminId'].")";
         $res = mysql_query($qry) or die(mysql_error());
