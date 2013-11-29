@@ -35,7 +35,7 @@
     }
      $sellerDataArr = array();
     
-    $conditions = array(" b_c.type = 'Agent' AND adr.table_name = 'agents'");
+    $conditions = array(" b_c.type = 'Agent'");
     
     $sellerCompany = '';
     
@@ -43,10 +43,8 @@
     $NumRows = '';
     $join = " LEFT JOIN brokers
         ON agents.broker_id = brokers.id 
-        LEFT JOIN broker_contacts AS b_c 
+        LEFT JOIN broker_contacts AS b_c
         ON agents.id = b_c.broker_id
-        LEFT JOIN addresses AS adr
-        ON agents.id = adr.table_id
         LEFT JOIN academic_qualifications AS aq
         ON agents.academic_qualification_id = aq.id
         ";
@@ -54,25 +52,25 @@
     if(!empty($RowsPerPage) && !empty($Offset))
     {
         $options = array('joins' => $join , 'select' => 
-        'agents.*,brokers.name,b_c.name,b_c.contact_email,CONCAT(adr.address_line_1," ",adr.address_line_2) AS address,adr.city_id,adr.pincode,aq.qualification');
+        'agents.*,brokers.name,b_c.name,aq.qualification');
                 
         $sellerCompany = SellerCompany::find('all' , $options);
         $NumRows = count($sellerCompany);
             
         $options = array('joins' => $join ,'select' => 
-        'agents.*,brokers.name,b_c.name,b_c.contact_email,CONCAT(adr.address_line_1," ",adr.address_line_2) AS address,adr.city_id,adr.pincode,aq.qualification' , 'limit' => $RowsPerPage , 'offset' => $Offset);
+        'agents.*,brokers.name,b_c.name,aq.qualification' , 'limit' => $RowsPerPage , 'offset' => $Offset);
         $sellerCompany = BrokerCompany::find('all' , $options);
     }
     else
     {
         $options = array('joins' => $join , 'select' => 
-        'agents.*,brokers.broker_name,b_c.name,b_c.contact_email,CONCAT(adr.address_line_1," ",adr.address_line_2) AS address,adr.city_id,adr.pincode,aq.qualification' , 'conditions' => $conditions);
+        'agents.*,brokers.broker_name,b_c.name,aq.qualification' , 'conditions' => $conditions);
         
         $sellerCompany = SellerCompany::find('all' , $options);
         $NumRows = count($sellerCompany);
         
         $options = array('joins' => $join ,'select' => 
-        'agents.*,brokers.broker_name,b_c.name,b_c.contact_email,CONCAT(adr.address_line_1," ",adr.address_line_2) AS address,adr.city_id,adr.pincode,aq.qualification' , 'limit' => $RowsPerPage, 'conditions' => $conditions);
+        'agents.*,brokers.broker_name,b_c.name,aq.qualification' , 'limit' => $RowsPerPage, 'conditions' => $conditions);
         $sellerCompany = SellerCompany::find('all' , $options);
         
         //echo SellerCompany::connection()->last_query; 

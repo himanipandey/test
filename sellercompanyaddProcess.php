@@ -150,27 +150,33 @@
             
             ResiProject::transaction(function(){
                 
-                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoption;
-               
+            global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoption;
+            
+            $qualification = !empty($qualification)?$qualification:NULL;
+            
             if(!empty($active_since))
             {
                 $active_since = explode("/" , $active_since);
                 $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];    
             }
-                                    
-            $sql_seller_company = @mysql_query("INSERT INTO `agents` SET
+            $sql = "INSERT INTO `agents` SET
                                                 `status` = '".$status."',
-                                                `broker_id` = ".$seller_cmpny.",
-                                                `academic_qualification_id` = ".$qualification.",
-                                                `rating` = ".$final_rating.",
-                                                `rate_option` = '$rateoption',
-                                                `seller_type` = '$type',
-                                                `active_since` = '$active_since',
-                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                `created_at` = '".date('Y-m-d H:i:s')."'"
-                                            );
+                                                `broker_id` = ".$seller_cmpny.",";
+                                                
+            if(!empty($qualification))                             
+            $sql .= "`academic_qualification_id` = '".$qualification."',";
+        
+            $sql .= "`rating` = ".$final_rating.",
+                    `rate_option` = '$rateoption',
+                    `seller_type` = '$type',
+                    `active_since` = '$active_since',
+                    `updated_by` = '".$_SESSION['adminId']."',
+                    `created_at` = '".date('Y-m-d H:i:s')."'";
+                    
+            $sql_seller_company = @mysql_query($sql) or die(mysql_error());
             $seller_id = mysql_insert_id();          
-             
+            //echo $seller_id;
+//            die;
             
             //$seller_id = 4;
             if($seller_id != false) {
@@ -266,7 +272,7 @@
             
             //print'<pre>';
 //            print_r($_POST);
-//            die;
+//            
             
             ResiProject::transaction(function(){
                 
@@ -279,11 +285,10 @@
             }
             $copy = !empty($copy)?$copy:'off';
             
-            
             $sql_seller_company = @mysql_query("UPDATE `agents` SET
                                                 `status` = '".$status."',
-                                                `broker_id` = ".$seller_cmpny.",
-                                                `academic_qualification_id` = ".$qualification.",
+                                                `broker_id` = '".$seller_cmpny."',
+                                                `academic_qualification_id` = '".$qualification."',
                                                 `rating` = '".$final_rating."',
                                                 `rate_option` = '$rateoption',
                                                 `seller_type` = '$type',
@@ -301,12 +306,12 @@
                 /** -- Primary Address Entry Start -- */
                 /** -- Add the addresses in addresses table -- */
                     
+                                                             
                     $sql_address = @mysql_query("UPDATE `addresses` SET 
                                                             `address_line_1` = '$addressline1',
                                                             `address_line_2` = '$addressline2',
-                                                            `city_id` = ".$city_id.",
-                                                            `pincode` = $pincode,
-                                                            `active_since` = '$active_since',
+                                                            `city_id` = '".$city_id."',
+                                                            `pincode` = '$pincode',
                                                             `updated_by` = ".$_SESSION['adminId']."
                                                              WHERE id=".$addressid);
                     
@@ -318,10 +323,10 @@
                                                             `contact_email` = '$email',
                                                             `type` = 'Agent',
                                                             `updated_by` = ".$_SESSION['adminId']."
-                                                             WHERE id=".$brkr_cntct_id);
+                                                             WHERE id=".$brkr_cntct_id)or die(mysql_error());
                     
                     
-                    
+                    //die;
                     $broker_contact_id = $brkr_cntct_id;
                     
                     if(!empty($broker_contact_id))
