@@ -62,7 +62,7 @@
         $sellerCompany = BrokerCompany::find('all' , $options);
     }
     else
-    {
+    { 
         $options = array('joins' => $join , 'select' => 
         'agents.*,brokers.broker_name,b_c.name,aq.qualification' , 'conditions' => $conditions);
         

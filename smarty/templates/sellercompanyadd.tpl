@@ -483,7 +483,7 @@
                 jQuery('#mobile').focus();
                 alert("Phone Number should be equal to 10 digits");
                 return false;
-            }
+            } 
             else if(jQuery('#email').val() && !(jQuery('#email').val().match(/^[a-zA-Z0-9._]+\@[a-zA-Z0-9]+\.[a-zA-Z]+$/)))
             {
                 jQuery('#email').focus();

@@ -42,7 +42,7 @@ class SellerCompany extends ActiveRecord\Model
     static function getByid($sid = '')
     {
         if(empty($sid))
-            return false;
+            return false; 
         
         
         $sql = @mysql_query("SELECT agents.* , brokers.broker_name ,b_c.id AS brkr_cntct_id, 

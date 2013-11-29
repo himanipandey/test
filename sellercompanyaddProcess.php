@@ -256,7 +256,7 @@
         	 
         }
         else {
-            
+             
             $final_rating = '';
             $rateoption = '';
             if(!empty($rating))
