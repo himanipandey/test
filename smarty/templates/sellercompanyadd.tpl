@@ -94,22 +94,26 @@
                         <hr />
                     </td>
                 </tr>
+                {if $sellerCompanyId == ""}
                 <tr>
                     <td colspan="8">
-                        <input type="checkbox" name="copy" id="copy" {if $copy == "on"} checked="" {/if}/>&nbsp;Copy Company Address
+                        
+                        <input type="checkbox" name="copy" id="copy" />&nbsp;Copy Company Address
+                        
                     </td>
                 </tr>
+                {/if}
 				<tr>
 				    <td width="20%" align="right" >Address Line 1 : <font color = "red">*</font></td>
                     <td width="30%" align="left" >
-                        <input type=text name="addressline1" class="check" id="addressline1" value="{$addressline1}" {if $copy == "on"} readonly="" {/if} style="width:250px;" />
+                        <input type=text name="addressline1" class="check" id="addressline1" value="{$addressline1}"  style="width:250px;" />
                         {if $ErrorMsg["addressline1"] != ''}
                             <font color = "red">{$ErrorMsg["addressline1"]}</font>
                         {/if}
                     </td>
                     <td width="20%" align="right" valign="top">City :<font color = "red">*</font></td>
                     <td width="30%" align="left" >
-				        <select name="city_id" id="city_id" {if $copy == "on"} disabled="" {/if} style="width:250px;">
+				        <select name="city_id" id="city_id" style="width:250px;">
                            <option value="">Select City</option>
                            {foreach from= $cityArr key = k item = val}
                                <option value="{$k}" {if $k == $cityhiddenArr} selected {/if}>{$val}</option>
@@ -122,11 +126,11 @@
                 <tr>
 				    <td width="20%" align="right" >Address Line 2 : </td>
                     <td width="30%" align="left" >
-                        <input type=text name="addressline2" {if $copy == "on"} readonly="" {/if} class="check" id="addressline2" value="{$addressline2}" style="width:250px;" />
+                        <input type=text name="addressline2" class="check" id="addressline2" value="{$addressline2}" style="width:250px;" />
                     </td>
                     <td width="15%" align="right" valign="top" >Pincode : </td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="pincode" class="check" {if $copy == "on"} readonly="" {/if} id="pincode" value="{$pincode}" maxlength="12" style="width:85px;" />
+                        <input type=text name="pincode" class="check" id="pincode" value="{$pincode}" maxlength="12" style="width:85px;" />
                         {if $ErrorMsg["pincode"] != ''}
                             <font color = "red">{$ErrorMsg["pincode"]}</font>
                         {/if}	
@@ -137,7 +141,7 @@
     				<td width="15%" align="right" valign="top" >Office Phone 1 : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                        <input type=text name="phone1" class="check" {if $copy == "on"} readonly="" {/if} id="phone1" value="{$phone1}" maxlength="12" style="width:85px;" />
+                        <input type=text name="phone1" class="check" id="phone1" value="{$phone1}" maxlength="12" style="width:85px;" />
                         {if $ErrorMsg["phone1"] != ''}
                             <font color = "red">{$ErrorMsg["phone1"]}</font>
                         {/if}		
@@ -145,7 +149,7 @@
                     <td width="15%" align="right" valign="top" >Office Phone 2 : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                        <input type=text name="phone2" class="check" {if $copy == "on"} readonly="" {/if} id="phone2" value="{$phone2}" maxlength="12" style="width:85px;" />
+                        <input type=text name="phone2" class="check" id="phone2" value="{$phone2}" maxlength="12" style="width:85px;" />
                         {if $ErrorMsg["phone2"] != ''}
                             <font color = "red">{$ErrorMsg["phone2"]}</font>
                         {/if}		
@@ -317,6 +321,7 @@
                             jQuery('#addressline1').val(json.addressline1);
                             jQuery('#addressline2').val(json.addressline2);
                             jQuery('#city_id').val(json.city_id);
+                            jQuery('#cityhiddenArr').val(json.city_id);
                             jQuery('#pincode').val(json.pincode);
                             jQuery('#phone1').val(json.phone1);
                             jQuery('#phone2').val(json.phone2);

@@ -150,7 +150,7 @@
             
             ResiProject::transaction(function(){
                 
-                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoption;
+                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating;
                
             if(!empty($active_since))
             {
@@ -162,8 +162,9 @@
                                                 `status` = '".$status."',
                                                 `broker_id` = ".$seller_cmpny.",
                                                 `academic_qualification_id` = ".$qualification.",
+                                                `chkAddr` = ".$copy.",
                                                 `rating` = ".$final_rating.",
-                                                `rate_option` = '$rateoption',
+                                                `rateoption` = '$rateoption',
                                                 `seller_type` = '$type',
                                                 `active_since` = '$active_since',
                                                 `updated_by` = '".$_SESSION['adminId']."',
@@ -184,12 +185,15 @@
                                                             `table_id` = ".$sellerIdFormapping.",
                                                             `address_line_1` = '$addressline1',
                                                             `address_line_2` = '$addressline2',
-                                                            `city_id` = '".$cityhiddenArr."',
+                                                            `city_id` = ".$city_id.",
                                                             `pincode` = $pincode,
                                                             `updated_by` = ".$_SESSION['adminId'].",
                                                             `created_at` = '".date('Y-m-d')."'");
                     
+                    
+                    
                     $address_id = mysql_insert_id();
+                    
                     
                     $sql_broker_contact = @mysql_query("INSERT INTO `broker_contacts` SET 
                                                             `broker_id` = ".$seller_id.",
@@ -284,8 +288,9 @@
                                                 `status` = '".$status."',
                                                 `broker_id` = ".$seller_cmpny.",
                                                 `academic_qualification_id` = ".$qualification.",
+                                                `chkAddr` = '".$copy."',
                                                 `rating` = '".$final_rating."',
-                                                `rate_option` = '$rateoption',
+                                                `rateoption` = '$rateoption',
                                                 `seller_type` = '$type',
                                                 `active_since` = '$active_since',
                                                 `updated_by` = '".$_SESSION['adminId']."'
@@ -306,7 +311,6 @@
                                                             `address_line_2` = '$addressline2',
                                                             `city_id` = ".$city_id.",
                                                             `pincode` = $pincode,
-                                                            `active_since` = '$active_since',
                                                             `updated_by` = ".$_SESSION['adminId']."
                                                              WHERE id=".$addressid);
                     
@@ -373,6 +377,9 @@
         }
         /**********end code project add******************/        
     }
-    
+    else
+    {
+        
+    }
 ?>
 

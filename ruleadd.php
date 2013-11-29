@@ -13,11 +13,21 @@ include("includes/configs/configs.php");
 AdminAuthentication();
 $cityArr = City::CityArr();
 $brokerArr = BrokerCompany::find('all' , array('select' => 'brokers.id,brokers.broker_name'));
-$qualification = SellerCompany::getQualification();
+
+$joins = " LEFT JOIN `broker_contacts` AS bc ON agents.id = bc.broker_id";
+$conditions = " bc.type= 'Agent'";
+$options = array('joins' => $joins , 'select' => "agents.id AS agent_id , bc.name AS agent_name" ,'conditions' => $conditions);
+$seller_company = SellerCompany::find('all' ,$options);
+
+//print'<pre>';
+//print_r($seller_company);
+//die;
+$locality = Locality::find('all');
 
 $smarty->assign("cityArr", $cityArr);
 $smarty->assign("brokerArr", $brokerArr);
-$smarty->assign("qualification", $qualification);
+$smarty->assign("seller_company", $seller_company);
+$smarty->assign("locality", $locality);
 $smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'all');
 $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 
@@ -33,9 +43,10 @@ if(!empty($_GET['sellerCompanyId']))
         $smarty->assign("brkr_cntct_id", !empty($sellerDet['brkr_cntct_id'])?$sellerDet['brkr_cntct_id']:'');
         $smarty->assign("qualification_id", !empty($sellerDet['academic_qualification_id'])?$sellerDet['academic_qualification_id']:'');
         $smarty->assign("rating", !empty($sellerDet['rating'])?$sellerDet['rating']:'');
-        $smarty->assign("rateoption", !empty($sellerDet['rate_option'])?$sellerDet['rate_option']:'');
+        $smarty->assign("rateoption", !empty($sellerDet['rateoption'])?$sellerDet['rateoption']:'');
         $smarty->assign("seller_type", !empty($sellerDet['seller_type'])?$sellerDet['seller_type']:'');
-        $smarty->assign("active_since", (!empty($sellerDet['active_since']) && $sellerDet['active_since'] !== '0000-00-00')?date('d/m/Y' , strtotime($sellerDet['active_since'])):'');
+        $smarty->assign("copy", !empty($sellerDet['chkAddr'])?$sellerDet['chkAddr']:'');
+        $smarty->assign("active_since", !empty($sellerDet['active_since'])?date('d/m/Y' , strtotime($sellerDet['active_since'])):'');
         
         $smarty->assign("seller_name", !empty($sellerDet['name'])?$sellerDet['name']:'');
         $smarty->assign("addressid", !empty($sellerDet['addressid'])?$sellerDet['addressid']:'');
@@ -54,13 +65,13 @@ if(!empty($_GET['sellerCompanyId']))
 }
 
 
-include('sellercompanyaddProcess.php');
+include('ruleaddProcess.php');
 
 
 
 $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 
-$smarty->display(PROJECT_ADD_TEMPLATE_PATH."sellercompanyadd.tpl");
+$smarty->display(PROJECT_ADD_TEMPLATE_PATH."ruleadd.tpl");
 $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");	
 
 
