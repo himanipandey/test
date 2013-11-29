@@ -75,7 +75,7 @@
         'agents.*,brokers.broker_name,b_c.name,b_c.contact_email,CONCAT(adr.address_line_1," ",adr.address_line_2) AS address,adr.city_id,adr.pincode,aq.qualification' , 'limit' => $RowsPerPage, 'conditions' => $conditions);
         $sellerCompany = SellerCompany::find('all' , $options);
         
-        //echo SellerCompany::connection()->last_query;
+        //echo SellerCompany::connection()->last_query; 
     }
     
     //print'<pre>';

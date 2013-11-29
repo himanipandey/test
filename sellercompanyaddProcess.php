@@ -333,7 +333,7 @@
                         {
                             while($row1 = @mysql_fetch_assoc($sql2))
                             {
-                                /** -- Insert values for contact_numbers table type=>phone1 --  */
+                                /** -- Insert values for contact_numbers table type=>phone1 --   */
                                 if($row1['type'] == "phone1")
                                 {
                                     $sql_contact_number = @mysql_query("UPDATE `contact_numbers` SET

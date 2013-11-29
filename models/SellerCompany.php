@@ -74,7 +74,7 @@ class SellerCompany extends ActiveRecord\Model
                     $i = 0;
                     while($row1 = @mysql_fetch_assoc($sql2))
                         $contacts[$row1['type']] = $row1['contact_no'];
-                }
+                } 
                 
                 $data = $row;
             }

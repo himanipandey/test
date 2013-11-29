@@ -96,7 +96,7 @@
                             {if $locality != ''}
                                 {foreach $locality key = k item = val}
                                     <option value="{$val->locality_id}">{$val->label}</option>
-                                {/foreach}
+                                {/foreach} 
                             {/if}
                         </select>
                     </td>

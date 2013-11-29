@@ -21,7 +21,7 @@ $smarty->assign("qualification", $qualification);
 $smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'all');
 $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 
-if(!empty($_GET['sellerCompanyId']))
+if(!empty($_GET['sellerCompanyId'])) 
 {
     $sellerDet = SellerCompany::getByid($_GET['sellerCompanyId']);
     
