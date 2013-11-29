@@ -75,7 +75,21 @@ $smarty->assign("projectLastAuditDate", $projectLastAuditDate);
 
 function prepareDisplayData($data){ 
     $result = array();
+     
+     $pids = "";
+    foreach ($data as $value)    
+		$pids .= $value['PROJECT_ID'].", ";
+		
+	$pids = substr($pids,0,strlen($pids)-2);
+	
+	$sql = "select group_concat(pa1.DEPARTMENT order by pa.ID desc) as department from resi_project rp inner join project_stage_history psh on rp.project_id = psh.project_id inner join project_assignment pa on psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID inner join proptiger_admin pa1 on pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and rp.project_id in (".$pids.") group by rp.PROJECT_ID;";
+
+	$sql_dept = dbQuery($sql);
+        
     foreach ($data as $value) {
+		
+		  $prv_asg_dept = explode(",",$sql_dept[0]['department']);
+			
          if($value['LAST_WORKED_AT'] == '')
             $value['LAST_WORKED_AT'] = 'NA';       
         $new = array('PROJECT_ID' => $value['PROJECT_ID'], 'PROJECT_NAME' => $value['PROJECT_NAME'], 'BUILDER_NAME'=>$value['BUILDER_NAME'], 
@@ -86,7 +100,11 @@ function prepareDisplayData($data){
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
         $assignment_type = '';
+        
         if($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') $assignment_type .= 'Reverted-';
+        
+        if($prv_asg_dept[0] === 'SURVEY')$assignment_type .= 'Field';
+        
         if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY')$assignment_type .= 'Field';
         elseif(empty($assigned_to[0])) $assignment_type .= 'Unassigned';
         else{
@@ -99,6 +117,7 @@ function prepareDisplayData($data){
         $new['REMARK'] = explode('|', $value['REMARK']);
         $result[] = $new;
     }
+  
     return $result;
 }
 
