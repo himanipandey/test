@@ -294,49 +294,51 @@
                 jQuery('.check').attr('readonly' , 'true');
                 jQuery('#city_id').attr('disabled' , 'true');
                 
+                var dataString = 'broker='+jQuery('#seller_cmpny').val();
+                //alert(dataString);
+    //            return;
+                jQuery.ajax({
+                   'type' : 'POST',
+                   'url' : 'sellerfetchAddress.php',
+                   'data' : dataString,
+                   'success' : function(data){
+                        //alert(data);
+    //                    return;
+                        if(data != '') 
+                        {
+                            var json = JSON.parse(data);
+                            if(json != '')
+                            {
+                                jQuery('#addressline1').val(json.addressline1);
+                                jQuery('#addressline2').val(json.addressline2);
+                                jQuery('#city_id').val(json.city_id);
+                                jQuery('#cityhiddenArr').val(json.city_id);
+                                jQuery('#pincode').val(json.pincode);
+                                jQuery('#phone1').val(json.phone1);
+                                jQuery('#phone2').val(json.phone2);
+                                jQuery('#mobile').val(json.mobile);
+                                jQuery('#email').val(json.email);
+                            }
+                        }
+                        
+                   },
+                   'error': function(){
+                        alert("Something went wrong");
+                        return;
+                   } 
+                    
+                });    
+                
             }
             else
             {
-                jQuery(this).attr('checked','false');
                 jQuery('.check').removeAttr('readonly');
                 jQuery('#city_id').removeAttr('disabled');
-                return false;
+                //alert("here");
+                //return false;
             }
             
-            var dataString = 'broker='+jQuery('#seller_cmpny').val();
-            //alert(dataString);
-//            return;
-            jQuery.ajax({
-               'type' : 'POST',
-               'url' : 'sellerfetchAddress.php',
-               'data' : dataString,
-               'success' : function(data){
-                    //alert(data);
-//                    return;
-                    if(data != '') 
-                    {
-                        var json = JSON.parse(data);
-                        if(json != '')
-                        {
-                            jQuery('#addressline1').val(json.addressline1);
-                            jQuery('#addressline2').val(json.addressline2);
-                            jQuery('#city_id').val(json.city_id);
-                            jQuery('#cityhiddenArr').val(json.city_id);
-                            jQuery('#pincode').val(json.pincode);
-                            jQuery('#phone1').val(json.phone1);
-                            jQuery('#phone2').val(json.phone2);
-                            jQuery('#mobile').val(json.mobile);
-                            jQuery('#email').val(json.email);
-                        }
-                    }
-                    
-               },
-               'error': function(){
-                    alert("Something went wrong");
-                    return;
-               } 
-                
-            });    
+            
             
         });
         
@@ -369,24 +371,6 @@
                 {
                     jQuery('#mobile').focus();
                     alert("Please enter Mobile Number");
-                    return false;
-                }
-                else if(jQuery('#mobile').val() && isNaN(jQuery('#mobile').val()))
-                {
-                    jQuery('#mobile').focus();
-                    alert("Please enter only numbers");
-                    return false;
-                }
-                else if(jQuery('#mobile').val() && !isNaN(jQuery('#mobile').val()) && !(jQuery('#mobile').val().match(/^[0-9]+$/)))
-                {
-                    jQuery('#mobile').focus();
-                    alert("Please enter valid numbers");
-                    return false;
-                }
-                else if(jQuery('#mobile').val() && (jQuery('#mobile').val().length < 10 || jQuery('#mobile').val().length > 10))
-                {
-                    jQuery('#mobile').focus();
-                    alert("Phone Number should be equal to 10 digits");
                     return false;
                 }
                 else if(jQuery('#phone1').val() && isNaN(jQuery('#phone1').val()))
@@ -479,6 +463,31 @@
                 }
                 
                 /*--- OFFICE Addres Details Validations ENDS---*/
+            }
+            
+            if(!jQuery('#mobile').val())
+            {
+                jQuery('#mobile').focus();
+                alert("Please enter Mobile");
+                return false;
+            }
+            else if(jQuery('#mobile').val() && isNaN(jQuery('#mobile').val()))
+            {
+                jQuery('#mobile').focus();
+                alert("Please enter only numbers");
+                return false;
+            }
+            else if(jQuery('#mobile').val() && !isNaN(jQuery('#mobile').val()) && !(jQuery('#mobile').val().match(/^[0-9]+$/)))
+            {
+                jQuery('#mobile').focus();
+                alert("Please enter valid numbers");
+                return false;
+            }
+            else if(jQuery('#mobile').val() && (jQuery('#mobile').val().length < 10 || jQuery('#mobile').val().length > 10))
+            {
+                jQuery('#mobile').focus();
+                alert("Phone Number should be equal to 10 digits");
+                return false;
             }
             
             jQuery('#brokerhiddenArr').val(jQuery('#seller_cmpny').val());
