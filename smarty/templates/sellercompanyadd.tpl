@@ -208,16 +208,16 @@
                     <td width="10%" align="left" valign="top" >
                         <input type="radio" name="rating" {if $rateoption == "forced"} checked=""  {/if} id="rating" value="" />&nbsp;Forced
                         <select name="rate" id="rate">
-                            <option value="0.5" {if $rating == "0.5"} selected=""  {/if}>0.5</option>
-                            <option value="1.0" {if $rating == "1.0"} selected=""  {/if}>1.0</option>
-                            <option value="1.5" {if $rating == "1.5"} selected=""  {/if}>1.5</option>
-                            <option value="2.0" {if $rating == "2.0"} selected=""  {/if}>2.0</option>
-                            <option value="2.5" {if $rating == "2.5"} selected=""  {/if}>2.5</option>
-                            <option value="3.0" {if $rating == "3.0"} selected=""  {/if}>3.0</option>
-                            <option value="3.5" {if $rating == "3.5"} selected=""  {/if}>3.5</option>
-                            <option value="4.0" {if $rating == "4.0"} selected=""  {/if}>4.0</option>
-                            <option value="4.5" {if $rating == "4.5"} selected=""  {/if}>4.5</option>
-                            <option value="5.0" {if $rating == "5.0"} selected=""  {/if}>5.0</option>
+                            <option value="0.5" {if $rating != '' && $rating == "0.5"} selected=""  {/if}>0.5</option>
+                            <option value="1.0" {if $rating != '' && $rating == "1.0"} selected=""  {/if}>1.0</option>
+                            <option value="1.5" {if $rating != '' && $rating == "1.5"} selected=""  {/if}>1.5</option>
+                            <option value="2.0" {if $rating != '' && $rating == "2.0"} selected=""  {/if}>2.0</option>
+                            <option value="2.5" {if $rating != '' && $rating == "2.5"} selected=""  {/if}>2.5</option>
+                            <option value="3.0" {if $rating != '' && $rating == "3.0"} selected=""  {/if}>3.0</option>
+                            <option value="3.5" {if $rating != '' && $rating == "3.5"} selected=""  {/if}>3.5</option>
+                            <option value="4.0" {if $rating != '' && $rating == "4.0"} selected=""  {/if}>4.0</option>
+                            <option value="4.5" {if $rating != '' && $rating == "4.5"} selected=""  {/if}>4.5</option>
+                            <option value="5.0" {if $rating != '' && $rating == "5.0"} selected=""  {/if}>5.0</option>
                         </select>	
                     </td>
                 </tr>
