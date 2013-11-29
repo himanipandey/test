@@ -468,7 +468,7 @@
             }
             else if(jQuery('#mobile').val() && isNaN(jQuery('#mobile').val()))
             {
-                jQuery('#mobile').focus();
+                jQuery('#mobile').focus(); 
                 alert("Please enter only numbers");
                 return false;
             }
