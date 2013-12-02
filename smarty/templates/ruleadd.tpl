@@ -87,7 +87,7 @@
                 <tr>
 				    <td width="20%" align="right" >Locality : </td>
                     <td width="20%" align="right" >Project : </td>
-                    <td width="20%" align="right" >Agent : </td>
+                    <td width="20%" align="right" >Agent : </td> 
 				</tr>
                 <tr>
                     <td width="30%" align="right" >

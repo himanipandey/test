@@ -10,7 +10,7 @@ include("appWideConfig.php");
 include("dbConfig.php");
 include("modelsConfig.php");
 include("includes/configs/configs.php"); 
-AdminAuthentication();
+AdminAuthentication(); 
 $cityArr = City::CityArr();
 $brokerArr = BrokerCompany::find('all' , array('select' => 'brokers.id,brokers.broker_name'));
 
