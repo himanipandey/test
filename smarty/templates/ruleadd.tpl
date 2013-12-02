@@ -124,7 +124,7 @@
 				  <td align="center" colspan="2">
 				  <input type="hidden" name="ruleId" id="ruleId" value="{$ruleId}" />
 				  <input type="submit" name="btnSave" id="btnSave" value="Submit Rule" style="float:right;" />
-				  &nbsp;&nbsp;<input type="button" name="btnExit" id="btnExit" value="Exit" style="float:right;" />
+				  &nbsp;&nbsp;
                   
                   
                   <input type="hidden" name="sort" id="sort" value="{$sort}" />
