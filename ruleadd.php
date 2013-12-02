@@ -19,8 +19,11 @@ $conditions = " bc.type= 'Agent'";
 $options = array('joins' => $joins , 'select' => "agents.id AS agent_id , bc.name AS agent_name" ,'conditions' => $conditions);
 $seller_company = SellerCompany::find('all' ,$options);
 
+
+
+
 //print'<pre>';
-//print_r($seller_company);
+//print_r($projectArr);
 //die;
 $locality = Locality::find('all');
 
@@ -28,6 +31,7 @@ $smarty->assign("cityArr", $cityArr);
 $smarty->assign("brokerArr", $brokerArr);
 $smarty->assign("seller_company", $seller_company);
 $smarty->assign("locality", $locality);
+
 $smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'all');
 $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 

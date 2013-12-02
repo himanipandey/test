@@ -103,6 +103,7 @@
                     <td width="30%" align="right" >
                         <select multiple="" name="project" id="project">
                             <option>---Select Project---</option>
+                            
                         </select>
                     </td>
                     <td width="30%" align="right" >
@@ -111,7 +112,7 @@
                             {if $seller_company != ''}
                                 {foreach $seller_company key = k item = val}
                                     <option value="{$val->agent_id}">{$val->agent_name}</option>
-                                {/foreach}
+                                {/foreach} 
                             {/if}
                         </select>
                     </td>                    
@@ -173,7 +174,48 @@
             
             return false;
                 
-        });        
+        }); 
+        
+        jQuery('#locality').change(function(){
+             var valuesloc = jQuery("#locality option:selected").map(function(){
+                                return this.value;
+                            }).get();
+
+            if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
+            {
+                var dataString = 'locality='+valuesloc;
+                jQuery.ajax({
+                    
+                    type    : 'POST',
+                    url     : 'fetchProjectLocality.php',
+                    data    : dataString,
+                    success : function(data){
+                        //alert(data);
+//                        return;
+                        if(data == '')
+                        {
+                            jQuery('#project').html('');
+                            return false;
+                        }
+                        jQuery('#project').html('');
+                        var json = JSON.parse(data);
+                        var appendData  = '<option value = ""> --- Select Project --- </option>';
+                        for(var key in json)
+                        {
+                            appendData += '<option value="' + key + '">' + json[key] + '</option>';
+                        }
+                        
+//                        alert(appendData);
+                        jQuery('#project').append(appendData);
+                    },
+                    error   : function(){
+                        alert("Something went wrong");
+                        return false;
+                    }
+                });
+            }
+        });
+               
     });
     
     
