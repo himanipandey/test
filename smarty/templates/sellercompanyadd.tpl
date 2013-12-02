@@ -28,7 +28,7 @@
                 <TD class=h1 align=left background=../images/heading_bg.gif bgColor=#ffffff height=40>
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
-                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>{if $sellerCompanyId == ''} Add New {else} Edit {/if} Seller Company</TD>
+                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>{if $sellerCompanyId == ''} Add New {else} Edit {/if} Sellers</TD>
                       <TD align=right ></TD>
                     </TR>
 		  </TBODY></TABLE>
@@ -54,7 +54,7 @@
                     <td width="30%" valign="top">Company Name :<font color = "red">*</font></td>
                     <td width="10%" valign="top">
                         <select name="seller_cmpny" id="seller_cmpny">
-                            <option value="">--Select Seller Company--</option>
+                            <option value="">--Select Company--</option>
                             {if $brokerArr != ''}
                                     {foreach from= $brokerArr key = k item = val}
                                         <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{$val->broker_name}</option>
