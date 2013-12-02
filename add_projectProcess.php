@@ -386,18 +386,22 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
        }
        else {
             $app = '';
-            if($application == 'app_form') {
-               $app = $app_form;
-            }
-            else if($application == 'app_form_pdf') {
-                $dir = "application_form/";
-                $pdf_path = $dir.str_replace(" ","",$txtProjectName).$_FILES['app_pdf']['name'];
-                $move = move_uploaded_file($_FILES['app_pdf']['tmp_name'],$pdf_path);
-                if($move == TRUE) {
+               
+			    $dir = "application_form/";
+			    $newpdfdir	= "application_form/".str_replace(" ","",$txtProjectName);
+				if((!is_dir($newpdfdir)))
+				{
+					mkdir($newpdfdir, 0777);
+				}
+               $pdf_path = $dir.str_replace(" ","",$txtProjectName)."/".$_FILES['app_pdf']['name'];
+               $move = move_uploaded_file($_FILES['app_pdf']['tmp_name'],$pdf_path);
+                
+                str_replace(" ","",$txtProjectName);
+             
+                if($move == TRUE)
                     $app = $pdf_path;
-                }
-            }
-
+        
+           			
            /*code for comment save in saperate comment table**/
             $arrCommentTypeValue = array();
             if( $txtProjectRemark != '' ) {
@@ -433,7 +437,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['launch_date'] = $eff_date_to;
             $arrInsertUpdateProject['source_of_information'] = $txtProjectSource;
             $arrInsertUpdateProject['youtube_video'] = $youtube_link;
-            $arrInsertUpdateProject['application_form'] =  $app;
+            if($application == 'pdf-new' || $application == 'pdf-del')
+				$arrInsertUpdateProject['application_form'] =  $app;
             $arrInsertUpdateProject['approvals'] = $approvals;
             $arrInsertUpdateProject['project_size'] = $project_size;
             $arrInsertUpdateProject['power_backup_type_id'] = $powerBackup;
@@ -585,7 +590,11 @@ elseif ($projectId!='') {
     $smarty->assign("eff_date_to", stripslashes($ProjectDetail->launch_date));
     $smarty->assign("display_order", $ProjectDetail->display_order);
     $smarty->assign("youtube_link", stripslashes($ProjectDetail->youtube_video));
-    $smarty->assign("app_form", stripslashes($ProjectDetail->application_form));
+    
+    $app_form = stripslashes($ProjectDetail->application_form);
+    $app_form = explode("/",$app_form);
+    $smarty->assign("app_form", $app_form[2]);
+    
     $smarty->assign("txtSourceofInfo", stripslashes($ProjectDetail->source_of_information));
     $smarty->assign("project_type", stripslashes($ProjectDetail->project_type_id));
     $smarty->assign("projectTypeOld", stripslashes($ProjectDetail->project_type_id));
