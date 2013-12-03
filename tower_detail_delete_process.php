@@ -37,7 +37,7 @@
 	else
 	{
 		//default display rows
-		$totRow			=	5;
+		$totRow			=	$projectDetail1[0]['NO_OF_TOWERS'];
 
 	}			
 	$smarty->assign("TotRow", $totRow);

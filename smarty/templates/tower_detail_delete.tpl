@@ -128,7 +128,7 @@
                         <tr>
                             <td align = "center" nowrap><b>Number Of Towers:</b></td>
                             <td align = "center">
-                                {$lastVal = 100}
+                                {$lastVal = $projectDetail[0]['NO_OF_TOWERS'] + 1}
                                   <select name="lp" onchange = "refreshSelectedRow(this.value);" id ="lp_select">
                                          <option value="">Select rows</option>
                                       {section name=lp start=1 loop=$lastVal step=1}
