@@ -17,15 +17,16 @@ include("includes/configs/configs.php");
 
 if(!empty($_POST['locality']))
 {
-    $allloc = mysql_escape_string(trim($_POST['locality']));
-    $allloc = explode("," , $_POST['locality']); 
+    $alloc = mysql_escape_string(trim($_POST['locality']));
+    $alloc = explode("," , $alloc); 
     $data = array();
+    $chkData = '';
     
-    if(!empty($allloc))
+    if(!empty($alloc))
     {
-        foreach($allloc as $key => $val)
+        foreach($alloc as $key => $val)
         {
-            $sql = @mysql_query("SELECT resi_project.id , resi_project.project_name FROM resi_project WHERE locality_id = ".$val);
+            $sql = @mysql_query("SELECT resi_project.id , resi_project.project_name FROM resi_project WHERE locality_id = ".$val." AND resi_project.id NOT IN (SELECT project_id FROM rule_project_mappings)");
             while($row = @mysql_fetch_assoc($sql))
             {
                 $data[$row['id']] = $row['project_name'];    

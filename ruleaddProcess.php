@@ -4,128 +4,96 @@
  * @author AKhan
  * @copyright 2013
  */
-
     $accessSeller = '';
     
     $smarty->assign("accessSeller",$accessSeller);
     
-    $sellerCompanyId = '';
-    if(!empty($_REQUEST['sellerCompanyId']))
-        $sellerCompanyId = $_REQUEST['sellerCompanyId'];
+    $ruleId = '';
+    if(!empty($_REQUEST['ruleId']))
+        $ruleId = $_REQUEST['ruleId'];
     
-    $smarty->assign("sellerCompanyId", $sellerCompanyId);
+    $smarty->assign("ruleId", $ruleId);
     
     $sellerIdForMapping = '';
     
-    if ($_POST['btnExit'] == "Exit")
-    {
-        header("Location:SellerCompanyList.php");
-    }
-    if ($_POST['btnSave'] == "Save"){
-
+    $sort = 'all';
+    $page = '1';
+    if(isset($_GET['sort']) && !empty($_GET['sort']))
+        $sort = $_GET['sort'];
+    
+    if(isset($_GET['page']) && !empty($_GET['page']))
+        $page = $_GET['page'];
         
-        @extract($_POST);
-        $smarty->assign("seller_cmpny", $seller_cmpny);
-        $smarty->assign("seller_name", $seller_name);
-        $smarty->assign("type", $type);
-        $smarty->assign("status", $status);
-        $smarty->assign("addressline1", $addressline1);
-        $smarty->assign("addressline2", !empty($addressline2)?$addressline2:'');
-        $smarty->assign("city_id", $city_id);
-        $smarty->assign("pincode", $pincode);
-        $smarty->assign("phone1", $phone1);
-        $smarty->assign("phone2", $phone2);
-        $smarty->assign("mobile", $mobile);
-        $smarty->assign("email", $email);
-        $smarty->assign("fax", $fax);
-        $smarty->assign("rating", $rating);
-        $smarty->assign("auto", $auto);
-        $smarty->assign("rate", $rate);
-        $smarty->assign("rate", $rate);
-        $smarty->assign("qualification", $qualification);
-        $smarty->assign("sellerCompanyId", $sellerCompanyId);
-        $smarty->assign("cityhiddenArr", $cityhiddenArr);
-        $smarty->assign("brokerhiddenArr", $brokerhiddenArr);
-        $smarty->assign("active_since", $active_since);
-        $smarty->assign("addressid", $addressid);
-        $smarty->assign("brkr_cntct_id", $brkr_cntct_id);
-        
-        $sellerChk = SellerCompany::chkName($seller_name);
-        //print'<pre>';
-//        print_r($_POST);
-//        
-//        print_R($sellerChk);
-//        die;
-        if(!empty($sellerChk))
-        {
-            foreach($sellerChk as $key => $val)
-            {
-                break;
-                if($val['id'] != $sellerCompanyId && count($sellerChk)>0)
-     			{
-     			    $ErrorMsg["seller_name"] = "Seller Company already exists!";
-                    break;
-     			}
-                if(count($sellerChk)>0 && $sellerCompanyId =='')
-                {
-                    $ErrorMsg["seller_name"] = "Seller Company already exists!";
-                    break;    
-                }
-                        
-            }
-        }
-        
-        if(empty($seller_cmpny)) {
-             $ErrorMsg["seller_cmpny"] = "Please enter Company name.";
-        }
-        else if(empty($seller_name)){
-             $ErrorMsg["seller_name"] = "Please enter Seller name.";
-        }
-        
-        /** --- OFFICE Addres Details Validations STARTS---*/
-        
-        if(!empty($copy) && $copy == 'off')
-        {
-            if( empty($addressline1)){
-                 $ErrorMsg["addressline1"] = "Please enter Address.";
-            }
-            else if(!is_numeric($phone1)) {
-                 $ErrorMsg["phone1"] = "Phone number must be numeric.";
-            }
-            else if(!preg_match("/^[0-9]{0,12}$/",$phone1)) {
-    			 $ErrorMsg["phone1"] = "Please enter a valid phone number.";
-    		}
-            else if($phone2 != '' && !is_numeric($phone2)) {
-                 $ErrorMsg["phone2"] = "Phone number must be numeric.";
-            }
-            else if($phone2 != '' && !preg_match("/^[0-9]{0,12}$/",$phone2)) {
-    			 $ErrorMsg["phone2"] = "Please enter a valid phone number.";
-    		}
-            else if(empty($city_id)) {
-                 $ErrorMsg["city_id"] = "Please select city.";
-            }
-            else if($pincode != '' && !is_numeric($pincode)) {
-                 $ErrorMsg["pincode"] = "Pin code must be numeric.";
-            }
-            else if($pincode != '' && !preg_match("/^[0-9]{0,12}$/",$pincode)) {
-    			 $ErrorMsg["pincode"] = "Please enter a valid pin code.";
-    		}
+    $smarty->assign("sort",$sort);
+    $smarty->assign("page",$page);
             
+    if(isset($_GET['page'])) {
+        $Page = $_GET['page'];
+    } else {
+        $Page = 1;
+    }
+    $RowsPerPage = '10';
+    $PageNum = 1;
+    if(isset($_GET['page'])) {
+        $PageNum = $_GET['page'];
+    }
+
+    if($_POST['search']!='' && ($_POST['broker']!='')){   
+        $Offset = 0;
+
+    }else{
+        $Offset = ($PageNum - 1) * $RowsPerPage;
+    }
+    
+    if ($_POST['btnSave'] == "Submit Rule"){
+
+        @extract($_POST);
+        $smarty->assign("broker_cmpny", $broker_cmpny);
+        $smarty->assign("rule_name", $rule_name);
+        $smarty->assign("city_id", $city_id);
+        $smarty->assign("locality", $locality);
+        $smarty->assign("project", $project);
+        $smarty->assign("agent", $agent);
+        $smarty->assign("locjIdArr", $locjIdArr);
+        $smarty->assign("projectjIdArr", $projectjIdArr);
+        $smarty->assign("agentjIdArr", $agentjIdArr);
+        
+        $finallocidArr = $locality;
+        if(!empty($locjIdArr))
+        {
+            $finallocidArr = array_merge($locality, json_decode(base64_decode($locjIdArr)));
         }
         
-        if(empty($mobile)) {
-             $ErrorMsg["mobile"] = "Please enter mobile number.";
-        }
-        else if($mobile != '' && !preg_match("/^[0-9]{0,10}$/",$mobile)) {
-    			 $ErrorMsg["mobile"] = "Please enter a valid mobile number.";
-        }
-        else if($email != '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			 $ErrorMsg["email"] = "Please enter a valid email address.";
-		}
         
-        /** --- OFFICE Address Details Validations ENDS---*/
+        $finalprojidArr = $project;
+        if(!empty($projectjIdArr))
+        {
+            $finalprojidArr = array_merge($project, json_decode(base64_decode($projectjIdArr)));
+        }
         
-       
+        $finalagentidArr = $agent;
+        if(!empty($locjIdArr))
+        {
+            $finalagentidArr = array_merge($agent, json_decode(base64_decode($agentjIdArr)));
+        }
+        //print'<pre>';
+//        
+//        print_r($finalagentidArr);
+//        print_r($finalprojidArr);
+//        print_r($finallocidArr);
+//        die;
+        $smarty->assign("ruleId", $ruleId);
+        
+        if(empty($broker_cmpny)) {
+             $ErrorMsg["broker_cmpny"] = "Please enter Company name.";
+        }
+        else if(empty($rule_name)){
+             $ErrorMsg["rule_name"] = "Please enter Rule.";
+        }
+        else if(empty($city_id)){
+             $ErrorMsg["city_id"] = "Please select City.";
+        }
+        
         //print'<pre>';
 //        print_r($_POST);
 //        print_r($ErrorMsg);
@@ -134,236 +102,180 @@
         if(!empty($ErrorMsg)) {
                  //Do Nothing
         } 
-        else if (empty($sellerCompanyId)){	
-            $final_rating = '';
-            $rateoption = '';
-            if(!empty($rating))
-            {
-                $final_rating = $rating;
-                $rateoption = 'auto';
-            }
-            else
-            {
-                $final_rating = $rate;
-                $rateoption = 'forced';
-            }    
+        else if (empty($ruleId)){	
             
             ResiProject::transaction(function(){
                 
-                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating;
+                global $broker_cmpny , $rule_name , $city_id,$locality,$project,$agent;
                
-            if(!empty($active_since))
-            {
-                $active_since = explode("/" , $active_since);
-                $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];    
-            }
-                                    
-            $sql_seller_company = @mysql_query("INSERT INTO `agents` SET
-                                                `status` = '".$status."',
-                                                `broker_id` = ".$seller_cmpny.",
-                                                `academic_qualification_id` = ".$qualification.",
-                                                `chkAddr` = ".$copy.",
-                                                `rating` = ".$final_rating.",
-                                                `rateoption` = '$rateoption',
-                                                `seller_type` = '$type',
-                                                `active_since` = '$active_since',
+                  
+                $sql_project_assignment_rules = @mysql_query("INSERT INTO `project_assignment_rules` SET
+                                                `broker_id` = '".mysql_escape_string($broker_cmpny)."',
+                                                `rule_name` = '".mysql_escape_string($rule_name)."',
                                                 `updated_by` = '".$_SESSION['adminId']."',
-                                                `created_at` = '".date('Y-m-d H:i:s')."'"
-                                            );
-            $seller_id = mysql_insert_id();          
-             
-            
-            //$seller_id = 4;
-            if($seller_id != false) {
-                $sellerIdFormapping = $seller_id;
-                
-                /** -- Primary Address Entry Start -- */
-                /** -- Add the addresses in addresses table -- */
-                    
-                    $sql_address = @mysql_query("INSERT INTO `addresses` SET 
-                                                            `table_name` = 'agents',
-                                                            `table_id` = ".$sellerIdFormapping.",
-                                                            `address_line_1` = '$addressline1',
-                                                            `address_line_2` = '$addressline2',
-                                                            `city_id` = ".$city_id.",
-                                                            `pincode` = $pincode,
-                                                            `updated_by` = ".$_SESSION['adminId'].",
-                                                            `created_at` = '".date('Y-m-d')."'");
+                                                `created_at` = '".date('Y-m-d H:i:s')."'") or die(mysql_error());
+                $rule_id = mysql_insert_id();          
+
+                if($rule_id != false) {
                     
                     
-                    
-                    $address_id = mysql_insert_id();
-                    
-                    
-                    $sql_broker_contact = @mysql_query("INSERT INTO `broker_contacts` SET 
-                                                            `broker_id` = ".$seller_id.",
-                                                            `name` = '".$seller_name."',
-                                                            `contact_email` = '$email',
-                                                            `type` = 'Agent',
-                                                            `updated_by` = ".$_SESSION['adminId'].",
-                                                            `created_at` = '".date('Y-m-d')."'");
-                    
-                    
-                    
-                    $broker_contact_id = mysql_insert_id();
-                    
-                    if(!empty($broker_contact_id))
+                    if(!empty($locality))
                     {
-                        /** -- Insert values for contact_numbers table type=>phone1 --  */
-                        $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
-                                                            `table_name` = 'broker_contacts',
-                                                            `table_id` = $broker_contact_id,
-                                                            `contact_no` = $phone1,
-                                                            `type` = 'phone1',
-                                                            `created_at` = '".date('Y-m-d')."',
-                                                            `updated_by` = ".$_SESSION['adminId']);
-                        
-                        /** -- Insert values for contact_numbers table type=>phone2 --  */
-                        $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
-                                                            `table_name` = 'broker_contacts',
-                                                            `table_id` = $broker_contact_id,
-                                                            `contact_no` = $phone2,
-                                                            `type` = 'phone2',
-                                                            `created_at` = '".date('Y-m-d')."',
-                                                            `updated_by` = ".$_SESSION['adminId']);
-                        
-                        
-                        /** -- Insert values for contact_numbers table type=>mobile --  */
-                        
-                        $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
-                                                            `table_name` = 'broker_contacts',
-                                                            `table_id` = $broker_contact_id,
-                                                            `contact_no` = $mobile,
-                                                            `type` = 'mobile',
-                                                            `created_at` = '".date('Y-m-d')."',
-                                                            `updated_by` = ".$_SESSION['adminId']);
-                        $contact_number_id = mysql_insert_id();
-                        /** -- Update broker_contacts table by contact_number_id --  */
-                        
-                        $sql_broker_contact = @mysql_query("UPDATE `broker_contacts` SET 
-                                                            `contact_number_id` = ".$contact_number_id." WHERE id = ".$broker_contact_id);
+                        foreach($locality as $key => $val)
+                        {
+                            if(empty($val))
+                                continue;
+                                
+                            $sql_rule_locality_mappings = @mysql_query("INSERT INTO `rule_locality_mappings` SET 
+                                                            `rule_id` = '".$rule_id."',
+                                                            `locality_id` = '".mysql_escape_string($val)."',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error());        
+                        }
                     }
-            }
-            else{
-                $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
-            }
-            
+                    
+                    if(!empty($project))
+                    {
+                        foreach($project as $key => $val)
+                        {
+                            if(empty($val))
+                                continue;
+                             
+                            $sql_rule_project_mappings = @mysql_query("INSERT INTO `rule_project_mappings` SET 
+                                                            `rule_id` = '".$rule_id."',
+                                                            `project_id` = '".mysql_escape_string($val)."',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error());      
+                        }
+                    }
+                    
+                    if(!empty($agent))
+                    {
+                        foreach($agent as $key => $val)
+                        {
+                            if(empty($val))
+                                continue;
+                             
+                            $sql_rule_agent_mappings = @mysql_query("INSERT INTO `rule_agent_mappings` SET 
+                                                            `rule_id` = '".$rule_id."',
+                                                            `agent_id` = '".mysql_escape_string($val)."',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error());    
+                        }
+                    }
+                }
+                else{
+                    $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
+                } 
             });
-            
-            
-        	 
         }
         else {
             
-            $final_rating = '';
-            $rateoption = '';
-            if(!empty($rating))
-            {
-                $final_rating = $rating;
-                $rateoption = 'auto';
-            }
-            else
-            {
-                $final_rating = $rate;
-                $rateoption = 'forced';
-            }    
-            
-            //print'<pre>';
-//            print_r($_POST);
-//            die;
-            
             ResiProject::transaction(function(){
                 
-                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$sellerCompanyId,$addressid,$brkr_cntct_id,$rateoption;
+                global $broker_cmpny , $rule_name , $city_id,$locality,$project,$agent,$ruleId , $finallocidArr ,$finalprojidArr,$finalagentidArr;
                
-            if(!empty($active_since))
-            {
-                $active_since = explode("/" , $active_since);
-                $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];    
-            }
-            $copy = !empty($copy)?$copy:'off';
-            
-            
-            $sql_seller_company = @mysql_query("UPDATE `agents` SET
-                                                `status` = '".$status."',
-                                                `broker_id` = ".$seller_cmpny.",
-                                                `academic_qualification_id` = ".$qualification.",
-                                                `chkAddr` = '".$copy."',
-                                                `rating` = '".$final_rating."',
-                                                `rateoption` = '$rateoption',
-                                                `seller_type` = '$type',
-                                                `active_since` = '$active_since',
-                                                `updated_by` = '".$_SESSION['adminId']."'
-                                                 WHERE id=".$sellerCompanyId);
-            
-            $seller_id = $sellerCompanyId;          
-             
-            
-            //$seller_id = 4;
-            if($seller_id != false) {
-                $sellerIdFormapping = $seller_id;
-                
-                /** -- Primary Address Entry Start -- */
-                /** -- Add the addresses in addresses table -- */
-                    
-                    $sql_address = @mysql_query("UPDATE `addresses` SET 
-                                                            `address_line_1` = '$addressline1',
-                                                            `address_line_2` = '$addressline2',
-                                                            `city_id` = ".$city_id.",
-                                                            `pincode` = $pincode,
-                                                            `updated_by` = ".$_SESSION['adminId']."
-                                                             WHERE id=".$addressid);
+                                
+                $sql_project_assignment_rules = @mysql_query("UPDATE `project_assignment_rules` SET
+                                                `broker_id` = '".mysql_escape_string($broker_cmpny)."',
+                                                `rule_name` = '".mysql_escape_string($rule_name)."',
+                                                `updated_by` = '".$_SESSION['adminId']."',
+                                                `updated_at` = '".date('Y-m-d H:i:s')."' WHERE id=".mysql_escape_string($ruleId));
+                $rule_id = $ruleId;          
+
+                if($rule_id != false) {
                     
                     
-                   
-                    $sql_broker_contact = @mysql_query("UPDATE `broker_contacts` SET 
-                                                            `broker_id` = ".$seller_id.",
-                                                            `name` = '".$seller_name."',
-                                                            `contact_email` = '$email',
-                                                            `type` = 'Agent',
-                                                            `updated_by` = ".$_SESSION['adminId']."
-                                                             WHERE id=".$brkr_cntct_id);
-                    
-                    
-                    
-                    $broker_contact_id = $brkr_cntct_id;
-                    
-                    if(!empty($broker_contact_id))
+                    if(!empty($finallocidArr))
                     {
-                        $contacts = array();
-                        $sql2 = @mysql_query("SELECT * FROM contact_numbers AS cn WHERE cn.table_name = 'broker_contacts' AND cn.table_id = '".$row['brkr_cntct_id']."'");
-                
-                        if(@mysql_num_rows($sql2) > 0)
+                        foreach($finallocidArr as $key => $val)
                         {
-                            while($row1 = @mysql_fetch_assoc($sql2))
+                            if(empty($val))
+                                continue;
+                            
+                            $chkSql = @mysql_query("SELECT * FROM `rule_locality_mappings` WHERE locality_id = ".mysql_escape_string($val)." AND rule_id = ".mysql_escape_string($rule_id));
+                            
+                            if(@mysql_num_rows($chkSql) > 0)
                             {
-                                /** -- Insert values for contact_numbers table type=>phone1 --  */
-                                if($row1['type'] == "phone1") 
-                                {
-                                    $sql_contact_number = @mysql_query("UPDATE `contact_numbers` SET
-                                                            `contact_no` = $phone1,
-                                                            `updated_by` = ".$_SESSION['adminId']." WHERE id=".$row1['id']);
-                                }/** -- Insert values for contact_numbers table type=>phone2 --  */
-                                else if($row1['type'] == "phone2")
-                                {
-                                    $sql_contact_number = @mysql_query("UPDATE `contact_numbers` SET
-                                                            `contact_no` = $phone2,
-                                                            `updated_by` = ".$_SESSION['adminId']." WHERE id=".$row1['id']);
-                                }/** -- Insert values for contact_numbers table type=>mobile --  */
-                                else if($row1['type'] == "mobile")
-                                {
-                                    $sql_contact_number = @mysql_query("UPDATE `contact_numbers` SET
-                                                            `contact_no` = $mobile,
-                                                            `updated_by` = ".$_SESSION['adminId']." WHERE id=".$row1['id']);
-                                    $contact_number_id = $row1['id'];
-                                }
+                                $sql_rule_locality_mappings = @mysql_query("UPDATE `rule_locality_mappings` SET 
+                                                        `locality_id` = '".mysql_escape_string($val)."',
+                                                        `updated_by` = '".$_SESSION['adminId']."',
+                                                        `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));    
                             }
+                            else
+                            {
+                                $sql_rule_locality_mappings = @mysql_query("INSERT INTO `rule_locality_mappings` SET 
+                                                            `rule_id` = '".$rule_id."',
+                                                            `locality_id` = '".mysql_escape_string($val)."',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
+                            }
+                            
+                                    
                         }
                     }
-            }
-            else{
-                $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
-            }
+                    
+                    if(!empty($finalprojidArr))
+                    {
+                        foreach($finalprojidArr as $key => $val)
+                        {
+                            if(empty($val))
+                                continue;
+                            
+                            $chkSql = @mysql_query("SELECT * FROM `rule_project_mappings` WHERE project_id = ".mysql_escape_string($val)." AND rule_id = ".mysql_escape_string($rule_id));
+                            
+                            if(@mysql_num_rows($chkSql) > 0)
+                            {
+                                $sql_rule_project_mappings = @mysql_query("UPDATE `rule_project_mappings` SET 
+                                                            `project_id` = '".mysql_escape_string($val)."',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
+                            }
+                            else
+                            {
+                                $sql_rule_project_mappings = @mysql_query("INSERT INTO `rule_project_mappings` SET 
+                                                            `rule_id` = '".$rule_id."',
+                                                            `project_id` = '".mysql_escape_string($val)."',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
+                            }
+                                  
+                        }
+                    }
+                    
+                    if(!empty($finalagentidArr))
+                    {
+                        foreach($finalagentidArr as $key => $val)
+                        {
+                            if(empty($val))
+                                continue;
+                            
+                            $chkSql = @mysql_query("SELECT * FROM `rule_agent_mappings` WHERE agent_id = ".mysql_escape_string($val)." AND rule_id = ".mysql_escape_string($rule_id));
+                            
+                            if(@mysql_num_rows($chkSql) > 0)
+                            {
+                                $sql_rule_agent_mappings = @mysql_query("UPDATE INTO `rule_agent_mappings` SET 
+                                                            `agent_id` = '".mysql_escape_string($val)."',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
+                            }
+                            else
+                            {
+                                $sql_rule_agent_mappings = @mysql_query("INSERT INTO `rule_agent_mappings` SET 
+                                                            `rule_id` = '".$rule_id."',
+                                                            `agent_id` = '".mysql_escape_string($val)."',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error()); 
+                            }
+                            
+                            
+                                
+                        }
+                    }
+                }
+                else{
+                    $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
+                }
             
             });
         }
@@ -373,13 +285,127 @@
             $smarty->assign("ErrorMsg", $ErrorMsg);    
         }
         else {
-            header("Location:SellerCompanyList.php?page=1&sort=all"); 
+            header("Location:ruleadd.php?page=1&sort=all"); 
         }
         /**********end code project add******************/        
     }
     else
     {
+        $ruleAttr = ProjectAssignmentRules::find('all');
+        $NumRows = count($ruleAttr);
+        if(!empty($RowsPerPage) && !empty($Offset))
+        {
+            $options = array('joins' => $join , 'limit' => $RowsPerPage , 'offset' => $Offset);
+            $ruleAttr = ProjectAssignmentRules::find('all' , $options);
+        }
+        else
+        {
+            $options = array('joins' => $join ,'limit' => $RowsPerPage);
+            $ruleAttr = ProjectAssignmentRules::find('all' , $options);
+        }
         
+        
+        $data = array();
+        if(!empty($ruleAttr))
+        {
+            $i = 0;
+            foreach($ruleAttr as $key => $val)
+            {
+                $locality = array();
+                $conditions = " rule_locality_mappings.rule_id = ".$val->id;
+                $joins = " LEFT JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id";
+                $options = array('joins' => $joins , 'select' => " locality.label AS locality" , 'conditions' => $conditions);
+                $localityAttr = RuleLocalityMappings::find('all',$options);
+                
+                if(!empty($localityAttr))
+                {
+                    foreach($localityAttr as $k => $v)
+                    {
+                        $locality[] = $v->locality;
+                    }
+                }
+                
+                
+                $project = array();
+                $conditions = " rule_project_mappings.rule_id = ".$val->id;
+                $joins = " LEFT JOIN resi_project ON rule_project_mappings.project_id = resi_project.id";
+                $options = array('joins' => $joins , 'select' => " resi_project.project_name" , 'conditions' => $conditions);
+                $projectAttr = RuleProjectMapping::find('all',$options);
+                
+                if(!empty($projectAttr))
+                {
+                    foreach($projectAttr as $k => $v)
+                    {
+                        $project[] = $v->project_name;
+                    }
+                }
+                
+                $agent = array();
+                $conditions = " rule_agent_mappings.rule_id = ".$val->id." AND broker_contacts.type ='Agent'";
+                $joins = " LEFT JOIN broker_contacts ON rule_agent_mappings.agent_id = broker_contacts.broker_id";
+                $options = array('joins' => $joins , 'select' => " broker_contacts.name" , 'conditions' => $conditions);
+                $agentAttr = RuleAgentMappings::find('all',$options);
+                
+                if(!empty($agentAttr))
+                {
+                    foreach($agentAttr as $k => $v)
+                    {
+                        $agent[] = $v->name;
+                    }
+                }
+                
+                $data[$i]['id'] = $val->id;
+                $data[$i]['rule_name'] = $val->rule_name;
+                
+                
+                foreach($val->created_at as $k => $v)
+                {
+                    if($k == "date")
+                    {
+                        $data[$i]['created_at'] = date('d/m/Y' ,strtotime($v));
+                        break;
+                    }
+                }
+                
+                $count = (count($locality) > count($project))?count($locality):count($project);
+                $count = (count($agent) > $count)?count($agent):$count;
+                $data[$i]['locality'] = $locality;
+                $data[$i]['project'] = $project;
+                $data[$i]['agent'] = $agent;
+                $data[$i]['count'] = $count;
+                $i++;
+            }
+        }
+        //print'<pre>';
+//        print_r($data);
+//        die;
+        
+        $MaxPage = (ceil($NumRows/$RowsPerPage))?ceil($NumRows/$RowsPerPage):'1' ;
+        $Num = $_GET['num'];
+        $Sort = $_GET['sort'];
+        if ($PageNum > 1) {
+                $Page = $PageNum - 1;
+                $Prev = " <a href=\"$Self?page=$Page&sort=$Sort$link\">[Prev]</a> ";
+                $First = " <a href=\"$Self?page=1&sort=$Sort$link\">[First Page]</a> ";
+        } else {
+                $Prev  = ' [Prev] ';
+                $First = ' [First Page] ';
+        }
+        if ($PageNum < $MaxPage) {
+                $Page = $PageNum + 1;
+                $Next = " <a href=\"$Self?page=$Page&sort=$Sort$link\">[Next]</a> ";
+                $Last = " <a href=\"$Self?page=$MaxPage&sort=$Sort$link\">[Last Page]</a> ";
+        } else {
+                $Next = ' [Next] ';
+                $Last = ' [Last Page] ';
+        }
+        $Pagginnation = "<DIV align=\"left\"><font style=\"font-size:11px; color:#000000;\">" . $First . $Prev . " Showing page <strong>$PageNum</strong> of <strong>$MaxPage</strong> pages " . $Next . $Last . "</font></DIV>";
+        $smarty->assign("Pagginnation", $Pagginnation);
+        $smarty->assign("Sorting", $Sorting);
+        $smarty->assign("NumRows",$NumRows);
+        $smarty->assign("NumRows" , $NumRows);
+        $smarty->assign("ruleDataArr" , $data);
+                                
     }
 ?>
 
