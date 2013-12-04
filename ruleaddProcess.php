@@ -59,79 +59,34 @@
         $smarty->assign("agentjIdArr", $agentjIdArr);
         
         $finallocidArr = json_decode(base64_decode($locjIdArr));
-//        if(!empty($locjIdArr))
-//        {
-//            $finallocidArr = array_merge($locality, json_decode(base64_decode($locjIdArr)));
-//            $finallocidArr = array_unique($finallocidArr);
-//        }
-//        
-//        $dellocidArr = '';
-//        if(!empty($dlocjIdArr))
-//        {
-//            if(count($finallocidArr) > count(json_decode(base64_decode($dlocjIdArr))))
-//                $dellocidArr = array_diff($finallocidArr , json_decode(base64_decode($dlocjIdArr)));
-//            else
-//                $dellocidArr = array_diff(json_decode(base64_decode($dlocjIdArr)) , $finallocidArr);
-//        }
-//        
-//        
         $finalprojidArr = json_decode(base64_decode($projectjIdArr));
-//        if(!empty($projectjIdArr))
-//        {
-//            $finalprojidArr = array_merge($project, json_decode(base64_decode($projectjIdArr)));
-//            $finalprojidArr = array_unique($finalprojidArr);
-//        }
-//        
-//        $delproidArr = '';
-//        if(!empty($dprojectjIdArr))
-//        {
-//            if(count($finalprojidArr) > count(json_decode(base64_decode($dprojectjIdArr))))
-//                $delproidArr = array_diff($finalprojidArr , json_decode(base64_decode($dprojectjIdArr)));
-//            else
-//                $delproidArr = array_diff(json_decode(base64_decode($dprojectjIdArr)) , $finalprojidArr);
-//        }
-//        
-//        
         $finalagentidArr = json_decode(base64_decode($agentjIdArr));
-//        if(!empty($locjIdArr))
-//        {
-//            $finalagentidArr = array_merge($agent, json_decode(base64_decode($agentjIdArr)));
-//            $finalagentidArr = array_unique($finalagentidArr);
-//        }
-//        
-//        $delagentidArr = '';
-//        if(!empty($dagentjIdArr))
-//        {
-//            if(count($finalagentidArr) > count(json_decode(base64_decode($dagentjIdArr))))
-//                $delagentidArr = array_diff($finalagentidArr,json_decode(base64_decode($dagentjIdArr)) );
-//            else
-//                $delagentidArr = array_diff(json_decode(base64_decode($dagentjIdArr)) , $finalagentidArr);
-//        }
-        print'<pre>';
-        print_r($locality);
-        print_r(json_decode(base64_decode($locjIdArr)));
-        //print_r($finallocidArr);
-        echo "<br>==============================<br>";
-        print_r($project);
-        print_r(json_decode(base64_decode($projectjIdArr)));
-        //print_r($finalprojidArr);
-        echo "<br>==============================<br>";
-        print_r($agent);
-        print_r(json_decode(base64_decode($agentjIdArr)));
-        //print_r($finalagentidArr);
-        
 
-        echo "<br>==============================<br>";
-        echo "<br><br>";
-        echo "<br>  Locatio Delete   <br>";
-        //print_r(json_decode(base64_decode($dlocjIdArr)));
-        //print_r($dellocidArr);
-        echo "<br><br>";
-        echo "<br>  Delete Pro   <br>";
-        //print_r(json_decode(base64_decode($dprojectjIdArr)));
-        //print_r($delproidArr);
-        echo "<br><br>";
-        echo "<br> Delete Agent<br>";
+        //print'<pre>';
+//        print_r($locality);
+//        print_r(json_decode(base64_decode($locjIdArr)));
+//        //print_r($finallocidArr);
+//        echo "<br>==============================<br>";
+//        print_r($project);
+//        print_r(json_decode(base64_decode($projectjIdArr)));
+//        //print_r($finalprojidArr);
+//        echo "<br>==============================<br>";
+//        print_r($agent);
+//        print_r(json_decode(base64_decode($agentjIdArr)));
+//        //print_r($finalagentidArr);
+//        
+//
+//        echo "<br>==============================<br>";
+//        echo "<br><br>";
+//        echo "<br>  Locatio Delete   <br>";
+//        //print_r(json_decode(base64_decode($dlocjIdArr)));
+//        //print_r($dellocidArr);
+//        echo "<br><br>";
+//        echo "<br>  Delete Pro   <br>";
+//        //print_r(json_decode(base64_decode($dprojectjIdArr)));
+//        //print_r($delproidArr);
+//        echo "<br><br>";
+//        echo "<br> Delete Agent<br>";
         //print_r(json_decode(base64_decode($dagentjIdArr)));
 //       // print_r($delagentidArr);
 //        die;
