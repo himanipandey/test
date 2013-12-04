@@ -13,10 +13,28 @@ function refreshimg(ct)
 	}		
 }
 $(document).ready(function(){
+	
+	 $('.taggedDate').hide();
+	if($('select#PType').val() == 'Construction Status'){
+			$('.taggedDate').each(function(){
+			  $(this).show();
+			  if($(this).children('#tower_dropdown').length == 0){
+				$(this).append('&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;');
+				$(this).append($('#select_tower').html());
+			 }
+					
+			});
+	}
+	
 	 $('select#PType').change(function(k, v){
 			 if($(this).val() == 'Construction Status'){
 				 $('.taggedDate').each(function(){
 					 $(this).show();
+					 if($(this).children('#tower_dropdown').length == 0){
+						$(this).append('&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;');
+						$(this).append($('#select_tower').html());
+					 }
+					
 				 });
 					
 			 }
@@ -57,9 +75,9 @@ $(document).ready(function(){
 	      </TR>
               <TR>
                 <TD vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
-
+			 <form method="post" enctype="multipart/form-data" >
 			  <TABLE cellSpacing=2 cellPadding=2 width="43%" align=center border=1 style = "border:1px solid;">
-			    <form method="post" enctype="multipart/form-data">
+			   
 			     
 				<tr>
 					<td  align = "center" colspan = "2">
@@ -159,398 +177,213 @@ $(document).ready(function(){
 				  <td width="20%" align="right" valign = "top" nowrap><b>Plan :</b> </td>
 				  <td width="30%" align="left" nowrap>
 				  
+				  <div id="select_tower" style="display:none"> <!-- this is for adding dynamically tower dropdown-->
+					{$towerDetailDiv}
+				  </div>
 				  
 				 <!-- <input type=file name='txtlocationplan'  style="width:400px;">-->
 				 <div id="img1"><input name="txtlocationplan[]" type="file" id='txtlocationplan1' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to1" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						
+							
 					</div>
 				  </div>
 				  <div id="img2" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan2' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to2" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to2" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img3" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan3' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to3" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to3" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img4" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan4' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to4" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to4" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img5" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan5' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 						<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to5" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to5" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img6" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan6' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to6" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to6" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img7" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan7' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to7" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to7" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img8" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan8' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 						<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to8" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to8" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img9" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan9' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to9" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to9" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img10" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan10' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to10" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to10" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 
 				  <div id="img11" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan11' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to11" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to11" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img12" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan12' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to12" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to12" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img13" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan13' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to13" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to13" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img14" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan14' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to14" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to14" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img15" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan15' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to15" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to15" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img16" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan16' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to16" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to16" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img17" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan17' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to17" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to17" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img18" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan18' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to18" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to18" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img19" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan19' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to19" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to19" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 
 				  <div id="img20" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan20' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to20" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to20" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+							
 					</div>
 				  </div>
 				  <div id="img21" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan21' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to21" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to21" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+						
 					</div>
 				  </div>
 				  <div id="img22" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan22' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to22" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to22" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						 
+						
 					</div>
 				  </div>
 				  <div id="img23" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan23' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to23" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to23" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						
 					</div>
 				  </div>
 				  <div id="img24" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan24' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to24" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to24" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						
 					</div>
 				  </div>
 				  <div id="img25" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan25' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to25" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to25" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						
 					</div>
 				  </div>
 				  <div id="img26" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan26' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font><font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to26" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to26" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+					
 					</div>
 				  </div>
 				  <div id="img27" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan27' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to27" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to27" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						
 					</div>
 				  </div>
 				  <div id="img28" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan28' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to28" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to28" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+					
 					</div>
 				  </div>
 				  <div id="img29" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan29' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to29" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to29" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+						
 					</div>
 				  </div>
 				  <div id="img30" style="display:none;"><input name="txtlocationplan[]" type="file" id='txtlocationplan30' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
 					<div class="taggedDate">
 						&nbsp;&nbsp;<b>Date:<font color = "red">*</font></b>&nbsp;&nbsp;<input name="txttagged_date[]" type="text" class="formstyle2" id="f_date_c_to30" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to30" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-						&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;
-							<select name= "txtTowerId[]" >
-								<option value="0" >--Select Tower--</option>
-								{section name=data loop=$towerDetail}
-									<option value="{$towerDetail[data].TOWER_ID}" >{$towerDetail[data].TOWER_NAME}</option>
-								{/section}
-									<option value="-1">Other</option>
-							</select>
+					
 					</div>
 				  </div>
 
@@ -571,10 +404,10 @@ $(document).ready(function(){
 				  </td>
 				</tr>
 			      </div>
-			    </form>
+			   
 			    </TABLE>
 <!--			</fieldset>-->
-	 
+			 </form>
           </td>
 		  </tr>
 		</TABLE>

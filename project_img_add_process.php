@@ -17,16 +17,21 @@
     
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
+    $tower_div = "<select name= 'txtTowerId[]' id='tower_dropdown'>";
+    $tower_div .="<option value='0' >--Select Tower--</option>";
     foreach($towerDetail_object as $s){
         $s = $s->to_array();
         foreach($s as $key=>$value){
-            $s[strtoupper($key)] = $value;
+		    $s[strtoupper($key)] = $value;
             unset($s[$key]);
+           
         }
-            array_push($towerDetail, $s);
-    }    
-     $smarty->assign("towerDetail", $towerDetail);
-         
+        $tower_div .="<option value='".$s['TOWER_NAME']."' >".$s['TOWER_NAME']."</option>";
+    }
+    $tower_div .= "<option value='-1'>Other</option>";
+    $tower_div .= "</select>";
+    $smarty->assign("towerDetailDiv", $tower_div);
+           
 	$builderDetail = fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
 	if(isset($_REQUEST['edit']))
 		$edit_project = $projectId;
@@ -41,6 +46,7 @@
 //$smarty->assign("projectplansid", $projectplansid);
 if (isset($_POST['Next']))
 {
+		
 	$smarty->assign("projectId", $projectId);
 	$folderName		=	$projectDetail[0]['PROJECT_NAME'];
 
