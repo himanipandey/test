@@ -26,7 +26,7 @@
             unset($s[$key]);
            
         }
-        $tower_div .="<option value='".$s['TOWER_NAME']."' >".$s['TOWER_NAME']."</option>";
+        $tower_div .="<option value='".$s['TOWER_ID']."' >".$s['TOWER_NAME']."</option>";
     }
     $tower_div .= "<option value='-1'>Other</option>";
     $tower_div .= "</select>";
@@ -46,7 +46,6 @@
 //$smarty->assign("projectplansid", $projectplansid);
 if (isset($_POST['Next']))
 {
-		
 	$smarty->assign("projectId", $projectId);
 	$folderName		=	$projectDetail[0]['PROJECT_NAME'];
 
@@ -84,10 +83,10 @@ if (isset($_POST['Next']))
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
 				$arrTaggedDate[$k] = $_REQUEST['txttagged_date'][$k];
-				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
+				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1];
 			}
 		}
-
+				
 	    if(count($arrValue) == 0)
 	    {
 		$ErrorMsg["blankerror"] = "Please select atleast one image.";
@@ -531,9 +530,7 @@ if (isset($_POST['Next']))
                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                             "object" => "project", "object_id" => $projectId,
-                                            "image_type" => "construction_status",
-                                            "service_extra_params" => array("tagged_date" => $arrTaggedDate[$key])
-                                            ));
+                                            "image_type" => "construction_status"));
                                         $response = $s3upload->upload();
                                         // Image id updation (next three lines could be written in single line but broken
                                         // in three lines due to limitation of php 5.3)
@@ -964,7 +961,7 @@ if (isset($_POST['Next']))
 														PLAN_IMAGE = '".$imgDbPath[1]."',
 														TITLE	   = '".$arrTitle[$key]."',
                                                         SERVICE_IMAGE_ID   = ".$image_id.",
-                                                        ".$add_towe."
+                                                        ".$add_tower."
                                                         TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								$res	=	mysql_query($qry) or die(mysql_error());
