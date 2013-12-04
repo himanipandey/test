@@ -57,7 +57,7 @@
                             <option value="">--Select Company--</option>
                             {if $brokerArr != ''}
                                     {foreach from= $brokerArr key = k item = val}
-                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{$val->broker_name}</option>
+                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{if strlen($val->broker_name) > 30} {$val->broker_name|substr:0:30|cat:"..."} {else} {$val->broker_name} {/if}</option>
                                     {/foreach}
                             {/if}
                         </select>

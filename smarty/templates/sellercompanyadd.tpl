@@ -57,7 +57,7 @@
                             <option value="">--Select Company--</option>
                             {if $brokerArr != ''}
                                     {foreach from= $brokerArr key = k item = val}
-                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{$val->broker_name}</option>
+                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{if strlen($val->broker_name) > 30} {$val->broker_name|substr:0:30|cat:"..."} {else} {$val->broker_name} {/if}</option>
                                     {/foreach}
                             {/if}
                         </select>
@@ -65,7 +65,7 @@
                     </td>
                     <td width="15%" align="right" valign="top" >Seller Name :<font color = "red">*</font></td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="seller_name" id="seller_name" maxlength="10" value="{$seller_name}" style="width:238px;" />	
+                        <input type=text name="seller_name" id="seller_name" value="{$seller_name}" style="width:238px;" />	
                     </td>
                     <td width="10%" align="right" valign="top" >Seller Type : </td>
                     <td width="10%" align="left" valign="top" >

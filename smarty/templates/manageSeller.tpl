@@ -74,7 +74,7 @@
 			             
                         <TD align=center class=td-border>{$count}</TD>
                         <TD align=left class=td-border>{$value['seller_cmpny']}  </TD>
-                        <TD align=left class=td-border>{$value['seller_name']}</TD>
+                        <TD align=left class=td-border>{if strlen($value['seller_name']) > 30} {$value['seller_name']|substr:0:30|cat:"..."} {else} {$value['seller_name']} {/if}</TD>
                         <TD align=left class=td-border>{$value['seller_type']}</TD>
                         <TD align=left class=td-border></TD>
                         <TD align=left class=td-border>{$value['rating']}</TD>
