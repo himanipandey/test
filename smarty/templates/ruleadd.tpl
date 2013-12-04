@@ -131,11 +131,16 @@
 				  <td align="center" colspan="2">
 				  <input type="hidden" name="ruleId" id="ruleId" value="{$ruleId}" />
 				  <input type="submit" name="btnSave" id="btnSave" value="Submit Rule" style="float:right;" />
-				  &nbsp;&nbsp;
+				  &nbsp;&nbsp;<input type="button" name="btnExit" id="btnExit" value="Exit" style="float:right;" />
                   
-                  <input type="hidden" name="locjIdArr" id="locjIdArr" value="{$locIjdArr}" />
+                  <input type="hidden" name="locjIdArr" id="locjIdArr" value="{$locjIdArr}" />
                   <input type="hidden" name="projectjIdArr" id="projectjIdArr" value="{$projectjIdArr}" />
                   <input type="hidden" name="agentjIdArr" id="agentjIdArr" value="{$agentjIdArr}" />
+                  
+                  <input type="hidden" name="dlocjIdArr" id="dlocjIdArr" value="" />
+                  <input type="hidden" name="dprojectjIdArr" id="dprojectjIdArr" value="" />
+                  <input type="hidden" name="dagentjIdArr" id="dagentjIdArr" value="" />
+                  
                   <input type="hidden" name="sort" id="sort" value="{$sort}" />
                   <input type="hidden" name="page" id="page" value="{$page}" />
 				  </td>
@@ -164,7 +169,8 @@
                   
 	             
                 <TD align=center class=td-border>{$count}</TD>
-                <TD align=left class=td-border>{$value['rule_name']}  </TD>
+                
+                <TD align=left class=td-border>{if strlen($value['rule_name']) > 30} {$value['rule_name']|substr:0:30|cat:"..."} {else} {$value['rule_name']} {/if}  </TD>
                 {$rcount = 0}
                 {section name=waistsizes start=0 loop=$value['count'] step=1}
                     {if $smarty.section.waistsizes.index != 0}
@@ -236,6 +242,10 @@
 <script type="text/javascript">
     jQuery(document).ready(function(){
         
+        jQuery('#btnExit').click(function(){
+           window.location.href = 'ruleadd.php'; 
+        });
+        
         jQuery('#btnSave').click(function(){
             
             if(!jQuery('#broker_cmpny').val())
@@ -281,6 +291,13 @@
                             return false;
                         }
                         jQuery('#agent').html('');
+                        
+                       // if(jQuery('#agentjIdArr').val()!= '' && jQuery('#agentjIdArr').val() != null)
+//                        {
+//                            jQuery('#dagentjIdArr').val(jQuery('#agentjIdArr').val());
+//                            jQuery('#agentjIdArr').val('');    
+//                        }
+                        
                         var json = JSON.parse(data);
                         var appendData  = '<option value = ""> --- Select Agents --- </option>';
                         for(var key in json)
@@ -323,7 +340,20 @@
                             return false;
                         }
                         jQuery('#locality').html('');
-                        jQuery('#locjIdArr').val('');
+                       // if(jQuery('#locjIdArr').val() != '' && jQuery('#locjIdArr').val() != null)
+//                        {
+//                            jQuery('#dlocjIdArr').val(jQuery('#locjIdArr').val());
+//                            jQuery('#locjIdArr').val('');
+//                        }
+//                        
+//                        
+//                        if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
+//                        {
+//                            jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
+//                            jQuery('#projectjIdArr').val('');
+//                        }
+                        
+                        
                         jQuery('#project').html('<option value = ""> --- Select Project --- </option>');
                         var json = JSON.parse(data);
                         var appendData  = '<option value = ""> --- Select Locality --- </option>';
@@ -370,7 +400,17 @@
                             return false;
                         }
                         jQuery('#project').html('');
-                        jQuery('#projectjIdArr').val('');
+                        //if(jQuery('#locjIdArr').val() != '' && jQuery('#locjIdArr').val() != null)
+//                        {
+//                            jQuery('#dlocjIdArr').val(jQuery('#locjIdArr').val());
+//                            jQuery('#locjIdArr').val('');
+//                        }
+//                        if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
+//                        {
+//                            jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
+//                            jQuery('#projectjIdArr').val('');    
+//                        }
+                        
                         var json = JSON.parse(data);
                         var appendData  = '<option value = ""> --- Select Project --- </option>';
                         for(var key in json)
@@ -392,6 +432,28 @@
                 jQuery('#project').html('<option value = ""> --- Select Project --- </option>');
             }
         });
+        
+        //jQuery('#project').change(function(){
+//            
+//            if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
+//            {
+//                jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
+//                jQuery('#projectjIdArr').val('');    
+//            }
+//            
+//            
+//        });
+//        
+//        jQuery('#agent').change(function(){
+//            
+//            if(jQuery('#agentjIdArr').val() != '' && jQuery('#agentjIdArr').val() != null)
+//            {
+//                jQuery('#dagentjIdArr').val(jQuery('#agentjIdArr').val());
+//                jQuery('#agentjIdArr').val('');    
+//            }
+//            
+//            
+//        });
                
     });
     

@@ -58,29 +58,82 @@
         $smarty->assign("projectjIdArr", $projectjIdArr);
         $smarty->assign("agentjIdArr", $agentjIdArr);
         
-        $finallocidArr = $locality;
-        if(!empty($locjIdArr))
-        {
-            $finallocidArr = array_merge($locality, json_decode(base64_decode($locjIdArr)));
-        }
-        
-        
-        $finalprojidArr = $project;
-        if(!empty($projectjIdArr))
-        {
-            $finalprojidArr = array_merge($project, json_decode(base64_decode($projectjIdArr)));
-        }
-        
-        $finalagentidArr = $agent;
-        if(!empty($locjIdArr))
-        {
-            $finalagentidArr = array_merge($agent, json_decode(base64_decode($agentjIdArr)));
-        }
-        //print'<pre>';
+        $finallocidArr = json_decode(base64_decode($locjIdArr));
+//        if(!empty($locjIdArr))
+//        {
+//            $finallocidArr = array_merge($locality, json_decode(base64_decode($locjIdArr)));
+//            $finallocidArr = array_unique($finallocidArr);
+//        }
 //        
-//        print_r($finalagentidArr);
-//        print_r($finalprojidArr);
-//        print_r($finallocidArr);
+//        $dellocidArr = '';
+//        if(!empty($dlocjIdArr))
+//        {
+//            if(count($finallocidArr) > count(json_decode(base64_decode($dlocjIdArr))))
+//                $dellocidArr = array_diff($finallocidArr , json_decode(base64_decode($dlocjIdArr)));
+//            else
+//                $dellocidArr = array_diff(json_decode(base64_decode($dlocjIdArr)) , $finallocidArr);
+//        }
+//        
+//        
+        $finalprojidArr = json_decode(base64_decode($projectjIdArr));
+//        if(!empty($projectjIdArr))
+//        {
+//            $finalprojidArr = array_merge($project, json_decode(base64_decode($projectjIdArr)));
+//            $finalprojidArr = array_unique($finalprojidArr);
+//        }
+//        
+//        $delproidArr = '';
+//        if(!empty($dprojectjIdArr))
+//        {
+//            if(count($finalprojidArr) > count(json_decode(base64_decode($dprojectjIdArr))))
+//                $delproidArr = array_diff($finalprojidArr , json_decode(base64_decode($dprojectjIdArr)));
+//            else
+//                $delproidArr = array_diff(json_decode(base64_decode($dprojectjIdArr)) , $finalprojidArr);
+//        }
+//        
+//        
+        $finalagentidArr = json_decode(base64_decode($agentjIdArr));
+//        if(!empty($locjIdArr))
+//        {
+//            $finalagentidArr = array_merge($agent, json_decode(base64_decode($agentjIdArr)));
+//            $finalagentidArr = array_unique($finalagentidArr);
+//        }
+//        
+//        $delagentidArr = '';
+//        if(!empty($dagentjIdArr))
+//        {
+//            if(count($finalagentidArr) > count(json_decode(base64_decode($dagentjIdArr))))
+//                $delagentidArr = array_diff($finalagentidArr,json_decode(base64_decode($dagentjIdArr)) );
+//            else
+//                $delagentidArr = array_diff(json_decode(base64_decode($dagentjIdArr)) , $finalagentidArr);
+//        }
+        print'<pre>';
+        print_r($locality);
+        print_r(json_decode(base64_decode($locjIdArr)));
+        //print_r($finallocidArr);
+        echo "<br>==============================<br>";
+        print_r($project);
+        print_r(json_decode(base64_decode($projectjIdArr)));
+        //print_r($finalprojidArr);
+        echo "<br>==============================<br>";
+        print_r($agent);
+        print_r(json_decode(base64_decode($agentjIdArr)));
+        //print_r($finalagentidArr);
+        
+
+        echo "<br>==============================<br>";
+        echo "<br><br>";
+        echo "<br>  Locatio Delete   <br>";
+        //print_r(json_decode(base64_decode($dlocjIdArr)));
+        //print_r($dellocidArr);
+        echo "<br><br>";
+        echo "<br>  Delete Pro   <br>";
+        //print_r(json_decode(base64_decode($dprojectjIdArr)));
+        //print_r($delproidArr);
+        echo "<br><br>";
+        echo "<br> Delete Agent<br>";
+        //print_r(json_decode(base64_decode($dagentjIdArr)));
+//       // print_r($delagentidArr);
 //        die;
         $smarty->assign("ruleId", $ruleId);
         
@@ -173,7 +226,7 @@
             
             ResiProject::transaction(function(){
                 
-                global $broker_cmpny , $rule_name , $city_id,$locality,$project,$agent,$ruleId , $finallocidArr ,$finalprojidArr,$finalagentidArr;
+                global $broker_cmpny , $rule_name , $city_id,$locality,$project,$agent,$ruleId , $finallocidArr ,$finalprojidArr,$finalagentidArr,$locjIdArr,$projectjIdArr,$agentjIdArr;
                
                                 
                 $sql_project_assignment_rules = @mysql_query("UPDATE `project_assignment_rules` SET
@@ -185,10 +238,20 @@
 
                 if($rule_id != false) {
                     
-                    
                     if(!empty($finallocidArr))
                     {
                         foreach($finallocidArr as $key => $val)
+                        {
+                            $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_locality_mappings` WHERE locality_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id);
+                            
+                            //echo "DELETE FROM `rule_locality_mappings` WHERE locality_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>";
+                             
+                        }
+                    }
+                    
+                    if(!empty($locality))
+                    {
+                        foreach($locality as $key => $val)
                         {
                             if(empty($val))
                                 continue;
@@ -200,7 +263,12 @@
                                 $sql_rule_locality_mappings = @mysql_query("UPDATE `rule_locality_mappings` SET 
                                                         `locality_id` = '".mysql_escape_string($val)."',
                                                         `updated_by` = '".$_SESSION['adminId']."',
-                                                        `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));    
+                                                        `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
+
+                                //echo "UPDATE `rule_locality_mappings` SET 
+//                                                        `locality_id` = '".mysql_escape_string($val)."',
+//                                                        `updated_by` = '".$_SESSION['adminId']."',
+//                                                        `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";    
                             }
                             else
                             {
@@ -209,15 +277,30 @@
                                                             `locality_id` = '".mysql_escape_string($val)."',
                                                             `updated_by` = '".$_SESSION['adminId']."',
                                                             `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
+
+                                //echo "INSERT INTO `rule_locality_mappings` SET 
+//                                                            `rule_id` = '".$rule_id."',
+//                                                            `locality_id` = '".mysql_escape_string($val)."',
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `created_at` = '".date('Y-m-d')."'"."<br>";
                             }
                             
                                     
                         }
                     }
                     
+                    
                     if(!empty($finalprojidArr))
                     {
                         foreach($finalprojidArr as $key => $val)
+                        {
+                            $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_project_mappings` WHERE project_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id); 
+                            //echo "DELETE FROM `rule_project_mappings` WHERE project_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>";
+                        }
+                    }
+                    if(!empty($project))
+                    {
+                        foreach($project as $key => $val)
                         {
                             if(empty($val))
                                 continue;
@@ -230,6 +313,11 @@
                                                             `project_id` = '".mysql_escape_string($val)."',
                                                             `updated_by` = '".$_SESSION['adminId']."',
                                                             `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
+
+                                //echo "UPDATE `rule_project_mappings` SET 
+//                                                            `project_id` = '".mysql_escape_string($val)."',
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";
                             }
                             else
                             {
@@ -238,6 +326,11 @@
                                                             `project_id` = '".mysql_escape_string($val)."',
                                                             `updated_by` = '".$_SESSION['adminId']."',
                                                             `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
+                                //echo "INSERT INTO `rule_project_mappings` SET 
+//                                                            `rule_id` = '".$rule_id."',
+//                                                            `project_id` = '".mysql_escape_string($val)."',
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `created_at` = '".date('Y-m-d')."'"."<br>";
                             }
                                   
                         }
@@ -247,6 +340,15 @@
                     {
                         foreach($finalagentidArr as $key => $val)
                         {
+                            $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_agent_mappings` WHERE agent_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id);
+                            //echo "DELETE FROM `rule_agent_mappings` WHERE agent_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>"; 
+                        }
+                    }
+                    
+                    if(!empty($agent))
+                    {
+                        foreach($agent as $key => $val)
+                        {
                             if(empty($val))
                                 continue;
                             
@@ -254,10 +356,14 @@
                             
                             if(@mysql_num_rows($chkSql) > 0)
                             {
-                                $sql_rule_agent_mappings = @mysql_query("UPDATE INTO `rule_agent_mappings` SET 
+                                $sql_rule_agent_mappings = @mysql_query("UPDATE  `rule_agent_mappings` SET 
                                                             `agent_id` = '".mysql_escape_string($val)."',
                                                             `updated_by` = '".$_SESSION['adminId']."',
                                                             `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
+                                //echo "UPDATE `rule_agent_mappings` SET 
+//                                                            `agent_id` = '".mysql_escape_string($val)."',
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";
                             }
                             else
                             {
@@ -265,13 +371,20 @@
                                                             `rule_id` = '".$rule_id."',
                                                             `agent_id` = '".mysql_escape_string($val)."',
                                                             `updated_by` = '".$_SESSION['adminId']."',
-                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error()); 
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
+                                //echo "INSERT INTO `rule_agent_mappings` SET 
+//                                                            `rule_id` = '".$rule_id."',
+//                                                            `agent_id` = '".mysql_escape_string($val)."',
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `created_at` = '".date('Y-m-d')."'"."<br>"; 
                             }
                             
                             
                                 
                         }
                     }
+                    
+                   //die("here");
                 }
                 else{
                     $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";

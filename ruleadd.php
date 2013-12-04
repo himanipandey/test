@@ -56,6 +56,8 @@ if(!empty($_GET['ruleId']))
         }        
     } 
     
+    
+    
     $locality = array();
     if(!empty($city_id))
     {
@@ -119,7 +121,7 @@ if(!empty($_GET['ruleId']))
     $smarty->assign("projectjIdArr", base64_encode(json_encode($projectIdArr)));
     $smarty->assign("seller_company", $agents);
     $smarty->assign("agentIdArr", $agentIdArr);
-    $smarty->assign("agentjIdArr", base64_encode(json_encode($agentjIdArr)));
+    $smarty->assign("agentjIdArr", base64_encode(json_encode($agentIdArr)));
 }
 
 include('ruleaddProcess.php');
