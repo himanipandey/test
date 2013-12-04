@@ -5,7 +5,7 @@
  * @copyright 2013
  */
 
-    $accessSeller = '';
+    $accessSeller = ''; 
     
     $smarty->assign("accessSeller",$accessSeller);
     

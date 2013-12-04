@@ -59,7 +59,7 @@
                         <TD class=whiteTxt width=15% align = 'left'>Active Since</TD>
                         <TD class=whiteTxt width=15% align = 'left'>Status</TD>                      
                         <TD class=whiteTxt width=12% align="center">Action</TD>
-                      </TR>
+                      </TR> 
                       <TR><TD colspan=14 class=td-border></TD></TR>
                         {$count = 0}
                         {foreach from = $sellerDataArr key = k item = value}

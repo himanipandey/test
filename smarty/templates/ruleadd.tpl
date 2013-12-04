@@ -50,7 +50,7 @@
                       <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["wrongPId"]}</font></td></tr>
                       {/if}
 	           
-				<tr>
+				<tr> 
                     <td width="30%" align="right" valign="top">Company Name :<font color = "red">*</font></td>
                     <td width="10%" align="left" valign="top">
                         <select name="broker_cmpny" id="broker_cmpny">

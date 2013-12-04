@@ -7,7 +7,7 @@
 
 include("smartyConfig.php");
 include("appWideConfig.php");
-include("dbConfig.php");
+include("dbConfig.php"); 
 include("modelsConfig.php");
 include("includes/configs/configs.php");
 AdminAuthentication();

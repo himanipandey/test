@@ -31,7 +31,7 @@
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>{if $brokerCompanyId == ''} Add New {else} Edit {/if} Broker Company</TD>
                       <TD align=right ></TD>
                     </TR>
-		  </TBODY></TABLE>
+		  </TBODY></TABLE> 
 		</TD>
 	      </TR>
               <TR>

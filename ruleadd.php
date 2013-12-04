@@ -54,7 +54,7 @@ if(!empty($_GET['ruleId']))
             if(isset($key) && $key == "rule_name")
                 $rule_name = $val->rule_name;
         }        
-    } 
+    }  
     
     
     

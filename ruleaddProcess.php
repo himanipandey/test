@@ -125,7 +125,7 @@
                 $rule_id = mysql_insert_id();          
 
                 if($rule_id != false) {
-                    
+                     
                     
                     if(!empty($locality))
                     {
