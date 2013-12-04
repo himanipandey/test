@@ -86,7 +86,7 @@
                 
                 <tr>
 				    <td width="20%" align="right" >Locality : </td>
-                    <td width="20%" align="right" >Project : </td>
+                    <td width="20%" align="center" >Project : </td>
                     <td width="20%" align="right" >Agent : </td> 
 				</tr>
                 <tr>
@@ -102,7 +102,7 @@
                             {/if}
                         </select>
                     </td>
-                    <td width="30%" align="right" >
+                    <td width="30%" align="center" >
                         <select multiple="" name="project[]" id="project">
                             <option>---Select Project---</option>
                             {if $project != ''}
