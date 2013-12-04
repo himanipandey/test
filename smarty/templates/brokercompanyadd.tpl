@@ -37,7 +37,7 @@
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 		      
-			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
+			  <TABLE cellSpacing=2 cellPadding=4 width="1000px" align=center border=0>
 			    <form method="post" id="frm1" enctype="multipart/form-data" action="brokercompanyadd.php">
 			      <div>
                       {if $ErrorMsg["dataInsertionError"] != ''}
