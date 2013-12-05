@@ -96,7 +96,7 @@
                             {if $locality != ''}
                                 {foreach from = $locality key = k item = val}
                                     <option value="{$val->locality_id}" {if in_array($val->locality_id , $locIdArr)} selected="" {/if}>
-                                        {$val->label}
+                                        {if strlen($val->label) > 30} {$val->label|substr:0:30|cat:"..."} {else} {$val->label} {/if}
                                     </option>
                                 {/foreach} 
                             {/if}
@@ -107,7 +107,7 @@
                             <option>---Select Project---</option>
                             {if $project != ''}
                                 {foreach from = $project key = k item = val}
-                                    <option value="{$val->id}" {if in_array($val->id , $projectIdArr)} selected="" {/if}>{$val->label}</option>
+                                    <option value="{$val->id}" {if in_array($val->id , $projectIdArr)} selected="" {/if}>{if strlen($val->label) > 30} {$val->label|substr:0:30|cat:"..."} {else} {$val->label} {/if}</option>
                                 {/foreach} 
                             {/if}
                         </select>
@@ -117,7 +117,7 @@
                             <option>---Select Agent---</option>
                             {if $seller_company != ''}
                                 {foreach from = $seller_company key = k item = val}
-                                    <option value="{$val->agent_id}" {if in_array($val->agent_id , $agentIdArr)} selected="" {/if}>{$val->agent_name}</option>
+                                    <option value="{$val->agent_id}" {if in_array($val->agent_id , $agentIdArr)} selected="" {/if}>{if strlen($val->agent_name) > 30} {$val->agent_name|substr:0:30|cat:"..."} {else} {$val->agent_name} {/if}</option>
                                 {/foreach} 
                             {/if}
                         </select>
