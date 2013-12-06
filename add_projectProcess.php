@@ -294,10 +294,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 				$ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Pre-Launch Date!';
 			}elseif($eff_date_to !='' && $eff_date_to != '0000-00-00' && date($eff_date_to) > date($exp_launch_date)){
 				$ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Launch Date!';
-			}elseif($eff_date_to_prom !='' && $eff_date_to_prom != '0000-00-00' && date($eff_date_to_prom) > date($exp_launch_date)){
-				$ErrorMsg['supplyDate'] = 'Expected supply date should be greater than  Promised Completion Date!';
 			}elseif( $retdt <= 0 ) {
-                $ErrorMsg['supplyDate'] = 'Expected supply date should be future date!';
+                $ErrorMsg['supplyDate'] = 'Expected supply date should be greater than current month!';
             }
         }
         /**code for new launch and completion date diff and if In case PROJECT_STATUS = Pre Launch then Pre_launch_date cannot be empty In case PROJECT_STATUS = Occupied or Ready For Possession then  ****/  
@@ -338,21 +336,23 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
         if( $preLaunchDt != '' && $promisedDt !='' ) {
             $retdt  = ((strtotime($promisedDt) - strtotime($preLaunchDt)) / (60*60*24));
             if( $retdt <= 0 ) {
-                $ErrorMsg['completionDateGreater'] = "Completion date to be always greater than Pre Launch date";
+                $ErrorMsg['CompletionDateGreater'] = "Completion date to be always greater than Pre Launch date";
             }
        }
-
-       if( $Status == 'Pre Launch' && $preLaunchDt == '' ) {
+     
+       if( $Status == PRE_LAUNCHED_ID_8 && $preLaunchDt == '' ) {
            $ErrorMsg['preLaunchDate'] = "Pre Launch date cant empty";
        }
-
-       if( $Status == 'Pre Launch' && $launchDt != '' ) {
+      
+       if( $Status == PRE_LAUNCHED_ID_8 && $launchDt != '' ) {
            $ErrorMsg['launchDate'] = "Launch date should be blank/zero";
        }
 
-       if( $Status == 'Occupied' || $Status == 'Ready for Possession' ) {
+       if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && $promisedDt == '' || $promisedDt == '0000-00-00' ) {
+           $ErrorMsg['CompletionDateGreater'] = "Completion date is mandatory!";
+       }
+       if( $Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4 ) {
            $yearExp = explode("-",$promisedDt);
-
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
                  $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
@@ -362,8 +362,10 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
            }
        }
-
-       if( $Status == 'Under Construction' ) {
+       if( $Status == UNDER_CONSTRUCTION_ID_1 && ($launchDt == '' || $launchDt == '0000-00-00') ) {
+           $ErrorMsg['launchDate'] = "Launch date is mandatory!";
+       }
+       if( $Status == UNDER_CONSTRUCTION_ID_1 ) {
            $yearExp = explode("-",$launchDt);
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
@@ -374,6 +376,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
            }
        }
+     //  echo $ErrorMsg['launchDate'];
+  //echo $Status ."==". OCCUPIED_ID_3 ." or ". READY_FOR_POSSESSION_ID_4."==>$launchDt";die;
        if($township == '')
            $township = null;
        if($powerBackup == '')
