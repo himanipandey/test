@@ -232,23 +232,16 @@
             
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
-                //$newImagePath = $_SERVER['DOCUMENT_ROOT'];
+                $newImagePath = $_SERVER['DOCUMENT_ROOT'];
                 
                 $imgdestpath = $newImagePath."/images/images_new/";
-                echo $newImagePath;
                 
                 if(!is_dir("images_new"))
                 {
-                    mkdir("/home/sysadmin/public_html/images_new" , 0777) or die("Can't");
-                    chmod("/home/sysadmin/public_html/images_new" , 0777);
-                    echo "he111e";
-                    die;
+                    mkdir($newImagePath."/images/images_new/");
+                    chmod($newImagePath."/images/images_new/" , 0777);
                 }
-                else
-                {
-                    echo "hee";
-                    die;
-                }
+
                 list($imgname , $extension) = explode("." , $logo['name']);
                 $newimgName = $imgdestpath.time(). '.' .$extension; 
                 
