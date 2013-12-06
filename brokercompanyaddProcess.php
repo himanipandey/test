@@ -244,7 +244,7 @@
                 list($imgname , $extension) = explode("." , $logo['name']);
                 $newimgName = $imgdestpath.time(). '.' .$extension; 
                 echo $logo["tmp_name"]. " " .$imgdestpath.time(). '.' .$extension."<br>";
-                $flag = move_uploaded_file($logo["tmp_name"], $imgdestpath.time(). '.' .$extension);
+                $flag = copy($logo["tmp_name"], $imgdestpath.time(). '.' .$extension);
                 
                 if(!$flag)
                 {
