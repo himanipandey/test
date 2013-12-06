@@ -134,7 +134,9 @@
 
 							//unlink($oldpath);
 
-							$txtlocationplan 	= move_uploaded_file($_FILES["img"]["tmp_name"][$key], $img_path);
+							$txtlocationplan 	= move_uploaded_file($_FILES["img"]["tmp_name"][$key], $img_path) or die("Can't");
+                            echo $img_path;
+                            die;
                             $s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath, "", $img_path));
                             $s3upload->upload();
 							if(!$txtlocationplan)
