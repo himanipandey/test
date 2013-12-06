@@ -49,8 +49,7 @@
 				
 				foreach($_REQUEST['chk_name'] as $k=>$v)
 				{
-	               echo "jhetre";
-                   die;
+	               
 					if($v != '')
 					{
 
@@ -124,7 +123,10 @@
 							{	
 								mkdir($proDir, 0777);
 							}
-
+                        echo "jhetre";
+                       print'<pre>';
+                       print_r($arrValue);
+                       die;
 						foreach($arrValue as $key=>$val)
 						{
 							
