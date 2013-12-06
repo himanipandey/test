@@ -49,7 +49,8 @@
 				
 				foreach($_REQUEST['chk_name'] as $k=>$v)
 				{
-	
+	               echo "jhetre";
+                   die;
 					if($v != '')
 					{
 
