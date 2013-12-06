@@ -10,6 +10,9 @@ include("appWideConfig.php");
 include("dbConfig.php");
 include("modelsConfig.php");
 include("includes/configs/configs.php");
+include("s3upload/s3_config.php");
+include("SimpleImage.php");
+	
 AdminAuthentication();
 $cityArr = City::CityArr();
 $cityLocArr = CityLocationRel::CityLocArr();

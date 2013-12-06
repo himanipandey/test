@@ -46,6 +46,9 @@ class S3Upload {
     }
 
     function validate_s3(){
+            print'<pre>';
+            print_r($this->s3);
+            die;
             $class = get_class($this->s3);
             if($class != self::$default_s3_class){
                 $this->add_errors("Not a valid s3 object");

@@ -47,6 +47,7 @@
         $email          =	trim($_POST['email']);
         $fax            =	trim($_POST['fax']);
         $active_since   =	trim($_POST['active_since']);
+        $logo           =   $_FILES['logo']; 
         
         $primary_address_id = trim($_POST['primary_address_id']);
         $fax_number_id = trim($_POST['fax_number_id']);
@@ -205,7 +206,7 @@
         else if (empty($brokerCompanyId)){	
             
             ResiProject::transaction(function(){
-                global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids;
+                global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids,$logo;
             //print'<pre>';
 //            print_r($_POST);
 //            die;
@@ -215,21 +216,52 @@
                 $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];    
             }
             
-            $sql_broker_company = @mysql_query("INSERT INTO `brokers` SET 
-                                            `broker_name` = '".$brokerCName."',
-                                            `status` = '".$status."',
-                                            `description` = '".$description."',
-                                            `pan` = '".$pan."',
-                                            `primary_email` = '".$email."',
-                                            `active_since` = '".$active_since."',
-                                            `created_at` = '".date('Y-m-d H:i:s')."',
-                                            `updated_by` = '".$_SESSION['adminId']."'
-                                    ")or die(mysql_error());            
+            //$sql_broker_company = @mysql_query("INSERT INTO `brokers` SET 
+//                                            `broker_name` = '".$brokerCName."',
+//                                            `status` = '".$status."',
+//                                            `description` = '".$description."',
+//                                            `pan` = '".$pan."',
+//                                            `primary_email` = '".$email."',
+//                                            `active_since` = '".$active_since."',
+//                                            `created_at` = '".date('Y-m-d H:i:s')."',
+//                                            `updated_by` = '".$_SESSION['adminId']."'
+//                                    ")or die(mysql_error());            
             
-            $broker_id = @mysql_insert_id();
-            //$broker_id = 4;
+            //$broker_id = @mysql_insert_id();
+            $broker_id = 4;
+            
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
+                $newImagePath = $_SERVER['DOCUMENT_ROOT'];
+                
+                $imgdestpath = $newImagePath."/images/images_new/";
+                
+                if(!is_dir("images_new"))
+                {
+                    mkdir($newImagePath."/images/images_new/");
+                    chmod($newImagePath."/images/images_new/" , 0777);
+                }
+                list($imgname , $extension) = explode("." , $logo['name']);
+                $newimgName = $imgdestpath.time(). '.' .$extension; 
+                
+                $flag = move_uploaded_file($logo["tmp_name"], $imgdestpath.time(). '.' .$extension);
+                
+                if(!$flag)
+                {
+                    echo "error<br>";
+                    die;
+                }
+                    
+                $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                                            "image_path" => str_replace($newImagePath, "", $newimgName),
+                                            "object" => "broker_company", "object_id" => $broker_id,
+                                            "image_type" => "logo"));
+                $response = $s3upload->upload();
+                $image_id = $response["service"]->data();
+                $image_id = $image_id->id;
+                print'<pre>';
+                print_r($response);
+                die;
                 $brokerIdFormapping = $broker_id;
                 
                 /** -- Primary Address Entry Start -- */
