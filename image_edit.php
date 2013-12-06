@@ -8,7 +8,7 @@
     include("s3upload/s3_config.php");
 	include("SimpleImage.php");
 	include("watermark_image.class.php");
-
+    echo $newImagePath;
 	AdminAuthentication();
 	include('image_editProcess.php');
 	//$smarty->display(SERVER_PATH."/smarty/templates/admin/crawler/header.tpl");
