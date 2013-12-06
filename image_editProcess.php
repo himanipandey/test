@@ -123,10 +123,7 @@
 							{	
 								mkdir($proDir, 0777);
 							}
-                        echo "jhetre";
-                       print'<pre>';
-                       print_r($arrValue);
-                       die;
+                        
 						foreach($arrValue as $key=>$val)
 						{
 							
@@ -142,11 +139,15 @@
                             $s3upload->upload();
 							if(!$txtlocationplan)
 							{
+							     echo "here";
+                                 die;
 								$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
 								break;
 							}
 							else
 							{
+							 echo "he1111re";
+                                 die;
 							$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 							$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$val;
 							
