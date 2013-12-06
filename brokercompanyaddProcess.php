@@ -233,14 +233,20 @@
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
                 $newImagePath = $_SERVER['DOCUMENT_ROOT'];
-                echo $newImagePath;
-                die;
+                
                 $imgdestpath = $newImagePath."/images/images_new/";
                 
                 if(!is_dir("images_new"))
                 {
                     mkdir($newImagePath."/images/images_new/");
                     chmod($newImagePath."/images/images_new/" , 0777);
+                    echo "he111e";
+                    die;
+                }
+                else
+                {
+                    echo "hee";
+                    die;
                 }
                 list($imgname , $extension) = explode("." , $logo['name']);
                 $newimgName = $imgdestpath.time(). '.' .$extension; 
