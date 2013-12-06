@@ -232,9 +232,8 @@
             
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
-                $newImagePath = $_SERVER['DOCUMENT_ROOT'];
                 
-                $imgdestpath = $newImagePath."/images/images_new/";
+                $imgdestpath = $newImagePath;
                 
                 if(!is_dir("images_new"))
                 {
