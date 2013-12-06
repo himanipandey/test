@@ -232,11 +232,11 @@
             
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
-                $newImagePath = $_SERVER['DOCUMENT_ROOT'];
+                //$newImagePath = $_SERVER['DOCUMENT_ROOT'];
                 
                 $imgdestpath = $newImagePath."/images/images_new/";
                 echo $newImagePath;
-                die;
+                
                 if(!is_dir("images_new"))
                 {
                     mkdir("/home/sysadmin/public_html/images_new" , 0777) or die("Can't");
