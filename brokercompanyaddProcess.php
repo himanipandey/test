@@ -243,8 +243,8 @@
 
                 list($imgname , $extension) = explode("." , $logo['name']);
                 $newimgName = $imgdestpath.time(). '.' .$extension; 
-                echo dirname(__FILE__)."<br>";
-                $flag = move_uploaded_file($logo["tmp_name"], dirname(__FILE__) ."/images/".time(). '.' .$extension);
+                
+                $flag = move_uploaded_file($logo["tmp_name"], "/home/sysadmin/brokercms/".time(). '.' .$extension);
                 
                 if(!$flag)
                 {
