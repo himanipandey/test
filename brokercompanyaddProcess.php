@@ -233,7 +233,7 @@
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
                 
-                $imgdestpath = $newImagePath;
+                $imgdestpath = "/home/sysadmin/public_html/images_new/";
                 
                 if(!is_dir("images_new"))
                 {
