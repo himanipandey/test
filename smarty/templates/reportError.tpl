@@ -1,0 +1,211 @@
+<style type="text/css">
+.button {
+    border: 1px solid #C2C2C2;
+    background: #F2F2F2;
+}
+
+.fwb {
+	font-weight: bold;
+}
+</style>
+</TD>
+  </TR>
+  <TR>
+    <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
+        <TR>
+          <TD width=224 height=25>&nbsp;</TD>
+          <TD width=10>&nbsp;</TD>
+          <TD width=866>&nbsp;</TD>
+	</TR>
+        <TR>
+          <TD class=paddingltrt10 vAlign=top align=middle bgColor=#ffffff>
+	   		{include file="{$PROJECT_ADD_TEMPLATE_PATH}left.tpl"}
+	  </TD>
+          <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
+          <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
+            <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
+              <TR>
+                <TD class=h1 align=left background=../images/heading_bg.gif bgColor=#ffffff height=40>
+                  <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
+                    <TR>
+                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Error List</TD>
+                      <TD align=right colSpan=3>
+                          </TD>
+                    </TR>
+		  </TBODY></TABLE>
+		</TD>
+	      </TR>
+              <TR>
+                <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                    <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
+                    <form name="form1" method="post" action="">
+                    <TBODY>
+                        <TR class = "headingrowcolor" height="25">
+                              <TD class=whiteTxt width=5% align="center"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
+                              <TD class=whiteTxt width=5% align="center">S.NO.</TD>
+                              <TD class=whiteTxt width=15% align="left">Error Type : Error Desc</TD>
+                              <TD class=whiteTxt width=25% align="left">Project Name</TD>
+                              <TD class=whiteTxt width=25% align="left">Property ID</TD>
+                              <TD class=whiteTxt width=15% align='left'>Date Reported</TD>
+                              <TD class=whiteTxt width=15% align='left'>Status</TD>
+                              <TD class=whiteTxt width=15% align='left'>Comment Box</TD>
+                              <TD class=whiteTxt width=15% align='left'>Action</TD>
+                              <!--TD class=whiteTxt width=12% align="center">History Link</TD>
+                              <TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
+                              <TD class=whiteTxt width=12% align="center">History</TD-->
+                        </TR>
+                        <TR><TD colspan=12 class=td-border></TD></TR>
+                        <TR>
+                            <TD colspan="12" class="td-border" height="12">
+                               <div style="float:right"><input type="button" name="subbtn_top" id="subbtn_top" value="Update Error Status" /></div>
+                            </TD>
+                         </TR>
+                        {$count = 0}
+                        {section name=data loop=$errorDataArr}
+                            {$count = $count+1}
+                            {if $count%2 == 0}
+                                    {$color = "bgcolor = '#FCFCFC'"} 
+                            {else}
+                                    {$color = "bgcolor = '#F7F7F7'"}
+                            {/if}	
+                            <TR {$color}>
+                                <TD align=center class=td-border>
+                                    <input type="checkbox" id="selectinvert{$errorDataArr[data].ID}" name="selectinvert" value="{$errorDataArr[data].ID}" />
+                                <TD align=center class=td-border>{$count}</TD>
+                                <TD align=left class=td-border>{$error_type[$errorDataArr[data].ERROR_TYPE]} : {$errorDataArr[data].DETAILS}</TD>
+                                <TD align=left class=td-border>{$errorDataArr[data].PROJECT_NAME}</TD>
+                                <TD align=left class=td-border>{$errorDataArr[data].UNIT_NAME} - {$errorDataArr[data].UNIT_TYPE}</TD>
+                                <TD align=left class=td-border>{$errorDataArr[data].DATE|date_format}</TD>
+                                <TD align=left class=td-border>
+                                    <select name="status_{$errorDataArr[data].ID}" id="status_{$errorDataArr[data].ID}">
+                                        <option value="0">No action taken</option>
+                                        <option value="1">No issue Found</option>
+                                        <option value="2">Issue found / being resolved</option>
+                                        <option value="3">Error Corrected</option>
+                                    </select>
+                                </TD>
+                                <TD align=left class=td-border>
+                                    Comments&nbsp;<textarea id="comments_{$errorDataArr[data].ID}" name="comments_{$errorDataArr[data].ID}" placeholder="put your comments" rows="3" cols="20"></textarea>
+                                </TD>
+                                <TD align=left class=td-border>&nbsp;</TD>
+                                <TD align=left class=td-border>&nbsp;</TD>
+                                <!--TD align=left class=td-border>&nbsp;</TD-->
+                            </TR>
+                        {/section}
+                        {if count($errorDataArr)<=0}
+                            <TR><TD colspan="11" class="td-border" align="left">Sorry, no records found.</TD></TR>
+                        {/if}
+                         
+                        <TR><TD colspan="11" class="td-border" align="right">&nbsp;</TD></TR>
+                     
+                      </TBODY>
+                    </FORM>
+                    </TABLE>
+                
+	      </TD>
+            </TR>
+          </TBODY></TABLE>
+        </TD>
+      </TR>
+    </TBODY></TABLE>
+  </TD>
+</TR>
+<TR>
+ 
+</TR>
+
+
+<script type="text/javascript">
+var checkflag = "false";
+function checkedAll(field) {
+    if (checkflag == "false") {
+      for (i = 0; i < field.length; i++) {
+        field[i].checked = true;
+      }
+      checkflag = "true";
+    } else {
+      for (i = 0; i < field.length; i++) {
+        field[i].checked = false;
+      }
+      checkflag = "false";
+    }
+}
+
+function countChecked() {
+     var n = jQuery("input[type=checkbox]:checked").length;
+     if(n==0){
+         jQuery("#confirmMsg").html('<font size="2" face="verdana" color="red">Please Select Atleast One Checkbox</font>');
+         return false;
+     }else
+     {
+         jQuery("#confirmMsg").html('');
+         return true;
+     }
+}
+   
+jQuery(document).ready(function(){
+    jQuery('input[id^="subbtn_"]').bind('click',function(){
+        var i=0;
+        var val = []; 
+        var idArr= [];
+        var data = [];
+        var current_status_val= [];
+        var x = countChecked();
+        if(x==false)
+        {
+         return false;
+        }
+        var cnt = 0;
+        jQuery(':checkbox:checked').each(function(i){
+            var nameOfRadio = ('approve_'+jQuery(this).val());
+            if(jQuery("#comments_"+jQuery(this).val()).val()=='Enter your Comment here'){
+                jQuery("#comments_"+jQuery(this).val()).focus();
+                jQuery("#comments_"+jQuery(this).val()).addClass('borderRed');
+                cnt = cnt + 1;
+                alert('Please enter your comment.');
+                return false;
+             }else{
+                jQuery("#comments_"+jQuery(this).val()).removeClass('borderRed').addClass('borderBlack');
+             }
+            val[i] = jQuery(this).val()+'_'+jQuery("textarea#comments_"+jQuery(this).val()).val()+'@'+jQuery("input[name="+nameOfRadio+"]:checked").val();
+            current_status_val[i] = $('#status_'+jQuery(this).val()).val();
+            idArr[i]=jQuery(this).val();
+        });
+        /*if(cnt==0){
+             var type_of_order = $('input[name=order_type]:radio:checked').val();
+             //alert("completeData="+val+'&type_of_order='+type_of_order+'&order_current_status='+current_status_val);
+             jQuery.ajax({
+                type: "POST",
+                url: "ajax/updateOrderStatus.php",
+                data: "completeData="+val+'&type_of_order='+type_of_order+'&order_current_status='+current_status_val,
+                 beforeSend: function() {
+                      setTimeout( function() {
+                          jQuery('#confirmMsg').hide();
+                      }, 3000 );
+                      jQuery("#messageUpdate").html('<img src = "images/bar-circle.gif" width="20px" height="20px;">');
+                  },
+
+                 success: function(response){
+                      if(response.search('cancel')!=-1){ 
+                          jQuery("#messageUpdate").html('<font size="2" face="verdana" color="green">Order Status Updated Sucessfully</font>');
+                      }
+                      else if(response.search('approve')!=-1 || (response.search('updated')!=-1 && response.search('cancel')==-1)){ 
+                          for (i=0;i<idArr.length;i++)
+                          {
+                              jQuery("#row_"+idArr[i]).remove();
+                          }
+                          jQuery("#messageUpdate").html('<font size="2" face="verdana" color="green">Order Status Updated Sucessfully</font>');
+                          var n = totchekbox();			
+                          if(n==0 || n==1)
+                          {
+                              jQuery("#searchResultValues").remove();
+                          }
+                      }
+                 }
+             });
+          }
+          */
+    });
+});
+</script>
