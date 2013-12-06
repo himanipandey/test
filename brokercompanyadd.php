@@ -13,7 +13,7 @@ include("modelsConfig.php");
 include("s3upload/s3_config.php");
 include("SimpleImage.php");
 	
-AdminAuthentication();
+AdminAuthentication(); 
 $cityArr = City::CityArr();
 $cityLocArr = CityLocationRel::CityLocArr(); 
 $smarty->assign("cityArr", $cityArr);
