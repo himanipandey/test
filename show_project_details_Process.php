@@ -31,21 +31,23 @@ $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (
 $uptionDetailWithPrice = array();
 
 foreach($optionsDetails as $key => $value) {
-	
 	$listing_price = ListingPrices::find('all',array('conditions'=>
-    array('listing_id = ?', $value->id), "limit" => 1, "order" => "effective_date desc",'select' => 
+    array('listing_id = ?', $value->id), "limit" => 1, "order" => "effective_date desc",'select' =>
                     'effective_date'));
-    
+
     $efective_date= explode(' ',$listing_price[0]->effective_date);
-    
+
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
-    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = $efective_date[0];
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] =date("Y-m-d",strtotime( $listing_price[0]->effective_date));
+
+
    
 }
+
 
 $PhaseOptionHash = $ProjectPhases[1];
 $ProjectPhases = $ProjectPhases[0];
