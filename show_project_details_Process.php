@@ -36,12 +36,8 @@ foreach($optionsDetails as $key => $value) {
     array('listing_id = ?', $value->id), "limit" => 1, "order" => "effective_date desc",'select' => 
                     'effective_date'));
     
-    print "<pre>".print_r($listing_price[0]->effective_date,1)."</pre>";
-     
     $efective_date= explode(' ',$listing_price[0]->effective_date);
     
-    
-              	
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
