@@ -235,11 +235,12 @@
                 $newImagePath = $_SERVER['DOCUMENT_ROOT'];
                 
                 $imgdestpath = $newImagePath."/images/images_new/";
-                
+                echo $newImagePath;
+                die;
                 if(!is_dir("images_new"))
                 {
-                    mkdir("/home/sysadmin/public_html/images_new/" , 0777) or die("Can't");
-                    chmod("/home/sysadmin/public_html/images_new/" , 0777);
+                    mkdir("/home/sysadmin/public_html/images_new" , 0777) or die("Can't");
+                    chmod("/home/sysadmin/public_html/images_new" , 0777);
                     echo "he111e";
                     die;
                 }
