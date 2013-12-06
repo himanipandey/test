@@ -126,7 +126,7 @@
                         
 						foreach($arrValue as $key=>$val)
 						{
-							$img_path       =   $newImagePath."/".$val;
+							$img_path       =   $newImagePath.$val;
 							//$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 							$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
 							$oldpath		=	$_REQUEST['property_image_path'][$key];
