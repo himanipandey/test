@@ -239,7 +239,7 @@
                 if(!is_dir("images_new"))
                 {
                     echo $newImagePath."/images/images_new/<br>";
-                    mkdir($newImagePath."/images/images_new/") or die("Can't");
+                    mkdir($newImagePath."/images/images_new/" , 0777) or die("Can't");
                     chmod($newImagePath."/images/images_new/" , 0777);
                     echo "he111e";
                     die;
