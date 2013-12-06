@@ -15,7 +15,7 @@ include("SimpleImage.php");
 	
 AdminAuthentication();
 $cityArr = City::CityArr();
-$cityLocArr = CityLocationRel::CityLocArr();
+$cityLocArr = CityLocationRel::CityLocArr(); 
 $smarty->assign("cityArr", $cityArr);
 $smarty->assign("cityLocArr", $cityLocArr);
 $smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'');
