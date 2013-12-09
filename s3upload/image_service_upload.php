@@ -2,7 +2,9 @@
 
 class ImageServiceUpload{
 
-    static $image_upload_url = "http://nightly.proptiger-ws.com:8080/data/v1/entity/image";
+    //static $image_upload_url = "http://nightly.proptiger-ws.com:8080/data/v1/entity/image";
+    static $image_upload_url = "http://nightly-build.proptiger-ws.com/";
+    
     static $valid_request_methods = array("POST", "PUT", "DELETE");
     static $object_types = array("project" => "project",
         "option" => "property",
