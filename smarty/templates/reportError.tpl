@@ -11,6 +11,8 @@
 .borderBlack{ border:1px solid #677788;
 }
 </style>
+<script type="text/javascript" src="/fancybox/fancybox/jquery.fancybox-1.3.4.js"></script>
+<link rel="stylesheet" type="text/css" href="/fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 </TD>
   </TR>
   <TR>
@@ -42,7 +44,7 @@
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
                     
-                    <div id="messageUpdate">asdfasdfsa</div>
+                    <div id="messageUpdate"></div>
                     <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
                     <form name="form1" method="post" action="">
                     <TBODY>
@@ -55,9 +57,8 @@
                               <TD class=whiteTxt width=15% align='left'>Date Reported</TD>
                               <TD class=whiteTxt width=15% align='left'>Status</TD>
                               <TD class=whiteTxt width=15% align='left'>Comment Box</TD>
-                              <TD class=whiteTxt width=15% align='left'>Action</TD>
-                              <!--TD class=whiteTxt width=12% align="center">History Link</TD>
-                              <TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
+                              <TD class=whiteTxt width=12% align="center">History Link</TD>
+                              <!--<TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
                               <TD class=whiteTxt width=12% align="center">History</TD-->
                         </TR>
                         <TR><TD colspan=12 class=td-border></TD></TR>
@@ -94,9 +95,7 @@
                                 <TD align=left class=td-border>
                                     Comments&nbsp;<textarea id="comments_{$errorDataArr[data].ID}" name="comments_{$errorDataArr[data].ID}" placeholder="Enter your Comments here" rows="3" cols="20"></textarea>
                                 </TD>
-                                <TD align=left class=td-border>&nbsp;</TD>
-                                <TD align=left class=td-border>&nbsp;</TD>
-                                <!--TD align=left class=td-border>&nbsp;</TD-->
+                                <TD align=left class=td-border><a href="javascript:void(0);" id="history" onclick=openHistBox({$errorDataArr[data].ID})>See History</a></TD>
                             </TR>
                         {/section}
                         {if count($errorDataArr)<=0}
@@ -200,4 +199,12 @@ jQuery(document).ready(function(){
           }          
     });
 });
+
+function openHistBox(errid)
+{
+    $.fancybox({
+        'href': '/errorHistory.php?errid='+errid,
+        'type': 'iframe'
+    })
+}
 </script>
