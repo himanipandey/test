@@ -246,13 +246,14 @@
                     
                 $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $newimgName),
-                                            "object" => "broker_company", "object_id" => $broker_id,
-                                            "image_type" => "logo"));
+                                            "object_type" => "broker_company", "object" => "broker_company", 
+                                            "object_id" => $broker_id, "image_type" => "logo"));
+                //http://nightly-build.proptiger-ws.com/?object=broker_company&objectId=4&imageType=logo
                 $response = $s3upload->upload();
                 $image_id = $response["service"]->data();
                 $image_id = $image_id->id;
                 print'<pre>';
-                print_r($response);
+                print_r($image_id);
                 die;
                 $brokerIdFormapping = $broker_id;
                 
