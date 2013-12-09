@@ -3,9 +3,12 @@
     border: 1px solid #C2C2C2;
     background: #F2F2F2;
 }
-
 .fwb {
 	font-weight: bold;
+}
+.borderRed{ border:1px solid red;
+}
+.borderBlack{ border:1px solid #677788;
 }
 </style>
 </TD>
@@ -38,6 +41,8 @@
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                    
+                    <div id="messageUpdate">asdfasdfsa</div>
                     <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
                     <form name="form1" method="post" action="">
                     <TBODY>
@@ -72,6 +77,7 @@
                             <TR {$color}>
                                 <TD align=center class=td-border>
                                     <input type="checkbox" id="selectinvert{$errorDataArr[data].ID}" name="selectinvert" value="{$errorDataArr[data].ID}" />
+                                </TD>
                                 <TD align=center class=td-border>{$count}</TD>
                                 <TD align=left class=td-border>{$error_type[$errorDataArr[data].ERROR_TYPE]} : {$errorDataArr[data].DETAILS}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].PROJECT_NAME}</TD>
@@ -86,7 +92,7 @@
                                     </select>
                                 </TD>
                                 <TD align=left class=td-border>
-                                    Comments&nbsp;<textarea id="comments_{$errorDataArr[data].ID}" name="comments_{$errorDataArr[data].ID}" placeholder="put your comments" rows="3" cols="20"></textarea>
+                                    Comments&nbsp;<textarea id="comments_{$errorDataArr[data].ID}" name="comments_{$errorDataArr[data].ID}" placeholder="Enter your Comments here" rows="3" cols="20"></textarea>
                                 </TD>
                                 <TD align=left class=td-border>&nbsp;</TD>
                                 <TD align=left class=td-border>&nbsp;</TD>
@@ -114,7 +120,6 @@
 <TR>
  
 </TR>
-
 
 <script type="text/javascript">
 var checkflag = "false";
@@ -158,27 +163,24 @@ jQuery(document).ready(function(){
         }
         var cnt = 0;
         jQuery(':checkbox:checked').each(function(i){
-            var nameOfRadio = ('approve_'+jQuery(this).val());
-            if(jQuery("#comments_"+jQuery(this).val()).val()=='Enter your Comment here'){
+            if(jQuery("#comments_"+jQuery(this).val()).val()===''){
                 jQuery("#comments_"+jQuery(this).val()).focus();
                 jQuery("#comments_"+jQuery(this).val()).addClass('borderRed');
                 cnt = cnt + 1;
                 alert('Please enter your comment.');
                 return false;
-             }else{
-                jQuery("#comments_"+jQuery(this).val()).removeClass('borderRed').addClass('borderBlack');
-             }
-            val[i] = jQuery(this).val()+'_'+jQuery("textarea#comments_"+jQuery(this).val()).val()+'@'+jQuery("input[name="+nameOfRadio+"]:checked").val();
+            }else{
+               jQuery("#comments_"+jQuery(this).val()).removeClass('borderRed').addClass('borderBlack');
+            }
             current_status_val[i] = $('#status_'+jQuery(this).val()).val();
+            val[i] = jQuery(this).val()+'_'+jQuery("textarea#comments_"+jQuery(this).val()).val();
             idArr[i]=jQuery(this).val();
         });
-        /*if(cnt==0){
-             var type_of_order = $('input[name=order_type]:radio:checked').val();
-             //alert("completeData="+val+'&type_of_order='+type_of_order+'&order_current_status='+current_status_val);
+        if(cnt==0){
              jQuery.ajax({
                 type: "POST",
-                url: "ajax/updateOrderStatus.php",
-                data: "completeData="+val+'&type_of_order='+type_of_order+'&order_current_status='+current_status_val,
+                url: "ajax/updateErrorStatus.php",
+                data: "completeData="+val+'&current_status_val='+current_status_val+'&adminid='+{$smarty.session.adminId},
                  beforeSend: function() {
                       setTimeout( function() {
                           jQuery('#confirmMsg').hide();
@@ -186,26 +188,16 @@ jQuery(document).ready(function(){
                       jQuery("#messageUpdate").html('<img src = "images/bar-circle.gif" width="20px" height="20px;">');
                   },
 
-                 success: function(response){
-                      if(response.search('cancel')!=-1){ 
-                          jQuery("#messageUpdate").html('<font size="2" face="verdana" color="green">Order Status Updated Sucessfully</font>');
-                      }
-                      else if(response.search('approve')!=-1 || (response.search('updated')!=-1 && response.search('cancel')==-1)){ 
-                          for (i=0;i<idArr.length;i++)
-                          {
-                              jQuery("#row_"+idArr[i]).remove();
-                          }
-                          jQuery("#messageUpdate").html('<font size="2" face="verdana" color="green">Order Status Updated Sucessfully</font>');
-                          var n = totchekbox();			
-                          if(n==0 || n==1)
-                          {
-                              jQuery("#searchResultValues").remove();
-                          }
-                      }
+                 success: function(response){ 
+                     alert(response);
+                     if(response == 'Success'){
+                        jQuery("#messageUpdate").html('<font size="2" face="verdana" color="green">Error Status Updated Sucessfully</font>');
+                     }else{
+                        jQuery("#messageUpdate").html('<font size="2" face="verdana" color="red">Error in updation</font>');
+                     }
                  }
              });
-          }
-          */
+          }          
     });
 });
 </script>
