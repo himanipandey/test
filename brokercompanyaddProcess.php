@@ -206,7 +206,7 @@
         else if (empty($brokerCompanyId)){	
             
             ResiProject::transaction(function(){
-                global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids,$logo;
+                global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids,$logo,$newImagePath;
             //print'<pre>';
 //            print_r($_POST);
 //            die;
@@ -233,18 +233,10 @@
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
                 
-                $imgdestpath = "/home/sysadmin/public_html/images_new/";
-                
-                if(!is_dir("images_new"))
-                {
-                    mkdir($newImagePath."/images/images_new/");
-                    chmod($newImagePath."/images/images_new/" , 0777);
-                }
-
                 list($imgname , $extension) = explode("." , $logo['name']);
-                $newimgName = $imgdestpath.time(). '.' .$extension; 
+                $newimgName = $newImagePath.time(). '.' .$extension; 
                 
-                $flag = move_uploaded_file($logo["tmp_name"], "/home/sysadmin/brokercms/".time(). '.' .$extension);
+                $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
                 
                 if(!$flag)
                 {
