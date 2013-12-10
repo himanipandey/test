@@ -192,7 +192,9 @@
 									                                <select name="suburbId" class="suburbId" style="width:230px;" readonly>
                                                                             <option value="">Select Suburb</option>
                                                                             {foreach from=$suburbSelect key=k item=v}
-                                                                                    <option {if $suburbId == $k} selected {/if} value = "{$k}">{$v}</option>
+																				{if $suburbId == $k}
+                                                                                    <option  selected  value = "{$k}">{$v}</option>
+                                                                                 {/if}
                                                                             {/foreach}
 
                                                                         </select> 

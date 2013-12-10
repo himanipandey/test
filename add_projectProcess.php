@@ -109,8 +109,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                else
                   $suburbId  = '';
                
-                  $getLocalityBySuburb =  Locality::localityList($suburbId);
-                  $smarty->assign("getLocalityBySuburb", $getLocalityBySuburb);
+               $localitySelect =  Locality::getLocalityByCity($_POST['cityId']);
+				foreach ($localitySelect  as $value) {
+					  $getLocalityBySuburb[$value->locality_id] = $value->label;
+				}
+                $smarty->assign("getLocalityBySuburb", $getLocalityBySuburb);
             }
             /***************end Query for Locality selected************/
             $smarty->assign("txtProjectName", $txtProjectName);
@@ -560,12 +563,19 @@ elseif ($projectId!='') {
     $smarty->assign("localityId", $ProjectDetail->locality_id);
     $localityDetail = Locality::getLocalityById($ProjectDetail->locality_id); 
     $suburbDetail = Suburb::getSuburbById($localityDetail[0]->suburb_id);
+    
     $suburbSelect =  Suburb::SuburbArr($suburbDetail[0]->city_id);
     $smarty->assign("suburbSelect", $suburbSelect);
+    
     $smarty->assign("suburbId", $localityDetail[0]->suburb_id);
     $smarty->assign("cityId", $suburbDetail[0]->city_id);
-    $localitySelect =  Locality::localityList($localityDetail[0]->suburb_id);
-    $smarty->assign("getLocalityBySuburb", $localitySelect);
+    
+    $localitySelect =  Locality::getLocalityByCity($suburbDetail[0]->city_id);
+    foreach ($localitySelect  as $value) {
+          $getLocalityBySuburb[$value->locality_id] = $value->label;
+    }
+    $smarty->assign("getLocalityBySuburb", $getLocalityBySuburb);
+   
    /****end city locality and suburb**********/
     
     /**start code for fetch offer heading and desc from db**/
