@@ -234,6 +234,7 @@
             if($broker_id != false) {
                 
                 list($imgname , $extension) = explode("." , $logo['name']);
+                echo $logo['name']."<br>";
                 $newimgName = $newImagePath.time(). '.' .$extension; 
                 echo $newImagePath.time(). '.' .$extension;
                 die;
