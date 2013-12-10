@@ -169,7 +169,11 @@ $(".pt_reqflrplan").fancybox();
 														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
 														
 														<div class="taggedDate" {if !$ImageDataListingArr[data].tagged_month || $ImageDataListingArr[data].tagged_month == '0000-00-00'} style="display:none" {/if}>
-															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;<input name="tagged_date[{$cnt}]" type="text" class="formstyle2" id="f_date_c_to{$cnt}" value="{$ImageDataListingArr[data].tagged_month}" readonly="1" size="10" /><img src="../images/cal_1.jpg" id="f_trigger_c_to{$cnt}" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" /><br><br>
+															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
+															<select name="tagged_date[{$cnt}]" >
+																{$dateDiv}
+															</select>
+															<br><br>
 															Tower:&nbsp;&nbsp;
 															<select name= "txtTowerId[{$cnt}]" >
 																<option value="0" >--Select Tower--</option>
@@ -221,25 +225,3 @@ $(".pt_reqflrplan").fancybox();
           </TBODY></TABLE>
         </TD>
       </TR>
-<script type="text/javascript" src="jscal/calendar.js"></script>
-<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
-<script type="text/javascript" src="jscal/calendar-setup.js"></script>
-<script type="text/javascript">
-	
-	var cals_dict = {};
-	
-	for(i=0;i<{$cnt};i++)
-		 cals_dict[ "f_trigger_c_to" + i] = "f_date_c_to" + i;
-	
-	for (var prop in cals_dict) {
-        Calendar.setup({
-            inputField     :    cals_dict[prop],                                 // id of the input field
-            //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
-            ifFormat       :    "%Y-%m-%d",                        // format of the input field
-            button         :    prop,                                 // trigger for the calendar (button ID)
-            align          :    "Tl",                              // alignment (defaults to "Bl")
-            singleClick    :    true,
-            showsTime	  :	true
-        });
-    }
-</script>

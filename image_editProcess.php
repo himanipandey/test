@@ -33,6 +33,14 @@
             array_push($towerDetail, $s);
     }    
      $smarty->assign("towerDetail", $towerDetail);
+     
+       //date dropdown
+    $curdate = date("M-Y",time());
+	$nextdate = date("M-Y",strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " +1 month"));
+    $date_div .="<option value='0' >--Select Month--</option>";
+    $date_div .="<option value='".$curdate."' >".$curdate."</option>";
+    $date_div .="<option value='".$nextdate."' >".$nextdate."</option>";
+    $smarty->assign("dateDiv", $date_div);
     	 
 			 
 		if( isset($_REQUEST['title']) &&  !array_filter($_REQUEST['title']) )
@@ -89,7 +97,7 @@
 						{
 							$arrValue[$k] = $_FILES['img']['name'][$k];
 							$arrTitle[$k] = $_REQUEST['title'][$k];
-							$arrTaggedDate[$k] = $_REQUEST['tagged_date'][$k];
+							$arrTaggedDate[$k] = date("Y-m-d",strtotime($_REQUEST['tagged_date'][$k]));
 							$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
 						}
 						else

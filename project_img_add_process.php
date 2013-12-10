@@ -15,6 +15,7 @@
         }
         $smarty->assign("linkShowHide", $linkShowHide);
     
+    //tower dropdown
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
     $tower_div = "<select name= 'txtTowerId[]' id='tower_dropdown'>";
@@ -31,7 +32,17 @@
     $tower_div .= "<option value='-1'>Other</option>";
     $tower_div .= "</select>";
     $smarty->assign("towerDetailDiv", $tower_div);
-           
+    
+    //date dropdown
+    $curdate = date("M-Y",time());
+	$nextdate = date("M-Y",strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " +1 month"));
+    $date_div  = "<select name='txttagged_date[]' id='date_dropdown'>";
+    $date_div .="<option value='0' >--Select Month--</option>";
+    $date_div .="<option value='".$curdate."' >".$curdate."</option>";
+    $date_div .="<option value='".$nextdate."' >".$nextdate."</option>";
+    $date_div .= "</select>";
+    $smarty->assign("dateDiv", $date_div);
+            
 	$builderDetail = fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
 	if(isset($_REQUEST['edit']))
 		$edit_project = $projectId;
@@ -82,7 +93,7 @@ if (isset($_POST['Next']))
 
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
-				$arrTaggedDate[$k] = $_REQUEST['txttagged_date'][$k];
+				$arrTaggedDate[$k] = date("Y-m-d",strtotime($_REQUEST['txttagged_date'][$k+1]));
 				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1];
 			}
 		}
