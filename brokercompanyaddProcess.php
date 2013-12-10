@@ -233,31 +233,33 @@
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
                 
-                list($imgname , $extension) = explode("." , $logo['name']);
-                echo $logo['name']."<br>";
-                $newimgName = $newImagePath.time(). '.' .$extension; 
-                echo $newImagePath.time(). '.' .$extension;
-                die;
-                $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
-                
-                if(!$flag)
+                if(!empty($logo['name']))
                 {
-                    echo "error<br>";
+                    list($imgname , $extension) = explode("." , $logo['name']);
+                    $newimgName = $newImagePath.time(). '.' .$extension; 
+                    
+                    $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
+                    
+                    if(!$flag)
+                    {
+                        echo "error<br>";
+                        die;
+                    }
+                        
+                    $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $newimgName),
+                                                "object" => "brokerCompany", "object_type" => "brokerCompany",
+                                                "object_id" => $broker_id, "image_type" => "logo"));
+                    //http://nightly-build.proptiger-ws.com/?object=broker_company&objectId=4&imageType=logo   
+                    $response = $s3upload->upload();
+                    $image_id = $response["service"]->data();
+                    $image_id = $image_id->id;
+                    print'<pre>';
+                    print_r($response);
+                    print_r($image_id);
                     die;
                 }
-                    
-                $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
-                                            "image_path" => str_replace($newImagePath, "", $newimgName),
-                                            "object" => "brokerCompany", "object_type" => "brokerCompany",
-                                            "object_id" => $broker_id, "image_type" => "logo"));
-                //http://nightly-build.proptiger-ws.com/?object=broker_company&objectId=4&imageType=logo   
-                $response = $s3upload->upload();
-                $image_id = $response["service"]->data();
-                $image_id = $image_id->id;
-                print'<pre>';
-                print_r($response);
-                print_r($image_id);
-                die;
+                
                 $brokerIdFormapping = $broker_id;
                 
                 /** -- Primary Address Entry Start -- */
