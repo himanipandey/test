@@ -171,7 +171,10 @@ $(".pt_reqflrplan").fancybox();
 														<div class="taggedDate" {if !$ImageDataListingArr[data].tagged_month || $ImageDataListingArr[data].tagged_month == '0000-00-00'} style="display:none" {/if}>
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
 															<select name="tagged_date[{$cnt}]" >
-																{$dateDiv}
+																<option value="0" >--Select Month--</option>
+																{foreach from=$dateDiv key=key item=data}
+																	<option value="{$key}" {if $ImageDataListingArr[data].tagged_month == $key} selected {/if} >{$data}</option>
+																{/foreach}
 															</select>
 															<br><br>
 															Tower:&nbsp;&nbsp;

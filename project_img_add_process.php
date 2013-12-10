@@ -34,12 +34,14 @@
     $smarty->assign("towerDetailDiv", $tower_div);
     
     //date dropdown
+    
     $curdate = date("M-Y",time());
-	$nextdate = date("M-Y",strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " +1 month"));
+	$nextdate = strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " +1 month");
+	
     $date_div  = "<select name='txttagged_date[]' id='date_dropdown'>";
     $date_div .="<option value='0' >--Select Month--</option>";
-    $date_div .="<option value='".$curdate."' >".$curdate."</option>";
-    $date_div .="<option value='".$nextdate."' >".$nextdate."</option>";
+    $date_div .="<option value='".date('Y-m-d',time())."' >".$curdate."</option>";
+    $date_div .="<option value='".date('Y-m-d',$nextdate)."' >".date("M-Y",$nextdate)."</option>";
     $date_div .= "</select>";
     $smarty->assign("dateDiv", $date_div);
             
@@ -93,7 +95,7 @@ if (isset($_POST['Next']))
 
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
-				$arrTaggedDate[$k] = date("Y-m-d",strtotime($_REQUEST['txttagged_date'][$k+1]));
+				$arrTaggedDate[$k] = $_REQUEST['txttagged_date'][$k+1];
 				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1];
 			}
 		}
@@ -538,7 +540,7 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 										$image->save($imgdestpath);
-                                       $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                             "object" => "project", "object_id" => $projectId,
                                             "image_type" => "construction_status"));
