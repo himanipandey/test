@@ -180,19 +180,20 @@ jQuery(document).ready(function(){
                 type: "POST",
                 url: "ajax/updateErrorStatus.php",
                 data: "completeData="+val+'&current_status_val='+current_status_val+'&adminid='+{$smarty.session.adminId},
-                 beforeSend: function() {
+                 /*beforeSend: function() {
                       setTimeout( function() {
                           jQuery('#confirmMsg').hide();
                       }, 3000 );
                       jQuery("#messageUpdate").html('<img src = "images/bar-circle.gif" width="20px" height="20px;">');
-                  },
+                  },*/
 
                  success: function(response){ 
-                     alert(response);
                      if(response == 'Success'){
-                        jQuery("#messageUpdate").html('<font size="2" face="verdana" color="green">Error Status Updated Sucessfully</font>');
+                        alert("Error Status Updated Sucessfully");
+                        location.reload();
                      }else{
-                        jQuery("#messageUpdate").html('<font size="2" face="verdana" color="red">Error in updation</font>');
+                        alert("Error in updation");
+                        location.reload();
                      }
                  }
              });
