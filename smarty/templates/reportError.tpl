@@ -50,14 +50,14 @@
                     <TBODY>
                         <TR class = "headingrowcolor" height="25">
                               <TD class=whiteTxt width=5% align="center"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
-                              <TD class=whiteTxt width=5% align="center">S.NO.</TD>
-                              <TD class=whiteTxt width=15% align="left">Error Type : Error Desc</TD>
-                              <TD class=whiteTxt width=25% align="left">Project Name</TD>
+                              <TD class=whiteTxt width=5% align="center">S.No.</TD>
+                              <TD class=whiteTxt width=15% align="left">Error Type: Error Desc</TD>
+                              <TD class=whiteTxt width=25% align="left">Project</TD>
                               <TD class=whiteTxt width=25% align="left">Property ID</TD>
                               <TD class=whiteTxt width=15% align='left'>Date Reported</TD>
                               <TD class=whiteTxt width=15% align='left'>Status</TD>
-                              <TD class=whiteTxt width=15% align='left'>Comment Box</TD>
-                              <TD class=whiteTxt width=12% align="center">History Link</TD>
+                              <TD class=whiteTxt width=15% align='left'>Comments</TD>
+                              <TD class=whiteTxt width=12% align="center">History</TD>
                               <!--<TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
                               <TD class=whiteTxt width=12% align="center">History</TD-->
                         </TR>
@@ -80,9 +80,9 @@
                                     <input type="checkbox" id="selectinvert{$errorDataArr[data].ID}" name="selectinvert" value="{$errorDataArr[data].ID}" />
                                 </TD>
                                 <TD align=center class=td-border>{$count}</TD>
-                                <TD align=left class=td-border>{$error_type[$errorDataArr[data].ERROR_TYPE]} : {$errorDataArr[data].DETAILS}</TD>
-                                <TD align=left class=td-border>{$errorDataArr[data].PROJECT_NAME}</TD>
-                                <TD align=left class=td-border>{$errorDataArr[data].UNIT_NAME} - {$errorDataArr[data].UNIT_TYPE}</TD>
+                                <TD align=left class=td-border><b>{$error_type[$errorDataArr[data].ERROR_TYPE]}</b>: {$errorDataArr[data].DETAILS}</TD>
+                                <TD align=left class=td-border>{$errorDataArr[data].PROJECT_NAME}, {$errorDataArr[data].LOCALITY}, {$errorDataArr[data].CITY}</TD>
+                                <TD align=left class=td-border>{$errorDataArr[data].UNIT_NAME} {$errorDataArr[data].UNIT_TYPE}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].DATE|date_format}</TD>
                                 <TD align=left class=td-border>
                                     <select name="status_{$errorDataArr[data].ID}" id="status_{$errorDataArr[data].ID}">
