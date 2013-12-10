@@ -346,7 +346,7 @@ $(function() {
                                             <option value = "">Select Stage</option>
                                            {foreach from = $getProjectPhases item = phases}
                                                <option value="{$phases->id}" {if $phase == $phases->id} selected{/if}>
-                                                  {$phases->name}
+                                                  {if $phases->name == 'NewProject'} NewProject Audit {else}{$phases->name}{/if}
                                                </option>
                                            {/foreach}									
                                          </select>
@@ -472,7 +472,7 @@ $(function() {
                                                      {/if}
                                              </td>
                                              <td style='padding-left:5px;'>
-                                                 {$arrVal['PROJECT_PHASE']}
+                                                {if $arrVal['PROJECT_PHASE'] == 'NewProject'} NewProject Audit {else}{$arrVal['PROJECT_PHASE']}{/if}
                                              </td>
                                              <td align='center' style='padding-left:5px;'>
                                                  <a href='javascript:void(0);' onClick='javascript:downloadExcel("{$arrVal['PROJECT_STAGE']}","{$arrVal['PROJECT_PHASE']}");'><img src='images/excel.png' border='0'></a>
