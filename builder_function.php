@@ -901,14 +901,15 @@ function towerDetail($towerId) {
 
 function costructionDetail($projectId) {
    $qryPhase = "select * from resi_project_phase
-   where project_id = $projectId order by phase_id desc";
+   where project_id = $projectId and phase_name != 'No Phase' order by phase_id asc";
    $resPhase = mysql_query($qryPhase);
    $dataPhase = mysql_fetch_assoc($resPhase);
-   if(mysql_num_rows($resPhase)>1) {
+   if(mysql_num_rows($resPhase)>0) {
        $sql = "SELECT *
               FROM " . RESI_PROJ_EXPECTED_COMPLETION . "
             WHERE
-              PROJECT_ID ='" . $projectId . "' and phase_id != ".$dataPhase['PHASE_ID']." 
+              PROJECT_ID ='" . $projectId . "'
+              and phase_id != (select phase_id from resi_project_phase where phase_name = 'No Phase' and project_id = $projectId)
             ORDER BY expected_completion_date DESC LIMIT 1";
    }
    else{
