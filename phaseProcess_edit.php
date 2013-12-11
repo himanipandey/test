@@ -100,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $smarty->assign("bookingStatus", $current_phase[0]['BOOKING_STATUS_ID']);
     $smarty->assign("phasename", $current_phase[0]['PHASE_NAME']);
     $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
-    $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
     $smarty->assign("remark", $current_phase[0]['REMARKS']);
     
     $towerDetail = fetch_towerDetails_for_phase($projectId, $phaseId);
@@ -121,7 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 if (isset($_POST['btnSave'])) {
     $phasename = $_REQUEST['phaseName'];
     $launch_date = $_REQUEST['launch_date'];
-    $completion_date = $_REQUEST['completion_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $isLaunchedUnitPhase = $_REQUEST['isLaunchUnitPhase'];
@@ -129,7 +127,6 @@ if (isset($_POST['btnSave'])) {
     // Assign vars for smarty
     $smarty->assign("phasename", $phasename);
     $smarty->assign("launch_date", $launch_date);
-    $smarty->assign("completion_date", $completion_date);
     $smarty->assign("remark", $remark);
 
     $PhaseExists = searchPhase($phaseDetail, $phasename);
@@ -156,14 +153,13 @@ if (isset($_POST['btnSave'])) {
         // Update
         ############## Transaction ##############
         ResiProjectPhase::transaction(function(){
-            global $projectId, $phaseId, $phasename, $launch_date, $completion_date, $remark, $towers;
+            global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers;
             if($phaseId != '0'){
                 //          Updating existing phase
                 $phase = ResiProjectPhase::virtual_find($phaseId);
                 $phase->project_id = $projectId;
                 $phase->phase_name = $phasename;
                 $phase->launch_date = $launch_date;
-                $phase->completion_date = $completion_date;
                 $phase->remarks = $remark;
                 $phase->booking_status_id = (($_REQUEST['bookingStatus'] != -1) ? $_REQUEST['bookingStatus'] : null);
                 $phase->save();

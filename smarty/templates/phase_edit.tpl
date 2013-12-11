@@ -233,15 +233,7 @@
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td width="20%" align="right" valign="top"><b>Completion Date :</b> </td>
-                                                <td width="30%" align="left">
-                                                    <input name="completion_date" value="{$completion_date}" type="text" class="formstyle2" id="completion_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="completion_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
-                                                </td>
-                                                <td width="50%" align="left">
-                                                    <font color="red"><span id = "err_completion_date" style = "display:none;">Enter Completion Date</span></font>
-                                                </td>
-                                            </tr>
+                                            
                                         {/if}
 
                                         <tr>
