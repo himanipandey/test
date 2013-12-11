@@ -904,16 +904,20 @@ function costructionDetail($projectId) {
    where project_id = $projectId order by phase_id desc";
    $resPhase = mysql_query($qryPhase);
    $dataPhase = mysql_fetch_assoc($resPhase);
-   if(mysql_num_rows($resPhase)>1)
-       $phaseName = " and phase_id != ".$dataPhase['phase_id'];
-   else 
-       $phaseName = '';
-   $sql = "SELECT *
+   if(mysql_num_rows($resPhase)>1) {
+       $sql = "SELECT *
               FROM " . RESI_PROJ_EXPECTED_COMPLETION . "
             WHERE
-              PROJECT_ID ='" . $projectId . "' $phaseName 
+              PROJECT_ID ='" . $projectId . "' and phase_id != ".$dataPhase['PHASE_ID']." 
             ORDER BY expected_completion_date DESC LIMIT 1";
-
+   }
+   else{
+        $sql = "SELECT *
+              FROM " . RESI_PROJ_EXPECTED_COMPLETION . "
+            WHERE
+              PROJECT_ID ='" . $projectId . "'
+            ORDER BY expected_completion_date DESC LIMIT 1";
+   }   
     $data = mysql_query($sql) or die(mysql_error());
     $dataarr = mysql_fetch_assoc($data);
     return $dataarr;
