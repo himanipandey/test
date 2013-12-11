@@ -33,7 +33,7 @@
 							<table align = "right">
 								<tr>
 									<td style = "font-size:11px;color:#FFFFFF">
-										<font  color="#FFFFFF">{if $AdminUserName != ''} Welcome <b>{$AdminUserName}</b> !{/if}</font> &nbsp;&nbsp;<strong>|</strong>&nbsp;&nbsp;<A href="changePass.php" style="color:#FFFFFF;font-size:11px;text-decoration:none;font-weight:bold">Change Password</A> | &nbsp;<b>{$dept}</b>
+										<font  color="#FFFFFF">{if $AdminUserName != ''} Welcome <b>{$AdminUserName}</b> !{/if}</font> &nbsp;&nbsp;<strong>|</strong>&nbsp;&nbsp;<A href="changePass.php" style="color:#FFFFFF;font-size:11px;text-decoration:none;font-weight:bold">Change Personal Details</A> | &nbsp;<b>{$dept}</b>
 									</td>
 								</tr>
 								<tr>
