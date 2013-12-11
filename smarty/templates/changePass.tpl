@@ -54,6 +54,13 @@
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post">
 			      <TBODY>
+                <tr>
+					  <td width="27%" align="right" class=td-border>*CloudAgent Phone</td>
+				      <td width="73%" align="left" class=td-border><input name="phoneno" id="txtuserPhone" style="width:250px;" value="{$phoneNo}" /> Putting Password in not mandetory in case you want to change this only.</td>
+				</tr>
+                
+                <tr><td></td></tr>
+                
 				<tr>
 					  <td width="27%" align="right" class=td-border>*Old  Password</td>
 				      <td width="73%" align="left" class=td-border><input name="oldpassword" type="password" id="txtusername" style="width:250px;" /></td>

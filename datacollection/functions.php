@@ -88,7 +88,7 @@ function getProjectListForManagers($cityId, $suburbId = ''){
          left join master_project_stages mpsp on pshp.PROJECT_STAGE_ID = mpsp.id
          left join master_project_phases mppp on pshp.PROJECT_PHASE_ID = mppp.id
          inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id and rpphs.PHASE_TYPE = 'Logical' and rpphs.version = 'Cms'
-         inner join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
+         left join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
          left join project_assignment pa 
          on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
@@ -127,7 +127,7 @@ function getAssignedProjectsFromPIDs($pids){
          on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID left join project_stage_history pshp 
          on psh.PREV_HISTORY_ID = pshp.HISTORY_ID 
          inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id and rpphs.PHASE_TYPE = 'Logical' and rpphs.version = 'Cms'
-         inner join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
+         left join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
          inner join master_project_stages pstg on rp.PROJECT_STAGE_ID = pstg.id
          inner join master_project_phases pphs on rp.PROJECT_PHASE_ID = pphs.id
          left join master_project_stages mpsp on pshp.PROJECT_STAGE_ID = mpsp.id
