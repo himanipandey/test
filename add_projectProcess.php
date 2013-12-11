@@ -321,47 +321,22 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $exp = explode(" 00:",$promisedDt);
             $promisedDt = $exp[0];
         }
-        if( $launchDt != '' && $promisedDt !='' ) {
-            $retdt  = ((strtotime($promisedDt)-strtotime($launchDt))/(60*60*24));
-            if( $retdt <= 0 ) {
-                $ErrorMsg['CompletionDateGreater'] = 'Completion date to be always greater than launch date';
-            }
-        }
+       
         if( $preLaunchDt != '' && $launchDt !='' ) {
             $retdt  = ((strtotime($launchDt) - strtotime($preLaunchDt)) / (60*60*24));
             if( $retdt <= 0 ) {
                 $ErrorMsg['launchDateGreater'] = "Launch date to be always greater than Pre Launch date";
             }
         }
-        if( $preLaunchDt != '' && $promisedDt !='' ) {
-            $retdt  = ((strtotime($promisedDt) - strtotime($preLaunchDt)) / (60*60*24));
-            if( $retdt <= 0 ) {
-                $ErrorMsg['CompletionDateGreater'] = "Completion date to be always greater than Pre Launch date";
-            }
-       }
      
        if( $Status == PRE_LAUNCHED_ID_8 && $preLaunchDt == '' ) {
            $ErrorMsg['preLaunchDate'] = "Pre Launch date cant empty";
        }
-      
+       
        if( $Status == PRE_LAUNCHED_ID_8 && $launchDt != '' ) {
            $ErrorMsg['launchDate'] = "Launch date should be blank/zero";
        }
 
-       if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && $promisedDt == '' || $promisedDt == '0000-00-00' ) {
-           $ErrorMsg['CompletionDateGreater'] = "Completion date is mandatory!";
-       }
-       if( $Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4 ) {
-           $yearExp = explode("-",$promisedDt);
-           if( $yearExp[0] == date("Y") ) {
-               if( intval($yearExp[1]) > intval(date("m"))) {
-                 $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
-               }    
-           } 
-           else if (intval($yearExp[0]) > intval(date("Y")) ) {
-               $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
-           }
-       }
        if( $Status == UNDER_CONSTRUCTION_ID_1 && ($launchDt == '' || $launchDt == '0000-00-00') ) {
            $ErrorMsg['launchDate'] = "Launch date is mandatory!";
        }
