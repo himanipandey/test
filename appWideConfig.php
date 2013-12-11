@@ -76,5 +76,9 @@ else{
 	define("SEND_EMAIL", TRUE);
 	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
 	define("RESALE_GROUP_EMAIL", "projects@proptiger.com");
+    define("CLOUDAGENT_RELEASE_USER_URL", "http://cloudagent.in/CAServices/ReleaseOfflineAgent.php?");
+    define("CLOUDAGENT_CALL_URL", "http://cloudagent.in/CAServices/PhoneManualDial.php?");
+    define("CLOUDAGENT_USER", "proptiger");
+    define("CLOUDAGENT_KEY", "KK6553cb21f45e304ffb6c8c92a279fde5");
 }
 ?>
