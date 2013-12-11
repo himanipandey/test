@@ -199,8 +199,8 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>LOCALITY</td>
 <td>PROJECT STATUS</td>
 <td>BOOKING STATUS</td>
-<td>STAGE</td>
 <td>PHASE</td>
+<td>STAGE</td>
 <td>STAGE MOVEMENT DATE</td>
 <td>STAGE MOVEMENT DONE BY</td>
 <td>UPDATION LABEL</td></tr>
@@ -208,8 +208,8 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 $cnt = 1;
 while($ob1 = mysql_fetch_assoc($QueryExecute))
 {
-	$stage = $ob1['PROJECT_PHASE'];
-	$phase = $ob1['PROJECT_STAGE'];
+	$stage = $ob1['PROJECT_STAGE'];
+	$phase = $ob1['PROJECT_PHASE'];
 	$builder = $ob1['BUILDER_NAME'];
 
 	$projid = $ob1['PROJECT_ID'];
@@ -244,9 +244,9 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         <td>".$localityname."</td>    
 	<td>".$proj_status."</td>
 	<td>".$booking_status."</td>
-        <td>".$phse."</td>
 	<td>".$stage."</td>
-        <td>".$date_time."</td>
+        <td>".$phse."</td>
+	      <td>".$date_time."</td>
         <td>".$stage_move_by."</td>            
 	<td>".$updation_label."</td>
 
