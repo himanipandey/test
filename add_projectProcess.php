@@ -7,6 +7,7 @@ $projectStatus = ResiProject::projectStatusMaster();
 $allTownships = Townships::getAllTownships();
 $getPowerBackupTypes = PowerBackupTypes::getPowerBackupTypes();
 
+//die("");
 include_once('./function/locality_functions.php');
 $smarty->assign("BuilderDataArr",$BuilderDataArr);
 $smarty->assign("CityDataArr",$CityDataArr);
@@ -291,16 +292,15 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
         if( $exp_launch_date != '' && $exp_launch_date != '0000-00-00' ) {
              $retdt  = ((strtotime($exp_launch_date)-strtotime(date("Y-m-d")))/(60*60*24));
             if($pre_launch_date !='' && $pre_launch_date != '0000-00-00' && date($pre_launch_date) > date($exp_launch_date)){
-				$ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Pre-Launch Date!';
-			}elseif($eff_date_to !='' && $eff_date_to != '0000-00-00' && date($eff_date_to) > date($exp_launch_date)){
-				$ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Launch Date!';
-			}elseif( $retdt <= 0 ) {
-                $ErrorMsg['supplyDate'] = 'Expected supply date should be greater than current month!';
+                    $ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Pre-Launch Date!';
+            }elseif($eff_date_to !='' && $eff_date_to != '0000-00-00' && date($eff_date_to) > date($exp_launch_date)){
+                    $ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Launch Date!';
+            }elseif( $retdt <= 0 ) {
+                $ErrorMsg['supplyDate'] = 'Expected supply date should be future date!';
             }
         }
         /**code for new launch and completion date diff and if In case PROJECT_STATUS = Pre Launch then Pre_launch_date cannot be empty In case PROJECT_STATUS = Occupied or Ready For Possession then  ****/  
         $launchDt = $eff_date_to;
-        $promisedDt = $eff_date_to_prom;
         $preLaunchDt = $pre_launch_date;
 
         if( $launchDt == '0000-00-00' )    
@@ -321,7 +321,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $exp = explode(" 00:",$promisedDt);
             $promisedDt = $exp[0];
         }
-       
         if( $preLaunchDt != '' && $launchDt !='' ) {
             $retdt  = ((strtotime($launchDt) - strtotime($preLaunchDt)) / (60*60*24));
             if( $retdt <= 0 ) {
@@ -349,6 +348,48 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            } 
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
                $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
+           }
+       }
+       
+       if( $launchDt != '' && $promisedDt !='' ) {
+            $retdt  = ((strtotime($promisedDt)-strtotime($launchDt))/(60*60*24));
+            if( $retdt <= 0 ) {
+                $ErrorMsg['CompletionDateGreater'] = 'Completion date to be always greater than launch date';
+            }
+        }
+
+    if( $preLaunchDt != '' && $promisedDt !='' && $projectId == '') {
+            $retdt  = ((strtotime($promisedDt) - strtotime($preLaunchDt)) / (60*60*24));
+            if( $retdt <= 0 ) {
+                $ErrorMsg['CompletionDateGreater'] = "Completion date to be always greater than Pre Launch date";
+            }
+       }
+
+    if( $Status == PRE_LAUNCHED_ID_8 && $preLaunchDt != '' && $projectId == '') {
+            $yearExp = explode("-",$preLaunchDt);
+           if( $yearExp[0] == date("Y") ) {
+               if( intval($yearExp[1]) > intval(date("m"))) {
+                 $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+               }    
+           } 
+           else if (intval($yearExp[0]) > intval(date("Y")) ) {
+               $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+           }
+       }
+
+
+      if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && ($promisedDt == '' || $promisedDt == '0000-00-00') && $projectId == '' ) {
+           $ErrorMsg['CompletionDateGreater'] = "Completion date is mandatory!";
+       }
+       if( $Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4 ) {
+           $yearExp = explode("-",$promisedDt);
+           if( $yearExp[0] == date("Y") ) {
+               if( intval($yearExp[1]) > intval(date("m"))) {
+                 $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+               }    
+           } 
+           else if (intval($yearExp[0]) > intval(date("Y")) ) {
+               $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
            }
        }
      //  echo $ErrorMsg['launchDate'];
@@ -419,7 +460,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['project_type_id'] = $project_type;
             $arrInsertUpdateProject['architect_name'] = $architect;
             $arrInsertUpdateProject['power_backup_capacity'] = $power_backup_capacity;
-            $arrInsertUpdateProject['promised_completion_date'] = $eff_date_to_prom;
+            if($projectId == '')
+                $arrInsertUpdateProject['promised_completion_date'] = $eff_date_to_prom;
             $arrInsertUpdateProject['residential_flag'] = $residential;
             $arrInsertUpdateProject['township_id'] = $township;
             $arrInsertUpdateProject['open_space'] = $open_space;
@@ -434,6 +476,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
             $arrOx = array();
            // $arrOx = 
+            
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
 
            if (!ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
@@ -448,11 +491,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->updated_by = $_SESSION['adminId'];
                $phase->virtual_save();
            }
-           
-				if($_POST['bookingStatus'] > 0)
-					mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID =".$_POST['bookingStatus']." WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
-				else
-					mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID ='' WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
+
+            if($_POST['bookingStatus'] > 0)
+                    mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID =".$_POST['bookingStatus']." WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
+            else
+                    mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID ='' WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
 					
 			
             		
@@ -466,8 +509,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $resUrl = mysql_query($updateQuery) or die(mysql_error());
                 $_POST['bank_list'] = array_values(array_filter($_POST['bank_list']));
                 if( isset($_POST['bank_list']) ) {
-					ProjectBanks::projectBankDeleteInsert($_POST['bank_list'],$returnProject->project_id);
-				} 
+                        ProjectBanks::projectBankDeleteInsert($_POST['bank_list'],$returnProject->project_id);
+                } 
+                
            if ($projectId == '')
            {
                if( $returnProject->project_id ) {
@@ -483,6 +527,16 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                     $insOffer = mysql_query($qryOffer) or die(mysql_error());
                    }
                  CommentsHistory::insertUpdateComments($returnProject->project_id, $arrCommentTypeValue, 'NewProject');
+                 $qryPhaseSelect = "select phase_id from resi_project_phase where project_id = $returnProject->project_id";
+                 $resPhaseSelect = mysql_query($qryPhaseSelect);
+                 $phaseIdSelet = mysql_fetch_assoc($resPhaseSelect);
+                 $qryCompletionDate = "insert into resi_proj_expected_completion 
+                    set
+                      project_id = $returnProject->project_id,
+                      expected_completion_date = '".$eff_date_to_prom."',
+                      submitted_date = now(),
+                      phase_id = ".$phaseIdSelet['phase_id'];
+                 mysql_query($qryCompletionDate);
                  header("Location:project_img_add.php?projectId=".$returnProject->project_id);
                }
             }

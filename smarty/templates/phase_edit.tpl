@@ -4,13 +4,13 @@
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
-<script type="text/javascript">
+<script type="text/javascript">    
     $(document).ready(function() {
         var pid = '{$phaseId}';
         $('select#phaseSelect').val(pid);
         toggle_supply_and_option();
     });
-    
+     
     $(document).ready(function(){
         $('#isLaunchUnitPhase').change(function(){
             $('.launched').each(function(){
@@ -99,7 +99,7 @@
     function deletePhase()
     {
             return confirm("Are you sure! you want to delete phase.");
-        }
+    }
 
         function toggle_supply_and_option() {
             $(".reset_option_and_supply").click(function() {
@@ -143,7 +143,7 @@
         }
 
 </script>
-
+<input type = "hidden" name = "projectId" id = "projectId" value="{$projectId}">
 <tr>
     <td class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
         <table cellSpacing=0 cellPadding=0 width="100%" border=0>
@@ -172,7 +172,7 @@
                                 </td>
                             </tr>
                             <tr></tr>
-                        <td vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
+                        <td vAlign="top" align="middle" class="backgorund-rt" height="350"><BR>
 
                             <table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
                                 <form method="post" id="phase_form">
@@ -192,7 +192,11 @@
                                                 {/foreach}
                                             </select>
                                         </td>
-                                        <td width="50%" align="left"></td>
+                                        <td width="50%" align="left">
+                                            {if (count($phases) >1 && $phaseName != 'No Phase') || (count($phases) == 1 && $phaseName == 'No Phase')}
+                                           {if $phaseId != -1} <input class="pt_click" type="button" title="Update Completion Date" value="Update Completion Date">{/if}
+                                           {else}&nbsp;{/if}
+                                        </td>
                                     </tr>
 
 
@@ -410,4 +414,17 @@
                 });
             }
         });
-                                                                                                                                        {/if}                                                                                                                            </script>
+      {/if}
+    jQuery(document).ready(function(){
+            jQuery(".pt_click").live('click',function(){
+                var projectId = $('#projectId').val();
+                var phaseId = $('#phaseSelect').val();
+                var title =  jQuery(this).attr('title');
+                if(title=='Update Completion Date'){
+                    jQuery(this).attr('href','javascript:void(0)');
+                    window.open('add_project_construction.php?projectId='+projectId+"&phaseId="+phaseId,'AddProjectConstruction',
+                    'height=400,width=900,scrollbars=yes,toolbar=no,left=150,right=150,resizable=1,top=50');
+                }
+            });
+    });
+ </script>

@@ -13,9 +13,13 @@ if (isset($_GET['error'])) {
 
 $projectId = $_REQUEST['projectId'];
 $project = ResiProject::virtual_find($projectId);
-$phaseId = $_REQUEST['phaseId'];
+if(isset($_REQUEST['phaseId']))
+   $phaseId = $_REQUEST['phaseId'];
+else
+    $phaseId = -1;
 $preview = $_REQUEST['preview'];
 $smarty->assign("preview", $preview);
+$smarty->assign("projectId", $projectId);
 $bookingStatuses = ResiProject::find_by_sql("select * from master_booking_statuses");
 $smarty->assign("bookingStatuses", $bookingStatuses);
 
@@ -32,7 +36,12 @@ if (isset($_REQUEST['delete'])) {
             header("Location:ProjectList.php?projectId=" . $projectId);
     }
 }
-/* * *******end code for delete phase***** */
+/********end code for delete phase***** */
+/************/
+$qrySelect = ResiProjectPhase::virtual_find($phaseId);
+$phaseName = $qrySelect->phase_name;
+$smarty->assign("phaseName", $phaseName);
+/************/
 $smarty->assign("phaseId", $phaseId);
 $projectDetail = ResiProject::virtual_find($projectId);
 $projectDetail = $projectDetail->to_custom_array();
@@ -144,7 +153,6 @@ if (isset($_POST['btnSave'])) {
                 $villas_config[$beds] = $value;
             }
         }
-
         // Update
         ############## Transaction ##############
         ResiProjectPhase::transaction(function(){
@@ -159,7 +167,6 @@ if (isset($_POST['btnSave'])) {
                 $phase->remarks = $remark;
                 $phase->booking_status_id = (($_REQUEST['bookingStatus'] != -1) ? $_REQUEST['bookingStatus'] : null);
                 $phase->save();
-
                 if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
                     $phase->add_towers($towers);
                 }

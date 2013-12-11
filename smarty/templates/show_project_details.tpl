@@ -1056,8 +1056,7 @@ function getDateNow(){
                                                         <b>Promised Completion Date:</b>
                                                     </td>
                                                     <td>
-                                                       {$completionDate}
-                                                    </td>
+                                                        {$completionDate}</td>
 						</tr>
 						
 						<tr height="25px;">
