@@ -52,12 +52,12 @@
                               <TD class=whiteTxt width=5% align="center"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
                               <TD class=whiteTxt width=5% align="center">S.No.</TD>
                               <TD class=whiteTxt width=15% align="left" style="overflow:hidden; width:250px; word-wrap: break-word;">Error Type: Error Desc</TD>
-                              <TD class=whiteTxt width=25% align="left">Project</TD>
-                              <TD class=whiteTxt width=25% align="left">Property Type</TD>
-                              <TD class=whiteTxt width=15% align='left'>Date Reported</TD>
-                              <TD class=whiteTxt width=15% align='left'>Status</TD>
-                              <TD class=whiteTxt width=15% align='left'>Comments</TD>
-                              <TD class=whiteTxt width=12% align="center">History</TD>
+                              <TD class=whiteTxt width=25% align="left" style="width:150px;">Project</TD>
+                              <TD class=whiteTxt width=25% align="left" style="width:150px;">Property Type</TD>
+                              <TD class=whiteTxt width=15% align='left' style="width:150px;">Date Reported</TD>
+                              <TD class=whiteTxt width=15% align='left' style="width:150px;">Status</TD>
+                              <TD class=whiteTxt width=15% align='left' style="width:150px;">Comments</TD>
+                              <TD class=whiteTxt width=12% align="center" style="width:150px;">History</TD>
                               <!--<TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
                               <TD class=whiteTxt width=12% align="center">History</TD-->
                         </TR>
