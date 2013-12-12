@@ -21,7 +21,7 @@
 		 $smarty->assign("count", $count);
 		 $path = "";
 		 $smarty->assign("path", $path);
-		 
+					 
 	$towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
     foreach($towerDetail_object as $s){
@@ -36,10 +36,12 @@
      
        //date dropdown
     $curdate = date("M-Y",time());
-	$nextdate = strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " +1 month");
     $date_div = array();
     $date_div[date("Y-m-d",time())] =  $curdate ;
-    $date_div[date('Y-m-d',$nextdate)] =  date("M-Y",$nextdate) ;
+    for($cmt=1;$cmt<=11;$cmt++){
+		$nextdate = strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " -$cmt month");
+		$date_div[date('Y-m-d',$nextdate)] =  date("M-Y",$nextdate) ;
+    }
     $smarty->assign("dateDiv", $date_div);
    
 			 

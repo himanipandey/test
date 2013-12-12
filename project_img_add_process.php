@@ -1,4 +1,5 @@
 <?php
+
 	set_time_limit(0);
 	ini_set("memory_limit","256M");
 	include("ftp.new.php");
@@ -14,6 +15,8 @@
             $linkShowHide = 1;
         }
         $smarty->assign("linkShowHide", $linkShowHide);
+        
+    $smarty->assign("imagetype", $_REQUEST['imagetype']);
     
     //tower dropdown
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
@@ -36,12 +39,14 @@
     //date dropdown
     
     $curdate = date("M-Y",time());
-	$nextdate = strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " +1 month");
-	
+		
     $date_div  = "<select name='txttagged_date[]' id='date_dropdown'>";
     $date_div .="<option value='0' >--Select Month--</option>";
     $date_div .="<option value='".date('Y-m-d',time())."' >".$curdate."</option>";
-    $date_div .="<option value='".date('Y-m-d',$nextdate)."' >".date("M-Y",$nextdate)."</option>";
+    for($cmt=1;$cmt<=11;$cmt++){
+		$nextdate = strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " -$cmt month");
+		$date_div .="<option value='".date('Y-m-d',$nextdate)."' >".date("M-Y",$nextdate)."</option>";
+	}    
     $date_div .= "</select>";
     $smarty->assign("dateDiv", $date_div);
             
