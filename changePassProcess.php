@@ -4,7 +4,7 @@ $smarty->assign("sort", $_GET['sort']);
 if ($_POST['Save'] == "Save") {
     $phoneNo = getAdminPhoneNo();
     $newPhoneNo = stripPhoneNumber($_POST['phoneno']);
-    if($newPhoneNo != $phoneNo){
+    if(!(strval($newPhoneNo) === strval($phoneNo))){
         if(strlen($newPhoneNo)<10) $ErrorMsg[] = "Please put in a valid phone no.";
         else{
             $admin = ProptigerAdmin::find($_SESSION['adminId']);
