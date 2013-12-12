@@ -168,8 +168,8 @@
                                               <tr>
                                                 <td nowrap width="20%" align="right"><b>Launch Date :</b> </td>
                                                 <td nowrap width="30%" align="left">
-                                                    {$launchDate}
-                                                    <input type="hidden" name = "launchDate" value="{$launchDate}">
+                                                    {$current_phase[0]['launch_date']}
+                                                    <input type="hidden" name = "launchDate" value="{$current_phase[0]['launch_date']}">
                                                 </td>
                                                 <td width="50%" align="left" nowrap>
                                                    &nbsp;
@@ -240,7 +240,7 @@
                                                      <td width="10%">&nbsp;</td>
                                                      <td width="90%" align='left' colspan='2'>
                                                      <input type = "hidden" name = "updateOrInsertRow" id = "updateOrInsertRow">
-                                                     <input type = "hidden" name = "updateOrInsertRow" id = "updateOrInsertRow">
+                                                     <input type = "hidden" name = "oldCompletionDate" id = "oldCompletionDate" value="{$oldCompletionDate}">
                                                      {if (count($phases) >1 && $phaseName != 'No Phase') || (count($phases) == 1 && $phaseName == 'No Phase')}
                                                      <input type="submit" name="btnSave" id="btnSave" value="Submit"  onclick="return construction_status('{$EffectiveDateList}');"/>
                                                      {/if}
@@ -256,7 +256,12 @@
                             <b>Old History</b><br>
                             {foreach from = $costDetail key=key item = item}
                                 <b>Effective Date: </b>{$item['SUBMITTED_DATE']|date_format:"%b %Y"}
-                                <b>Completion Date: </b>{$item['EXPECTED_COMPLETION_DATE']|date_format:"%b %Y"}<br>
+                                <b>Completion Date: </b>
+                                {if $item['EXPECTED_COMPLETION_DATE'] == '0000-00-00 00:00:00'}
+                                    0000-00-00 00:00:00
+                                {else}
+                                {$item['EXPECTED_COMPLETION_DATE']|date_format:"%b %Y"}
+                                {/if}<br>
                             {/foreach}
                         </td>
 		</TR>

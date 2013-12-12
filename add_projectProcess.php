@@ -336,7 +336,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            $ErrorMsg['launchDate'] = "Launch date should be blank/zero";
        }
 
-       if( $Status == UNDER_CONSTRUCTION_ID_1 && ($launchDt == '' || $launchDt == '0000-00-00') ) {
+       if( $Status == UNDER_CONSTRUCTION_ID_1 && ($launchDt == '' || $launchDt == '0000-00-00') && $projectId != '' ) {
            $ErrorMsg['launchDate'] = "Launch date is mandatory!";
        }
        if( $Status == UNDER_CONSTRUCTION_ID_1 ) {
@@ -485,10 +485,12 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->project_id = $returnProject->project_id;
                $phase->phase_name = 'No Phase';
                $phase->phase_type = 'Logical';
+               $phase->completion_date = $eff_date_to_prom;
                $phase->status     = 'Active';
                $phase->created_at = date('Y-m-d H:i:s');
                $phase->updated_at = date('Y-m-d H:i:s');
                $phase->updated_by = $_SESSION['adminId'];
+               $phase->submitted_date = date('Y-m-d H:i:s');
                $phase->virtual_save();
            }
 
@@ -530,6 +532,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                  $qryPhaseSelect = "select phase_id from resi_project_phase where project_id = $returnProject->project_id";
                  $resPhaseSelect = mysql_query($qryPhaseSelect);
                  $phaseIdSelet = mysql_fetch_assoc($resPhaseSelect);
+                 if($eff_date_to_prom == '')
+                     $eff_date_to_prom = '0000-00-00';
                  $qryCompletionDate = "insert into resi_proj_expected_completion 
                     set
                       project_id = $returnProject->project_id,

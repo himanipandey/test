@@ -901,23 +901,21 @@ function towerDetail($towerId) {
 
 function costructionDetail($projectId) {
    $qryPhase = "select * from resi_project_phase
-   where project_id = $projectId and phase_name != 'No Phase' order by phase_id asc";
+   where project_id = $projectId and phase_name != 'No Phase' order by phase_id desc";
    $resPhase = mysql_query($qryPhase);
    $dataPhase = mysql_fetch_assoc($resPhase);
    if(mysql_num_rows($resPhase)>0) {
-       $sql = "SELECT *
-              FROM " . RESI_PROJ_EXPECTED_COMPLETION . "
-            WHERE
-              PROJECT_ID ='" . $projectId . "'
-              and phase_id != (select phase_id from resi_project_phase where phase_name = 'No Phase' and project_id = $projectId)
-            ORDER BY expected_completion_date DESC LIMIT 1";
+       $sql = "select * from resi_project_phase 
+           where 
+             phase_name != 'No Phase'
+           and 
+             project_id = $projectId
+          ORDER BY completion_date desc LIMIT 1";
    }
    else{
-        $sql = "SELECT *
-              FROM " . RESI_PROJ_EXPECTED_COMPLETION . "
-            WHERE
-              PROJECT_ID ='" . $projectId . "'
-            ORDER BY expected_completion_date DESC LIMIT 1";
+        $sql = "select * from resi_project_phase 
+           where 
+             project_id = $projectId";
    }   
     $data = mysql_query($sql) or die(mysql_error());
     $dataarr = mysql_fetch_assoc($data);

@@ -2469,7 +2469,7 @@ function getDateNow(){
 								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 										<tr class="headingrowcolor" height="30px;">
 											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date <br> Booking Status</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
@@ -2527,7 +2527,7 @@ function getDateNow(){
 																<br>
 																{if $lastItem['LAUNCH_DATE'] != '' && $lastItem['COMPLETION_DATE'] != ''}
 																	
-																	{$lastItem['LAUNCH_DATE']} <br> {$lastItem['COMPLETION_DATE']}
+																	{$lastItem['LAUNCH_DATE']} <br> {$lastItem['COMPLETION_DATE']} <br> {$lastItem['submitted_date']}
 																{else}
 																	--
 																{/if}
