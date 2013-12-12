@@ -161,6 +161,8 @@
             $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$val->id));
             $imgurl = '';
             $imgid = '';
+            print'<pre>';
+            print_r($img);
             if(!empty($img))
             {
                 foreach($img as $k1 => $v1)
