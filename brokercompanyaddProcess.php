@@ -79,7 +79,7 @@
         $citypkidArr    =   !empty($_POST['citypkidArr'])?json_decode(base64_decode($_POST['citypkidArr'])):array();
         $remove_citylocids = !empty($_POST['remove_citylocids'])?json_decode(base64_decode($_POST['remove_citylocids'])):array();
         
-        $image_id       =  trim($_POST['image_id']);
+        $image_id       =  trim($_POST['imgid']);
         
         if(empty($remove_citylocids))
             $finaladdcitylocids = $citypkidArr;
