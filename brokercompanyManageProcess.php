@@ -157,7 +157,7 @@
             }
             $brokerDataArr[$i]['description'] = $desc;
             $brokerDataArr[$i]['status'] = $val->status;
-            
+            echo $val->id."<br>";
             $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$val->id));
             $imgurl = '';
             $imgid = '';
@@ -235,9 +235,9 @@
         }
     }
    
-    //print'<pre>';
-//    print_r($brokerDataArr);
-//    die;
+    print'<pre>';
+    print_r($brokerDataArr);
+    die;
     
     
     $link ='';
