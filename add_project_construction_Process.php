@@ -120,25 +120,6 @@
                                 AND submitted_date >= '".$submittted_dateMin."' and submitted_date <= '".$submittted_dateMax."'";
                     }
                     else {
-                        //code if user want to update completion date with new submitted date
-                        $qryOldCompletionDateExists = "select * from ".RESI_PROJ_EXPECTED_COMPLETION."
-                            where expected_completion_date = '".$expectedCompletionDate."'
-                                  and project_id = $projectId and phase_id = $phaseId";
-                        $resOldCompletionDate = mysql_query($qryOldCompletionDateExists);
-                        if(mysql_num_rows($resOldCompletionDate)>0) {
-                          $qry = "UPDATE ".RESI_PROJ_EXPECTED_COMPLETION."
-                                    SET	
-                                        EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."',
-                                        REMARK = '".$remark."'
-                                    WHERE
-                                        PROJECT_ID = '".$projectId."' 
-                                    AND
-                                        phase_id = $phaseId
-                                    AND
-                                        SUBMITTED_DATE = '".$effectiveDt."'";
-                        }
-                        //code if user want to update completion date with new submitted date
-                        else{
                             if($_REQUEST['oldCompletionDate'] == '0000-00-00') {
                                 $startDt = $effectiveDt;
                                 $endDt = explode("-",$effectiveDt);
