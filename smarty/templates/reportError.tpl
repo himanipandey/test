@@ -38,9 +38,10 @@
                       <TD align=right colSpan=3>
                           </TD>
                     </TR>
-		  </TBODY></TABLE>
-		</TD>
-	      </TR>
+                    </TBODY>
+                  </TABLE>
+                </TD>
+              </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
                     
@@ -51,7 +52,7 @@
                         <TR class = "headingrowcolor" height="25">
                               <TD class=whiteTxt width=5% align="center" style="width:20px;"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
                               <TD class=whiteTxt width=5% align="center" style="width:30px;">S.No.</TD>
-                              <TD class=whiteTxt width=15% align="left" style="width:250px; word-wrap: break-word;">Error Type: Error Desc</TD>
+                              <TD class=whiteTxt width=15% align="left" style="word-wrap: break-word;">Error Type: Error Desc</TD>
                               <TD class=whiteTxt width=25% align="left" style="width:100px;">Project</TD>
                               <TD class=whiteTxt width=25% align="left" style="width:100px;">Property Type</TD>
                               <TD class=whiteTxt width=15% align='left' style="width:80px;">Date Reported</TD>
