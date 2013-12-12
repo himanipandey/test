@@ -498,6 +498,9 @@
                                                                     });
                                                                 });
                                                            </script>
+                                                                <input type = "hidden" name = "completionDate" value="">
+                                                           {else}
+                                                               <input type = "hidden" name = "completionDate" value="{$eff_date_to_prom}">
                                                            {/if}
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b>Expected Supply Date :</b> </td>

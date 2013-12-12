@@ -99,6 +99,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $skipUpdationCycle = $_POST["skipUpdationCycle"];
             $updationCycleIdOld = $_POST["updationCycleIdOld"];
             $numberOfTowers = $_POST["numberOfTowers"];
+            $completionDate = $_POST["completionDate"];
+            
             
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
@@ -175,6 +177,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
             $smarty->assign("updationCycleIdOld", $updationCycleIdOld);
             $smarty->assign("numberOfTowers", $numberOfTowers);
+            $smarty->assign("completionDate", $completionDate);
             /***********Folder name**********/
             if(!empty($builderId)){
 	    	$builderDetail = ResiBuilder::getBuilderById($builderId);
@@ -338,7 +341,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
        if( $Status == UNDER_CONSTRUCTION_ID_1 && ($launchDt == '' || $launchDt == '0000-00-00') && $projectId != '' ) {
            $ErrorMsg['launchDate'] = "Launch date is mandatory!";
        }
-       if( $Status == UNDER_CONSTRUCTION_ID_1 ) {
+       if( $Status == UNDER_CONSTRUCTION_ID_1 ) { 
            $yearExp = explode("-",$launchDt);
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
@@ -347,6 +350,12 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            } 
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
                $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
+           }
+           if($projectId != '' && $Status == UNDER_CONSTRUCTION_ID_1) {
+               $retdt  = ((strtotime($completionDate)-strtotime($launchDt))/(60*60*24));
+                if( $retdt <= 180 ) {
+                    $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date';
+                } 
            }
        }
        if( $launchDt != '' && $eff_date_to_prom !='' ) {
