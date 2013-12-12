@@ -248,7 +248,7 @@
                         
                     $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $newimgName),
-                                                "object_type" => "brokerCompany",
+                                                "object" => "brokerCompany", "object_type" => "brokerCompany",
                                                 "object_id" => $broker_id, "image_type" => "logo"));
                        
                     $response = $s3upload->upload();
