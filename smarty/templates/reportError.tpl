@@ -45,13 +45,13 @@
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
                     
                     <div id="messageUpdate"></div>
-                    <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
+                    <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0 style='table-layout: fixed;'>
                     <form name="form1" method="post" action="">
                     <TBODY>
                         <TR class = "headingrowcolor" height="25">
                               <TD class=whiteTxt width=5% align="center"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
                               <TD class=whiteTxt width=5% align="center">S.No.</TD>
-                              <TD class=whiteTxt width=15% align="left">Error Type: Error Desc</TD>
+                              <TD class=whiteTxt width=15% align="left" style="word-wrap: break-word;">Error Type: Error Desc</TD>
                               <TD class=whiteTxt width=25% align="left">Project</TD>
                               <TD class=whiteTxt width=25% align="left">Property Type</TD>
                               <TD class=whiteTxt width=15% align='left'>Date Reported</TD>
