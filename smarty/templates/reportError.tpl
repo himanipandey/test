@@ -53,7 +53,7 @@
                               <TD class=whiteTxt width=5% align="center">S.No.</TD>
                               <TD class=whiteTxt width=15% align="left">Error Type: Error Desc</TD>
                               <TD class=whiteTxt width=25% align="left">Project</TD>
-                              <TD class=whiteTxt width=25% align="left">Property ID</TD>
+                              <TD class=whiteTxt width=25% align="left">Property Type</TD>
                               <TD class=whiteTxt width=15% align='left'>Date Reported</TD>
                               <TD class=whiteTxt width=15% align='left'>Status</TD>
                               <TD class=whiteTxt width=15% align='left'>Comments</TD>

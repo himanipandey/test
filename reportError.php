@@ -6,7 +6,7 @@
     AdminAuthentication();
     $error_type = array(
         'rate' => 'Price/ Rate',
-        'status' => 'Price/ Rate',
+        'status' => 'Project Status',
         'propdetails' => 'Property details',
         'other' => 'Other',
     );
