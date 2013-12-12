@@ -95,6 +95,9 @@
                         $errorMsg['CompletionDateGreater'] = 'Completion date to be always 6 month greater than launch date';
                     }
                 }
+                if(count($errorMsg)>0){
+                    $smarty->assign('errorMsg',$errorMsg);
+                }
                 /******end validation taken from project add/edit page*************/
                 
                 else if( ($month_effective_date <= date('m') && $year_effective_date == date('Y')) || $year_effective_date <= date('Y') ) {
@@ -191,7 +194,7 @@
                     $errorMsg['submitted_date'] = "Submitted date can not be greater then current month";
                 }   
                 $smarty->assign('errorMsg',$errorMsg);
-    }
+        }
 	else if($_POST['btnExit'] == "Exit")
 	{
 		//  header("Location:ProjectList.php?projectId=".$projectId);
