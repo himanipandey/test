@@ -1836,7 +1836,7 @@ function getDateNow(){
                          <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Villa Floors</td>
-
+						 <td nowrap="nowrap"  align="left" class=whiteTxt>Booking Status</td>
                     </tr>
                     {$cntPrice = 0}
                     {foreach from = $uptionDetailWithPrice key=key item = value}
@@ -1876,6 +1876,15 @@ function getDateNow(){
                         </td>
                       <td >
                             {$valueInner['villa_no_floors']}
+                      </td>
+                      <td >{if $valueInner['booking_status_id'] > 0}
+																	{if $valueInner['booking_status_id'] == 1}Available{/if}
+																	{if $valueInner['booking_status_id'] == 2}Sold out{/if}
+																	{if $valueInner['booking_status_id'] == 3}On Hold{/if}
+																{else}
+																	--
+																{/if}
+                           
                       </td>
                     {$cntPrice = $cntPrice+1}
 		   </tr>
