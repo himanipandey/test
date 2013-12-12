@@ -480,7 +480,7 @@
 								  <td width="20%" align="right" valign ="top"><b> Promised Completion Date:</b> </td><td width="30%" align="left">
 									<input name="eff_date_to_prom" value="{$eff_date_to_prom}" type="text" class="formstyle2" id="f_date_c_prom" value="" size="10" />  <img src="images/cal_1.jpg" id="f_trigger_c_prom" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 								  </td>
-								  <td width="50%" align="left"><font color="red">{if count($ErrorMsg['completionDateGreater'])>0} {$ErrorMsg['completionDateGreater']}{/if}</font> </td>
+								  <td width="50%" align="left"><font color="red">{if count($ErrorMsg['CompletionDateGreater'])>0} {$ErrorMsg['CompletionDateGreater']}{/if}</font> </td>
 							   </tr>
                                                            <script type="text/javascript">
                                                                 var cals_dict = {

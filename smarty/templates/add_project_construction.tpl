@@ -168,7 +168,7 @@
                                               <tr>
                                                 <td nowrap width="20%" align="right"><b>Launch Date :</b> </td>
                                                 <td nowrap width="30%" align="left">
-                                                    {$current_phase[0]['launch_date']}
+                                                    {$launchDate}
                                                     <input type="hidden" name = "launchDate" value="{$current_phase[0]['launch_date']}">
                                                 </td>
                                                 <td width="50%" align="left" nowrap>

@@ -88,7 +88,14 @@
                 if( $launchDate != '' && ($year_expected_completion < $expLaunchDate[0] 
                         || ( $year_expected_completion == $expLaunchDate[0] && $month_expected_completion <= $expLaunchDate[1])) ){
                     $errorMsg['CompletionDateGreater'] = 'Completion date to be always greater than launch date';
-                }/******end validation taken from project add/edit page*************/
+                }
+                if( $launchDate != '' && $expectedCompletionDate !='' ) {
+                    $retdt  = ((strtotime($expectedCompletionDate)-strtotime($launchDate))/(60*60*24));
+                    if( $retdt <= 180 ) {
+                        $errorMsg['CompletionDateGreater'] = 'Completion date to be always 6 month greater than launch date';
+                    }
+                }
+                /******end validation taken from project add/edit page*************/
                 
                 else if( ($month_effective_date <= date('m') && $year_effective_date == date('Y')) || $year_effective_date <= date('Y') ) {
                     //code for update completion date history if month and year are same and already exists entry

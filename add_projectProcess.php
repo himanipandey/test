@@ -302,7 +302,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
         /**code for new launch and completion date diff and if In case PROJECT_STATUS = Pre Launch then Pre_launch_date cannot be empty In case PROJECT_STATUS = Occupied or Ready For Possession then  ****/  
         $launchDt = $eff_date_to;
         $preLaunchDt = $pre_launch_date;
-
         if( $launchDt == '0000-00-00' )    
             $launchDt = '';
         else {
@@ -315,11 +314,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $exp = explode(" 00:",$preLaunchDt);
             $preLaunchDt = $exp[0];
         }
-        if( $promisedDt == '0000-00-00' )
-            $promisedDt = '';
+        if( $eff_date_to_prom == '0000-00-00' )
+            $eff_date_to_prom = '';
         else {
-            $exp = explode(" 00:",$promisedDt);
-            $promisedDt = $exp[0];
+            $exp = explode(" 00:",$eff_date_to_prom);
+            $eff_date_to_prom = $exp[0];
         }
         if( $preLaunchDt != '' && $launchDt !='' ) {
             $retdt  = ((strtotime($launchDt) - strtotime($preLaunchDt)) / (60*60*24));
@@ -350,16 +349,14 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
            }
        }
-       
-       if( $launchDt != '' && $promisedDt !='' ) {
-            $retdt  = ((strtotime($promisedDt)-strtotime($launchDt))/(60*60*24));
-            if( $retdt <= 0 ) {
-                $ErrorMsg['CompletionDateGreater'] = 'Completion date to be always greater than launch date';
+       if( $launchDt != '' && $eff_date_to_prom !='' ) {
+            $retdt  = ((strtotime($eff_date_to_prom)-strtotime($launchDt))/(60*60*24));
+            if( $retdt <= 180 ) {
+                $ErrorMsg['CompletionDateGreater'] = 'Completion date to be always 6 month greater than launch date';
             }
         }
-
-    if( $preLaunchDt != '' && $promisedDt !='' && $projectId == '') {
-            $retdt  = ((strtotime($promisedDt) - strtotime($preLaunchDt)) / (60*60*24));
+    if( $preLaunchDt != '' && $eff_date_to_prom !='' && $projectId == '') {
+            $retdt  = ((strtotime($eff_date_to_prom) - strtotime($preLaunchDt)) / (60*60*24));
             if( $retdt <= 0 ) {
                 $ErrorMsg['CompletionDateGreater'] = "Completion date to be always greater than Pre Launch date";
             }
@@ -378,11 +375,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
        }
 
 
-      if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && ($promisedDt == '' || $promisedDt == '0000-00-00') && $projectId == '' ) {
+      if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && ($eff_date_to_prom == '' || $eff_date_to_prom == '0000-00-00') && $projectId == '' ) {
            $ErrorMsg['CompletionDateGreater'] = "Completion date is mandatory!";
        }
        if( $Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4 ) {
-           $yearExp = explode("-",$promisedDt);
+           $yearExp = explode("-",$eff_date_to_prom);
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
                  $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
@@ -474,8 +471,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
             else if($skipUpdationCycle == 0 && $updationCycleIdOld == skipUpdationCycle_Id)
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
-            $arrOx = array();
-           // $arrOx = 
             
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
 
@@ -486,7 +481,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->phase_name = 'No Phase';
                $phase->phase_type = 'Logical';
                $phase->completion_date = $eff_date_to_prom;
-               $phase->status     = 'Active';
+               $phase->launch_date = $eff_date_to;
+               $phase->status = 'Active';
                $phase->created_at = date('Y-m-d H:i:s');
                $phase->updated_at = date('Y-m-d H:i:s');
                $phase->updated_by = $_SESSION['adminId'];
