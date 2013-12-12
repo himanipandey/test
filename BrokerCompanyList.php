@@ -9,6 +9,8 @@ include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
 include("includes/configs/configs.php");
+include("s3upload/s3_config.php");
+include("SimpleImage.php");
 date_default_timezone_set('Asia/Kolkata');
 AdminAuthentication();	
 include("modelsConfig.php");

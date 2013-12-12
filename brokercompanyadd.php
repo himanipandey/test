@@ -23,6 +23,20 @@ $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'');
 
 if(!empty($_GET['brokerCompanyId']))
 {
+    $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$_GET['brokerCompanyId']));
+    $imgurl = '';
+    $imgid = '';
+    if(!empty($img))
+    {
+        foreach($img as $k1 => $v1)
+        {
+            if($key == "data")
+            {
+                $imgurl = $v1[0]->absolutePath;
+                $imgid = $v1[0]->id;
+            }
+        }
+    }
     $brkrDet = BrokerCompany::getById($_GET['brokerCompanyId']);
     //echo BrokerCompany::connection()->last_query."<br>";
     $cityLocIDArr = BrokerCompanyLocation::CityLocIDArr($_GET['brokerCompanyId']);
@@ -42,6 +56,9 @@ if(!empty($_GET['brokerCompanyId']))
 //    
 //    die;
     $contactIDArr = array_merge($contactIDArr , !empty($brkrDet)?$brkrDet:array());
+    
+    $smarty->assign("imgurl", !empty($imgurl)?$imgurl:'');
+    $smarty->assign("imgid", !empty($imgid)?$imgid:'');
     
     $smarty->assign("name", !empty($contactIDArr['name'])?$contactIDArr['name']:'');
     $smarty->assign("status", !empty($contactIDArr['status'])?$contactIDArr['status']:'');

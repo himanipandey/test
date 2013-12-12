@@ -6,7 +6,7 @@
  */
 
     $accessBroker = '';
-    
+    $image_id = '';
     $smarty->assign("accessBroker",$accessBroker);
     
     $brokerCompanyId = '';
@@ -79,6 +79,8 @@
         $citypkidArr    =   !empty($_POST['citypkidArr'])?json_decode(base64_decode($_POST['citypkidArr'])):array();
         $remove_citylocids = !empty($_POST['remove_citylocids'])?json_decode(base64_decode($_POST['remove_citylocids'])):array();
         
+        $image_id       =  trim($_POST['image_id']);
+        
         if(empty($remove_citylocids))
             $finaladdcitylocids = $citypkidArr;
         else
@@ -102,6 +104,8 @@
         $smarty->assign("cc_email", $cc_email);
         $smarty->assign("cc_fax", $cc_fax);
         $smarty->assign("cc_mobile", $cc_mobile);
+        
+        $smarty->assign("image_id", $image_id);
         
         $brokerChk = BrokerCompany::chkName($brokerCName);
                 
@@ -206,7 +210,7 @@
         else if (empty($brokerCompanyId)){	
             
             ResiProject::transaction(function(){
-                global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids,$logo,$newImagePath,$s3;
+                global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids,$logo,$newImagePath,$s3,$image_id;
             //print'<pre>';
 //            print_r($_POST);
 //            die;
@@ -216,19 +220,19 @@
                 $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];    
             }
             
-            //$sql_broker_company = @mysql_query("INSERT INTO `brokers` SET 
-//                                            `broker_name` = '".$brokerCName."',
-//                                            `status` = '".$status."',
-//                                            `description` = '".$description."',
-//                                            `pan` = '".$pan."',
-//                                            `primary_email` = '".$email."',
-//                                            `active_since` = '".$active_since."',
-//                                            `created_at` = '".date('Y-m-d H:i:s')."',
-//                                            `updated_by` = '".$_SESSION['adminId']."'
-//                                    ")or die(mysql_error());            
+            $sql_broker_company = @mysql_query("INSERT INTO `brokers` SET 
+                                            `broker_name` = '".$brokerCName."',
+                                            `status` = '".$status."',
+                                            `description` = '".$description."',
+                                            `pan` = '".$pan."',
+                                            `primary_email` = '".$email."',
+                                            `active_since` = '".$active_since."',
+                                            `created_at` = '".date('Y-m-d H:i:s')."',
+                                            `updated_by` = '".$_SESSION['adminId']."'
+                                    ")or die(mysql_error());            
             
-            //$broker_id = @mysql_insert_id();
-            $broker_id = 4;
+            $broker_id = @mysql_insert_id();
+            //$broker_id = 4;
             
             $primary_email = !empty($email)?$email:'';
             if($broker_id != false) {
@@ -242,22 +246,19 @@
                     
                     if(!$flag)
                     {
-                        echo "error<br>";
-                        die;
-                    }
-                        
-                    $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                        $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $newimgName),
                                                 "object" => "brokerCompany", "object_type" => "brokerCompany",
                                                 "object_id" => $broker_id, "image_type" => "logo"));
                        
-                    $response = $s3upload->upload();
-                    $image_id = $response["service"]->data();
-                    $image_id = $image_id->id;
-                    print'<pre>';
-                    print_r($response);
-                    print_r($image_id);
-                    die;
+                        $response = $s3upload->upload();
+                        $image_id = $response["service"]->data();
+                        $image_id = $image_id->id;
+                    }
+                    //print'<pre>';
+//                    print_r($response);
+//                    print_r($image_id);
+//                    die;
                 }
                 
                 $brokerIdFormapping = $broker_id;
@@ -545,7 +546,7 @@
         else {
             
            ResiProject::transaction(function(){
-            global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids,$brokerCompanyId;
+            global $brokerCName,$pan,$description,$status,$addressline1,$addressline2,$city_id,$pincode,$phone1,$phone2,$email,$fax,$active_since,$primary_address_id,$fax_number_id,$primary_broker_contact_id,$primary_contact_number_id,$cp_name,$cp_phone1,$cp_phone2,$cp_email,$cp_fax,$cp_mobile,$cp_ids,$acontactids,$rcontacts,$finalcontacts,$cc_phone,$cc_email,$cc_fax,$cc_mobile,$citypkidArr,$remove_citylocids,$finaladdcitylocids,$brokerCompanyId,$image_id,$logo,$newImagePath,$s3;
             
             $brokerCommpany = BrokerCompany::find_by_id($brokerCompanyId);
             
@@ -565,9 +566,37 @@
             $brokerCommpany->updated_by = $_SESSION['adminId'];
             $brokerCommpany->save();
             
+            
+            
             if($brokerCommpany->id != false) {
                 
                 $brokerIdFormapping = $brokerCommpany->id;
+                
+                if(!empty($logo['name']) && !empty($image_id))
+                {
+                    list($imgname , $extension) = explode("." , $logo['name']);
+                    $newimgName = $newImagePath.time(). '.' .$extension; 
+                    
+                    $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
+                    
+                    if(!$flag)
+                    {
+                        $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $newimgName),
+                                                "object" => "brokerCompany", "object_type" => "brokerCompany",
+                                                "object_id" => $broker_id, "image_type" => "logo",
+                                                "service_image_id" => $image_id
+                                                ));
+                       
+                        $response = $s3upload->update();
+                        $image_id = $response["service"]->data();
+                        $image_id = $image_id->id;
+                    }
+                    //print'<pre>';
+//                    print_r($response);
+//                    print_r($image_id);
+//                    die;
+                }
                 
                 /** -- Primary Contact Entry in broker_contacts Table -- */
                 

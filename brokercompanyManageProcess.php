@@ -4,6 +4,7 @@
  * @author AKhan
  * @copyright 2013
  */
+ 
     $sort = 'all';
     $page = '1';
     if(isset($_GET['sort']) && !empty($_GET['sort']))
@@ -43,10 +44,6 @@
     
     $options = array();
     $NumRows = '';
-    //$join = " left join broker_contacts
-//        on brokers.id = broker_contacts.broker_id 
-//        left join _t_city AS city
-//        on addresses.city_id = city.city_id";
     $join = "";
     
     if(!empty($RowsPerPage) && !empty($Offset))
@@ -101,38 +98,34 @@
     //print'<pre>';
 //    print_r($brokerCompany);
 //    die;
-
+    
+    //$img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId=1'));
+    //print'<pre>';
+    ////$imgurl = '';
+//    $imgid = '';
+//    if(!empty($img))
+//    {
+//        foreach($img as $key => $val)
+//        {
+//            //print_r($val);
+//            if($key == "data")
+//            {
+//                $imgurl = $val[0]->absolutePath;
+//                $imgid = $val[0]->id;
+//            }
+//        }
+//        //print_r($img);
+//    }
+    //echo $imgurl." ".$imgid;
+//    die;
     if(!empty($brokerCompany))
     {
+        
         foreach($brokerCompany as $key => $val)
         {
-            
             $bcmp = array();
             $bcontact = array();
-            //$bcmpLocation = BrokerCompanyLocation::find('all' , array('conditions' => "table_name = 'brokers' AND table_id =". $val->id));
-            //$bcmpLocation = BrokerCompanyLocation::CityLocIDArr($val->id);
             
-            
-            
-            //if(!empty($bcmpLocation))
-//            {
-//                foreach($bcmpLocation as $k => $v)
-//                    $bcmp[] = $v->pkid;
-//            }
-//            
-//            $contactDetail = BrokerCompanyContact::ContactArr($val->id);
-//            
-//            if(!empty($contactDetail))
-//            {
-//                foreach($contactDetail as $k => $v)
-//                    $bcontact[] = $v['id'];
-//            }
-            //print'<pre>';
-//            print_r($bcmpLocation);
-//            print_r($contactDetail);
-//            print_r($bcmp);
-//            print_r($bcontact);
-//            die;
             $brokerDataArr[$i]['id'] = $val->id;
             
             $name = '';
@@ -165,64 +158,26 @@
             $brokerDataArr[$i]['description'] = $desc;
             $brokerDataArr[$i]['status'] = $val->status;
             
-            //$addr = '';
-//            $addressline1 = '';
-//            $addressline2 = '';
-//            $city = '';
-//            $pincode = '';
-//            foreach($bcmpLocation as $k => $v)
-//            {
-//                $addressline1 = $v->address_line_1;
-//                $addressline2 = $v->address_line_2;
-//                $city = $v->city;
-//                $pincode = $v->pincode;
-//            }
-//            
-//            if(!empty($addressline1) && !empty($addressline2))
-//            {
-//                $addr = $addressline1." ".$addressline2;
-//                if(strlen($addr) > 16)
-//                    $addr = substr($addr , 0 , 12).'...';
-//            }
-//            else if(!empty($addressline1))
-//            {
-//                $addr = $addressline1;
-//                if(strlen($addr) > 16)
-//                    $addr = substr($addr , 0 , 12).'...';
-//            }
-//            else if(!empty($addressline2))
-//            {
-//                $addr = $addressline2;
-//                if(strlen($addr) > 16)
-//                    $addr = substr($addr , 0 , 12).'...';
-//                            
-//            }
-                
-             
-            //$brokerDataArr[$i]['addressline1'] = $addr;
-//            $brokerDataArr[$i]['city_id'] = $city;
-//            $brokerDataArr[$i]['pincode'] = $pincode;
-//            $brokerDataArr[$i]['phone1'] = !empty($val->phone1)?$val->phone1:'';
-//            $brokerDataArr[$i]['phone2'] = !empty($val->phone2)?$val->phone2:'';
-//            $brokerDataArr[$i]['fax'] = !empty($val->fax)?$val->fax:'';
+            $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$val->id));
+            $imgurl = '';
+            $imgid = '';
+            if(!empty($img))
+            {
+                foreach($img as $k1 => $v1)
+                {
+                    if($key == "data")
+                    {
+                        $imgurl = $v1[0]->absolutePath;
+                        $imgid = $v1[0]->id;
+                    }
+                }
+            }
             
-            //$eml = '';
-//            if(!empty($val->email))
-//            {
-//                if(strlen($val->email) > 14)
-//                    $eml = substr($val->email , 0 ,14).'...';
-//                else
-//                    $eml = $val->email;
-//            }
-//            else
-//            {
-//                $eml = '';
-//            }
-            
-            //$brokerDataArr[$i]['email'] = $eml;
             $flg = 0;
+            
             if(!empty($val->active_since))
             {
+                
                 foreach($val->active_since as $k => $v)
                 {
                     if($k == 'date')
@@ -236,11 +191,6 @@
             if($flg == 0)
                 $brokerDataArr[$i]['active_since'] = '';
             
-            //$brokerDataArr[$i]['cc_phone'] = $val->cc_phone;
-//            $brokerDataArr[$i]['cc_mobile'] = $val->cc_mobile;
-//            $brokerDataArr[$i]['cc_fax'] = $val->cc_fax;
-//            $brokerDataArr[$i]['cc_email'] = $val->cc_email;
-//            
             $flg = 0;
             if(!empty($val->created_at))
             {
@@ -277,16 +227,14 @@
                 
             
             $brokerDataArr[$i]['updated_by'] = $val->updated_by;
-            //$brokerDataArr[$i]['label'] = $val->label;
-                        
-            //$brokerDataArr[$i]['cityloc'] = base64_encode(json_encode($bcmp));
-            //$brokerDataArr[$i]['contacts'] = base64_encode(json_encode($bcontact));
+            $brokerDataArr[$i]['imageurl'] = $imgurl;
+            $brokerDataArr[$i]['imageid'] = $imgid;
             
             $i++;
             
         }
     }
-   // die;
+   
     //print'<pre>';
 //    print_r($brokerDataArr);
 //    die;
