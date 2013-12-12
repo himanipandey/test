@@ -57,7 +57,7 @@ if(!empty($_GET['brokerCompanyId']))
 //    die;
     $contactIDArr = array_merge($contactIDArr , !empty($brkrDet)?$brkrDet:array());
     
-    $smarty->assign("imgurl", !empty($imgurl)?$imgurl:'');
+    
     $smarty->assign("imgid", !empty($imgid)?$imgid:'');
     
     $smarty->assign("name", !empty($contactIDArr['name'])?$contactIDArr['name']:'');

@@ -571,11 +571,10 @@
             $brokerCommpany->save();
             
             
-            
             if($brokerCommpany->id != false) {
                 
                 $brokerIdFormapping = $brokerCommpany->id;
-                
+                echo $image_id;
                 if(!empty($logo['name']) && !empty($image_id))
                 {
                     list($imgname , $extension) = explode("." , $logo['name']);
@@ -596,12 +595,12 @@
                         $image_id = $response["service"]->data();
                         $image_id = $image_id->id;
                     }
-                    //print'<pre>';
-//                    print_r($response);
-//                    print_r($image_id);
-//                    die;
+                    print'<pre>';
+                    print_r($response);
+                    print_r($image_id);
+                    die;
                 }
-                
+                die;
                 /** -- Primary Contact Entry in broker_contacts Table -- */
                 
                 

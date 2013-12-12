@@ -475,7 +475,6 @@
                   <input type="hidden" name="primary_contact_number_id" id="primary_contact_number_id" value="{$primary_contact_number_id}" />
                   
                   <input type="hidden" name="imgid" value="{$imgid}" id="imgid" />
-                  <input type="hidden" name="imgurl" value="{$imgurl}" id="imgurl" />
                   
                   <input type="hidden" name="sort" id="sort" value="{$sort}" />
                   <input type="hidden" name="page" id="page" value="{$page}" />
