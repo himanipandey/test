@@ -51,7 +51,7 @@
                         <TR class = "headingrowcolor" height="25">
                               <TD class=whiteTxt width=5% align="center"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
                               <TD class=whiteTxt width=5% align="center">S.No.</TD>
-                              <TD class=whiteTxt width=15% align="left" style="overflow:hidden; width:50px; word-wrap: break-word;">Error Type: Error Desc</TD>
+                              <TD class=whiteTxt width=15% align="left" style="overflow:hidden; width:250px; word-wrap: break-word;">Error Type: Error Desc</TD>
                               <TD class=whiteTxt width=25% align="left">Project</TD>
                               <TD class=whiteTxt width=25% align="left">Property Type</TD>
                               <TD class=whiteTxt width=15% align='left'>Date Reported</TD>
@@ -80,7 +80,7 @@
                                     <input type="checkbox" id="selectinvert{$errorDataArr[data].ID}" name="selectinvert" value="{$errorDataArr[data].ID}" />
                                 </TD>
                                 <TD align=center class=td-border>{$count}</TD>
-                                <TD align=left class=td-border style="overflow:hidden; width:50px; word-wrap: break-word;"><b>{$error_type[$errorDataArr[data].ERROR_TYPE]}</b>: {$errorDataArr[data].DETAILS}</TD>
+                                <TD align=left class=td-border style="overflow:hidden; width:250px; word-wrap: break-word;"><b>{$error_type[$errorDataArr[data].ERROR_TYPE]}</b>: {$errorDataArr[data].DETAILS}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].PROJECT_NAME}, {$errorDataArr[data].LOCALITY}, {$errorDataArr[data].CITY}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].UNIT_NAME} {$errorDataArr[data].UNIT_TYPE}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].DATE|date_format}</TD>
