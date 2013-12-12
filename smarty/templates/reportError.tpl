@@ -45,19 +45,19 @@
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
                     
                     <div id="messageUpdate"></div>
-                    <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0 style='table-layout: fixed;'>
+                    <TABLE cellSpacing=1 cellPadding=4 width="100%;" align=center border=0 style='table-layout: fixed;'>
                     <form name="form1" method="post" action="">
                     <TBODY>
                         <TR class = "headingrowcolor" height="25">
-                              <TD class=whiteTxt width=5% align="center"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
-                              <TD class=whiteTxt width=5% align="center">S.No.</TD>
-                              <TD class=whiteTxt width=15% align="left" style="overflow:hidden; width:250px; word-wrap: break-word;">Error Type: Error Desc</TD>
-                              <TD class=whiteTxt width=25% align="left" style="width:150px;">Project</TD>
-                              <TD class=whiteTxt width=25% align="left" style="width:150px;">Property Type</TD>
-                              <TD class=whiteTxt width=15% align='left' style="width:150px;">Date Reported</TD>
-                              <TD class=whiteTxt width=15% align='left' style="width:150px;">Status</TD>
-                              <TD class=whiteTxt width=15% align='left' style="width:150px;">Comments</TD>
-                              <TD class=whiteTxt width=12% align="center" style="width:150px;">History</TD>
+                              <TD class=whiteTxt width=5% align="center" style="width:20px;"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
+                              <TD class=whiteTxt width=5% align="center" style="width:30px;">S.No.</TD>
+                              <TD class=whiteTxt width=15% align="left" style="width:250px; word-wrap: break-word;">Error Type: Error Desc</TD>
+                              <TD class=whiteTxt width=25% align="left" style="width:100px;">Project</TD>
+                              <TD class=whiteTxt width=25% align="left" style="width:100px;">Property Type</TD>
+                              <TD class=whiteTxt width=15% align='left' style="width:80px;">Date Reported</TD>
+                              <TD class=whiteTxt width=15% align='left' style="width:200px;">Status</TD>
+                              <TD class=whiteTxt width=15% align='left' style="width:250px;">Comments</TD>
+                              <TD class=whiteTxt width=12% align="center" style="width:100px;">History</TD>
                               <!--<TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
                               <TD class=whiteTxt width=12% align="center">History</TD-->
                         </TR>
