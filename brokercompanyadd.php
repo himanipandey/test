@@ -30,7 +30,7 @@ if(!empty($_GET['brokerCompanyId']))
     {
         foreach($img as $k1 => $v1)
         {
-            if($key == "data")
+            if($k1 == "data")
             {
                 $imgurl = $v1[0]->absolutePath;
                 $imgid = $v1[0]->id;
