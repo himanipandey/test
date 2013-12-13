@@ -123,10 +123,10 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                     $phase->reset_options($arr);
                 }
 
-          //  if (isset($_POST['btnSave']))
-               // header("Location:ProjectList.php?projectId=" . $projectId);
-           // else if (isset($_POST['btnAddMore']))
-              //  header("Location:phase.php?projectId=" . $projectId);
+            if (isset($_POST['btnSave']))
+                header("Location:ProjectList.php?projectId=" . $projectId);
+            else if (isset($_POST['btnAddMore']))
+                header("Location:phase.php?projectId=" . $projectId);
         }
         else {
               $smarty->assign("error_msg",$error_msg);
