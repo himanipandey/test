@@ -126,7 +126,7 @@
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0>
                     <TBODY>
                         <TR>
-                          <TD class="h1" width="67%"><img height="18" hspace="5" src="../images/arrow.gif" width="18">Project Construction Status({ucwords($fetch_projectDetail[0]['PROJECT_NAME'])})</TD>
+                          <TD class="h1" width="67%"><img height="18" hspace="5" src="../images/arrow.gif" width="18">Promised Completion Date({ucwords($fetch_projectDetail[0]['PROJECT_NAME'])})</TD>
                           <TD width="33%" align ="right"class="h1"></TD>   
 
                         </TR>

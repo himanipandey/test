@@ -223,7 +223,6 @@
                                                 <td width="50%" align="left"></td>
                                             </tr>
 
-                                         {if $phaseObject.PHASE_TYPE != 'Logical'}
                                             <tr>
                                                 <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
                                                 <td width="30%" align="left">
@@ -241,9 +240,6 @@
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
                                                 </td>
                                             </tr>
-                                            
-                                            
-                                        {/if}
 
                                         <tr>
                                             <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>

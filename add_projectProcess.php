@@ -294,11 +294,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
         }
         if( $exp_launch_date != '' && $exp_launch_date != '0000-00-00' ) {
              $retdt  = ((strtotime($exp_launch_date)-strtotime(date("Y-m-d")))/(60*60*24));
-            if($pre_launch_date !='' && $pre_launch_date != '0000-00-00' && date($pre_launch_date) > date($exp_launch_date)){
-                    $ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Pre-Launch Date!';
-            }elseif($eff_date_to !='' && $eff_date_to != '0000-00-00' && date($eff_date_to) > date($exp_launch_date)){
-                    $ErrorMsg['supplyDate'] = 'Expected supply date should be greater than Launch Date!';
-            }elseif( $retdt <= 0 ) {
+            if( $retdt <= 0 ) {
                 $ErrorMsg['supplyDate'] = 'Expected supply date should be future date!';
             }
         }

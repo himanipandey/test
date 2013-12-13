@@ -135,27 +135,23 @@ if (isset($_POST['btnSave'])) {
     if ($PhaseExists != -1 && $phasename != $old_phase_name) {
         header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=1");
     } else {
-        
+        $error_msg = '';
         $smarty->assign("launch_date",$launch_date);
            // $smarty->assign("completion_date",$completion_date);
         if( $launch_date != '' && $completion_date !='' ) {
-            $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
+            $retdt  = ((strtotime($launch_date)-strtotime($completion_date))/(60*60*24));
             if( $retdt <= 180 ) {
                 $error_msg = 'Launch date should be atleast 6 month less than completion date';
             }
             
-            $smarty->assign("launch_date",$launch_date);
-            $smarty->assign("completion_date",$completion_date);
-            $smarty->assign("error_msg",$error_msg);
         }
         else if( $launch_date != '') {
             $retdt  = ((strtotime(date('Y-m-d')) - strtotime($launch_date)) / (60*60*24));
             if( $retdt < 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
-                $smarty->assign("error_msg",$error_msg);
           }
-        else{
+        if( $error_msg == '' ){
             // Flats Config
             $flats_config = array();
             foreach ($_REQUEST as $key => $value) {
@@ -247,6 +243,11 @@ if (isset($_POST['btnSave'])) {
             $loc = "Location:phase_edit.php?projectId=$projectId";
             if($preview == 'true') $loc = $loc."&preview=true";
             header($loc);
+        }
+        else {
+            $smarty->assign("error_msg",$error_msg);
+            $smarty->assign("launch_date",$launch_date);
+            $smarty->assign("completion_date",$completion_date);
         }
     }
 } else if ($_POST['btnExit'] == "Exit") {

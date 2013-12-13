@@ -1,6 +1,4 @@
-
 <?php
-
 $projectId = $_REQUEST['projectId'];
 $project = ResiProject::virtual_find($projectId);
 $options = $project->get_all_options();
@@ -54,32 +52,27 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
             $villas_config[$beds] = $value;
         }
     }
-
     $PhaseExists = searchPhase($phaseDetail, $phasename);
     $phase = null;
     if ($PhaseExists != -1) {
-        header("Location:phase.php?projectId=" . $projectId . "&error=true");
+        //header("Location:phase.php?projectId=" . $projectId . "&error=true");
     } else {
             $smarty->assign("launch_date",$launch_date);
             $smarty->assign("completion_date",$completion_date);
+            $error_msg = '';
         if( $launch_date != '' && $completion_date !='' ) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
             if( $retdt <= 180 ) {
                 $error_msg = 'Completion date to be always 6 month greater than launch date';
             }
-            
-            $smarty->assign("launch_date",$launch_date);
-            $smarty->assign("completion_date",$completion_date);
-            $smarty->assign("error_msg",$error_msg);
         }
         else if( $launch_date != '') {
             $retdt  = ((strtotime(date('Y-m-d')) - strtotime($launch_date)) / (60*60*24));
             if( $retdt < 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
-                $smarty->assign("error_msg",$error_msg);
           }
-        else{
+          if($error_msg == ''){
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
                 global $projectId, $phasename, $launch_date, $completion_date, $remark, $towers, $bookingStatus, $phase;
@@ -105,7 +98,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
             /***********code related to completion date add/edit**************/
             $qryFetchPhaseId = "select phase_id from resi_project_phase 
                 where project_id = $projectId and phase_name = '".$phasename."'";
-            $resFetchPhaseId = mysql_query($qryFetchPhaseId);
+            $resFetchPhaseId = mysql_query($qryFetchPhaseId) or die(mysql_error());
             $dataFetchPhaseId = mysql_fetch_assoc($resFetchPhaseId);
 
             $qryCompletionDate = "insert into resi_proj_expected_completion 
@@ -130,10 +123,15 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                     $phase->reset_options($arr);
                 }
 
-            if (isset($_POST['btnSave']))
-                header("Location:ProjectList.php?projectId=" . $projectId);
-            else if (isset($_POST['btnAddMore']))
-                header("Location:phase.php?projectId=" . $projectId);
+          //  if (isset($_POST['btnSave']))
+               // header("Location:ProjectList.php?projectId=" . $projectId);
+           // else if (isset($_POST['btnAddMore']))
+              //  header("Location:phase.php?projectId=" . $projectId);
+        }
+        else {
+              $smarty->assign("error_msg",$error_msg);
+              $smarty->assign("launch_date",$launch_date);
+              $smarty->assign("completion_date",$completion_date);
         }
     }
 }
