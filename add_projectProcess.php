@@ -474,7 +474,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
             
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
-
+           //echo $eff_date_to." heer";die;
            if (!ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
            {
                $phase = new ResiProjectPhase();
@@ -489,8 +489,16 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->updated_by = $_SESSION['adminId'];
                $phase->submitted_date = date('Y-m-d H:i:s');
                $phase->virtual_save();
+           }else{
+                   $qryUpdatePhase = "update resi_project_phase 
+                       set launch_date = '".$eff_date_to."',
+                           completion_date = '".$completionDate."',
+                           updated_at = now(),
+                           updated_by = ".$_SESSION['adminId']."
+                       where project_id = $projectId and phase_name = 'No Phase'";
+                   mysql_query($qryUpdatePhase);
+                    
            }
-
             if($_POST['bookingStatus'] > 0)
                     mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID =".$_POST['bookingStatus']." WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
             else
