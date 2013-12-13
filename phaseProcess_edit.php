@@ -139,7 +139,7 @@ if (isset($_POST['btnSave'])) {
         $smarty->assign("launch_date",$launch_date);
            // $smarty->assign("completion_date",$completion_date);
         if( $launch_date != '' && $completion_date !='' ) {
-            $retdt  = ((strtotime($launch_date)-strtotime($completion_date))/(60*60*24));
+            $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
             if( $retdt <= 180 ) {
                 $error_msg = 'Launch date should be atleast 6 month less than completion date';
             }

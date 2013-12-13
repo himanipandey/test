@@ -500,7 +500,7 @@
                                                            </script>
                                                                 <input type = "hidden" name = "completionDate" value="">
                                                            {else}
-                                                               <input type = "hidden" name = "completionDate" value="{$eff_date_to_prom}">
+                                                               <input type = "hidden" name = "completionDate" value="{$completionDate}">
                                                            {/if}
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b>Expected Supply Date :</b> </td>

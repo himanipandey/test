@@ -193,9 +193,7 @@
                                             </select>
                                         </td>
                                         <td width="50%" align="left">
-                                            {if (count($phases) >1 && $phaseName != 'No Phase') || (count($phases) == 1 && $phaseName == 'No Phase')}
                                            {if $phaseId != -1} <input class="pt_click" type="button" title="Update Completion Date" value="Update Completion Date">{/if}
-                                           {else}&nbsp;{/if}
                                         </td>
                                     </tr>
 

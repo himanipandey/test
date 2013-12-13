@@ -653,6 +653,7 @@ elseif ($projectId!='') {
     $smarty->assign("open_space", stripslashes($ProjectDetail->open_space));
     $smarty->assign("shouldDisplayPrice", stripslashes($ProjectDetail->should_display_price));
     $smarty->assign("eff_date_to_prom", stripslashes($ProjectDetail->promised_completion_date));
+    $smarty->assign("completionDate", stripslashes($ProjectDetail->promised_completion_date));
     $smarty->assign("comments", stripslashes($ProjectDetail->comments));
     $smarty->assign("skipUpdationCycle", $ProjectDetail->updation_cycle_id);
     $smarty->assign("updationCycleIdOld", $ProjectDetail->updation_cycle_id);
