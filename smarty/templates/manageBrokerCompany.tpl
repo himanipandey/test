@@ -90,7 +90,7 @@
 			             
                         <TD align=center class=td-border>{$count}</TD>
                         <TD align=left class=td-border>{$value['name']}  </TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a id="showcontent_{$count}" href="#img_{$count}"> <img src="{$value['imageurl']}" style="width:120px;height:90px;" /> </a> <div style="display:none;"><div id="img_{$count}"><img src="{$value['imageurl']}" style="width:120px;height:90px;" /></div></div>{else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
+                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a class="showcontent" id="showcontent_{$count}" href="#img_{$count}"> <img src="{$value['imageurl']}" style="width:120px;height:90px;" /> </a> <div style="display:none;"><div id="img_{$count}"><img src="{$value['imageurl']}" style="width:120px;height:90px;" /></div></div>{else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['pan']}</TD>
                         <TD align=left class=td-border>{$value['description']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -142,14 +142,14 @@
 </TR>
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        //jQuery('.showcontent').click(function(){
+        jQuery('.showcontent').click(function(){
 //            var id = jQuery(this).attr('id');
 //            var subid = id.split("_");
 //            alert(subid[0] + ' ' + subid[1]);
 //            jQuery('#img_' + subid[1]).css("display" , "block");
-//            
-//        });
-          jQuery("a#showcontent_6").fancybox();     
+            jQuery("a#showcontent_6").fancybox();    
+        });
+               
         
     });
 </script>
