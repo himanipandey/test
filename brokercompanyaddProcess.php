@@ -592,6 +592,8 @@
                     {
                         if(!empty($image_id))
                         {
+                            echo "here2";
+                            die;
                             $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $newimgName),
                                             "object" => "brokerCompany", "object_id" => $broker_id, 
@@ -602,6 +604,8 @@
                         }
                         else
                         {
+                            echo "here1";
+                            die;
                             $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
                                                     "image_path" => str_replace($newImagePath, "", $newimgName),
                                                     "object" => "brokerCompany", "object_type" => "brokerCompany",
