@@ -748,7 +748,15 @@ function allProjectImages($projectId) {
     $data = mysql_query($sqlListingImages);
     $ImageDataListingArr = array();
     while ($dataListingArr = mysql_fetch_assoc($data)) {
+		
+		if($dataListingArr['tower_id']){
+			$sql_towername = mysql_fetch_object(mysql_query("SELECT *  FROM " . RESI_PROJECT_TOWER_DETAILS . "
+            WHERE
+            TOWER_ID ='" . $dataListingArr['tower_id'] . "'")) or die(mysql_error());
+            $dataListingArr['TOWER_NAME'] = $sql_towername->TOWER_NAME;
+		}
         $ImageDataListingArr [] = $dataListingArr;
+        
     }
     return $ImageDataListingArr;
 }
@@ -901,11 +909,23 @@ function towerDetail($towerId) {
 /* * ***********FUNCTION FOR FETCH LATEST CONSTRUCTION STATUS************** */
 
 function costructionDetail($projectId) {
-    $sql = "SELECT *
-					FROM " . RESI_PROJ_EXPECTED_COMPLETION . "
-				WHERE
-					PROJECT_ID ='" . $projectId . "'  ORDER BY EXPECTED_COMPLETION_ID DESC LIMIT 1";
-
+   $qryPhase = "select * from resi_project_phase
+   where project_id = $projectId and phase_name != 'No Phase' order by phase_id desc";
+   $resPhase = mysql_query($qryPhase);
+   $dataPhase = mysql_fetch_assoc($resPhase);
+   if(mysql_num_rows($resPhase)>0) {
+       $sql = "select * from resi_project_phase 
+           where 
+             phase_name != 'No Phase'
+           and 
+             project_id = $projectId
+          ORDER BY completion_date desc LIMIT 1";
+   }
+   else{
+        $sql = "select * from resi_project_phase 
+           where 
+             project_id = $projectId";
+   }   
     $data = mysql_query($sql) or die(mysql_error());
     $dataarr = mysql_fetch_assoc($data);
     return $dataarr;

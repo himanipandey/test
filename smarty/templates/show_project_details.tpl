@@ -1056,8 +1056,7 @@ function getDateNow(){
                                                         <b>Promised Completion Date:</b>
                                                     </td>
                                                     <td>
-                                                       {$completionDate}
-                                                    </td>
+                                                        {$completionDate}</td>
 						</tr>
 						
 						<tr height="25px;">
@@ -1737,6 +1736,10 @@ function getDateNow(){
 											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
 											<br><br>
 										<b>Image Title </b>:{$ImageDataListingArr[data].TITLE}<br><br>
+										{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
+											<b>Tagged Date </b>:{$ImageDataListingArr[data].tagged_month|strtotime|date_format:"%B %Y"}<br><br>
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{else}Other{/if}<br><br>
+										{/if}
 									</div>
 								</td>
 								{$cnt = $cnt+1} 		
@@ -2479,7 +2482,7 @@ function getDateNow(){
 								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 										<tr class="headingrowcolor" height="30px;">
 											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date <br> Booking Status</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
@@ -2537,7 +2540,7 @@ function getDateNow(){
 																<br>
 																{if $lastItem['LAUNCH_DATE'] != '' && $lastItem['COMPLETION_DATE'] != ''}
 																	
-																	{$lastItem['LAUNCH_DATE']} <br> {$lastItem['COMPLETION_DATE']}
+																	{$lastItem['LAUNCH_DATE']} <br> {$lastItem['COMPLETION_DATE']} <br> {$lastItem['submitted_date']}
 																{else}
 																	--
 																{/if}
