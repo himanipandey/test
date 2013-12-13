@@ -580,16 +580,17 @@
                     list($imgname , $extension) = explode("." , $logo['name']);
                     $newimgName = $newImagePath.time(). '.' .$extension; 
                     
+                    $s3upload = new ImageUpload(NULL, array("service_image_id" => $image_id));
+                    $response = $s3upload->delete();
+                    
+                    print'<pre>';
+                    print_r($response);
+                    die;
                     $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
                     
                     if($flag != '')
                     {
-                        $s3upload = new ImageUpload(NULL, array("service_image_id" => $image_id));
-                        $response = $s3upload->delete();
                         
-                        print'<pre>';
-                        print_r($response);
-                        die;
                         $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
                                         "image_path" => str_replace($newImagePath, "", $newimgName),
                                         "object" => "brokerCompany", "object_id" => $broker_id, 
