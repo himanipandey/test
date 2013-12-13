@@ -90,7 +90,7 @@
 			             
                         <TD align=center class=td-border>{$count}</TD>
                         <TD align=left class=td-border>{$value['name']}  </TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a class="showcontent" href="#img_{$count}"> <img src="{$value['imageurl']}" style="width:120px;height:90px;" /> </a> <div id="img_{$count}" style="display:none;"><img src="{$value['imageurl']}" style="width:120px;height:90px;" /></div>{else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
+                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a class="showcontent" id="showcontent{$count}" href="#img_{$count}"> <img src="{$value['imageurl']}" style="width:120px;height:90px;" /> </a> <div id="img_{$count}" style="display:none;"><img src="{$value['imageurl']}" style="width:120px;height:90px;" /></div>{else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['pan']}</TD>
                         <TD align=left class=td-border>{$value['description']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -142,8 +142,10 @@
 </TR>
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        
-               jQuery("a.showcontent").fancybox();
+        jQuery('.showcontent').click(function(){
+            jQuery("a#" + jQuery(this).attr('id')).fancybox();
+        });
+               
         
     });
 </script>
