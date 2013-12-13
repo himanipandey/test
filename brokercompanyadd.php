@@ -23,6 +23,8 @@ $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'');
 
 if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] == "edit")
 {
+    echo "here";
+    die;
     $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$_GET['brokerCompanyId']));
     $imgurl = '';
     $imgid = '';
