@@ -586,11 +586,16 @@
                     {
                         $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $newimgName),
-                                                "object" => "brokerCompany", "object_type" => "brokerCompany",
-                                                "object_id" => $broker_id, "image_type" => "logo",
+                                                "object" => "brokerCompany", "object_id" => $broker_id, 
+                                                "image_type" => "logo", 
                                                 "service_image_id" => $image_id
                                                 ));
-                       
+                        $response = $s3upload->delete();
+                        
+                        print'<pre>';
+                        print_r($response);
+                    
+                        
                         $response = $s3upload->update();
                         $image_id = $response["service"]->data();
                         $image_id = $image_id->id;
