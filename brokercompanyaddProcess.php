@@ -575,7 +575,7 @@
                 
                 $brokerIdFormapping = $brokerCommpany->id;
                 //echo $image_id;
-                if(!empty($logo['name']) && !empty($image_id))
+                if(!empty($logo['name']))
                 {
                     list($imgname , $extension) = explode("." , $logo['name']);
                     $newimgName = $newImagePath.time(). '.' .$extension; 
@@ -587,24 +587,36 @@
 //                    print_r($response);
 //                    die;
                     $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
-                    
+                    $response = '';
                     if($flag != '')
                     {
+                        if(!empty($image_id))
+                        {
+                            $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                                            "image_path" => str_replace($newImagePath, "", $newimgName),
+                                            "object" => "brokerCompany", "object_id" => $broker_id, 
+                                            "image_type" => "logo", 
+                                            "service_image_id" => $image_id
+                                            ));
+                            $response = $s3upload->update();    
+                        }
+                        else
+                        {
+                            $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                                                    "image_path" => str_replace($newImagePath, "", $newimgName),
+                                                    "object" => "brokerCompany", "object_type" => "brokerCompany",
+                                                    "object_id" => $broker_id, "image_type" => "logo"));
+                           
+                            $response = $s3upload->upload();
+                        }
                         
-                        $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
-                                        "image_path" => str_replace($newImagePath, "", $newimgName),
-                                        "object" => "brokerCompany", "object_id" => $broker_id, 
-                                        "image_type" => "logo", 
-                                        "service_image_id" => $image_id
-                                        ));
-                        $response = $s3upload->update();
                         $image_id = $response["service"]->data();
                         $image_id = $image_id->id;
                     }
-                    print'<pre>';
-                    print_r($response);
-                    print_r($image_id);
-                    die;
+                    //print'<pre>';
+//                    print_r($response);
+//                    print_r($image_id);
+//                    die;
                 }
                 //die;
                 /** -- Primary Contact Entry in broker_contacts Table -- */
