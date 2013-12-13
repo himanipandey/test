@@ -77,21 +77,21 @@ function prepareDisplayData($data){
     $result = array();
      
      $pids = "";
+     $depts = array();
+	 $prevs_depts = array();
     foreach ($data as $value)    
 		$pids .= $value['PROJECT_ID'].", ";
-		
-	$pids = substr($pids,0,strlen($pids)-2);
-	
-	$sql = "select group_concat(pa1.DEPARTMENT order by pa.ID desc) as department,rp.PROJECT_ID from resi_project rp inner join project_stage_history psh on rp.project_id = psh.project_id inner join project_assignment pa on psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID inner join proptiger_admin pa1 on pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and rp.project_id in (".$pids.") group by rp.PROJECT_ID;";
 
-	$sql_depts = dbQuery($sql);
+	if(!empty($pids)) {
+		$pids = substr($pids,0,strlen($pids)-2);
+		$sql = "select group_concat(pa1.DEPARTMENT order by pa.ID desc) as department,rp.PROJECT_ID from resi_project rp inner join project_stage_history psh on rp.project_id = psh.project_id inner join project_assignment pa on psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID inner join proptiger_admin pa1 on pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and rp.project_id in (".$pids.") group by rp.PROJECT_ID;";
+		$sql_depts = dbQuery($sql);
 	
-	$depts = array();
-	$prevs_depts = array();
-	foreach($sql_depts as $value){
-		$prv_asg_dept = explode(",",$value['department']);
-		$prevs_depts[$value['PROJECT_ID']] = $value['department'];
-		$depts[$value['PROJECT_ID']] = $prv_asg_dept[0];
+		foreach($sql_depts as $value){
+			$prv_asg_dept = explode(",",$value['department']);
+			$prevs_depts[$value['PROJECT_ID']] = $value['department'];
+			$depts[$value['PROJECT_ID']] = $prv_asg_dept[0];
+		}
 	}
 			        
     foreach ($data as $value) {
@@ -109,7 +109,7 @@ function prepareDisplayData($data){
         
         if(($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') && strstr($prevs_depts[$value['PROJECT_ID']],$value['DEPARTMENT'])){
             $assignment_type .= 'Reverted-';
-            if($depts[$value['PROJECT_ID']] === 'SURVEY')$assignment_type .= 'Field';
+            if(isset($depts[$value['PROJECT_ID']]) && $depts[$value['PROJECT_ID']] === 'SURVEY')$assignment_type .= 'Field';
         }
         
         
