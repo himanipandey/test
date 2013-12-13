@@ -20,7 +20,7 @@ function getDatesBetweeenTwoDates($fromDate, $toDate) {
  * ***********************************************
  * */
 function AdminDetail($adminId) {
-    $Sql = "SELECT USERNAME,ADMINEMAIL,CONCAT(FNAME,' ',LNAME) AS FNAME, DEPARTMENT FROM " . ADMIN . " WHERE ADMINID = '" . $adminId . "'";
+    $Sql = "SELECT USERNAME,ADMINEMAIL,MOBILE,CONCAT(FNAME,' ',LNAME) AS FNAME, DEPARTMENT FROM " . ADMIN . " WHERE ADMINID = '" . $adminId . "'";
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function AdminDetail()');
     if (mysql_num_rows($ExecSql) >= 1) {
         $Res = mysql_fetch_assoc($ExecSql);
@@ -28,6 +28,7 @@ function AdminDetail($adminId) {
         $ResDetails['Email'] = $Res['ADMINEMAIL'];
         $ResDetails['name'] = $Res['FNAME'];
         $ResDetails['DEPARTMENT'] = $Res['DEPARTMENT'];
+        $ResDetails['MOBILE'] = $Res['MOBILE'];
         return $ResDetails;
     } else {
         return 0;
