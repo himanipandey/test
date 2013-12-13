@@ -334,9 +334,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            $ErrorMsg['launchDate'] = "Launch date should be blank/zero";
        }
 
-       if( $Status == UNDER_CONSTRUCTION_ID_1 && ($launchDt == '' || $launchDt == '0000-00-00') && $projectId != '' ) {
-           $ErrorMsg['launchDate'] = "Launch date is mandatory!";
-       }
        if( $Status == UNDER_CONSTRUCTION_ID_1 ) { 
            $yearExp = explode("-",$launchDt);
            if( $yearExp[0] == date("Y") ) {
@@ -347,7 +344,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
                $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
            }
-           if($projectId != '' && $Status == UNDER_CONSTRUCTION_ID_1) {
+           if($projectId != '' && $Status == UNDER_CONSTRUCTION_ID_1 && ($completionDate != '' || $launchDt != '')) {
                $retdt  = ((strtotime($completionDate)-strtotime($launchDt))/(60*60*24));
                 if( $retdt <= 180 ) {
                     $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date';
@@ -379,24 +376,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $retdt < 0 ) {
                 $ErrorMsg['launchDateGreater'] = "Launch date should be less or equal to current date";
             }
-      }
-       
-    if( $Status == PRE_LAUNCHED_ID_8 && $preLaunchDt != '' && $projectId == '') {
-            $yearExp = explode("-",$preLaunchDt);
-           if( $yearExp[0] == date("Y") ) {
-               if( intval($yearExp[1]) > intval(date("m"))) {
-                 $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
-               }    
-           } 
-           else if (intval($yearExp[0]) > intval(date("Y")) ) {
-               $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
-           }
-       }
-
-
-      if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && ($eff_date_to_prom == '' || $eff_date_to_prom == '0000-00-00') && $projectId == '' ) {
-           $ErrorMsg['CompletionDateGreater'] = "Completion date is mandatory!";
-       }
+      }      
        if( $Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4 ) {
            $yearExp = explode("-",$eff_date_to_prom);
            if( $yearExp[0] == date("Y") ) {
