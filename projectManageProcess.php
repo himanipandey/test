@@ -110,8 +110,16 @@
   		if($city != '')
   		{
                     $getLocality = Array();
-                    $getLocality = Locality::getLocalityByCity($city);
-                    $smarty->assign("getLocality", $getLocality);
+                    if($city == 'othercities'){
+						foreach($arrOtherCities as $key => $value){
+							$cityLocality = Locality::getLocalityByCity($key);
+							if(!empty($cityLocality))
+								$getLocality = array_merge($getLocality,$cityLocality);
+						}
+					}else
+						$getLocality = Locality::getLocalityByCity($city);
+				
+					$smarty->assign("getLocality", $getLocality);
 		}
 
 		if(!isset($_REQUEST['Residential']))
@@ -153,7 +161,13 @@
 		{
                     if($_REQUEST['locality'] != '')
                         $arrSearchFields['locality_id'] = $_REQUEST['locality'];
-					elseif(isset($city) && !empty($city)){ //if only city selected		
+					elseif(isset($city) && !empty($city)){ //if only city selected	
+					
+					  if($city == 'othercities'){
+							$OtherCitiesKeys = array_keys($arrOtherCities);
+							$cities = implode(",",$OtherCitiesKeys);
+							$arrSearchFields['city_id'] = $cities;
+					  }else
 						$arrSearchFields['city_id'] = $city;
 					}
 					if($_REQUEST['project_name'] != '')

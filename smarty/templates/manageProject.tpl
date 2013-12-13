@@ -264,6 +264,7 @@ $(function() {
 
                                                                   <option value = "{$key}" {if $city == $key} selected  {else}{/if}>{$val}</option>
                                                           {/foreach}
+                                                          <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
                                                   </select>
                                           </td>
                                          
@@ -277,7 +278,7 @@ $(function() {
                                                 <option value = "">Select Locality</option>
                                                 {foreach from = $getLocality item = value}
                                                     <option value = "{$value->locality_id}" 
-                                                    {if $locality == $value->locality_id} selected {/if}>{$value->label}</option>
+                                                    {if $locality == $value->locality_id} selected {/if} >{if $city == "othercities"}{$value->cityname} - {/if}{$value->label}</option>
                                                 {/foreach}
                                               </select>
                                           </span>
