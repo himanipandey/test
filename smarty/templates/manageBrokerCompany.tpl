@@ -142,20 +142,18 @@
 </TR>
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        //jQuery('.showcontent').click(function(){
+        jQuery('.showcontent').click(function(){
 ////            var id = jQuery(this).attr('id');
 ////            var subid = id.split("_");
 ////            alert(subid[0] + ' ' + subid[1]);
 ////            jQuery('#img_' + subid[1]).css("display" , "block");
-//                
-//        });
-        jQuery("a.showcontent").fancybox({
-            var href = jQuery(this).attr('href');
-            $.fancybox({
-                type: 'iframe',
-                href: "'" + href + "'"
-            });
+                var href = jQuery(this).attr('href');
+                $.fancybox({
+                    type: 'iframe',
+                    href: "'" + href + "'"
+                });                
         });
+        
         
     });
 </script>
