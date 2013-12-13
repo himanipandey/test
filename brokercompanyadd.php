@@ -21,7 +21,7 @@ $smarty->assign("cityLocArr", $cityLocArr);
 $smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'');
 $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'');
 
-if(!empty($_GET['brokerCompanyId']))
+if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] == "mode")
 {
     $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$_GET['brokerCompanyId']));
     $imgurl = '';
@@ -30,13 +30,15 @@ if(!empty($_GET['brokerCompanyId']))
     {
         foreach($img as $k1 => $v1)
         {
-            if($k1 == "data")
+            if($k1 == "data" && !empty($v1))
             {
                 $imgurl = $v1[0]->absolutePath;
                 $imgid = $v1[0]->id;
+                break;
             }
         }
     }
+    
     $brkrDet = BrokerCompany::getById($_GET['brokerCompanyId']);
     //echo BrokerCompany::connection()->last_query."<br>";
     $cityLocIDArr = BrokerCompanyLocation::CityLocIDArr($_GET['brokerCompanyId']);
