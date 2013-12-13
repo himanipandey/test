@@ -1739,7 +1739,7 @@ function getDateNow(){
 										<b>Image Title </b>:{$ImageDataListingArr[data].TITLE}<br><br>
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 											<b>Tagged Date </b>:{$ImageDataListingArr[data].tagged_month|strtotime|date_format:"%B %Y"}<br><br>
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}$ImageDataListingArr[data].tower_id{else}Other{/if}<br><br>
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{else}Other{/if}<br><br>
 										{/if}
 									</div>
 								</td>

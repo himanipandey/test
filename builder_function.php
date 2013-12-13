@@ -748,7 +748,15 @@ function allProjectImages($projectId) {
     $data = mysql_query($sqlListingImages);
     $ImageDataListingArr = array();
     while ($dataListingArr = mysql_fetch_assoc($data)) {
+		
+		if($dataListingArr['tower_id']){
+			$sql_towername = mysql_fetch_object(mysql_query("SELECT *  FROM " . RESI_PROJECT_TOWER_DETAILS . "
+            WHERE
+            TOWER_ID ='" . $dataListingArr['tower_id'] . "'")) or die(mysql_error());
+            $dataListingArr['TOWER_NAME'] = $sql_towername->TOWER_NAME;
+		}
         $ImageDataListingArr [] = $dataListingArr;
+        
     }
     return $ImageDataListingArr;
 }
