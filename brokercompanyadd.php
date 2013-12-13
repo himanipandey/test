@@ -90,8 +90,7 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
     
     $smarty->assign("contactids", $contactIDArr);    
     $smarty->assign("contacts", !empty($contactIDArr['contacts'])?$contactIDArr['contacts']:'');
-    echo "here1";
-    die;
+    
 }
 include('brokercompanyaddProcess.php');
 

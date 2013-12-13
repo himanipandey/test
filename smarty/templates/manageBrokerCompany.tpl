@@ -88,7 +88,7 @@
 			             
                         <TD align=center class=td-border>{$count}</TD>
                         <TD align=left class=td-border>{$value['name']}  </TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <img src="{$value['imageurl']}" style="width:120px;height:90px;" /> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
+                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a id="showcontent" href="{$value['imageurl']}"> <img src="{$value['imageurl']}" style="width:120px;height:90px;" /> </a> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['pan']}</TD>
                         <TD align=left class=td-border>{$value['description']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -138,5 +138,11 @@
 <TR>
  
 </TR>
-
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        
+               jQuery("a#showcontent").fancybox();
+        
+    });
+</script>
 
