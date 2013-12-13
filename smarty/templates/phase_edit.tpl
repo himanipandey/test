@@ -225,6 +225,14 @@
 
                                          {if $phaseObject.PHASE_TYPE != 'Logical'}
                                             <tr>
+                                                <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
+                                                <td width="30%" align="left">
+                                                    {$completion_date}
+                                                <td width="50%" align="left">
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
                                                 <td width="30%" align="left">
                                                     <input name="launch_date" value="{$launch_date}" type="text" class="formstyle2" id="launch_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="launch_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
@@ -233,6 +241,7 @@
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
                                                 </td>
                                             </tr>
+                                            
                                             
                                         {/if}
 
@@ -363,8 +372,9 @@
                                                                                                                                             <td>&nbsp;</td>
 
                                                                                                                                             <td align="left" style="padding-left:0px;">
+                                                                                                                                                <input type = "hidden" name = "completion_date" value="{$completion_date}">
                                                                                                                                                 <input type="submit" name="btnSave" id="btnSave" value="Submit" onclick="return validate_phase();" />
-
+                                                                                                                                                
                                                                                                                                                 {if $specialAccess == 1 && $phaseObject.PHASE_TYPE != 'Logical'}
                                                                                                                                                     &nbsp;&nbsp;<input type="submit" name="delete" value="Delete" onclick = "return deletePhase();" />
                                                                                                                                                 {/if}

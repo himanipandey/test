@@ -371,6 +371,20 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             }
        }
 
+    if( $preLaunchDt != '') {
+            $retdt  = ((strtotime(date('Y-m-d')) - strtotime($preLaunchDt)) / (60*60*24));
+            if( $retdt < 0 ) {
+                $ErrorMsg['preLaunchDate'] = "Pre Launch date should be less or equal to current date";
+            }
+       }   
+
+    if( $launchDt != '') {
+            $retdt  = ((strtotime(date('Y-m-d')) - strtotime($launchDt)) / (60*60*24));
+            if( $retdt < 0 ) {
+                $ErrorMsg['launchDateGreater'] = "Launch date should be less or equal to current date";
+            }
+      }
+       
     if( $Status == PRE_LAUNCHED_ID_8 && $preLaunchDt != '' && $projectId == '') {
             $yearExp = explode("-",$preLaunchDt);
            if( $yearExp[0] == date("Y") ) {

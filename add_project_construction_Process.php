@@ -120,31 +120,14 @@
                                 AND submitted_date >= '".$submittted_dateMin."' and submitted_date <= '".$submittted_dateMax."'";
                     }
                     else {
-                            if($_REQUEST['oldCompletionDate'] == '0000-00-00') {
-                                $startDt = $effectiveDt;
-                                $endDt = explode("-",$effectiveDt);
-                                $endDate = $endDt[0]."-".$endDt[1]."-31";
-                             $qry = "UPDATE ".RESI_PROJ_EXPECTED_COMPLETION."
-                                SET	
-                                    EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."',
-                                    REMARK = '".$remark."'
-                                   WHERE
-                                        PROJECT_ID = '".$projectId."' 
-                                    AND
-                                        phase_id = $phaseId
-                                    AND
-                                        SUBMITTED_DATE >= '".$startDt."' and SUBMITTED_DATE <= '".$endDate."'";
-                            }
-                            else {
-                                   $qry = "INSERT INTO ".RESI_PROJ_EXPECTED_COMPLETION."
+                        
+                          $qry = "insert into ".RESI_PROJ_EXPECTED_COMPLETION."
                                     SET	
-                                        PROJECT_ID = '".$projectId."',
-                                        phase_id = $phaseId,
                                         EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."',
                                         REMARK = '".$remark."',
-                                        SUBMITTED_DATE = '$effectiveDt'";
-                            }
-                        }
+                                        PROJECT_ID = '".$projectId."',
+                                        phase_id = $phaseId,
+                                        SUBMITTED_DATE = '".$effectiveDt."'";                        
                     }
                     $res = mysql_query($qry) OR die(mysql_error()." completion date update");
                     if($res) {
