@@ -581,12 +581,12 @@
                     $newimgName = $newImagePath.time(). '.' .$extension; 
                     
                     $s3upload = new ImageUpload(NULL, array("service_image_id" => $image_id));
-                    $s3upload->delete();
+                    $response = $s3upload->delete();
                     //$imgdeleteDetail = $response["service"]->data();
 //                    $image_id = $imgdeleteDetail->staus;
                     print'<pre>';
                     print_r($response);
-                    die;
+                    
                     $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
                     
                     if($flag != '')
