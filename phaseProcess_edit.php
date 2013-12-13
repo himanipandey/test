@@ -145,9 +145,9 @@ if (isset($_POST['btnSave'])) {
             }
             
         }
-        else if( $launch_date != '') {
-            $retdt  = ((strtotime(date('Y-m-d')) - strtotime($launch_date)) / (60*60*24));
-            if( $retdt < 0 ) {
+        if( $launch_date != '') {
+            $retdt  = ((strtotime($launch_date) - strtotime(date('Y-m-d'))) / (60*60*24));
+            if( $retdt > 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
           }

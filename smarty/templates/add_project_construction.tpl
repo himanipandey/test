@@ -241,9 +241,7 @@
                                                      <td width="90%" align='left' colspan='2'>
                                                      <input type = "hidden" name = "updateOrInsertRow" id = "updateOrInsertRow">
                                                      <input type = "hidden" name = "oldCompletionDate" id = "oldCompletionDate" value="{$oldCompletionDate}">
-                                                     {if (count($phases) >1 && $phaseName != 'No Phase') || (count($phases) == 1 && $phaseName == 'No Phase')}
                                                      <input type="submit" name="btnSave" id="btnSave" value="Submit"  onclick="return construction_status('{$EffectiveDateList}');"/>
-                                                     {/if}
                                                      </td> 
                                               </tr>
                                              {/if}

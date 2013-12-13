@@ -105,7 +105,7 @@
                     $qryOldData = "select * from ".RESI_PROJ_EXPECTED_COMPLETION." 
                         where project_id = $projectId and phase_id = $phaseId";
                     $resOldData = mysql_query($qryOldData);
-                    if($month_effective_date == date('m') && $year_effective_date == date('Y') && mysql_num_rows($resOldData)>0 && $_REQUEST['updateOrInsertRow'] == 1) {
+                    if(mysql_num_rows($resOldData)>0 && $_REQUEST['updateOrInsertRow'] == 1) {
                         $submittted_dateMin = $year_effective_date."-".$month_effective_date."-01";
                         $submittted_dateMax = $year_effective_date."-".$month_effective_date."-31";
                         $qry = "UPDATE ".RESI_PROJ_EXPECTED_COMPLETION."
