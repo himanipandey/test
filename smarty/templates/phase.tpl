@@ -5,6 +5,18 @@
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
 <script type="text/javascript">
+  function isNumberKey(evt)
+  {
+ 	 var charCode = (evt.which) ? evt.which : event.keyCode;
+
+ 	 if (charCode == 8)
+		return true;
+ 	 
+	 if (charCode >= 48 && charCode <= 57 )
+		return true;
+
+	 return false;
+  }
     function validate_phase() {
         var name_flag = true;
         var flat_bed = true;
@@ -103,11 +115,11 @@
 								  <td width="20%" align="right"><font color ="red">*</font><b>Phase Name :</b> </td>
 								  <td width="30%" align="left">
 									 
-									 <input type="text" name="PhaseName" class="PhaseName" id="PhaseName" value = "{$phasename}" />
+									 <input type="text" name="PhaseName" class="PhaseName" id="PhaseName" value = "{$phasename}" maxlength="2" onkeypress='return isNumberKey(event)' size="2" />
 									 <div id="imgPathRefresh"></div>
 								  </td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
+									  <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name. It must be numeric.</span></font>
 								  </td>
 							   </tr>
 
