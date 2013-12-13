@@ -182,6 +182,10 @@ if (isset($_POST['btnSave'])) {
                     $phase->remarks = $remark;
                     $phase->booking_status_id = (($_REQUEST['bookingStatus'] != -1) ? $_REQUEST['bookingStatus'] : null);
                     $phase->save();
+                    $qryUpdateProjectLaunchDate = "update resi_project 
+                        set launch_date = '".$launch_date."'
+                        where project_id = $projectId and version = 'Cms'";
+                    mysql_query($qryUpdateProjectLaunchDate);
                     if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
                         $phase->add_towers($towers);
                     }
