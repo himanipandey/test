@@ -148,6 +148,7 @@
 ////            alert(subid[0] + ' ' + subid[1]);
 ////            jQuery('#img_' + subid[1]).css("display" , "block");
                 var href = jQuery(this).attr('src');
+                alert(href);
                 $.fancybox({
                     type: 'iframe',
                     href: "'" + href + "'"
