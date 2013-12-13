@@ -37,31 +37,42 @@ class BrokerCompanyLocation extends ActiveRecord\Model
         else
         {
             $brkrComp = BrokerCompany::find('all' , array('select' => 'primary_address_id' , 'conditions' => "brokers.id=".$bid) );
+            //echo BrokerCompany::connection()->last_query."<br>";
             $primary_address_id = '';
+            //print'<pre>';
+//            print_r($brkrComp);
             if(!empty($brkrComp))
             {
                 foreach($brkrComp as $key => $val)
                 {
-                    $primary_address_id = $val->primary_address_id;
-                    break;
+                    if($key == "primary_address_id")
+                    {
+                        $primary_address_id = $val->primary_address_id;
+                        break;
+                    }
+                    
                 }
             }
-             
             
+            if(!empty($primary_address_id))
+                $primary_address_id = " AND addresses.id != $primary_address_id";
             $options = array('joins' => $join , 'select' => 
-        'addresses.address_line_1 , addresses.address_line_2 , addresses.pincode , locality.locality_id AS locality_id , city.label AS city , locality.label AS location ,addresses.id AS pkid' , 'conditions' => array(" addresses.table_name = 'brokers' AND addresses.table_id = '".$bid."' AND addresses.id != $primary_address_id"));    
+        'addresses.address_line_1 , addresses.address_line_2 , addresses.pincode , locality.locality_id AS locality_id , city.label AS city , locality.label AS location ,addresses.id AS pkid' , 'conditions' => array(" addresses.table_name = 'brokers' AND addresses.table_id = '".$bid."' $primary_address_id"));
+        
+        
+            $getCity = BrokerCompanyLocation::find('all' , $options);
+            
+            return $getCity;    
         }
         
         
-        
-        $getCity = BrokerCompanyLocation::find('all' , $options);
         //echo BrokerCompanyLocation::connection()->last_query."<br>";
 //        
 //        print'<pre>';
 //        print_r($getCity);
 //        die;
 //        
-        return $getCity;
+        
         
 
     }
