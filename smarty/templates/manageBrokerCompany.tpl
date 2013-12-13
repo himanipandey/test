@@ -90,7 +90,7 @@
 			             
                         <TD align=center class=td-border>{$count}</TD>
                         <TD align=left class=td-border>{$value['name']}  </TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <img class="showcontent" id="img_{$count}" src="{$value['imageurl']}" style="width:120px;height:90px;" /> </a> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
+                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <img class="showcontent" id="img_{$count}" src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['pan']}</TD>
                         <TD align=left class=td-border>{$value['description']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -147,7 +147,7 @@
 ////            var subid = id.split("_");
 ////            alert(subid[0] + ' ' + subid[1]);
 ////            jQuery('#img_' + subid[1]).css("display" , "block");
-                var href = jQuery(this).attr('href');
+                var href = jQuery(this).attr('src');
                 $.fancybox({
                     type: 'iframe',
                     href: "'" + href + "'"
