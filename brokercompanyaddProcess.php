@@ -589,7 +589,7 @@
                         
                         print'<pre>';
                         print_r($response);
-                    
+                        die;
                         $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
                                         "image_path" => str_replace($newImagePath, "", $newimgName),
                                         "object" => "brokerCompany", "object_id" => $broker_id, 
