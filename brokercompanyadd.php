@@ -23,8 +23,6 @@ $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'');
 
 if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] == "edit")
 {
-    echo "here<br>";
-    
     $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$_GET['brokerCompanyId']));
     $imgurl = '';
     $imgid = '';
@@ -40,8 +38,7 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
             }
         }
     }
-    echo "here1";
-    die;
+    
     $brkrDet = BrokerCompany::getById($_GET['brokerCompanyId']);
     //echo BrokerCompany::connection()->last_query."<br>";
     $cityLocIDArr = BrokerCompanyLocation::CityLocIDArr($_GET['brokerCompanyId']);
@@ -93,6 +90,8 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
     
     $smarty->assign("contactids", $contactIDArr);    
     $smarty->assign("contacts", !empty($contactIDArr['contacts'])?$contactIDArr['contacts']:'');
+    echo "here1";
+    die;
 }
 include('brokercompanyaddProcess.php');
 
