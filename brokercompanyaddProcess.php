@@ -574,19 +574,18 @@
             if($brokerCommpany->id != false) {
                 
                 $brokerIdFormapping = $brokerCommpany->id;
-                echo $image_id;
+                //echo $image_id;
                 if(!empty($logo['name']) && !empty($image_id))
                 {
                     list($imgname , $extension) = explode("." , $logo['name']);
                     $newimgName = $newImagePath.time(). '.' .$extension; 
                     
-                    $s3upload = new ImageUpload(NULL, array("service_image_id" => $image_id));
-                    $response = $s3upload->delete();
-                    //$imgdeleteDetail = $response["service"]->data();
-//                    $image_id = $imgdeleteDetail->staus;
-                    print'<pre>';
-                    print_r($response);
-                    die;
+                    //$s3upload = new ImageUpload(NULL, array("service_image_id" => $image_id));
+//                    $response = $s3upload->delete();
+//                    
+//                    print'<pre>';
+//                    print_r($response);
+//                    die;
                     $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
                     
                     if($flag != '')
@@ -602,12 +601,12 @@
                         $image_id = $response["service"]->data();
                         $image_id = $image_id->id;
                     }
-                    print'<pre>';
-                    print_r($response);
-                    print_r($image_id);
-                    die;
+                   // print'<pre>';
+//                    print_r($response);
+//                    print_r($image_id);
+//                    die;
                 }
-                die;
+                //die;
                 /** -- Primary Contact Entry in broker_contacts Table -- */
                 
                 
