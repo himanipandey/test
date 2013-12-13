@@ -50,21 +50,22 @@
                     <form name="form1" method="post" action="">
                     <TBODY>
                         <TR class = "headingrowcolor" height="25">
-                              <TD class=whiteTxt width=5% align="center" style="width:20px;"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
-                              <TD class=whiteTxt width=5% align="center" style="width:30px;">S.No.</TD>
-                              <TD class=whiteTxt width=15% align="left" style="word-wrap: break-word;">Error Type: Error Desc</TD>
-                              <TD class=whiteTxt width=25% align="left" style="width:100px;">Project</TD>
-                              <TD class=whiteTxt width=25% align="left" style="width:100px;">Property Type</TD>
-                              <TD class=whiteTxt width=15% align='left' style="width:80px;">Date Reported</TD>
-                              <TD class=whiteTxt width=15% align='left' style="width:200px;">Status</TD>
-                              <TD class=whiteTxt width=15% align='left' style="width:250px;">Comments</TD>
-                              <TD class=whiteTxt width=12% align="center" style="width:100px;">History</TD>
+                              <TD class=whiteTxt align="center" style="width:20px;"><input type="checkbox" id="selectinvert" name="selectinvert1" value="" onclick="checkedAll(document.form1.selectinvert);" /></TD>
+                              <TD class=whiteTxt align="center" style="width:30px;">S.No.</TD>
+                              <TD class=whiteTxt align="left" style="width:150px;">Error Type: Error Desc</TD>
+                              <TD class=whiteTxt align="left" style="width:100px;">Project</TD>
+                              <TD class=whiteTxt align="left" style="width:100px;">Property Type</TD>
+                              <TD class=whiteTxt align='left' style="width:80px;">Date Reported</TD>
+                              <TD class=whiteTxt align='left' style="width:200px;">Status</TD>
+                              <TD class=whiteTxt align='left' style="width:200px;">Comments</TD>
+                              <TD class=whiteTxt align="center" style="width:100px;">History</TD>
+                              <TD class=whiteTxt align="center" style="width:100px;">ScreenShot link</TD>
                               <!--<TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
                               <TD class=whiteTxt width=12% align="center">History</TD-->
                         </TR>
-                        <TR><TD colspan=12 class=td-border></TD></TR>
+                        <TR><TD colspan=10 class=td-border></TD></TR>
                         <TR>
-                            <TD colspan="12" class="td-border" height="12">
+                            <TD colspan="10" class="td-border" height="12">
                                <div style="float:right"><input type="button" name="subbtn_top" id="subbtn_top" value="Update Error Status" /></div>
                             </TD>
                          </TR>
@@ -81,7 +82,7 @@
                                     <input type="checkbox" id="selectinvert{$errorDataArr[data].ID}" name="selectinvert" value="{$errorDataArr[data].ID}" />
                                 </TD>
                                 <TD align=center class=td-border>{$count}</TD>
-                                <TD align=left class=td-border style="overflow:hidden; width:250px; word-wrap: break-word;"><b>{$error_type[$errorDataArr[data].ERROR_TYPE]}</b>: {$errorDataArr[data].DETAILS}</TD>
+                                <TD align=left class=td-border style="overflow:hidden; word-wrap: break-word;"><b>{$error_type[$errorDataArr[data].ERROR_TYPE]}</b>: {$errorDataArr[data].DETAILS}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].PROJECT_NAME}, {$errorDataArr[data].LOCALITY}, {$errorDataArr[data].CITY}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].UNIT_NAME} {$errorDataArr[data].UNIT_TYPE}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].DATE|date_format}</TD>
@@ -94,16 +95,21 @@
                                     </select>
                                 </TD>
                                 <TD align=left class=td-border>
-                                    Comments&nbsp;<textarea id="comments_{$errorDataArr[data].ID}" name="comments_{$errorDataArr[data].ID}" placeholder="Enter your Comments here" rows="3" cols="20"></textarea>
+                                    <textarea id="comments_{$errorDataArr[data].ID}" name="comments_{$errorDataArr[data].ID}" placeholder="Enter your Comments here" rows="3" cols="20"></textarea>
                                 </TD>
                                 <TD align=left class=td-border><a href="javascript:void(0);" id="history" onclick=openHistBox({$errorDataArr[data].ID})>See History</a></TD>
+                                <TD align=left class=td-border>
+                                    {if $errorDataArr[data].IMAGE_URL!=''}
+                                        <a href="http://{$img_server_name}/images/errors/{$errorDataArr[data].IMAGE_URL}"  target='_blank'>Screenshot</a>
+                                    {/if}
+                                </TD>
                             </TR>
                         {/section}
                         {if count($errorDataArr)<=0}
-                            <TR><TD colspan="11" class="td-border" align="left">Sorry, no records found.</TD></TR>
+                            <TR><TD colspan="10" class="td-border" align="left">Sorry, no records found.</TD></TR>
                         {/if}
                          
-                        <TR><TD colspan="11" class="td-border" align="right">&nbsp;</TD></TR>
+                        <TR><TD colspan="10" class="td-border" align="right">&nbsp;</TD></TR>
                      
                       </TBODY>
                     </FORM>
