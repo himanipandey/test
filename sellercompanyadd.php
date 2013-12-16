@@ -27,10 +27,10 @@ if(!empty($_GET['sellerCompanyId']))
 {
     $sellerDet = SellerCompany::getByid($_GET['sellerCompanyId']);
     
-    print'<pre>';
-    print_r($sellerDet);
-    print'</pre>';
-    
+    //print'<pre>';
+//    print_r($sellerDet);
+//    print'</pre>';
+//    
     if(!empty($sellerDet))
     {
         

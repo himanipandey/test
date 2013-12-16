@@ -86,7 +86,7 @@
         foreach($sellerCompany as $key => $val)
         {
             $sellerDataArr[$i]['id'] = !empty($val->id)?$val->id:'';
-            $sellerDataArr[$i]['seller_cmpny'] = !empty($val->broker_name)?$val->broker_name:'';
+            $sellerDataArr[$i]['seller_cmpny'] = !empty($val->broker_name)?((strlen($val->broker_name) > 30)? substr($val->broker_name , 0 , 30)."..." : $val->broker_name ):'';
             $sellerDataArr[$i]['seller_name'] = !empty($val->name)?$val->name:'';
             $sellerDataArr[$i]['seller_type'] = !empty($val->seller_type)?$val->seller_type:'';
             $sellerDataArr[$i]['rating'] = !empty($val->rating)?$val->rating:'0';
