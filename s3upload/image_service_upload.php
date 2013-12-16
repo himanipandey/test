@@ -12,7 +12,6 @@ class ImageServiceUpload{
         "locality" => "locality",
         "bank" => "bank",
         "brokerCompany" => "brokerCompany"
-        "sellerCompany" => "sellerCompany"
     );
 
     static $image_types = array(
@@ -40,8 +39,7 @@ class ImageServiceUpload{
             "hospital" => "hospital"
         ),
         "bank" => array("logo" => "logo"),
-        "brokerCompany" => array("logo" => "logo"),
-        "sellerCompany" => array("logo" => "logo")
+        "brokerCompany" => array("logo" => "logo")
         );
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
