@@ -76,14 +76,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 }
           }
           
-         if( $pre_launch_date != '' && $launch_date !=''  && $phasename == 'No Phase' ) {
-            $retdt  = ((strtotime($launch_date) - strtotime($pre_launch_date)) / (60*60*24));
-            if( $retdt <= 0 ) {
-                $error_msg = "Launch date to be always greater than Pre Launch date";
-            }
-        } 
-          
-         if( $pre_launch_date != '' && $completion_date !='') {
+        if( $pre_launch_date != '' && $completion_date !='') {
                 $retdt  = ((strtotime($completion_date) - strtotime($pre_launch_date)) / (60*60*24));
                 if( $retdt <= 0 ) {
                     $error_msg = "Completion date to be always greater than Pre Launch date";

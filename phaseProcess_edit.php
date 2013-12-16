@@ -100,6 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $smarty->assign("phasename", $current_phase[0]['PHASE_NAME']);
     $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
     $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
+    $projectDetail = projectDetailById($projectId);
+    $smarty->assign("pre_launch_date", $projectDetail[0]['PRE_LAUNCH_DATE']);
     $smarty->assign("remark", $current_phase[0]['REMARKS']);
     
     $towerDetail = fetch_towerDetails_for_phase($projectId, $phaseId);
@@ -121,6 +123,7 @@ if (isset($_POST['btnSave'])) {
     $phasename = $_REQUEST['phaseName'];
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
+   $pre_launch_date = $_REQUEST['pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $isLaunchedUnitPhase = $_REQUEST['isLaunchUnitPhase'];
@@ -130,6 +133,7 @@ if (isset($_POST['btnSave'])) {
     $smarty->assign("launch_date", $launch_date);
     $smarty->assign("completion_date", $completion_date);
     $smarty->assign("remark", $remark);
+    $smarty->assign("pre_launch_date",$pre_launch_date);
 
     $PhaseExists = searchPhase($phaseDetail, $phasename);
     if ($PhaseExists != -1 && $phasename != $old_phase_name) {
@@ -145,12 +149,19 @@ if (isset($_POST['btnSave'])) {
             }
             
         }
+        if( $pre_launch_date != '' && $launch_date !=''  && $phasename == 'No Phase' ) {
+            $retdt  = ((strtotime($launch_date) - strtotime($pre_launch_date)) / (60*60*24));
+            if( $retdt <= 0 ) {
+                $error_msg = "Launch date to be always greater than Pre Launch date";
+            }
+        } 
         if( $launch_date != '') {
             $retdt  = ((strtotime($launch_date) - strtotime(date('Y-m-d'))) / (60*60*24));
             if( $retdt > 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
           }
+         
         if( $error_msg == '' ){
             // Flats Config
             $flats_config = array();
