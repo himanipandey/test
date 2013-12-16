@@ -281,6 +281,7 @@ $(function() {
                                               {foreach from = $citylist key= key item = val}
                                                   <option value = "{$key}" {if $city == $key} selected  {else}{/if}>{$val}</option>
                                               {/foreach}
+                                              <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
                                           </select>
                                       </td>
                                   </tr>
@@ -290,12 +291,12 @@ $(function() {
                                         <td align="left" style = "padding-left:20px;">
                                         <span id = "LocalityList">
                                             <select name = 'locality' id = "locality" onchange="localitySelect(this.value);">
-                                              <option value = "">Select Locality</option>
-                                              {foreach from = $localityArr item = value}
-                                                  <option value = "{$value->locality_id}" 
-                                                  {if $locality == $value->locality_id} selected {/if}>{$value->label}</option>
-                                              {/foreach}
-                                            </select>
+                                                <option value = "">Select Locality</option>
+                                                {foreach from = $getLocality item = value}
+                                                    <option value = "{$value->locality_id}" 
+                                                    {if $locality == $value->locality_id} selected {/if} >{if $city == "othercities"}{$value->cityname} - {/if}{$value->label}</option>
+                                                {/foreach}
+                                              </select>
                                         </span>
                                         </td>
                                   <input type="hidden" name = "locality" id = "localitySelectText" value="{$locality}">

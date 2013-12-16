@@ -703,4 +703,22 @@ include("phaseStageConfig.php");
 define("MAX_PRIORITY",100);
 define("PROJECT_MAX_PRIORITY",999);
 define("PROJECT_MAX_VALID_PRIORITY",15);
+
+$arrOtherCities = 
+  array(
+		"24"=>"Chandigarh",
+		"23"=>"Lucknow",
+		"13"=>"Indore",
+		"33"=>"Bhopal",
+		"35"=>"Nashik",
+		"25"=>"Nagpur",
+		"38"=>"Vadodara",
+		"27"=>"Goa",
+		"97"=>"Durgapur",
+		"31"=>"Bhubaneswar",
+		"30"=>"Kochi",
+		"29"=>"Trivandrum",
+		"45"=>"Trichy",
+		"41"=>"Visakhapatnam"
+  );
 ?>

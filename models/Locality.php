@@ -19,9 +19,10 @@ class Locality extends ActiveRecord\Model
     static function getLocalityByCity($ctid) {
         $conditions = array("a.city_id = ? and a.status = ? and locality.status = ?", $ctid, 'Active', 'Active');
         $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
+        $join .= 'INNER JOIN city c ON(a.city_id = c.city_id)';
 
         $getLocality = Locality::find('all',array('joins' => $join, 
-               "conditions" => $conditions, "select" => "locality.locality_id,locality.label"));
+               "conditions" => $conditions, "select" => "locality.locality_id,locality.label, c.label as cityname"));
         return $getLocality;
     }
 }
