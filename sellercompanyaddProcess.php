@@ -167,19 +167,19 @@
             if(!empty($qualification))                             
             $sql .= "`academic_qualification_id` = '".$qualification."',";
         
-            //$sql .= "`rating` = ".$final_rating.",
-//                    `rate_option` = '$rateoption',
-//                    `seller_type` = '$type',
-//                    `active_since` = '$active_since',
-//                    `updated_by` = '".$_SESSION['adminId']."',
-//                    `created_at` = '".date('Y-m-d H:i:s')."'";
-//                    
-//            $sql_seller_company = @mysql_query($sql) or die(mysql_error());
-//            $seller_id = mysql_insert_id();          
+            $sql .= "`rating` = ".$final_rating.",
+                    `rate_option` = '$rateoption',
+                    `seller_type` = '$type',
+                    `active_since` = '$active_since',
+                    `updated_by` = '".$_SESSION['adminId']."',
+                    `created_at` = '".date('Y-m-d H:i:s')."'";
+                    
+            $sql_seller_company = @mysql_query($sql) or die(mysql_error());
+            $seller_id = mysql_insert_id();          
             //echo $seller_id;
 //            die;
             
-            $seller_id = 4;
+            //$seller_id = 4;
             if($seller_id != false) {
                 
                 if(!empty($logo['name']))
