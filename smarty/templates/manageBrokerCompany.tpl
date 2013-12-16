@@ -90,7 +90,7 @@
 			             
                         <TD align=center class=td-border>{$count}</TD>
                         <TD align=left class=td-border>{$value['name']}  </TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <img class="showcontent" id="{$count}" src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div id="div_{$count}" style="display:none;"><img src="{$value['imageurl']}" /></div> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
+                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <img class="showcontent" id="{$count}" src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div id="div_{$count}" style="display:none;"><img src="{$value['imageurl']}" /></div> {else}<img src="no_image.gif" width="" height="" class="showcontent" id="789" /> <div style="display:none;"><div id="div_789"><img src="no_image.gif" width="" height="" /></div></div>{/if}</TD>
                         <TD align=left class=td-border>{$value['pan']}</TD>
                         <TD align=left class=td-border>{$value['description']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -148,10 +148,10 @@
 //            alert(subid[0] + ' ' + subid[1]);
 //            jQuery('#img_' + subid[1]).css("display" , "block");
 //              var href = jQuery(this).attr('src');
-                alert("'#div_" + id + "'");
+                alert('#div_' + id);
                 $.fancybox({
                     type: 'inline',
-                    content: "'#div_" + id + "'"
+                    content: '#div_' + id
                 });
                                 
         });
