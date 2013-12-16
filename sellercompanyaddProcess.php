@@ -204,13 +204,13 @@
 //                        print_r($image_id);
 //                        die;
                     }
-                    print'<pre>';
-                    print_r($response);
-                    print_r($image_id);
-                    die;
+                    //print'<pre>';
+//                    print_r($response);
+//                    print_r($image_id);
+//                    die;
                 }
-                echo "here";
-                die;
+                //echo "here";
+//                die;
                 $sellerIdFormapping = $seller_id;
                 
                 /** -- Primary Address Entry Start -- */
