@@ -11,7 +11,7 @@ class ImageServiceUpload{
         "builder" => "builder",
         "locality" => "locality",
         "bank" => "bank",
-        "brokerCompany" => "brokerCompany"
+        "brokerCompany" => "brokerCompany",
         "sellerCompany" => "sellerCompany"
     );
 
