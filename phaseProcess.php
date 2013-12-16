@@ -5,6 +5,7 @@ $options = $project->get_all_options();
 $smarty->assign("options", $options);
 $projectDetail = array($project->to_custom_array());
 $smarty->assign("ProjectDetail", $projectDetail);
+$smarty->assign("pre_launch_date", $projectDetail[0]['PRE_LAUNCH_DATE']);
 if (isset($_GET['error'])) {
     $smarty->assign("error_msg", "This phase already exists!");
 }
@@ -31,6 +32,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     $phasename = $_REQUEST['PhaseName'];
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
+    $pre_launch_date = $_REQUEST['pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $bookingStatus = $_REQUEST['bookingStatus'];
@@ -59,6 +61,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     } else {
             $smarty->assign("launch_date",$launch_date);
             $smarty->assign("completion_date",$completion_date);
+            $smarty->assign("pre_launch_date",$pre_launch_date);
             $error_msg = '';
         if( $launch_date != '' && $completion_date !='' ) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
@@ -72,6 +75,13 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
           }
+          
+         if( $pre_launch_date != '' && $completion_date !='') {
+                $retdt  = ((strtotime($completion_date) - strtotime($pre_launch_date)) / (60*60*24));
+                if( $retdt <= 0 ) {
+                    $error_msg = "Completion date to be always greater than Pre Launch date";
+                }
+         }
           if($error_msg == ''){
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
@@ -132,6 +142,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
               $smarty->assign("error_msg",$error_msg);
               $smarty->assign("launch_date",$launch_date);
               $smarty->assign("completion_date",$completion_date);
+              $smarty->assign("pre_launch_date",$pre_launch_date);
         }
     }
 }

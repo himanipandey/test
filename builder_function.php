@@ -909,23 +909,25 @@ function towerDetail($towerId) {
 /* * ***********FUNCTION FOR FETCH LATEST CONSTRUCTION STATUS************** */
 
 function costructionDetail($projectId) {
-   $qryPhase = "select * from resi_project_phase
-   where project_id = $projectId and phase_name != 'No Phase' order by phase_id desc";
+   echo$qryPhase = "select * from resi_project_phase
+   where project_id = $projectId and phase_type != 'Logical' and status = 'Active' order by phase_id desc";
    $resPhase = mysql_query($qryPhase);
    $dataPhase = mysql_fetch_assoc($resPhase);
    if(mysql_num_rows($resPhase)>0) {
        $sql = "select * from resi_project_phase 
            where 
-             phase_name != 'No Phase'
+             phase_name != 'Logical'
            and 
              project_id = $projectId
+           and status = 'Active'
           ORDER BY completion_date desc LIMIT 1";
    }
    else{
         $sql = "select * from resi_project_phase 
            where 
-             project_id = $projectId";
+             project_id = $projectId and status = 'Active'";
    }   
+   echo $sql;
     $data = mysql_query($sql) or die(mysql_error());
     $dataarr = mysql_fetch_assoc($data);
     return $dataarr;
