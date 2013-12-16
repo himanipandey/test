@@ -88,6 +88,13 @@
                 $launchDate = $_REQUEST['launchDate'];
                 $pre_launch_date = $_REQUEST['pre_launch_date'];
                 $expLaunchDate = explode("-",$launchDate);
+                
+                if($launchDate == '0000-00-00')
+                    $launchDate = '';
+                if($expectedCompletionDate == '0000-00-00')
+                    $expectedCompletionDate = '';
+                if($pre_launch_date == '0000-00-00')
+                    $pre_launch_date = '';
                 if( $launchDate != '' && ($year_expected_completion < $expLaunchDate[0] 
                         || ( $year_expected_completion == $expLaunchDate[0] && $month_expected_completion <= $expLaunchDate[1])) ){
                     $errorMsg['CompletionDateGreater'] = 'Completion date to be always greater than launch date';
