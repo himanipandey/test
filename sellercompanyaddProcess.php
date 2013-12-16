@@ -51,6 +51,7 @@
         $smarty->assign("brkr_cntct_id", $brkr_cntct_id);
         
         $sellerChk = SellerCompany::chkName($seller_name);
+        $logo = $_FILES['logo'];
         //print'<pre>';
 //        print_r($_POST);
 //        
