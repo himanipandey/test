@@ -1,3 +1,5 @@
+<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
 <style type="text/css">
 .button {
@@ -76,7 +78,7 @@
                         <TD align=left class=td-border>{$value['seller_cmpny']}  </TD>
                         <TD align=left class=td-border>{if strlen($value['seller_name']) > 30} {$value['seller_name']|substr:0:30|cat:"..."} {else} {$value['seller_name']} {/if}</TD>
                         <TD align=left class=td-border>{$value['seller_type']}</TD>
-                        <TD align=left class=td-border></TD>
+                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <img class="showcontent" id="{$count}" src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_{$count}"><img src="{$value['imageurl']}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['rating']}</TD>
                         <TD align=left class=td-border>{$value['qualification']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -127,4 +129,14 @@
  
 </TR>
 
-
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery('.showcontent').click(function(){
+            var id = jQuery(this).attr('id');
+            $.fancybox({
+                type: 'inline',
+                content: '#div_' + id
+            });                                
+        });
+    });
+</script>

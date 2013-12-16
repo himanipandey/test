@@ -10,6 +10,8 @@ include("appWideConfig.php");
 include("dbConfig.php"); 
 include("modelsConfig.php");
 include("includes/configs/configs.php");
+include("s3upload/s3_config.php");
+include("SimpleImage.php");
 AdminAuthentication();
 $cityArr = City::CityArr();
 $brokerArr = BrokerCompany::find('all' , array('select' => 'brokers.id,brokers.broker_name'));
@@ -24,9 +26,26 @@ $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 if(!empty($_GET['sellerCompanyId'])) 
 {
     $sellerDet = SellerCompany::getByid($_GET['sellerCompanyId']);
-    
+       
     if(!empty($sellerDet))
     {
+        
+        $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$sellerDet));
+        $imgurl = '';
+        $imgid = '';
+        if(!empty($img))
+        {
+            foreach($img as $k1 => $v1)
+            {
+                if($k1 == "data" && !empty($v1))
+                {
+                    $imgurl = $v1[0]->absolutePath;
+                    $imgid = $v1[0]->id;
+                    break;
+                }
+            }
+        }
+        $smarty->assign("imgid", !empty($imgid)?$imgid:'');
         $smarty->assign("sellerCompanyId", !empty($sellerDet['id'])?$sellerDet['id']:'');
         $smarty->assign("status", !empty($sellerDet['status'])?$sellerDet['status']:'');
         $smarty->assign("broker_id", !empty($sellerDet['broker_id'])?$sellerDet['broker_id']:'');

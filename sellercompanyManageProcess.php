@@ -91,6 +91,23 @@
             $sellerDataArr[$i]['seller_type'] = !empty($val->seller_type)?$val->seller_type:'';
             $sellerDataArr[$i]['rating'] = !empty($val->rating)?$val->rating:'0';
             $sellerDataArr[$i]['qualification'] = !empty($val->qualification)?$val->qualification:'None';
+            
+            $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=sellerCompany&objectId='.$val->id));
+            $imgurl = '';
+            $imgid = '';
+            
+            if(!empty($img))
+            {
+                foreach($img as $k1 => $v1)
+                {
+                    if($k1 == "data")
+                    {
+                        $imgurl = $v1[0]->absolutePath;
+                        $imgid = $v1[0]->id;
+                    }
+                }
+            }
+            
             $active_since = '';
             if(!empty($val->active_since))
             {   
@@ -108,7 +125,8 @@
                 $sellerDataArr[$i]['active_since'] = '';
             
             $sellerDataArr[$i]['status'] = $val->status;
-            
+            $sellerDataArr[$i]['imageurl'] = $imgurl;
+            $sellerDataArr[$i]['imageid'] = $imgid;
             $i++;
             
         }

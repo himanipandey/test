@@ -252,6 +252,7 @@
                   <input type="hidden" name="typehiddenArr" id="typehiddenArr" value="" />
                   <input type="hidden" name="statushiddenArr" id="statushiddenArr" value="" />
                   <input type="hidden" name="quahiddenArr" id="quahiddenArr" value="" />
+                  <input type="hidden" name="imgid" value="{$imgid}" id="imgid" />
                   <input type="hidden" name="sort" id="sort" value="{$sort}" />
                   <input type="hidden" name="page" id="page" value="{$page}" />
 				  </td>

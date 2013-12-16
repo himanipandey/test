@@ -150,7 +150,7 @@
             
             ResiProject::transaction(function(){
                 
-            global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoption;
+            global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoption,$newImagePath,$logo,$s3,$image_id;
             
             $qualification = !empty($qualification)?$qualification:NULL;
             
@@ -180,6 +180,34 @@
             
             //$seller_id = 4;
             if($seller_id != false) {
+                
+                if(!empty($logo['name']))
+                {
+                    list($imgname , $extension) = explode("." , $logo['name']);
+                    $newimgName = $newImagePath.time(). '.' .$extension; 
+                    
+                    $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
+                    
+                    if($flag != '')
+                    {
+                        $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                                                "image_path" => str_replace($newImagePath, "", $newimgName),
+                                                "object" => "sellerCompany", "object_type" => "sellerCompany",
+                                                "object_id" => $seller_id, "image_type" => "logo"));
+                       
+                        $response = $s3upload->upload();
+                        $image_id = $response["service"]->data();
+                        $image_id = $image_id->id;
+                        //print'<pre>';
+//                        print_r($response);
+//                        print_r($image_id);
+//                        die;
+                    }
+                    //print'<pre>';
+//                    print_r($response);
+//                    print_r($image_id);
+//                    die;
+                }
                 $sellerIdFormapping = $seller_id;
                 
                 /** -- Primary Address Entry Start -- */
@@ -276,7 +304,7 @@
             
             ResiProject::transaction(function(){
                 
-                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$sellerCompanyId,$addressid,$brkr_cntct_id,$rateoption;
+                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$sellerCompanyId,$addressid,$brkr_cntct_id,$rateoption,$image_id,$logo,$newImagePath,$s3;
                
             if(!empty($active_since))
             {
@@ -301,6 +329,51 @@
             
             //$seller_id = 4;
             if($seller_id != false) {
+                
+                if(!empty($logo['name']))
+                {
+                    list($imgname , $extension) = explode("." , $logo['name']);
+                    $newimgName = $newImagePath.time(). '.' .$extension; 
+                    
+                    //$s3upload = new ImageUpload(NULL, array("service_image_id" => $image_id));
+//                    $response = $s3upload->delete();
+//                    
+//                    print'<pre>';
+//                    print_r($response);
+//                    die;
+                    $flag = move_uploaded_file($logo["tmp_name"], $newImagePath.time(). '.' .$extension);
+                    $response = '';
+                    if($flag != '')
+                    {
+                        if(!empty($image_id))
+                        {
+                            $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                                            "image_path" => str_replace($newImagePath, "", $newimgName),
+                                            "object" => "sellerCompany", "object_id" => $seller_id, 
+                                            "image_type" => "logo", 
+                                            "service_image_id" => $image_id
+                                            ));
+                            $response = $s3upload->update();    
+                        }
+                        else
+                        {
+                            $s3upload = new ImageUpload($newimgName, array("s3" => $s3,
+                                                    "image_path" => str_replace($newImagePath, "", $newimgName),
+                                                    "object" => "sellerCompany", "object_type" => "sellerCompany",
+                                                    "object_id" => $seller_id, "image_type" => "logo"));
+                           
+                            $response = $s3upload->upload();
+                        }
+                        
+                        $image_id = $response["service"]->data();
+                        $image_id = $image_id->id;
+                    }
+                    //print'<pre>';
+//                    print_r($response);
+//                    print_r($image_id);
+//                    die;
+                }
+                
                 $sellerIdFormapping = $seller_id;
                 
                 /** -- Primary Address Entry Start -- */
