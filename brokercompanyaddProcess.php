@@ -254,15 +254,15 @@
                         $response = $s3upload->upload();
                         $image_id = $response["service"]->data();
                         $image_id = $image_id->id;
-                        //print'<pre>';
-//                        print_r($response);
-//                        print_r($image_id);
-//                        die;
+                        print'<pre>';
+                        print_r($response);
+                        print_r($image_id);
+                        die;
                     }
                     //print'<pre>';
 //                    print_r($response);
-//                    print_r($image_id);
-//                    die;
+                    print_r($image_id);
+                    die;
                 }
                 
                 $brokerIdFormapping = $broker_id;
