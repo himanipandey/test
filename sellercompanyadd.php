@@ -26,7 +26,11 @@ $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 if(!empty($_GET['sellerCompanyId'])) 
 {
     $sellerDet = SellerCompany::getByid($_GET['sellerCompanyId']);
-       
+    
+    print'<pre>';
+    print_r($sellerDet);
+    print'</pre>';
+    
     if(!empty($sellerDet))
     {
         
