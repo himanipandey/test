@@ -107,7 +107,7 @@ function prepareDisplayData($data){
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
         $assignment_type = '';
         
-        if(($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') && strstr($prevs_depts[$value['PROJECT_ID']],$value['DEPARTMENT'])){
+        if(($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') && strstr($prevs_depts[$value['PROJECT_ID']],$assigned_to_dep[count($assigned_to_dep)-1])){
             $assignment_type .= 'Reverted-';
             if(isset($depts[$value['PROJECT_ID']]) && $depts[$value['PROJECT_ID']] === 'SURVEY')$assignment_type .= 'Field';
         }
