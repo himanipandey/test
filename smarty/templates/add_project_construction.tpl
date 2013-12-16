@@ -175,15 +175,27 @@
                                                    &nbsp;
                                                 </td>
                                               </tr>
+                                              
+                                              <tr>
+                                                <td nowrap width="20%" align="right"><b>Pre Launch Date :</b> </td>
+                                                <td nowrap width="30%" align="left">
+                                                    {$pre_launch_date}
+                                                    <input type="hidden" name = "pre_launch_date" value="{$pre_launch_date}">
+                                                </td>
+                                                <td width="50%" align="left" nowrap>
+                                                   &nbsp;
+                                                </td>
+                                              </tr>
+
                                               <tr>
                                                       <td width="20%" align="right" valign="top" nowrap><b><font color ="red">*</font>Expected Completion Date :</b> </td>
                                                       <td width="30%" align="left">
                                                        Month:<select name = "month_expected_completion" id = "month_expected_completion">
                                                            <option value="">Select Month</option>
-                                                           {section name=foo start=1 loop=13 step=1}
-                                                               <option value="{$smarty.section.foo.index}"
-                                                                 {if $month_expected_completion == $smarty.section.foo.index} selected {/if}>{$smarty.section.foo.index}</option>
-                                                           {/section}
+                                                           {foreach from = $months key = key item = item}
+                                                               <option value="{$key}"
+                                                                 {if $month_expected_completion == $key} selected {/if}>{$item}</option>
+                                                           {/foreach}
                                                        </select>
 
                                                        Year:<select name = "year_expected_completion" id = "year_expected_completion">
@@ -206,10 +218,10 @@
                                                    <td width="30%" align="left" nowrap>
                                                     Month:<select name = "month_effective_date" id = "month_effective_date">
                                                         <option value="">Select Month</option>
-                                                        {section name=foo start=1 loop=13 step=1}
-                                                            <option value="{$smarty.section.foo.index}"
-                                                             {if $month_effective_date == $smarty.section.foo.index} selected {/if}>{$smarty.section.foo.index}</option>
-                                                        {/section}
+                                                        {foreach from = $months key = key item = item}
+                                                               <option value="{$key}"
+                                                                 {if $month_effective_date == $key} selected {/if}>{$item}</option>
+                                                           {/foreach}
                                                     </select>
 
                                                     Year:<select name = "year_effective_date" id = "year_effective_date">

@@ -4,8 +4,8 @@
 	$smarty->assign("fetch_projectDetail", $fetch_projectDetail); 
 	
         //find start and end date for year and month drop down
-        $YearStart = mktime(0,0,0,date('m'),date('d'),date('Y')-2);
-        $YearStart = date('Y',$YearStart);
+        $YearStart = 2000;
+       // $YearStart = date('Y',$YearStart);
         $smarty->assign("YearStart", $YearStart); 
         $yearEnd = mktime(0,0,0,date('m'),date('d'),date('Y')+20);
         $yearEnd = date('Y',$yearEnd);
@@ -37,6 +37,8 @@
              $oldCompletionDate = $current_phase[0]['COMPLETION_DATE'];
             // Assign vars for smarty
             $smarty->assign("launchDate", $current_phase[0]['LAUNCH_DATE']);
+            $fetch_projectDetail = ProjectDetail($projectId);
+            $smarty->assign("pre_launch_date", $fetch_projectDetail[0]['PRE_LAUNCH_DATE']);
             $smarty->assign("oldCompletionDate", $oldCompletionDate);
             $expCompletionDate = explode("-",$current_phase[0]['COMPLETION_DATE']);
             $smarty->assign("month_expected_completion", $expCompletionDate[1]);
@@ -84,6 +86,7 @@
                 $errorMsg = array();
                 /********validation taken from project add/edit page*************/
                 $launchDate = $_REQUEST['launchDate'];
+                $pre_launch_date = $_REQUEST['pre_launch_date'];
                 $expLaunchDate = explode("-",$launchDate);
                 if( $launchDate != '' && ($year_expected_completion < $expLaunchDate[0] 
                         || ( $year_expected_completion == $expLaunchDate[0] && $month_expected_completion <= $expLaunchDate[1])) ){
@@ -95,6 +98,25 @@
                         $errorMsg['CompletionDateGreater'] = 'Completion date to be always 6 month greater than launch date';
                     }
                 }
+               
+                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) > intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+                    }
+                }
+                
+                if( $pre_launch_date != '' && $expectedCompletionDate !='') {
+                    $retdt  = ((strtotime($expectedCompletionDate) - strtotime($pre_launch_date)) / (60*60*24));
+                    if( $retdt <= 0 ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date to be always greater than Pre Launch date";
+                    }
+                 }
                 if(count($errorMsg)>0){
                     $smarty->assign('errorMsg',$errorMsg);
                 }
@@ -173,4 +195,8 @@
 	/**************************************/
 	
 $smarty->assign('eff_date',$effectiveDt);
+
+$months = array(1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'May', 6 => 'Jun', 7 => 'Jul', 
+    8 => 'Aug', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec');
+$smarty->assign('months',$months);
 ?>

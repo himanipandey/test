@@ -238,6 +238,8 @@
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
                                                 </td>
                                             </tr>
+                                        <input type = "hidden" name = "pre_launch_date" value="{$pre_launch_date}">
+                                    
 
                                         <tr>
                                             <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
