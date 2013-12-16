@@ -82,6 +82,18 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                     $error_msg = "Completion date to be always greater than Pre Launch date";
                 }
          }
+         $fetch_projectDetail = projectDetailById($projectId);
+         if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
+            $yearExp = explode("-",$completion_date);
+            if( $yearExp[0] == date("Y") ) {
+                if( intval($yearExp[1]) > intval(date("m"))) {
+                  $error_msg = "Completion date cannot be greater current month";
+                }    
+            } 
+            else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                $error_msg = "Completion date cannot be greater current month";
+            }
+        }
           if($error_msg == ''){
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
