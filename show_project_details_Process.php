@@ -93,7 +93,8 @@ $qryAllPhase = "select * from resi_project_phase
 $resAllPhase = mysql_query($qryAllPhase);
 $allCompletionDateChk = 0;
 while($data = mysql_fetch_assoc($resAllPhase)) {
-    if($data['completion_date'] == '' || $data['completion_date'] == '0000-00-00') {
+    $data['completion_date'];
+    if(trim($data['COMPLETION_DATE']) == '' || trim($data['COMPLETION_DATE']) == '0000-00-00') {
         $arrAllCompletionDateChk = 1;
     }
 }
