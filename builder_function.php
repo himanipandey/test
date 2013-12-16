@@ -894,9 +894,9 @@ function update_towerDetail($projectId, $TowerId, $no_of_floors, $stilt, $no_of_
 
 function towerDetail($towerId) {
     $sql = "SELECT *
-					FROM " . RESI_PROJ_TOWER_CONSTRUCTION_STATUS . "
-				WHERE
-					TOWER_ID ='" . $towerId . "'  ORDER BY TOWER_CONST_STATUS_ID DESC LIMIT 1";
+                    FROM " . RESI_PROJ_TOWER_CONSTRUCTION_STATUS . "
+            WHERE
+                    TOWER_ID ='" . $towerId . "'  ORDER BY TOWER_CONST_STATUS_ID DESC LIMIT 1";
 
     $data = mysql_query($sql) or die(mysql_error());
     $arr = array();
@@ -909,14 +909,14 @@ function towerDetail($towerId) {
 /* * ***********FUNCTION FOR FETCH LATEST CONSTRUCTION STATUS************** */
 
 function costructionDetail($projectId) {
-   echo$qryPhase = "select * from resi_project_phase
+   $qryPhase = "select * from resi_project_phase
    where project_id = $projectId and phase_type != 'Logical' and status = 'Active' order by phase_id desc";
    $resPhase = mysql_query($qryPhase);
    $dataPhase = mysql_fetch_assoc($resPhase);
    if(mysql_num_rows($resPhase)>0) {
        $sql = "select * from resi_project_phase 
            where 
-             phase_name != 'Logical'
+             phase_type != 'Logical'
            and 
              project_id = $projectId
            and status = 'Active'
@@ -927,7 +927,6 @@ function costructionDetail($projectId) {
            where 
              project_id = $projectId and status = 'Active'";
    }   
-   echo $sql;
     $data = mysql_query($sql) or die(mysql_error());
     $dataarr = mysql_fetch_assoc($data);
     return $dataarr;

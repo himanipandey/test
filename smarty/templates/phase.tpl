@@ -120,6 +120,7 @@
                                         <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span><span id = "err_launch_date2" style = "display:none;">Launched date should be less than the Completion Date.</span></font>
                                     </td>
                                 </tr>
+                                
                                 <tr>
                                     <td width="20%" align="right" valign="top"><b>Pre Launch Date  :</b> </td>
                                     <td width="30%" align="left">{$pre_launch_date}
