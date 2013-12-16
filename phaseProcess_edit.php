@@ -30,6 +30,15 @@ if (isset($_REQUEST['delete'])) {
     $resDelete = $phase->virtual_save();
     if ($resDelete) {
         Listings::update_all(array('conditions' => array('phase_id' => $phaseId, 'listing_category' => 'Primary'), 'set' => array('status' => 'Inactive')));
+        
+        $costDetailLatest = costructionDetail($projectId);
+        $qry = "UPDATE resi_project 
+            set 
+               PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
+           where PROJECT_ID = $projectId";
+        mysql_query($qry) OR DIE(mysql_error());
+        
+        
         if ($preview == 'true')
             header("Location:show_project_details.php?projectId=" . $projectId);
         else
@@ -142,6 +151,13 @@ if (isset($_POST['btnSave'])) {
         $error_msg = '';
         $smarty->assign("launch_date",$launch_date);
            // $smarty->assign("completion_date",$completion_date);
+        if($launch_date == '0000-00-00')
+            $launch_date = '';
+        if($completion_date == '0000-00-00')
+            $completion_date = '';
+        if($pre_launch_date == '0000-00-00')
+            $pre_launch_date = '';
+        
         if( $launch_date != '' && $completion_date !='' ) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
             if( $retdt <= 180 ) {
