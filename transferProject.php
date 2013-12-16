@@ -225,7 +225,7 @@
              }
              if($updationCycle != '')
              {
-                 $QueryMember .= $and." UPDATION_CYCLE_ID = '".$updationCycle."'";
+                 $QueryMember .= $and." UPDATION_CYCLE_ID = '".$updationCycle."' AND (PROJECT_STAGE_ID = '4' OR PROJECT_STAGE_ID = '3')";
                  $and  = ' AND ';
              }
 
