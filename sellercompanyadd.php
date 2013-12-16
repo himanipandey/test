@@ -71,6 +71,10 @@ if(!empty($_GET['sellerCompanyId']))
         $smarty->assign("phone2", !empty($sellerDet['phone1'])?$sellerDet['phone2']:'');
         $smarty->assign("email", !empty($sellerDet['contact_email'])?$sellerDet['contact_email']:'');
     }
+    //else
+//    {
+//        header('Location:SellerCompanyList.php');
+//    }
     //print'<pre>';
 //    print_r($sellerDet);
 //    die;

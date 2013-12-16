@@ -222,12 +222,22 @@
                                                             `address_line_1` = '$addressline1',
                                                             `address_line_2` = '$addressline2',
                                                             `city_id` = '".$cityhiddenArr."',
-                                                            `pincode` = $pincode,
-                                                            `updated_by` = ".$_SESSION['adminId'].",
-                                                            `created_at` = '".date('Y-m-d')."'");
-                    
+                                                            `pincode` = '$pincode',
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
+                    //echo "INSERT INTO `addresses` SET 
+//                                                            `table_name` = 'agents',
+//                                                            `table_id` = ".$sellerIdFormapping.",
+//                                                            `address_line_1` = '$addressline1',
+//                                                            `address_line_2` = '$addressline2',
+//                                                            `city_id` = '".$cityhiddenArr."',
+//                                                            `pincode` = '$pincode',
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `created_at` = '".date('Y-m-d')."'<br/>";
+//                    die;
                     $address_id = mysql_insert_id();
-                    
+                    //echo $address_id;
+//                    die;
                     $sql_broker_contact = @mysql_query("INSERT INTO `broker_contacts` SET 
                                                             `broker_id` = ".$seller_id.",
                                                             `name` = '".$seller_name."',
@@ -382,28 +392,55 @@
                 /** -- Primary Address Entry Start -- */
                 /** -- Add the addresses in addresses table -- */
                     
-                                                             
-                    $sql_address = @mysql_query("UPDATE `addresses` SET 
+                    if(empty($addressid))
+                    {
+                        $sql_address = @mysql_query("INSERT INTO `addresses` SET 
+                                                            `table_name` = 'agents',
+                                                            `table_id` = ".$sellerIdFormapping.",
                                                             `address_line_1` = '$addressline1',
                                                             `address_line_2` = '$addressline2',
                                                             `city_id` = '".$city_id."',
                                                             `pincode` = '$pincode',
-                                                            `updated_by` = ".$_SESSION['adminId']."
+                                                            `updated_by` = '".$_SESSION['adminId']."',
+                                                            `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
+                    } 
+                    else
+                    {
+                        $sql_address = @mysql_query("UPDATE `addresses` SET 
+                                                            `address_line_1` = '$addressline1',
+                                                            `address_line_2` = '$addressline2',
+                                                            `city_id` = '".$city_id."',
+                                                            `pincode` = '$pincode',
+                                                            `updated_by` = '".$_SESSION['adminId']."'
                                                              WHERE id=".$addressid);
+                    }                              
                     
                     
-                   
-                    $sql_broker_contact = @mysql_query("UPDATE `broker_contacts` SET 
+                    if(empty($brkr_cntct_id))
+                    {
+                        $sql_broker_contact = @mysql_query("INSERT INTO `broker_contacts` SET 
+                                                            `broker_id` = ".$seller_id.",
+                                                            `name` = '".$seller_name."',
+                                                            `contact_email` = '$email',
+                                                            `type` = 'Agent',
+                                                            `updated_by` = ".$_SESSION['adminId'].",
+                                                            `created_at` = '".date('Y-m-d')."'");
+                    }
+                    else
+                    {
+                        $sql_broker_contact = @mysql_query("UPDATE `broker_contacts` SET 
                                                             `broker_id` = ".$seller_id.",
                                                             `name` = '".$seller_name."',
                                                             `contact_email` = '$email',
                                                             `type` = 'Agent',
                                                             `updated_by` = ".$_SESSION['adminId']."
                                                              WHERE id=".$brkr_cntct_id)or die(mysql_error());
-                    
+                        $broker_contact_id = $brkr_cntct_id;    
+                    }
+                                        
                     
                     //die;
-                    $broker_contact_id = $brkr_cntct_id;
+                    
                     
                     if(!empty($broker_contact_id))
                     {
@@ -435,6 +472,10 @@
                                     $contact_number_id = $row1['id'];
                                 }
                             }
+                        }
+                        else
+                        {
+                            
                         }
                     }
             }
