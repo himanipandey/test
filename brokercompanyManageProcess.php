@@ -166,9 +166,6 @@
             {
                 foreach($img as $k1 => $v1)
                 {
-                    print'<pre>';
-                    print_r($v1);
-                    print'</pre>';
                     if($k1 == "data")
                     {
                         $imgurl = $v1[0]->absolutePath;
