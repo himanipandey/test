@@ -30,6 +30,15 @@ if (isset($_REQUEST['delete'])) {
     $resDelete = $phase->virtual_save();
     if ($resDelete) {
         Listings::update_all(array('conditions' => array('phase_id' => $phaseId, 'listing_category' => 'Primary'), 'set' => array('status' => 'Inactive')));
+        
+        $costDetailLatest = costructionDetail($projectId);
+        $qry = "UPDATE resi_project 
+            set 
+               PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
+           where PROJECT_ID = $projectId";
+        mysql_query($qry) OR DIE(mysql_error());
+        
+        
         if ($preview == 'true')
             header("Location:show_project_details.php?projectId=" . $projectId);
         else
