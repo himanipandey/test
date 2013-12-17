@@ -83,7 +83,7 @@
                                 <TD align=center class=td-border>{$count}</TD>
                                 <TD align=left class=td-border style="overflow:hidden; word-wrap: break-word;"><b>{$error_type[$errorDataArr[data].ERROR_TYPE]}</b>: {$errorDataArr[data].DETAILS}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].PROJECT_NAME}, {$errorDataArr[data].LOCALITY}, {$errorDataArr[data].CITY}</TD>
-                                <TD align=left class=td-border>{$errorDataArr[data].UNIT_NAME} {$errorDataArr[data].UNIT_TYPE}</TD>
+                                <TD align=left class=td-border>{$errorDataArr[data].UNIT_NAME}<br />{$errorDataArr[data].UNIT_TYPE}<br />{if $errorDataArr[data].SIZE > 0}({$errorDataArr[data].SIZE} sq ft){/if}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].DATE|date_format}</TD>
                                 <TD align=left class=td-border>
                                     <select name="status_{$errorDataArr[data].ID}" id="status_{$errorDataArr[data].ID}">
