@@ -58,7 +58,7 @@
                               <TD class=whiteTxt align='left' style="width:200px;">Status</TD>
                               <TD class=whiteTxt align='left' style="width:200px;">Comments</TD>
                               <TD class=whiteTxt align="center" style="width:100px;">History</TD>
-                              <TD class=whiteTxt align="center" style="width:100px;">ScreenShot link</TD>
+                              <TD class=whiteTxt align="center" style="width:100px;">URL link</TD>
                               <!--<TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
                               <TD class=whiteTxt width=12% align="center">History</TD-->
                         </TR>
@@ -98,8 +98,8 @@
                                 </TD>
                                 <TD align=left class=td-border><a href="javascript:void(0);" id="history" onclick=openHistBox({$errorDataArr[data].ID})>See History</a></TD>
                                 <TD align=left class=td-border>
-                                    {if $errorDataArr[data].IMAGE_URL!=''}
-                                        <a href="http://{$img_server_name}/images/errors/{$errorDataArr[data].IMAGE_URL}"  target='_blank'>Screenshot</a>
+                                    {if $errorDataArr[data].URL!=''}
+                                        <a href="{$errorDataArr[data].URL}"  target='_blank'>URL</a>
                                     {/if}
                                 </TD>
                             </TR>
