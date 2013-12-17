@@ -3,7 +3,7 @@
     $cityList = "1,2,5,6,8,11,12,16,18,20,21";
     $joinLocSub = 'INNER JOIN suburb a ON locality.suburb_id = a.suburb_id
                    INNER JOIN city c on a.city_id = c.city_id';
-    $locIds = Locality::find('all',array('joins' => $joinLocSub,
+    $locIds = Locality::find('all',array('joins' => $joinLocSub,'conditions' => "c.city_id in ($cityList)",
         "select" => "locality.locality_id"));
     $arrIds = array();
     foreach($locIds as $ids) {
@@ -45,12 +45,12 @@
     $floorPlans = ResiFloorPlans::find('all',array('joins' => $joinFloor, 'conditions'=>$conditionsFloor,"select" => "count(*) as FLOOR_PLAN_COUNT"));
     
     $joinProjectWithFloor = 'INNER JOIN resi_project_options a ON( resi_project.project_id = a.project_id ) 
-                   INNER JOIN resi_floor_plans b ON(a.options_id = b.floor_plan_id)';
+                   INNER JOIN resi_floor_plans b ON(a.options_id = b.option_id)';
     $conditionsProjectWithFloor = array("($active) AND resi_project.residential_flag = 'Residential' AND resi_project.locality_id in ($LocIdList)");
     
     $projectWithFoorPlans = ResiProject::virtual_find('all',array('joins' => $joinProjectWithFloor, 'conditions'=>$conditionsProjectWithFloor,
-        'group' => 'resi_project.project_id',"select" => "count(*) as PROJECT_COUNT_WITH_FLOOR"));
-    $percntProjectWithFloorPlans = (count($projectWithFoorPlans)/$activeProject->project_count)*100;
+        "select" => "count( distinct resi_project.project_id) as PROJECT_COUNT_WITH_FLOOR"));
+    $percntProjectWithFloorPlans = ($projectWithFoorPlans->project_count_with_floor/$activeProject->project_count)*100;
     $avrgNumOfFloorPlanPerProj = $floorPlans[0]->floor_plan_count/$activeProject->project_count;
    
     /********Percentage of under const project with const images**************/
