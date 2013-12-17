@@ -44,7 +44,7 @@
               </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
-                    
+                    {if $reportErrorPermissionAccess == true}
                     <div id="messageUpdate"></div>
                     <TABLE cellSpacing=1 cellPadding=4 width="100%;" align=center border=0 style='table-layout: fixed;'>
                     <form name="form1" method="post" action="">
@@ -114,7 +114,9 @@
                       </TBODY>
                     </FORM>
                     </TABLE>
-                
+                    {else}
+                        <font color="red">No Access</font>
+                    {/if}
 	      </TD>
             </TR>
           </TBODY></TABLE>
