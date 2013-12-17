@@ -7,7 +7,7 @@
     $error_type = array(
         'rate' => 'Price/ Rate',
         'status' => 'Project Status',
-        'propdetails' => 'Property details',
+        'propdetails' => 'Property Details',
         'other' => 'Other',
     );
     
