@@ -146,6 +146,7 @@ $(".pt_reqflrplan").fancybox();
 											<tr bgcolor='#ffffff'>
 									
 												{$cnt = 0}
+												{$date_cnt = 0}
 												{section name=data loop=$ImageDataListingArr}
 						
 												<td class = "tdcls_{$cnt}" >
@@ -166,13 +167,33 @@ $(".pt_reqflrplan").fancybox();
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
 														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
+														
+														<div class="taggedDate" {if !$ImageDataListingArr[data].tagged_month || $ImageDataListingArr[data].tagged_month == '0000-00-00'} style="display:none" {/if}>
+															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
+															<select name="tagged_date[{$cnt}]" >
+																<option value="0" >--Select Month--</option>
+																{foreach from=$dateDiv key=keys item=datas}
+																	<option value="{$keys}" {if ($ImageDataListingArr[data].tagged_month|strtotime|date_format:"%Y-%m") == $keys} selected {/if} >{$datas}</option>
+																{/foreach}
+															</select>
+															<br><br>
+															Tower:&nbsp;&nbsp;
+															<select name= "txtTowerId[{$cnt}]" >
+																<option value="0" >--Select Tower--</option>
+																{section name=towerdata loop=$towerDetail}
+																	<option value="{$towerDetail[towerdata].TOWER_ID}" {if $ImageDataListingArr[data].tower_id == $towerDetail[towerdata].TOWER_ID} selected {/if} >{$towerDetail[towerdata].TOWER_NAME}</option>
+																{/section}
+																	<option value="-1" {if $ImageDataListingArr[data].tower_id == null} selected {/if}>Other</option>
+															</select>
+														</div>
+														
 														Delete/Edit:<input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
 														New Image?:<input type="file" name="img[{$cnt}]"/>
 
 
 													</div>
 												</td>
-												{$cnt = $cnt+1} 		
+												{$cnt = $cnt+1}
 												{/section}
 											</tr>
 										</table>

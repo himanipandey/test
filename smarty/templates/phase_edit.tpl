@@ -4,13 +4,13 @@
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
-<script type="text/javascript">
+<script type="text/javascript">    
     $(document).ready(function() {
         var pid = '{$phaseId}';
         $('select#phaseSelect').val(pid);
         toggle_supply_and_option();
     });
-    
+     
     $(document).ready(function(){
         $('#isLaunchUnitPhase').change(function(){
             $('.launched').each(function(){
@@ -99,7 +99,7 @@
     function deletePhase()
     {
             return confirm("Are you sure! you want to delete phase.");
-        }
+    }
 
         function toggle_supply_and_option() {
             $(".reset_option_and_supply").click(function() {
@@ -143,7 +143,7 @@
         }
 
 </script>
-
+<input type = "hidden" name = "projectId" id = "projectId" value="{$projectId}">
 <tr>
     <td class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
         <table cellSpacing=0 cellPadding=0 width="100%" border=0>
@@ -172,7 +172,7 @@
                                 </td>
                             </tr>
                             <tr></tr>
-                        <td vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
+                        <td vAlign="top" align="middle" class="backgorund-rt" height="350"><BR>
 
                             <table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
                                 <form method="post" id="phase_form">
@@ -192,7 +192,9 @@
                                                 {/foreach}
                                             </select>
                                         </td>
-                                        <td width="50%" align="left"></td>
+                                        <td width="50%" align="left">
+                                           {if $phaseId != -1} <input class="pt_click" type="button" title="Update Completion Date" value="Update Completion Date">{/if}
+                                        </td>
                                     </tr>
 
 
@@ -219,7 +221,14 @@
                                                 <td width="50%" align="left"></td>
                                             </tr>
 
-                                         {if $phaseObject.PHASE_TYPE != 'Logical'}
+                                            <tr>
+                                                <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
+                                                <td width="30%" align="left">
+                                                    {$completion_date}
+                                                <td width="50%" align="left">
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
                                                 <td width="30%" align="left">
@@ -229,16 +238,8 @@
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td width="20%" align="right" valign="top"><b>Completion Date :</b> </td>
-                                                <td width="30%" align="left">
-                                                    <input name="completion_date" value="{$completion_date}" type="text" class="formstyle2" id="completion_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="completion_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
-                                                </td>
-                                                <td width="50%" align="left">
-                                                    <font color="red"><span id = "err_completion_date" style = "display:none;">Enter Completion Date</span></font>
-                                                </td>
-                                            </tr>
-                                        {/if}
+                                        <input type = "hidden" name = "pre_launch_date" value="{$pre_launch_date}">
+                                    
 
                                         <tr>
                                             <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
@@ -367,8 +368,9 @@
                                                                                                                                             <td>&nbsp;</td>
 
                                                                                                                                             <td align="left" style="padding-left:0px;">
+                                                                                                                                                <input type = "hidden" name = "completion_date" value="{$completion_date}">
                                                                                                                                                 <input type="submit" name="btnSave" id="btnSave" value="Submit" onclick="return validate_phase();" />
-
+                                                                                                                                                
                                                                                                                                                 {if $specialAccess == 1 && $phaseObject.PHASE_TYPE != 'Logical'}
                                                                                                                                                     &nbsp;&nbsp;<input type="submit" name="delete" value="Delete" onclick = "return deletePhase();" />
                                                                                                                                                 {/if}
@@ -410,4 +412,17 @@
                 });
             }
         });
-                                                                                                                                        {/if}                                                                                                                            </script>
+      {/if}
+    jQuery(document).ready(function(){
+            jQuery(".pt_click").live('click',function(){
+                var projectId = $('#projectId').val();
+                var phaseId = $('#phaseSelect').val();
+                var title =  jQuery(this).attr('title');
+                if(title=='Update Completion Date'){
+                    jQuery(this).attr('href','javascript:void(0)');
+                    window.open('add_project_construction.php?projectId='+projectId+"&phaseId="+phaseId,'AddProjectConstruction',
+                    'height=400,width=900,scrollbars=yes,toolbar=no,left=150,right=150,resizable=1,top=50');
+                }
+            });
+    });
+ </script>
