@@ -77,4 +77,11 @@
     if($isupplyEditPermissionAuth == true)
         $supplyEditPermissionAccess = 1;
     $smarty->assign("supplyEditPermissionAccess",$supplyEditPermissionAccess);
+   
+    ////////////////////////////report error//////////////////
+    $isReportErrorPermissionAuth = isUserPermitted('report-error', 'access');
+    $reportErrorPermissionAccess = 0;
+    if($isReportErrorPermissionAuth == true)
+        $reportErrorPermissionAccess = 1;
+    $smarty->assign("reportErrorPermissionAccess",$reportErrorPermissionAccess);
 ?>
