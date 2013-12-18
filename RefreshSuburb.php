@@ -90,7 +90,15 @@
                    if($city_id != '')
                    {
                         $suburbArr = Array();
-                        $sql = "SELECT A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".SUBURB." AS A WHERE A.CITY_ID = " . $city_id . " ORDER BY A.LABEL ASC";
+                        
+						if($city_id == 'othercities'){
+							$group_city_ids = array();
+							foreach($arrOtherCities as $key => $value){
+								$group_city_ids[] = $key;
+							}
+							$city_id = implode(",",$group_city_ids);
+						}
+                        $sql = "SELECT A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".SUBURB." AS A WHERE A.CITY_ID in (" . $city_id . ") ORDER BY A.LABEL ASC";
 
                         $data = mysql_query($sql);
 

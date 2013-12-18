@@ -95,15 +95,27 @@ function getProjectListForManagers($cityId, $suburbId = ''){
          = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms' ";
-    // city id = -1 denotes all cities
-    if((int)$cityId != -1){
-    $sql = $sql." and c.CITY_ID=$cityId";
+    
+    global $arrOtherCities;
+    
+    if($cityId == 'othercities'){
+		$group_city_ids = array();
+		foreach($arrOtherCities as $key => $value){
+			$group_city_ids[] = $key;
+		}
+		$group_city_ids = implode(",",$group_city_ids);
+		$sql = $sql." and c.CITY_ID in ($group_city_ids)";
+	}
+    elseif((int)$cityId != -1){// city id = -1 denotes all cities
+		$sql = $sql." and c.CITY_ID=$cityId";
     }
+    
     if($suburbId!=''){
         $sql = $sql . " and sub.SUBURB_ID=$suburbId ";
     }
     $sql = $sql . " group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
-    return $res = dbQuery($sql);
+     
+    return  $res = dbQuery($sql); 
 }
 
 function getAssignedProjectsFromPIDs($pids){

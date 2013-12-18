@@ -1,5 +1,4 @@
 <?php
-
 $CityDataArr = City::CityArr();
 $ProjectTypeArr = ResiProjectType::ProjectTypeArr();
 $BankListArr = BankList::arrBank();
@@ -14,36 +13,35 @@ if ($_REQUEST['btnExit'] == "Exit") {
 }
 
 $lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
-$smarty->assign("lastUpdatedDetail", $lastUpdatedDetail); //To Do
+$smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
 
 $arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
 $smarty->assign("arrCalingPrimary", $arrCalingPrimary);
 
-/* * ****start display other pricing***** */
+/* * ****start display other pricing******/
 $otherPricing = fetch_other_price($projectId);
 $smarty->assign("otherPricing", $otherPricing);
 /* * ****end display other pricing***** */
 
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
 $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id) 
-    join resi_project_options o on (o.options_id = option_id)", 'conditions' =>
-            array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active'"), "select" =>
-            "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
+    join resi_project_options o on (o.options_id = option_id)",'conditions' => 
+    array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active'"), "select" => 
+    "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
 
-foreach ($optionsDetails as $key => $value) {
-
-    $listing_price = ListingPrices::find('all', array('conditions' =>
-                array('listing_id = ?', $value->id), 'select' =>
-                'effective_date'));
-
+foreach($optionsDetails as $key => $value) {
+	
+	$listing_price = ListingPrices::find('all',array('conditions'=>
+    array('listing_id = ?', $value->id),'select' => 
+                    'effective_date'));
+              	
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
-    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = date('Y-m-d', strtotime($listing_price[0]->effective_date));
-    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['booking_status_id'] = $value->booking_status_id;
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = date('Y-m-d',strtotime($listing_price[0]->effective_date));
 }
 
 $PhaseOptionHash = $ProjectPhases[1];
@@ -58,57 +56,70 @@ $cnt = 0;
 $arrPrevMonthDate = array();
 $arrPhase = array();
 foreach ($PreviousMonthsData as $k => $v) {
-    if ($cnt > 1) {
-        foreach ($v as $keyMiddle => $vMiddle) {
-            foreach ($vMiddle as $kLast => $vLast) {
+    if($cnt > 1) {
+        foreach($v as $keyMiddle => $vMiddle) {
+            foreach( $vMiddle as $kLast => $vLast ) {
                 $vLast['phase_name'] = $uptionDetailWithPrice[$vLast['phase_id']][$vLast['options_id']]['phase_name'];
-                if ($cnt == 2) {
+                if($cnt == 2) {
                     $uptionDetailWithPrice[$vLast['phase_id']][$vLast['options_id']]['latestPrice'] = $vLast['price'];
                 }
-                if ($cnt == 3) {
+                if($cnt == 3) {
                     $uptionDetailWithPrice[$vLast['phase_id']][$vLast['options_id']]['prevMonthPrice'] = $vLast['price'];
                 }
-                if ($cnt == 4) {
+                if($cnt == 4) {
                     $uptionDetailWithPrice[$vLast['phase_id']][$vLast['options_id']]['prevPrevMonthPrice'] = $vLast['price'];
                 }
             }
-        }
+        } 
     }
-    if ($cnt > 2 and $cnt <= 4)
+    if( $cnt >2 and  $cnt <=4)
         $arrPrevMonthDate[] = $k;
     $cnt++;
 }
 //echo "<pre>";
 //print_r($PreviousMonthsAvailability);
-$smarty->assign("arrPrevMonthDate", $arrPrevMonthDate);
-$smarty->assign("uptionDetailWithPrice", $uptionDetailWithPrice);
+$smarty->assign("arrPrevMonthDate",$arrPrevMonthDate);
+$smarty->assign("uptionDetailWithPrice",$uptionDetailWithPrice);
 
-$smarty->assign("ProjectOptionDetail", $ProjectOptionDetail);
-$smarty->assign("PreviousMonthsData", $PreviousMonthsData);
-$smarty->assign("PreviousMonthsAvailability", $PreviousMonthsAvailability);
+$smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
+$smarty->assign("PreviousMonthsData",$PreviousMonthsData);
+$smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
 //$smarty->assign("ProjectPhases",$ProjectPhases); //To Do
-$smarty->assign("PhaseOptionHash", $PhaseOptionHash);
+$smarty->assign("PhaseOptionHash",$PhaseOptionHash);
 
+//code for completion date validation for phase label
+$qryAllPhase = "select * from resi_project_phase 
+    where project_id = $projectId and status = 'Active'";
+$resAllPhase = mysql_query($qryAllPhase);
+$allCompletionDateChk = 0;
+while($data = mysql_fetch_assoc($resAllPhase)) {
+    $data['completion_date'];
+    if(trim($data['COMPLETION_DATE']) == '' || trim($data['COMPLETION_DATE']) == '0000-00-00') {
+        $arrAllCompletionDateChk = 1;
+    }
+}
+$smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk);
+//end code for completion date validation for phase label
 $arrOnlyPreviousMonthData = array();
-foreach ($PreviousMonthsData as $k => $v) {
-    if ($k != 'current' && $k != 'latest')
+foreach($PreviousMonthsData as $k=>$v) { 
+    if( $k != 'current' && $k != 'latest')
         $arrOnlyPreviousMonthData[] = $k;
 }
-$smarty->assign("arrOnlyPreviousMonthData", $arrOnlyPreviousMonthData);
+$smarty->assign("arrOnlyPreviousMonthData",$arrOnlyPreviousMonthData);
 
 $arrAvaiPreviousMonthData = array();
-foreach ($PreviousMonthsAvailability as $k => $v) {
-    if ($k != 'current' && $k != 'latest')
+foreach($PreviousMonthsAvailability as $k=>$v) { 
+    if( $k != 'current' && $k != 'latest')
         $arrAvaiPreviousMonthData[] = $k;
 }
 //echo "<pre>";
 //print_r($PreviousMonthsAvailability);
-$smarty->assign("arrAvaiPreviousMonthData", $arrAvaiPreviousMonthData);
+$smarty->assign("arrAvaiPreviousMonthData",$arrAvaiPreviousMonthData);
 
 
 $ProjectAmenities = ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
 
-$project = ResiProject::virtual_find($projectId, array('get_extra_scope' => true));
+$project = ResiProject::virtual_find($projectId,array('get_extra_scope'=>true));
 $projectDetail = $project->to_custom_array();
 $arrSpecification = array($projectDetail);
 
@@ -155,15 +166,14 @@ if ($_REQUEST['phaseId'] != -1)
     $phaseId = $_REQUEST['phaseId'];
 
 /* * *****supply code start here********* */
-/* * ***** To Do ** */
+/******* To Do ***/
 $supplyAll = array();
 $res = ProjectSupply::projectSupplyForProjectPage($projectId);
 $arrPhaseCount = array();
 $arrPhaseTypeCount = array();
 
 foreach ($res as $data) {
-    if ($data['PHASE_NAME'] == '')
-        $data['PHASE_NAME'] = 'noPhase';
+    if ($data['PHASE_NAME'] == '')$data['PHASE_NAME'] = 'noPhase';
     $supplyAll[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = $data;
     $arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
     $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
@@ -171,9 +181,9 @@ foreach ($res as $data) {
 $supplyAllArray = array();
 $isSupplyLaunchVerified = ProjectSupply::isSupplyLaunchVerified($projectId);
 
-foreach ($supplyAll as $k => $v) {
-    foreach ($v as $kMiddle => $vMiddle) {
-        foreach ($vMiddle as $kLast => $vLast) {
+foreach($supplyAll as $k=>$v) {
+    foreach($v as $kMiddle=>$vMiddle) {
+        foreach($vMiddle as $kLast=>$vLast) {
             $supplyAllArray[$k][$kMiddle][$kLast]['PHASE_NAME'] = $vLast['PHASE_NAME'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LAUNCH_DATE'] = $vLast['LAUNCH_DATE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['COMPLETION_DATE'] = $vLast['COMPLETION_DATE'];
@@ -181,7 +191,7 @@ foreach ($supplyAll as $k => $v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_ID'] = $vLast['PROJECT_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['PHASE_ID'] = $vLast['PHASE_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_BEDROOMS'] = $vLast['NO_OF_BEDROOMS'];
-            $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_NO_OF_FLATS'] = $vLast['NO_OF_FLATS'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_NO_OF_FLATS'] = $vLast['NO_OF_FLATS']; 
             $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_LAUNCHED'] = $vLast['LAUNCHED'];
             $supplyAllArray[$k][$kMiddle][$kLast]['AVAILABLE_NO_FLATS'] = $vLast['AVAILABLE_NO_FLATS'];
             $supplyAllArray[$k][$kMiddle][$kLast]['EDIT_REASON'] = $vLast['EDIT_REASON'];
@@ -189,9 +199,9 @@ foreach ($supplyAll as $k => $v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_TYPE'] = $vLast['PROJECT_TYPE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LISTING_ID'] = $vLast['LISTING_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['BOOKING_STATUS_ID'] = $vLast['BOOKING_STATUS_ID'];
-
+            
             $qryEditedLaunched = "select supply,launched from project_supplies
-                where listing_id = " . $vLast['LISTING_ID'] . " and version = 'Website'";
+                where listing_id = ".$vLast['LISTING_ID']." and version = 'Website'";
             $resEditedLaunched = mysql_query($qryEditedLaunched) or die(mysql_error());
             $dataEditedLaunched = mysql_fetch_assoc($resEditedLaunched);
             $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_FLATS'] = $dataEditedLaunched['supply'];
@@ -290,9 +300,9 @@ while ($data = mysql_fetch_array($res)) {
 }
 
 $joinbank = "inner join bank_list bl on project_banks.bank_id = bl.bank_id";
-$bankList = ProjectBanks::find('all', array('joins' => $joinbank, 'conditions' =>
-            array('project_id = ?', $projectDetails[0]['PROJECT_ID']), 'select' =>
-            'project_banks.*,bl.bank_name'));
+$bankList = ProjectBanks::find('all',array('joins' => $joinbank,'conditions'=>
+    array('project_id = ?', $projectDetails[0]['PROJECT_ID']),'select' => 
+                    'project_banks.*,bl.bank_name'));
 $smarty->assign("bankList", $bankList);
 
 
@@ -325,11 +335,11 @@ $suburbSelect = Suburb::SuburbArr($projectDetails[0]['CITY_ID']);
 //$localitySelect = Locality::localityList($projectDetails[0]['SUBURB_ID']);//To Do
 
 $locality = Locality::getLocalityById($projectDetails[0]['LOCALITY_ID']);
-$smarty->assign('locality', $locality[0]->label);
+$smarty->assign('locality',$locality[0]->label);
 $suburb = Suburb::getSuburbById($locality[0]->suburb_id);
-$smarty->assign('suburb', $suburb[0]->label);
+$smarty->assign('suburb',$suburb[0]->label);
 $city = City::getCityById($suburb[0]->city_id);
-$smarty->assign('city', $city[0]->label);
+$smarty->assign('city',$city[0]->label);
 $builderDetail = fetch_builderDetail($projectDetails[0]['BUILDER_ID']);
 $smarty->assign("builderDetail", $builderDetail);
 /* * ***code for promised completion date******* */
@@ -338,39 +348,39 @@ $smarty->assign("completionDate", $completionDate);
 /* * ***code for promised completion date******* */
 
 
-/* * ******** booking status for project ********** */
-
+/********** booking status for project ***********/
+ 
 $projectd = $projectDetails[0]['PROJECT_ID'];
-$project_booking_status = ResiProjectPhase::find("all", array("conditions" => array("project_id = {$projectId} and phase_type = 'Logical'"), 'select' =>
-            'booking_status_id'));
+ $project_booking_status = ResiProjectPhase::find("all", array("conditions" => array("project_id = {$projectId} and phase_type = 'Logical'"),'select' => 
+                    'booking_status_id'));
 $smarty->assign("project_booking_status_id", $project_booking_status[0]->booking_status_id);
-
+    
 //$smarty->assign("localitySelect", $localitySelect); //To Do
 $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
 
-/* * ****code for project comment fetch from commeny history table**** */
+/******code for project comment fetch from commeny history table*****/
 $cycleId = $projectDetails[0]['PROJECT_STAGE'];
 $projectComments = CommentsHistory::getCommentHistoryByProjectIdCycleId($projectId, $cycleId);
 $smarty->assign("projectComments", $projectComments);
 
 $projectOldComments = CommentsHistory::getOldCommentHistoryByProjectId($projectId);
 $smarty->assign("projectOldComments", $projectOldComments);
-/* * ****end code for project comment fetch from commeny history table**** */
+/******end code for project comment fetch from commeny history table*****/
 
-/* * start code for fetch offer heading and desc from db* */
-$qryOfferFetch = "select * from project_offers where project_id = $projectId";
-$resOfferFetch = mysql_query($qryOfferFetch) or die(mysql_error());
-$dataOffer = mysql_fetch_assoc($resOfferFetch);
-$special_offer = $dataOffer['OFFER'];
-$offer_heading = $dataOffer['OFFER_HEADING'];
-$offer_desc = $dataOffer['OFFER_DESC'];
-$smarty->assign("special_offer", $special_offer);
-$smarty->assign("offer_heading", $offer_heading);
-$smarty->assign("offer_desc", $offer_desc);
-/* * end code for fetch offer heading and desc from db* */
-
+/**start code for fetch offer heading and desc from db**/
+    $qryOfferFetch = "select * from project_offers where project_id = $projectId";
+    $resOfferFetch = mysql_query($qryOfferFetch) or die(mysql_error());
+    $dataOffer = mysql_fetch_assoc($resOfferFetch);
+    $special_offer = $dataOffer['OFFER'];
+    $offer_heading = $dataOffer['OFFER_HEADING'];
+    $offer_desc = $dataOffer['OFFER_DESC'];
+    $smarty->assign("special_offer", $special_offer);
+    $smarty->assign("offer_heading", $offer_heading);
+    $smarty->assign("offer_desc", $offer_desc);
+    /**end code for fetch offer heading and desc from db**/
+    
 if (!isset($_GET['towerId']))
     $_GET['towerId'] = '';
 if ($_GET['towerId'] != '') {
@@ -400,19 +410,19 @@ if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
     foreach ($newPhase as $k => $v) {
-        $qry = "select * from master_project_phases where name = '" . $k . "'";
+        $qry = "select * from master_project_phases where name = '".$k."'";
         $res = mysql_query($qry) or die(mysql_error());
         $phaseId = mysql_fetch_assoc($res);
-
-        $qryStg = "select * from master_project_stages where name = '" . $projectStage . "'";
+        
+        $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
         $resStg = mysql_query($qryStg) or die(mysql_error());
         $stageId = mysql_fetch_assoc($resStg);
-
-        $qryCurrent = "select * from master_project_phases where name = '" . $currentPhase . "'";
+        
+        $qryCurrent = "select * from master_project_phases where name = '".$currentPhase."'";
         $resCurrent = mysql_query($qryCurrent) or die(mysql_error());
         $phaseIdCurrent = mysql_fetch_assoc($resCurrent);
-
-        $qryNext = "select * from master_project_phases where name = '" . $v . "'";
+        
+        $qryNext = "select * from master_project_phases where name = '".$v."'";
         $resNext = mysql_query($qryNext) or die(mysql_error());
         $phaseIdNext = mysql_fetch_assoc($resNext);
         if ($phaseIdCurrent['id'] == $phaseId['id']) {
@@ -426,11 +436,11 @@ if ($_POST['forwardFlag'] == 'update') {
     $currentPhase = $_POST['currentPhase'];
     foreach ($updatePhase as $k => $v) {
         if ($currentPhase == $k) {
-
-            $qry = "select * from master_project_phases where name = '" . $v . "'";
+            
+            $qry = "select * from master_project_phases where name = '".$v."'";
             $res = mysql_query($qry) or die(mysql_error());
             $phaseId = mysql_fetch_assoc($res);
-            $qryStg = "select * from master_project_stages where name = '" . $projectStage . "'";
+            $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
             $resStg = mysql_query($qryStg) or die(mysql_error());
             $stageId = mysql_fetch_assoc($resStg);
             updateProjectPhase($projectId, $phaseId['id'], $stageId['id']);
@@ -454,23 +464,23 @@ if ($_POST['forwardFlag'] == 'no') {
     else
         $phaseName = 'DataCollection';
 //  Get back older history
-    $qry = "select * from master_project_phases where name = '" . $phaseName . "'";
+    $qry = "select * from master_project_phases where name = '".$phaseName."'";
     $res = mysql_query($qry) or die(mysql_error());
     $phaseId = mysql_fetch_assoc($res);
-
-    $qryStg = "select * from master_project_stages where name = '" . $projectStage . "'";
+    
+    $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
     $resStg = mysql_query($qryStg) or die(mysql_error());
     $stageId = mysql_fetch_assoc($resStg);
     $history = ProjectStageHistory::find("all", array("conditions" => "project_id = {$projectId} and project_phase_id in
-    (" . phaseId_1 . "," . phaseId_3 . "," . phaseId_8 . ") and project_stage_id = {$stageId['id']}", "limit" => 1, "order" => "date_time desc"));
+    (".phaseId_1.",".phaseId_3.",".phaseId_8.") and project_stage_id = {$stageId['id']}", "limit" => 1, "order" => "date_time desc"));
 //  If old history is found
-    if (count($history) > 0) {
+    if(count($history) > 0){
         $history = $history[0];
         $lastAssignemnt = ProjectAssignment::find("all", array("conditions" => array("movement_history_id" => $history->history_id),
-                    "limit" => 1, "order" => "UPDATION_TIME desc"));
+            "limit" => 1, "order" => "UPDATION_TIME desc"));
     }
 //  if old history is not found
-    else {
+    else{
         $lastAssignemnt = array();
     }
 
@@ -478,7 +488,7 @@ if ($_POST['forwardFlag'] == 'no') {
     updateProjectPhase($projectId, $phaseId['id'], $stageId['id'], TRUE);
 
 //  Assigning back to same user if assignment is found
-    if (count($lastAssignemnt) > 0) {
+    if(count($lastAssignemnt) > 0){
         $lastAssignemnt = $lastAssignemnt[0];
         $newAssignment = new ProjectAssignment();
         $project = ResiProject::virtual_find($projectId);
