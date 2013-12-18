@@ -172,8 +172,8 @@ $(".pt_reqflrplan").fancybox();
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
 															<select name="tagged_date[{$cnt}]" >
 																<option value="0" >--Select Month--</option>
-																{foreach from=$dateDiv key=key item=data}
-																	<option value="{$key}" {if $ImageDataListingArr[data].tagged_month == $key} selected {/if} >{$data}</option>
+																{foreach from=$dateDiv key=keys item=datas}
+																	<option value="{$keys}" {if ($ImageDataListingArr[data].tagged_month|strtotime|date_format:"%Y-%m") == $keys} selected {/if} >{$datas}</option>
 																{/foreach}
 															</select>
 															<br><br>

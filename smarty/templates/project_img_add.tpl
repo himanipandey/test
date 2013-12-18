@@ -110,19 +110,19 @@ $(document).ready(function(){
 					<select name = "PType" id = "PType">
 						<option value =''>Select Type</option>
                                                 {if $linkShowHide == 0}
-                                                    <option value ='Project Image' {if $PType == 'Project Image'} selected {/if}>Project Image</option>
-                                                    <option value ='Location Plan' {if $PType == 'Location Plan'} selected {/if}>Location Plan</option>
-                                                    <option value ='Layout Plan' {if $PType == 'Layout Plan'} selected {/if}>Layout Plan</option>
-                                                    <option value ='Site Plan' {if $PType == 'Site Plan'} selected {/if}>Site Plan</option>
-                                                    <option value ='Master Plan' {if $PType == 'Master Plan'} selected {/if}>Master Plan</option>
-                                                    <option value ='Cluster Plan' {if $PType == 'Cluster Plan'} selected {/if}>Cluster Plan</option>
-                                                    <option value ='Construction Status' {if $PType == 'Construction Status'} selected {/if}>Construction Status</option>
-                                                    <option value ='Payment Plan' {if $PType == 'Payment Plan'} selected {/if}>Payment Plan</option>
-                                                    <option value ='Specification' {if $PType == 'Specification'} selected {/if}>Specification</option>
-                                                    <option value ='Price List' {if $PType == 'Price List'} selected {/if}>Price List</option>
-                                                    <option value ='Application Form' {if $PType == 'Application Form'} selected {/if}>Application Form</option>
+                                                    <option value ='Project Image' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Project Image'} selected {/if}>Project Image</option>
+                                                    <option value ='Location Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Location Plan'} selected {/if}>Location Plan</option>
+                                                    <option value ='Layout Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Layout Plan'} selected {/if}>Layout Plan</option>
+                                                    <option value ='Site Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Site Plan'} selected {/if}>Site Plan</option>
+                                                    <option value ='Master Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Master Plan'} selected {/if}>Master Plan</option>
+                                                    <option value ='Cluster Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Cluster Plan'} selected {/if}>Cluster Plan</option>
+                                                    <option value ='Construction Status' {if $PType == 'Construction Status' || $imagetype == 'const'} selected {/if}>Construction Status</option>
+                                                    <option value ='Payment Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Payment Plan'} selected {/if}>Payment Plan</option>
+                                                    <option value ='Specification' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Specification'} selected {/if}>Specification</option>
+                                                    <option value ='Price List' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Price List'} selected {/if}>Price List</option>
+                                                    <option value ='Application Form' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Application Form'} selected {/if}>Application Form</option>
 						{else}
-                                                    <option value ='Construction Status' {if $PType == 'Construction Status'} selected {/if}>Construction Status</option>
+                                                    <option value ='Construction Status' {if $PType == 'Construction Status' || $imagetype == 'const'} selected {/if}>Construction Status</option>
                                                 {/if}
 					</select>	
                                         <input type="hidden" name = "linkShowHide" value="{$linkShowHide}">

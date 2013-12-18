@@ -5,7 +5,7 @@ require_once "support/objects.php";
 class ResiProject extends Objects
 {
     static $table_name = 'resi_project';
-    static $default_scope = array("version" => "cms");
+    static $default_scope = array("version" => "Cms");
     static $virtual_primary_key = 'project_id';
 
     static $has_many = array(
