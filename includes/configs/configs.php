@@ -719,6 +719,9 @@ $arrOtherCities =
 		"30"=>"Kochi",
 		"29"=>"Trivandrum",
 		"45"=>"Trichy",
-		"41"=>"Visakhapatnam"
+		"41"=>"Visakhapatnam",
+		"90"=>"Sonepat",
+		"98"=>"Panipat",
+		"99"=>"Raigad"
   );
 ?>
