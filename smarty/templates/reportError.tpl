@@ -87,10 +87,10 @@
                                 <TD align=left class=td-border>{$errorDataArr[data].DATE|date_format}</TD>
                                 <TD align=left class=td-border>
                                     <select name="status_{$errorDataArr[data].ID}" id="status_{$errorDataArr[data].ID}">
-                                        <option value="0">No action taken</option>
-                                        <option value="1">No issue Found</option>
-                                        <option value="2">Issue found / being resolved</option>
-                                        <option value="3">Error Corrected</option>
+                                        <option value="0" {if $errorDataArr[data].STATUS_ID == 0} selected='selected' {/if}>No action taken</option>
+                                        <option value="1" {if $errorDataArr[data].STATUS_ID == 1} selected='selected' {/if}>No issue Found</option>
+                                        <option value="2" {if $errorDataArr[data].STATUS_ID == 2} selected='selected' {/if}>Issue found / being resolved</option>
+                                        <option value="3" {if $errorDataArr[data].STATUS_ID == 3} selected='selected' {/if}>Error Corrected</option>
                                     </select>
                                 </TD>
                                 <TD align=left class=td-border>
@@ -163,7 +163,8 @@ jQuery(document).ready(function(){
         var x = countChecked();
         if(x==false)
         {
-         return false;
+            alert("Please check any checkbox first!");
+            return false;
         }
         var cnt = 0;
         jQuery(':checkbox:checked').each(function(i){
