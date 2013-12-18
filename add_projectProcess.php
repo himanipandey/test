@@ -561,15 +561,27 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 }
                 //update code for offer heading and desc
                 if($special_offer != '' || $offer_heading != '' || $offer_desc != ''){
-                    $qryOfferUpdate = "update project_offers 
-                    set
-                        OFFER = '".$special_offer."',
-                        OFFER_HEADING = '".$offer_heading."',
-                        OFFER_DESC = '".$offer_desc."',
-                        updated_by = '".$_SESSION['adminId']."'
-                    where
-                        project_id = $projectId";
-                    mysql_query($qryOfferUpdate) or die(mysql_error());
+                    $qryOfferChk = "select * from project_offers where project_id = $projectId";
+                    $resOfferChk = mysql_query($qryOfferChk) or die(mysql_error());
+                    if(mysql_num_rows($resOfferChk)<=0){
+                        $qryOffer = "insert into project_offers 
+                        set
+                            OFFER = '".$special_offer."',
+                            OFFER_HEADING = '".$offer_heading."',
+                            OFFER_DESC = '".$offer_desc."',
+                            updated_by = '".$_SESSION['adminId']."',
+                            project_id = $projectId";
+                    }else{
+                        $qryOffer = "update project_offers 
+                        set
+                            OFFER = '".$special_offer."',
+                            OFFER_HEADING = '".$offer_heading."',
+                            OFFER_DESC = '".$offer_desc."',
+                            updated_by = '".$_SESSION['adminId']."'
+                        where
+                            project_id = $projectId";
+                    }
+                    mysql_query($qryOffer) or die(mysql_error());
                 }
                 if($preview == 'true')
                    header("Location:show_project_details.php?projectId=".$projectId);
