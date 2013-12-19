@@ -14,7 +14,8 @@ class ResiProject extends Objects
         array('call_projects', 'class_name' => "CallProject", "foreign_key" => "ProjectId"),
         array('options', 'class_name' => "ResiProjectOptions", "foreign_key" => "PROJECT_ID"),
         array('phases', 'class_name' => "ResiProjectPhase", "foreign_key" => "PROJECT_ID"),
-   ); 
+   );
+    
    static function projectStatusMaster() {
        $qry = "select * from project_status_master";
        $result = ResiProject::find_by_sql($qry);
@@ -129,6 +130,10 @@ class ResiProject extends Objects
 
    public function get_all_options(){
        return ResiProjectOptions::find("all", array("conditions" => array("project_id" => $this->project_id, "option_category" => "Actual")));
+   }
+   
+   public static function get_all_phases($project_id){
+       return ResiProjectPhase::find("all", array("conditions" => array("project_id" => $project_id, "version" => "Cms")));
    }
 
        public function get_all_towers(){
