@@ -33,7 +33,7 @@ $uptionDetailWithPrice = array();
 foreach($optionsDetails as $key => $value) {
 	
 	$listing_price = ListingPrices::find('all',array('conditions'=>
-    array('listing_id = ?', $value->id),'select' => 
+    array('listing_id = ?', $value->id),"limit" => 1, "order" => "effective_date desc",'select' => 
                     'effective_date'));
               	
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;

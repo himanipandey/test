@@ -129,9 +129,17 @@
         $smarty->assign("stage", $stage);
 
         if($city != '')
-        {
-            $localityArr = Locality::getLocalityByCity($city);
-            $smarty->assign("localityArr", $localityArr);
+        { 
+			$getLocality = Array();
+            if($city == 'othercities'){
+				foreach($arrOtherCities as $key => $value){
+					$cityLocality = Locality::getLocalityByCity($key);
+					if(!empty($cityLocality))
+						$getLocality = array_merge($getLocality,$cityLocality);
+				}
+			}else
+				$getLocality = Locality::getLocalityByCity($city);
+			$smarty->assign("getLocality", $getLocality);
         }
         $QueryMember1 = "Select p.PROJECT_ID,p.PROJECT_PHASE_ID,p.PROJECT_STAGE_ID,ph.name as PROJECT_PHASE, 
                 st.name as PROJECT_STAGE 
@@ -177,7 +185,14 @@
 
              if($_REQUEST['city'] != '')
              {
-                 $QueryMember .= $and." city.city_id ='".$_REQUEST['city']."'";
+				 $city = '';
+				 if($_REQUEST['city'] == 'othercities'){
+					$OtherCitiesKeys = array_keys($arrOtherCities);
+					$city = implode(",",$OtherCitiesKeys);
+				 }else{
+					 $city = $_REQUEST['city'];
+				}
+                 $QueryMember .= $and." city.city_id in ($city)";
                  $and  = ' AND ';
              }
              if($_REQUEST['project_name'] != '')
@@ -225,7 +240,7 @@
              }
              if($updationCycle != '')
              {
-                 $QueryMember .= $and." UPDATION_CYCLE_ID = '".$updationCycle."'";
+                 $QueryMember .= $and." UPDATION_CYCLE_ID = '".$updationCycle."' AND (PROJECT_STAGE_ID = '4' OR PROJECT_STAGE_ID = '3')";
                  $and  = ' AND ';
              }
 

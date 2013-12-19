@@ -29,7 +29,7 @@ $smarty->assign("BedroomDetails", $bedroomDetails);
 /* * ********************************** */
 if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     // Vars
-    $phasename = $_REQUEST['PhaseName'];
+    $phasename = "Phase - ".$_REQUEST['PhaseName'];
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
     $pre_launch_date = $_REQUEST['pre_launch_date'];

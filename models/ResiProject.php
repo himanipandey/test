@@ -72,7 +72,7 @@ class ResiProject extends Objects
       }
           
 	  if( $key == 'city_id' ){
-		$conditions .=  "city.city_id = $value ".$city_and;
+		$conditions .=  "city.city_id in ($value) ".$city_and;
    	  }
       else if( $key == 'expected_supply_date_between_from_to' ) {
           $twoDate = explode('_',$value);

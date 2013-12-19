@@ -112,8 +112,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                else
                   $suburbId  = '';
                
-                  $getLocalityBySuburb =  Locality::localityList($suburbId);
-                  $smarty->assign("getLocalityBySuburb", $getLocalityBySuburb);
+               $localitySelect =  Locality::getLocalityByCity($_POST['cityId']);
+				foreach ($localitySelect  as $value) {
+					  $getLocalityBySuburb[$value->locality_id] = $value->label;
+				}
+                $smarty->assign("getLocalityBySuburb", $getLocalityBySuburb);
             }
             /***************end Query for Locality selected************/
             $smarty->assign("txtProjectName", $txtProjectName);
@@ -561,15 +564,27 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 }
                 //update code for offer heading and desc
                 if($special_offer != '' || $offer_heading != '' || $offer_desc != ''){
-                    $qryOfferUpdate = "update project_offers 
-                    set
-                        OFFER = '".$special_offer."',
-                        OFFER_HEADING = '".$offer_heading."',
-                        OFFER_DESC = '".$offer_desc."',
-                        updated_by = '".$_SESSION['adminId']."'
-                    where
-                        project_id = $projectId";
-                    mysql_query($qryOfferUpdate) or die(mysql_error());
+                    $qryOfferChk = "select * from project_offers where project_id = $projectId";
+                    $resOfferChk = mysql_query($qryOfferChk) or die(mysql_error());
+                    if(mysql_num_rows($resOfferChk)<=0){
+                        $qryOffer = "insert into project_offers 
+                        set
+                            OFFER = '".$special_offer."',
+                            OFFER_HEADING = '".$offer_heading."',
+                            OFFER_DESC = '".$offer_desc."',
+                            updated_by = '".$_SESSION['adminId']."',
+                            project_id = $projectId";
+                    }else{
+                        $qryOffer = "update project_offers 
+                        set
+                            OFFER = '".$special_offer."',
+                            OFFER_HEADING = '".$offer_heading."',
+                            OFFER_DESC = '".$offer_desc."',
+                            updated_by = '".$_SESSION['adminId']."'
+                        where
+                            project_id = $projectId";
+                    }
+                    mysql_query($qryOffer) or die(mysql_error());
                 }
                 if($preview == 'true')
                    header("Location:show_project_details.php?projectId=".$projectId);
@@ -598,12 +613,19 @@ elseif ($projectId!='') {
     $smarty->assign("localityId", $ProjectDetail->locality_id);
     $localityDetail = Locality::getLocalityById($ProjectDetail->locality_id); 
     $suburbDetail = Suburb::getSuburbById($localityDetail[0]->suburb_id);
+    
     $suburbSelect =  Suburb::SuburbArr($suburbDetail[0]->city_id);
     $smarty->assign("suburbSelect", $suburbSelect);
+    
     $smarty->assign("suburbId", $localityDetail[0]->suburb_id);
     $smarty->assign("cityId", $suburbDetail[0]->city_id);
-    $localitySelect =  Locality::localityList($localityDetail[0]->suburb_id);
-    $smarty->assign("getLocalityBySuburb", $localitySelect);
+    
+    $localitySelect =  Locality::getLocalityByCity($suburbDetail[0]->city_id);
+    foreach ($localitySelect  as $value) {
+          $getLocalityBySuburb[$value->locality_id] = $value->label;
+    }
+    $smarty->assign("getLocalityBySuburb", $getLocalityBySuburb);
+   
    /****end city locality and suburb**********/
     
     /**start code for fetch offer heading and desc from db**/
