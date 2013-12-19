@@ -126,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $smarty->assign("FlatsQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Apartment']));
     $smarty->assign("VillasQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Villa']));
     $smarty->assign("PlotQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Plot']));
+    $smarty->assign("phase_quantity", $phase_quantity);
 }
 /* * ********************************** */
 if (isset($_POST['btnSave'])) {
@@ -247,9 +248,22 @@ if (isset($_POST['btnSave'])) {
                 }
             }
 
-            if ($_POST['plotvilla'] != '') {
+           if ($_POST['plotvilla'] != '') {
                 $supply = $_POST['supply'];
-                ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $_POST['supply'], $_POST['launched']);
+                if($supply == ''){
+                  $qryPlotCase = "select ps.supply,ps.launched,l.status from resi_project_options rpo 
+                    join listings l on(rpo.options_id = l.option_id and l.listing_category = 'Primary')
+                    join project_supplies ps on (l.id = ps.listing_id and ps.version = 'Cms')
+                    where rpo.option_type =  'plot' and l.phase_id = $phaseId order by l.id desc";
+                    $resPlotCase = mysql_query($qryPlotCase);
+                    echo mysql_num_rows($resPlotCase);
+                    $dataPlotcase = mysql_fetch_assoc($resPlotCase);
+                    if(($_POST['launched'] == '' || $_POST['launched'] == 0) && mysql_num_rows($resPlotCase)>0) {
+                        $_POST['launched'] = $dataPlotcase['launched'];
+                         $supply = $dataPlotcase['supply'];
+                    }
+                }
+                ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $supply, $_POST['launched']);
             }
 
             $towerDetail = fetch_towerDetails_for_phase($projectId, $phaseId);
