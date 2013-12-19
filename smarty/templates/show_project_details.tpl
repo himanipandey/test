@@ -1810,9 +1810,25 @@ function getDateNow(){
 						  	</td>
 						</tr>
 						{/if}
+						
+						<tr bgcolor = "#c2c2c2">
+						{if count($lastUpdatedDetail['listing_prices'])>0}
+						
+							  <td nowrap="nowrap"  align="left" valign="top"><b>Last Updated Detail : Project Price</b><br></br>
+							  {foreach from = $lastUpdatedDetail['listing_prices'] key=key item = item}
+									
+									<b>Department: </b> {$item['dept']}</br>
+									<b>Name: </b> {$item['name']}</br>
+									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
+								{/foreach}	
+																
+							  </td>
+							  
+						  
+						{/if}
 						{if count($lastUpdatedDetail['resi_project_options'])>0}
-						  <tr bgcolor = "#c2c2c2">
-							  <td nowrap="nowrap"  align="left" colspan = "9"><b>Last Updated Detail</b><br></br>
+						  
+							  <td nowrap="nowrap"  align="left" colspan = "8" valign="top"><b>Last Updated Detail : Project Configuration</b><br></br>
 							  {foreach from = $lastUpdatedDetail['resi_project_options'] key=key item = item}
 									
 									<b>Department: </b> {$item['dept']}</br>
@@ -1822,9 +1838,11 @@ function getDateNow(){
 																
 							  </td>
 							  
-						  </tr>
+						 
 						{/if}
-                            {/if}
+						 </tr>
+						
+                {/if}
                     <tr class="headingrowcolor" height="30px;">
 						<td  nowrap="nowrap"  align="center" class=whiteTxt >SNo.</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Phase Name</td>
@@ -2457,9 +2475,10 @@ function getDateNow(){
 
 							</tr>
 						{/if}
+						<tr bgcolor = "#c2c2c2">
 						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
-						  <tr bgcolor = "#c2c2c2">
-							  <td nowrap="nowrap"  align="left" colspan = "8"><b>Last Updated Detail</b><br></br>
+						  
+							  <td nowrap="nowrap"  align="left" valign="top" width="30%"><b>Last Updated Detail : Supply</b><br></br>
 								{foreach from = $lastUpdatedDetail['resi_proj_supply'] key=key item = item}
 									
 									<b>Department: </b> {$item['dept']}</br>
@@ -2469,9 +2488,23 @@ function getDateNow(){
 								
 							  </td>
 							  
-						  </tr>
-						{/if}
 						
+						{/if}
+						{if count($lastUpdatedDetail['project_availabilities'])>0}
+						 
+							  <td nowrap="nowrap"  align="left" colspan = "7" valign="top"><b>Last Updated Detail : Inventory</b><br></br>
+								{foreach from = $lastUpdatedDetail['project_availabilities'] key=key item = item}
+									
+									<b>Department: </b> {$item['dept']}</br>
+									<b>Name: </b> {$item['name']}</br>
+									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
+								{/foreach}	
+								
+							  </td>
+							  
+						 
+						{/if}
+						 </tr>
 						 <tr>
 							<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 							

@@ -1525,7 +1525,65 @@ function lastUpdatedAuditDetail($projectId) {
 		
 		$count++;
 	}
-	                        
+	
+	 $qry = "SELECT
+                     b.DEPARTMENT, c.FNAME, a.updated_at
+                    FROM
+                       _t_listing_prices a
+                           JOIN
+                       (SELECT
+                            p.DEPARTMENT, MAX(lp._t_transaction_id) as tid
+							FROM _t_listing_prices lp
+							INNER JOIN listings lst
+								 on lp.listing_id = lst.id 
+							INNER JOIN resi_project_phase rpp
+								 on lst.phase_id = rpp.phase_id
+							JOIN proptiger_admin p ON lp.updated_by = p.ADMINID
+							WHERE rpp.PROJECT_ID = $projectId
+							GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
+                           join
+                       proptiger_admin c ON (c.ADMINID = a.updated_by)";
+                 
+    $result = mysql_query($qry);
+	$count = 0;
+    while($res = mysql_fetch_object($result))
+	{
+		$arrData['listing_prices'][$count]['name'] = $res->FNAME;
+		$arrData['listing_prices'][$count]['dept'] = $res->DEPARTMENT;
+		$arrData['listing_prices'][$count]['ACTION_DATE'] = $res->updated_at;
+		
+		$count++;
+	}     
+	
+	 $qry = "SELECT
+                     b.DEPARTMENT, c.FNAME, a.updated_at
+                    FROM
+                       _t_project_availabilities a
+                           JOIN
+                       (SELECT p.DEPARTMENT , MAX(pal._t_transaction_id) as tid FROM _t_project_availabilities pal
+						INNER JOIN project_supplies ps
+							 on pal.project_supply_id = ps.id
+						INNER JOIN listings lst
+							 on ps.listing_id = lst.id 
+						INNER JOIN resi_project_phase rpp
+							 on lst.phase_id = rpp.phase_id
+						JOIN proptiger_admin p ON pal.updated_by = p.ADMINID
+						WHERE rpp.PROJECT_ID = $projectId
+						GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
+                           join
+                       proptiger_admin c ON (c.ADMINID = a.updated_by)";
+                 
+    $result = mysql_query($qry);
+	$count = 0;
+    while($res = mysql_fetch_object($result))
+	{
+		$arrData['project_availabilities'][$count]['name'] = $res->FNAME;
+		$arrData['project_availabilities'][$count]['dept'] = $res->DEPARTMENT;
+		$arrData['project_availabilities'][$count]['ACTION_DATE'] = $res->updated_at;
+		
+		$count++;
+	}                        
+	                   
      $qry = "SELECT
                      b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
