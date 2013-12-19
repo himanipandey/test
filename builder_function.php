@@ -2097,17 +2097,21 @@ function projectBankList($projectId){
 	while($bank = mysql_fetch_array($ExecSql))
 		$projectList[] = $bank['BANK_ID'];
 	
-	return  $projectList;
-	
+	return  $projectList;	
 }
 
-function checkForDuplicateOption($bedroom,$bathroom,$option_name,$size){
-	
-	print $bedroom."->".$bathroom."->".$option_name."->".$size;
-	
-	die;
-	
+function enqueProjectForMigration($projectId, $migrationType, $adminId=NULL){
+    if(is_null($adminId))$adminId = $_SESSION['adminId'];
+    $attributes = array(
+        'project_id'=>$projectId,
+        'migration_type'=>$migrationType,
+        'version_from'=>'Cms',
+        'version_to'=>'Website',
+        'status'=>'Waiting',
+        'created_by'=>$adminId,
+        'created_at'=>'NOW()'
+    );
+    return ProjectMigration::create($attributes);
 }
-
 ?>
 
