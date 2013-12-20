@@ -12,6 +12,8 @@ if ($_REQUEST['btnExit'] == "Exit") {
     header("Location:ProjectList.php?projectId=" . $projectId);
 }
 
+if(ProjectMigration::isProjectWaitingForMigration($projectId))die ('This project is being migrated to website. Please try after some time');
+
 $lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
 $smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
 
