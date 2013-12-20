@@ -12,6 +12,10 @@
     });
      
     $(document).ready(function(){
+		$('.supply_select .reset_option_and_supply').each(function(i,v){
+			if(i > 0)
+				$(this).hide();
+		});
         $('#isLaunchUnitPhase').change(function(){
             $('.launched').each(function(){
                 if($('#isLaunchUnitPhase')[0].checked)$(this).removeAttr('readonly');
@@ -295,7 +299,7 @@
                                                                                                 </td>
                                                                                             {/if}
                                                                                             </tr>
-                                                                                                <tr {if $phaseObject['PHASE_TYPE'] == 'Logical'} style="display: none;" {/if}>
+                                                                                               <!-- <tr {if $phaseObject['PHASE_TYPE'] == 'Logical'} style="display: none;" {/if}>
                                                                                                     <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
                                                                                                         <td width="30%" align="left">
                                                                                                             <select name="towers[]" id="towers" multiple="multiple" style="width: 150px; height: 110px;">
@@ -306,7 +310,7 @@
                                                                                                             </select>
                                                                                                         </td>
                                                                                                         <td width="50%" align="left"></td>
-                                                                                                </tr>
+                                                                                                </tr> -->
                                                                                         {/if}
 
                                                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==2 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5}
@@ -361,6 +365,20 @@
                                                                                                                             </tr>
                                                                                                                             <input type='hidden' name='plotvilla' id='plotvilla' value='Plot'>
                                                                                                                         {/if}  
+                                                                                                                        {if count($phase_quantity) == 0 || count($bedrooms_hash['Apartment'])>0}
+																															<tr {if $phaseObject['PHASE_TYPE'] == 'Logical'} style="display: none;" {/if}>
+																																<td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
+																																	<td width="30%" align="left">
+																																		<select name="towers[]" id="towers" multiple="multiple" style="width: 150px; height: 110px;">
+																																			<option value="-1">Select Towers</option>
+																																			{foreach $TowerDetails as $tower}
+																																				<option value="{$tower.TOWER_ID}" {if $tower.PHASE_ID eq $phaseId}selected{/if}>{$tower.TOWER_NAME}</option>
+																																			{/foreach}
+																																		</select>
+																																	</td>
+																																	<td width="50%" align="left"></td>
+																															</tr>
+																													{/if}
                                                                                                                         {if $phaseId != '0'}
                                                                                                                         <tr>
                                                                                                                             <td width="20%" align="right" valign="top"><b><b><b>Remarks :</b> </td>
