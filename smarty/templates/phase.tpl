@@ -191,19 +191,6 @@
 									      </tr>
 								  {/if}
 
-								  {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
-										<tr>
-											<td width="20%" align="right" valign="top"><b>Supply of Plot  :</b> </td>
-											<td width="30%" align="left" nowrap>
-												<input type='text' name='supply' id='supply' value='{$supply}'>
-											</td>
-											<td width="50%" align="left">
-												<font color="red"><span id = "err_supply" style = "display:none;">Enter the supply for Plot</span></font>
-											</td>
-										</tr>
-										<input type='hidden' name='plotvilla' id='plotvilla' value='Plot'>
-								  {/if}                               
-
 							   <tr>
 								  <td width="20%" align="right" valign="top"><b><b><b>Remarks :</b> </td>
 								  <td width="30%" align="left">
