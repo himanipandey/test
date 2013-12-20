@@ -297,6 +297,12 @@
                 $arrUpdatePhase = explode("|",$_POST['updatePhase']);
                 $SET = ' SET ';
                 $SetQry = '';
+                
+                if($arrUpdatePhase[0]=='NoStage'){
+                    foreach ($arrPropId as $pid) {
+                        ProjectMigration::enqueProjectForMigration ($pid, 'Genuine', $_SESSION['adminId']);
+                    }
+                }
                 if($arrUpdatePhase[0] != '') {
 					$getProjectStage = ProjectStage::getStageByName($arrUpdatePhase[0]);
                     $SetQry .= $SET . " PROJECT_STAGE_ID = '".$getProjectStage[0]->id."' ";
