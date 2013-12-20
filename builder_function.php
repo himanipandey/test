@@ -1109,8 +1109,10 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 /*********************************/
 
 function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
+    if($phase == phaseId_6)ProjectMigration::enqueProjectForMigration($pID, 'Genuine', $_SESSION['adminId']);
+    
+    mysql_query('begin');
     if ($phase != phaseId_6) {
-        mysql_query('begin');
         $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE_ID = '" . $phase . "' 
             WHERE PROJECT_ID = '" . $pID . "' and version = 'Cms';";
     } else {
@@ -2090,7 +2092,6 @@ function ViewLocalityDetails($localityID) {
     }
 }
 function projectBankList($projectId){
-	
 	$projectList = array();
 	$Sql = "SELECT BANK_ID FROM " . PROJECT_BANKS . " WHERE PROJECT_ID = ".$projectId;
 	$ExecSql = mysql_query($Sql);
@@ -2098,20 +2099,6 @@ function projectBankList($projectId){
 		$projectList[] = $bank['BANK_ID'];
 	
 	return  $projectList;	
-}
-
-function enqueProjectForMigration($projectId, $migrationType, $adminId=NULL){
-    if(is_null($adminId))$adminId = $_SESSION['adminId'];
-    $attributes = array(
-        'project_id'=>$projectId,
-        'migration_type'=>$migrationType,
-        'version_from'=>'Cms',
-        'version_to'=>'Website',
-        'status'=>'Waiting',
-        'created_by'=>$adminId,
-        'created_at'=>'NOW()'
-    );
-    return ProjectMigration::create($attributes);
 }
 ?>
 

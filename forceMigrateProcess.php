@@ -20,7 +20,7 @@
         fwrite($handle, str_replace(',', "\n", $projectId));
         
         foreach ($projectIdArr as $pid) {
-            enqueProjectForMigration($pid, 'Forced');
+            ProjectMigration::enqueProjectForMigration($pid, 'Forced', $_SESSION['adminId']);
         }
         
         fclose($handle);
