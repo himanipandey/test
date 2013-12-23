@@ -5,6 +5,18 @@
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
 <script type="text/javascript">
+  function isNumberKey(evt)
+  {
+ 	 var charCode = (evt.which) ? evt.which : event.keyCode;
+
+ 	 if (charCode == 8)
+		return true;
+ 	 
+	 if (charCode >= 48 && charCode <= 57 )
+		return true;
+
+	 return false;
+  }
     function validate_phase() {
         var name_flag = true;
         var flat_bed = true;
@@ -103,11 +115,11 @@
 								  <td width="20%" align="right"><font color ="red">*</font><b>Phase Name :</b> </td>
 								  <td width="30%" align="left">
 									 
-									 <input type="text" name="PhaseName" class="PhaseName" id="PhaseName" value = "{$phasename}" />
+									 <input type="text" name="PhaseName" class="PhaseName" id="PhaseName" value = "{$phasename}" maxlength="2" onkeypress='return isNumberKey(event)' size="2" />
 									 <div id="imgPathRefresh"></div>
 								  </td>
 								  <td width="50%" align="left">
-									  <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
+									  <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name. It must be numeric.</span></font>
 								  </td>
 							   </tr>
 
@@ -118,6 +130,15 @@
                                     </td>
                                     <td width="50%" align="left">
                                         <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span><span id = "err_launch_date2" style = "display:none;">Launched date should be less than the Completion Date.</span></font>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td width="20%" align="right" valign="top"><b>Pre Launch Date  :</b> </td>
+                                    <td width="30%" align="left">{$pre_launch_date}
+                                        <input type = "hidden" name = "pre_launch_date" value="{$pre_launch_date}">
+                                    </td>
+                                    <td width="50%" align="left">&nbsp;
                                     </td>
                                 </tr>
 
@@ -169,19 +190,6 @@
 										  <td width="50%" align="left"></td>
 									      </tr>
 								  {/if}
-
-								  {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
-										<tr>
-											<td width="20%" align="right" valign="top"><b>Supply of Plot  :</b> </td>
-											<td width="30%" align="left" nowrap>
-												<input type='text' name='supply' id='supply' value='{$supply}'>
-											</td>
-											<td width="50%" align="left">
-												<font color="red"><span id = "err_supply" style = "display:none;">Enter the supply for Plot</span></font>
-											</td>
-										</tr>
-										<input type='hidden' name='plotvilla' id='plotvilla' value='Plot'>
-								  {/if}                               
 
 							   <tr>
 								  <td width="20%" align="right" valign="top"><b><b><b>Remarks :</b> </td>

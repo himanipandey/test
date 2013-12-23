@@ -31,4 +31,14 @@
     /********skip updation cycle id define*****/
     define('skipUpdationCycle_Id', 15);
     $smarty->assign("skipUpdationCycle_Id", skipUpdationCycle_Id);
+    
+    /***********project status id define**************/
+    define("UNDER_CONSTRUCTION_ID_1","1");   //Under Construction
+    define("CANCELLED_ID_2","2"); //Cancelled
+    define("OCCUPIED_ID_3","3"); //Occupied
+    define("READY_FOR_POSSESSION_ID_4","4");  //Ready for Possession
+    define("ON_HOLD_ID_5","5"); //On Hold
+    define("NOT_LAUNCHED_ID_6","6"); //Not Launched
+    define("LAUNCHED_ID_7","7"); //Launch
+    define("PRE_LAUNCHED_ID_8","8"); //Pre Launch
 ?>

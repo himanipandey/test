@@ -67,7 +67,9 @@ class ProjectSupply extends Objects {
     function projectTypeGroupedQuantityForPhase($projectId, $phaseId) {
         $query = "select option_type UNIT_TYPE, GROUP_CONCAT(CONCAT(IFNULL( bedrooms, 0 ), ':', supply,
             ':', launched)) as AGG from " . self::table_name() . " 
-               s join listings l on (l.id = s.listing_id) join resi_project_options o on (o.options_id = l.option_id) where version = 'Cms' and project_id = '$projectId' and phase_id";
+               s join listings l on (l.id = s.listing_id  
+               and l.listing_category = 'Primary' and l.status = 'Active') join resi_project_options o on 
+               (o.options_id = l.option_id) where version = 'Cms' and project_id = '$projectId' and phase_id";
         if ($phaseId == '0')$query .= ' is NULL ';
         else $query .= " ='$phaseId' ";
         $query .= ' group by UNIT_TYPE;';
@@ -76,7 +78,7 @@ class ProjectSupply extends Objects {
     
     function projectSupplyForProjectPage($projectId){
         $result = array();
-        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, rpp.project_id,  rpp.BOOKING_STATUS_ID,
+        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, rpp.submitted_date, rpp.project_id,  rpp.BOOKING_STATUS_ID,
             ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply, ps.launched, 
             pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type,ls.id as listing_id
             from 
@@ -96,7 +98,7 @@ class ProjectSupply extends Objects {
              left join " . ResiProjectPhase::table_name() . "  rpp on (ls.phase_id = rpp.PHASE_ID and rpp.version = 'Cms')
        union 
             select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
-                rpp.COMPLETION_DATE, rpp.project_id,rpp.BOOKING_STATUS_ID, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
+                rpp.COMPLETION_DATE, rpp.submitted_date, rpp.project_id,rpp.BOOKING_STATUS_ID, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
                 ps.launched, pa.availability, pa.comment, pa.effective_month, 
                 rpo.option_type as project_type,ls.id as listing_id 
             from 
@@ -111,6 +113,7 @@ class ProjectSupply extends Objects {
             $entry['PHASE_NAME'] = $value->phase_name;
             $entry['LAUNCH_DATE'] = $value->launch_date;
             $entry['COMPLETION_DATE'] = $value->completion_date;
+            $entry['submitted_date'] = $value->submitted_date;
             $entry['PROJECT_ID'] = $value->project_id;
             $entry['PHASE_ID'] = $value->phase_id;
             $entry['NO_OF_BEDROOMS'] = $value->no_of_bedroom;

@@ -10,7 +10,7 @@
 		$smarty->assign("ProjectDetail", $projectDetail);
 		$ImageDataListingArr = allProjectImages($projectId);
 		$builderDetail	= fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
-
+	
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 		$count =0;
 		$count+=count($ImageDataListingArr);
@@ -21,11 +21,38 @@
 		 $smarty->assign("count", $count);
 		 $path = "";
 		 $smarty->assign("path", $path);
-		 
+					 
+	$towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
+    $towerDetail        =   array();
+    foreach($towerDetail_object as $s){
+        $s = $s->to_array();
+        foreach($s as $key=>$value){
+            $s[strtoupper($key)] = $value;
+            unset($s[$key]);
+        }
+            array_push($towerDetail, $s);
+    }    
+     $smarty->assign("towerDetail", $towerDetail);
+     
+       //date dropdown
+    $curdate = date("M-Y",time());
+    $date_div = array();
+    $date_div[date("Y-m",time())] =  $curdate ;
+    for($cmt=1;$cmt<=11;$cmt++){
+		$nextdate = strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " -$cmt month");
+		$date_div[date('Y-m',$nextdate)] =  date("M-Y",$nextdate) ;
+    }
+    $smarty->assign("dateDiv", $date_div);
+   
 			 
 		if( isset($_REQUEST['title']) &&  !array_filter($_REQUEST['title']) )
 	    {
 	      $ErrorMsg["title"] = "Please enter Image Title.";
+	    }
+		
+		if( isset($_REQUEST['tagged_month']) &&  !array_filter($_REQUEST['tagged_month']) )
+	    {
+	      $ErrorMsg["tagged_month"] = "Please enter Image Tagged Date.";
 	    }
 		
 		 /*********edit images code start here*******************/
@@ -42,17 +69,16 @@
 
 				/********************************/		
 				$BuilderName = $builderNamebuild[1];
-				$ProjectName = str_replace(" ","-",$projectDetail[0]['PROJECT_NAME']);	
+				$ProjectName = str_replace(" ","-",$projectDetail[0]['PROJECT_NAME']);	 
 				
 				$arrValue = array();
 				$arrTitle = array();
-				
+				$arrTaggedDate = array();
+				$arrTowerId = array();
 				foreach($_REQUEST['chk_name'] as $k=>$v)
 				{
-	
 					if($v != '')
 					{
-
 						if(!in_array(strtolower($_FILES['img']['type'][$k]), $arrImg))
 						{
 							$ErrorMsg["ImgError"] = "You can upload only ".ucwords(implode(" / ",$arrImg))." images.";
@@ -73,6 +99,8 @@
 						{
 							$arrValue[$k] = $_FILES['img']['name'][$k];
 							$arrTitle[$k] = $_REQUEST['title'][$k];
+							$arrTaggedDate[$k] = date("Y-m-d",strtotime($_REQUEST['tagged_date'][$k]));
+							$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
 						}
 						else
 						{
@@ -524,10 +552,10 @@
                                                         "object" => "project", "object_id" => $projectId,
                                                         "image_type" => "construction_status",
                                                         "service_image_id" => $service_image_id));
-                                                    $response = $s3upload->update();
+                                                   $response = $s3upload->update();
                                                     // Image id updation (next three lines could be written in single line but broken
                                                     // in three lines due to limitation of php 5.3)
-                                                    $image_id = $response["service"]->data();
+                                                   $image_id = $response["service"]->data();
                                                     $image_id = $image_id->id;
 													$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 													$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);	
@@ -545,7 +573,7 @@
 													$image->save($imgdestpath);
                                                     $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                                     $s3upload->upload();
-													$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+											 		$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 													$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 													/**********Working for watermark*******************/
 													// Image path
@@ -892,10 +920,10 @@
                                                             "object" => "project", "object_id" => $projectId,
                                                             "image_type" => "project_image",
                                                             "service_image_id" => $service_image_id));
-                                                        $response = $s3upload->update();
+                                                       $response = $s3upload->update();
                                                         // Image id updation (next three lines could be written in single line but broken
                                                         // in three lines due to limitation of php 5.3)
-                                                        $image_id = $response["service"]->data();
+                                                       $image_id = $response["service"]->data();
                                                         $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
@@ -905,7 +933,7 @@
                                                         $imgdestpath = $createFolder."/".$newimg;
 														$image->save($imgdestpath);
                                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                                        $s3upload->upload();
+                                                       $s3upload->upload();
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 														/**********Working for watermark*******************/
@@ -916,7 +944,7 @@
 														$img->ApplyWatermark($watermark_path);
 														$img->SaveAsFile($imgdestpath);
                                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                                        $s3upload->upload();
+                                                       $s3upload->upload();
 														$img->Free();							
 														/*********update project table for samall image***********/
 														$pathProject	=	"/".$BuilderName."/".strtolower($ProjectName);
@@ -928,7 +956,7 @@
                                                         $imgdestpath = $createFolder."/".$newrect;
 														$image->save($imgdestpath);
                                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                                        $s3upload->upload();
+                                                       $s3upload->upload();
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newrect;
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newrect;
 														/**********Working for watermark*******************/
@@ -941,7 +969,7 @@
 														$img->ApplyWatermark($watermark_path);
 														$img->SaveAsFile($imgdestpath);
                                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                                        $s3upload->upload();
+                                                       $s3upload->upload();
 														$img->Free();	
 														/************Resize and rect small img*************/
 														$image->resize(95,65);
@@ -949,7 +977,7 @@
                                                         $imgdestpath = $createFolder."/".$newsmrect;
 														$image->save($imgdestpath);
                                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                                        $s3upload->upload();
+                                                      $s3upload->upload();
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;	
 
@@ -959,18 +987,27 @@
                                                         $imgdestpath = $createFolder."/".$newsmrect;
 														$image->save($imgdestpath);
                                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                                        $s3upload->upload();
+                                                       $s3upload->upload();
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;	
 													}	
 												 }
 										}
 									}
+									$add_tower = '';
+									if($arrTowerId[$key] > 0)
+										$add_tower = " TOWER_ID = $arrTowerId[$key], ";
+									else
+										$add_tower = " TOWER_ID = NULL, ";
+								
 									$dbpath = explode("/images_new",$img_path);
 									$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 												SET 
 													PLAN_IMAGE = '".$dbpath[1]."',
 													TITLE	   = '".$arrTitle[$key]."',
+													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
+													TOWER_ID = '".$arrTowerId[$key]."',
+													".$add_tower."
 													SERVICE_IMAGE_ID   = ".$image_id."
 												WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$key]."' AND PLAN_IMAGE = '".$oldpath."'";
 									$res	=	mysql_query($qry);

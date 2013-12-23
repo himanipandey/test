@@ -183,7 +183,9 @@
 									                                <select name="suburbId" class="suburbId" style="width:230px;" readonly>
                                                                             <option value="">Select Suburb</option>
                                                                             {foreach from=$suburbSelect key=k item=v}
-                                                                                    <option {if $suburbId == $k} selected {/if} value = "{$k}">{$v}</option>
+																				{if $suburbId == $k}
+                                                                                    <option  selected  value = "{$k}">{$v}</option>
+                                                                                 {/if}
                                                                             {/foreach}
 
                                                                         </select> 
@@ -466,13 +468,33 @@
                                                             {/if}
                                                                 </font></td>
 							   </tr>
+                                                           {if $projectId == ''}
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Promised Completion Date:</b> </td><td width="30%" align="left">
 									<input name="eff_date_to_prom" value="{$eff_date_to_prom}" type="text" class="formstyle2" id="f_date_c_prom" value="" size="10" />  <img src="images/cal_1.jpg" id="f_trigger_c_prom" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
 								  </td>
 								  <td width="50%" align="left"><font color="red">{if count($ErrorMsg['CompletionDateGreater'])>0} {$ErrorMsg['CompletionDateGreater']}{/if}</font> </td>
 							   </tr>
-                                                           
+                                                           <script type="text/javascript">
+                                                                var cals_dict = {
+                                                                    "f_trigger_c_prom" : "f_date_c_prom"
+                                                                };
+                                                                $.each(cals_dict, function(k, v) {
+                                                                    Calendar.setup({
+                                                                        inputField     :    v,                                 // id of the input field
+                                                                        //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
+                                                                        ifFormat       :    "%Y-%m-%d",                        // format of the input field
+                                                                        button         :    k,                                 // trigger for the calendar (button ID)
+                                                                        align          :    "Tl",                              // alignment (defaults to "Bl")
+                                                                        singleClick    :    true,
+                                                                        showsTime	  :	true
+                                                                    });
+                                                                });
+                                                           </script>
+                                                                <input type = "hidden" name = "completionDate" value="">
+                                                           {else}
+                                                               <input type = "hidden" name = "completionDate" value="{$completionDate}">
+                                                           {/if}
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b>Expected Supply Date :</b> </td>
                                                                 <td width="30%" align="left">
@@ -714,8 +736,7 @@
     var cals_dict = {
         "f_trigger_c_to" : "f_date_c_to",
         "pre_f_trigger_c_to" : "pre_f_date_c_to",
-        "exp_f_trigger_c_to" : "exp_f_date_c_to",
-        "f_trigger_c_prom" : "f_date_c_prom"
+        "exp_f_trigger_c_to" : "exp_f_date_c_to"
     };
 
     $.each(cals_dict, function(k, v) {

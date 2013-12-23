@@ -26,14 +26,14 @@ $smarty->assign("otherPricing", $otherPricing);
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
 $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id) 
     join resi_project_options o on (o.options_id = option_id)",'conditions' => 
-    array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active'"), "select" => 
+    array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active' and listings.status = 'Active'"), "select" => 
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
 
 foreach($optionsDetails as $key => $value) {
 	
 	$listing_price = ListingPrices::find('all',array('conditions'=>
-    array('listing_id = ?', $value->id),'select' => 
+    array('listing_id = ?', $value->id),"limit" => 1, "order" => "effective_date desc",'select' => 
                     'effective_date'));
               	
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
@@ -42,7 +42,6 @@ foreach($optionsDetails as $key => $value) {
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = date('Y-m-d',strtotime($listing_price[0]->effective_date));
-   
 }
 
 $PhaseOptionHash = $ProjectPhases[1];
@@ -88,6 +87,19 @@ $smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
 //$smarty->assign("ProjectPhases",$ProjectPhases); //To Do
 $smarty->assign("PhaseOptionHash",$PhaseOptionHash);
 
+//code for completion date validation for phase label
+$qryAllPhase = "select * from resi_project_phase 
+    where project_id = $projectId and status = 'Active'";
+$resAllPhase = mysql_query($qryAllPhase);
+$allCompletionDateChk = 0;
+while($data = mysql_fetch_assoc($resAllPhase)) {
+    $data['completion_date'];
+    if(trim($data['COMPLETION_DATE']) == '' || trim($data['COMPLETION_DATE']) == '0000-00-00') {
+        $arrAllCompletionDateChk = 1;
+    }
+}
+$smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk);
+//end code for completion date validation for phase label
 $arrOnlyPreviousMonthData = array();
 foreach($PreviousMonthsData as $k=>$v) { 
     if( $k != 'current' && $k != 'latest')
@@ -175,6 +187,7 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['PHASE_NAME'] = $vLast['PHASE_NAME'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LAUNCH_DATE'] = $vLast['LAUNCH_DATE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['COMPLETION_DATE'] = $vLast['COMPLETION_DATE'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['submitted_date'] = $vLast['submitted_date'];
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_ID'] = $vLast['PROJECT_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['PHASE_ID'] = $vLast['PHASE_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_BEDROOMS'] = $vLast['NO_OF_BEDROOMS'];

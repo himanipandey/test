@@ -5,7 +5,7 @@ require_once "support/objects.php";
 class ResiProject extends Objects
 {
     static $table_name = 'resi_project';
-    static $default_scope = array("version" => "cms");
+    static $default_scope = array("version" => "Cms");
     static $virtual_primary_key = 'project_id';
 
     static $has_many = array(
@@ -72,7 +72,7 @@ class ResiProject extends Objects
       }
           
 	  if( $key == 'city_id' ){
-		$conditions .=  "city.city_id = $value ".$city_and;
+		$conditions .=  "city.city_id in ($value) ".$city_and;
    	  }
       else if( $key == 'expected_supply_date_between_from_to' ) {
           $twoDate = explode('_',$value);

@@ -5,6 +5,27 @@ include("../appWideConfig.php");
 include("../builder_function.php");
 date_default_timezone_set('Asia/Kolkata');
 
+$arrOtherCities = 
+  array(
+		"24"=>"Chandigarh",
+		"23"=>"Lucknow",
+		"13"=>"Indore",
+		"33"=>"Bhopal",
+		"35"=>"Nashik",
+		"25"=>"Nagpur",
+		"38"=>"Vadodara",
+		"27"=>"Goa",
+		"97"=>"Durgapur",
+		"31"=>"Bhubaneswar",
+		"30"=>"Kochi",
+		"29"=>"Trivandrum",
+		"45"=>"Trichy",
+		"41"=>"Visakhapatnam",
+		"90"=>"Sonepat",
+		"98"=>"Panipat",
+		"99"=>"Raigad"
+  );
+
 $dept = $_SESSION['DEPARTMENT'];
 
 if(!isset($_POST['dwnld_projectId']))
@@ -52,6 +73,14 @@ $NumRows =  $city = $builder = $project_name = '';
 $transfer = $_POST['dwnld_transfer'];
 $search = $_POST['dwnld_search'];
 $city =	$_POST['dwnld_city'];
+if($city == 'othercities'){
+	$group_city_ids = array();
+	foreach($arrOtherCities as $key => $value){
+		$group_city_ids[] = $key;
+	}
+	$city= implode(",",$group_city_ids);
+}
+
 $locality = $_POST['dwnld_locality'];
 $builder = $_POST['dwnld_builder'];
 $phase = $_POST['current_dwnld_phase'];
@@ -149,7 +178,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         }
         if($_POST['dwnld_city'] != '')
         {
-            $QueryMember .= $and." sub.CITY_ID = '".$_POST['dwnld_city']."'";
+            $QueryMember .= $and." sub.CITY_ID in (".$city.")";
             $and  = ' AND ';
         }
         if($_POST['dwnld_builder'] != '')
@@ -199,8 +228,8 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>LOCALITY</td>
 <td>PROJECT STATUS</td>
 <td>BOOKING STATUS</td>
-<td>STAGE</td>
 <td>PHASE</td>
+<td>STAGE</td>
 <td>STAGE MOVEMENT DATE</td>
 <td>STAGE MOVEMENT DONE BY</td>
 <td>UPDATION LABEL</td></tr>
@@ -208,8 +237,8 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 $cnt = 1;
 while($ob1 = mysql_fetch_assoc($QueryExecute))
 {
-	$stage = $ob1['PROJECT_PHASE'];
-	$phase = $ob1['PROJECT_STAGE'];
+	$stage = $ob1['PROJECT_STAGE'];
+	$phase = $ob1['PROJECT_PHASE'];
 	$builder = $ob1['BUILDER_NAME'];
 
 	$projid = $ob1['PROJECT_ID'];
@@ -244,9 +273,9 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         <td>".$localityname."</td>    
 	<td>".$proj_status."</td>
 	<td>".$booking_status."</td>
-        <td>".$phse."</td>
 	<td>".$stage."</td>
-        <td>".$date_time."</td>
+        <td>".$phse."</td>
+	      <td>".$date_time."</td>
         <td>".$stage_move_by."</td>            
 	<td>".$updation_label."</td>
 

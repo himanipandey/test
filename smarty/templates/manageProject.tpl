@@ -198,7 +198,19 @@ function localitySelect(loclitySelectVal) {
 $(function() {
   $("#localitySelectText").val();
   localitySelect({$locality});
+  
+  $(".builerUPdate").val(GetParameterValues('builder'));
+    
 });
+ function GetParameterValues(param) {
+	var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	for (var i = 0; i < url.length; i++) {
+		var urlparam = url[i].split('=');
+		if (urlparam[0] == param) {
+			return urlparam[1];
+		}
+	}
+}
 </script>
 
 
@@ -264,6 +276,7 @@ $(function() {
 
                                                                   <option value = "{$key}" {if $city == $key} selected  {else}{/if}>{$val}</option>
                                                           {/foreach}
+                                                          <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
                                                   </select>
                                           </td>
                                          
@@ -277,7 +290,7 @@ $(function() {
                                                 <option value = "">Select Locality</option>
                                                 {foreach from = $getLocality item = value}
                                                     <option value = "{$value->locality_id}" 
-                                                    {if $locality == $value->locality_id} selected {/if}>{$value->label}</option>
+                                                    {if $locality == $value->locality_id} selected {/if} >{if $city == "othercities"}{$value->cityname} - {/if}{$value->label}</option>
                                                 {/foreach}
                                               </select>
                                           </span>
@@ -561,12 +574,12 @@ $(function() {
                                     {if in_array($value->phase_name,$arrProjEditPermission)}
                                         <option value = "/new/price?projectId={$value->project_id}">Update Price</option>
                                         <option value = "/new/availability/{$value->no_phase_id}/edit">Update Availability(Supply)</option>
-                                        <option value = "project_img_add.php?projectId={$value->project_id}&edit=edit">Add Construction Image</option>
+                                        <option value = "project_img_add.php?projectId={$value->project_id}&edit=edit&imagetype=const">Add Construction Image</option>
                                         {if $value->stage_name == 'SecondaryPriceCycle'}
                                          <option value = "secondary_price.php?projectId={$value->project_id}">Update Project Secondary Price</option>
                                         {/if}
                                     {else}
-                                        <option value = "project_img_add.php?projectId={$value->project_id}&edit=edit&auth=auth">Add Construction Image</option>
+                                        <option value = "project_img_add.php?projectId={$value->project_id}&edit=edit&auth=auth&imagetype=const">Add Construction Image</option>
                                     {/if}
                             </select>
 

@@ -20,7 +20,7 @@ function getDatesBetweeenTwoDates($fromDate, $toDate) {
  * ***********************************************
  * */
 function AdminDetail($adminId) {
-    $Sql = "SELECT USERNAME,ADMINEMAIL,CONCAT(FNAME,' ',LNAME) AS FNAME, DEPARTMENT FROM " . ADMIN . " WHERE ADMINID = '" . $adminId . "'";
+    $Sql = "SELECT USERNAME,ADMINEMAIL,MOBILE,CONCAT(FNAME,' ',LNAME) AS FNAME, DEPARTMENT FROM " . ADMIN . " WHERE ADMINID = '" . $adminId . "'";
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function AdminDetail()');
     if (mysql_num_rows($ExecSql) >= 1) {
         $Res = mysql_fetch_assoc($ExecSql);
@@ -28,6 +28,7 @@ function AdminDetail($adminId) {
         $ResDetails['Email'] = $Res['ADMINEMAIL'];
         $ResDetails['name'] = $Res['FNAME'];
         $ResDetails['DEPARTMENT'] = $Res['DEPARTMENT'];
+        $ResDetails['MOBILE'] = $Res['MOBILE'];
         return $ResDetails;
     } else {
         return 0;
@@ -747,7 +748,15 @@ function allProjectImages($projectId) {
     $data = mysql_query($sqlListingImages);
     $ImageDataListingArr = array();
     while ($dataListingArr = mysql_fetch_assoc($data)) {
+		
+		if($dataListingArr['tower_id']){
+			$sql_towername = mysql_fetch_object(mysql_query("SELECT *  FROM " . RESI_PROJECT_TOWER_DETAILS . "
+            WHERE
+            TOWER_ID ='" . $dataListingArr['tower_id'] . "'")) or die(mysql_error());
+            $dataListingArr['TOWER_NAME'] = $sql_towername->TOWER_NAME;
+		}
         $ImageDataListingArr [] = $dataListingArr;
+        
     }
     return $ImageDataListingArr;
 }
@@ -885,9 +894,9 @@ function update_towerDetail($projectId, $TowerId, $no_of_floors, $stilt, $no_of_
 
 function towerDetail($towerId) {
     $sql = "SELECT *
-					FROM " . RESI_PROJ_TOWER_CONSTRUCTION_STATUS . "
-				WHERE
-					TOWER_ID ='" . $towerId . "'  ORDER BY TOWER_CONST_STATUS_ID DESC LIMIT 1";
+                    FROM " . RESI_PROJ_TOWER_CONSTRUCTION_STATUS . "
+            WHERE
+                    TOWER_ID ='" . $towerId . "'  ORDER BY TOWER_CONST_STATUS_ID DESC LIMIT 1";
 
     $data = mysql_query($sql) or die(mysql_error());
     $arr = array();
@@ -900,11 +909,24 @@ function towerDetail($towerId) {
 /* * ***********FUNCTION FOR FETCH LATEST CONSTRUCTION STATUS************** */
 
 function costructionDetail($projectId) {
-    $sql = "SELECT *
-					FROM " . RESI_PROJ_EXPECTED_COMPLETION . "
-				WHERE
-					PROJECT_ID ='" . $projectId . "'  ORDER BY EXPECTED_COMPLETION_ID DESC LIMIT 1";
-
+   $qryPhase = "select * from resi_project_phase
+   where project_id = $projectId and phase_type != 'Logical' and status = 'Active' order by phase_id desc";
+   $resPhase = mysql_query($qryPhase);
+   $dataPhase = mysql_fetch_assoc($resPhase);
+   if(mysql_num_rows($resPhase)>0) {
+       $sql = "select * from resi_project_phase 
+           where 
+             phase_type != 'Logical'
+           and 
+             project_id = $projectId
+           and status = 'Active'
+          ORDER BY completion_date desc LIMIT 1";
+   }
+   else{
+        $sql = "select * from resi_project_phase 
+           where 
+             project_id = $projectId and status = 'Active'";
+   }   
     $data = mysql_query($sql) or die(mysql_error());
     $dataarr = mysql_fetch_assoc($data);
     return $dataarr;
@@ -1503,7 +1525,65 @@ function lastUpdatedAuditDetail($projectId) {
 		
 		$count++;
 	}
-	                        
+	
+	 $qry = "SELECT
+                     b.DEPARTMENT, c.FNAME, a.updated_at
+                    FROM
+                       _t_listing_prices a
+                           JOIN
+                       (SELECT
+                            p.DEPARTMENT, MAX(lp._t_transaction_id) as tid
+							FROM _t_listing_prices lp
+							INNER JOIN listings lst
+								 on lp.listing_id = lst.id 
+							INNER JOIN resi_project_phase rpp
+								 on lst.phase_id = rpp.phase_id
+							JOIN proptiger_admin p ON lp.updated_by = p.ADMINID
+							WHERE rpp.PROJECT_ID = $projectId
+							GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
+                           join
+                       proptiger_admin c ON (c.ADMINID = a.updated_by)";
+                 
+    $result = mysql_query($qry);
+	$count = 0;
+    while($res = mysql_fetch_object($result))
+	{
+		$arrData['listing_prices'][$count]['name'] = $res->FNAME;
+		$arrData['listing_prices'][$count]['dept'] = $res->DEPARTMENT;
+		$arrData['listing_prices'][$count]['ACTION_DATE'] = $res->updated_at;
+		
+		$count++;
+	}     
+	
+	 $qry = "SELECT
+                     b.DEPARTMENT, c.FNAME, a.updated_at
+                    FROM
+                       _t_project_availabilities a
+                           JOIN
+                       (SELECT p.DEPARTMENT , MAX(pal._t_transaction_id) as tid FROM _t_project_availabilities pal
+						INNER JOIN project_supplies ps
+							 on pal.project_supply_id = ps.id
+						INNER JOIN listings lst
+							 on ps.listing_id = lst.id 
+						INNER JOIN resi_project_phase rpp
+							 on lst.phase_id = rpp.phase_id
+						JOIN proptiger_admin p ON pal.updated_by = p.ADMINID
+						WHERE rpp.PROJECT_ID = $projectId
+						GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
+                           join
+                       proptiger_admin c ON (c.ADMINID = a.updated_by)";
+                 
+    $result = mysql_query($qry);
+	$count = 0;
+    while($res = mysql_fetch_object($result))
+	{
+		$arrData['project_availabilities'][$count]['name'] = $res->FNAME;
+		$arrData['project_availabilities'][$count]['dept'] = $res->DEPARTMENT;
+		$arrData['project_availabilities'][$count]['ACTION_DATE'] = $res->updated_at;
+		
+		$count++;
+	}                        
+	                   
      $qry = "SELECT
                      b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
@@ -1927,8 +2007,7 @@ function getPrevMonthProjectData($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-        //$url=$_SERVER['HTTP_HOST']."/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
-        $url=$_SERVER['HTTP_HOST']."/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+    $url=$_SERVER['HTTP_HOST']."/app/v2/project-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp."&cached=false";
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
@@ -1945,8 +2024,8 @@ function getFlatAvailability($projectId)
 	$tmstmp=time();
 
 	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
-	//$url=$_SERVER['HTTP_HOST']."/app/v1/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
-        $url=$_SERVER['HTTP_HOST']."/app/v2/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp;
+	
+    $url=$_SERVER['HTTP_HOST']."/app/v2/project-inventory-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp."&cached=false";
 	$url=$url.'&project_ids[]='.$projectId;
 
 	$obj=curlFetch($url);
