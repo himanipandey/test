@@ -64,20 +64,22 @@ class ProjectAvailability extends Model {
         }
         
         foreach ($supply_ids as $supply_id) {
-            foreach ($indexed_inventory_data[$supply_id->cms_supply_id] as $month => $cms_month_data){
-                $cms_month_data = $cms_month_data->to_array();
-                unset($cms_month_data['id']);
-                $cms_month_data['project_supply_id'] = $supply_id->website_supply_id;
-                $cms_month_data['updated_by'] = $updatedBy;
-                $cms_month_data['updated_at'] = 'NOW()';
-                if(isset($indexed_inventory_data[$supply_id->website_supply_id][$month])){
-                    $website_month_data = $indexed_inventory_data[$supply_id->website_supply_id][$month];
-                    $website_month_data->update_attributes($cms_month_data);
-                    $result[] = $website_month_data->save();
-                }
-                else{
-                    $cms_month_data['created_at'] = 'NOW()';
-                    $result[] = self::create($cms_month_data);
+            if(isset($indexed_inventory_data[$supply_id->cms_supply_id])){
+                foreach ($indexed_inventory_data[$supply_id->cms_supply_id] as $month => $cms_month_data){
+                    $cms_month_data = $cms_month_data->to_array();
+                    unset($cms_month_data['id']);
+                    $cms_month_data['project_supply_id'] = $supply_id->website_supply_id;
+                    $cms_month_data['updated_by'] = $updatedBy;
+                    $cms_month_data['updated_at'] = 'NOW()';
+                    if(isset($indexed_inventory_data[$supply_id->website_supply_id][$month])){
+                        $website_month_data = $indexed_inventory_data[$supply_id->website_supply_id][$month];
+                        $website_month_data->update_attributes($cms_month_data);
+                        $result[] = $website_month_data->save();
+                    }
+                    else{
+                        $cms_month_data['created_at'] = 'NOW()';
+                        $result[] = self::create($cms_month_data);
+                    }
                 }
             }
         }

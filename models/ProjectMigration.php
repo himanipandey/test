@@ -22,4 +22,8 @@ class ProjectMigration extends ActiveRecord\Model
     public static function isProjectWaitingForMigration($projectId){
         return self::count(array('conditions'=>array('project_id'=>$projectId, 'status'=>'Waiting')));
     }
+    
+    public static function getAllProjectsWaitingMigration(){
+        return ResiProject::all(array('joins'=>"inner join project_migration pm on resi_project.PROJECT_ID = pm.PROJECT_ID and resi_project.version = 'Cms' and pm.status in ('Waiting', 'Error')", 'select'=>"resi_project.PROJECT_ID, resi_project.PROJECT_NAME, pm.status"));
+    }
 }

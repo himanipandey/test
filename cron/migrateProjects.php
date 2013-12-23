@@ -6,11 +6,7 @@ Date: 19/12/2013
  */
 
 $docroot = dirname(__FILE__) . "/../";
-
-//require_once $docroot.'dbConfig.php';
 require_once $docroot.'modelsConfig.php';
-//require_once 'cronFunctions.php';
-//require_once $docroot.'includes/send_mail_amazon.php';
 
 
 $allItems = ProjectMigration::find('all', array('conditions'=>array('status'=>'Waiting'), 'select'=>'id'));

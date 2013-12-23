@@ -15,19 +15,21 @@ class ListingPrices extends ActiveRecord\Model
             $indexed_price_data[$price->version][$price->listing_id.$date] = $price;
         }
         
-        foreach ($indexed_price_data['Cms'] as $key => $cms_price) {
-            $cms_price = $cms_price->to_array();
-            unset($cms_price['id']);
-            $cms_price['version'] = 'Website';
-            $cms_price['updated_by'] = $updatedBy;
-            if(isset($indexed_price_data['Website'][$key])){
-                $website_price = $indexed_price_data['Website'][$key];
-                $website_price->update_attributes($cms_price);
-                $result[] = $website_price->save();
-            }
-            else{
-                $cms_price['created_at'] = 'NOW()';
-                $result[] = self::create($cms_price);
+        if(isset($indexed_price_data['Cms'])){
+            foreach ($indexed_price_data['Cms'] as $key => $cms_price) {
+                $cms_price = $cms_price->to_array();
+                unset($cms_price['id']);
+                $cms_price['version'] = 'Website';
+                $cms_price['updated_by'] = $updatedBy;
+                if(isset($indexed_price_data['Website'][$key])){
+                    $website_price = $indexed_price_data['Website'][$key];
+                    $website_price->update_attributes($cms_price);
+                    $result[] = $website_price->save();
+                }
+                else{
+                    $cms_price['created_at'] = 'NOW()';
+                    $result[] = self::create($cms_price);
+                }
             }
         }
         return $result === array_filter($result);
