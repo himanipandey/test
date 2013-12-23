@@ -22,6 +22,7 @@
         foreach ($projectIdArr as $pid) {
             ProjectMigration::enqueProjectForMigration($pid, 'Forced', $_SESSION['adminId']);
         }
+        exec("/usr/bin/php ".strval(dirname(__FILE__))."/cron/migrateProjects.php  > /dev/null 2>/dev/null &");
         
         fclose($handle);
         exec("cd /home/sysadmin/production/cron/migration; php migrateRefData.php; php main.php $tmpFile");	

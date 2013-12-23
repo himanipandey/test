@@ -363,7 +363,7 @@
                 }
             }
         }
-
+        exec("/usr/bin/php ".strval(dirname(__FILE__))."/cron/migrateProjects.php  > /dev/null 2>/dev/null &");
     }
 
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
