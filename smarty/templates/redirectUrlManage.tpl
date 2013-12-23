@@ -112,7 +112,7 @@ function chkConfirm(fromUrl,page,url)
                             {/if}
                         </TD>
                         <TD  class="td-border" align=center nowrap>
-                            <input type = "button" name = "deleteUrl" onclick="chkConfirm('{$urlDataArr[data].FROM_URL}',{$page},'{$url}');" value ="Delete">
+                            <input type = "button" name = "deleteUrl" onclick="chkConfirm('{$urlDataArr[data].FROM_URL}','{$page}','{$url}');" value ="Delete">
                         </TD>
                       </TR>
                        {/section}

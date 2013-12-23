@@ -19,7 +19,7 @@
     }
     $RowsPerPage = '30';
     $PageNum = 1;
-    if(isset($_GET['page'])) {
+    if(isset($_GET['page']) && $_GET['page'] != '') {
         $PageNum = $_GET['page'];
     }
 
@@ -30,7 +30,6 @@
             $Offset = ($PageNum - 1) * $RowsPerPage;
     }
      $urlDataArr = array();
-
     if($_REQUEST['url']!=''){
         $qryFlg = "WHERE rum.from_url LIKE '%".$_REQUEST['url']."%' OR rum.to_url like '%".$_REQUEST['url']."%' ";
     }
@@ -89,6 +88,7 @@
     $smarty->assign("Sorting", $Sorting);
     $smarty->assign("NumRows",$NumRows);
     $smarty->assign("url",$_REQUEST['url']);
+
     $smarty->assign("urlDataArr", $urlDataArr);
 ?>                 
                   
