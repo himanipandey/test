@@ -136,14 +136,18 @@ class ResiProject extends Objects
        return ResiProjectPhase::find("all", array("conditions" => array("project_id" => $project_id, "version" => "Cms")));
    }
 
-       public function get_all_towers(){
-           return ResiProjectTowerDetails::all(array("conditions" => array("project_id = ?", $this->project_id)));
-       }
-     
-//     public function get_all_towers(){
-//         $phase_ids = array();
-//         $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $this->project_id)));
-//         foreach($phases as $phase) array_push($phase_ids, $phase->phase_id);
-//         return ResiProjectPhase::get_towers_for_phases($phase_ids);
-//     }
+    public function get_all_towers(){
+        return ResiProjectTowerDetails::all(array("conditions" => array("project_id = ?", $this->project_id)));
+    }
+    
+    public static function delete_website_version(){
+        $delete_project = "delete a.* from resi_project a left join resi_project b on a.PROJECT_ID = b.PROJECT_ID and b.version = 'Cms' where a.version = 'Website' and b.PROJECT_ID is null;";
+        $delete_phase = "select count(*) from resi_project_phase a left join resi_project_phase b on a.PHASE_ID = b.PHASE_ID and b.version = 'Cms' where a.version = 'Website' and b.PHASE_ID is null;";
+        $delete_supply = "select count(*) from project_supplies a left join project_supplies b on a.listing_id = b.listing_id and b.version = 'Cms' where a.version = 'Website' and b.listing_id is null;";
+        $delete_inventory = "select count(*) from project_availabilities a inner join project_supplies b on a.project_supply_id = b.id left join project_supplies c on b.listing_id = c.listing_id and c.version = 'Cms' left join project_availabilities d on c.id = d.project_supply_id and a.effective_month = d.effective_month where b.version = 'Website' and d.id is null;";
+        self::find_by_sql($delete_project);
+        self::find_by_sql($delete_phase);
+        self::find_by_sql($delete_supply);
+        self::find_by_sql($delete_inventory);
+    }
 }
