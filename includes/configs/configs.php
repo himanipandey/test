@@ -691,6 +691,7 @@ if(in_array($_SESSION['adminId'],$arrForce))
 $smarty->assign("forceMigrateModule", $forceMigrateModule);
 
 $newImagePath = "/home/sysadmin/public_html/images_new/";
+$applicationFormPath = "/home/sysadmin/public_html/application_form/";
 // $newImagePath = "images_new/";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);

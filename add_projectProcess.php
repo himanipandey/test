@@ -408,8 +408,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
        else {
             $app = '';
                
-			    $dir = "application_form/";
-			    $newpdfdir	= "application_form/".str_replace(" ","",$txtProjectName);
+                $dir = $applicationFormPath;
+			    $newpdfdir	= $applicationFormPath.str_replace(" ","",$txtProjectName);
 				if((!is_dir($newpdfdir)))
 				{
 					mkdir($newpdfdir, 0777);
