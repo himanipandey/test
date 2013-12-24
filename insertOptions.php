@@ -12,6 +12,8 @@
 	$txtVillaFloors				=	'0';
 	$txtVillaTerraceArea		=	'0';
 	$txtVillaGardenArea			=	'0';
+	
+	
 
 	$projectId=$_REQUEST['projectId'];
 	$balconys=$_REQUEST['Balconys'];
@@ -42,8 +44,11 @@
 	$txtUnitName=str_replace("@","+",$txtUnitName);
 	$status='Available';
 	$optionId = '';
+
+		
 	if($typeid_edit == '')
 	{
+	
 		$sql	=	"INSERT INTO  ".PROJECT_OPTIONS."
 						SET
 							`PROJECT_ID`				=	'".$projectId."',
@@ -72,6 +77,7 @@
 	}
 	else
 	{
+			
 		$sql	=	"UPDATE  ".PROJECT_OPTIONS."
 						SET
 							`OPTION_NAME`					=	'".$txtUnitName."',
@@ -89,9 +95,7 @@
 							`POOJA_ROOM`				=	'".$poojarooms."',
                                                          `LENGTH_OF_PLOT`           =	'".$txtSizeLen."',
                                                         `BREADTH_OF_PLOT`           =	'".$txtSizeBre."',
-							`CLP_VISIBLE`				=	'1',
-							 `STATUS`					=	'".$status."',
-                                                         updated_by = ".$_SESSION['adminId']."
+							updated_by = ".$_SESSION['adminId']."
 						WHERE
 								`PROJECT_ID`	=	'".$projectId."'
 							 AND
@@ -99,8 +103,7 @@
 
 		$res=mysql_query($sql) or die(mysql_error());
 		$optionId = $typeid_edit;
-		audit_insert($typeid_edit,'update','resi_project_options',$projectId);
-	}
+		}
 						if($bed=='')
 						{
 							$bed=0;
@@ -129,8 +132,51 @@
 						}
 
 						$str=$optionId."_".$bed."_".$bathrooms."_".$balconys."_".$servantrooms."_".$studyrooms."_".$poojarooms."_".$rowId;
-
-						echo $str;
+						
+						//fetch existing room sizes for the current option
+						$sql_room_sizes = mysql_query("SELECT * FROM ".PROJECT_OPTIONS_ROOM_SIZE." WHERE `OPTIONS_ID` = '$optionId'");
+						$room_sizes = '#';
+						
+						if($sql_room_sizes){
+						
+							$room_sizes_arr = array();
+							
+								while($sizes_row = mysql_fetch_object($sql_room_sizes)){
+									
+									if($sizes_row->ROOM_CATEGORY_ID == 1 || $sizes_row->ROOM_CATEGORY_ID == 2){ //bed
+										$room_sizes_arr['beds'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+										$room_sizes_arr['bedscat'][] = $sizes_row->ROOM_CATEGORY_ID;
+									}
+									if($sizes_row->ROOM_CATEGORY_ID == 3) //bath
+										$room_sizes_arr['bathrooms'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 4) //Kitchen
+										$room_sizes_arr['kitchen'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 5) //Living
+										$room_sizes_arr['living'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 6) //Dining
+										$room_sizes_arr['dining'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 7) //balcony
+										$room_sizes_arr['balconys'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 8) //Servant
+										$room_sizes_arr['servantrooms'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 9) //study
+										$room_sizes_arr['studyroom'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 10) //pooja
+										$room_sizes_arr['poojaroom'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 11) //powder_room
+										$room_sizes_arr['powderroom'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 12) //Terrace
+										$room_sizes_arr['terrace'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 13) //Utility Room
+										$room_sizes_arr['utilityroom'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									if($sizes_row->ROOM_CATEGORY_ID == 14) //Family Room
+										$room_sizes_arr['familyroom'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+									
+								}
+														
+						}
+						
+						echo $str."_"."beds#".implode('#',$room_sizes_arr['beds'])."_"."bedscat#".implode('#',$room_sizes_arr['bedscat'])."_"."bathrooms#".implode('#',$room_sizes_arr['bathrooms'])."_"."balconys#".implode('#',$room_sizes_arr['balconys'])."_"."servantrooms#".implode('#',$room_sizes_arr['servantrooms'])."_"."studyroom#".implode('#',$room_sizes_arr['studyroom'])."_"."poojaroom#".implode('#',$room_sizes_arr['poojaroom'])."_"."dining#".implode('#',$room_sizes_arr['dining'])."_"."kitchen#".implode('#',$room_sizes_arr['kitchen'])."_"."living#".implode('#',$room_sizes_arr['living'])."_"."powderroom#".implode('#',$room_sizes_arr['powderroom'])."_"."terrace#".implode('#',$room_sizes_arr['terrace'])."_"."utilityroom#".implode('#',$room_sizes_arr['utilityroom'])."_"."familyroom#".implode('#',$room_sizes_arr['familyroom']);
 
 
 

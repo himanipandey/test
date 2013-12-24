@@ -161,6 +161,7 @@ DEFINE("RESI_PROJECT_OPTIONS","resi_project_options");
 DEFINE("BROKER_LIST","BROKER_LIST");
 DEFINE("AMENITIES_MASTER","amenities_master");
 DEFINE("PROJECT_OPTIONS","resi_project_options");
+DEFINE("PROJECT_OPTIONS_ROOM_SIZE","resi_proj_options_room_size");
 DEFINE("ROOM_CATEGORY","room_category");
 
 DEFINE("PROJECT_SUPPLIES","project_supplies");
