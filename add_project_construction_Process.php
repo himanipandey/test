@@ -146,7 +146,8 @@
                                     PROJECT_ID = '".$projectId."' 
                                 AND
                                     phase_id = $phaseId
-                                AND submitted_date >= '".$submittted_dateMin."' and submitted_date <= '".$submittted_dateMax."'";
+                                AND submitted_date >= '".$submittted_dateMin."' 
+                                and submitted_date <= '".$submittted_dateMax."'";
                     }
                     else {
                         
@@ -164,14 +165,15 @@
                         $qryPhaseUpdate = "update resi_project_phase 
                             set completion_date = '".$expectedCompletionDate."',
                                 submitted_date = '".$effectiveDt."'
-                            where phase_id = $phaseId and project_id = $projectId";
+                            where phase_id = $phaseId and project_id = $projectId
+                              and version = 'Cms'";
                         $resPhaseUpdate = mysql_query($qryPhaseUpdate) or die(mysql_error()." phase update");
                         $costDetailLatest = costructionDetail($projectId);
                         $costDetailLatest['COMPLETION_DATE'];
                          $qry = "UPDATE resi_project 
                              set 
                                 PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
-                             where PROJECT_ID = $projectId";
+                             where PROJECT_ID = $projectId and version = 'Cms'";
                         $success = mysql_query($qry) OR die(mysql_error()." project update");
                     }
                     if($success)
