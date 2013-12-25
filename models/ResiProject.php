@@ -170,4 +170,9 @@ class ResiProject extends Objects
             a.YOUTUBE_VIDEO = b.YOUTUBE_VIDEO";
         $conn->query($sql);
     }
+    
+    public static function get_projects_without_website_version(){
+        $sql = "select a.* from resi_project a left join resi_project b on a.PROJECT_ID = b.PROJECT_ID and a.version = 'Cms' and b.version = 'Website' where b.PROJECT_ID is null";
+        return self::find_by_sql($sql);
+    }
 }
