@@ -141,13 +141,33 @@ class ResiProject extends Objects
     }
     
     public static function delete_website_version(){
+        $conn = self::connection();
         $delete_project = "delete a.* from resi_project a left join resi_project b on a.PROJECT_ID = b.PROJECT_ID and b.version = 'Cms' where a.version = 'Website' and b.PROJECT_ID is null;";
-        $delete_phase = "select count(*) from resi_project_phase a left join resi_project_phase b on a.PHASE_ID = b.PHASE_ID and b.version = 'Cms' where a.version = 'Website' and b.PHASE_ID is null;";
-        $delete_supply = "select count(*) from project_supplies a left join project_supplies b on a.listing_id = b.listing_id and b.version = 'Cms' where a.version = 'Website' and b.listing_id is null;";
-        $delete_inventory = "select count(*) from project_availabilities a inner join project_supplies b on a.project_supply_id = b.id left join project_supplies c on b.listing_id = c.listing_id and c.version = 'Cms' left join project_availabilities d on c.id = d.project_supply_id and a.effective_month = d.effective_month where b.version = 'Website' and d.id is null;";
-        self::find_by_sql($delete_project);
-        self::find_by_sql($delete_phase);
-        self::find_by_sql($delete_supply);
-        self::find_by_sql($delete_inventory);
+        $delete_phase = "delete a.* from resi_project_phase a left join resi_project_phase b on a.PHASE_ID = b.PHASE_ID and b.version = 'Cms' where a.version = 'Website' and b.PHASE_ID is null;";
+        $delete_supply = "delete a.* from project_supplies a left join project_supplies b on a.listing_id = b.listing_id and b.version = 'Cms' where a.version = 'Website' and b.listing_id is null;";
+        $delete_inventory = "delete a.* from project_availabilities a inner join project_supplies b on a.project_supply_id = b.id left join project_supplies c on b.listing_id = c.listing_id and c.version = 'Cms' left join project_availabilities d on c.id = d.project_supply_id and a.effective_month = d.effective_month where b.version = 'Website' and d.id is null;";
+        $conn->query($delete_project);
+        $conn->query($delete_phase);
+        $conn->query($delete_supply);
+        $conn->query($delete_inventory);
+    }
+    
+    public static function partially_migrate_projects() {
+        $conn = self::connection();
+        $sql = "UPDATE resi_project a inner join resi_project b
+            on a.PROJECT_ID = b.PROJECT_ID and a.version = 'Website' and b.version = 'Cms'
+            SET a.LATITUDE = b.LATITUDE,
+            a.PROJECT_ADDRESS = b.PROJECT_ADDRESS,
+            a.LONGITUDE = b.LONGITUDE,
+            a.SHOULD_DISPLAY_PRICE = b.SHOULD_DISPLAY_PRICE,
+            a.D_AVAILABILITY= b.D_AVAILABILITY,
+            a.LOCALITY_ID  = b.LOCALITY_ID,
+            a.PROJECT_URL  = b.PROJECT_URL,
+            a.PROJECT_NAME  = b.PROJECT_NAME,
+            a.DISPLAY_ORDER = b.DISPLAY_ORDER,
+            a.DISPLAY_ORDER_LOCALITY = b.DISPLAY_ORDER_LOCALITY,
+            a.DISPLAY_ORDER_SUBURB = b.DISPLAY_ORDER_SUBURB,
+            a.YOUTUBE_VIDEO = b.YOUTUBE_VIDEO";
+        $conn->query($sql);
     }
 }
