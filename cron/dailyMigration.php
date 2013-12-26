@@ -18,7 +18,7 @@ $missingProjects = ResiProject::get_recent_projects_without_website_version(8640
 
 foreach ($missingProjects as $project) {
     ProjectMigration::connection()->transaction();
-        $result = [];
+        $result = array();
         $result[] = ResiProject::copy_cms_to_website($project->project_id, $project->updated_by);
         $allPhases = ResiProject::get_all_phases($project->project_id);
         foreach ($allPhases as $phase) {
