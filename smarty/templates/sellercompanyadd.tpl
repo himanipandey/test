@@ -199,14 +199,14 @@
                 <tr>
                     <td width="15%" align="right" valign="top" >Seller Rating:</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type="radio" name="rating" id="rating" {if $rateoption == "auto"} checked=""  {/if} value="3.0" />	&nbsp;Auto&nbsp;
+                        <input type="radio" name="rating" class="rating" id="rating_auto" {if $rateoption == "auto"} checked=""  {/if} value="3.0" />	&nbsp;Auto&nbsp;
                         <input type="auto" name="auto" id="auto" value="3.0" style="width:25px;" readonly="" />
                     </td>
                 </tr>
                 <tr>
                     <td width="15%" align="right" valign="top" >&nbsp;</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type="radio" name="rating" {if $rateoption == "forced"} checked=""  {/if} id="rating" value="" />&nbsp;Forced
+                        <input type="radio" class="rating" name="rating" {if $rateoption == "forced"} checked=""  {/if} id="rating_forced" value="" />&nbsp;Forced
                         <select name="rate" id="rate">
                             <option value="0.5" {if $rating != '' && $rating == "0.5"} selected=""  {/if}>0.5</option>
                             <option value="1.0" {if $rating != '' && $rating == "1.0"} selected=""  {/if}>1.0</option>
@@ -253,6 +253,7 @@
                   <input type="hidden" name="statushiddenArr" id="statushiddenArr" value="" />
                   <input type="hidden" name="quahiddenArr" id="quahiddenArr" value="" />
                   <input type="hidden" name="imgid" value="{$imgid}" id="imgid" />
+                  <input type="hidden" name="rateoption" value="{$rateoption}" id="rateoption" />
                   <input type="hidden" name="sort" id="sort" value="{$sort}" />
                   <input type="hidden" name="page" id="page" value="{$page}" />
 				  </td>
@@ -340,6 +341,18 @@
             }
             
             
+            
+        });
+        
+        jQuery('.rating').click(function(){
+            
+           var id = jQuery(this).attr('id');
+           id = id.split("_");
+           
+           if(id[1] != '')
+           {
+                jQuery('#rateoption').val(id[1]);
+           } 
             
         });
         

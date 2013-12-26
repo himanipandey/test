@@ -277,22 +277,48 @@
 </table>
 
 <script type="text/javascript">
+var version = '';
 jQuery(document).ready(function(){
-	jQuery(".pt_click").live('click',function(){
+     
+     if (typeof jQuery != 'undefined') {
+        version = jQuery.fn.jquery;
+     }
+     
+    if(version < '1.9.1')
+   	{
+   	    jQuery(".pt_click").live('click',function(){
+    
+    		var title =  jQuery(this).attr('title');
+    		if(title=='Add Quick City'){
+    			jQuery(this).attr('href','javascript:void(0)');
+    			window.open('AddQuickCity.php','CityManagement','height=300,width=600,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
+    		}
+    	});
+        
+        jQuery(".label_click").live('click',function(){
+    		var title =  jQuery(this).attr('title');
+    		jQuery(this).attr('href','javascript:void(0)');
+    		window.open('AddQuickLabel.php','LabelManagement','height=300,width=800,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
+    	});
+   	}
+    else
+    {
+        jQuery(".pt_click").on('click',function(){
 
-		var title =  jQuery(this).attr('title');
-		if(title=='Add Quick City'){
-			jQuery(this).attr('href','javascript:void(0)');
-			window.open('AddQuickCity.php','CityManagement','height=300,width=600,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
-		}
-	});
+    		var title =  jQuery(this).attr('title');
+    		if(title=='Add Quick City'){
+    			jQuery(this).attr('href','javascript:void(0)');
+    			window.open('AddQuickCity.php','CityManagement','height=300,width=600,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
+    		}
+    	});
+        jQuery(".label_click").on('click',function(){
+    		var title =  jQuery(this).attr('title');
+    		jQuery(this).attr('href','javascript:void(0)');
+    		window.open('AddQuickLabel.php','LabelManagement','height=300,width=800,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
+    	});
+    }
+    
+
 });
 
-jQuery(document).ready(function(){
-	jQuery(".label_click").live('click',function(){
-		var title =  jQuery(this).attr('title');
-		jQuery(this).attr('href','javascript:void(0)');
-		window.open('AddQuickLabel.php','LabelManagement','height=300,width=800,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
-	});
-});
 </script>

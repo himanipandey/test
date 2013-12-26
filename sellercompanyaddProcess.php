@@ -137,21 +137,21 @@
         } 
         else if (empty($sellerCompanyId)){	
             $final_rating = '';
-            $rateoption = '';
-            if(!empty($rating))
+            $rateoptions = '';
+            if(!empty($rating) && !empty($rateoption) && $rateoption == 'auto')
             {
                 $final_rating = $rating;
-                $rateoption = 'auto';
+                $rateoptions = 'auto';
             }
-            else
+            else if(!empty($rateoption) && $rateoption == 'forced')
             {
                 $final_rating = $rate;
-                $rateoption = 'forced';
+                $rateoptions = 'forced';
             }    
             
             ResiProject::transaction(function(){
                 
-            global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoption,$newImagePath,$logo,$s3,$image_id;
+            global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoptions,$newImagePath,$logo,$s3,$image_id;
             
             $qualification = !empty($qualification)?$qualification:NULL;
             
@@ -167,8 +167,8 @@
             if(!empty($qualification))                             
             $sql .= "`academic_qualification_id` = '".$qualification."',";
         
-            $sql .= "`rating` = ".$final_rating.",
-                    `rate_option` = '$rateoption',
+            $sql .= "`rating` = '".$final_rating."',
+                    `rate_option` = '$rateoptions',
                     `seller_type` = '$type',
                     `active_since` = '$active_since',
                     `updated_by` = '".$_SESSION['adminId']."',
@@ -299,25 +299,25 @@
         else {
              
             $final_rating = '';
-            $rateoption = '';
-            if(!empty($rating))
+            $rateoptions = '';
+            if(!empty($rating)&& !empty($rateoption) && $rateoption == 'auto')
             {
                 $final_rating = $rating;
-                $rateoption = 'auto';
+                $rateoptions = 'auto';
             }
-            else
+            else if(!empty($rateoption) && $rateoption == 'forced')
             {
                 $final_rating = $rate;
-                $rateoption = 'forced';
+                $rateoptions = 'forced';
             }    
-            
-            //print'<pre>';
+            //echo $final_rating." ".$rateoptions." ".$sellerCompanyId;
+//            print'<pre>';
 //            print_r($_POST);
-//            
+//            die;
             
             ResiProject::transaction(function(){
                 
-                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$sellerCompanyId,$addressid,$brkr_cntct_id,$rateoption,$image_id,$logo,$newImagePath,$s3;
+                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$sellerCompanyId,$addressid,$brkr_cntct_id,$rateoptions,$image_id,$logo,$newImagePath,$s3;
                
             if(!empty($active_since))
             {
@@ -326,16 +326,19 @@
             }
             $copy = !empty($copy)?$copy:'off';
             
-            $sql_seller_company = @mysql_query("UPDATE `agents` SET
+            $sql = "UPDATE `agents` SET
                                                 `status` = '".$status."',
-                                                `broker_id` = '".$seller_cmpny."',
-                                                `academic_qualification_id` = '".$qualification."',
-                                                `rating` = '".$final_rating."',
-                                                `rate_option` = '$rateoption',
+                                                `broker_id` = '".$seller_cmpny."',";
+            if(!empty($qualification))
+                $sql .= "`academic_qualification_id` = '".$qualification."',";
+            
+            $sql .= "`rating` = '".$final_rating."',
+                                                `rate_option` = '$rateoptions',
                                                 `seller_type` = '$type',
                                                 `active_since` = '$active_since',
                                                 `updated_by` = '".$_SESSION['adminId']."'
-                                                 WHERE id=".$sellerCompanyId);
+                                                 WHERE id=".$sellerCompanyId;
+            $sql_seller_company = @mysql_query($sql) or die(mysql_error());
             
             $seller_id = $sellerCompanyId;          
              

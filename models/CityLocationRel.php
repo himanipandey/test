@@ -8,7 +8,7 @@
 class CityLocationRel extends ActiveRecord\Model
 {
     static $table_name = 'locality';
-    static function CityLocArr($cid = '') {
+    static function CityLocArr($cid = '' , $search = '') {
     
         $join = " left join suburb AS sub
         on locality.suburb_id = sub.suburb_id
@@ -18,6 +18,7 @@ class CityLocationRel extends ActiveRecord\Model
         $city_id = '';
         if(!empty($cid))
         {
+            
             $options = array('joins' => $join , 'select' => 'city.city_id' , 'conditions' => "locality.locality_id = '".$cid."'");
             $getCity = CityLocationRel::find('all' , $options);
             foreach($getCity as $key => $val)
@@ -29,7 +30,7 @@ class CityLocationRel extends ActiveRecord\Model
         else
         {
             $options = array('joins' => $join , 'select' => 
-            'CONCAT(city.label,"-",locality.label) AS city_loc , locality.locality_id ');
+            'CONCAT(city.label,"-",locality.label) AS city_loc , locality.locality_id ' , 'conditions' => array("city.label like '%$search%' OR locality.label like '%$search%'"));
             
             $getCity = CityLocationRel::find('all' , $options);
             foreach($getCity as $value) {
@@ -45,8 +46,6 @@ class CityLocationRel extends ActiveRecord\Model
 //        die;
 
     }
-    
-    
     
 }
 

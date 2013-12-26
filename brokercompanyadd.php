@@ -16,8 +16,15 @@ include("SimpleImage.php");
 AdminAuthentication(); 
 $cityArr = City::CityArr();
 $cityLocArr = CityLocationRel::CityLocArr(); 
+$result = array();
+foreach($cityLocArr as $key => $val)
+{
+    array_push($result , array("id" => $key , "value" => $val));
+}
+$result = json_encode($result);
+
 $smarty->assign("cityArr", $cityArr);
-$smarty->assign("cityLocArr", $cityLocArr);
+$smarty->assign("cityLocArr", $result);
 $smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'');
 $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'');
 

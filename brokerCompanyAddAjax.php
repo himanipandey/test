@@ -14,7 +14,7 @@ include("includes/configs/configs.php");
 //print_r($_POST);
 //die;
 //
-$restrictArr = array("locations","addloc","addmorecity","brokercmpnyid","citypkidArr1","remove_citylocids1");
+$restrictArr = array("location","addloc","addmorecity","brokercmpnyid","citypkidArr1","remove_citylocids1");
 if(isset($_POST['brokercmpnyid']) && !empty($_POST['brokercmpnyid']))
 {
     $brokercmpnyid = $_POST['brokercmpnyid'];
@@ -71,15 +71,18 @@ else
 {
     foreach($_POST as $key => $val)
     {
-        
         if(!in_array($key , $restrictArr))
         {
             $city_id = CityLocationRel::CityLocArr(trim($key));
             
-            $chkExist = BrokerCompanyLocation::find('all' , array('conditions' => "city_id = ".$city_id." AND locality_id = ".mysql_real_escape_string($key)));
-            
+            $chkExist = BrokerCompanyLocation::find('all' , array('conditions' => "city_id = ".$city_id." AND locality_id = ".mysql_real_escape_string($key)." AND (table_id = '' OR table_id IS NULL) AND table_name = 'brokers'"));
+            //echo BrokerCompanyLocation::connection()->last_query."<br>";
+//            echo $city_id." <br>";
+//            print_r($chkExist);
             if(empty($chkExist))
             {
+                //echo "here  \n";
+//                continue;
                 $bcmpLocation = new BrokerCompanyLocation();
             
                 $bcmpLocation->table_name = 'brokers';
@@ -88,6 +91,8 @@ else
                 $bcmpLocation->city_id = !empty($city_id)?$city_id:'';
                 $bcmpLocation->created_at = date('Y-m-d H:i:s');
                 $bcmpLocation->updated_by = $_SESSION['adminId'];
+                //print_r($bcmpLocation);
+                
                 $bcmpLocation->save();
                 
                 if($bcmpLocation->id != false) {
@@ -97,8 +102,10 @@ else
             
         }
     }
+    //die;
 }
-
+//print_r($citylocids);
+//die;
 
 if(!empty($citylocids))
 {
@@ -122,6 +129,10 @@ if(!empty($citylocids))
 //    die;
     $data['citylocids'] = base64_encode(json_encode($citylocids));
     echo json_encode($data);
+}
+else
+{
+    echo json_encode(array("response" => "error"));
 }
 die;
 ?>
