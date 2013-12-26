@@ -910,7 +910,7 @@ function towerDetail($towerId) {
 
 function costructionDetail($projectId) {
    $qryPhase = "select * from resi_project_phase
-   where project_id = $projectId and phase_type != 'Logical' and status = 'Active' order by phase_id desc";
+   where project_id = $projectId and phase_type != 'Logical' and status = 'Active' and version = 'Cms' order by phase_id desc";
    $resPhase = mysql_query($qryPhase);
    $dataPhase = mysql_fetch_assoc($resPhase);
    if(mysql_num_rows($resPhase)>0) {
@@ -919,13 +919,13 @@ function costructionDetail($projectId) {
              phase_type != 'Logical'
            and 
              project_id = $projectId
-           and status = 'Active'
+           and status = 'Active' and version = 'Cms'
           ORDER BY completion_date desc LIMIT 1";
    }
    else{
         $sql = "select * from resi_project_phase 
            where 
-             project_id = $projectId and status = 'Active'";
+             project_id = $projectId and status = 'Active' and version = 'Cms'";
    }   
     $data = mysql_query($sql) or die(mysql_error());
     $dataarr = mysql_fetch_assoc($data);

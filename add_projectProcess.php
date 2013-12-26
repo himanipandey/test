@@ -495,10 +495,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            }else{
                    $qryUpdatePhase = "update resi_project_phase 
                        set launch_date = '".$eff_date_to."',
-                           completion_date = '".$completionDate."',
                            updated_at = now(),
                            updated_by = ".$_SESSION['adminId']."
-                       where project_id = $projectId and phase_name = 'No Phase'";
+                       where project_id = $projectId and phase_name = 'No Phase' and version = 'Cms'";
                    mysql_query($qryUpdatePhase);
                     
            }
