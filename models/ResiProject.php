@@ -146,10 +146,12 @@ class ResiProject extends Objects
         $delete_phase = "delete a.* from resi_project_phase a left join resi_project_phase b on a.PHASE_ID = b.PHASE_ID and b.version = 'Cms' where a.version = 'Website' and b.PHASE_ID is null;";
         $delete_inventory = "delete a.* from project_availabilities a inner join project_supplies b on a.project_supply_id = b.id left join project_supplies c on b.listing_id = c.listing_id and c.version = 'Cms' left join project_availabilities d on c.id = d.project_supply_id and a.effective_month = d.effective_month where b.version = 'Website' and d.id is null;";
         $delete_supply = "delete a.* from project_supplies a left join project_supplies b on a.listing_id = b.listing_id and b.version = 'Cms' where a.version = 'Website' and b.listing_id is null;";
+        $delete_price = "delete a.* from listing_prices a left join listing_prices b on a.listing_id = b.listing_id and a.effective_date = b.effective_date and b.version = 'Cms' where a.version = 'Website' and b.id is null";
         $conn->query($delete_project);
         $conn->query($delete_phase);
         $conn->query($delete_inventory);
         $conn->query($delete_supply);
+        $conn->query($delete_price);
     }
     
     public static function partially_migrate_projects() {
