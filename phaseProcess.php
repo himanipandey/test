@@ -126,7 +126,8 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 
             /***********code related to completion date add/edit**************/
             $qryFetchPhaseId = "select phase_id from resi_project_phase 
-                where project_id = $projectId and phase_name = '".$phasename."'";
+                where project_id = $projectId and phase_name = '".$phasename."' 
+                    and version = 'Cms' ";
             $resFetchPhaseId = mysql_query($qryFetchPhaseId) or die(mysql_error());
             $dataFetchPhaseId = mysql_fetch_assoc($resFetchPhaseId);
 
@@ -142,7 +143,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 $qry = "UPDATE resi_project 
                     set 
                        PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
-                   where PROJECT_ID = $projectId";
+                   where PROJECT_ID = $projectId and version = 'Cms'";
                 $success = mysql_query($qry) OR DIE(mysql_error());
              }
     /***********end code related to completion date add/edit**************/

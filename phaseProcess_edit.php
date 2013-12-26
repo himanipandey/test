@@ -35,7 +35,7 @@ if (isset($_REQUEST['delete'])) {
         $qry = "UPDATE resi_project 
             set 
                PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
-           where PROJECT_ID = $projectId";
+           where PROJECT_ID = $projectId and version = 'Cms'";
         mysql_query($qry) OR DIE(mysql_error());
         
         
