@@ -197,4 +197,18 @@ class ProjectSupply extends Objects {
 			return TRUE;
 		
 	}
+	
+	function checkAvailability($projectId, $phaseId, $projectType, $noOfBedroom, $supply, $launchedUnit) {
+        if($phaseId=='0') $phaseId = NULL;
+        $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType')"));
+
+        if($supply_new) {
+			$supplyId = $supply_new[0]->id;
+			if(ProjectAvailability::getAvailability($supplyId) < $supply){
+				return true;
+			}else
+				return false;
+		}
+		
+	}
 }

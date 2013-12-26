@@ -101,7 +101,7 @@ foreach ($phaseDetail as $k => $val) {
 }
 $smarty->assign("phases", $phases);
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD']) {
     $current_phase = phaseDetailsForId($phaseId);
     // Assign vars for smarty
     $smarty->assign("phaseObject", $current_phase[0]);
@@ -179,13 +179,15 @@ if (isset($_POST['btnSave'])) {
                 }
           }
          
-        if( $error_msg == '' ){
+     
             // Flats Config
             $flats_config = array();
             foreach ($_REQUEST as $key => $value) {
                 if (substr($key, 0, 9) == "flat_bed_") {
                     $beds = substr($key, 9);
                     $flats_config[$beds] = $value;
+                    if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'apartment', $beds, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']))
+						$error_msg = "Supply must be greater than Availability.";
                 }
             }
 
@@ -195,8 +197,17 @@ if (isset($_POST['btnSave'])) {
                 if (substr($key, 0, 10) == "villa_bed_") {
                     $beds = substr($key, 10);
                     $villas_config[$beds] = $value;
+                    if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'apartment', $beds, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']))
+						$error_msg = "Supply must be greater than Availability.";
                 }
             }
+            
+         if ($_POST['plotvilla'] != '') { 
+            if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
+						$error_msg = "Supply must be greater than Availability.";
+		 }
+		 				
+         if( $error_msg == '' ){
             // Update
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
