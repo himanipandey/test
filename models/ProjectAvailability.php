@@ -47,7 +47,7 @@ class ProjectAvailability extends Model {
     
     function getAvailability($supplyId){
 		
-		$sql = "select availability from ".self::table_name()." where  	project_supply_id ='".$supplyId."'";
+		$sql = "select availability from ".self::table_name()." where  project_supply_id ='".$supplyId."' order by `effective_month` desc limit 1";
 		$res = self::find_by_sql($sql);
 		if($res)
 			return $res[0]->availability;
