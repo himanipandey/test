@@ -7,6 +7,7 @@
  
     $sort = 'all';
     $page = '1';
+    
     if(isset($_GET['sort']) && !empty($_GET['sort']))
         $sort = $_GET['sort'];
     
@@ -52,14 +53,16 @@
     if(!empty($RowsPerPage) && !empty($Offset))
     {
         $options = array('joins' => $join , 'select' => 
-        'agents.*,brokers.name,b_c.name,aq.qualification');
-                
+        'agents.*,brokers.broker_name,b_c.name,aq.qualification' , 'conditions' => $conditions);
+        
         $sellerCompany = SellerCompany::find('all' , $options);
+        
         $NumRows = count($sellerCompany);
-            
+        
         $options = array('joins' => $join ,'select' => 
-        'agents.*,brokers.name,b_c.name,aq.qualification' , 'limit' => $RowsPerPage , 'offset' => $Offset);
-        $sellerCompany = BrokerCompany::find('all' , $options);
+        'agents.*,brokers.broker_name,b_c.name,aq.qualification' , 'limit' => $RowsPerPage , 'offset' => $Offset, 'conditions' => $conditions);
+        $sellerCompany = SellerCompany::find('all' , $options);
+        
     }
     else
     { 
@@ -67,19 +70,18 @@
         'agents.*,brokers.broker_name,b_c.name,aq.qualification' , 'conditions' => $conditions);
         
         $sellerCompany = SellerCompany::find('all' , $options);
+        
         $NumRows = count($sellerCompany);
         
         $options = array('joins' => $join ,'select' => 
         'agents.*,brokers.broker_name,b_c.name,aq.qualification' , 'limit' => $RowsPerPage, 'conditions' => $conditions);
-        $sellerCompany = SellerCompany::find('all' , $options);
-        
-        //echo SellerCompany::connection()->last_query; 
+        $sellerCompany = SellerCompany::find('all' , $options); 
     }
     
     //print'<pre>';
 //    print_r($sellerCompany);
 //    die;
-    $sellerDataArr = array();
+//    $sellerDataArr = array();
     $i = 0;
     if(!empty($sellerCompany))
     {

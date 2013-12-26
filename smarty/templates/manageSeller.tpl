@@ -33,10 +33,10 @@
                 <TD class=h1 align=left background=../images/heading_bg.gif bgColor=#ffffff height=40>
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
-                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Sellers List</TD>
+                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Agents List</TD>
                       <TD align=right colSpan=3>
                           {if $accessBroker == ''}
-                          <a href="sellercompanyadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Sellers</b></a>
+                          <a href="sellercompanyadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Agents</b></a>
                           {/if}
                           </TD>
                     </TR>
@@ -53,11 +53,11 @@
                         <TR class = "headingrowcolor" height="25">
                         <TD class=whiteTxt width=5% align="center">S NO</TD>
                         <TD class=whiteTxt width=15% align="left">Company Name</TD>
-                        <TD class=whiteTxt width=25% align="left">Seller Name</TD>
-                        <TD class=whiteTxt width=25% align="left">Seller Type</TD>
-                        <TD class=whiteTxt width=25% align="left">Seller Image</TD>
-                        <TD class=whiteTxt width=25% align="left">Seller Rating</TD>
-                        <TD class=whiteTxt width=25% align="left">Seller Qualification</TD>
+                        <TD class=whiteTxt width=25% align="left">Agent Name</TD>
+                        <TD class=whiteTxt width=25% align="left">Agent Type</TD>
+                        <TD class=whiteTxt width=25% align="left">Agent Image</TD>
+                        <TD class=whiteTxt width=25% align="left">Agent Rating</TD>
+                        <TD class=whiteTxt width=25% align="left">Agent Qualification</TD>
                         <TD class=whiteTxt width=15% align = 'left'>Active Since</TD>
                         <TD class=whiteTxt width=15% align = 'left'>Status</TD>                      
                         <TD class=whiteTxt width=12% align="center">Action</TD>

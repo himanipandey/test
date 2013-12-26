@@ -27,7 +27,7 @@
         @extract($_POST);
         $smarty->assign("seller_cmpny", $seller_cmpny);
         $smarty->assign("seller_name", $seller_name);
-        $smarty->assign("type", $type);
+        //$smarty->assign("type", $type);
         $smarty->assign("status", $status);
         $smarty->assign("addressline1", $addressline1);
         $smarty->assign("addressline2", !empty($addressline2)?$addressline2:'');
@@ -52,6 +52,8 @@
         
         $sellerChk = SellerCompany::chkName($seller_name);
         $logo = $_FILES['logo'];
+        
+        
         //print'<pre>';
 //        print_r($_POST);
 //        
@@ -151,7 +153,7 @@
             
             ResiProject::transaction(function(){
                 
-            global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoptions,$newImagePath,$logo,$s3,$image_id;
+            global $seller_cmpny_hidden , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$cityhiddenArr ,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$rateoptions,$newImagePath,$logo,$s3,$image_id;
             
             $qualification = !empty($qualification)?$qualification:NULL;
             
@@ -162,18 +164,18 @@
             }
             $sql = "INSERT INTO `agents` SET
                                                 `status` = '".$status."',
-                                                `broker_id` = ".$seller_cmpny.",";
+                                                `broker_id` = '".$seller_cmpny_hidden."',";
                                                 
             if(!empty($qualification))                             
             $sql .= "`academic_qualification_id` = '".$qualification."',";
         
             $sql .= "`rating` = '".$final_rating."',
                     `rate_option` = '$rateoptions',
-                    `seller_type` = '$type',
+                    `seller_type` = 'Broker Agent',
                     `active_since` = '$active_since',
                     `updated_by` = '".$_SESSION['adminId']."',
                     `created_at` = '".date('Y-m-d H:i:s')."'";
-                    
+                  
             $sql_seller_company = @mysql_query($sql) or die(mysql_error());
             $seller_id = mysql_insert_id();          
             //echo $seller_id;
@@ -317,7 +319,7 @@
             
             ResiProject::transaction(function(){
                 
-                global $seller_cmpny , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$sellerCompanyId,$addressid,$brkr_cntct_id,$rateoptions,$image_id,$logo,$newImagePath,$s3;
+                global $seller_cmpny_hidden , $seller_name , $type , $status , $addressline1 , $addressline2 ,$city_id,$pincode,$phone1,$phone2,$mobile,$email,$active_since,$qualification,$final_rating,$sellerCompanyId,$addressid,$brkr_cntct_id,$rateoptions,$image_id,$logo,$newImagePath,$s3;
                
             if(!empty($active_since))
             {
@@ -328,13 +330,13 @@
             
             $sql = "UPDATE `agents` SET
                                                 `status` = '".$status."',
-                                                `broker_id` = '".$seller_cmpny."',";
+                                                `broker_id` = '".$seller_cmpny_hidden."',";
             if(!empty($qualification))
                 $sql .= "`academic_qualification_id` = '".$qualification."',";
             
             $sql .= "`rating` = '".$final_rating."',
                                                 `rate_option` = '$rateoptions',
-                                                `seller_type` = '$type',
+                                                `seller_type` = 'Broker Agent',
                                                 `active_since` = '$active_since',
                                                 `updated_by` = '".$_SESSION['adminId']."'
                                                  WHERE id=".$sellerCompanyId;

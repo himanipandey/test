@@ -2,11 +2,69 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 
-<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<style type="text/css">
+    .ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    z-index:10000;
+    }
+    /* IE 6 doesn't support max-height
+    * we use height instead, but this forces the menu to always be this tall
+    */
+    * html .ui-autocomplete {
+    height: 100px;
+    }
+    .ui-menu-item a {
+        font-size: 10px;
+    }
+    
+    .ui-state-focus a{
+        font-size: 10px;
+    }
+    .divloc_class{
+        border: 1px solid #D3D3D3;
+        height: 100px;
+        overflow: scroll;
+        width: 230px;
+    }
+    
+    .li-data{
+        background-color: #000000;
+        color: #FFFFFF;
+        font-family: Verdana;
+        font-size: 12px;
+        cursor:pointer;
+    }
+    
+    .li-data:hover{
+        background-color: orange;
+        color: #FFFFFF;
+        font-family: Verdana;
+        font-size: 12px;
+        cursor:pointer;
+        font-weight:bold;
+    }
+</style>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
-
+<script type="text/javascript">
+    $(function() {
+        var availableTags = {$brokerArr}; 
+        $( "#seller_cmpny" ).autocomplete({
+                source: availableTags,
+                select: function( event, ui ) {
+                    //event.preventDefault();
+                    //alert(ui.item.value+ ' '+ ui.item.id );
+                    jQuery('#seller_cmpny_hidden').val(ui.item.id);
+                }
+            });
+        });
+        
+</script>
 </TD>
   </TR>
   <TR>
@@ -28,7 +86,7 @@
                 <TD class=h1 align=left background=../images/heading_bg.gif bgColor=#ffffff height=40>
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
-                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>{if $sellerCompanyId == ''} Add New {else} Edit {/if} Sellers</TD>
+                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>{if $sellerCompanyId == ''} Add New {else} Edit {/if} Agents</TD>
                       <TD align=right ></TD>
                     </TR>
 		  </TBODY></TABLE>
@@ -53,26 +111,20 @@
 				<tr> 
                     <td width="30%" valign="top">Company Name :<font color = "red">*</font></td>
                     <td width="10%" valign="top">
-                        <select name="seller_cmpny" id="seller_cmpny">
-                            <option value="">--Select Company--</option>
-                            {if $brokerArr != ''}
+                        <input type="text" name="seller_cmpny" id="seller_cmpny" value="{$seller_cmpny}" />
+                        <!--<select name="seller_cmpny" id="seller_cmpny">
+                            
+                            {*if $brokerArr != ''}
                                     {foreach from= $brokerArr key = k item = val}
                                         <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{if strlen($val->broker_name) > 30} {$val->broker_name|substr:0:30|cat:"..."} {else} {$val->broker_name} {/if}</option>
                                     {/foreach}
-                            {/if}
-                        </select>
+                            {/if*}
+                        </select>-->
                         
                     </td>
-                    <td width="15%" align="right" valign="top" >Seller Name :<font color = "red">*</font></td>
+                    <td width="15%" align="right" valign="top" >Agent Name :<font color = "red">*</font></td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text name="seller_name" id="seller_name" value="{$seller_name}" style="width:238px;" />	
-                    </td>
-                    <td width="10%" align="right" valign="top" >Seller Type : </td>
-                    <td width="10%" align="left" valign="top" >
-                        <select name="type" id="type">
-                            <option value="">--Select Seller Type--</option>
-                            <option value="Broker Agent" {if $seller_type == "Broker Agent"} selected="" {/if}>Broker Agent</option>
-                        </select>
                     </td>
                     <td width="10%" align="right">Status :</td>
                     <td width="10%" align="left" >
@@ -104,14 +156,14 @@
                 </tr>
                 {/if}
 				<tr>
-				    <td width="20%" align="right" >Address Line 1 : <font color = "red">*</font></td>
+				    <td width="20%" align="left" >Address Line 1 : <font color = "red">*</font></td>
                     <td width="30%" align="left" >
                         <input type=text name="addressline1" class="check" id="addressline1" value="{$addressline1}"  style="width:250px;" />
                         {if $ErrorMsg["addressline1"] != ''}
                             <font color = "red">{$ErrorMsg["addressline1"]}</font>
                         {/if}
                     </td>
-                    <td width="20%" align="right" valign="top">City :<font color = "red">*</font></td>
+                    <td width="20%" align="left" valign="top">City :<font color = "red">*</font></td>
                     <td width="30%" align="left" >
 				        <select name="city_id" id="city_id" style="width:250px;">
                            <option value="">Select City</option>
@@ -124,11 +176,11 @@
 				</tr>
                 
                 <tr>
-				    <td width="20%" align="right" >Address Line 2 : </td>
+				    <td width="20%" align="left" >Address Line 2 : </td>
                     <td width="30%" align="left" >
                         <input type=text name="addressline2" class="check" id="addressline2" value="{$addressline2}" style="width:250px;" />
                     </td>
-                    <td width="15%" align="right" valign="top" >Pincode : </td>
+                    <td width="15%" align="left" valign="top" >Pincode : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text name="pincode" class="check" id="pincode" value="{$pincode}" maxlength="12" style="width:85px;" />
                         {if $ErrorMsg["pincode"] != ''}
@@ -138,7 +190,7 @@
 				</tr>
                 
                 <tr>
-    				<td width="15%" align="right" valign="top" >Office Phone 1 : </td>
+    				<td width="15%" align="left" valign="top" >Office Phone 1 : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
                         <input type=text name="phone1" class="check" id="phone1" value="{$phone1}" maxlength="12" style="width:85px;" />
@@ -146,7 +198,7 @@
                             <font color = "red">{$ErrorMsg["phone1"]}</font>
                         {/if}		
                     </td>
-                    <td width="15%" align="right" valign="top" >Office Phone 2 : </td>
+                    <td width="15%" align="left" valign="top" >Office Phone 2 : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
                         <input type=text name="phone2" class="check" id="phone2" value="{$phone2}" maxlength="12" style="width:85px;" />
@@ -158,7 +210,7 @@
 				</tr>
                 
                 <tr>
-    				<td width="15%" align="right" valign="top" >Mobile:<font color = "red">*</font></td>
+    				<td width="15%" align="left" valign="top" >Mobile:<font color = "red">*</font></td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text name="mobile" id="mobile" value="{$mobile}" maxlength="10" style="width:85px;" />	
                         {if $ErrorMsg["mobile"] != ''}
@@ -166,7 +218,7 @@
                         {/if}	
                     </td>
     				
-    				<td width="15%" align="right" valign="top" >Office Email:</td>
+    				<td width="15%" align="left" valign="top" >Office Email:</td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text name="email" id="email" value="{$email}" style="width:250px;" />	
                         {if $ErrorMsg["email"] != ''}
@@ -184,7 +236,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td width="15%" align="right" valign="top" >Seller Logo:</td>
+                    <td width="15%" align="right" valign="top" >Agent Logo:</td>
                     <td width="10%" align="left" valign="top" >
                         <input type="file" name="logo" id="logo" value="{$logo}" style="width:250px;" />		
                     </td>
@@ -197,7 +249,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td width="15%" align="right" valign="top" >Seller Rating:</td>
+                    <td width="15%" align="right" valign="top" >Agent Rating:</td>
                     <td width="10%" align="left" valign="top" >
                         <input type="radio" name="rating" class="rating" id="rating_auto" {if $rateoption == "auto"} checked=""  {/if} value="3.0" />	&nbsp;Auto&nbsp;
                         <input type="auto" name="auto" id="auto" value="3.0" style="width:25px;" readonly="" />
@@ -244,7 +296,7 @@
 				  <input type="hidden" name="sellerCompanyId" id="sellerCompanyId" value="{$sellerCompanyId}" />
 				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="float:left;" />
 				  &nbsp;&nbsp;<input type="button" name="btnExit" id="btnExit" value="Exit" style="float:right:" />
-                  
+                  <input type="hidden" name="seller_cmpny_hidden" id="seller_cmpny_hidden" value="{$broker_id}" />
                   <input type="hidden" name="addressid" id="addressid" value="{$addressid}" />
                   <input type="hidden" name="brkr_cntct_id" id="brkr_cntct_id" value="{$brkr_cntct_id}" />
                   <input type="hidden" name="cityhiddenArr" id="cityhiddenArr" value="" />
@@ -285,7 +337,7 @@
         
         jQuery('#copy').click(function(){
             
-            if(!jQuery('#seller_cmpny').val())
+            if(!jQuery('#seller_cmpny_hidden').val())
             {
                 alert("Please select Seller Company");
                 return false;
@@ -296,7 +348,7 @@
                 jQuery('.check').attr('readonly' , 'true');
                 jQuery('#city_id').attr('disabled' , 'true');
                 
-                var dataString = 'broker='+jQuery('#seller_cmpny').val();
+                var dataString = 'broker='+jQuery('#seller_cmpny_hidden').val();
                 //alert(dataString);
     //            return;
                 jQuery.ajax({
@@ -514,6 +566,10 @@
                 
         });        
     });
+    function dateRange(date) {
+    var now = new Date();
+    return (date.getTime() > now.getTime() )
+    }
     
     Calendar.setup({
 
@@ -521,6 +577,7 @@
                 ifFormat       :    "%d/%m/%Y",      // format of the input field
                 button         :    "f_trigger_c_to",  // trigger for the calendar (button ID)
                 align          :    "Tl",           // alignment (defaults to "Bl")
+                dateStatusFunc : dateRange,
                 singleClick    :    true,
                 showsTime		:	true
 

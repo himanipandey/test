@@ -17,6 +17,23 @@ $cityArr = City::CityArr();
 $brokerArr = BrokerCompany::find('all' , array('select' => 'brokers.id,brokers.broker_name'));
 $qualification = SellerCompany::getQualification();
 
+$result = array();
+//print'<pre>';
+foreach($brokerArr as $key => $val)
+{
+    $broker_name  = '';
+    if(!empty($val->broker_name) && strlen($val->broker_name) > 30)
+        $broker_name = substr($val->broker_name , 0  ,30).'...';
+    else
+        $broker_name = $val->broker_name;
+    array_push($result , array("id" => $val->id , "value" => $broker_name));
+}
+
+//print_r($result);
+//die;
+$brokerArr = json_encode($result);
+
+
 $smarty->assign("cityArr", $cityArr);
 $smarty->assign("brokerArr", $brokerArr);
 $smarty->assign("qualification", $qualification);
@@ -49,10 +66,25 @@ if(!empty($_GET['sellerCompanyId']))
                 }
             }
         }
+        $broker_name = '';
+        $brokerId = '';
+        $broker_det = BrokerCompany::find('all' , array('select' => 'id, broker_name' , 'conditions' => array(" id ='".mysql_escape_string($sellerDet['broker_id'])."'")));
+        if(!empty($broker_det))
+        {
+            foreach($broker_det as $key=> $val)
+            {
+                $brokerId = $val->id;
+                $broker_name = $val->broker_name;
+            }    
+        }
+        
+        
+        
         $smarty->assign("imgid", !empty($imgid)?$imgid:'');
         $smarty->assign("sellerCompanyId", !empty($sellerDet['id'])?$sellerDet['id']:'');
         $smarty->assign("status", !empty($sellerDet['status'])?$sellerDet['status']:'');
-        $smarty->assign("broker_id", !empty($sellerDet['broker_id'])?$sellerDet['broker_id']:'');
+        $smarty->assign("broker_id", !empty($brokerId)?$brokerId:'');
+        $smarty->assign("seller_cmpny", !empty($broker_name)?$broker_name:'');
         $smarty->assign("brkr_cntct_id", !empty($sellerDet['brkr_cntct_id'])?$sellerDet['brkr_cntct_id']:'');
         $smarty->assign("qualification_id", !empty($sellerDet['academic_qualification_id'])?$sellerDet['academic_qualification_id']:'');
         $smarty->assign("rating", !empty($sellerDet['rating'])?$sellerDet['rating']:'');
