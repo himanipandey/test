@@ -117,8 +117,8 @@
                                             //  locality name modified
                                             addToNameChangeLog( 'locality', $localityid, $localityDetailsArray['LABEL'], $txtCityName );
                                         }
-                                            if($txtCityUrl != $old_loc_url)
-                                                    insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
+                                            //if($txtCityUrl != $old_loc_url)
+                                            //        insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
                                             header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
                                     }
                     }
