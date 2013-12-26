@@ -171,8 +171,8 @@ class ResiProject extends Objects
         $conn->query($sql);
     }
     
-    public static function get_projects_without_website_version(){
-        $sql = "select a.* from resi_project a left join resi_project b on a.PROJECT_ID = b.PROJECT_ID and a.version = 'Cms' and b.version = 'Website' where b.PROJECT_ID is null";
+    public static function get_recent_projects_without_website_version($time_in_seconds){
+        $sql = "select a.* from resi_project a left join resi_project b on a.PROJECT_ID = b.PROJECT_ID and b.version = 'Website' where a.version = 'Cms' and a.created_at > DATE_SUB(NOW(), INTERVAL $time_in_seconds SECOND) and b.PROJECT_ID is null";
         return self::find_by_sql($sql);
     }
 }

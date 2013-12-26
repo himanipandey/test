@@ -12,7 +12,7 @@ require_once $docroot.'modelsConfig.php';
 ResiProject::delete_website_version();
 ResiProject::partially_migrate_projects();
 
-$missingProjects = ResiProject::get_projects_without_website_version();
+$missingProjects = ResiProject::get_recent_projects_without_website_version(86400*2);
 
 
 foreach ($missingProjects as $project) {
