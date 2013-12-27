@@ -64,20 +64,6 @@
 	   });
           });
 	});
-
-	function change_type(type_val)
-	{
-		if(type_val == 'app_form')
-		{
-			document.getElementById("app_form").style.display = '';
-			document.getElementById("app_form_pdf").style.display = 'none';
-		}
-		else
-		{
-			document.getElementById("app_form").style.display = 'none';
-			document.getElementById("app_form_pdf").style.display = '';
-		}
-	}
 	
   function isNumberKey(evt)
   {
@@ -90,6 +76,11 @@
 	 return true;
   }
 
+ function delete_pdf(){
+		$('#old_pdf').css("display","none");
+		$('#app_pdf').css("display","block");
+		$('#application').val("pdf-del");
+ }
 </script>
   <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -537,20 +528,27 @@
 							   </tr>
 
 							   <tr>
-								  <td width="100%" align="left" valign ="top" colspan ="3">
-									<input type = "radio" name = "application" value = "app_form" checked = "checked" onclick = "change_type(this.value);"><b>Application form in html</b>
-									 <input type = "radio" name = "application" value = "app_form_pdf" onclick = "change_type(this.value);"><b>Application form in pdf</b>
-								  </td>
-							   </tr>
-
-							   <tr>
-								  <td width="32%" align="right" valign ="top"><b>Application Form (in html):</b> </td><td width="30%" align="left">
-                                                                        <span id = "app_form">
-                                                                               <textarea name = "app_form" id = "app_form" rows="10" cols="45">{$app_form}</textarea>
-                                                                       </span>
-                                                                       <span id = "app_form_pdf" style = "display:none;">
-                                                                               <input type = "file" name = "app_pdf">
-                                                                       </span>
+								  <td width="32%" align="right" valign ="top"><b>Application form in pdf:</b> </td><td width="30%" align="left">
+									  
+									   
+                                                           
+                                                         <span id = "app_form_pdf" >
+															{if $app_form}
+																<input type = "hidden" name = "application" id="application" value = "pdf-old">
+																<span id="old_pdf">
+																{$app_form}
+																&nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick="delete_pdf()" title="Delete PDF"/>
+																</span>
+																
+																<input type = "file" name = "app_pdf" id="app_pdf" style="display:none" />
+															{else}
+																 
+																<input type = "hidden" name = "application" id="application" value = "pdf-new">
+																<input type = "file" name = "app_pdf" />
+															{/if}
+                                                          </span>
+                                                            
+                                                                       
 								  </td>
 								  {if $ErrorMsg["app_form"] != ''}
 								  <td width="50%" align="left"><font color="red">{$ErrorMsg["app_form"]}</font></td>

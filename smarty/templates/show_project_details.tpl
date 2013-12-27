@@ -1167,7 +1167,9 @@ function getDateNow(){
                                                     </td>
                                                     <td>
                                                         {if $projectDetails[0].APPLICATION_FORM != ''}
-                                                                {$projectDetails[0].APPLICATION_FORM}
+															<a href="{$projectDetails[0].APPLICATION_FORM}" target="_blank"/>
+																<img src="/images/pdficon_small.gif" />
+                                                            </a>    
                                                         {else}
                                                                 --
                                                         {/if}
