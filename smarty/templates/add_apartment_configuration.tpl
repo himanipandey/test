@@ -265,7 +265,7 @@
                                 <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizeval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                           </td>
                           <td>
-                                <input type="checkbox" onclick="add_carpet({($smarty.section.foo.index)})" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtDisplayCarpetArea[{$smarty.section.foo.index}]} checked="checked"{/if}>
+                                <input type="checkbox" onclick="add_carpet({($smarty.section.foo.index)})" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtCarpetAreaInfo"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtDisplayCarpetArea[{$smarty.section.foo.index}]} checked="checked"{/if}>
                           </td>
                           <!--
                           <td>
@@ -501,7 +501,7 @@
                                     <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval_VA[$new_index]} == '') OR !is_numeric({$txtSizeval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                               </td>
                               <td>
-                                    <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtCarpetAreaInfo_VA[{$new_index}]} checked="checked"{/if}>
+                                    <input type="checkbox" onclick="add_carpet({($smarty.section.foo.index)})" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtCarpetAreaInfo"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtCarpetAreaInfo_VA[{$new_index}]} checked="checked"{/if}>
                               </td>
                               <!--
                               <td>
