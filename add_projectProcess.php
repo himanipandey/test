@@ -563,9 +563,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $resStg = mysql_query($qryStg) or die(mysql_error());
                 $stageId = mysql_fetch_assoc($resStg);
                 CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name']);
-                if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
-                   insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
-                }
+                //if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
+                 //  insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
+               // }
                 //update code for offer heading and desc
                 if($special_offer != '' || $offer_heading != '' || $offer_desc != ''){
                     $qryOfferChk = "select * from project_offers where project_id = $projectId";
