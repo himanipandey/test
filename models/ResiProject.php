@@ -14,7 +14,8 @@ class ResiProject extends Objects
         array('call_projects', 'class_name' => "CallProject", "foreign_key" => "ProjectId"),
         array('options', 'class_name' => "ResiProjectOptions", "foreign_key" => "PROJECT_ID"),
         array('phases', 'class_name' => "ResiProjectPhase", "foreign_key" => "PROJECT_ID"),
-   ); 
+   );
+    
    static function projectStatusMaster() {
        $qry = "select * from project_status_master";
        $result = ResiProject::find_by_sql($qry);
@@ -130,15 +131,50 @@ class ResiProject extends Objects
    public function get_all_options(){
        return ResiProjectOptions::find("all", array("conditions" => array("project_id" => $this->project_id, "option_category" => "Actual")));
    }
+   
+   public static function get_all_phases($project_id){
+       return ResiProjectPhase::find("all", array("conditions" => array("project_id" => $project_id, "version" => "Cms")));
+   }
 
-       public function get_all_towers(){
-           return ResiProjectTowerDetails::all(array("conditions" => array("project_id = ?", $this->project_id)));
-       }
-     
-//     public function get_all_towers(){
-//         $phase_ids = array();
-//         $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $this->project_id)));
-//         foreach($phases as $phase) array_push($phase_ids, $phase->phase_id);
-//         return ResiProjectPhase::get_towers_for_phases($phase_ids);
-//     }
+    public function get_all_towers(){
+        return ResiProjectTowerDetails::all(array("conditions" => array("project_id = ?", $this->project_id)));
+    }
+    
+    public static function delete_website_version(){
+        $conn = self::connection();
+        $delete_project = "delete a.* from resi_project a left join resi_project b on a.PROJECT_ID = b.PROJECT_ID and b.version = 'Cms' where a.version = 'Website' and b.PROJECT_ID is null;";
+        $delete_phase = "delete a.* from resi_project_phase a left join resi_project_phase b on a.PHASE_ID = b.PHASE_ID and b.version = 'Cms' where a.version = 'Website' and b.PHASE_ID is null;";
+        $delete_inventory = "delete a.* from project_availabilities a inner join project_supplies b on a.project_supply_id = b.id left join project_supplies c on b.listing_id = c.listing_id and c.version = 'Cms' left join project_availabilities d on c.id = d.project_supply_id and a.effective_month = d.effective_month where b.version = 'Website' and d.id is null;";
+        $delete_supply = "delete a.* from project_supplies a left join project_supplies b on a.listing_id = b.listing_id and b.version = 'Cms' where a.version = 'Website' and b.listing_id is null;";
+        $delete_price = "delete a.* from listing_prices a left join listing_prices b on a.listing_id = b.listing_id and a.effective_date = b.effective_date and b.version = 'Cms' where a.version = 'Website' and b.id is null";
+        $conn->query($delete_project);
+        $conn->query($delete_phase);
+        $conn->query($delete_inventory);
+        $conn->query($delete_supply);
+        $conn->query($delete_price);
+    }
+    
+    public static function partially_migrate_projects() {
+        $conn = self::connection();
+        $sql = "UPDATE resi_project a inner join resi_project b
+            on a.PROJECT_ID = b.PROJECT_ID and a.version = 'Website' and b.version = 'Cms'
+            SET a.LATITUDE = b.LATITUDE,
+            a.PROJECT_ADDRESS = b.PROJECT_ADDRESS,
+            a.LONGITUDE = b.LONGITUDE,
+            a.SHOULD_DISPLAY_PRICE = b.SHOULD_DISPLAY_PRICE,
+            a.D_AVAILABILITY= b.D_AVAILABILITY,
+            a.LOCALITY_ID  = b.LOCALITY_ID,
+            a.PROJECT_URL  = b.PROJECT_URL,
+            a.PROJECT_NAME  = b.PROJECT_NAME,
+            a.DISPLAY_ORDER = b.DISPLAY_ORDER,
+            a.DISPLAY_ORDER_LOCALITY = b.DISPLAY_ORDER_LOCALITY,
+            a.DISPLAY_ORDER_SUBURB = b.DISPLAY_ORDER_SUBURB,
+            a.YOUTUBE_VIDEO = b.YOUTUBE_VIDEO";
+        $conn->query($sql);
+    }
+    
+    public static function get_recent_projects_without_website_version($time_in_seconds){
+        $sql = "select a.* from resi_project a left join resi_project b on a.PROJECT_ID = b.PROJECT_ID and b.version = 'Website' where a.version = 'Cms' and a.created_at > DATE_SUB(NOW(), INTERVAL $time_in_seconds SECOND) and b.PROJECT_ID is null";
+        return self::find_by_sql($sql);
+    }
 }

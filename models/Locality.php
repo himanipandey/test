@@ -25,4 +25,10 @@ class Locality extends ActiveRecord\Model
                "conditions" => $conditions, "select" => "locality.locality_id,locality.label, c.label as cityname"));
         return $getLocality;
     }
+    
+    static function updateLocalityCoordinates(){
+        $conn = self::connection();
+        $sql = "update locality a, (select locality_id, avg(latitude) as latitude, avg(longitude) as longitude from resi_project where latitude is not null and latitude not in (0 , 1, 2, 3, 4, 5, 6, 7, 8, 9) and longitude is not null and longitude not in (0 , 1, 2, 3, 4, 5, 6, 7, 8, 9) and status in ('Active' , 'ActiveInCms') group by locality_id) b set a.latitude = b.latitude, a.longitude = b.longitude where a.LOCALITY_ID = b.LOCALITY_ID";
+        $conn->query($sql);
+    }
 }
