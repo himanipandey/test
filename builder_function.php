@@ -910,7 +910,7 @@ function towerDetail($towerId) {
 
 function costructionDetail($projectId) {
    $qryPhase = "select * from resi_project_phase
-   where project_id = $projectId and phase_type != 'Logical' and status = 'Active' order by phase_id desc";
+   where project_id = $projectId and phase_type != 'Logical' and status = 'Active' and version = 'Cms' order by phase_id desc";
    $resPhase = mysql_query($qryPhase);
    $dataPhase = mysql_fetch_assoc($resPhase);
    if(mysql_num_rows($resPhase)>0) {
@@ -919,13 +919,13 @@ function costructionDetail($projectId) {
              phase_type != 'Logical'
            and 
              project_id = $projectId
-           and status = 'Active'
+           and status = 'Active' and version = 'Cms'
           ORDER BY completion_date desc LIMIT 1";
    }
    else{
         $sql = "select * from resi_project_phase 
            where 
-             project_id = $projectId and status = 'Active'";
+             project_id = $projectId and status = 'Active' and version = 'Cms'";
    }   
     $data = mysql_query($sql) or die(mysql_error());
     $dataarr = mysql_fetch_assoc($data);
@@ -1109,8 +1109,10 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 /*********************************/
 
 function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
+    if($phase == phaseId_6)ProjectMigration::enqueProjectForMigration($pID, 'Genuine', $_SESSION['adminId']);
+    
+    mysql_query('begin');
     if ($phase != phaseId_6) {
-        mysql_query('begin');
         $Sql = "UPDATE " . RESI_PROJECT . " SET PROJECT_PHASE_ID = '" . $phase . "' 
             WHERE PROJECT_ID = '" . $pID . "' and version = 'Cms';";
     } else {
@@ -2090,24 +2092,13 @@ function ViewLocalityDetails($localityID) {
     }
 }
 function projectBankList($projectId){
-	
 	$projectList = array();
 	$Sql = "SELECT BANK_ID FROM " . PROJECT_BANKS . " WHERE PROJECT_ID = ".$projectId;
 	$ExecSql = mysql_query($Sql);
 	while($bank = mysql_fetch_array($ExecSql))
 		$projectList[] = $bank['BANK_ID'];
 	
-	return  $projectList;
-	
+	return  $projectList;	
 }
-
-function checkForDuplicateOption($bedroom,$bathroom,$option_name,$size){
-	
-	print $bedroom."->".$bathroom."->".$option_name."->".$size;
-	
-	die;
-	
-}
-
 ?>
 
