@@ -204,7 +204,7 @@ class ProjectSupply extends Objects {
 
         if($supply_new) {
 			$supplyId = $supply_new[0]->id;
-			if(ProjectAvailability::getAvailability($supplyId) < $supply){
+			if(ProjectAvailability::getAvailability($supplyId) < $launchedUnit){
 				return true;
 			}else
 				return false;
