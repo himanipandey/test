@@ -187,9 +187,9 @@ if (isset($_POST['btnSave'])) {
                     $beds = substr($key, 9);
                     $flats_config[$beds] = $value;
                     if($value['supply'] < $value['launched'])
-						$error_msg = "Supply Unit must be greater than Launched Unit.";
+			$error_msg = "Supply Unit must be greater than Launched Unit.";
                     if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'apartment', $beds, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']))
-						$error_msg = "Launched Unit must be greater than Availability.";
+                        $error_msg = "Launched Unit must be greater than Availability.";
                 }
             }
 
