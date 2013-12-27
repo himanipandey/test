@@ -186,6 +186,8 @@ if (isset($_POST['btnSave'])) {
                 if (substr($key, 0, 9) == "flat_bed_") {
                     $beds = substr($key, 9);
                     $flats_config[$beds] = $value;
+                    if($value['supply'] < $value['launched'])
+						$error_msg = "Supply Unit must be greater than Launched Unit.";
                     if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'apartment', $beds, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']))
 						$error_msg = "Launched Unit must be greater than Availability.";
                 }
@@ -197,12 +199,16 @@ if (isset($_POST['btnSave'])) {
                 if (substr($key, 0, 10) == "villa_bed_") {
                     $beds = substr($key, 10);
                     $villas_config[$beds] = $value;
+                    if($value['supply'] < $value['launched'])
+						$error_msg = "Supply Unit must be greater than Launched Unit.";
                     if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'apartment', $beds, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']))
 						$error_msg = "Launched Unit must be greater than Availability.";
                 }
             }
             
          if ($_POST['plotvilla'] != '') { 
+			 if($_POST['supply'] < $_POST['launched'])
+						$error_msg = "Supply Unit must be greater than Launched Unit.";
             if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
 						$error_msg = "Launched Unit must be greater than Availability.";
 		 }
