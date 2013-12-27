@@ -414,7 +414,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 				{
 					mkdir($newpdfdir, 0777);
 				}
-               $pdf_path = $dir.str_replace(" ","",$txtProjectName)."/".$_FILES['app_pdf']['name'];
+               $pdf_path = $dir.str_replace(" ","",$txtProjectName)."/".time()."_".$_FILES['app_pdf']['name'];
                $move = move_uploaded_file($_FILES['app_pdf']['tmp_name'],$pdf_path);
                 
                 str_replace(" ","",$txtProjectName);
