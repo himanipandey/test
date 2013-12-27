@@ -12,6 +12,8 @@ if ($_REQUEST['btnExit'] == "Exit") {
     header("Location:ProjectList.php?projectId=" . $projectId);
 }
 
+if(ProjectMigration::isProjectWaitingForMigration($projectId))die ('This project is being migrated to website. You will be able to see project details only after some time.');
+
 $lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
 $smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
 
@@ -24,7 +26,7 @@ $smarty->assign("otherPricing", $otherPricing);
 /* * ****end display other pricing***** */
 
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
-$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id) 
+$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id and p.version = 'Cms') 
     join resi_project_options o on (o.options_id = option_id)",'conditions' => 
     array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active' and listings.status = 'Active'"), "select" => 
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));

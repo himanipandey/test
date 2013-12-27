@@ -691,9 +691,13 @@ if(in_array($_SESSION['adminId'],$arrForce))
 $smarty->assign("forceMigrateModule", $forceMigrateModule);
 
 $newImagePath = "/home/sysadmin/public_html/images_new/";
+//$applicationFormPath = "/home/sysadmin/public_html/cms_documents/application_form/";
+$applicationFormPath = "app_docs/";
 // $newImagePath = "images_new/";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
+//$appDisplayPath = "app_docs/";
+//$smarty->assign("imgDisplayPath", $appDisplayPath);
 
 $analytics_credential=array("username"=>"cms","password"=>"Cms123!");
 
