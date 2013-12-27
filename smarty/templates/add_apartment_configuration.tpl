@@ -28,10 +28,14 @@
 		var idValue=id+1;
 		var selectValBed = $("#bed_"+idValue+" :selected").val();
 		var selectValBath = $("#bathrooms_"+idValue+" :selected").val();
+		var carpet_id = "txtCarpetAreaInfo_"+(idValue);
 		if(selectValBed!='0' && selectValBath!='0')
 		{
 			var str=selectValBed+"BHK+"+selectValBath+"T";
-			var unitName=$("#txtUnitName_"+idValue).val(str);
+			if($("#"+carpet_id).attr('checked'))
+				var unitName=$("#txtUnitName_"+idValue).val(str+"(Carpet)");
+			else
+				var unitName=$("#txtUnitName_"+idValue).val(str);
 		}
 	 }
 
@@ -66,6 +70,24 @@
         if(chk == 1)
             return confirm("Are you sure! you want to delete records which are checked.");
     }
+    
+    function add_carpet(index){
+		
+		carpet_id = "txtCarpetAreaInfo_"+(index + 1);
+		unitname_id = "txtUnitName_"+(index + 1);
+		unitname_val = $("#"+unitname_id).val();
+		
+		if($("#"+carpet_id).attr('checked')){
+			$("#"+unitname_id).val(unitname_val+"(Carpet)");
+		}else{
+			unitname_val = unitname_val.replace("(Carpet)","")
+			$("#"+unitname_id).val(unitname_val);
+		}
+		
+			
+		
+	}
+	
 </SCRIPT>
 
 
@@ -243,7 +265,7 @@
                                 <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizeval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                           </td>
                           <td>
-                                <input type="checkbox" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtDisplayCarpetArea[{$smarty.section.foo.index}]} checked="checked"{/if}>
+                                <input type="checkbox" onclick="add_carpet({($smarty.section.foo.index)})" name="txtCarpetAreaInfo_{($smarty.section.foo.index)}" id="txtCarpetAreaInfo_{($smarty.section.foo.index+1)}"   tempName="txtSize"  style="width:100px;border:1px solid"  maxlength = "10" {if $txtDisplayCarpetArea[{$smarty.section.foo.index}]} checked="checked"{/if}>
                           </td>
                           <!--
                           <td>
