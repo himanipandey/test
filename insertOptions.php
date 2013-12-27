@@ -40,6 +40,7 @@
 	$txtSize=$_REQUEST['txtSize'];
 	$typeid_edit=$_REQUEST['typeid_edit'];
 	$txtUnitName=$_REQUEST['txtUnitName'];
+	$txtCarpetAreaInfo=$_REQUEST['txtCarpetAreaInfo'];
 
 	$txtUnitName=str_replace("@","+",$txtUnitName);
 	$status='Available';
@@ -65,6 +66,7 @@
 							`STUDY_ROOM`				=	'".$studyrooms."',
 							`SERVANT_ROOM`				=	'".$servantrooms."',
 							`BALCONY`					=	'".$balconys."',
+							`DISPLAY_CARPET_AREA`					=	'".$txtCarpetAreaInfo."',
 							`POOJA_ROOM`				=	'".$poojarooms."',
                                                         `LENGTH_OF_PLOT`           =	'".$txtSizeLen."',
                                                         `BREADTH_OF_PLOT`           =	'".$txtSizeBre."',
@@ -92,7 +94,9 @@
 							`STUDY_ROOM`				=	'".$studyrooms."',
 							`SERVANT_ROOM`				=	'".$servantrooms."',
 							`BALCONY`					=	'".$balconys."',
+							`DISPLAY_CARPET_AREA`		=	'".$txtCarpetAreaInfo."',
 							`POOJA_ROOM`				=	'".$poojarooms."',
+							
                                                          `LENGTH_OF_PLOT`           =	'".$txtSizeLen."',
                                                         `BREADTH_OF_PLOT`           =	'".$txtSizeBre."',
 							updated_by = ".$_SESSION['adminId']."

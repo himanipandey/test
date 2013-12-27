@@ -12,9 +12,14 @@ $(document).ready(function(){
 			{
 				insertValue=insertValue.replace("+","@");
 			}
-
-
-			requestURL += $(this).attr('tempName') + "=" + insertValue + "&";
+			if($(this).attr('tempName') =='txtCarpetAreaInfo'){
+				if($(this).attr('checked'))
+					requestURL += $(this).attr('tempName') + "=" + 1 + "&";
+				else
+					requestURL += $(this).attr('tempName') + "=" + 0 + "&";
+			}else{
+				requestURL += $(this).attr('tempName') + "=" + insertValue + "&";
+			}
 		});
 		requestURL=requestURL.substring(0, requestURL.length - 1);
 		//alert(requestURL);
