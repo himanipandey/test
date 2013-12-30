@@ -14,6 +14,19 @@ AdminAuthentication();
 $cityArr = City::CityArr();
 $brokerArr = BrokerCompany::find('all' , array('select' => 'brokers.id,brokers.broker_name'));
 
+$result = array();
+foreach($brokerArr as $key => $val)
+{
+    $broker_name  = '';
+    if(!empty($val->broker_name) && strlen($val->broker_name) > 30)
+        $broker_name = substr($val->broker_name , 0  ,30).'...';
+    else
+        $broker_name = $val->broker_name;
+    array_push($result , array("id" => $val->id , "value" => $broker_name));
+}
+$brokerArr = json_encode($result);
+
+
 $smarty->assign("cityArr", $cityArr);
 $smarty->assign("brokerArr", $brokerArr);
 
@@ -23,30 +36,44 @@ $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 if(!empty($_GET['ruleId']))
 {
     $conditions = " project_assignment_rules.id = ".$_GET['ruleId'];
-    $joins = " INNER JOIN brokers ON project_assignment_rules.broker_id = brokers.id
-                INNER JOIN rule_locality_mappings ON project_assignment_rules.id = rule_locality_mappings.rule_id
-                INNER JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
-                INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
-                INNER JOIN city ON suburb.city_id = city.city_id
+    $joins = " LEFT JOIN brokers ON project_assignment_rules.broker_id = brokers.id
+                LEFT JOIN rule_locality_mappings ON project_assignment_rules.id = rule_locality_mappings.rule_id
+                LEFT JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
+                LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
+                LEFT JOIN city ON suburb.city_id = city.city_id
+                LEFT JOIN city AS cityrel ON rule_locality_mappings.city_id = cityrel.city_id
                 ";
     
-    $options  = array('joins' => $joins , 'select' => 'project_assignment_rules.*,rule_locality_mappings.locality_id , brokers.broker_name , city.city_id ,city.label AS city' , 'conditions' => $conditions );
+    $options  = array('joins' => $joins , 'select' => 'project_assignment_rules.*,rule_locality_mappings.locality_id , brokers.broker_name , city.city_id ,city.label AS city , cityrel.city_id  AS cityrelid' , 'conditions' => $conditions );
     
     $ruleAttr = ProjectAssignmentRules::find('all' , $options);
     
+    //echo ProjectAssignmentRules::connection()->last_query."<br>";
+//    die;
 
                
     $city_id = '';
     $broker_id = '';
+    $broker_name = '';
     $rule_name = '';
     $locIdArr = array();
+    $locflag = 0;
+    $projectflag = 0;
     if(!empty($ruleAttr))
     {
         foreach($ruleAttr as $key => $val)
         {
-            $locIdArr[] = $val->locality_id;
-            if(isset($key) && $key == "city_id")
-                $city_id = $val->city_id;    
+            if(!empty($val->locality_id) && $val->locality_id != '-1')
+                $locIdArr[] = $val->locality_id;
+            else if(!empty($val->locality_id) && $val->locality_id == '-1')
+                $locflag = 1;
+            if(isset($key) && $key == "city_id" && !empty($val->city_id))
+                $city_id = $val->city_id;
+            else if(isset($key) && $key == "cityrelid" && !empty($val->cityrelid))
+                $city_id = $val->cityrelid;    
+            
+            if(isset($key) && $key == "broker_name")
+                $broker_name = $val->broker_name;
                 
             if(isset($key) && $key == "broker_id")
                 $broker_id = $val->broker_id; 
@@ -55,6 +82,10 @@ if(!empty($_GET['ruleId']))
                 $rule_name = $val->rule_name;
         }        
     }  
+    else
+    {
+        header('Location:ruleadd.php');
+    }
     
     
     
@@ -62,25 +93,33 @@ if(!empty($_GET['ruleId']))
     if(!empty($city_id))
     {
         $i = 0;
-        $sql = "SELECT locality.locality_id , locality.label FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = ".$city_id;
+        $sql = @mysql_query("SELECT locality.locality_id , locality.label FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = ".$city_id) or die(mysql_error());
         
-        $locality = RuleAgentMappings::find_by_sql($sql);
+        while($row = @mysql_fetch_assoc($sql))
+        {
+            $locality[$row['locality_id']] = $row['label'];
+        }        
     }
     
     $project = array();
     $projectIdArr = array();
     if(!empty($locIdArr))
     {
-        $sql = "SELECT resi_project.id , resi_project.project_name AS label FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE locality_id IN (".implode("," , $locIdArr).")";
+        $sql = "SELECT resi_project.id , resi_project.project_name AS label FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE resi_project.locality_id IN (".implode("," , $locIdArr).")";
         
         $project = RuleAgentMappings::find_by_sql($sql);
     }
+    //print'<pre>';
+//    print_r($project);
+//    die;
+    $sql = @mysql_query("SELECT * FROM rule_project_mappings WHERE rule_id = '".mysql_escape_string($_GET['ruleId'])."' AND project_id = '-1'");
+    if(@mysql_num_rows($sql) > 0)
+        $projectflag = 1;
     
     $sql = @mysql_query("SELECT resi_project.id , resi_project.project_name FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.id = rule_project_mappings.project_id WHERE rule_project_mappings.rule_id = ".$_GET['ruleId']);
     while($row = @mysql_fetch_assoc($sql))
     {
-        $projectIdArr[] = $row['id'];
-            
+        $projectIdArr[] = $row['id'];   
     }
     
     $i = 0;
@@ -101,7 +140,7 @@ if(!empty($_GET['ruleId']))
     
     
     //print'<pre>';
-//    //print_r($ruleAttr);
+//    print_r($ruleAttr);
 //    print_r($locality);
 //    print_r($locIdArr);
 //    print_R($project);
@@ -109,13 +148,18 @@ if(!empty($_GET['ruleId']))
 //    print_R($agents);
 //    print_R($agentIdArr);
 //    die;
+   // echo $projectflag;die;
     
+    $smarty->assign("broker_name", $broker_name);
     $smarty->assign("rule_name", $rule_name);
     $smarty->assign("city_id", $city_id);
     $smarty->assign("broker_id", $broker_id);
+    $smarty->assign("locflag", $locflag);
     $smarty->assign("locality", $locality);
     $smarty->assign("locIdArr", $locIdArr);
     $smarty->assign("locjIdArr", base64_encode(json_encode($locIdArr)));
+    
+    $smarty->assign("projectflag", $projectflag);
     $smarty->assign("project", $project);
     $smarty->assign("projectIdArr", $projectIdArr);
     $smarty->assign("projectjIdArr", base64_encode(json_encode($projectIdArr)));

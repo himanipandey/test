@@ -1,11 +1,113 @@
-
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<style type="text/css">
+    .ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    z-index:10000;
+    }
+    /* IE 6 doesn't support max-height
+    * we use height instead, but this forces the menu to always be this tall
+    */
+    * html .ui-autocomplete {
+    height: 100px;
+    }
+    .ui-menu-item a {
+        font-size: 10px;
+    }
+    
+    .ui-state-focus a{
+        font-size: 10px;
+    }
+    .divloc_class{
+        border: 1px solid #D3D3D3;
+        height: 100px;
+        overflow: scroll;
+        width: 230px;
+    }
+    
+    .li-data{
+        background-color: #000000;
+        color: #FFFFFF;
+        font-family: Verdana;
+        font-size: 12px;
+        cursor:pointer;
+    }
+    
+    .li-data:hover{
+        background-color: orange;
+        color: #FFFFFF;
+        font-family: Verdana;
+        font-size: 12px;
+        cursor:pointer;
+        font-weight:bold;
+    }
+</style>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
-<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+<script type="text/javascript">
+    
+
+    $(function() {
+        var availableTags = {$brokerArr}; 
+        $( "#broker_cmpny" ).autocomplete({
+                source: availableTags,
+                select: function( event, ui ) {
+                    //event.preventDefault();
+                    //alert(ui.item.value+ ' '+ ui.item.id )
+                    jQuery('#broker_cmpny_id').val(ui.item.id);
+                    var valuesloc = ui.item.id;
+
+                    if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
+                    {
+                        var dataString = 'broker='+valuesloc;
+                        jQuery.ajax({
+                            
+                            type    : 'POST',
+                            url     : 'fetchAgents.php',
+                            data    : dataString,
+                            success : function(data){
+                                //alert(data);
+        //                        return;
+                                if(data == '')
+                                {
+                                    jQuery('#agent').html('');
+                                    return false;
+                                }
+                                jQuery('#agent').html('');
+                                
+                                
+                                var json = JSON.parse(data);
+                                var appendData  = '<option value = "all"> --- All Agents --- </option>';
+                                for(var key in json)
+                                {
+                                    appendData += '<option value="' + key + '">' + json[key] + '</option>';
+                                }
+                                
+                                jQuery('#agent').append(appendData);
+                            },
+                            error   : function(){
+                                alert("Something went wrong");
+                                return false;
+                            }
+                        });
+                    }
+                    else
+                    {
+                        jQuery('#agent').html('<option value = "all"> --- All Agents --- </option>');
+                    }
+                    
+                }
+            });
+        });
+        
+</script>
 
 </TD>
   </TR>
@@ -50,31 +152,10 @@
                       <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["wrongPId"]}</font></td></tr>
                       {/if}
 	           
-				<tr> 
-                    <td width="30%" align="right" valign="top">Company Name :<font color = "red">*</font></td>
-                    <td width="10%" align="left" valign="top">
-                        <select name="broker_cmpny" id="broker_cmpny">
-                            <option value="">--Select Company--</option>
-                            {if $brokerArr != ''}
-                                    {foreach from= $brokerArr key = k item = val}
-                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{if strlen($val->broker_name) > 30} {$val->broker_name|substr:0:30|cat:"..."} {else} {$val->broker_name} {/if}</option>
-                                    {/foreach}
-                            {/if}
-                        </select>
-                        
-                    </td>  
-				</tr>
-                <tr>
-                    <td width="15%" align="right" valign="top" >Rule Name :<font color = "red">*</font></td>
-                    <td width="10%" align="left" valign="top" >
-                        <input type=text name="rule_name" id="rule_name" value="{$rule_name}" style="width:238px;" />	
-                    </td>
-                </tr>
-                
-				<tr>
+               <tr>
 				    <td width="20%" align="right" valign="top">City :<font color = "red">*</font></td>
                     <td width="30%" align="left" >
-				        <select name="city_id" id="city_id" {if $copy == "on"} disabled="" {/if} style="width:250px;">
+				        <select name="city_id" id="city_id" {if $copy == "on"} disabled="" {/if} style="width:236px;">
                            <option value="">Select City</option>
                            {foreach from= $cityArr key = k item = val}
                                <option value="{$k}" {if $k == $city_id} selected {/if}>{$val}</option>
@@ -83,6 +164,28 @@
                       </td>
                       {if $ErrorMsg["city"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["hq"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
+				<tr> 
+                    <td width="30%" align="right" valign="top">Company Name :<font color = "red">*</font></td>
+                    <td width="10%" align="left" valign="top">
+                        <!--<select name="broker_cmpny" id="broker_cmpny">
+                            
+                            {*if $brokerArr != ''}
+                                    {foreach from= $brokerArr key = k item = val}
+                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{if strlen($val->broker_name) > 30} {$val->broker_name|substr:0:30|cat:"..."} {else} {$val->broker_name} {/if}</option>
+                                    {/foreach}
+                            {/if*}
+                        </select>-->
+                        <input type="text" name="broker_cmpny" id="broker_cmpny" value="{if $broker_name != ''} {$broker_name} {/if}" />
+                    </td>  
+				</tr>
+                <tr>
+                    <td width="15%" align="right" valign="top" >Rule Name :<font color = "red">*</font></td>
+                    <td width="10%" align="left" valign="top" >
+                        <input type=text name="rule_name" id="rule_name" value="{$rule_name}" />	
+                    </td>
+                </tr>
+                
+				
                 
                 <tr>
 				    <td width="20%" align="right" >Locality : </td>
@@ -91,20 +194,21 @@
 				</tr>
                 <tr>
                     <td width="30%" align="right" >
-                        <select multiple="" name="locality[]" id="locality" style="20px;">
-                            <option>---Select Locality---</option>
+                        
+                        <select multiple="" name="locality[]" id="locality" style="width:260px;height:140px;">
+                            <option value="all" {if $locflag == 1} selected="" {/if}>---All Locality---</option>
                             {if $locality != ''}
                                 {foreach from = $locality key = k item = val}
-                                    <option value="{$val->locality_id}" {if in_array($val->locality_id , $locIdArr)} selected="" {/if}>
-                                        {if strlen($val->label) > 30} {$val->label|substr:0:30|cat:"..."} {else} {$val->label} {/if}
+                                    <option value="{$k}" {if in_array($k , $locIdArr)} selected="" {/if}>
+                                        {if strlen($val) > 30} {$val|substr:0:30|cat:"..."} {else} {$val} {/if}
                                     </option>
                                 {/foreach} 
                             {/if}
                         </select>
                     </td>
                     <td width="30%" align="center" >
-                        <select multiple="" name="project[]" id="project">
-                            <option>---Select Project---</option>
+                        <select multiple="" name="project[]" id="project" style="width:260px;height:140px;">
+                            <option value="all" {if $projectflag == 1} selected="" {/if}>---All Project---</option>
                             {if $project != ''}
                                 {foreach from = $project key = k item = val}
                                     <option value="{$val->id}" {if in_array($val->id , $projectIdArr)} selected="" {/if}>{if strlen($val->label) > 30} {$val->label|substr:0:30|cat:"..."} {else} {$val->label} {/if}</option>
@@ -113,8 +217,8 @@
                         </select>
                     </td>
                     <td width="30%" align="right" >
-                        <select multiple="" name="agent[]" id="agent">
-                            <option>---Select Agent---</option>
+                        <select multiple="" name="agent[]" id="agent" style="width:260px;height:140px;">
+                            <option value="all">---All Agent---</option>
                             {if $seller_company != ''}
                                 {foreach from = $seller_company key = k item = val}
                                     <option value="{$val->agent_id}" {if in_array($val->agent_id , $agentIdArr)} selected="" {/if}>{if strlen($val->agent_name) > 30} {$val->agent_name|substr:0:30|cat:"..."} {else} {$val->agent_name} {/if}</option>
@@ -141,6 +245,7 @@
                   <input type="hidden" name="dprojectjIdArr" id="dprojectjIdArr" value="" />
                   <input type="hidden" name="dagentjIdArr" id="dagentjIdArr" value="" />
                   
+                  <input type="hidden" name="broker_cmpny_id" id="broker_cmpny_id" value="" />
                   <input type="hidden" name="sort" id="sort" value="{$sort}" />
                   <input type="hidden" name="page" id="page" value="{$page}" />
 				  </td>
@@ -148,64 +253,71 @@
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
-                <tr class = "headingrowcolor" height="25">
-                    <TD class=whiteTxt width=5% align="center">S NO</TD>
-                    <TD class=whiteTxt width=15% align="left">Rule Name</TD>
-                    <TD class=whiteTxt width=25% align="left">Locality(s)</TD>
-                    <TD class=whiteTxt width=25% align="left">Project(s)</TD>
-                    <TD class=whiteTxt width=25% align="left">Agent(s)</TD>
-                    <TD class=whiteTxt width=25% align="left">Date</TD>
-                    <TD class=whiteTxt width=25% align="left">Action</TD>
+                <tr height="25">
+                    <td colspan="3">
+                        <table width="100%">
+                            <tr class = "headingrowcolor">
+                                <TD class=whiteTxt width=5% align="center">S NO</TD>
+                                <TD class=whiteTxt width=15% align="left">Rule Name</TD>
+                                <TD class=whiteTxt width=25% align="left">Locality(s)</TD>
+                                <TD class=whiteTxt width=25% align="left">Project(s)</TD>
+                                <TD class=whiteTxt width=25% align="left">Agent(s)</TD>
+                                <TD class=whiteTxt width=25% align="left">Date</TD>
+                                <TD class=whiteTxt width=25% align="left">Action</TD>
+                            </tr>
+                            {$count = 0}
+                            {foreach from = $ruleDataArr key = k item = value}
+                                  {$count = $count+1}
+                                  {if $count%2 == 0}
+                                          {$color = "bgcolor = '#FCFCFC'"} 
+                                  {else}
+                                          {$color = "bgcolor = '#F7F7F7'"}
+                                  {/if}	
+                            <TR {$color}>
+                              
+            	             
+                            <TD align=center class=td-border>{$count}</TD>
+                            
+                            <TD align=left class=td-border>{if strlen($value['rule_name']) > 30} {$value['rule_name']|substr:0:30|cat:"..."} {else} {$value['rule_name']} {/if}  </TD>
+                            {$rcount = 0}
+                            {section name=waistsizes start=0 loop=$value['count'] step=1}
+                                {if $smarty.section.waistsizes.index != 0}
+                                    {$rcount = $rcount+1}
+                                      {if $rcount%2 == 0}
+                                              {$rcolor = "bgcolor = '#FCFCFC'"} 
+                                      {else}
+                                              {$rcolor = "bgcolor = '#F7F7F7'"}
+                                      {/if}	
+                                    <TR {$rcolor}>
+                                    <TD align=center class=td-border></TD>
+                                    <TD align=left class=td-border></TD>
+                                {/if}
+                                
+                                <TD align=center class=td-border>{$value['locality'][$smarty.section.waistsizes.index]}</TD>
+                                <TD align=left class=td-border>{$value['project'][$smarty.section.waistsizes.index]}</TD>
+                                <TD align=center class=td-border>{$value['agent'][$smarty.section.waistsizes.index]}</TD>
+                                
+                                {if $smarty.section.waistsizes.index == 0}
+                                    <TD align=left class=td-border>{$value['created_at']}</TD>
+                                    <TD align=left class="td-border">
+                    	                 <a href="ruleadd.php?ruleId={$value['id']}&mode=edit&page={$page}&sort={$sort}" title="{$value['rule_name']}">EDIT </a>
+                                      </TD>
+                                {else}
+                                    <TD align=left class=td-border>&nbsp;</TD>
+                                    <TD align=left class="td-border">&nbsp;</TD>
+                                {/if}
+                                
+                                </tr>
+                            {/section}
+                            </TR>
+                            {/foreach}
+                            {if $NumRows<=0}
+                                <TR><TD colspan="9" class="td-border" align="left">Sorry, no records found.</TD></TR>
+                            {/if}
+                        </table>
+                    </td>
                 </tr>
-                {$count = 0}
-                {foreach from = $ruleDataArr key = k item = value}
-                      {$count = $count+1}
-                      {if $count%2 == 0}
-                              {$color = "bgcolor = '#FCFCFC'"} 
-                      {else}
-                              {$color = "bgcolor = '#F7F7F7'"}
-                      {/if}	
-                <TR {$color}>
-                  
-	             
-                <TD align=center class=td-border>{$count}</TD>
                 
-                <TD align=left class=td-border>{if strlen($value['rule_name']) > 30} {$value['rule_name']|substr:0:30|cat:"..."} {else} {$value['rule_name']} {/if}  </TD>
-                {$rcount = 0}
-                {section name=waistsizes start=0 loop=$value['count'] step=1}
-                    {if $smarty.section.waistsizes.index != 0}
-                        {$rcount = $rcount+1}
-                          {if $rcount%2 == 0}
-                                  {$rcolor = "bgcolor = '#FCFCFC'"} 
-                          {else}
-                                  {$rcolor = "bgcolor = '#F7F7F7'"}
-                          {/if}	
-                        <TR {$rcolor}>
-                        <TD align=center class=td-border></TD>
-                        <TD align=left class=td-border></TD>
-                    {/if}
-                    
-                    <TD align=center class=td-border>{$value['locality'][$smarty.section.waistsizes.index]}</TD>
-                    <TD align=left class=td-border>{$value['project'][$smarty.section.waistsizes.index]}</TD>
-                    <TD align=center class=td-border>{$value['agent'][$smarty.section.waistsizes.index]}</TD>
-                    
-                    {if $smarty.section.waistsizes.index == 0}
-                        <TD align=left class=td-border>{$value['created_at']}</TD>
-                        <TD align=left class="td-border">
-        	                 <a href="ruleadd.php?ruleId={$value['id']}&mode=edit&page={$page}&sort={$sort}" title="{$value['rule_name']}">EDIT </a>
-                          </TD>
-                    {else}
-                        <TD align=left class=td-border>&nbsp;</TD>
-                        <TD align=left class="td-border">&nbsp;</TD>
-                    {/if}
-                    
-                    </tr>
-                {/section}
-                </TR>
-                {/foreach}
-                {if $NumRows<=0}
-                    <TR><TD colspan="9" class="td-border" align="left">Sorry, no records found.</TD></TR>
-                {/if}
 			      </div>
 			    </form>
 			    </TABLE>
@@ -248,7 +360,13 @@
         
         jQuery('#btnSave').click(function(){
             
-            if(!jQuery('#broker_cmpny').val())
+            if(!jQuery('#city_id').val())
+            {
+                jQuery('#city_id').focus();
+                alert("Please select City");
+                return false;
+            }
+            else if(!jQuery('#broker_cmpny').val())
             {
                 jQuery('#broker_cmpny').focus();
                 alert("Please select Company");
@@ -260,69 +378,21 @@
                 alert("Please enter Rule");
                 return false;
             }
-            else if(!jQuery('#city_id').val())
+            else if(!jQuery('#locality').val())
             {
-                jQuery('#city_id').focus();
-                alert("Please select City");
+                jQuery('#locality').focus();
+                alert("Please select Locality");
                 return false;
             }
+            
             
             return true;
                 
         }); 
-        
-        jQuery('#broker_cmpny').change(function(){
-            var valuesloc = jQuery(this).val();
-
-            if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
-            {
-                var dataString = 'broker='+valuesloc;
-                jQuery.ajax({
-                    
-                    type    : 'POST',
-                    url     : 'fetchAgents.php',
-                    data    : dataString,
-                    success : function(data){
-                        //alert(data);
-//                        return;
-                        if(data == '')
-                        {
-                            jQuery('#agent').html('');
-                            return false;
-                        }
-                        jQuery('#agent').html('');
-                        
-                       // if(jQuery('#agentjIdArr').val()!= '' && jQuery('#agentjIdArr').val() != null)
-//                        {
-//                            jQuery('#dagentjIdArr').val(jQuery('#agentjIdArr').val());
-//                            jQuery('#agentjIdArr').val('');    
-//                        }
-                        
-                        var json = JSON.parse(data);
-                        var appendData  = '<option value = ""> --- Select Agents --- </option>';
-                        for(var key in json)
-                        {
-                            appendData += '<option value="' + key + '">' + json[key] + '</option>';
-                        }
-                        
-//                        alert(appendData);
-                        jQuery('#agent').append(appendData);
-                    },
-                    error   : function(){
-                        alert("Something went wrong");
-                        return false;
-                    }
-                });
-            }
-            else
-            {
-                jQuery('#agent').html('<option value = ""> --- Select Agents --- </option>');
-            }
-        });
-        
+                
         jQuery('#city_id').change(function(){
             var valuesloc = jQuery(this).val();
-
+            jQuery('#frm1').submit();
             if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
             {
                 var dataString = 'city='+valuesloc;
@@ -336,7 +406,7 @@
 //                        return;
                         if(data == '')
                         {
-                            jQuery('#locality').html('<option value = ""> --- Select Locality --- </option>');
+                            jQuery('#locality').html('<option value = "all"> --- All Locality --- </option>');
                             return false;
                         }
                         jQuery('#locality').html('');
@@ -354,9 +424,9 @@
 //                        }
                         
                         
-                        jQuery('#project').html('<option value = ""> --- Select Project --- </option>');
+                        jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
                         var json = JSON.parse(data);
-                        var appendData  = '<option value = ""> --- Select Locality --- </option>';
+                        var appendData  = '<option value = "all"> --- All Locality --- </option>';
                         for(var key in json)
                         {
                             appendData += '<option value="' + key + '">' + json[key] + '</option>';
@@ -370,11 +440,12 @@
                         return false;
                     }
                 });
+                
             }
             else
             {
-                jQuery('#locality').html('<option value = ""> --- Select Locality --- </option>');
-                jQuery('#project').html('<option value = ""> --- Select Project --- </option>');
+                jQuery('#locality').html('<option value = "all"> --- All Locality --- </option>');
+                jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
             }
         });
         
@@ -412,7 +483,7 @@
 //                        }
                         
                         var json = JSON.parse(data);
-                        var appendData  = '<option value = ""> --- Select Project --- </option>';
+                        var appendData  = '<option value = "all"> --- All Project --- </option>';
                         for(var key in json)
                         {
                             appendData += '<option value="' + key + '">' + json[key] + '</option>';
@@ -429,7 +500,7 @@
             }
             else
             {
-                jQuery('#project').html('<option value = ""> --- Select Project --- </option>');
+                jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
             }
         });
         

@@ -1367,9 +1367,9 @@
         });
         
 </script>
-    <div id="applocations">
+    <div id="applocations" style="width:600px;height:auto;">
         <form method="post" name="frm2" id="frm2">
-            <table id="addlocations" style="width:600px;height:auto;padding-bottom:60pxa;">
+            <table id="addlocations" style="padding-bottom:60px;">
                 <tr>
                     <td>
                         Add Localities :
