@@ -202,7 +202,7 @@ if (isset($_POST['btnSave'])) {
                     if($value['supply'] < $value['launched'])
 						$error_msg = "Supply Unit must be greater than Launched Unit.";
                     if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'apartment', $beds, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']))
-						$error_msg = "Launched Unit must be greater than Availability.";
+			$error_msg = "Launched Unit must be greater than Availability.";
                 }
             }
             
@@ -210,7 +210,7 @@ if (isset($_POST['btnSave'])) {
 			 if($_POST['supply'] < $_POST['launched'])
 						$error_msg = "Supply Unit must be greater than Launched Unit.";
             if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
-						$error_msg = "Launched Unit must be greater than Availability.";
+                    $error_msg = "Launched Unit must be greater than Availability.";
 		 }
 		 				
          if( $error_msg == '' ){
