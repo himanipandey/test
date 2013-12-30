@@ -91,7 +91,7 @@ $smarty->assign("PhaseOptionHash",$PhaseOptionHash);
 
 //code for completion date validation for phase label
 $qryAllPhase = "select * from resi_project_phase 
-    where project_id = $projectId and status = 'Active'";
+    where project_id = $projectId and status = 'Active' and version = 'Cms'";
 $resAllPhase = mysql_query($qryAllPhase);
 $allCompletionDateChk = 0;
 while($data = mysql_fetch_assoc($resAllPhase)) {
