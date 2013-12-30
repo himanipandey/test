@@ -195,7 +195,7 @@
                 <tr>
                     <td width="30%" align="right" >
                         
-                        <select multiple="" name="locality[]" id="locality" style="width:260px;height:140px;">
+                        <select multiple="" name="locality[]" id="locality" style="width:260px;min-height:200px;height:auto">
                             <option value="all" {if $locflag == 1} selected="" {/if}>---All Locality---</option>
                             {if $locality != ''}
                                 {foreach from = $locality key = k item = val}
@@ -207,7 +207,7 @@
                         </select>
                     </td>
                     <td width="30%" align="center" >
-                        <select multiple="" name="project[]" id="project" style="width:260px;height:140px;">
+                        <select multiple="" name="project[]" id="project" style="width:260px;;min-height:200px;height:auto">
                             <option value="all" {if $projectflag == 1} selected="" {/if}>---All Project---</option>
                             {if $project != ''}
                                 {foreach from = $project key = k item = val}
@@ -217,7 +217,7 @@
                         </select>
                     </td>
                     <td width="30%" align="right" >
-                        <select multiple="" name="agent[]" id="agent" style="width:260px;height:140px;">
+                        <select multiple="" name="agent[]" id="agent" style="width:260px;;min-height:200px;height:auto">
                             <option value="all">---All Agent---</option>
                             {if $seller_company != ''}
                                 {foreach from = $seller_company key = k item = val}
@@ -392,7 +392,7 @@
                 
         jQuery('#city_id').change(function(){
             var valuesloc = jQuery(this).val();
-            jQuery('#frm1').submit();
+           // jQuery('#frm1').submit();
             if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
             {
                 var dataString = 'city='+valuesloc;
@@ -453,10 +453,13 @@
              var valuesloc = jQuery("#locality option:selected").map(function(){
                                 return this.value;
                             }).get();
-
+              var currCity = jQuery("#city_id option:selected").map(function(){
+                                return this.value;
+                            }).get();
+                            
             if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
             {
-                var dataString = 'locality='+valuesloc;
+                var dataString = 'locality='+valuesloc+'&cityId='+currCity;
                 jQuery.ajax({
                     
                     type    : 'POST',
