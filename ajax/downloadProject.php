@@ -122,7 +122,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                   INNER JOIN
                     resi_project_phase rpp on RP.PROJECT_ID = rpp.PROJECT_ID ";
 
-    $and = " WHERE ";
+    $and = " WHERE RP.version='Cms' and ";
 
     if($_POST['dwnld_projectId'] == '')
     {
@@ -130,15 +130,15 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         {
             $arrAvalibality = explode(",",$_REQUEST['dwnld_Availability']); 
             $QueryMember .= $and ." (1 = 0 ";
-            if(in_array(0,$arrAvalibality))
+            if(in_array(1,$arrAvalibality))
             {
                     $QueryMember .=  " OR RP.D_AVAILABILITY = 0";
             }
-            if(in_array(1,$arrAvalibality))
+            if(in_array(2,$arrAvalibality))
             {
                     $QueryMember .=  " OR RP.D_AVAILABILITY > 0";
             }
-            if(in_array(2,$arrAvalibality))
+            if(in_array(3,$arrAvalibality))
             {
                     $QueryMember .=  " OR RP.D_AVAILABILITY IS NULL ";
             }
