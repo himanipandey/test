@@ -3,6 +3,19 @@ require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 $errorMsg = array();
 
+$callingFieldFlag = '';
+if($_SESSION['DEPARTMENT'] === 'CALLCENTER')
+    $callingFieldFlag = 'callcenter';
+else
+    $callingFieldFlag = 'survey';
+$smarty->assign("callingFieldFlag",$callingFieldFlag);
+
+$arrSurveyTeamList = array();
+if($callingFieldFlag == 'survey'){//filter executive list for survey
+    $arrSurveyTeamList = surveyexecutiveList();
+}
+$smarty->assign("arrSurveyTeamList", $arrSurveyTeamList);
+
 //building data for the display when user is coming from project-status page
 if(in_array($_POST['submit'], array('fresh assignement', 'field assignement'))){
     $projectIds = $_POST['assign'];

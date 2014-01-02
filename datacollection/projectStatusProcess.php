@@ -6,14 +6,22 @@ if( $dataCollectionFlowAuth == false )
 $smarty->assign("accessDataCollection",$accessDataCollection);
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
-if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER'))){
+if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER' 
+     || $_SESSION['DEPARTMENT'] === 'SURVEY'))){
     header("Location: project_desktop.php");
 }
-
+$callingFieldFlag = '';
+if($_SESSION['DEPARTMENT'] === 'CALLCENTER')
+    $callingFieldFlag = 'callcenter';
+else
+    $callingFieldFlag = 'survey';
+$smarty->assign("callingFieldFlag",$callingFieldFlag);
 if(isset($_POST['cityId']) && !empty($_POST['cityId'])){
     unset($_SESSION['project-status']);
     $_SESSION['project-status']['city'] = $_POST['cityId'];
     $_SESSION['project-status']['suburb'] = $_POST['suburbId'];
+    if(isset($_POST['localityId']) && $_POST['localityId'] != '')
+        $_SESSION['project-status']['locality'] = $_POST['localityId'];
 }
 elseif(isset($_REQUEST['executive']) && !empty($_REQUEST['executive'])){
     unset($_SESSION['project-status']);
@@ -24,9 +32,17 @@ elseif(isset($_POST['projectIds']) && !empty($_POST['projectIds'])){
     $_SESSION['project-status']['projectIds'] = $_REQUEST['projectIds'];
 }
 if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
-    $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $_SESSION['project-status']['suburb']);
+    if(isset($_SESSION['project-status']['locality']) && !empty($_SESSION['project-status']['locality'])){
+        $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $_SESSION['project-status']['suburb'], $_SESSION['project-status']['locality']);
+    }else {
+    $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], 
+            $_SESSION['project-status']['suburb']);
+    }
     $projectList = prepareDisplayData($projectsfromDB);
     $suburbDataArr = Suburb::SuburbArr($_SESSION['project-status']['city']);
+    if(isset($_POST['suburbId']) && $_POST['suburbId'] != '')
+        $localityDataArr = Locality::localityList($_SESSION['project-status']['suburb']);
+    
 }elseif(isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
     $projectsAssignedToExec = getAssignedProjects($_SESSION['project-status']['executive']);
     $projectIds = getProjectIdsFromProjectDetails($projectsAssignedToExec);
@@ -53,22 +69,32 @@ if(isset($_SESSION['project-status']['assignmentError'])){
     }
     unset($_SESSION['project-status']['assignmentError']);
 }
-
-$CityDataArr = City::CityArr();
+if($callingFieldFlag == 'survey')
+    $CityDataArr = arrSurveyTeamLeadCities($_SESSION['adminId']);
+else
+    $CityDataArr = City::CityArr();
 $executiveList = getCallCenterExecutiveWorkLoad();
 
 if(isset($projectList) && $_REQUEST['download'] == 'true'){
     download_xls_file($projectList,$projectLastAuditDate);
 }
 $smarty->assign("CityDataArr", $CityDataArr);
+$arrSurveyTeamList = array();
+if($callingFieldFlag == 'survey'){//filter executive list for survey
+    $arrSurveyTeamList = surveyexecutiveList();
+}
+
+$smarty->assign("arrSurveyTeamList", $arrSurveyTeamList);
 $smarty->assign("executiveList", $executiveList);
 $smarty->assign("projectList", $projectList);
 $smarty->assign("projectPageURL", '/show_project_details.php?projectId=');
 $smarty->assign("selectedCity", $_SESSION['project-status']['city']);
 $smarty->assign("selectedSuburb", $_SESSION['project-status']['suburb']);
+$smarty->assign("selectedLocality", $_SESSION['project-status']['locality']);
 $smarty->assign("selectedExecutive", $_SESSION['project-status']['executive']);
 $smarty->assign("selectedProjectIds", $_SESSION['project-status']['projectIds']);
 $smarty->assign("SuburbDataArr", $suburbDataArr);
+$smarty->assign("LocalityDataArr", $localityDataArr);
 $smarty->assign("message", $msg);
 $smarty->assign("projectLastAuditDate", $projectLastAuditDate);
 
@@ -124,7 +150,10 @@ function prepareDisplayData($data){
         $new['ASSIGNED_AT'] = explode('|', $value['ASSIGNED_AT']);
         $new['STATUS'] = explode('|', $value['STATUS']);
         $new['REMARK'] = explode('|', $value['REMARK']);
+        $new['LAST_DEPARTMENT'] = $assigned_to_dep[count($assigned_to_dep)-1];
         $result[] = $new;
+       // echo "<pre>";
+        //print_r($result);
     }
   
     return $result;
@@ -149,6 +178,8 @@ function extractPIDs($pidString){
 
 function download_xls_file($projectList, $projectLastAuditDate){
     $filename = "/tmp/data_collection_".time().".xls";
+    echo "<pre>";
+    print_r($projectList);die("asdfghj");
     foreach ($projectList as $pkey => $project){
         // For first three assignments
         $projectList[$pkey]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];
@@ -166,4 +197,5 @@ function download_xls_file($projectList, $projectLastAuditDate){
     }
     excel_file_download($projectList, $filename);
 }
+
 ?>

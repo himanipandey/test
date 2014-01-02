@@ -47,7 +47,12 @@
                                                             <td>
                                                                 <select name="executives[]" class="squareDiv200" multiple>
                                                                     {foreach from = $executiveWorkLoad item = executive}
-                                                                        <option value="{$executive["ADMINID"]}" {if $executive['WORKLOAD'] gte 80}disabled{/if}>{$executive['USERNAME']} - {$executive['WORKLOAD']}</option>
+                                                                        {if in_array($executive['ADMINID'], $arrSurveyTeamList) && $callingFieldFlag == 'survey'}
+                                                                            <option value="{$executive["ADMINID"]}" {if $executive['WORKLOAD'] gte 80}disabled{/if}>{$executive['USERNAME']} - {$executive['WORKLOAD']}</option>
+                                                                        {else if $callingFieldFlag == 'callcenter'}
+                                                                             <option value="{$executive["ADMINID"]}" {if $executive['WORKLOAD'] gte 80}disabled{/if}>{$executive['USERNAME']} - {$executive['WORKLOAD']}</option>
+                                                                        {/if}
+                                                                
                                                                     {/foreach}
                                                             </td>
                                                         </TR>

@@ -75,10 +75,17 @@ function selectAllCheckBoxes(inputName, checked){
                                                     </tfoot>
                                                     <tbody>
                                                         {foreach from = $executiveWorkLoad key=key item = item}
-                                                        <tr>
-                                                            <td><a href="/project-status.php?executive={$item['ADMINID']}">{$item['USERNAME']}</td>
-                                                            <td>{$item['WORKLOAD']}</td>
-                                                        </tr>
+                                                            {if in_array($item['ADMINID'], $arrSurveyTeamList) && $callingFieldFlag == 'survey'}
+                                                                <tr>
+                                                                    <td><a href="/project-status.php?executive={$item['ADMINID']}">{$item['USERNAME']}</td>
+                                                                    <td>{$item['WORKLOAD']}</td>
+                                                                </tr>
+                                                            {else if $callingFieldFlag == 'callcenter'}
+                                                                <tr>
+                                                                    <td><a href="/project-status.php?executive={$item['ADMINID']}">{$item['USERNAME']}</td>
+                                                                    <td>{$item['WORKLOAD']}</td>
+                                                                </tr>
+                                                            {/if}
                                                         {/foreach}
                                                     </tbody>
                                                 </table>

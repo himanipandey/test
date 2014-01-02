@@ -31,6 +31,10 @@ function saveStatusUpdateByExecutive($projectID, $status, $remark){
 }
 
 function getCallCenterExecutiveWorkLoad($executives = array()){
+    if($_SESSION['DEPARTMENT'] == 'SURVEY')
+        $department = "'SURVEY'";
+    else
+        $department = "'CALLCENTER', 'DATAENTRY'";
     if(empty($executives)){
         $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
             from 
@@ -45,7 +49,7 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
                or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
                and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
-               where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY')  group by pa.ADMINID order by WORKLOAD;";
+               where pa.DEPARTMENT in ($department)  group by pa.ADMINID order by WORKLOAD;";
     }
     else{
         $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
@@ -59,13 +63,13 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
             (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version = 'Cms' 
             and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
             inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
-            where pa.DEPARTMENT in ('CALLCENTER', 'DATAENTRY') and pa.ADMINID in 
+            where pa.DEPARTMENT in ($department) and pa.ADMINID in 
             (".  implode(',', $executives).") group by pa.ADMINID order by WORKLOAD;";
     }
     return $result = dbQuery($sql);
 }
 
-function getProjectListForManagers($cityId, $suburbId = ''){
+function getProjectListForManagers($cityId, $suburbId = '', $localityId = ''){
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,mbst.name as BOOKING_STATUS,
          psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
          max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE, pphs.name as PROJECT_PHASE, 
@@ -87,14 +91,17 @@ function getProjectListForManagers($cityId, $suburbId = ''){
          inner join master_project_phases pphs on rp.project_phase_id = pphs.id
          left join master_project_stages mpsp on pshp.PROJECT_STAGE_ID = mpsp.id
          left join master_project_phases mppp on pshp.PROJECT_PHASE_ID = mppp.id
-         inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id and rpphs.PHASE_TYPE = 'Logical' and rpphs.version = 'Cms'
+         inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id 
+            and rpphs.PHASE_TYPE = 'Logical' and rpphs.version = 'Cms'
          left join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
          left join project_assignment pa 
          on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
-         = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
+         = uc.UPDATION_CYCLE_ID 
+         where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
-         rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms' ";
+         rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') 
+         and rp.version = 'Cms' ";
     
     global $arrOtherCities;
     
@@ -107,14 +114,22 @@ function getProjectListForManagers($cityId, $suburbId = ''){
 		$sql = $sql." and c.CITY_ID in ($group_city_ids)";
 	}
     elseif((int)$cityId != -1){// city id = -1 denotes all cities
-		$sql = $sql." and c.CITY_ID=$cityId";
+       $sql = $sql." and c.CITY_ID=$cityId";
     }
-    
+    elseif((int)$cityId == -1 && $_SESSION['DEPARTMENT'] == 'SURVEY'){
+    // city id = -1 denotes all cities for survey
+        $arrTeamLeadList = arrSurveyTeamLeadCities($_SESSION['adminId']);
+        $arrCityIdList[] = array_keys($arrTeamLeadList);
+        $expCityList = implode(',',$arrCityIdList[0]);
+        $sql = $sql." and c.CITY_ID in($expCityList)";
+    }
     if($suburbId!=''){
         $sql = $sql . " and sub.SUBURB_ID=$suburbId ";
     }
+    if($localityId!=''){
+        $sql = $sql . " and l.LOCALITY_ID=$localityId ";
+    }
     $sql = $sql . " group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
-     
     return  $res = dbQuery($sql); 
 }
 
@@ -330,5 +345,31 @@ function excel_file_download($data, $filename){
     ob_clean();
     flush();
     readfile($filename);
+}
+
+function arrSurveyTeamLeadCities($teamLeadId){
+    $qry = "select c.city_id,c.label from proptiger_admin_city a join city c 
+        on a.city_id = c.city_id where a.admin_id = $teamLeadId";
+    $res = mysql_query($qry) or die(mysql_error());
+    $arrSurveyTeamLeadCity = array();
+    while ($data = mysql_fetch_assoc($res)){
+        $arrSurveyTeamLeadCity[$data['city_id']] = $data['label'];
+    }
+    return $arrSurveyTeamLeadCity;
+}
+
+function surveyexecutiveList(){
+    $arrAllSurveyLeadCityList = arrSurveyTeamLeadCities($_SESSION['adminId']);
+    $qryFilter = "select distinct pa.ADMINID from proptiger_admin pa join proptiger_admin_city pac
+            on(pa.adminid = pac.admin_id)
+            where pac.city_id in(
+       ".implode(',',  array_keys($arrAllSurveyLeadCityList)).") 
+           and pa.department = 'SURVEY' and adminid != ".$_SESSION['adminId'];
+    $resFilter = mysql_query($qryFilter) or die(mysql_error());
+    $arrSurveyTeamList = array();
+    while ($data = mysql_fetch_assoc($resFilter)){
+        $arrSurveyTeamList[] = $data['ADMINID'];
+    }
+    return $arrSurveyTeamList;
 }
 ?>
