@@ -400,13 +400,22 @@
     }
     else if(!empty($_POST['city_id']))
     {
-        $conditions = " rule_locality_mappings.city_id = '".mysql_escape_string($_POST['city_id'])."'";
-                
-        $options = array('conditions' => $conditions);        
-        $ruleAttr = RuleLocalityMappings::find('all' ,$options);
-//        print'<pre>';
+        //$joins = " LEFT JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
+//                    LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
+//                    LEFT JOIN city ON suburb.city_id = city.city_id
+//                    ";
+//        $conditions = " city.city_id = '".mysql_escape_string($_POST['city_id'])."'";
+//                
+//        $options = array('joins' =>$joins , 'conditions' => $conditions);  
+        
+              
+        $ruleAttr = ProjectAssignmentRules::find('all');
+        //echo ProjectAssignmentRules::connection()->last_query."<br>";
+//        die;
+        print'<pre>';
 //        print_r($ruleAttr);
 //        die;
+        //echo $_POST['city_id']."<br>";
         $data = array();
         
         if(!empty($ruleAttr))
@@ -415,48 +424,98 @@
             foreach($ruleAttr as $key => $val)
             {
                 $locality = array();
-                
-                
+                $localityAttr = array();
+                $resultLocality = '';
+                //echo "<br>=====================<br>";
+//                echo $val->id;
+//                echo "<br>=====================<br>";
                 $projectflag = 0;
-                $sqlQuery = @mysql_query("SELECT * FROM rule_locality_mappings WHERE rule_id = '".$val->id."' AND city_id='".mysql_escape_string($_POST['city_id'])."'");
+                
+                $sqlQuery = @mysql_query("SELECT * FROM rule_locality_mappings 
+                                            WHERE rule_locality_mappings.rule_id = '".$val->id."'");
                 
                 if(@mysql_num_rows($sqlQuery))
                 {
-                    $conditions = " rule_locality_mappings.rule_id = ".$val->id." and rule_locality_mappings.city_id = '".mysql_escape_string($_POST['city_id'])."'";
-                
-                    $options = array('select' => " locality_id" , 'conditions' => $conditions);
-                    $localityAttr = RuleLocalityMappings::find('all',$options);
-                }
-                else
-                {
-                    $conditions = " rule_locality_mappings.rule_id = ".$val->id." and rule_locality_mappings.city_id = '".mysql_escape_string($_POST['city_id'])."'";
-                
-                    $joins = " LEFT JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
-                                LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
-                                LEFT JOIN city ON suburb.city_id = city.city_id";
-                                
-                    $options = array('joins' => $joins , 'select' => " locality.label AS locality" , 'conditions' => $conditions);
-                    $localityAttr = RuleLocalityMappings::find('all',$options);
-                    $NumRows = count($localityAttr);
-                    
-                    if(!empty($RowsPerPage) && !empty($Offset))
+                    $resultLocality = @mysql_fetch_assoc($sqlQuery);
+                    //print'<pre>';
+//                    print_r($resultLocality);
+//                    continue;
+                    if($resultLocality['locality_id'] == '-1' && $resultLocality['city_id'] == $_POST['city_id'])
                     {
-                        $options = array('joins' => $joins , 'select' => " locality.label AS locality" , 'limit' => $RowsPerPage , 'offset' => $Offset, 'conditions' => $conditions);
+                        $conditions = " rule_locality_mappings.rule_id = '".$val->id."'";
+                        $options = array('select' => " locality_id" , 'conditions' => $conditions);
                         $localityAttr = RuleLocalityMappings::find('all',$options);
+                        //print_r($localityAttr);
                     }
                     else
                     {
-                        $options = array('joins' => $joins , 'select' => " locality.label AS locality" , 'limit' => $RowsPerPage ,'conditions' => $conditions);
+                        $conditions = " rule_locality_mappings.rule_id = ".$val->id." and city.city_id = '".mysql_escape_string($_POST['city_id'])."'";
+                
+                        $joins = " INNER JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
+                                    INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
+                                    INNER JOIN city ON suburb.city_id = city.city_id";
+                                    
+                        $options = array('joins' => $joins , 'select' => "locality.label AS locality" , 'conditions' => $conditions);
                         $localityAttr = RuleLocalityMappings::find('all',$options);
+                        $NumRows = count($localityAttr);
+                        
+                        if(!empty($RowsPerPage) && !empty($Offset))
+                        {
+                            $options = array('joins' => $joins , 'select' => " locality.locality_id,locality.label AS locality" , 'limit' => $RowsPerPage , 'offset' => $Offset, 'conditions' => $conditions);
+                            $localityAttr = RuleLocalityMappings::find('all',$options);
+                        }
+                        else
+                        {
+                            $options = array('joins' => $joins , 'select' => " locality.locality_id,locality.label AS locality" , 'limit' => $RowsPerPage ,'conditions' => $conditions);
+                            $localityAttr = RuleLocalityMappings::find('all',$options);
+                        }
                     }
                 }
                 
+                //$sqlQuery = @mysql_query("SELECT * FROM rule_locality_mappings 
+//                                            INNER JOIN project_assignment_rules ON rule_locality_mappings.rule_id = project_assignment_rules.id
+//                                            INNER JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
+//                                            INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
+//                                            INNER JOIN city ON suburb.city_id = city.city_id
+//                                            WHERE project_assignment_rules.id = '".$val->id."' AND city.city_id = '".mysql_escape_string($_POST['city_id'])."'");
+//                
+//                if(@mysql_num_rows($sqlQuery))
+//                {
+//                    $conditions = " rule_locality_mappings.rule_id = '".$val->id."'";
+//                
+//                    $options = array('select' => " locality_id" , 'conditions' => $conditions);
+//                    $localityAttr = RuleLocalityMappings::find('all',$options);
+//                }
+//                else
+//                {
+//                    $conditions = " rule_locality_mappings.rule_id = ".$val->id." and rule_locality_mappings.city_id = '".mysql_escape_string($_POST['city_id'])."'";
+//                
+//                    $joins = " LEFT JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
+//                                LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
+//                                LEFT JOIN city ON suburb.city_id = city.city_id";
+//                                
+//                    $options = array('joins' => $joins , 'select' => " locality.label AS locality" , 'conditions' => $conditions);
+//                    $localityAttr = RuleLocalityMappings::find('all',$options);
+//                    $NumRows = count($localityAttr);
+//                    
+//                    if(!empty($RowsPerPage) && !empty($Offset))
+//                    {
+//                        $options = array('joins' => $joins , 'select' => " locality.label AS locality" , 'limit' => $RowsPerPage , 'offset' => $Offset, 'conditions' => $conditions);
+//                        $localityAttr = RuleLocalityMappings::find('all',$options);
+//                    }
+//                    else
+//                    {
+//                        $options = array('joins' => $joins , 'select' => " locality.label AS locality" , 'limit' => $RowsPerPage ,'conditions' => $conditions);
+//                        $localityAttr = RuleLocalityMappings::find('all',$options);
+//                    }
+//                }
                 
                 
-                print'<pre>';
-                echo RuleLocalityMappings::connection()->last_query."<br>";
-                print_r($localityAttr);
-                continue;
+                
+                //print'<pre>';
+//                echo RuleLocalityMappings::connection()->last_query."<br>";
+//                print_r($localityAttr);
+//                continue;
                 
                 
                 if(!empty($localityAttr))
@@ -472,7 +531,9 @@
                             $locality[] = $v->locality;
                     }
                 }
-                
+                //print'<pre>';
+//                print_r($locality);
+//                continue;
 
                 $project = array();
                 
@@ -563,10 +624,13 @@
                 }
                 //print_r($localityAttr);
 //                continue;
-                print_r($data);
-                continue;
+                //print'<pre>';
+//                print_r($data);
+//                continue;
             }
         }
+        print'<pre>';
+        print_r($data);
         die;
         $locarr = array();
         
