@@ -4,7 +4,9 @@
  * @author AKhan
  * @copyright 2013
  */
- 
+ //print'<pre>';
+// print_r($_REQUEST);
+// die;
     $sort = 'all';
     $page = '1';
     if(isset($_GET['sort']) && !empty($_GET['sort']))
@@ -35,10 +37,40 @@
     }
      $brokerDataArr = array();
     
-    $conditions = array('conditions' => '');
-    if(!empty($_REQUEST['broker'])){
-        $conditions = array(" brokers.name LIKE '%".$_REQUEST['broker']."%'");
+    $conditions = '';
+    if(!empty($_REQUEST['broker']) && empty($_REQUEST['pan']) && empty($_REQUEST['active_since'])){
+        $conditions = " brokers.broker_name LIKE '%".$_REQUEST['broker']."%'";
+        
     }
+    else if(empty($_REQUEST['broker']) && !empty($_REQUEST['pan']) && empty($_REQUEST['active_since'])){
+        $conditions = array(" brokers.pan LIKE '%".$_REQUEST['pan']."%'");
+    }
+    else if(empty($_REQUEST['broker']) && empty($_REQUEST['pan']) && !empty($_REQUEST['active_since'])){
+        
+        $date = explode("/" , $_REQUEST['active_since']);
+        $date = $date[2]."-".$date[1]."-".$date[0];
+        
+        $conditions = array(" brokers.active_since LIKE '%".$date."%'");
+    }
+    else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['pan']) && empty($_REQUEST['active_since'])){
+        $conditions = array(" brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND brokers.pan LIKE '%".$_REQUEST['pan']."%'");
+    }
+    else if(!empty($_REQUEST['broker']) && empty($_REQUEST['pan']) && !empty($_REQUEST['active_since'])){
+        $date = explode("/" , $_REQUEST['active_since']);
+        $date = $date[2]."-".$date[1]."-".$date[0];
+        $conditions = array(" brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND brokers.active_since LIKE '%".$date."%'");
+    }
+    else if(empty($_REQUEST['broker']) && !empty($_REQUEST['pan']) && !empty($_REQUEST['active_since'])){
+        $date = explode("/" , $_REQUEST['active_since']);
+        $date = $date[2]."-".$date[1]."-".$date[0];
+        $conditions = array(" brokers.pan LIKE '%".$_REQUEST['pan']."%' AND brokers.active_since LIKE '%".$date."%'");
+    }
+    else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['pan']) && !empty($_REQUEST['active_since'])){
+        $date = explode("/" , $_REQUEST['active_since']);
+        $date = $date[2]."-".$date[1]."-".$date[0];
+        $conditions = array(" brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND brokers.pan LIKE '%".$_REQUEST['pan']."%' AND brokers.active_since LIKE '%".$date."%'");
+    }
+    
     
     $brokerCompany = '';
     
@@ -48,46 +80,28 @@
     
     if(!empty($RowsPerPage) && !empty($Offset))
     {
-        if(!empty($_REQUEST['broker']))
-            $options = array('joins' => $join , 'select' => 
+        $options = array('joins' => $join , 'select' => 
         'brokers.*' , 'conditions' => $conditions);
-        else
-            $options = array('joins' => $join , 'select' => 
-        'brokers.*');
-                
+            
         $brokerCompany = BrokerCompany::find('all' , $options);
         $NumRows = count($brokerCompany);
             
-        if(!empty($_REQUEST['broker']))
-        {
-            $options = array('joins' => $join , 'select' => 
-        'brokers.*' , 'limit' => $RowsPerPage , 'offset' => $Offset , 'conditions' => $conditions);   
-        }   
-        else
-        {
-            $options = array('joins' => $join ,'select' => 
-        'brokers.*' , 'limit' => $RowsPerPage , 'offset' => $Offset);
-        }
+        $options = array('joins' => $join , 'select' => 
+        'brokers.*' , 'limit' => $RowsPerPage , 'offset' => $Offset , 'conditions' => $conditions);
+        
         $brokerCompany = BrokerCompany::find('all' , $options);
     }
     else
     {
-        if(!empty($_REQUEST['broker']))
-            $options = array('joins' => $join , 'select' => 
+        $options = array('joins' => $join , 'select' => 
         'brokers.*' , 'conditions' => $conditions);
-        else
-            $options = array('joins' => $join , 'select' => 
-        'brokers.*');
         
         $brokerCompany = BrokerCompany::find('all' , $options);
         $NumRows = count($brokerCompany);
         
-        if(!empty($_REQUEST['broker']))
-            $options = array('joins' => $join , 'select' => 
+        $options = array('joins' => $join , 'select' => 
         'brokers.*' , 'limit' => $RowsPerPage , 'conditions' => $conditions);
-        else
-            $options = array('joins' => $join ,'select' => 
-        'brokers.*' , 'limit' => $RowsPerPage);
+        
         $brokerCompany = BrokerCompany::find('all' , $options);
         
         //echo BrokerCompany::connection()->last_query;
@@ -277,9 +291,12 @@
     $smarty->assign("Pagginnation", $Pagginnation);
     $smarty->assign("Sorting", $Sorting);
     $smarty->assign("NumRows",$NumRows);
-    $smarty->assign("broker",$_REQUEST['broker']);
+    
     $smarty->assign("brokerDataArr", $brokerDataArr);
     $smarty->assign("accessBroker", $accessBroker);
+    $smarty->assign("broker", !empty($_REQUEST['broker'])?$_REQUEST['broker']:'');
+    $smarty->assign("pan", !empty($_REQUEST['pan'])?$_REQUEST['pan']:'');
+    $smarty->assign("active_since", !empty($_REQUEST['active_since'])?$_REQUEST['active_since']:'');
     
     
 ?>

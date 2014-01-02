@@ -1,6 +1,8 @@
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
-
+<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script>
 <style type="text/css">
 .button {
     border: 1px solid #C2C2C2;
@@ -46,7 +48,86 @@
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
                 
-                  
+                    <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td>
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td width="77%" height="25" align="center" style="padding-top:30px;padding-bottom:10px;">
+                                <form name="frm_build" id="frm_build" method="post" action ="SellerCompanyList.php?page=1&sort=all">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <label class="fwb">Company Name : </label>
+                                            </td>
+                                            <td>
+                                                <input name="broker" id="broker" value="{$broker}" class="button" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="fwb">Agent Name : </label>
+                                            </td>
+                                            <td>
+                                                <input name="agent" id="agent" value="{$agent}" class="button" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="fwb">Agent Rating : </label>
+                                            </td>
+                                            <td>
+                                                <select name="agent_rating" id="agent_rating">
+                                                    <option value="">-- Select Rating --</option>
+                                                    <option value="0.5" {if $agent_rating != '' && $agent_rating == "0.5"} selected=""  {/if}>0.5</option>
+                                                    <option value="1" {if $agent_rating != '' && ($agent_rating == "1.0" || $agent_rating == "1")} selected=""  {/if}>1.0</option>
+                                                    <option value="1.5" {if $agent_rating != '' && $agent_rating == "1.5"} selected=""  {/if}>1.5</option>
+                                                    <option value="2" {if $agent_rating != '' && $agent_rating == "2.0"} selected=""  {/if}>2.0</option>
+                                                    <option value="2.5" {if $agent_rating != '' && $agent_rating == "2.5"} selected=""  {/if}>2.5</option>
+                                                    <option value="3" {if $agent_rating != '' && $agent_rating == "3.0"} selected=""  {/if}>3.0</option>
+                                                    <option value="3.5" {if $agent_rating != '' && $agent_rating == "3.5"} selected=""  {/if}>3.5</option>
+                                                    <option value="4" {if $agent_rating != '' && $agent_rating == "4.0"} selected=""  {/if}>4.0</option>
+                                                    <option value="4.5" {if $agent_rating != '' && $agent_rating == "4.5"} selected=""  {/if}>4.5</option>
+                                                    <option value="5" {if $agent_rating != '' && $agent_rating == "5.0"} selected=""  {/if}>5.0</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="fwb">Agent Qualification : </label>
+                                            </td>
+                                            <td>
+                                                <select name="agent_quali" id="agent_quali">
+                                                    <option value="">--Select Qualification--</option>
+                                                    {foreach from= $qualification key = k item = val}
+                                                       <option value="{$val['id']}" {if $val['id'] == $agent_quali} selected="true" {/if}>{$val['qualification']}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="fwb">Active Since : </label>
+                                            </td>
+                                            <td>
+                                                <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="button" />
+                                                <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td>
+                                                <input type="submit" name="search" id="search" value="Search" class="button" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
                     <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
                     <form name="form1" method="post" action="">
                       <TBODY>
@@ -78,7 +159,7 @@
                         <TD align=left class=td-border>{$value['seller_cmpny']}  </TD>
                         <TD align=left class=td-border>{if strlen($value['seller_name']) > 30} {$value['seller_name']|substr:0:30|cat:"..."} {else} {$value['seller_name']} {/if}</TD>
                         <TD align=left class=td-border>{$value['seller_type']}</TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <img class="showcontent" id="{$count}" src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_{$count}"><img src="{$value['imageurl']}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
+                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a href="#div_{$count}" class="showcontent" id="{$count}" ><img src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_{$count}"><img src="{$value['imageurl']}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['rating']}</TD>
                         <TD align=left class=td-border>{$value['qualification']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -131,12 +212,24 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery('.showcontent').click(function(){
-            var id = jQuery(this).attr('id');
-            $.fancybox({
-                type: 'inline',
-                content: '#div_' + id
-            });                                
+        $('.showcontent').fancybox({
+            'zoomSpeedIn': 300,
+            'zoomSpeedOut': 300,
+            'overlayShow': false
         });
     });
+    Calendar.setup({
+            inputField     :    "active_since",     // id of the input field
+            ifFormat       :    "%d/%m/%Y",      // format of the input field
+            button         :    "f_trigger_c_to",  // trigger for the calendar (button ID)
+            align          :    "Tl",           // alignment (defaults to "Bl")
+            dateStatusFunc : dateRange,
+            singleClick    :    true,
+            showsTime		:	false
+
+         });
+    function dateRange(date) {
+        var now = new Date();
+        return (date.getTime() > now.getTime() )
+    }
 </script>

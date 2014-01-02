@@ -1,5 +1,10 @@
-<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="fancy2.1/source/jquery.fancybox.css" media="screen" />
+<!--<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />-->
+<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="fancy2.1/source/jquery.fancybox.pack.js"></script>
 
 <style type="text/css">
 .button {
@@ -52,11 +57,41 @@
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="77%" height="25" align="center" style="padding-top:30px;padding-bottom:10px;">
-                                <!--<form name="frm_build" id="frm_build" method="post" action ="BrokerCompanyList.php?page=1&sort=all">
-                                    <label class="fwb">Enter Broker Company Name : </label>
-                                    <input name="broker" id="broker" value="{$broker}" class="button" /> &nbsp;&nbsp;&nbsp;
-                                    <input type="submit" name="search" id="search" value="Search" class="button" />
-                                </form>-->
+                                <form name="frm_build" id="frm_build" method="post" action ="BrokerCompanyList.php?page=1&sort=all">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <label class="fwb">Broker Company : </label>
+                                            </td>
+                                            <td>
+                                                <input name="broker" id="broker" value="{$broker}" class="button" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="fwb">PAN : </label>
+                                            </td>
+                                            <td>
+                                                <input name="pan" id="pan" value="{$pan}" maxlength="10" style="width:80px;" class="button" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="fwb">Active Since : </label>
+                                            </td>
+                                            <td>
+                                                <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="button" />
+                                                <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td>
+                                                <input type="submit" name="search" id="search" value="Search" class="button" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
                             </td>
                           </tr>
                         </table>
@@ -90,7 +125,7 @@
 			             
                         <TD align=center class=td-border>{$count}</TD>
                         <TD align=left class=td-border>{$value['name']}  </TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <img class="showcontent" id="{$count}" src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_{$count}"><img src="{$value['imageurl']}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
+                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a href="#div_{$count}" class="showcontent" id="{$count}"><img src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_{$count}"><img src="{$value['imageurl']}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['pan']}</TD>
                         <TD align=left class=td-border>{$value['description']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -142,13 +177,32 @@
 </TR>
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery('.showcontent').click(function(){
-            var id = jQuery(this).attr('id');
-            $.fancybox({
-                type: 'inline',
-                content: '#div_' + id
-            });                                
+        
+        $('.showcontent').fancybox({
+            'zoomSpeedIn': 300,
+            'zoomSpeedOut': 300,
+            'overlayShow': false
+        });
+        jQuery('#pan').blur(function(){
+            if(jQuery(this).val() == '')
+                return false;
+            
+            jQuery(this).val((jQuery(this).val()).toUpperCase());
         });
     });
+    Calendar.setup({
+            inputField     :    "active_since",     // id of the input field
+            ifFormat       :    "%d/%m/%Y",      // format of the input field
+            button         :    "f_trigger_c_to",  // trigger for the calendar (button ID)
+            align          :    "Tl",           // alignment (defaults to "Bl")
+            dateStatusFunc : dateRange,
+            singleClick    :    true,
+            showsTime		:	false
+
+         });
+    function dateRange(date) {
+        var now = new Date();
+        return (date.getTime() > now.getTime() )
+    }
 </script>
 
