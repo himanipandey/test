@@ -353,6 +353,9 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
+		
+		//filling localities according to selected city
+		cityLocalities();
         
         jQuery('#btnExit').click(function(){
            window.location.href = 'ruleadd.php'; 
@@ -392,61 +395,8 @@
                 
         jQuery('#city_id').change(function(){
             var valuesloc = jQuery(this).val();
-           // jQuery('#frm1').submit();
-            if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
-            {
-                var dataString = 'city='+valuesloc;
-                jQuery.ajax({
-                    
-                    type    : 'POST',
-                    url     : 'fetchLocalityCity.php',
-                    data    : dataString,
-                    success : function(data){
-                        //alert(data);
-//                        return;
-                        if(data == '')
-                        {
-                            jQuery('#locality').html('<option value = "all"> --- All Locality --- </option>');
-                            return false;
-                        }
-                        jQuery('#locality').html('');
-                       // if(jQuery('#locjIdArr').val() != '' && jQuery('#locjIdArr').val() != null)
-//                        {
-//                            jQuery('#dlocjIdArr').val(jQuery('#locjIdArr').val());
-//                            jQuery('#locjIdArr').val('');
-//                        }
-//                        
-//                        
-//                        if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
-//                        {
-//                            jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
-//                            jQuery('#projectjIdArr').val('');
-//                        }
-                        
-                        
-                        jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
-                        var json = JSON.parse(data);
-                        var appendData  = '<option value = "all"> --- All Locality --- </option>';
-                        for(var key in json)
-                        {
-                            appendData += '<option value="' + key + '">' + json[key] + '</option>';
-                        }
-                        
-//                        alert(appendData);
-                        jQuery('#locality').append(appendData);
-                    },
-                    error   : function(){
-                        alert("Something went wrong");
-                        return false;
-                    }
-                });
-                
-            }
-            else
-            {
-                jQuery('#locality').html('<option value = "all"> --- All Locality --- </option>');
-                jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
-            }
+            window.location.href = 'ruleadd.php?city_id='+valuesloc +'&page=1&sort=all'; 
+          
         });
         
         jQuery('#locality').change(function(){
@@ -530,6 +480,67 @@
 //        });
                
     });
+    
+    function cityLocalities(){
+	
+			valuesloc  = "{$city_id}";
+			
+            if(valuesloc != '')
+            {
+                var dataString = 'city='+valuesloc;
+                jQuery.ajax({
+                    
+                    type    : 'POST',
+                    url     : 'fetchLocalityCity.php',
+                    data    : dataString,
+                    success : function(data){
+                        //alert(data);
+//                        return;
+                        if(data == '')
+                        {
+                            jQuery('#locality').html('<option value = "all"> --- All Locality --- </option>');
+                            return false;
+                        }
+                        jQuery('#locality').html('');
+                       // if(jQuery('#locjIdArr').val() != '' && jQuery('#locjIdArr').val() != null)
+//                        {
+//                            jQuery('#dlocjIdArr').val(jQuery('#locjIdArr').val());
+//                            jQuery('#locjIdArr').val('');
+//                        }
+//                        
+//                        
+//                        if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
+//                        {
+//                            jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
+//                            jQuery('#projectjIdArr').val('');
+//                        }
+                        
+                        
+                        jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
+                        var json = JSON.parse(data);
+                        var appendData  = '<option value = "all"> --- All Locality --- </option>';
+                        for(var key in json)
+                        {
+                            appendData += '<option value="' + key + '">' + json[key] + '</option>';
+                        }
+                        
+//                        alert(appendData);
+                        jQuery('#locality').append(appendData);
+                    },
+                    error   : function(){
+                        alert("Something went wrong");
+                        return false;
+                    }
+                });
+                
+            }
+            else
+            {
+                jQuery('#locality').html('<option value = "all"> --- All Locality --- </option>');
+                jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
+            }
+	
+	}
     
     
  </script>
