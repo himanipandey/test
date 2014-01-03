@@ -15,6 +15,7 @@ function refreshimg(ct)
 $(document).ready(function(){
 	
 	 $('.taggedDate').hide();
+	 
 	if($('select#PType').val() == 'Construction Status'){
 			$('.taggedDate').each(function(){
 			  $(this).show();
@@ -29,6 +30,9 @@ $(document).ready(function(){
 	}
 	
 	 $('select#PType').change(function(k, v){
+			$('.taggedDate').each(function(){
+					 $(this).children().remove();$(this).html("");
+			 });
 			 if($(this).val() == 'Construction Status'){
 				 $('.taggedDate').each(function(){
 					 $(this).show();
@@ -42,11 +46,18 @@ $(document).ready(function(){
 				 });
 					
 			 }
-			 else{
+				         
+	         if($('select#PType').val() == 'Project Image'){
 				$('.taggedDate').each(function(){
-					 $(this).hide();
-				 });
-	         }
+				  $(this).show();
+				  if($(this).children('#tower_dropdown').length == 0){
+					$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
+					$(this).append($('#select_display_order').html());
+				  }
+						
+				});
+			 }
+	         
 		});
 });
 </script>
@@ -180,13 +191,12 @@ $(document).ready(function(){
 				<tr>
 				  <td width="20%" align="right" valign = "top" nowrap><b>Plan :</b> </td>
 				  <td width="30%" align="left" nowrap>
-				  
-				  <div id="select_date" style="display:none"> <!-- this is for adding dynamically date dropdown-->
-					{$dateDiv}
-				  </div>
-				  <div id="select_tower" style="display:none"> <!-- this is for adding dynamically tower dropdown-->
-					{$towerDetailDiv}
-				  </div>
+				  <!-- this is for adding dynamically date dropdown-->
+				  <div id="select_date" style="display:none">{$dateDiv}</div>
+				   <!-- this is for adding dynamically tower dropdown-->
+				  <div id="select_tower" style="display:none">{$towerDetailDiv}</div>
+				   <!-- this is for adding dynamically display dropdown-->
+				  <div id="select_display_order" style="display:none">{$display_order_div}</div>
 				  
 				 <!-- <input type=file name='txtlocationplan'  style="width:400px;">-->
 				 <div id="img1"><input name="txtlocationplan[]" type="file" id='txtlocationplan1' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">

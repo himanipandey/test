@@ -49,6 +49,17 @@
 	}    
     $date_div .= "</select>";
     $smarty->assign("dateDiv", $date_div);
+    
+    //display order
+    $display_order_div = "<select name='txtdisplay_order[]' id='display_order_dropdown'>";
+    for($cmt=1;$cmt<=5;$cmt++){
+		if($cmt == 5)
+			$display_order_div .="<option value='$cmt' selected >$cmt</option>";
+		else
+			$display_order_div .="<option value='$cmt'>$cmt</option>";
+	}
+    $display_order_div .= "</select>";
+    $smarty->assign("display_order_div", $display_order_div);
             
 	$builderDetail = fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
 	if(isset($_REQUEST['edit']))
@@ -78,6 +89,7 @@ if (isset($_POST['Next']))
 	$arrTitle = array();
 	$arrTaggedDate = array();
 	$arrTowerId = array();
+	$arrDisplayOrder = array();
 	  	foreach($_FILES['txtlocationplan']['name'] as $k=>$v)
 		{
 			if($v != '')
@@ -101,7 +113,8 @@ if (isset($_POST['Next']))
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
 				$arrTaggedDate[$k] = $_REQUEST['txttagged_date'][$k+1];
-				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1];
+				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
+				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
 			}
 		}
 				
@@ -980,6 +993,7 @@ if (isset($_POST['Next']))
 														TITLE	   = '".$arrTitle[$key]."',
                                                         SERVICE_IMAGE_ID   = ".$image_id.",
                                                         ".$add_tower."
+                                                        DISPLAY_ORDER = '".$arrDisplayOrder[$key]."', 
                                                         TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								$res	=	mysql_query($qry) or die(mysql_error());
@@ -993,6 +1007,7 @@ if (isset($_POST['Next']))
 													    BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
 													SERVICE_IMAGE_ID        =    ".$image_id.",
 													TITLE			=	'".$arrTitle[$key]."',
+													DISPLAY_ORDER = '".$arrDisplayOrder[$key]."', 
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													SUBMITTED_DATE	=	now()";
