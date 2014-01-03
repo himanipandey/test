@@ -196,7 +196,9 @@
                     <td width="30%" align="right" >
                         
                         <select multiple="" name="locality[]" id="locality" style="width:260px;height:140px;">
-                            <option value="all" {if $locflag == 1} selected="" {/if}>---All Locality---</option>
+                            {if $chkLoc == 0}       
+                                <option value="all" {if $locflag == 1} selected="" {/if}>---All Locality---</option>
+                            {/if}             
                             {if $locality != ''}
                                 {foreach from = $locality key = k item = val}
                                     <option value="{$k}" {if in_array($k , $locIdArr)} selected="" {/if}>
@@ -211,14 +213,14 @@
                             <option value="all" {if $projectflag == 1} selected="" {/if}>---All Project---</option>
                             {if $project != ''}
                                 {foreach from = $project key = k item = val}
-                                    <option value="{$val->id}" {if in_array($val->id , $projectIdArr)} selected="" {/if}>{if strlen($val->label) > 30} {$val->label|substr:0:30|cat:"..."} {else} {$val->label} {/if}</option>
+                                    <option value="{$val->project_id}" {if in_array($val->project_id , $projectIdArr)} selected="" {/if}>{if strlen($val->label) > 30} {$val->label|substr:0:30|cat:"..."} {else} {$val->label} {/if}</option>
                                 {/foreach} 
                             {/if}
                         </select>
                     </td>
                     <td width="30%" align="right" >
                         <select multiple="" name="agent[]" id="agent" style="width:260px;height:140px;">
-                            <option value="all">---All Agent---</option>
+                            <option value="all" {if $agentflag == 1} selected="" {/if}>---All Agent---</option>
                             {if $seller_company != ''}
                                 {foreach from = $seller_company key = k item = val}
                                     <option value="{$val->agent_id}" {if in_array($val->agent_id , $agentIdArr)} selected="" {/if}>{if strlen($val->agent_name) > 30} {$val->agent_name|substr:0:30|cat:"..."} {else} {$val->agent_name} {/if}</option>
@@ -293,9 +295,13 @@
                                     <TD align=left class=td-border></TD>
                                 {/if}
                                 
-                                <TD align=center class=td-border>{$value['locality'][$smarty.section.waistsizes.index]}</TD>
-                                <TD align=left class=td-border>{$value['project'][$smarty.section.waistsizes.index]}</TD>
-                                <TD align=center class=td-border>{$value['agent'][$smarty.section.waistsizes.index]}</TD>
+                                <TD align=center class=td-border>
+                                    {if $value['locality'][$smarty.section.waistsizes.index] != '' && strlen($value['locality'][$smarty.section.waistsizes.index]) > 30} {$value['locality'][$smarty.section.waistsizes.index]|substr:0:30|cat:"..."} {elseif $value['locality'][$smarty.section.waistsizes.index] != '' && strlen($value['locality'][$smarty.section.waistsizes.index]) <= 30} {$value['locality'][$smarty.section.waistsizes.index]} {else} &nbsp;{/if}
+                                </TD>
+                                <TD align=left class=td-border>
+                                    {if $value['project'][$smarty.section.waistsizes.index] != '' && strlen($value['project'][$smarty.section.waistsizes.index]) > 30} {$value['project'][$smarty.section.waistsizes.index]|substr:0:30|cat:"..."} {elseif $value['project'][$smarty.section.waistsizes.index] != '' && strlen($value['project'][$smarty.section.waistsizes.index]) <= 30} {$value['project'][$smarty.section.waistsizes.index]} {else} &nbsp;{/if}
+                                </TD>
+                                <TD align=center class=td-border>{if $value['agent'][$smarty.section.waistsizes.index] != '' && strlen($value['agent'][$smarty.section.waistsizes.index]) > 30} {$value['agent'][$smarty.section.waistsizes.index]|substr:0:30|cat:"..."} {elseif $value['agent'][$smarty.section.waistsizes.index] != '' && strlen($value['agent'][$smarty.section.waistsizes.index]) <= 30} {$value['agent'][$smarty.section.waistsizes.index]} {else} &nbsp;{/if}</TD>
                                 
                                 {if $smarty.section.waistsizes.index == 0}
                                     <TD align=left class=td-border>{$value['created_at']}</TD>
@@ -389,81 +395,37 @@
             return true;
                 
         }); 
-                
         jQuery('#city_id').change(function(){
             var valuesloc = jQuery(this).val();
-            jQuery('#frm1').submit();
-            if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
-            {
-                var dataString = 'city='+valuesloc;
-                jQuery.ajax({
-                    
-                    type    : 'POST',
-                    url     : 'fetchLocalityCity.php',
-                    data    : dataString,
-                    success : function(data){
-                        //alert(data);
-//                        return;
-                        if(data == '')
-                        {
-                            jQuery('#locality').html('<option value = "all"> --- All Locality --- </option>');
-                            return false;
-                        }
-                        jQuery('#locality').html('');
-                       // if(jQuery('#locjIdArr').val() != '' && jQuery('#locjIdArr').val() != null)
-//                        {
-//                            jQuery('#dlocjIdArr').val(jQuery('#locjIdArr').val());
-//                            jQuery('#locjIdArr').val('');
-//                        }
-//                        
-//                        
-//                        if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
-//                        {
-//                            jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
-//                            jQuery('#projectjIdArr').val('');
-//                        }
-                        
-                        
-                        jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
-                        var json = JSON.parse(data);
-                        var appendData  = '<option value = "all"> --- All Locality --- </option>';
-                        for(var key in json)
-                        {
-                            appendData += '<option value="' + key + '">' + json[key] + '</option>';
-                        }
-                        
-//                        alert(appendData);
-                        jQuery('#locality').append(appendData);
-                    },
-                    error   : function(){
-                        alert("Something went wrong");
-                        return false;
-                    }
-                });
-                
-            }
-            else
-            {
-                jQuery('#locality').html('<option value = "all"> --- All Locality --- </option>');
-                jQuery('#project').html('<option value = "all"> --- All Project --- </option>');
-            }
-        });
-        
+                jQuery('#ruleId').val('');
+                jQuery('#frm1').submit(); 
+          });  
+          
         jQuery('#locality').change(function(){
+            
              var valuesloc = jQuery("#locality option:selected").map(function(){
+                                if(this.value == 'all')
+                                {
+                                    jQuery('#locality').val(this.value);
+                                    return 'all-' + jQuery('#city_id').val();
+                                }
                                 return this.value;
                             }).get();
-
+            //alert(valuesloc);
+//            return;
             if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
             {
                 var dataString = 'locality='+valuesloc;
+                //alert(dataString);
+//                return;
+                
                 jQuery.ajax({
                     
                     type    : 'POST',
                     url     : 'fetchProjectLocality.php',
                     data    : dataString,
                     success : function(data){
-                        //alert(data);
+//                        alert(data);
 //                        return;
                         if(data == '')
                         {
@@ -471,16 +433,16 @@
                             return false;
                         }
                         jQuery('#project').html('');
-                        //if(jQuery('#locjIdArr').val() != '' && jQuery('#locjIdArr').val() != null)
-//                        {
-//                            jQuery('#dlocjIdArr').val(jQuery('#locjIdArr').val());
-//                            jQuery('#locjIdArr').val('');
-//                        }
-//                        if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
-//                        {
-//                            jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
-//                            jQuery('#projectjIdArr').val('');    
-//                        }
+                        if(jQuery('#locjIdArr').val() != '' && jQuery('#locjIdArr').val() != null)
+                        {
+                            jQuery('#dlocjIdArr').val(jQuery('#locjIdArr').val());
+                            jQuery('#locjIdArr').val('');
+                        }
+                        if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
+                        {
+                            jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
+                            jQuery('#projectjIdArr').val('');    
+                        }
                         
                         var json = JSON.parse(data);
                         var appendData  = '<option value = "all"> --- All Project --- </option>';
@@ -504,27 +466,27 @@
             }
         });
         
-        //jQuery('#project').change(function(){
-//            
-//            if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
-//            {
-//                jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
-//                jQuery('#projectjIdArr').val('');    
-//            }
-//            
-//            
-//        });
-//        
-//        jQuery('#agent').change(function(){
-//            
-//            if(jQuery('#agentjIdArr').val() != '' && jQuery('#agentjIdArr').val() != null)
-//            {
-//                jQuery('#dagentjIdArr').val(jQuery('#agentjIdArr').val());
-//                jQuery('#agentjIdArr').val('');    
-//            }
-//            
-//            
-//        });
+        jQuery('#project').change(function(){
+            
+            if(jQuery('#projectjIdArr').val() != '' && jQuery('#projectjIdArr').val() != null)
+            {
+                jQuery('#dprojectjIdArr').val(jQuery('#projectjIdArr').val());
+                jQuery('#projectjIdArr').val('');    
+            }
+            
+            
+        });
+        
+        jQuery('#agent').change(function(){
+            
+            if(jQuery('#agentjIdArr').val() != '' && jQuery('#agentjIdArr').val() != null)
+            {
+                jQuery('#dagentjIdArr').val(jQuery('#agentjIdArr').val());
+                jQuery('#agentjIdArr').val('');    
+            }
+            
+            
+        });
                
     });
     
