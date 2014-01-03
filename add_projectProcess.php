@@ -100,8 +100,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $updationCycleIdOld = $_POST["updationCycleIdOld"];
             $numberOfTowers = $_POST["numberOfTowers"];
             $completionDate = $_POST["completionDate"];
-            
-            
+            $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
+                       
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
                $suburbSelect = Suburb::SuburbArr($_POST['cityId']);
@@ -181,6 +181,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("updationCycleIdOld", $updationCycleIdOld);
             $smarty->assign("numberOfTowers", $numberOfTowers);
             $smarty->assign("completionDate", $completionDate);
+            $smarty->assign("redevelopmentProject", $redevelopmentProject);
+            
             /***********Folder name**********/
             if(!empty($builderId)){
 	    	$builderDetail = ResiBuilder::getBuilderById($builderId);
@@ -482,6 +484,26 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
             
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
+           
+           $redev_pro = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));
+           
+           if($redev_pro){
+			
+				$redev_pro = TableAttributes::find($redev_pro[0]->id);
+				$redev_pro->updated_by = $_SESSION['adminId'];
+				$redev_pro->attribute_value = $redevelopmentProject;
+				$redev_pro->save();		
+			   
+			}else{
+				$redev_pro = new TableAttributes();
+				$redev_pro->table_name = 'resi_project';
+				$redev_pro->table_id = $returnProject->project_id;
+				$redev_pro->attribute_name = 'REDEVELOPMENT_PROJECT';
+				$redev_pro->attribute_value = $redevelopmentProject;
+				$redev_pro->updated_by = $_SESSION['adminId'];
+				$redev_pro->save();
+			}
+           
            //echo $eff_date_to." heer";die;
            if (!ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
            {
@@ -682,8 +704,10 @@ elseif ($projectId!='') {
     $smarty->assign("numberOfTowers", $ProjectDetail->no_of_towers);
     $booking_status_id = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical'),'select' => 
                     'BOOKING_STATUS_ID'));
-    //  print "<pre>".print_r($booking_status_id,1);  die;
     $smarty->assign("bookingStatus", $booking_status_id[0]->booking_status_id);
+    $redevelopmentProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));              
+    $smarty->assign("redevelopmentProject", $redevelopmentProject[0]->attribute_value);
+    
     
  }
 
