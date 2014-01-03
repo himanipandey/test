@@ -392,6 +392,16 @@
             }
             
             
+            if(jQuery('#locality').val())
+            {
+                if(!jQuery('#project').val())
+                {
+                    jQuery('#project').focus();
+                    alert("Please select Project");
+                    return false;
+                }
+            }
+            
             return true;
                 
         }); 

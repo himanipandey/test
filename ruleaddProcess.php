@@ -273,7 +273,11 @@
                                                             `locality_id` = '-1',
                                                             `updated_by` = '".$_SESSION['adminId']."',
                                                             `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
-    
+                                    $getLocSql = @mysql_query("SELECT * FROM rule_locality_mappings WHERE `locality_id` = '-1' AND rule_id = '".mysql_escape_string($rule_id)."'");
+                                    
+                                    $resultLocSql = @mysql_fetch_assoc($getLocSql);
+                                    if(!empty($resultLocSql['id']))
+                                        $locality_id = $resultLocSql['id'];
                                     //echo "UPDATE `rule_locality_mappings` SET 
     //                                                        `locality_id` = '".mysql_escape_string($val)."',
     //                                                        `updated_by` = '".$_SESSION['adminId']."',
@@ -306,7 +310,11 @@
                                                             `locality_id` = '".mysql_escape_string($val)."',
                                                             `updated_by` = '".$_SESSION['adminId']."',
                                                             `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
-                                    $locality_id = $val;
+                                    $getLocSql = @mysql_query("SELECT * FROM rule_locality_mappings WHERE `locality_id` = '".mysql_escape_string($val)."' AND rule_id = '".mysql_escape_string($rule_id)."'");
+                                    
+                                    $resultLocSql = @mysql_fetch_assoc($getLocSql);
+                                    if(!empty($resultLocSql['id']))
+                                        $locality_id = $resultLocSql['id'];
                                     //echo "UPDATE `rule_locality_mappings` SET 
     //                                                        `locality_id` = '".mysql_escape_string($val)."',
     //                                                        `updated_by` = '".$_SESSION['adminId']."',
@@ -433,7 +441,9 @@
                             //echo "DELETE FROM `rule_agent_mappings` WHERE agent_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>"; 
                         }
                     }
-                    
+                    //print'<pre>';
+//                    print_r($agent);
+//                    die;
                     if(!empty($agent))
                     {
                         foreach($agent as $key => $val)
@@ -467,28 +477,17 @@
                                                                 `updated_by` = '".$_SESSION['adminId']."',
                                                                 `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
                                     //echo "INSERT INTO `rule_agent_mappings` SET 
-    //                                                            `rule_id` = '".$rule_id."',
-    //                                                            `agent_id` = '".mysql_escape_string($val)."',
-    //                                                            `updated_by` = '".$_SESSION['adminId']."',
-    //                                                            `created_at` = '".date('Y-m-d')."'"."<br>"; 
+//                                                                `agent_id` = '-1',
+//                                                                `rule_id` = '".$rule_id."',
+//                                                                `updated_by` = '".$_SESSION['adminId']."',
+//                                                                `created_at` = '".date('Y-m-d')."'"."<br>"; 
                                 }
                             }
                             else
                             {
                                 $chkSql = @mysql_query("SELECT * FROM `rule_agent_mappings` WHERE agent_id = '".mysql_escape_string($val)."' AND rule_id = '".mysql_escape_string($rule_id)."'");
                             
-                                if(@mysql_num_rows($chkSql) > 0)
-                                {
-                                    $sql_rule_agent_mappings = @mysql_query("UPDATE  `rule_agent_mappings` SET 
-                                                                `agent_id` = '".mysql_escape_string($val)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
-                                    //echo "UPDATE `rule_agent_mappings` SET 
-    //                                                            `agent_id` = '".mysql_escape_string($val)."',
-    //                                                            `updated_by` = '".$_SESSION['adminId']."',
-    //                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";
-                                }
-                                else
+                                if(!@mysql_num_rows($chkSql) > 0)
                                 {
                                     $sql_rule_agent_mappings = @mysql_query("INSERT INTO `rule_agent_mappings` SET 
                                                                 `rule_id` = '".$rule_id."',
@@ -496,11 +495,19 @@
                                                                 `updated_by` = '".$_SESSION['adminId']."',
                                                                 `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
                                     //echo "INSERT INTO `rule_agent_mappings` SET 
-    //                                                            `rule_id` = '".$rule_id."',
-    //                                                            `agent_id` = '".mysql_escape_string($val)."',
-    //                                                            `updated_by` = '".$_SESSION['adminId']."',
-    //                                                            `created_at` = '".date('Y-m-d')."'"."<br>"; 
+//                                                                `rule_id` = '".$rule_id."',
+//                                                                `agent_id` = '".mysql_escape_string($val)."',
+//                                                                `updated_by` = '".$_SESSION['adminId']."',
+//                                                                `created_at` = '".date('Y-m-d')."'"."<br>"; 
+                                    //$sql_rule_agent_mappings = @mysql_query("UPDATE `rule_agent_mappings` SET 
+//                                                                `updated_by` = '".$_SESSION['adminId']."',
+//                                                                `updated_at` = '".date('Y-m-d')."' WHERE agent_id = '".mysql_escape_string($val)."' AND rule_id=".mysql_escape_string($rule_id));
+                                    //echo "UPDATE `rule_agent_mappings` SET 
+//                                                                `agent_id` = '".mysql_escape_string($val)."',
+//                                                                `updated_by` = '".$_SESSION['adminId']."',
+//                                                                `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";
                                 }
+                                
                             }    
                         }
                     }
@@ -616,6 +623,7 @@
                 $conditions = " rule_id = '".$val->id."'";
                 $options = array( 'select' => " project_id" , 'conditions' => $conditions);
                 $projectAttrtest = RuleProjectMapping::find('all',$options);
+                
                 if(!empty($projectAttrtest))
                 {
                     foreach($projectAttrtest as $k1 => $v1)
@@ -626,6 +634,7 @@
                             $conditions = " rule_id = '".$val->id."' AND rule_locality_mapping_id = '$rule_locality_mapping_id'";
                             $options = array( 'select' => " project_id" , 'conditions' => $conditions);
                             $projectAttr = RuleProjectMapping::find('all',$options);
+                            //echo RuleProjectMapping::connection()->last_query."<br>";
                         }
                         else
                         {

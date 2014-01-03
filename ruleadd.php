@@ -59,6 +59,7 @@ if(!empty($_GET['ruleId']))
     $broker_name = '';
     $rule_name = '';
     $locIdArr = array();
+    
     $locflag = 0;
     $projectflag = 0;
     $agentflag = 0;
@@ -70,6 +71,8 @@ if(!empty($_GET['ruleId']))
                 $locIdArr[] = $val->locality_id;
             else if(!empty($val->locality_id) && $val->locality_id == '-1')
                 $locflag = 1;
+            
+            
             if(isset($key) && $key == "city_id" && !empty($val->city_id))
                 $city_id = $val->city_id;
             else if(isset($key) && $key == "cityrelid" && !empty($val->cityrelid))
@@ -163,17 +166,32 @@ if(!empty($_GET['ruleId']))
     $smarty->assign("locflag", $locflag);
     $smarty->assign("locality", $locality);
     $smarty->assign("locIdArr", $locIdArr);
-    $smarty->assign("locjIdArr", base64_encode(json_encode($locIdArr)));
+    
+    if($locflag == 1 && empty($locIdArr))
+        $smarty->assign("locjIdArr", base64_encode(json_encode(array('all'))));
+    else
+        $smarty->assign("locjIdArr", base64_encode(json_encode($locIdArr)));
     
     $smarty->assign("projectflag", $projectflag);
     $smarty->assign("project", $project);
     $smarty->assign("projectIdArr", $projectIdArr);
-    $smarty->assign("projectjIdArr", base64_encode(json_encode($projectIdArr)));
+    
+    if($projectflag == 1 && empty($projectIdArr))
+        $smarty->assign("projectjIdArr", base64_encode(json_encode(array('all'))));
+    else
+        $smarty->assign("projectjIdArr", base64_encode(json_encode($projectIdArr)));
+        
+    
     $smarty->assign("seller_company", $agents);
     
     $smarty->assign("agentflag", $agentflag);
     $smarty->assign("agentIdArr", $agentIdArr);
-    $smarty->assign("agentjIdArr", base64_encode(json_encode($agentIdArr)));
+    
+    if($agentflag == 1 && empty($agentIdArr))
+        $smarty->assign("agentjIdArr", base64_encode(json_encode(array('all'))));
+    else
+        $smarty->assign("agentjIdArr", base64_encode(json_encode($agentIdArr)));
+    
 }
 
 include('ruleaddProcess.php');
