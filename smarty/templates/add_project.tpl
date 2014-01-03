@@ -691,7 +691,7 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-                                                           <tr>
+                               <tr>
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
                                                                     <select name="skipUpdationCycle">
                                                                         <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
@@ -700,6 +700,12 @@
                                                                     <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
                                                                 </td>
 								<td width="50%" align="left"><font color="red"></font></td>
+							   </tr>
+							   <tr>
+								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
+									<input type="checkbox" name="redevelopmentProject" {if $redevelopmentProject} checked {/if} />
+                                  </td>
+								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 							   
 								  <td>&nbsp;</td>
