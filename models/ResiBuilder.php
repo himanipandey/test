@@ -5,10 +5,10 @@ class ResiBuilder extends Objects
 {
     static $table_name = 'resi_builder';
     static function BuilderEntityArr() {
-        $getBuilder = ResiBuilder::find('all',array( "select" => "builder_id, builder_name",'order'=>'builder_name asc')); 
+        $getBuilder = ResiBuilder::find('all',array( "select" => "builder_id, entity",'order'=>'entity asc')); 
         $arrBuilder = array();
         foreach($getBuilder as $value) {
-            $arrBuilder[$value->builder_id] = $value->builder_name;
+            $arrBuilder[$value->builder_id] = $value->entity;
         }
         return $arrBuilder;
     } 
