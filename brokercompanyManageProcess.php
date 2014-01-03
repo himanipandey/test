@@ -39,11 +39,11 @@
     
     $conditions = '';
     if(!empty($_REQUEST['broker']) && empty($_REQUEST['pan']) && empty($_REQUEST['active_since'])){
-        $conditions = " brokers.broker_name LIKE '%".$_REQUEST['broker']."%'";
+        $conditions = " brokers.broker_name LIKE '%".trim($_REQUEST['active_since'])."%'";
         
     }
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['pan']) && empty($_REQUEST['active_since'])){
-        $conditions = array(" brokers.pan LIKE '%".$_REQUEST['pan']."%'");
+        $conditions = array(" brokers.pan LIKE '%".trim($_REQUEST['pan'])."%'");
     }
     else if(empty($_REQUEST['broker']) && empty($_REQUEST['pan']) && !empty($_REQUEST['active_since'])){
         
@@ -53,22 +53,22 @@
         $conditions = array(" brokers.active_since LIKE '%".$date."%'");
     }
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['pan']) && empty($_REQUEST['active_since'])){
-        $conditions = array(" brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND brokers.pan LIKE '%".$_REQUEST['pan']."%'");
+        $conditions = array(" brokers.broker_name LIKE '%".trim($_REQUEST['active_since'])."%' AND brokers.pan LIKE '%".trim($_REQUEST['pan'])."%'");
     }
     else if(!empty($_REQUEST['broker']) && empty($_REQUEST['pan']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = array(" brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND brokers.active_since LIKE '%".$date."%'");
+        $conditions = array(" brokers.broker_name LIKE '%".trim($_REQUEST['active_since'])."%' AND brokers.active_since LIKE '%".$date."%'");
     }
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['pan']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = array(" brokers.pan LIKE '%".$_REQUEST['pan']."%' AND brokers.active_since LIKE '%".$date."%'");
+        $conditions = array(" brokers.pan LIKE '%".trim($_REQUEST['pan'])."%' AND brokers.active_since LIKE '%".$date."%'");
     }
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['pan']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = array(" brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND brokers.pan LIKE '%".$_REQUEST['pan']."%' AND brokers.active_since LIKE '%".$date."%'");
+        $conditions = array(" brokers.broker_name LIKE '%".trim($_REQUEST['active_since'])."%' AND brokers.pan LIKE '%".trim($_REQUEST['pan'])."%' AND brokers.active_since LIKE '%".$date."%'");
     }
     
     

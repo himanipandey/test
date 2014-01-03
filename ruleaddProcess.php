@@ -46,7 +46,7 @@
     }else{
         $Offset = ($PageNum - 1) * $RowsPerPage;
     }
-    
+    $rule_id = '';
     if ($_POST['btnSave'] == "Submit Rule"){
         //print'<pre>';
 //        print_r($_POST);
@@ -89,7 +89,7 @@
             
             ResiProject::transaction(function(){
                 
-                global $broker_cmpny , $rule_name , $city_id,$locality,$project,$agent , $broker_cmpny_id;
+                global $broker_cmpny , $rule_name , $city_id,$locality,$project,$agent , $broker_cmpny_id, $rule_id;
                 $locality_id = '';
                 
                 $chkSql = @mysql_query("SELECT * FROM rule_locality_mappings WHERE city_id = '".mysql_escape_string($city_id)."' AND locality_id = '-1'");
@@ -218,6 +218,15 @@
                 }
                 
             });
+            
+            if(!empty($rule_id))
+            {
+                header("Location:ruleadd.php?ruleId=".$rule_id."&mode=edit&page=1&sort=all");
+                echo $rule_id;
+                die;
+            }
+                //
+            
         }
         else {
             
@@ -519,11 +528,19 @@
                 }
             
             });
+            
+            
         }
          
             
         if(count($ErrorMsg)>0) {
             $smarty->assign("ErrorMsg", $ErrorMsg);    
+        }
+        else if(!empty($ruleId))
+        {
+            header("Location:ruleadd.php?ruleId=".$ruleId."&mode=edit&page=1&sort=all");
+            //echo $rule_id;
+//                die;
         }
         else {
             header("Location:ruleadd.php?page=1&sort=all"); 

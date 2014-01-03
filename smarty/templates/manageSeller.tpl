@@ -55,72 +55,74 @@
                           <tr>
                             <td width="77%" height="25" align="center" style="padding-top:30px;padding-bottom:10px;">
                                 <form name="frm_build" id="frm_build" method="post" action ="SellerCompanyList.php?page=1&sort=all">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <label class="fwb">Company Name : </label>
-                                            </td>
-                                            <td>
-                                                <input name="broker" id="broker" value="{$broker}" class="button" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="fwb">Agent Name : </label>
-                                            </td>
-                                            <td>
-                                                <input name="agent" id="agent" value="{$agent}" class="button" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="fwb">Agent Rating : </label>
-                                            </td>
-                                            <td>
-                                                <select name="agent_rating" id="agent_rating">
-                                                    <option value="">-- Select Rating --</option>
-                                                    <option value="0.5" {if $agent_rating != '' && $agent_rating == "0.5"} selected=""  {/if}>0.5</option>
-                                                    <option value="1" {if $agent_rating != '' && ($agent_rating == "1.0" || $agent_rating == "1")} selected=""  {/if}>1.0</option>
-                                                    <option value="1.5" {if $agent_rating != '' && $agent_rating == "1.5"} selected=""  {/if}>1.5</option>
-                                                    <option value="2" {if $agent_rating != '' && $agent_rating == "2.0"} selected=""  {/if}>2.0</option>
-                                                    <option value="2.5" {if $agent_rating != '' && $agent_rating == "2.5"} selected=""  {/if}>2.5</option>
-                                                    <option value="3" {if $agent_rating != '' && $agent_rating == "3.0"} selected=""  {/if}>3.0</option>
-                                                    <option value="3.5" {if $agent_rating != '' && $agent_rating == "3.5"} selected=""  {/if}>3.5</option>
-                                                    <option value="4" {if $agent_rating != '' && $agent_rating == "4.0"} selected=""  {/if}>4.0</option>
-                                                    <option value="4.5" {if $agent_rating != '' && $agent_rating == "4.5"} selected=""  {/if}>4.5</option>
-                                                    <option value="5" {if $agent_rating != '' && $agent_rating == "5.0"} selected=""  {/if}>5.0</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="fwb">Agent Qualification : </label>
-                                            </td>
-                                            <td>
-                                                <select name="agent_quali" id="agent_quali">
-                                                    <option value="">--Select Qualification--</option>
-                                                    {foreach from= $qualification key = k item = val}
-                                                       <option value="{$val['id']}" {if $val['id'] == $agent_quali} selected="true" {/if}>{$val['qualification']}</option>
-                                                    {/foreach}
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="fwb">Active Since : </label>
-                                            </td>
-                                            <td>
-                                                <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="button" />
-                                                <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>&nbsp;</td>
-                                            <td>
-                                                <input type="submit" name="search" id="search" value="Search" class="button" />
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div style="border:1px solid #c2c2c2;padding-top:10px;padding-bottom:10px;width:38%" align="center">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <label class="fwb">Company Name : </label>
+                                                </td>
+                                                <td>
+                                                    <input name="broker" id="broker" value="{$broker}" class="button" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="fwb">Agent Name : </label>
+                                                </td>
+                                                <td>
+                                                    <input name="agent" id="agent" value="{$agent}" class="button" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="fwb">Agent Rating : </label>
+                                                </td>
+                                                <td>
+                                                    <select name="agent_rating" id="agent_rating">
+                                                        <option value="">-- Select Rating --</option>
+                                                        <option value="0.5" {if $agent_rating != '' && $agent_rating == "0.5"} selected=""  {/if}>0.5</option>
+                                                        <option value="1" {if $agent_rating != '' && ($agent_rating == "1.0" || $agent_rating == "1")} selected=""  {/if}>1.0</option>
+                                                        <option value="1.5" {if $agent_rating != '' && $agent_rating == "1.5"} selected=""  {/if}>1.5</option>
+                                                        <option value="2" {if $agent_rating != '' && $agent_rating == "2.0"} selected=""  {/if}>2.0</option>
+                                                        <option value="2.5" {if $agent_rating != '' && $agent_rating == "2.5"} selected=""  {/if}>2.5</option>
+                                                        <option value="3" {if $agent_rating != '' && $agent_rating == "3.0"} selected=""  {/if}>3.0</option>
+                                                        <option value="3.5" {if $agent_rating != '' && $agent_rating == "3.5"} selected=""  {/if}>3.5</option>
+                                                        <option value="4" {if $agent_rating != '' && $agent_rating == "4.0"} selected=""  {/if}>4.0</option>
+                                                        <option value="4.5" {if $agent_rating != '' && $agent_rating == "4.5"} selected=""  {/if}>4.5</option>
+                                                        <option value="5" {if $agent_rating != '' && $agent_rating == "5.0"} selected=""  {/if}>5.0</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="fwb">Agent Qualification : </label>
+                                                </td>
+                                                <td>
+                                                    <select name="agent_quali" id="agent_quali">
+                                                        <option value="">--Select Qualification--</option>
+                                                        {foreach from= $qualification key = k item = val}
+                                                           <option value="{$val['id']}" {if $val['id'] == $agent_quali} selected="true" {/if}>{$val['qualification']}</option>
+                                                        {/foreach}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="fwb">Active Since : </label>
+                                                </td>
+                                                <td>
+                                                    <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="button" />
+                                                    <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>
+                                                    <input type="submit" name="search" id="search" value="Search" class="button" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </form>
                             </td>
                           </tr>

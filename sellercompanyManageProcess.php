@@ -40,10 +40,10 @@
     
     
     if(!empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%'";
     }
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".$_REQUEST['agent']."%'";
+        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%'";
     }
     else if(empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
         $conditions = " b_c.type = 'Agent' AND agents.rating = '".$_REQUEST['agent_rating']."'";
@@ -59,31 +59,31 @@
     
     
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND b_c.name LIKE '%".$_REQUEST['agent']."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%'";
     }
     else if(!empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND agents.rating = '".$_REQUEST['agent_rating']."'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."'";
     }
     else if(!empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
     }
     else if(!empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND agents.active_since LIKE '%".$date."%'";
     }
     
     
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.rating = '".$_REQUEST['agent_rating']."'";
+        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."'";
     }
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
+        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
     }
      else if(empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.active_since LIKE '%".$date."%'";
     }
     
     else if(empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
@@ -101,42 +101,42 @@
     }
     
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.rating = '".$_REQUEST['agent_rating']."'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."'";
     }
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
     }
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.active_since LIKE '%".$date."%'";
     }
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
     }
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
     }
     else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND agents.active_since LIKE '%".$date."%'";
     }
     
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && empty($_REQUEST['active_since'])){
-        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
+        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%'";
     }
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
     }
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
     }
     
     else if(empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
@@ -149,27 +149,27 @@
     else if(!empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
     }
     else if(!empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
     }
     else if(!empty($_REQUEST['broker']) && empty($_REQUEST['agent']) && !empty($_REQUEST['agent_rating']) && empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND agents.rating = '".$_REQUEST['agent_rating']."' AND agents.active_since LIKE '%".$date."%'";
     }
      else if(!empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".$_REQUEST['broker']."%' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND brokers.broker_name LIKE '%".trim($_REQUEST['broker'])."%' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
     }
     else if(empty($_REQUEST['broker']) && !empty($_REQUEST['agent']) && empty($_REQUEST['agent_rating']) && !empty($_REQUEST['agent_quali']) && !empty($_REQUEST['active_since'])){
         $date = explode("/" , $_REQUEST['active_since']);
         $date = $date[2]."-".$date[1]."-".$date[0];
-        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".$_REQUEST['agent']."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
+        $conditions = " b_c.type = 'Agent' AND b_c.name LIKE '%".trim($_REQUEST['agent'])."%' AND aq.id LIKE '%".$_REQUEST['agent_quali']."%' AND agents.active_since LIKE '%".$date."%'";
     }
     
     

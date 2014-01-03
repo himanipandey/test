@@ -58,39 +58,41 @@
                           <tr>
                             <td width="77%" height="25" align="center" style="padding-top:30px;padding-bottom:10px;">
                                 <form name="frm_build" id="frm_build" method="post" action ="BrokerCompanyList.php?page=1&sort=all">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <label class="fwb">Broker Company : </label>
-                                            </td>
-                                            <td>
-                                                <input name="broker" id="broker" value="{$broker}" class="button" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="fwb">PAN : </label>
-                                            </td>
-                                            <td>
-                                                <input name="pan" id="pan" value="{$pan}" maxlength="10" style="width:80px;" class="button" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="fwb">Active Since : </label>
-                                            </td>
-                                            <td>
-                                                <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="button" />
-                                                <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>&nbsp;</td>
-                                            <td>
-                                                <input type="submit" name="search" id="search" value="Search" class="button" />
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div style="border:1px solid #c2c2c2;padding-top:10px;padding-bottom:10px;width:38%" align="center">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <label class="fwb">Broker Company : </label>
+                                                </td>
+                                                <td>
+                                                    <input name="broker" id="broker" value="{$broker}" class="button" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="fwb">PAN : </label>
+                                                </td>
+                                                <td>
+                                                    <input name="pan" id="pan" value="{$pan}" maxlength="10" style="width:80px;" class="button" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="fwb">Active Since : </label>
+                                                </td>
+                                                <td>
+                                                    <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="button" />
+                                                    <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>
+                                                    <input type="submit" name="search" id="search" value="Search" class="button" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </form>
                             </td>
                           </tr>
@@ -189,6 +191,8 @@
             
             jQuery(this).val((jQuery(this).val()).toUpperCase());
         });
+        
+        
     });
     Calendar.setup({
             inputField     :    "active_since",     // id of the input field

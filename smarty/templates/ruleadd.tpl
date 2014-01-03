@@ -139,7 +139,7 @@
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 		      
-			  <TABLE cellSpacing=2 cellPadding=4 width="65%" align=center border=0>
+			  <TABLE cellSpacing=2 cellPadding=4 width="65%" align=center border=0 >
 			    <form method="post" id="frm1" enctype="multipart/form-data" action="ruleadd.php">
 			      <div>
                       {if $ErrorMsg["dataInsertionError"] != ''}
@@ -152,38 +152,30 @@
                       <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["wrongPId"]}</font></td></tr>
                       {/if}
 	           
-               <tr>
-				    <td width="20%" align="right" valign="top">City :<font color = "red">*</font></td>
-                    <td width="30%" align="left" >
-				        <select name="city_id" id="city_id" {if $copy == "on"} disabled="" {/if} style="width:236px;">
-                           <option value="">Select City</option>
-                           {foreach from= $cityArr key = k item = val}
-                               <option value="{$k}" {if $k == $city_id} selected {/if}>{$val}</option>
-                           {/foreach}
-                       </select>
-                      </td>
-                      {if $ErrorMsg["city"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["hq"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
-				</tr>
-				<tr> 
-                    <td width="30%" align="right" valign="top">Company Name :<font color = "red">*</font></td>
-                    <td width="10%" align="left" valign="top">
-                        <!--<select name="broker_cmpny" id="broker_cmpny">
-                            
-                            {*if $brokerArr != ''}
-                                    {foreach from= $brokerArr key = k item = val}
-                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{if strlen($val->broker_name) > 30} {$val->broker_name|substr:0:30|cat:"..."} {else} {$val->broker_name} {/if}</option>
-                                    {/foreach}
-                            {/if*}
-                        </select>-->
-                        <input type="text" name="broker_cmpny" id="broker_cmpny" value="{if $broker_name != ''} {$broker_name} {/if}" />
-                    </td>  
-				</tr>
-                <tr>
-                    <td width="15%" align="right" valign="top" >Rule Name :<font color = "red">*</font></td>
-                    <td width="10%" align="left" valign="top" >
-                        <input type=text name="rule_name" id="rule_name" value="{$rule_name}" />	
-                    </td>
-                </tr>
+                       <tr>
+        				    <td width="20%" align="right" valign="top">City :<font color = "red">*</font></td>
+                            <td width="30%" align="left" >
+        				        <select name="city_id" id="city_id" {if $copy == "on"} disabled="" {/if} style="width:236px;">
+                                   <option value="">Select City</option>
+                                   {foreach from= $cityArr key = k item = val}
+                                       <option value="{$k}" {if $k == $city_id} selected {/if}>{$val}</option>
+                                   {/foreach}
+                               </select>
+                              </td>
+                              {if $ErrorMsg["city"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["hq"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+        				</tr>
+        				<tr> 
+                            <td width="30%" align="right" valign="top">Company Name :<font color = "red">*</font></td>
+                            <td width="10%" align="left" valign="top">
+                                <input type="text" name="broker_cmpny" id="broker_cmpny" value="{if $broker_name != ''} {$broker_name} {/if}" />
+                            </td>  
+        				</tr>
+                        <tr>
+                            <td width="15%" align="right" valign="top" >Rule Name :<font color = "red">*</font></td>
+                            <td width="10%" align="left" valign="top" >
+                                <input type=text name="rule_name" id="rule_name" value="{$rule_name}" />	
+                            </td>
+                        </tr>
                 
 				
                 
