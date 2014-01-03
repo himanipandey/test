@@ -485,6 +485,15 @@
             }
             
             
+            jQuery("#project option:selected").map(function(){
+                    
+                    if(this.value == 'all')
+                    {
+                        jQuery('#project').val(this.value);
+                        return false;
+                    }
+                });
+            
         });
         
         jQuery('#agent').change(function(){
@@ -494,7 +503,14 @@
                 jQuery('#dagentjIdArr').val(jQuery('#agentjIdArr').val());
                 jQuery('#agentjIdArr').val('');    
             }
-            
+            jQuery("#agent option:selected").map(function(){
+                    
+                    if(this.value == 'all')
+                    {
+                        jQuery('#agent').val(this.value);
+                        return false;
+                    }
+                });
             
         });
                
