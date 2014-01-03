@@ -11,7 +11,7 @@ include("dbConfig.php");
 include("modelsConfig.php");
 include("includes/configs/configs.php"); 
 AdminAuthentication(); 
-$cityArr = City::CityArr();
+$cityArr = City::CityArr($BranchLoc);
 $brokerArr = BrokerCompany::find('all' , array('select' => 'brokers.id,brokers.broker_name'));
 
 $result = array();
@@ -25,6 +25,10 @@ foreach($brokerArr as $key => $val)
     array_push($result , array("id" => $val->id , "value" => $broker_name));
 }
 $brokerArr = json_encode($result);
+
+//print'<pre>';
+//print_r($BranchLoc);
+//die;
 
 
 $smarty->assign("cityArr", $cityArr);
