@@ -35,7 +35,7 @@ $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 
 if(!empty($_GET['ruleId']))
 {
-    $conditions = " project_assignment_rules.id = ".$_GET['ruleId'];
+    $conditions = " project_assignment_rules.id = '".$_GET['ruleId']."'";
     $joins = " LEFT JOIN brokers ON project_assignment_rules.broker_id = brokers.id
                 LEFT JOIN rule_locality_mappings ON project_assignment_rules.id = rule_locality_mappings.rule_id
                 LEFT JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
@@ -47,7 +47,9 @@ if(!empty($_GET['ruleId']))
     $options  = array('joins' => $joins , 'select' => 'project_assignment_rules.*,rule_locality_mappings.locality_id , brokers.broker_name , city.city_id ,city.label AS city , cityrel.city_id  AS cityrelid' , 'conditions' => $conditions );
     
     $ruleAttr = ProjectAssignmentRules::find('all' , $options);
-    
+    //print'<pre>';
+//    print_r($ruleAttr);
+//    die;
     //echo ProjectAssignmentRules::connection()->last_query."<br>";
 //    die;
 
@@ -59,6 +61,7 @@ if(!empty($_GET['ruleId']))
     $locIdArr = array();
     $locflag = 0;
     $projectflag = 0;
+    $agentflag = 0;
     if(!empty($ruleAttr))
     {
         foreach($ruleAttr as $key => $val)
@@ -105,7 +108,7 @@ if(!empty($_GET['ruleId']))
     $projectIdArr = array();
     if(!empty($locIdArr))
     {
-        $sql = "SELECT resi_project.id , resi_project.project_name AS label FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE resi_project.locality_id IN (".implode("," , $locIdArr).")";
+        $sql = "SELECT resi_project.project_id , resi_project.project_name AS label FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE resi_project.locality_id IN (".implode("," , $locIdArr).")";
         
         $project = RuleAgentMappings::find_by_sql($sql);
     }
@@ -116,10 +119,10 @@ if(!empty($_GET['ruleId']))
     if(@mysql_num_rows($sql) > 0)
         $projectflag = 1;
     
-    $sql = @mysql_query("SELECT resi_project.id , resi_project.project_name FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.id = rule_project_mappings.project_id WHERE rule_project_mappings.rule_id = ".$_GET['ruleId']);
+    $sql = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE rule_project_mappings.rule_id = ".$_GET['ruleId']);
     while($row = @mysql_fetch_assoc($sql))
     {
-        $projectIdArr[] = $row['id'];   
+        $projectIdArr[] = $row['project_id'];   
     }
     
     $i = 0;
@@ -130,7 +133,10 @@ if(!empty($_GET['ruleId']))
         $agents = RuleAgentMappings::find_by_sql($sql);
     }
     
-    
+    $sql = @mysql_query("SELECT * FROM rule_agent_mappings WHERE rule_id = '".mysql_escape_string($_GET['ruleId'])."' AND agent_id = '-1'");
+    if(@mysql_num_rows($sql) > 0)
+        $agentflag = 1;
+        
     $agentIdArr = array();
     $sql = @mysql_query("SELECT rule_agent_mappings.agent_id FROM rule_agent_mappings WHERE rule_agent_mappings.rule_id = ".$_GET['ruleId']);
     while($row = @mysql_fetch_assoc($sql))
@@ -164,6 +170,8 @@ if(!empty($_GET['ruleId']))
     $smarty->assign("projectIdArr", $projectIdArr);
     $smarty->assign("projectjIdArr", base64_encode(json_encode($projectIdArr)));
     $smarty->assign("seller_company", $agents);
+    
+    $smarty->assign("agentflag", $agentflag);
     $smarty->assign("agentIdArr", $agentIdArr);
     $smarty->assign("agentjIdArr", base64_encode(json_encode($agentIdArr)));
 }
