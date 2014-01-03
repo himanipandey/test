@@ -63,8 +63,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    $eff_date_to = trim($_POST['eff_date_to']);
 			 $display_order = PROJECT_MAX_PRIORITY;
 	    $oldbuilderId = trim($_POST['oldbuilderId']);
-	    $youtube_link = trim($_POST['youtube_link']);
-            
+	                
             $application = trim($_POST['application']);
             $app_form =	trim($_POST['app_form']);
 
@@ -145,8 +144,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("exp_launch_date", $exp_launch_date);
             $smarty->assign("eff_date_to", $eff_date_to);   
             $smarty->assign("display_order", $display_order);
-            $smarty->assign("youtube_link", $youtube_link);
-
+           
             if(isset($_POST['bank_list']))
                $smarty->assign("bank_arr", $_POST['bank_list']);
             else
@@ -457,7 +455,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['pre_launch_date'] = $pre_launch_date;
             $arrInsertUpdateProject['launch_date'] = $eff_date_to;
             $arrInsertUpdateProject['source_of_information'] = $txtProjectSource;
-            $arrInsertUpdateProject['youtube_video'] = $youtube_link;
             if($application == 'pdf-new' || $application == 'pdf-del')
 				$arrInsertUpdateProject['application_form'] =  $app;
             $arrInsertUpdateProject['approvals'] = $approvals;
@@ -652,8 +649,7 @@ elseif ($projectId!='') {
     $smarty->assign("txtProjectURLOld", stripslashes($ProjectDetail->project_url));
     $smarty->assign("eff_date_to", stripslashes($ProjectDetail->launch_date));
     $smarty->assign("display_order", $ProjectDetail->display_order);
-    $smarty->assign("youtube_link", stripslashes($ProjectDetail->youtube_video));
-    
+       
     $app_form = stripslashes($ProjectDetail->application_form);
     $app_form = explode("/",$app_form);
     $smarty->assign("app_form", $app_form[2]);

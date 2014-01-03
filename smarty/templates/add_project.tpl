@@ -519,14 +519,7 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-
-							   <tr>
-								  <td width="20%" align="right"><b>YouTube Video Key:</b> </td><td width="30%" align="left">
-									 <input type = "text" name = "youtube_link" value = "{$youtube_link}">
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-
+							   
 							   <tr>
 								  <td width="32%" align="right" valign ="top"><b>Application form in pdf:</b> </td><td width="30%" align="left">
 									  

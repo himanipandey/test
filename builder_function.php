@@ -2100,5 +2100,18 @@ function projectBankList($projectId){
 	
 	return  $projectList;	
 }
+function project_video_detail($projectId){
+	
+	$videoList = array();
+	$Sql = "SELECT video_id, category, video_url FROM " . VIDEO_LINKS . " WHERE table_id = ".$projectId." ORDER BY video_id DESC";
+	$ExecSql = mysql_query($Sql);
+	while($video = mysql_fetch_array($ExecSql)){
+		$videoList[$video['video_id']]['video_id'] = $video['video_id'];
+		$videoList[$video['video_id']]['category'] = $video['category'];
+		$videoList[$video['video_id']]['url'] = $video['video_url'];		
+	}
+	
+	return  $videoList;	
+}
 ?>
 

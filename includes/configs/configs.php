@@ -187,6 +187,7 @@ DEFINE("RESI_PROJECT_OTHER_PRICING","resi_project_other_pricing");
 DEFINE("CALLDETAILS","CallDetails");
 DEFINE("CALLPROJECT","CallProject");
 DEFINE("PROJECT_BANKS","project_banks");
+DEFINE("VIDEO_LINKS","video_links");
 
 
 /**************This always put at the end of define tables*******************/
