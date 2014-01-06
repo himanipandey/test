@@ -2126,5 +2126,18 @@ function fetchProjectRedevelolpmentFlag($projectId){
      return ($flag->attribute_value)? "Yes" : "No";
 	
 }
+function checkDuplicateVideoLink($videoLinkUrl){
+	
+	$videoLinkUrl = trim($videoLinkUrl);
+	$Sql = "SELECT count(*) as cnt FROM " . VIDEO_LINKS . " WHERE video_url = '".$videoLinkUrl."'";
+	
+	$qrySelect = mysql_query($Sql) or die(mysql_error());
+     
+     if($qrySelect)
+		$vcount = mysql_fetch_object($qrySelect);
+		
+				
+	return ($vcount->cnt)? 1 : 0; 
+}
 ?>
 

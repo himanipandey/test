@@ -69,6 +69,10 @@ if($_REQUEST['edit'] == 'edit' && !isset($_POST['page_stage'])){
 		while($count < $_REQUEST['img']){
 			if(trim($_REQUEST['Url'][$count]) == ''){
 				$ErrorMsg["ptype"] = "Please enter Video Url."; break;
+			}else{
+			  if(checkDuplicateVideoLink($_REQUEST['Url'][$count])){//checking duplicacy
+				$ErrorMsg["ptype"] = "Video Url already exist"; break;
+			 }
 			}
 			$count++;
 		}
@@ -93,7 +97,7 @@ if($_REQUEST['edit'] == 'edit' && !isset($_POST['page_stage'])){
 		}else{
 			$count = 0;
 			while($count < $_REQUEST['img']){
-				$video_url =  mysql_real_escape_string($_REQUEST['Url'][$count]);
+				$video_url =  trim(mysql_real_escape_string($_REQUEST['Url'][$count]));
 				$video_type =  mysql_real_escape_string($_REQUEST['PType']);
 				mysql_query("INSERT INTO " . VIDEO_LINKS . " (`video_id`, `table_id`, `table_name`, `category`, `video_url`) VALUES (NULL, '$projectId', 'resi_project', '".$video_type."', '".addslashes($video_url)."');") or die(mysql_error());
 				$count++;
