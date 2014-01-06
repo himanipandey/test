@@ -17,7 +17,7 @@
 	
 	$smarty->assign("param_edit",$_REQUEST['edit']);
 	
-if($_REQUEST['edit'] == 'edit' && !isset($_POST['page_stage'])){
+if($_REQUEST['edit'] == 'edit'){
 	
 	$video_id =  mysql_real_escape_string($_REQUEST['v']);
 	$project_video = mysql_fetch_object(mysql_query("SELECT * FROM " . VIDEO_LINKS . " WHERE video_id='$video_id' and table_id='$projectId'")) or die(mysql_error());
@@ -28,7 +28,8 @@ if($_REQUEST['edit'] == 'edit' && !isset($_POST['page_stage'])){
 	//header("Location:project_video_add.php?projectId=$projectId&edit=add");
 	
 	
-}elseif($_REQUEST['edit'] == 'delete'){
+}
+if($_REQUEST['edit'] == 'delete'){
 	
 	$video_id =  mysql_real_escape_string($_REQUEST['v']);
 	mysql_query("DELETE FROM " . VIDEO_LINKS . " WHERE video_id='$video_id' and table_id='$projectId'") or die(mysql_error());
