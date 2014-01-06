@@ -62,17 +62,31 @@ if($_REQUEST['edit'] == 'edit' && !isset($_POST['page_stage'])){
 	    }else if( !array_filter($_REQUEST['Url']))
 	    {
 	      $ErrorMsg["ptype"] = "Please enter Video Url.";
-	    }
-	    
+	    }	  
 	   //checking Url is empty
 	    $count = 0;
+	    $temp_arr = array();
 		while($count < $_REQUEST['img']){
+			
 			if(trim($_REQUEST['Url'][$count]) == ''){
 				$ErrorMsg["ptype"] = "Please enter Video Url."; break;
 			}else{
-			  if(checkDuplicateVideoLink($_REQUEST['Url'][$count])){//checking duplicacy
-				$ErrorMsg["ptype"] = "Video Url already exist"; break;
-			 }
+				
+				$ext_vlinks = checkDuplicateVideoLink($_REQUEST['Url'][$count]);
+				
+			  if(array_key_exists($_REQUEST['Url'][$count], $temp_arr)){
+				  $ErrorMsg["ptype"] = "Duplicate Video Url not allowed."; break;				  
+			  }else if($ext_vlinks){//checking duplicacy
+			     if(!isset($_REQUEST['video_id'])){
+					$ErrorMsg["ptype"] = "Video Url already exist"; 
+					break;
+				 }
+				 elseif($_REQUEST['video_id'] && $ext_vlinks > 1){
+					$ErrorMsg["ptype"] = "Video Url already exist"; break;
+				 }
+				 
+			  }
+			  $temp_arr[$_REQUEST['Url'][$count]] = $_REQUEST['Url'][$count];
 			}
 			$count++;
 		}

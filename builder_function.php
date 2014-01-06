@@ -2137,7 +2137,7 @@ function checkDuplicateVideoLink($videoLinkUrl){
 		$vcount = mysql_fetch_object($qrySelect);
 		
 				
-	return ($vcount->cnt)? 1 : 0; 
+	return ($vcount->cnt)? $vcount->cnt : 0; 
 }
 ?>
 

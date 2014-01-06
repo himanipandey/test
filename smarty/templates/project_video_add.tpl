@@ -243,6 +243,7 @@ $(document).ready(function(){
 						{if $param_edit == 'edit'}
 							 <input type="hidden" name="page_stage" value="edit" />
 							  <input type="hidden" name="video_id" value="{$video_id}" />
+							  <input type="hidden" name="img" value="1" />
 						{/if}
 			
 				  </td>
