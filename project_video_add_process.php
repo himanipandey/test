@@ -63,6 +63,15 @@ if($_REQUEST['edit'] == 'edit' && !isset($_POST['page_stage'])){
 	    {
 	      $ErrorMsg["ptype"] = "Please enter Video Url.";
 	    }
+	    
+	   //checking Url is empty
+	    $count = 0;
+		while($count < $_REQUEST['img']){
+			if(trim($_REQUEST['Url'][$count]) == ''){
+				$ErrorMsg["ptype"] = "Please enter Video Url."; break;
+			}
+			$count++;
+		}
          
         $smarty->assign("PType", $_REQUEST['PType']);
 	if(is_array($ErrorMsg)) {
@@ -71,7 +80,7 @@ if($_REQUEST['edit'] == 'edit' && !isset($_POST['page_stage'])){
 	else
 	{
 				
-			$video_url =  mysql_real_escape_string($_REQUEST['Url'][0]);
+			$video_url =  trim(mysql_real_escape_string($_REQUEST['Url'][0]));
 			$video_type =  mysql_real_escape_string($_REQUEST['PType']);
 			
 		if(isset($_POST['page_stage'])){

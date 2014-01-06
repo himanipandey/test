@@ -7,7 +7,7 @@ function isNumberKey(evt)
  	if(charCode == 8 || charCode == 13 || charCode == 46)
    	 return true;
 	
-	if (charCode >= 49 && charCode <= 57)
+	if (charCode >= 48 && charCode <= 57)
 		return true;
 
 	 return false;
