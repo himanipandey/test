@@ -13,7 +13,7 @@ include("includes/configs/configs.php");
 include("s3upload/s3_config.php");
 include("SimpleImage.php");
 AdminAuthentication();
-$cityArr = City::CityArr();
+$cityArr = City::CityArr($BranchLoc);
 $brokerArr = BrokerCompany::find('all' , array('select' => 'brokers.id,brokers.broker_name'));
 $qualification = SellerCompany::getQualification();
 

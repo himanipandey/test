@@ -14,7 +14,7 @@ include("s3upload/s3_config.php");
 include("SimpleImage.php");
 
 AdminAuthentication(); 
-$cityArr = City::CityArr();
+$cityArr = City::CityArr($BranchLoc);
 $cityLocArr = CityLocationRel::CityLocArr(); 
 $result = array();
 foreach($cityLocArr as $key => $val)
