@@ -2113,5 +2113,18 @@ function project_video_detail($projectId){
 	
 	return  $videoList;	
 }
+function fetchProjectRedevelolpmentFlag($projectId){
+	
+	 $select = "select attribute_value from table_attributes 
+            where table_name = 'resi_project' and table_id = $projectId and attribute_name = 'REDEVELOPMENT_PROJECT'";
+     $qrySelect = mysql_query($select) or die(mysql_error());
+     
+     if($qrySelect)
+		$flag = mysql_fetch_object($qrySelect);
+     
+     
+     return ($flag->attribute_value)? "Yes" : "No";
+	
+}
 ?>
 

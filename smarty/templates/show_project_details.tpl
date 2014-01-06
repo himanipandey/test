@@ -1077,9 +1077,9 @@ function getDateNow(){
                                                             <b>YouTube Video Key:</b>
                                                     </td>
                                                     <td>
-                                                        {if $projectDetails[0].YOUTUBE_VIDEO!=""}
+                                                        {if $project_video_links!=""}
                                                          <a href = "{$projectDetails[0].YOUTUBE_VIDEO}"><a>
-                                                                Youtube Link 
+                                                                {$project_video_links} Youtube Link Available
                                                           {else}
                                                                 No link available
                                                         {/if}
@@ -1221,6 +1221,14 @@ function getDateNow(){
                                                         {else}
                                                               --
                                                         {/if}
+                                                    </td>
+						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Redevelopment Project: </b>
+                                                    </td>
+                                                    <td>
+                                                        {$redevelopment_flag}
                                                     </td>
 						</tr>
                                                 
