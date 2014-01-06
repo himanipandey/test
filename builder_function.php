@@ -2100,5 +2100,44 @@ function projectBankList($projectId){
 	
 	return  $projectList;	
 }
+function project_video_detail($projectId){
+	
+	$videoList = array();
+	$Sql = "SELECT video_id, category, video_url FROM " . VIDEO_LINKS . " WHERE table_id = ".$projectId." ORDER BY video_id DESC";
+	$ExecSql = mysql_query($Sql);
+	while($video = mysql_fetch_array($ExecSql)){
+		$videoList[$video['video_id']]['video_id'] = $video['video_id'];
+		$videoList[$video['video_id']]['category'] = $video['category'];
+		$videoList[$video['video_id']]['url'] = $video['video_url'];		
+	}
+	
+	return  $videoList;	
+}
+function fetchProjectRedevelolpmentFlag($projectId){
+	
+	 $select = "select attribute_value from table_attributes 
+            where table_name = 'resi_project' and table_id = $projectId and attribute_name = 'REDEVELOPMENT_PROJECT'";
+     $qrySelect = mysql_query($select) or die(mysql_error());
+     
+     if($qrySelect)
+		$flag = mysql_fetch_object($qrySelect);
+     
+     
+     return ($flag->attribute_value)? "Yes" : "No";
+	
+}
+function checkDuplicateVideoLink($videoLinkUrl){
+	
+	$videoLinkUrl = trim($videoLinkUrl);
+	$Sql = "SELECT count(*) as cnt FROM " . VIDEO_LINKS . " WHERE video_url = '".$videoLinkUrl."'";
+	
+	$qrySelect = mysql_query($Sql) or die(mysql_error());
+     
+     if($qrySelect)
+		$vcount = mysql_fetch_object($qrySelect);
+		
+				
+	return ($vcount->cnt)? $vcount->cnt : 0; 
+}
 ?>
 

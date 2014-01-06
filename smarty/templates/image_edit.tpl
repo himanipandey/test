@@ -167,8 +167,8 @@ $(".pt_reqflrplan").fancybox();
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
 														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
-														
-														<div class="taggedDate" {if !$ImageDataListingArr[data].tagged_month || $ImageDataListingArr[data].tagged_month == '0000-00-00'} style="display:none" {/if}>
+														{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
+														<div class="taggedDate">
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
 															<select name="tagged_date[{$cnt}]" >
 																<option value="0" >--Select Month--</option>
@@ -186,7 +186,16 @@ $(".pt_reqflrplan").fancybox();
 																	<option value="-1" {if $ImageDataListingArr[data].tower_id == null} selected {/if}>Other</option>
 															</select>
 														</div>
-														
+														{/if}
+														{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
+															Display Order:&nbsp;&nbsp;
+															<select name= "txtdisplay_order[{$cnt}]" >
+																{foreach from=$display_order_div key=keyss item=datass}
+																	<option value="{$keyss}"  {if $ImageDataListingArr[data].display_order == $keyss} selected {/if}>{$datass}</option>
+																{/foreach}																	
+															</select>
+															<br/>
+														{/if}
 														Delete/Edit:<input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
 														New Image?:<input type="file" name="img[{$cnt}]"/>
 

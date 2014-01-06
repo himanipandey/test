@@ -63,8 +63,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    $eff_date_to = trim($_POST['eff_date_to']);
 			 $display_order = PROJECT_MAX_PRIORITY;
 	    $oldbuilderId = trim($_POST['oldbuilderId']);
-	    $youtube_link = trim($_POST['youtube_link']);
-            
+	                
             $application = trim($_POST['application']);
             $app_form =	trim($_POST['app_form']);
 
@@ -100,8 +99,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $updationCycleIdOld = $_POST["updationCycleIdOld"];
             $numberOfTowers = $_POST["numberOfTowers"];
             $completionDate = $_POST["completionDate"];
-            
-            
+            $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
+                       
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
                $suburbSelect = Suburb::SuburbArr($_POST['cityId']);
@@ -145,8 +144,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("exp_launch_date", $exp_launch_date);
             $smarty->assign("eff_date_to", $eff_date_to);   
             $smarty->assign("display_order", $display_order);
-            $smarty->assign("youtube_link", $youtube_link);
-
+           
             if(isset($_POST['bank_list']))
                $smarty->assign("bank_arr", $_POST['bank_list']);
             else
@@ -181,6 +179,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("updationCycleIdOld", $updationCycleIdOld);
             $smarty->assign("numberOfTowers", $numberOfTowers);
             $smarty->assign("completionDate", $completionDate);
+            $smarty->assign("redevelopmentProject", $redevelopmentProject);
+            
             /***********Folder name**********/
             if(!empty($builderId)){
 	    	$builderDetail = ResiBuilder::getBuilderById($builderId);
@@ -457,7 +457,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['pre_launch_date'] = $pre_launch_date;
             $arrInsertUpdateProject['launch_date'] = $eff_date_to;
             $arrInsertUpdateProject['source_of_information'] = $txtProjectSource;
-            $arrInsertUpdateProject['youtube_video'] = $youtube_link;
             if($application == 'pdf-new' || $application == 'pdf-del')
 				$arrInsertUpdateProject['application_form'] =  $app;
             $arrInsertUpdateProject['approvals'] = $approvals;
@@ -482,6 +481,26 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
             
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
+           
+           $redev_pro = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));
+           
+           if($redev_pro){
+			
+				$redev_pro = TableAttributes::find($redev_pro[0]->id);
+				$redev_pro->updated_by = $_SESSION['adminId'];
+				$redev_pro->attribute_value = $redevelopmentProject;
+				$redev_pro->save();		
+			   
+			}else{
+				$redev_pro = new TableAttributes();
+				$redev_pro->table_name = 'resi_project';
+				$redev_pro->table_id = $returnProject->project_id;
+				$redev_pro->attribute_name = 'REDEVELOPMENT_PROJECT';
+				$redev_pro->attribute_value = $redevelopmentProject;
+				$redev_pro->updated_by = $_SESSION['adminId'];
+				$redev_pro->save();
+			}
+           
            //echo $eff_date_to." heer";die;
            if (!ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
            {
@@ -652,8 +671,7 @@ elseif ($projectId!='') {
     $smarty->assign("txtProjectURLOld", stripslashes($ProjectDetail->project_url));
     $smarty->assign("eff_date_to", stripslashes($ProjectDetail->launch_date));
     $smarty->assign("display_order", $ProjectDetail->display_order);
-    $smarty->assign("youtube_link", stripslashes($ProjectDetail->youtube_video));
-    
+       
     $app_form = stripslashes($ProjectDetail->application_form);
     $app_form = explode("/",$app_form);
     $smarty->assign("app_form", $app_form[2]);
@@ -682,8 +700,10 @@ elseif ($projectId!='') {
     $smarty->assign("numberOfTowers", $ProjectDetail->no_of_towers);
     $booking_status_id = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical'),'select' => 
                     'BOOKING_STATUS_ID'));
-    //  print "<pre>".print_r($booking_status_id,1);  die;
     $smarty->assign("bookingStatus", $booking_status_id[0]->booking_status_id);
+    $redevelopmentProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));              
+    $smarty->assign("redevelopmentProject", $redevelopmentProject[0]->attribute_value);
+    
     
  }
 
