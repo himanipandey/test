@@ -28,7 +28,7 @@ $(document).ready(function(){
 					
 			});
 	}
-	 if($('select#PType').val() == 'Project Image'){
+	/* if($('select#PType').val() == 'Project Image'){
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
@@ -37,7 +37,7 @@ $(document).ready(function(){
 				  }
 						
 				});
-			 }
+			 }*/
 	
 	 $('select#PType').change(function(k, v){
 			$('.taggedDate').each(function(){
@@ -57,7 +57,7 @@ $(document).ready(function(){
 					
 			 }
 				         
-	         if($('select#PType').val() == 'Project Image'){
+	      /*   if($('select#PType').val() == 'Project Image'){
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
@@ -67,7 +67,7 @@ $(document).ready(function(){
 						
 				});
 			 }
-	         
+	         */
 		});
 });
 </script>

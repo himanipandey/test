@@ -89,7 +89,7 @@ if (isset($_POST['Next']))
 	$arrTitle = array();
 	$arrTaggedDate = array();
 	$arrTowerId = array();
-	$arrDisplayOrder = array();
+	//$arrDisplayOrder = array();
 	  	foreach($_FILES['txtlocationplan']['name'] as $k=>$v)
 		{
 			if($v != '')
@@ -114,7 +114,7 @@ if (isset($_POST['Next']))
 				$arrTitle[$k] = $_REQUEST['title'][$k];
 				$arrTaggedDate[$k] = $_REQUEST['txttagged_date'][$k+1];
 				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
-				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
+				//$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
 			}
 		}
 				
@@ -992,8 +992,7 @@ if (isset($_POST['Next']))
 														PLAN_IMAGE = '".$imgDbPath[1]."',
 														TITLE	   = '".$arrTitle[$key]."',
                                                         SERVICE_IMAGE_ID   = ".$image_id.",
-                                                        ".$add_tower."
-                                                        DISPLAY_ORDER = '".$arrDisplayOrder[$key]."', 
+                                                        ".$add_tower." 
                                                         TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								$res	=	mysql_query($qry) or die(mysql_error());
@@ -1006,8 +1005,7 @@ if (isset($_POST['Next']))
 													PLAN_TYPE		=	'".$_REQUEST['PType']."',
 													    BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
 													SERVICE_IMAGE_ID        =    ".$image_id.",
-													TITLE			=	'".$arrTitle[$key]."',
-													DISPLAY_ORDER = '".$arrDisplayOrder[$key]."', 
+													TITLE			=	'".$arrTitle[$key]."', 
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													SUBMITTED_DATE	=	now()";
