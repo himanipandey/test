@@ -107,6 +107,7 @@
                                                 <option value="">Category</option>
                                                 <option value="Mall">Mall</option>
                                                 <option value="Hospital">Hospital</option>
+                                                <option value="Map">Map</option>
                                                 <option value="School">School</option>
                                                 <option value="Road">Road</option>
                                                 <option value="Other">Other</option>
