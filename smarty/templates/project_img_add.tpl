@@ -28,6 +28,16 @@ $(document).ready(function(){
 					
 			});
 	}
+	 if($('select#PType').val() == 'Project Image'){
+				$('.taggedDate').each(function(){
+				  $(this).show();
+				  if($(this).children('#tower_dropdown').length == 0){
+					$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
+					$(this).append($('#select_display_order').html());
+				  }
+						
+				});
+			 }
 	
 	 $('select#PType').change(function(k, v){
 			$('.taggedDate').each(function(){
