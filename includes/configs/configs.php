@@ -648,7 +648,9 @@ $arrCampaign =
     "Delhi_Resale1",
     "Delhi_Resale2",
     "Chennai_Campaign2",
-    "Kolkata_Campaign2"
+    "Kolkata_Campaign2",
+    "Hyderabad_campaign_1",
+    "Hyderabad_campaign_2"
 	);
 
 $arrCampaignDids = 
@@ -671,7 +673,9 @@ $arrCampaignDids =
     "Delhi_Resale1"=>'911166576882',
     "Delhi_Resale2"=>'911130803890',
     "Chennai_Campaign2"=>'914466949417',
-    "Kolkata_Campaign2"=>'913330566010'
+    "Kolkata_Campaign2"=>'913330566010',
+    "Hyderabad_campaign_1"=>'914030883984',
+    "Hyderabad_campaign_2"=>'914066588473'
 	);
 
 /**************Authentication*************/
