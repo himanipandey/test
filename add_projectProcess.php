@@ -32,7 +32,7 @@ $preview = $_REQUEST['preview'];
 $smarty->assign("preview", $preview);
 $bookingStatuses = ResiProject::find_by_sql("select * from master_booking_statuses");
 $smarty->assign("bookingStatuses", $bookingStatuses);
-      
+
 if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	if ( $_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save" ) {
 	    $txtProjectName = trim($_POST['txtProjectName']);
@@ -213,7 +213,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $ErrorMsg["txtSuburbs"] = "Suburbs must be selected.";
             }
 	    if(empty($comments)){
-               $ErrorMsg["txtComments"] = "Please enter comment.";
+               $ErrorMsg["Comment"] = "Please enter project comment.";
             }
 	    if(empty($txtAddress)){
                $ErrorMsg["txtAddress"] = "Please enter project address.";

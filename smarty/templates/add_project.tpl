@@ -199,7 +199,7 @@
                                                                        <textarea name="txtProjectDesc" rows="10" cols="45" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
                                                                 </td>
                                                                 <td width="50%" align="left">
-                                                                        <font color="red">{if $ErrorMsg["txtDesc"] != ''} {$ErrorMsg["txtDesc"]} {/if}<span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
+                                                                        <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
                                                                </td>
 							   </tr>
 							   {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
@@ -322,10 +322,10 @@
 							   </tr>							   
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Comments :</b> </td>
-								  <td width="30%" align="left"><input type="text" name="comments" id="comments" value="{$comments}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
+								  <td nowrap width="30%" align="left"><input type="text" name="comments" id="comments" value="{$comments}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
 
 								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Option Description!</span></font>
+									  <font color="red">{if $ErrorMsg["Comment"] != ''} {$ErrorMsg["Comment"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Comment!</span></font>
 								  </td>
 							   </tr>
 
