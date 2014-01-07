@@ -1,7 +1,7 @@
 <?php
 $errorDataArr = array();
 $QueryMember = "
-SELECT a.*,b.PROJECT_NAME, c.UNIT_NAME, c.UNIT_TYPE, c.SIZE, d.LABEL as CITY, e.LABEL as LOCALITY
+SELECT a.*,b.PROJECT_NAME, b.BUILDER_NAME, c.UNIT_NAME, c.UNIT_TYPE, c.SIZE, d.LABEL as CITY, e.LABEL as LOCALITY
 FROM 
         proptiger.RESI_PROJECT_ERROR a LEFT JOIN 
         proptiger.RESI_PROJECT b ON a.PROJECT_ID = b.PROJECT_ID LEFT JOIN 
