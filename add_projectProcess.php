@@ -455,7 +455,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['longitude'] = $txtProjectLongitude;
             $arrInsertUpdateProject['display_order'] = getDisplayOrder($projectId);
             $arrInsertUpdateProject['status'] = $Active;
-            $arrInsertUpdateProject['project_url'] = $txtProjectURL;
             $arrInsertUpdateProject['pre_launch_date'] = $pre_launch_date;
             $arrInsertUpdateProject['launch_date'] = $eff_date_to;
             $arrInsertUpdateProject['source_of_information'] = $txtProjectSource;
