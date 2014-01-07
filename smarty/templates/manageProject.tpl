@@ -559,6 +559,7 @@ $(function() {
                                 <option value = "add_specification.php?projectId={$value->project_id}&edit=edit">Edit/Add Specification and Amenities</option>
                                 <option value = "image_edit.php?projectId={$value->project_id}&edit=edit">Edit Plans</option>
                                 <option value = "project_img_add.php?projectId={$value->project_id}&edit=edit">Add Plans</option>
+                                <option value = "project_video_add.php?projectId={$value->project_id}&edit=add">Add/Edit Video</option>
                                 <option value = "add_apartmentConfiguration.php?projectId={$value->project_id}&edit=edit">Add/Edit Configuration</option>
                                 <option value = "edit_floor_plan.php?projectId={$value->project_id}&edit=edit">Edit Floor Plans</option>
                                 <option value = "add_apartmentFloorPlan.php?projectId={$value->project_id}&edit=edit">Add Floor Plans</option>

@@ -1,6 +1,6 @@
 <?php
     $citylist = City::CityArr();
-    $builderList = ResiBuilder::BuilderEntityArr();
+    $builderList = ResiBuilder::ProjectSearchBuilderEntityArr();
     if(!isset($_GET['projectId']))
         $_GET['projectId'] = '';
     $projectStatus = ResiProject::projectStatusMaster();

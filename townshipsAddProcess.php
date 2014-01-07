@@ -12,6 +12,9 @@ if (isset($_POST['btnSave'])) {
     $townshipsName = trim($_REQUEST['townshipsName']);
     $smarty->assign("townshipsName", $townshipsName);
     
+    $totalArea = trim($_REQUEST['totalArea']);
+    $smarty->assign("totalArea", $totalArea);
+    
 //  Server Side Validation
     if( $townshipsName == '')  {
         $ErrorMsg["townshipsName"] = "Please enter TownShips name.";
@@ -21,13 +24,13 @@ if (isset($_POST['btnSave'])) {
     }
     $getTownships = Townships::getTownshipByName($townshipsName);
     
-    if(count($getTownships) > 0)
+    if(count($getTownships) > 0 && $townshipsId != $getTownships[0]->id)
     {
         $ErrorMsg["townshipsName"] = "This township Already exists";
     }
-    
-    
+           
     $smarty->assign("ErrorMsg", $ErrorMsg);
+    
     if(count($ErrorMsg) == 0) {
         if ($townshipsId != '')
             $townshipsInsert = Townships::find($townshipsId);
@@ -35,6 +38,7 @@ if (isset($_POST['btnSave'])) {
             $townshipsInsert = new Townships();
   
         $townshipsInsert->township_name = $townshipsName;
+        $townshipsInsert->total_area = $totalArea;
         $townshipsInsert->updated_by = $_SESSION['adminId'];                
         if( $townshipsInsert->save() )
            header("Location:townships.php?page=1&sort=all");
@@ -44,8 +48,10 @@ elseif($townshipsId!=''){
     $townShipsDetail = Townships::getTownShipsById($townshipsId);
     $townshipsName = $townShipsDetail[0]->township_name;
     $townshipsId = $townShipsDetail[0]->id;
+    $totalArea = $townShipsDetail[0]->total_area;
     $smarty->assign("townshipsName", $townshipsName);
     $smarty->assign("townshipsId", $townshipsId);
+    $smarty->assign("totalArea", $totalArea);
 }
 
  

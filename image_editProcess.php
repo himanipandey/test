@@ -43,6 +43,13 @@
 		$date_div[date('Y-m',$nextdate)] =  date("M-Y",$nextdate) ;
     }
     $smarty->assign("dateDiv", $date_div);
+    
+    //display order
+    $display_order_div = array();
+    for($cmt=1;$cmt<=5;$cmt++){
+		$display_order_div[$cmt] =  $cmt ;
+    }
+    $smarty->assign("display_order_div", $display_order_div);
    
 			 
 		if( isset($_REQUEST['title']) &&  !array_filter($_REQUEST['title']) )
@@ -75,6 +82,7 @@
 				$arrTitle = array();
 				$arrTaggedDate = array();
 				$arrTowerId = array();
+				$arrDisplayOrder = array();
 				foreach($_REQUEST['chk_name'] as $k=>$v)
 				{
 					if($v != '')
@@ -101,6 +109,7 @@
 							$arrTitle[$k] = $_REQUEST['title'][$k];
 							$arrTaggedDate[$k] = date("Y-m-d",strtotime($_REQUEST['tagged_date'][$k]));
 							$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
+							$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
 						}
 						else
 						{
@@ -1008,6 +1017,7 @@
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													TOWER_ID = '".$arrTowerId[$key]."',
 													".$add_tower."
+													DISPLAY_ORDER = '".$arrDisplayOrder[$key]."',
 													SERVICE_IMAGE_ID   = ".$image_id."
 												WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$key]."' AND PLAN_IMAGE = '".$oldpath."'";
 									$res	=	mysql_query($qry);

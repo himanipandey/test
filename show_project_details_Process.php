@@ -17,8 +17,14 @@ if(ProjectMigration::isProjectWaitingForMigration($projectId))die ('This project
 $lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
 $smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
 
+$project_video_links = project_video_detail($projectId);
+$smarty->assign("project_video_links", count($project_video_links));
+
 $arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
 $smarty->assign("arrCalingPrimary", $arrCalingPrimary);
+
+$redevelopment_flag = fetchProjectRedevelolpmentFlag($projectId);
+$smarty->assign("redevelopment_flag", $redevelopment_flag);
 
 /* * ****start display other pricing******/
 $otherPricing = fetch_other_price($projectId);
