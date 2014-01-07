@@ -347,15 +347,17 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
                $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
            }
-           if($completionDate == '0000-00-00')
-               $completionDate = '';
-           if($projectId != '' && $Status == UNDER_CONSTRUCTION_ID_1 && ($completionDate != '' || $launchDt != '')) {
-               $retdt  = ((strtotime($completionDate)-strtotime($launchDt))/(60*60*24));
-                if( $retdt <= 180 ) {
-                    $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date';
-                } 
-           }
        }
+       
+       if($completionDate == '0000-00-00')
+               $completionDate = '';
+        if($projectId != '' && ($completionDate != '' || $launchDt != '')) {
+            $retdt  = ((strtotime($completionDate)-strtotime($launchDt))/(60*60*24));
+             if( $retdt <= 180 ) {
+                 $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date';
+             } 
+        }
+           
        if( $launchDt != '' && $eff_date_to_prom !='' ) {
             $retdt  = ((strtotime($eff_date_to_prom)-strtotime($launchDt))/(60*60*24));
             if( $retdt <= 180 ) {
