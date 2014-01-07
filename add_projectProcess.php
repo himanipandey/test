@@ -354,7 +354,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
         if($projectId != '' && ($completionDate != '' || $launchDt != '')) {
             $retdt  = ((strtotime($completionDate)-strtotime($launchDt))/(60*60*24));
              if( $retdt <= 180 ) {
-                 $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date';
+                 $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date: '.$completionDate;
              } 
         }
            
