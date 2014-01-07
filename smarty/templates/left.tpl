@@ -226,6 +226,7 @@
     <tr>
                 <td class="thinline" align="left" colspan="2"></td>
     </tr>
+    {if $priorityMgmtPermissionAccess == 1}
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
         <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Priority Management</font></a></td>
@@ -248,6 +249,7 @@
             </tr>
         </table>
     </td></tr>
+    {/if}
     {if $isMetricsAccess == true}
      <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
