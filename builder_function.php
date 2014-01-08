@@ -2126,13 +2126,13 @@ function fetchProjectRedevelolpmentFlag($projectId){
      return ($flag->attribute_value)? "Yes" : "No";
 	
 }
-function checkDuplicateVideoLink($videoLinkUrl,$video_id=0){
+function checkDuplicateVideoLink($projectId,$videoLinkUrl,$video_id=0){
 	
 	$condition = '';
 	if($video_id)
 		$condition = " AND video_id != '$video_id'";
 	$videoLinkUrl = trim($videoLinkUrl);
-	$Sql = "SELECT count(*) as cnt FROM " . VIDEO_LINKS . " WHERE video_url = '".$videoLinkUrl."' ".$condition;
+	$Sql = "SELECT count(*) as cnt FROM " . VIDEO_LINKS . " WHERE table_id = '$projectId' AND video_url = '".$videoLinkUrl."' ".$condition;
 	
 	$qrySelect = mysql_query($Sql) or die(mysql_error());
      

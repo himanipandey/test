@@ -78,9 +78,9 @@ if($_REQUEST['edit'] == 'delete'){
 			  }else {//checking duplicacy
 				
 				 if(!isset($_REQUEST['video_id']))
-					$ext_vlinks = checkDuplicateVideoLink($_REQUEST['Url'][$count]);
+					$ext_vlinks = checkDuplicateVideoLink($projectId,$_REQUEST['Url'][$count]);
 				 elseif($_REQUEST['video_id'])
-					$ext_vlinks = checkDuplicateVideoLink($_REQUEST['Url'][$count],$_REQUEST['video_id']);
+					$ext_vlinks = checkDuplicateVideoLink($projectId,$_REQUEST['Url'][$count],$_REQUEST['video_id']);
 				 if($ext_vlinks){
 					$ErrorMsg["ptype"] = "Video Url already exist"; break;
 				 }
