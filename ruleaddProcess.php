@@ -47,8 +47,9 @@
         $Offset = ($PageNum - 1) * $RowsPerPage;
     }
     $rule_id = '';
+    $chkLoc = 0;
     if ($_POST['btnSave'] == "Submit Rule"){
-        //print'<pre>';
+//        print'<pre>';
 //        print_r($_POST);
 //        die;
 
@@ -90,132 +91,198 @@
             ResiProject::transaction(function(){
                 
                 global $broker_cmpny , $rule_name , $city_id,$locality,$project,$agent , $broker_cmpny_id, $rule_id;
-                $locality_id = '';
                 
-                $chkSql = @mysql_query("SELECT * FROM rule_locality_mappings WHERE city_id = '".mysql_escape_string($city_id)."' AND locality_id = '-1'");
+                $sql_project_assignment_rules = @mysql_query("INSERT INTO `project_assignment_rules` SET
+                                            `broker_id` = '".mysql_escape_string($broker_cmpny_id)."',
+                                            `rule_name` = '".mysql_escape_string($rule_name)."',
+                                            `updated_by` = '".$_SESSION['adminId']."',
+                                            `created_at` = '".date('Y-m-d H:i:s')."'") or die(mysql_error());
+                $rule_id = mysql_insert_id();          
+                //$rule_id = 51;
                 
-                if(!@mysql_num_rows($chkSql) > 0)
-                {
-                    $sql_project_assignment_rules = @mysql_query("INSERT INTO `project_assignment_rules` SET
-                                                `broker_id` = '".mysql_escape_string($broker_cmpny_id)."',
-                                                `rule_name` = '".mysql_escape_string($rule_name)."',
-                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                `created_at` = '".date('Y-m-d H:i:s')."'") or die(mysql_error());
-                    $rule_id = mysql_insert_id();          
-                    //$rule_id = 1;
-                    if($rule_id != false) {
-                         
-                        
-                        if(!empty($locality) && $locality != 'all')
+                if($rule_id != false) {
+                     
+                    
+                    if(!empty($project) && $project != 'all')
+                    {
+                        $chkAll = 0;
+                        $insertLocpa = ' INSERT INTO `rule_project_mappings` (rule_id,project_id,updated_by,created_at) 
+                                                                values';
+                        $str1 = '';
+                        foreach($project as $key => $val)
                         {
-                            foreach($locality as $key => $val)
+                            if(empty($val))
+                                continue;
+                            
+                            if($val == 'all')
                             {
-                                if(empty($val))
-                                    continue;
-                                
-                                if($val == 'all')
+                                $chkAll = 1;
+                                if(!empty($locality) && $locality[0] == 'all')
                                 {
-                                    $sql_rule_locality_mappings = @mysql_query("INSERT INTO `rule_locality_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `locality_id` = '-1',
-                                                                `city_id` = '".mysql_escape_string($city_id)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    $locality_id = @mysql_insert_id();
-                                    //$locality_id = '1';
-    //                                echo "INSERT INTO `rule_locality_mappings` SET 
-    //                                                                    `rule_id` = '".$rule_id."',
-    //                                                                    `locality_id` = '-1',
-    //                                                                    `city_id` = '".mysql_escape_string($city_id)."',
-    //                                                                    `updated_by` = '".$_SESSION['adminId']."',
-    //                                                                    `created_at` = '".date('Y-m-d')."'<br>";
-                                }
-                                else
-                                {
-                                    $sql_rule_locality_mappings = @mysql_query("INSERT INTO `rule_locality_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `locality_id` = '".mysql_escape_string($val)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    $locality_id = @mysql_insert_id();    
-                                }
+                                    $fetchProQuery = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project 
+                                            LEFT JOIN locality ON resi_project.locality_id = locality.locality_id
+                                            LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
+                                            LEFT JOIN city ON suburb.city_id = city.city_id
+                                            WHERE city.city_id = '".mysql_escape_string($city_id)."'
+                                            AND resi_project.project_id NOT IN (SELECT project_id FROM rule_project_mappings)
+                                            ");
+                                    $insertLoc = 'INSERT INTO `rule_project_mappings` (rule_id,project_id,updated_by,created_at) 
+                                                                values ';
+                                    $str = '';
+                                    while($row = @mysql_fetch_assoc($fetchProQuery))
+                                    {
+                                        $str .= " ('".$rule_id."','".$row['project_id']."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
                                         
-                            }
-                        }
-                        
-                        
-                        if(!empty($project) && $project != 'all')
-                        {
-                            foreach($project as $key => $val)
-                            {
-                                if(empty($val))
-                                    continue;
-                                
-                                if($val == 'all')
-                                {
-                                    $sql_rule_project_mappings = @mysql_query("INSERT INTO `rule_project_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `project_id` = '-1',
-                                                                `rule_locality_mapping_id` = '".$locality_id."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    //echo "INSERT INTO `rule_project_mappings` SET 
+                                        //echo "INSERT INTO `rule_project_mappings` SET 
     //                                                                    `rule_id` = '".$rule_id."',
-    //                                                                    `project_id` = '-1',
-    //                                                                    `locality_id` = '".$locality_id."',
-    //                                                                    `updated_by` = '".$_SESSION['adminId']."',
-    //                                                                    `created_at` = '".date('Y-m-d')."'<br>"; 
-                                }
-                                else
-                                {
-                                    $sql_rule_project_mappings = @mysql_query("INSERT INTO `rule_project_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `project_id` = '".mysql_escape_string($val)."',
-                                                                `rule_locality_mapping_id` = '".$locality_id."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());    
-                                }
-                                      
-                            }
-                        }
-                        
-                        
-                        if(!empty($agent) && $agent != 'all')
-                        {
-                            foreach($agent as $key => $val)
-                            {
-                                if(empty($val))
-                                    continue;
-                                 
-                                if($val == 'all')
-                                {
-                                    $sql_rule_agent_mappings = @mysql_query("INSERT INTO `rule_agent_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `agent_id` = '-1',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    //echo "INSERT INTO `rule_agent_mappings` SET 
-    //                                                                    `rule_id` = '".$rule_id."',
-    //                                                                    `agent_id` = '-1',
+    //                                                                    `project_id` = '".$row['project_id']."',
     //                                                                    `updated_by` = '".$_SESSION['adminId']."',
     //                                                                    `created_at` = '".date('Y-m-d')."'<br>";
+                                    }  
+                                    
+                                    $insertLoc .= trim($str , ',');
+                                    $sql_rule_project_mappings = @mysql_query($insertLoc) or die(mysql_error()); 
                                 }
                                 else
                                 {
-                                    $sql_rule_agent_mappings = @mysql_query("INSERT INTO `rule_agent_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `agent_id` = '".mysql_escape_string($val)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                }    
+                                    
+                                    $fetchProQuery = @mysql_query("SELECT resi_project.project_id , resi_project.project_name AS label FROM resi_project WHERE resi_project.locality_id IN (".implode("," , $locality).")");
+                                    $insertLoc = ' INSERT INTO `rule_project_mappings` (rule_id,project_id,updated_by,created_at) 
+                                                                values';
+                                    $str = '';
+                                    while($row = @mysql_fetch_assoc($fetchProQuery))
+                                    {
+                                        $str .= " ('".$rule_id."','".$row['project_id']."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                        
+                                        //echo "INSERT INTO `rule_project_mappings` SET 
+    //                                                                    `rule_id` = '".$rule_id."',
+    //                                                                    `project_id` = '".$row['project_id']."',
+    //                                                                    `updated_by` = '".$_SESSION['adminId']."',
+    //                                                                    `created_at` = '".date('Y-m-d')."'<br>";
+                                    }
+                                    $insertLoc .= trim($str , ',');
+                                    $sql_rule_project_mappings = @mysql_query($insertLoc) or die(mysql_error());
+                                }
+                                
+                                break;
+                                 
                             }
+                            else
+                            {
+                                $str1 .= " ('".$rule_id."','".$val."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                //echo "Project ID : ".$val."<br>";
+                                  
+                                //echo "INSERT INTO `rule_project_mappings` SET 
+//                                                        `rule_id` = '".$rule_id."',
+//                                                        `project_id` = '".mysql_escape_string($val)."',
+//                                                        `updated_by` = '".$_SESSION['adminId']."',
+//                                                        `created_at` = '".date('Y-m-d')."'<br>";
+                                  
+                            }
+                                  
                         }
                         
+                        if($chkAll == 0 && !empty($insertLocpa))
+                        {
+                            $insertLocpa .= trim($str1 , ',');
+                            $sql_rule_project_mappings = @mysql_query($insertLocpa) or die(mysql_error());
+                        }
                     }
-                    else{
-                        $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
-                    } 
+                    
+                    if(!empty($locality) && $locality != 'all')
+                    {
+                        $chkAll = 0;
+                        $insertLocpa = 'INSERT INTO `rule_locality_mappings` (rule_id,locality_id,updated_by,created_at) values';
+                        $str1 = '';
+                        foreach($locality as $key => $val)
+                        {
+                            if(empty($val))
+                                continue;
+                            
+                            if($val == 'all')
+                            {
+                                $chkAll= 1;
+                                $fetchLocQuery = @mysql_query("SELECT locality.locality_id FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = ".mysql_escape_string($city_id)." AND locality.locality_id NOT IN (SELECT locality_id FROM rule_locality_mappings)");
+                                $insertLoc = 'INSERT INTO `rule_locality_mappings` (rule_id,locality_id,updated_by,created_at) values';
+                                $str = '';
+                                while($row = @mysql_fetch_assoc($fetchLocQuery))
+                                {
+                                    $str .= " ('".$rule_id."','".$row['locality_id']."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                                        
+                                    
+                                    
+                                    //echo "INSERT INTO `rule_locality_mappings` SET 
+//                                                                        `rule_id` = '".$rule_id."',
+//                                                                        `locality_id` = '".$row['locality_id']."',
+//                                                                        `updated_by` = '".$_SESSION['adminId']."',
+//                                                                        `created_at` = '".date('Y-m-d')."'<br>";
+
+                                }
+                                $insertLoc .= trim($str , ',');
+                                $sql_rule_locality_mappings = @mysql_query($insertLoc) or die(mysql_error());
+                                
+                                break;                                                                
+                            }
+                            else
+                            {
+                                $str1 .= " ('".$rule_id."','".mysql_escape_string($val)."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                
+                                //echo "Locality ID : ".$val."<br>";
+                                
+                                //echo "INSERT INTO `rule_locality_mappings` SET 
+//                                                                    `rule_id` = '".$rule_id."',
+//                                                                    `locality_id` = '".mysql_escape_string($val)."',
+//                                                                    `updated_by` = '".$_SESSION['adminId']."',
+//                                                                    `created_at` = '".date('Y-m-d')."'<br>";    
+                            }
+                                    
+                        }
+                        if($chkAll == 0 && !empty($insertLocpa))
+                        {
+                            $insertLocpa .= trim($str1 , ',');
+                            $sql_rule_locality_mappings = @mysql_query($insertLocpa) or die(mysql_error());
+                        }
+                    }
+                    
+                    //echo "<br>Agent<br>";
+                    if(!empty($agent) && $agent != 'all')
+                    {
+                        $chkAll = 0;
+                        $insertLocpa = ' INSERT INTO `rule_agent_mappings` (rule_id,agent_id,updated_by,created_at) values';
+                        $str1 = '';
+                        foreach($agent as $key => $val)
+                        {
+                            if(empty($val))
+                                continue;
+                             
+                            if($val == 'all')
+                            {
+                                $chkAll = 1 ;
+                                break;
+                            }
+                            else
+                            {
+                                //echo "Agent ID : ".$val."<br>";
+                                $str1 .= " ('".$rule_id."','".mysql_escape_string($val)."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                               // echo "INSERT INTO `rule_agent_mappings` SET 
+//                                                            `rule_id` = '".$rule_id."',
+//                                                            `agent_id` = '".mysql_escape_string($val)."',
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `created_at` = '".date('Y-m-d')."'<br><br>";
+                            }    
+                        }
+                        if($chkAll == 0 && !empty($insertLocpa))
+                        {
+                            $insertLocpa .= trim($str1 , ',');
+                            $sql_rule_agent_mappings = @mysql_query($insertLocpa) or die(mysql_error());
+                        }
+                    }
+                    
                 }
+                else{
+                    $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
+                } 
+                
                 
             });
             
@@ -225,7 +292,6 @@
                 echo $rule_id;
                 die;
             }
-                //
             
         }
         else {
@@ -254,109 +320,134 @@
                     
                     if(!empty($finallocidArr))
                     {
+                        $delall = 'DELETE FROM `rule_locality_mappings` WHERE locality_id IN (';
+                        $str1 = '';                        
                         foreach($finallocidArr as $key => $val)
                         {
+                            $del = 'DELETE FROM `rule_locality_mappings` WHERE locality_id IN (';
+                            $str = '';
                             if($val == 'all')
-                                $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_locality_mappings` WHERE locality_id = '-1' AND rule_id = '".$rule_id."'");
+                            {
+                                $fetchLocQuery = @mysql_query("SELECT locality.locality_id FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = '".mysql_escape_string($city_id)."'");
+                                while($row = @mysql_fetch_assoc($sql))
+                                {
+                                    $str .= "'".$row['locality_id']."'".",";
+                                           
+                                }
+                                
+                                if(!empty($str))
+                                {
+                                    $del .= trim($str , ',').") AND rule_id = '".$rule_id."'";
+                                    //echo " Delete here".$del."<br>";
+                                    //die;
+                                    $sql_rule_locality_mappings = @mysql_query($del);
+                                }
+                                break;
+                            }
                             else
-                                $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_locality_mappings` WHERE locality_id = '".mysql_escape_string($val)."' AND rule_id = '".$rule_id."'");
+                            {
+                                $str1 .= "'".mysql_escape_string($val)."'".",";
+                            }
+                                
                             //echo "DELETE FROM `rule_locality_mappings` WHERE locality_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>";
                              
                         }
+                        if(!empty($str1))
+                        {
+                            $delall .= trim($str1 , ",").") AND rule_id = '".$rule_id."'";
+                            //echo " Delete thr".$delall."<br>";
+                            //die;
+                            $sql_rule_locality_mappings = @mysql_query($delall);
+                        }
                     }
-                    
+                    //print'<pre>';
+//                    print_r($locality);
                     if(!empty($locality))
                     {
+                        $chkAll = 0;
+                        $insertLocpa = ' INSERT INTO `rule_locality_mappings` (rule_id,locality_id,updated_by,created_at) values';
+                        $str1 = '';
                         foreach($locality as $key => $val)
                         {
                             if(empty($val))
                                 continue;
-                            
+                            //echo " Loc Val ".$val."<br>";
                             if($val == 'all')
                             {
-                                $chkSql = @mysql_query("SELECT * FROM `rule_locality_mappings` WHERE locality_id = '-1' AND rule_id = '".mysql_escape_string($rule_id)."'");
+                                $chkAll = 1;
+                                $fetchLocQuery = @mysql_query("SELECT locality.locality_id FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = ".mysql_escape_string($city_id)." AND locality.locality_id NOT IN (SELECT locality_id FROM rule_locality_mappings)");
+                                $insertLoc = ' INSERT INTO `rule_locality_mappings` (rule_id,locality_id,updated_by,created_at) values';
+                                $str = '';
+                                while($row = @mysql_fetch_assoc($fetchLocQuery))
+                                {
+                                    $chkSql = @mysql_query("SELECT * FROM `rule_locality_mappings` WHERE locality_id = '".mysql_escape_string($row['locality_id'])."' AND rule_id = '".mysql_escape_string($rule_id)."'");
                             
-                                if(@mysql_num_rows($chkSql) > 0)
-                                {
-                                    $sql_rule_locality_mappings = @mysql_query("UPDATE `rule_locality_mappings` SET 
-                                                            `locality_id` = '-1',
-                                                            `updated_by` = '".$_SESSION['adminId']."',
-                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
-                                    $getLocSql = @mysql_query("SELECT * FROM rule_locality_mappings WHERE `locality_id` = '-1' AND rule_id = '".mysql_escape_string($rule_id)."'");
-                                    
-                                    $resultLocSql = @mysql_fetch_assoc($getLocSql);
-                                    if(!empty($resultLocSql['id']))
-                                        $locality_id = $resultLocSql['id'];
+                                    if(!@mysql_num_rows($chkSql) > 0)
+                                    {
+                                        $str .= " ('".$rule_id."','".mysql_escape_string($row['locality_id'])."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                    }
+                                    //$sql_rule_locality_mappings = @mysql_query("UPDATE `rule_locality_mappings` SET 
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id = '".mysql_escape_string($rule_id)."' AND `locality_id` = '".mysql_escape_string($row['locality_id'])."'");
                                     //echo "UPDATE `rule_locality_mappings` SET 
-    //                                                        `locality_id` = '".mysql_escape_string($val)."',
-    //                                                        `updated_by` = '".$_SESSION['adminId']."',
-    //                                                        `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";    
+//                                                            `locality_id` = '".mysql_escape_string($row['locality_id'])."',
+//                                                            `updated_by` = '".$_SESSION['adminId']."',
+//                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>"; 
                                 }
-                                else
+                                
+                                if(!empty($str))
                                 {
-                                    $sql_rule_locality_mappings = @mysql_query("INSERT INTO `rule_locality_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `locality_id` = '-1',
-                                                                `city_id` = '".mysql_escape_string($city_id)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    $locality_id = @mysql_insert_id();
-                                    //echo "INSERT INTO `rule_locality_mappings` SET 
-//                                                                `rule_id` = '".$rule_id."',
-//                                                                `locality_id` = '-1',
-//                                                                `city_id` = '".mysql_escape_string($city_id)."',
-//                                                                `updated_by` = '".$_SESSION['adminId']."',
-//                                                                `created_at` = '".date('Y-m-d')."'"."<br>";
+                                    $insertLoc .= trim($str , ',');
+                                    //echo "<br> For All ".$insertLoc."<br>";
+//                                    die;
+                                    $sql_rule_locality_mappings = @mysql_query($insertLoc) or die(mysql_error());    
                                 }
+                                break;
+                                
                             }
                             else
                             {
-                                $chkSql = @mysql_query("SELECT * FROM `rule_locality_mappings` WHERE locality_id = '".mysql_escape_string($val)."' AND rule_id = '".mysql_escape_string($rule_id)."'");
-                            
-                                if(@mysql_num_rows($chkSql) > 0)
+                                $chkSql = @mysql_query("SELECT * FROM `rule_locality_mappings` WHERE locality_id = '".mysql_escape_string($val)."' AND rule_id = '".mysql_escape_string($rule_id)."'")or die(mysql_error());
+                                echo " Loc num rows ".@mysql_num_rows($chkSql)."<br>";
+                                if(!@mysql_num_rows($chkSql) > 0)
                                 {
-                                    $sql_rule_locality_mappings = @mysql_query("UPDATE `rule_locality_mappings` SET 
-                                                            `locality_id` = '".mysql_escape_string($val)."',
-                                                            `updated_by` = '".$_SESSION['adminId']."',
-                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
-                                    $getLocSql = @mysql_query("SELECT * FROM rule_locality_mappings WHERE `locality_id` = '".mysql_escape_string($val)."' AND rule_id = '".mysql_escape_string($rule_id)."'");
-                                    
-                                    $resultLocSql = @mysql_fetch_assoc($getLocSql);
-                                    if(!empty($resultLocSql['id']))
-                                        $locality_id = $resultLocSql['id'];
-                                    //echo "UPDATE `rule_locality_mappings` SET 
-    //                                                        `locality_id` = '".mysql_escape_string($val)."',
-    //                                                        `updated_by` = '".$_SESSION['adminId']."',
-    //                                                        `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";                              
-                                }
-                                else
-                                {
-                                    $sql_rule_locality_mappings = @mysql_query("INSERT INTO `rule_locality_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `locality_id` = '".mysql_escape_string($val)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    $locality_id = @mysql_insert_id();
+                                    $str1 .= " ('".$rule_id."','".mysql_escape_string($val)."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
                                     //echo "INSERT INTO `rule_locality_mappings` SET 
     //                                                            `rule_id` = '".$rule_id."',
     //                                                            `locality_id` = '".mysql_escape_string($val)."',
     //                                                            `updated_by` = '".$_SESSION['adminId']."',
     //                                                            `created_at` = '".date('Y-m-d')."'"."<br>";
                                 }
-                            }
-                            
-                            
-                                    
+                            }           
+                        }
+                        //echo $chkAll ." ". $insertLocpa." <br>".$str1."<br>";
+                        if($chkAll == 0 && !empty($insertLocpa) && !empty($str1))
+                        {
+                            $insertLocpa .= trim($str1 , ',');
+                            //echo "For Selected ".$insertLocpa."<br>";
+//                            die; 
+                            $sql_rule_locality_mappings = @mysql_query($insertLocpa) or die(mysql_error());
                         }
                     }
-                    
+                    //echo "here";
+//                    die;
                     
                     if(!empty($finalprojidArr))
                     {
                         foreach($finalprojidArr as $key => $val)
                         {
                             if($val == 'all')
-                                $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_project_mappings` WHERE project_id = '-1' AND rule_id = '".$rule_id."'");
+                            {
+                                $fetchProQuery = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project 
+                                            LEFT JOIN locality ON resi_project.locality_id = locality.locality_id
+                                            LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
+                                            LEFT JOIN city ON suburb.city_id = city.city_id
+                                            WHERE city.city_id = '".mysql_escape_string($city_id)."'");
+                                while($row = @mysql_fetch_assoc($fetchProQuery))
+                                {
+                                    $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_project_mappings` WHERE project_id = '".$row['project_id']."' AND rule_id = '".$rule_id."'");    
+                                }
+                            }
                             else
                                 $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_project_mappings` WHERE project_id = '".mysql_escape_string($val)."' AND rule_id = '".$rule_id."'"); 
                             //echo "DELETE FROM `rule_project_mappings` WHERE project_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>";
@@ -366,6 +457,10 @@
                     
                     if(!empty($project))
                     {
+                        $chkAll = 0;
+                        $insertLocpa = 'INSERT INTO `rule_project_mappings` (rule_id,project_id,updated_by,created_at) 
+                                                                values';
+                        $str1 = '';
                         foreach($project as $key => $val)
                         {
                             if(empty($val))
@@ -373,60 +468,85 @@
                             
                             if($val == 'all')
                             {
-                                $chkSql = @mysql_query("SELECT * FROM `rule_project_mappings` WHERE project_id = '-1' AND rule_id = '".mysql_escape_string($rule_id)."'");
-                            
-                                if(@mysql_num_rows($chkSql) > 0)
+                                $chkAll = 1;
+                                if(!empty($locality) && $locality[0] == 'all')
                                 {
-                                    $sql_rule_project_mappings = @mysql_query("UPDATE `rule_project_mappings` SET 
-                                                                `project_id` = '-1',
-                                                                `rule_locality_mapping_id` = '".$locality_id."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
-    
-                                    //echo "UPDATE `rule_project_mappings` SET 
-//                                                                `project_id` = '-1',
-//                                                                    `rule_locality_mapping_id` = '".$locality_id."',
-//                                                                `updated_by` = '".$_SESSION['adminId']."',
-//                                                                `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";
+                                    $fetchProQuery = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project 
+                                            LEFT JOIN locality ON resi_project.locality_id = locality.locality_id
+                                            LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
+                                            LEFT JOIN city ON suburb.city_id = city.city_id
+                                            WHERE city.city_id = '".mysql_escape_string($city_id)."'
+                                            AND resi_project.project_id NOT IN (SELECT project_id FROM rule_project_mappings)
+                                            ");
+                                    $insertLoc = 'INSERT INTO `rule_project_mappings` (rule_id,project_id,updated_by,created_at) 
+                                                                values';
+                                    $str = '';
+                                    while($row = @mysql_fetch_assoc($fetchProQuery))
+                                    {
+                                        $chkSql = @mysql_query("SELECT * FROM `rule_project_mappings` WHERE project_id = ".mysql_escape_string($row['project_id'])." AND rule_id = ".mysql_escape_string($rule_id));
+                            
+                                        if(!@mysql_num_rows($chkSql) > 0)
+                                        {
+                                            $str .= " ('".$rule_id."','".$row['project_id']."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                            
+                                        }
+                                        
+                                        //echo "INSERT INTO `rule_project_mappings` SET 
+    //                                                                    `rule_id` = '".$rule_id."',
+    //                                                                    `project_id` = '".$row['project_id']."',
+    //                                                                    `updated_by` = '".$_SESSION['adminId']."',
+    //                                                                    `created_at` = '".date('Y-m-d')."'<br>";
+                                    }   
+                                    
+                                    if(!empty($str))
+                                    {
+                                        $insertLoc .= trim($str , ',');
+                                        $sql_rule_project_mappings = @mysql_query($insertLoc) or die(mysql_error());    
+                                    }
+                                    
+                                    
+                                    
                                 }
                                 else
                                 {
-                                    $sql_rule_project_mappings = @mysql_query("INSERT INTO `rule_project_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `project_id` = '-1',
-                                                                `rule_locality_mapping_id` = '".$locality_id."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    //echo "INSERT INTO `rule_project_mappings` SET 
-    //                                                            `rule_id` = '".$rule_id."',
-    //                                                            `project_id` = '".mysql_escape_string($val)."',
-    //                                                            `updated_by` = '".$_SESSION['adminId']."',
-    //                                                            `created_at` = '".date('Y-m-d')."'"."<br>";
+                                    
+                                    $fetchProQuery = @mysql_query("SELECT resi_project.project_id , resi_project.project_name AS label FROM resi_project WHERE resi_project.locality_id IN (".implode("," , $locality).")");
+                                    $insertLoc = 'INSERT INTO `rule_project_mappings` (rule_id,project_id,updated_by,created_at) 
+                                                                values';
+                                    $str = '';
+                                    while($row = @mysql_fetch_assoc($fetchProQuery))
+                                    {
+                                        $chkSql = @mysql_query("SELECT * FROM `rule_project_mappings` WHERE project_id = ".mysql_escape_string($row['project_id'])." AND rule_id = ".mysql_escape_string($rule_id));
+                            
+                                        if(!@mysql_num_rows($chkSql) > 0)
+                                        {
+                                            $str .= " ('".$rule_id."','".$row['project_id']."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                            
+                                        }
+                                        
+                                        //echo "INSERT INTO `rule_project_mappings` SET 
+    //                                                                    `rule_id` = '".$rule_id."',
+    //                                                                    `project_id` = '".$row['project_id']."',
+    //                                                                    `updated_by` = '".$_SESSION['adminId']."',
+    //                                                                    `created_at` = '".date('Y-m-d')."'<br>";
+                                    }
+                                    
+                                    if(!empty($str))
+                                    {
+                                        $insertLoc .= trim($str , ',');
+                                        $sql_rule_project_mappings = @mysql_query($insertLoc) or die(mysql_error());
+                                    }
                                 }
+                                
                             }
                             else
                             {
                                 $chkSql = @mysql_query("SELECT * FROM `rule_project_mappings` WHERE project_id = ".mysql_escape_string($val)." AND rule_id = ".mysql_escape_string($rule_id));
                             
-                                if(@mysql_num_rows($chkSql) > 0)
+                                if(!@mysql_num_rows($chkSql) > 0)
                                 {
-                                    $sql_rule_project_mappings = @mysql_query("UPDATE `rule_project_mappings` SET 
-                                                                `project_id` = '".mysql_escape_string($val)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
-    
-                                    //echo "UPDATE `rule_project_mappings` SET 
-    //                                                            `project_id` = '".mysql_escape_string($val)."',
-    //                                                            `updated_by` = '".$_SESSION['adminId']."',
-    //                                                            `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";
-                                }
-                                else
-                                {
-                                    $sql_rule_project_mappings = @mysql_query("INSERT INTO `rule_project_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `project_id` = '".mysql_escape_string($val)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
+                                    $str1 .= " ('".$rule_id."','".mysql_escape_string($val)."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                    
                                     //echo "INSERT INTO `rule_project_mappings` SET 
     //                                                            `rule_id` = '".$rule_id."',
     //                                                            `project_id` = '".mysql_escape_string($val)."',
@@ -436,6 +556,12 @@
                             }
                                   
                         }
+                        
+                        if($chkAll == 0 && !empty($insertLocpa) && !empty($str1))
+                        {
+                            $insertLocpa .= trim($str1, ',');
+                            $sql_rule_project_mappings = @mysql_query($insertLocpa) or die(mysql_error());
+                        }
                     }
                     
                     
@@ -444,7 +570,7 @@
                         foreach($finalagentidArr as $key => $val)
                         {
                             if($val == 'all')
-                                $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_agent_mappings` WHERE agent_id = '-1' AND rule_id = '".$rule_id."'");
+                                break;
                             else
                                 $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_agent_mappings` WHERE agent_id = '".mysql_escape_string($val)."' AND rule_id = '".$rule_id."'");
                             //echo "DELETE FROM `rule_agent_mappings` WHERE agent_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>"; 
@@ -453,8 +579,12 @@
                     //print'<pre>';
 //                    print_r($agent);
 //                    die;
+                    
                     if(!empty($agent))
                     {
+                        $chkAll = 0;
+                        $insertLocpa = ' INSERT INTO `rule_agent_mappings` (rule_id,agent_id,updated_by,created_at) values';
+                        $str1 = '';
                         foreach($agent as $key => $val)
                         {
                             if(empty($val))
@@ -462,62 +592,26 @@
                             
                             if($val == 'all')
                             {
-                                
-                                $chkSql = @mysql_query("SELECT * FROM `rule_agent_mappings` WHERE agent_id = '-1' AND rule_id = '".mysql_escape_string($rule_id)."'");
-                                
-                                if(@mysql_num_rows($chkSql) > 0)
-                                {
-                                    $sql_rule_agent_mappings = @mysql_query("UPDATE  `rule_agent_mappings` SET 
-                                                                `agent_id` = '-1',
-                                                                `rule_id` = '".$rule_id."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id));
-                                    //echo "UPDATE `rule_agent_mappings` SET 
-//                                                                `agent_id` = '-1',
-//                                                                `rule_id` = '".$rule_id."',
-//                                                                `updated_by` = '".$_SESSION['adminId']."',
-//                                                                `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";
-                                }
-                                else
-                                {
-                                    $sql_rule_agent_mappings = @mysql_query("INSERT INTO `rule_agent_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `agent_id` = '-1',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    //echo "INSERT INTO `rule_agent_mappings` SET 
-//                                                                `agent_id` = '-1',
-//                                                                `rule_id` = '".$rule_id."',
-//                                                                `updated_by` = '".$_SESSION['adminId']."',
-//                                                                `created_at` = '".date('Y-m-d')."'"."<br>"; 
-                                }
+                                $chkAll = 1;
+                                break;
                             }
                             else
                             {
                                 $chkSql = @mysql_query("SELECT * FROM `rule_agent_mappings` WHERE agent_id = '".mysql_escape_string($val)."' AND rule_id = '".mysql_escape_string($rule_id)."'");
-                            
+                                    
                                 if(!@mysql_num_rows($chkSql) > 0)
                                 {
-                                    $sql_rule_agent_mappings = @mysql_query("INSERT INTO `rule_agent_mappings` SET 
-                                                                `rule_id` = '".$rule_id."',
-                                                                `agent_id` = '".mysql_escape_string($val)."',
-                                                                `updated_by` = '".$_SESSION['adminId']."',
-                                                                `created_at` = '".date('Y-m-d')."'") or die(mysql_error());
-                                    //echo "INSERT INTO `rule_agent_mappings` SET 
-//                                                                `rule_id` = '".$rule_id."',
-//                                                                `agent_id` = '".mysql_escape_string($val)."',
-//                                                                `updated_by` = '".$_SESSION['adminId']."',
-//                                                                `created_at` = '".date('Y-m-d')."'"."<br>"; 
-                                    //$sql_rule_agent_mappings = @mysql_query("UPDATE `rule_agent_mappings` SET 
-//                                                                `updated_by` = '".$_SESSION['adminId']."',
-//                                                                `updated_at` = '".date('Y-m-d')."' WHERE agent_id = '".mysql_escape_string($val)."' AND rule_id=".mysql_escape_string($rule_id));
-                                    //echo "UPDATE `rule_agent_mappings` SET 
-//                                                                `agent_id` = '".mysql_escape_string($val)."',
-//                                                                `updated_by` = '".$_SESSION['adminId']."',
-//                                                                `updated_at` = '".date('Y-m-d')."' WHERE rule_id=".mysql_escape_string($rule_id)."<br>";
+                                    $str1 .= " ('".$rule_id."','".mysql_escape_string($val)."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
+                                    
                                 }
                                 
                             }    
+                        }
+                        
+                        if($chkAll == 0 && !empty($insertLocpa) && !empty($str1) )
+                        {
+                            $insertLocpa .= trim($str1, ',');
+                            $sql_rule_agent_mappings = @mysql_query($insertLocpa) or die(mysql_error());
                         }
                     }
                     
@@ -553,162 +647,174 @@
         $data = array();
         if(!empty($ruleAttr))
         {
+            $fetchLocQuery = @mysql_query("SELECT COUNT(locality.locality_id) AS locount FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = '".mysql_escape_string($_POST['city_id'])."'");
+            $locount = @mysql_fetch_assoc($fetchLocQuery);
+            $locount = $locount['locount'];
+            $locounter = 0;
+            
+            $fetchProQuery = @mysql_query("SELECT COUNT(resi_project.project_id) AS procount FROM resi_project 
+                                INNER JOIN locality ON resi_project.locality_id = locality.locality_id
+                                INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
+                                INNER JOIN city ON suburb.city_id = city.city_id
+                                WHERE city.city_id = '".mysql_escape_string($_POST['city_id'])."'");
+            $procount = @mysql_fetch_assoc($fetchProQuery);
+            $procount = $procount['procount'];
+            $procounter = 0;                  
+            
+            $fetchAgentQuery = @mysql_query("SELECT COUNT(agents.id) agentcount FROM agents LEFT JOIN broker_contacts ON agents.id = broker_contacts.broker_id WHERE agents.broker_id = ".mysql_escape_string($_POST['broker_cmpny_id'])." AND broker_contacts.type='Agent' AND agents.id NOT IN (SELECT agent_id FROM rule_agent_mappings)");
+            $agentcount = @mysql_fetch_assoc($fetchAgentQuery);
+            $agentcount = $agentcount['agentcount'];
+            $agentcounter = 0;
+            
             $i = 0;
             foreach($ruleAttr as $key => $val)
             {
                 $locality = array();
                 $localityAttr = array();
-                $resultLocality = '';
+                 
                 $projectflag = 0;
                 
-                $sqlQuery = @mysql_query("SELECT * FROM rule_locality_mappings 
-                                            WHERE rule_locality_mappings.rule_id = '".$val->id."'");
+                $conditions = " rule_locality_mappings.rule_id = ".$val->id." and city.city_id = '".mysql_escape_string($_POST['city_id'])."'";
                 
-                if(@mysql_num_rows($sqlQuery))
+                $joins = " INNER JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
+                            INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
+                            INNER JOIN city ON suburb.city_id = city.city_id";
+                            
+                $options = array('joins' => $joins , 'select' => "locality.label AS locality" , 'conditions' => $conditions);
+                $localityAttr = RuleLocalityMappings::find('all',$options);
+                $NumRows = count($localityAttr);
+                $locounter += $NumRows;
+                
+                if(!empty($RowsPerPage) && !empty($Offset))
                 {
-                    $resultLocality = @mysql_fetch_assoc($sqlQuery);
-                    if($resultLocality['locality_id'] == '-1' && $resultLocality['city_id'] == $_POST['city_id'])
-                    {
-                        $conditions = " rule_locality_mappings.rule_id = '".$val->id."'";
-                        $options = array('select' => " rule_locality_mappings.id,locality_id" , 'conditions' => $conditions);
-                        $localityAttr = RuleLocalityMappings::find('all',$options);
-                        $NumRows = count($localityAttr);
-                        
-                        if(!empty($RowsPerPage) && !empty($Offset))
-                        {
-                            $conditions = " rule_locality_mappings.rule_id = '".$val->id."'";
-                            $options = array('select' => " rule_locality_mappings.id,locality_id" ,'limit' => $RowsPerPage , 'offset' => $Offset, 'conditions' => $conditions);
-                            $localityAttr = RuleLocalityMappings::find('all',$options);
-                        }
-                        else
-                        {
-                            $conditions = " rule_locality_mappings.rule_id = '".$val->id."'";
-                            $options = array('select' => " rule_locality_mappings.id,locality_id" ,'limit' => $RowsPerPage , 'conditions' => $conditions);
-                            $localityAttr = RuleLocalityMappings::find('all',$options);
-                        }
-                    }
-                    else
-                    {
-                        $conditions = " rule_locality_mappings.rule_id = ".$val->id." and city.city_id = '".mysql_escape_string($_POST['city_id'])."'";
+                    $options = array('joins' => $joins , 'select' => " locality.locality_id,locality.label AS locality" , 'limit' => $RowsPerPage , 'offset' => $Offset, 'conditions' => $conditions);
+                    $localityAttr = RuleLocalityMappings::find('all',$options);
+                }
+                else
+                {
+                    $options = array('joins' => $joins , 'select' => " locality.locality_id,locality.label AS locality" , 'limit' => $RowsPerPage ,'conditions' => $conditions);
+                    $localityAttr = RuleLocalityMappings::find('all',$options);
+                }
                 
-                        $joins = " INNER JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
-                                    INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
-                                    INNER JOIN city ON suburb.city_id = city.city_id";
-                                    
-                        $options = array('joins' => $joins , 'select' => "locality.label AS locality" , 'conditions' => $conditions);
-                        $localityAttr = RuleLocalityMappings::find('all',$options);
-                        $NumRows = count($localityAttr);
-                        
-                        if(!empty($RowsPerPage) && !empty($Offset))
-                        {
-                            $options = array('joins' => $joins , 'select' => " rule_locality_mappings.id,locality.locality_id,locality.label AS locality" , 'limit' => $RowsPerPage , 'offset' => $Offset, 'conditions' => $conditions);
-                            $localityAttr = RuleLocalityMappings::find('all',$options);
-                        }
-                        else
-                        {
-                            $options = array('joins' => $joins , 'select' => " rule_locality_mappings.id,locality.locality_id,locality.label AS locality" , 'limit' => $RowsPerPage ,'conditions' => $conditions);
-                            $localityAttr = RuleLocalityMappings::find('all',$options);
-                        }
-                    }
+                //echo " locount : $locount    NumRows ".$NumRows."  locounter : $locounter<br>";
+                
+                if(!empty($localityAttr) && !empty($locount) && ($locount == $NumRows || $locounter == $locount))
+                {
+                    $localityAttr = array();
+                    $localityAttr[] = 'all';
                 }
                 
                 //print'<pre>';
-//                echo RuleLocalityMappings::connection()->last_query."<br>";
-//                print_r($localityAttr);
-//                continue;
+                //echo RuleLocalityMappings::connection()->last_query."<br>";
+                //print_r($localityAttr);
+                //continue;
+                //die;
                 
-                $rule_locality_mapping_id = '';
                 if(!empty($localityAttr))
                 {
                     foreach($localityAttr as $k => $v)
                     {
-                        if($v->locality_id == '-1')
+                        if($v == 'all')
                         {
+                            $locality = array();
                             $locality[] = 'All';
-                            $rule_locality_mapping_id = $v->id;
-                            $projectflag = 1;
+                            $chkLoc = 1;
+                            break;
                         }
                         else
-                        {
                             $locality[] = $v->locality;
-                            $rule_locality_mapping_id = $v->id;
-                        }
                     }
                 }
                 
-                
-                $conditions = " rule_id = '".$val->id."'";
-                $options = array( 'select' => " project_id" , 'conditions' => $conditions);
-                $projectAttrtest = RuleProjectMapping::find('all',$options);
-                
-                if(!empty($projectAttrtest))
+                if(!empty($locality) && $locality == 'all')
                 {
-                    foreach($projectAttrtest as $k1 => $v1)
-                    {
-                        //echo "project_id ".$v1->project_id." ". "rule_locality_mapping_id" . $rule_locality_mapping_id."<br>";
-                        if($v1->project_id == '-1')
-                        {
-                            $conditions = " rule_id = '".$val->id."' AND rule_locality_mapping_id = '$rule_locality_mapping_id'";
-                            $options = array( 'select' => " project_id" , 'conditions' => $conditions);
-                            $projectAttr = RuleProjectMapping::find('all',$options);
-                            //echo RuleProjectMapping::connection()->last_query."<br>";
-                        }
-                        else
-                        {
-                            $conditions = " rule_project_mappings.rule_id = ".$val->id;
-                            $joins = " LEFT JOIN resi_project ON rule_project_mappings.project_id = resi_project.project_id";
-                            $options = array('joins' => $joins , 
-                                            'select' => " resi_project.project_id,resi_project.project_name" , 
-                                            'conditions' => $conditions
-                                        );
-                            $projectAttr = RuleProjectMapping::find('all',$options);
-                        }
-                    }
+                    $conditions = " rule_project_mappings.rule_id = ".$val->id;
+                    $joins = " LEFT JOIN resi_project ON rule_project_mappings.project_id = resi_project.project_id";
+                    $options = array('joins' => $joins , 
+                                    'select' => " resi_project.project_id,resi_project.project_name" , 
+                                    'conditions' => $conditions
+                                );
+                }
+                else
+                {
+                    $conditions = " rule_project_mappings.rule_id = ".$val->id;
+                    $joins = " LEFT JOIN resi_project ON rule_project_mappings.project_id = resi_project.project_id";
+                    $options = array('joins' => $joins , 
+                                    'select' => " resi_project.project_id,resi_project.project_name" , 
+                                    'conditions' => $conditions
+                                );    
                 }
                 
+                $projectAttr = RuleProjectMapping::find('all',$options);
+                //echo RuleProjectMapping::connection()->last_query."<br>";
+                $project_count = count($projectAttr);
+                $procounter += $project_count;
+                //echo " procount : $procount    procounter ".$procounter."  Project Count : $project_count<br>";
+                if(!empty($procount) && ($procount == $project_count || $procounter == $procount))
+                {
+                    $projectAttr = array();
+                    $projectAttr[] = 'all';
+                }
+                    
                 $project = array();                
                 
                 //print'<pre>';
 //                print_r($projectAttr);
+//                continue;
                 if(!empty($projectAttr))
                 {
                     foreach($projectAttr as $k => $v)
                     {
-                        if(isset($v->project_id) && $v->project_id == '-1')
+                        if($v == 'all')
+                        {
+                            $project = array();
                             $project[] = 'All';
+                            break;
+                        }
                         else
-                            $project[] = $v->project_name;
+                        {
+                            $project[] = $v->project_name;    
+                        }
+                        
                     }
                 }
                 
-                //print'<pre>';
-//                print_r($project);
-                $conditions = " rule_id = '".$val->id."' AND agent_id = '-1'";
-                $options = array('select' => " agent_id" , 'conditions' => $conditions);
+                
+                $conditions = " rule_agent_mappings.rule_id = '".$val->id."' AND broker_contacts.type ='Agent'";
+                $joins = " LEFT JOIN broker_contacts ON rule_agent_mappings.agent_id = broker_contacts.broker_id";
+                $options = array('joins' => $joins , 'select' => " broker_contacts.name" , 'conditions' => $conditions);
                 $agentAttr = RuleAgentMappings::find('all',$options);
-                $agent = array();
+                $agent_count = count($agentAttr);
+                $agentcounter += $agent_count;
+                //print'<pre>';
+//                print_r($agentAttr);
+                if(!empty($agentcount) && ($agentcount == $agent_count || $agentcounter == $agentcount))
+                {
+                    $agentAttr = array();
+                    $agentAttr[] = 'all';
+                }
+                else if(empty($agent_count))
+                {
+                    $agentAttr = array();
+                    $agentAttr[] = 'all';
+                }
+               
                 if(!empty($agentAttr))
                 {
                     foreach($agentAttr as $k => $v)
                     {
-                        $agent[] = 'All';
-                    }
-                }
-                else
-                {
-                    $conditions = " rule_agent_mappings.rule_id = '".$val->id."' AND broker_contacts.type ='Agent' AND rule_agent_mappings.agent_id !='-1'";
-                    $joins = " LEFT JOIN broker_contacts ON rule_agent_mappings.agent_id = broker_contacts.broker_id";
-                    $options = array('joins' => $joins , 'select' => " broker_contacts.name" , 'conditions' => $conditions);
-                    $agentAttr = RuleAgentMappings::find('all',$options);
-                    
-                    if(!empty($agentAttr))
-                    {
-                        foreach($agentAttr as $k => $v)
+                        if($v == 'all')
+                        {
+                            $agent = array();
+                            $agent[] = 'All';
+                            break;    
+                        }
+                        else
                         {
                             $agent[] = $v->name;
                         }
+                        
                     }
-                    
                 }
                 
                 if(!empty($localityAttr))
@@ -742,50 +848,18 @@
 //                continue;
             }
             
+            $NumRows = count($data);
             if($NumRows == 0)   
                 $NumRows = $count;
         }
         //print'<pre>';
 //        print_r($data);
-//        die;
+        //die;
         $locarr = array();
-        $chkLoc = 0;
-        $sql = @mysql_query("SELECT locality.locality_id , locality.label FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = '".$_POST['city_id']."'");
+        
+        $sql = @mysql_query("SELECT locality.locality_id , locality.label FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = '".$_POST['city_id']."' AND locality.locality_id NOT IN (SELECT locality_id FROM rule_locality_mappings)");
         while($row = @mysql_fetch_assoc($sql))
         {
-            $chkSql = @mysql_query("SELECT rp.project_id FROM resi_project AS rp LEFT JOIN locality AS l ON rp.locality_id = l.locality_id WHERE l.locality_id = '".$row['locality_id']."'");
-            
-            $total_projects = @mysql_num_rows($chkSql);
-            
-            //echo "Locality ".$row['locality_id']."<br>";
-//            echo "Total Projects :".$total_projects."<br>";
-            $chkLoc = 0;
-            $chkFlag = 0;
-            $chkSql = @mysql_query("SELECT locality_id FROM rule_locality_mappings AS rlm WHERE rlm.locality_id = '-1' AND rlm.city_id = '".$_POST['city_id']."'");
-            $chkLoc = @mysql_num_rows($chkSql);
-            if($chkLoc == 1)
-                continue;
-            
-            $chkSql = @mysql_query("SELECT rpm.project_id FROM rule_project_mappings AS rpm LEFT JOIN rule_locality_mappings AS rlm ON rpm.rule_id = rlm.rule_id WHERE rlm.locality_id = '".$row['locality_id']."'");
-            $total_projects_mapped = @mysql_num_rows($chkSql);
-            
-            if($total_projects_mapped == 1)
-                while($row1 = @mysql_fetch_assoc($chkSql))
-                {
-                    if($row1['project_id'] == '-1')
-                    {
-                        $chkFlag = 1;
-                        break;
-                    }        
-                }
-            
-            //echo "Total Projects Mapped :".$total_projects_mapped."<br>";
-            if($chkFlag == 1 || $total_projects == $total_projects_mapped)
-            {
-                continue;
-            }
-            
-            
             $locarr[$row['locality_id']] = $row['label'];    
         }
         //print'<pre>';

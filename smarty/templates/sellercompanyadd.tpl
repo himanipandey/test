@@ -1,8 +1,6 @@
-
-<script type="text/javascript" src="jscal/calendar.js"></script>
-<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
-<script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" href="fancy2.1/source/jquery.fancybox.css" media="screen" />
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+
 
 <style type="text/css">
     .ui-autocomplete {
@@ -49,6 +47,11 @@
         font-weight:bold;
     }
 </style>
+<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="fancy2.1/source/jquery.fancybox.pack.js"></script>
+
 <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 <script type="text/javascript">
@@ -112,14 +115,7 @@
                     <td width="30%" valign="top">Company Name :<font color = "red">*</font></td>
                     <td width="10%" valign="top">
                         <input type="text" name="seller_cmpny" id="seller_cmpny" value="{$seller_cmpny}" />
-                        <!--<select name="seller_cmpny" id="seller_cmpny">
-                            
-                            {*if $brokerArr != ''}
-                                    {foreach from= $brokerArr key = k item = val}
-                                        <option value="{$val->id}" {if $val->id == $broker_id} selected="" {/if}>{if strlen($val->broker_name) > 30} {$val->broker_name|substr:0:30|cat:"..."} {else} {$val->broker_name} {/if}</option>
-                                    {/foreach}
-                            {/if*}
-                        </select>-->
+                        
                         
                     </td>
                     <td width="15%" align="right" valign="top" >Agent Name :<font color = "red">*</font></td>
@@ -238,7 +234,13 @@
                 <tr>
                     <td width="15%" align="right" valign="top" >Agent Logo:</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type="file" name="logo" id="logo" value="{$logo}" style="width:250px;" />		
+                        <input type="file" name="logo" id="logo" value="{$logo}" style="width:250px;" />
+                        		
+                    </td>
+                    <td  width="10%" align="left" valign="top">
+                        <div style="width:130px!important;height:130px">
+                            {if $imgurl != ''} <a href="#div_img" class="showcontent" ><img src="{$imgurl}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_img"><img src="{$imgurl}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}
+                        </div>
                     </td>
                 </tr>
                 
@@ -564,7 +566,11 @@
             
             return true;
                 
-        });        
+        });     
+        
+        $('.showcontent').fancybox({
+            
+        });   
     });
     function dateRange(date) {
     var now = new Date();

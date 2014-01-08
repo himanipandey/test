@@ -269,6 +269,11 @@
         });
         
         
+        $('.showimage').fancybox({
+            'zoomSpeedIn': 300,
+            'zoomSpeedOut': 300,
+            'overlayShow': false
+        });
         
         
         //if(version < '1.9.1')        
@@ -884,10 +889,11 @@
                     <td width="10%" align="left" valign="top" >
                         <input type="file" name="logo" id="logo" value="" style="width:88px;" />
                     </td>
-                   <!-- <td width="15%" align="left" valign="top">
+                   <td width="15%" align="left" valign="top">
                         <div style="width:130px!important;height:130px">
+                            {if $imgurl != ''} <a href="#div_img" class="showimage" ><img src="{$imgurl}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_img"><img src="{$imgurl}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}
                         </div>
-                    </td>-->
+                    </td>
                     <td width="15%" align="right" valign="top" >PAN : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text name="pan" id="pan" maxlength="10" value="{$pan}" style="width:85px;" />	

@@ -137,8 +137,7 @@
                         <TD class=whiteTxt width=5% align="center">S NO</TD>
                         <TD class=whiteTxt width=15% align="left">Company Name</TD>
                         <TD class=whiteTxt width=25% align="left">Agent Name</TD>
-                        <TD class=whiteTxt width=25% align="left">Agent Type</TD>
-                        <TD class=whiteTxt width=25% align="left">Agent Image</TD>
+                        <TD class=whiteTxt width=25% align="left">Agent Type</TD>                        
                         <TD class=whiteTxt width=25% align="left">Agent Rating</TD>
                         <TD class=whiteTxt width=25% align="left">Agent Qualification</TD>
                         <TD class=whiteTxt width=15% align = 'left'>Active Since</TD>
@@ -161,7 +160,6 @@
                         <TD align=left class=td-border>{$value['seller_cmpny']}  </TD>
                         <TD align=left class=td-border>{if strlen($value['seller_name']) > 30} {$value['seller_name']|substr:0:30|cat:"..."} {else} {$value['seller_name']} {/if}</TD>
                         <TD align=left class=td-border>{$value['seller_type']}</TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a href="#div_{$count}" class="showcontent" id="{$count}" ><img src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_{$count}"><img src="{$value['imageurl']}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['rating']}</TD>
                         <TD align=left class=td-border>{$value['qualification']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -214,11 +212,7 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        $('.showcontent').fancybox({
-            'zoomSpeedIn': 300,
-            'zoomSpeedOut': 300,
-            'overlayShow': false
-        });
+        
     });
     Calendar.setup({
             inputField     :    "active_since",     // id of the input field

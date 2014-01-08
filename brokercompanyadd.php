@@ -33,6 +33,7 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
     $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$_GET['brokerCompanyId']));
     $imgurl = '';
     $imgid = '';
+    
     if(!empty($img))
     {
         foreach($img as $k1 => $v1)
@@ -41,10 +42,11 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
             {
                 $imgurl = $v1[0]->absolutePath;
                 $imgid = $v1[0]->id;
-                break;
             }
         }
     }
+            
+            
     
     $brkrDet = BrokerCompany::getById($_GET['brokerCompanyId']);
     //echo BrokerCompany::connection()->last_query."<br>";
@@ -68,7 +70,7 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
     
     
     $smarty->assign("imgid", !empty($imgid)?$imgid:'');
-    
+    $smarty->assign("imgurl", !empty($imgurl)?$imgurl:'');
     $smarty->assign("name", !empty($contactIDArr['name'])?$contactIDArr['name']:'');
     $smarty->assign("status", !empty($contactIDArr['status'])?$contactIDArr['status']:'');
     $smarty->assign("description", !empty($contactIDArr['description'])?$contactIDArr['description']:'');

@@ -44,13 +44,12 @@ if(!empty($_GET['ruleId']))
                 LEFT JOIN rule_locality_mappings ON project_assignment_rules.id = rule_locality_mappings.rule_id
                 LEFT JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
                 LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
-                LEFT JOIN city ON suburb.city_id = city.city_id
-                LEFT JOIN city AS cityrel ON rule_locality_mappings.city_id = cityrel.city_id
-                ";
+                LEFT JOIN city ON suburb.city_id = city.city_id";
     
-    $options  = array('joins' => $joins , 'select' => 'project_assignment_rules.*,rule_locality_mappings.locality_id , brokers.broker_name , city.city_id ,city.label AS city , cityrel.city_id  AS cityrelid' , 'conditions' => $conditions );
+    $options  = array('joins' => $joins , 'select' => 'project_assignment_rules.*,rule_locality_mappings.locality_id , brokers.broker_name , city.city_id ,city.label AS city ' , 'conditions' => $conditions );
     
     $ruleAttr = ProjectAssignmentRules::find('all' , $options);
+    
     //print'<pre>';
 //    print_r($ruleAttr);
 //    die;
@@ -71,17 +70,8 @@ if(!empty($_GET['ruleId']))
     {
         foreach($ruleAttr as $key => $val)
         {
-            if(!empty($val->locality_id) && $val->locality_id != '-1')
-                $locIdArr[] = $val->locality_id;
-            else if(!empty($val->locality_id) && $val->locality_id == '-1')
-                $locflag = 1;
-            
-            
-            if(isset($key) && $key == "city_id" && !empty($val->city_id))
-                $city_id = $val->city_id;
-            else if(isset($key) && $key == "cityrelid" && !empty($val->cityrelid))
-                $city_id = $val->cityrelid;    
-            
+            $locIdArr[] = $val->locality_id;
+            $city_id = $val->city_id;
             if(isset($key) && $key == "broker_name")
                 $broker_name = $val->broker_name;
                 
@@ -98,7 +88,6 @@ if(!empty($_GET['ruleId']))
     }
     
     
-    
     $locality = array();
     if(!empty($city_id))
     {
@@ -111,26 +100,41 @@ if(!empty($_GET['ruleId']))
         }        
     }
     
+    if(!empty($locality) && !empty($locIdArr) && count($locIdArr) == count($locality))
+        $locflag = 1;
+    //print'<pre>';
+//    print_r($locIdArr);
+//    die;
     $project = array();
     $projectIdArr = array();
     if(!empty($locIdArr))
     {
         $sql = "SELECT resi_project.project_id , resi_project.project_name AS label FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE resi_project.locality_id IN (".implode("," , $locIdArr).")";
-        
-        $project = RuleAgentMappings::find_by_sql($sql);
+        //echo $sql."<br>";
+        //$sql = "SELECT resi_project.project_id , resi_project.project_name AS label FROM resi_project 
+//                                            LEFT JOIN rule_project_mappings AS rpm ON resi_project.project_id = rpm.project_id
+//                                            LEFT JOIN locality ON resi_project.locality_id = locality.locality_id
+//                                            LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id
+//                                            LEFT JOIN city ON suburb.city_id = city.city_id
+//                                            WHERE city.city_id = '".mysql_escape_string($city_id)."' AND rpm.rule_id = '".$_GET['ruleId']."'";
+        $project = RuleProjectMapping::find_by_sql($sql);
     }
-    //print'<pre>';
-//    print_r($project);
-//    die;
-    $sql = @mysql_query("SELECT * FROM rule_project_mappings WHERE rule_id = '".mysql_escape_string($_GET['ruleId'])."' AND project_id = '-1'");
-    if(@mysql_num_rows($sql) > 0)
-        $projectflag = 1;
+
     
-    $sql = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE rule_project_mappings.rule_id = ".$_GET['ruleId']);
+    $sql = @mysql_query("SELECT project_id FROM rule_project_mappings WHERE rule_id = ".$_GET['ruleId']);
     while($row = @mysql_fetch_assoc($sql))
     {
         $projectIdArr[] = $row['project_id'];   
     }
+    
+    //print'<pre>';
+//    print_r($locIdArr);
+//    print_r($projectIdArr);
+    //echo count($projectIdArr) ." ". count($project)."<br>";
+//    die;
+    
+    if(!empty($project) && !empty($projectIdArr) && count($projectIdArr) == count($project))
+        $projectflag = 1;
     
     $i = 0;
     $agents = array();
@@ -140,9 +144,6 @@ if(!empty($_GET['ruleId']))
         $agents = RuleAgentMappings::find_by_sql($sql);
     }
     
-    $sql = @mysql_query("SELECT * FROM rule_agent_mappings WHERE rule_id = '".mysql_escape_string($_GET['ruleId'])."' AND agent_id = '-1'");
-    if(@mysql_num_rows($sql) > 0)
-        $agentflag = 1;
         
     $agentIdArr = array();
     $sql = @mysql_query("SELECT rule_agent_mappings.agent_id FROM rule_agent_mappings WHERE rule_agent_mappings.rule_id = ".$_GET['ruleId']);
@@ -150,6 +151,9 @@ if(!empty($_GET['ruleId']))
     {
         $agentIdArr[] = $row['agent_id'];    
     }
+    
+    if(empty($agentIdArr))
+        $agentflag = 1;
     
     
     //print'<pre>';

@@ -211,6 +211,7 @@
                         </select>
                     </td>
                     <td width="30%" align="right" >
+                                        
                         <select multiple="" name="agent[]" id="agent" style="width:260px;height:140px;">
                             <option value="all" {if $agentflag == 1} selected="" {/if}>---All Agent---</option>
                             {if $seller_company != ''}
@@ -228,6 +229,7 @@
 				<tr>
 				  <td align="center" colspan="2">
 				  <input type="hidden" name="ruleId" id="ruleId" value="{$ruleId}" />
+                  
 				  <input type="submit" name="btnSave" id="btnSave" value="Submit Rule" style="float:right;" />
 				  &nbsp;&nbsp;<input type="button" name="btnExit" id="btnExit" value="Exit" style="float:right;" />
                   
@@ -382,15 +384,19 @@
                 alert("Please select Locality");
                 return false;
             }
+            else if(!jQuery('#agent').val())
+            {
+                jQuery('#agent').focus();
+                alert("Please select Agents");
+                return false;
+            }
             
             
             if(jQuery('#locality').val())
             {
                 if(!jQuery('#project').val())
                 {
-                    jQuery('#project').focus();
-                    alert("Please select Project");
-                    return false;
+                    jQuery('#project').val('all');
                 }
             }
             
@@ -417,7 +423,7 @@
 //            return;
             if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
             {
-                var dataString = 'locality='+valuesloc;
+                var dataString = 'locality='+valuesloc+'&mode='+{if $ruleId != ''} {$ruleId} {else} 0 {/if};
                 //alert(dataString);
 //                return;
                 

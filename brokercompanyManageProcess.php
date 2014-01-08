@@ -109,29 +109,7 @@
     $brokerDataArr = array();
     $i = 0;
     
-    //print'<pre>';
-//    print_r($brokerCompany);
-//    die;
     
-    //$img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId=1'));
-    //print'<pre>';
-    ////$imgurl = '';
-//    $imgid = '';
-//    if(!empty($img))
-//    {
-//        foreach($img as $key => $val)
-//        {
-//            //print_r($val);
-//            if($key == "data")
-//            {
-//                $imgurl = $val[0]->absolutePath;
-//                $imgid = $val[0]->id;
-//            }
-//        }
-//        //print_r($img);
-//    }
-    //echo $imgurl." ".$imgid;
-//    die;
     if(!empty($brokerCompany))
     {
         
@@ -172,21 +150,7 @@
             $brokerDataArr[$i]['description'] = $desc;
             $brokerDataArr[$i]['status'] = $val->status;
             
-            $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$val->id));
-            $imgurl = '';
-            $imgid = '';
             
-            if(!empty($img))
-            {
-                foreach($img as $k1 => $v1)
-                {
-                    if($k1 == "data")
-                    {
-                        $imgurl = $v1[0]->absolutePath;
-                        $imgid = $v1[0]->id;
-                    }
-                }
-            }
             
             $flg = 0;
             
@@ -242,8 +206,7 @@
                 
             
             $brokerDataArr[$i]['updated_by'] = $val->updated_by;
-            $brokerDataArr[$i]['imageurl'] = $imgurl;
-            $brokerDataArr[$i]['imageid'] = $imgid;
+            
             
             $i++;
             

@@ -106,7 +106,6 @@
                         <TR class = "headingrowcolor" height="25">
                         <TD class=whiteTxt width=5% align="center">S NO</TD>
                         <TD class=whiteTxt width=15% align="left">Broker Company Name</TD>
-                        <TD class=whiteTxt width=15% align="left">Comapny Logo</TD>
                         <TD class=whiteTxt width=25% align="left">PAN</TD>
                         <TD class=whiteTxt width=25% align="left">Description</TD>
                         <TD class=whiteTxt width=15% align = 'left'>Active Since</TD>
@@ -127,7 +126,6 @@
 			             
                         <TD align=center class=td-border>{$count}</TD>
                         <TD align=left class=td-border>{$value['name']}  </TD>
-                        <TD align=left class=td-border>{if $value['imageurl'] != ''} <a href="#div_{$count}" class="showcontent" id="{$count}"><img src="{$value['imageurl']}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_{$count}"><img src="{$value['imageurl']}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}</TD>
                         <TD align=left class=td-border>{$value['pan']}</TD>
                         <TD align=left class=td-border>{$value['description']}</TD>
                         <TD align=left class=td-border>{$value['active_since']}</TD>
@@ -180,18 +178,13 @@
 <script type="text/javascript">
     jQuery(document).ready(function(){
         
-        $('.showcontent').fancybox({
-            'zoomSpeedIn': 300,
-            'zoomSpeedOut': 300,
-            'overlayShow': false
-        });
+        
         jQuery('#pan').blur(function(){
             if(jQuery(this).val() == '')
                 return false;
             
             jQuery(this).val((jQuery(this).val()).toUpperCase());
         });
-        
         
     });
     Calendar.setup({

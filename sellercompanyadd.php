@@ -51,9 +51,10 @@ if(!empty($_GET['sellerCompanyId']))
     if(!empty($sellerDet))
     {
         
-        $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$sellerDet));
+        $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=sellerCompany&objectId='.$_GET['sellerCompanyId']));
         $imgurl = '';
         $imgid = '';
+        
         if(!empty($img))
         {
             foreach($img as $k1 => $v1)
@@ -62,7 +63,6 @@ if(!empty($_GET['sellerCompanyId']))
                 {
                     $imgurl = $v1[0]->absolutePath;
                     $imgid = $v1[0]->id;
-                    break;
                 }
             }
         }
@@ -81,6 +81,7 @@ if(!empty($_GET['sellerCompanyId']))
         
         
         $smarty->assign("imgid", !empty($imgid)?$imgid:'');
+        $smarty->assign("imgurl", !empty($imgurl)?$imgurl:'');
         $smarty->assign("sellerCompanyId", !empty($sellerDet['id'])?$sellerDet['id']:'');
         $smarty->assign("status", !empty($sellerDet['status'])?$sellerDet['status']:'');
         $smarty->assign("broker_id", !empty($brokerId)?$brokerId:'');
