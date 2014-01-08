@@ -246,6 +246,12 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 			$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
 	    	}
 	    }
+	  /*   if($Active == 'Inactive' && isset($_POST['reason'])){
+			if($_POST['reason'] == 'duplicate' && trim($_POST['duplicate_pid']) == '')
+				$ErrorMsg["txtproject_alias"] = "Duplicate PID must be valid.";
+			elseif($_POST['reason'] == 'other_reason' && trim($_POST['other_reason_txt']) == '')
+				$ErrorMsg["txtproject_alias"] = "Please enter reason for inactive.";
+		}*/
 	   if(!empty($power_backup_capacity)){
 	    	if(!is_numeric($power_backup_capacity) || $power_backup_capacity > 10){
 			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";

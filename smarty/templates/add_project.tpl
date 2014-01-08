@@ -81,6 +81,30 @@
 		$('#app_pdf').css("display","block");
 		$('#application').val("pdf-del");
  }
+ 
+    $(document).ready(function(){
+	
+		   $('#reasonRow').hide();
+		   $('#duplicate_pid').hide();
+		   $('#other_reason_txt').hide();
+		   $('#Active').change(function(){
+				if($(this).val() == 'Inactive')
+					$('#reasonRow').show();
+				else
+					$('#reasonRow').hide();
+		   });
+		   
+		   $('input[name=reason]').click(function(){
+				if($(this).val() == 'duplicate'){
+					 $('#duplicate_pid').show();
+					$('#other_reason_txt').hide();
+				}else{
+					$('#duplicate_pid').hide();
+					$('#other_reason_txt').show();
+				}
+		   });
+		
+	})
 </script>
   <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -391,6 +415,27 @@
 									  <font color="red"><span id = "err_project_active" style = "display:none;"></span></font>
 								  </td>
 							   </tr>
+							   <tr id="reasonRow">
+								  <td width="20%" align="right" valign="top"><b>Reason :</b> </td>
+								  <td width="30%" align="left">
+									<input type="radio" name="reason" value="duplicate"   />Duplicate
+									<br/>
+									<input type="radio" name="reason" value="other_reason"  />Other
+									<br/>
+									<br/>
+									<div id="duplicate_pid">
+										<font color="red">*</font>Duplicate PID : 
+										<input type="text" name="duplicate_pid"  />
+									</div>
+									<div id="other_reason_txt">
+										<font color="red">*</font>Other Reason : 
+										<textarea name="other_reason_txt"  cols="45" rows="10" ></textarea>
+									</div>
+								  </td>
+								  <td width="50%" align="left">
+									
+								  </td>
+							   </tr> 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Status :</b> </td>
 								  <td width="30%" align="left" valign = "top">
