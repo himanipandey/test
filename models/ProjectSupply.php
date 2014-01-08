@@ -188,7 +188,7 @@ class ProjectSupply extends Objects {
                 on ps.listing_id = l.id
                 inner join resi_project_options rpo on l.option_id = rpo.options_id
                 where 
-                rpo.project_id = '$projectId' group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
+                rpo.project_id = '$projectId' and l.status = 'Active' group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
          $result = self::find_by_sql($sql);
          
           if(count($result)>0)
