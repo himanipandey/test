@@ -196,8 +196,12 @@ $(".pt_reqflrplan").fancybox();
 															</select>
 															<br/>
 														{/if}
-														Delete/Edit:<input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
+														<br/><br/>
+														Delete:<input type="radio" name="chk_name[{$cnt}]" value="delete_img">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														Edit:<input type="radio" name="chk_name[{$cnt}]"  value="edit_img"><br><br>
 														New Image?:<input type="file" name="img[{$cnt}]"/>
+														
+														
 
 
 													</div>
