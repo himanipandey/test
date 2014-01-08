@@ -197,7 +197,7 @@ $(".pt_reqflrplan").fancybox();
 															<br/>
 														{/if}
 														<br/><br/>
-														Delete:<input type="radio" name="chk_name[{$cnt}]" value="delete_img">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														Delete:<input type="radio" name="chk_name[{$cnt}]" value="delete_img" id="chk_{$cnt}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 														Edit:<input type="radio" name="chk_name[{$cnt}]"  value="edit_img"><br><br>
 														New Image?:<input type="file" name="img[{$cnt}]"/>
 														
