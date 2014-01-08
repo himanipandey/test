@@ -220,7 +220,7 @@ $(".pt_reqflrplan").fancybox();
 								   <span id = 'rowPropCount' style = 'display:none;'>{$countPropImages}</span>
 								  
 								  <input type="hidden" name="projectId" value="{$projectId}" />
-								  <input type="submit" name="btnSave" id="btnSave" value="Submit" style = "font-size:16px;"  onclick="return check();">
+								  <input type="submit" name="btnSave" id="btnSave" value="Submit" style = "font-size:16px;"  >
 								  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style = "font-size:16px;">
 								  </td>
 								</tr>
