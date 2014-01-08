@@ -1,5 +1,5 @@
 <?php        
-$BuilderDataArr	= ResiBuilder::BuilderEntityArr();
+$BuilderDataArr	= ResiBuilder::ProjectSearchBuilderEntityArr();
 $CityDataArr = City::CityArr();
 $ProjectTypeArr	= ResiProjectType::ProjectTypeArr();
 $BankListArr = BankList::arrBank();
