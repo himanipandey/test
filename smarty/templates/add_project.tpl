@@ -321,7 +321,7 @@
 								  </td>
 							   </tr>							   
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Project Comments :</b> </td>
+								  <td width="20%" align="right"><b>Project Comments :</b> </td>
 								  <td nowrap width="30%" align="left"><input type="text" name="comments" id="comments" value="{$comments}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
 
 								  <td width="50%" align="left">

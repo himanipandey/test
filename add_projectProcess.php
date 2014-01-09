@@ -212,9 +212,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    if(empty($suburbId)){
                $ErrorMsg["txtSuburbs"] = "Suburbs must be selected.";
             }
-	    if(empty($comments)){
-               $ErrorMsg["Comment"] = "Please enter project comment.";
-            }
 	    if(empty($txtAddress)){
                $ErrorMsg["txtAddress"] = "Please enter project address.";
             }
