@@ -490,6 +490,35 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
            
+           if($projectId && $Active == 'Inactive'){ // when project status set to be inactive
+			   $pro_aliases = ProjectAliases::find('all',array('conditions' => array('original_project_id' => $projectId)));
+			   if($pro_aliases)
+				$pro_aliases = ProjectAliases::find($pro_aliases[0]->id);
+			   else
+			    $pro_aliases = new ProjectAliases();
+			   
+			   $pro_aliases->original_project_id = $projectId;
+			   if($_POST['reason'] == 'duplicate'){
+				 $pro_aliases->duplicate_project_id = $_POST['duplicate_pid'];
+				 $pro_aliases->reason_text = '';
+				}
+			   if($_POST['reason'] == 'other_reason'){
+				 $pro_aliases->reason_text = $_POST['other_reason_txt'];
+				  $pro_aliases->duplicate_project_id = 0;
+				}
+				 
+			   $pro_aliases->save();
+			   
+		   }elseif($projectId && $Active != '' && $Active != 'Inactive'){ // when project status set to be active delete entries in project aliases
+		   
+				 $pro_aliases = ProjectAliases::find('all',array('conditions' => array('original_project_id' => $projectId)));
+				 
+				 if($pro_aliases){
+					$pro_aliases = ProjectAliases::find($pro_aliases[0]->id);
+					$pro_aliases->delete();
+				}
+		   }
+           
            $redev_pro = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));
            
            if($redev_pro){

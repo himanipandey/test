@@ -415,6 +415,7 @@
 									  <font color="red"><span id = "err_project_active" style = "display:none;"></span></font>
 								  </td>
 							   </tr>
+							 {if $projectId != ''}
 							   <tr id="reasonRow">
 								  <td width="20%" align="right" valign="top"><b>Reason :</b> </td>
 								  <td width="30%" align="left">
@@ -436,6 +437,7 @@
 									
 								  </td>
 							   </tr> 
+							  {/if}
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Status :</b> </td>
 								  <td width="30%" align="left" valign = "top">
