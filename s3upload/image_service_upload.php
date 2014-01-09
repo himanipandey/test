@@ -31,6 +31,7 @@ class ImageServiceUpload{
             "locality_image" => "main",
             "other" => "other",
             "mall" => "mall",
+            "map"  => "map",
             "road" => "road",
             "school" => "school",
             "hospital" => "hospital"
