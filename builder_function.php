@@ -2142,5 +2142,21 @@ function checkDuplicateVideoLink($projectId,$videoLinkUrl,$video_id=0){
 				
 	return ($vcount->cnt)? $vcount->cnt : 0; 
 }
+function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0){
+	
+	$condition = '';
+	if($plan_id)
+		$condition = " AND SERVICE_IMAGE_ID != '$service_image_id'";
+	$display_order = mysql_real_escape_string($display_order);
+	$Sql = "SELECT count(*) as cnt FROM " . PROJECT_PLAN_IMAGES . " WHERE PROJECT_ID = '$projectId' AND display_order != '5' AND PLAN_TYPE = 'Project Image' AND display_order = '".$display_order."' ".$condition;
+	
+	$qrySelect = mysql_query($Sql) or die(mysql_error());
+	
+	if($qrySelect)
+		$vcount = mysql_fetch_object($qrySelect);
+		
+				
+	return ($vcount->cnt)? $vcount->cnt : 0; 
+}
 ?>
 

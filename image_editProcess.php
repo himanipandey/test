@@ -65,6 +65,29 @@
 		{
 		  $ErrorMsg["tagged_month"] = "Please select edit or delete action.";
 		}
+		//checking for display orders unqueness
+		foreach($_REQUEST['chk_name'] as $k=>$v)
+		{
+			if($v != '')
+			{
+				if($v == 'edit_img' && $_REQUEST['PType'][$k] == 'Project Image'){
+					if(trim($_REQUEST['txtdisplay_order'][$k]) == ''){
+						$ErrorMsg["display_order"] = "Please enter Display Order."; break;
+					}else{
+										
+					  if(array_key_exists($_REQUEST['txtdisplay_order'][$k], $temp_arr)){
+						  $ErrorMsg["display_order"] = "Display order must be unique."; break;				  
+					  }else {//checking duplicacy
+							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k]);
+							if($ext_vlinks){
+								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist."; break;
+							}
+					  }
+					  $temp_arr[$_REQUEST['txtdisplay_order'][$k]] = $_REQUEST['txtdisplay_order'][$k];
+					}
+				}
+			}
+		}
 		
 		 /*********edit images code start here*******************/
 			$source=array();
@@ -72,6 +95,7 @@
 
 			if (isset($_POST['btnSave']) && !is_array($ErrorMsg)) 
 			{
+				
 				$image_update_flag = 0;
 				$smarty->assign("projectId", $projectId);		
 				$folderName = $projectDetail[0]['PROJECT_NAME'];
