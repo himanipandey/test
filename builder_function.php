@@ -2142,6 +2142,7 @@ function checkDuplicateVideoLink($projectId,$videoLinkUrl,$video_id=0){
 				
 	return ($vcount->cnt)? $vcount->cnt : 0; 
 }
+
 function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0){
 	
 	$condition = '';
@@ -2157,6 +2158,32 @@ function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=
 		
 				
 	return ($vcount->cnt)? $vcount->cnt : 0; 
+}
+function updateD_Availablitiy($projectId){
+	
+	$no_of_phases = 0;
+	$condition = '';
+	
+	$phase_created = mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());
+	
+	if($phase_created)
+		$no_of_phases = mysql_fetch_object($phase_created)->cnt;
+	
+	if($no_of_phases > 0)
+		$condition = " AND (resi_project_phase.PHASE_TYPE = 'Actual')";
+		
+	$most_recent_updates = mysql_query("SELECT resi_project.PROJECT_ID, resi_project_phase.PHASE_ID, resi_project_phase.PHASE_TYPE, project_supplies.id as project_supply_id, project_availabilities.effective_month, project_availabilities.availability FROM `resi_project` INNER JOIN `resi_project_phase` ON `resi_project_phase`.`PROJECT_ID` = `resi_project`.`PROJECT_ID` AND (resi_project_phase.version ='Cms' and resi_project_phase.STATUS='Active') INNER JOIN `listings` ON `listings`.`phase_id` = `resi_project_phase`.`PHASE_ID` AND (listings.STATUS='Active') INNER JOIN `project_supplies` ON `project_supplies`.`listing_id` = `listings`.`id` AND `project_supplies`.`version` = 'Cms' left join project_availabilities on project_supplies.id=project_availabilities.project_supply_id WHERE `resi_project`.`version` = 'Cms' AND (resi_project.PROJECT_ID = '$projectId') ".$condition);
+	
+	if($most_recent_updates){
+		$total_av = 0;
+		while($mysql_row = mysql_fetch_object($most_recent_updates))
+			$total_av += $mysql_row->availability;			
+			
+		//update availability
+		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+
+	}
+
 }
 ?>
 
