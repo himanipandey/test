@@ -87,23 +87,26 @@
 		   $('#reasonRow').hide();
 		   $('#duplicate_pid').hide();
 		   $('#other_reason_txt').hide();
-		   $('#Active').change(function(){
-				if($(this).val() == 'Inactive')
-					$('#reasonRow').show();
-				else
-					$('#reasonRow').hide();
-		   });
-		   
-		   $('input[name=reason]').click(function(){
-				if($(this).val() == 'duplicate'){
-					 $('#duplicate_pid').show();
-					$('#other_reason_txt').hide();
-				}else{
-					$('#duplicate_pid').hide();
-					$('#other_reason_txt').show();
-				}
-		   });
-		
+		  active_value = "{$Active}";
+		  if(active_value != 'Inactive')
+		  {
+			   $('#Active').change(function(){
+					if($(this).val() == 'Inactive')
+						$('#reasonRow').show();
+					else
+						$('#reasonRow').hide();
+			   });
+			   
+			   $('input[name=reason]').click(function(){
+					if($(this).val() == 'duplicate'){
+						 $('#duplicate_pid').show();
+						$('#other_reason_txt').hide();
+					}else{
+						$('#duplicate_pid').hide();
+						$('#other_reason_txt').show();
+					}
+				});
+		  }
 	})
 </script>
   <TR>
