@@ -62,7 +62,7 @@
                                                     <label class="fwb">Company Name : </label>
                                                 </td>
                                                 <td>
-                                                    <input name="broker" id="broker" value="{$broker}" class="button" />
+                                                    <input name="broker" id="broker" value="{$broker}" class="text" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -70,7 +70,7 @@
                                                     <label class="fwb">Agent Name : </label>
                                                 </td>
                                                 <td>
-                                                    <input name="agent" id="agent" value="{$agent}" class="button" />
+                                                    <input name="agent" id="agent" value="{$agent}" class="text" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -78,7 +78,7 @@
                                                     <label class="fwb">Agent Rating : </label>
                                                 </td>
                                                 <td>
-                                                    <select name="agent_rating" id="agent_rating">
+                                                    <select name="agent_rating" id="agent_rating" class="text">
                                                         <option value="">-- Select Rating --</option>
                                                         <option value="0.5" {if $agent_rating != '' && $agent_rating == "0.5"} selected=""  {/if}>0.5</option>
                                                         <option value="1" {if $agent_rating != '' && ($agent_rating == "1.0" || $agent_rating == "1")} selected=""  {/if}>1.0</option>
@@ -98,7 +98,7 @@
                                                     <label class="fwb">Agent Qualification : </label>
                                                 </td>
                                                 <td>
-                                                    <select name="agent_quali" id="agent_quali">
+                                                    <select name="agent_quali" id="agent_quali" class="text">
                                                         <option value="">--Select Qualification--</option>
                                                         {foreach from= $qualification key = k item = val}
                                                            <option value="{$val['id']}" {if $val['id'] == $agent_quali} selected="true" {/if}>{$val['qualification']}</option>
@@ -111,7 +111,7 @@
                                                     <label class="fwb">Active Since : </label>
                                                 </td>
                                                 <td>
-                                                    <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="button" />
+                                                    <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="text" />
                                                     <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                                 </td>
                                             </tr>
@@ -119,6 +119,7 @@
                                                 <td>&nbsp;</td>
                                                 <td>
                                                     <input type="submit" name="search" id="search" value="Search" class="button" />
+                                                    <input type="button" name="reset" id="reset" value="Reset" class="button" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -212,7 +213,9 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        
+        jQuery('#reset').click(function(){
+           jQuery('.text').val(''); 
+        });
     });
     Calendar.setup({
             inputField     :    "active_since",     // id of the input field

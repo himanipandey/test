@@ -65,7 +65,7 @@
                                                     <label class="fwb">Broker Company : </label>
                                                 </td>
                                                 <td>
-                                                    <input name="broker" id="broker" value="{$broker}" class="button" />
+                                                    <input name="broker" id="broker" value="{$broker}" class="text" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -73,7 +73,7 @@
                                                     <label class="fwb">PAN : </label>
                                                 </td>
                                                 <td>
-                                                    <input name="pan" id="pan" value="{$pan}" maxlength="10" style="width:80px;" class="button" />
+                                                    <input name="pan" id="pan" value="{$pan}" maxlength="10" style="width:80px;" class="text" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -81,7 +81,7 @@
                                                     <label class="fwb">Active Since : </label>
                                                 </td>
                                                 <td>
-                                                    <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="button" />
+                                                    <input name="active_since" id="active_since" readonly="" style="width:80px;" value="{$active_since}" class="text" />
                                                     <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                                 </td>
                                             </tr>
@@ -89,6 +89,7 @@
                                                 <td>&nbsp;</td>
                                                 <td>
                                                     <input type="submit" name="search" id="search" value="Search" class="button" />
+                                                    <input type="button" name="reset" id="reset" value="Reset" class="button" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -186,6 +187,9 @@
             jQuery(this).val((jQuery(this).val()).toUpperCase());
         });
         
+        jQuery('#reset').click(function(){
+           jQuery('.text').val(''); 
+        });
     });
     Calendar.setup({
             inputField     :    "active_since",     // id of the input field
