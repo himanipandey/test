@@ -6,6 +6,7 @@ Date: 7/10/2013
  */
 require_once(dirname(__FILE__)."/table_attribute_mappings.php"); // auxilary functions mapping
 require_once(dirname(__FILE__)."/table_attributes.php"); // auxilary functions mapping
+require_once(dirname(__FILE__)."/project_aliases.php"); // auxilary functions mapping
 class Objects extends ActiveRecord\Model{
 
     static $custom_methods = array("all", "first", "last");
