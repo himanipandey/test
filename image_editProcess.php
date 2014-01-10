@@ -148,7 +148,7 @@
 							$service_image_id = $_REQUEST["service_image_id"][$k];
 							
 							if($arrTowerId[$key] > 0)
-								$add_tower = " TOWER_ID = $arrTowerId[$k], ";
+								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
 							else
 								$add_tower = " TOWER_ID = NULL, ";
 							
@@ -156,7 +156,6 @@
 							$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 												SET 
 													TITLE	   = '".$arrTitle[$k]."',
-													TAGGED_MONTH = '".$arrTaggedDate[$k]."',
 													".$add_tower."
 													DISPLAY_ORDER = '".$arrDisplayOrder[$k]."'
 												WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
@@ -1054,7 +1053,7 @@
 									}
 									$add_tower = '';
 									if($arrTowerId[$key] > 0)
-										$add_tower = " TOWER_ID = $arrTowerId[$key], ";
+										$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."', TOWER_ID = $arrTowerId[$key], ";
 									else
 										$add_tower = " TOWER_ID = NULL, ";
 								
@@ -1063,7 +1062,6 @@
 												SET 
 													PLAN_IMAGE = '".$dbpath[1]."',
 													TITLE	   = '".$arrTitle[$key]."',
-													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													DISPLAY_ORDER = '".$arrDisplayOrder[$key]."',
 													SERVICE_IMAGE_ID   = ".$image_id."
