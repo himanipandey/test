@@ -920,7 +920,7 @@ if (isset($_POST['Next']))
                                             $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
-                                                "image_type" => "project_image",));
+                                                "image_type" => "project_image","service_extra_params" => array("priority" => $arrDisplayOrder[$key])));
                                                 
 										
                                             $response = $s3upload->upload();

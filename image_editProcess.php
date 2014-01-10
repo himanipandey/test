@@ -977,7 +977,7 @@
                                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                             "object" => "project", "object_id" => $projectId,
                                                             "image_type" => "project_image",
-                                                            "service_image_id" => $service_image_id));
+                                                            "service_image_id" => $service_image_id,"service_extra_params" => array("priority" => $arrDisplayOrder[$key])));
                                                        $response = $s3upload->update();
                                                         // Image id updation (next three lines could be written in single line but broken
                                                         // in three lines due to limitation of php 5.3)
