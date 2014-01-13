@@ -412,7 +412,9 @@
 									 <option {if $Active == 'ActiveInCms'} selected{/if}  value="ActiveInCms">Active In Cms</option>
 									 </select>
 								  {/if}
-									 
+                                                                  {if $projectId != ''}
+                                                                      <input type="hidden" id = "existingStatus" name = "existingStatus" value="{$Active}">
+                                                                  {/if}    
 								  </td>
 								  <td width="50%" align="left">
 									  <font color="red"><span id = "err_project_active" style = "display:none;"></span></font>

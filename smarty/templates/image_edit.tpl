@@ -163,6 +163,9 @@ $(".pt_reqflrplan").fancybox();
 														Image Type:{$ImageDataListingArr[data].PLAN_IMAGE}<input type = "text" readonly name = "PType[{$cnt}]"
 														value = "{$ImageDataListingArr[data].PLAN_TYPE}"
 														STYLE="width: 165px;border:1px solid #c3c3c3;">
+                                                                                                                
+                                                                                                                <input type = "hidden" name = "currentPlanId[{$cnt}]"
+														value = "{$ImageDataListingArr[data].PROJECT_PLAN_ID}">
 
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />

@@ -2143,13 +2143,18 @@ function checkDuplicateVideoLink($projectId,$videoLinkUrl,$video_id=0){
 	return ($vcount->cnt)? $vcount->cnt : 0; 
 }
 
-function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0){
-	
+function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $currentPlanId =''){
+	if($currentPlanId == '')
+            $currentPlanId = '';
+        else
+            $currentPlanId = "and PROJECT_PLAN_ID != ".$currentPlanId;
 	$condition = '';
 	if($plan_id)
 		$condition = " AND SERVICE_IMAGE_ID != '$service_image_id'";
 	$display_order = mysql_real_escape_string($display_order);
-	$Sql = "SELECT count(*) as cnt FROM " . PROJECT_PLAN_IMAGES . " WHERE PROJECT_ID = '$projectId' AND display_order != '5' AND PLAN_TYPE = 'Project Image' AND display_order = '".$display_order."' ".$condition;
+	$Sql = "SELECT count(*) as cnt FROM " . PROJECT_PLAN_IMAGES . " WHERE 
+            PROJECT_ID = '$projectId' AND display_order != '5' AND PLAN_TYPE = 'Project Image' 
+                 $currentPlanId AND display_order = '".$display_order."' ".$condition;
 	
 	$qrySelect = mysql_query($Sql) or die(mysql_error());
 	
