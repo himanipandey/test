@@ -878,24 +878,24 @@
                       {/if}
 	           
 				<tr>
-                    <td width="30%" valign="top">Broker Company Name :<font color = "red">*</font></td>
-                    <td width="10%" valign="top">
-                        <input type=text name="name" id="name" value ="{$name}" style="width:250px;" />
+                    <td width="150px" valign="top">Broker Company Name :<font color = "red">*</font></td>
+                    <td width="100px" valign="top">
+                        <input type=text name="name" id="name" value ="{$name}" style="width:180px;" />
                         {if $ErrorMsg["name"] != ''}
                             <font color = "red">{$ErrorMsg["name"]}</font>
                         {/if}
                     </td>
-                    <td width="10%" align="right" valign="top" >Company Logo : </td>
-                    <td width="10%" align="left" valign="top" >
+                    <td width="100px" align="right" valign="top" >Company Logo : </td>
+                    <td width="100px" align="left" valign="top" >
                         <input type="file" name="logo" id="logo" value="" style="width:88px;" />
                     </td>
-                   <td width="15%" align="left" valign="top">
-                        <div style="width:130px!important;height:130px">
-                            {if $imgurl != ''} <a href="#div_img" class="showimage" ><img src="{$imgurl}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_img"><img src="{$imgurl}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}
+                   <td width="100px" align="left" valign="top">
+                        <div style="width:100px!important;height:130px">
+                            {if $imgurl != ''} <a href="#div_img" class="showimage" ><img src="{$imgurl}" style="width:100px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_img"><img src="{$imgurl}" width="100" height="90" /></div></div> {else}<img src="no_image.gif" width="100" height="90" /> {/if}
                         </div>
                     </td>
-                    <td width="15%" align="right" valign="top" >PAN : </td>
-                    <td width="10%" align="left" valign="top" >
+                    <td width="150px" align="left" valign="top" >PAN:</td>
+                    <td width="100px" align="left" valign="top" >
                         <input type=text name="pan" id="pan" maxlength="10" value="{$pan}" style="width:85px;" />	
                     </td>
 				</tr>
@@ -904,7 +904,7 @@
                 <tr>
                        <td width="30%" >Description :</td>
                        <td width="20%" align="left" >
-                               <textarea name="description" style="width:250px;" id="description">{$description}</textarea>	
+                               <textarea name="description" style="width:180px;" id="description">{$description}</textarea>	
                                 {if $ErrorMsg["description"] != ''}
                                     <font color = "red">{$ErrorMsg["description"]}</font>
                                 {/if}
@@ -931,7 +931,7 @@
 				<tr>
 				    <td width="35%" align="left" >Address Line 1 : <font color = "red">*</font></td>
                     <td width="10%" align="left" >
-                        <input type=text name="addressline1" id="addressline1" value="{$addressline1}" style="width:250px;" />
+                        <input type=text name="addressline1" id="addressline1" value="{$addressline1}" style="width:180px;" />
                         {if $ErrorMsg["addressline1"] != ''}
                             <font color = "red">{$ErrorMsg["addressline1"]}</font>
                         {/if}
@@ -940,7 +940,7 @@
                     <td width="10%">&nbsp;</td>
                     <td width="10%" align="right" valign="top">City :<font color = "red">*</font></td>
                     <td width="25%" align="left" >
-				        <select name="city_id" id = "city_id" style="width:200px;">
+				        <select name="city_id" id = "city_id" style="width:150px;">
                            <option value="">Select City</option>
                            {foreach from= $cityArr key = k item = val}
                                <option value="{$k}" {if $k == $city_id} selected {/if}>{$val}</option>
@@ -953,7 +953,7 @@
                 <tr>
 				    <td width="30%" align="left" >Address Line 2 : </td>
                     <td width="10%" align="left" >
-                        <input type=text name="addressline2" id="addressline2" value="{$addressline2}" style="width:250px;" />
+                        <input type=text name="addressline2" id="addressline2" value="{$addressline2}" style="width:180px;" />
                     </td>
                     
                     <td width="10%">&nbsp;</td>
@@ -977,14 +977,15 @@
                     </td>
                     
                     <td width="10%">&nbsp;</td>
-                    <td width="15%" align="right" valign="top" >Office Email:</td>
+                    <td width="10%" align="right" valign="top" >Office Email:</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="email" id="email" value="{$email}" style="width:250px;" />	
+                        <input type=text name="email" id="email" value="{$email}" style="width:150px;" />	
                         {if $ErrorMsg["email"] != ''}
                             <font color = "red">{$ErrorMsg["email"]}</font>
                         {/if}	
                     </td>
-    				
+    				<td width="15%">&nbsp;</td>
+                    <td width="10%">&nbsp;</td>
 				</tr>
                 
                 <tr>
@@ -1032,7 +1033,7 @@
                                         
                                         <td width="30%" valign="top"><input type="checkbox" name="chkbox_{$val['id']}" id="chkbox_{$val['id']}" class="chkbox" /> &nbsp;Name :<font color = "red">*</font></td>
                                         <td width="10%" valign="top">
-                                            <input type="text" name="cp_name" id="cp_name-{$val['id']}" class="cp_name" value ="{$val['name']}" style="width:250px;" />
+                                            <input type="text" name="cp_name" id="cp_name-{$val['id']}" class="cp_name" value ="{$val['name']}" style="width:180px;" />
                                             
                                         </td>
                                         <td width="20%" align="right" >Contact Mobile : </td>
@@ -1169,7 +1170,6 @@
                             <font color = "red">{$ErrorMsg["cc_phone"]}</font>
                         {/if}	
                     </td>
-                    <td width="10%">&nbsp;</td>
                     <td width="20%" align="right" valign="top" >Cust Care Mobile : </td>
                     <td width="30%" align="left" >
                     <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
@@ -1178,6 +1178,7 @@
                             <font color = "red">{$ErrorMsg["cc_mobile"]}</font>
                         {/if}
                     </td>
+                    <td width="10%">&nbsp;</td>                    
 				</tr>
                 
                
@@ -1189,16 +1190,15 @@
                             <font color = "red">{$ErrorMsg["cc_fax"]}</font>
                         {/if}	
                     </td>
-                    <td width="10%">&nbsp;</td>
                     <td width="15%" align="right" valign="top" >Cust Care Email:</td>
                     <td width="10%" align="left" valign="top" >
                         
-                        <input type=text name="cc_email" id="cc_email" value="{$cc_email}" style="width:250px;" />
+                        <input type=text name="cc_email" id="cc_email" value="{$cc_email}" style="width:180px;" />
                         {if $ErrorMsg["cc_email"] != ''}
                             <font color = "red">{$ErrorMsg["cc_email"]}</font>
                         {/if}	
                     </td>
-    				
+    				<td width="10%">&nbsp;</td>
 				</tr>
                 
                 <tr>
