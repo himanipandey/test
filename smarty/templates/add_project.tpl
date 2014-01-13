@@ -1,5 +1,5 @@
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/common.js?version=3"></script>
+<script type="text/javascript" src="js/common.js?version=4"></script>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
