@@ -66,7 +66,7 @@
 						<form name = "frm" method = "post" onsubmit = "return bank_validation();" enctype = "multipart/form-data">
 						
 						<tr bgcolor = '#F7F7F7'>
-							<td align = "right"><b>Bank Name:</b></td>
+							<td align = "right"><font color="red">*</font><b>Bank Name:</b></td>
 							<td align = "left"><input type = "text" name = "bankname" id = "bankname" value = "{$bankname}"></td>
 						</tr>
 						<tr bgcolor = '#F7F7F7'>
@@ -74,7 +74,7 @@
 							<td align = "left"><input type = "file" name = "logo"></td>
 						</tr>
 						<tr bgcolor = '#F7F7F7'>
-							<td align = "right" valign ="top"><b>Bank Detail:</b></td>
+							<td align = "right" valign ="top"><font color="red">*</font><b>Bank Detail:</b></td>
 							<td align = "left">
 								<textarea name = "bank_detail" id = "bank_detail" rows="15" cols="30">{$bank_detail}</textarea>
 							</td>
