@@ -393,8 +393,19 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
            }
        }
-     //  echo $ErrorMsg['launchDate'];
-  //echo $Status ."==". OCCUPIED_ID_3 ." or ". READY_FOR_POSSESSION_ID_4."==>$launchDt";die;
+       if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && $projectId != '' ) {
+           if($completionDate == '0000-00-00')
+               $completionDate = '';
+           $yearExp = explode("-",$completionDate);
+           if( $yearExp[0] == date("Y") ) {
+               if( intval($yearExp[1]) > intval(date("m"))) {
+                 $ErrorMsg["txtStatus"] = "Completion date cannot be greater current month for this status";
+               }    
+           } 
+           else if (intval($yearExp[0]) > intval(date("Y")) ) {
+               $ErrorMsg["txtStatus"] = "Completion date cannot be greater current month for this status";
+           }
+       }
        if($township == '')
            $township = null;
        if($powerBackup == '')
