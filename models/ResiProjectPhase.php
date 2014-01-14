@@ -123,5 +123,17 @@ class ResiProjectPhase extends Objects
     static function getNoPhaseForProject($projectId){
         return self::find(array('conditions'=>array('PROJECT_ID'=>$projectId, 'PHASE_TYPE'=>'Logical', 'version'=>'Cms')));
     }
-
+    
+    static function getWebsitePhaseCountForProjects(){
+        $conditions = array();
+        $conditions['version'] = 'Website';
+        
+        $sqlResult = self::find_by_sql("select PROJECT_ID, count(*) as count from resi_project_phase where version = 'Website' group by PROJECT_ID");
+        $result = array();
+        //print_r($sqlResult[0]);die;
+        foreach ($sqlResult as $value) {
+            $result[$value->project_id] = $value->count;
+        }
+        return $result;
+    }
 }
