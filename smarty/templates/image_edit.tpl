@@ -163,6 +163,9 @@ $(".pt_reqflrplan").fancybox();
 														Image Type:{$ImageDataListingArr[data].PLAN_IMAGE}<input type = "text" readonly name = "PType[{$cnt}]"
 														value = "{$ImageDataListingArr[data].PLAN_TYPE}"
 														STYLE="width: 165px;border:1px solid #c3c3c3;">
+                                                                                                                
+                                                                                                                <input type = "hidden" name = "currentPlanId[{$cnt}]"
+														value = "{$ImageDataListingArr[data].PROJECT_PLAN_ID}">
 
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
@@ -196,8 +199,12 @@ $(".pt_reqflrplan").fancybox();
 															</select>
 															<br/>
 														{/if}
-														Delete/Edit:<input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
+														<br/><br/>
+														Delete:<input type="radio" name="chk_name[{$cnt}]" value="delete_img" id="chk_{$cnt}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														Edit:<input type="radio" name="chk_name[{$cnt}]"  value="edit_img"><br><br>
 														New Image?:<input type="file" name="img[{$cnt}]"/>
+														
+														
 
 
 													</div>
@@ -216,7 +223,7 @@ $(".pt_reqflrplan").fancybox();
 								   <span id = 'rowPropCount' style = 'display:none;'>{$countPropImages}</span>
 								  
 								  <input type="hidden" name="projectId" value="{$projectId}" />
-								  <input type="submit" name="btnSave" id="btnSave" value="Submit" style = "font-size:16px;"  onclick="return check();">
+								  <input type="submit" name="btnSave" id="btnSave" value="Submit" style = "font-size:16px;"  >
 								  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style = "font-size:16px;">
 								  </td>
 								</tr>

@@ -2126,10 +2126,13 @@ function fetchProjectRedevelolpmentFlag($projectId){
      return ($flag->attribute_value)? "Yes" : "No";
 	
 }
-function checkDuplicateVideoLink($videoLinkUrl){
+function checkDuplicateVideoLink($projectId,$videoLinkUrl,$video_id=0){
 	
+	$condition = '';
+	if($video_id)
+		$condition = " AND video_id != '$video_id'";
 	$videoLinkUrl = trim($videoLinkUrl);
-	$Sql = "SELECT count(*) as cnt FROM " . VIDEO_LINKS . " WHERE video_url = '".$videoLinkUrl."'";
+	$Sql = "SELECT count(*) as cnt FROM " . VIDEO_LINKS . " WHERE table_id = '$projectId' AND video_url = '".$videoLinkUrl."' ".$condition;
 	
 	$qrySelect = mysql_query($Sql) or die(mysql_error());
      
@@ -2138,6 +2141,54 @@ function checkDuplicateVideoLink($videoLinkUrl){
 		
 				
 	return ($vcount->cnt)? $vcount->cnt : 0; 
+}
+
+function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $currentPlanId =''){
+	if($currentPlanId == '')
+            $currentPlanId = '';
+        else
+            $currentPlanId = "and PROJECT_PLAN_ID != ".$currentPlanId;
+	$condition = '';
+	if($plan_id)
+		$condition = " AND SERVICE_IMAGE_ID != '$service_image_id'";
+	$display_order = mysql_real_escape_string($display_order);
+	$Sql = "SELECT count(*) as cnt FROM " . PROJECT_PLAN_IMAGES . " WHERE 
+            PROJECT_ID = '$projectId' AND display_order != '5' AND PLAN_TYPE = 'Project Image' 
+                 $currentPlanId AND display_order = '".$display_order."' ".$condition;
+	
+	$qrySelect = mysql_query($Sql) or die(mysql_error());
+	
+	if($qrySelect)
+		$vcount = mysql_fetch_object($qrySelect);
+		
+				
+	return ($vcount->cnt)? $vcount->cnt : 0; 
+}
+function updateD_Availablitiy($projectId){
+	
+	$no_of_phases = 0;
+	$condition = '';
+	
+	$phase_created = mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());
+	
+	if($phase_created)
+		$no_of_phases = mysql_fetch_object($phase_created)->cnt;
+	
+	if($no_of_phases > 0)
+		$condition = " AND (resi_project_phase.PHASE_TYPE = 'Actual')";
+		
+	$most_recent_updates = mysql_query("SELECT resi_project.PROJECT_ID, resi_project_phase.PHASE_ID, resi_project_phase.PHASE_TYPE, project_supplies.id as project_supply_id, project_availabilities.effective_month, project_availabilities.availability FROM `resi_project` INNER JOIN `resi_project_phase` ON `resi_project_phase`.`PROJECT_ID` = `resi_project`.`PROJECT_ID` AND (resi_project_phase.version ='Cms' and resi_project_phase.STATUS='Active') INNER JOIN `listings` ON `listings`.`phase_id` = `resi_project_phase`.`PHASE_ID` AND (listings.STATUS='Active') INNER JOIN `project_supplies` ON `project_supplies`.`listing_id` = `listings`.`id` AND `project_supplies`.`version` = 'Cms' left join project_availabilities on project_supplies.id=project_availabilities.project_supply_id WHERE `resi_project`.`version` = 'Cms' AND (resi_project.PROJECT_ID = '$projectId') ".$condition);
+	
+	if($most_recent_updates){
+		$total_av = 0;
+		while($mysql_row = mysql_fetch_object($most_recent_updates))
+			$total_av += $mysql_row->availability;			
+			
+		//update availability
+		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+
+	}
+
 }
 ?>
 

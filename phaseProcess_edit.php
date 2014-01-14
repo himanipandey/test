@@ -38,7 +38,8 @@ if (isset($_REQUEST['delete'])) {
            where PROJECT_ID = $projectId and version = 'Cms'";
         mysql_query($qry) OR DIE(mysql_error());
         
-        
+        updateD_Availablitiy($projectId); // update D_availability 
+                
         if ($preview == 'true')
             header("Location:show_project_details.php?projectId=" . $projectId);
         else
@@ -244,14 +245,17 @@ if (isset($_POST['btnSave'])) {
                             $existingOptions = ProjectOptionsPhases::optionsForPhase($phaseId);
                             $removedOptions = array_diff($existingOptions, $arr);
                             if(empty($existingOptions) || !empty($removedOptions)){
-                                header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=2");
+								header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=2");
                                 exit;
                             }
                         }
                         $phase->reset_options($arr);
+                       
+                        
                     }
                 }
             });
+             updateD_Availablitiy($projectId); // update D_availability  
             #########################################
             // Phase Quantity
             if (sizeof($flats_config) > 0) {
@@ -321,5 +325,6 @@ if (isset($_POST['btnSave'])) {
     else
         header("Location:ProjectList.php?projectId=" . $projectId);
 }
+
 /* * *********************************** */
 ?>

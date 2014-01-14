@@ -1,5 +1,5 @@
 <?php        
-$BuilderDataArr	= ResiBuilder::BuilderEntityArr();
+$BuilderDataArr	= ResiBuilder::ProjectSearchBuilderEntityArr();
 $CityDataArr = City::CityArr();
 $ProjectTypeArr	= ResiProjectType::ProjectTypeArr();
 $BankListArr = BankList::arrBank();
@@ -212,9 +212,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    if(empty($suburbId)){
                $ErrorMsg["txtSuburbs"] = "Suburbs must be selected.";
             }
-	    if(empty($comments)){
-               $ErrorMsg["Comment"] = "Please enter project comment.";
-            }
 	    if(empty($txtAddress)){
                $ErrorMsg["txtAddress"] = "Please enter project address.";
             }
@@ -246,6 +243,12 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 			$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
 	    	}
 	    }
+	  /*   if($Active == 'Inactive' && isset($_POST['reason'])){
+			if($_POST['reason'] == 'duplicate' && trim($_POST['duplicate_pid']) == '')
+				$ErrorMsg["txtproject_alias"] = "Duplicate PID must be valid.";
+			elseif($_POST['reason'] == 'other_reason' && trim($_POST['other_reason_txt']) == '')
+				$ErrorMsg["txtproject_alias"] = "Please enter reason for inactive.";
+		}*/
 	   if(!empty($power_backup_capacity)){
 	    	if(!is_numeric($power_backup_capacity) || $power_backup_capacity > 10){
 			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";
@@ -351,7 +354,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
        
        if($completionDate == '0000-00-00')
                $completionDate = '';
-        if($projectId != '' && ($completionDate != '' || $launchDt != '')) {
+         if($projectId != '' && ($completionDate != '' && $launchDt != '')) {
             $retdt  = ((strtotime($completionDate)-strtotime($launchDt))/(60*60*24));
              if( $retdt <= 180 ) {
                  $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date: '.$completionDate;
@@ -483,6 +486,35 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
             
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
+           
+           if($projectId && $Active == 'Inactive'){ // when project status set to be inactive
+			   $pro_aliases = ProjectAliases::find('all',array('conditions' => array('original_project_id' => $projectId)));
+			   if($pro_aliases)
+				$pro_aliases = ProjectAliases::find($pro_aliases[0]->id);
+			   else
+			    $pro_aliases = new ProjectAliases();
+			   
+			   $pro_aliases->original_project_id = $projectId;
+			   if($_POST['reason'] == 'duplicate'){
+				 $pro_aliases->duplicate_project_id = $_POST['duplicate_pid'];
+				 $pro_aliases->reason_text = '';
+				}
+			   if($_POST['reason'] == 'other_reason'){
+				 $pro_aliases->reason_text = $_POST['other_reason_txt'];
+				  $pro_aliases->duplicate_project_id = 0;
+				}
+				 
+			   $pro_aliases->save();
+			   
+		   }elseif($projectId && $Active != '' && $Active != 'Inactive'){ // when project status set to be active delete entries in project aliases
+		   
+				 $pro_aliases = ProjectAliases::find('all',array('conditions' => array('original_project_id' => $projectId)));
+				 
+				 if($pro_aliases){
+					$pro_aliases = ProjectAliases::find($pro_aliases[0]->id);
+					$pro_aliases->delete();
+				}
+		   }
            
            $redev_pro = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));
            

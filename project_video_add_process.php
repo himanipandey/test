@@ -72,19 +72,19 @@ if($_REQUEST['edit'] == 'delete'){
 			if(trim($_REQUEST['Url'][$count]) == ''){
 				$ErrorMsg["ptype"] = "Please enter Video Url."; break;
 			}else{
-				
-				$ext_vlinks = checkDuplicateVideoLink($_REQUEST['Url'][$count]);
-				
+								
 			  if(array_key_exists($_REQUEST['Url'][$count], $temp_arr)){
 				  $ErrorMsg["ptype"] = "Duplicate Video Url not allowed."; break;				  
-			  }else if($ext_vlinks){//checking duplicacy
-			     if(!isset($_REQUEST['video_id'])){
-					$ErrorMsg["ptype"] = "Video Url already exist"; 
-					break;
-				 }
-				 elseif($_REQUEST['video_id'] && $ext_vlinks > 1){
+			  }else {//checking duplicacy
+				
+				 if(!isset($_REQUEST['video_id']))
+					$ext_vlinks = checkDuplicateVideoLink($projectId,$_REQUEST['Url'][$count]);
+				 elseif($_REQUEST['video_id'])
+					$ext_vlinks = checkDuplicateVideoLink($projectId,$_REQUEST['Url'][$count],$_REQUEST['video_id']);
+				 if($ext_vlinks){
 					$ErrorMsg["ptype"] = "Video Url already exist"; break;
 				 }
+					
 				 
 			  }
 			  $temp_arr[$_REQUEST['Url'][$count]] = $_REQUEST['Url'][$count];

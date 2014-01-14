@@ -136,6 +136,30 @@ if (isset($_POST['Next']))
 	    {
 	      $ErrorMsg["ptype"] = "Please enter Tagged Date.";
 	    }
+	   
+	    //checking uniqness display order of elevation images
+	    if($_REQUEST['PType'] == 'Project Image'){
+			$count = 1;
+			$temp_arr = array();
+			while($count <= $_REQUEST['img']){
+				
+				if(trim($_REQUEST['txtdisplay_order'][$count]) == ''){
+					$ErrorMsg["ptype"] = "Please enter Display Order."; break;
+				}else{
+									
+				  if(array_key_exists($_REQUEST['txtdisplay_order'][$count], $temp_arr)){
+					  $ErrorMsg["ptype"] = "Display order must be unique."; break;				  
+				  }else {//checking duplicacy
+						$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$count]);
+						if($ext_vlinks){
+							 $ErrorMsg["ptype"] = "Display order '".$_REQUEST['txtdisplay_order'][$count]."' already exist."; break;
+						}
+				  }
+				  $temp_arr[$_REQUEST['txtdisplay_order'][$count]] = $_REQUEST['txtdisplay_order'][$count];
+				}
+				$count++;
+			}
+		}
             $smarty->assign("PType", $_REQUEST['PType']);
 	if(is_array($ErrorMsg)) {
 		// Do Nothing
@@ -896,7 +920,7 @@ if (isset($_POST['Next']))
                                             $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
-                                                "image_type" => "project_image",));
+                                                "image_type" => "project_image","service_extra_params" => array("priority" => $arrDisplayOrder[$key])));
                                                 
 										
                                             $response = $s3upload->upload();
