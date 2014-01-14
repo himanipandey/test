@@ -988,6 +988,20 @@ function getDateNow(){
 								{$projectDetails[0].STATUS}
 							</td>
 						</tr>
+						{if $projectDetails[0].STATUS == 'Inactive'}
+						<tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left">
+								<b>Inactive Reason:</b>
+							</td>
+							<td>
+								{if $project_alias_detail->duplicate_project_id}
+									Duplicate PID : {$project_alias_detail->duplicate_project_id}
+								{else}
+									{$project_alias_detail->reason_text}
+								{/if}
+							</td>
+						</tr>
+						{/if}
                                                 
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">

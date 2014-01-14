@@ -314,7 +314,10 @@ $bankList = ProjectBanks::find('all',array('joins' => $joinbank,'conditions'=>
                     'project_banks.*,bl.bank_name'));
 $smarty->assign("bankList", $bankList);
 
-
+if($projectDetails[0]['STATUS'] == 'Inactive'){
+	$project_alias_detail = project_aliases_detail($projectId);
+	$smarty->assign("project_alias_detail", $project_alias_detail);
+}
 
 if ($projectDetails[0]['PROJECT_STAGE'] == 'NewProject') {
     $phse = 'newP';
