@@ -98,7 +98,7 @@ class ProjectAvailability extends Model {
     }
     
     public static function getInventoryForIndexing($aProjectId){
-        $condition = "where rp.version = 'Website' and rp.status = 'Active' and rp.PROJECT_ID in (".  implode(',', $aProjectId).")";
+        $condition = "where rp.version = 'Website' and rp.status = 'Active' and pa.effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . "' and rp.PROJECT_ID in (".  implode(',', $aProjectId).")";
         $sql = "select concat_ws('/', rp.PROJECT_Id, rpp.PHASE_ID, rpo.OPTION_TYPE, rpo.BEDROOMS, pa.effective_month) as unique_key, rp.PROJECT_ID, rpp.PHASE_ID, rpo.OPTION_TYPE, rpo.BEDROOMS, pa.effective_month, rp.PROJECT_NAME, rpp.PHASE_NAME, rb.BUILDER_ID, rb.BUILDER_NAME, c.CITY_ID, c.LABEL as CITY_NAME, s.SUBURB_ID, s.LABEL as SUBURB_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, rpp.PHASE_TYPE, ps.supply, ps.launched, pa.availability from resi_project rp inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join resi_project_options rpo on rp.PROJECT_ID = rpo.PROJECT_ID and rpo.OPTION_CATEGORY = 'Logical'  inner join listings li on rpo.OPTIONS_ID = li.option_id and li.status = 'Active' inner join project_supplies ps on li.id = ps.listing_id and ps.version = 'Website' inner join project_availabilities pa on ps.id = pa.project_supply_id $condition group by rp.PROJECT_Id, rpp.PHASE_ID, rpo.OPTION_TYPE, rpo.BEDROOMS, pa.effective_month";
         return self::find_by_sql($sql);
     }
