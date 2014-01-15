@@ -127,7 +127,7 @@ $(".pt_reqflrplan").fancybox();
 					<td  align = "center" colspan = "2">
 						{if count($ErrorMsg)>0}
 					   {foreach from=$ErrorMsg item=data}
-					   <font color = "red">{$data}</font><br>
+					   <font color = "red" style="font-size:17px;">{$data}</font><br>
 					   {/foreach}
 					{/if}
 					</td>
