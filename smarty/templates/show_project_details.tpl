@@ -385,6 +385,22 @@ function getDateNow(){
  {
 	window.location.href = "show_project_details.php?stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId;
  }
+ 
+ $(document).ready(function(){
+	 
+	 $('#diffButton').click(function(){
+		 projectID = $('#projectId').val();
+		 $.ajax({
+	      type:"post",
+	      url:"project_stage_difference.php",
+	      data:"projectID="+projectID,
+	      success : function (dt) {
+			$('#diffContent td').html(dt);
+	      }
+	  });
+		
+	});
+});
 </script>
 
 
@@ -453,7 +469,7 @@ function getDateNow(){
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                  <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
             {/if}
-	{else}
+	{else}diffButtondiffButton
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                 <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','updation','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
             {/if}
@@ -524,16 +540,24 @@ function getDateNow(){
             <!-- Project Phases -->
             &nbsp;&nbsp;&nbsp;&nbsp;
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-            &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:</b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
             {/if}
            
-            <!-- End of Project Phases -->	   
+            <!-- End of Project Phases -->
+             <!-- Project Diff -->
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            {if $projectDetails[0]['PROJECT_PHASE_ID'] > 3}
+            &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Stage Differenece:</b><button id="diffButton">Diff</button>
+            {/if}
+            <!-- End of Project Diff -->	   
 			</td></tr>				   
 			<tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						
-						
+						<tr id="diffContent">
+							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"></td>						  
+						</tr>
 						<tr bgcolor = "#c2c2c2">
 							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"><b>Last Updated Detail</b></br>
 						  	  </br>
