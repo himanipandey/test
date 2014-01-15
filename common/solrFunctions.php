@@ -1,5 +1,5 @@
 <?php
-// date should be send in timestamp format.
+// date should be sent in timestamp format.
 function getDateInSolrFormat($time)
 {
   if(empty($time))
