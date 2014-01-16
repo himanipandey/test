@@ -988,7 +988,7 @@ function getDateNow(){
 								{$projectDetails[0].STATUS}
 							</td>
 						</tr>
-						{if $projectDetails[0].STATUS == 'Inactive'}
+						{if $projectDetails[0].STATUS == 'Inactive' && $project_alias_detail != 0}
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
 								<b>Inactive Reason:</b>

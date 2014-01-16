@@ -2191,7 +2191,9 @@ function updateD_Availablitiy($projectId){
 
 }
 function project_aliases_detail($projectID){
-	$project_alias = mysql_fetch_object(mysql_query("SELECT * FROM project_aliases WHERE original_project_id='$projectID'")) or die(mysql_error());
+	$project_alias = mysql_query("SELECT * FROM project_aliases WHERE original_project_id='$projectID'") or die(mysql_error());
+	if($project_alias)
+		$project_alias = mysql_fetch_object($project_alias);
 	return ($project_alias)?$project_alias:0;
 }
 ?>
