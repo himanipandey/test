@@ -2,7 +2,7 @@
 $currentDir = dirname(__FILE__);
 
 define('MIN_B2B_DATE', '2013-03-01');
-define('MAX_B2B_DATE', '2014-12-01');
+define('MAX_B2B_DATE', '2014-01-01');
 define('B2B_DOCUMENT_TYPE', 'B2B');
 
 require_once($currentDir . '/../Apache/Solr/Service.php');
@@ -21,13 +21,15 @@ define("INVALID_DATE", "0000-00-00 00:00:00");
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 
+$logger->info("Starting Indexing B2B Documents");
 $solr = new Apache_Solr_Service(SOLR_SERVER_HOSTNAME, SOLR_SERVER_PORT, '/solr/');
-$solr->deleteByQuery("*:*");
+$solr->deleteByQuery("DOCUMENT_TYPE:" . B2B_DOCUMENT_TYPE);
 $solr->commit();
-$logger->info("Deleted All documents of document type ");
+$logger->info("Deleted All documents of document type ".B2B_DOCUMENT_TYPE);
 
 $aProjectPhaseCount = ResiProjectPhase::getWebsitePhaseCountForProjects();
 $aAllProjects = ResiProject::find_by_sql('select PROJECT_ID from resi_project where version = "Website"');
+$logger->info("Project And Phase Details Retrieved");
 
 $i = 0;
 while($i< count($aAllProjects)){
@@ -37,11 +39,13 @@ while($i< count($aAllProjects)){
         $i=$i+1;
     }
     
+    $logger->info("Retrieving price and inventory data");
     $aAllInventory = ProjectAvailability::getInventoryForIndexing($aPid);
-    $aAllInventory = removeInvalidPhaseData($aAllInventory, $aProjectPhaseCount);
     $aAllPrice = ListingPrices::getPriceForIndexing($aPid);
-    $aAllPrice = removeInvalidPhaseData($aAllPrice, $aProjectPhaseCount);
+    $logger->info("Price and inventory data retrieved");
     
+    $aAllInventory = removeInvalidPhaseData($aAllInventory, $aProjectPhaseCount);
+    $aAllPrice = removeInvalidPhaseData($aAllPrice, $aProjectPhaseCount);
     
     fillIntermediateMonths($aAllInventory);
     fillIntermediateMonths($aAllPrice);
@@ -50,79 +54,86 @@ while($i< count($aAllProjects)){
     $aSolrDocument = getSolrDocuments($aAllInventory, $aAllPrice);
     $solr->addDocuments($aSolrDocument);
     $solr->optimize();
-    $solr->commit();
-
-    echo count($aAllInventory). " == ". count($aAllPrice) ."\n";
+    $logger->info(count($aSolrDocument) . " documents pushed into solr");
+    $logger->info("Indexing complete for $i projects");
 }
 
+
 function getSolrDocuments($aAllInventory, $aAllPrice){
+    global $logger;
     $aKey = array_unique(array_merge(array_keys($aAllInventory), array_keys($aAllPrice)));
     $result = array();
     foreach ($aKey as $key) {
         $solrDocument = new Apache_Solr_Document();
         
-        $solrDocument->addField('id', B2B_DOCUMENT_TYPE.$key);
+        $solrDocument->addField('id', B2B_DOCUMENT_TYPE. "/" . $key);
         $solrDocument->addField('DOCUMENT_TYPE', B2B_DOCUMENT_TYPE);
-        $solrDocument->addField('PROJECT_ID', isset($aAllInventory[$key])? $aAllInventory[$key]->project_id : $aAllPrice[$key]->project_id);
-        $solrDocument->addField('PROJECT_NAME', isset($aAllInventory[$key])? $aAllInventory[$key]->project_name : $aAllPrice[$key]->project_name);
-        $solrDocument->addField('PHASE_ID', isset($aAllInventory[$key])? $aAllInventory[$key]->phase_id : $aAllPrice[$key]->phase_id);
-        $solrDocument->addField('PHASE_NAME', isset($aAllInventory[$key])? $aAllInventory[$key]->phase_name : $aAllPrice[$key]->phase_name);
-        $solrDocument->addField('PHASE_TYPE', isset($aAllInventory[$key])? $aAllInventory[$key]->phase_type : $aAllPrice[$key]->phase_type);
-        $solrDocument->addField('LOCALITY_ID', isset($aAllInventory[$key])? $aAllInventory[$key]->locality_id : $aAllPrice[$key]->locality_id);
-        $solrDocument->addField('LOCALITY_NAME', isset($aAllInventory[$key])? $aAllInventory[$key]->locality_name : $aAllPrice[$key]->locality_name);
-        $solrDocument->addField('SUBURB_ID', isset($aAllInventory[$key])? $aAllInventory[$key]->suburb_id : $aAllPrice[$key]->suburb_id);
-        $solrDocument->addField('SUBURB_NAME', isset($aAllInventory[$key])? $aAllInventory[$key]->suburb_name : $aAllPrice[$key]->suburb_name);
-        $solrDocument->addField('CITY_ID', isset($aAllInventory[$key])? $aAllInventory[$key]->city_id : $aAllPrice[$key]->city_id);
-        $solrDocument->addField('CITY_NAME', isset($aAllInventory[$key])? $aAllInventory[$key]->city_name : $aAllPrice[$key]->city_name);
-        $solrDocument->addField('BUILDER_ID', isset($aAllInventory[$key])? $aAllInventory[$key]->builder_id : $aAllPrice[$key]->builder_id);
-        $solrDocument->addField('BUILDER_NAME', isset($aAllInventory[$key])? $aAllInventory[$key]->builder_name : $aAllPrice[$key]->builder_name);
         
-        $effectiveMonth = substr(isset($aAllInventory[$key])? $aAllInventory[$key]->effective_month : $aAllPrice[$key]->effective_month, 0, 10);
-        $solrDocument->addField('EFFECTIVE_MONTH', getDateInSolrFormat(strtotime($effectiveMonth)));        $solrDocument->addField('COMPLETION_DATE', getDateInSolrFormat(strtotime(isset($aAllInventory[$key])? $aAllInventory[$key]->completion_date : $aAllPrice[$key]->completion_date)));        $solrDocument->addField('LAUNCH_DATE', getDateInSolrFormat(strtotime(isset($aAllInventory[$key])? $aAllInventory[$key]->launch_date : $aAllPrice[$key]->launch_date)));        
-        $solrDocument->addField('PRE_LAUNCH_DATE', getDateInSolrFormat(strtotime(isset($aAllInventory[$key])? $aAllInventory[$key]->pre_launch_date : $aAllPrice[$key]->pre_launch_date)));
-        $bedrooms = isset($aAllInventory[$key])? $aAllInventory[$key]->bedrooms : $aAllPrice[$key]->bedrooms;
+        $arrayToPick = isset($aAllInventory[$key])? $aAllInventory : $aAllPrice;
+        
+        $solrDocument->addField('PROJECT_ID', $arrayToPick[$key]->project_id);
+        $solrDocument->addField('PROJECT_NAME',$arrayToPick[$key]->project_name);
+        $solrDocument->addField('PHASE_ID', $arrayToPick[$key]->phase_id);
+        $solrDocument->addField('PHASE_NAME', $arrayToPick[$key]->phase_name);
+        $solrDocument->addField('PHASE_TYPE', $arrayToPick[$key]->phase_type);
+        $solrDocument->addField('LOCALITY_ID', $arrayToPick[$key]->locality_id);
+        $solrDocument->addField('LOCALITY_NAME', $arrayToPick[$key]->locality_name);
+        $solrDocument->addField('SUBURB_ID', $arrayToPick[$key]->suburb_id);
+        $solrDocument->addField('SUBURB_NAME', $arrayToPick[$key]->suburb_name);
+        $solrDocument->addField('CITY_ID', $arrayToPick[$key]->city_id);
+        $solrDocument->addField('CITY_NAME', $arrayToPick[$key]->city_name);
+        $solrDocument->addField('BUILDER_ID', $arrayToPick[$key]->builder_id);
+        $solrDocument->addField('BUILDER_NAME', $arrayToPick[$key]->builder_name);
+        $effectiveMonth = substr($arrayToPick[$key]->effective_month, 0, 10);
+        $solrDocument->addField('EFFECTIVE_MONTH', getDateInSolrFormat(strtotime($effectiveMonth)));
+        $solrDocument->addField('COMPLETION_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->completion_date)));
+        $solrDocument->addField('LAUNCH_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->launch_date)));
+        $solrDocument->addField('PRE_LAUNCH_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->pre_launch_date)));
+        $bedrooms = $arrayToPick[$key]->bedrooms;
         if(is_int($bedrooms))$solrDocument->addField('BEDROOMS', $bedrooms);
-        $solrDocument->addField('UNIT_TYPE', isset($aAllInventory[$key])? $aAllInventory[$key]->unit_type : $aAllPrice[$key]->unit_type);
+        $solrDocument->addField('UNIT_TYPE', isset($arrayToPick[$key])? $arrayToPick[$key]->unit_type : $aAllPrice[$key]->unit_type);
         
-        if(isset($aAllPrice[$key]))$solrDocument->addField('AVERAGE_PRICE_PER_UNIT_AREA', $aAllPrice[$key]->average_price_per_unit_area);
-        if(isset($aAllInventory[$key]))$solrDocument->addField('SUPPLY', $aAllInventory[$key]->supply);
-        if(isset($aAllInventory[$key]))$solrDocument->addField('LAUNCHED_UNIT', $aAllInventory[$key]->launched);
-        if(isset($aAllInventory[$key]))$solrDocument->addField('INVENTORY', $aAllInventory[$key]->inventory);
-        if(isset($aAllPrice[$key]))$solrDocument->addField('AVERAGE_SIZE', $aAllPrice[$key]->average_size);
         if(isset($aAllPrice[$key])){
+            $solrDocument->addField('AVERAGE_PRICE_PER_UNIT_AREA', $aAllPrice[$key]->average_price_per_unit_area);
+            $solrDocument->addField('AVERAGE_SIZE', $aAllPrice[$key]->average_size);
             $aSize = explode (',', $aAllPrice[$key]->size);
             foreach ($aSize as $size) {
                 $solrDocument->addField('SIZE', $size);
             }
+            $solrDocument->addField('AVERAGE_TOTAL_PRICE', $aAllPrice[$key]->average_total_price);
         }
-        if(isset($aAllPrice[$key]))$solrDocument->addField('AVERAGE_TOTAL_PRICE', $aAllPrice[$key]->average_total_price);
-        
+        if(isset($aAllInventory[$key])){
+            $solrDocument->addField('SUPPLY', $aAllInventory[$key]->supply);
+            $solrDocument->addField('LAUNCHED_UNIT', $aAllInventory[$key]->launched);
+            $solrDocument->addField('INVENTORY', $aAllInventory[$key]->inventory);
+        }
         
         array_push($result, $solrDocument);
     }
+    $logger->info("Solr document set ready");
     return $result;
 }
 
 function removeInvalidPhaseData($aData, $aProjectPhaseCount){
+    global $logger;
     $result = array();
     foreach ($aData as $value) {
         if($value->phase_type == 'Actual' || $aProjectPhaseCount[$value->project_id] == 1)$result[] = $value;
     }
+    $logger->info("Remove invalid phase operation complete");
     return $result;
 }
 
 function fillIntermediateMonths(&$aData){
+    global $logger;
     $aNewData = array();
-    for($i=0; $i<count($aData); $i++){
+    $count = count($aData);
+    for($i=0; $i<$count; $i++){
         $currData = $aData[$i];
         array_push($aNewData, clone $currData);
+        
         $fillTill = MAX_B2B_DATE;
-        if(isset($aData[$i+1])){
-            $currIndex = $currData->project_id . $currData->phase_id . $currData->unit_type . $currData->bedrooms;
-            $nextIndex = $aData[$i+1]->project_id . $aData[$i+1]->phase_id . $aData[$i+1]->unit_type . $aData[$i+1]->bedrooms;
-            if($currIndex === $nextIndex)$fillTill = getMonthShiftedDate ($aData[$i+1]->effective_month, -1);
-        }
-        if($aData[$i]->effective_month == $fillTill)continue;
+        if(isset($aData[$i+1]) && $currData->key_without_month === $aData[$i+1]->key_without_month)$fillTill = getMonthShiftedDate($aData[$i+1]->effective_month, -1);
         
         while(substr($currData->effective_month, 0, 10)<$fillTill){
             $nextMonth = getMonthShiftedDate($currData->effective_month, 1);
@@ -131,10 +142,12 @@ function fillIntermediateMonths(&$aData){
             array_push($aNewData, clone $currData);
         }
     }
+    $logger->info("Filling missing months operation complete");
     $aData = $aNewData;
 }
 
 function indexPriceInventoryData(&$aAllInventory, &$aAllPrice){
+    global $logger;
     $aNewAllInventory = array();
     foreach ($aAllInventory as $value) {
         $key = $value->unique_key;
@@ -148,6 +161,7 @@ function indexPriceInventoryData(&$aAllInventory, &$aAllPrice){
         $aNewAllPrice[$key] = $value;
     }
     $aAllPrice = $aNewAllPrice;
+    $logger->info("Indexing price and inventory data complete");
 }
 
 function getMonthShiftedDate($date, $shift){
