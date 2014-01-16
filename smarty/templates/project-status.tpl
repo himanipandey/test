@@ -82,14 +82,16 @@
                                                 <select name="executive" id="executive" STYLE="width: 150px">
                                                     
                                                         <option value =''>Select Exec</option>
-                                                        {foreach from = $executiveList item = item}
-                                                            {if in_array($item['ADMINID'], $arrSurveyTeamList) && $callingFieldFlag == 'survey'}
-                                                                <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
-                                                            {else if $callingFieldFlag == 'callcenter'}
-                                                                 <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
-                                                            {/if}
-                                                           
+                                                        {if $callingFieldFlag == 'survey'}
+                                                        {foreach from = $arrSurveyTeamList key= key item = item}
+                                                            <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['FNAME']} - {$item['WORKLOAD']}</option>
                                                         {/foreach}
+                                                        {else}
+                                                          {foreach from = $executiveList item = item}
+                                                            <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
+                                                          {/foreach}  
+                                                        {/if}                                                           
+                                                        
                                                 </select>
                                                 <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
                                             </form>
@@ -115,7 +117,7 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <form method="post" action="project-assign.php" onsubmit="return verifyChecked()">
+                                            <form method="post" action="project-assign.php?flag={$callingFieldFlag}" onsubmit="return verifyChecked()">
                                                 <table class="tablesorter">
                                                     <thead>
                                                         <tr>
@@ -157,10 +159,12 @@
                                                     <tfoot>
                                                         <tr>
                                                             <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
-                                                                <input type="submit" name="submit" value="fresh assignement"></input>&nbsp;&nbsp;
-                                                               {if $callingFieldFlag != 'survey'}
-                                                                    <input type="submit" name="submit" value="field assignement"></input>&nbsp;&nbsp;
-                                                               {/if}
+                                                                {if $department == 'CALLCENTER' || $department == 'SURVEY'}
+                                                                    <input type="submit" name="submit" value="fresh assignement"fresh assigne></input>&nbsp;&nbsp;
+                                                                   {if $callingFieldFlag != 'survey'}
+                                                                        <input type="submit" name="submit" value="field assignement"></input>&nbsp;&nbsp;
+                                                                   {/if}
+                                                                {/if}
                                                                 <button class="btn first"><i class="icon-step-backward"></i></button>
                                                                 <button class="btn prev"><i class="icon-arrow-left"></i></button>
                                                                 <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
@@ -193,25 +197,28 @@
                                                                 <td>{$item['PROJECT_STAGE']}</td>
                                                                 <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
                                                                 <td>{$item['LAST_WORKED_AT']}</td>
-                                                                <td>{$item['ASSIGNMENT_TYPE']}</td>
-                                                                <td>{$item['ASSIGNED_TO'][0]}</td>
-                                                                <td>{$item['ASSIGNED_AT'][0]}</td>
-                                                                <td>{$item['STATUS'][0]}</td>
-                                                                <td>{$item['REMARK'][0]}</td>
-                                                                <td>{$item['ASSIGNED_TO'][1]}</td>
-                                                                <td>{$item['ASSIGNED_AT'][1]}</td>
-                                                                <td>{$item['STATUS'][1]}</td>
-                                                                <td>{$item['REMARK'][1]}</td>
-                                                                <td>{$item['ASSIGNED_TO'][2]}</td>
-                                                                <td>{$item['ASSIGNED_AT'][2]}</td>
-                                                                <td>{$item['STATUS'][2]}</td>
-                                                                <td>{$item['REMARK'][2]}</td>
-                                                                <td>{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}</td>
-                                                                <td>{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}</td>
-                                                                <td>{$item['STATUS'][count($item['STATUS']) -1]}</td>
-                                                                <td>{$item['REMARK'][count($item['REMARK']) -1]}</td>
+                                                                <td>
+                                                                    {$assignType = $item['ASSIGNMENT_TYPE']|replace:'Field':''}
+                                                                    {$assignType}
+                                                                </td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][count($item['STATUS']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][count($item['REMARK']) -1]}{else}&nbsp;{/if}</td>
                                                             </tr>
-                                                        {elseif $callingFieldFlag == 'callcenter'}
+                                                        {elseif $callingFieldFlag == 'callcenter' && !strstr($item['ASSIGNMENT_TYPE'],'Field')}
                                                            <tr>
                                                                 <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
                                                                 <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>

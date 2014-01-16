@@ -5,7 +5,6 @@
     include("dbConfig.php");
     include("modelsConfig.php");
     include("includes/configs/configs.php");
-
     $accessBulkProject = '';
     if( $bulkProjUpdateAuth == false )
        $accessBulkProject = "No Access";
@@ -185,13 +184,13 @@
 
              if($_REQUEST['city'] != '')
              {
-				 $city = '';
-				 if($_REQUEST['city'] == 'othercities'){
-					$OtherCitiesKeys = array_keys($arrOtherCities);
-					$city = implode(",",$OtherCitiesKeys);
-				 }else{
-					 $city = $_REQUEST['city'];
-				}
+                    $city = '';
+                    if($_REQUEST['city'] == 'othercities'){
+                           $OtherCitiesKeys = array_keys($arrOtherCities);
+                           $city = implode(",",$OtherCitiesKeys);
+                    }else{
+                            $city = $_REQUEST['city'];
+                   }
                  $QueryMember .= $and." city.city_id in ($city)";
                  $and  = ' AND ';
              }
@@ -298,7 +297,7 @@
                 $SET = ' SET ';
                 $SetQry = '';
                 if($arrUpdatePhase[0] != '') {
-					$getProjectStage = ProjectStage::getStageByName($arrUpdatePhase[0]);
+                    $getProjectStage = ProjectStage::getStageByName($arrUpdatePhase[0]);
                     $SetQry .= $SET . " PROJECT_STAGE_ID = '".$getProjectStage[0]->id."' ";
                     $SET = ',';
 
@@ -342,7 +341,9 @@
                         $QueryExecute = mysql_query($Qry) or die(mysql_error());
                         $tot_affected_rows = mysql_affected_rows($Qry);	
 
-                        $qHistory = " INSERT INTO project_stage_history (PROJECT_ID,PROJECT_STAGE_ID,PROJECT_PHASE_ID,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID) SELECT PROJECT_ID, PROJECT_STAGE_ID, PROJECT_PHASE_ID,NOW(),'".$_SESSION['adminId']."', MOVEMENT_HISTORY_ID FROM resi_project WHERE id IN (".$eligibleIds.") AND version = 'cms' ";
+                        $qHistory = " INSERT INTO project_stage_history (PROJECT_ID,PROJECT_STAGE_ID,PROJECT_PHASE_ID,DATE_TIME,ADMIN_ID, PREV_HISTORY_ID) 
+                                    SELECT PROJECT_ID, PROJECT_STAGE_ID, PROJECT_PHASE_ID,NOW(),'".$_SESSION['adminId']."', 
+                                MOVEMENT_HISTORY_ID FROM resi_project WHERE id IN (".$eligibleIds.") AND version = 'Cms' ";
                         mysql_query($qHistory)  or die(mysql_error().__LINE__);
                         $qRecordHistoryId = "update resi_project rp inner join 
                                   (select PROJECT_ID, max(HISTORY_ID) HISTORY_ID from project_stage_history where PROJECT_ID in ($getProjectId)

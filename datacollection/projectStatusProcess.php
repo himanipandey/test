@@ -1,21 +1,24 @@
 <?php
 
 $accessDataCollection = '';
-if( $dataCollectionFlowAuth == false )
+if( $surveyAuth == false && $callCenterAuth == false)
    $accessDataCollection = "No Access";
 $smarty->assign("accessDataCollection",$accessDataCollection);
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
-if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER' 
+/*if(!(($_SESSION['ROLE'] === 'teamLeader') && ($_SESSION['DEPARTMENT'] === 'CALLCENTER' 
      || $_SESSION['DEPARTMENT'] === 'SURVEY'))){
     header("Location: project_desktop.php");
-}
+}*/
 $callingFieldFlag = '';
-if($_SESSION['DEPARTMENT'] === 'CALLCENTER')
+$getFlag = $_REQUEST['flag'];
+if($getFlag === 'callcenter')
     $callingFieldFlag = 'callcenter';
 else
     $callingFieldFlag = 'survey';
 $smarty->assign("callingFieldFlag",$callingFieldFlag);
+
+$smarty->assign('department',$_SESSION['DEPARTMENT']);
 if(isset($_POST['cityId']) && !empty($_POST['cityId'])){
     unset($_SESSION['project-status']);
     $_SESSION['project-status']['city'] = $_POST['cityId'];
@@ -33,9 +36,9 @@ elseif(isset($_POST['projectIds']) && !empty($_POST['projectIds'])){
 }
 if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
     if(isset($_SESSION['project-status']['locality']) && !empty($_SESSION['project-status']['locality'])){
-        $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $_SESSION['project-status']['suburb'], $_SESSION['project-status']['locality']);
+        $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $getFlag, $_SESSION['project-status']['suburb'], $_SESSION['project-status']['locality']);
     }else {
-    $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], 
+    $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $getFlag, 
             $_SESSION['project-status']['suburb']);
     }
     $projectList = prepareDisplayData($projectsfromDB);
@@ -104,13 +107,19 @@ function prepareDisplayData($data){
      
      $pids = "";
      $depts = array();
+     
 	 $prevs_depts = array();
     foreach ($data as $value)    
 		$pids .= $value['PROJECT_ID'].", ";
 
 	if(!empty($pids)) {
 		$pids = substr($pids,0,strlen($pids)-2);
-		$sql = "select group_concat(pa1.DEPARTMENT order by pa.ID desc) as department,rp.PROJECT_ID from resi_project rp inner join project_stage_history psh on rp.project_id = psh.project_id inner join project_assignment pa on psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID inner join proptiger_admin pa1 on pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and rp.project_id in (".$pids.") group by rp.PROJECT_ID;";
+		$sql = "select group_concat(pa1.DEPARTMENT order by pa.ID desc) as department,
+                    rp.PROJECT_ID from resi_project rp inner join project_stage_history psh 
+                    on rp.project_id = psh.project_id inner join project_assignment pa on 
+                    psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID inner join proptiger_admin pa1 on 
+                    pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and 
+                    rp.project_id in (".$pids.") group by rp.PROJECT_ID;";
 		$sql_depts = dbQuery($sql);
 	
 		foreach($sql_depts as $value){
@@ -119,7 +128,7 @@ function prepareDisplayData($data){
 			$depts[$value['PROJECT_ID']] = $prv_asg_dept[0];
 		}
 	}
-			        
+
     foreach ($data as $value) {
 		
 		 if($value['LAST_WORKED_AT'] == '')
@@ -128,34 +137,39 @@ function prepareDisplayData($data){
             'CITY' => $value['CITY'], 'LOCALITY'=>$value['LOCALITY'], 'PROJECT_PHASE'=>$value['PROJECT_STAGE'], 
             'PROJECT_STAGE'=>$value['PROJECT_PHASE'], 'MOVEMENT_DATE' => $value['MOVEMENT_DATE'],
             'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'],'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 
-            'LABEL'=>$value['LABEL']);
+            'LABEL'=>$value['LABEL'], 'ASSIGNED_TO_DEPART'=>$value['ASSIGNED_TO_DEPART'],'ROLE'=>$value['ROLE']);
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
         $assignment_type = '';
         
         if(($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') && strstr($prevs_depts[$value['PROJECT_ID']],$assigned_to_dep[count($assigned_to_dep)-1])){
-            $assignment_type .= 'Reverted-';
+            $assignment_type .= 'Reverted';
             if(isset($depts[$value['PROJECT_ID']]) && $depts[$value['PROJECT_ID']] === 'SURVEY')$assignment_type .= 'Field';
         }
         
-        
-        
-        if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY')$assignment_type .= 'Field';
+        if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY')$assignment_type .= 'Unassigned';
         elseif(empty($assigned_to[0])) $assignment_type .= 'Unassigned';
         else{
             $assignment_type .= 'Assigned-'.  strval(count($assigned_to));
         }
+        $RoleExp = explode('|',$value['ROLE']);
+        $roleCount = count($RoleExp);
+       $lastRole = $RoleExp[$roleCount-1];
+        $new['leadAssignedType'] = 0;
+        if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY' && $lastRole == 'teamLeader'){
+            $new['STATUS'][] = 'Unassigned';
+            $new['leadAssignedType'] = 1;
+        }
+        else 
+            $new['STATUS'] = explode('|', $value['STATUS']);
+        
         $new['ASSIGNMENT_TYPE'] = $assignment_type;
         $new['ASSIGNED_TO'] = $assigned_to;
         $new['ASSIGNED_AT'] = explode('|', $value['ASSIGNED_AT']);
-        $new['STATUS'] = explode('|', $value['STATUS']);
         $new['REMARK'] = explode('|', $value['REMARK']);
         $new['LAST_DEPARTMENT'] = $assigned_to_dep[count($assigned_to_dep)-1];
         $result[] = $new;
-       // echo "<pre>";
-        //print_r($result);
     }
-  
     return $result;
 }
 
@@ -178,8 +192,6 @@ function extractPIDs($pidString){
 
 function download_xls_file($projectList, $projectLastAuditDate){
     $filename = "/tmp/data_collection_".time().".xls";
-    echo "<pre>";
-    print_r($projectList);die("asdfghj");
     foreach ($projectList as $pkey => $project){
         // For first three assignments
         $projectList[$pkey]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];

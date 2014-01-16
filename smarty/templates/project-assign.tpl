@@ -46,14 +46,17 @@
                                                             </td>
                                                             <td>
                                                                 <select name="executives[]" class="squareDiv200" multiple>
-                                                                    {foreach from = $executiveWorkLoad item = executive}
-                                                                        {if in_array($executive['ADMINID'], $arrSurveyTeamList) && $callingFieldFlag == 'survey'}
-                                                                            <option value="{$executive["ADMINID"]}" {if $executive['WORKLOAD'] gte 80}disabled{/if}>{$executive['USERNAME']} - {$executive['WORKLOAD']}</option>
-                                                                        {else if $callingFieldFlag == 'callcenter'}
-                                                                             <option value="{$executive["ADMINID"]}" {if $executive['WORKLOAD'] gte 80}disabled{/if}>{$executive['USERNAME']} - {$executive['WORKLOAD']}</option>
-                                                                        {/if}
-                                                                
-                                                                    {/foreach}
+                                                                    
+                                                                    
+                                                                    {if $callingFieldFlag == 'survey'}
+                                                                        {foreach from = $arrSurveyTeamList key= key item = item}
+                                                                            <option {if $executive['WORKLOAD'] gte 80}disabled{/if} value ='{$item['ADMINID']}'>{$item['FNAME']} - {$item['WORKLOAD']}</option>
+                                                                        {/foreach}
+                                                                        {else}
+                                                                          {foreach from = $executiveList item = item}
+                                                                            <option {if $executive['WORKLOAD'] gte 80}disabled{/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
+                                                                          {/foreach}  
+                                                                    {/if}
                                                             </td>
                                                         </TR>
                                                         <tr>
@@ -82,7 +85,7 @@
                                 </TR>
                                 <TR>
                                     <td style="text-align: center;">
-                                        <a href = "project-status.php">BACK</a>
+                                        <a href = "project-status.php?flag={$callingFieldFlag}">BACK</a>
                                     </td>
                                 </TR>
                             </TBODY>

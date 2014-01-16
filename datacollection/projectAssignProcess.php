@@ -2,9 +2,9 @@
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 $errorMsg = array();
-
 $callingFieldFlag = '';
-if($_SESSION['DEPARTMENT'] === 'CALLCENTER')
+$getFlag = $_REQUEST['flag'];
+if($getFlag === 'callcenter')
     $callingFieldFlag = 'callcenter';
 else
     $callingFieldFlag = 'survey';
@@ -25,7 +25,7 @@ if(in_array($_POST['submit'], array('fresh assignement', 'field assignement'))){
     else {
         $projectDetails = getMultipleProjectDetails($projectIds);
         if($_POST['submit']==='fresh assignement'){
-            $executiveWorkLoad = getCallCenterExecutiveWorkLoad();
+            $executiveWorkLoad = getCallCenterExecutiveWorkLoad($executives = array(), $callingFieldFlag);
         }
         else{
             $executiveWorkLoad = array(array('USERNAME'=>'field', 'WORKLOAD'=>'NA'));
@@ -36,10 +36,11 @@ if(in_array($_POST['submit'], array('fresh assignement', 'field assignement'))){
     }
 }
 elseif($_POST['submit'] === 'Assign') {   //assigning projects
+
     if($_POST['assignmenttype'] === 'fresh assignement'){
         $projectIds = $_POST['projects'];
         $executives = $_POST['executives'];
-        $executiveList = getCallCenterExecutiveWorkLoad($executives);
+        $executiveList = getCallCenterExecutiveWorkLoad($executives,$callingFieldFlag);
         $assignmentStatus = assignToCCExecutives($projectIds, $executiveList);
     }
     elseif($_POST['assignmenttype'] === 'field assignement'){
@@ -48,6 +49,6 @@ elseif($_POST['submit'] === 'Assign') {   //assigning projects
     }
     $errorMsg = array_keys($assignmentStatus);
     $_SESSION['project-status']['assignmentError'] = $errorMsg;
-    header("Location: project-status.php");
+    header("Location: project-status.php?flag=$callingFieldFlag");
 }
 ?>

@@ -84,4 +84,19 @@
     if($isReportErrorPermissionAuth == true)
         $reportErrorPermissionAccess = 1;
     $smarty->assign("reportErrorPermissionAccess",$reportErrorPermissionAccess);
+    
+    /*************datacollection callcenter and survey auth***************/
+    $callCenterAuth = isUserPermitted('callcenter', 'access');
+    $smarty->assign("callCenterAuth", $callCenterAuth);
+    
+    $myProjectsCallCenterAuth = isUserPermitted('myprojects_callcenter', 'access');
+    $smarty->assign("myProjectsCallCenterAuth", $myProjectsCallCenterAuth);
+    
+    
+    $surveyAuth = isUserPermitted('survey', 'access');
+    $smarty->assign("surveyAuth", $surveyAuth);
+    
+    $myProjectsSurveyAuth = isUserPermitted('myprojects_survey', 'access');
+    $smarty->assign("myProjectsSurveyAuth", $myProjectsSurveyAuth);
+    
 ?>
