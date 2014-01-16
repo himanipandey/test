@@ -5,6 +5,8 @@ define('MIN_B2B_DATE', '2013-03-01');
 define('MAX_B2B_DATE', '2014-01-01');
 define('B2B_DOCUMENT_TYPE', 'B2B');
 
+date_default_timezone_set ('UTC');
+
 require_once($currentDir . '/../Apache/Solr/Service.php');
 require_once ($currentDir . '/../log4php/Logger.php');
 require_once ($currentDir . '/../modelsConfig.php');
@@ -16,12 +18,12 @@ error_reporting(E_ALL);
 
 ini_set('memory_limit', '-1');
 set_time_limit(0);
-define("INVALID_DATE", "0000-00-00 00:00:00");
+define("INVALID_DATE", "0000-00-00");
 
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 
-$logger->info("Starting Indexing B2B Documents");
+$logger->info("\n\n\n\nStarting Indexing B2B Documents");
 $solr = new Apache_Solr_Service(SOLR_SERVER_HOSTNAME, SOLR_SERVER_PORT, '/solr/');
 $solr->deleteByQuery("DOCUMENT_TYPE:" . B2B_DOCUMENT_TYPE);
 $solr->commit();
@@ -86,9 +88,9 @@ function getSolrDocuments($aAllInventory, $aAllPrice){
         $solrDocument->addField('BUILDER_NAME', $arrayToPick[$key]->builder_name);
         $effectiveMonth = substr($arrayToPick[$key]->effective_month, 0, 10);
         $solrDocument->addField('EFFECTIVE_MONTH', getDateInSolrFormat(strtotime($effectiveMonth)));
-        $solrDocument->addField('COMPLETION_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->completion_date)));
-        $solrDocument->addField('LAUNCH_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->launch_date)));
-        $solrDocument->addField('PRE_LAUNCH_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->pre_launch_date)));
+        if($arrayToPick[$key]->completion_date != INVALID_DATE)$solrDocument->addField('COMPLETION_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->completion_date)));
+        if($arrayToPick[$key]->launch_date != INVALID_DATE)$solrDocument->addField('LAUNCH_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->launch_date)));
+        if($arrayToPick[$key]->pre_launch_date != INVALID_DATE)$solrDocument->addField('PRE_LAUNCH_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->pre_launch_date)));
         $bedrooms = $arrayToPick[$key]->bedrooms;
         if(is_int($bedrooms))$solrDocument->addField('BEDROOMS', $bedrooms);
         $solrDocument->addField('UNIT_TYPE', isset($arrayToPick[$key])? $arrayToPick[$key]->unit_type : $aAllPrice[$key]->unit_type);
