@@ -88,9 +88,8 @@ function getSolrDocuments($aAllInventory, $aAllPrice){
         $solrDocument->addField('BUILDER_NAME', $arrayToPick[$key]->builder_name);
         $effectiveMonth = substr($arrayToPick[$key]->effective_month, 0, 10);
         $solrDocument->addField('EFFECTIVE_MONTH', getDateInSolrFormat(strtotime($effectiveMonth)));
-        if($arrayToPick[$key]->completion_date != INVALID_DATE)$solrDocument->addField('COMPLETION_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->completion_date)));
+        if($arrayToPick[$key]->completion_date != INVALID_DATE)$solrDocument->addField('PROMISED_COMPLETION_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->completion_date)));
         if($arrayToPick[$key]->launch_date != INVALID_DATE)$solrDocument->addField('LAUNCH_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->launch_date)));
-        if($arrayToPick[$key]->pre_launch_date != INVALID_DATE)$solrDocument->addField('PRE_LAUNCH_DATE', getDateInSolrFormat(strtotime($arrayToPick[$key]->pre_launch_date)));
         $bedrooms = $arrayToPick[$key]->bedrooms;
         if(is_int($bedrooms))$solrDocument->addField('BEDROOMS', $bedrooms);
         $solrDocument->addField('UNIT_TYPE', isset($arrayToPick[$key])? $arrayToPick[$key]->unit_type : $aAllPrice[$key]->unit_type);
@@ -100,7 +99,7 @@ function getSolrDocuments($aAllInventory, $aAllPrice){
             $solrDocument->addField('AVERAGE_SIZE', $aAllPrice[$key]->average_size);
             $aSize = explode (',', $aAllPrice[$key]->size);
             foreach ($aSize as $size) {
-                $solrDocument->addField('SIZE', $size);
+                $solrDocument->addField('ALL_SIZE', $size);
             }
             $solrDocument->addField('AVERAGE_TOTAL_PRICE', $aAllPrice[$key]->average_total_price);
         }
