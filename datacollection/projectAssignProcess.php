@@ -36,8 +36,6 @@ if(in_array($_POST['submit'], array('fresh assignement', 'field assignement'))){
     }
 }
 elseif($_POST['submit'] === 'Assign') {   //assigning projects
-echo "<pre>";
-print_r($_REQUEST);
     if($_POST['assignmenttype'] === 'fresh assignement'){
         $projectIds = $_POST['projects'];
         $executives = $_POST['executives'];

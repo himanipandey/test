@@ -137,15 +137,22 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
     return  $res = dbQuery($sql); 
 }
 
-function getAssignedProjectsFromPIDs($pids){
+function getAssignedProjectsFromPIDs($pids, $department = ''){
     $res = array();
+    if($department == 'survey')
+        $andQry = " and pa1.DEPARTMENT = 'SURVEY'";
+    else
+        $andQry = " and pa1.DEPARTMENT = 'CALLCENTER'";
     if(!empty($pids)){
        $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS, mbst.name as BOOKING_STATUS, psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
          max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE, pphs.name as PROJECT_PHASE, 
          mpsp.name as PREV_PROJECT_STAGE, mppp.name PREV_PROJECT_PHASE,
          rp.MOVEMENT_HISTORY_ID, GROUP_CONCAT(pa1.USERNAME order by pa.ID asc separator '|') ASSIGNED_TO, 
          GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') 
-         DEPARTMENT, GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT, 
+         DEPARTMENT,
+         GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') ASSIGNED_TO_DEPART,
+         GROUP_CONCAT(pa1.ROLE order by pa.ID asc separator '|') ROLE,
+         GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT, 
          GROUP_CONCAT(pa.STATUS order by pa.ID asc separator '|') STATUS, 
          GROUP_CONCAT(pa.EXECUTIVE_REMARK order by pa.ID asc separator '|') REMARK, 
          if(uc.LABEL is null, 'No Label', uc.LABEL) LABEL from resi_project rp 
@@ -163,14 +170,15 @@ function getAssignedProjectsFromPIDs($pids){
          inner join master_project_phases pphs on rp.PROJECT_PHASE_ID = pphs.id
          left join master_project_stages mpsp on pshp.PROJECT_STAGE_ID = mpsp.id
          left join master_project_phases mppp on pshp.PROJECT_PHASE_ID = mppp.id
-         left join project_assignment pa 
-         on (rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID and rp.updation_cycle_id = pa.updation_cycle_id)
+         left join 
+         project_assignment pa ON (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
          left join proptiger_admin pa1 on 
          pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
          = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'
-            and rp.PROJECT_ID in (" .  implode(',', $pids) . ") 
+            and rp.PROJECT_ID in (" .  implode(',', $pids) . ") $andQry
                 group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
         $res = dbQuery($sql);
     }
@@ -219,8 +227,9 @@ function assignProject($projectId, $adminId){
     $flag = false;
     dbExecute('begin');
     $sql = "select rp.PROJECT_ID, rp.MOVEMENT_HISTORY_ID, pa.ASSIGNED_TO, pa.STATUS, pa.ID,rp.UPDATION_CYCLE_ID 
-         from resi_project rp left join project_assignment pa on 
-         (rp.MOVEMENT_HISTORY_Id = pa.MOVEMENT_HISTORY_Id and rp.updation_cycle_id = pa.updation_cycle_id)
+         from resi_project rp left join 
+         project_assignment pa ON rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id)
          where rp.PROJECT_ID = $projectId and rp.version = 'Cms' order by pa.ID for update;";
     $assignmentHistory = dbQuery($sql);
     $movementId = $assignmentHistory[0]['MOVEMENT_HISTORY_ID'];
@@ -306,6 +315,7 @@ function assignProjectsToField($projectIds){
             $result[$project['PROJECT_ID']] = 'No survey teamlead for this project';
         }
     }
+    
     return $result;
 }
 

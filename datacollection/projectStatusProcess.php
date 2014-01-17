@@ -49,11 +49,11 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
 }elseif(isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
     $projectsAssignedToExec = getAssignedProjects($_SESSION['project-status']['executive']);
     $projectIds = getProjectIdsFromProjectDetails($projectsAssignedToExec);
-    $projectsfromDB = getAssignedProjectsFromPIDs($projectIds);
+    $projectsfromDB = getAssignedProjectsFromPIDs($projectIds,$getFlag);
     $projectList = prepareDisplayData($projectsfromDB);
 }elseif(isset($_SESSION['project-status']['projectIds']) && !empty($_SESSION['project-status']['projectIds'])){
     $projectIds = extractPIDs($_SESSION['project-status']['projectIds']);
-    $projectsfromDB = getAssignedProjectsFromPIDs($projectIds);
+    $projectsfromDB = getAssignedProjectsFromPIDs($projectIds,$getFlag);
     $projectList = prepareDisplayData($projectsfromDB);
 }
 $project_ids = array();
