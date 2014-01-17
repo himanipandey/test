@@ -49,11 +49,11 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
 }elseif(isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
     $projectsAssignedToExec = getAssignedProjects($_SESSION['project-status']['executive']);
     $projectIds = getProjectIdsFromProjectDetails($projectsAssignedToExec);
-    $projectsfromDB = getAssignedProjectsFromPIDs($projectIds,$getFlag);
+    $projectsfromDB = getAssignedProjectsFromPIDs($projectIds);
     $projectList = prepareDisplayData($projectsfromDB);
 }elseif(isset($_SESSION['project-status']['projectIds']) && !empty($_SESSION['project-status']['projectIds'])){
     $projectIds = extractPIDs($_SESSION['project-status']['projectIds']);
-    $projectsfromDB = getAssignedProjectsFromPIDs($projectIds,$getFlag);
+    $projectsfromDB = getAssignedProjectsFromPIDs($projectIds);
     $projectList = prepareDisplayData($projectsfromDB);
 }
 $project_ids = array();
@@ -199,19 +199,21 @@ function download_xls_file($projectList, $projectLastAuditDate){
     $filename = "/tmp/data_collection_".time().".xls";
     foreach ($projectList as $pkey => $project){
         // For first three assignments
-        $projectList[$pkey]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];
-
-        foreach(array(1,2,3) as $a){
-            $projectList[$pkey]["ASSIGNED_TO_{$a}"] = $projectList[$pkey]["ASSIGNED_TO"][$a-1];
-            $projectList[$pkey]["ASSIGNED_AT_{$a}"] = $projectList[$pkey]["ASSIGNED_AT"][$a-1];
-            $projectList[$pkey]["STATUS_{$a}"] = $projectList[$pkey]["STATUS"][$a-1];
-            $projectList[$pkey]["REMARK_{$a}"] = $projectList[$pkey]["REMARK"][$a-1];
-        }
-        unset($projectList[$pkey]["ASSIGNED_TO"]);
-        unset($projectList[$pkey]["ASSIGNED_AT"]);
-        unset($projectList[$pkey]["STATUS"]);
-        unset($projectList[$pkey]["REMARK"]);
-    }
+            $projectList[$pkey]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];
+            foreach(array(1,2,3) as $a){
+                $projectList[$pkey]["ASSIGNED_TO_{$a}"] = $projectList[$pkey]["ASSIGNED_TO"][$a-1];
+                $projectList[$pkey]["ASSIGNED_AT_{$a}"] = $projectList[$pkey]["ASSIGNED_AT"][$a-1];
+                $projectList[$pkey]["STATUS_{$a}"] = $projectList[$pkey]["STATUS"][$a-1];
+                $projectList[$pkey]["REMARK_{$a}"] = $projectList[$pkey]["REMARK"][$a-1];
+            }
+            unset($projectList[$pkey]["ASSIGNED_TO"]);
+            unset($projectList[$pkey]["ASSIGNED_AT"]);
+            unset($projectList[$pkey]["STATUS"]);
+            unset($projectList[$pkey]["REMARK"]);
+            unset($projectList[$pkey]["ASSIGNED_TO_DEPART"]);
+            unset($projectList[$pkey]["ROLE"]);
+            unset($projectList[$pkey]["leadAssignedType"]);
+    };
     excel_file_download($projectList, $filename);
 }
 
