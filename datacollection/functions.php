@@ -265,7 +265,7 @@ function getAllAssignedToFromAssignmentHistory($assignmentHistory){
 function getMultipleProjectDetails($projectIds){
     if (empty($projectIds)) return array();
         $sql = "select rp.*,rb.BUILDER_NAME from " . RESI_PROJECT . " rp join
-            RESI_BUILDER rb on rp.builder_id = rb.builder_id 
+            resi_builder rb on rp.builder_id = rb.builder_id 
             where rp.PROJECT_ID in (".  implode(',', $projectIds).") and rp.version ='Cms'";
     return $result = dbQuery($sql);
 }
