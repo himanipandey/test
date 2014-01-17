@@ -71,12 +71,17 @@
         $isMetricsAccess = 1;
     $smarty->assign("isMetricsAccess",$isMetricsAccess);
     
-     $isupplyEditPermissionAuth = isUserPermitted('supplyEditPermission', 'access');
-
+    $isupplyEditPermissionAuth = isUserPermitted('supplyEditPermission', 'access');
     $supplyEditPermissionAccess = 0;
     if($isupplyEditPermissionAuth == true)
         $supplyEditPermissionAccess = 1;
     $smarty->assign("supplyEditPermissionAccess",$supplyEditPermissionAccess);
+    
+    $priorityMgmtPermissionAuth = isUserPermitted('priorityManagement', 'access');
+    $priorityMgmtPermissionAccess = 0;
+    if($priorityMgmtPermissionAuth == 1)
+        $priorityMgmtPermissionAccess = 1;
+    $smarty->assign("priorityMgmtPermissionAccess",$priorityMgmtPermissionAccess);
    
     ////////////////////////////report error//////////////////
     $isReportErrorPermissionAuth = isUserPermitted('report-error', 'access');

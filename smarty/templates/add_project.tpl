@@ -1,5 +1,5 @@
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/common.js?version=1"></script>
+<script type="text/javascript" src="js/common.js?version=4"></script>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
@@ -64,20 +64,6 @@
 	   });
           });
 	});
-
-	function change_type(type_val)
-	{
-		if(type_val == 'app_form')
-		{
-			document.getElementById("app_form").style.display = '';
-			document.getElementById("app_form_pdf").style.display = 'none';
-		}
-		else
-		{
-			document.getElementById("app_form").style.display = 'none';
-			document.getElementById("app_form_pdf").style.display = '';
-		}
-	}
 	
   function isNumberKey(evt)
   {
@@ -90,6 +76,38 @@
 	 return true;
   }
 
+ function delete_pdf(){
+		$('#old_pdf').css("display","none");
+		$('#app_pdf').css("display","block");
+		$('#application').val("pdf-del");
+ }
+ 
+    $(document).ready(function(){
+	
+		   $('#reasonRow').hide();
+		   $('#duplicate_pid').hide();
+		   $('#other_reason_txt').hide();
+		  active_value = "{$Active}";
+		  if(active_value != 'Inactive')
+		  {
+			   $('#Active').change(function(){
+					if($(this).val() == 'Inactive')
+						$('#reasonRow').show();
+					else
+						$('#reasonRow').hide();
+			   });
+			   
+			   $('input[name=reason]').click(function(){
+					if($(this).val() == 'duplicate'){
+						 $('#duplicate_pid').show();
+						$('#other_reason_txt').hide();
+					}else{
+						$('#duplicate_pid').hide();
+						$('#other_reason_txt').show();
+					}
+				});
+		  }
+	})
 </script>
   <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -208,7 +226,7 @@
                                                                        <textarea name="txtProjectDesc" rows="10" cols="45" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
                                                                 </td>
                                                                 <td width="50%" align="left">
-                                                                        <font color="red">{if $ErrorMsg["txtDesc"] != ''} {$ErrorMsg["txtDesc"]} {/if}<span id = "err_project_desc" style = "display:none;">Please enter project description!</span></font>
+                                                                        <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
                                                                </td>
 							   </tr>
 							   {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
@@ -330,11 +348,11 @@
 								  </td>
 							   </tr>							   
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Project Comments :</b> </td>
-								  <td width="30%" align="left"><input type="text" name="comments" id="comments" value="{$comments}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
+								  <td width="20%" align="right"><b>Project Comments :</b> </td>
+								  <td nowrap width="30%" align="left"><input type="text" name="comments" id="comments" value="{$comments}" style="width:360px;" /><br><span style = "font-size:10px">Like:1bhk,2bhk etc.</span></td>
 
 								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Option Description!</span></font>
+									  <font color="red">{if $ErrorMsg["Comment"] != ''} {$ErrorMsg["Comment"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Comment!</span></font>
 								  </td>
 							   </tr>
 
@@ -394,12 +412,37 @@
 									 <option {if $Active == 'ActiveInCms'} selected{/if}  value="ActiveInCms">Active In Cms</option>
 									 </select>
 								  {/if}
-									 
+                                                                  {if $projectId != ''}
+                                                                      <input type="hidden" id = "existingStatus" name = "existingStatus" value="{$Active}">
+                                                                  {/if}    
 								  </td>
 								  <td width="50%" align="left">
 									  <font color="red"><span id = "err_project_active" style = "display:none;"></span></font>
 								  </td>
 							   </tr>
+							 {if $projectId != ''}
+							   <tr id="reasonRow">
+								  <td width="20%" align="right" valign="top"><b>Reason :</b> </td>
+								  <td width="30%" align="left">
+									<input type="radio" name="reason" value="duplicate"   />Duplicate
+									<br/>
+									<input type="radio" name="reason" value="other_reason"  />Other
+									<br/>
+									<br/>
+									<div id="duplicate_pid">
+										<font color="red">*</font>Duplicate PID : 
+										<input type="text" name="duplicate_pid"  />
+									</div>
+									<div id="other_reason_txt">
+										<font color="red">*</font>Other Reason : 
+										<textarea name="other_reason_txt"  cols="45" rows="10" ></textarea>
+									</div>
+								  </td>
+								  <td width="50%" align="left">
+									
+								  </td>
+							   </tr> 
+							  {/if}
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Status :</b> </td>
 								  <td width="30%" align="left" valign = "top">
@@ -528,29 +571,29 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-
+							   
 							   <tr>
-								  <td width="20%" align="right"><b>YouTube Video Key:</b> </td><td width="30%" align="left">
-									 <input type = "text" name = "youtube_link" value = "{$youtube_link}">
-								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-
-							   <tr>
-								  <td width="100%" align="left" valign ="top" colspan ="3">
-									<input type = "radio" name = "application" value = "app_form" checked = "checked" onclick = "change_type(this.value);"><b>Application form in html</b>
-									 <input type = "radio" name = "application" value = "app_form_pdf" onclick = "change_type(this.value);"><b>Application form in pdf</b>
-								  </td>
-							   </tr>
-
-							   <tr>
-								  <td width="32%" align="right" valign ="top"><b>Application Form (in html):</b> </td><td width="30%" align="left">
-                                                                        <span id = "app_form">
-                                                                               <textarea name = "app_form" id = "app_form" rows="10" cols="45">{$app_form}</textarea>
-                                                                       </span>
-                                                                       <span id = "app_form_pdf" style = "display:none;">
-                                                                               <input type = "file" name = "app_pdf">
-                                                                       </span>
+								  <td width="32%" align="right" valign ="top"><b>Application form in pdf:</b> </td><td width="30%" align="left">
+									  
+									   
+                                                           
+                                                         <span id = "app_form_pdf" >
+															{if $app_form}
+																<input type = "hidden" name = "application" id="application" value = "pdf-old">
+																<span id="old_pdf">
+																{$app_form}
+																&nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick="delete_pdf()" title="Delete PDF"/>
+																</span>
+																
+																<input type = "file" name = "app_pdf" id="app_pdf" style="display:none" />
+															{else}
+																 
+																<input type = "hidden" name = "application" id="application" value = "pdf-new">
+																<input type = "file" name = "app_pdf" />
+															{/if}
+                                                          </span>
+                                                            
+                                                                       
 								  </td>
 								  {if $ErrorMsg["app_form"] != ''}
 								  <td width="50%" align="left"><font color="red">{$ErrorMsg["app_form"]}</font></td>
@@ -700,7 +743,7 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-                                                           <tr>
+                               <tr>
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
                                                                     <select name="skipUpdationCycle">
                                                                         <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
@@ -709,6 +752,12 @@
                                                                     <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
                                                                 </td>
 								<td width="50%" align="left"><font color="red"></font></td>
+							   </tr>
+							   <tr>
+								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
+									<input type="checkbox" name="redevelopmentProject" {if $redevelopmentProject} checked {/if} />
+                                  </td>
+								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 							   
 								  <td>&nbsp;</td>

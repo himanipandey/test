@@ -110,7 +110,7 @@
         {if $urlAuth == true}
 	<tr>
             <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-            <td align="left" height="22"><A class="leftnav" href="redirectUrl.php"><font color = "#f15a22">Redirect URL</font></A></td>
+            <td align="left" height="22"><A class="leftnav" href="redirectUrlManage.php"><font color = "#f15a22">Redirect URL Management</font></A></td>
 	</tr>
         {/if}
         
@@ -267,6 +267,7 @@
     <tr>
                 <td class="thinline" align="left" colspan="2"></td>
     </tr>
+    {if $priorityMgmtPermissionAccess == 1}
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
         <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Priority Management</font></a></td>
@@ -289,6 +290,7 @@
             </tr>
         </table>
     </td></tr>
+    {/if}
     {if $isMetricsAccess == true}
      <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
@@ -310,16 +312,10 @@
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
         <td align="left" height="22"><a class="leftnav" href="projects-waiting-migration.php"><font color = "#f15a22">Projects Pending Migration</font></a></td>
-        
+
     </tr>
     <tr><td class="thinline" align="left" colspan="2"></td></tr>
     
-     <tr>
-        <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-        <td align="left" height="22"><a class="leftnav" href="agingOfProjectinField.php"><font color = "#f15a22">Aging of project in field queue</font></a></td>
-        
-    </tr>
-    <tr><td class="thinline" align="left" colspan="2"></td></tr>
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
         <td align="left" height="22"><a class="leftnav" href="logout.php"><font color = "#f15a22">Logout</font></a></td>

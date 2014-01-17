@@ -49,6 +49,17 @@
 	}    
     $date_div .= "</select>";
     $smarty->assign("dateDiv", $date_div);
+    
+    //display order
+    $display_order_div = "<select name='txtdisplay_order[]' id='display_order_dropdown'>";
+    for($cmt=1;$cmt<=5;$cmt++){
+		if($cmt == 5)
+			$display_order_div .="<option value='$cmt' selected >$cmt</option>";
+		else
+			$display_order_div .="<option value='$cmt'>$cmt</option>";
+	}
+    $display_order_div .= "</select>";
+    $smarty->assign("display_order_div", $display_order_div);
             
 	$builderDetail = fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
 	if(isset($_REQUEST['edit']))
@@ -78,6 +89,7 @@ if (isset($_POST['Next']))
 	$arrTitle = array();
 	$arrTaggedDate = array();
 	$arrTowerId = array();
+	$arrDisplayOrder = array();
 	  	foreach($_FILES['txtlocationplan']['name'] as $k=>$v)
 		{
 			if($v != '')
@@ -101,7 +113,8 @@ if (isset($_POST['Next']))
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
 				$arrTaggedDate[$k] = $_REQUEST['txttagged_date'][$k+1];
-				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1];
+				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
+				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
 			}
 		}
 				
@@ -123,6 +136,30 @@ if (isset($_POST['Next']))
 	    {
 	      $ErrorMsg["ptype"] = "Please enter Tagged Date.";
 	    }
+	   
+	    //checking uniqness display order of elevation images
+	    if($_REQUEST['PType'] == 'Project Image'){
+			$count = 1;
+			$temp_arr = array();
+			while($count <= $_REQUEST['img']){
+				
+				if(trim($_REQUEST['txtdisplay_order'][$count]) == ''){
+					$ErrorMsg["ptype"] = "Please enter Display Order."; break;
+				}else{
+									
+				  if(array_key_exists($_REQUEST['txtdisplay_order'][$count], $temp_arr)){
+					  $ErrorMsg["ptype"] = "Display order must be unique."; break;				  
+				  }else {//checking duplicacy
+						$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$count]);
+						if($ext_vlinks){
+							 $ErrorMsg["ptype"] = "Display order '".$_REQUEST['txtdisplay_order'][$count]."' already exist."; break;
+						}
+				  }
+				  $temp_arr[$_REQUEST['txtdisplay_order'][$count]] = $_REQUEST['txtdisplay_order'][$count];
+				}
+				$count++;
+			}
+		}
             $smarty->assign("PType", $_REQUEST['PType']);
 	if(is_array($ErrorMsg)) {
 		// Do Nothing
@@ -883,7 +920,7 @@ if (isset($_POST['Next']))
                                             $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
-                                                "image_type" => "project_image",));
+                                                "image_type" => "project_image","service_extra_params" => array("priority" => $arrDisplayOrder[$key])));
                                                 
 										
                                             $response = $s3upload->upload();
@@ -979,7 +1016,8 @@ if (isset($_POST['Next']))
 														PLAN_IMAGE = '".$imgDbPath[1]."',
 														TITLE	   = '".$arrTitle[$key]."',
                                                         SERVICE_IMAGE_ID   = ".$image_id.",
-                                                        ".$add_tower."
+                                                        ".$add_tower." 
+                                                        DISPLAY_ORDER = '".$arrDisplayOrder[$key]."',
                                                         TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								$res	=	mysql_query($qry) or die(mysql_error());
@@ -992,7 +1030,8 @@ if (isset($_POST['Next']))
 													PLAN_TYPE		=	'".$_REQUEST['PType']."',
 													    BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
 													SERVICE_IMAGE_ID        =    ".$image_id.",
-													TITLE			=	'".$arrTitle[$key]."',
+													TITLE			=	'".$arrTitle[$key]."', 
+													DISPLAY_ORDER = '".$arrDisplayOrder[$key]."',
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													SUBMITTED_DATE	=	now()";

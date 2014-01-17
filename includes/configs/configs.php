@@ -161,6 +161,7 @@ DEFINE("RESI_PROJECT_OPTIONS","resi_project_options");
 DEFINE("BROKER_LIST","BROKER_LIST");
 DEFINE("AMENITIES_MASTER","amenities_master");
 DEFINE("PROJECT_OPTIONS","resi_project_options");
+DEFINE("PROJECT_OPTIONS_ROOM_SIZE","resi_proj_options_room_size");
 DEFINE("ROOM_CATEGORY","room_category");
 
 DEFINE("PROJECT_SUPPLIES","project_supplies");
@@ -186,6 +187,7 @@ DEFINE("RESI_PROJECT_OTHER_PRICING","resi_project_other_pricing");
 DEFINE("CALLDETAILS","CallDetails");
 DEFINE("CALLPROJECT","CallProject");
 DEFINE("PROJECT_BANKS","project_banks");
+DEFINE("VIDEO_LINKS","video_links");
 
 
 /**************This always put at the end of define tables*******************/
@@ -646,7 +648,9 @@ $arrCampaign =
     "Delhi_Resale1",
     "Delhi_Resale2",
     "Chennai_Campaign2",
-    "Kolkata_Campaign2"
+    "Kolkata_Campaign2",
+    "Hyderabad_campaign_1",
+    "Hyderabad_campaign_2"
 	);
 
 $arrCampaignDids = 
@@ -669,7 +673,9 @@ $arrCampaignDids =
     "Delhi_Resale1"=>'911166576882',
     "Delhi_Resale2"=>'911130803890',
     "Chennai_Campaign2"=>'914466949417',
-    "Kolkata_Campaign2"=>'913330566010'
+    "Kolkata_Campaign2"=>'913330566010',
+    "Hyderabad_campaign_1"=>'914030883984',
+    "Hyderabad_campaign_2"=>'914066588473'
 	);
 
 /**************Authentication*************/
@@ -691,9 +697,13 @@ if(in_array($_SESSION['adminId'],$arrForce))
 $smarty->assign("forceMigrateModule", $forceMigrateModule);
 
 $newImagePath = "/home/sysadmin/public_html/images_new/";
+//$applicationFormPath = "/home/sysadmin/public_html/cms_documents/application_form/";
+$applicationFormPath = "app_docs/";
 // $newImagePath = "images_new/";
 $imgDisplayPath = "images_new/";
 $smarty->assign("imgDisplayPath", $imgDisplayPath);
+//$appDisplayPath = "app_docs/";
+//$smarty->assign("imgDisplayPath", $appDisplayPath);
 
 $analytics_credential=array("username"=>"cms","password"=>"Cms123!");
 

@@ -43,6 +43,13 @@
 		$date_div[date('Y-m',$nextdate)] =  date("M-Y",$nextdate) ;
     }
     $smarty->assign("dateDiv", $date_div);
+    
+    //display order
+    $display_order_div = array();
+    for($cmt=1;$cmt<=5;$cmt++){
+		$display_order_div[$cmt] =  $cmt ;
+    }
+    $smarty->assign("display_order_div", $display_order_div);
    
 			 
 		if( isset($_REQUEST['title']) &&  !array_filter($_REQUEST['title']) )
@@ -54,6 +61,33 @@
 	    {
 	      $ErrorMsg["tagged_month"] = "Please enter Image Tagged Date.";
 	    }
+	   	if(isset($_POST['btnSave']) && empty($_REQUEST['chk_name']) )
+		{
+		  $ErrorMsg["tagged_month"] = "Please select edit or delete action.";
+		}
+		//checking for display orders unqueness
+		foreach($_REQUEST['chk_name'] as $k=>$v)
+		{
+			if($v != '')
+			{
+				if($v == 'edit_img' && $_REQUEST['PType'][$k] == 'Project Image'){
+					if(trim($_REQUEST['txtdisplay_order'][$k]) == ''){
+						$ErrorMsg["display_order"] = "Please enter Display Order."; break;
+					}else{
+										
+					  if(array_key_exists($_REQUEST['txtdisplay_order'][$k], $temp_arr)){
+						  $ErrorMsg["display_order"] = "Display order must be unique."; break;				  
+					  }else {//checking duplicacy
+							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k],$_REQUEST['currentPlanId'][$k]);
+							if($ext_vlinks){
+								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist."; break;
+							}
+					  }
+					  $temp_arr[$_REQUEST['txtdisplay_order'][$k]] = $_REQUEST['txtdisplay_order'][$k];
+					}
+				}
+			}
+		}
 		
 		 /*********edit images code start here*******************/
 			$source=array();
@@ -61,6 +95,8 @@
 
 			if (isset($_POST['btnSave']) && !is_array($ErrorMsg)) 
 			{
+				
+				$image_update_flag = 0;
 				$smarty->assign("projectId", $projectId);		
 				$folderName = $projectDetail[0]['PROJECT_NAME'];
 				
@@ -75,35 +111,57 @@
 				$arrTitle = array();
 				$arrTaggedDate = array();
 				$arrTowerId = array();
+				$arrDisplayOrder = array();
 				foreach($_REQUEST['chk_name'] as $k=>$v)
 				{
 					if($v != '')
 					{
-						if(!in_array(strtolower($_FILES['img']['type'][$k]), $arrImg))
-						{
-							$ErrorMsg["ImgError"] = "You can upload only ".ucwords(implode(" / ",$arrImg))." images.";
-						}
-						
-						foreach($arrType  as $planType=>$imgNamePart)
-						{
-							if($_REQUEST['PType'][$k] == $planType)
+						if($v == 'edit_img'){
+												
+							//////////////////////////////////
+							if($_FILES['img']['name'][$k] != '')
 							{
-								if(!preg_match("/-".$imgNamePart."\.[a-z]{3,4}$/", $_FILES['img']['name'][$k]) && $_FILES['img']['name'][$k] != '')
-						{
-									$ErrorMsg["ImgError"] = "The word ".$imgNamePart." should be part of image name at end.";	
+								if(!in_array(strtolower($_FILES['img']['type'][$k]), $arrImg))
+								{
+								  $ErrorMsg["ImgError"] = "You can upload only ".ucwords(implode(" / ",$arrImg))." images.";
+							    }
+							    foreach($arrType  as $planType=>$imgNamePart)
+								{
+									if($_REQUEST['PType'][$k] == $planType)
+									{
+										if(!preg_match("/-".$imgNamePart."\.[a-z]{3,4}$/", $_FILES['img']['name'][$k]) && $_FILES['img']['name'][$k] != '')
+										{
+											$ErrorMsg["ImgError"] = "The word ".$imgNamePart." should be part of image name at end.";	
+										}
+									}
+								}
+								$arrValue[$k] = $_FILES['img']['name'][$k];
+								
 							}
-						}
-							}
-						
-						if($_FILES['img']['name'][$k] != '')
-						{
-							$arrValue[$k] = $_FILES['img']['name'][$k];
+							//////////////////////////////////					
+												
+							
 							$arrTitle[$k] = $_REQUEST['title'][$k];
 							$arrTaggedDate[$k] = date("Y-m-d",strtotime($_REQUEST['tagged_date'][$k]));
 							$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
+							$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
+							$service_image_id = $_REQUEST["service_image_id"][$k];
+							
+							if($arrTowerId[$key] > 0)
+								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
+							else
+								$add_tower = " TOWER_ID = NULL, ";
+							
+							//updating the image meta data
+							$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
+												SET 
+													TITLE	   = '".$arrTitle[$k]."',
+													".$add_tower."
+													DISPLAY_ORDER = '".$arrDisplayOrder[$k]."'
+												WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
+									$res	=	mysql_query($qry);
 						}
-						else
-						{
+						else if($v == 'delete_img'){
 							/********delete image from db if checked but not browes new image*********/
                             $service_image_id = $_REQUEST['service_image_id'][$k];
                             $s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
@@ -114,8 +172,7 @@
                                                                                AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."'
                                                                                AND PLAN_IMAGE = '".$_REQUEST['property_image_path'][$k]."'";
 							$res	=	mysql_query($qry);		
-							
-							header("Location:image_edit.php?projectId=$projectId&edit=edit");
+														
 						}
 					}
 				}
@@ -919,7 +976,7 @@
                                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                             "object" => "project", "object_id" => $projectId,
                                                             "image_type" => "project_image",
-                                                            "service_image_id" => $service_image_id));
+                                                            "service_image_id" => $service_image_id,"service_extra_params" => array("priority" => $arrDisplayOrder[$key])));
                                                        $response = $s3upload->update();
                                                         // Image id updation (next three lines could be written in single line but broken
                                                         // in three lines due to limitation of php 5.3)
@@ -996,7 +1053,7 @@
 									}
 									$add_tower = '';
 									if($arrTowerId[$key] > 0)
-										$add_tower = " TOWER_ID = $arrTowerId[$key], ";
+										$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."', TOWER_ID = $arrTowerId[$key], ";
 									else
 										$add_tower = " TOWER_ID = NULL, ";
 								
@@ -1005,9 +1062,8 @@
 												SET 
 													PLAN_IMAGE = '".$dbpath[1]."',
 													TITLE	   = '".$arrTitle[$key]."',
-													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
-													TOWER_ID = '".$arrTowerId[$key]."',
 													".$add_tower."
+													DISPLAY_ORDER = '".$arrDisplayOrder[$key]."',
 													SERVICE_IMAGE_ID   = ".$image_id."
 												WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$key]."' AND PLAN_IMAGE = '".$oldpath."'";
 									$res	=	mysql_query($qry);
@@ -1031,14 +1087,17 @@
 								}							
 											
 								$result = upload_file_to_img_server_using_ftp($source,$dest,1);
-								if($preview == 'true')
-									header("Location:show_project_details.php?projectId=".$projectId);
-								else
-									header("Location:ProjectList.php?projectId=".$projectId);
+								
+								
 					}
 					}	
 				
 				} 
+				
+				if($preview == 'true')
+									header("Location:show_project_details.php?projectId=".$projectId);
+								else
+									header("Location:ProjectList.php?projectId=".$projectId);
 			}
 			else if(isset($_POST['btnExit']))
 			{

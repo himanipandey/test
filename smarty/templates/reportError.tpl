@@ -55,10 +55,10 @@
                               <TD class=whiteTxt align="left" style="width:100px;">Project</TD>
                               <TD class=whiteTxt align="left" style="width:100px;">Property Type</TD>
                               <TD class=whiteTxt align='left' style="width:80px;">Date Reported</TD>
-                              <TD class=whiteTxt align='left' style="width:200px;">Status</TD>
+                              <TD class=whiteTxt align='left' style="width:190px;">Status</TD>
                               <TD class=whiteTxt align='left' style="width:200px;">Comments</TD>
                               <TD class=whiteTxt align="center" style="width:100px;">History</TD>
-                              <TD class=whiteTxt align="center" style="width:100px;">URL link</TD>
+                              <TD class=whiteTxt align="center" style="width:50px;">URL link</TD>
                               <!--<TD class=whiteTxt width=12% align="center">Last Modified Date</TD>
                               <TD class=whiteTxt width=12% align="center">History</TD-->
                         </TR>
@@ -82,11 +82,11 @@
                                 </TD>
                                 <TD align=center class=td-border>{$count}</TD>
                                 <TD align=left class=td-border style="overflow:hidden; word-wrap: break-word;"><b>{$error_type[$errorDataArr[data].ERROR_TYPE]}</b>: {$errorDataArr[data].DETAILS}</TD>
-                                <TD align=left class=td-border>{$errorDataArr[data].PROJECT_NAME}, {$errorDataArr[data].LOCALITY}, {$errorDataArr[data].CITY}</TD>
+                                <TD align=left class=td-border>{$errorDataArr[data].BUILDER_NAME} {$errorDataArr[data].PROJECT_NAME}, {$errorDataArr[data].LOCALITY}, {$errorDataArr[data].CITY}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].UNIT_NAME}<br />{$errorDataArr[data].UNIT_TYPE}<br />{if $errorDataArr[data].SIZE > 0}({$errorDataArr[data].SIZE} sq ft){/if}</TD>
                                 <TD align=left class=td-border>{$errorDataArr[data].DATE|date_format}</TD>
                                 <TD align=left class=td-border>
-                                    <select name="status_{$errorDataArr[data].ID}" id="status_{$errorDataArr[data].ID}">
+                                    <select name="status_{$errorDataArr[data].ID}" id="status_{$errorDataArr[data].ID}" style="width:160px;">
                                         <option value="0" {if $errorDataArr[data].STATUS_ID == 0} selected='selected' {/if}>No action taken</option>
                                         <option value="1" {if $errorDataArr[data].STATUS_ID == 1} selected='selected' {/if}>No issue Found</option>
                                         <option value="2" {if $errorDataArr[data].STATUS_ID == 2} selected='selected' {/if}>Issue found / being resolved</option>

@@ -188,13 +188,31 @@ class ProjectSupply extends Objects {
                 on ps.listing_id = l.id
                 inner join resi_project_options rpo on l.option_id = rpo.options_id
                 where 
-                rpo.project_id = '$projectId' group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
+                rpo.project_id = '$projectId' and l.status = 'Active' group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
          $result = self::find_by_sql($sql);
          
           if(count($result)>0)
 			return FALSE;
 		  else
 			return TRUE;
+		
+	}
+	
+	function checkAvailability($projectId, $phaseId, $projectType, $noOfBedroom, $supply, $launchedUnit) {
+        if($phaseId=='0') $phaseId = NULL;
+        $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType')"));
+        if($supply_new) {
+			$supplyId = $supply_new[0]->id;
+                        $supplyId = $supply_new[0]->id;
+                        $availability = ProjectAvailability::getAvailability($supplyId);
+			if($availability > $launchedUnit && $availability>0 && $supply >0 && $launchedUnit>0){
+                            return false;
+			}else{
+				return true;
+                        }
+		}
+                else
+                    return true;
 		
 	}
 }

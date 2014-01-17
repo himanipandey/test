@@ -6,6 +6,7 @@ Date: 7/10/2013
  */
 require_once(dirname(__FILE__)."/table_attribute_mappings.php"); // auxilary functions mapping
 require_once(dirname(__FILE__)."/table_attributes.php"); // auxilary functions mapping
+require_once(dirname(__FILE__)."/project_aliases.php"); // auxilary functions mapping
 class Objects extends ActiveRecord\Model{
 
     static $custom_methods = array("all", "first", "last");
@@ -262,7 +263,6 @@ class Objects extends ActiveRecord\Model{
         if($extra_scope and count($objects) > 0){
             $objects = static::fetch_extra_values($objects);
         }
-
         return $objects;
     }
 
@@ -397,8 +397,37 @@ class Objects extends ActiveRecord\Model{
         }
         return $object_array;
     }
+    
+    private function actual_save($validate = true){
+        $result = parent::save($validate);
+        return $result;
+    }
+    
+    public static function copy_cms_to_website($virtual_primary_key_id, $updated_by){
+        $result = null;
+        $cms_version = self::virtual_find($virtual_primary_key_id);
+        $cms_version_array = $cms_version->to_array();
+        unset($cms_version_array['id']);
+        unset($cms_version_array['created_at']);
+        $cms_version_array['version'] = 'Website';
+        $cms_version_array['updated_by'] = $updated_by;
+        $cms_version_array['updated_at'] = 'NOW()';
+        
+        $website_version = self::find(array('conditions'=>array(static::$virtual_primary_key=>$virtual_primary_key_id, 'version'=>'Website')));
+        
+        if($website_version){
+            $website_version->update_attributes($cms_version_array);
+            $result = $website_version->actual_save();
+        }
+        else{
+            $cms_version_array['created_at'] = 'NOW()';
+            $result = self::create($cms_version_array);
+        }
+        if($result)return true;
+        return false;
+    }
 
-/****************************************** End of Public Instance Methods ********************************************/
+    /****************************************** End of Public Instance Methods ********************************************/
 
 }
 

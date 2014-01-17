@@ -12,11 +12,19 @@ if ($_REQUEST['btnExit'] == "Exit") {
     header("Location:ProjectList.php?projectId=" . $projectId);
 }
 
+if(ProjectMigration::isProjectWaitingForMigration($projectId))die ('This project is being migrated to website. You will be able to see project details only after some time.');
+
 $lastUpdatedDetail = lastUpdatedAuditDetail($projectId); //To Do
 $smarty->assign("lastUpdatedDetail", $lastUpdatedDetail);//To Do
 
+$project_video_links = project_video_detail($projectId);
+$smarty->assign("project_video_links", count($project_video_links));
+
 $arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
 $smarty->assign("arrCalingPrimary", $arrCalingPrimary);
+
+$redevelopment_flag = fetchProjectRedevelolpmentFlag($projectId);
+$smarty->assign("redevelopment_flag", $redevelopment_flag);
 
 /* * ****start display other pricing******/
 $otherPricing = fetch_other_price($projectId);
@@ -24,7 +32,7 @@ $smarty->assign("otherPricing", $otherPricing);
 /* * ****end display other pricing***** */
 
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
-$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id) 
+$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id and p.version = 'Cms') 
     join resi_project_options o on (o.options_id = option_id)",'conditions' => 
     array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active' and listings.status = 'Active'"), "select" => 
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
@@ -41,6 +49,7 @@ foreach($optionsDetails as $key => $value) {
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = date('Y-m-d',strtotime($listing_price[0]->effective_date));
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['booking_status_id'] = $value->booking_status_id;
 }
 
 $PhaseOptionHash = $ProjectPhases[1];
@@ -49,7 +58,7 @@ $ProjectOptionDetail = ProjectOptionDetail($projectId);
 $PreviousMonthsData = getPrevMonthProjectData($projectId);
 $PreviousMonthsAvailability = getFlatAvailability($projectId);
 //echo "<pre>";
-//print_r($uptionDetailWithPrice);
+//print_r($optionsDetails);
 $arrPriceListData = array();
 $cnt = 0;
 $arrPrevMonthDate = array();
@@ -88,7 +97,7 @@ $smarty->assign("PhaseOptionHash",$PhaseOptionHash);
 
 //code for completion date validation for phase label
 $qryAllPhase = "select * from resi_project_phase 
-    where project_id = $projectId and status = 'Active'";
+    where project_id = $projectId and status = 'Active' and version = 'Cms'";
 $resAllPhase = mysql_query($qryAllPhase);
 $allCompletionDateChk = 0;
 while($data = mysql_fetch_assoc($resAllPhase)) {
@@ -306,7 +315,10 @@ $bankList = ProjectBanks::find('all',array('joins' => $joinbank,'conditions'=>
                     'project_banks.*,bl.bank_name'));
 $smarty->assign("bankList", $bankList);
 
-
+if($projectDetails[0]['STATUS'] == 'Inactive'){
+	$project_alias_detail = project_aliases_detail($projectId);
+	$smarty->assign("project_alias_detail", $project_alias_detail);
+}
 
 if ($projectDetails[0]['PROJECT_STAGE'] == 'NewProject') {
     $phse = 'newP';

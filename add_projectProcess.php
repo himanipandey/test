@@ -1,5 +1,5 @@
 <?php        
-$BuilderDataArr	= ResiBuilder::BuilderEntityArr();
+$BuilderDataArr	= ResiBuilder::ProjectSearchBuilderEntityArr();
 $CityDataArr = City::CityArr();
 $ProjectTypeArr	= ResiProjectType::ProjectTypeArr();
 $BankListArr = BankList::arrBank();
@@ -32,7 +32,7 @@ $preview = $_REQUEST['preview'];
 $smarty->assign("preview", $preview);
 $bookingStatuses = ResiProject::find_by_sql("select * from master_booking_statuses");
 $smarty->assign("bookingStatuses", $bookingStatuses);
-      
+
 if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	if ( $_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save" ) {
 	    $txtProjectName = trim($_POST['txtProjectName']);
@@ -63,8 +63,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    $eff_date_to = trim($_POST['eff_date_to']);
 			 $display_order = PROJECT_MAX_PRIORITY;
 	    $oldbuilderId = trim($_POST['oldbuilderId']);
-	    $youtube_link = trim($_POST['youtube_link']);
-            
+	                
             $application = trim($_POST['application']);
             $app_form =	trim($_POST['app_form']);
 
@@ -100,8 +99,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $updationCycleIdOld = $_POST["updationCycleIdOld"];
             $numberOfTowers = $_POST["numberOfTowers"];
             $completionDate = $_POST["completionDate"];
-            
-            
+            $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
+                       
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
                $suburbSelect = Suburb::SuburbArr($_POST['cityId']);
@@ -145,8 +144,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("exp_launch_date", $exp_launch_date);
             $smarty->assign("eff_date_to", $eff_date_to);   
             $smarty->assign("display_order", $display_order);
-            $smarty->assign("youtube_link", $youtube_link);
-
+           
             if(isset($_POST['bank_list']))
                $smarty->assign("bank_arr", $_POST['bank_list']);
             else
@@ -181,6 +179,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("updationCycleIdOld", $updationCycleIdOld);
             $smarty->assign("numberOfTowers", $numberOfTowers);
             $smarty->assign("completionDate", $completionDate);
+            $smarty->assign("redevelopmentProject", $redevelopmentProject);
+            
             /***********Folder name**********/
             if(!empty($builderId)){
 	    	$builderDetail = ResiBuilder::getBuilderById($builderId);
@@ -211,9 +211,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             }
 	    if(empty($suburbId)){
                $ErrorMsg["txtSuburbs"] = "Suburbs must be selected.";
-            }
-	    if(empty($comments)){
-               $ErrorMsg["txtComments"] = "Please enter comment.";
             }
 	    if(empty($txtAddress)){
                $ErrorMsg["txtAddress"] = "Please enter project address.";
@@ -246,6 +243,12 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 			$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
 	    	}
 	    }
+	  /*   if($Active == 'Inactive' && isset($_POST['reason'])){
+			if($_POST['reason'] == 'duplicate' && trim($_POST['duplicate_pid']) == '')
+				$ErrorMsg["txtproject_alias"] = "Duplicate PID must be valid.";
+			elseif($_POST['reason'] == 'other_reason' && trim($_POST['other_reason_txt']) == '')
+				$ErrorMsg["txtproject_alias"] = "Please enter reason for inactive.";
+		}*/
 	   if(!empty($power_backup_capacity)){
 	    	if(!is_numeric($power_backup_capacity) || $power_backup_capacity > 10){
 			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";
@@ -347,15 +350,17 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
                $ErrorMsg['launchDate'] = "Launch date should not be greater than current month in case of Under construction project.";
            }
-           if($completionDate == '0000-00-00')
-               $completionDate = '';
-           if($projectId != '' && $Status == UNDER_CONSTRUCTION_ID_1 && ($completionDate != '' || $launchDt != '')) {
-               $retdt  = ((strtotime($completionDate)-strtotime($launchDt))/(60*60*24));
-                if( $retdt <= 180 ) {
-                    $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date';
-                } 
-           }
        }
+       
+       if($completionDate == '0000-00-00')
+               $completionDate = '';
+         if($projectId != '' && ($completionDate != '' && $launchDt != '')) {
+            $retdt  = ((strtotime($completionDate)-strtotime($launchDt))/(60*60*24));
+             if( $retdt <= 180 ) {
+                 $ErrorMsg['launchDate'] = 'Launch date should be atleast 6 month less than completion date: '.$completionDate;
+             } 
+        }
+           
        if( $launchDt != '' && $eff_date_to_prom !='' ) {
             $retdt  = ((strtotime($eff_date_to_prom)-strtotime($launchDt))/(60*60*24));
             if( $retdt <= 180 ) {
@@ -393,6 +398,20 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
            }
        }
+       
+       if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && $projectId != '' ) {
+           if($completionDate == '0000-00-00')
+               $completionDate = '';
+           $yearExp = explode("-",$completionDate);
+           if( $yearExp[0] == date("Y") ) {
+               if( intval($yearExp[1]) > intval(date("m"))) {
+                 $ErrorMsg["txtStatus"] = "Completion date cannot be greater current month for this status";
+               }    
+           } 
+           else if (intval($yearExp[0]) > intval(date("Y")) ) {
+               $ErrorMsg["txtStatus"] = "Completion date cannot be greater current month for this status";
+           }
+       }
      //  echo $ErrorMsg['launchDate'];
   //echo $Status ."==". OCCUPIED_ID_3 ." or ". READY_FOR_POSSESSION_ID_4."==>$launchDt";die;
        if($township == '')
@@ -407,18 +426,22 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
        }
        else {
             $app = '';
-            if($application == 'app_form') {
-               $app = $app_form;
-            }
-            else if($application == 'app_form_pdf') {
-                $dir = "application_form/";
-                $pdf_path = $dir.str_replace(" ","",$txtProjectName).$_FILES['app_pdf']['name'];
-                $move = move_uploaded_file($_FILES['app_pdf']['tmp_name'],$pdf_path);
-                if($move == TRUE) {
+               
+                $dir = $applicationFormPath;
+			    $newpdfdir	= $applicationFormPath.str_replace(" ","",$txtProjectName);
+				if((!is_dir($newpdfdir)))
+				{
+					mkdir($newpdfdir, 0777);
+				}
+               $pdf_path = $dir.str_replace(" ","",$txtProjectName)."/".time()."_".$_FILES['app_pdf']['name'];
+               $move = move_uploaded_file($_FILES['app_pdf']['tmp_name'],$pdf_path);
+                
+                str_replace(" ","",$txtProjectName);
+             
+                if($move == TRUE)
                     $app = $pdf_path;
-                }
-            }
-
+        
+           			
            /*code for comment save in saperate comment table**/
             $arrCommentTypeValue = array();
             if( $txtProjectRemark != '' ) {
@@ -453,8 +476,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['pre_launch_date'] = $pre_launch_date;
             $arrInsertUpdateProject['launch_date'] = $eff_date_to;
             $arrInsertUpdateProject['source_of_information'] = $txtProjectSource;
-            $arrInsertUpdateProject['youtube_video'] = $youtube_link;
-            $arrInsertUpdateProject['application_form'] =  $app;
+            if($application == 'pdf-new' || $application == 'pdf-del')
+				$arrInsertUpdateProject['application_form'] =  $app;
             $arrInsertUpdateProject['approvals'] = $approvals;
             $arrInsertUpdateProject['project_size'] = $project_size;
             $arrInsertUpdateProject['power_backup_type_id'] = $powerBackup;
@@ -477,6 +500,55 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrInsertUpdateProject['updation_cycle_id'] = null;
             
            $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
+           
+           if($projectId && $Active == 'Inactive'){ // when project status set to be inactive
+			   $pro_aliases = ProjectAliases::find('all',array('conditions' => array('original_project_id' => $projectId)));
+			   if($pro_aliases)
+				$pro_aliases = ProjectAliases::find($pro_aliases[0]->id);
+			   else
+			    $pro_aliases = new ProjectAliases();
+			   
+			   $pro_aliases->original_project_id = $projectId;
+			   if($_POST['reason'] == 'duplicate'){
+				 $pro_aliases->duplicate_project_id = $_POST['duplicate_pid'];
+				 $pro_aliases->reason_text = '';
+				}
+			   if($_POST['reason'] == 'other_reason'){
+				 $pro_aliases->reason_text = $_POST['other_reason_txt'];
+				  $pro_aliases->duplicate_project_id = 0;
+				}
+				 
+			   $pro_aliases->save();
+			   
+		   }elseif($projectId && $Active != '' && $Active != 'Inactive'){ // when project status set to be active delete entries in project aliases
+		   
+				 $pro_aliases = ProjectAliases::find('all',array('conditions' => array('original_project_id' => $projectId)));
+				 
+				 if($pro_aliases){
+					$pro_aliases = ProjectAliases::find($pro_aliases[0]->id);
+					$pro_aliases->delete();
+				}
+		   }
+           
+           $redev_pro = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));
+           
+           if($redev_pro){
+			
+				$redev_pro = TableAttributes::find($redev_pro[0]->id);
+				$redev_pro->updated_by = $_SESSION['adminId'];
+				$redev_pro->attribute_value = $redevelopmentProject;
+				$redev_pro->save();		
+			   
+			}else{
+				$redev_pro = new TableAttributes();
+				$redev_pro->table_name = 'resi_project';
+				$redev_pro->table_id = $returnProject->project_id;
+				$redev_pro->attribute_name = 'REDEVELOPMENT_PROJECT';
+				$redev_pro->attribute_value = $redevelopmentProject;
+				$redev_pro->updated_by = $_SESSION['adminId'];
+				$redev_pro->save();
+			}
+           
            //echo $eff_date_to." heer";die;
            if (!ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
            {
@@ -495,10 +567,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            }else{
                    $qryUpdatePhase = "update resi_project_phase 
                        set launch_date = '".$eff_date_to."',
-                           completion_date = '".$completionDate."',
                            updated_at = now(),
                            updated_by = ".$_SESSION['adminId']."
-                       where project_id = $projectId and phase_name = 'No Phase'";
+                       where project_id = $projectId and phase_name = 'No Phase' and version = 'Cms'";
                    mysql_query($qryUpdatePhase);
                     
            }
@@ -559,9 +630,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $resStg = mysql_query($qryStg) or die(mysql_error());
                 $stageId = mysql_fetch_assoc($resStg);
                 CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name']);
-                if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
-                   insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
-                }
+                //if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
+                 //  insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
+               // }
                 //update code for offer heading and desc
                 if($special_offer != '' || $offer_heading != '' || $offer_desc != ''){
                     $qryOfferChk = "select * from project_offers where project_id = $projectId";
@@ -648,8 +719,11 @@ elseif ($projectId!='') {
     $smarty->assign("txtProjectURLOld", stripslashes($ProjectDetail->project_url));
     $smarty->assign("eff_date_to", stripslashes($ProjectDetail->launch_date));
     $smarty->assign("display_order", $ProjectDetail->display_order);
-    $smarty->assign("youtube_link", stripslashes($ProjectDetail->youtube_video));
-    $smarty->assign("app_form", stripslashes($ProjectDetail->application_form));
+       
+    $app_form = stripslashes($ProjectDetail->application_form);
+    $app_form = explode("/",$app_form);
+    $smarty->assign("app_form", $app_form[2]);
+    
     $smarty->assign("txtSourceofInfo", stripslashes($ProjectDetail->source_of_information));
     $smarty->assign("project_type", stripslashes($ProjectDetail->project_type_id));
     $smarty->assign("projectTypeOld", stripslashes($ProjectDetail->project_type_id));
@@ -674,8 +748,10 @@ elseif ($projectId!='') {
     $smarty->assign("numberOfTowers", $ProjectDetail->no_of_towers);
     $booking_status_id = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical'),'select' => 
                     'BOOKING_STATUS_ID'));
-    //  print "<pre>".print_r($booking_status_id,1);  die;
     $smarty->assign("bookingStatus", $booking_status_id[0]->booking_status_id);
+    $redevelopmentProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));              
+    $smarty->assign("redevelopmentProject", $redevelopmentProject[0]->attribute_value);
+    
     
  }
 

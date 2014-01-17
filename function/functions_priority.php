@@ -202,7 +202,7 @@ function getProjectArr($Id, $type, $order){
               $cnt++;
             }
             $queryLessThenMax = " AND rp.DISPLAY_ORDER > 0 AND rp.DISPLAY_ORDER < ".PROJECT_MAX_PRIORITY;
-            $where = "rp.locality_id in ($listLoc)" .$queryLessThenMax;
+            $where = "rp.version = 'Cms' and rp.locality_id in ($listLoc)" .$queryLessThenMax;
             $orderby = "ORDER BY rp.DISPLAY_ORDER $orderBy, rp.PROJECT_NAME ASC";
             break;
         case "suburb":
@@ -223,12 +223,12 @@ function getProjectArr($Id, $type, $order){
              $cnt++;
             }
             $queryLessThenMax = " AND rp.DISPLAY_ORDER_SUBURB > 0 AND rp.DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
-            $where = "rp.locality_id in ($listLoc)" .$queryLessThenMax;
+            $where = "rp.version = 'Cms' and rp.locality_id in ($listLoc)" .$queryLessThenMax;
             $orderby = "ORDER BY rp.DISPLAY_ORDER_SUBURB $orderBy, rp.PROJECT_NAME ASC";
             break;
         case "locality":
             $queryLessThenMax = " AND rp.DISPLAY_ORDER_LOCALITY > 0 AND rp.DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
-            $where = "rp.LOCALITY_ID = '" . $Id . "'" .$queryLessThenMax;
+            $where = "rp.version = 'Cms' and rp.LOCALITY_ID = '" . $Id . "'" .$queryLessThenMax;
             $orderby = "ORDER BY rp.DISPLAY_ORDER_LOCALITY $orderBy, rp.PROJECT_NAME ASC";
             break;
     }

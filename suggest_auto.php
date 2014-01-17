@@ -92,7 +92,7 @@ else if($_REQUEST['type'] == 'project')
         $where = "LOCALITY_ID=".$_REQUEST['id']." AND ";
     }
     
-    $rs = mysql_query("select PROJECT_NAME, PROJECT_ID FROM ".RESI_PROJECT." where ".$where." (PROJECT_NAME like '". mysql_real_escape_string($_REQUEST['term']) ."%'  OR PROJECT_ID like '". mysql_real_escape_string($_REQUEST['term']) ."%')  order by PROJECT_NAME ASC limit 0,10");
+    $rs = mysql_query("select PROJECT_NAME, PROJECT_ID FROM ".RESI_PROJECT." where ".$where." (PROJECT_NAME like '". mysql_real_escape_string($_REQUEST['term']) ."%'  OR PROJECT_ID like '". mysql_real_escape_string($_REQUEST['term']) ."%') and version = 'Cms'  order by PROJECT_NAME ASC limit 0,10");
     if ($rs && mysql_num_rows($rs) )
     {
         while( $row = mysql_fetch_array($rs, MYSQL_ASSOC) )

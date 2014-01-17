@@ -35,10 +35,11 @@ if (isset($_REQUEST['delete'])) {
         $qry = "UPDATE resi_project 
             set 
                PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
-           where PROJECT_ID = $projectId";
+           where PROJECT_ID = $projectId and version = 'Cms'";
         mysql_query($qry) OR DIE(mysql_error());
         
-        
+        updateD_Availablitiy($projectId); // update D_availability 
+                
         if ($preview == 'true')
             header("Location:show_project_details.php?projectId=" . $projectId);
         else
@@ -101,7 +102,7 @@ foreach ($phaseDetail as $k => $val) {
 }
 $smarty->assign("phases", $phases);
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD']) {
     $current_phase = phaseDetailsForId($phaseId);
     // Assign vars for smarty
     $smarty->assign("phaseObject", $current_phase[0]);
@@ -179,13 +180,17 @@ if (isset($_POST['btnSave'])) {
                 }
           }
          
-        if( $error_msg == '' ){
+     
             // Flats Config
             $flats_config = array();
             foreach ($_REQUEST as $key => $value) {
                 if (substr($key, 0, 9) == "flat_bed_") {
                     $beds = substr($key, 9);
                     $flats_config[$beds] = $value;
+                    if($value['supply'] < $value['launched'])
+			$error_msg = "Supply Unit must be greater than Launched Unit.";
+                    if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'apartment', $beds, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']))
+                        $error_msg = "Launched Unit must be greater than Availability.";
                 }
             }
 
@@ -195,8 +200,21 @@ if (isset($_POST['btnSave'])) {
                 if (substr($key, 0, 10) == "villa_bed_") {
                     $beds = substr($key, 10);
                     $villas_config[$beds] = $value;
+                    if($value['supply'] < $value['launched'])
+						$error_msg = "Supply Unit must be greater than Launched Unit.";
+                    if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'apartment', $beds, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']))
+			$error_msg = "Launched Unit must be greater than Availability.";
                 }
             }
+            
+         if ($_POST['plotvilla'] != '') { 
+			 if($_POST['supply'] < $_POST['launched'])
+						$error_msg = "Supply Unit must be greater than Launched Unit.";
+            if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
+                    $error_msg = "Launched Unit must be greater than Availability.";
+		 }
+		 				
+         if( $error_msg == '' ){
             // Update
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
@@ -227,14 +245,17 @@ if (isset($_POST['btnSave'])) {
                             $existingOptions = ProjectOptionsPhases::optionsForPhase($phaseId);
                             $removedOptions = array_diff($existingOptions, $arr);
                             if(empty($existingOptions) || !empty($removedOptions)){
-                                header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=2");
+								header("Location:phase_edit.php?projectId=" . $projectId . "&phaseId=" . $phaseId . "&error=2");
                                 exit;
                             }
                         }
                         $phase->reset_options($arr);
+                       
+                        
                     }
                 }
             });
+             updateD_Availablitiy($projectId); // update D_availability  
             #########################################
             // Phase Quantity
             if (sizeof($flats_config) > 0) {
@@ -304,5 +325,6 @@ if (isset($_POST['btnSave'])) {
     else
         header("Location:ProjectList.php?projectId=" . $projectId);
 }
+
 /* * *********************************** */
 ?>

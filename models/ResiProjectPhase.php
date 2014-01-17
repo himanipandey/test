@@ -121,7 +121,7 @@ class ResiProjectPhase extends Objects
     }
 
     static function getNoPhaseForProject($projectId){
-        return self::find(array('conditions'=>array('PROJECT_ID'=>$projectId)));
+        return self::find(array('conditions'=>array('PROJECT_ID'=>$projectId, 'PHASE_TYPE'=>'Logical', 'version'=>'Cms')));
     }
 
 }

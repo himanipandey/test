@@ -991,6 +991,20 @@ function getDateNow(){
 								{$projectDetails[0].STATUS}
 							</td>
 						</tr>
+						{if $projectDetails[0].STATUS == 'Inactive' && $project_alias_detail != 0}
+						<tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left">
+								<b>Inactive Reason:</b>
+							</td>
+							<td>
+								{if $project_alias_detail->duplicate_project_id}
+									Duplicate PID : {$project_alias_detail->duplicate_project_id}
+								{else}
+									{$project_alias_detail->reason_text}
+								{/if}
+							</td>
+						</tr>
+						{/if}
                                                 
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">
@@ -1080,9 +1094,9 @@ function getDateNow(){
                                                             <b>YouTube Video Key:</b>
                                                     </td>
                                                     <td>
-                                                        {if $projectDetails[0].YOUTUBE_VIDEO!=""}
+                                                        {if $project_video_links!=""}
                                                          <a href = "{$projectDetails[0].YOUTUBE_VIDEO}"><a>
-                                                                Youtube Link 
+                                                                {$project_video_links} Youtube Link Available
                                                           {else}
                                                                 No link available
                                                         {/if}
@@ -1170,7 +1184,9 @@ function getDateNow(){
                                                     </td>
                                                     <td>
                                                         {if $projectDetails[0].APPLICATION_FORM != ''}
-                                                                {$projectDetails[0].APPLICATION_FORM}
+															<a href="{$projectDetails[0].APPLICATION_FORM}" target="_blank"/>
+																<img src="/images/pdficon_small.gif" />
+                                                            </a>    
                                                         {else}
                                                                 --
                                                         {/if}
@@ -1222,6 +1238,14 @@ function getDateNow(){
                                                         {else}
                                                               --
                                                         {/if}
+                                                    </td>
+						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Redevelopment Project: </b>
+                                                    </td>
+                                                    <td>
+                                                        {$redevelopment_flag}
                                                     </td>
 						</tr>
                                                 
@@ -1738,6 +1762,9 @@ function getDateNow(){
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 											<b>Tagged Date </b>:{$ImageDataListingArr[data].tagged_month|strtotime|date_format:"%B %Y"}<br><br>
 											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{else}Other{/if}<br><br>
+										{/if}
+										{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
+											<b>Display Order </b>:{$ImageDataListingArr[data].display_order}<br><br>
 										{/if}
 									</div>
 								</td>

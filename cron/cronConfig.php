@@ -46,9 +46,11 @@ $dailyEmail = array(
             'sendifnodata'=>0
         ),
         array(
-            'sql'=>"select l.LABEL as LOCALITY_NAME,l.LOCALITY_ID, rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, l.MIN_LATITUDE, l.MAX_LATITUDE, l.MIN_LONGITUDE, l.MAX_LONGITUDE,rp.LATITUDE, rp.LONGITUDE 
+            'sql'=>"select l.LABEL as LOCALITY_NAME,l.LOCALITY_ID, rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, l.MIN_LATITUDE, l.MAX_LATITUDE, l.MIN_LONGITUDE, l.MAX_LONGITUDE,rp.LATITUDE, rp.LONGITUDE, city.LABEL as CITY_NAME 
             from locality l inner join resi_project rp 
             on l.LOCALITY_ID = rp.LOCALITY_ID
+            inner join suburb s on l.suburb_id = s.suburb_id
+            inner join city on s.city_id = city.city_id
             inner join resi_builder rb on rp.builder_id = rb.builder_id
              where 
             l.IS_GEO_BOUNDARY_CLEAN = 'true'

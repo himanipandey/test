@@ -1,4 +1,18 @@
 <script type="text/javascript" src="js/jquery.js"></script>
+<script language="javascript">
+function isNumberKey(evt)
+  {
+ 	 var charCode = (evt.which) ? evt.which : event.keyCode;
+ 	  	
+ 	if(charCode == 8 || charCode == 13 || charCode == 46)
+   	 return true;
+	
+	if (charCode >= 48 && charCode <= 57)
+		return true;
+
+	 return false;
+  }
+</script>
 </TD>
   </TR>
   <TR>
@@ -34,7 +48,12 @@
 			      <div>
 				<tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>TownShip Name : </td>
-				  <td width="30%" align="left"><input type=text name="townshipsName"  value="{$townshipsName}" style="width:250px;"></td> {if $ErrorMsg["townshipName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["townshipName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				  <td width="30%" align="left"><input type=text name="townshipsName"  value="{$townshipsName}" style="width:250px;"></td> {if $ErrorMsg["townshipsName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["townshipsName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				</tr>
+				<tr>
+                                    <td width="20%" align="right" >Total Area : </td>
+				  <td width="30%" align="left"><input type=text name="totalArea"  value="{$totalArea}" style="width:100px;" onkeypress='return isNumberKey(event)' />(in acres)</td> 
+				  <td width="50%" align="left" id="errmsgarea"></td>
 				</tr>
 				<tr>
 				  <td >&nbsp;</td>

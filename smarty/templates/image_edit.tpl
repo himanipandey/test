@@ -127,7 +127,7 @@ $(".pt_reqflrplan").fancybox();
 					<td  align = "center" colspan = "2">
 						{if count($ErrorMsg)>0}
 					   {foreach from=$ErrorMsg item=data}
-					   <font color = "red">{$data}</font><br>
+					   <font color = "red" style="font-size:17px;">{$data}</font><br>
 					   {/foreach}
 					{/if}
 					</td>
@@ -163,12 +163,15 @@ $(".pt_reqflrplan").fancybox();
 														Image Type:{$ImageDataListingArr[data].PLAN_IMAGE}<input type = "text" readonly name = "PType[{$cnt}]"
 														value = "{$ImageDataListingArr[data].PLAN_TYPE}"
 														STYLE="width: 165px;border:1px solid #c3c3c3;">
+                                                                                                                
+                                                                                                                <input type = "hidden" name = "currentPlanId[{$cnt}]"
+														value = "{$ImageDataListingArr[data].PROJECT_PLAN_ID}">
 
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
 														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
-														
-														<div class="taggedDate" {if !$ImageDataListingArr[data].tagged_month || $ImageDataListingArr[data].tagged_month == '0000-00-00'} style="display:none" {/if}>
+														{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
+														<div class="taggedDate">
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
 															<select name="tagged_date[{$cnt}]" >
 																<option value="0" >--Select Month--</option>
@@ -186,9 +189,22 @@ $(".pt_reqflrplan").fancybox();
 																	<option value="-1" {if $ImageDataListingArr[data].tower_id == null} selected {/if}>Other</option>
 															</select>
 														</div>
-														
-														Delete/Edit:<input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
+														{/if}
+														{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
+															Display Order:&nbsp;&nbsp;
+															<select name= "txtdisplay_order[{$cnt}]" >
+																{foreach from=$display_order_div key=keyss item=datass}
+																	<option value="{$keyss}"  {if $ImageDataListingArr[data].display_order == $keyss} selected {/if}>{$datass}</option>
+																{/foreach}																	
+															</select>
+															<br/>
+														{/if}
+														<br/><br/>
+														Delete:<input type="radio" name="chk_name[{$cnt}]" value="delete_img" id="chk_{$cnt}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														Edit:<input type="radio" name="chk_name[{$cnt}]"  value="edit_img"><br><br>
 														New Image?:<input type="file" name="img[{$cnt}]"/>
+														
+														
 
 
 													</div>
@@ -207,7 +223,7 @@ $(".pt_reqflrplan").fancybox();
 								   <span id = 'rowPropCount' style = 'display:none;'>{$countPropImages}</span>
 								  
 								  <input type="hidden" name="projectId" value="{$projectId}" />
-								  <input type="submit" name="btnSave" id="btnSave" value="Submit" style = "font-size:16px;"  onclick="return check();">
+								  <input type="submit" name="btnSave" id="btnSave" value="Submit" style = "font-size:16px;"  >
 								  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style = "font-size:16px;">
 								  </td>
 								</tr>
