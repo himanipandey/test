@@ -487,9 +487,8 @@ if ($_POST['forwardFlag'] == 'no') {
 
         $res = mysql_query($qry) or die(mysql_error());
         $OldHistory = mysql_fetch_assoc($res);
-
     //  Assigning back to same user if assignment is found
-        if(count($OldHistory) > 0){
+        if(mysql_num_rows($res) > 0){
             $lastAssignemnt = $OldHistory['ASSIGNED_TO'];
             $newAssignment = new ProjectAssignment();
             $project = ResiProject::virtual_find($projectId);
@@ -516,6 +515,8 @@ if ($_POST['forwardFlag'] == 'no') {
                 where id = ".$dataAssign['id'];
             $resUp = mysql_query($qryUp) or   die(mysql_error());
             
+        }else{
+            updateProjectPhase($projectId, $phaseId['id'], $stageId['id'], TRUE);
         }
         header("Location:$returnURLPID");
     }

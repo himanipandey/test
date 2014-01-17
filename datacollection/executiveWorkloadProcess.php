@@ -8,18 +8,24 @@ $smarty->assign("accessDataCollection",$accessDataCollection);
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 $callingFieldFlag = '';
-if($_SESSION['DEPARTMENT'] === 'CALLCENTER')
+$getFlag = $_REQUEST['flag'];
+if($getFlag === 'callcenter')
     $callingFieldFlag = 'callcenter';
 else
     $callingFieldFlag = 'survey';
-$smarty->assign("callingFieldFlag",$callingFieldFlag);
 
-$executiveWorkLoad = getCallCenterExecutiveWorkLoad($callingFieldFlag);
-$smarty->assign("executiveWorkLoad", $executiveWorkLoad);
-
+$executiveWorkLoad = array();
 $arrSurveyTeamList = array();
-if($callingFieldFlag == 'survey'){//filter executive list for survey
+
+if($callingFieldFlag === 'callcenter'){
+    $executiveWorkLoad = getCallCenterExecutiveWorkLoad();
+}
+else{
     $arrSurveyTeamList = surveyexecutiveList();
 }
+
+$smarty->assign("callingFieldFlag",$callingFieldFlag);
+$smarty->assign("executiveWorkLoad", $executiveWorkLoad);
+
 $smarty->assign("arrSurveyTeamList", $arrSurveyTeamList);
 ?>

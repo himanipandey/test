@@ -32,13 +32,8 @@ function saveStatusUpdateByExecutive($projectID, $status, $remark){
     return;
 }
 
-function getCallCenterExecutiveWorkLoad($executives = array(), $callingFieldFlag){
-    if($callingFieldFlag == 'survey')
-        $department = "'SURVEY'";
-    elseif($callingFieldFlag == 'callcenter')
-        $department = "'CALLCENTER', 'DATAENTRY'";
-    else
-        $department = "'CALLCENTER', 'DATAENTRY','SURVEY'";
+function getCallCenterExecutiveWorkLoad($executives = array()){
+    $department = "'CALLCENTER', 'DATAENTRY','SURVEY'";
     if(empty($executives)){
         $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
             from 
@@ -125,7 +120,7 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
     elseif((int)$cityId != -1){// city id = -1 denotes all cities
        $sql = $sql." and c.CITY_ID=$cityId";
     }
-    elseif((int)$cityId == -1 && $_SESSION['DEPARTMENT'] == 'SURVEY'){
+    elseif((int)$cityId == -1 && $department == 'survey'){
     // city id = -1 denotes all cities for survey
         $arrTeamLeadList = arrSurveyTeamLeadCities($_SESSION['adminId']);
         $arrCityIdList[] = array_keys($arrTeamLeadList);
@@ -192,7 +187,6 @@ function assignToCCExecutives($projectList, $executiveList){
             array_values($executiveList);
             $executiveCount = $executiveCount - 1;
         }
-        echo $executiveCount;
         if($executiveCount > 0){
             $assign = assignProject($projectId, $executiveList[($j%$executiveCount)]['ADMINID']);
             $j++;
@@ -401,8 +395,7 @@ function surveyexecutiveList(){
                and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
                where pa.DEPARTMENT in ('SURVEY') and pa.adminid not in(".$_SESSION['adminId'].") group by pa.ADMINID order by WORKLOAD;";
-   
-    $result = dbQuery($sql);
+        $result = dbQuery($sql);
     return $result;
 }
 

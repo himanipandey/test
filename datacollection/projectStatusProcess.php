@@ -146,18 +146,23 @@ function prepareDisplayData($data){
             $assignment_type .= 'Reverted';
             if(isset($depts[$value['PROJECT_ID']]) && $depts[$value['PROJECT_ID']] === 'SURVEY')$assignment_type .= 'Field';
         }
-        
-        if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY')$assignment_type .= 'Unassigned';
+        $RoleExp = explode('|',$value['ROLE']);
+        $roleCount = count($RoleExp);
+        $lastRole = $RoleExp[$roleCount-1];
+        if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY'){
+            if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY' && trim($lastRole) == 'teamLeader'){
+                $assignment_type .= 'Field_lead';
+            }
+            else
+                $assignment_type .= 'Field_Assigned-'.  strval(count($assigned_to));
+         }
         elseif(empty($assigned_to[0])) $assignment_type .= 'Unassigned';
         else{
             $assignment_type .= 'Assigned-'.  strval(count($assigned_to));
         }
-        $RoleExp = explode('|',$value['ROLE']);
-        $roleCount = count($RoleExp);
-       $lastRole = $RoleExp[$roleCount-1];
+
         $new['leadAssignedType'] = 0;
         if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY' && $lastRole == 'teamLeader'){
-            $new['STATUS'][] = 'Unassigned';
             $new['leadAssignedType'] = 1;
         }
         else 

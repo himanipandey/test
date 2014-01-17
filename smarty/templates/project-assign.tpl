@@ -46,16 +46,14 @@
                                                             </td>
                                                             <td>
                                                                 <select name="executives[]" class="squareDiv200" multiple>
-                                                                    
-                                                                    
                                                                     {if $callingFieldFlag == 'survey'}
                                                                         {foreach from = $arrSurveyTeamList key= key item = item}
                                                                             <option {if $executive['WORKLOAD'] gte 80}disabled{/if} value ='{$item['ADMINID']}'>{$item['FNAME']} - {$item['WORKLOAD']}</option>
                                                                         {/foreach}
-                                                                        {else}
-                                                                          {foreach from = $executiveList item = item}
+                                                                    {else}
+                                                                        {foreach from = $executiveWorkLoad key = key item = item}
                                                                             <option {if $executive['WORKLOAD'] gte 80}disabled{/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
-                                                                          {/foreach}  
+                                                                        {/foreach}  
                                                                     {/if}
                                                             </td>
                                                         </TR>

@@ -87,7 +87,7 @@
                                                             <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['FNAME']} - {$item['WORKLOAD']}</option>
                                                         {/foreach}
                                                         {else}
-                                                          {foreach from = $executiveList item = item}
+                                                          {foreach from = $executiveList key = key item = item}
                                                             <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
                                                           {/foreach}  
                                                         {/if}                                                           
@@ -198,8 +198,11 @@
                                                                 <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
                                                                 <td>{$item['LAST_WORKED_AT']}</td>
                                                                 <td>
-                                                                    {$assignType = $item['ASSIGNMENT_TYPE']|replace:'Field':''}
-                                                                    {$assignType}
+                                                                    {$assignType = $item['ASSIGNMENT_TYPE']|replace:'Field':'Unassigned'}
+                                                                    {$newType = $assignType|replace:'_lead':''}
+                                                                    {$otherType = $newType|replace:'Unassigned_':''}
+                                                                    {$otherType = $otherType|replace:'RevertedUnassignedAssigned':'Assigned'}
+                                                                     {$otherType}
                                                                 </td>
                                                                 <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][0]}{else}&nbsp;{/if}</td>
                                                                 <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][0]}{else}&nbsp;{/if}</td>
