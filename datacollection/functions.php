@@ -188,7 +188,7 @@ function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
          = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'
-            and rp.PROJECT_ID in (" .  implode(',', $pids) . ")  $department
+            and rp.PROJECT_ID in (" .  implode(',', $pids) . ")
                 group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
         $res = dbQuery($sql);
     }
