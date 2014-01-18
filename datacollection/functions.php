@@ -71,6 +71,11 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
 }
 
 function getProjectListForManagers($cityId, $department = '', $suburbId = '', $localityId = ''){
+    if($department == 'survey')
+        $department = "and pa1.DEPARTMENT = 'SURVEY'";
+    else {
+        $department = "and pa1.DEPARTMENT = 'CALLCENTER'";
+    }
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,mbst.name as BOOKING_STATUS,
          psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
          max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE, pphs.name as PROJECT_PHASE, 
@@ -105,7 +110,7 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
          where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') 
-         and rp.version = 'Cms' ";
+         and rp.version = 'Cms'  $department";
     
     global $arrOtherCities;
     
@@ -137,7 +142,12 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
     return  $res = dbQuery($sql); 
 }
 
-function getAssignedProjectsFromPIDs($pids){
+function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
+    if($callingFieldFlag == 'survey')
+        $department = "and pa1.DEPARTMENT = 'SURVEY'";
+    else {
+        $department = "and pa1.DEPARTMENT = 'CALLCENTER'";
+    }
     $res = array();
     if(!empty($pids)){
        $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS, mbst.name as BOOKING_STATUS, psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
@@ -174,7 +184,7 @@ function getAssignedProjectsFromPIDs($pids){
          = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'
-            and rp.PROJECT_ID in (" .  implode(',', $pids) . ")
+            and rp.PROJECT_ID in (" .  implode(',', $pids) . ")  $department
                 group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
         $res = dbQuery($sql);
     }

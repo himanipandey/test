@@ -193,7 +193,7 @@
             <td align="left" height="22"><a class="leftnav" href="executive-performance.php?flag=callcenter"><font color = "#f15a22">Executive Performance</font></a></td>
 	</tr>
         {/if}
-        {if $myProjectsCallCenterAuth == true && $callCenterAuth == true}
+        {if $myProjectsCallCenterAuth == true && $callCenterAuth == false}
         <tr>
             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
             <td align="left" height="22"><a class="leftnav" href="my-projects.php"><font color = "#f15a22">My Projects</font></a></td>
