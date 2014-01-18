@@ -128,7 +128,6 @@ function prepareDisplayData($data){
 			$depts[$value['PROJECT_ID']] = $prv_asg_dept[0];
 		}
 	}
-
     foreach ($data as $value) {
 		
 		 if($value['LAST_WORKED_AT'] == '')

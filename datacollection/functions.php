@@ -4,7 +4,8 @@ function getAssignedProjects($adminId=NULL){
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, c.LABEL CITY, pa.CREATION_TIME 
         ASSIGNMENT_DATE, pa.STATUS, pa.EXECUTIVE_REMARK REMARK from project_assignment pa 
         inner join resi_project rp 
-        on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and pa.updation_cycle_id = rp.updation_cycle_id)
+        on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
         inner join resi_builder rb on rp.builder_id = rb.builder_id
         inner join locality l on rp.locality_id = l.locality_id
         inner join suburb s on l.suburb_id = s.suburb_id
@@ -17,7 +18,8 @@ function saveStatusUpdateByExecutive($projectID, $status, $remark){
     dbExecute('begin');
     $sql = "select rp.PROJECT_ID, pa.ID from resi_project rp 
         inner join project_assignment pa 
-            on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and rp.updation_cycle_id = pa.updation_cycle_id)
+            on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
         where rp.PROJECT_ID = $projectID 
             and pa.ASSIGNED_TO = $_SESSION[adminId] 
             and rp.version = 'Cms'
@@ -41,7 +43,8 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
               where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, 
                count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
                inner join resi_project rp 
-               on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and pa.updation_cycle_id = rp.updation_cycle_id)
+               on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
                inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
                where 
@@ -57,7 +60,8 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
             where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, count(rp.MOVEMENT_HISTORY_ID) TOTAL 
             from project_assignment pa 
             inner join resi_project rp 
-            on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and pa.updation_cycle_id = rp.updation_cycle_id)
+            on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
             inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
             where ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') or 
@@ -102,15 +106,15 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
          inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id 
             and rpphs.PHASE_TYPE = 'Logical' and rpphs.version = 'Cms'
          left join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
-         left join project_assignment pa 
-         on (rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID and rp.updation_cycle_id = pa.updation_cycle_id)
+         left join project_assignment pa ON (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
          left join proptiger_admin pa1 on 
-         pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
+         (pa.ASSIGNED_TO = pa1.ADMINID $department) left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
          = uc.UPDATION_CYCLE_ID 
          where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') 
-         and rp.version = 'Cms'  $department";
+         and rp.version = 'Cms'  ";
     
     global $arrOtherCities;
     
@@ -180,7 +184,7 @@ function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
          project_assignment pa ON (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
             or rp.updation_cycle_id = pa.updation_cycle_id))
          left join proptiger_admin pa1 on 
-         pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
+         (pa.ASSIGNED_TO = pa1.ADMINID $department)  left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
          = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'
