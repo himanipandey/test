@@ -27,7 +27,7 @@ foreach ($missingProjects as $project) {
         $result[] = ProjectAvailability::copyProjectInventoryToWebsite($project->project_id, $project->updated_by);
         $result[] = ListingPrices::copyProjectPriceToWebsite($project->project_id, $project->updated_by);
         $projectUpdationDate = ResiProject::get_project_updation_date($project->project_id);
-        ResiProject::set_table_attribute($project->project_id, 'PROJECT_UPDATION_DATE', $projectUpdationDate, $project->updated_by);
+        ResiProject::set_table_attribute($project->project_id, 'D_PROJECT_UPDATION_DATE', $projectUpdationDate, $project->updated_by);
         if(!($result === array_filter($result))){
             ProjectMigration::connection()->rollback();
         }
