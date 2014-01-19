@@ -148,7 +148,16 @@ function prepareDisplayData($data){
         $RoleExp = explode('|',$value['ROLE']);
         $roleCount = count($RoleExp);
         $lastRole = $RoleExp[$roleCount-1];
+       // $firstRole = '';
         if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY'){
+            
+            $qryOldHistoryId = "select pa1.role from resi_project rp
+                join project_assignment pa on rp.movement_history_id = pa.movement_history_id
+                join  proptiger_admin pa1 on pa.assigned_to = pa1.adminid
+                where rp.project_id = ".$value['PROJECT_ID']." order by pa.updation_time asc limit 1";            
+            $resOldHistoryId = mysql_query($qryOldHistoryId) or die(mysql_error());
+            $dataOldHistoryId = mysql_fetch_assoc($resOldHistoryId);
+           // $firstRole = $dataOldHistoryId['role'];
             if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY' && trim($lastRole) == 'teamLeader'){
                 $assignment_type .= 'Field_lead';
             }
@@ -159,7 +168,7 @@ function prepareDisplayData($data){
         else{
             $assignment_type .= 'Assigned-'.  strval(count($assigned_to));
         }
-
+        
         $new['leadAssignedType'] = 0;
         if($assigned_to_dep[count($assigned_to_dep)-1] === 'SURVEY' && $lastRole == 'teamLeader'){
             $new['leadAssignedType'] = 1;
@@ -168,6 +177,7 @@ function prepareDisplayData($data){
             $new['STATUS'] = explode('|', $value['STATUS']);
         
         $new['ASSIGNMENT_TYPE'] = $assignment_type;
+       // $new['FIRST_ROLE'] = $firstRole;
         $new['ASSIGNED_TO'] = $assigned_to;
         $new['ASSIGNED_AT'] = explode('|', $value['ASSIGNED_AT']);
         $new['REMARK'] = explode('|', $value['REMARK']);

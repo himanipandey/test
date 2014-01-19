@@ -198,7 +198,7 @@
                                                                 <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
                                                                 <td>{$item['LAST_WORKED_AT']}</td>
                                                                 <td>
-                                                                    {$assignType1 = $item['ASSIGNMENT_TYPE']|replace:'RevertedFieldField_Assigned-':'RevertedAssigned-'}    
+                                                                    {$assignType1 = $item['ASSIGNMENT_TYPE']|replace:'RevertedFieldField_Assigned-':'RevertedAssigned-'} 
                                                                     {$assignType = $assignType1|replace:'Field':'Unassigned'}
                                                                     {$newType = $assignType|replace:'_lead':''}
                                                                     {$otherType = $newType|replace:'Unassigned_':''}

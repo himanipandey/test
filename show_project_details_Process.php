@@ -485,7 +485,7 @@ if ($_POST['forwardFlag'] == 'no') {
     $resStg = mysql_query($qryStg) or die(mysql_error());
     $stageId = mysql_fetch_assoc($resStg);
     
-    if($_REQUEST['returnStage'] == 'NewProject' || $_REQUEST['returnStage'] == 'UpdationCycle'
+    if(($_REQUEST['returnStage'] == 'NewProject' || $_REQUEST['returnStage'] == 'UpdationCycle')
             && ($_REQUEST['currentPhase'] == 'Audit1' OR $_REQUEST['currentPhase'] == 'Audit2')){
        /* $qry = "select pa.* from resi_project rp join project_assignment pa
                 on rp.updation_cycle_id = pa.updation_cycle_id
@@ -493,11 +493,11 @@ if ($_POST['forwardFlag'] == 'no') {
                 where rp.project_id = $projectId and psh.project_phase_id in
         (".phaseId_1.",".phaseId_3.",".phaseId_8.") and psh.project_stage_id = ".$stageId['id']." order by pa.UPDATION_TIME desc limit 1";*/
         $qry = "select pa.* from resi_project rp join project_assignment pa
-                on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
-            or rp.updation_cycle_id = pa.updation_cycle_id))
-                join project_stage_history psh on pa.movement_history_id = psh.history_id
+                on (rp.updation_cycle_id is null
+                    or rp.updation_cycle_id = pa.updation_cycle_id)
+                join project_stage_history psh on (pa.movement_history_id =
+ psh.history_id and rp.project_id = psh.project_id)
                 where rp.project_id = $projectId  order by pa.UPDATION_TIME desc limit 1";
-
         $res = mysql_query($qry) or die(mysql_error());
         $OldHistory = mysql_fetch_assoc($res);
     //  Assigning back to same user if assignment is found
@@ -534,6 +534,9 @@ if ($_POST['forwardFlag'] == 'no') {
         }
         header("Location:$returnURLPID");
     }
+    else{
+            updateProjectPhase($projectId, $phaseId['id'], $stageId['id'], TRUE);
+        }
     header("Location:$returnURLPID");
 }
 /*****code for display updation cycle*********/
