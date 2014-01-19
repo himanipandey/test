@@ -73,6 +73,10 @@ function getSolrDocuments($aAllInventory, $aAllPrice){
         
         $arrayToPick = isset($aAllInventory[$key])? $aAllInventory : $aAllPrice;
         
+        //hard coded values as of now
+        $solrDocument->addField('COUNTRY_ID', 1);
+        $solrDocument->addField('COUNTRY_NAME', 'India');
+        
         $solrDocument->addField('PROJECT_ID', $arrayToPick[$key]->project_id);
         $solrDocument->addField('PROJECT_NAME',$arrayToPick[$key]->project_name);
         $solrDocument->addField('PHASE_ID', $arrayToPick[$key]->phase_id);
