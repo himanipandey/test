@@ -132,7 +132,8 @@ function addImageToDB( $columnName, $areaId, $imageName ) {
 function currentCycleOfProject($projectId) {
     $currentCycle = '';
     $qry = "select a.department from resi_project rp join project_assignment pa
-            on rp.updation_cycle_id = pa.updation_cycle_id
+            on (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id)
             left join proptiger_admin a
             on pa.assigned_to = a.adminid 
             inner join master_project_stages pstg on rp.PROJECT_STAGE_ID = pstg.id
