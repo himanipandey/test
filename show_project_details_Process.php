@@ -497,7 +497,7 @@ if ($_POST['forwardFlag'] == 'no') {
                     or rp.updation_cycle_id = pa.updation_cycle_id)
                 join project_stage_history psh on (pa.movement_history_id =
  psh.history_id and rp.project_id = psh.project_id)
-                where rp.project_id = $projectId  order by pa.UPDATION_TIME desc limit 1";
+                where rp.project_id = $projectId and version = 'Cms'  order by pa.UPDATION_TIME desc limit 1";
         $res = mysql_query($qry) or die(mysql_error());
         $OldHistory = mysql_fetch_assoc($res);
     //  Assigning back to same user if assignment is found
