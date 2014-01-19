@@ -493,7 +493,8 @@ if ($_POST['forwardFlag'] == 'no') {
                 where rp.project_id = $projectId and psh.project_phase_id in
         (".phaseId_1.",".phaseId_3.",".phaseId_8.") and psh.project_stage_id = ".$stageId['id']." order by pa.UPDATION_TIME desc limit 1";*/
         $qry = "select pa.* from resi_project rp join project_assignment pa
-                on (rp.updation_cycle_id is null or rp.updation_cycle_id = pa.updation_cycle_id)
+                on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
                 join project_stage_history psh on pa.movement_history_id = psh.history_id
                 where rp.project_id = $projectId  order by pa.UPDATION_TIME desc limit 1";
 
