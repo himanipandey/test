@@ -117,7 +117,8 @@ function prepareDisplayData($data){
 		$sql = "select group_concat(pa1.DEPARTMENT order by pa.ID desc) as department,
                     rp.PROJECT_ID from resi_project rp inner join project_stage_history psh 
                     on rp.project_id = psh.project_id inner join project_assignment pa on 
-                    psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID inner join proptiger_admin pa1 on 
+                    (psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+                    or rp.updation_cycle_id = pa.updation_cycle_id)) inner join proptiger_admin pa1 on 
                     pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and 
                     rp.project_id in (".$pids.") and rp.version = 'Cms' group by rp.PROJECT_ID;";
 		$sql_depts = dbQuery($sql);
@@ -140,7 +141,6 @@ function prepareDisplayData($data){
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
         $assigned_to_dep = explode('|', $value['DEPARTMENT']);
         $assignment_type = '';
-        
         if(($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') && strstr($prevs_depts[$value['PROJECT_ID']],$assigned_to_dep[count($assigned_to_dep)-1])){
             $assignment_type .= 'Reverted';
             if(isset($depts[$value['PROJECT_ID']]) && $depts[$value['PROJECT_ID']] === 'SURVEY')$assignment_type .= 'Field';

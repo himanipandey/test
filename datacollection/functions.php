@@ -150,7 +150,7 @@ function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
     if($callingFieldFlag == 'survey')
         $department = "and pa1.DEPARTMENT = 'SURVEY'";
     else {
-        $department = "and pa1.DEPARTMENT in( 'CALLCENTER','SURVEY')";
+        $department = "and pa1.DEPARTMENT in('CALLCENTER','SURVEY')";
     }
     $res = array();
     if(!empty($pids)){
