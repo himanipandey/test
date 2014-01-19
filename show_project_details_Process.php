@@ -492,12 +492,24 @@ if ($_POST['forwardFlag'] == 'no') {
                 join project_stage_history psh on pa.movement_history_id = psh.history_id
                 where rp.project_id = $projectId and psh.project_phase_id in
         (".phaseId_1.",".phaseId_3.",".phaseId_8.") and psh.project_stage_id = ".$stageId['id']." order by pa.UPDATION_TIME desc limit 1";*/
-        $qry = "select pa.* from resi_project rp join project_assignment pa
+       $limitCondition = '';
+        if($_REQUEST['currentPhase'] == 'Audit1')
+           $limitCondition = "0,1";
+       else {
+           $limitCondition = "1,1"; 
+       }
+       $qrymovmentHistory = "select history_id from project_stage_history where history_id not in(
+           select movement_history_id from resi_project 
+           where project_id = $projectId and version = 'Cms') order by history_id desc limit $limitCondition";
+       $resmovmentHistory = mysql_query($qrymovmentHistory) or die(mysql_error());
+       $movmentHistoryData = mysql_fetch_assoc($resmovmentHistory);
+       
+      $qry = "select pa.* from resi_project rp join project_assignment pa
                 on (rp.updation_cycle_id is null
                     or rp.updation_cycle_id = pa.updation_cycle_id)
-                join project_stage_history psh on (pa.movement_history_id =
- psh.history_id and rp.project_id = psh.project_id)
-                where rp.project_id = $projectId and version = 'Cms'  order by pa.UPDATION_TIME desc limit 1";
+                where rp.project_id = $projectId and rp.version = 'Cms'
+                    and pa.movement_history_id = ".$movmentHistoryData['history_id']."
+            order by pa.UPDATION_TIME desc limit 1";//die;
         $res = mysql_query($qry) or die(mysql_error());
         $OldHistory = mysql_fetch_assoc($res);
     //  Assigning back to same user if assignment is found
