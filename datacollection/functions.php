@@ -78,7 +78,7 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
     if($department == 'survey')
         $department = "and pa1.DEPARTMENT = 'SURVEY'";
     else {
-        $department = "and pa1.DEPARTMENT in( 'CALLCENTER','SURVEY')";
+        $department = "and pa1.DEPARTMENT in('CALLCENTER','SURVEY','DATAENTRY')";
     }
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,mbst.name as BOOKING_STATUS,
          psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
@@ -150,7 +150,7 @@ function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
     if($callingFieldFlag == 'survey')
         $department = "and pa1.DEPARTMENT = 'SURVEY'";
     else {
-        $department = "and pa1.DEPARTMENT in('CALLCENTER','SURVEY')";
+        $department = "and pa1.DEPARTMENT in('CALLCENTER','SURVEY','DATAENTRY')";
     }
     $res = array();
     if(!empty($pids)){
