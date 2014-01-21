@@ -1,7 +1,7 @@
 <?php
 
 $accessDataCollection = '';
-if( $dataCollectionFlowAuth == false )
+if( $surveyAuth == false && $callCenterAuth == false)
    $accessDataCollection = "No Access";
 $smarty->assign("accessDataCollection",$accessDataCollection);
 

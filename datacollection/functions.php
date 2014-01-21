@@ -399,17 +399,21 @@ function surveyexecutiveList(){
         $sql = "select pa.ADMINID, pa.FNAME, max(t.TOTAL) WORKLOAD 
             from 
             (select pa.ADMINID, 0 TOTAL from proptiger_admin pa 
-              where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, 
+            inner join proptiger_admin_city pac on pa.adminid = pac.admin_id
+              where pa.ROLE = 'executive' and pac.city_id in(".implode(',',array_keys($arrAllSurveyLeadCityList)).")
+                  and pa.DEPARTMENT in ('SURVEY')
+            union select pa.ASSIGNED_TO, 
                count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
                inner join resi_project rp
                on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and pa.updation_cycle_id = rp.updation_cycle_id)
                inner join locality l on rp.locality_id = l.locality_id
                inner join suburb s on l.suburb_id = s.suburb_id
-               
+               inner join proptiger_admin_city pac on s.city_id = pac.city_id
                inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
+               
                where 
-                s.city_id in(".implode(',',array_keys($arrAllSurveyLeadCityList)).") and
+                pac.city_id in(".implode(',',array_keys($arrAllSurveyLeadCityList)).") and
                ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
                or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
                and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
