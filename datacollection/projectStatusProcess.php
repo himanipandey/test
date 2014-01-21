@@ -36,6 +36,7 @@ elseif(isset($_POST['projectIds']) && !empty($_POST['projectIds'])){
 }
 if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
     if(isset($_SESSION['project-status']['locality']) && !empty($_SESSION['project-status']['locality'])){
+        
         $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $getFlag, $_SESSION['project-status']['suburb'], $_SESSION['project-status']['locality']);
     }else {
     $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $getFlag, 
@@ -56,6 +57,7 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
     $projectsfromDB = getAssignedProjectsFromPIDs($projectIds,$callingFieldFlag);
     $projectList = prepareDisplayData($projectsfromDB);
 }
+
 $project_ids = array();
 foreach($projectList as $p){
     array_push($project_ids, $p['PROJECT_ID']);
@@ -86,7 +88,6 @@ $arrSurveyTeamList = array();
 if($callingFieldFlag == 'survey'){//filter executive list for survey
     $arrSurveyTeamList = surveyexecutiveList();
 }
-
 $smarty->assign("arrSurveyTeamList", $arrSurveyTeamList);
 $smarty->assign("executiveList", $executiveList);
 $smarty->assign("projectList", $projectList);
@@ -103,6 +104,7 @@ $smarty->assign("projectLastAuditDate", $projectLastAuditDate);
 
 
 function prepareDisplayData($data){ 
+   
     $result = array();
      
      $pids = "";
@@ -139,7 +141,7 @@ function prepareDisplayData($data){
             'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'],'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 
             'LABEL'=>$value['LABEL'], 'ASSIGNED_TO_DEPART'=>$value['ASSIGNED_TO_DEPART'],'ROLE'=>$value['ROLE']);
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
-        $assigned_to_dep = explode('|', $value['DEPARTMENT']);
+        $assigned_to_dep = explode('|', $value['ASSIGNED_TO_DEPART']);
         $assignment_type = '';
         if(($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') && strstr($prevs_depts[$value['PROJECT_ID']],$assigned_to_dep[count($assigned_to_dep)-1])){
             $assignment_type .= 'Reverted';
