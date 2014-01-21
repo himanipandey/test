@@ -411,7 +411,7 @@ function getDateNow(){
 		{if $projectDetails[0].PROJECT_PHASE=="DataCollection"}
 		<span> Data Collection</span>
 		{/if}
-		
+
 		{if $projectDetails[0].PROJECT_PHASE=="DcCallCenter"}
 		<span> Data Collection Call Center</span>
 		{/if}
@@ -433,6 +433,8 @@ function getDateNow(){
 	Label: {$projectLabel}
 	<br>
 {/if}
+<span>	Current Assigned Department : </span>
+<span> {$currentCycle}</span>      
 {if $projectDetails[0].PROJECT_STAGE != 'NoStage'}
 
 	{$projectStatus = $projectDetails[0]['project_status']}
@@ -442,6 +444,7 @@ function getDateNow(){
 	{$stageProject = $projectDetails[0].PROJECT_STAGE}
 	
 	{if count($accessModule)>0}
+             <br> 
             <span>
                 Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
                 <input type = "radio" name = "validationChk" value = "N">No<br>
@@ -988,6 +991,20 @@ function getDateNow(){
 								{$projectDetails[0].STATUS}
 							</td>
 						</tr>
+						{if $projectDetails[0].STATUS == 'Inactive' && $project_alias_detail != 0}
+						<tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left">
+								<b>Inactive Reason:</b>
+							</td>
+							<td>
+								{if $project_alias_detail->duplicate_project_id}
+									Duplicate PID : {$project_alias_detail->duplicate_project_id}
+								{else}
+									{$project_alias_detail->reason_text}
+								{/if}
+							</td>
+						</tr>
+						{/if}
                                                 
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">

@@ -37,7 +37,6 @@ $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (
     array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active' and listings.status = 'Active'"), "select" => 
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
-
 foreach($optionsDetails as $key => $value) {
 	
 	$listing_price = ListingPrices::find('all',array('conditions'=>
@@ -86,7 +85,7 @@ foreach ($PreviousMonthsData as $k => $v) {
     $cnt++;
 }
 //echo "<pre>";
-//print_r($PreviousMonthsAvailability);
+//print_r($uptionDetailWithPrice);
 $smarty->assign("arrPrevMonthDate",$arrPrevMonthDate);
 $smarty->assign("uptionDetailWithPrice",$uptionDetailWithPrice);
 
@@ -218,6 +217,8 @@ foreach($supplyAll as $k=>$v) {
         }
     }
 }
+//echo "<pre>";
+//print_r($supplyAllArray);
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
@@ -314,7 +315,10 @@ $bankList = ProjectBanks::find('all',array('joins' => $joinbank,'conditions'=>
                     'project_banks.*,bl.bank_name'));
 $smarty->assign("bankList", $bankList);
 
-
+if($projectDetails[0]['STATUS'] == 'Inactive'){
+	$project_alias_detail = project_aliases_detail($projectId);
+	$smarty->assign("project_alias_detail", $project_alias_detail);
+}
 
 if ($projectDetails[0]['PROJECT_STAGE'] == 'NewProject') {
     $phse = 'newP';
@@ -480,37 +484,77 @@ if ($_POST['forwardFlag'] == 'no') {
     $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
     $resStg = mysql_query($qryStg) or die(mysql_error());
     $stageId = mysql_fetch_assoc($resStg);
-    $history = ProjectStageHistory::find("all", array("conditions" => "project_id = {$projectId} and project_phase_id in
-    (".phaseId_1.",".phaseId_3.",".phaseId_8.") and project_stage_id = {$stageId['id']}", "limit" => 1, "order" => "date_time desc"));
-//  If old history is found
-    if(count($history) > 0){
-        $history = $history[0];
-        $lastAssignemnt = ProjectAssignment::find("all", array("conditions" => array("movement_history_id" => $history->history_id),
-            "limit" => 1, "order" => "UPDATION_TIME desc"));
+    
+    if(($_REQUEST['returnStage'] == 'NewProject' || $_REQUEST['returnStage'] == 'UpdationCycle')
+            && ($_REQUEST['currentPhase'] == 'Audit1' OR $_REQUEST['currentPhase'] == 'Audit2')){
+       /* $qry = "select pa.* from resi_project rp join project_assignment pa
+                on rp.updation_cycle_id = pa.updation_cycle_id
+                join project_stage_history psh on pa.movement_history_id = psh.history_id
+                where rp.project_id = $projectId and psh.project_phase_id in
+        (".phaseId_1.",".phaseId_3.",".phaseId_8.") and psh.project_stage_id = ".$stageId['id']." order by pa.UPDATION_TIME desc limit 1";*/
+       $limitCondition = '';
+        if($_REQUEST['currentPhase'] == 'Audit1')
+           $limitCondition = "0,1";
+       else {
+           $limitCondition = "1,1"; 
+       }
+       $qrymovmentHistory = "select history_id from project_stage_history where history_id not in(
+           select movement_history_id from resi_project 
+           where project_id = $projectId and version = 'Cms') order by history_id desc limit $limitCondition";
+       $resmovmentHistory = mysql_query($qrymovmentHistory) or die(mysql_error());
+       $movmentHistoryData = mysql_fetch_assoc($resmovmentHistory);
+       
+      $qry = "select pa.* from resi_project rp join project_assignment pa
+                on (rp.updation_cycle_id is null
+                    or rp.updation_cycle_id = pa.updation_cycle_id)
+                where rp.project_id = $projectId and rp.version = 'Cms'
+                    and pa.movement_history_id = ".$movmentHistoryData['history_id']."
+            order by pa.UPDATION_TIME desc limit 1";//die;
+        $res = mysql_query($qry) or die(mysql_error());
+        $OldHistory = mysql_fetch_assoc($res);
+    //  Assigning back to same user if assignment is found
+        if(mysql_num_rows($res) > 0){
+            $lastAssignemnt = $OldHistory['ASSIGNED_TO'];
+            $newAssignment = new ProjectAssignment();
+            $project = ResiProject::virtual_find($projectId);
+            $newAssignment->movement_history_id = $OldHistory['MOVEMENT_HISTORY_ID'];
+            $newAssignment->assigned_to = $OldHistory['ASSIGNED_TO'];
+            $newAssignment->assigned_by = $OldHistory['ASSIGNED_BY'];
+            $newAssignment->status = "notAttempted";
+            $newAssignment->creation_time = Date('Y-m-d H:i:s');
+            $newAssignment->updation_time = Date('Y-m-d H:i:s');
+            $newAssignment->save();
+            updateProjectPhase($projectId, $phaseId['id'], $stageId['id'], TRUE);
+            
+            $qryUpdatestageHistory = "select history_id from project_stage_history 
+                where project_id = $projectId order by history_id desc limit 1";
+            $resUpdateHistory = mysql_query($qryUpdatestageHistory) or die(mysql_error());
+            $dataUpdate = mysql_fetch_assoc($resUpdateHistory);
+            $qryUpdateAssignment = "select id from project_assignment 
+                 order by id desc limit 1";
+            $resUpdateAssignment = mysql_query($qryUpdateAssignment) or die(mysql_error());
+            $dataAssign = mysql_fetch_assoc($resUpdateAssignment);
+            if($projectDetail['UPDATION_CYCLE_ID'] == null)
+                $projectDetail['UPDATION_CYCLE_ID'] = 0;
+            $qryUp = "update project_assignment set movement_history_id = ".$dataUpdate['history_id'].",
+                updation_cycle_id = ".$projectDetail['UPDATION_CYCLE_ID']."
+                where id = ".$dataAssign['id'];
+            $resUp = mysql_query($qryUp) or   die(mysql_error());
+            
+        }else{
+            updateProjectPhase($projectId, $phaseId['id'], $stageId['id'], TRUE);
+        }
+        header("Location:$returnURLPID");
     }
-//  if old history is not found
     else{
-        $lastAssignemnt = array();
-    }
-
-
-    updateProjectPhase($projectId, $phaseId['id'], $stageId['id'], TRUE);
-
-//  Assigning back to same user if assignment is found
-    if(count($lastAssignemnt) > 0){
-        $lastAssignemnt = $lastAssignemnt[0];
-        $newAssignment = new ProjectAssignment();
-        $project = ResiProject::virtual_find($projectId);
-        $newAssignment->movement_history_id = $project->movement_history_id;
-        $newAssignment->assigned_to = $lastAssignemnt->assigned_to;
-        $newAssignment->assigned_by = $lastAssignemnt->assigned_by;
-        $newAssignment->status = "notAttempted";
-        $newAssignment->creation_time = Date('Y-m-d H:i:s');
-        $newAssignment->updation_time = Date('Y-m-d H:i:s');
-        $newAssignment->save();
-    }
+            updateProjectPhase($projectId, $phaseId['id'], $stageId['id'], TRUE);
+        }
     header("Location:$returnURLPID");
 }
+/*****code for display updation cycle*********/
+    $currentCycle = currentCycleOfProject($projectId);
+    $smarty->assign('currentCycle',$currentCycle);
+/************************************/
 include('builder_contact_info_process.php');
 
 /* * code for secondary price dispaly*********** */
