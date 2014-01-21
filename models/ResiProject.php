@@ -177,4 +177,18 @@ class ResiProject extends Objects
         $sql = "select a.* from resi_project a left join resi_project b on a.PROJECT_ID = b.PROJECT_ID and b.version = 'Website' where a.version = 'Cms' and a.created_at > DATE_SUB(NOW(), INTERVAL $time_in_seconds SECOND) and b.PROJECT_ID is null";
         return self::find_by_sql($sql);
     }
+    
+    public static function get_project_updation_date($project_id){
+        $sql = "select max(b.updated_at), max(c.updated_at), max(d.updated_at), max(e.updated_at), max(f.updated_at), max(g.updated_at), max(h.updated_at), max(i.updated_at) from resi_project a left join resi_project_phase b on a.PROJECT_ID = b.PROJECT_ID and b.version = 'cms' left join resi_project_options c on a.PROJECT_ID = c.PROJECT_ID left join listings d on c.OPTIONS_ID = d.option_id left join project_supplies e on d.id = e.listing_id and e.version = 'Cms' left join project_availabilities f on e.id = f.project_supply_id left join listing_prices g on d.id = g.listing_id and g.version = 'Cms' left join table_attributes h on a.PROJECT_ID = h.table_id and h.table_name = 'resi_project' and h.attribute_name != 'D_PROJECT_UPDATION_DATE' left join project_offers i on a.PROJECT_ID = i.project_id where a.PROJECT_ID = $project_id and a.version = 'Cms'";
+        $result = self::find_by_sql($sql);
+        $result = $result[0];
+        return substr(max(array_values($result->to_array())), 0, 10);
+    }
+    
+    public static function set_table_attribute($project_id, $attribute_name, $attribute_value, $updated_by){
+        $project = self::virtual_find($project_id);
+        $project->$attribute_name = $attribute_value;
+        $project->set_attr_updated_by($updated_by);
+        $project->save();
+    }
 }
