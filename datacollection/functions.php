@@ -396,7 +396,7 @@ function arrSurveyTeamLeadCities($teamLeadId){
 
 function surveyexecutiveList(){
     $arrAllSurveyLeadCityList = arrSurveyTeamLeadCities($_SESSION['adminId']);
-        $sql = "select pa.ADMINID, pa.FNAME, max(t.TOTAL) WORKLOAD 
+       $sql = "select pa.ADMINID, pa.FNAME, max(t.TOTAL) WORKLOAD 
             from 
             (select pa.ADMINID, 0 TOTAL from proptiger_admin pa 
             inner join proptiger_admin_city pac on pa.adminid = pac.admin_id
@@ -405,10 +405,10 @@ function surveyexecutiveList(){
             union select pa.ASSIGNED_TO, 
                count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
                inner join resi_project rp
-               on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and pa.updation_cycle_id = rp.updation_cycle_id)
+               on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and (pa.updation_cycle_id = rp.updation_cycle_id or rp.updation_cycle_id is null))
                inner join locality l on rp.locality_id = l.locality_id
                inner join suburb s on l.suburb_id = s.suburb_id
-               inner join proptiger_admin_city pac on s.city_id = pac.city_id
+               inner join proptiger_admin_city pac on (s.city_id = pac.city_id and pa.assigned_to = pac.admin_id)
                inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
                

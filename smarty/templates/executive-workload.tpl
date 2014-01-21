@@ -74,19 +74,22 @@ function selectAllCheckBoxes(inputName, checked){
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-                                                        {foreach from = $executiveWorkLoad key=key item = item}
-                                                            {if in_array($item['ADMINID'], $arrSurveyTeamList) && $callingFieldFlag == 'survey'}
-                                                                <tr>
-                                                                    <td><a href="/project-status.php?executive={$item['ADMINID']}">{$item['USERNAME']}</td>
-                                                                    <td>{$item['WORKLOAD']}</td>
-                                                                </tr>
-                                                            {else if $callingFieldFlag == 'callcenter'}
-                                                                <tr>
-                                                                    <td><a href="/project-status.php?executive={$item['ADMINID']}">{$item['USERNAME']}</td>
-                                                                    <td>{$item['WORKLOAD']}</td>
-                                                                </tr>
-                                                            {/if}
+                                                        
+                                                        {if $callingFieldFlag == 'survey'}
+                                                        {foreach from = $arrSurveyTeamList key= key item = item}
+                                                            <tr>
+                                                                <td><a href="/project-status.php?flag={$callingFieldFlag}&executive={$item['ADMINID']}">{$item['FNAME']}</td>
+                                                                <td>{$item['WORKLOAD']}</td>
+                                                            </tr>
                                                         {/foreach}
+                                                        {else}
+                                                          {foreach from = $executiveWorkLoad key = key item = item}
+                                                            <tr>
+                                                                <td><a href="/project-status.php?flag={$callingFieldFlag}&executive={$item['ADMINID']}">{$item['FNAME']}</td>
+                                                                <td>{$item['WORKLOAD']}</td>
+                                                            </tr>
+                                                          {/foreach}  
+                                                        {/if} 
                                                     </tbody>
                                                 </table>
                                             </form>
