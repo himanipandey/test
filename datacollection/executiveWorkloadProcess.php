@@ -18,7 +18,7 @@ $executiveWorkLoad = array();
 $arrSurveyTeamList = array();
 
 if($callingFieldFlag === 'callcenter'){
-    $executiveWorkLoad = getCallCenterExecutiveWorkLoad();
+    $executiveWorkLoad = getCallCenterExecutive();
 }
 else{
     $arrSurveyTeamList = surveyexecutiveList();

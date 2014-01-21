@@ -453,4 +453,44 @@ function getallprojectListForField(){
     $sql = $sql . " group by pa1.adminid order by rp.PROJECT_ID;";
     return  $res = dbQuery($sql); 
 }
+
+function getCallCenterExecutive($executives = array()){
+    $department = "'CALLCENTER', 'DATAENTRY'";
+    if(empty($executives)){
+        $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
+            from 
+            (select pa.ADMINID, 0 TOTAL from proptiger_admin pa 
+              where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, 
+               count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
+               inner join resi_project rp 
+               on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
+               inner join master_project_phases mpp on rp.project_phase_id = mpp.id
+               inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
+               where 
+               ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
+               or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
+               and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
+               inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
+               where pa.DEPARTMENT in ($department)  group by pa.ADMINID order by WORKLOAD;";
+    }
+    else{
+        $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
+            from (select pa.ADMINID, 0 TOTAL from proptiger_admin pa 
+            where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, count(rp.MOVEMENT_HISTORY_ID) TOTAL 
+            from project_assignment pa 
+            inner join resi_project rp 
+            on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id))
+            inner join master_project_phases mpp on rp.project_phase_id = mpp.id
+               inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
+            where ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') or 
+            (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version = 'Cms' 
+            and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
+            inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
+            where pa.DEPARTMENT in ($department) and pa.ADMINID in 
+            (".  implode(',', $executives).") group by pa.ADMINID order by WORKLOAD;";
+    }
+    return $result = dbQuery($sql);
+}
 ?>

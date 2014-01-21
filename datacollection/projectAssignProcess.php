@@ -25,7 +25,7 @@ if(in_array($_POST['submit'], array('fresh assignement', 'field assignement'))){
     else {
         $projectDetails = getMultipleProjectDetails($projectIds);
         if($_POST['submit']==='fresh assignement'){
-            $executiveWorkLoad = getCallCenterExecutiveWorkLoad($executives = array());
+            $executiveWorkLoad = getCallCenterExecutive($executives = array());
         }
         else{
             $executiveWorkLoad = array(array('USERNAME'=>'field', 'WORKLOAD'=>'NA'));

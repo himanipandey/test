@@ -76,7 +76,7 @@ if($callingFieldFlag == 'survey')
     $CityDataArr = arrSurveyTeamLeadCities($_SESSION['adminId']);
 else
     $CityDataArr = City::CityArr();
-$executiveList = getCallCenterExecutiveWorkLoad();
+$executiveList = getCallCenterExecutive();
 
 if(isset($projectList) && $_REQUEST['download'] == 'true'){
     download_xls_file($projectList, $projectLastAuditDate, $callingFieldFlag);
