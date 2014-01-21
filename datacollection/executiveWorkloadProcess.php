@@ -1,12 +1,31 @@
 <?php
 
 $accessDataCollection = '';
-if( $dataCollectionFlowAuth == false )
+if( $surveyAuth == false && $callCenterAuth == false)
    $accessDataCollection = "No Access";
 $smarty->assign("accessDataCollection",$accessDataCollection);
 
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
-$executiveWorkLoad = getCallCenterExecutiveWorkLoad();
+$callingFieldFlag = '';
+$getFlag = $_REQUEST['flag'];
+if($getFlag === 'callcenter')
+    $callingFieldFlag = 'callcenter';
+else
+    $callingFieldFlag = 'survey';
+
+$executiveWorkLoad = array();
+$arrSurveyTeamList = array();
+
+if($callingFieldFlag === 'callcenter'){
+    $executiveWorkLoad = getCallCenterExecutive();
+}
+else{
+    $arrSurveyTeamList = surveyexecutiveList();
+}
+
+$smarty->assign("callingFieldFlag",$callingFieldFlag);
 $smarty->assign("executiveWorkLoad", $executiveWorkLoad);
+
+$smarty->assign("arrSurveyTeamList", $arrSurveyTeamList);
 ?>

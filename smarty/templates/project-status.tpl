@@ -30,7 +30,7 @@
                                     <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                                         <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                                                 <TR>
-                                                    <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Projects in Phase DCCallCenter</TD>
+                                                    <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Projects in {if $callingFieldFlag == 'survey'}Survey{else}CallCenter{/if}</TD>
                                                     <!--<TD align=right colSpan=3><a href="localityadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Locality</b></a></TD>-->
                                                 </TR>
                                             </TBODY>
@@ -56,12 +56,20 @@
                                                         {foreach from = $CityDataArr key=key item = item}
                                                         <option {if $selectedCity == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
                                                         {/foreach}
-                                                        <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
+                                                        {if $callingFieldFlag != 'survey'}
+                                                            <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
+                                                        {/if}
                                                 </select>
-                                                <select name="suburbId" id = "suburbId" class="suburbId" STYLE="width: 150px">
+                                                <select name="suburbId" id = "suburbId" class="suburbId" onchange="updateLocalityDropdown(this.value, 'localityId');" STYLE="width: 150px">
                                                     <option value="">Select Suburb</option>
                                                     {foreach from = $SuburbDataArr key=key item = item}
                                                         <option {if $selectedSuburb == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
+                                                    {/foreach}
+                                                </select>
+                                                <select name="localityId" id = "localityId" class="localityId" STYLE="width: 150px">
+                                                    <option value="">Select Locality</option>
+                                                    {foreach from = $LocalityDataArr key=key item = item}
+                                                        <option {if $selectedLocality == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
                                                     {/foreach}
                                                 </select>
                                                 <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
@@ -72,10 +80,18 @@
                                         <div style="float: left; height: 31px;">
                                             <form method="post" onsubmit="return verifyAdminSelected();">
                                                 <select name="executive" id="executive" STYLE="width: 150px">
+                                                    
                                                         <option value =''>Select Exec</option>
-                                                        {foreach from = $executiveList item = item}
-                                                            <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
+                                                        {if $callingFieldFlag == 'survey'}
+                                                        {foreach from = $arrSurveyTeamList key= key item = item}
+                                                            <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['FNAME']} - {$item['WORKLOAD']}</option>
                                                         {/foreach}
+                                                        {else}
+                                                          {foreach from = $executiveList key = key item = item}
+                                                            <option {if $selectedExecutive == $item['ADMINID']} selected="selected" {/if} value ='{$item['ADMINID']}'>{$item['USERNAME']} - {$item['WORKLOAD']}</option>
+                                                          {/foreach}  
+                                                        {/if}                                                           
+                                                        
                                                 </select>
                                                 <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
                                             </form>
@@ -90,7 +106,7 @@
                                             </form>
                                         </div>
                                         <div style="float: left; height: 31px;margin-left: 18px">
-                                            <a href="?download=true" >
+                                            <a href="?download=true&flag={$callingFieldFlag}" >
                                                 <button>
                                                     Download Excel
                                                 </button>
@@ -101,7 +117,7 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <form method="post" action="project-assign.php" onsubmit="return verifyChecked()">
+                                            <form method="post" action="project-assign.php?flag={$callingFieldFlag}" onsubmit="return verifyChecked()">
                                                 <table class="tablesorter">
                                                     <thead>
                                                         <tr>
@@ -143,8 +159,12 @@
                                                     <tfoot>
                                                         <tr>
                                                             <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
-                                                                <input type="submit" name="submit" value="fresh assignement"></input>&nbsp;&nbsp;
-                                                                <input type="submit" name="submit" value="field assignement"></input>&nbsp;&nbsp;
+                                                                {if $department == 'CALLCENTER' || $department == 'SURVEY'}
+                                                                    <input type="submit" name="submit" value="fresh assignement"fresh assigne></input>&nbsp;&nbsp;
+                                                                   {if $callingFieldFlag != 'survey'}
+                                                                        <input type="submit" name="submit" value="field assignement"></input>&nbsp;&nbsp;
+                                                                   {/if}
+                                                                {/if}
                                                                 <button class="btn first"><i class="icon-step-backward"></i></button>
                                                                 <button class="btn prev"><i class="icon-arrow-left"></i></button>
                                                                 <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
@@ -161,39 +181,85 @@
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-                                                        {foreach from = $projectList key=key item = item}
-                                                        <tr>
-                                                            <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
-                                                            <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
-                                                            <td>{$item['PROJECT_NAME']}</td>
-                                                            <td>{$item['BUILDER_NAME']}</td>
-                                                            <td>{$item['CITY']}</td>
-                                                            <td nowrap>{$item['LOCALITY']}</td>
-                                                            <td>{$item['PROJECT_STATUS']}</td>
-                                                            <td>{$item['BOOKING_STATUS']}</td>
-                                                            <td>{$item['LABEL']}</td>
-                                                            <td>{$item['PROJECT_PHASE']}</td>
-                                                            <td>{$item['PROJECT_STAGE']}</td>
-                                                            <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
-                                                            <td>{$item['LAST_WORKED_AT']}</td>
-                                                            <td>{$item['ASSIGNMENT_TYPE']}</td>
-                                                            <td>{$item['ASSIGNED_TO'][0]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][0]}</td>
-                                                            <td>{$item['STATUS'][0]}</td>
-                                                            <td>{$item['REMARK'][0]}</td>
-                                                            <td>{$item['ASSIGNED_TO'][1]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][1]}</td>
-                                                            <td>{$item['STATUS'][1]}</td>
-                                                            <td>{$item['REMARK'][1]}</td>
-                                                            <td>{$item['ASSIGNED_TO'][2]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][2]}</td>
-                                                            <td>{$item['STATUS'][2]}</td>
-                                                            <td>{$item['REMARK'][2]}</td>
-                                                            <td>{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}</td>
-                                                            <td>{$item['STATUS'][count($item['STATUS']) -1]}</td>
-                                                            <td>{$item['REMARK'][count($item['REMARK']) -1]}</td>
-                                                        </tr>
+                                                    {foreach from = $projectList key=key item = item}
+                                                        {if $callingFieldFlag == 'survey' && $item['LAST_DEPARTMENT'] == 'SURVEY'}
+                                                            <tr>
+                                                                <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
+                                                                <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
+                                                                <td>{$item['PROJECT_NAME']}</td>
+                                                                <td>{$item['BUILDER_NAME']}</td>
+                                                                <td>{$item['CITY']}</td>
+                                                                <td nowrap>{$item['LOCALITY']}</td>
+                                                                <td>{$item['PROJECT_STATUS']}</td>
+                                                                <td>{$item['BOOKING_STATUS']}</td>
+                                                                <td>{$item['LABEL']}</td>
+                                                                <td>{$item['PROJECT_PHASE']}</td>
+                                                                <td>{$item['PROJECT_STAGE']}</td>
+                                                                <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
+                                                                <td>{$item['LAST_WORKED_AT']}</td>
+                                                                <td>
+                                                                    {$assignType1 = $item['ASSIGNMENT_TYPE']|replace:'RevertedFieldField_Assigned-':'RevertedAssigned-'} 
+                                                                    {$assignType = $assignType1|replace:'Field':'Unassigned'}
+                                                                    {$newType = $assignType|replace:'_lead':''}
+                                                                    {$otherType = $newType|replace:'Unassigned_':''}
+                                                                    {$otherType2 = $otherType|replace:'RevertedUnassignedAssigned':'Assigned'}
+                                                                    {$otherType = $otherType2|replace:'RevertedUnassignedUnassigned':'Unassigned'}
+                                                                     
+                                                                     {$otherType}
+                                                                </td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][count($item['STATUS']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][count($item['REMARK']) -1]}{else}&nbsp;{/if}</td>
+                                                            </tr>
+                                                        {elseif $callingFieldFlag == 'callcenter' && !strstr($item['ASSIGNMENT_TYPE'],'Field')}
+                                                           <tr>
+                                                                <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
+                                                                <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
+                                                                <td>{$item['PROJECT_NAME']}</td>
+                                                                <td>{$item['BUILDER_NAME']}</td>
+                                                                <td>{$item['CITY']}</td>
+                                                                <td nowrap>{$item['LOCALITY']}</td>
+                                                                <td>{$item['PROJECT_STATUS']}</td>
+                                                                <td>{$item['BOOKING_STATUS']}</td>
+                                                                <td>{$item['LABEL']}</td>
+                                                                <td>{$item['PROJECT_PHASE']}</td>
+                                                                <td>{$item['PROJECT_STAGE']}</td>
+                                                                <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
+                                                                <td>{$item['LAST_WORKED_AT']}</td>
+                                                                <td>{$item['ASSIGNMENT_TYPE']}</td>
+                                                                <td>{$item['ASSIGNED_TO'][0]}</td>
+                                                                <td>{$item['ASSIGNED_AT'][0]}</td>
+                                                                <td>{$item['STATUS'][0]}</td>
+                                                                <td>{$item['REMARK'][0]}</td>
+                                                                <td>{$item['ASSIGNED_TO'][1]}</td>
+                                                                <td>{$item['ASSIGNED_AT'][1]}</td>
+                                                                <td>{$item['STATUS'][1]}</td>
+                                                                <td>{$item['REMARK'][1]}</td>
+                                                                <td>{$item['ASSIGNED_TO'][2]}</td>
+                                                                <td>{$item['ASSIGNED_AT'][2]}</td>
+                                                                <td>{$item['STATUS'][2]}</td>
+                                                                <td>{$item['REMARK'][2]}</td>
+                                                                <td>{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}</td>
+                                                                <td>{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}</td>
+                                                                <td>{$item['STATUS'][count($item['STATUS']) -1]}</td>
+                                                                <td>{$item['REMARK'][count($item['REMARK']) -1]}</td>
+                                                            </tr>
+                                                        {/if}    
+                                                        
+                                                        
                                                         {/foreach}
                                                     </tbody>
                                                 </table>
@@ -279,6 +345,22 @@ function updateSuburbDropdown(cityId, suburbSelectboxId)
 		success: function(html)
 		{
                     $("."+suburbSelectboxId).html('<option value="">All</option>'+html);
+		}
+	});
+}
+function updateLocalityDropdown(suburbId, localitySelectboxId)
+{
+        var cityId = $("#cityId").val();
+        dataString = 'id='+cityId+"&suburb_id="+suburbId;
+	$.ajax
+	({
+		type: "POST",
+		url: "RefreshSuburb.php",
+		data: dataString,
+		cache: false,
+		success: function(html)
+		{
+                    $("."+localitySelectboxId).html('<option value="">All</option>'+html);
 		}
 	});
 }
