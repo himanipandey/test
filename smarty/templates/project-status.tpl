@@ -106,7 +106,7 @@
                                             </form>
                                         </div>
                                         <div style="float: left; height: 31px;margin-left: 18px">
-                                            <a href="?download=true" >
+                                            <a href="?download=true&flag={$callingFieldFlag}" >
                                                 <button>
                                                     Download Excel
                                                 </button>

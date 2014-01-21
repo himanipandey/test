@@ -79,7 +79,7 @@ else
 $executiveList = getCallCenterExecutiveWorkLoad();
 
 if(isset($projectList) && $_REQUEST['download'] == 'true'){
-    download_xls_file($projectList,$projectLastAuditDate);
+    download_xls_file($projectList, $projectLastAuditDate, $callingFieldFlag);
 }
 $smarty->assign("CityDataArr", $CityDataArr);
 $arrSurveyTeamList = array();
@@ -204,26 +204,120 @@ function extractPIDs($pidString){
     return $result;
 }
 
-function download_xls_file($projectList, $projectLastAuditDate){
+function download_xls_file($projectList, $projectLastAuditDate, $callingFieldFlag){
     $filename = "/tmp/data_collection_".time().".xls";
+    $callCenterArr = array();
+    $fieldArr = array();
+    $cntCall = 0;
+    $cntField = 0;
     foreach ($projectList as $pkey => $project){
-        // For first three assignments
-            $projectList[$pkey]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];
+        $fieldChk = strstr($projectList[$pkey]["ASSIGNMENT_TYPE"],'Field');
+        //code for field data download
+        if($callingFieldFlag === 'survey' && $projectList[$pkey]['LAST_DEPARTMENT'] == 'SURVEY'){
+            $fieldArr[$cntField]['PROJECT_ID'] = $projectList[$pkey]["PROJECT_ID"];
+            $fieldArr[$cntField]['PROJECT_NAME'] = $projectList[$pkey]["PROJECT_NAME"];
+            $fieldArr[$cntField]['BUILDER_NAME'] = $projectList[$pkey]["BUILDER_NAME"];
+            $fieldArr[$cntField]['CITY'] = $projectList[$pkey]["CITY"];
+            $fieldArr[$cntField]['LOCALITY'] = $projectList[$pkey]["LOCALITY"];
+            $fieldArr[$cntField]['PROJECT_STATUS'] = $projectList[$pkey]["PROJECT_STATUS"];
+            if($projectList[$pkey]["BOOKING_STATUS"] != '')
+                $fieldArr[$cntField]['BOOKING_STATUS'] = $projectList[$pkey]["BOOKING_STATUS"];
+            else
+                $fieldArr[$cntField]['BOOKING_STATUS'] = "NA";
+            $fieldArr[$cntField]['LABEL'] = $projectList[$pkey]["LABEL"];
+            $fieldArr[$cntField]['PROJECT_PHASE'] = $projectList[$pkey]["PROJECT_PHASE"];
+            if($projectList[$pkey]["PROJECT_STAGE"] != '')
+                $fieldArr[$cntField]['PROJECT_STAGE'] = $projectList[$pkey]["PROJECT_STAGE"];
+            else
+                $fieldArr[$cntField]['PROJECT_STAGE'] = '';
+            if($projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]] != '')
+                $fieldArr[$cntField]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];
+            else
+                $fieldArr[$cntField]["LAST_AUDIT_DATE"] = "NA";
+            $fieldArr[$cntField]['LAST_WORKED_AT'] = $projectList[$pkey]["LAST_WORKED_AT"];
+            $assignType1 = str_replace('RevertedFieldField_Assigned-','RevertedAssigned-',$projectList[$pkey]['ASSIGNMENT_TYPE']); 
+            $assignType = str_replace('Field','Unassigned',$assignType1);
+            $newType = str_replace('_lead','',$assignType);
+            $otherType = str_replace('Unassigned_','',$newType);
+            $otherType2 = str_replace('RevertedUnassignedAssigned','Assigned',$otherType);
+            $otherType = str_replace('RevertedUnassignedUnassigned','Unassigned',$otherType2);
+
+            $fieldArr[$cntField]['ASSIGNMENT_TYPE'] = $otherType;
+             // For first three assignments
             foreach(array(1,2,3) as $a){
-                $projectList[$pkey]["ASSIGNED_TO_{$a}"] = $projectList[$pkey]["ASSIGNED_TO"][$a-1];
-                $projectList[$pkey]["ASSIGNED_AT_{$a}"] = $projectList[$pkey]["ASSIGNED_AT"][$a-1];
-                $projectList[$pkey]["STATUS_{$a}"] = $projectList[$pkey]["STATUS"][$a-1];
-                $projectList[$pkey]["REMARK_{$a}"] = $projectList[$pkey]["REMARK"][$a-1];
+                if($projectList[$pkey]["leadAssignedType"] == 0){
+                    $fieldArr[$cntField]["ASSIGNED_TO_{$a}"] = $projectList[$pkey]["ASSIGNED_TO"][$a-1];
+                    $fieldArr[$cntField]["ASSIGNED_AT_{$a}"] = $projectList[$pkey]["ASSIGNED_AT"][$a-1];
+                    $fieldArr[$cntField]["STATUS_{$a}"] = $projectList[$pkey]["STATUS"][$a-1];
+                    $fieldArr[$cntField]["REMARK_{$a}"] = $projectList[$pkey]["REMARK"][$a-1];
+                }else {
+                    $fieldArr[$cntField]["ASSIGNED_TO_{$a}"] = '';
+                    $fieldArr[$cntField]["ASSIGNED_AT_{$a}"] = '';
+                    $fieldArr[$cntField]["STATUS_{$a}"] = '';
+                    $fieldArr[$cntField]["REMARK_{$a}"] = '';
+                }
             }
-            unset($projectList[$pkey]["ASSIGNED_TO"]);
-            unset($projectList[$pkey]["ASSIGNED_AT"]);
-            unset($projectList[$pkey]["STATUS"]);
-            unset($projectList[$pkey]["REMARK"]);
-            unset($projectList[$pkey]["ASSIGNED_TO_DEPART"]);
-            unset($projectList[$pkey]["ROLE"]);
-            unset($projectList[$pkey]["leadAssignedType"]);
+            unset($fieldArr[$cntField]["ASSIGNED_TO"]);
+            unset($fieldArr[$cntField]["ASSIGNED_AT"]);
+            unset($fieldArr[$cntField]["STATUS"]);
+            unset($fieldArr[$cntField]["REMARK"]);
+            unset($fieldArr[$cntField]["ASSIGNED_TO_DEPART"]);
+            unset($fieldArr[$cntField]["ROLE"]);
+            unset($fieldArr[$cntField]["leadAssignedType"]);
+            $cntField++;
+        }
+        elseif($callingFieldFlag === 'callcenter' && $fieldChk == false){
+            $callCenterArr[$cntCall]['PROJECT_ID'] = $projectList[$pkey]["PROJECT_ID"];
+            $callCenterArr[$cntCall]['PROJECT_NAME'] = $projectList[$pkey]["PROJECT_NAME"];
+            $callCenterArr[$cntCall]['BUILDER_NAME'] = $projectList[$pkey]["BUILDER_NAME"];
+            $callCenterArr[$cntCall]['CITY'] = $projectList[$pkey]["CITY"];
+            $callCenterArr[$cntCall]['LOCALITY'] = $projectList[$pkey]["LOCALITY"];
+            $callCenterArr[$cntCall]['PROJECT_STATUS'] = $projectList[$pkey]["PROJECT_STATUS"];
+            if($projectList[$pkey]["BOOKING_STATUS"] != '')
+                $callCenterArr[$cntField]['BOOKING_STATUS'] = $projectList[$pkey]["BOOKING_STATUS"];
+            else
+                $callCenterArr[$cntField]['BOOKING_STATUS'] = "NA";
+            $callCenterArr[$cntCall]['BOOKING_STATUS'] = $projectList[$pkey]["BOOKING_STATUS"];
+            $callCenterArr[$cntCall]['LABEL'] = $projectList[$pkey]["LABEL"];
+            $callCenterArr[$cntCall]['PROJECT_PHASE'] = $projectList[$pkey]["PROJECT_PHASE"];
+            if($projectList[$pkey]["PROJECT_STAGE"] != '')
+                $callCenterArr[$cntCall]['PROJECT_STAGE'] = $projectList[$pkey]["PROJECT_STAGE"];
+            else
+                $callCenterArr[$cntCall]['PROJECT_STAGE'] = '';
+            if($projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]] != '')
+                $callCenterArr[$cntCall]["LAST_AUDIT_DATE"] = $projectLastAuditDate[$projectList[$pkey]["PROJECT_ID"]];
+            else
+                $callCenterArr[$cntCall]["LAST_AUDIT_DATE"] = "NA";
+            $callCenterArr[$cntCall]['LAST_WORKED_AT'] = $projectList[$pkey]["LAST_WORKED_AT"];
+            $callCenterArr[$cntCall]['ASSIGNMENT_TYPE'] = $projectList[$pkey]["ASSIGNMENT_TYPE"];
+             // For first three assignments
+            foreach(array(1,2,3) as $a){
+                $callCenterArr[$cntCall]["ASSIGNED_TO_{$a}"] = $projectList[$pkey]["ASSIGNED_TO"][$a-1];
+                $callCenterArr[$cntCall]["ASSIGNED_AT_{$a}"] = $projectList[$pkey]["ASSIGNED_AT"][$a-1];
+                $callCenterArr[$cntCall]["STATUS_{$a}"] = $projectList[$pkey]["STATUS"][$a-1];
+                $callCenterArr[$cntCall]["REMARK_{$a}"] = $projectList[$pkey]["REMARK"][$a-1];
+            }
+            unset($callCenterArr[$cntCall]["ASSIGNED_TO"]);
+            unset($callCenterArr[$cntCall]["ASSIGNED_AT"]);
+            unset($callCenterArr[$cntCall]["STATUS"]);
+            unset($callCenterArr[$cntCall]["REMARK"]);
+            unset($callCenterArr[$cntCall]["ASSIGNED_TO_DEPART"]);
+            unset($callCenterArr[$cntCall]["ROLE"]);
+            unset($callCenterArr[$cntCall]["leadAssignedType"]);
+            $cntCall++;
+        }
     };
-    excel_file_download($projectList, $filename);
+    if($callingFieldFlag === 'callcenter'){
+        echo "<pre>";
+        print_r($callCenterArr);//die;
+        excel_file_download($callCenterArr, $filename);
+    }
+    else{
+        echo "<pre>";
+        print_r($fieldArr);///die;
+        excel_file_download($fieldArr, $filename);
+        
+        }
 }
 
 ?>
