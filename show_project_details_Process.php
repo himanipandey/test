@@ -506,7 +506,7 @@ if ($_POST['forwardFlag'] == 'no') {
        
       $qry = "select pa.* from resi_project rp join project_assignment pa
                 on (rp.updation_cycle_id is null
-                    or rp.updation_cycle_id = pa.updation_cycle_id)
+                    or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null)
                 where rp.project_id = $projectId and rp.version = 'Cms'
                     and pa.movement_history_id = ".$movmentHistoryData['history_id']."
             order by pa.UPDATION_TIME desc limit 1";//die;

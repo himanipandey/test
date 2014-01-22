@@ -62,7 +62,9 @@ $project_ids = array();
 foreach($projectList as $p){
     array_push($project_ids, $p['PROJECT_ID']);
 }
-$projectLastAuditDate = ProjectStageHistory::get_last_audit_date($project_ids);
+//$projectLastAuditDate = ProjectStageHistory::get_last_audit_date($project_ids);
+$projectLastAuditDate = array();
+
 if(isset($_SESSION['project-status']['assignmentError'])){
     if(empty($_SESSION['project-status']['assignmentError'])){
         $msg['type'] = 'success';
@@ -120,7 +122,7 @@ function prepareDisplayData($data){
                     rp.PROJECT_ID from resi_project rp inner join project_stage_history psh 
                     on rp.project_id = psh.project_id inner join project_assignment pa on 
                     (psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
-                    or rp.updation_cycle_id = pa.updation_cycle_id)) inner join proptiger_admin pa1 on 
+                    or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null)) inner join proptiger_admin pa1 on 
                     pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and 
                     rp.project_id in (".$pids.") and rp.version = 'Cms' group by rp.PROJECT_ID;";
 		$sql_depts = dbQuery($sql);
