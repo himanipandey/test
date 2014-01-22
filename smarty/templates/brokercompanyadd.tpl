@@ -425,18 +425,21 @@
             }
             else if(jQuery('#phone1').val() && isNaN(jQuery('#phone1').val()))
             {
+                jQuery('#phone1').val('');
                 jQuery('#phone1').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#phone1').val() && !isNaN(jQuery('#phone1').val()) && !(jQuery('#phone1').val().match(/^[0-9]+$/)))
             {
+                jQuery('#phone1').val('');
                 jQuery('#phone1').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#phone1').val() && (jQuery('#phone1').val().length > 12))
             {
+                jQuery('#phone1').val('');
                 jQuery('#phone1').focus();
                 alert("Phone Number should be equal to 12 digits");
                 return false;
@@ -452,12 +455,14 @@
             }
             else if(jQuery('#phone2').val() && !isNaN(jQuery('#phone2').val()) && !(jQuery('#phone2').val().match(/^[0-9]+$/)))
             {
+                jQuery('#phone2').val('');
                 jQuery('#phone2').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#phone2').val() && (jQuery('#phone2').val().length > 12))
             {
+                jQuery('#phone2').val('');
                 jQuery('#phone2').focus();
                 alert("Phone Number should be equal to 12 digits");
                 return false;
