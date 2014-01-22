@@ -133,7 +133,7 @@ function currentCycleOfProject($projectId) {
     $currentCycle = '';
     $qry = "select a.department from resi_project rp join project_assignment pa
             on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
-            or rp.updation_cycle_id = pa.updation_cycle_id))
+            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
             left join proptiger_admin a
             on pa.assigned_to = a.adminid 
             inner join master_project_stages pstg on rp.PROJECT_STAGE_ID = pstg.id

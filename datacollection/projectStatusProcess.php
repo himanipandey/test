@@ -36,6 +36,7 @@ elseif(isset($_POST['projectIds']) && !empty($_POST['projectIds'])){
 }
 if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
     if(isset($_SESSION['project-status']['locality']) && !empty($_SESSION['project-status']['locality'])){
+        
         $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $getFlag, $_SESSION['project-status']['suburb'], $_SESSION['project-status']['locality']);
     }else {
     $projectsfromDB = getProjectListForManagers($_SESSION['project-status']['city'], $getFlag, 
@@ -56,11 +57,14 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
     $projectsfromDB = getAssignedProjectsFromPIDs($projectIds,$callingFieldFlag);
     $projectList = prepareDisplayData($projectsfromDB);
 }
+
 $project_ids = array();
 foreach($projectList as $p){
     array_push($project_ids, $p['PROJECT_ID']);
 }
-$projectLastAuditDate = ProjectStageHistory::get_last_audit_date($project_ids);
+//$projectLastAuditDate = ProjectStageHistory::get_last_audit_date($project_ids);
+$projectLastAuditDate = array();
+
 if(isset($_SESSION['project-status']['assignmentError'])){
     if(empty($_SESSION['project-status']['assignmentError'])){
         $msg['type'] = 'success';
@@ -86,7 +90,6 @@ $arrSurveyTeamList = array();
 if($callingFieldFlag == 'survey'){//filter executive list for survey
     $arrSurveyTeamList = surveyexecutiveList();
 }
-
 $smarty->assign("arrSurveyTeamList", $arrSurveyTeamList);
 $smarty->assign("executiveList", $executiveList);
 $smarty->assign("projectList", $projectList);
@@ -103,6 +106,7 @@ $smarty->assign("projectLastAuditDate", $projectLastAuditDate);
 
 
 function prepareDisplayData($data){ 
+   
     $result = array();
      
      $pids = "";
@@ -118,7 +122,7 @@ function prepareDisplayData($data){
                     rp.PROJECT_ID from resi_project rp inner join project_stage_history psh 
                     on rp.project_id = psh.project_id inner join project_assignment pa on 
                     (psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
-                    or rp.updation_cycle_id = pa.updation_cycle_id)) inner join proptiger_admin pa1 on 
+                    or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null)) inner join proptiger_admin pa1 on 
                     pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and 
                     rp.project_id in (".$pids.") and rp.version = 'Cms' group by rp.PROJECT_ID;";
 		$sql_depts = dbQuery($sql);
@@ -139,7 +143,7 @@ function prepareDisplayData($data){
             'LAST_WORKED_AT'=>$value['LAST_WORKED_AT'], 'PROJECT_STATUS'=>$value['PROJECT_STATUS'],'BOOKING_STATUS'=>$value['BOOKING_STATUS'], 
             'LABEL'=>$value['LABEL'], 'ASSIGNED_TO_DEPART'=>$value['ASSIGNED_TO_DEPART'],'ROLE'=>$value['ROLE']);
         $assigned_to = explode('|', $value['ASSIGNED_TO']);
-        $assigned_to_dep = explode('|', $value['DEPARTMENT']);
+        $assigned_to_dep = explode('|', $value['ASSIGNED_TO_DEPART']);
         $assignment_type = '';
         if(($value['PREV_PROJECT_PHASE'] == 'Audit1' || $value['PREV_PROJECT_PHASE'] == 'Audit2') && strstr($prevs_depts[$value['PROJECT_ID']],$assigned_to_dep[count($assigned_to_dep)-1])){
             $assignment_type .= 'Reverted';
