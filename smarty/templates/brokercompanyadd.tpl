@@ -473,12 +473,14 @@
             }
             else if(jQuery('#fax').val() && !isNaN(jQuery('#fax').val()) && !(jQuery('#fax').val().match(/^[0-9]+$/)))
             {
+                jQuery('#fax').val('');
                 jQuery('#fax').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#fax').val() && jQuery('#fax').val().length > 12)
             {
+                jQuery('#fax').val('');
                 jQuery('#fax').focus();
                 alert("Fax Number should be less than or eaual to 12 digits");
                 return false;
@@ -502,12 +504,14 @@
             }
             else if(jQuery('#pincode').val() && !isNaN(jQuery('#pincode').val()) && !(jQuery('#pincode').val().match(/^[0-9]+$/)))
             {
+                jQuery('#pincode').val('');
                 jQuery('#pincode').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#pincode').val() && jQuery('#pincode').val().length > 12)
             {
+                jQuery('#pincode').val('');
                 jQuery('#pincode').focus();
                 alert("Pincode should be less than 12 digits");
                 return false;
