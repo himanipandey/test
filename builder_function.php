@@ -2196,5 +2196,35 @@ function project_aliases_detail($projectID){
 		$project_alias = mysql_fetch_object($project_alias);
 	return ($project_alias)?$project_alias:0;
 }
+
+function getLocalityAveragePrice($locId)
+{
+	global $analytics_credential;
+	$usrn="cms";
+	$psswd="Cms123!";
+	$tmstmp=time();
+	
+	$locId = $locId - 50000;
+
+	$prev_month = date("Y-m", strtotime("-1 months"));
+
+	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
+	$url = $_SERVER['HTTP_HOST']."/app/v1/locality-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp."&locality=".$locId."&duration=3&unittype[]=apartment&unittype[]=plot&unittype[]=villa&duration=1";
+	
+	$obj=curlFetch($url);
+	$json=json_decode($obj,true);
+	
+	$average_price = 0;
+	$total_price = 0;
+	$cnt = 0;
+	foreach($json['price_trend'] as $unit_type => $price_array){
+			$total_price += $price_array[$prev_month]['mean'];
+			$cnt++;
+	}
+	
+	$average_price = round($total_price / $cnt);
+	
+	return $average_price ;
+}
 ?>
 

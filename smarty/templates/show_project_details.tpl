@@ -1787,6 +1787,7 @@ function getDateNow(){
 						  		<td align="left"  nowrap colspan ="4"><b>Floor Plans</b><button class="clickbutton" onclick="$(this).trigger('event11');">Edit</button></td>
 							</tr>
 						{/if}
+						
 						{if count($lastUpdatedDetail['resi_floor_plans'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
@@ -1824,9 +1825,18 @@ function getDateNow(){
 				{/if}
 				</td>
 		   </tr>
-		   
-		   
 		   <tr>
+				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+						<tr>
+							<td align="left"  nowrap colspan ="4">
+								<b> Locality Average Price : </b> {$localityAvgPrice}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		    <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 				{if is_array($ImageDataListingArrFloor)}
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
