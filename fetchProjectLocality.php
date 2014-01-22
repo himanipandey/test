@@ -14,7 +14,7 @@ include("includes/configs/configs.php");
 //print_r($_POST);
 //die;
 //
-
+$locality_id = '';
 if(!empty($_POST['locality']))
 {
     $mode = !empty($_POST['mode'])?$_POST['mode']:'';
@@ -28,6 +28,7 @@ if(!empty($_POST['locality']))
     {
         foreach($alloc as $key => $val)
         {
+            $locality_id = $val;
             $temp = explode("-" , $val);
             if($temp[0] == 'all')
             {
@@ -90,6 +91,18 @@ if(!empty($_POST['locality']))
             
         }
     }
+    //echo count($data)."<br>";
+//    
+//    $chkSql = @mysql_query("SELECT rpm.project_id 
+//                                        FROM rule_project_mappings AS rpm  
+//                                        LEFT JOIN resi_project AS rp ON rpm.project_id = rp.project_id
+//                                        LEFT JOIN locality ON rp.locality_id = locality.locality_id
+//                                        WHERE locality.locality_id = '".$locality_id."'");
+//    $c1 = @mysql_num_rows($chkSql);
+//    $sql = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project WHERE locality_id = ".$locality_id."");
+//    $c2 = @mysql_num_rows($sql); 
+//    echo "C1 : " . $c1 . " c2 ".$c2;
+//    die;
     echo json_encode($data);
     exit();
 }

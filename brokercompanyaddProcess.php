@@ -855,9 +855,11 @@
                 
                 /** -- CC Entry Start -- */
                 /** -- Insert values in broker_contacts for Customer Care -- */
+                
                 $brkrcmpnyContct = BrokerCompanyContact::find('all' , array('conditions' => " name = 'Customer Care' AND broker_id = ".$brokerIdFormapping));
                 $cc_id = '';
                 $contact_number_id = '';
+                
                 if(!empty($brkrcmpnyContct))
                 {
                     foreach($brkrcmpnyContct as $key => $val)
@@ -870,9 +872,9 @@
                     }
                 }
                 
-                
-                
-                
+                //echo $cc_id;
+//                
+//                die;
                 if(!empty($cc_id))
                 {
                     $brkrcmpnyContct1 = BrokerCompanyContact::find_by_id($cc_id);
@@ -880,30 +882,47 @@
                     $brkrcmpnyContct1->updated_by = $_SESSION['adminId'];
                     $brkrcmpnyContct1->save();
                     $brkrcmpnyContctNum = BrokerCompanyContact::ContactBrkIDFrmCnt($cc_id);
-                    
+                    //print'<pre>';
+//                    print_r($brkrcmpnyContctNum);
+//                    print_r($cc_mobile);
+//                    echo "<br>";
+//                    print_r($cc_phone);
+//                    echo "<br>";
+//                    print_r($cc_fax);
+//                    echo "<br>";
+                    //die;
                     if(!empty($brkrcmpnyContctNum))
                         foreach($brkrcmpnyContctNum as $k => $v)
                         {
                             $contctNumber = ContactNumber::find_by_id($v['id']);
-                            if($v['type'] == 'mobile')
+                            
+                            if(!empty($contctNumber))
                             {
-                                $contctNumber->contact_no = $cc_mobile->$val ;    
+                                $query = "UPDATE contact_numbers SET ";
+                                if($v['type'] == 'cc_mobile')
+                                {
+                                    //$contctNumber->contact_no = $cc_mobile ;  
+                                    $query .= " contact_no = '".$cc_mobile."' WHERE id = '".$v['id']."' AND type = 'cc_mobile'";  
+                                    @mysql_query($query);
+                                }
+                                else if($v['type'] == 'cc_phone')
+                                {
+                                    //$contctNumber->contact_no = $cc_phone ;
+                                    $query .= " contact_no = '".$cc_phone."' WHERE id = '".$v['id']."' AND type = 'cc_phone'";
+                                    @mysql_query($query);
+                                }
+                                else if($v['type'] == 'cc_fax')
+                                {
+                                    //$contctNumber->contact_no = $cc_fax ;
+                                    $query .= " contact_no = '".$cc_fax."' WHERE id = '".$v['id']."' AND type = 'cc_fax'";    
+                                    @mysql_query($query);
+                                }
+                                
                             }
-                            else if($v['type'] == 'phone')
-                            {
-                                $contctNumber->contact_no = $cc_phone->$val ;
-                            }
-                            else if($v['type'] == 'fax')
-                            {
-                                $contctNumber->contact_no = $cc_fax->$val ;    
-                            }
-                            $contctNumber->save();
                         }
                 }
-                    
-                    
-                        
                 
+                //echo "here";die;    
                 if(!empty($remove_citylocids))
                     foreach($remove_citylocids as $key => $val)
                     {
