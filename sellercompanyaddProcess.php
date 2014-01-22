@@ -313,7 +313,7 @@
                 $rateoptions = 'forced';
             }    
             //echo $final_rating." ".$rateoptions." ".$sellerCompanyId;
-//            print'<pre>';
+            //print'<pre>';
 //            print_r($_POST);
 //            die;
             
@@ -450,30 +450,32 @@
                     if(!empty($broker_contact_id))
                     {
                         $contacts = array();
-                        $sql2 = @mysql_query("SELECT * FROM contact_numbers AS cn WHERE cn.table_name = 'broker_contacts' AND cn.table_id = '".$row['brkr_cntct_id']."'");
+                        $sql2 = @mysql_query("SELECT * FROM contact_numbers AS cn WHERE cn.table_name = 'broker_contacts' AND cn.table_id = '".$brkr_cntct_id."'");
                 
                         if(@mysql_num_rows($sql2) > 0)
                         {
+                            //echo $phone1." ".$phone2." ".$mobile."<br>";
+                            //echo mysql_num_rows($sql2)." ".$row['brkr_cntct_id'];die;
                             while($row1 = @mysql_fetch_assoc($sql2))
                             {
-                                /** -- Insert values for contact_numbers table type=>phone1 --   */
+                                /** -- Update values for contact_numbers table type=>phone1 --   */
                                 if($row1['type'] == "phone1")
                                 {
                                     $sql_contact_number = @mysql_query("UPDATE `contact_numbers` SET
                                                             `contact_no` = $phone1,
-                                                            `updated_by` = ".$_SESSION['adminId']." WHERE id=".$row1['id']);
-                                }/** -- Insert values for contact_numbers table type=>phone2 --  */
+                                                            `updated_by` = ".$_SESSION['adminId']." WHERE table_id= '".$brkr_cntct_id."' AND type = 'phone1'") or die(mysql_error());
+                                }/** -- Update values for contact_numbers table type=>phone2 --  */
                                 else if($row1['type'] == "phone2")
                                 {
                                     $sql_contact_number = @mysql_query("UPDATE `contact_numbers` SET
                                                             `contact_no` = $phone2,
-                                                            `updated_by` = ".$_SESSION['adminId']." WHERE id=".$row1['id']);
-                                }/** -- Insert values for contact_numbers table type=>mobile --  */
+                                                            `updated_by` = ".$_SESSION['adminId']." WHERE table_id= '".$brkr_cntct_id."' AND type = 'phone2'") or die(mysql_error());
+                                }/** -- Update values for contact_numbers table type=>mobile --  */
                                 else if($row1['type'] == "mobile")
                                 {
                                     $sql_contact_number = @mysql_query("UPDATE `contact_numbers` SET
                                                             `contact_no` = $mobile,
-                                                            `updated_by` = ".$_SESSION['adminId']." WHERE id=".$row1['id']);
+                                                            `updated_by` = ".$_SESSION['adminId']." WHERE table_id= '".$brkr_cntct_id."' AND type = 'mobile'") or die(mysql_error());
                                     $contact_number_id = $row1['id'];
                                 }
                             }
@@ -482,6 +484,7 @@
                         {
                             
                         }
+                        //die("here");
                     }
             }
             else{

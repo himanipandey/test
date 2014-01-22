@@ -8,7 +8,9 @@
     $accessBroker = '';
     $image_id = '';
     $smarty->assign("accessBroker",$accessBroker);
-    
+    //print'<pre>';
+//    print_r($_POST);
+//    die;
     $brokerCompanyId = '';
     if(!empty($_REQUEST['brokerCompanyId']))
         $brokerCompanyId = $_REQUEST['brokerCompanyId'];
@@ -23,8 +25,7 @@
     }
     if ($_POST['btnSave'] == "Save"){
 
-//        print'<pre>';
-//        print_r($_POST);
+
 //        //print_r(json_decode(base64_decode($_REQUEST['xcp_ids'])));
 //        print_r(json_decode(base64_decode($_REQUEST['xcp_phone1'])));
 //        print_r(json_decode(base64_decode($_REQUEST['xcp_phone2'])));
@@ -78,7 +79,9 @@
         $cc_mobile      =	trim($_POST['cc_mobile']);
         $citypkidArr    =   !empty($_POST['citypkidArr'])?json_decode(base64_decode($_POST['citypkidArr'])):array();
         $remove_citylocids = !empty($_POST['remove_citylocids'])?json_decode(base64_decode($_POST['remove_citylocids'])):array();
-        
+        //print'<pre>';
+//        print_r($remove_citylocids);
+//        die;
         $image_id       =  trim($_POST['imgid']);
         
         if(empty($remove_citylocids))
@@ -570,7 +573,24 @@
             $brokerCommpany->updated_by = $_SESSION['adminId'];
             $brokerCommpany->save();
             
-            
+            //if(!empty($brokerCommpany))
+//            {
+//                if(!empty($active_since))
+//                {
+//                    $active_since = explode("/" , $active_since);
+//                    $active_since = $active_since[2]."-".$active_since[1]."-".$active_since[0];   
+//                }
+//                $sql_broker_company = @mysql_query("UPDATE `brokers` SET 
+//                                            `broker_name` = '".$brokerCName."',
+//                                            `status` = '".$status."',
+//                                            `description` = '".$description."',
+//                                            `pan` = '".$pan."',
+//                                            `primary_email` = '".$email."',
+//                                            `active_since` = '".$active_since."',
+//                                            `updated_at` = '".date('Y-m-d H:i:s')."',
+//                                            `updated_by` = '".$_SESSION['adminId']."'
+//                                    ")or die(mysql_error());       
+//            }
             if($brokerCommpany->id != false) {
                 
                 $brokerIdFormapping = $brokerCommpany->id;

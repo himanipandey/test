@@ -105,6 +105,9 @@
                     
                 }
             });
+            
+            
+            
         });
         
 </script>
@@ -240,7 +243,7 @@
                   <input type="hidden" name="dlocjIdArr" id="dlocjIdArr" value="" />
                   <input type="hidden" name="dprojectjIdArr" id="dprojectjIdArr" value="" />
                   <input type="hidden" name="dagentjIdArr" id="dagentjIdArr" value="" />
-                  
+                  <input type="hidden" name="hiddennameflg" id="hiddennameflg" value="" />
                   <input type="hidden" name="broker_cmpny_id" id="broker_cmpny_id" value="" />
                   <input type="hidden" name="sort" id="sort" value="{$sort}" />
                   <input type="hidden" name="page" id="page" value="{$page}" />
@@ -366,14 +369,23 @@
                 alert("Please select City");
                 return false;
             }
-            else if(!jQuery('#broker_cmpny').val())
+            else if(!jQuery('#broker_cmpny').val() || !jQuery.trim(jQuery('#broker_cmpny').val()))
             {
+                jQuery('#broker_cmpny').val('');
                 jQuery('#broker_cmpny').focus();
                 alert("Please select Company");
                 return false;
             }
-            else if(!jQuery('#rule_name').val())
+            else if(jQuery('#broker_cmpny').val() && jQuery.trim(jQuery('#broker_cmpny').val()) && jQuery('#hiddennameflg').val() == '1')
             {
+                jQuery('#broker_cmpny').val('');
+                jQuery('#broker_cmpny').focus();
+                alert("Please select different Company this doesn't exists");
+                return false;
+            }
+            else if(!jQuery('#rule_name').val() || !jQuery.trim(jQuery('#rule_name').val()))
+            {
+                jQuery('#rule_name').val('');
                 jQuery('#rule_name').focus();
                 alert("Please enter Rule");
                 return false;
@@ -511,6 +523,47 @@
                 });
             
         });
+        
+        jQuery('#broker_cmpny').blur(function(){
+            
+                if(jQuery(this).val() == '' || !jQuery.trim(jQuery('#broker_cmpny').val()))
+                {
+                    return false;
+                }
+                
+                var dataString = 'name='+jQuery(this).val();
+                
+                //alert(dataString);
+    //            return;
+                jQuery.ajax({
+                    'type' : 'POST',
+                    'url' : 'brokercompanychk.php',
+                    'data' : dataString,
+                    'success' : function(data){
+                        //alert(data);
+    //                    return;
+                        var json = JSON.parse(data);
+                        
+                        if(json.response == 'success')
+                        {
+                            jQuery('#broker_cmpny').focus();
+                            jQuery('#broker_cmpny').val('');
+                            alert("Please select different Company Name This doesn't exists");
+                            jQuery('#hiddennameflg').val('1');
+                        }
+                        else
+                            jQuery('#hiddennameflg').val('');
+                        return false;
+                        
+                    },
+                    'error' : function(){
+                        alert("Something went wrong");
+                        return false;
+                    }
+                
+                
+                });
+            });
                
     });
     

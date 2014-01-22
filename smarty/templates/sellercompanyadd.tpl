@@ -298,6 +298,7 @@
 				  <input type="hidden" name="sellerCompanyId" id="sellerCompanyId" value="{$sellerCompanyId}" />
 				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="float:left;" />
 				  &nbsp;&nbsp;<input type="button" name="btnExit" id="btnExit" value="Exit" style="float:right:" />
+                  <input type="hidden" name="hiddennameflg" id="hiddennameflg" value="" />
                   <input type="hidden" name="seller_cmpny_hidden" id="seller_cmpny_hidden" value="{$broker_id}" />
                   <input type="hidden" name="addressid" id="addressid" value="{$addressid}" />
                   <input type="hidden" name="brkr_cntct_id" id="brkr_cntct_id" value="{$brkr_cntct_id}" />
@@ -410,40 +411,94 @@
             
         });
         
+        jQuery('#seller_cmpny').blur(function(){
+            
+            if(jQuery(this).val() == '' || !jQuery.trim(jQuery('#seller_cmpny').val()))
+            {
+                return false;
+            }
+            
+            var dataString = 'name='+jQuery(this).val();
+            
+            //alert(dataString);
+//            return;
+            jQuery.ajax({
+                'type' : 'POST',
+                'url' : 'brokercompanychk.php',
+                'data' : dataString,
+                'success' : function(data){
+                    //alert(data);
+//                    return;
+                    var json = JSON.parse(data);
+                    
+                    if(json.response == 'success')
+                    {
+                        jQuery('#seller_cmpny').focus();
+                        jQuery('#seller_cmpny').val('');
+                        alert("Please select different Company Name This doesn't exists");
+                        jQuery('#hiddennameflg').val('1');
+                    }
+                    else
+                        jQuery('#hiddennameflg').val('');
+                    return false;
+                    
+                },
+                'error' : function(){
+                    alert("Something went wrong");
+                    return false;
+                }
+            
+            
+            });
+        });
+        
         jQuery('#btnSave').click(function(){
             
-            if(!jQuery('#seller_cmpny').val())
+            if(!jQuery('#seller_cmpny').val() || !jQuery.trim(jQuery('#seller_cmpny').val()))
             {
                 jQuery('#seller_cmpny').focus();
-                alert("Please select Seller Company Name");
+                jQuery('#seller_cmpny').val('');
+                alert("Please select Company Name");
                 return false;
             }
-            else if(!jQuery('#seller_name').val())
+            else if(jQuery('#seller_cmpny').val() && jQuery.trim(jQuery('#seller_cmpny').val()) && jQuery('#hiddennameflg').val() == '1')
+            {
+                jQuery('#seller_cmpny').focus();
+                jQuery('#seller_cmpny').val('');
+                alert("Please select different Company Name This doesn't exists");
+                return false;
+            }
+            else if(!jQuery('#seller_name').val() || !jQuery.trim(jQuery('#seller_name').val()))
             {
                 jQuery('#seller_name').focus();
-                alert("Please enter Seller Name");
+                jQuery('#seller_name').val('');
+                alert("Please enter Agent Name");
                 return false;
             }
+            
             
             if(!jQuery('#copy').is(':checked'))
             {
                 jQuery('#cityhiddenArr').val(jQuery('#city_id').val());
                 /*---OFFICE Addres Details Validations STARTS---*/
-                if(!jQuery('#addressline1').val())
+                if(!jQuery('#addressline1').val() || !jQuery.trim(jQuery('#addressline1').val()))
                 {
                     jQuery('#addressline1').focus();
+                    jQuery('#addressline1').val('');
                     alert("Please enter Address");
                     return false;
                 }
-                else if(!jQuery('#mobile').val())
+                else if(!jQuery('#mobile').val() || !jQuery.trim(jQuery('#mobile').val()))
                 {
                     jQuery('#mobile').focus();
+                    jQuery('#mobile').val('');
                     alert("Please enter Mobile Number");
                     return false;
                 }
-                else if(jQuery('#phone1').val() && isNaN(jQuery('#phone1').val()))
+                else if(jQuery('#phone1').val() && isNaN(jQuery('#phone1').val()) && !jQuery.trim(jQuery('#phone1').val()))
                 {
                     jQuery('#phone1').focus();
+                    jQuery('#phone1').val('');
                     alert("Please enter only numbers");
                     return false;
                 }
@@ -459,9 +514,10 @@
                     alert("Phone Number should be equal to 12 digits");
                     return false;
                 }
-                else if(jQuery('#phone2').val() && isNaN(jQuery('#phone2').val()))
+                else if(jQuery('#phone2').val() && isNaN(jQuery('#phone2').val()) && !jQuery.trim(jQuery('#phone2').val()))
                 {
                     jQuery('#phone2').focus();
+                    jQuery('#phone2').val('');
                     alert("Please enter only numbers");
                     return false;
                 }
@@ -477,9 +533,10 @@
                     alert("Phone Number should be equal to 12 digits");
                     return false;
                 }
-                else if(jQuery('#fax').val() && isNaN(jQuery('#fax').val()))
+                else if(jQuery('#fax').val() && isNaN(jQuery('#fax').val()) && !jQuery.trim(jQuery('#fax').val()))
                 {
                     jQuery('#fax').focus();
+                    jQuery('#fax').val('');
                     alert("Please enter only numbers");
                     return false;
                 }
@@ -505,9 +562,10 @@
                 }
                 
                 
-                if(jQuery('#pincode').val() && isNaN(jQuery('#pincode').val()))
+                if(jQuery('#pincode').val() && isNaN(jQuery('#pincode').val()) && !jQuery.trim(jQuery('#pincode').val()))
                 {
                     jQuery('#pincode').focus();
+                    jQuery('#pincode').val('');
                     alert("Please enter only numbers");
                     return false;
                 }
@@ -528,7 +586,7 @@
                 /*--- OFFICE Addres Details Validations ENDS---*/
             }
             
-            if(!jQuery('#mobile').val())
+            if(!jQuery('#mobile').val() && jQuery.trim(jQuery('#mobile').val()))
             {
                 jQuery('#mobile').focus();
                 alert("Please enter Mobile");
@@ -543,6 +601,7 @@
             else if(jQuery('#mobile').val() && !isNaN(jQuery('#mobile').val()) && !(jQuery('#mobile').val().match(/^[0-9]+$/)))
             {
                 jQuery('#mobile').focus();
+                jQuery('#mobile').val('');
                 alert("Please enter valid numbers");
                 return false;
             }
@@ -552,9 +611,10 @@
                 alert("Phone Number should be equal to 10 digits");
                 return false;
             } 
-            else if(jQuery('#email').val() && !(jQuery('#email').val().match(/^[a-zA-Z0-9._]+\@[a-zA-Z0-9]+\.[a-zA-Z]+$/)))
+            else if(jQuery('#email').val() && !(jQuery('#email').val().match(/^[a-zA-Z0-9._]+\@[a-zA-Z0-9]+\.[a-zA-Z]+$/)) && !jQuery.trim(jQuery('#email').val()))
             {
                 jQuery('#email').focus();
+                jQuery('#email').val('');
                 alert("Please enter valid Email Address");
                 return false;
             }

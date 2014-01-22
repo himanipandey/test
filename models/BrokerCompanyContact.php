@@ -19,9 +19,11 @@ class BrokerCompanyContact extends ActiveRecord\Model
         if(empty($bid))
             return false;
         
-        
-        $sql = "SELECT adr.table_id,adr.address_line_1, adr.address_line_2,adr.pincode,adr.city_id,adr.locality_id FROM addresses AS adr,brokers AS b WHERE b.id = '".$bid."' AND adr.table_name = 'brokers' AND adr.table_id = '".$bid."'";
-
+        $sql = "SELECT adr.table_id,adr.address_line_1, adr.address_line_2,adr.pincode,adr.city_id,adr.locality_id FROM addresses AS adr INNER JOIN brokers AS b WHERE adr.id = b.primary_address_id AND adr.table_name = 'brokers' AND adr.table_id = '".$bid."'";
+        //$getHeadContact = BrokerCompanyContact::find_by_sql($sql);        
+//        
+//        $sql = "SELECT adr.table_id,adr.address_line_1, adr.address_line_2,adr.pincode,adr.city_id,adr.locality_id FROM addresses AS adr,brokers AS b WHERE b.id = '".$bid."' AND adr.table_name = 'brokers' AND adr.table_id = '".$bid."'";
+//
         $getContact = BrokerCompanyContact::find_by_sql($sql);
         //echo BrokerCompanyContact::connection()->last_query;
          //print'<pre>';

@@ -288,7 +288,7 @@
             
             if(!empty($rule_id))
             {
-                header("Location:ruleadd.php?ruleId=".$rule_id."&mode=edit&page=1&sort=all");
+                header("Location:ruleadd.php?city_id=".$city_id."&page=1&sort=all");
                 echo $rule_id;
                 die;
             }
@@ -632,7 +632,7 @@
         }
         else if(!empty($ruleId))
         {
-            header("Location:ruleadd.php?ruleId=".$ruleId."&mode=edit&page=1&sort=all");
+            header("Location:ruleadd.php?city_id=".$city_id."&page=1&sort=all");
             //echo $rule_id;
 //                die;
         }
@@ -641,13 +641,18 @@
         }
         /**********end code project add******************/        
     }
-    else if(!empty($_POST['city_id']))
+    else if(!empty($_POST['city_id']) || !empty($_GET['city_id']))
     {
+        $cityID = '';
+        if(!empty($_POST['city_id']))
+            $cityID = $_POST['city_id'];
+        else if(!empty($_GET['city_id']))
+            $cityID = $_GET['city_id'];  
         $ruleAttr = ProjectAssignmentRules::find('all');
         $data = array();
         if(!empty($ruleAttr))
         {
-            $fetchLocQuery = @mysql_query("SELECT COUNT(locality.locality_id) AS locount FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = '".mysql_escape_string($_POST['city_id'])."'");
+            $fetchLocQuery = @mysql_query("SELECT COUNT(locality.locality_id) AS locount FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = '".mysql_escape_string($cityID)."'");
             $locount = @mysql_fetch_assoc($fetchLocQuery);
             $locount = $locount['locount'];
             $locounter = 0;
@@ -656,7 +661,7 @@
                                 INNER JOIN locality ON resi_project.locality_id = locality.locality_id
                                 INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
                                 INNER JOIN city ON suburb.city_id = city.city_id
-                                WHERE city.city_id = '".mysql_escape_string($_POST['city_id'])."'");
+                                WHERE city.city_id = '".mysql_escape_string($cityID)."'");
             $procount = @mysql_fetch_assoc($fetchProQuery);
             $procount = $procount['procount'];
             $procounter = 0;                  
@@ -674,7 +679,7 @@
                  
                 $projectflag = 0;
                 
-                $conditions = " rule_locality_mappings.rule_id = ".$val->id." and city.city_id = '".mysql_escape_string($_POST['city_id'])."'";
+                $conditions = " rule_locality_mappings.rule_id = ".$val->id." and city.city_id = '".mysql_escape_string($cityID)."'";
                 
                 $joins = " INNER JOIN locality ON rule_locality_mappings.locality_id = locality.locality_id
                             INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
@@ -857,16 +862,34 @@
         //die;
         $locarr = array();
         
-        $sql = @mysql_query("SELECT locality.locality_id , locality.label FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = '".$_POST['city_id']."' AND locality.locality_id NOT IN (SELECT locality_id FROM rule_locality_mappings)");
+        //$sql = @mysql_query("SELECT locality.locality_id , locality.label FROM locality LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id LEFT JOIN city ON suburb.city_id = city.city_id  WHERE city.city_id = '".mysql_escape_string($cityID)."' AND locality.locality_id NOT IN (SELECT locality_id FROM rule_locality_mappings)");
+        
+        $sql = @mysql_query("SELECT locality.locality_id , locality.label 
+                                        FROM locality 
+                                        LEFT JOIN suburb ON locality.suburb_id = suburb.suburb_id 
+                                        LEFT JOIN city ON suburb.city_id = city.city_id  
+                                        WHERE city.city_id = '".mysql_escape_string($cityID)."'");
+                                         
+                                         
         while($row = @mysql_fetch_assoc($sql))
         {
+            $chkSql = @mysql_query("SELECT resi_project.project_id 
+                                                FROM resi_project  
+                                                LEFT JOIN locality ON resi_project.locality_id = locality.locality_id
+                                                WHERE locality.locality_id = '".$row['locality_id']."'");
+            $c1 = @mysql_num_rows($chkSql);
+            $chkSql = @mysql_query("SELECT resi_project.project_id 
+                                                FROM resi_project  
+                                                LEFT JOIN locality ON resi_project.locality_id = locality.locality_id
+                                                WHERE locality.locality_id = '".$row['locality_id']."'");
+            $c2 = @mysql_num_rows($chkSql);
             $locarr[$row['locality_id']] = $row['label'];    
         }
         //print'<pre>';
 //        print_r($locarr);
         //print_r($data);
         //die;
-        $smarty->assign("city_id" , $_POST['city_id']);
+        $smarty->assign("city_id" , $cityID);
         $smarty->assign("locality" , $locarr);
     }
     //echo $NumRows;

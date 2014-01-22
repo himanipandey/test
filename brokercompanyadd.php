@@ -12,24 +12,18 @@ include("includes/configs/configs.php");
 include("modelsConfig.php");
 include("s3upload/s3_config.php");
 include("SimpleImage.php");
-
+$cityLocArr = array();
+$result = array();
 AdminAuthentication(); 
 $cityArr = City::CityArr($BranchLoc);
-$cityLocArr = CityLocationRel::CityLocArr(); 
-$result = array();
-foreach($cityLocArr as $key => $val)
-{
-    array_push($result , array("id" => $key , "value" => $val));
-}
-$result = json_encode($result);
-
+ 
 $smarty->assign("cityArr", $cityArr);
-$smarty->assign("cityLocArr", $result);
 $smarty->assign("sort", !empty($_GET['sort'])?$_GET['sort']:'');
 $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'');
 
 if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] == "edit")
 {
+    $cityLocArr = CityLocationRel::CityLocArr('','',$_GET['brokerCompanyId']); 
     $img = json_decode(file_get_contents('http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=brokerCompany&objectId='.$_GET['brokerCompanyId']));
     $imgurl = '';
     $imgid = '';
@@ -62,13 +56,13 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
     $smarty->assign("cityLocIDArr", $cityLocIDArr);
     
     $contactIDArr = BrokerCompanyContact::ContactArr($_GET['brokerCompanyId']);
+    
+    $contactIDArr = array_merge($contactIDArr , !empty($brkrDet)?$brkrDet:array());
+    
     //print('<pre>');
 //    print_R($contactIDArr);
 //    
 //    die;
-    $contactIDArr = array_merge($contactIDArr , !empty($brkrDet)?$brkrDet:array());
-    
-    
     $smarty->assign("imgid", !empty($imgid)?$imgid:'');
     $smarty->assign("imgurl", !empty($imgurl)?$imgurl:'');
     $smarty->assign("name", !empty($contactIDArr['name'])?$contactIDArr['name']:'');
@@ -85,7 +79,7 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
     $smarty->assign("phone2", !empty($contactIDArr['phone2'])?$contactIDArr['phone2']:'');
     $smarty->assign("mobile", !empty($contactIDArr['mobile'])?$contactIDArr['mobile']:'');
     $smarty->assign("fax", !empty($contactIDArr['fax'])?$contactIDArr['fax']:'');
-    $smarty->assign("email", !empty($contactIDArr['primary_email'])?$contactIDArr['primary_email']:'');
+    $smarty->assign("email", !empty($contactIDArr['email'])?$contactIDArr['email']:'');
     $smarty->assign("cc_phone", !empty($contactIDArr['cc_phone'])?$contactIDArr['cc_phone']:'');
     $smarty->assign("cc_mobile", !empty($contactIDArr['cc_mobile'])?$contactIDArr['cc_mobile']:'');
     $smarty->assign("cc_fax", !empty($contactIDArr['cc_fax'])?$contactIDArr['cc_fax']:'');
@@ -101,6 +95,24 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
     $smarty->assign("contacts", !empty($contactIDArr['contacts'])?$contactIDArr['contacts']:'');
     
 }
+else
+{
+    $cityLocArr = CityLocationRel::CityLocArr();
+}
+
+if(!empty($cityLocArr))
+{
+    foreach($cityLocArr as $key => $val)
+    {
+        array_push($result , array("id" => $key , "value" => $val));
+    }
+    $result = json_encode($result);
+}
+//print'<pre>';
+//print_r($result);
+//die;
+
+$smarty->assign("cityLocArr", $result);
 include('brokercompanyaddProcess.php');
 
 

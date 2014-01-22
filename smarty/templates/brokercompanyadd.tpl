@@ -59,7 +59,8 @@
         }); 
        
         jQuery('#pan').blur(function(){
-            if(jQuery(this).val() == '')
+            //alert(jQuery('#pan').val() + ' ' + jQuery('#hiddenpan').val());
+            if(jQuery(this).val() == '' || !jQuery.trim(jQuery('#pan').val()) || jQuery('#pan').val() == jQuery('#hiddenpan').val())
                 return false;
             
             if(jQuery(this).val() && (jQuery(this).val().length < 10 || jQuery(this).val().length > 10))
@@ -85,7 +86,53 @@
                     if(json.response == 'error')
                     {
                         alert("Please enter another PAN");
+                        jQuery('#hiddenpanflg').val('1');
                     }
+                    else
+                        jQuery('#hiddenpanflg').val('');
+                    return false;
+                    
+                },
+                'error' : function(){
+                    alert("Something went wrong");
+                    return false;
+                }
+            
+            
+            });
+        });
+        
+        jQuery('#name').blur(function(){
+            //alert(jQuery('#name').val() + ' ' + jQuery('#hiddenname').val());
+            if(jQuery(this).val() == '' || !jQuery.trim(jQuery('#name').val()) || jQuery('#name').val() == jQuery('#hiddenname').val())
+                return false;
+            
+            if(jQuery(this).val() == '')
+            {
+                alert("Please enter Company Name");
+                return false;
+            }
+            
+            var dataString = 'name='+jQuery(this).val();
+            
+            //alert(dataString);
+//            return;
+            jQuery.ajax({
+                'type' : 'POST',
+                'url' : 'brokercompanychk.php',
+                'data' : dataString,
+                'success' : function(data){
+                    //alert(data);
+//                    return;
+                    var json = JSON.parse(data);
+                    
+                    if(json.response == 'error')
+                    {
+                        alert("Please enter different Company Name");
+                        jQuery('#hiddennameflg').val('1');
+                    }
+                    else
+                        jQuery('#hiddennameflg').val('');
                     return false;
                     
                 },
@@ -164,6 +211,8 @@
                     jQuery('#citypkidArr1').val(json.citylocids);
                     jQuery('#citypkidArr').val(json.citylocids);
                     jQuery.fancybox.close();
+                    jQuery('.cityloc').remove();
+                    jQuery('#location').val('');
                     return false;
                 },
                 'error' : function(){
@@ -201,7 +250,7 @@
                 
                 if(jQuery('#remove_citylocids1').val())
                 {
-                    rmv = JSON.parse(atob(jQuery('#remove_citylocids1').val()));
+                    rmv = JSON.parse(btoa(jQuery('#remove_citylocids1').val()));
                     //console.log(rmv);
                 }
                 jQuery('.citychkbox').each(function(){
@@ -217,13 +266,21 @@
                         rmv.push(id);
                     else if(id != '' && typeof id != undefined && id != undefined)
                         removeCityIds.push(id);
+                    //console.log('rmv:' + rmv);
+//                    console.log('remove:' + removeCityIds);
                 }); 
                 
                 if(rmv != '')
+                {
                     jQuery('#remove_citylocids1').val(btoa(JSON.stringify(rmv)));
+                    jQuery('#remove_citylocids').val(btoa(JSON.stringify(rmv)));
+                }
                 else
+                {
                     jQuery('#remove_citylocids1').val(btoa(JSON.stringify(removeCityIds)));
-               // console.log('---RMV---');
+                    jQuery('#remove_citylocids').val(btoa(JSON.stringify(removeCityIds)));
+                }
+                //console.log('---RMV---');
 //                console.log(rmv);
 //                console.log('---Cityid---');
 //                console.log(removeCityIds);
@@ -302,31 +359,66 @@
             
         });        
         jQuery('#btnSave').click(function(){
-            
-            if(!jQuery('#name').val())
+            var flag = 0;
+            if(!jQuery('#name').val() || !jQuery.trim(jQuery('#name').val()))
             {
+                jQuery('#name').val('');
                 jQuery('#name').focus();
                 alert("Please enter Broker Company Name");
                 return false;
             }
+            else if(jQuery('#name').val() && jQuery('#name').val() != jQuery('#hiddenname').val())
+            {
+                if(flag == 1)
+                    return false;
+                
+                if(jQuery('#hiddennameflg').val() == '1')
+                {
+                    alert("Please enter different Broker Company Name");
+                    jQuery('#name').val('');
+                    jQuery('#name').focus();
+                    flag = 1;
+                    //alert(flag);
+//                    alert("In " + flag);      
+                    return false;
+                }
+            }
             else if(jQuery('#pan').val() && (jQuery('#pan').val().length < 10 || jQuery('#pan').val().length > 10))
             {
+                jQuery('#pan').val('');
                 jQuery('#pan').focus();
                 alert("Pan length must be equal to 10");
                 return false;
             }
-            
+            else if(jQuery('#pan').val() && jQuery('#pan').val().length  == 10 && jQuery('#pan').val() != jQuery('#hiddenpan').val())
+            {
+                if(flag == 1)
+                    return false;
+                
+                if(jQuery('#hiddenpanflg').val() == '1')
+                {
+                    alert("Please enter different PAN");
+                    jQuery('#pan').val('');
+                    jQuery('#pan').focus();
+                    flag = 1;
+                    //alert(flag);
+//                    alert("In " + flag);      
+                    return false;
+                }
+            }
             
             
             /*--- OFFICE Addres Details Validations STARTS---*/
-            if(!jQuery('#addressline1').val())
+            if(!jQuery('#addressline1').val() || !jQuery.trim(jQuery('#addressline1').val()))
             {
+                jQuery('#addressline1').val('');
                 jQuery('#addressline1').focus();
                 alert("Please enter Address");
                 return false;
             }
-            else if(!jQuery('#phone1').val())
+            else if(!jQuery('#phone1').val() || !jQuery.trim(jQuery('#phone1').val()))
             {
+                jQuery('#phone1').val('');
                 jQuery('#phone1').focus();
                 alert("Please enter Office Phone number");
                 return false;
@@ -351,8 +443,9 @@
             }
             
             
-            if(jQuery('#phone2').val() && isNaN(jQuery('#phone2').val()))
+            if(jQuery('#phone2').val() && isNaN(jQuery('#phone2').val()) && jQuery.trim(jQuery('#phone2').val()))
             {
+                jQuery('#phone2').val('');
                 jQuery('#phone2').focus();
                 alert("Please enter only numbers");
                 return false;
@@ -371,8 +464,9 @@
             }
             
             
-            if(jQuery('#fax').val() && isNaN(jQuery('#fax').val()))
+            if(jQuery('#fax').val() && isNaN(jQuery('#fax').val()) && jQuery.trim(jQuery('#fax').val()))
             {
+                jQuery('#fax').val('');
                 jQuery('#fax').focus();
                 alert("Please enter only numbers");
                 return false;
@@ -399,8 +493,9 @@
             }
             
             
-            if(jQuery('#pincode').val() && isNaN(jQuery('#pincode').val()))
+            if(jQuery('#pincode').val() && isNaN(jQuery('#pincode').val()) && jQuery.trim(jQuery('#pincode').val()))
             {
+                jQuery('#pincode').val('');
                 jQuery('#pincode').focus();
                 alert("Please enter only numbers");
                 return false;
@@ -419,6 +514,7 @@
             }
             else if(jQuery('#email').val() && !(jQuery('#email').val().match(/^[a-zA-Z0-9._]+\@[a-zA-Z0-9]+\.[a-zA-Z]+$/)))
             {
+                jQuery('#email').val('');
                 jQuery('#email').focus();
                 alert("Please enter valid Email Address");
                 return false;
@@ -427,11 +523,13 @@
             /*--- OFFICE Addres Details Validations ENDS---*/
             
             /*--- Contact Person Details Validations START---*/
-            var flag = 0;
+            
             jQuery('.cp_name').each(function(){
-                
+                if(flag == 1)
+                    return false;
                 if(!jQuery(this).val())
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter Contact Person Name");
                     flag = 1;
@@ -450,6 +548,7 @@
                 
                 if(jQuery(this).val() && isNaN(jQuery(this).val()))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter only numbers");
                     flag = 1;
@@ -457,6 +556,7 @@
                 }
                 else if(jQuery(this).val() && !isNaN(jQuery(this).val()) && !(jQuery(this).val().match(/^[0-9]+$/)))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter only numbers");
                     flag = 1;
@@ -464,6 +564,7 @@
                 }
                 else if(jQuery(this).val() && (jQuery(this).val().length > 12))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Phone Number should be less or equal to 12 digits");
                     flag = 1;
@@ -480,6 +581,7 @@
                 
                 if(jQuery(this).val() && isNaN(jQuery(this).val()))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter only numbers");
                     flag = 1;
@@ -487,6 +589,7 @@
                 }
                 else if(jQuery(this).val() && !isNaN(jQuery(this).val()) && !(jQuery(this).val().match(/^[0-9]+$/)))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter only numbers");
                     flag = 1;
@@ -494,6 +597,7 @@
                 }
                 else if(jQuery(this).val() && (jQuery(this).val().length > 12))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Phone Number should be less or equal to 12 digits");
                     flag = 1;
@@ -508,6 +612,7 @@
                     return false;
                 if(jQuery(this).val() && isNaN(jQuery(this).val()))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter only numbers");
                     flag = 1;
@@ -515,6 +620,7 @@
                 }
                 else if(jQuery(this).val() && !isNaN(jQuery(this).val()) && !(jQuery(this).val().match(/^[0-9]+$/)))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter only numbers");
                     flag = 1;
@@ -522,6 +628,7 @@
                 }
                 else if(jQuery(this).val() && (jQuery(this).val().length > 12))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Fax Number should be les than or equal to 12 digits");
                     flag = 1;
@@ -537,6 +644,7 @@
                     return false;
                 if(jQuery(this).val() && isNaN(jQuery(this).val()))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter only numbers");
                     flag = 1;
@@ -544,6 +652,7 @@
                 }
                 else if(jQuery(this).val() && !isNaN(jQuery(this).val()) && !(jQuery(this).val().match(/^[0-9]+$/)))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter valid numbers");
                     flag = 1;
@@ -551,6 +660,7 @@
                 }
                 else if(jQuery(this).val() && (jQuery(this).val().length > 10 || jQuery(this).val().length < 10))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Mobile Number should be equal to 10 digits");
                     flag = 1;
@@ -565,6 +675,7 @@
                     return false;
                 if(jQuery(this).val() && !(jQuery(this).val().match(/^[a-zA-Z0-9._]+\@[a-zA-Z0-9]+\.[a-zA-Z]+$/)))
                 {
+                    jQuery(this).val('');
                     jQuery(this).focus();
                     alert("Please enter valid Email Address");
                     flag = 1;
@@ -584,60 +695,70 @@
             
             if(jQuery('#cc_phone').val() && isNaN(jQuery('#cc_phone').val()))
             {
+                jQuery('#cc_phone').val('');
                 jQuery('#cc_phone').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#cc_phone').val() && !isNaN(jQuery('#cc_phone').val()) && !(jQuery('#cc_phone').val().match(/^[0-9]+$/)))
             {
+                jQuery('#cc_phone').val('');
                 jQuery('#cc_phone').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#cc_phone').val() && jQuery('#cc_phone').val().length > 12)
             {
+                jQuery('#cc_phone').val('');
                 jQuery('#cc_phone').focus();
                 alert("Phone Number should be equal to 12 digits");
                 return false;
             }
             else if(jQuery('#cc_fax').val() && isNaN(jQuery('#cc_fax').val()))
             {
+                jQuery('#cc_fax').val('');
                 jQuery('#cc_fax').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#cc_fax').val() && !isNaN(jQuery('#cc_fax').val()) && !(jQuery('#cc_fax').val().match(/^[0-9]+$/)))
             {
+                jQuery('#cc_fax').val('');
                 jQuery('#cc_fax').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#cc_fax').val() && jQuery('#cc_fax').val().length > 12)
             {
+                jQuery('#cc_fax').val('');
                 jQuery('#cc_fax').focus();
                 alert("Fax Number should be less than or eaual to 12 digits");
                 return false;
             }
             else if(jQuery('#cc_mobile').val() && isNaN(jQuery('#cc_mobile').val()))
             {
+                jQuery('#cc_mobile').val('');
                 jQuery('#cc_mobile').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#cc_mobile').val() && !isNaN(jQuery('#cc_mobile').val()) && !(jQuery('#cc_mobile').val().match(/^[0-9]+$/)))
             {
+                jQuery('#cc_mobile').val('');
                 jQuery('#cc_mobile').focus();
                 alert("Please enter only numbers");
                 return false;
             }
             else if(jQuery('#cc_mobile').val() && (jQuery('#cc_mobile').val().length > 10 || jQuery('#cc_mobile').val().length < 10))
             {
+                jQuery('#cc_mobile').val('');
                 jQuery('#cc_mobile').focus();
                 alert("Mobile Number should be equal to 10 digits");
                 return false;
             }
             else if(jQuery('#cc_email').val() && !(jQuery('#cc_email').val().match(/^[a-zA-Z0-9._]+\@[a-zA-Z0-9]+\.[a-zA-Z]+$/)))
             {
+                jQuery('#cc_email').val('');
                 jQuery('#cc_email').focus();
                 alert("Please enter valid Email Address");
                 return false;
@@ -733,10 +854,15 @@
                 jQuery('#xcp_mobile').val(btoa(JSON.stringify(cp_mobile)));
                 jQuery('#xcp_email').val(btoa(JSON.stringify(cp_email)));
                 jQuery('#xcp_ids').val(btoa(JSON.stringify(cp_ids)));
+                //alert("here");
+                //jQuery('#frm1').submit();
                 return true;   
             }   
             else
+            {
+                //alert("here2");
                 return false;
+            }
         });
        
         jQuery("a#showcontent").fancybox({
@@ -821,7 +947,9 @@
             
         });
         
-        
+        jQuery('#cleardate').click(function(){
+            jQuery('#active_since').val('');
+        })
         
     });
     
@@ -887,7 +1015,7 @@
                     </td>
                     <td width="100px" align="right" valign="top" >Company Logo : </td>
                     <td width="100px" align="left" valign="top" >
-                        <input type="file" name="logo" id="logo" value="" style="width:88px;" />
+                        <input type="file" name="logo" id="logo" value="" style="width:185px;" />
                     </td>
                    <td width="100px" align="left" valign="top">
                         <div style="width:100px!important;height:130px">
@@ -1045,7 +1173,7 @@
                                     
                                    
                                     <tr class="{$val['id']}">
-                        				<td width="15%" valign="top" >Contact Phone 1 :<font color = "red">*</font> </td>
+                        				<td width="15%" valign="top" >Contact Phone 1 :</td>
                                         <td width="10%" align="left" valign="top" >
                                             <input type="text"maxlength="2" readonly="true" value="+91" style="width:25px;" />
                                             <input type="text" name="cp_phone1" id="cp_phone1-{$val['id']}" class="cp_phone1" value="{$val['phone1']}" maxlength="12" style="width:85px;" />
@@ -1212,7 +1340,8 @@
     				<td width="15%" valign="top" >Active Since : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text name="active_since" id="active_since" value="{$active_since}" style="width:85px;" readonly="1" size="10" />
-                        <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />	
+                        <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                        <input type="button" name="cleardate" id="cleardate" value="Reset Date" />	
                     </td>
     				
 				</tr>     
@@ -1293,7 +1422,10 @@
 				  <input type="hidden" name="brokerCompanyId" id="brokerCompanyId" value="{$brokerCompanyId}" />
 				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="float:left;" />
 				  &nbsp;&nbsp;<input type="button" name="btnExit" id="btnExit" value="Exit" style="float:right:" />
-                  
+                  <input type="hidden" name="hiddenpan" id="hiddenpan" value="{$pan}" />
+                  <input type="hidden" name="hiddenpanflg" id="hiddenpanflg" value="" />
+                  <input type="hidden" name="hiddenname" id="hiddenname" value="{$name}" />
+                  <input type="hidden" name="hiddennameflg" id="hiddennameflg" value="" />
                   <input type="hidden" name="xcp_name" id="xcp_name" value="" />
                   <input type="hidden" name="xcp_mobile" id="xcp_mobile" value="" />
                   <input type="hidden" name="xcp_email" id="xcp_email" value="" />
@@ -1382,14 +1514,6 @@
                     </td>
                     <td>
                         <input type="text" name="location" id="location" value="" />
-                        <!--<select name="locations" id="locations">
-                            <option value="">Select Locations</option>
-                            {if $cityLocArr != ''}
-                                {foreach from= $cityLocArr key = k item = val}
-                                   <option value="{$k}" {if $k == $city_id} selected {/if}>{$val}</option>
-                                {/foreach}
-                            {/if}
-                        </select>-->
                         <div id="divLoc"></div>
                         <input type="hidden" name="addmorecity" id="addmorecity" value="{$citylocids}" />
                     </td>
