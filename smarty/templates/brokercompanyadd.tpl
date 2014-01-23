@@ -58,6 +58,7 @@
             window.location.href = 'BrokerCompanyList.php';
         }); 
        
+               
         jQuery('#pan').blur(function(){
             //alert(jQuery('#pan').val() + ' ' + jQuery('#hiddenpan').val());
             if(jQuery(this).val() == '' || !jQuery.trim(jQuery('#pan').val()) || jQuery('#pan').val() == jQuery('#hiddenpan').val())

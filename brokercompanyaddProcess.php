@@ -658,36 +658,53 @@
                         $brkrcmpnyContct = BrokerCompanyContact::find_by_id($primary_broker_contact_id);
                         $brkrcmpnyContct->contact_email = !empty($email)?$email:'';
                         $brkrcmpnyContct->save();
+                        //echo $phone1." ".$phone2." ".$fax;die;
+                        //if(!empty($primary_contact_number_id))
+//                            $contctNumber = ContactNumber::find_by_id($primary_contact_number_id);
+//                        if(!empty($phone1))
+//                            $contctNumber->contact_no = $phone1;
+//                        $contctNumber->updated_by = $_SESSION['adminId'];
+//                        $contctNumber->save();
+                       
                         
-                        if(!empty($primary_contact_number_id))
-                            $contctNumber = ContactNumber::find_by_id($primary_contact_number_id);
-                        if(!empty($phone1))
-                            $contctNumber->contact_no = $phone1;
-                        $contctNumber->updated_by = $_SESSION['adminId'];
-                        $contctNumber->save();
+                        $contctNumber1 = BrokerCompanyContact::ContactHQIDTypeArr($brokerCompanyId);
+                        //print'<pre>';
+//                        print_r($contctNumber);
+//                        die;
+                        $temp_contctNumber1 = $contctNumber1;
                         
-                        $contctNumber1 = BrokerCompanyContact::ContactIDTypeArr($brokerCompanyId);
                         
-                        if(!empty($contctNumber1))
+                        
+                        if(!empty($temp_contctNumber1))
                         {
-                            foreach($contctNumber1 as $k => $v)
+                            $strquery = '';
+                            
+                            foreach($temp_contctNumber1 as $k => $v)
                             {
-                                $contctNumber = ContactNumber::find_by_id($v['id']);
-                                
-                                if(!empty($contctNumber->type) && $contctNumber->type == 'mobile')
-                                    $contctNumber->contact_no = $mobile;
-                                else if(!empty($contctNumber->type) && $contctNumber->type == 'phone1')
-                                    $contctNumber->contact_no = $phone1;
-                                else if(!empty($contctNumber->type) && $contctNumber->type == 'phone2')
-                                    $contctNumber->contact_no = $phone2;
-                                else if(!empty($contctNumber->type) && $contctNumber->type == 'fax' && $v['id'] == $fax_number_id)
+                                //$contctNumber = ContactNumber::find_by_id($v['id']);
+                                $query = "UPDATE contact_numbers";
+                                if($v['type'] == 'phone1')
                                 {
-                                    $contctNumber->contact_no = $fax;
+                                    $query .= " SET contact_no = '".$phone1."' WHERE id = '".$v['id']."'";
+                                    //mysql_query($query) or die(mysql_error());
+                                    
                                 }
-                                
-                                $contctNumber->save();
+                                else if($v['type'] == 'phone2')
+                                {
+                                    $query .= " SET contact_no = '".$phone2."' WHERE id = '".$v['id']."'";
+                                    //echo $query."<br>";
+                                }
+                                else if($v['type'] == 'fax')
+                                {
+                                    $query .= " SET contact_no = '".$fax."' WHERE id = '".$v['id']."'";
+                                    //echo $query."<br>";
+                                }
+                                //echo $query."<br>";
+                                mysql_query($query);
                             }
                         }
+                        //echo "here";
+//                        die;
                         
                         /** -- Update the broker_contacts table with the table->contact_numbers pkid->mobile -- */
                         $brkrcmpnyContct = BrokerCompanyContact::find_by_id($primary_broker_contact_id);
@@ -798,9 +815,6 @@
                     /** -- Broker Contacts Entry End -- */
                 }
 
-                //print'<pre>';
-//                print_r($cp_mobile);
-//                die;
                 
                 if(!empty($finalcontacts))
                     foreach($finalcontacts as $key => $val)
@@ -809,28 +823,45 @@
                         
                         if(!empty($brkrcmpnyContctNum))
                         {
+                            $strquery = '';
                             foreach($brkrcmpnyContctNum as $k => $v)
                             {
-                                $contctNumber = ContactNumber::find_by_id($v['id']);
+                                //$contctNumber = ContactNumber::find_by_id($v['id']);
+                                //print'<pre>';
+//                                print_r($v);
+//                                continue;
+                                $query = "UPDATE contact_numbers SET ";
                                 if($v['type'] == 'mobile')
                                 {
-                                    $contctNumber->contact_no = $cp_mobile->$val ;    
+                                    $query .= " contact_no = '".$cp_mobile->$val."' WHERE id = '".$v['id']."' AND type = 'mobile';";
                                 }
                                 else if($v['type'] == 'phone1')
                                 {
-                                    $contctNumber->contact_no = $cp_phone1->$val ;
+                                    $query .= " contact_no = '".$cp_phone1->$val."' WHERE id = '".$v['id']."' AND type = 'phone1';";
                                 }
                                 else if($v['type'] == 'phone2')
                                 {
-                                    $contctNumber->contact_no = $cp_phone2->$val ;    
+                                    $query .= " contact_no = '".$cp_phone2->$val."' WHERE id = '".$v['id']."' AND type = 'phone2';";
                                 }
                                 else if($v['type'] == 'fax')
                                 {
-                                    $contctNumber->contact_no = $cp_fax->$val ;    
+                                    $query .= " contact_no = '".$cp_fax->$val."' WHERE id = '".$v['id']."' AND type = 'fax';";
                                 }
-                                $contctNumber->save();
+                                else
+                                {
+                                    $query = '';
+                                }
+                                mysql_query($query);
+                                //$strquery .= " ".$query;
+                                
                             }
                             
+                            //if(!empty($strquery))
+//                            {
+//                                @mysql_query($strquery);
+//                            }
+                           // echo "<br>".$strquery;
+//                            echo "her";die;
                             $brkrcmpnyContct = BrokerCompanyContact::find_by_id($val);
                             $brkrcmpnyContct->name = !empty($cp_name->$val)?$cp_name->$val:'';
                             $brkrcmpnyContct->contact_email = !empty($cp_email->$val)?$cp_email->$val:'';
@@ -842,6 +873,7 @@
                         
                         
                     }
+                    
                     
                 
                 if(!empty($rcontacts))

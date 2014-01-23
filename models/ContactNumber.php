@@ -163,7 +163,7 @@ class ContactNumber extends ActiveRecord\Model
         if(empty($bid))
             return false;
             
-        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name = 'Heaquarter' AND type = 'NAgent'";
+        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name = 'Headquarter' AND type = 'NAgent'";
         
         $brokerContacts = ContactNumber::find_by_sql($sql);
         $contactId = array();
@@ -200,6 +200,43 @@ class ContactNumber extends ActiveRecord\Model
             return false;
             
         $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name != 'Headquarter' AND name != 'Customer Care' AND type = 'NAgent'";
+        
+        $brokerContacts = ContactNumber::find_by_sql($sql);
+       
+        $contactId = array();
+        $contactNumbers = array();
+        if(!empty($brokerContacts))
+        {
+            
+            foreach($brokerContacts as $key => $val)
+            {
+                $contactId = ContactNumber::find('all' , array('conditions' => "table_id=$val->id AND table_name = 'broker_contacts'" ));
+                if(!empty($contactId))
+                {
+                    $i = 0;
+                    foreach($contactId as $k => $v)
+                    {
+                        $contactNumbers[$i]['id'] = $v->id;
+                        $contactNumbers[$i]['type'] = $v->type;
+                        $i++;
+                    }
+                }
+                
+            }
+        }
+        //print'<pre>';
+//        print_r($contactNumbers);
+//        die;
+        return $contactNumbers;
+            
+    }
+    
+    static function ContactHQIDTypeArr($bid = '') {
+        
+        if(empty($bid))
+            return false;
+            
+        $sql = "SELECT * FROM broker_contacts WHERE broker_id = '".$bid."' AND name = 'Headquarter' AND type = 'NAgent'";
         
         $brokerContacts = ContactNumber::find_by_sql($sql);
        
