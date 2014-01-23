@@ -732,6 +732,12 @@ $arrOtherCities =
 		"41"=>"Visakhapatnam",
 		"90"=>"Sonepat",
 		"98"=>"Panipat",
-		"99"=>"Raigad"
+		"99"=>"Raigad",
+		"26"=>"Coimbatore",
+		"28"=>"Jaipur",
+		"46"=>"Agra",
+		"48"=>"Pondicherry",
+		"61"=>"Vijayawada",
+		"91"=>"Karnal"
   );
 ?>
