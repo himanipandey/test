@@ -35,13 +35,13 @@ if(isset($_POST['brokercmpnyid']) && !empty($_POST['brokercmpnyid']))
         }
         
     $citylocids = $finaladdcitylocids;
-      
+    
     foreach($_POST as $key => $val)
     {
         if(!in_array($key , $restrictArr))
         {
             $city_id = CityLocationRel::CityLocArr(trim($key));
-            $chkExist = BrokerCompanyLocation::find('all' , array('conditions' => "city_id = ".$city_id." AND locality_id = ".mysql_real_escape_string($key)));
+            $chkExist = BrokerCompanyLocation::find('all' , array('conditions' => "city_id = ".$city_id." AND locality_id = ".mysql_real_escape_string($key)." AND table_id = '" . $brokercmpnyid . "'"));
             if(empty($chkExist))
             {
                 $bcmpLocation = new BrokerCompanyLocation();
@@ -62,6 +62,7 @@ if(isset($_POST['brokercmpnyid']) && !empty($_POST['brokercmpnyid']))
             }
         }
     }
+    
     //$data['citylocids'] = base64_encode(json_encode($citylocids));
     //echo json_encode($data);
     //print_r($data['citylocids']);
@@ -69,6 +70,7 @@ if(isset($_POST['brokercmpnyid']) && !empty($_POST['brokercmpnyid']))
 }
 else
 {
+    $i = 0;
     foreach($_POST as $key => $val)
     {
         if(!in_array($key , $restrictArr))
@@ -81,7 +83,8 @@ else
 //            print_r($chkExist);
             if(empty($chkExist))
             {
-                //echo "here  \n";
+                //echo "hre$i";
+//                $i++;
 //                continue;
                 $bcmpLocation = new BrokerCompanyLocation();
             

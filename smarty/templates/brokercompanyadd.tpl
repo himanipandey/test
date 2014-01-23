@@ -147,6 +147,11 @@
         });
         
         jQuery('body').on('click' , '#cancel' ,function(){
+            jQuery('#location').val('');
+            jQuery('.cityloctxt').each(function(){
+               jQuery(this).val('');
+            });
+            jQuery('.cityloc').remove();
             jQuery.fancybox.close();
         });
         
@@ -182,7 +187,7 @@
                 'url' : 'brokerCompanyAddAjax.php',
                 'data' : dataString,
                 'success' : function(data){
-                    //alert(data);
+//                    alert(data);
 //                    return false;
                     var json = JSON.parse(data);
                     if(json.response == "error")

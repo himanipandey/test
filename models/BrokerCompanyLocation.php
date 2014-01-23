@@ -56,12 +56,16 @@ class BrokerCompanyLocation extends ActiveRecord\Model
             
             if(!empty($primary_address_id))
                 $primary_address_id = " AND addresses.id != $primary_address_id";
+            else
+                $primary_address_id = '';
             $options = array('joins' => $join , 'select' => 
         'addresses.address_line_1 , addresses.address_line_2 , addresses.pincode , locality.locality_id AS locality_id , city.label AS city , locality.label AS location ,addresses.id AS pkid' , 'conditions' => array(" addresses.table_name = 'brokers' AND addresses.table_id = '".$bid."' $primary_address_id"));
-        
+            
         
             $getCity = BrokerCompanyLocation::find('all' , $options);
-            
+            //print'<pre>';
+//            print_r($getCity);
+//            die;
             return $getCity;    
         }
         
