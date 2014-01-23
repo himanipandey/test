@@ -55,6 +55,17 @@ class CityLocationRel extends ActiveRecord\Model
             //die;
             return $arrCity;    
         }
+        else
+        {
+            $options = array('joins' => $join , 'select' => 
+            'CONCAT(city.label,"-",locality.label) AS city_loc , locality.locality_id ');
+            
+            $getCity = CityLocationRel::find('all' , $options);
+            foreach($getCity as $value) {
+                $arrCity[$value->locality_id] = $value->city_loc;
+            }
+            return $arrCity; 
+        }
         
         
         
