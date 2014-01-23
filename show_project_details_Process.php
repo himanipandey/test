@@ -461,7 +461,6 @@ if ($_POST['forwardFlag'] == 'update') {
     }
     header("Location:$returnURLPID");
 }
-
 if ($_POST['forwardFlag'] == 'no') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
@@ -500,7 +499,7 @@ if ($_POST['forwardFlag'] == 'no') {
        }
        $qrymovmentHistory = "select history_id from project_stage_history where history_id not in(
            select movement_history_id from resi_project 
-           where project_id = $projectId and version = 'Cms') order by history_id desc limit $limitCondition";
+           where project_id = $projectId and version = 'Cms') and project_id = $projectId order by history_id desc limit $limitCondition";
        $resmovmentHistory = mysql_query($qrymovmentHistory) or die(mysql_error());
        $movmentHistoryData = mysql_fetch_assoc($resmovmentHistory);
        
