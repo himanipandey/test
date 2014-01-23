@@ -1,4 +1,9 @@
 <script>
+	function delete_logo(){
+		$('#current-logo').hide();
+		$('#bankLogo').val('del-logo');
+	 }
+	
 	function bank_validation()
 	{
 		if(document.getElementById("bankname").value == '')
@@ -15,7 +20,10 @@
 		}
 		return true;
 	}
+	
 </script>
+<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 </TD>
   </TR>
   <TR>
@@ -66,15 +74,35 @@
 						<form name = "frm" method = "post" onsubmit = "return bank_validation();" enctype = "multipart/form-data">
 						
 						<tr bgcolor = '#F7F7F7'>
-							<td align = "right"><b>Bank Name:</b></td>
+							<td align = "right"><font color="red">*</font><b>Bank Name:</b></td>
 							<td align = "left"><input type = "text" name = "bankname" id = "bankname" value = "{$bankname}"></td>
 						</tr>
+						{if $img != ''}
+							<tr bgcolor = '#F7F7F7'>
+								<td width="20%" align="right" valign = top><b>Current Logo : </b></td>
+								<td width="20%" align="left" >
+								<div id='current-logo'>
+											<a id="view" href="{$imgDisplayPath}bank_list/{$img}" title="Bank Logo">View Image</a>  
+											<script type="text/javascript">
+											$(document).ready(function() {
+											$("a#view").fancybox();
+											});
+											</script>
+											
+											&nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick="delete_logo()" title="Delete Logo"/>
+											<input type = "hidden" name = "bankLogo" id="bankLogo" value = "">
+								</div>
+									
+								</td>
+								
+						 	</tr>
+						{/if}
 						<tr bgcolor = '#F7F7F7'>
 							<td align = "right"><b>Bank Logo:</b></td>
 							<td align = "left"><input type = "file" name = "logo"></td>
 						</tr>
 						<tr bgcolor = '#F7F7F7'>
-							<td align = "right" valign ="top"><b>Bank Detail:</b></td>
+							<td align = "right" valign ="top"><font color="red">*</font><b>Bank Detail:</b></td>
 							<td align = "left">
 								<textarea name = "bank_detail" id = "bank_detail" rows="15" cols="30">{$bank_detail}</textarea>
 							</td>
@@ -98,79 +126,3 @@
  
 </TR>
 
-
- <script type="text/javascript">
-
-	Calendar.setup({
-
-		inputField     :    "f_date_start",     // id of the input field
-	//    ifFormat       :    "%Y/%m/%d %l:%M %P",      // format of the input field
-	  ifFormat       :    "%Y-%m-%d",      // format of the input field
-		button         :    "f_trigger_start",  // trigger for the calendar (button ID)
-		align          :    "Tl",           // alignment (defaults to "Bl")
-		singleClick    :    true,
-		showsTime		:	true
-
-	});
-
-</script>
- <script type="text/javascript">	
-	Calendar.setup({
-
-		inputField     :    "f_date_end",     // id of the input field
-	//    ifFormat       :    "%Y/%m/%d %l:%M %P",      // format of the input field
-	  ifFormat       :    "%Y-%m-%d",      // format of the input field
-		button         :    "f_trigger_end",  // trigger for the calendar (button ID)
-		align          :    "Tl",           // alignment (defaults to "Bl")
-		singleClick    :    true,
-		showsTime		:	true
-
-	});
-
-/**************Date Diff coding************************/
-var dt1 = 0;
-var dt2 = 0;
-var diff=0;
-function DateDiff1(dt,flg)
-{
-//alert(parseDate(dt)+"here");
-	var DiffNoOfDays	=	0;
-	if(flg == 1)
-		this.dt1 =  parseDate(dt);
-	else
-		this.dt2 = parseDate(dt);
-
-	if( ((this.dt1 != 0) || (this.dt1 != '')) && ((this.dt2 != 0) || (this.dt2 != '')) )
-	{
-		DiffNoOfDays	=	DateDiff(this.dt1,this.dt2)/86400000;
-		DiffNoOfDays		=	Math.abs(DiffNoOfDays);
-		
-	}
-	this.diff=DiffNoOfDays;
-}
-
-function parseDate(input)
-{
-	var parts = input.match(/(\d+)/g);
-	return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
-}
-
-
-
-function DateDiff(date1,date2)
-{
-   return date1.getTime() - date2.getTime();
-}
-
-function getDiff()
-{
-	 this.diff;
-	 if(this.diff > 30)
-	 {
-		alert("Maximum limit of Date Difference Exceeded! ");
-		return false;
-	 }
-	 return true;
-}
-
-</script>

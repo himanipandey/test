@@ -10,6 +10,9 @@
     $cityAuth = isUserPermitted('city', 'manage');
     $smarty->assign("cityAuth", $cityAuth);
     
+    $bankAuth = isUserPermitted('bank', 'manage');
+    $smarty->assign("bankAuth", $bankAuth);
+    
     $dailyPerformanceReportAuth = isUserPermitted('daily-performance-report', 'read');
     $smarty->assign("dailyPerformanceReportAuth", $dailyPerformanceReportAuth);
     
