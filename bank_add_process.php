@@ -7,6 +7,7 @@
 		$bankname	=	trim($_REQUEST['bankname']);
 		$bank_detail=	trim($_REQUEST['bank_detail']);
 		$logo_name	=	$_FILES['logo']['name'];
+		
 		if($logo_name != ''){
 			$dest		=	$newImagePath."/bank_list/".$logo_name;
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
@@ -29,10 +30,11 @@
 		
 		 $banks->bank_name = $bankname;
 		 $banks->bank_detail = $bank_detail;
+		 
 		 if($logo_name !='' && $image_id){
 			$banks->bank_logo = $logo_name;
             $banks->service_image_id = $image_id;
-         }elseif(isset($_POST['bankLogo'])){
+         }elseif(isset($_POST['bankLogo']) && $_POST['bankLogo'] == 'del-logo'){
 			 $banks->bank_logo = '';
             $banks->service_image_id = 0;
 		 }
