@@ -140,7 +140,7 @@ function currentCycleOfProject($projectId) {
             inner join master_project_phases pphs on rp.PROJECT_PHASE_ID = pphs.id
             where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
                 (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and
-            rp.project_id = $projectId and version = 'Cms' order by pa.updation_time desc limit 1";
+            rp.project_id = $projectId and version = 'Cms' order by pa.id desc limit 1";
     $resUpdationCycle = mysql_query($qry) or die(mysql_error());
     $updationCycle = mysql_fetch_assoc($resUpdationCycle);
     if(mysql_num_rows($resUpdationCycle)>0){
