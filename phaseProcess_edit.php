@@ -285,7 +285,8 @@ if (isset($_POST['btnSave'])) {
                     }
                 }
                 //ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $supply, $_POST['launched']);
-                if($supply != null)
+                //print "<pre>".print_r($_POST,1)."</pre>"; die;
+                if($supply != null && isset($_POST['supply']) && isset($_POST['launched']))
 					ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $supply, $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']);
             }
 
