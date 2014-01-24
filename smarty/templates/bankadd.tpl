@@ -107,8 +107,15 @@
 								<textarea name = "bank_detail" id = "bank_detail" rows="15" cols="30">{$bank_detail}</textarea>
 							</td>
 						</tr>
-						
-							 <tr  class = "headingrowcolor"><td align = "right" colspan = "3"><input type = "submit" value = "Submit" name = "submit"></td></tr>
+							<tr  class = "headingrowcolor">
+								<td align = "right" colspan = "3">
+									{if $bankid}
+										<input type = "submit" value = "Update" name = "update">
+									{else}
+										<input type = "submit" value = "Submit" name = "submit">
+									{/if}										
+								</td>
+							</tr>
 						</form>
 					</table>
 				
