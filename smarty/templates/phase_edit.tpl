@@ -98,7 +98,7 @@
             }
         });
 
-		if($('#supply').length){
+		if($('#supply').is(':visible')){
 			 var intRegex = /^\d+$/;
 			 var err = $('span.err_plotsupply');
 			  if (!intRegex.test($('#supply').val())) {
