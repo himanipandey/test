@@ -83,7 +83,8 @@
 								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist."; break;
 							}
 					  }
-					  $temp_arr[$_REQUEST['txtdisplay_order'][$k]] = $_REQUEST['txtdisplay_order'][$k];
+					  if($_REQUEST['txtdisplay_order'][$k] != 5)
+						$temp_arr[$_REQUEST['txtdisplay_order'][$k]] = $_REQUEST['txtdisplay_order'][$k];
 					}
 				}
 			}
