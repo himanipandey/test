@@ -187,7 +187,7 @@
                 'url' : 'brokerCompanyAddAjax.php',
                 'data' : dataString,
                 'success' : function(data){
-//                    alert(data);
+                   // alert(data);
 //                    return false;
                     var json = JSON.parse(data);
                     if(json.response == "error")
@@ -443,11 +443,11 @@
                 alert("Please enter only numbers");
                 return false;
             }
-            else if(jQuery('#phone1').val() && (jQuery('#phone1').val().length > 12))
+            else if(jQuery('#phone1').val() && (jQuery('#phone1').val().length > 20))
             {
                 jQuery('#phone1').val('');
                 jQuery('#phone1').focus();
-                alert("Phone Number should be equal to 12 digits");
+                alert("Phone Number should be equal to 20 digits");
                 return false;
             }
             
@@ -466,11 +466,11 @@
                 alert("Please enter only numbers");
                 return false;
             }
-            else if(jQuery('#phone2').val() && (jQuery('#phone2').val().length > 12))
+            else if(jQuery('#phone2').val() && (jQuery('#phone2').val().length > 20))
             {
                 jQuery('#phone2').val('');
                 jQuery('#phone2').focus();
-                alert("Phone Number should be equal to 12 digits");
+                alert("Phone Number should be equal to 20 digits");
                 return false;
             }
             
@@ -489,11 +489,11 @@
                 alert("Please enter only numbers");
                 return false;
             }
-            else if(jQuery('#fax').val() && jQuery('#fax').val().length > 12)
+            else if(jQuery('#fax').val() && jQuery('#fax').val().length > 20)
             {
                 jQuery('#fax').val('');
                 jQuery('#fax').focus();
-                alert("Fax Number should be less than or eaual to 12 digits");
+                alert("Fax Number should be less than or eaual to 20 digits");
                 return false;
             }
             
@@ -520,11 +520,11 @@
                 alert("Please enter only numbers");
                 return false;
             }
-            else if(jQuery('#pincode').val() && jQuery('#pincode').val().length > 12)
+            else if(jQuery('#pincode').val() && (jQuery('#pincode').val().length > 6 || jQuery('#pincode').val().length < 6))
             {
                 jQuery('#pincode').val('');
                 jQuery('#pincode').focus();
-                alert("Pincode should be less than 12 digits");
+                alert("Pincode should be equal to 6 digits");
                 return false;
             }
             else if(jQuery('#email').val() && !(jQuery('#email').val().match(/^[a-zA-Z0-9._]+\@[a-zA-Z0-9]+\.[a-zA-Z]+$/)))
@@ -542,7 +542,7 @@
             jQuery('.cp_name').each(function(){
                 if(flag == 1)
                     return false;
-                if(!jQuery(this).val())
+                if(!jQuery(this).val() || !jQuery.trim(jQuery(this).val()))
                 {
                     jQuery(this).val('');
                     jQuery(this).focus();
@@ -577,11 +577,11 @@
                     flag = 1;
                     return false;
                 }
-                else if(jQuery(this).val() && (jQuery(this).val().length > 12))
+                else if(jQuery(this).val() && (jQuery(this).val().length > 20))
                 {
                     jQuery(this).val('');
                     jQuery(this).focus();
-                    alert("Phone Number should be less or equal to 12 digits");
+                    alert("Phone Number should be less or equal to 20 digits");
                     flag = 1;
                     return false;
                 } 
@@ -610,11 +610,11 @@
                     flag = 1;
                     return false;
                 }
-                else if(jQuery(this).val() && (jQuery(this).val().length > 12))
+                else if(jQuery(this).val() && (jQuery(this).val().length > 20))
                 {
                     jQuery(this).val('');
                     jQuery(this).focus();
-                    alert("Phone Number should be less or equal to 12 digits");
+                    alert("Phone Number should be less or equal to 20 digits");
                     flag = 1;
                     return false;
                 } 
@@ -641,11 +641,11 @@
                     flag = 1;
                     return false;
                 }
-                else if(jQuery(this).val() && (jQuery(this).val().length > 12))
+                else if(jQuery(this).val() && (jQuery(this).val().length > 20))
                 {
                     jQuery(this).val('');
                     jQuery(this).focus();
-                    alert("Fax Number should be les than or equal to 12 digits");
+                    alert("Fax Number should be les than or equal to 20 digits");
                     flag = 1;
                     return false;
                 } 
@@ -722,11 +722,11 @@
                 alert("Please enter only numbers");
                 return false;
             }
-            else if(jQuery('#cc_phone').val() && jQuery('#cc_phone').val().length > 12)
+            else if(jQuery('#cc_phone').val() && jQuery('#cc_phone').val().length > 20)
             {
                 jQuery('#cc_phone').val('');
                 jQuery('#cc_phone').focus();
-                alert("Phone Number should be equal to 12 digits");
+                alert("Phone Number should be less than or equal to 20 digits");
                 return false;
             }
             else if(jQuery('#cc_fax').val() && isNaN(jQuery('#cc_fax').val()))
@@ -743,11 +743,11 @@
                 alert("Please enter only numbers");
                 return false;
             }
-            else if(jQuery('#cc_fax').val() && jQuery('#cc_fax').val().length > 12)
+            else if(jQuery('#cc_fax').val() && jQuery('#cc_fax').val().length > 20)
             {
                 jQuery('#cc_fax').val('');
                 jQuery('#cc_fax').focus();
-                alert("Fax Number should be less than or eaual to 12 digits");
+                alert("Fax Number should be less than or eaual to 20 digits");
                 return false;
             }
             else if(jQuery('#cc_mobile').val() && isNaN(jQuery('#cc_mobile').val()))
@@ -1102,7 +1102,7 @@
                     <td width="10%">&nbsp;</td>
                     <td width="15%" align="right" valign="top" >Pincode : </td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="pincode" id="pincode" value="{$pincode}" maxlength="12" style="width:85px;" />
+                        <input type=text name="pincode" id="pincode" value="{$pincode}" maxlength="6" style="width:85px;" />
                         {if $ErrorMsg["pincode"] != ''}
                             <font color = "red">{$ErrorMsg["pincode"]}</font>
                         {/if}	
@@ -1113,7 +1113,7 @@
     				<td width="35%" align="left" valign="top" >Office Phone 1 :<font color = "red">*</font> </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                        <input type=text name="phone1" id="phone1" value="{$phone1}" maxlength="12" style="width:85px;" />
+                        <input type=text name="phone1" id="phone1" value="{$phone1}" maxlength="20" style="width:85px;" />
                         {if $ErrorMsg["phone1"] != ''}
                             <font color = "red">{$ErrorMsg["phone1"]}</font>
                         {/if}		
@@ -1135,7 +1135,7 @@
     				<td width="35%" align="left" valign="top" >Office Phone 2 : </td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                        <input type=text name="phone2" id="phone2" value="{$phone2}" maxlength="12" style="width:85px;" />
+                        <input type=text name="phone2" id="phone2" value="{$phone2}" maxlength="20" style="width:85px;" />
                         {if $ErrorMsg["phone2"] != ''}
                             <font color = "red">{$ErrorMsg["phone2"]}</font>
                         {/if}		
@@ -1146,7 +1146,7 @@
                 <tr>
     				<td width="15%" align="left" valign="top" >Office Fax : </td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="fax" id="fax" value="{$fax}" maxlength="12" style="width:85px;" />
+                        <input type=text name="fax" id="fax" value="{$fax}" maxlength="20" style="width:85px;" />
                         {if $ErrorMsg["fax"] != ''}
                             <font color = "red">{$ErrorMsg["fax"]}</font>
                         {/if}	
@@ -1191,7 +1191,7 @@
                         				<td width="15%" valign="top" >Contact Phone 1 :</td>
                                         <td width="10%" align="left" valign="top" >
                                             <input type="text"maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                                            <input type="text" name="cp_phone1" id="cp_phone1-{$val['id']}" class="cp_phone1" value="{$val['phone1']}" maxlength="12" style="width:85px;" />
+                                            <input type="text" name="cp_phone1" id="cp_phone1-{$val['id']}" class="cp_phone1" value="{$val['phone1']}" maxlength="20" style="width:85px;" />
                                             
                                         </td>
                                         <td width="15%" align="right" valign="top" >Contact Email:</td>
@@ -1206,7 +1206,7 @@
                         				<td width="15%" valign="top" >Contact Phone 2 : </td>
                                         <td width="10%" align="left" valign="top" >
                                             <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                                            <input type="text" name="cp_phone2" id="cp_phone2-{$val['id']}" class="cp_phone2" value="{$val['phone2']}" maxlength="12" style="width:85px;" />
+                                            <input type="text" name="cp_phone2" id="cp_phone2-{$val['id']}" class="cp_phone2" value="{$val['phone2']}" maxlength="20" style="width:85px;" />
                                             
                                         </td>
                         				
@@ -1215,7 +1215,7 @@
                                     <tr class="{$val['id']}">
                         				<td width="15%" valign="top" >Contact Fax : </td>
                                         <td width="10%" align="left" valign="top" >
-                                            <input type="text" name="cp_fax" id="cp_fax-{$val['id']}" class="cp_fax" value="{$val['fax']}" maxlength="12" style="width:85px;" />
+                                            <input type="text" name="cp_fax" id="cp_fax-{$val['id']}" class="cp_fax" value="{$val['fax']}" maxlength="20" style="width:85px;" />
                                            	{if $ErrorMsg["cp_fax"] != ''}
                                                 <font color = "red">{$ErrorMsg["cp_fax"]}</font>
                                             {/if}
@@ -1246,7 +1246,7 @@
                         				<td width="15%" valign="top" >Contact Phone 1 :</td>
                                         <td width="10%" align="left" valign="top" >
                                             <input type="text"maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                                            <input type="text" name="cp_phone1" id="cp_phone1-01" class="cp_phone1" value="{$cp_phone1}" maxlength="12" style="width:85px;" />
+                                            <input type="text" name="cp_phone1" id="cp_phone1-01" class="cp_phone1" value="{$cp_phone1}" maxlength="20" style="width:85px;" />
                                             {if $ErrorMsg["cp_phone1"] != ''}
                                                 <font color = "red">{$ErrorMsg["cp_phone1"]}</font>
                                             {/if}
@@ -1265,7 +1265,7 @@
                         				<td width="15%" valign="top" >Contact Phone 2 : </td>
                                         <td width="10%" align="left" valign="top" >
                                             <input type=text maxlength="2" readonly="true" value="+91" style="width:25px;" />
-                                            <input type="text" name="cp_phone2" id="cp_phone2-01" class="cp_phone2" value="{$cp_phone2}" maxlength="12" style="width:85px;" />
+                                            <input type="text" name="cp_phone2" id="cp_phone2-01" class="cp_phone2" value="{$cp_phone2}" maxlength="20" style="width:85px;" />
                                             {if $ErrorMsg["cp_phone2"] != ''}
                                                 <font color = "red">{$ErrorMsg["cp_phone2"]}</font>
                                             {/if}
@@ -1276,7 +1276,7 @@
                                     <tr>
                         				<td width="15%" valign="top" >Contact Fax : </td>
                                         <td width="10%" align="left" valign="top" >
-                                            <input type="text" name="cp_fax" id="cp_fax-01" class="cp_fax" value="{$cp_fax}" maxlength="12" style="width:85px;" />
+                                            <input type="text" name="cp_fax" id="cp_fax-01" class="cp_fax" value="{$cp_fax}" maxlength="20" style="width:85px;" />
                                            	{if $ErrorMsg["cp_fax"] != ''}
                                                 <font color = "red">{$ErrorMsg["cp_fax"]}</font>
                                             {/if}
@@ -1308,7 +1308,7 @@
 				<tr>
                     <td width="15%" valign="top" >Cust Care Phone :</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="cc_phone" id="cc_phone" value="{$cc_phone}" maxlength="12" style="width:85px;" />
+                        <input type=text name="cc_phone" id="cc_phone" value="{$cc_phone}" maxlength="20" style="width:85px;" />
                         {if $ErrorMsg["cc_phone"] != ''}
                             <font color = "red">{$ErrorMsg["cc_phone"]}</font>
                         {/if}	
@@ -1328,7 +1328,7 @@
                 <tr>
     				<td width="15%" valign="top" >Cust Care Fax : </td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="cc_fax" id="cc_fax" value="{$cc_fax}" maxlength="10" style="width:85px;" />
+                        <input type=text name="cc_fax" id="cc_fax" value="{$cc_fax}" maxlength="20" style="width:85px;" />
                         {if $ErrorMsg["cc_fax"] != ''}
                             <font color = "red">{$ErrorMsg["cc_fax"]}</font>
                         {/if}	

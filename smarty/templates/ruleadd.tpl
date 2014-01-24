@@ -244,7 +244,7 @@
                   <input type="hidden" name="dprojectjIdArr" id="dprojectjIdArr" value="" />
                   <input type="hidden" name="dagentjIdArr" id="dagentjIdArr" value="" />
                   <input type="hidden" name="hiddennameflg" id="hiddennameflg" value="" />
-                  <input type="hidden" name="broker_cmpny_id" id="broker_cmpny_id" value="" />
+                  <input type="hidden" name="broker_cmpny_id" id="broker_cmpny_id" value="{$broker_id}" />
                   <input type="hidden" name="sort" id="sort" value="{$sort}" />
                   <input type="hidden" name="page" id="page" value="{$page}" />
 				  </td>

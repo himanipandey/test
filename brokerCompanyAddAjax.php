@@ -60,6 +60,11 @@ if(isset($_POST['brokercmpnyid']) && !empty($_POST['brokercmpnyid']))
                     $citylocids[] = $bcmpLocation->id; 
                 }  
             }
+            else
+            {
+                echo json_encode(array("response" => "error"));
+                die;
+            }
         }
     }
     

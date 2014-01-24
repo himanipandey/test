@@ -128,7 +128,8 @@ class BrokerCompanyContact extends ActiveRecord\Model
         
         
         $contactId = ContactNumber::find('all' , array('conditions' => "table_id=$cid AND table_name = 'broker_contacts'" ));
-        //echo BrokerCompanyContact::connection()->last_query;
+        //echo ContactNumber::connection()->last_query;
+//        die;        
         if(!empty($contactId))
         {
             $i = 0;

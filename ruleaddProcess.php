@@ -310,14 +310,16 @@
                 
                 global $broker_cmpny_id , $rule_name , $city_id,$locality,$project,$agent,$ruleId , $finallocidArr ,$finalprojidArr,$finalagentidArr,$locjIdArr,$projectjIdArr,$agentjIdArr;
                $locality_id = '';
-//                print'<pre>';
+                print'<pre>';
 //                print_r($_POST);
 //                echo "<br>==========Locality==========<br>";
 //                print_r($finallocidArr);
-//                echo "<br>==========Project==========<br>";
-//                print_r($finalprojidArr);                
-//                echo "<br>==========Agent==========<br>";
-//                print_r($finalagentidArr);
+                //echo "<br>==========Project==========<br>";
+//                print_r($finalprojidArr); 
+//                print_r($project);               
+                echo "<br>==========Agent==========<br>";
+                print_r($finalagentidArr);
+                print_r($agent);
 //                die;            
                 $sql_project_assignment_rules = @mysql_query("UPDATE `project_assignment_rules` SET
                                                 `broker_id` = '".mysql_escape_string($broker_cmpny_id)."',
@@ -348,7 +350,7 @@
                                 if(!empty($str))
                                 {
                                     $del .= trim($str , ',').") AND rule_id = '".$rule_id."'";
-                                    //echo " Delete here".$del."<br>";
+                                    //echo " Delete All".$del."<br>";
                                     //die;
                                     $sql_rule_locality_mappings = @mysql_query($del);
                                 }
@@ -365,7 +367,7 @@
                         if(!empty($str1))
                         {
                             $delall .= trim($str1 , ",").") AND rule_id = '".$rule_id."'";
-                            //echo " Delete thr".$delall."<br>";
+                            echo " Delete some".$delall."<br>";
                             //die;
                             $sql_rule_locality_mappings = @mysql_query($delall);
                         }
@@ -417,8 +419,9 @@
                             }
                             else
                             {
-                                $chkSql = @mysql_query("SELECT * FROM `rule_locality_mappings` WHERE locality_id = '".mysql_escape_string($val)."' AND rule_id = '".mysql_escape_string($rule_id)."'")or die(mysql_error());
-                                echo " Loc num rows ".@mysql_num_rows($chkSql)."<br>";
+                                $chkSql = @mysql_query("SELECT * FROM `rule_locality_mappings` WHERE locality_id = '".mysql_escape_string($val)."'")or die(mysql_error());
+                                //echo " Loc num rows ".@mysql_num_rows($chkSql)."<br>";
+                                //echo "SELECT * FROM `rule_locality_mappings` WHERE locality_id = '".mysql_escape_string($val)."'<br>";
                                 if(!@mysql_num_rows($chkSql) > 0)
                                 {
                                     $str1 .= " ('".$rule_id."','".mysql_escape_string($val)."','".$_SESSION['adminId']."','".date('Y-m-d')."')".",";
@@ -444,8 +447,12 @@
                     
                     if(!empty($finalprojidArr))
                     {
+                        $delall = "DELETE FROM `rule_project_mappings` WHERE project_id IN (";
+                        $str1 = '';
                         foreach($finalprojidArr as $key => $val)
                         {
+                            $del = "DELETE FROM `rule_project_mappings` WHERE project_id IN (";
+                            $str = '';
                             if($val == 'all')
                             {
                                 $fetchProQuery = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project 
@@ -455,16 +462,32 @@
                                             WHERE city.city_id = '".mysql_escape_string($city_id)."'");
                                 while($row = @mysql_fetch_assoc($fetchProQuery))
                                 {
-                                    $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_project_mappings` WHERE project_id = '".$row['project_id']."' AND rule_id = '".$rule_id."'");    
+                                    $str .= "'".$row['project_id']."'".",";    
+                                }
+                                $sql_rule_project_mappings = '';
+                                if(!empty($str))
+                                {
+                                    $del .= trim($str , ",").") AND rule_id = '".$rule_id."'";
+                                    //echo "Delete for All $del<br>";
+                                    $sql_rule_locality_mappings = @mysql_query($del);
                                 }
                             }
                             else
-                                $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_project_mappings` WHERE project_id = '".mysql_escape_string($val)."' AND rule_id = '".$rule_id."'"); 
-                            //echo "DELETE FROM `rule_project_mappings` WHERE project_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>";
+                            {
+                                $str1 .= "'".$val."'".",";
+                                //$sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_project_mappings` WHERE project_id = '".mysql_escape_string($val)."' AND rule_id = '".$rule_id."'"); 
+                            }
+                        }
+                        $sql_rule_project_mappings = '';
+                        if(!empty($str1))
+                        {
+                            $delall .= trim($str1 , ",").") AND rule_id = '".$rule_id."'";
+                            //echo "Delete for some $delall<br>";
+                            $sql_rule_project_mappings = @mysql_query($delall);
                         }
                     }
                     
-                    
+                    //echo "here i am ";die;
                     if(!empty($project))
                     {
                         $chkAll = 0;
@@ -511,6 +534,7 @@
                                     if(!empty($str))
                                     {
                                         $insertLoc .= trim($str , ',');
+                                        //echo "For All Locality Project ".$insertLoc."<br>";
                                         $sql_rule_project_mappings = @mysql_query($insertLoc) or die(mysql_error());    
                                     }
                                     
@@ -544,6 +568,7 @@
                                     if(!empty($str))
                                     {
                                         $insertLoc .= trim($str , ',');
+                                        //echo "For All Project ".$insertLoc."<br>";
                                         $sql_rule_project_mappings = @mysql_query($insertLoc) or die(mysql_error());
                                     }
                                 }
@@ -551,7 +576,7 @@
                             }
                             else
                             {
-                                $chkSql = @mysql_query("SELECT * FROM `rule_project_mappings` WHERE project_id = ".mysql_escape_string($val)." AND rule_id = ".mysql_escape_string($rule_id));
+                                $chkSql = @mysql_query("SELECT * FROM `rule_project_mappings` WHERE project_id = '".mysql_escape_string($val)."'");
                             
                                 if(!@mysql_num_rows($chkSql) > 0)
                                 {
@@ -567,23 +592,53 @@
                                   
                         }
                         
-                        if($chkAll == 0 && !empty($insertLocpa) && !empty($str1))
+                        if($chkAll == 0 && !empty($str1))
                         {
                             $insertLocpa .= trim($str1, ',');
+                            //echo "For Some Project ".$insertLoc."<br>";
                             $sql_rule_project_mappings = @mysql_query($insertLocpa) or die(mysql_error());
                         }
                     }
                     
-                    
+                    //echo "Project end";
+//                    die;
                     if(!empty($finalagentidArr))
                     {
+                        $delall = "DELETE FROM `rule_agent_mappings` WHERE agent_id IN (";
+                        $str = '';
                         foreach($finalagentidArr as $key => $val)
                         {
+                            $del = "DELETE FROM `rule_agent_mappings` WHERE agent_id IN (";
+                            $str1 = '';
                             if($val == 'all')
-                                break;
+                            {
+                                $chkSql = @mysql_query("SELECT * FROM `rule_agent_mappings` WHERE rule_id = '".$rule_id."'");
+                                
+                                if(@mysql_num_rows($chkSql) > 0)
+                                {
+                                    while($row = @mysql_fetch_assoc($chkSql))
+                                    {
+                                        $str1 .= "'".$row['agent_id']."'".",";
+                                    }
+                                }
+                                if(!empty($str1))
+                                {
+                                    $del .= trim($str1 , ",").") AND rule_id = '".$rule_id."'";
+                                    //echo "Delete for all ".$del;
+                                    @mysql_query($del);
+                                }
+                            }
                             else
-                                $sql_rule_locality_mappings = @mysql_query("DELETE FROM `rule_agent_mappings` WHERE agent_id = '".mysql_escape_string($val)."' AND rule_id = '".$rule_id."'");
-                            //echo "DELETE FROM `rule_agent_mappings` WHERE agent_id=".mysql_escape_string($val)." AND rule_id = ".$rule_id."<br>"; 
+                            {
+                                $str .= "'".$val."'".",";
+                            }
+                        }
+                        
+                        if(!empty($str))
+                        {
+                            $delall .= trim($str , ",").") AND rule_id = '".$rule_id."'";
+                            //echo "For some agent ".$delall."<br>";
+                            $sql_rule_locality_mappings = @mysql_query($delall);
                         }
                     }
                     //print'<pre>';
@@ -608,7 +663,7 @@
                             else
                             {
                                 $countAgents += 1;
-                                $chkSql = @mysql_query("SELECT * FROM `rule_agent_mappings` WHERE agent_id = '".mysql_escape_string($val)."' AND rule_id = '".mysql_escape_string($rule_id)."'");
+                                $chkSql = @mysql_query("SELECT * FROM `rule_agent_mappings` WHERE agent_id = '".mysql_escape_string($val)."'");
                                     
                                 if(!@mysql_num_rows($chkSql) > 0)
                                 {
@@ -619,17 +674,20 @@
                             }    
                         }
                         
-                        $chkSql = @mysql_query("SELECT agents.id FROM agents WHERE agents.broker_id = ".$broker_cmpny_id." AND agents.id NOT IN (SELECT agent_id FROM rule_agent_mappings)");
+                        $chkSql = @mysql_query("SELECT agents.id FROM agents WHERE agents.broker_id = '".$broker_cmpny_id."' AND agents.id NOT IN (SELECT agent_id FROM rule_agent_mappings)");
+                        //echo "SELECT agents.id FROM agents WHERE agents.broker_id = '".$broker_cmpny_id."' AND agents.id NOT IN (SELECT agent_id FROM rule_agent_mappings)<br>";
                         $chkSql = @mysql_num_rows($chkSql);
-                        
-                        if($chkAll == 0 && !empty($insertLocpa) && !empty($str1) && $chkSql == $countAgents)
+                        //echo $chkSql . " ". $countAgents."<br>";
+                        if($chkAll == 0 && !empty($str1) && $chkSql != $countAgents)
                         {
                             $insertLocpa .= trim($str1, ',');
+                            //echo "For some Insert ".$insertLocpa."<br>";
                             $sql_rule_agent_mappings = @mysql_query($insertLocpa) or die(mysql_error());
                         }
                     }
                     
-                   //die("here");
+                   //echo "Agent end";
+//                   die;
                 }
                 else{
                     $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
