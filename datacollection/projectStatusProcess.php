@@ -123,7 +123,7 @@ function prepareDisplayData($data){
                     (psh.HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
                     or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null)) inner join proptiger_admin pa1 on 
                     pa.ASSIGNED_TO = pa1.ADMINID where psh.history_id != rp.movement_history_id and 
-                    rp.project_id in (".$pids.") and rp.version = 'Cms' group by rp.PROJECT_ID;";
+                    rp.project_id in (".$pids.") and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active') group by rp.PROJECT_ID;";
 		$sql_depts = dbQuery($sql);
 	
 		foreach($sql_depts as $value){
@@ -157,7 +157,7 @@ function prepareDisplayData($data){
             $qryOldHistoryId = "select pa1.role from resi_project rp
                 join project_assignment pa on rp.movement_history_id = pa.movement_history_id
                 join  proptiger_admin pa1 on pa.assigned_to = pa1.adminid
-                where rp.project_id = ".$value['PROJECT_ID']." and rp.version = 'Cms' order by pa.updation_time asc limit 1";            
+                where rp.project_id = ".$value['PROJECT_ID']." and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active') order by pa.updation_time asc limit 1";            
             $resOldHistoryId = mysql_query($qryOldHistoryId) or die(mysql_error());
             $dataOldHistoryId = mysql_fetch_assoc($resOldHistoryId);
            // $firstRole = $dataOldHistoryId['role'];
