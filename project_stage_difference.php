@@ -5,31 +5,48 @@ include("dbConfig.php");
 include("modelsConfig.php");
 include("includes/configs/configs.php");
 
+//newproject = 2, updation cycle = 3 , secondary price cycle =4
+
+// audit1 = 4
 
 $projectID = $_POST['projectID'];
+$projectStageId = $_POST['stageID'];
+$projectPhaseId = 1;
 
-$audit_PrelaunchDate = '';
-$audit_LaunchDate = '';
-$audit_CompletionDate = '';
-$audit_SupplyDate = '';
-$audit_ProjectStatus = '';
-$audit_BookingStatus = '';
+if($projectStageId == 4)
+	$projectStageId  = 3;
+	
+if($projectStageId == 2)
+	$projectPhaseId = 3;
+	
+	
+if($projectStageId == 3)
+	$projectPhaseId = 1;
 
-$call_PrelaunchDate = '';
-$call_LaunchDate = '';
-$call_CompletionDate = '';
-$call_SupplyDate = '';
-$call_ProjectStatus = '';
-$call_BookingStatus = '';
+
+$audit_PrelaunchDate = '-';
+$audit_LaunchDate = '-';
+$audit_CompletionDate = '-';
+$audit_SupplyDate = '-';
+$audit_ProjectStatus = '-';
+$audit_BookingStatus = '-';
+
+$call_PrelaunchDate = '-';
+$call_LaunchDate = '-';
+$call_CompletionDate = '-';
+$call_SupplyDate = '-';
+$call_ProjectStatus = '-';
+$call_BookingStatus = '-';
 	
 //values on audit1	
 $sql_resi_audit = mysql_query("SELECT trp._t_transaction_id,trp.PRE_LAUNCH_DATE,trp.LAUNCH_DATE,trp.PROMISED_COMPLETION_DATE,trp.EXPECTED_SUPPLY_DATE,trp.PROJECT_STATUS_ID,trp.created_at,trp.updated_at,
 ps.display_name
 FROM _t_resi_project trp 
 LEFT JOIN project_status_master ps ON trp.project_status_id = ps.id
-WHERE trp.PROJECT_ID='$projectID' AND trp.PROJECT_PHASE_ID = 4 ORDER BY trp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
+WHERE trp.PROJECT_ID='$projectID' AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = 4) ORDER BY trp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
 
-if($sql_resi_audit){
+
+if(mysql_num_rows($sql_resi_audit)){
 
 	$sql_resi_audit = mysql_fetch_object($sql_resi_audit);
 	
@@ -63,7 +80,7 @@ FROM _t_resi_project trp
 LEFT JOIN project_status_master ps on trp.project_status_id = ps.id
 LEFT JOIN resi_project_phase  rpp on trp.project_id = rpp.project_id  
 LEFT JOIN master_booking_statuses mbs ON rpp.booking_status_id = mbs.id
-WHERE trp.PROJECT_ID='$projectID'  AND trp.PROJECT_PHASE_ID = 3 AND rpp.PHASE_TYPE = 'Logical' ORDER BY trp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
+WHERE trp.PROJECT_ID='$projectID'  AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = '$projectPhaseId') AND rpp.PHASE_TYPE = 'Logical' ORDER BY trp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
 
 if($sql_resi_callcenter){
 
@@ -97,34 +114,34 @@ $html = "<table width='600px'><tbody>
 			<th nowrap='nowrap' align='center' class='whiteTxt' width=35%>Audit-1 Stage</th>			
 		</tr>
 		<tr>
-			<td width=30%><b>PRE LAUNCH DATE</b></td>
-			<td width=35%>$call_PrelaunchDate</td>
-			<td width=35%>$audit_PrelaunchDate</td>
+			<td a width=30%><b>PRE LAUNCH DATE</b></td>
+			<td align='center' width=35%>$call_PrelaunchDate</td>
+			<td align='center' width=35%>$audit_PrelaunchDate</td>
 		</tr>
 		<tr>
-			<td width=30%><b>LAUNCH DATE</b></td>
-			<td width=35%>$call_LaunchDate</td>
-			<td width=35%>$audit_LaunchDate</td>
+			<td  width=30%><b>LAUNCH DATE</b></td>
+			<td align='center' width=35%>$call_LaunchDate</td>
+			<td align='center' width=35%>$audit_LaunchDate</td>
 		</tr>
 		<tr>
-			<td width=30%><b>COMPLETION DATE</b></td>
-			<td width=35%>$call_CompletionDate</td>
-			<td width=35%>$audit_CompletionDate</td>
+			<td  width=30%><b>COMPLETION DATE</b></td>
+			<td align='center' width=35%>$call_CompletionDate</td>
+			<td align='center' width=35%>$audit_CompletionDate</td>
 		</tr>
 		<tr>
 			<td width=30%><b>EXPECTED SUPPLY DATE</b></td>
-			<td width=35%>$call_SupplyDate</td>
-			<td width=35%>$audit_SupplyDate</td>
+			<td align='center' width=35%>$call_SupplyDate</td>
+			<td align='center' width=35%>$audit_SupplyDate</td>
 		</tr>
 		<tr>
-			<td width=30%><b>PROJECT STATUS</b></td>
-			<td width=35%>$call_ProjectStatus</td>
-			<td width=35%>$audit_ProjectStatus</td>
+			<td  width=30%><b>PROJECT STATUS</b></td>
+			<td align='center' width=35%>$call_ProjectStatus</td>
+			<td align='center' width=35%>$audit_ProjectStatus</td>
 		</tr>
 		<tr>
-			<td width=30%><b>BOOKING STATUS</b></td>
-			<td width=35%>$call_BookingStatus</td>
-			<td width=35%>$audit_BookingStatus</td>
+			<td  width=30%><b>BOOKING STATUS</b></td>
+			<td align='center' width=35%>$call_BookingStatus</td>
+			<td align='center' width=35%>$audit_BookingStatus</td>
 		</tr>
 		</tbody></table>";
 

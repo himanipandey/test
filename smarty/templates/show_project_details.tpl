@@ -390,10 +390,11 @@ function getDateNow(){
 	 
 	 $('#diffButton').click(function(){
 		 projectID = $('#projectId').val();
+		 projectStage = "{$projectDetails[0]['PROJECT_STAGE_ID']}";
 		 $.ajax({
 	      type:"post",
 	      url:"project_stage_difference.php",
-	      data:"projectID="+projectID,
+	      data:"projectID="+projectID+"&stageID="+projectStage,
 	      success : function (dt) {
 			$('#diffContent td').html(dt);
 	      }
@@ -546,9 +547,9 @@ function getDateNow(){
             <!-- End of Project Phases -->
              <!-- Project Diff -->
             &nbsp;&nbsp;&nbsp;&nbsp;
-            {if $projectDetails[0]['PROJECT_PHASE_ID'] > 3}
-            &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Stage Differenece:</b><button id="diffButton">Diff</button>
-            {/if}
+            {if $projectDetails[0]['PROJECT_PHASE_ID'] > 3 && $projectDetails[0]['PROJECT_PHASE_ID'] > 1 && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+				&nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Stage Differenece:</b><button id="diffButton">Diff</button>
+		    {/if}
             <!-- End of Project Diff -->	   
 			</td></tr>				   
 			<tr>
