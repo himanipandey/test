@@ -6,13 +6,15 @@
 	
 	function bank_validation()
 	{
-		if(document.getElementById("bankname").value == '')
+		bankname = document.getElementById("bankname").value;
+		bank_detail = document.getElementById("bank_detail").value
+		if(bankname.trim() == '')
 		{
 			alert("Please enter bank name!");
 			document.getElementById("bankname").focus();
 			return false;
 		}
-		if(document.getElementById("bank_detail").value == '')
+		if(bank_detail.trim() == '')
 		{
 			alert("Please enter bank detail!");
 			document.getElementById("bank_detail").focus();
