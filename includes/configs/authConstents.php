@@ -104,4 +104,7 @@
     $myProjectsSurveyAuth = isUserPermitted('myprojects_survey', 'access');
     $smarty->assign("myProjectsSurveyAuth", $myProjectsSurveyAuth);
     
+    $audit2Auth = isUserPermitted('Audit2', 'access');
+    $smarty->assign("audit2Auth", $audit2Auth);
+    
 ?>

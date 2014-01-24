@@ -487,7 +487,16 @@ $(function() {
                                      <tr bgcolor='#ffffff'><td colspan='6' align='center' valign='middle' height='80'>No record found for the selected search criteria</td></tr>
                                {/if}
                                </table>
-                               <br>
+                               <br/>
+                               {if $audit2Auth}
+                               <table width="502" border="0" align="left" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "margin: 20px;">
+								   <tr>
+										<td valign="top"><b>Project Remarks : </b></td>
+										<td><textarea cols="53" rows="10" name="project_remarks" id="project_remarks"></textarea></td>
+									</tr>
+                               </table>
+                               <br/>
+                               {/if}
                                {if $flagcheck == 1}
                                <table width="502" border="0" align="left" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;float:right">
                                     <tr bgcolor='#DCDCDC'>
