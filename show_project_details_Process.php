@@ -499,14 +499,14 @@ if ($_POST['forwardFlag'] == 'no') {
        }
        $qrymovmentHistory = "select history_id from project_stage_history where history_id not in(
            select movement_history_id from resi_project 
-           where project_id = $projectId and version = 'Cms') and project_id = $projectId order by history_id desc limit $limitCondition";
+           where project_id = $projectId and version = 'Cms' and status in ('ActiveInCms','Active')) and project_id = $projectId order by history_id desc limit $limitCondition";
        $resmovmentHistory = mysql_query($qrymovmentHistory) or die(mysql_error());
        $movmentHistoryData = mysql_fetch_assoc($resmovmentHistory);
        
       $qry = "select pa.* from resi_project rp join project_assignment pa
                 on (rp.updation_cycle_id is null
                     or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null)
-                where rp.project_id = $projectId and rp.version = 'Cms'
+                where rp.project_id = $projectId and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active') 
                     and pa.movement_history_id = ".$movmentHistoryData['history_id']."
             order by pa.id desc limit 1";//die;
         $res = mysql_query($qry) or die(mysql_error());

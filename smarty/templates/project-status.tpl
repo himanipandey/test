@@ -56,7 +56,7 @@
                                                         {foreach from = $CityDataArr key=key item = item}
                                                         <option {if $selectedCity == {$key}} selected="selected" {/if} value ='{$key}'>{$item}</option>
                                                         {/foreach}
-                                                        {if $callingFieldFlag != 'survey'}
+                                                        {if $callingFieldFlag != 'survey' || ($callingFieldFlag == 'survey' && $department == 'ADMINISTRATOR')}
                                                             <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
                                                         {/if}
                                                 </select>
