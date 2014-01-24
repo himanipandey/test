@@ -10,7 +10,7 @@ function getAssignedProjects($adminId=NULL){
         inner join locality l on rp.locality_id = l.locality_id
         inner join suburb s on l.suburb_id = s.suburb_id
         inner join city c on s.CITY_ID = c.CITY_ID 
-        where pa.ASSIGNED_TO = ".$adminId." and pa.STATUS = 'notAttempted' and rp.version = 'Cms';";
+        where pa.ASSIGNED_TO = ".$adminId." and pa.STATUS = 'notAttempted' and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active');";
     return dbQuery($sql);
 }
 
@@ -23,6 +23,7 @@ function saveStatusUpdateByExecutive($projectID, $status, $remark){
         where rp.PROJECT_ID = $projectID 
             and pa.ASSIGNED_TO = $_SESSION[adminId] 
             and rp.version = 'Cms'
+            and rp.status in ('ActiveInCms','Active')
             and pa.STATUS = 'notAttempted' for update;";
     $result = dbQuery($sql);
     if(count($result)==1){
@@ -50,7 +51,7 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
                where 
                ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
                or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
-               and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
+               and pa.STATUS = 'notAttempted' and rp.status in ('ActiveInCms','Active') group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
                where pa.DEPARTMENT in ($department)  group by pa.ADMINID order by WORKLOAD;";
     }
@@ -66,7 +67,7 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
             where ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') or 
             (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version = 'Cms' 
-            and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
+            and pa.STATUS = 'notAttempted' and rp.status in ('ActiveInCms','Active') group by pa.ASSIGNED_TO) t 
             inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
             where pa.DEPARTMENT in ($department) and pa.ADMINID in 
             (".  implode(',', $executives).") group by pa.ADMINID order by WORKLOAD;";
@@ -239,7 +240,7 @@ function assignProject($projectId, $adminId){
          from resi_project rp left join 
          project_assignment pa ON rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
             or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null)
-         where rp.PROJECT_ID = $projectId and rp.version = 'Cms' order by pa.ID for update;";
+         where rp.PROJECT_ID = $projectId and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active') order by pa.ID for update;";
     $assignmentHistory = dbQuery($sql);
     $movementId = $assignmentHistory[0]['MOVEMENT_HISTORY_ID'];
     $count = count($assignmentHistory);
@@ -415,7 +416,7 @@ function surveyexecutiveList(){
                 pac.city_id in(".implode(',',array_keys($arrAllSurveyLeadCityList)).") and
                ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
                or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
-               and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
+               and pa.STATUS = 'notAttempted' and rp.status in ('ActiveInCms','Active') group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
                where pa.DEPARTMENT in ('SURVEY') and pa.adminid not in(".$_SESSION['adminId'].") group by pa.ADMINID order by WORKLOAD;";
         $result = dbQuery($sql);
