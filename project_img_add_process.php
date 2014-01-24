@@ -155,7 +155,8 @@ if (isset($_POST['Next']))
 							 $ErrorMsg["ptype"] = "Display order '".$_REQUEST['txtdisplay_order'][$count]."' already exist."; break;
 						}
 				  }
-				  $temp_arr[$_REQUEST['txtdisplay_order'][$count]] = $_REQUEST['txtdisplay_order'][$count];
+				  if($_REQUEST['txtdisplay_order'][$count] != 5)
+					$temp_arr[$_REQUEST['txtdisplay_order'][$count]] = $_REQUEST['txtdisplay_order'][$count];
 				}
 				$count++;
 			}

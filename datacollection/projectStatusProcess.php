@@ -62,8 +62,7 @@ $project_ids = array();
 foreach($projectList as $p){
     array_push($project_ids, $p['PROJECT_ID']);
 }
-//$projectLastAuditDate = ProjectStageHistory::get_last_audit_date($project_ids);
-$projectLastAuditDate = array();
+$projectLastAuditDate = ProjectStageHistory::get_last_audit_date($project_ids);
 
 if(isset($_SESSION['project-status']['assignmentError'])){
     if(empty($_SESSION['project-status']['assignmentError'])){
@@ -312,15 +311,10 @@ function download_xls_file($projectList, $projectLastAuditDate, $callingFieldFla
         }
     };
     if($callingFieldFlag === 'callcenter'){
-        echo "<pre>";
-        print_r($callCenterArr);//die;
         excel_file_download($callCenterArr, $filename);
     }
     else{
-        echo "<pre>";
-        print_r($fieldArr);///die;
         excel_file_download($fieldArr, $filename);
-        
         }
 }
 
