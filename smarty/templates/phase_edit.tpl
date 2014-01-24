@@ -54,6 +54,7 @@
         var name_flag = true;
         var flat_bed = true;
         var villa_bed = true;
+        var plot_supply = true;
 
         {*var phasename = $('#phaseName').val();
         if (!phasename) {
@@ -97,7 +98,20 @@
             }
         });
 
-        return name_flag && flat_bed && villa_bed;
+		if($('#supply').length){
+			 var intRegex = /^\d+$/;
+			 var err = $('span.err_plotsupply');
+			  if (!intRegex.test($('#supply').val())) {
+                    $(err).show();
+                    plot_supply = false;
+                }
+                else {
+                    $(err).hide();
+                }
+			
+		}
+		
+	    return name_flag && flat_bed && villa_bed && plot_supply;
     }
 
     function deletePhase()
@@ -355,13 +369,16 @@
                                                                                                                                <tr {$showHide} class="supply_select">
                                                                                                                                 <td width="20%" align="right" valign="top"><b>Supply of Plot  :</b> </td>
                                                                                                                                 <td width="30%" align="left" nowrap>
+																																	<font color="red">
+																																		<span class = "err_plotsupply" style = "display:none;">Integer expected<br/></span>
+																																		<span id = "err_supply" style = "display:none;">Enter the supply for Plot<br/></span></font>
                                                                                                       <input type='text' name='supply' id='supply' value="{$PlotQuantity[0]['supply']}">
                                                                                                                                     <label>Launched</label>
                                                                                                                                     <input id="supply" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched" class="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
                                                                                                                                 </td>
                                                                                                                                 <td width="50%" align="left">
 																																	
-                                                                                                                                    <font color="red"><span id = "err_supply" style = "display:none;">Enter the supply for Plot</span></font>
+                                                                                                                                    
                                                                                                                                     {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == 4 && $phaseObject['PHASE_TYPE'] != 'Logical'}
                                                                                                                                      <button class="reset_option_and_supply supply_button">Change to options</button>
                                                                                                                                      {/if}
