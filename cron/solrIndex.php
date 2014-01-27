@@ -140,61 +140,55 @@ function getSolrDocuments($aAllInventory, $aAllPrice){
         $arrayToPick = isset($aAllInventory[$key])? $aAllInventory : $aAllPrice;
         
         //hard coded values as of now
-        $ecArray['COUNTRY_ID'] = 1;
-        $ecArray['COUNTRY_NAME'] = 'India';
+        $ecArray['country_id'] = 1;
+        $ecArray['country_name'] = 'India';
         
-        $ecArray['PROJECT_ID'] = $arrayToPick[$key]->project_id;
-        $ecArray['PROJECT_NAME'] = $arrayToPick[$key]->project_name;
-        $ecArray['PHASE_ID'] = $arrayToPick[$key]->phase_id;
-        $ecArray['PHASE_NAME'] = $arrayToPick[$key]->phase_name;
-        $ecArray['PHASE_TYPE'] =  $arrayToPick[$key]->phase_type;
-        $ecArray['LOCALITY_ID'] = intval($arrayToPick[$key]->locality_id);
-        $ecArray['LOCALITY_NAME'] = $arrayToPick[$key]->locality_name;
-        $ecArray['SUBURB_ID'] = $arrayToPick[$key]->suburb_id;
-        $ecArray['SUBURB_NAME'] = $arrayToPick[$key]->suburb_name;
-        $ecArray['CITY_ID'] = $arrayToPick[$key]->city_id;
-        $ecArray['CITY_NAME'] = $arrayToPick[$key]->city_name;
-        $ecArray['BUILDER_ID'] = $arrayToPick[$key]->builder_id;
-        $ecArray['BUILDER_NAME'] = $arrayToPick[$key]->builder_name;
+        $ecArray['project_id'] = $arrayToPick[$key]->project_id;
+        $ecArray['project_name'] = $arrayToPick[$key]->project_name;
+        $ecArray['phase_id'] = $arrayToPick[$key]->phase_id;
+        $ecArray['phase_name'] = $arrayToPick[$key]->phase_name;
+        $ecArray['phase_type'] =  $arrayToPick[$key]->phase_type;
+        $ecArray['locality_id'] = intval($arrayToPick[$key]->locality_id);
+        $ecArray['locality_name'] = $arrayToPick[$key]->locality_name;
+        $ecArray['suburb_id'] = $arrayToPick[$key]->suburb_id;
+        $ecArray['suburb_name'] = $arrayToPick[$key]->suburb_name;
+        $ecArray['city_id'] = $arrayToPick[$key]->city_id;
+        $ecArray['city_name'] = $arrayToPick[$key]->city_name;
+        $ecArray['builder_id'] = $arrayToPick[$key]->builder_id;
+        $ecArray['builder_name'] = $arrayToPick[$key]->builder_name;
         $effectiveMonth = substr($arrayToPick[$key]->effective_month, 0, 10);
-        $ecArray['EFFECTIVE_MONTH'] = getDateInSolrFormat(strtotime($effectiveMonth));
-        if($arrayToPick[$key]->completion_date != INVALID_DATE)$ecArray['PROMISED_COMPLETION_DATE']= getDateInSolrFormat(strtotime($arrayToPick[$key]->completion_date));
-        if($arrayToPick[$key]->launch_date != INVALID_DATE)$ecArray['LAUNCH_DATE'] = getDateInSolrFormat(strtotime($arrayToPick[$key]->launch_date));
+        $ecArray['effective_month'] = getDateInSolrFormat(strtotime($effectiveMonth));
+        $ecArray['effective_month_year'] = $arrayToPick[$key]->effective_month_year;
+        $ecArray['effective_month_month'] = $arrayToPick[$key]->effective_month_month;
+        if($arrayToPick[$key]->completion_date != INVALID_DATE)$ecArray['promised_completion_date']= getDateInSolrFormat(strtotime($arrayToPick[$key]->completion_date));
+        if($arrayToPick[$key]->launch_date != INVALID_DATE)$ecArray['launch_date'] = getDateInSolrFormat(strtotime($arrayToPick[$key]->launch_date));
         $bedrooms = $arrayToPick[$key]->bedrooms;
-        if(is_int($bedrooms))$ecArray['BEDROOMS'] = $bedrooms;
-        $ecArray['UNIT_TYPE'] = isset($arrayToPick[$key])? $arrayToPick[$key]->unit_type : $aAllPrice[$key]->unit_type;
+        if(is_int($bedrooms))$ecArray['bedrooms'] = $bedrooms;
+        $ecArray['unit_type'] = isset($arrayToPick[$key])? $arrayToPick[$key]->unit_type : $aAllPrice[$key]->unit_type;
+        $ecArray['bedrooms'] = isset($arrayToPick[$key])? $arrayToPick[$key]->bedrooms : $aAllPrice[$key]->bedrooms;
         
         if(isset($aAllPrice[$key])){
-            $ecArray['AVERAGE_PRICE_PER_UNIT_AREA'] = $aAllPrice[$key]->average_price_per_unit_area;
-            $ecArray['AVERAGE_SIZE'] = $aAllPrice[$key]->average_size;
-            $aSize = explode (',', $aAllPrice[$key]->size);
-            foreach ($aSize as $size) {
-                $ecArray['ALL_SIZE'] = $size;
-            }
-            $ecArray['AVERAGE_TOTAL_PRICE'] = $aAllPrice[$key]->average_total_price;
+            $ecArray['average_price_per_unit_area'] = $aAllPrice[$key]->average_price_per_unit_area;
+            $ecArray['average_size'] = $aAllPrice[$key]->average_size;
+            $ecArray['all_size'] = json_encode(explode (',', $aAllPrice[$key]->size));
+            $ecArray['average_total_price'] = $aAllPrice[$key]->average_total_price;
         }
         if(isset($aAllInventory[$key])){
-            $ecArray['SUPPLY'] = $aAllInventory[$key]->supply;
-            $ecArray['LAUNCHED_UNIT'] = $aAllInventory[$key]->launched;
-            $ecArray['INVENTORY'] = $aAllInventory[$key]->inventory;
+            $ecArray['supply'] = $aAllInventory[$key]->supply;
+            $ecArray['launched_unit'] = $aAllInventory[$key]->launched;
+            $ecArray['inventory'] = $aAllInventory[$key]->inventory;
         }
         $params['body'] = $ecArray;
         //$ecClient->index($params);
-        
-        
         
         //Code used for storing the documents into mysql
         
         $ecArray['unique_key'] = $ecArray['id'];
         unset($ecArray['id']);
-        unset($ecArray['SUBURB_ID']);
-        unset($ecArray['SUBURB_NAME']);
-        $mysqlArray = array();
-        foreach ($ecArray as $k=>$value) {
-            $mysqlArray[strtolower($k)] = $value;
-        }
+        unset($ecArray['suburb_id']);
+        unset($ecArray['suburb_name']);
         
-        $x = DInventoryPrice::create($mysqlArray);
+        $x = DInventoryPrice::create($ecArray);
         $x->save();
     }
     $logger->info("Solr document set ready");
