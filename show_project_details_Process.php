@@ -380,6 +380,9 @@ $smarty->assign("projectComments", $projectComments);
 
 $projectOldComments = CommentsHistory::getOldCommentHistoryByProjectId($projectId);
 $smarty->assign("projectOldComments", $projectOldComments);
+
+$projectRemarks = CommentsHistory::getProjectRemarks($projectId);
+$smarty->assign("projectRemarks", $projectRemarks);
 /******end code for project comment fetch from commeny history table*****/
 
 /**start code for fetch offer heading and desc from db**/

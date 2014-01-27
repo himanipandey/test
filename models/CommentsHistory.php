@@ -146,4 +146,11 @@ class CommentsHistory extends ActiveRecord\Model
         }
         return $arrAllCycleByProjectId;
     }
+    
+    function getProjectRemarks($projectId){
+		 $conditions = array("project_id = ? AND comment_type = ? AND STATUS = ? ",
+                $projectId, 'Audit2', "New");
+		 $getComments = CommentsHistory::find('all', array("conditions" => $conditions,"order" => "comment_id desc","limit" => 1));   
+		 return ($getComments)?$getComments:0;	
+	}
 }

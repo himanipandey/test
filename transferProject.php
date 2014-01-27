@@ -332,11 +332,13 @@
                     $phaseId = ProjectPhase::getPhaseByName($arrExp[1]);
                     $stageId = ProjectStage::getStageByName($arrExp[0]);
                     
-                    $eligibleProjects  = "select id from resi_project where PROJECT_STAGE_ID='".$stageId[0]->id."' AND PROJECT_PHASE_ID='".$phaseId[0]->id."' AND PROJECT_ID IN (".$getProjectId.") AND version = 'Cms' for update";
+                    $eligibleProjects  = "select id, project_id from resi_project where PROJECT_STAGE_ID='".$stageId[0]->id."' AND PROJECT_PHASE_ID='".$phaseId[0]->id."' AND PROJECT_ID IN (".$getProjectId.") AND version = 'Cms' for update";
                     $eligibleProjects = mysql_query($eligibleProjects);
                     $eligibleIds = array();
+                    $eligibleProjectIds = array();
                     while ($row = mysql_fetch_array($eligibleProjects)) {
                         $eligibleIds[] = $row['id'];
+                        $eligibleProjectIds[] = $row['project_id'];
                     }
                     
                     if(count($eligibleIds)>0){
@@ -357,6 +359,23 @@
                                     on rp.PROJECT_ID = t.PROJECT_Id 
                                     set rp.MOVEMENT_HISTORY_ID = t.HISTORY_ID where rp.version = 'Cms';";
                         mysql_query($qRecordHistoryId)  or die(mysql_error());
+                        
+                        //update project remarks
+                        if(!empty($_POST['project_remarks'])){
+							$sql_label_updation_cycle = mysql_fetch_object(mysql_query("SELECT label FROM ".UPDATION_CYCLE." WHERE updation_cycle_id = '".$arrUpdatePhase[1]."'"));
+							$label_updation_cycle = str_replace(" ","-",$sql_label_updation_cycle->label);
+							foreach($eligibleProjectIds as $key => $eligibleId){
+								$comment = new CommentsHistory();
+								$comment->updation_cycle = $arrUpdatePhase[0]."_".$label_updation_cycle;
+								$comment->comment_type  = "Audit2";
+								$comment->status = "New";
+								$comment->project_id = $eligibleId;
+								$comment->comment_text = mysql_real_escape_string(trim($_POST['project_remarks']));
+								$comment->user_id = $_SESSION['adminId'];
+								$comment->save(); 
+							}
+						}
+						
                     }
                     mysql_query('commit');
                     $smarty->assign("projectIdUpdated",str_replace($getProjectId));

@@ -488,6 +488,7 @@ $(function() {
                                {/if}
                                </table>
                                <br/>
+                               {if $flagcheck == 1}
                                {if $audit2Auth}
                                <table width="502" border="0" align="left" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "margin: 20px;">
 								   <tr>
@@ -497,7 +498,6 @@ $(function() {
                                </table>
                                <br/>
                                {/if}
-                               {if $flagcheck == 1}
                                <table width="502" border="0" align="left" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;float:right">
                                     <tr bgcolor='#DCDCDC'>
                                         <td height="35" align="center" colspan= "2" style='border-bottom:1px solid #c2c2c2;color:#333;'>

@@ -347,7 +347,7 @@ function getDateNow(){
       var projectRemark = $('#remark_call_'+id).val();
       var callId = $('#callId_'+id).val();
       if (status === "success")
-	  projectList = projectList.join(",");
+	  projrectList = projectList.join(",");
       else 
 	  projectList = "";
       
@@ -386,7 +386,41 @@ function getDateNow(){
 	window.location.href = "show_project_details.php?stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId;
  }
 </script>
+ <link rel="stylesheet" href="css/jquery-ui.css">
+<script src="js/jquery-ui.js"></script>
+ <script>
+	$(function() {
+		project_remark = "{$projectRemarks}";
+	  if(project_remark != "0"){
+		$( "#dialog-confirm" ).dialog({
+			resizable: false,
+			draggable: false,
+			modal: true,
+			width : 450,
+			buttons: {
+				Read: function() {
+					//Update the Project Remark Status
+					 $.ajax   ({
+					   type: "POST",
+					   url: "updateProjectRemarks.php",
+					   data: "cid="+"{$projectRemarks[0]->comment_id}",
+					   cache: false,
+					   success: function(html){}
+				   });
 
+					$( this ).dialog( "close" );
+				},
+				skip: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+	 }
+	});
+</script>
+<div id="dialog-confirm" title="Project Remark">
+<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>{$projectRemarks[0]->comment_text}</p>
+</div>
 
 <form  action="show_project_details.php?projectId={$projectId}" method="POST" id="changePhaseForm">
   <input type="hidden" id="forwardFlag" name="forwardFlag" value=""/>
