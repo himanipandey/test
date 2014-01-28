@@ -1223,7 +1223,8 @@
                     				</tr>
                                     
                                 {/foreach}
-                            {elseif $contacts == ''}
+                            {/if}
+                            {if $brokerCompanyId == ''}
                                     <tr>
                                         <td width="30%" valign="top">Name :<font color = "red">*</font></td>
                                         <td width="10%" valign="top">

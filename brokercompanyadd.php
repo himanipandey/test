@@ -59,12 +59,13 @@ if(!empty($_GET['brokerCompanyId']) && !empty($_GET['mode']) && $_GET['mode'] ==
     
     $contactIDArr = BrokerCompanyContact::ContactArr($_GET['brokerCompanyId']);
     
+    //print('<pre>');
+//    print_R($brkrDet);
+//    die;
+    
     $contactIDArr = array_merge($contactIDArr , !empty($brkrDet)?$brkrDet:array());
     
-    //print('<pre>');
-//    print_R($contactIDArr);
-//    
-//    die;
+
     $smarty->assign("imgid", !empty($imgid)?$imgid:'');
     $smarty->assign("imgurl", !empty($imgurl)?$imgurl:'');
     $smarty->assign("name", !empty($contactIDArr['name'])?$contactIDArr['name']:'');

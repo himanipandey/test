@@ -75,12 +75,12 @@ class BrokerCompanyContact extends ActiveRecord\Model
             }
         }
         
-        if(!empty($contactArr['ids']))        
-            unset($contactArr['ids']);
+        //if(!empty($contactArr['ids']))        
+        unset($contactArr['ids']);
                    
         $contacts['contacts'] = !empty($contactArr)?$contactArr:'';
         //print'<pre>';
-        //print_r($contacts);
+//        print_r($contacts);
         //print_r($contactHqArr);
         //die;
 
