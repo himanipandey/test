@@ -573,13 +573,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                    mysql_query($qryUpdatePhase);
                     
            }
-            if($_POST['bookingStatus'] > 0)
-                    mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID =".$_POST['bookingStatus']." WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
-            else
-                    mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID ='' WHERE project_id = ".$returnProject->project_id." and phase_type = 'Logical'");
-					
-			
-            		
+                    		
             //create new project url
             $localityDetail = Locality::getLocalityById($localityId); 
             $cityDetail = City::getCityById($cityId);

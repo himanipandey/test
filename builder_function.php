@@ -2186,6 +2186,15 @@ function updateD_Availablitiy($projectId){
 			
 		//update availability
 		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+		
+		//update project booking status
+		$booking_status = '';
+		if($total_av == 0)
+			$booking_status = 2;
+		else
+			$booking_status = 1;
+			
+		 mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID =".$booking_status." WHERE project_id = ".$projectId." and phase_type = 'Logical' and `version` = 'Cms'");
 
 	}
 

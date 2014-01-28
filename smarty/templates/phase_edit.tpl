@@ -226,19 +226,6 @@
                                                     <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
                                                 </td>
                                             </tr>
-                                             <tr>
-                                                <td width="20%" align="right"><b>Booking Status :</b> </td>
-                                                <td width="30%" align="left">
-                                                    <select id="bookingStatus" name="bookingStatus">
-                                                        <option value="-1">Select Status</option>
-                                                        {foreach $bookingStatuses as $b}
-                                                            <option value="{$b->id}" {if $b->id == $bookingStatus}selected="selected" {/if}>{$b->display_name}</option>
-                                                        {/foreach}
-                                                    </select>
-                                                </td>
-                                                <td width="50%" align="left"></td>
-                                            </tr>
-
                                             <tr>
                                                 <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
                                                 <td width="30%" align="left">

@@ -459,21 +459,7 @@
 									  <font color="red">{if $ErrorMsg["txtStatus"] != ''} {$ErrorMsg["txtStatus"]} {/if}<span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
-							   <tr>
-                                                <td width="20%" align="right"><b>Booking Status :</b> </td>
-                                                <td width="30%" align="left">
-                                                    <select id="bookingStatus" name="bookingStatus">
-                                                        <option value="-1">Select Status</option>
-                                                        {foreach $bookingStatuses as $b}
-                                                            <option value="{$b->id}" {if $b->id == $bookingStatus}selected="selected" {/if}>{$b->display_name}</option>
-                                                        {/foreach}
-                                                    </select>
-                                                </td>
-                                                <td width="50%" align="left"></td>
-                                            </tr>
-							   <tr>
-
-                                                           
+							                                                              
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
 								  <td width="30%" align="left">
