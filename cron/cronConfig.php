@@ -6,6 +6,7 @@ require_once 'cronFunctions.php';
 require_once $docroot.'includes/send_mail_amazon.php';
 
 $latLongList = '0,1,2,3,4,5,6,7,8,9';
+$yesterday = date("Y-m-d", mktime(0, 0, 0, date("m") , date("d")-1,date("Y")));
 $dailyEmail = array(
 	array(
 		'sql'=>"SELECT 
@@ -61,6 +62,32 @@ $dailyEmail = array(
             'recipients'=>array('ankur.dhawan@proptiger.com'), 
             'attachmentname'=>'Latitude_longitude_beyond_limit',
             'sendifnodata'=>0
+        ),
+        array(
+            'sql'=>'select rp.project_name as PROJECT_NAME, rp.PROJECT_ID, rb.BUILDER_NAME
+                ,
+             CASE
+                WHEN vl.table_name = resi_project THEN PROJECT 
+                WHEN vl.table_name = resi_builder THEN BUILDER 
+                else
+                    vl.table_name
+            END AS TABLE,vl.category,vl.video_url
+            from    resi_project rp 
+             inner join locality l
+            on  rp.LOCALITY_ID = l.LOCALITY_ID
+            inner join resi_builder rb on rp.builder_id = rb.builder_id
+            inner join video_links vl on rp.project_id = vl.table_id
+             where 
+            l.IS_GEO_BOUNDARY_CLEAN = true
+            and rp.version = Cms
+            and vl.created_at >'.$yesterday."
+             ;',
+            'subject'=>'Lat Long Beyond Limits',
+            'recipients'=>array('ankur.dhawan@proptiger.com','prasha.agarwal@proptiger.com','karanvir.singh@proptiger.com'), 
+            'attachmentname'=>'New Videos added',
+            'sendifnodata'=>0
         )
 );
+
+ 
 ?>
