@@ -13,6 +13,7 @@ require_once ($currentDir . '/../modelsConfig.php');
 
 //TODO
 // Bulk Insert in table
+// Builder Data in last 2 steps
 // Get demand data
 
 ini_set('display_errors', '1');
@@ -20,12 +21,12 @@ error_reporting(E_ALL);
 
 ini_set('memory_limit', '-1');
 set_time_limit(0);
-define("INVALID_DATE", "0000-00-00");
+define("INVALID_DATE", "0000-00-01");
 
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 
-
+//DInventoryPriceTmp::connection()->query("set session sql_mode = 'STRICT_ALL_TABLES'");
 DInventoryPriceTmp::connection()->query("TRUNCATE TABLE d_inventory_prices_tmp");
 
 $logger->info("\n\n\nDeleted All rows");
@@ -36,7 +37,7 @@ $logger->info("Project And Phase Details Retrieved");
 
 
 $i = 0;
-while($i< count($aAllProjects)){
+while(false && $i< count($aAllProjects)){
     $aPid = array();
     for($j=1; $j<=1000 && $i< count($aAllProjects); $j++){
         $aPid[] = $aAllProjects[$i]->project_id;
@@ -206,7 +207,7 @@ function firstDayOf($period, $date = null)
             
             if($month < 6){
                 $newDate->modify('first day of january ' . $newDate->format('Y'));
-            } elseif ($month > 9) {
+            } else {
                 $newDate->modify('first day of july ' . $newDate->format('Y'));
             }
             break;
@@ -239,15 +240,17 @@ function indexProjectsWithLowerLaunchDate(){
     global $aAllProjects;
     global $aProjectPhaseCount;
     
-    $sql = "select 1 as country_id, 'India' as country_name, rp.PROJECT_ID, rp.PROJECT_NAME, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, lo.LOCALITY_ID, lo.LABEL as locality_name, c.CITY_ID, c.LABEL as city_name, if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE) as LAUNCH_DATE, rpp.COMPLETION_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, group_concat(rpo1.SIZE) as all_size, ps.supply, ps.launched launched_unit from resi_project rp inner join locality lo on rp.LOCALITY_ID = lo.LOCALITY_ID inner join suburb s on lo.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and (rpp.LAUNCH_DATE = dip.effective_month or rp.PRE_LAUNCH_DATE = dip.effective_month) where rp.version = 'Website' and (rpp.LAUNCH_DATE != 0 or rp.PRE_LAUNCH_DATE != 0) and dip.id is null group by ps.id";
+    $sql = "select 1 as country_id, 'India' as country_name, rp.PROJECT_ID, rp.PROJECT_NAME, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, lo.LOCALITY_ID, lo.LABEL as locality_name, c.CITY_ID, c.LABEL as city_name, date_format(rpp.COMPLETION_DATE, '%Y-%m-01') COMPLETION_DATE, date_format(if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE), '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, group_concat(rpo1.SIZE) as all_size, ps.supply, ps.launched launched_unit from resi_project rp inner join locality lo on rp.LOCALITY_ID = lo.LOCALITY_ID inner join suburb s on lo.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and (date_format(if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE), '%Y-%m-01') = dip.effective_month) where rp.version = 'Website' and (rpp.LAUNCH_DATE != 0 or rp.PRE_LAUNCH_DATE != 0) and dip.id is null group by ps.id";
     $aData = DInventoryPriceTmp::find_by_sql($sql);
     $aData = removeInvalidPhaseData($aData, $aProjectPhaseCount);
     $i = 0;
     foreach ($aData as $data) {
         $mysqlArray = $data->to_array();
         if($mysqlArray['launch_date'] != INVALID_DATE){
+            $mysqlArray['created_at'] = 'NOW()';
             $mysqlArray['launch_date'] = substr($mysqlArray['launch_date'], 0, 10);
             $mysqlArray['unique_key'] = $mysqlArray['project_id']."/".$mysqlArray['phase_id']."/".$mysqlArray['unit_type']."/".$mysqlArray['bedrooms']."/".$mysqlArray['launch_date'];
+            if($mysqlArray['completion_date'] == INVALID_DATE)unset ($mysqlArray['completion_date']);
             $mysqlArray['effective_month'] = $mysqlArray['launch_date'];
             $mysqlArray['year'] = firstDayOf('year', $mysqlArray['effective_month']);
             $mysqlArray['half_year'] = firstDayOf('half_year', $mysqlArray['effective_month']);
@@ -265,15 +268,17 @@ function indexProjectsWithHigherCompletionDate(){
     global $aAllProjects;
     global $aProjectPhaseCount;
     
-    $sql = "select 1 as country_id, 'India' as country_name, rp.PROJECT_ID, rp.PROJECT_NAME, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, lo.LOCALITY_ID, lo.LABEL as locality_name, c.CITY_ID, c.LABEL as city_name, if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE) as LAUNCH_DATE, rpp.COMPLETION_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, group_concat(rpo1.SIZE) as all_size, ps.supply, ps.launched launched_unit from resi_project rp inner join locality lo on rp.LOCALITY_ID = lo.LOCALITY_ID inner join suburb s on lo.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and rpp.COMPLETION_DATE = dip.effective_month where rp.version = 'Website' and rpp.COMPLETION_DATE != 0 and dip.id is null group by ps.id";
+    $sql = "select 1 as country_id, 'India' as country_name, rp.PROJECT_ID, rp.PROJECT_NAME, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, lo.LOCALITY_ID, lo.LABEL as locality_name, c.CITY_ID, c.LABEL as city_name, date_format(rpp.COMPLETION_DATE, '%Y-%m-01') COMPLETION_DATE, date_format(if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE), '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, group_concat(rpo1.SIZE) as all_size, ps.supply, ps.launched launched_unit from resi_project rp inner join locality lo on rp.LOCALITY_ID = lo.LOCALITY_ID inner join suburb s on lo.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and date_format(rpp.COMPLETION_DATE, '%Y-%m-01') = dip.effective_month where rp.version = 'Website' and rpp.COMPLETION_DATE != 0 and dip.id is null group by ps.id";
     $aData = DInventoryPriceTmp::find_by_sql($sql);
     $aData = removeInvalidPhaseData($aData, $aProjectPhaseCount);
     $i = 0;
     foreach ($aData as $data) {
         $mysqlArray = $data->to_array();
         if($mysqlArray['completion_date'] != INVALID_DATE){
+            $mysqlArray['created_at'] = 'NOW()';
             $mysqlArray['completion_date'] = substr($mysqlArray['completion_date'], 0, 10);
             $mysqlArray['unique_key'] = $mysqlArray['project_id']."/".$mysqlArray['phase_id']."/".$mysqlArray['unit_type']."/".$mysqlArray['bedrooms']."/".$mysqlArray['completion_date'];
+            if($mysqlArray['launch_date'] == INVALID_DATE)unset ($mysqlArray['launch_date']);
             $mysqlArray['effective_month'] = $mysqlArray['completion_date'];
             $mysqlArray['year'] = firstDayOf('year', $mysqlArray['effective_month']);
             $mysqlArray['half_year'] = firstDayOf('half_year', $mysqlArray['effective_month']);
