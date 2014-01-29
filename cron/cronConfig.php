@@ -64,28 +64,31 @@ $dailyEmail = array(
             'sendifnodata'=>0
         ),
         array(
-            'sql'=>'select rp.project_name as PROJECT_NAME, rp.PROJECT_ID, rb.BUILDER_NAME
-                ,
+            "sql"=>"select rp.project_name as PROJECT_NAME, rp.PROJECT_ID, rb.BUILDER_NAME,l.LABEL as LOCALITY
+                ,c.LABEL as CITY,pa.fname as UPDATED_BY,
              CASE
-                WHEN vl.table_name = resi_project THEN PROJECT 
-                WHEN vl.table_name = resi_builder THEN BUILDER 
+                WHEN vl.table_name = 'resi_project' THEN 'PROJECT' 
+                WHEN vl.table_name = 'resi_builder' THEN 'BUILDER'
+                WHEN vl.table_name = 'locality' THEN 'LOCALITY'
+                WHEN vl.table_name = 'city' THEN 'CITY'
                 else
                     vl.table_name
-            END AS TABLE,vl.category,vl.video_url
+                END AS data,vl.category,vl.video_url
             from    resi_project rp 
              inner join locality l
             on  rp.LOCALITY_ID = l.LOCALITY_ID
+            inner join suburb s on l.suburb_id = s.suburb_id
+            inner join city c on s.city_id = c.city_id
             inner join resi_builder rb on rp.builder_id = rb.builder_id
             inner join video_links vl on rp.project_id = vl.table_id
+            inner join proptiger_admin pa on vl.updated_by = pa.adminid
              where 
-            l.IS_GEO_BOUNDARY_CLEAN = true
-            and rp.version = Cms
-            and vl.created_at >'.$yesterday."
-             ;',
-            'subject'=>'Lat Long Beyond Limits',
-            'recipients'=>array('ankur.dhawan@proptiger.com','prasha.agarwal@proptiger.com','karanvir.singh@proptiger.com'), 
-            'attachmentname'=>'New Videos added',
-            'sendifnodata'=>0
+            rp.version = 'Cms'
+            and vl.updated_at >'".$yesterday."';",
+            "subject"=>"New Videos added",
+            'recipients'=>array('ankur.dhawan@proptiger.com','prasha.agarwal@proptiger.com','karanvir.singh@proptiger.com'),
+            "attachmentname"=>"New Videos added",
+            "sendifnodata"=>0
         )
 );
 
