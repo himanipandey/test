@@ -8,7 +8,7 @@ require_once $docroot.'includes/send_mail_amazon.php';
 $yesterday = date("Y-m-d", mktime(0, 0, 0, date("m") , date("d")-1,date("Y")));
 $sqlNewAdded = "select count(video_url) as COUNT,category from video_links 
        where 
-       created_at > '".$yesterday."' group by category";
+       created_at = '".$yesterday."%' group by category";
 $resNewAdded = mysql_query($sqlNewAdded) or die(mysql_error());
 $arrAllData = array();
 while($dataNewAdded = mysql_fetch_assoc($resNewAdded)) {
@@ -23,7 +23,7 @@ while($dataNewAdded = mysql_fetch_assoc($resNewAdded)) {
 
 $sqlExisting ="select count(video_url) as COUNT,category as categoryExisting from video_links 
        where 
-       created_at <= '".$yesterday."' group by category";
+       created_at < '".$yesterday."' group by category";
 $resExisting = mysql_query($sqlExisting) or die(mysql_error());
 
 while($dataExisting = mysql_fetch_assoc($resExisting)) {
@@ -117,5 +117,6 @@ echo $message;
 $subject = "New Videos added";
 $to = "'vimlesh.rajput@proptiger.com','manish.goyal@proptiger.com'";
 $from = 'no-reply@proptiger.com';
-sendMailFromAmazon($to,  $subject, $message, $from , $cc=null, $bcc=null, $ajaxCall=true);
+sendMailFromAmazon($to,  $subject, $message, $from , null, null, true);
+
 ?>
