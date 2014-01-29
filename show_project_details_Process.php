@@ -6,6 +6,21 @@ $enum_value = ResiProject::projectStatusMaster();
 $AmenitiesArr = AmenitiesList();
 
 $projectId = $_REQUEST['projectId'];
+
+/****start code for supply order validation when move to audit2*****/
+$availabilityOrderChk = availebilitydescendingOrder($projectId);
+$bedRoomOrder = '';
+$availOrder = '';
+if($availabilityOrderChk['flg'] == true){
+    $bedRoomOrder = $availabilityOrderChk['bedrooms'];
+    $availOrder   = str_replace("|",",",$availabilityOrderChk['arrOrder']);
+}
+    
+$smarty->assign("availabilityOrderChk", $availabilityOrderChk['flg']);
+$smarty->assign("bedRoomOrder", $bedRoomOrder);
+$smarty->assign("availOrder", $availOrder);
+/****end code for supply order validation when move to audit2*****/ 
+    
 if (!isset($_REQUEST['btnExit']))
     $_REQUEST['btnExit'] = '';
 if ($_REQUEST['btnExit'] == "Exit") {
@@ -637,4 +652,41 @@ $updatedTypes = ProjectSecondaryPrice::getSecondryPriceUpdatedTypes($projectId);
 $arrPType = array_unique(array_merge($arrPType, $updatedTypes));
 $smarty->assign("arrPType", $arrPType);
 /* * code for secondary price dispaly*********** */
+
+function availebilitydescendingOrder($projectId) {
+            $qry = "SELECT 
+            resi_project_options.BEDROOMS as bedrooms,
+            GROUP_CONCAT(project_availabilities.availability order by project_availabilities.effective_month asc separator '|') availabilityArr 
+        FROM
+            project_supplies
+                INNER JOIN
+            listings ON listings.id = project_supplies.listing_id AND listings.status = 'Active'
+                INNER JOIN
+            resi_project_phase ON resi_project_phase.PHASE_ID = listings.phase_id AND resi_project_phase.version = 'Cms'
+                INNER JOIN
+            resi_project_options ON resi_project_options.OPTIONS_ID = listings.option_id
+                left join
+            project_availabilities ON project_supplies.id = project_availabilities.project_supply_id
+        WHERE
+            project_supplies.version = 'Cms' AND (project_supplies.version = 'Cms' and resi_project_phase.PROJECT_ID = '$projectId' and resi_project_phase.STATUS = 'Active')
+           group by resi_project_phase.phase_id,resi_project_options.BEDROOMS,resi_project_options.OPTION_TYPE";
+        $res = mysql_query($qry) or die(mysql_error());
+        $arrOrder = array();
+        $flag = 'true';
+        while($data = mysql_fetch_assoc($res)) {
+            $arrExp = explode('|',$data['availabilityArr']);
+           
+            $fstStr = implode("|",$arrExp);
+            arsort($arrExp);
+            $scndStr = implode("|",$arrExp);
+           
+            if(!($fstStr === $scndStr)){
+                $flag = 'false';
+                $arrOrder['arrOrder'] = $data['availabilityArr'];
+                $arrOrder['bedrooms'] = $data['bedrooms'];
+            }
+        }
+        $arrOrder['flg'] = $flag;
+        return $arrOrder;  
+}
 ?>
