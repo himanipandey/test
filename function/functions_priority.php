@@ -1,5 +1,7 @@
 <?php
+
 $orderBy = "ASC";
+
 function cmp($value1, $value2)
 {
     global $orderBy;
@@ -134,6 +136,7 @@ function autoAdjustPrio($tablename, $cityID = null, $priority = null)
     }
     mysql_query($query) or die(mysql_error());
 }
+
 function checkSubLocInCity($type,$cityId,$typeId){
 
 	if($type == 'suburb')
@@ -538,7 +541,33 @@ function checkProjAvail($projectId = null, $priority = null, $mode = null, $mode
     return $data['CNT'];
 }
 
-function getNearPlacesArr($Id, $type, $order, $placeType=0){
+function getNearPlacesArrfromCity($cityId, $order, $placeType=0)
+{
+    global $orderBy;
+    $orderBy = $order; 
+    if($placeType==0)
+         $where = " np.city_id = $cityId";
+    else
+        $where = "np.city_id = $cityId and  np.place_type_id = $placeType"; //.$queryLessThenMax;
+    $orderby = " ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
+    $qry = "SELECT np.name, np.id, np.city_id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority
+            FROM " . locality_near_places. " np 
+            inner join near_place_types npt on npt.id = np.place_type_id
+            WHERE ".$where." ". $orderby;
+
+    $res = mysql_query($qry) or die(mysql_error());
+    //print_r($res)
+    $arr = array();
+     while ($data = mysql_fetch_assoc($res)) {
+        //echo $data;
+        array_push($arr, $data);
+    }
+    return $arr;
+
+}
+
+function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
+{
     global $orderBy;
     $orderBy = $order;
     $queryLessThenMax = "";
@@ -546,7 +575,7 @@ function getNearPlacesArr($Id, $type, $order, $placeType=0){
     switch($type)
     {
         case "city":
-           $locList = "select l.locality_id from locality l 
+           /*$locList = "select l.locality_id from locality l 
                         inner join suburb s on l.suburb_id = s.suburb_id
                         inner join city c on s.city_id = c.city_id 
                         where c.city_id = $Id";
@@ -564,13 +593,10 @@ function getNearPlacesArr($Id, $type, $order, $placeType=0){
               $cnt++;
             }
             //$queryLessThenMax = " AND np.DISPLAY_ORDER > 0 AND np.DISPLAY_ORDER < ".NEAR_PLACES_MAX_PRIORITY;
-            if($placeType==0)
-                $where = "np.locality_id in ($listLoc)";
-            else
-                $where = "np.locality_id in ($listLoc) and np.place_type_id = $placeType"; //.$queryLessThenMax;
-            $orderby = "ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
+            */
+            
             break;
-        case "suburb":
+        /*case "suburb":
             $locList = "select l.locality_id from locality l 
                         inner join suburb s on l.suburb_id = s.suburb_id
                         where s.suburb_id = $Id";
@@ -587,34 +613,53 @@ function getNearPlacesArr($Id, $type, $order, $placeType=0){
                 $comma = ',';
              $cnt++;
             }
-            //$queryLessThenMax = " AND rp.DISPLAY_ORDER_SUBURB > 0 AND rp.DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
+            //$queryLessThenMax = "  rp.DISPLAY_ORDER_SUBURB > 0 AND rp.DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
             //$where = "np.locality_id in ($listLoc)".$queryLessThenMax;
             if($placeType==0)
                 $where = "np.locality_id in ($listLoc)";
             else
                 $where = "np.locality_id in ($listLoc) and np.place_type_id = $placeType";
             $orderby = "ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
-            break;
+            break;*/
         case "locality":
             //print_r("here1");
             //$queryLessThenMax = " AND rp.DISPLAY_ORDER_LOCALITY > 0 AND rp.DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
-            //$where = "np.locality_id = '" . $Id . "'" .$queryLessThenMax;
-            if($placeType==0)
-                $where = "np.locality_id = '" . $Id . "'";
-            else
-                $where = "np.locality_id = '" . $Id . "' and np.place_type_id = $placeType";
+            //$where = "$Id ="; 
+            $results = mysql_query ("SELECT LATITUDE, LONGITUDE FROM locality l WHERE l.LOCALITY_ID = $localityId");
+            $row = mysql_fetch_assoc($results);
+            $results1 = mysql_query("SELECT np.id, np.latitude, np.longitude FROM locality_near_places np WHERE np.city_id = $cityId");
+           
+            $NearPlacesArr = array();
+            while ($row1 = mysql_fetch_assoc($results1)) 
+            {
+                if(getDistance($row['LATITUDE'], $row['LONGITUDE'], $row1['latitude'], $row1['longitude']) < 5)
+                {
+                    array_push($NearPlacesArr, $row1['id']);
+                    //echo ($row1['id']);
+                }
+                    
+                
+            }
+
+            //print_r($NearPlacesArr);
+            //die("here");
+            if($placeType!=0)
+                $where = " and np.place_type_id = $placeType";
+            else $where = "";
+                
+
+           
             $orderby = "ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
+            
+            $qry = "SELECT np.name, np.city_id, np.id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority
+            FROM " . locality_near_places. " np 
+                
+            inner join near_place_types npt on npt.id = np.place_type_id
+            where np.id IN (".implode(",", $NearPlacesArr).")  ".$where." ".$orderby;
+
+             //print_r($qry);
             break;
     }
-    $qry = "SELECT np.name, np.id, np.latitude, np.longitude, npt.display_name, c.CITY_ID, s.SUBURB_ID, l.LOCALITY_ID, np.priority
-            FROM " . LOCALITY_NEAR_PLACES. " np 
-            inner join locality l on np.locality_id = l.locality_id
-            inner join suburb s on l.suburb_id = s.suburb_id
-            inner join city c on s.city_id = c.city_id
-            inner join NEAR_PLACE_TYPES npt on npt.id = np.place_type_id
-            WHERE ".$where." ".$orderby;
-
-    //print_r($qry);
     $res = mysql_query($qry) or die(mysql_error());
     //print_r($res)
     $arr = array();
@@ -626,11 +671,52 @@ function getNearPlacesArr($Id, $type, $order, $placeType=0){
 }
 
 
-
-
-function updateNearPlace($nearPlaceId = null, $priority = null, $mode = null, $modeid = null)
+function getDistance($lat, $lon, $lat2, $lon2)
 {
-    switch($mode)
+    
+//echo $lat."  ".$lon."  ".$lat2."  ".$lon2."  "; 
+    //distance in km  
+   /* 
+    if (cos(deg2rad($lat2))*cos(deg2rad(lat))*cos(deg2rad(long)-deg2rad($long2))+sin(deg2rad($lat2))*sin(deg2rad(lat)) <= 1.0)
+    {
+        if(cos(deg2rad($lat2))*cos(deg2rad(lat))*cos(deg2rad(long)-deg2rad($long2))+sin(deg2rad($lat2))*sin(deg2rad(lat)) < -1.0)
+            $distance = ((3959*acos(-1))*1.609344);
+        else
+            $distance = ((3959*acos(cos(deg2rad($lat2))*cos(deg2rad(lat))*cos(deg2rad(long)-deg2rad($long2))+sin(deg2rad($lat2))*sin(deg2rad(lat)) ))*1.609344);
+    }
+    else
+        $distance = ((3959*acos(1))*1.609344);
+    //echo abs($distance)." ";
+    */
+
+
+ $distance =((acos(sin($lat * pi() / 180) * sin($lat2 * pi() / 180) + cos($lat * pi() / 180) * cos($lat2 * pi() / 180) * cos(($lon - $lon2) * pi() / 180)) * 180 / pi()) * 60 * 1.1515)*1.609344;
+
+//echo  $distance;
+//$distance1 = (3958*3.1415926*sqrt(($lat2-$lat1)*($lat2-$lat1) + cos($lat2/57.29578)*cos($lat1/57.29578)*($lon2-$lon1)*($lon2-$lon1))/180);
+
+    return abs($distance);
+
+
+    /*((3959*Acos(
+        CASE 
+        WHEN
+          cos(deg2rad(".$lat2."))*cos(deg2rad(lat))*cos(deg2rad(lon)-deg2rad(".$lon2."))+sin(deg2rad(".$lat2."))*sin(deg2rad(lat)) <= 1.0  THEN  
+                CASE 
+                  WHEN cos(deg2rad(".$lat2."))*cos(deg2rad(lat))*cos(deg2rad(lon)-deg2rad(".$lon2."))+sin(deg2rad(".$lat2."))*sin(deg2rad(lat)) < -1.0  THEN -1 
+                   ELSE cos(deg2rad(".$lat2."))*cos(deg2rad(lat))*cos(deg2rad(lon)-deg2rad(".$lon2."))+sin(deg2rad(".$lat2."))*sin(deg2rad(lat))  
+                   END 
+        ELSE 1 
+        END 
+        ))*1.609344);*/
+    
+
+}
+
+
+function updateNearPlace($nearPlaceId, $priority, $status, $mode = null, $modeid = null)
+{
+    /*switch($mode)
     {
         case "city":
             $locList = "select l.locality_id from locality l 
@@ -677,8 +763,19 @@ function updateNearPlace($nearPlaceId = null, $priority = null, $mode = null, $m
             $where = "locality_id = '" . $modeid . "'";
             $update = "priority = '$priority'";
             break;
+    }*/
+    if($priority>0 && $priority<=5)
+    {
+        $update = " priority = '$priority', status = '$status'"; //die($status);
     }
-    $qry = "UPDATE " . LOCALITY_NEAR_PLACES . " SET $update WHERE ".$where." AND id = '".$nearPlaceId."'";
+        
+    else 
+    {
+        $update = " status = '$status'"; //die("hello1");
+    }
+       
+    $qry = "UPDATE " . locality_near_places . " SET $update WHERE id = '".$nearPlaceId."'";
+    //die($qry);
     mysql_query($qry);
     if(mysql_affected_rows()>0){
         echo "1";
@@ -736,7 +833,7 @@ function checkNearPlaceAvail($nearPlaceId = null, $priority = null, $mode = null
             $where = "locality_id = '" . $modeid . "'";
             break;
     }
-    $qry = "SELECT COUNT(*) AS CNT FROM " . LOCALITY_NEAR_PLACES . " WHERE ".$where." AND id = '".$nearPlaceId."'";
+    $qry = "SELECT COUNT(*) AS CNT FROM " . locality_near_places . " WHERE ".$where." AND id = '".$nearPlaceId."'";
     $res = mysql_query($qry);
     $data = mysql_fetch_assoc($res);
 

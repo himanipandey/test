@@ -1,5 +1,8 @@
 <?php
 //calling function for all the cities
+
+
+
 $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 $smarty->assign('dirname',$dirName);
@@ -28,6 +31,7 @@ $NearPlaceTypesArr = NearPlaceTypes::NearPlaceTypesArr();
 
 $smarty->assign("nearPlaceTypesArray", $NearPlaceTypesArr);
 
+
 if(!empty($_REQUEST['near_place_type']))
 {
     $nearPlaceTypesId = $_REQUEST['near_place_type']; 
@@ -55,19 +59,19 @@ if(!empty($_REQUEST['suburb']))
     $NearPlacesArr = getNearPlacesArr($suburbId,'suburb',$orderby);
     }
 }
-else if(!empty($_REQUEST['locality']))
+else if(!empty($_REQUEST['locality']) && !empty($cityId))
 {
     $localityId = $_REQUEST['locality'];
     $smarty->assign('localityId',$localityId);
     if(!empty($nearPlaceTypesId))
     {
-        $NearPlacesArr = getNearPlacesArr($localityId,'locality',$orderby, $nearPlaceTypesId);
+        $NearPlacesArr = getNearPlacesArr( $cityId, $localityId,'locality',$orderby, $nearPlaceTypesId);
         //print_r("here");
     }
     else
     {
         //print_r("here");
-    $NearPlacesArr = getNearPlacesArr($localityId,'locality',$orderby);
+    $NearPlacesArr = getNearPlacesArr($cityId, $localityId,'locality',$orderby);
     //print_r($NearPlacesArr);
     }
 }
@@ -75,12 +79,12 @@ else if(!empty($cityId))
 {
     if(!empty($nearPlaceTypesId))
     {
-        $NearPlacesArr = getNearPlacesArr($cityId,'city',$orderby, $nearPlaceTypesId);
+        $NearPlacesArr = getNearPlacesArrfromcity($cityId, $orderby, $nearPlaceTypesId);
     }
     else
     {
         //print_r("here");
-       $NearPlacesArr = getNearPlacesArr($cityId,'city',$orderby);
+       $NearPlacesArr = getNearPlacesArrfromcity($cityId, $orderby);
        //print_r($NearPlacesArr);
     }
    

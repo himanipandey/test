@@ -45,12 +45,12 @@ function openProjectPriorityAdd()
     })
 }
 
-function nearPlacePriorityEdit(id,type,priority)
+function nearPlacePriorityEdit(id,type,priority,status)
 {
     var cityid      = $('#citydd').val();
     var localityid  = $('#loc').val();
     var suburbid    = $('#sub').val();
-    var url = '/setNearPlacePriority.php?cityId='+cityid+'&localityid='+localityid+'&suburbid='+suburbid+'&type='+type+'&id='+id+'&priority='+priority+'&mode=edit';
+    var url = '/setNearPlacePriority.php?cityId='+cityid+'&localityid='+localityid+'&suburbid='+suburbid+'&type='+type+'&id='+id+'&priority='+priority+'&status='+status+'&mode=edit';
     $.fancybox({
         'width'                :720,
         'height'               :200,
@@ -86,6 +86,25 @@ function projectPriorityDelete(id,type)
     } 
     
 }
+
+
+function openMap(lat, lon)
+{
+var url = 'https://maps.google.com/maps?q= '+lat+','+lon;
+window.open(url,'1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;
+
+ //alert (lat+lon);
+    /*var url = '/https://maps.google.com/maps?q= '+lat+','+lon;
+    alert (url);
+    $.fancybox({
+        'width'                :800,
+        'height'               :800,
+        'scrolling'            : 'yes',
+        'href'                 : url,
+        'type'                : 'iframe'
+    })*/
+}
+
 function show_loc_inst(){
     var wid = screen.width/3;
     var hei = (screen.height/2+25);
@@ -185,10 +204,10 @@ function show_loc_inst(){
                                 <TR class = "headingrowcolor">
                                   <th  width=2% align="center">S.No.</th>
                                   <th  width=5% align="center">Name</th>
-                                  <TH  width=2% align="center">Id</TH>
+                                  <TH  width=5% align="center">Vicinity</TH>
                                   <TH  width=8% align="center">Place Type</TH>
-                                  <TH  width=5% align="center">Latitude</TH>
-                                  <TH  width=5% align="center">Longitude</TH>
+                                  <TH  width=8% align="center">Location in Map</TH>
+                                  
                                   <TH  width=5% align="center">Priority
                                   {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
                                       <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
@@ -220,12 +239,15 @@ function show_loc_inst(){
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i}</TD>
                                   <TD align=center class=td-border>{$v.name}</TD>
-                                  <TD align=center class=td-border>{$v.id}</TD>
+                                  <TD align=center class=td-border>{$v.vicinity}</TD>
                                   <TD align=center class=td-border>{$v.display_name}</TD>
-                                  <TD align=center class=td-border>{$v.latitude}</TD>
-                                  <TD align=center class=td-border>{$v.longitude}</TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
+                  <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
+
+                                  </TD>
+                                  
                                   <TD align=center class=td-border>{$v.priority}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}');">Edit</a></TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Edit</a></TD>
                                 </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->

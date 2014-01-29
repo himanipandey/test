@@ -14,6 +14,7 @@ $localityid = $_GET['localityid'];
 $suburbid = $_GET['suburbid'];
 $nearPlaceId = $_GET['id'];
 $priority = $_GET['priority'];
+$status = $_GET['status'];
 $highPrio = getAvaiHighProjectPriority($cityId, $localityid, $suburbid);
 ?>
 <script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script> 
@@ -35,11 +36,12 @@ $highPrio = getAvaiHighProjectPriority($cityId, $localityid, $suburbid);
 });*/
 jQuery(document).ready(function(){
     $( "#priority_form").submit(function() {
-        var nearPlaceId   = $('#nearplacesearch').val();
+        var nearPlaceId   = $('#nearPlaceId').val();
         var prior       = $('#priority').val();
         var cityId      = $('#cityId').val();
         var localityid  = $('#localityid').val();
         var suburbid    = $('#suburbid').val();
+        var status      =  $('#status').val();
         //var autoadjust  = $("#autoadjust").is(':checked') ? 1 : 0;
         if($('#nearplacesearch').val() === ''){
             alert("Please add a Near Place");
@@ -49,10 +51,11 @@ jQuery(document).ready(function(){
             alert("Select a Priority");
             return false;
         }
+        //alert (prior+cityId);
         $.ajax({
             type: "POST",
             url: '/saveNearPlacePriority.php',
-            data: { nearPlaceId: nearPlaceId, prio:prior, cityId:cityId, loc:localityid, sub:suburbid },
+            data: { nearPlaceId: nearPlaceId, prio:prior, cityId:cityId, loc:localityid, sub:suburbid, status:status },
             success:function(msg){
                if(msg == 1){
                    alert("Priority Successfully updated");
@@ -89,11 +92,30 @@ li.ui-menu-item { font-size:12px !important; }
   <TBODY>
     <TR class = "headingrowcolor">
         <TD class=whiteTxt width=12% align="right">Near Place Name or ID:</TD>
-        <TD class=whiteTxt width=15% align="left"><input type="text" id="nearplacesearch" value="<?php if(!empty($_GET['mode'])){ echo $_GET['id'];}?>" /></TD>
+        <TD class=whiteTxt width=15% align="left"><?php if(!empty($_GET['mode'])){ echo $_GET['id'];}?></TD>
     </TR>
     <TR>
         <TD class=whiteTxt width=12% align="right">Priority:</TD>
-        <TD class=whiteTxt width=15% align="left"><input type="text" id="priority" value="<?php if(!empty($_GET['mode'])){ echo $_GET['priority'];}else{ echo '5';}?>" /></TD>
+        <!--<TD class=whiteTxt width=15% align="left"><input type="text" id="priority" value="<?php //if(!empty($_GET['mode'])){ echo $_GET['priority'];}else{ echo '5';}?>" /></TD>-->
+        <TD class=whiteTxt width=15% align="left">
+          <select id="priority" value="<?php if(!empty($_GET['mode'])){ echo $_GET['priority'];}else{ echo '5';}?>" >
+          <option name=one value=1 <?php if($_GET['priority']==1) { echo "selected = 'selected'";}?> > one </option>
+          <option name=two value=2 <?php if($_GET['priority']==2) { echo "selected = 'selected'";}?> > two </option>
+          <option name=three value=3 <?php if($_GET['priority']==3) { echo "selected = 'selected'";}?> > three </option>
+          <option name=four value=4 <?php if($_GET['priority']==4) { echo "selected = 'selected'";}?> > Four </option>
+          <option name=five value=5 <?php if($_GET['priority']==5) { echo "selected = 'selected'";}?> > Five </option>
+          
+        </select>
+      </TD>
+    <TR>
+        <TD class=whiteTxt width=12% align="right">Status:</TD>
+        <TD class=whiteTxt width=15% align="left">
+          <select id="status" value="<?php if(!empty($_GET['mode'])){ echo $status;}?>" >
+          <option name=one value='A' <?php if($_GET['status']=='A') { echo "selected = 'selected'";}?> > Active </option>
+          <option name=two value='I' <?php if($_GET['status']=='I') { echo "selected = 'selected'";}?> > Inactive </option>
+                  
+        </select>
+      </TD>
     </TR>
     <!--<TR>
         <TD class=whiteTxt width=12% align="right"><input type="checkbox" name="autoadjust" id="autoadjust" value="" /></TD>
@@ -101,11 +123,12 @@ li.ui-menu-item { font-size:12px !important; }
     </TR>-->
     <TR>
         <TD class=whiteTxt width=12% align="center">
+            <input type="hidden" name="nearPlaceId" id="nearPlaceId" value="<?php echo $nearPlaceId;?>" />
             <input type="hidden" name="cityId" id="cityId" value="<?php echo $cityId;?>" />
             <input type="hidden" name="localityid" id="localityid" value="<?php echo $localityid;?>" />
             <input type="hidden" name="suburbid" id="suburbid" value="<?php echo $suburbid;?>" />
         </TD>
-        <TD class=whiteTxt width=15% align="center"><input type="submit" id="submit" name="submit" value="Add Priority" /></TD>
+        <TD class=whiteTxt width=15% align="center"><input type="submit" id="submit" name="submit" value="Submit" /></TD>
     </TR>
     
     

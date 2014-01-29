@@ -1,4 +1,6 @@
 <?php
+//echo "hi";
+//die(hello);
 error_reporting(1);
 ini_set('display_errors','1');
 include("smartyConfig.php");
@@ -10,12 +12,15 @@ include("function/functions_priority.php");
 AdminAuthentication();
 $priority   = $_POST['prio'];
 $cityId     = $_POST['cityId'];
-$sub        = $_POST['sub'];
-$loc        = $_POST['loc'];
-$autoadjust = $_POST['autoadjust'];
+//$a = $_POST['nearPlaceId'];
+//die($priority.$cityId.$a);
+//$sub        = $_POST['sub'];
+//$loc        = $_POST['loc'];
+//$autoadjust = $_POST['autoadjust'];
 if(!empty($_POST['nearPlaceId']))
 {
     $nearPlaceId    = $_POST['nearPlaceId'];
+    $status = $_POST['status'];
     if($priority < 1 || trim($priority) == '' || $priority > 5){
 	     echo 4; return;
 	}
@@ -50,9 +55,11 @@ if(!empty($_POST['nearPlaceId']))
             echo "2";
         }
     }else{
-        $count = checkNearPlaceAvail($nearPlaceId, $priority, 'city', $cityId);
-        if($count > 0)
-        {
+
+        //die("here");
+        //$count = checkNearPlaceAvail($nearPlaceId, $priority, 'city', $cityId);
+        //if($count > 0)
+        //{
             /*if($autoadjust){
                 autoAdjustProjPrio($cityId, $priority, 'city');
             }
@@ -60,10 +67,10 @@ if(!empty($_POST['nearPlaceId']))
             {
                autoAdjustMaxCountProjPrio($cityId, $priority, 'city'); 
             }*/
-            updateNearPlace($nearPlaceId, $priority, 'city', $cityId);
-        }else{
-            echo "2";
-        }
+            updateNearPlace($nearPlaceId, $priority, $status, 'city', $cityId);
+        //}else{
+            //echo "2";
+        //}
     }
 }
 else
