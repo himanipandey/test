@@ -627,7 +627,9 @@ function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
             //$where = "$Id ="; 
             $results = mysql_query ("SELECT LATITUDE, LONGITUDE FROM locality l WHERE l.LOCALITY_ID = $localityId");
             $row = mysql_fetch_assoc($results);
-            $results1 = mysql_query("SELECT np.id, np.latitude, np.longitude FROM locality_near_places np WHERE np.city_id = $cityId");
+            $lat = $row['LATITUDE'];
+            $lon = $row['LONGITUDE'];
+            /*$results1 = mysql_query("SELECT np.id, np.latitude, np.longitude FROM locality_near_places np WHERE np.city_id = $cityId");
            
             $NearPlacesArr = array();
             while ($row1 = mysql_fetch_assoc($results1)) 
@@ -639,7 +641,7 @@ function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
                 }
                     
                 
-            }
+            }*/
 
             //print_r($NearPlacesArr);
             //die("here");
@@ -655,7 +657,8 @@ function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
             FROM " . locality_near_places. " np 
                 
             inner join near_place_types npt on npt.id = np.place_type_id
-            where np.id IN (".implode(",", $NearPlacesArr).")  ".$where." ".$orderby;
+            where get_distance_in_kms_between_geo_locations($lat, $lon, np.latitude, np.longitude) < 5"
+            .$where." ".$orderby;
 
              //print_r($qry);
             break;
