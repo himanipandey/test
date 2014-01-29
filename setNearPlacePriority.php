@@ -111,8 +111,8 @@ li.ui-menu-item { font-size:12px !important; }
         <TD class=whiteTxt width=12% align="right">Status:</TD>
         <TD class=whiteTxt width=15% align="left">
           <select id="status" value="<?php if(!empty($_GET['mode'])){ echo $status;}?>" >
-          <option name=one value='A' <?php if($_GET['status']=='A') { echo "selected = 'selected'";}?> > Active </option>
-          <option name=two value='I' <?php if($_GET['status']=='I') { echo "selected = 'selected'";}?> > Inactive </option>
+          <option name=one value='Active' <?php if($_GET['status']=='Active') { echo "selected = 'selected'";}?> > Active </option>
+          <option name=two value='Inactive' <?php if($_GET['status']=='Inactive') { echo "selected = 'selected'";}?> > Inactive </option>
                   
         </select>
       </TD>
