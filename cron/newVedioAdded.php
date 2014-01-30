@@ -8,7 +8,7 @@ require_once $docroot.'includes/send_mail_amazon.php';
 $yesterday = date("Y-m-d", mktime(0, 0, 0, date("m") , date("d")-1,date("Y")));
 $sqlNewAdded = "select count(video_url) as COUNT,category from video_links 
        where 
-       created_at = '".$yesterday."%' group by category";
+       created_at like '".$yesterday."%' group by category";
 $resNewAdded = mysql_query($sqlNewAdded) or die(mysql_error());
 $arrAllData = array();
 while($dataNewAdded = mysql_fetch_assoc($resNewAdded)) {
