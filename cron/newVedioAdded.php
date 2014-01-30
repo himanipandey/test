@@ -114,7 +114,7 @@ for($i=0;$i<3;$i++){
 $message .= '<tr><th align = "center">Grand Total</th><th align = "center">'.$total.'</td><th align = "center">'.$totalExist.'</th><th align = "center">'.($totalExist+$total).'</th></tr>';
 $message.= "</table></html>";
 $subject = "New videos added yesterday";
-$toArr = array("vimlesh.rajput@proptiger.com","manish.goyal@proptiger.com","mohit.dargan@proptiger.com");
+$toArr = array("ankur.dhawan@proptiger.com","prashan.agarwal@proptiger.com","karanvir.singh@proptiger.com");
 $from = 'no-reply@proptiger.com';
 foreach($toArr as $Tovalue)
     sendMailFromAmazon($Tovalue,  $subject, $message, $from , $cc=null, $bcc=null, $ajaxCall=true)
