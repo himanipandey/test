@@ -106,7 +106,7 @@ if($_REQUEST['edit'] == 'delete'){
 			
 			$video_id = mysql_real_escape_string($_REQUEST['video_id']);
 			
-			mysql_query("UPDATE ". VIDEO_LINKS ." SET video_url='$video_url', category = '$video_type' WHERE video_id='$video_id ' AND table_id='$projectId'") or die(mysql_error());
+			mysql_query("UPDATE ". VIDEO_LINKS ." SET video_url='$video_url', category = '$video_type', updated_at = '".date('Y-m-d H:i:s')."', updated_by = '".$_SESSION['adminId']."' WHERE video_id='$video_id ' AND table_id='$projectId'") or die(mysql_error());
 		
 			header("Location:project_video_add.php?projectId=$projectId&edit=add");
 		}else{
@@ -114,7 +114,7 @@ if($_REQUEST['edit'] == 'delete'){
 			while($count < $_REQUEST['img']){
 				$video_url =  trim(mysql_real_escape_string($_REQUEST['Url'][$count]));
 				$video_type =  mysql_real_escape_string($_REQUEST['PType']);
-				mysql_query("INSERT INTO " . VIDEO_LINKS . " (`video_id`, `table_id`, `table_name`, `category`, `video_url`) VALUES (NULL, '$projectId', 'resi_project', '".$video_type."', '".addslashes($video_url)."');") or die(mysql_error());
+				mysql_query("INSERT INTO " . VIDEO_LINKS . " (`video_id`, `table_id`, `table_name`, `category`, `video_url`, `updated_by`,  	`created_at`,`updated_at`) VALUES (NULL, '$projectId', 'resi_project', '".$video_type."', '".addslashes($video_url)."','".$_SESSION['adminId']."','".date('Y-m-d H:i:s')."','".date('Y-m-d H:i:s')."');") or die(mysql_error());
 				$count++;
 			}
 		}

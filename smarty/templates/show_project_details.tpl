@@ -118,8 +118,9 @@ function towerSelect(towerId)
 		
 	}
 
-	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, preLaunchDate,phaseId,stg)
-	{		
+	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, 
+            preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder)
+	{	
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
@@ -170,6 +171,10 @@ function towerSelect(towerId)
 		{
 			flgChk = 1;
 		}
+                if(dir != 'backward' && phase == 'Audit1' && availabilityOrderChk == 'false') {
+                    alert("Supply order should be in descending order!\nCurrent order is "+availOrder+" for bedroom "+bedRoomOrder);
+                    return false;
+                }
 		
 		if(flgChk == 1)
 		{
@@ -429,7 +434,7 @@ function getDateNow(){
 		{if $projectDetails[0].PROJECT_PHASE=="DataCollection"}
 		<span> Data Collection</span>
 		{/if}
-		
+
 		{if $projectDetails[0].PROJECT_PHASE=="DcCallCenter"}
 		<span> Data Collection Call Center</span>
 		{/if}
@@ -451,6 +456,8 @@ function getDateNow(){
 	Label: {$projectLabel}
 	<br>
 {/if}
+<span>	Current Assigned Department : </span>
+<span> {$currentCycle}</span>      
 {if $projectDetails[0].PROJECT_STAGE != 'NoStage'}
 
 	{$projectStatus = $projectDetails[0]['project_status']}
@@ -460,6 +467,7 @@ function getDateNow(){
 	{$stageProject = $projectDetails[0].PROJECT_STAGE}
 	
 	{if count($accessModule)>0}
+             <br> 
             <span>
                 Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
                 <input type = "radio" name = "validationChk" value = "N">No<br>
@@ -469,16 +477,22 @@ function getDateNow(){
 	{/if}
 	{if $projectDetails[0].PROJECT_STAGE=='NewProject'}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-                 <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
+                 <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$arrAllCompletionDateChk}',
+                '{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}','{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}');">Move To Next Stage	</button>
             {/if}
 	{else}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-                <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','updation','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Move To Next Stage	</button>
+                <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}',
+                'updation','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}',
+            '{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}');">Move To Next Stage	</button>
             {/if}
 	{/if}
 
 	{if $projectDetails[0].PROJECT_PHASE!="DataCollection" && $projectDetails[0].PROJECT_PHASE!="Complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}');">Revert	</button>
+	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}',
+'{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}',
+'{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}');">Revert	</button>
+
 	{/if}
 {/if}<br>
 <!--{if $projectDetails[0].PROJECT_PHASE!="Complete"}
@@ -1015,6 +1029,20 @@ function getDateNow(){
 								{$projectDetails[0].STATUS}
 							</td>
 						</tr>
+						{if $projectDetails[0].STATUS == 'Inactive' && $project_alias_detail != 0}
+						<tr height="25px;">
+							<td nowrap="nowrap" width="6%" align="left">
+								<b>Inactive Reason:</b>
+							</td>
+							<td>
+								{if $project_alias_detail->duplicate_project_id}
+									Duplicate PID : {$project_alias_detail->duplicate_project_id}
+								{else}
+									{$project_alias_detail->reason_text}
+								{/if}
+							</td>
+						</tr>
+						{/if}
                                                 
 						<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left">

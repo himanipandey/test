@@ -285,7 +285,9 @@ if (isset($_POST['btnSave'])) {
                     }
                 }
                 //ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $supply, $_POST['launched']);
-                ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $supply, $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']);
+                //print "<pre>".print_r($_POST,1)."</pre>"; die;
+                if($supply != null && isset($_POST['supply']) && isset($_POST['launched']))
+					ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $supply, $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']);
             }
 
             $towerDetail = fetch_towerDetails_for_phase($projectId, $phaseId);
