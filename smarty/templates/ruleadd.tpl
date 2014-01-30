@@ -154,7 +154,13 @@
                       {if $ErrorMsg["wrongPId"] != ''}
                       <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["wrongPId"]}</font></td></tr>
                       {/if}
-	           
+	                   
+                       <tr> 
+                            <td width="30%" align="right" valign="top">Company Name :<font color = "red">*</font></td>
+                            <td width="10%" align="left" valign="top">
+                                <input type="text" name="broker_cmpny" id="broker_cmpny" value="{if $broker_name != ''}{$broker_name}{/if}" />
+                            </td>  
+        				</tr>
                        <tr>
         				    <td width="20%" align="right" valign="top">City :<font color = "red">*</font></td>
                             <td width="30%" align="left" >
@@ -166,12 +172,6 @@
                                </select>
                               </td>
                               {if $ErrorMsg["city"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["hq"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
-        				</tr>
-        				<tr> 
-                            <td width="30%" align="right" valign="top">Company Name :<font color = "red">*</font></td>
-                            <td width="10%" align="left" valign="top">
-                                <input type="text" name="broker_cmpny" id="broker_cmpny" value="{if $broker_name != ''} {$broker_name} {/if}" />
-                            </td>  
         				</tr>
                         <tr>
                             <td width="15%" align="right" valign="top" >Rule Name :<font color = "red">*</font></td>
@@ -303,7 +303,7 @@
                                 {if $smarty.section.waistsizes.index == 0}
                                     <TD align=left class=td-border>{$value['created_at']}</TD>
                                     <TD align=left class="td-border">
-                    	                 <a href="ruleadd.php?ruleId={$value['id']}&mode=edit&page={$page}&sort={$sort}" title="{$value['rule_name']}">EDIT </a>
+                    	                 <a href="ruleadd.php?ruleId={$value['id']}&mode=edit&company_id={$broker_id}&page={$page}&sort={$sort}" title="{$value['rule_name']}">EDIT </a>
                                       </TD>
                                 {else}
                                     <TD align=left class=td-border>&nbsp;</TD>
@@ -363,10 +363,10 @@
         
         jQuery('#btnSave').click(function(){
             
-            if(!jQuery('#city_id').val())
+            if(!jQuery('#broker_cmpny').val())
             {
-                jQuery('#city_id').focus();
-                alert("Please select City");
+                jQuery('#broker_cmpny').focus();
+                alert("Please select Company");
                 return false;
             }
             else if(!jQuery('#broker_cmpny').val() || !jQuery.trim(jQuery('#broker_cmpny').val()))
@@ -381,6 +381,12 @@
                 jQuery('#broker_cmpny').val('');
                 jQuery('#broker_cmpny').focus();
                 alert("Please select different Company this doesn't exists");
+                return false;
+            }
+            else if(!jQuery('#city_id').val())
+            {
+                jQuery('#city_id').focus();
+                alert("Please select City");
                 return false;
             }
             else if(!jQuery('#rule_name').val() || !jQuery.trim(jQuery('#rule_name').val()))
@@ -418,7 +424,33 @@
         jQuery('#city_id').change(function(){
             var valuesloc = jQuery(this).val();
                 jQuery('#ruleId').val('');
-                jQuery('#frm1').submit(); 
+                
+                if(!jQuery('#broker_cmpny').val())
+                {
+                    jQuery('#broker_cmpny').focus();
+                    alert("Please select Company");
+                    jQuery(this).val('');
+                    return false;
+                }
+                else if(!jQuery('#broker_cmpny').val() || !jQuery.trim(jQuery('#broker_cmpny').val()))
+                {
+                    jQuery('#broker_cmpny').val('');
+                    jQuery('#broker_cmpny').focus();
+                    alert("Please select Company");
+                    return false;
+                }
+                else if(jQuery('#broker_cmpny').val() && jQuery.trim(jQuery('#broker_cmpny').val()) && jQuery('#hiddennameflg').val() == '1')
+                {
+                    jQuery('#broker_cmpny').val('');
+                    jQuery('#broker_cmpny').focus();
+                    alert("Please select different Company this doesn't exists");
+                    return false;
+                }
+                else
+                {
+                    jQuery('#frm1').submit();    
+                }
+                 
           });  
           
         jQuery('#locality').change(function(){
@@ -435,7 +467,7 @@
 //            return;
             if(valuesloc != '' && valuesloc != undefined && typeof valuesloc != undefined)
             {
-                var dataString = 'locality='+valuesloc+'&mode='+{if $ruleId != ''} {$ruleId} {else} 0 {/if};
+                var dataString = 'locality='+valuesloc+'&mode='+{if $ruleId != ''}{$ruleId}{else}0{/if}+'&company_id='+jQuery('#broker_cmpny_id').val();
                 //alert(dataString);
 //                return;
                 
@@ -445,7 +477,7 @@
                     url     : 'fetchProjectLocality.php',
                     data    : dataString,
                     success : function(data){
-//                        alert(data);
+                        //alert(data);
 //                        return;
                         if(data == '')
                         {

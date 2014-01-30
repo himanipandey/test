@@ -877,6 +877,7 @@
                         /** -- Update the broker_contacts table with the table->contact_numbers pkid->mobile -- */
                         @mysql_query("UPDATE broker_contacts SET 
                                         contact_number_id = '".$contactID."',
+                                        contact_email = '".$cp_email->$val."',
                                         updated_at =  '".date('Y-m-d H:i:s')."' WHERE id = '".$brkrcmpnyContct_id."'");
                     }
                     /** -- Broker Contacts Entry End -- */
@@ -918,6 +919,78 @@
                                 //$strquery .= " ".$query;
                                 
                             }
+                            //echo "here  ";
+                            //echo $cp_phone1->$val."<br>";
+//                            echo "SELECT * FROM contact_numbers WHERE table_id = '".$val."' AND type = 'phone1'";
+//                            die;
+                            if(!empty($cp_mobile->$val))
+                            {
+                                $chkBr = @mysql_query("SELECT * FROM contact_numbers WHERE table_id = '".$val."' AND type = 'mobile'");
+                                if(!(@mysql_num_rows($chkBr) > 0))
+                                {
+                                    $sql = @mysql_query("INSERT INTO contact_numbers SET
+                                                            table_name = 'broker_contacts',
+                                                            table_id = '".$val."',
+                                                            type = 'mobile',
+                                                            contact_no = '".$cp_mobile->$val."',
+                                                            created_at =  '".date('Y-m-d H:i:s')."',
+                                                            updated_by = '".$_SESSION['adminId']."'
+                                                        ");
+                                    $contactID = @mysql_insert_id();
+                                }
+                            }
+                            
+                            
+                            if(!empty($cp_phone1->$val))
+                            {
+                                $chkBr = '';
+                                $chkBr = @mysql_query("SELECT * FROM contact_numbers WHERE table_id = '".$val."' AND type = 'phone1'");
+                                if(!(@mysql_num_rows($chkBr) > 0))
+                                {
+                                    $sql = @mysql_query("INSERT INTO contact_numbers SET
+                                                            table_name = 'broker_contacts',
+                                                            table_id = '".$val."',
+                                                            type = 'phone1',
+                                                            contact_no = '".$cp_phone1->$val."',
+                                                            created_at =  '".date('Y-m-d H:i:s')."',
+                                                            updated_by = '".$_SESSION['adminId']."'
+                                                        ");
+                                }
+                            }
+                            
+                            if(!empty($cp_phone2->$val))
+                            {
+                                $chkBr = '';
+                                $chkBr = @mysql_query("SELECT * FROM contact_numbers WHERE table_id = '".$val."' AND type = 'phone2'");
+                                if(!(@mysql_num_rows($chkBr) > 0))
+                                {
+                                    $sql = @mysql_query("INSERT INTO contact_numbers SET
+                                                            table_name = 'broker_contacts',
+                                                            table_id = '".$val."',
+                                                            type = 'phone2',
+                                                            contact_no = '".$cp_phone2->$val."',
+                                                            created_at =  '".date('Y-m-d H:i:s')."',
+                                                            updated_by = '".$_SESSION['adminId']."'
+                                                        ");
+                                }
+                            }
+                            
+                            if(!empty($cp_phone2->$val))
+                            {
+                                $chkBr = '';
+                                $chkBr = @mysql_query("SELECT * FROM contact_numbers WHERE table_id = '".$val."' AND type = 'fax'");
+                                if(!(@mysql_num_rows($chkBr) > 0))
+                                {
+                                    $sql = @mysql_query("INSERT INTO contact_numbers SET
+                                                            table_name = 'broker_contacts',
+                                                            table_id = '".$val."',
+                                                            type = 'fax',
+                                                            contact_no = '".$cp_fax->$val."',
+                                                            created_at =  '".date('Y-m-d H:i:s')."',
+                                                            updated_by = '".$_SESSION['adminId']."'
+                                                        ");
+                                }
+                            }
                             
                             //if(!empty($strquery))
 //                            {
@@ -925,14 +998,20 @@
 //                            }
                            // echo "<br>".$strquery;
 //                            echo "her";die;
+                            //print'<pre>';
+//                            print_R($cp_email);
+//                            echo $cp_email->$val;die; 
                             $brkrcmpnyContct = BrokerCompanyContact::find_by_id($val);
                             $brkrcmpnyContct->name = !empty($cp_name->$val)?$cp_name->$val:'';
                             $brkrcmpnyContct->contact_email = !empty($cp_email->$val)?$cp_email->$val:'';
-                            
+                            $brkrcmpnyContct->updated_at =  date('Y-m-d H:i:s');
                             $brkrcmpnyContct->save();
                         }
                         else
                         {
+                            //print'<pre>';
+//                            print_R($cp_email);
+//                            echo $cp_email->$val;die; 
                             $brkrcmpnyContctId = '';
                             $chkBr = @mysql_query("SELECT * FROM broker_contacts WHERE id = '".$val."'");
                             if(!(@mysql_num_rows($chkBr) > 0))
@@ -1015,124 +1094,18 @@
                             }                            
                             
                             /** -- Update the broker_contacts table with the table->contact_numbers pkid->mobile -- */
+                            $brkrcmpnyContct = BrokerCompanyContact::find_by_id($brkrcmpnyContctId);
                             if(!empty($contactID))
-                            {
-                                $brkrcmpnyContct = BrokerCompanyContact::find_by_id($brkrcmpnyContctId);
-                                $brkrcmpnyContct->contact_number_id = $contactID;
-                                $brkrcmpnyContct->updated_at =  date('Y-m-d H:i:s');
-                                $brkrcmpnyContct->save();    
-                            }
+                                $brkrcmpnyContct->contact_number_id = $contactID;    
+                            $brkrcmpnyContct->contact_email = !empty($cp_email->$val)?$cp_email->$val:'';
+                            $brkrcmpnyContct->updated_at =  date('Y-m-d H:i:s');
+                            $brkrcmpnyContct->save();
                         }
                         
                         
                         
                     }
                     
-                //if(empty($rcontacts) && empty($acontactids) && empty($finalcontacts) && !empty($cp_ids))
-//                {
-//                    //print'<pre>';
-////                    print_r($cp_ids);
-////                    echo "heer";die;                    
-//                    foreach($cp_ids as $key => $val)
-//                    {
-//                        //echo $cp_name->$val." ".$cp_email->$val." ".$cp_mobile->$val." <br>";
-////                        die;
-//                        $brkrcmpnyContct = new  BrokerCompanyContact();
-//                        
-//                        $brkrcmpnyContct->broker_id = $brokerIdFormapping;
-//                        $brkrcmpnyContct->name = !empty($cp_name->$val)?$cp_name->$val:'';
-//                        $brkrcmpnyContct->contact_email = !empty($cp_email->$val)?$cp_email->$val:'';
-//                        $brkrcmpnyContct->type =  'NAgent';
-//                        $brkrcmpnyContct->created_at =  date('Y-m-d H:i:s');
-//                        //$brkrcmpnyContct->updated_at =  '000-00-00 00:00:00';
-//                        $brkrcmpnyContct->updated_by = $_SESSION['adminId'];
-//                        $brkrcmpnyContct->save();
-//                        
-//                        //$brkrcmpnyContct->id = 1;
-//                        
-//                        if(!empty($brkrcmpnyContct->id))
-//                        {
-//                            $brkrIDArr[] = $brkrcmpnyContct->id;
-//                            
-//                            /** -- This will generate a row in contact_numbers table for mobile -- */
-//                            if(!empty($cp_mobile->$val) && isset($cp_mobile->$val))
-//                            {
-//                                $contctNumber = new ContactNumber();
-//                                $contctNumber->table_name = 'broker_contacts';
-//                                $contctNumber->table_id = $brkrcmpnyContct->id;
-//                                $contctNumber->type = 'mobile';
-//                                if(!empty($cp_mobile->$val))
-//                                    $contctNumber->contact_no = $cp_mobile->$val ;
-//                                $contctNumber->created_at =  date('Y-m-d H:i:s');
-//                                $contctNumber->updated_by = $_SESSION['adminId'];
-//                                $contctNumber->save();
-//                                //$contactID = 1;
-//                                if(!empty($contctNumber->id))
-//                                    $contactID = $contctNumber->id;    
-//                            }
-//                            
-//                            
-//                            /** -- This will generate a row in contact_numbers table for phone1 -- */
-//                            if(!empty($cp_phone1->$val) && isset($cp_phone1->$val))
-//                            {
-//                                $contctNumber = new ContactNumber();
-//                                $contctNumber->table_name = 'broker_contacts';
-//                                $contctNumber->table_id = $brkrcmpnyContct->id;
-//                                $contctNumber->type = 'phone1';
-//                                if(!empty($cp_phone1->$val))
-//                                    $contctNumber->contact_no = $cp_phone1->$val ;
-//                                $contctNumber->created_at =  date('Y-m-d H:i:s');
-//                                $contctNumber->updated_at =  '000-00-00 00:00:00';
-//                                $contctNumber->updated_by = $_SESSION['adminId'];
-//                                $contctNumber->save();
-//                            }
-//                            
-//                            /** -- This will generate a row in contact_numbers table for phone2 -- */
-//                            if(!empty($cp_phone2->$val) && isset($cp_phone2->$val))
-//                            {
-//                                $contctNumber = new ContactNumber();
-//                                $contctNumber->table_name = 'broker_contacts';
-//                                $contctNumber->table_id = $brkrcmpnyContct->id;
-//                                $contctNumber->type = 'phone2';
-//                                if(!empty($cp_phone2->$val))
-//                                    $contctNumber->contact_no = $cp_phone2->$val ;
-//                                $contctNumber->created_at =  date('Y-m-d H:i:s');
-//                                $contctNumber->updated_at =  '000-00-00 00:00:00';
-//                                $contctNumber->updated_by = $_SESSION['adminId'];
-//                                $contctNumber->save();
-//                            }
-//                            
-//                            
-//                            /** -- This will generate a row in contact_numbers table for fax -- */ 
-//                            if(!empty($cp_fax->$val) && isset($cp_fax->$val))
-//                            {
-//                                $contctNumber = new ContactNumber();
-//                                $contctNumber->table_name = 'broker_contacts';
-//                                $contctNumber->table_id = $brkrcmpnyContct->id;
-//                                $contctNumber->type = 'fax';
-//                                if(!empty($cp_fax->$val))
-//                                    $contctNumber->contact_no = $cp_fax->$val ;
-//                                $contctNumber->created_at =  date('Y-m-d H:i:s');
-//                                $contctNumber->updated_at =  '000-00-00 00:00:00';
-//                                $contctNumber->updated_by = $_SESSION['adminId'];
-//                                $contctNumber->save();
-//                            }
-//                            
-//                            
-//                            /** -- Update the broker_contacts table with the table->contact_numbers pkid->mobile -- */
-//                            
-//                            if(!empty($contactID))
-//                            {
-//                                $brkrcmpnyContct = BrokerCompanyContact::find_by_id($brkrcmpnyContct->id);
-//                                $brkrcmpnyContct->contact_number_id = $contactID;
-//                                $brkrcmpnyContct->updated_at =  date('Y-m-d H:i:s');
-//                                $brkrcmpnyContct->save();    
-//                            }
-//                        }
-//                    }
-//                    /** -- Broker Contacts Entry End -- */
-//                                    
-//                }                                                        
                 
                 /** -- CC Entry Start -- */
                 /** -- Insert values in broker_contacts for Customer Care -- */
@@ -1153,6 +1126,7 @@
                     }
                 }
                 
+                //echo $cc_id."here";die;
                 if(!empty($cc_id))
                 {
                     $brkrcmpnyContct1 = @mysql_query("SELECT * FROM broker_contacts WHERE id = '".$cc_id."'");
@@ -1160,10 +1134,11 @@
                     {
                         @mysql_query("UPDATE broker_contacts SET
                                         contact_email = '".$cc_email."',
+                                        updated_at = '".date('Y-m-d H:i:s')."',
                                         updated_by = '".$_SESSION['adminId']."' WHERE id = '".$cc_id."'");
                                         
                         $brkrcmpnyContctNum = BrokerCompanyContact::ContactBrkIDFrmCnt($cc_id);
-                        //echo $cc_id;die;
+                        //
 //                        print'<pre>';
 //                        print_r($brkrcmpnyContctNum);
 //                        print_r($cc_mobile);
@@ -1174,7 +1149,7 @@
 //                        echo "<br>";
 //                        die;
                     }
-                    
+                    //echo "here";die;
                     $chkFlag = 0;
                     if(!empty($brkrcmpnyContctNum))
                     {
@@ -1190,60 +1165,103 @@
                                     //$contctNumber->contact_no = $cc_mobile ;  
                                     $query .= " contact_no = '".$cc_mobile."' WHERE id = '".$v['id']."' AND type = 'cc_mobile'";  
                                     @mysql_query($query);
-                                    $chkFlag = 1;
                                 }
                                 else if($v['type'] == 'cc_phone')
                                 {
                                     //$contctNumber->contact_no = $cc_phone ;
                                     $query .= " contact_no = '".$cc_phone."' WHERE id = '".$v['id']."' AND type = 'cc_phone'";
                                     @mysql_query($query);
-                                    $chkFlag = 2;
                                 }
                                 else if($v['type'] == 'cc_fax')
                                 {
                                     //$contctNumber->contact_no = $cc_fax ;
                                     $query .= " contact_no = '".$cc_fax."' WHERE id = '".$v['id']."' AND type = 'cc_fax'";    
                                     @mysql_query($query);
-                                    $chkFlag = 3;
                                 }
                                 
                             }
                         }
                         
-                        if(!empty($cc_mobile) && $chkFlag != 1 && $chkFlag != 0)
+                        //echo "here "."<br>"."SELECT * FROM contact_numbers WHERE table_id = '".$cc_id."' AND type = 'cc_mobile'";
+//                        die;
+//echo $cc_mobile;
+                        if(!empty($cc_mobile))
                         {
-                            $sql = @mysql_query("INSERT INTO contact_numbers SET
+                            $chkCC = @mysql_query("SELECT * FROM contact_numbers WHERE table_id = '".$cc_id."' AND type = 'cc_mobile'");
+                            if(!(@mysql_num_rows($chkCC) > 0))
+                            {
+                                $sql = @mysql_query("INSERT INTO contact_numbers SET
                                                         table_name = 'broker_contacts',
                                                         table_id = '".$cc_id."',
                                                         contact_no = '".$cc_mobile."',
                                                         type = 'cc_mobile',
                                                         updated_by = '".$_SESSION['adminId']."',
-                                                        created_at = '".date('Y-m-d')."'");
+                                                        created_at = '".date('Y-m-d H:i:s')."'");
+                            }
                         }
-                        if(!empty($cc_phone) && $chkFlag != 2 && $chkFlag != 0)
+                        
+                        //echo "here "."<br>"."SELECT * FROM contact_numbers WHERE table_id = '".$cc_id."' AND type = 'cc_mobile'";
+//                        die;
+                        if(!empty($cc_phone))
                         {
-                            $sql = @mysql_query("INSERT INTO contact_numbers SET
+                            $chkCC = '';
+                            $chkCC = @mysql_query("SELECT * FROM contact_numbers WHERE table_id = '".$cc_id."' AND type = 'cc_phone'");
+                            if(!(@mysql_num_rows($chkCC) > 0))
+                            {
+                                $sql = @mysql_query("INSERT INTO contact_numbers SET
                                                         table_name = 'broker_contacts',
                                                         table_id = '".$cc_id."',
                                                         contact_no = '".$cc_phone."',
                                                         type = 'cc_phone',
                                                         updated_by = '".$_SESSION['adminId']."',
-                                                        created_at = '".date('Y-m-d')."'");
+                                                        created_at = '".date('Y-m-d H:i:s')."'");
+                            }
                         }
-                        if(!empty($cc_fax) && $chkFlag != 3 && $chkFlag != 0)
+                        if(!empty($cc_fax))
                         {
-                            $sql = @mysql_query("INSERT INTO contact_numbers SET
+                            $chkCC = '';
+                            $chkCC = @mysql_query("SELECT * FROM contact_numbers WHERE table_id = '".$cc_id."' AND type = 'cc_fax'");
+                            if(!(@mysql_num_rows($chkCC) > 0))
+                            {   
+                                $sql = @mysql_query("INSERT INTO contact_numbers SET
                                                         table_name = 'broker_contacts',
                                                         table_id = '".$cc_id."',
                                                         contact_no = '".$cc_fax."',
                                                         type = 'cc_fax',
                                                         updated_by = '".$_SESSION['adminId']."',
-                                                        created_at = '".date('Y-m-d')."'");
+                                                        created_at = '".date('Y-m-d H:i:s')."'");
+                            }
                         }
+                        
+                        $sql = @mysql_query("UPDATE broker_contacts SET
+                                                        contact_email = '".$cc_email."',
+                                                        updated_at =  '".date('Y-m-d H:i:s')."',
+                                                        updated_by = '".$_SESSION['adminId']."' WHERE id = '".$cc_id."'") or die(mysql_error());
+                        //$brkrcmpnyContct = BrokerCompanyContact::find_by_id($cc_id);
+//                        if(!empty($contact_number_id))
+//                            $brkrcmpnyContct->contact_number_id = $contact_number_id;
+//                        $brkrcmpnyContct->contact_email = !empty($cc_email)?$cc_email:'';
+//                        $brkrcmpnyContct->updated_by = $_SESSION['adminId'];
+//                        $brkrcmpnyContct->updated_at =  date('Y-m-d H:i:s');
+//                        $brkrcmpnyContct->save();
                     }
                     else
                     {
-                        //echo "-->".$cc_mobile."<--";die;
+                        //echo "-->".$cc_mobile."<-- $brokerIdFormapping";die;
+                        $chkCC = '';
+                        $chkCC = @mysql_query("SELECT * FROM broker_contacts WHERE broker_id = '".$brokerIdFormapping."' AND name = 'Customer Care'");
+                        if(!(@mysql_num_rows($chkCC) > 0))
+                        {
+                            @mysql_query("INSERT INTO broker_contacts SET
+                                                broker_id = '".$brokerIdFormapping."',
+                                                name = 'Customer Care',
+                                                contact_email = '".$cc_email."',
+                                                type =  'NAgent',
+                                                created_at =  '".date('Y-m-d H:i:s')."',
+                                                updated_by = '".$_SESSION['adminId']."'");
+                        }
+                        
+                        //echo $cc_id;die;
                         if(!empty($cc_mobile))
                         {
                             $sql = @mysql_query("INSERT INTO contact_numbers SET
@@ -1252,7 +1270,8 @@
                                                         contact_no = '".$cc_mobile."',
                                                         type = 'cc_mobile',
                                                         updated_by = '".$_SESSION['adminId']."',
-                                                        created_at = '".date('Y-m-d')."'") or die(mysql_error());
+                                                        created_at = '".date('Y-m-d H:i:s')."'") or die(mysql_error());
+                            $contact_number_id = @mysql_insert_id();
                         }
                         if(!empty($cc_phone))
                         {
@@ -1262,7 +1281,8 @@
                                                         contact_no = '".$cc_phone."',
                                                         type = 'cc_phone',
                                                         updated_by = '".$_SESSION['adminId']."',
-                                                        created_at = '".date('Y-m-d')."'");
+                                                        created_at = '".date('Y-m-d H:i:s')."'");
+                            $contact_number_id = @mysql_insert_id();
                         }
                         if(!empty($cc_fax))
                         {
@@ -1272,12 +1292,87 @@
                                                         contact_no = '".$cc_fax."',
                                                         type = 'cc_fax',
                                                         updated_by = '".$_SESSION['adminId']."',
-                                                        created_at = '".date('Y-m-d')."'");
+                                                        created_at = '".date('Y-m-d H:i:s')."'");
+                            $contact_number_id = @mysql_insert_id();
                         }
+                        
+                        //$brkrcmpnyContct = BrokerCompanyContact::find_by_id($cc_id);
+//                        if(!empty($contact_number_id))
+//                            $brkrcmpnyContct->contact_number_id = $contact_number_id;
+//                        $brkrcmpnyContct->contact_email = !empty($cc_email)?$cc_email:'';
+//                        $brkrcmpnyContct->updated_by = $_SESSION['adminId'];
+//                        $brkrcmpnyContct->updated_at =  date('Y-m-d H:i:s');
+//                        $brkrcmpnyContct->save(); 
+                        $sql = @mysql_query("UPDATE broker_contacts SET
+                                                contact_email = '".$cc_email."',
+                                                updated_at =  '".date('Y-m-d H:i:s')."',
+                                                updated_by = '".$_SESSION['adminId']."' WHERE id = '".$cc_id."'") or die(mysql_error());
                     }
                 }
+                else
+                {
+                    $chkCC = '';
+                    
+                    $chkCC = @mysql_query("SELECT * FROM broker_contacts WHERE broker_id = '".$brokerIdFormapping."' AND name = 'Customer Care'");
+                    if(!(@mysql_num_rows($chkCC) > 0))
+                    {
+                        $contact_number_id = '';
+                        @mysql_query("INSERT INTO broker_contacts SET
+                                            broker_id = '".$brokerIdFormapping."',
+                                            name = 'Customer Care',
+                                            contact_email = '".$cc_email."',
+                                            type =  'NAgent',
+                                            created_at =  '".date('Y-m-d H:i:s')."',
+                                            updated_by = '".$_SESSION['adminId']."'");
+                        
+                        $contact_number_id = @mysql_insert_id();
+                    }
+                    
+                    if(!empty($cc_mobile))
+                    {
+                        $sql = @mysql_query("INSERT INTO contact_numbers SET
+                                                    table_name = 'broker_contacts',
+                                                    table_id = '".$contact_number_id."',
+                                                    contact_no = '".$cc_mobile."',
+                                                    type = 'cc_mobile',
+                                                    updated_by = '".$_SESSION['adminId']."',
+                                                    created_at = '".date('Y-m-d')."'") or die(mysql_error());
+                    }
+                    if(!empty($cc_phone))
+                    {
+                        $sql = @mysql_query("INSERT INTO contact_numbers SET
+                                                    table_name = 'broker_contacts',
+                                                    table_id = '".$contact_number_id."',
+                                                    contact_no = '".$cc_phone."',
+                                                    type = 'cc_phone',
+                                                    updated_by = '".$_SESSION['adminId']."',
+                                                    created_at = '".date('Y-m-d')."'");
+                    }
+                    if(!empty($cc_fax))
+                    {
+                        $sql = @mysql_query("INSERT INTO contact_numbers SET
+                                                    table_name = 'broker_contacts',
+                                                    table_id = '".$contact_number_id."',
+                                                    contact_no = '".$cc_fax."',
+                                                    type = 'cc_fax',
+                                                    updated_by = '".$_SESSION['adminId']."',
+                                                    created_at = '".date('Y-m-d')."'");
+                    }
+                    
+                    //$brkrcmpnyContct = BrokerCompanyContact::find_by_id($contact_number_id);
+//                    ////$brkrcmpnyContct->contact_number_id = $contact_number_id;
+//                    $brkrcmpnyContct->contact_email = !empty($cc_email)?$cc_email:'';
+//                    $brkrcmpnyContct->updated_by = $_SESSION['adminId'];
+//                    $brkrcmpnyContct->updated_at =  date('Y-m-d H:i:s');
+//                    $brkrcmpnyContct->save();
+                    $sql = @mysql_query("UPDATE broker_contacts SET
+                                                contact_email = '".$cc_email."',
+                                                updated_at =  '".date('Y-m-d H:i:s')."',
+                                                updated_by = '".$_SESSION['adminId']."' WHERE id = '".$contact_number_id."'") or die(mysql_error());                                                             
+                }
                 
-               // echo "here";die;    
+                
+                //echo "here";die;    
                 if(!empty($remove_citylocids))
                     foreach($remove_citylocids as $key => $val)
                     {
@@ -1314,7 +1409,9 @@
             });
         }
          
-            
+        //print'<pre>';
+//        print_r($ErrorMsg);
+//        die;
         if(count($ErrorMsg)>0) {
             $smarty->assign("ErrorMsg", $ErrorMsg);    
         }

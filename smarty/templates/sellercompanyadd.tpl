@@ -280,7 +280,8 @@
                     <td width="15%" align="right" valign="top" >Active Since</td>
                     <td width="10%" align="left" valign="top" >
                         <input type=text name="active_since" id="active_since" value="{$active_since}" style="width:85px;" readonly="1" size="10" />
-                        <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />	
+                        <img src="../images/cal_1.jpg" id="f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                        <input type="button" name="cleardate" id="cleardate" value="Reset Date" />	
                     </td>
                     <td width="15%" align="right" valign="top" >Select Qualification</td>
                     <td width="10%" align="left" valign="top" >
@@ -333,10 +334,26 @@
 <script type="text/javascript">
     jQuery(document).ready(function(){
         
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; 
+        var yyyy = today.getFullYear();
+        if(dd<10){
+            dd='0'+dd
+        } 
+        if(mm<10)
+        {
+            mm='0'+mm
+        } 
+        today = yyyy + '-' + mm + '-' + dd ;
         
         jQuery('#btnExit').click(function(){
             window.location.href = 'SellerCompanyList.php';
         }); 
+        
+        jQuery('#cleardate').click(function(){
+            jQuery('#active_since').val('');
+        });
         
         jQuery('#copy').click(function(){
             
@@ -453,7 +470,27 @@
         });
         
         jQuery('#btnSave').click(function(){
-            
+            var active = jQuery('#active_since').val();
+            active = active.split("/");
+            var active = new Date(active[2] + '-' + active[1] + '-' + active[0]);
+            var dd = active.getDate();
+            var mm = active.getMonth()+1; 
+            var yyyy = active.getFullYear();
+            if(dd<10)
+            {
+                dd='0'+dd;
+            } 
+            if(mm<10)
+            {
+                mm='0'+mm;
+            } 
+            active = yyyy + '-' + mm + '-' + dd ;
+            //alert(active + ' ' + today);
+            if(active > today)
+            {
+                alert("Please enter Past Date");
+                return false;
+            }
             if(!jQuery('#seller_cmpny').val() || !jQuery.trim(jQuery('#seller_cmpny').val()))
             {
                 jQuery('#seller_cmpny').focus();

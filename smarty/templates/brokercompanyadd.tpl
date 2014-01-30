@@ -53,6 +53,18 @@
 <script type="text/javascript">
     jQuery(document).ready(function(){
         
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; 
+        var yyyy = today.getFullYear();
+        if(dd<10){
+            dd='0'+dd
+        } 
+        if(mm<10)
+        {
+            mm='0'+mm
+        } 
+        today = yyyy + '-' + mm + '-' + dd ;
         
         jQuery('#btnExit').click(function(){
             window.location.href = 'BrokerCompanyList.php';
@@ -363,9 +375,35 @@
            }  
             
             
-        });        
+        });      
+        
+        
+          
         jQuery('#btnSave').click(function(){
             var flag = 0;
+            var active = jQuery('#active_since').val();
+            active = active.split("/");
+            var active = new Date(active[2] + '-' + active[1] + '-' + active[0]);
+            var dd = active.getDate();
+            var mm = active.getMonth()+1; 
+            var yyyy = active.getFullYear();
+            if(dd<10)
+            {
+                dd='0'+dd;
+            } 
+            if(mm<10)
+            {
+                mm='0'+mm;
+            } 
+            active = yyyy + '-' + mm + '-' + dd ;
+            //alert(active + ' ' + today);
+            if(active > today)
+            {
+                alert("Please enter Past Date");
+                return false;
+            }
+            
+            //return false;
             if(!jQuery('#name').val() || !jQuery.trim(jQuery('#name').val()))
             {
                 jQuery('#name').val('');
@@ -964,7 +1002,9 @@
         
         jQuery('#cleardate').click(function(){
             jQuery('#active_since').val('');
-        })
+        });
+        
+        
         
     });
     
@@ -1501,6 +1541,7 @@
         var availableTags = {$cityLocArr}; 
         $( "#location" ).autocomplete({
                 source: availableTags,
+                minLength: 1,
                 select: function( event, ui ) {
                     event.preventDefault();
                     //alert(ui.item.value+ ' '+ ui.item.id )
