@@ -29,8 +29,7 @@ function sendMailFromAmazon($to,  $subject, $message, $from , $cc=null, $bcc=nul
              				)
         		));
 
-        echo "<pre>";
-        print_r($response);
+
 	if (!$response->isOK()) {
             if($ajaxCall)
                 echo 'Not Send';
