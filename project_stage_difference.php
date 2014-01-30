@@ -39,7 +39,7 @@ $call_SupplyDate = '-';
 $call_ProjectStatus = '-';
 $call_BookingStatus = '-';
 	
-	print "stage : ".$projectStageId."----phase : ".$projectPhaseId." current phase : ".$currPhaseID;
+	//print "stage : ".$projectStageId."----phase : ".$projectPhaseId." current phase : ".$currPhaseID;
 	
 //values on audit1	
 $sql_resi_audit = mysql_query("SELECT trp._t_transaction_id,trp.PRE_LAUNCH_DATE,trp.LAUNCH_DATE,trp.PROMISED_COMPLETION_DATE,trp.EXPECTED_SUPPLY_DATE,trp.PROJECT_STATUS_ID,trp.created_at,trp.updated_at,
@@ -69,10 +69,8 @@ if(mysql_num_rows($sql_resi_audit)){
 		//booking status Audit---
 		$sql_audit_bk = mysql_query("SELECT mbs.display_name FROM _t_resi_project_phase trpp 
 		LEFT JOIN master_booking_statuses mbs ON trpp.booking_status_id = mbs.id
-		WHERE project_id='$projectID'  AND updated_at <='$updated_at' AND PHASE_TYPE = 'Logical'  AND version = 'Cms' ORDER BY trpp.updated_at desc limit 1") or die(mysql_error());
-		
-		
-		
+		WHERE project_id='$projectID'  AND updated_at <='$updated_at' AND PHASE_TYPE = 'Logical'  AND version = 'Cms' ORDER BY trpp.updated_at  desc limit 1") or die(mysql_error());
+			
 	}else{
 		//booking status Audit---
 		$sql_audit_bk = mysql_query("SELECT mbs.display_name FROM resi_project_phase trpp 
