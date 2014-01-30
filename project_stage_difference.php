@@ -80,7 +80,7 @@ FROM _t_resi_project trp
 LEFT JOIN project_status_master ps on trp.project_status_id = ps.id
 LEFT JOIN resi_project_phase  rpp on trp.project_id = rpp.project_id  
 LEFT JOIN master_booking_statuses mbs ON rpp.booking_status_id = mbs.id
-WHERE trp.PROJECT_ID='$projectID'  AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = '$projectPhaseId') AND rpp.PHASE_TYPE = 'Logical'  AND trp.version = 'Cms' ORDER BY trp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
+WHERE trp.PROJECT_ID='$projectID'  AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = '4') AND rpp.PHASE_TYPE = 'Logical'  AND trp.version = 'Cms' ORDER BY trp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
 
 if($sql_resi_callcenter){
 
@@ -92,6 +92,7 @@ if($sql_resi_callcenter){
 	$call_SupplyDate = $sql_resi_callcenter->EXPECTED_SUPPLY_DATE;
 	$call_ProjectStatus = $sql_resi_callcenter->display_name;
 	
+	//print $sql_resi_callcenter->updated_at." - ".$projectStageId." - ".$projectPhaseId;
 
 	//booking status Audit---
 	$sql_call_bk = mysql_query("SELECT trpp._t_transaction_id,mbs.display_name FROM _t_resi_project_phase trpp 
