@@ -118,6 +118,6 @@ $subject = "New Videos added";
 $to = "'vimlesh.rajput@proptiger.com','manish.goyal@proptiger.com'";
 $from = 'no-reply@proptiger.com';
 //sendMailFromAmazon($to,  $subject, $message, $from , null, null, true);
-sendRawEmailFromAmazon($to, $from, '', $subject, $message, null, null, null);
+sendRawEmailFromAmazon($to, $from, null, $subject, $message, null, null, null);
 
 ?>
