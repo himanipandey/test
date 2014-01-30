@@ -112,19 +112,11 @@ for($i=0;$i<3;$i++){
     $message .= '<tr><td align = "center">'.$categoryName[$i].'</td><td align = "center">'.$categoryValue[$i].'</td><td align = "center">'.$categoryValueExist[$i].'</td><td align = "center">'.($categoryValueExist[$i]+$categoryValue[$i]).'</td></tr>';
 }
 $message .= '<tr><th align = "center">Grand Total</th><th align = "center">'.$total.'</td><th align = "center">'.$totalExist.'</th><th align = "center">'.($totalExist+$total).'</th></tr>';
-$message .= "</table></html>";
-echo $message;
-$subject = "New Videos added";
-$to = "'vimlesh.rajput@proptiger.com'";
+$message.= "</table></html>";
+$subject = "New videos added yesterday";
+$toArr = array("vimlesh.rajput@proptiger.com","manish.goyal@proptiger.com","mohit.dargan@proptiger.com");
 $from = 'no-reply@proptiger.com';
-$cc = 'vimlesh.rajput@gmail.com';
-$attachmentname = 'test.php';
-$attachmentpath = 'includes/test.php';
-$destination = 'tst';
-//sendMailFromAmazon($to,  $subject, $message, $from , null, null, true);
-sendMailFromAmazon($to,  $subject, $message, $from , $cc=null, $bcc=null, $ajaxCall=true)
-//sendRawEmailFromAmazon($to, $from, $cc, $subject, $message, $attachmentname = false, $attachmentpath = false, $destination = false, $ajaxCall=true);
-//function sendRawEmailFromAmazon($to, $from, $cc, $subject, $body, $attachmentname, $attachmentpath, $destination, $ajaxCall=true){
-
+foreach($toArr as $Tovalue)
+    sendMailFromAmazon($Tovalue,  $subject, $message, $from , $cc=null, $bcc=null, $ajaxCall=true)
 
 ?>
