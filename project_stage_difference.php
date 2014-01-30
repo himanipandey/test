@@ -60,7 +60,7 @@ if(mysql_num_rows($sql_resi_audit)){
 	//booking status Audit---
 	$sql_audit_bk = mysql_query("SELECT trpp._t_transaction_id,mbs.display_name FROM _t_resi_project_phase trpp 
 	LEFT JOIN master_booking_statuses mbs ON trpp.booking_status_id = mbs.id
-	WHERE trpp.updated_at <= '$sql_resi_audit->updated_at' AND project_id='$projectID'  AND PHASE_TYPE = 'Logical' ORDER BY trpp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
+	WHERE project_id='$projectID'  AND PHASE_TYPE = 'Logical' ORDER BY trpp.updated_at desc limit 1") or die(mysql_error());
 	
 	if($sql_audit_bk){
 		$sql_audit_bk = mysql_fetch_object($sql_audit_bk);
