@@ -163,58 +163,6 @@ $html = "<table width='600px'><tbody>
 
 	print $html;
 	
-	
 ?>
-<?php
-/*
-function fetchStartTime($stageNameID, $phasenameID, $projectId) {
-    $whereClause = '';
-    if (trim($phasenameID) == '2' AND trim($stageNameID) == '2') {
-        $qryRevert = "SELECT * FROM project_stage_history
-			WHERE
-				PROJECT_ID = $projectId
-			AND
-				PROJECT_STAGE_ID = '2'
-			AND
-				PROJECT_PHASE = '2'
-			ORDER BY HISTORY_ID DESC";
-        $resRevert = mysql_query($qryRevert);
-        if (mysql_num_rows($resRevert) > 1) {
-            $qryRevert = "SELECT DATE_TIME FROM project_stage_history
-				WHERE
-					HISTORY_ID< (SELECT HISTORY_ID FROM project_stage_history
-									WHERE
-										PROJECT_ID = $projectId
-									AND
-										PROJECT_STAGE_ID = '2'
-									AND
-										PROJECT_PHASE_ID = '2'
-									ORDER BY HISTORY_ID DESC LIMIT 1)
-				 ORDER BY HISTORY_ID DESC LIMIT 1";
-            $resRevert = mysql_query($qryRevert);
-            $dataStartTime = mysql_fetch_assoc($resRevert);
-            $startTime = $dataStartTime['DATE_TIME'];
-            return $startTime;
-        }
-        else
-            return NULL;
-    }
-    elseif (trim($phasenameID) == '4' AND trim($stageNameID) == '2') {
-        $whereClause = "(PROJECT_STAGE_ID  = '$stageNameID' AND PROJECT_PHASE_ID  = '3')";
-    } elseif (trim($phasenameID) == '4' AND trim($stageNameID) == '3') {
-        $whereClause = "((PROJECT_STAGE_ID  = '$stageNameID' AND PROJECT_PHASE_ID  = '8') OR (PROJECT_STAGE_ID  = '1' AND PROJECT_PHASE_ID  = '6'))";
-    }
 
-    $qry = "SELECT  MAX(DATE_TIME) as DATE_TIME
-			FROM
-			   project_stage_history
-		    WHERE
-		      PROJECT_ID = $projectId
-			AND $whereClause"
-    ;
-    $res = mysql_query($qry) or die(mysql_error());
-    $data = mysql_fetch_assoc($res);
-    return $data['DATE_TIME'];
-}*/
-?>
 

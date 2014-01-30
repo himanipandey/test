@@ -547,7 +547,7 @@ function getDateNow(){
             <!-- End of Project Phases -->
              <!-- Project Diff -->
             &nbsp;&nbsp;&nbsp;&nbsp;
-            {if $projectDetails[0]['PROJECT_PHASE_ID'] > 3 && $projectDetails[0]['PROJECT_PHASE_ID'] > 1 && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+            {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission) && ($projectDetails[0]['PROJECT_STAGE_ID'] == 3 || $projectDetails[0]['PROJECT_PHASE_ID'] == 4) && ($projectDetails[0]['PROJECT_STAGE_ID'] == 2 || $projectDetails[0]['PROJECT_PHASE_ID'] == 4)}
 				&nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Stage Differenece:</b><button id="diffButton">Diff</button>
 		    {/if}
             <!-- End of Project Diff -->	   
