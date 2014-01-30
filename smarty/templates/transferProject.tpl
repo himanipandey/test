@@ -508,18 +508,11 @@ $(function() {
                                             <option value="NoStage|0" {if $updatePhasePost == "NoStage|0"} selected {/if}>No Phase</option>
                                             <option value="NewProject|0" {if $updatePhasePost == "NewProject|0"} selected {/if}>New Project</option>
                                             {foreach from=$UpdationArr key=k item=v}
-                                             {if $v->updation_cycle_id != $skipUpdationCycle_Id}
-                                                 {if ucfirst($v->cycle_type) == 'NewProject'}
-                                                     <option value = "{ucfirst($v->cycle_type)}|{$v->updation_cycle_id}"
-                                                        {if $updatePhasePost == "{ucfirst($v->cycle_type)}|{$v->updation_cycle_id}"} selected {/if}> 
-                                                        {ucfirst($v->cycle_type)} - {$v->label}
-                                                     </option>
-                                                 {else}
-                                                    <option value = "{ucfirst($v->cycle_type)}Cycle|{$v->updation_cycle_id}"
-                                                    {if $updatePhasePost == "{ucfirst($v->cycle_type)}Cycle|{$v->updation_cycle_id}"} selected {/if}> 
-                                                        {ucfirst($v->cycle_type)}Cycle - {$v->label}
-                                                    </option>
-                                                {/if}
+                                             {if $v->updation_cycle_id != $skipUpdationCycle_Id and $v->updation_cycle_id != $skipUpdationCycle_Id}
+                                                <option value = "{ucfirst($v->cycle_type)}Cycle|{$v->updation_cycle_id}"
+                                                {if $updatePhasePost == "{ucfirst($v->cycle_type)}Cycle|{$v->updation_cycle_id}"} selected {/if}> 
+                                                    {ucfirst($v->cycle_type)}Cycle - {$v->label}
+                                                </option>
                                              {/if}
                                             {/foreach}	
                                         </select>

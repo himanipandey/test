@@ -1,65 +1,89 @@
 <?php 
     $projectId  = $_REQUEST['projectId'];
     $brokerId   = $_REQUEST['brokerId'];
-    $arrBrokerPriceByProject = getBrokerPriceByProject($projectId, $brokerId);
+    $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId);
     if(isset($_REQUEST['btnExit'])){
         header("Location:secondary_price.php?projectId=$projectId");
     }
     if(isset($_REQUEST['submit'])){
-        $minPrice = $_REQUEST['minPrice'];
+	    $minPrice = $_REQUEST['minPrice'];
         $maxPrice = $_REQUEST['maxPrice'];
         $brokerId  = $_REQUEST['brokerId'];
         $flag = 0;
+        $blank_error_flag = 1;
         $arrMinPrice = array();
         $arrMaxPrice = array();
         $arrMeanPrice = array();
         $effectiveDate = $_REQUEST['effectiveDate'];
+         $phaseID = $_REQUEST['phaseSelect'];
         $exp = explode("-",$effectiveDate);
         $effMonthYear = $exp[0]."-".$exp[1]."-01";
+        
         foreach($_REQUEST['unitType'] as $key=>$val){
             $arrMinPrice[] = $_REQUEST['minPrice'][$key];
             $arrMaxPrice[] = $_REQUEST['maxPrice'][$key];
             
             $arrMeanPrice[] = ($_REQUEST['minPrice'][$key]+$_REQUEST['maxPrice'][$key])/2;
+       
             if($_REQUEST['minPrice'][$key] != '' AND $_REQUEST['maxPrice'][$key] != ''){
-               
+				$blank_error_flag = 0;
+				$percentDiff = ($_REQUEST['maxPrice'][$key] - $_REQUEST['minPrice'][$key]) /(($_REQUEST['maxPrice'][$key] + $_REQUEST['minPrice'][$key]) / 2) * 100;
+		               
                 if($_REQUEST['minPrice'][$key] > $_REQUEST['maxPrice'][$key]) {
                     $flag = 2;
-                }
+                }elseif( $phaseID == -1){
+					$flag=4;
+					
+				}else if($percentDiff > 20){
+					$flag = 3;
+				}
                 else {
                     $minPrice = $_REQUEST['minPrice'][$key];
                     $maxPrice = $_REQUEST['maxPrice'][$key];
                     $typeName =   $val;
                 
-                    $attributes= array(
+                    $attributes[]= array(
                         'project_id'=>$projectId, 
+                        'phase_id' => $phaseID,
                         'broker_id'=>$brokerId, 
                         'unit_type'=>$typeName, 
                         'effective_date'=>$effMonthYear,
                         'min_price'=>$minPrice, 
                         'max_price'=>$maxPrice,
                         'last_modified_by'=>$_SESSION['adminId'],
-                        'last_modified_date'=>'NOW()'
+                        'LAST_MODIFIED_DATE'=>'now()'
                     );
                 }
             }
-            else
-                $flag = 1;        
+            
         }
+        if($blank_error_flag == 1)
+			$flag = 1;
         $errorPrice = '';
         if($flag == 0){
-            $res = ProjectSecondaryPrice::insertUpdate($attributes);
-            if($res)
-                $errorPrice = "<font color = 'green'>Price has been inserted successfully!</font>";
-            else
-                $errorPrice = "<font color = 'red'>Problem in price insertion please try again!</font>";
+			ProjectSecondaryPrice::transaction(function(){
+				global $attributes,$errorPrice;
+				foreach($attributes as $key=>$attribute){
+					$res = ProjectSecondaryPrice::insertUpdate($attribute);
+				}
+				if($res)
+					$errorPrice = "<font color = 'green'>Price has been inserted successfully!</font>";
+				else
+					$errorPrice = "<font color = 'red'>Problem in price insertion please try again!</font>";
+			});
+			
         }else{
                 if($flag == 2)
                     $errorPrice = "<font color = 'red'>Minimum price should be less them max price!</font>";
+                elseif($flag == 3)
+                    $errorPrice = "<font color = 'red'>The difference between Max price and Min Price must be within 20%.</font>";
+                elseif($flag == 4)
+                    $errorPrice = "<font color = 'red'>Please select Phase.</font>";
                 else
                     $errorPrice = "<font color = 'red'>Min/Max price cant blank!</font>";
         }
-        $arrBrokerPriceByProject = getBrokerPriceByProject($projectId, $brokerId);
+
+        $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId);
          $smarty->assign("arrBrokerPriceByProject", $arrBrokerPriceByProject);
         $smarty->assign("arrMinPrice",  $arrMinPrice);
         $smarty->assign("arrMaxPrice", $arrMaxPrice);
@@ -90,6 +114,25 @@
      foreach($arrBrokerPriceByProject as $k=>$v) {
          
      }
+    $phaseDetail = array();
+	$phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active'), "order" => "phase_name asc"));
+	foreach($phases as $p){
+		array_push($phaseDetail, $p->to_custom_array());
+	}
+	$phases = Array();
+	$old_phase_name = '';
+	foreach ($phaseDetail as $k => $val) {
+		$p = Array();
+		$p['id'] = $val['PHASE_ID'];
+		$p['name'] = $val['PHASE_NAME'];
+		array_push($phases, $p);
+	}
+	$smarty->assign("phases", $phases);
+	
+	 if(isset($_GET['phaseId'])) { 
+		$smarty->assign("currPhaseId", $_GET['phaseId']);	
+	 }
+	
      $smarty->assign("allBrokerByProject", $arrBrokerList);
      $projectDetails = array();
      $projectDetails = projectDetailById($projectId);

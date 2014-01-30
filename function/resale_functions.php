@@ -129,26 +129,111 @@
         return $arrProjectByBroker;
     }
     
-    function getBrokerPriceByProject($projectId, $brokerId = null, $effectiveDt = null){
-        $effectiveDtQuery = '1 = 1';
-        $brokerQuery = '1 = 1';
+    function getBrokerPriceByProject($projectId){
+		
+		global $brokerIdList,$maxEffectiveDtAll;
+		
+		$max_eff_date  = '';
+		
+		$sql_max_eff_date = mysql_query("select max(EFFECTIVE_DATE) as max_eff_date from project_secondary_price where project_id = '$projectId'");
+		if($sql_max_eff_date){
+			$sql_max_eff_date = mysql_fetch_object($sql_max_eff_date);
+			$max_eff_date =  $sql_max_eff_date->max_eff_date;
+		}
+		
+		$maxEffectiveDtAll = $max_eff_date;
+	
+		$sql_price_phases = mysql_query("select distinct(rpp.phase_name),psp.phase_id from project_secondary_price psp 
+								left join resi_project_phase rpp on psp.phase_id = rpp.phase_id 
+											where psp.project_id = '$projectId' and rpp.status = 'Active';");
+											
+		while($row_price_phases = mysql_fetch_object($sql_price_phases)){
+			$sql_all_phase_prices = ""; 
+			$phase_price_detail[$row_price_phases->phase_name] = getPhasePriceByProject($projectId,$row_price_phases->phase_id);
+		}
+		
+		
+		 $phase_prices = array();
+		
+		foreach($phase_price_detail as $key => $arrBrokerPriceByProject){
+	
+			$maxEffectiveDt = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
+			$minMaxSum = array();
+			$latestMonthAllBrokerPrice = array();
+			$oneMonthAgoPrice = array();
+			$twoMonthAgoPrice = array();
+			$brokerIdList = array();
+			
+			 $dateBreak = explode("-",$maxEffectiveDt );
+			 $oneMonthAgo = mktime(0, 0, 0, $dateBreak[1]-1, 1, $dateBreak[0]);
+			 $oneMonthAgoDt = date('Y-m-d',$oneMonthAgo);
+			 $twoMonthAgo = mktime(0, 0, 0, $dateBreak[1]-2, 1, $dateBreak[0]);
+			 $twoMonthAgoDt = date('Y-m-d',$twoMonthAgo);
+								
+			 foreach($arrBrokerPriceByProject as $k=>$v) {
+				 if ($maxEffectiveDt == $v['EFFECTIVE_DATE']) {
+					$minMaxSum[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
+					$minMaxSum[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
+					if(count($latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['minPrice']) == 0) {
+						$latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['minPrice'] = $v['MIN_PRICE'];
+						$latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['maxPrice'] = $v['MAX_PRICE'];
+					}
+					if (!in_array($v['BROKER_ID'],$brokerIdList)) {
+						$brokerIdList[] = $v['BROKER_ID'];
+					}
+				 }
+				
+				 if($oneMonthAgoDt == $v['EFFECTIVE_DATE']){
+					$oneMonthAgoPrice[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
+					$oneMonthAgoPrice[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
+				 }
+				 
+				 if($twoMonthAgoDt == $v['EFFECTIVE_DATE']){
+					$twoMonthAgoPrice[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
+					$twoMonthAgoPrice[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
+				 }
+			 }
+			 
+			 $phase_prices[$key]['minMaxSum'] = $minMaxSum;
+			 $phase_prices[$key]['latestMonthAllBrokerPrice'] = $latestMonthAllBrokerPrice;
+			 $phase_prices[$key]['oneMonthAgoPrice'] = $oneMonthAgoPrice;
+			 $phase_prices[$key]['twoMonthAgoPrice'] = $twoMonthAgoPrice;
+			 $phase_prices[$key]['brokerIdList'] = $brokerIdList;
+			
+		}
+		
+		//print "<pre>".print_r($phase_prices,1)."</pre>";
+	   //print "<pre>".print_r($phase_price_detail,1)."</pre>";
+			
+		//	die;
+		
+		return $phase_prices;
+	
+    }
+  
+  function getBrokerLatestPriceByProject($projectId, $brokerId = null, $phaseId = null, $effectiveDt = null){
+    
+    $brokercond1 = ''; $brokercond2 = '';
+    $phasecond1 = ''; $phasecond2 = '';
+    $effectiveDtcond1 = ''; $effectiveDtcond2 = '';
+    $phaseId = (isset($_GET['phaseId']))? mysql_real_escape_string($_GET['phaseId']) : $phaseId;
+    if($phaseId) { 
+        $phasecond1 = " and phase_id='".$phaseId."'";
+        $phasecond2 = " and psp1.phase_id='".$phaseId."'";
+    }
+    
+    if($effectiveDt) { 
+        $effectiveDtcond1 = " and EFFECTIVE_DATE='".$effectiveDt."'";
+        $effectiveDtcond2 = " and psp1.EFFECTIVE_DATE='".$effectiveDt."'";
+    }
+    
+    if($brokerId){
+		$brokercond1 = " and broker_id='".$brokerId."'";
+        $brokercond2 = " and psp1.broker_id='".$brokerId."'";
+	}
 
-        if ($brokerId) {
-            $brokerQuery = " BROKER_ID = '$brokerId'";
-        }
-
-        if ($effectiveDt) {
-            $effectiveDtQuery = " EFFECTIVE_DATE = '$effectiveDt'";
-        }
-
-      $qry = "SELECT * 
-                FROM 
-                    project_secondary_price   
-                WHERE
-                    PROJECT_ID = $projectId
-                AND $brokerQuery
-                AND $effectiveDtQuery
-                ORDER BY EFFECTIVE_DATE DESC, ID DESC";
+      $qry = "select * from project_secondary_price psp1 
+    join (select UNIT_TYPE,max(ID) as ID from project_secondary_price where project_id = '$projectId' ".$phasecond1." ".$effectiveDtcond1." ".$brokercond1." group by UNIT_TYPE) as psp2 on psp1.ID = psp2.ID where psp1.project_id = '$projectId' ".$phasecond2."  ".$effectiveDtcond1." ".$brokercond1." order by psp1.UNIT_TYPE ASC";
 
         $res = mysql_query($qry) or die(mysql_error());
         $arrBrokerPriceByProject = array();
@@ -159,4 +244,20 @@
 
         return $arrBrokerPriceByProject;
     }
+    function getPhasePriceByProject($projectId,$phase_id){
+		$qry = "SELECT * FROM 
+                    project_secondary_price   
+                WHERE
+                    PROJECT_ID = $projectId AND PHASE_ID = $phase_id 
+                      ORDER BY EFFECTIVE_DATE DESC, ID DESC";
+
+        $res = mysql_query($qry) or die(mysql_error());
+        $arrBrokerPriceByProject = array();
+
+        while($data = mysql_fetch_assoc($res)){
+            array_push($arrBrokerPriceByProject,$data);
+        }
+		
+        return $arrBrokerPriceByProject;
+	}
 ?>

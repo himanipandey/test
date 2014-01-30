@@ -56,6 +56,16 @@
                              </select>
                         </td>
                       </tr>
+                      <tr bgcolor = '#F7F7F7'>
+                          <td align ="left" valign ="top" colspan="2" style = "padding-left:80px;" >
+                        <b>Phase :</b>&nbsp;&nbsp;&nbsp;<select id="phaseSelect" name="phaseSelect">
+                                                <option value="-1">Select Phase</option>
+                                                {foreach $phases as $p}
+                                                    <option value="{$p.id}" {if $arrBrokerPriceByProject[0]['PHASE_ID'] == $p.id || $currPhaseId == $p.id}selected{/if}>{$p.name}</option>
+                                                {/foreach}
+                                            </select>
+                      </td>
+                      </tr>
                         <tr bgcolor = '#FCFCFC'>
                             <td align ="left" valign ="top" colspan="2"  style = "padding-left:80px;">
                               <b>Year:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -171,6 +181,7 @@
                                              <input type = "hidden" name = "brokerId" id = "brokerId" value = "{$brokerId}">
                                              <input type = "hidden" name = "month" value = "{$month}">
                                              <input type = "hidden" name = "year" value = "{$year}">
+                                              <input type = "hidden" name = "phaseSelect" value = "{$phaseSelect}">
                                              <input type="submit" name="submit"  value="Submit" onclick = "return validation();">
                                              <input type="submit" name="btnExit" id="btnExit" value="Exit">
                                          </td>
@@ -218,6 +229,10 @@
     function blankChk(){
         if($("#brokerSearch").val() == ''){
             alert("Please select broker!");
+            return false;
+        }
+        if($("#phaseSelect").val() == '' || $("#phaseSelect").val() == '-1'){
+            alert("Please select Phase");
             return false;
         }
         if($("#year").val() == ''){

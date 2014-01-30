@@ -91,20 +91,15 @@
                                                             <td>
                                                                 <select name="remark">
                                                                     <option value="">Please Pick One</option>
-                                                                    {if $callingFieldFlag == 'callcenter'}
-                                                                         <option value="callBackRequest">Call Back Request</option>
-                                                                        <option value="couldNotContact">Could Not Contact</option>
-                                                                        <option value="contactNoNotAvailable">Contact No Not Available</option> no
-                                                                        <option value="noSuchProject">No Such Project</option>
-                                                                        <option value="languageBarrier">Language Barrier</option>
-                                                                        <option value="websiteNotFound">Website Not Found</option>
-                                                                        <option value="partialInfoOnCall">Partial Info On Call</option>
-                                                                        <option value="ringingButNoResponse">Ringing But No Response</option>
-                                                                        <option value="gotNoInfo">Got No Info</option>
-                                                                    {else if $callingFieldFlag == 'survey'}
-                                                                        <option value="noSuchProject">No Such Project</option>
-                                                                        <option value="websiteNotFound">Website Not Found</option>
-                                                                    {/if}
+                                                                    <option value="callBackRequest">Call Back Request</option>
+                                                                    <option value="couldNotContact">Could Not Contact</option>
+                                                                    <option value="contactNoNotAvailable">Contact No Not Available</option>
+                                                                    <option value="noSuchProject">No Such Project</option>
+                                                                    <option value="languageBarrier">Language Barrier</option>
+                                                                    <option value="websiteNotFound">Website Not Found</option>
+                                                                    <option value="partialInfoOnCall">Partial Info On Call</option>
+                                                                    <option value="ringingButNoResponse">Ringing But No Response</option>
+                                                                    <option value="gotNoInfo">Got No Info</option>
                                                                 </select>
                                                             </td>
                                                             <td>

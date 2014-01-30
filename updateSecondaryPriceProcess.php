@@ -6,77 +6,96 @@
     $effectiveDt = '';
     $month = '';
     $year  = '';
+    $phaseId = '';
     if(isset($_REQUEST['search'])){ //search for month, year and broker
          $brokerId   = $_REQUEST['brokerId'];
          $effectiveDt= $_REQUEST['year']."-".$_REQUEST['month']."-01 00:00:00";
          $year = $_REQUEST['year'];
          $month = $_REQUEST['month'];
-         $arrBrokerPriceByProject = getBrokerPriceByProject($projectId, $brokerId, $effectiveDt);
+         $phaseId = $_REQUEST['phaseSelect'];
+         
+         $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId, $phaseId, $effectiveDt);
     }   // die;
     if(isset($_REQUEST['submit'])){ //code start for update price
-        $minPrice = $_REQUEST['minPrice'];
+    
+		$minPrice = $_REQUEST['minPrice'];
         $maxPrice = $_REQUEST['maxPrice'];
         $brokerId  = $_REQUEST['brokerId'];
         $oldEffectiveDate  = $_REQUEST['year']."-".$_REQUEST['month']."-01 00:00:00";
         $year = $_REQUEST['year'];
         $month = $_REQUEST['month'];
+        $phaseId = $_REQUEST['phaseSelect'];
         $flag = 0;
+        $blank_error_flag = 1;
         $comma = ',';
         $cnt = 0;
         $arrMinPrice = array();
         $arrMaxPrice = array();
         $arrMeanPrice = array();
         foreach($_REQUEST['unitType'] as $key=>$val){
-            $cnt++;
-            if($cnt == count($_REQUEST['unitType']))
-                $comma = ';';
             $arrMinPrice[] = $_REQUEST['minPrice'][$key];
             $arrMaxPrice[] = $_REQUEST['maxPrice'][$key];
+            
             $arrMeanPrice[] = ($_REQUEST['minPrice'][$key]+$_REQUEST['maxPrice'][$key])/2;
+       
             if($_REQUEST['minPrice'][$key] != '' AND $_REQUEST['maxPrice'][$key] != ''){
+				$blank_error_flag = 0;
+				$percentDiff = ($_REQUEST['maxPrice'][$key] - $_REQUEST['minPrice'][$key]) /(($_REQUEST['maxPrice'][$key] + $_REQUEST['minPrice'][$key]) / 2) * 100;
+		               
                 if($_REQUEST['minPrice'][$key] > $_REQUEST['maxPrice'][$key]) {
                     $flag = 2;
-                }
+                }elseif( $phaseID == -1){
+					$flag=4;
+					
+				}else if($percentDiff > 20){
+					$flag = 3;
+				}
                 else {
                     $minPrice = $_REQUEST['minPrice'][$key];
                     $maxPrice = $_REQUEST['maxPrice'][$key];
                     $typeName =   $val;
-                    $qryUp = "UPDATE project_secondary_price
-                              SET 
-                                 MIN_PRICE           =   '".$minPrice."',
-                                 MAX_PRICE           =   '".$maxPrice."',
-                                 LAST_MODIFIED_BY    = '".$_SESSION['adminId']."',
-                                 LAST_MODIFIED_DATE  = now()
-                               WHERE
-                                 PROJECT_ID = '".$projectId."'
-                               AND
-                                 BROKER_ID  = '".$brokerId."'
-                               AND
-                                 UNIT_TYPE  = '".$typeName."'
-                               AND
-                                 EFFECTIVE_DATE = '".$oldEffectiveDate."'";
-                  $resUp  = mysql_query($qryUp) or die(mysql_error());
-                  if($resUp)
-                      $flag = 0;
-                  else
-                      $flag = 1;
+                
+                    $attributes[]= array(
+                        'project_id'=>$projectId, 
+                        'phase_id' => $phaseId,
+                        'broker_id'=>$brokerId, 
+                        'unit_type'=>$typeName, 
+                        'effective_date'=>$oldEffectiveDate,
+                        'min_price'=>$minPrice, 
+                        'max_price'=>$maxPrice,
+                        'last_modified_by'=>$_SESSION['adminId'],
+                        'LAST_MODIFIED_DATE'=>'now()'
+                    );
                 }
             }
-            else
-                $flag = 1;     
+            
         }
+        if($blank_error_flag == 1)
+			$flag = 1;
         $errorPrice = '';
         if($flag == 0){
-           
-                $errorPrice = "<font color = 'green'>Price has been updated successfully!</font>";
-            
+			ProjectSecondaryPrice::transaction(function(){
+				global $attributes,$errorPrice;
+				foreach($attributes as $key=>$attribute){
+					$res = ProjectSecondaryPrice::insertUpdate($attribute);
+				}
+				if($res)
+					$errorPrice = "<font color = 'green'>Price has been inserted successfully!</font>";
+				else
+					$errorPrice = "<font color = 'red'>Problem in price insertion please try again!</font>";
+			});
+			
         }else{
-           if($flag == 2)
+                if($flag == 2)
                     $errorPrice = "<font color = 'red'>Minimum price should be less them max price!</font>";
+                elseif($flag == 3)
+                    $errorPrice = "<font color = 'red'>The difference between Max price and Min Price must be within 20%.</font>";
+                elseif($flag == 4)
+                    $errorPrice = "<font color = 'red'>Please select Phase.</font>";
                 else
                     $errorPrice = "<font color = 'red'>Min/Max price cant blank!</font>";
         }
-        $arrBrokerPriceByProject = getBrokerPriceByProject($projectId, $brokerId, $effectiveDt);
+        $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId, $phaseId, $oldEffectiveDate);
         $smarty->assign("arrMinPrice",  $arrMinPrice);
         $smarty->assign("arrMaxPrice", $arrMaxPrice);
         $smarty->assign("arrMeanPrice", $arrMeanPrice);
@@ -87,6 +106,7 @@
     $smarty->assign("projectId", $projectId);
     $smarty->assign("year",  $year);
     $smarty->assign("month",  $month);
+     $smarty->assign("phaseSelect",  $phaseId);
     //code for distinct unit for a project
     $arrProjectType = fetch_projectOptions($projectId);
     $arrPType = array(); 
@@ -113,4 +133,19 @@
      $endYear    = $currentYear+10;
      $smarty->assign("startYear", $startYear);
      $smarty->assign("endYear", $endYear);
+     
+     $phaseDetail = array();
+	$phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active'), "order" => "phase_name asc"));
+	foreach($phases as $p){
+		array_push($phaseDetail, $p->to_custom_array());
+	}
+	$phases = Array();
+	$old_phase_name = '';
+	foreach ($phaseDetail as $k => $val) {
+		$p = Array();
+		$p['id'] = $val['PHASE_ID'];
+		$p['name'] = $val['PHASE_NAME'];
+		array_push($phases, $p);
+	}
+	$smarty->assign("phases", $phases);
 ?>

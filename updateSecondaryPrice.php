@@ -6,6 +6,7 @@ ini_set('display_errors','1');
 	include("dbConfig.php");
 	include("includes/configs/configs.php");
 	include("builder_function.php");
+	include("modelsConfig.php");
 	AdminAuthentication();
 	$dept = $_SESSION['DEPARTMENT'];
 	$smarty->assign("arrProjEditPermission", $ARR_PROJ_EDIT_PERMISSION[$dept]);

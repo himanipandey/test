@@ -411,7 +411,7 @@ function getDateNow(){
 		{if $projectDetails[0].PROJECT_PHASE=="DataCollection"}
 		<span> Data Collection</span>
 		{/if}
-
+		
 		{if $projectDetails[0].PROJECT_PHASE=="DcCallCenter"}
 		<span> Data Collection Call Center</span>
 		{/if}
@@ -433,8 +433,6 @@ function getDateNow(){
 	Label: {$projectLabel}
 	<br>
 {/if}
-<span>	Current Assigned Department : </span>
-<span> {$currentCycle}</span>      
 {if $projectDetails[0].PROJECT_STAGE != 'NoStage'}
 
 	{$projectStatus = $projectDetails[0]['project_status']}
@@ -444,7 +442,6 @@ function getDateNow(){
 	{$stageProject = $projectDetails[0].PROJECT_STAGE}
 	
 	{if count($accessModule)>0}
-             <br> 
             <span>
                 Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
                 <input type = "radio" name = "validationChk" value = "N">No<br>
@@ -2014,9 +2011,10 @@ function getDateNow(){
                             <tr class ="headingrowcolor">
                                 <td colspan="5">&nbsp;</td>
                                 <td colspan="{count($brokerIdList)}" align ="center" class ="whiteTxt"><b>Brokers</b></td>
-                                <td colspan="2">&nbsp;</td>
+                                <td colspan="3">&nbsp;</td>
                             </tr>
                             <tr class ="headingrowcolor" height="30px">
+								<th class ="whiteTxt" align = "left"><b>Phase Name</b></th>
                                 <th class ="whiteTxt" align = "left"><b>S.NO.</b></th>
                                  <th style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Unit Type</b></th>
                                  <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Min Price</b></th>
@@ -2028,6 +2026,8 @@ function getDateNow(){
                                     <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$oneMonthAgoDt}</b></th>
                                  <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$twoMonthAgoDt}</b></th>
                             </tr>
+                            <form name ="frm" method = "post">
+						{foreach from=$phase_prices key=phase_name item = phase_values}		
                             {$cnt = 0}
                             {foreach from= $arrPType key=k item = val}
                                 {$cnt = $cnt+1}
@@ -2037,38 +2037,40 @@ function getDateNow(){
                                     {$bgcolor = '#FCFCFC'}
                                 {/if}
                                 <tr bgcolor = "{$bgcolor}" height="30px">
+									 <td valign ="top" align = "center">{if $cnt == 1}{$phase_name}{/if}</td>
                                    <td valign ="top" align = "center">{$cnt}</td>
                                    <td valign ="top" style ="padding-left: 10px;" align = "left">
                                        {$val}
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                       {min($minMaxSum[$val]['minPrice'])|string_format:"%d"}
+                                       {min($phase_values['minMaxSum'][$val]['minPrice'])|string_format:"%d"}
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                        {max($minMaxSum[$val]['maxPrice'])|string_format:"%d"}
+                                        {max($phase_values['minMaxSum'][$val]['maxPrice'])|string_format:"%d"}
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                       {$arrCnt = count($minMaxSum[$val]['minPrice'])+count($minMaxSum[$val]['maxPrice'])}
-                                       {$arrSum = array_sum($minMaxSum[$val]['minPrice'])+array_sum($minMaxSum[$val]['maxPrice'])}
+                                       {$arrCnt = count($phase_values['minMaxSum'][$val]['minPrice'])+count($phase_values['minMaxSum'][$val]['maxPrice'])}
+                                       {$arrSum = array_sum($phase_values['minMaxSum'][$val]['minPrice'])+array_sum($phase_values['minMaxSum'][$val]['maxPrice'])}
                                        {($arrSum/$arrCnt)|string_format:"%d"}
                                    </td>
-                                   {foreach from = $latestMonthAllBrokerPrice[$val] key=brokerId item = priceDetail}  
-                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                        {$priceDetail['minPrice']|string_format:"%d"} - {$priceDetail['maxPrice']|string_format:"%d"}
-                                    </td>
-                                   {/foreach}
+                                    {foreach from = $brokerIdList key=brokerkey item = brokerId}
+										<td  valign ="top" style ="padding-left: 10px;" align = "left">
+											{$phase_values['latestMonthAllBrokerPrice'][$val][$brokerId]['minPrice']|string_format:"%d"} - {$phase_values['latestMonthAllBrokerPrice'][$val][$brokerId]['maxPrice']|string_format:"%d"}
+										</td>
+                                    {/foreach}
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                       {$arrCnt = count($oneMonthAgoPrice[$val]['minPrice'])+count($oneMonthAgoPrice[$val]['maxPrice'])}
-                                       {$arrSumOneMonthAgo = array_sum($oneMonthAgoPrice[$val]['minPrice'])+array_sum($oneMonthAgoPrice[$val]['maxPrice'])}
+                                       {$arrCnt = count($phase_values['oneMonthAgoPrice'][$val]['minPrice'])+count($phase_values['oneMonthAgoPrice'][$val]['maxPrice'])}
+                                       {$arrSumOneMonthAgo = array_sum($phase_values['oneMonthAgoPrice'][$val]['minPrice'])+array_sum($phase_values['oneMonthAgoPrice'][$val]['maxPrice'])}
                                        {($arrSumOneMonthAgo/$arrCnt)|string_format:"%d"}
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                       {$arrCnt = count($twoMonthAgoPrice[$val]['minPrice'])+count($twoMonthAgoPrice[$val]['maxPrice'])}
-                                       {$arrSumTwoMonthAgo = array_sum($twoMonthAgoPrice[$val]['minPrice'])+array_sum($twoMonthAgoPrice[$val]['maxPrice'])}
+                                       {$arrCnt = count($phase_values['twoMonthAgoPrice'][$val]['minPrice'])+count($phase_values['twoMonthAgoPrice'][$val]['maxPrice'])}
+                                       {$arrSumTwoMonthAgo = array_sum($phase_values['twoMonthAgoPrice'][$val]['minPrice'])+array_sum($phase_values['twoMonthAgoPrice'][$val]['maxPrice'])}
                                        {($arrSumTwoMonthAgo/$arrCnt)|string_format:"%d"}
                                    </td>
                                </tr>
                             {/foreach}
+                         {/foreach}
                         </table>
                    </td>
                  </tr>

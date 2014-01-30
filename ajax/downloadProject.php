@@ -1,11 +1,8 @@
 <?php
-include("../smartyConfig.php");
 include("../dbConfig.php");
 include("../modelsConfig.php");
 include("../appWideConfig.php");
 include("../builder_function.php");
-include("../common/function.php");
-include("../includes/configs/phaseStageConfig.php");
 date_default_timezone_set('Asia/Kolkata');
 
 $arrOtherCities = 
@@ -26,13 +23,7 @@ $arrOtherCities =
 		"41"=>"Visakhapatnam",
 		"90"=>"Sonepat",
 		"98"=>"Panipat",
-		"99"=>"Raigad",
-		"26"=>"Coimbatore",
-		"28"=>"Jaipur",
-		"46"=>"Agra",
-		"48"=>"Pondicherry",
-		"61"=>"Vijayawada",
-		"91"=>"Karnal"
+		"99"=>"Raigad"
   );
 
 $dept = $_SESSION['DEPARTMENT'];
@@ -224,6 +215,7 @@ $QueryMember1 = $QueryMember1 . $QueryMember." Group By rpp.PROJECT_ID";
 $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
 $NumRows = mysql_num_rows($QueryExecute);
 
+
 $contents = "";
 
 $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' style='font-size:11px;font-family:tahoma,arial,verdana;vertical-align:middle;text-align:center;'>
@@ -235,7 +227,6 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>CITY</td>
 <td>LOCALITY</td>
 <td>PROJECT STATUS</td>
-<td>ASSIGNED DEPARTMENT</td>
 <td>BOOKING STATUS</td>
 <td>PHASE</td>
 <td>STAGE</td>
@@ -252,7 +243,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 
 	$projid = $ob1['PROJECT_ID'];
 	$projname = $ob1['PROJECT_NAME'];
-	$currentCycle = currentCycleOfProject($projid);
+	
 	$cityname = $ob1['CITY_NAME'];
         $date_time = $ob1['DATE_TIME'];
         $stage_move_by = $ob1['FNAME'];
@@ -281,7 +272,6 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         <td>".$cityname."</td>
         <td>".$localityname."</td>    
 	<td>".$proj_status."</td>
-        <td>".$currentCycle."</td>  
 	<td>".$booking_status."</td>
 	<td>".$stage."</td>
         <td>".$phse."</td>

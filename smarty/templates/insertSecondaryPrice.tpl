@@ -70,7 +70,15 @@
               {if $brokerId != ''}
                   <form name ="frm" method = "post">
                   <tr bgcolor = '#FCFCFC'>
-                      <td align ="left" valign ="top" colspan="2"  style = "padding-left:310px;">
+					   <td align ="right" valign ="top"  >
+                        <b>Phase :</b>&nbsp;<select id="phaseSelect" name="phaseSelect" onchange="change_phase();">
+                                                <option value="-1">Select Phase</option>
+                                                {foreach $phases as $p}
+                                                    <option value="{$p.id}" {if $arrBrokerPriceByProject[0]['PHASE_ID'] == $p.id || $currPhaseId == $p.id}selected{/if}>{$p.name}</option>
+                                                {/foreach}
+                                            </select>
+                      </td>
+                      <td align ="left" valign ="top">
                         <b>Effective Date:</b>&nbsp;<input name="effectiveDate" value="{$effectiveDate}" type="text" class="formstyle2" id="f_date_c_from" size="5" /> 
                         <img src="images/cal_1.jpg" id="f_trigger_c_from" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                       </td>
@@ -170,6 +178,7 @@
             </table>
 </div>
 <script>
+	 
     function isNumberKey(evt){
        var charCode = (evt.which) ? evt.which : event.keyCode;
           if(charCode == 99 || charCode == 118)
@@ -193,6 +202,30 @@
     }
     function refreshBroker(brokerId,projectId){
          window.location.assign("insertSecondaryPrice.php?projectId="+projectId+"&brokerId="+brokerId);
+    }
+    function change_phase() {
+        var new_id = $('#phaseSelect').val();
+        var newURL = updateURLParameter(window.location.href, 'phaseId', new_id);
+        window.location.href = newURL;
+    }
+    function updateURLParameter(url, param, paramVal) {
+        var newAdditionalURL = "";
+        var tempArray = url.split("?");
+        var baseURL = tempArray[0];
+        var additionalURL = tempArray[1];
+        var temp = "";
+        if (additionalURL) {
+            tempArray = additionalURL.split("&");
+            for (i = 0; i < tempArray.length; i++) {
+                if (tempArray[i].split('=')[0] != param) {
+                    newAdditionalURL += temp + tempArray[i];
+                    temp = "&";
+                }
+            }
+        }
+
+        var rows_txt = temp + "" + param + "=" + paramVal;
+        return baseURL + "?" + newAdditionalURL + rows_txt;
     }
 </script>
       
