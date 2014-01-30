@@ -11,6 +11,7 @@ include("includes/configs/configs.php");
 
 $projectID = $_POST['projectID'];
 $projectStageId = $_POST['stageID'];
+$currPhaseID = $_POST['phaseID'];
 $projectPhaseId = 1;
 
 if($projectStageId == 4)
@@ -38,6 +39,8 @@ $call_SupplyDate = '-';
 $call_ProjectStatus = '-';
 $call_BookingStatus = '-';
 	
+	print "stage : ".$projectStageId."----phase : ".$projectPhaseId." current phase : ".$currPhaseID;
+	
 //values on audit1	
 $sql_resi_audit = mysql_query("SELECT trp._t_transaction_id,trp.PRE_LAUNCH_DATE,trp.LAUNCH_DATE,trp.PROMISED_COMPLETION_DATE,trp.EXPECTED_SUPPLY_DATE,trp.PROJECT_STATUS_ID,trp.created_at,trp.updated_at,
 ps.display_name
@@ -56,11 +59,26 @@ if(mysql_num_rows($sql_resi_audit)){
 	$audit_SupplyDate = $sql_resi_audit->EXPECTED_SUPPLY_DATE;
 	$audit_ProjectStatus = $sql_resi_audit->display_name;
 	
-
-	//booking status Audit---
-	$sql_audit_bk = mysql_query("SELECT trpp._t_transaction_id,mbs.display_name FROM _t_resi_project_phase trpp 
-	LEFT JOIN master_booking_statuses mbs ON trpp.booking_status_id = mbs.id
-	WHERE project_id='$projectID'  AND PHASE_TYPE = 'Logical'  AND version = 'Cms' ORDER BY trpp.updated_at desc limit 1") or die(mysql_error());
+	if($currPhaseID > 4){
+		$sql_updated_at = mysql_query("select updated_at
+				from _t_resi_project where 
+				project_id = '$projectID'  AND project_phase_id > 4 order by updated_at desc limit 1;") or die(mysql_error());
+		$updated_at = mysql_fetch_object($sql_updated_at);
+		$updated_at = $updated_at->updated_at;
+		
+		//booking status Audit---
+		$sql_audit_bk = mysql_query("SELECT mbs.display_name FROM _t_resi_project_phase trpp 
+		LEFT JOIN master_booking_statuses mbs ON trpp.booking_status_id = mbs.id
+		WHERE project_id='$projectID'  AND updated_at <='$updated_at' AND PHASE_TYPE = 'Logical'  AND version = 'Cms' ORDER BY trpp.updated_at desc limit 1") or die(mysql_error());
+		
+		
+		
+	}else{
+		//booking status Audit---
+		$sql_audit_bk = mysql_query("SELECT mbs.display_name FROM resi_project_phase trpp 
+		LEFT JOIN master_booking_statuses mbs ON trpp.booking_status_id = mbs.id
+		WHERE project_id='$projectID'  AND PHASE_TYPE = 'Logical'  AND version = 'Cms' ORDER BY trpp.updated_at desc limit 1") or die(mysql_error());
+	}
 	
 	if($sql_audit_bk){
 		$sql_audit_bk = mysql_fetch_object($sql_audit_bk);
@@ -80,7 +98,7 @@ FROM _t_resi_project trp
 LEFT JOIN project_status_master ps on trp.project_status_id = ps.id
 LEFT JOIN resi_project_phase  rpp on trp.project_id = rpp.project_id  
 LEFT JOIN master_booking_statuses mbs ON rpp.booking_status_id = mbs.id
-WHERE trp.PROJECT_ID='$projectID'  AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = '4') AND rpp.PHASE_TYPE = 'Logical'  AND trp.version = 'Cms' ORDER BY trp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
+WHERE trp.PROJECT_ID='$projectID'  AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = '$projectPhaseId') AND rpp.PHASE_TYPE = 'Logical'  AND trp.version = 'Cms' ORDER BY trp._t_transaction_id DESC LIMIT 1") or die(mysql_error());
 
 if($sql_resi_callcenter){
 
