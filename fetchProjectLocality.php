@@ -24,7 +24,7 @@ if(!empty($_POST['locality']))
     $data = array();
     $chkData = '';
     $city_id = '';
-    
+
     if(!empty($alloc))
     {
         foreach($alloc as $key => $val)
@@ -85,16 +85,17 @@ if(!empty($_POST['locality']))
 //                {
 //                    $sql = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project WHERE locality_id = ".$val." AND resi_project.project_id NOT IN (SELECT rpm.project_id FROM project_assignment_rules AS par LEFT JOIN rule_project_mappings AS rpm ON par.id = rpm.rule_id WHERE par.broker_id = '".$company_id."')");    
 //                }
-                
+                $nPro = array();
                 $chkComp = @mysql_query("SELECT par.id
                         FROM project_assignment_rules AS par 
                         WHERE par.broker_id = '".$company_id."'");
+                
                 while($row = @mysql_fetch_assoc($chkComp))
                 {
                     $chkRule = @mysql_query("SELECT rpm.project_id 
                                 FROM rule_project_mappings AS rpm 
                                 WHERE rpm.rule_id = '".$row['id']."'");
-                                
+                        
                     if(@mysql_num_rows($chkRule) > 0)
                     {
                         while($row1 = @mysql_fetch_assoc($chkRule))
@@ -118,11 +119,16 @@ if(!empty($_POST['locality']))
                     }
                     
                 }
-                $nPro = implode($nPro , ",");
+                
+                if(!empty($nPro))
+                    $nPro = implode($nPro , ",");
                 //print'<pre>';
 //                print_r($nPro);
 //                die;
-                $sql = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project WHERE locality_id = ".$val." AND resi_project.project_id NOT IN (".$nPro.") ");
+                if(!empty($nPro))
+                    $sql = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project WHERE locality_id = '".$val."' AND resi_project.project_id NOT IN (".$nPro.") ");
+                else
+                    $sql = @mysql_query("SELECT resi_project.project_id , resi_project.project_name FROM resi_project WHERE locality_id = '".$val."'");
                 //echo "SELECT resi_project.project_id , resi_project.project_name FROM resi_project WHERE locality_id = ".$val." AND resi_project.project_id NOT IN (".$nPro.")<br>";
                 
                 while($row = @mysql_fetch_assoc($sql))
@@ -138,6 +144,7 @@ if(!empty($_POST['locality']))
             
         }
     }
+        
     //echo count($data)."<br>";
 //    
 //    $chkSql = @mysql_query("SELECT rpm.project_id 
