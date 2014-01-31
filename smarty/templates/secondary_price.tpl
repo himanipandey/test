@@ -320,13 +320,14 @@ function builder_contact(builderId,buildernm)
 						{foreach from=$phase_prices key=phase_name item = phase_values}		
                             {$cnt = 0}
                             {foreach from= $arrPType key=k item = val}
-                                {$cnt = $cnt+1}
+                              
                                 {if $cnt%2 == 0}
                                     {$bgcolor = '#F7F7F7'}
                                 {else}
                                     {$bgcolor = '#FCFCFC'}
                                 {/if}
                            {if isset($phase_values['latestMonthAllBrokerPrice'][$val])}
+								  {$cnt = $cnt+1}
                                 <tr bgcolor = "{$bgcolor}" height="30px">
 								
 									 <td valign ="top" align = "center">{if $cnt == 1}{$phase_name}{/if}</td>
