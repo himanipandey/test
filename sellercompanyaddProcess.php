@@ -251,40 +251,48 @@
                     
                     
                     $broker_contact_id = mysql_insert_id();
-                    
+                    $contact_number_id = '';
                     if(!empty($broker_contact_id))
                     {
                         /** -- Insert values for contact_numbers table type=>phone1 --  */
-                        $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
+                        if(!empty($phone1))
+                        {
+                            $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
                                                             `table_name` = 'broker_contacts',
                                                             `table_id` = $broker_contact_id,
                                                             `contact_no` = $phone1,
                                                             `type` = 'phone1',
                                                             `created_at` = '".date('Y-m-d')."',
-                                                            `updated_by` = ".$_SESSION['adminId']);
+                                                            `updated_by` = ".$_SESSION['adminId']);    
+                        }
                         
                         /** -- Insert values for contact_numbers table type=>phone2 --  */
-                        $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
+                        if(!empty($phone2))
+                        {
+                            $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
                                                             `table_name` = 'broker_contacts',
                                                             `table_id` = $broker_contact_id,
                                                             `contact_no` = $phone2,
                                                             `type` = 'phone2',
                                                             `created_at` = '".date('Y-m-d')."',
                                                             `updated_by` = ".$_SESSION['adminId']);
-                        
+                        }
                         
                         /** -- Insert values for contact_numbers table type=>mobile --  */
+                        if(!empty($mobile))
+                        {
+                            $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
+                                                                `table_name` = 'broker_contacts',
+                                                                `table_id` = $broker_contact_id,
+                                                                `contact_no` = $mobile,
+                                                                `type` = 'mobile',
+                                                                `created_at` = '".date('Y-m-d')."',
+                                                                `updated_by` = ".$_SESSION['adminId']);
+                            $contact_number_id = mysql_insert_id();    
+                        }
                         
-                        $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
-                                                            `table_name` = 'broker_contacts',
-                                                            `table_id` = $broker_contact_id,
-                                                            `contact_no` = $mobile,
-                                                            `type` = 'mobile',
-                                                            `created_at` = '".date('Y-m-d')."',
-                                                            `updated_by` = ".$_SESSION['adminId']);
-                        $contact_number_id = mysql_insert_id();
                         /** -- Update broker_contacts table by contact_number_id --  */
-                        
+                        if(!empty($contact_number_id))
                         $sql_broker_contact = @mysql_query("UPDATE `broker_contacts` SET 
                                                             `contact_number_id` = ".$contact_number_id." WHERE id = ".$broker_contact_id);
                     }
@@ -482,6 +490,50 @@
                         }
                         else
                         {
+                            /** -- Chk for Existence and Insert values for contact_numbers table type=>phone1 --  */
+                            $chkC = @mysql_query("SELECT * FROM contact_numbers AS cn WHERE cn.table_name = 'broker_contacts' AND cn.table_id = '".$brkr_cntct_id."' AND type = 'phone1'");
+                            if(!(@mysql_num_rows($chkC) > 0))
+                            {
+                                $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
+                                                                `table_name` = 'broker_contacts',
+                                                                `table_id` = $broker_contact_id,
+                                                                `contact_no` = $phone1,
+                                                                `type` = 'phone1',
+                                                                `created_at` = '".date('Y-m-d')."',
+                                                                `updated_by` = ".$_SESSION['adminId']);  
+                            }
+                            
+                            /** -- Chk for Existence and Insert values for contact_numbers table type=>phone2 --  */
+                            $chkC = '';
+                            $chkC = @mysql_query("SELECT * FROM contact_numbers AS cn WHERE cn.table_name = 'broker_contacts' AND cn.table_id = '".$brkr_cntct_id."' AND type = 'phone2'");
+                            if(!(@mysql_num_rows($chkC) > 0))
+                            {
+                                $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
+                                                                `table_name` = 'broker_contacts',
+                                                                `table_id` = $broker_contact_id,
+                                                                `contact_no` = $phone2,
+                                                                `type` = 'phone2',
+                                                                `created_at` = '".date('Y-m-d')."',
+                                                                `updated_by` = ".$_SESSION['adminId']);
+                            }
+                            
+                            /** -- Chk for Existence and Insert values for contact_numbers table type=>mobile --  */
+                            $chkC = '';
+                            $chkC = @mysql_query("SELECT * FROM contact_numbers AS cn WHERE cn.table_name = 'broker_contacts' AND cn.table_id = '".$brkr_cntct_id."' AND type = 'mobile'");
+                            if(!(@mysql_num_rows($chkC) > 0))
+                            {
+                                $sql_contact_number = @mysql_query("INSERT INTO `contact_numbers` SET
+                                                                    `table_name` = 'broker_contacts',
+                                                                    `table_id` = $broker_contact_id,
+                                                                    `contact_no` = $mobile,
+                                                                    `type` = 'mobile',
+                                                                    `created_at` = '".date('Y-m-d')."',
+                                                                    `updated_by` = ".$_SESSION['adminId']);
+                                $contact_number_id = mysql_insert_id();
+                                if(!empty($contact_number_id))
+                                $sql_broker_contact = @mysql_query("UPDATE `broker_contacts` SET 
+                                                            `contact_number_id` = ".$contact_number_id." WHERE id = ".$broker_contact_id);   
+                            }
                             
                         }
                         //die("here");

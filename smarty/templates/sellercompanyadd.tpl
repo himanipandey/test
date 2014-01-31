@@ -471,26 +471,30 @@
         
         jQuery('#btnSave').click(function(){
             var active = jQuery('#active_since').val();
-            active = active.split("/");
-            var active = new Date(active[2] + '-' + active[1] + '-' + active[0]);
-            var dd = active.getDate();
-            var mm = active.getMonth()+1; 
-            var yyyy = active.getFullYear();
-            if(dd<10)
+            if(active != '')
             {
-                dd='0'+dd;
-            } 
-            if(mm<10)
-            {
-                mm='0'+mm;
-            } 
-            active = yyyy + '-' + mm + '-' + dd ;
-            //alert(active + ' ' + today);
-            if(active > today)
-            {
-                alert("Please enter Past Date");
-                return false;
+                active = active.split("/");
+                var active = new Date(active[2] + '-' + active[1] + '-' + active[0]);
+                var dd = active.getDate();
+                var mm = active.getMonth()+1; 
+                var yyyy = active.getFullYear();
+                if(dd<10)
+                {
+                    dd='0'+dd;
+                } 
+                if(mm<10)
+                {
+                    mm='0'+mm;
+                } 
+                active = yyyy + '-' + mm + '-' + dd ;
+                //alert(active + ' ' + today);
+                if(active > today)
+                {
+                    alert("Please enter Past Date");
+                    return false;
+                }
             }
+            
             if(!jQuery('#seller_cmpny').val() || !jQuery.trim(jQuery('#seller_cmpny').val()))
             {
                 jQuery('#seller_cmpny').focus();
@@ -525,70 +529,74 @@
                     alert("Please enter Address");
                     return false;
                 }
-                else if(!jQuery('#mobile').val() || !jQuery.trim(jQuery('#mobile').val()))
+                else if(jQuery('#addressline2').val() && !jQuery.trim(jQuery('#addressline2').val()))
                 {
-                    jQuery('#mobile').focus();
-                    jQuery('#mobile').val('');
-                    alert("Please enter Mobile Number");
+                    jQuery('#addressline2').focus();
+                    jQuery('#addressline2').val('');
+                    alert("Please enter Address");
                     return false;
                 }
-                else if(jQuery('#phone1').val() && isNaN(jQuery('#phone1').val()) && !jQuery.trim(jQuery('#phone1').val()))
+                //else if(!jQuery('#mobile').val() || !jQuery.trim(jQuery('#mobile').val()))
+//                {
+//                    jQuery('#mobile').focus();
+//                    jQuery('#mobile').val('');
+//                    alert("Please enter Mobile Number");
+//                    return false;
+//                }
+                
+                else if(jQuery('#phone1').val() && !jQuery.trim(jQuery('#phone1').val()))
+                {
+                    jQuery('#phone1').focus();
+                    jQuery('#phone1').val('');
+                    alert("Please enter phone number 1");
+                    return false;
+                }
+                else if(jQuery('#phone1').val() && isNaN(jQuery('#phone1').val()))
                 {
                     jQuery('#phone1').focus();
                     jQuery('#phone1').val('');
                     alert("Please enter only numbers");
                     return false;
                 }
-                else if(jQuery('#phone1').val() && !isNaN(jQuery('#phone1').val()) && !(jQuery('#phone1').val().match(/^[0-9]+$/)))
+                else if(jQuery('#phone1').val() && !(jQuery('#phone1').val().match(/^[0-9]+$/)))
                 {
                     jQuery('#phone1').focus();
                     alert("Please enter only numbers");
                     return false;
                 }
-                else if(jQuery('#phone1').val() && (jQuery('#phone1').val().length > 12))
+                else if(jQuery('#phone1').val() && (jQuery('#phone1').val().length > 20))
                 {
                     jQuery('#phone1').focus();
-                    alert("Phone Number should be equal to 12 digits");
+                    alert("Phone Number should be less than 20 digits");
                     return false;
                 }
-                else if(jQuery('#phone2').val() && isNaN(jQuery('#phone2').val()) && !jQuery.trim(jQuery('#phone2').val()))
+                else if(jQuery('#phone2').val() && !jQuery.trim(jQuery('#phone2').val()))
+                {
+                    jQuery('#phone2').focus();
+                    jQuery('#phone2').val('');
+                    alert("Please enter phone number 2");
+                    return false;
+                }
+                else if(jQuery('#phone2').val() && isNaN(jQuery('#phone2').val()))
                 {
                     jQuery('#phone2').focus();
                     jQuery('#phone2').val('');
                     alert("Please enter only numbers");
                     return false;
                 }
-                else if(jQuery('#phone2').val() && !isNaN(jQuery('#phone2').val()) && !(jQuery('#phone2').val().match(/^[0-9]+$/)))
+                else if(jQuery('#phone2').val() && !(jQuery('#phone2').val().match(/^[0-9]+$/)))
                 {
                     jQuery('#phone2').focus();
                     alert("Please enter only numbers");
                     return false;
                 }
-                else if(jQuery('#phone2').val() && (jQuery('#phone2').val().length > 12))
+                else if(jQuery('#phone2').val() && (jQuery('#phone2').val().length > 20))
                 {
                     jQuery('#phone2').focus();
-                    alert("Phone Number should be equal to 12 digits");
+                    alert("Phone Number should be less than 20 digits");
                     return false;
                 }
-                else if(jQuery('#fax').val() && isNaN(jQuery('#fax').val()) && !jQuery.trim(jQuery('#fax').val()))
-                {
-                    jQuery('#fax').focus();
-                    jQuery('#fax').val('');
-                    alert("Please enter only numbers");
-                    return false;
-                }
-                else if(jQuery('#fax').val() && !isNaN(jQuery('#fax').val()) && !(jQuery('#fax').val().match(/^[0-9]+$/)))
-                {
-                    jQuery('#fax').focus();
-                    alert("Please enter only numbers");
-                    return false;
-                }
-                else if(jQuery('#fax').val() && jQuery('#fax').val().length > 12)
-                {
-                    jQuery('#fax').focus();
-                    alert("Fax Number should be less than or eaual to 12 digits");
-                    return false;
-                }
+                
                 
                 
                 if(!jQuery('#city_id').val())
@@ -598,24 +606,30 @@
                     return false;
                 }
                 
-                
-                if(jQuery('#pincode').val() && isNaN(jQuery('#pincode').val()) && !jQuery.trim(jQuery('#pincode').val()))
+                if(jQuery('#pincode').val() && !jQuery.trim(jQuery('#pincode').val()))
                 {
                     jQuery('#pincode').focus();
                     jQuery('#pincode').val('');
                     alert("Please enter only numbers");
                     return false;
                 }
-                else if(jQuery('#pincode').val() && !isNaN(jQuery('#pincode').val()) && !(jQuery('#pincode').val().match(/^[0-9]+$/)))
+                else if(jQuery('#pincode').val() && isNaN(jQuery('#pincode').val()))
+                {
+                    jQuery('#pincode').focus();
+                    jQuery('#pincode').val('');
+                    alert("Please enter only numbers");
+                    return false;
+                }
+                else if(jQuery('#pincode').val() &&  !(jQuery('#pincode').val().match(/^[0-9]+$/)))
                 {
                     jQuery('#pincode').focus();
                     alert("Please enter only numbers");
                     return false;
                 }
-                else if(jQuery('#pincode').val() && jQuery('#pincode').val().length > 12)
+                else if(jQuery('#pincode').val() && jQuery('#pincode').val().length > 6)
                 {
                     jQuery('#pincode').focus();
-                    alert("Pincode should be less than 12 digits");
+                    alert("Pincode should be less than 6 digits");
                     return false;
                 }
                 
@@ -623,7 +637,7 @@
                 /*--- OFFICE Addres Details Validations ENDS---*/
             }
             
-            if(!jQuery('#mobile').val() && jQuery.trim(jQuery('#mobile').val()))
+            if(!jQuery('#mobile').val() && !jQuery.trim(jQuery('#mobile').val()))
             {
                 jQuery('#mobile').focus();
                 alert("Please enter Mobile");
@@ -631,7 +645,8 @@
             }
             else if(jQuery('#mobile').val() && isNaN(jQuery('#mobile').val()))
             {
-                jQuery('#mobile').focus(); 
+                jQuery('#mobile').focus();
+                jQuery('#mobile').val('');  
                 alert("Please enter only numbers");
                 return false;
             }
