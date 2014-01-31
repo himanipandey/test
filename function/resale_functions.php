@@ -145,7 +145,7 @@
 	
 		$sql_price_phases = mysql_query("select distinct(rpp.phase_name),psp.phase_id from project_secondary_price psp 
 								left join resi_project_phase rpp on psp.phase_id = rpp.phase_id 
-											where psp.project_id = '$projectId' and rpp.status = 'Active';");
+											where psp.project_id = '$projectId' and rpp.status = 'Active' and rpp.version='Cms';");
 											
 											
 											
@@ -236,7 +236,7 @@
       $qry = "select * from project_secondary_price psp1 
     join (select UNIT_TYPE,max(ID) as ID from project_secondary_price where project_id = '$projectId' ".$phasecond1." ".$effectiveDtcond1." ".$brokercond1." group by UNIT_TYPE) as psp2 on psp1.ID = psp2.ID 
     left join resi_project_phase rpp on rpp.phase_id  = psp1.phase_id
-    where psp1.project_id = '$projectId' and rpp.status='active' ".$phasecond2."  ".$effectiveDtcond1." ".$brokercond1."  order by psp1.UNIT_TYPE ASC";
+    where psp1.project_id = '$projectId' and rpp.status='active' ".$phasecond2."  ".$effectiveDtcond1." ".$brokercond1." and rpp.version='Cms' order by psp1.UNIT_TYPE ASC";
 
         $res = mysql_query($qry) or die(mysql_error());
         $arrBrokerPriceByProject = array();
@@ -270,7 +270,7 @@
 		
     $qryopt = "select distinct(rpp.option_type) from resi_project_options rpp
   inner join listings lst where lst.option_id = rpp.options_id
-    and rpp.project_id = '$projectId' $condPhase and lst.status = 'active' order by rpp.option_type";
+    and rpp.project_id = '$projectId' $condPhase and lst.status = 'active' and rpp.version='Cms' order by rpp.option_type";
     
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
