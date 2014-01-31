@@ -584,7 +584,7 @@
         if(!empty($chkExist->id))
         {
             $allloc = mysql_escape_string(trim($chkExist->id));
-            $sql = @mysql_query("SELECT agents.id AS agent_id, broker_contacts.name AS agent_name FROM agents LEFT JOIN broker_contacts ON agents.id = broker_contacts.broker_id WHERE agents.broker_id = ".$allloc." AND broker_contacts.type='Agent' AND agents.id NOT IN (SELECT agent_id FROM rule_agent_mappings)");
+            $sql = @mysql_query("SELECT agents.id AS agent_id, broker_contacts.name AS agent_name FROM agents LEFT JOIN broker_contacts ON agents.id = broker_contacts.broker_id WHERE agents.broker_id = ".$allloc." AND broker_contacts.type='Agent' AND agents.id");
             while($row = @mysql_fetch_assoc($sql))
             {
                 $agentOptions[$i]['agent_id'] = $row['agent_id'];

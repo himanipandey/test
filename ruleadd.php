@@ -40,6 +40,35 @@ $smarty->assign("page", !empty($_GET['page'])?$_GET['page']:'1');
 if(!empty($_GET['ruleId']))
 {
     $nPro = array();
+    /** This commented code gives all the Project of Localities in rule_locality Table */
+    $chkRule = @mysql_query("SELECT rpm.project_id 
+                    FROM rule_project_mappings AS rpm 
+                    WHERE rpm.rule_id = '".$_GET['ruleId']."'");
+                    
+    if(@mysql_num_rows($chkRule) > 0)
+    {
+        while($row1 = @mysql_fetch_assoc($chkRule))
+        {
+            if(!in_array($row1['project_id'] , $nPro))
+                $nPro[] = $row1['project_id'];
+        }
+        
+    }
+    else
+    {        
+        $chkRuleLoc = @mysql_query("SELECT rp.project_id 
+                FROM resi_project AS rp 
+                LEFT JOIN rule_locality_mappings AS rlm ON rp.locality_id = rlm.locality_id
+                WHERE rlm.rule_id = '".$_GET['ruleId']."'");
+        while($row1 = @mysql_fetch_assoc($chkRuleLoc))
+        {
+            if(!in_array($row1['project_id'] , $nPro))
+                $nPro[] = $row1['project_id'];
+        }
+    }
+    /** --------------------------------------------------------------------------------- */
+    
+    $nPro1 = array();
     if(!empty($_GET['company_id']))
     {
         $chkComp = @mysql_query("SELECT par.id
@@ -47,6 +76,10 @@ if(!empty($_GET['ruleId']))
                         WHERE par.broker_id = '".$_GET['company_id']."'");
         while($row = @mysql_fetch_assoc($chkComp))
         {
+            //echo $row['id'] ." -->". $_GET['ruleId']."<-- <br>";
+            if($row['id'] == $_GET['ruleId'])
+                continue;
+            //echo $row['id'] ." "."<br>";
             $chkRule = @mysql_query("SELECT rpm.project_id 
                         FROM rule_project_mappings AS rpm 
                         WHERE rpm.rule_id = '".$row['id']."'");
@@ -55,10 +88,9 @@ if(!empty($_GET['ruleId']))
             {
                 while($row1 = @mysql_fetch_assoc($chkRule))
                 {
-                    if(!in_array($row1['project_id'] , $nPro))
-                        $nPro[] = $row1['project_id'];
+                    if(!in_array($row1['project_id'] , $nPro1) && !in_array($row1['project_id'] , $nPro))
+                        $nPro1[] = $row1['project_id'];
                 }
-                
             }
             else
             {
@@ -68,23 +100,23 @@ if(!empty($_GET['ruleId']))
                         WHERE rlm.rule_id = '".$row['id']."'");
                 while($row1 = @mysql_fetch_assoc($chkRuleLoc))
                 {
-                    if(!in_array($row1['project_id'] , $nPro))
-                        $nPro[] = $row1['project_id'];
+                    if(!in_array($row1['project_id'] , $nPro1)&& !in_array($row1['project_id'] , $nPro))
+                        $nPro1[] = $row1['project_id'];
                 }
             }
             
         }
-        
-        
     }
     
-    if(!empty($nPro))
+    if(!empty($nPro1))
     {
-        $nPro = implode("," , $nPro);
+        $nPro1 = implode("," , $nPro1);
     }
-    $nPro = '';
+    //$nPro = '';
     //print'<pre>';
 //    print_r($nPro);
+//    print_r($nPro1);
+//    print_r(array_diff($nPro , $nPro1));
 //    die;
     
     $locIdArr = array();
@@ -180,12 +212,13 @@ if(!empty($_GET['ruleId']))
     {
         $sql = "";
         
-        if(is_string($nPro) && !empty($nPro))
+        if(is_string($nPro1) && !empty($nPro1))
         {
-            $sql = "SELECT resi_project.project_id , resi_project.project_name AS label FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE resi_project.locality_id IN (".implode("," , $locIdArr).") AND resi_project.project_id NOT IN (".$nPro.")";
+            $sql = "SELECT resi_project.project_id , resi_project.project_name AS label FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE resi_project.locality_id IN (".implode("," , $locIdArr).") AND resi_project.project_id NOT IN (".$nPro1.") GROUP BY resi_project.project_id";
+            //echo "thr1";
         }
         else
-        {
+        {//echo "thr";
             $sql = "SELECT resi_project.project_id , resi_project.project_name AS label FROM resi_project LEFT JOIN rule_project_mappings ON resi_project.project_id = rule_project_mappings.project_id WHERE resi_project.locality_id IN (".implode("," , $locIdArr).")";
                     
         }
@@ -202,11 +235,11 @@ if(!empty($_GET['ruleId']))
     }
     
     //print'<pre>';
-    //print_r($project);
-//    print_r($locIdArr);
+//    print_r($project);
+////    print_r($locIdArr);
 //    print_r($projectIdArr);
-    //echo count($projectIdArr) ." ". count($project)."<br>";
-    //die;
+//    echo count($projectIdArr) ." ". count($project)."<br>";
+//    die;
     
     if(!empty($project) && ((!empty($projectIdArr) && count($projectIdArr) == count($project)) || (empty($projectIdArr) && count($projectIdArr) == 0)))
         $projectflag = 1;
