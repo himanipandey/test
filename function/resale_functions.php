@@ -270,7 +270,7 @@
 		
     $qryopt = "select distinct(rpp.option_type) from resi_project_options rpp
   inner join listings lst where lst.option_id = rpp.options_id
-    and rpp.project_id = '$projectId' $condPhase and lst.status = 'active' and rpp.version='Cms' order by rpp.option_type";
+    and rpp.project_id = '$projectId' $condPhase and lst.status = 'active' order by rpp.option_type";
     
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
