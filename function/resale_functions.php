@@ -242,7 +242,7 @@
         $arrBrokerPriceByProject = array();
 
         while($data = mysql_fetch_assoc($res)){
-            array_push($arrBrokerPriceByProject,$data);
+            $arrBrokerPriceByProject[$data['UNIT_TYPE']]= $data;
         }
 
         return $arrBrokerPriceByProject;
