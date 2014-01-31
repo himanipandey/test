@@ -37,6 +37,7 @@
      $smarty->assign("twoMonthAgoDt", $twoMonthAgoDt);
      
      $smarty->assign('phase_prices', $phase_prices);
+    
      $smarty->assign("brokerIdList", $brokerIdList);
      
 

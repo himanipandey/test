@@ -71,7 +71,7 @@
                   <form name ="frm" method = "post">
                   <tr bgcolor = '#FCFCFC'>
 					   <td align ="right" valign ="top"  >
-                        <b>Phase :</b>&nbsp;<select id="phaseSelect" name="phaseSelect" onchange="change_phase();">
+				             <b>Phase :</b>&nbsp;<select id="phaseSelect" name="phaseSelect" onchange="change_phase();">
                                                 <option value="-1">Select Phase</option>
                                                 {foreach $phases as $p}
                                                     <option value="{$p.id}" {if $arrBrokerPriceByProject[0]['PHASE_ID'] == $p.id || $currPhaseId == $p.id}selected{/if}>{$p.name}</option>

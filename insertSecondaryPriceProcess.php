@@ -95,13 +95,8 @@
     $smarty->assign("brokerId", $brokerId);
     $smarty->assign("projectId", $projectId);
     //code for distinct unit for a project
-    $arrProjectType = fetch_projectOptions($projectId);
-    $arrPType = array(); 
-    foreach($arrProjectType as $val){
-        $exp = explode("-",$val);
-        if(!in_array(trim($exp[0]),$arrPType))
-            array_push($arrPType,trim($exp[0]));
-    }
+    $phase_id = ($arrBrokerPriceByProject[0]['PHASE_ID'])?$arrBrokerPriceByProject[0]['PHASE_ID']:$_REQUEST['phaseId'];
+    $arrPType = fetch_projectTypes_by_phase($projectId,$phase_id);
     $smarty->assign("arrPType", $arrPType);
     $allBrokerByProject   = getBrokerByProject($projectId);
     $arrBrokerList = array();

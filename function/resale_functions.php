@@ -147,6 +147,8 @@
 								left join resi_project_phase rpp on psp.phase_id = rpp.phase_id 
 											where psp.project_id = '$projectId' and rpp.status = 'Active';");
 											
+											
+											
 		while($row_price_phases = mysql_fetch_object($sql_price_phases)){
 			$sql_all_phase_prices = ""; 
 			$phase_price_detail[$row_price_phases->phase_name] = getPhasePriceByProject($projectId,$row_price_phases->phase_id);
@@ -154,7 +156,7 @@
 		
 		
 		 $phase_prices = array();
-		
+		 
 		foreach($phase_price_detail as $key => $arrBrokerPriceByProject){
 	
 			$maxEffectiveDt = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
@@ -162,8 +164,7 @@
 			$latestMonthAllBrokerPrice = array();
 			$oneMonthAgoPrice = array();
 			$twoMonthAgoPrice = array();
-			$brokerIdList = array();
-			
+					
 			 $dateBreak = explode("-",$maxEffectiveDt );
 			 $oneMonthAgo = mktime(0, 0, 0, $dateBreak[1]-1, 1, $dateBreak[0]);
 			 $oneMonthAgoDt = date('Y-m-d',$oneMonthAgo);
@@ -175,12 +176,14 @@
 					$minMaxSum[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
 					$minMaxSum[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
 					if(count($latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['minPrice']) == 0) {
+						
 						$latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['minPrice'] = $v['MIN_PRICE'];
 						$latestMonthAllBrokerPrice[$v['UNIT_TYPE']][$v['BROKER_ID']]['maxPrice'] = $v['MAX_PRICE'];
 					}
 					if (!in_array($v['BROKER_ID'],$brokerIdList)) {
 						$brokerIdList[] = $v['BROKER_ID'];
 					}
+					
 				 }
 				
 				 if($oneMonthAgoDt == $v['EFFECTIVE_DATE']){
@@ -193,16 +196,14 @@
 					$twoMonthAgoPrice[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
 				 }
 			 }
-			 
 			 $phase_prices[$key]['minMaxSum'] = $minMaxSum;
 			 $phase_prices[$key]['latestMonthAllBrokerPrice'] = $latestMonthAllBrokerPrice;
 			 $phase_prices[$key]['oneMonthAgoPrice'] = $oneMonthAgoPrice;
 			 $phase_prices[$key]['twoMonthAgoPrice'] = $twoMonthAgoPrice;
 			 $phase_prices[$key]['brokerIdList'] = $brokerIdList;
-			
+			 
 		}
 		
-		//print "<pre>".print_r($phase_prices,1)."</pre>";
 	   //print "<pre>".print_r($phase_price_detail,1)."</pre>";
 			
 		//	die;
@@ -233,7 +234,9 @@
 	}
 
       $qry = "select * from project_secondary_price psp1 
-    join (select UNIT_TYPE,max(ID) as ID from project_secondary_price where project_id = '$projectId' ".$phasecond1." ".$effectiveDtcond1." ".$brokercond1." group by UNIT_TYPE) as psp2 on psp1.ID = psp2.ID where psp1.project_id = '$projectId' ".$phasecond2."  ".$effectiveDtcond1." ".$brokercond1." order by psp1.UNIT_TYPE ASC";
+    join (select UNIT_TYPE,max(ID) as ID from project_secondary_price where project_id = '$projectId' ".$phasecond1." ".$effectiveDtcond1." ".$brokercond1." group by UNIT_TYPE) as psp2 on psp1.ID = psp2.ID 
+    left join resi_project_phase rpp on rpp.phase_id  = psp1.phase_id
+    where psp1.project_id = '$projectId' and rpp.status='active' ".$phasecond2."  ".$effectiveDtcond1." ".$brokercond1."  order by psp1.UNIT_TYPE ASC";
 
         $res = mysql_query($qry) or die(mysql_error());
         $arrBrokerPriceByProject = array();
@@ -257,7 +260,23 @@
         while($data = mysql_fetch_assoc($res)){
             array_push($arrBrokerPriceByProject,$data);
         }
-		
-        return $arrBrokerPriceByProject;
+	
+		return $arrBrokerPriceByProject;
 	}
+	function fetch_projectTypes_by_phase($projectId,$phaseId=null) {
+		$condPhase = '';
+	if($phaseId)
+		$condPhase =" and phase_id ='$phaseId' ";
+		
+    $qryopt = "select distinct(rpp.option_type) from resi_project_options rpp
+  inner join listings lst where lst.option_id = rpp.options_id
+    and rpp.project_id = '$projectId' $condPhase and lst.status = 'active' order by rpp.option_type";
+    
+    $resopt = mysql_query($qryopt) or die(mysql_error());
+    $arrOptions = array();
+    while ($data = mysql_fetch_object($resopt)) {
+        $arrOptions[]=$data->option_type;
+    }
+    return $arrOptions;
+}
 ?>

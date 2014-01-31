@@ -115,7 +115,11 @@
         if(!in_array(trim($exp[0]),$arrPType))
             array_push($arrPType,trim($exp[0]));
     }
+
+    $arrPType = fetch_projectTypes_by_phase($projectId,$phaseId);
     $smarty->assign("arrPType", $arrPType);
+    
+    
     $allBrokerByProject   = getBrokerByProject($projectId);
     $arrBrokerList = array();
      foreach($allBrokerByProject as $key=>$val){
