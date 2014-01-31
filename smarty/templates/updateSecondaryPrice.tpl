@@ -61,7 +61,7 @@
                         <b>Phase :</b>&nbsp;&nbsp;&nbsp;<select id="phaseSelect" name="phaseSelect">
                                                 <option value="-1">Select Phase</option>
                                                 {foreach $phases as $p}
-                                                    <option value="{$p.id}" {if $arrBrokerPriceByProject[0]['PHASE_ID'] == $p.id || $currPhaseId == $p.id}selected{/if}>{$p.name}</option>
+                                                    <option value="{$p.id}" {if $arrBrokerPriceByProject[0]['PHASE_ID'] == $p.id || $phaseSelect == $p.id}selected{/if}>{$p.name}</option>
                                                 {/foreach}
                                             </select>
                       </td>
@@ -153,19 +153,19 @@
                                                 <input type = "hidden" name = "unitType[]" value ="{$val}">
                                             </td>
                                             <td valign ="top" style ="padding-left: 10px;" align = "left">
-                                                <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$k]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$k]['MIN_PRICE'])}{else}{$arrMinPrice[$k]}{/if}">
+                                                <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$val]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{else}{$arrMinPrice[$val]}{/if}">
                                             </td>
                                             <td  valign ="top" style ="padding-left: 10px;" align = "left">
                                                 <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
-                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$k]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$k]['MAX_PRICE'])}{else}{$arrMaxPrice[$k]}{/if}">
+                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{else}{$arrMaxPrice[$val]}{/if}">
                                             </td>
                                             <td style ="padding-left: 10px;" align = "left">
                                                 <div id = "mean_{$cnt}">
-                                               {if $arrBrokerPriceByProject[$k]['MAX_PRICE'] != ''}
-                                                   {($arrBrokerPriceByProject[$k]['MAX_PRICE']+$arrBrokerPriceByProject[$k]['MIN_PRICE'])/2}
+                                               {if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}
+                                                   {($arrBrokerPriceByProject[$val]['MAX_PRICE']+$arrBrokerPriceByProject[$val]['MIN_PRICE'])/2}
                                                {else}
-                                                   {if $arrMeanPrice[$k] !=''}     
-                                                        {$arrMeanPrice[$k]}
+                                                   {if $arrMeanPrice[$val] !=''}     
+                                                        {$arrMeanPrice[$val]}
                                                     {else}
                                                         --
                                                     {/if}

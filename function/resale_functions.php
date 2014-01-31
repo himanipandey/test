@@ -158,7 +158,6 @@
 		 $phase_prices = array();
 		 
 		foreach($phase_price_detail as $key => $arrBrokerPriceByProject){
-	
 			$maxEffectiveDt = $arrBrokerPriceByProject[0]['EFFECTIVE_DATE'];
 			$minMaxSum = array();
 			$latestMonthAllBrokerPrice = array();
@@ -170,8 +169,11 @@
 			 $oneMonthAgoDt = date('Y-m-d',$oneMonthAgo);
 			 $twoMonthAgo = mktime(0, 0, 0, $dateBreak[1]-2, 1, $dateBreak[0]);
 			 $twoMonthAgoDt = date('Y-m-d',$twoMonthAgo);
-								
+			 $arrPType = fetch_projectTypes_by_phase($arrBrokerPriceByProject[0]['PROJECT_ID'],$arrBrokerPriceByProject[0]['PHASE_ID']);	
+			 
 			 foreach($arrBrokerPriceByProject as $k=>$v) {
+				if(in_array($v['UNIT_TYPE'],$arrPType)){
+					
 				 if ($maxEffectiveDt == $v['EFFECTIVE_DATE']) {
 					$minMaxSum[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
 					$minMaxSum[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
@@ -195,6 +197,8 @@
 					$twoMonthAgoPrice[$v['UNIT_TYPE']]['minPrice'][] = $v['MIN_PRICE'];
 					$twoMonthAgoPrice[$v['UNIT_TYPE']]['maxPrice'][] = $v['MAX_PRICE'];
 				 }
+				}
+			
 			 }
 			 $phase_prices[$key]['minMaxSum'] = $minMaxSum;
 			 $phase_prices[$key]['latestMonthAllBrokerPrice'] = $latestMonthAllBrokerPrice;
@@ -204,8 +208,7 @@
 			 
 		}
 		
-	   //print "<pre>".print_r($phase_price_detail,1)."</pre>";
-			
+		
 		//	die;
 		
 		return $phase_prices;
@@ -270,13 +273,14 @@
 		
     $qryopt = "select distinct(rpp.option_type) from resi_project_options rpp
   inner join listings lst where lst.option_id = rpp.options_id
-    and rpp.project_id = '$projectId' $condPhase and lst.status = 'active' order by rpp.option_type";
+    and rpp.project_id = '$projectId' $condPhase and lst.status = 'Active' order by rpp.option_type";
     
     $resopt = mysql_query($qryopt) or die(mysql_error());
     $arrOptions = array();
     while ($data = mysql_fetch_object($resopt)) {
         $arrOptions[]=$data->option_type;
     }
+    
     return $arrOptions;
 }
 ?>

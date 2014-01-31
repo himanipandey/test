@@ -13,8 +13,9 @@
          $year = $_REQUEST['year'];
          $month = $_REQUEST['month'];
          $phaseId = $_REQUEST['phaseSelect'];
-         
          $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId, $phaseId, $effectiveDt);
+      
+       
     }   // die;
     if(isset($_REQUEST['submit'])){ //code start for update price
     
@@ -106,7 +107,7 @@
     $smarty->assign("projectId", $projectId);
     $smarty->assign("year",  $year);
     $smarty->assign("month",  $month);
-     $smarty->assign("phaseSelect",  $phaseId);
+    $smarty->assign("phaseSelect",  $phaseId);
     //code for distinct unit for a project
     $arrProjectType = fetch_projectOptions($projectId);
     $arrPType = array(); 

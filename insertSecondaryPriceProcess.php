@@ -2,7 +2,7 @@
     $projectId  = $_REQUEST['projectId'];
     $brokerId   = $_REQUEST['brokerId'];
     $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId);
-    if(isset($_REQUEST['btnExit'])){
+     if(isset($_REQUEST['btnExit'])){
         header("Location:secondary_price.php?projectId=$projectId");
     }
     if(isset($_REQUEST['submit'])){

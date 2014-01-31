@@ -326,7 +326,9 @@ function builder_contact(builderId,buildernm)
                                 {else}
                                     {$bgcolor = '#FCFCFC'}
                                 {/if}
+                           {if isset($phase_values['latestMonthAllBrokerPrice'][$val])}
                                 <tr bgcolor = "{$bgcolor}" height="30px">
+								
 									 <td valign ="top" align = "center">{if $cnt == 1}{$phase_name}{/if}</td>
                                    <td valign ="top" align = "center">{$cnt}</td>
                                    <td valign ="top" style ="padding-left: 10px;" align = "left">
@@ -359,6 +361,7 @@ function builder_contact(builderId,buildernm)
                                        {($arrSumTwoMonthAgo/$arrCnt)|string_format:"%d"}
                                    </td>
                                </tr>
+                               {/if}
                             {/foreach}
                          {/foreach}
                         </table>
