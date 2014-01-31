@@ -74,15 +74,17 @@
 				             <b>Phase :</b>&nbsp;<select id="phaseSelect" name="phaseSelect" onchange="change_phase();">
                                                 <option value="-1">Select Phase</option>
                                                 {foreach $phases as $p}
-                                                    <option value="{$p.id}" {if $arrBrokerPriceByProject[0]['PHASE_ID'] == $p.id || $currPhaseId == $p.id}selected{/if}>{$p.name}</option>
+                                                    <option value="{$p.id}" {if $currPhaseId == $p.id}selected{/if}>{$p.name}</option>
                                                 {/foreach}
                                             </select>
                       </td>
+                
                       <td align ="left" valign ="top">
                         <b>Effective Date:</b>&nbsp;<input name="effectiveDate" value="{$effectiveDate}" type="text" class="formstyle2" id="f_date_c_from" size="5" /> 
                         <img src="images/cal_1.jpg" id="f_trigger_c_from" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                       </td>
                   </tr>
+       {if $currPhaseId != ''}
                   {if count($arrBrokerPriceByProject)>0}
                    <tr bgcolor = '#FCFCFC'>
                       <td align ="left" valign ="top" colspan="2"  style = "padding-left:200px;">
@@ -144,6 +146,7 @@
                                    </td>    
                                </tr>
                             {/foreach}
+                   {/if}
                             <tr class="headingrowcolor" height="30px;">
                                 <td class="whiteTxt" colspan = "4" align ="center">
                                     <input type = "hidden" name = "projectId" id = "projectId" value = "{$projectId}">
