@@ -27,14 +27,15 @@
        
             if($_REQUEST['minPrice'][$key] != '' AND $_REQUEST['maxPrice'][$key] != ''){
 				$blank_error_flag = 0;
-				$percentDiff = ($_REQUEST['maxPrice'][$key] - $_REQUEST['minPrice'][$key]) /(($_REQUEST['maxPrice'][$key] + $_REQUEST['minPrice'][$key]) / 2) * 100;
+			
+				$price_diff = ($_REQUEST['minPrice'][$key]*20/100);
 		               
                 if($_REQUEST['minPrice'][$key] > $_REQUEST['maxPrice'][$key]) {
                     $flag = 2;
                 }elseif( $phaseID == -1){
 					$flag=4;
 					
-				}else if($percentDiff > 20){
+				}else if($_REQUEST['maxPrice'][$key] > ($price_diff+$_REQUEST['minPrice'][$key])){
 					$flag = 3;
 				}
                 else {
