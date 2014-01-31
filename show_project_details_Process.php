@@ -577,7 +577,7 @@ $smarty->assign("maxEffectiveDt", $maxEffectiveDtAll);
 $smarty->assign("arrCampaign", $arrCampaign);
 $smarty->assign("noPhasePhaseId", $noPhasePhaseId);
 
-$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
+$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails->locality_id));
 
 //code for distinct unit for a project
 $arrProjectType = fetch_projectOptions($projectId);
