@@ -1,6 +1,6 @@
 <?php
-include_once __DIR__."/../common.php";
-
+$docroot = dirname(__FILE__) . "/../";
+require_once $docroot.'dbConfig.php';
 list($builders, $localities) = getActiveBuildersAndLocalites();
 $suburbs = getActiveSuburbs($localities);
 $cities = getActiveCities($suburbs);
@@ -102,5 +102,10 @@ QRY;
     }
 
     return array(array_keys($builders), array_keys($localities) );
+}
+
+function doQuery($sql) {
+    $res = mysql_query($sql) or die(mysql_error());
+    return $res;
 }
 ?>
