@@ -2074,8 +2074,7 @@ function getDateNow(){
                                     <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$oneMonthAgoDt}</b></th>
                                  <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$twoMonthAgoDt}</b></th>
                             </tr>
-                            <form name ="frm" method = "post">
-						{foreach from=$phase_prices key=phase_name item = phase_values}		
+                 		{foreach from=$phase_prices key=phase_name item = phase_values}		
                             {$cnt = 0}
                             {foreach from= $arrPType key=k item = val}
                               
