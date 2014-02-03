@@ -35,7 +35,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     $pre_launch_date = $_REQUEST['pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
-    $bookingStatus = $_REQUEST['bookingStatus'];
+    $bookingStatus = 1; //available
 
     // Flats Config
     $flats_config = array();

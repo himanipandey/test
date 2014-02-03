@@ -559,6 +559,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->completion_date = $eff_date_to_prom;
                $phase->launch_date = $eff_date_to;
                $phase->status = 'Active';
+               $phase->booking_status_id = 1;
                $phase->created_at = date('Y-m-d H:i:s');
                $phase->updated_at = date('Y-m-d H:i:s');
                $phase->updated_by = $_SESSION['adminId'];
