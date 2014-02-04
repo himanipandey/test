@@ -2554,7 +2554,7 @@ function getDateNow(){
 							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>
 							  	{if $supplyEditPermissionAccess == 1} 
 									{if !$isSupplyLaunchVerified}
-										<button class="clickbutton" style="background-color: red" onclick="$(this).trigger('event17');">Verify Supply Change</button>
+										<button class="clickbutton" {if $isVerifiedFlagCheck}style="background-color: red"{/if} onclick="$(this).trigger('event17');">Verify Supply Change</button>
 									{/if}
 								{/if}	
 									<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>
