@@ -736,8 +736,11 @@
                 //die("here");
                 
                 
-                $conditions = " rule_project_mappings.rule_id = ".$val->id;
-                $joins = " LEFT JOIN resi_project ON rule_project_mappings.project_id = resi_project.project_id";
+                $conditions = " rule_project_mappings.rule_id = ".$val->id." and city.city_id = '".mysql_escape_string($cityID)."'";
+                $joins = " LEFT JOIN resi_project ON rule_project_mappings.project_id = resi_project.project_id
+                                INNER JOIN locality ON resi_project.locality_id = locality.locality_id
+                                INNER JOIN suburb ON locality.suburb_id = suburb.suburb_id
+                                INNER JOIN city ON suburb.city_id = city.city_id";
                 $options = array('joins' => $joins , 
                                 'select' => " resi_project.project_id,resi_project.project_name" , 
                                 'conditions' => $conditions
@@ -753,13 +756,15 @@
                     $projectAttr = array();
                     $projectAttr[] = 'all';
                 }
-                else if(empty($project_count))
+                else if(empty($project_count) && count($locality) > 0)
                     $projectAttr[] = 'all';
                 $project = array();                
                 
                 //print'<pre>';
 //                print_r($projectAttr);
-//                continue;
+//                echo "here";
+                //continue;
+                //die;
                 if(!empty($projectAttr))
                 {
                     foreach($projectAttr as $k => $v)
@@ -817,33 +822,14 @@
                         
                     }
                 }
-                //$relCity = '';
-//                $chkR = @mysql_query("SELECT city.city_id FROM rule_project_mappings AS rpm LEFT JOIN resi_project AS rp ON rpm.project_id = rp.project_id LEFT JOIN locality AS l ON rp.locality_id = l.locality_id LEFT JOIN suburb AS s ON l.suburb_id = s.suburb_id LEFT JOIN city ON s.city_id = city.city_id LEFT JOIN project_assignment_rules AS par ON rpm.rule_id = par.id WHERE par.broker_id = '".$chkExist->id."'");
-//                echo "SELECT city.city_id FROM rule_project_mappings AS rpm LEFT JOIN resi_project AS rp ON rpm.project_id = rp.project_id LEFT JOIN locality AS l ON rp.locality_id = l.locality_id LEFT JOIN suburb AS s ON l.suburb_id = s.suburb_id LEFT JOIN city ON s.city_id = city.city_id LEFT JOIN project_assignment_rules AS par ON rpm.rule_id = par.id WHERE par.broker_id = '".$chkExist->id."'<br>";
-//                
-//                if(!@mysql_num_rows($chkR) > 0)
-//                {
-//                    $chkR = @mysql_query("SELECT city.city_id FROM rule_locality_mappings AS rpm locality AS l ON rp.locality_id = l.locality_id LEFT JOIN suburb AS s ON l.suburb_id = s.suburb_id LEFT JOIN city ON s.city_id = city.city_id  LEFT JOIN project_assignment_rules AS par ON rlm.rule_id = par.id  WHERE par.broker_id = '".$chkExist->id."'");
-//                    
-//                    if(@mysql_num_rows($chkR) > 0)
-//                    {
-//                        $relCity = @mysql_fetch_assoc($chkR);
-//                        $relCity = $relCity['city_id'];
-//                    }
-//                    
-//                }
-//                else
-//                {
-//                    $relCity = @mysql_fetch_assoc($chkR);
-//                    $relCity = $relCity['city_id'];
-//                }
-//                //print'<pre>';
-////                    print_r($relCity);
-//                echo $relCity ." ". $cityID."<br>";
-//                if(!empty($relCity) && $relCity == $cityID)
-//                {
-//                    
-//                }
+                
+                if(empty($localityAttr) && empty($projectAttr) )
+                {
+                    continue;
+                    
+                }
+                else
+                {
                     $ruleIdArr[] = $val->id;
                     $data[$i]['id'] = $val->id;
                     $data[$i]['rule_name'] = $val->rule_name;
@@ -864,6 +850,7 @@
                     $data[$i]['agent'] = $agent;
                     $data[$i]['count'] = $count;
                     $i++;
+                }
                 
                 
 //                continue;

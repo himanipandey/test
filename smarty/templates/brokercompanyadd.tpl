@@ -173,10 +173,11 @@
             jQuery('.cityloctxt').each(function(){
                if(jQuery(this).length > 0)
                {
-                    if(jQuery(this).val() == '')
+                    if(jQuery(this).val() == '' || !jQuery.trim(jQuery(this).val()))
                     {
                         alert("Please enter the Address");
                         jQuery(this).focus();
+                        jQuery(this).val('');
                         flg = 1;
                         return false;
                     }
@@ -324,9 +325,7 @@
             }
         });
         
-        //jQuery('#addloc').click(function(){
-//            
-//        });
+       
 
         jQuery('#locations').change(function(){
             //alert(jQuery(this).val() + ' ' +jQuery(this).find(":selected").text());
@@ -350,21 +349,6 @@
             'overlayShow': false
         });
         
-        
-        //if(version < '1.9.1')        
-//            jQuery('.remove').live('click' , function(){
-//                alert("here");
-//               var id = jQuery(this).attr('id');
-//               id = id.split("-");
-//               
-//               if(id[1] != '')
-//               {
-//                    jQuery('#cl_' + id[1]).remove();
-//               }  
-//                
-//                
-//            });
-//        else
         jQuery('body').on('click' , '.remove' , function(){
            var id = jQuery(this).attr('id');
            id = id.split("-");

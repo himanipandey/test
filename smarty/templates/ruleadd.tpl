@@ -53,7 +53,7 @@
 
 <script type="text/javascript">
     
-
+    jQuery('#loader').hide();
     $(function() {
         var availableTags = {$brokerArr}; 
         $( "#broker_cmpny" ).autocomplete({
@@ -74,7 +74,11 @@
                             data    : dataString,
                             success : function(data){
                                 //alert(data);
-        //                        return;
+                                //var json = JSON.parse(data);
+                                
+                                //if(eval(json) != '')
+//                                    alert(eval(json));                                
+//                                return;
                                 if(data == '')
                                 {
                                     jQuery('#agent').html('');
@@ -85,12 +89,16 @@
                                 
                                 var json = JSON.parse(data);
                                 var appendData  = '<option value = "all"> --- All Agents --- </option>';
-                                for(var key in json)
+                                if(eval(json) != '')
                                 {
-                                    appendData += '<option value="' + key + '">' + json[key] + '</option>';
+                                    for(var key in json)
+                                    {
+                                        appendData += '<option value="' + key + '">' + json[key] + '</option>';
+                                    }
+                                    jQuery('#agent').append(appendData);
                                 }
                                 
-                                jQuery('#agent').append(appendData);
+                                
                             },
                             error   : function(){
                                 alert("Something went wrong");
@@ -180,7 +188,13 @@
                             </td>
                         </tr>
                 
-				
+				<tr>
+                    <td colspan="3" style="text-align:center">
+                        <div id="loader" style="display:none;">
+                            <img src="ajax-loader.gif" />
+                        </div>
+                    </td>
+                </tr>
                 
                 <tr>
 				    <td width="20%" align="right" >Locality : </td>
@@ -216,8 +230,8 @@
                     <td width="30%" align="right" >
                                         
                         <select multiple="" name="agent[]" id="agent" style="width:260px;height:140px;">
-                            <option value="all" {if $agentflag == 1} selected="" {/if}>---All Agent---</option>
-                            {if $seller_company != ''}
+                            {if $seller_company != '' && count($seller_company) > 0}
+                                <option value="all" {if $agentflag == 1} selected="" {/if}>---All Agent---</option>
                                 {foreach from = $seller_company key = k item = val}
                                     <option value="{$val->agent_id}" {if in_array($val->agent_id , $agentIdArr)} selected="" {/if}>{if strlen($val->agent_name) > 30} {$val->agent_name|substr:0:30|cat:"..."} {else} {$val->agent_name} {/if}</option>
                                 {/foreach} 
@@ -476,9 +490,13 @@
                     type    : 'POST',
                     url     : 'fetchProjectLocality.php',
                     data    : dataString,
+                    beforeSend : function(){
+                      jQuery('#loader').show();  
+                    },
                     success : function(data){
                         //alert(data);
 //                        return;
+                        jQuery('#loader').hide();
                         if(data == '')
                         {
                             jQuery('#project').html('');
@@ -507,6 +525,7 @@
                         jQuery('#project').append(appendData);
                     },
                     error   : function(){
+                        jQuery('#loader').hide();
                         alert("Something went wrong");
                         return false;
                     }

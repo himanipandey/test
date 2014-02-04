@@ -98,7 +98,7 @@
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 		      
-			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
+			  <TABLE cellSpacing=2 cellPadding=4 width="100%" align=center border=0>
 			    <form method="post" id="frm1" enctype="multipart/form-data" action="sellercompanyadd.php">
 			      <div>
                       {if $ErrorMsg["dataInsertionError"] != ''}
@@ -112,19 +112,19 @@
                       {/if}
 	           
 				<tr> 
-                    <td width="30%" valign="top">Company Name :<font color = "red">*</font></td>
+                    <td width="20%" valign="top">Company Name :<font color = "red">*</font></td>
                     <td width="10%" valign="top">
                         <input type="text" name="seller_cmpny" id="seller_cmpny" value="{$seller_cmpny}" />
                         
                         
                     </td>
-                    <td width="15%" align="right" valign="top" >Agent Name :<font color = "red">*</font></td>
+                    <td width="15%" align="left" valign="top" >Agent Name :<font color = "red">*</font></td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="seller_name" id="seller_name" value="{$seller_name}" style="width:238px;" />	
+                        <input type=text name="seller_name" id="seller_name" value="{$seller_name}" />	
                     </td>
-                    <td width="10%" align="right">Status :</td>
+                    <td width="25%" align="left">Status :&nbsp;</td>
                     <td width="10%" align="left" >
-    				    <select name = "status" id = "status" style="width:90px;">
+    				    <select name = "status" id = "status" style="width:70px;">
                            <option value="Active" {if $status == 'Active'}selected=""{/if}>Active</option>
                            <option value="Inactive" {if $status == 'Inactive'}selected=""{/if}>Inactive</option>
                         </select>
@@ -153,15 +153,15 @@
                 {/if}
 				<tr>
 				    <td width="20%" align="left" >Address Line 1 : <font color = "red">*</font></td>
-                    <td width="30%" align="left" >
-                        <input type=text name="addressline1" class="check" id="addressline1" value="{$addressline1}"  style="width:250px;" />
+                    <td width="24%" align="left" >
+                        <input type=text name="addressline1" class="check" id="addressline1" value="{$addressline1}"  />
                         {if $ErrorMsg["addressline1"] != ''}
                             <font color = "red">{$ErrorMsg["addressline1"]}</font>
                         {/if}
                     </td>
                     <td width="20%" align="left" valign="top">City :<font color = "red">*</font></td>
-                    <td width="30%" align="left" >
-				        <select name="city_id" id="city_id" style="width:250px;">
+                    <td width="24%" align="left" >
+				        <select name="city_id" id="city_id">
                            <option value="">Select City</option>
                            {foreach from= $cityArr key = k item = val}
                                <option value="{$k}" {if $k == $cityhiddenArr} selected {/if}>{$val}</option>
@@ -174,11 +174,11 @@
                 <tr>
 				    <td width="20%" align="left" >Address Line 2 : </td>
                     <td width="30%" align="left" >
-                        <input type=text name="addressline2" class="check" id="addressline2" value="{$addressline2}" style="width:250px;" />
+                        <input type=text name="addressline2" class="check" id="addressline2" value="{$addressline2}" />
                     </td>
                     <td width="15%" align="left" valign="top" >Pincode : </td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="pincode" class="check" id="pincode" value="{$pincode}" maxlength="12" style="width:85px;" />
+                        <input type=text name="pincode" class="check" id="pincode" value="{$pincode}" maxlength="12" />
                         {if $ErrorMsg["pincode"] != ''}
                             <font color = "red">{$ErrorMsg["pincode"]}</font>
                         {/if}	
@@ -216,7 +216,7 @@
     				
     				<td width="15%" align="left" valign="top" >Office Email:</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type=text name="email" id="email" value="{$email}" style="width:250px;" />	
+                        <input type=text name="email" id="email" value="{$email}"  />	
                         {if $ErrorMsg["email"] != ''}
                             <font color = "red">{$ErrorMsg["email"]}</font>
                         {/if}	
@@ -234,11 +234,11 @@
                 <tr>
                     <td width="15%" align="right" valign="top" >Agent Logo:</td>
                     <td width="10%" align="left" valign="top" >
-                        <input type="file" name="logo" id="logo" value="{$logo}" style="width:250px;" />
+                        <input type="file" name="logo" id="logo" value="{$logo}" style="width:200px;" />
                         		
                     </td>
                     <td  width="10%" align="left" valign="top">
-                        <div style="width:130px!important;height:130px">
+                        <div style="width:50px!important;height:130px">
                             {if $imgurl != ''} <a href="#div_img" class="showcontent" ><img src="{$imgurl}" style="width:120px;height:90px;cursor: pointer;" /> </a> <div style="display:none;"><div id="div_img"><img src="{$imgurl}" /></div></div> {else}<img src="no_image.gif" width="" height="" /> {/if}
                         </div>
                     </td>
