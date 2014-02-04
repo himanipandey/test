@@ -235,14 +235,15 @@ function show_loc_inst(){
                                   <TH  width=4% align="center">Place Type</TH>
                                   <TH  width=8% align="center">Location in Map</TH>
                                   
-                                  <TH  width=10% align="center">Priority (Status)
-                                  {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
+                                  <TH  width=4% align="center">Priority
+                                 <!-- {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
                                       <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
                                   {else}
                                       <span style="clear:both;margin-left:10px"><input type="image" name="desc" value="desc" src="images/arrow-down.png"></span>
-                                  {/if}
+                                  {/if}-->
                                   </TH> 
-                                  <TH width=3% align="center">Save</TH>
+                                 <TH width=6% align="center">Status</TH> 
+				 <TH width=3% align="center">Save</TH>
                                 </TR>
                               
                           </thead>
@@ -276,15 +277,16 @@ function show_loc_inst(){
                                   <!--<TD align=center class=td-border>{$v.priority}</TD>-->
                                    
                                    <TD align=center class=td-border>
-                                    <select id="priority{$v.id}" value="" style="width:40%;" >
+                                    <select id="priority{$v.id}" value="" >
           <option name=one value=1  {if $v.priority == 1} selected="selected"  {/if}>1</option>
           <option name=two value=2  {if $v.priority == 2} selected="selected"  {/if}>2</option>
           <option name=three value=3 {if $v.priority == 3} selected="selected"  {/if}>3</option>
           <option name=four value=4 {if $v.priority == 4} selected="selected"  {/if}>4</option>
           <option name=five value=5 {if $v.priority == 5} selected="selected"  {/if}>5</option>
           </select>
-        
-          <select id="status{$v.id}" value='' style="width:50%; margin-left:5%;">
+          </TD>
+        <TD align=center class=td-border>  
+	<select id="status{$v.id}" value='' style="width:90%; margin-left:5%;">
           <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
           <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
                   
