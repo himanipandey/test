@@ -184,8 +184,22 @@ class ProjectSupply extends Objects {
         $project->no_of_flats = $total_count[0]->total_supply;
         $project->save();
     }
-    
     function isSupplyLaunchVerified($projectId){
+		
+		$sql = "select l.id from project_supplies ps inner join listings l
+                on ps.listing_id = l.id
+                inner join resi_project_options rpo on l.option_id = rpo.options_id
+                where 
+                rpo.project_id = '$projectId' and l.status = 'Active' group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
+         $result = self::find_by_sql($sql);
+         
+          if(count($result)>0)
+			return FALSE;
+		  else
+			return TRUE;
+		
+	}
+    function isVerifiedFlagCheck($projectId){
 		
 		$sql = "select rpp.phase_id,ps.* from project_supplies ps
 				inner join listings lst on lst.id = ps.listing_id

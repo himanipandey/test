@@ -204,6 +204,7 @@ foreach ($res as $data) {
 }
 $supplyAllArray = array();
 $isSupplyLaunchVerified = ProjectSupply::isSupplyLaunchVerified($projectId);
+$isVerifiedFlagCheck = ProjectSupply::isVerifiedFlagCheck($projectId);
 
 foreach($supplyAll as $k=>$v) {
     foreach($v as $kMiddle=>$vMiddle) {

@@ -66,8 +66,7 @@ class ProjectAvailability extends Model {
             $all_supply_ids[] = $supply_id->website_supply_id;
            //copy the supply and lanuched unit in website if flag=>true 
             if($supply_id->cms_verfied_flag == 'true'){
-				print "<pre>".$supply_id->website_supply_id."</pre>";
-            	$website_supply = ProjectSupply::find($supply_id->website_supply_id);
+				$website_supply = ProjectSupply::find($supply_id->website_supply_id);
 				$website_supply->supply = $supply_id->supply;
 				$website_supply->launched = $supply_id->launched;
 				$website_supply->save();	
