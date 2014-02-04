@@ -211,9 +211,9 @@ class ProjectSupply extends Objects {
          $result = self::find_by_sql($sql);
          
           if(count($result)>0)
-			return FALSE;
+			return 1;
 		  else
-			return TRUE;
+			return 0;
 		
 	}
 	
