@@ -95,8 +95,8 @@
             <tr>
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
-        {/if}
-	
+        {/if}	
+        
         {if $imageAuth == true}
             <tr>
                 <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
@@ -162,10 +162,11 @@
 	<tr>
             <td class="thinline" align="left" colspan="2"></td>
 	</tr>
-       {if $dataCollectionFlowAuth == true || $myProjectsAuth == true}
+       <!--Callcenter start-->
+       {if $myProjectsCallCenterAuth == true || $callCenterAuth == true}
 	<tr>
             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-            <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Data Collection Flow</font></a></td>
+            <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Data Collection Flow CallCenter</font></a></td>
 	</tr>
         {/if}
 	<tr><td colspan='2' style="padding-left:10px;">
@@ -173,26 +174,26 @@
 	<tr>
             <td class="thinline" align="left" colspan="2"></td>
 	</tr>
-        {if $dataCollectionFlowAuth == true}
+        {if $callCenterAuth == true && $myProjectsCallCenterAuth == false}
 	<tr>
             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-            <td align="left" height="22"><a class="leftnav" href="project-status.php"><font color = "#f15a22">Project Status</font></a></td>
+            <td align="left" height="22"><a class="leftnav" href="project-status.php?flag=callcenter"><font color = "#f15a22">Project Status</font></a></td>
 	</tr>
         <tr>
             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-            <td align="left" height="22"><a class="leftnav" href="project-status-summary.php"><font color = "#f15a22">Project Status Summary</font></a></td>
+            <td align="left" height="22"><a class="leftnav" href="project-status-summary.php?flag=callcenter"><font color = "#f15a22">Project Status Summary</font></a></td>
 	</tr>
         
 	<tr>
             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-            <td align="left" height="22"><a class="leftnav" href="executive-workload.php"><font color = "#f15a22">Executive Workload</font></a></td>
+            <td align="left" height="22"><a class="leftnav" href="executive-workload.php?flag=callcenter"><font color = "#f15a22">Executive Workload</font></a></td>
 	</tr>
         <tr>
             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-            <td align="left" height="22"><a class="leftnav" href="executive-performance.php"><font color = "#f15a22">Executive Performance</font></a></td>
+            <td align="left" height="22"><a class="leftnav" href="executive-performance.php?flag=callcenter"><font color = "#f15a22">Executive Performance</font></a></td>
 	</tr>
         {/if}
-        {if $myProjectsAuth == true}
+        {if $myProjectsCallCenterAuth == true && $callCenterAuth == false}
         <tr>
             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
             <td align="left" height="22"><a class="leftnav" href="my-projects.php"><font color = "#f15a22">My Projects</font></a></td>
@@ -200,7 +201,47 @@
         {/if}
 	</table>
 	</td></tr>
-	
+         <!--Callcenter start-->
+        <!--Survey start-->
+        {if $myProjectsSurveyAuth == true || $surveyAuth == true}
+	<tr>
+            <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+            <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Data Collection Flow Survey</font></a></td>
+	</tr>
+        {/if}
+	<tr><td colspan='2' style="padding-left:10px;">
+	<table width='100%'>
+	<tr>
+            <td class="thinline" align="left" colspan="2"></td>
+	</tr>
+        {if $surveyAuth == true && $myProjectsSurveyAuth == false}
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="project-status.php?flag=survey"><font color = "#f15a22">Project Status</font></a></td>
+            </tr>
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="project-status-summary.php?flag=survey"><font color = "#f15a22">Project Status Summary</font></a></td>
+            </tr>
+
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="executive-workload.php?flag=survey"><font color = "#f15a22">Executive Workload</font></a></td>
+            </tr>
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="executive-performance.php?flag=survey"><font color = "#f15a22">Executive Performance</font></a></td>
+            </tr>
+        {/if}
+        {if $myProjectsSurveyAuth == true && $surveyAuth == true}
+        <tr>
+            <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+            <td align="left" height="22"><a class="leftnav" href="my-projects.php"><font color = "#f15a22">My Projects</font></a></td>
+	</tr>
+        {/if}
+	</table>
+	</td></tr>
+	<!--survey end-->
         
         {if $brokerAuth == true}
             <tr>
@@ -247,10 +288,6 @@
                 <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
                 <td align="left" height="22"><a class="leftnav" href="project_priority.php"><font color = "#f15a22">Project Priority</font></a></td>
             </tr>
-            <tr>
-                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-                <td align="left" height="22"><a class="leftnav" href="locality_near_places_priority.php"><font color = "#f15a22">Locality Near Places Priority</font></a></td>
-            </tr>
         </table>
     </td></tr>
     {/if}
@@ -275,6 +312,7 @@
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
         <td align="left" height="22"><a class="leftnav" href="projects-waiting-migration.php"><font color = "#f15a22">Projects Pending Migration</font></a></td>
+
     </tr>
     <tr><td class="thinline" align="left" colspan="2"></td></tr>
     
