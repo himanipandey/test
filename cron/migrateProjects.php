@@ -28,8 +28,6 @@ foreach ($allItems as $item) {
             }
             $result[] = ProjectAvailability::copyProjectInventoryToWebsite($projectId, $adminId);
             $result[] = ListingPrices::copyProjectPriceToWebsite($projectId, $adminId);
-            $projectUpdationDate = ResiProject::get_project_updation_date($projectId);
-            ResiProject::set_table_attribute($projectId, 'D_PROJECT_UPDATION_DATE', $projectUpdationDate, $adminId);
         }
         if($result === array_filter($result)){
             ProjectMigration::update_all(array('set' => array('status' => 'Processed'),'conditions' => array('id' => $itemForUpdate->id)));

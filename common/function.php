@@ -128,30 +128,3 @@ function addImageToDB( $columnName, $areaId, $imageName ) {
     dbExecute( $insertQuery );
     return mysql_insert_id();
 }
-/********code for find current assigned cycle of a project************/
-function currentCycleOfProject($projectId) {
-    $currentCycle = '';
-    $qry = "select a.department from resi_project rp join project_assignment pa
-            on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
-            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
-            left join proptiger_admin a
-            on pa.assigned_to = a.adminid 
-            inner join master_project_stages pstg on rp.PROJECT_STAGE_ID = pstg.id
-            inner join master_project_phases pphs on rp.PROJECT_PHASE_ID = pphs.id
-            where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
-                (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and
-            rp.project_id = $projectId and version = 'Cms' order by pa.id desc limit 1";
-    $resUpdationCycle = mysql_query($qry) or die(mysql_error());
-    $updationCycle = mysql_fetch_assoc($resUpdationCycle);
-    if(mysql_num_rows($resUpdationCycle)>0){
-        if($updationCycle['department'] == 'SURVEY')
-            $currentCycle = 'Survey';
-        elseif($updationCycle['department'] == 'CALLCENTER')
-            $currentCycle = 'Call Center';
-        else
-            $currentCycle = 'Not Assigned';
-    }
-    else
-        $currentCycle = 'NA';
-    return $currentCycle;
-}

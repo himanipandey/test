@@ -74,22 +74,12 @@ function selectAllCheckBoxes(inputName, checked){
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-                                                        
-                                                        {if $callingFieldFlag == 'survey'}
-                                                        {foreach from = $arrSurveyTeamList key= key item = item}
-                                                            <tr>
-                                                                <td><a href="/project-status.php?flag={$callingFieldFlag}&executive={$item['ADMINID']}">{$item['FNAME']}</td>
-                                                                <td>{$item['WORKLOAD']}</td>
-                                                            </tr>
+                                                        {foreach from = $executiveWorkLoad key=key item = item}
+                                                        <tr>
+                                                            <td><a href="/project-status.php?executive={$item['ADMINID']}">{$item['USERNAME']}</td>
+                                                            <td>{$item['WORKLOAD']}</td>
+                                                        </tr>
                                                         {/foreach}
-                                                        {else}
-                                                          {foreach from = $executiveWorkLoad key = key item = item}
-                                                            <tr>
-                                                                <td><a href="/project-status.php?flag={$callingFieldFlag}&executive={$item['ADMINID']}">{$item['USERNAME']}</td>
-                                                                <td>{$item['WORKLOAD']}</td>
-                                                            </tr>
-                                                          {/foreach}  
-                                                        {/if} 
                                                     </tbody>
                                                 </table>
                                             </form>
