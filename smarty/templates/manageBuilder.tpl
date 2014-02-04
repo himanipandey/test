@@ -50,6 +50,13 @@ function chkConfirm()
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
                  {if $accessBuilder == ''}
                   <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    {if $callerMessage != ''}
+                    <tr>
+                      <td align = "center">
+                    <font color="green">{$callerMessage}</font>
+                      </td>
+                    </tr>
+                    {/if}
                     <tr>
                       <td>
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">

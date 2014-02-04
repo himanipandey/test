@@ -44,13 +44,16 @@
                                     WHERE
                                       ID      = '".$exp_id[$key]."'";
                             $resUp = mysql_query($resUp);
+                            /******code for call api************/
+                            if($exp_phone[$key] != '')
+                                $_SESSION['callerMessage'][] = file_get_contents("http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=".$exp_phone[$key]);
                             if($resUp)
                             {
                                 if(strlen($projects)>0){
                                     $exp = explode(',', $projects);
                                     if(count($exp)>0 && !empty($projects)) {
                                         foreach($exp as $val) {
-                                        print $qryIns = "insert into project_builder_contact_mappings set 
+                                         $qryIns = "insert into project_builder_contact_mappings set 
                                          project_id = $val,builder_contact_id = '".$exp_id[$key]."'";
                                         $resIns = mysql_query($qryIns) or die(mysql_error());
                                         }
@@ -71,6 +74,9 @@
                                       BUILDER_ID = '".$builderId."'";
                             $resIns = mysql_query($resIns) or die(mysql_error());
                             $contactId = mysql_insert_id();
+                            /******code for call api************/
+                            if($exp_phone[$key] != '')
+                                $_SESSION['callerMessage'][] = file_get_contents("http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=".$exp_phone[$key]);
                             if($resIns){
                                     if(strlen($projects)>0){
                                     $exp = explode(',', $projects);

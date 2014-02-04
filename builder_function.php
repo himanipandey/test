@@ -975,6 +975,8 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $D
                             EMAIL			=	'" . $email . "',
                             SUBMITTED_DATE	=	now()";
             $res = mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
+            if($phone != '')
+                $_SESSION['callerMessage'][] = file_get_contents("http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=".$phone);
         }
         $cnt++;
     }
@@ -1055,7 +1057,6 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 			}
           
     $cnt = 0;
-
     foreach ($contactArr['Name'] as $k => $v) {
         if ($v != '') {
             $name = $contactArr['Name'][$cnt];
@@ -1072,7 +1073,8 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
                             SUBMITTED_DATE	=	now()";
             mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
             $lastId = mysql_insert_id();
-                        
+            if($phone != '')
+                $_SESSION['callerMessage'][] = file_get_contents("http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=".$phone);
             $projectId = explode("#",$projects);
             
             if( count($projectId) >0 && !empty($projects)) {
@@ -1085,7 +1087,6 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
         }
         $cnt++;
     }
-
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function UpdateBuilder()');
     
     if( $ExecSql ) {
