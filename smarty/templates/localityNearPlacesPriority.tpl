@@ -231,7 +231,7 @@ function show_loc_inst(){
                                 <TR class = "headingrowcolor">
                                   <th  width=1% align="center">Serial</th>
                                   <th  width=5% align="center">Name</th>
-                                  <TH  width=5% align="center">Vicinity</TH>
+                                  <TH  width=8% align="center">Vicinity</TH>
                                   <TH  width=4% align="center">Place Type</TH>
                                   <TH  width=8% align="center">Location in Map</TH>
                                   
@@ -286,7 +286,7 @@ function show_loc_inst(){
           </select>
           </TD>
         <TD align=center class=td-border>  
-	<select id="status{$v.id}" value='' style="width:90%; margin-left:5%;">
+	<select id="status{$v.id}" value=''>
           <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
           <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
                   
