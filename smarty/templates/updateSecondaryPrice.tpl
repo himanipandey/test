@@ -56,6 +56,16 @@
                              </select>
                         </td>
                       </tr>
+                      <tr bgcolor = '#F7F7F7'>
+                          <td align ="left" valign ="top" colspan="2" style = "padding-left:80px;" >
+                        <b>Phase :</b>&nbsp;&nbsp;&nbsp;<select id="phaseSelect" name="phaseSelect">
+                                                <option value="-1">Select Phase</option>
+                                                {foreach $phases as $p}
+                                                    <option value="{$p.id}" {if $arrBrokerPriceByProject[0]['PHASE_ID'] == $p.id || $phaseSelect == $p.id}selected{/if}>{$p.name}</option>
+                                                {/foreach}
+                                            </select>
+                      </td>
+                      </tr>
                         <tr bgcolor = '#FCFCFC'>
                             <td align ="left" valign ="top" colspan="2"  style = "padding-left:80px;">
                               <b>Year:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -143,19 +153,19 @@
                                                 <input type = "hidden" name = "unitType[]" value ="{$val}">
                                             </td>
                                             <td valign ="top" style ="padding-left: 10px;" align = "left">
-                                                <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$k]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$k]['MIN_PRICE'])}{else}{$arrMinPrice[$k]}{/if}">
+                                                <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$val]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{else}{$arrMinPrice[$val]}{/if}">
                                             </td>
                                             <td  valign ="top" style ="padding-left: 10px;" align = "left">
                                                 <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
-                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$k]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$k]['MAX_PRICE'])}{else}{$arrMaxPrice[$k]}{/if}">
+                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{else}{$arrMaxPrice[$val]}{/if}">
                                             </td>
                                             <td style ="padding-left: 10px;" align = "left">
                                                 <div id = "mean_{$cnt}">
-                                               {if $arrBrokerPriceByProject[$k]['MAX_PRICE'] != ''}
-                                                   {($arrBrokerPriceByProject[$k]['MAX_PRICE']+$arrBrokerPriceByProject[$k]['MIN_PRICE'])/2}
+                                               {if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}
+                                                   {($arrBrokerPriceByProject[$val]['MAX_PRICE']+$arrBrokerPriceByProject[$val]['MIN_PRICE'])/2}
                                                {else}
-                                                   {if $arrMeanPrice[$k] !=''}     
-                                                        {$arrMeanPrice[$k]}
+                                                   {if $arrMeanPrice[$val] !=''}     
+                                                        {$arrMeanPrice[$val]}
                                                     {else}
                                                         --
                                                     {/if}
@@ -171,6 +181,7 @@
                                              <input type = "hidden" name = "brokerId" id = "brokerId" value = "{$brokerId}">
                                              <input type = "hidden" name = "month" value = "{$month}">
                                              <input type = "hidden" name = "year" value = "{$year}">
+                                              <input type = "hidden" name = "phaseSelect" value = "{$phaseSelect}">
                                              <input type="submit" name="submit"  value="Submit" onclick = "return validation();">
                                              <input type="submit" name="btnExit" id="btnExit" value="Exit">
                                          </td>
@@ -218,6 +229,10 @@
     function blankChk(){
         if($("#brokerSearch").val() == ''){
             alert("Please select broker!");
+            return false;
+        }
+        if($("#phaseSelect").val() == '' || $("#phaseSelect").val() == '-1'){
+            alert("Please select Phase");
             return false;
         }
         if($("#year").val() == ''){

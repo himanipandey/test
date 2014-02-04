@@ -1,5 +1,7 @@
 <?php
+
 $orderBy = "ASC";
+
 function cmp($value1, $value2)
 {
     global $orderBy;
@@ -134,6 +136,7 @@ function autoAdjustPrio($tablename, $cityID = null, $priority = null)
     }
     mysql_query($query) or die(mysql_error());
 }
+
 function checkSubLocInCity($type,$cityId,$typeId){
 
 	if($type == 'suburb')
@@ -374,6 +377,9 @@ function autoAdjustProjPrio($id = null, $priority = null, $type = null)
     $qry = "UPDATE " . RESI_PROJECT . " SET $update WHERE ".$where;
     mysql_query($qry) or die(mysql_error());
 }
+
+
+
 function getProjectCount($Id, $type){
     switch($type)
     {
@@ -529,6 +535,308 @@ function checkProjAvail($projectId = null, $priority = null, $mode = null, $mode
             break;
     }
     $qry = "SELECT COUNT(*) AS CNT FROM " . RESI_PROJECT . " WHERE ".$where." AND PROJECT_ID = '".$projectId."'";
+    $res = mysql_query($qry);
+    $data = mysql_fetch_assoc($res);
+
+    return $data['CNT'];
+}
+
+function getNearPlacesArrfromCity($cityId, $order, $placeType=0)
+{
+    global $orderBy;
+    $orderBy = $order; 
+    if($placeType==0)
+         $where = " np.city_id = $cityId";
+    else
+        $where = "np.city_id = $cityId and  np.place_type_id = $placeType"; //.$queryLessThenMax;
+    $orderby = " ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
+    $qry = "SELECT np.name, np.id, np.city_id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority
+            FROM " . locality_near_places. " np 
+            inner join near_place_types npt on npt.id = np.place_type_id
+            WHERE ".$where." ". $orderby;
+
+    $res = mysql_query($qry) or die(mysql_error());
+    //print_r($res)
+    $arr = array();
+     while ($data = mysql_fetch_assoc($res)) {
+        //echo $data;
+        array_push($arr, $data);
+    }
+    return $arr;
+
+}
+
+function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
+{
+    global $orderBy;
+    $orderBy = $order;
+    $queryLessThenMax = "";
+    
+    switch($type)
+    {
+        case "city":
+           /*$locList = "select l.locality_id from locality l 
+                        inner join suburb s on l.suburb_id = s.suburb_id
+                        inner join city c on s.city_id = c.city_id 
+                        where c.city_id = $Id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $comma = ',';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+              $cnt++;
+            }
+            //$queryLessThenMax = " AND np.DISPLAY_ORDER > 0 AND np.DISPLAY_ORDER < ".NEAR_PLACES_MAX_PRIORITY;
+            */
+            
+            break;
+        /*case "suburb":
+            $locList = "select l.locality_id from locality l 
+                        inner join suburb s on l.suburb_id = s.suburb_id
+                        where s.suburb_id = $Id";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $comma = ',';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                $comma = ',';
+             $cnt++;
+            }
+            //$queryLessThenMax = "  rp.DISPLAY_ORDER_SUBURB > 0 AND rp.DISPLAY_ORDER_SUBURB < ".PROJECT_MAX_PRIORITY;
+            //$where = "np.locality_id in ($listLoc)".$queryLessThenMax;
+            if($placeType==0)
+                $where = "np.locality_id in ($listLoc)";
+            else
+                $where = "np.locality_id in ($listLoc) and np.place_type_id = $placeType";
+            $orderby = "ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
+            break;*/
+        case "locality":
+            //print_r("here1");
+            //$queryLessThenMax = " AND rp.DISPLAY_ORDER_LOCALITY > 0 AND rp.DISPLAY_ORDER_LOCALITY < ".PROJECT_MAX_PRIORITY;
+            //$where = "$Id ="; 
+            $results = mysql_query ("SELECT LATITUDE, LONGITUDE FROM locality l WHERE l.LOCALITY_ID = $localityId");
+            $row = mysql_fetch_assoc($results);
+            $lat = $row['LATITUDE'];
+            $lon = $row['LONGITUDE'];
+            /*$results1 = mysql_query("SELECT np.id, np.latitude, np.longitude FROM locality_near_places np WHERE np.city_id = $cityId");
+           
+            $NearPlacesArr = array();
+            while ($row1 = mysql_fetch_assoc($results1)) 
+            {
+                if(getDistance($row['LATITUDE'], $row['LONGITUDE'], $row1['latitude'], $row1['longitude']) < 5)
+                {
+                    array_push($NearPlacesArr, $row1['id']);
+                    //echo ($row1['id']);
+                }
+                    
+                
+            }*/
+
+            //print_r($NearPlacesArr);
+            //die("here");
+            if($placeType!=0)
+                $where = " and np.place_type_id = $placeType";
+            else $where = "";
+                
+
+           
+            $orderby = "ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
+            
+            $qry = "SELECT np.name, np.city_id, np.id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority
+            FROM " . locality_near_places. " np 
+                
+            inner join near_place_types npt on npt.id = np.place_type_id
+            where get_distance_in_kms_between_geo_locations($lat, $lon, np.latitude, np.longitude) < 5"
+            .$where." ".$orderby;
+
+             //print_r($qry);
+            break;
+    }
+    $res = mysql_query($qry) or die(mysql_error());
+    //print_r($res)
+    $arr = array();
+    while ($data = mysql_fetch_assoc($res)) {
+        //echo $data;
+        array_push($arr, $data);
+    }
+    return $arr;
+}
+
+
+function getDistance($lat, $lon, $lat2, $lon2)
+{
+    
+//echo $lat."  ".$lon."  ".$lat2."  ".$lon2."  "; 
+    //distance in km  
+   /* 
+    if (cos(deg2rad($lat2))*cos(deg2rad(lat))*cos(deg2rad(long)-deg2rad($long2))+sin(deg2rad($lat2))*sin(deg2rad(lat)) <= 1.0)
+    {
+        if(cos(deg2rad($lat2))*cos(deg2rad(lat))*cos(deg2rad(long)-deg2rad($long2))+sin(deg2rad($lat2))*sin(deg2rad(lat)) < -1.0)
+            $distance = ((3959*acos(-1))*1.609344);
+        else
+            $distance = ((3959*acos(cos(deg2rad($lat2))*cos(deg2rad(lat))*cos(deg2rad(long)-deg2rad($long2))+sin(deg2rad($lat2))*sin(deg2rad(lat)) ))*1.609344);
+    }
+    else
+        $distance = ((3959*acos(1))*1.609344);
+    //echo abs($distance)." ";
+    */
+
+
+ $distance =((acos(sin($lat * pi() / 180) * sin($lat2 * pi() / 180) + cos($lat * pi() / 180) * cos($lat2 * pi() / 180) * cos(($lon - $lon2) * pi() / 180)) * 180 / pi()) * 60 * 1.1515)*1.609344;
+
+//echo  $distance;
+//$distance1 = (3958*3.1415926*sqrt(($lat2-$lat1)*($lat2-$lat1) + cos($lat2/57.29578)*cos($lat1/57.29578)*($lon2-$lon1)*($lon2-$lon1))/180);
+
+    return abs($distance);
+
+
+    /*((3959*Acos(
+        CASE 
+        WHEN
+          cos(deg2rad(".$lat2."))*cos(deg2rad(lat))*cos(deg2rad(lon)-deg2rad(".$lon2."))+sin(deg2rad(".$lat2."))*sin(deg2rad(lat)) <= 1.0  THEN  
+                CASE 
+                  WHEN cos(deg2rad(".$lat2."))*cos(deg2rad(lat))*cos(deg2rad(lon)-deg2rad(".$lon2."))+sin(deg2rad(".$lat2."))*sin(deg2rad(lat)) < -1.0  THEN -1 
+                   ELSE cos(deg2rad(".$lat2."))*cos(deg2rad(lat))*cos(deg2rad(lon)-deg2rad(".$lon2."))+sin(deg2rad(".$lat2."))*sin(deg2rad(lat))  
+                   END 
+        ELSE 1 
+        END 
+        ))*1.609344);*/
+    
+
+}
+
+
+function updateNearPlace($nearPlaceId, $priority, $status, $mode = null, $modeid = null)
+{
+    /*switch($mode)
+    {
+        case "city":
+            $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                inner join city c on s.city_id = c.city_id 
+                where c.city_id = $modeid";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                $comma = ',';
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                
+             $cnt++;
+            }
+            $where = "locality_id in ($listLoc)";
+            $update = "priority = '$priority'";
+            break;
+        case "suburb":
+            $locList = "select l.locality_id from locality l 
+                        inner join suburb s on l.suburb_id = s.suburb_id
+                        where s.suburb_id = $modeid";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                $comma = ',';
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                
+             $cnt++;
+            }
+            $where = "locality_id in ($listLoc)";
+            $update = "priority = '$priority'";
+            break;
+        case "locality":
+            $where = "locality_id = '" . $modeid . "'";
+            $update = "priority = '$priority'";
+            break;
+    }*/
+    if($priority>0 && $priority<=5)
+    {
+        $update = " priority = '$priority', status = '$status'"; //die($status);
+    }
+        
+    else 
+    {
+        $update = " status = '$status'"; //die("hello1");
+    }
+       
+    $qry = "UPDATE " . locality_near_places . " SET $update WHERE id = '".$nearPlaceId."'";
+    //die($qry);
+    mysql_query($qry);
+    if(mysql_affected_rows()>0){
+        echo "1";
+    }
+    else{
+        echo "3";
+    }
+}
+
+
+function checkNearPlaceAvail($nearPlaceId = null, $priority = null, $mode = null, $modeid = null)
+{
+    switch($mode)
+    {
+        case "city":
+            $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                inner join city c on s.city_id = c.city_id 
+                where c.city_id = $modeid";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+            $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                $comma = ',';
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                
+             $cnt++;
+            }
+            $where = "locality_id in ($listLoc)";
+            break;
+        case "suburb":
+             $locList = "select l.locality_id from locality l 
+                inner join suburb s on l.suburb_id = s.suburb_id
+                where s.suburb_id = $modeid";
+            $LocId = mysql_query($locList);
+            $listLoc = '';
+           $cnt = 1;
+            $rowCount = mysql_num_rows($LocId);
+            while($locList = mysql_fetch_assoc($LocId)) {
+                $comma = ',';
+                if($cnt != $rowCount)
+                    $listLoc .= $locList['locality_id'].$comma;
+                else
+                    $listLoc .= $locList['locality_id'];
+                
+             $cnt++;
+            }
+            $where = "locality_id in ($listLoc)";
+            break;
+        case "locality":
+            $where = "locality_id = '" . $modeid . "'";
+            break;
+    }
+    $qry = "SELECT COUNT(*) AS CNT FROM " . locality_near_places . " WHERE ".$where." AND id = '".$nearPlaceId."'";
     $res = mysql_query($qry);
     $data = mysql_fetch_assoc($res);
 

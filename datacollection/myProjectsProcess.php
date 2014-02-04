@@ -5,13 +5,6 @@ if( $myProjectsAuth == false )
    $accessMyProjects = "No Access";
 $smarty->assign("accessDataCollection",$accessDataCollection);
 
-$callingFieldFlag = '';
-if($_SESSION['DEPARTMENT'] === 'CALLCENTER')
-    $callingFieldFlag = 'callcenter';
-else
-    $callingFieldFlag = 'survey';
-$smarty->assign("callingFieldFlag",$callingFieldFlag);
-
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 if($_POST['submit'] === 'Save'){
