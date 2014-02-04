@@ -20,6 +20,9 @@ class ProjectSupply extends Objects {
         if($supply_new) {
             $supply_new = $supply_new[0];
             $attributes['updated_by']=$_SESSION['adminId'];
+            if($supply_new->supply != $supply || $supply_new->launched != $launchedUnit)
+				$supply_new->is_verified = 'false';
+				
             $attributes['supply']=$supply;
             $attributes['launched']=$launchedUnit;
             $supply_new->update_attributes($attributes);
@@ -184,11 +187,13 @@ class ProjectSupply extends Objects {
     
     function isSupplyLaunchVerified($projectId){
 		
-		$sql = "select l.id from project_supplies ps inner join listings l
-                on ps.listing_id = l.id
-                inner join resi_project_options rpo on l.option_id = rpo.options_id
-                where 
-                rpo.project_id = '$projectId' and l.status = 'Active' group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
+		$sql = "select rpp.phase_id,ps.* from project_supplies ps
+				inner join listings lst on lst.id = ps.listing_id
+				inner join resi_project_phase rpp on rpp.phase_id = lst.phase_id
+				where rpp.project_id = $projectId 
+				and lst.status = 'Active' and rpp.status = 'Active'
+				and rpp.phase_type = 'Actual' and ps.version = 'Cms'
+				and is_verified = 'false'";
          $result = self::find_by_sql($sql);
          
           if(count($result)>0)
