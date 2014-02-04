@@ -381,26 +381,30 @@
           
         jQuery('#btnSave').click(function(){
             var flag = 0;
+            
             var active = jQuery('#active_since').val();
-            active = active.split("/");
-            var active = new Date(active[2] + '-' + active[1] + '-' + active[0]);
-            var dd = active.getDate();
-            var mm = active.getMonth()+1; 
-            var yyyy = active.getFullYear();
-            if(dd<10)
+            if(active != '')
             {
-                dd='0'+dd;
-            } 
-            if(mm<10)
-            {
-                mm='0'+mm;
-            } 
-            active = yyyy + '-' + mm + '-' + dd ;
-            //alert(active + ' ' + today);
-            if(active > today)
-            {
-                alert("Please enter Past Date");
-                return false;
+                active = active.split("/");
+                var active = new Date(active[2] + '-' + active[1] + '-' + active[0]);
+                var dd = active.getDate();
+                var mm = active.getMonth()+1; 
+                var yyyy = active.getFullYear();
+                if(dd<10)
+                {
+                    dd='0'+dd;
+                } 
+                if(mm<10)
+                {
+                    mm='0'+mm;
+                } 
+                active = yyyy + '-' + mm + '-' + dd ;
+                //alert(active + ' ' + today);
+                if(active > today)
+                {
+                    alert("Please enter Past Date");
+                    return false;
+                }
             }
             
             //return false;
