@@ -46,7 +46,7 @@
                             $resUp = mysql_query($resUp);
                             /******code for call api************/
                             if($exp_phone[$key] != '')
-                                $_SESSION['callerMessage'][] = file_get_contents("http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=".$exp_phone[$key]);
+                                $_SESSION['callerMessage'][] = file_get_contents(DND_SCUB.$exp_phone[$key]);
                             if($resUp)
                             {
                                 if(strlen($projects)>0){
@@ -76,7 +76,7 @@
                             $contactId = mysql_insert_id();
                             /******code for call api************/
                             if($exp_phone[$key] != '')
-                                $_SESSION['callerMessage'][] = file_get_contents("http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=".$exp_phone[$key]);
+                                $_SESSION['callerMessage'][] = file_get_contents(DND_SCUB.$exp_phone[$key]);
                             if($resIns){
                                     if(strlen($projects)>0){
                                     $exp = explode(',', $projects);

@@ -734,4 +734,5 @@ $arrOtherCities =
 		"98"=>"Panipat",
 		"99"=>"Raigad"
   );
+define("DND_SCUB","http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=");
 ?>
