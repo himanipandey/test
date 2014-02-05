@@ -571,7 +571,9 @@ function getDateNow(){
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						
-						
+						<tr id="diffContent">
+							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"></td>						  
+						</tr>
 						<tr bgcolor = "#c2c2c2">
 							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"><b>Last Updated Detail</b></br>
 						  	  </br>
