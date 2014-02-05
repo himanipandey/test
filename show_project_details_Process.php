@@ -689,4 +689,12 @@ function availebilitydescendingOrder($projectId) {
         $arrOrder['flg'] = $flag;
         return $arrOrder;  
 }
+$msg = '';
+if(isset($_REQUEST['flag'])){
+    if($_REQUEST['flag'] == 1)
+        $msg = "callerNumber Inserted Successfully";
+    else
+        $msg = "callerNumber Not Inserted";
+}
+$smarty->assign("callerMessage", $msg);
 ?>

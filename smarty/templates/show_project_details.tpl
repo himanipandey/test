@@ -294,7 +294,7 @@ function getDateNow(){
               url:"submit_builder_contact.php",
               data:"name="+str1+"&phone="+phone1+"&email="+email1+"&builderId="+builderId+"&deleteval="+deleteval+"&id="+id+"&projects="+projects1,
               success:function(dt){
-                  window.location.href = "show_project_details.php?projectId="+pid;
+                  window.location.href = "show_project_details.php?projectId="+pid+"&flag="+dt;
               }
 
             }
@@ -584,7 +584,9 @@ function getDateNow(){
 							  			<img src = "images/plus.jpg" width ="20px">
 							  		
 							  	</a>
-							  	</span>
+							  	</span>{if $callerMessage != ''}
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;<font color = "green"><b>{$callerMessage}</b></font>
+                                                              {/if}
 							  </td>
 						</tr>
 

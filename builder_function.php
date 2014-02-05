@@ -975,6 +975,8 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $D
                             EMAIL			=	'" . $email . "',
                             SUBMITTED_DATE	=	now()";
             $res = mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
+            if($phone != '')
+                $_SESSION['callerMessage'][] = file_get_contents(DND_SCUB.$phone);
         }
         $cnt++;
     }
@@ -1072,7 +1074,8 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
                             SUBMITTED_DATE	=	now()";
             mysql_query($qry) or die(mysql_error() . " Error in builder contact info");
             $lastId = mysql_insert_id();
-                        
+            if($phone != '')
+                $_SESSION['callerMessage'][] = file_get_contents(DND_SCUB.$phone);            
             $projectId = explode("#",$projects);
             
             if( count($projectId) >0 && !empty($projects)) {
