@@ -200,7 +200,8 @@
                     {
                         $insertLocpa = ' INSERT INTO `rule_agent_mappings` (rule_id,agent_id,updated_by,created_at) values';
                         $str1 = '';
-                        $fetchAgentQuery = @mysql_query("SELECT agents.id FROM agents WHERE agents.broker_id = ".$broker_cmpny_id." AND agents.id NOT IN (SELECT ram.agent_id FROM rule_agent_mappings AS ram INNER JOIN project_assignment_rules AS par ON ram.rule_id = par.id WHERE ram.rule_id = '".$broker_cmpny_id."')");
+                        //$fetchAgentQuery = @mysql_query("SELECT agents.id FROM agents WHERE agents.broker_id = ".$broker_cmpny_id." AND agents.id NOT IN (SELECT ram.agent_id FROM rule_agent_mappings AS ram INNER JOIN project_assignment_rules AS par ON ram.rule_id = par.id WHERE ram.rule_id = '".$broker_cmpny_id."')");
+                        $fetchAgentQuery = @mysql_query("SELECT agents.id FROM agents LEFT JOIN broker_contacts ON agents.id = broker_contacts.broker_id WHERE agents.broker_id = ".$broker_cmpny_id." AND broker_contacts.type='Agent'");
                         $countAgent1 = @mysql_num_rows($fetchAgentQuery);
                         foreach($agent as $key => $val)
                         {
@@ -226,9 +227,11 @@
                         if(!empty($str1))
                         {
                             $insertLocpa .= trim($str1 , ',');
+                            //echo $insertLocpa."<br>";
                             $sql_rule_agent_mappings = @mysql_query($insertLocpa) or die(mysql_error());
                         }
-                        //echo $insertLocpa;die;
+                        
+                        //die;
                         
                     }
                     
