@@ -843,4 +843,3 @@ function checkNearPlaceAvail($nearPlaceId = null, $priority = null, $mode = null
 
 
 
-?>
