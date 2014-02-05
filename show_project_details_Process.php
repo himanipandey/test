@@ -637,4 +637,6 @@ $updatedTypes = ProjectSecondaryPrice::getSecondryPriceUpdatedTypes($projectId);
 $arrPType = array_unique(array_merge($arrPType, $updatedTypes));
 $smarty->assign("arrPType", $arrPType);
 /* * code for secondary price dispaly*********** */
+$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
+
 ?>
