@@ -608,7 +608,7 @@ $smarty->assign("allBrokerByProject", $arrBrokerList);
  $smarty->assign('phase_prices', $phase_prices);
 $smarty->assign("brokerIdList", $brokerIdList);
 
-$smarty->assign("maxEffectiveDt", $maxEffectiveDt);
+$smarty->assign("maxEffectiveDt", $maxEffectiveDtAll);
 
 $smarty->assign("arrCampaign", $arrCampaign);
 $smarty->assign("noPhasePhaseId", $noPhasePhaseId);
