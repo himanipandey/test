@@ -205,7 +205,7 @@ class ProjectSupply extends Objects {
  				inner join resi_project_phase rpp on rpp.phase_id = lst.phase_id
 				where rpp.project_id = $projectId 
 				and lst.status = 'Active' and rpp.status = 'Active'
-				and rpp.phase_type = 'Actual' and ps.version = 'Cms'
+				and ps.version = 'Cms'
 				and is_verified = 'false'";
           $result = self::find_by_sql($sql);
           
