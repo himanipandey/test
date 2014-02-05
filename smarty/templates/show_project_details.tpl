@@ -2056,14 +2056,15 @@ function getDateNow(){
                  {/if}
 
                 <tr>
-                  <td align ="left" valign ="top" colspan="2"  style = "padding-left:30px;">
+                 <td align ="left" valign ="top" colspan="2"  style = "padding-left:30px;">
                         <table align="left" style = "border:1px solid;">
                             <tr class ="headingrowcolor">
                                 <td colspan="5">&nbsp;</td>
                                 <td colspan="{count($brokerIdList)}" align ="center" class ="whiteTxt"><b>Brokers</b></td>
-                                <td colspan="2">&nbsp;</td>
+                                <td colspan="3">&nbsp;</td>
                             </tr>
                             <tr class ="headingrowcolor" height="30px">
+								<th class ="whiteTxt" align = "left"><b>Phase Name</b></th>
                                 <th class ="whiteTxt" align = "left"><b>S.NO.</b></th>
                                  <th style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Unit Type</b></th>
                                  <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Min Price</b></th>
@@ -2075,7 +2076,8 @@ function getDateNow(){
                                     <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$oneMonthAgoDt}</b></th>
                                  <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$twoMonthAgoDt}</b></th>
                             </tr>
-                            {foreach from=$phase_prices key=phase_name item = phase_values}		
+                            <form name ="frm" method = "post">
+						{foreach from=$phase_prices key=phase_name item = phase_values}		
                             {$cnt = 0}
                             {foreach from= $arrPType key=k item = val}
                               
