@@ -226,7 +226,6 @@ if (isset($_POST['btnSave'])) {
                     $phase->phase_name = $phasename;
                     $phase->launch_date = $launch_date;
                     $phase->remarks = $remark;
-                    $phase->booking_status_id = (($_REQUEST['bookingStatus'] != -1) ? $_REQUEST['bookingStatus'] : null);
                     $phase->save();
                     if($phasename == 'No Phase') {
                         $qryUpdateProjectLaunchDate = "update resi_project 
