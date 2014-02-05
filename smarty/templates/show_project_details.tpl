@@ -385,6 +385,23 @@ function getDateNow(){
  {
 	window.location.href = "show_project_details.php?stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId;
  }
+ $(document).ready(function(){
+	 
+	 $('#diffButton').click(function(){
+		 projectID = $('#projectId').val();
+		 projectStage = "{$projectDetails[0]['PROJECT_STAGE_ID']}";
+		 projectPhase = "{$projectDetails[0]['PROJECT_PHASE_ID']}";
+		 $.ajax({
+	      type:"post",
+	      url:"project_stage_difference.php",
+	      data:"projectID="+projectID+"&stageID="+projectStage+"&phaseID="+projectPhase,
+	      success : function (dt) {
+			$('#diffContent td').html(dt);
+	      }
+	  });
+		
+	});
+});
 </script>
 
 
@@ -530,7 +547,14 @@ function getDateNow(){
             &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
             {/if}
            
-            <!-- End of Project Phases -->	   
+            <!-- End of Project Phases -->	
+            <!-- Project Diff -->
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            
+            {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission) && $projectDetails[0]['PROJECT_PHASE_ID'] > 3 && ($projectDetails[0]['PROJECT_STAGE_ID'] == 2 || $projectDetails[0]['PROJECT_STAGE_ID'] == 3)} 
+				&nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Stage Differenece:</b><button id="diffButton">Diff</button>
+		    {/if}
+            <!-- End of Project Diff -->	   
 			</td></tr>				   
 			<tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
