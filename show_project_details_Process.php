@@ -652,6 +652,7 @@ $updatedTypes = ProjectSecondaryPrice::getSecondryPriceUpdatedTypes($projectId);
 $arrPType = array_unique(array_merge($arrPType, $updatedTypes));
 $smarty->assign("arrPType", $arrPType);
 /* * code for secondary price dispaly*********** */
+<<<<<<< HEAD
 
 function availebilitydescendingOrder($projectId) {
             $qry = "SELECT 
@@ -697,4 +698,7 @@ if(isset($_REQUEST['flag'])){
         $msg = "callerNumber Not Inserted";
 }
 $smarty->assign("callerMessage", $msg);
+
+$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
+
 ?>

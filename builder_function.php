@@ -2145,7 +2145,40 @@ function checkDuplicateVideoLink($projectId,$videoLinkUrl,$video_id=0){
 				
 	return ($vcount->cnt)? $vcount->cnt : 0; 
 }
+function getLocalityAveragePrice($locId)
+{
+	global $analytics_credential;
+	$usrn="cms";
+	$psswd="Cms123!";
+	$tmstmp=time();
+	
+	$locId = $locId - 50000;
 
+	$keytoken = hash_hmac ( 'sha1' , $tmstmp , $psswd );
+	$url = $_SERVER['HTTP_HOST']."/app/v1/locality-price-trend?username=".$usrn."&token=".$keytoken."&timestamp=".$tmstmp."&locality=".$locId."&duration=3&unittype[]=apartment&unittype[]=plot&unittype[]=villa&duration=1";
+	
+	$obj=curlFetch($url);
+	$json=json_decode($obj,true);
+	
+	$average_price = 0;
+	$total_price = 0;
+	$cnt = 0;
+	foreach($json['price_trend'] as $unit_type => $price_array){
+		$count=0;
+		foreach($price_array as $key=>$value){
+			if($count == 0){
+				$total_price += $value['mean'];
+				$cnt++;
+			}
+			else
+				continue;
+		}
+	}
+	
+	$average_price = round($total_price / $cnt);
+	
+	return $average_price ;
+}
 function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $currentPlanId =''){
 	if($currentPlanId == '')
             $currentPlanId = '';
