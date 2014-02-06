@@ -210,7 +210,7 @@ class ProjectSupply extends Objects {
           $result = self::find_by_sql($sql);
           
          foreach($result as $key=>$value){
-				$sql_web_diff = "select supply, launched from project_supplies where listing_id = '$value->listing_id' and supply != '$value->supply' and version='Website'";
+				$sql_web_diff = "select supply, launched from project_supplies where listing_id = '$value->listing_id' and (supply != '$value->supply' or launched != '$value->launched') and version='Website'";
 				$result_diff = self::find_by_sql($sql_web_diff);
 			  if(count($result_diff)>0){
 				  return 1;
