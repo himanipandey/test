@@ -1,6 +1,8 @@
 <?php
 	include("builder_function.php");
         include("dbConfig.php");
+        include("smartyConfig.php");
+        require("includes/configs/configs.php");
 	$builderId		=	$_REQUEST['builderId'];
 	$exp 			= explode("--",$_REQUEST['name']);
 	$exp_Del 		= explode("--",$_REQUEST['deleteval']);
@@ -44,11 +46,12 @@
                                     WHERE
                                       ID      = '".$exp_id[$key]."'";
                             $resUp = mysql_query($resUp);
-                            /******code for call api************/
-                            if($exp_phone[$key] != '')
-                                $_SESSION['callerMessage'][] = file_get_contents(DND_SCUB.$exp_phone[$key]);
+                            
                             if($resUp)
                             {
+                                /******code for call api************/
+                                if($exp_phone[$key] != '')
+                                    $_SESSION['callerMessage'][] = file_get_contents(DND_SCUB.$exp_phone[$key]);
                                 if(strlen($projects)>0){
                                     $exp = explode(',', $projects);
                                     if(count($exp)>0 && !empty($projects)) {
@@ -74,9 +77,9 @@
                                       BUILDER_ID = '".$builderId."'";
                             $resIns = mysql_query($resIns) or die(mysql_error());
                             $contactId = mysql_insert_id();
-                            if($exp_phone[$key] != '')
-                                $_SESSION['callerMessage'][] = file_get_contents(DND_SCUB.$exp_phone[$key]);
                             if($resIns){
+                                if($exp_phone[$key] != '')
+                                $_SESSION['callerMessage'][] = file_get_contents(DND_SCUB.$exp_phone[$key]);
                                     if(strlen($projects)>0){
                                     $exp = explode(',', $projects);
                                     if(count($exp)>0 && !empty($projects)) {
