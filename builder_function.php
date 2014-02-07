@@ -2222,25 +2222,28 @@ function updateD_Availablitiy($projectId){
  		
 		$max_effective_month = mysql_fetch_object($sql_max_effective_month)->max_effective_month;
 	
+		$count = 0;
 		while($mysql_row = mysql_fetch_object($most_recent_updates)){
 				
-			if($mysql_row->effective_month == $max_effective_month){	
-				$total_av += $mysql_row->availability;
+			if($mysql_row->effective_month == $max_effective_month && $mysql_row->availability !== null && $mysql_row->availability !== ''){	
+				
+				if($count == 0){
+						$count++;
+						$total_av = 0;
+				}
+				
+				$total_av = $total_av + $mysql_row->availability;
 			}
 		}		
 	}
 
-	if($total_av !=null || $total_av != ''){		
-		//update availability
+	//update availability
 	mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
-    }else{
-			//update availability
-	mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = null WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
-	}
+    
 	
 	//update project booking status
 	$booking_status = '';
-	if($total_av == '' || $total_av == null || $total_av >0)
+	if($total_av === '' || $total_av === null || $total_av >0)
 		$booking_status = 1;
 	else
 		$booking_status = 2;
