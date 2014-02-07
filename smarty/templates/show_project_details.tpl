@@ -1325,9 +1325,19 @@ function getDateNow(){
                                       <tr height="25px;">
                                             <td  nowrap="nowrap" width="1%" align="left"><b>Audit Team Remark:</b></td>
 
-                                            <td>
+                                            <td>#######################
                                                 {$projectOldComments['auditRemark']->comment_text}
                                                 &nbsp;<b>By </b>{$projectOldComments['auditRemark']->fname} on {($projectOldComments['auditRemark']->date_time)|date_format:'%b-%y'}
+                                          </td>
+                                      </tr>
+                                      {/if}
+                                      {if array_key_exists('secondaryAuditRemark',$projectOldComments)}    
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Secondary Audit Team Remark:</b></td>
+
+                                            <td>
+                                                {$projectOldComments['secondaryAuditRemark']->comment_text}
+                                                &nbsp;<b>By </b>{$projectOldComments['secondaryAuditRemark']->fname} on {($projectOldComments['secondaryAuditRemark']->date_time)|date_format:'%b-%y'}
                                           </td>
                                       </tr>
                                       {/if}
@@ -1393,6 +1403,18 @@ function getDateNow(){
                                                 {if array_key_exists('auditRemark',$projectComments)}
                                                       {$projectComments['auditRemark']->comment_text}
                                                       &nbsp;<b>By </b>{$projectComments['auditRemark']->fname} on {($projectComments['auditRemark']->date_time)|date_format:'%b-%y'}
+                                                {else}
+                                                       --
+                                                {/if}
+                                          </td>
+                                      </tr>
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Secondary Audit Team Remark:</b></td>
+
+                                            <td>
+                                                {if array_key_exists('secondaryAuditRemark',$projectComments)}
+                                                      {$projectComments['secondaryAuditRemark']->comment_text}
+                                                      &nbsp;<b>By </b>{$projectComments['secondaryAuditRemark']->fname} on {($projectComments['secondaryAuditRemark']->date_time)|date_format:'%b-%y'}
                                                 {else}
                                                        --
                                                 {/if}

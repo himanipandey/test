@@ -42,6 +42,7 @@ class CommentsHistory extends ActiveRecord\Model
         $commentTypeMap = array("Project" => 'projectRemark',
                    "Calling" => 'callingRemark', 
                    'Audit' => 'auditRemark',
+                   'SecondaryAudit' => 'secondaryAuditRemark',
                    'Secondary' => 'secondaryRemark',
                    'FieldSurvey' => 'fieldSurveyRemark'
                     );
@@ -72,6 +73,7 @@ class CommentsHistory extends ActiveRecord\Model
         $commentTypeMap = array("Project" => 'projectRemark',
                    "Calling" => 'callingRemark', 
                    'Audit' => 'auditRemark',
+                   'SecondaryAudit' => 'secondaryAuditRemark',
                    'Secondary' => 'secondaryRemark',
                    'FieldSurvey' => 'fieldSurveyRemark'
                     );
@@ -99,6 +101,7 @@ class CommentsHistory extends ActiveRecord\Model
             $commentTypeMap = array("Project" => 'projectRemark',
                        "Calling" => 'callingRemark', 
                        'Audit' => 'auditRemark',
+                       'SecondaryAudit' => 'secondaryAuditRemark',
                        'Secondary' => 'secondaryRemark',
                        'FieldSurvey' => 'fieldSurveyRemark'
                         );
