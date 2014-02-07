@@ -2249,9 +2249,74 @@ function updateD_Availablitiy($projectId){
 		$booking_status = 2;
 			
 	 mysql_query("UPDATE ".RESI_PROJECT_PHASE." SET BOOKING_STATUS_ID =".$booking_status." WHERE project_id = ".$projectId." and phase_type = 'Logical' and `version` = 'Cms'");
+	 
+	 //updating phase booking status
+	 updatePhaseBookingStatus($projectId);
  
 
 }
+function updatePhaseBookingStatus($projectId){
+	$sql_phases = mysql_query("select PHASE_ID from resi_project_phase where PROJECT_ID = '$projectId' and status = 'Active' and phase_type = 'Actual' and version = 'Cms'") or die(mysql_error());
+	
+	if($sql_phases){
+		
+		while($row_phase = mysql_fetch_object($sql_phases)){
+		
+				/////////////////////////////////updating phase's booking status////////////////////////////////////////////
+				$sql_phase_avail = mysql_query("select project_supplies.launched, project_availabilities.availability, 
+					project_availabilities.effective_month, project_availabilities.comment 
+					FROM `project_supplies` 
+					INNER JOIN `listings` ON `listings`.`id` = `project_supplies`.`listing_id` 
+					AND `listings`.`status` = 'Active' 
+					INNER JOIN `resi_project_phase` 
+					ON `resi_project_phase`.`PHASE_ID` = `listings`.`phase_id` 
+					AND `resi_project_phase`.`version` = 'Cms' 
+					INNER JOIN `listings` `listings_project_supplies_join` 
+					ON `listings_project_supplies_join`.`id` = `project_supplies`.`listing_id` 
+					AND `listings_project_supplies_join`.`status` = 'Active' 
+					INNER JOIN `resi_project_options` 
+					ON `resi_project_options`.`OPTIONS_ID` = `listings_project_supplies_join`.`option_id` 
+					left join project_availabilities 
+					on project_supplies.id = project_availabilities.project_supply_id 
+					WHERE `project_supplies`.`version` = 'Cms' 
+					AND (resi_project_phase.PROJECT_ID = '$projectId' 
+					and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID')
+					order by project_availabilities.effective_month desc") or die(mysql_error());
+					
+				$max_effetcive_month = ''; $total_avail = null; $phase_booking_status = '';
+				$count = 0;
+				while($row_phase_avail = mysql_fetch_object($sql_phase_avail)){
+					
+					if(!$max_effetcive_month)
+						$max_effetcive_month = $row_phase_avail->effective_month;
+						
+					if($max_effetcive_month == $row_phase_avail->effective_month && $row_phase_avail->availability !== null && $row_phase_avail->availability !== ''){
+						if($count == 0){
+								$count++;
+								$total_av = 0;
+						}
+						$total_avail = $row_phase_avail->availability + $total_avail;
+					}
+					
+										
+				}
+				
+				if($total_avail === '' || $total_avail === null || $total_avail >0)
+					$phase_booking_status = 1;
+				else
+					$phase_booking_status = 2;
+						
+				mysql_query("update resi_project_phase set booking_status_id = '$phase_booking_status' where phase_id = '$row_phase->PHASE_ID' and phase_type = 'Actual' and version = 'Cms'") or die (mysql_error());
+	
+			   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			
+		}
+		
+	}
+	
+}
+
 function project_aliases_detail($projectID){
 	$project_alias = mysql_query("SELECT * FROM project_aliases WHERE original_project_id='$projectID'") or die(mysql_error());
 	if($project_alias)
