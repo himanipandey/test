@@ -2,7 +2,7 @@
 $orderBy = "ASC";
 function saveAliases($aliasName)
 {
-	$return = 3;
+	//$return = 3;
 	$sql = "SELECT * FROM ".aliases. " where name = '$aliasName'";
 	$result=mysql_query($sql);
     

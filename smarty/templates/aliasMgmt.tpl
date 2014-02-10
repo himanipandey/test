@@ -1,6 +1,6 @@
 
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-
+<link href="/js/jQuery-Autocomplete-master/content/styles.css" rel="stylesheet" />
 <script type="text/javascript" src="/js/jquery/jquery-1.8.3.min.js"></script> 
 <script type="text/javascript" src="/js/jQuery-Autocomplete-master/scripts/jquery.mockjax.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
@@ -40,11 +40,11 @@ function openProjectPriorityAdd()
 
 
 jQuery(document).ready(function(){
-/*$( "#createAlias").submit(function() {
-        var aliasName   = $('#searchid').val();
+$( "#createAlias").submit(function() {
+        var aliasName   = $('#query').val();
        // alert("hello");
         //var autoadjust  = $("#autoadjust").is(':checked') ? 1 : 0;
-        if($('#searchid').val() === ''){
+        if($('#query').val() === ''){
             alert("Please provide an Alias name");
             return false;
         }
@@ -74,7 +74,7 @@ jQuery(document).ready(function(){
             }
         })
   });
-*/
+
 
 
 
@@ -83,9 +83,10 @@ jQuery(document).ready(function(){
 
 });
 
-var options, a;
+var options, a, b;
+
 jQuery(function(){
-   options = { serviceUrl:'/findAliases.php' };
+   options = { serviceUrl:'/findAliases.php', appendTo: '#contain' };
    a = $('#query').autocomplete(options);
 });
 
@@ -171,6 +172,16 @@ $('#searchid').click(function(){
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 
+             <!-- <div class="container" id="contain">
+
+                   <p>Type Alias name:</p>
+                   <div style="position: relative; height: 80px;">
+                   <input type="text" name="query" id="query" style="position: absolute; z-index: 2; background: transparent;"/>
+                   <input type="text" name="query" id="query-x" disabled="disabled" style="color: #CCC; position: absolute;   background: transparent; z-index: 1;"/>
+                   </div>
+              <div id="selction"></div>
+              </div> -->
+
         <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 
             
@@ -192,20 +203,18 @@ $('#searchid').click(function(){
               <td width="20%" align="right-top" ><font color = "red">*</font>Alias Name : </td>
 
               <td width="30%" align="left">
-                  <table>
-                    <tr>
-                    
-
-                      
-                  </tr>
-                  <tr>
-                      <div id=""></div>
-                  </tr>
-                  </table>
-
+                 <!-- <div id="">
+                     <input type="text" name="query" id="query" style="position: absolute; z-index: 2; background: transparent;"/>
+                    </div><div id=""></div>
+                    <div id="contain"></div>-->
+                <div style="position: relative; height: 80px; width: auto" >
+                   <input type="text" name="query" id="query"/>
+                   <div id="contain" style="width: auto"></div>
+                   </div>
+              
               </td> 
               <td align="left" >
-                 <input type="submit" value="Submit" style="cursor:pointer">
+                 <input type="submit" value="Submit" >
               </td>
             </tr>
           
@@ -233,14 +242,10 @@ $('#searchid').click(function(){
     </TABLE>                    
         </TD>
             </TR>
-          </TBODY></TABLE>
+          </TBODY> </TABLE>
         </TD>
       </TR>
     </TBODY></TABLE>
   </TD>
 </TR>
 
-<div>
-                     <input type="text" name="query" id="query"/>
-                     </div>
-                       <div id="selection"></div>
