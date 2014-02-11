@@ -28,13 +28,15 @@
         $and = ' WHERE ';
         if($fromdate!='')
         {
-            $quryand .= $and." DATE(A.DATE_TIME)>='".$fromdate."'";
+            $fromdate = $fromdate." 00:00:00";
+            $quryand .= $and." A.DATE_TIME>='".$fromdate."'";
             $and = ' AND ';
         }
 
         if($todate!='')
         {
-            $quryand .= $and." DATE(A.DATE_TIME)<='".$todate."'";
+            $todate = $todate." 23:59:59";
+            $quryand .= $and." A.DATE_TIME<='".$todate."'";
             $and = ' AND ';
         }
 
@@ -52,7 +54,9 @@
 
         if($todate == '' && $fromdate == '')
         {
-            $quryand .= $and." DATE(A.DATE_TIME)>='".$fromdate."' AND DATE(A.DATE_TIME)<='".$todate."'";
+            $fromdate = $fromdate." 00:00:00";
+            $todate = $todate." 23:59:59";
+            $quryand .= $and." A.DATE_TIME>='".$fromdate."' AND A.DATE_TIME<='".$todate."'";
             $and = ' AND ';
         }
         $quryand .= $and."C.version = 'cms'";
