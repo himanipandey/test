@@ -10,6 +10,8 @@
 
 
 <script language="javascript">
+
+
 function chkConfirm() 
 {
     return confirm("Are you sure! you want to delete this record.");
@@ -87,6 +89,17 @@ function nearPlacePriorityEdit(id,type)
     })  */
 }
 
+
+function onChangeValue(id)
+{
+   
+  var v = $("#priority"+id).val();
+  $('#priority_hide'+id).val(v);
+  
+
+}
+
+
 function projectPriorityDelete(id,type)
 {
     var cityid      = $('#citydd').val();
@@ -132,14 +145,7 @@ window.open(url,'1390911428816','width=700,height=500,toolbar=0,menubar=0,locati
     })*/
 }
 
-function show_loc_inst(){
-    var wid = screen.width/3;
-    var hei = (screen.height/2+25);
-    var w = window.open("Surprise1", "_blank","toolbar=no ,left=300, top=200, scrollbar=yes, location=0, status=no,titlebar=no,menubar=no,width="+wid +",height=" +hei);
-    var d = w.document.open();
-    d.write("<!DOCTYPE html><html><body><h1>Instructions</h1><p>1. Select the city and optinally locality and suburb to see the current projects in that area.</p><p>2. You can set at the max 15 projects for a given area.</p><p>3. Click Add Project to add a project.In that popup box, type in either project name, or project id to insert that project. </p><p>3.1. Type in the priority in the priority field.Lower numeric value is higher priority.</p><p>3.2. Check the checkbox to auto shift the projects, if desired.If this is selected, then projects at and below specified priority are shifted down 1 priority level. If this is not selected, then multiple projects could be at the same priority(which is fine, if that is what you want.)</p><p>4. Projects after first 15 would be  automatically reset to default priority.</p></body></html>");
-    d.close();
-}
+
 </script>
 </TD>
   </TR>
@@ -224,26 +230,26 @@ function show_loc_inst(){
                         </table>
                       </td>
                     </tr>
-                  </table>
+                  </table> 
                     <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
                         <form name="form1" method="post" action="">
                           <thead>
                                 <TR class = "headingrowcolor">
-                                  <th  width=1% align="center">Serial</th>
+                                  <th  width=1% align="center">No.</th>
                                   <th  width=5% align="center">Name</th>
-                                  <TH  width=8% align="center">Vicinity</TH>
+                                  <TH  width=12% align="center">Vicinity</TH>
                                   <TH  width=4% align="center">Place Type</TH>
-                                  <TH  width=8% align="center">Location in Map</TH>
+                                  <TH  width=6% align="center">Location in Map</TH>
                                   
-                                  <TH  width=4% align="center">Priority
+                                  <TH  width=1% align="center">Priority
                                  <!-- {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
                                       <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
                                   {else}
                                       <span style="clear:both;margin-left:10px"><input type="image" name="desc" value="desc" src="images/arrow-down.png"></span>
                                   {/if}-->
                                   </TH> 
-                                 <TH width=6% align="center">Status</TH> 
-				 <TH width=3% align="center">Save</TH>
+                                 <TH width=4% align="center">Status</TH> 
+				                         <TH align="center">Edit and Save</TH>
                                 </TR>
                               
                           </thead>
@@ -269,32 +275,31 @@ function show_loc_inst(){
                                   <TD align=center class=td-border>{$v.name}</TD>
                                   <TD align=center class=td-border>{$v.vicinity}</TD>
                                   <TD align=center class=td-border>{$v.display_name}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q={$v.latitude},{$v.longitude}</a>
                   <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
 
                                   </TD>
                                   
                                   <!--<TD align=center class=td-border>{$v.priority}</TD>-->
                                    
-                                   <TD align=center class=td-border>
-                                    <select id="priority{$v.id}" value="" >
+                                   <TD align=center class=td-border>{$v.priority}
+                                    <!--<input  id = "priority_hide{$v.id}" value = "{$v.priority}">   
+                                    </input>-->
+                                   
+                                 </TD>
+          <TD align=center class=td-border>{$v.status}
+	       </TD>
+            <TD align=center class=td-border><select id="priority{$v.id}" value=""  style="width: auto;">
           <option name=one value=1  {if $v.priority == 1} selected="selected"  {/if}>1</option>
           <option name=two value=2  {if $v.priority == 2} selected="selected"  {/if}>2</option>
           <option name=three value=3 {if $v.priority == 3} selected="selected"  {/if}>3</option>
           <option name=four value=4 {if $v.priority == 4} selected="selected"  {/if}>4</option>
           <option name=five value=5 {if $v.priority == 5} selected="selected"  {/if}>5</option>
-          </select>
-          </TD>
-        <TD align=center class=td-border>  
-	<select id="status{$v.id}" value=''>
+          </select> <select id="status{$v.id}" value='' style="width: auto;">
           <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
           <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
                   
-        </select>
-      
-
-      </TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Save</a></TD>
+        </select><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">  Save</a></TD>
                                 </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
