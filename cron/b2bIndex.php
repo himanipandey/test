@@ -24,8 +24,6 @@ define('B2B_DOCUMENT_TYPE', 'B2B');
 $bulkInsert = FALSE;
 if(isset($argv[1]) && $argv[1] == 'bulkInsert')$bulkInsert = TRUE;
 
-$handle = fopen("/tmp/" . DInventoryPriceTmp::table_name() . ".csv", "w+");
-
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 
@@ -41,6 +39,7 @@ $logger->info("Project And Phase Details Retrieved");
 
 $i = 0;
 while($i< count($aAllProjects)){
+    $handle = fopen("/tmp/" . DInventoryPriceTmp::table_name() . ".csv", "w+");
     $aPid = array();
     for($j=1; $j<=1000 && $i< count($aAllProjects); $j++){
         $aPid[] = $aAllProjects[$i]->project_id;
@@ -63,12 +62,17 @@ while($i< count($aAllProjects)){
     
     createDocuments($aAllInventory, $aAllPrice);
     
+    if($bulkInsert){
+        importTableFromTmpCsv(DInventoryPriceTmp::table_name());
+        fclose($handle);
+    }
+    
     $logger->info("Indexing complete for $i projects");
 }
 
+$handle = fopen("/tmp/" . DInventoryPriceTmp::table_name() . ".csv", "w+");
 indexProjectsWithLowerLaunchDate();
 indexProjectsWithHigherCompletionDate();
-
 if($bulkInsert){
     importTableFromTmpCsv(DInventoryPriceTmp::table_name());
     fclose($handle);
