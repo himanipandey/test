@@ -1148,7 +1148,7 @@ function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
     }
    
     $r = mysql_query($ins);
-    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " 
+    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . ", updated_by = ".$_SESSION['adminId']." 
         where PROJECT_ID = $pID and version = 'Cms';";
     mysql_query($sql) or die(mysql_error());
     mysql_query('commit');
