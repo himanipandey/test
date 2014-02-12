@@ -97,17 +97,20 @@ function createDocuments($aAllInventory, $aAllPrice){
     $prevKey = '';
     foreach ($aKey as $key) {
         $i++;
+        $t1 = microtime(TRUE);
         //Code used for storing the documents into mysql
         $entry = array();
         $entry['unique_key'] = $key;
         
         $arrayToPick = isset($aAllInventory[$key])? $aAllInventory : $aAllPrice;
-        
+        $t2 = microtime(TRUE);
         $entry['project_id'] = $arrayToPick[$key]->project_id;
         $entry['project_name'] = $arrayToPick[$key]->project_name;
         $entry['phase_id'] = $arrayToPick[$key]->phase_id;
         $entry['phase_name'] = $arrayToPick[$key]->phase_name;
         $entry['phase_type'] =  $arrayToPick[$key]->phase_type;        
+        
+        $t3 = microtime(TRUE);
         
         $effectiveMonth = $arrayToPick[$key]->effective_month;
         $entry['effective_month'] = $effectiveMonth;
@@ -121,29 +124,36 @@ function createDocuments($aAllInventory, $aAllPrice){
         $entry['unit_type'] = isset($arrayToPick[$key])? $arrayToPick[$key]->unit_type : $aAllPrice[$key]->unit_type;
         $entry['bedrooms'] = isset($arrayToPick[$key])? $arrayToPick[$key]->bedrooms : $aAllPrice[$key]->bedrooms;
         
+        $t4 = microtime(TRUE);
+        
         if(isset($aAllPrice[$key])){
             $entry['average_price_per_unit_area'] = $aAllPrice[$key]->average_price_per_unit_area;
             $entry['average_size'] = $aAllPrice[$key]->average_size;
             $entry['all_size'] = json_encode(explode (',', $aAllPrice[$key]->size));
             $entry['average_total_price'] = $aAllPrice[$key]->average_total_price;
         }
+        
+        $t5 = microtime(TRUE);
         if(isset($aAllInventory[$key])){
             $entry['supply'] = $aAllInventory[$key]->supply;
             $entry['launched_unit'] = $aAllInventory[$key]->launched;
             $entry['inventory'] = $aAllInventory[$key]->inventory;
             if(isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month)$entry['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
         }
-        
+        $t6 = microtime(TRUE);
         setProjectLevelValues($entry);
         
         $prevKey = $key;
  
         if($bulkInsert){
             $x = new DInventoryPriceTmp($entry);
+            $t7 = microtime(TRUE);
             fwrite($handle, str_replace(",,", ",NULL,", str_replace(",,", ",NULL,", $x->to_csv()))."\r\n");
+            $t8 = microtime(TRUE);
         }else{
             $x->save();
         }
+        echo $i . " == " .  round(memory_get_usage()/(1024*1024)) . "-" . round($t2-$t1, 4) . "-" . round($t3-$t1, 4) . "-" . round($t4-$t1, 4) . "-" . round($t5-$t1, 4) . "-" . round($t6-$t1, 4) . "-" . round($t7-$t1, 4) . "-" . round($t8-$t1, 4) . "-" .  "\n";
     }
     $logger->info($i . " documents inserted in mysql");
 }
