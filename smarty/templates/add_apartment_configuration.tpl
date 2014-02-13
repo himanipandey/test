@@ -463,7 +463,7 @@
                                     
                                   <input type = "hidden" name = "bed_{($smarty.section.foo.index+1)}_old" id = "bed_{($smarty.section.foo.index+1)}_old" value ="{$bedval_VA[$new_index]}">
                                   
-                                    <select id="bed_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bed_{($smarty.section.foo.index+1)}',$edit_project), show_add({$smarty.section.foo.index}); fillUnitName({$smarty.section.foo.index});" tempName="bed" name = 'bed[]' style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$bedval_VA[$new_index]} == '') OR !is_numeric({$bedval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
+                                    <select id="bed_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bed_{($smarty.section.foo.index+1)}',{$edit_project}), show_add({$smarty.section.foo.index}); fillUnitName({$smarty.section.foo.index});" tempName="bed" name = 'bed[]' style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$bedval_VA[$new_index]} == '') OR !is_numeric({$bedval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
                                         <option value = "0">Select</option>
                                         <option {if $bedval_VA[$new_index] == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>1</option>
                                         <option {if $bedval_VA[$new_index] == '2'} value = "2" selected = 'selected' {else} value = "2" {/if}>2</option>
@@ -479,9 +479,9 @@
                                     </select>
 
                               </td>
-                              
+                              <input type = "hidden" name = "bathrooms_{($smarty.section.foo.index+1)}_old" id = "bathrooms_{($smarty.section.foo.index+1)}_old" value ="{$bathroomsval_VA[$new_index]}">
                               <td>
-                                     <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
+                                     <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bathrooms_{($smarty.section.foo.index+1)}', {$edit_project}),fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
                                         <option value = "0">Select</option>
                                         <option {if $bathroomsval_VA[$new_index] == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>1</option>
                                         <option {if $bathroomsval_VA[$new_index] == '2'} value = "2" selected = 'selected' {else} value = "2" {/if}>2</option>
