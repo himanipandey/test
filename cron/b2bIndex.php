@@ -95,6 +95,7 @@ function createDocuments($aAllInventory, $aAllPrice){
     
     $i = 0;
     $prevKey = '';
+    $t0 = 0;
     foreach ($aKey as $key) {
         $i++;
         $t1 = microtime(TRUE);
@@ -102,27 +103,23 @@ function createDocuments($aAllInventory, $aAllPrice){
         $entry = array();
         $entry['unique_key'] = $key;
         
-        $arrayToPick = isset($aAllInventory[$key])? $aAllInventory : $aAllPrice;
+        $arrayToPick = isset($aAllInventory[$key])? $aAllInventory[$key] : $aAllPrice[$key];
+        
         $t2 = microtime(TRUE);
-        $entry['project_id'] = $arrayToPick[$key]->project_id;
-        $entry['project_name'] = $arrayToPick[$key]->project_name;
-        $entry['phase_id'] = $arrayToPick[$key]->phase_id;
-        $entry['phase_name'] = $arrayToPick[$key]->phase_name;
-        $entry['phase_type'] =  $arrayToPick[$key]->phase_type;        
+        $entry['project_id'] = $arrayToPick->project_id;
+        $entry['project_name'] = $arrayToPick->project_name;
+        $entry['phase_id'] = $arrayToPick->phase_id;
+        $entry['phase_name'] = $arrayToPick->phase_name;
+        $entry['phase_type'] =  $arrayToPick->phase_type;
+        $entry['effective_month'] = $arrayToPick->effective_month;
+        $entry['quarter'] = firstDayOf('quarter', $entry['effective_month']);
+        $entry['half_year'] = firstDayOf('half_year', $entry['effective_month']);
+        $entry['year'] = firstDayOf('year', $entry['effective_month']);
+        $entry['unit_type'] = $arrayToPick->unit_type;
+        $entry['bedrooms'] = intval($arrayToPick->bedrooms);
         
-        $t3 = microtime(TRUE);
-        
-        $effectiveMonth = $arrayToPick[$key]->effective_month;
-        $entry['effective_month'] = $effectiveMonth;
-        $entry['quarter'] = firstDayOf('quarter', $entry['effective_month']); //$arrayToPick[$key]->quarter;
-        $entry['half_year'] = firstDayOf('half_year', $entry['effective_month']); //$arrayToPick[$key]->half_year;
-        $entry['year'] = firstDayOf('year', $entry['effective_month']); //$arrayToPick[$key]->year;
-        if($arrayToPick[$key]->completion_date != INVALID_DATE)$entry['completion_date']= $arrayToPick[$key]->completion_date;
-        if($arrayToPick[$key]->launch_date != INVALID_DATE)$entry['launch_date'] = $arrayToPick[$key]->launch_date;
-        $bedrooms = $arrayToPick[$key]->bedrooms;
-        if(is_int($bedrooms))$entry['bedrooms'] = $bedrooms;
-        $entry['unit_type'] = isset($arrayToPick[$key])? $arrayToPick[$key]->unit_type : $aAllPrice[$key]->unit_type;
-        $entry['bedrooms'] = isset($arrayToPick[$key])? $arrayToPick[$key]->bedrooms : $aAllPrice[$key]->bedrooms;
+        if($arrayToPick->completion_date != INVALID_DATE)$entry['completion_date']= $arrayToPick->completion_date;
+        if($arrayToPick->launch_date != INVALID_DATE)$entry['launch_date'] = $arrayToPick->launch_date;
         
         $t4 = microtime(TRUE);
         
@@ -145,15 +142,16 @@ function createDocuments($aAllInventory, $aAllPrice){
         
         $prevKey = $key;
  
+        $x = new DInventoryPriceTmp($entry);
         if($bulkInsert){
-            $x = new DInventoryPriceTmp($entry);
             $t7 = microtime(TRUE);
             fwrite($handle, str_replace(",,", ",NULL,", str_replace(",,", ",NULL,", $x->to_csv()))."\r\n");
             $t8 = microtime(TRUE);
         }else{
             $x->save();
         }
-        echo $i . " == " .  round(memory_get_usage()/(1024*1024)) . "-" . round($t2-$t1, 4) . "-" . round($t3-$t1, 4) . "-" . round($t4-$t1, 4) . "-" . round($t5-$t1, 4) . "-" . round($t6-$t1, 4) . "-" . round($t7-$t1, 4) . "-" . round($t8-$t1, 4) . "-" .  "\n";
+        echo $i . " == " .  round(memory_get_usage()/(1024*1024)) . "-" . round($t2-$t1, 4) . "-" . round($t4-$t2, 4) . "-" . round($t5-$t4, 4) . "-" . round($t6-$t5, 4) . "-" . round($t7-$t6, 4) . "-" . round($t8-$t7, 4) . "-" . round($t8-$t0, 4) .  "\n";
+        $t0 = microtime(TRUE);
     }
     $logger->info($i . " documents inserted in mysql");
 }
