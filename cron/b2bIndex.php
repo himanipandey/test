@@ -20,18 +20,22 @@ define("INVALID_DATE", "0000-00-01");
 define('MIN_B2B_DATE', '2013-03-01');
 define('MAX_B2B_DATE', '2014-01-01');
 define('B2B_DOCUMENT_TYPE', 'B2B');
+define('CSV_FIELD_DELIMITER', '~#~');
+define('CSV_LINE_DELIMITER', "\r\n");
 
 $bulkInsert = FALSE;
 if(isset($argv[1]) && $argv[1] == 'bulkInsert')$bulkInsert = TRUE;
 
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
+$handle = fopen("/tmp/" . DInventoryPriceTmp::table_name() . ".csv", "w+");
 
 DInventoryPriceTmp::connection()->query("TRUNCATE TABLE d_inventory_prices_tmp");
 
 $logger->info("\n\n\nDeleted All rows");
 
 $aProjectPhaseCount = ResiProjectPhase::getWebsitePhaseCountForProjects();
+
 $aAllProjects = ResiProject::find_by_sql("select rp.PROJECT_ID, rb.BUILDER_ID, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, c.CITY_ID, c.LABEL as CITY_NAME, psm.display_name as construction_status  from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where rp.version = 'Website' and (uc.LABEL != 'Skip Updation' or uc.LABEL is null) and rp.STATUS = 'Active' and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched')");
 $aAllIndexedProjects = indexProjects($aAllProjects);
 
@@ -39,7 +43,6 @@ $logger->info("Project And Phase Details Retrieved");
 
 $i = 0;
 while($i< count($aAllProjects)){
-    $handle = fopen("/tmp/" . DInventoryPriceTmp::table_name() . ".csv", "w+");
     $aPid = array();
     for($j=1; $j<=1000 && $i< count($aAllProjects); $j++){
         $aPid[] = $aAllProjects[$i]->project_id;
@@ -61,16 +64,9 @@ while($i< count($aAllProjects)){
     indexPriceInventoryData($aAllPrice);
     
     createDocuments($aAllInventory, $aAllPrice);
-    
-    if($bulkInsert){
-        importTableFromTmpCsv(DInventoryPriceTmp::table_name());
-        fclose($handle);
-    }
-    
     $logger->info("Indexing complete for $i projects");
 }
 
-$handle = fopen("/tmp/" . DInventoryPriceTmp::table_name() . ".csv", "w+");
 indexProjectsWithLowerLaunchDate();
 indexProjectsWithHigherCompletionDate();
 if($bulkInsert){
@@ -78,7 +74,7 @@ if($bulkInsert){
     fclose($handle);
 }
 
-if(runTests()){
+if(false && runTests()){
     DInventoryPriceTmp::connection()->query("rename table d_inventory_prices to d_inventory_prices_old, d_inventory_prices_tmp to d_inventory_prices, d_inventory_prices_old to d_inventory_prices_tmp;");
     $logger->info("Migration successful.");
 }else{
@@ -95,17 +91,15 @@ function createDocuments($aAllInventory, $aAllPrice){
     
     $i = 0;
     $prevKey = '';
-    $t0 = 0;
+    $lines = array();
     foreach ($aKey as $key) {
         $i++;
-        $t1 = microtime(TRUE);
         //Code used for storing the documents into mysql
         $entry = array();
         $entry['unique_key'] = $key;
         
         $arrayToPick = isset($aAllInventory[$key])? $aAllInventory[$key] : $aAllPrice[$key];
         
-        $t2 = microtime(TRUE);
         $entry['project_id'] = $arrayToPick->project_id;
         $entry['project_name'] = $arrayToPick->project_name;
         $entry['phase_id'] = $arrayToPick->phase_id;
@@ -121,8 +115,6 @@ function createDocuments($aAllInventory, $aAllPrice){
         if($arrayToPick->completion_date != INVALID_DATE)$entry['completion_date']= $arrayToPick->completion_date;
         if($arrayToPick->launch_date != INVALID_DATE)$entry['launch_date'] = $arrayToPick->launch_date;
         
-        $t4 = microtime(TRUE);
-        
         if(isset($aAllPrice[$key])){
             $entry['average_price_per_unit_area'] = $aAllPrice[$key]->average_price_per_unit_area;
             $entry['average_size'] = $aAllPrice[$key]->average_size;
@@ -130,28 +122,23 @@ function createDocuments($aAllInventory, $aAllPrice){
             $entry['average_total_price'] = $aAllPrice[$key]->average_total_price;
         }
         
-        $t5 = microtime(TRUE);
         if(isset($aAllInventory[$key])){
             $entry['supply'] = $aAllInventory[$key]->supply;
             $entry['launched_unit'] = $aAllInventory[$key]->launched;
             $entry['inventory'] = $aAllInventory[$key]->inventory;
             if(isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month)$entry['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
         }
-        $t6 = microtime(TRUE);
         setProjectLevelValues($entry);
         
         $prevKey = $key;
  
         $x = new DInventoryPriceTmp($entry);
         if($bulkInsert){
-            $t7 = microtime(TRUE);
-            fwrite($handle, str_replace(",,", ",NULL,", str_replace(",,", ",NULL,", $x->to_csv()))."\r\n");
-            $t8 = microtime(TRUE);
+            $x = new DInventoryPriceTmp($entry);
+            fwrite($handle, getCSVRowFromArray($x->to_array()));
         }else{
             $x->save();
         }
-        echo $i . " == " .  round(memory_get_usage()/(1024*1024)) . "-" . round($t2-$t1, 4) . "-" . round($t4-$t2, 4) . "-" . round($t5-$t4, 4) . "-" . round($t6-$t5, 4) . "-" . round($t7-$t6, 4) . "-" . round($t8-$t7, 4) . "-" . round($t8-$t0, 4) .  "\n";
-        $t0 = microtime(TRUE);
     }
     $logger->info($i . " documents inserted in mysql");
 }
@@ -229,9 +216,9 @@ function indexProjectsWithLowerLaunchDate(){
             
             setProjectLevelValues($entry);
             
+            $x = new DInventoryPriceTmp($entry);
             if($bulkInsert){
-                $x = new DInventoryPriceTmp($entry);
-                fwrite($handle, str_replace(",,", ",NULL,", str_replace(",,", ",NULL,", $x->to_csv()))."\r\n");
+                fwrite($handle, getCSVRowFromArray($x->to_array()));
             }else{
                 $x->save();
             }
@@ -264,9 +251,9 @@ function indexProjectsWithHigherCompletionDate(){
             
             setProjectLevelValues($entry);
             
+            $x = new DInventoryPriceTmp($entry);
             if($bulkInsert){
-                $x = new DInventoryPriceTmp($entry);
-                fwrite($handle, str_replace(",,", ",NULL,", str_replace(",,", ",NULL,", $x->to_csv()))."\r\n");
+                fwrite($handle, getCSVRowFromArray($x->to_array()));
             }else{
                 $x->save();
             }
@@ -301,6 +288,23 @@ function setProjectLevelValues(&$entry){
 }
 
 function importTableFromTmpCsv($tableName){
-    exec('mysqlimport --local --fields-optionally-enclosed-by="\"" --fields-terminated-by=, --lines-terminated-by="\r\n" -u' . DB_PROJECT_USER . ' -p' . DB_PROJECT_PASS . ' ' . DB_PROJECT_NAME . ' /tmp/' . $tableName . '.csv');
+    echo $command = 'mysqlimport --local --fields-terminated-by="'.CSV_FIELD_DELIMITER.'" --lines-terminated-by="'.CSV_LINE_DELIMITER.'" -u'.DB_PROJECT_USER.' -p'.DB_PROJECT_PASS.' '.DB_PROJECT_NAME.' /tmp/'.$tableName.'.csv';
+    exec($command);
 }
+
+    function getCSVRowFromArray($entry){
+        return str_replace(
+                CSV_FIELD_DELIMITER.CSV_LINE_DELIMITER,
+                CSV_FIELD_DELIMITER.'NULL'.CSV_LINE_DELIMITER,
+                str_replace(
+                        CSV_FIELD_DELIMITER.CSV_FIELD_DELIMITER,
+                        CSV_FIELD_DELIMITER.'NULL'.CSV_FIELD_DELIMITER,
+                        str_replace(
+                                CSV_FIELD_DELIMITER.CSV_FIELD_DELIMITER,
+                                CSV_FIELD_DELIMITER.'NULL'.CSV_FIELD_DELIMITER,
+                                implode(CSV_FIELD_DELIMITER, $entry)
+                        )
+                ).CSV_LINE_DELIMITER
+        );
+    }
 ?>
