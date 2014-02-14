@@ -1874,7 +1874,7 @@ function getDateNow(){
 												<img src="{$imgDisplayPath}{$finalStrWithThumbFloor}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
 											</a>
 											<br>
-										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}=={$finalStrWithThumbFloor}<br><br>
+										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
                                         <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({$ImageDataListingArrFloor[data].SIZE} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
 									</div>
 								</td>
