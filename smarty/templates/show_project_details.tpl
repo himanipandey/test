@@ -1792,7 +1792,13 @@ function getDateNow(){
 									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 										
 											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
-													<img src="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+                                                                                            {$parts = explode('.', $ImageDataListingArr[data].PLAN_IMAGE)}
+                                                                                            {$last = array_pop($parts)}
+                                                                                            {$str1 = implode('.', $parts)}
+                                                                                            {$str1 = $str1|cat:'-thumb'}
+                                                                                            {$str2 = $str1|cat:'.'}
+                                                                                            {$finalStrWithThumb = $str2|cat:$last}
+                                                                                            <img src="{$imgDisplayPath}{$finalStrWithThumb}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
 												</a>
 												<br>
 											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
@@ -1859,10 +1865,16 @@ function getDateNow(){
 										
 											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}
 														" target="_blank">
-												<img src="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
+                                                                                            {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
+                                                                                            {$lastFloor = array_pop($partsFloor)}
+                                                                                            {$strFloor1 = implode('.', $partsFloor)}
+                                                                                            {$strFloor1 = $strFloor1|cat:'-thumb'}
+                                                                                            {$strFloor2 = $strFloor1|cat:'.'}
+                                                                                            {$finalStrWithThumbFloor = $strFloor2|cat:$last}
+												<img src="{$imgDisplayPath}{$finalStrWithThumbFloor}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
 											</a>
 											<br>
-										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
+										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}=={$finalStrWithThumbFloor}<br><br>
                                         <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({$ImageDataListingArrFloor[data].SIZE} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
 									</div>
 								</td>
