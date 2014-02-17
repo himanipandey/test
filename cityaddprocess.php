@@ -128,6 +128,18 @@ elseif($cityid!=''){
 	$txtMetaKeywords		=	trim($getSeoData[0]->meta_keywords);
 	$txtMetaDescription		=	trim($getSeoData[0]->meta_description);
 	
+	//getting city aliases
+	//$getAliasesArray = getAllAliases('city', $cityid);
+	$getSuburbAliasesArr = getSpecificAliases('city', $cityid, 'suburb');
+	$getLandmarkAliasesArr = getSpecificAliases('city', $cityid, 'locality_near_places');
+	$getGenericAliasesArr = getSpecificAliases('city', $cityid, 'aliases');
+	//print_r($getGenericAliasesArr);
+	$genericJson = json_encode($getGenericAliasesArr);
+	$landmarkJson = json_encode($getLandmarkAliasesArr);
+	$suburbJson = json_encode($getSuburbAliasesArr);
+	//echo $suburbJson;
+
+
 	$smarty->assign("txtCityName", $txtCityName);
 	$smarty->assign("txtCityUrl", $txtCityUrl);
 	$smarty->assign("txtCityUrlOld", $txtCityUrlOld);
@@ -137,6 +149,15 @@ elseif($cityid!=''){
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);
 	$smarty->assign("status", $status);
 	$smarty->assign("desc", $desc);
+	//$smarty->assign("allAliases", $getAliasesArray);
+	$smarty->assign("suburbAliases", $getSuburbAliasesArr);
+	$smarty->assign("landmarkAliases", $getLandmarkAliasesArr);
+	$smarty->assign("genericAliases", $getGenericAliasesArr);
+
+	$smarty->assign("genericJson", $genericJson);
+	$smarty->assign("suburbJson", $suburbJson);
+	$smarty->assign("landmarkJson", $landmarkJson);
+
 
 	
 }

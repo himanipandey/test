@@ -1,50 +1,41 @@
 
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-<link href="/js/jQuery-Autocomplete-master/content/styles.css" rel="stylesheet" />
-<script type="text/javascript" src="/js/jquery/jquery-1.8.3.min.js"></script> 
-<script type="text/javascript" src="/js/jQuery-Autocomplete-master/scripts/jquery.mockjax.js"></script>
-<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
-<script type="text/javascript" src="/js/jQuery-Autocomplete-master/src/jquery.autocomplete.js"></script>
-
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="js/tablesorter_default_table.js"></script>
 
 
 
 <script language="javascript">
-function chkConfirm() 
-{
-    return confirm("Are you sure! you want to delete this record.");
-}
-function selectCity(value){
-  window.location.href="{$dirname}/locality_near_places_priority.php?&citydd="+value;
-}
-
-
-function openProjectPriorityAdd()
-{
-    var cityid      = $('#citydd').val();
-    var localityid  = $('#loc').val();
-    var suburbid    = $('#sub').val();
-    var url = '/setProjectPriority.php?cityId='+cityid+'&localityid='+localityid+'&suburbid='+suburbid;
-    $.fancybox({
-        'width'                : 720,
-        'height'               : 200,
-        'scrolling'            : 'yes',
-        'href'                 : url,
-        'type'                 : 'iframe'
-    })
-}
-
-
-
-  
 
 
 jQuery(document).ready(function(){
-$( "#createAlias").submit(function() {
-        var aliasName   = $('#query').val();
-       // alert("hello");
+
+  var selectedItem;
+
+ $( "#createAlias").submit(function() {
+  //alert(selectedItem);
+    if(jQuery.isEmptyObject(selectedItem)==false){
+
+        var aliasName   = $('#alias').val();
+        var res = selectedItem.id.split("-");
+        var tableName = res[1];
+        if (tableName=='LOCALITY')
+        var tableId = parseInt(res[2])+50000;
+        else if (tableName=='SUBURB')
+        var tableId = parseInt(res[2])+10000;
+        else 
+        var tableId = res[2];
+        //alert(tableId);
+        //alert("tb:"+tableName+tableId);
         //var autoadjust  = $("#autoadjust").is(':checked') ? 1 : 0;
-        if($('#query').val() === ''){
+        if(aliasName == ''){
             alert("Please provide an Alias name");
             return false;
         }
@@ -53,8 +44,9 @@ $( "#createAlias").submit(function() {
         $.ajax({
             type: "POST",
             url: '/saveAliases.php',
-            data: { aliasname: aliasName },
+            data: { tableName : tableName, tableId : tableId, aliasName : aliasName, task : 'createAlias' },
             success:function(msg){
+
                if(msg == 1){
                    alert("Alias Successfully Created.");
                    location.reload(true); 
@@ -73,6 +65,7 @@ $( "#createAlias").submit(function() {
                }
             }
         })
+    }
   });
 
 
@@ -81,61 +74,93 @@ $( "#createAlias").submit(function() {
 
 
 
-});
-
-var options, a, b;
-
-jQuery(function(){
-   options = { serviceUrl:'/findAliases.php', appendTo: '#contain' };
-   a = $('#query').autocomplete(options);
-});
-
-
-/* $(function(){
-$(".search").keyup(function() 
-{ 
  
-var searchid = $(this).val();
-var dataString = 'search='+ searchid;
-if(searchid!='')
-{
-    $.ajax({
-    type: "POST",
-    url: '/findAliases.php',
-    data: dataString,
-    cache: false,
-    success: function(html)
-    {
-    $("#result").html(html).show();
-    }
+
+ 
+
+  $.widget( "custom.catcomplete", $.ui.autocomplete, {
+   /* _renderMenu: function( ul, items ) {
+      var that = this;
+        currentCategory = "";
+        
+      $.each( items, function( index, item ) {
+        var res = item.id.split("-");
+        var tableName = res[1];
+        //console.log(index+item);
+        if ( tableName != currentCategory ) {
+          ul.append( "<li class='ui-autocomplete-category'><strong>" + tableName  + "</strong></li>" );
+          //item.parents().html += "<strong>" + tableName  + "</strong>";
+          currentCategory = tableName;
+        }
+        that._renderItemData( ul, item );
+
+      });
+    },
+
+    _renderItemData: function( ul, item ) {
+    var that = this;
+    that._renderItem( ul, item ).data( "ui-autocomplete-item", item );
+    },
+*/
+  _renderItem: function( ul, item ) {
+    var res = item.id.split("-");
+        var tableName = res[1];
+    return $( "<li>" )
+      .append( $( "<a>" ).text( item.label + "........." +tableName ) )
+      .appendTo( ul );
+  },
+  
+
+  });
+
+
+ $( "#searchPlace" ).catcomplete({
+     // q = $("#searchPlace").val();
+      //alert("hello");
+      source: function( request, response ) {
+        $.ajax({
+          url: "http://nightly-build.proptiger-ws.com/app/v1/typeahead?query="+$("#searchPlace").val()+"&typeAheadType=(locality or city or suburb)&rows=10",
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full",
+           
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            //alert(data);
+            response( $.map( data.data, function( item ) {              
+                return {
+                label: item.displayText,
+                value: item.label,
+                id:item.id,
+                }
+              
+            }));
+          }
+        });
+      },
+      
+      select: function( event, ui ) {
+        selectedItem = ui.item;
+        //alert(selectedItem.label);
+        //log( ui.item ?
+         // "Selected: " + ui.item.label :
+          //"Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      },
+
     });
-}return false;    
+
+
 });
 
-jQuery("#result").live("click",function(e){ 
-  //alert('click');
-    var $clicked = $(e.target);
-    
-    var $name = $clicked.find('.name').html();
-    alert($name);
-    //var decoded = $("<div/>").html($name).text();
-    //var decoded = $clicked.html();
-     //alert(decoded);
-    $('#searchid').val(decoded);
-});
 
-jQuery(document).live("click", function(e) { 
-    var $clicked = $(e.target);
-    if (! $clicked.hasClass("search")){
-    jQuery("#result").fadeOut(); 
-    }
-});
-
-$('#searchid').click(function(){
-
-    jQuery("#result").fadeIn();
-});
-});*/
 </script>
 
 
@@ -170,7 +195,7 @@ $('#searchid').click(function(){
     </TD>
         </TR>
               <TR>
-                <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                <TD vAlign=top align=middle class="backgorund-rt" ><BR>
 
              <!-- <div class="container" id="contain">
 
@@ -184,60 +209,96 @@ $('#searchid').click(function(){
 
         <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 
-            
-
-
-
-
-
-
-
-
-
-
              <form id="createAlias" onsubmit="return false;">
             <div>
-        
-        
-            <tr>
-              <td width="20%" align="right-top" ><font color = "red">*</font>Alias Name : </td>
-
-              <td width="30%" align="left">
-                 <!-- <div id="">
-                     <input type="text" name="query" id="query" style="position: absolute; z-index: 2; background: transparent;"/>
-                    </div><div id=""></div>
-                    <div id="contain"></div>-->
-                <div style="position: relative; height: 80px; width: auto" >
-                   <input type="text" name="query" id="query"/>
-                   <div id="contain" style="width: auto"></div>
-                   </div>
+             <tr>
               
-              </td> 
+
+            <div class="ui-widget"><td width="20%" align="right"><label for="search">Create Alias For: </label></td>
+            <td width="30%" align="left"><input id="searchPlace"></td></div>
+            </tr>
+            <tr>
+            <td width="20%" align="right"><label for="search">Alias: </label></td>
+             <td width="30%" align="left"><input id="alias"></td></div>         
+              
               <td align="left" >
                  <input type="submit" value="Submit" >
               </td>
-            </tr>
-          
-            
-        
-        
-        
-          
-          
-        
+            </tr> 
             </div>
-          </form>
-
-
-      
-
+            </form>
+        </TABLE>
 
 
 
 
-          </TABLE>
      </fieldset>
               </td>
+      </tr>
+      <tr>
+        <td>
+          <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
+                        <form name="form1" method="post" action="">
+                          <thead>
+                                <TR class = "headingrowcolor">
+                                  <th  width=10% align="center">Serial</th>
+                                  <th  width=15% align="center">Entity Type</th>
+                                  <th  width=15% align="center">Entity Name</th>
+                                  <TH  width=15% align="center">Alias</TH>
+                                  
+                                </TR>
+                              
+                          </thead>
+                          <tbody>
+                               
+                                {$i=0}
+                               
+                                {foreach from=$aliasesArr key=k item=v}
+                                    {$i=$i+1}
+                                    {if $i%2 == 0}
+                                      {$color = "bgcolor = '#F7F7F7'"}
+                                    {else}                            
+                                      {$color = "bgcolor = '#FCFCFC'"}
+                                    {/if}
+                                <TR {$color}>
+                                  <TD align=center class=td-border>{$i}</TD>
+                                  {if isset($v.c_label)}
+                                  <TD align=center class=td-border>City</TD>
+                                  <TD align=center class=td-border>{$v.c_label}</TD>
+                                  {elseif isset($v.l_label)}
+                                  <TD align=center class=td-border>Locality</TD>
+                                  <TD align=center class=td-border>{$v.l_label}</TD>
+                                  {elseif isset($v.s_label)}
+                                  <TD align=center class=td-border>Suburb</TD>
+                                  <TD align=center class=td-border>{$v.s_label}</TD>
+                                  {/if}
+                                  <TD align=center class=td-border>{$v.alias_name}</TD>                                  
+                                </TR>
+                                {/foreach}
+                                <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
+                          </tbody>
+                          <tfoot>
+                                                        <tr>
+                                                            <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
+                                                                
+                                                                <button class="btn first"><i class="icon-step-backward"></i></button>
+                                                                <button class="btn prev"><i class="icon-arrow-left"></i></button>
+                                                                <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+                                                                <button class="btn next"><i class="icon-arrow-right"></i></button>
+                                                                <button class="btn last"><i class="icon-step-forward"></i></button>
+                                                                <select class="pagesize input-mini" title="Select page size">
+                                                                    <option value="10">10</option>
+                                                                    <option value="20">20</option>
+                                                                    <option value="50">50</option>
+                                                                    <option selected="selected" value="100">100</option>
+                                                                </select>
+                                                                <select class="pagenum input-mini" title="Select page number"></select>
+                                                            </th>
+                                                        </tr>
+                           </tfoot>
+                        </form>
+                    </TABLE>
+        </td>
       </tr>
     </TABLE>                    
         </TD>

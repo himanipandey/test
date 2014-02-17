@@ -1,4 +1,16 @@
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="js/bootstrap-tagsinput/bootstrap-tagsinput.css">
+
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
+<script type="text/javascript" src="js/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+<?php
+
+
+
+?>
 </TD>
   </TR>
   <TR>
@@ -101,6 +113,30 @@
 				 <td width="50%" align="left"></td>
 				</tr>
 				<tr>
+					<td width="20%" align="right">Aliases  : </td>
+					<td width="30%" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:red; font-weight: bold;"></label></td>
+				</tr>
+				<tr>
+					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
+					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search: </label></td>
+					<td width="30%" align="left"><input id="search"></td></div>
+					<td width="10%" align="left"><button type="button" id="button" align="left">Save Alias</button></td><td><label align="left" id="onclicktext" style="color:red; font-weight: bold;"></label> </td>
+					
+					
+ 
+
+
+					<!--<td width="30%" align="left">
+						<div style="position: relative; height: 80px; width: auto" >
+                   			<input type="text" name="query" id="query"/>
+                  		 <div id="contain" style="width: auto"></div>
+                  		 </div>
+                    </td>-->
+                <!--</td>-->
+				</tr>
+
+
+				<tr>
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
 				  <input type="hidden" name="catid" value="<?php echo $catid ?>" />
@@ -126,9 +162,275 @@
     </TBODY></TABLE>
   </TD>
 </TR>
+
+
+
 <script type="text/javascript">
 
+
+
 jQuery(document).ready(function(){
+
+if({$genericJson}!=''){
+var bb = {$genericJson};
+}
+
+$('#aliases').tagsinput({
+
+	tagClass: function(item) {
+    	switch (item.type) {
+     		 case 'generic'   : return 'label label-info';
+     		 case 'landmark'  : return 'label label-important';
+     		 case 'suburb': return 'label label-success';
+        }
+  	},
+  	itemValue: 'value',
+  	itemText: 'text',
+  	typeahead: {
+    	source: bb,
+  	}
+  	
+});
+
+if({$landmarkJson}!=''){
+var a= {$landmarkJson};
+var landmarkAliases = [];
+for(var i in a){
+    landmarkAliases.push([i, a [i]]);
+}
+for (index = 0; index < landmarkAliases.length; ++index) {
+	var elm = landmarkAliases[index];
+    $('#aliases').tagsinput('add', { "value": elm[1].id , "text": elm[1].name, "type": "landmark"    }); 
+}
+}
+
+if({$genericJson}!=''){
+var b = {$genericJson};
+var genericAliases = [];
+for(var i in b){
+    genericAliases.push([i, b [i]]);
+}
+for (index = 0; index < genericAliases.length; ++index) {
+    var elm = genericAliases[index];
+    //alert(elm[1].name);
+    $('#aliases').tagsinput('add', { "value": elm[1].id , "text": elm[1].name, "type": "generic"    }); 
+}
+}
+
+if({$suburbJson}!=''){
+var c = {$suburbJson};
+var suburbAliases = [];
+for(var i in c){
+    suburbAliases.push([i, c[i]]);
+}
+for (index = 0; index < suburbAliases.length; ++index) {
+	 var elm = suburbAliases[index];
+    $('#aliases').tagsinput('add', { "value": elm[1].SUBURB_ID , "text": elm[1].LABEL, "type": "suburb"    }); 
+}
+}
+
+$("#aliases").on('itemRemoved', function(e) {
+    //alert(e.item.text);
+    var tableName = 'city';
+    var tableId = {$cityid};
+    var aliasTableName ='';
+    if(e.item.type=='landmark')
+    aliasTableName= 'locality_near_places';
+	else if(e.item.type=='generic')
+    aliasTableName= 'aliases';
+	else 
+		aliasTableName= 'suburb';
+    var aliasTableId = e.item.value;
+    $.ajax({
+            type: "POST",
+            url: '/saveAliases.php',
+            data: { tableName : tableName, tableId : tableId, aliasTableName : aliasTableName, aliasTableId : aliasTableId, task : 'dettachAlias' },
+            success:function(msg){
+            	//alert(msg);
+               if(msg == 1){
+               	//alert(msg);
+               	$("#removetext1").text("Alias Successfully Removed.");
+              	 
+               }
+               if(msg == 2){
+               	$("#removetext1").text("Alias Already Removed.");
+                   
+                   //location.reload(true); 
+               }
+               if(msg == 3){
+               	$("#removetext1").text("Error in Removing Alias.");
+                   
+               }
+               if(msg == 4){
+               	$("#removetext1").text("No Alias Selected.");
+                   
+               }
+            },
+        	});
+});
+
+
+var options, d, selectedItem;
+
+
+
+
+
+ $.widget( "custom.catcomplete", $.ui.autocomplete, {
+    _renderMenu: function( ul, items ) {
+      var that = this,
+        currentCategory = "";
+      $.each( items, function( index, item ) {
+        if ( item.table != currentCategory ) {
+          ul.append( "<li class='ui-autocomplete-category'><strong>" + item.table + "</strong></li>" );
+          currentCategory = item.table;
+        }
+        that._renderItemData( ul, item );
+      });
+    }
+  });
+ 
+  
+
+  	
+
+
+   $(function() {
+    function selectedValue( message ) {
+      alert("selected");
+      //$( "<div>" ).text( message ).prependTo( "#log" );
+      //$( "#log" ).scrollTop( 0 );
+    };
+ 
+    $( "#search" ).catcomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "/findSpecificAliases.php",
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full",
+            maxRows: 4,
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+          	
+            response( $.map( data, function( item ) {
+              return {
+                label: item.name,
+                value: item.name,
+                table: item.table,
+                id: item.id,
+              }
+            }));
+          }
+        });
+      },
+      minLength: 3,
+      select: function( event, ui ) {
+      	selectedItem = ui.item;
+      	//alert(selectedItem.label);
+        //log( ui.item ?
+         // "Selected: " + ui.item.label :
+          //"Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+ 
+
+
+  
+  
+
+
+
+    $("#button").click(function(){
+    	if(jQuery.isEmptyObject(selectedItem)){
+    		//$("#onclicktext").style.display='block';
+        	$("#onclicktext").text("NO Alias selected");
+    		//return false;
+        }
+   		else if($('#search').val() ==''){
+   			$("#onclicktext").text("Empty Alias field.");
+    		
+        }
+        else if($('#search').val() !== selectedItem.label){
+        	$("#onclicktext").text("Alias filed and Alias selected should be same.");
+        	
+        }
+        else if($('#search').val() == selectedItem.label && $('#search').val()!=''){
+        	
+        	var tableName = 'city';
+        	var tableId = {$cityid};
+        	var aliasTableName = selectedItem.table;
+        	var aliasTableId = selectedItem.id;
+        	//alert("item :"+selectedItem.label);
+        	$.ajax({
+            type: "POST",
+            url: '/saveAliases.php',
+            data: { tableName : tableName, tableId : tableId, aliasTableName : aliasTableName, aliasTableId : aliasTableId, task : 'attachAlias' },
+            success:function(msg){
+            	//alert(msg);
+               if(msg == 1){
+               	//alert("saved");
+               	$("#onclicktext").text("Alias Successfully Added.");
+              	$('#aliases').tagsinput('add', { "value": aliasTableId , "text": selectedItem.label , "type": "landmark"    });
+                   //location.reload(true); 
+               }
+               if(msg == 2){
+               	$("#onclicktext").text("Alias Already Added.");
+                   
+                   //location.reload(true); 
+               }
+               if(msg == 3){
+               	$("#onclicktext").text("Error in Adding Alias.");
+                   
+               }
+               if(msg == 4){
+               	$("#onclicktext").text("No Alias Selected.");
+                   
+               }
+            },
+        	});
+        }
+
+        
+        else
+        	alert("Wrong Entry");
+    
+	});
+});
+
+//var genericAliases = $.parseJSON(b);
+//var a =genericAliases.toString();
+//alert(a);
+
+//landmarkAliases = <?php echo json_encode($getLandmarkAliasesArr); ?>;
+//suburbAliases = <?php echo json_encode($getSuburbAliasesArr); ?>;
+//alert(genericAliases['name']);
+
+
+
+/*genericAliases.forEach(function(element, index, array){
+	alert(element);
+	//obj = JSON.parse(element);
+	//alert(obj.name);
+	$('#aliases').tagsinput('add', { "value": 1 , "text": "obj.name"    , "type": "generic"    });
+});*/
+
+//$('#aliases').tagsinput('add', { "value": 1 , "text": "obj.name"    , "type": "generic"    }); 	
+//$('#aliases').tagsinput('add', { "value": 4 , "text": 'landmarkAliases'   , "type": "landmark"   });
+//$('#aliases').tagsinput('add', { "value": 7 , "text": 'suburbAliases'       , "type": "suburb" });
+
+
+
+
+
 
 	jQuery("#btnSave").click(function(){
 	
@@ -197,6 +499,6 @@ jQuery(document).ready(function(){
 
 	});
 
-});
+});  
 
 </script>

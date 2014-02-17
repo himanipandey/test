@@ -14,6 +14,7 @@ include("includes/configs/configs.php");
 include("builder_function.php");
 //die("here");
 include("function/functions_priority.php");
+include("function/alias_functions.php");
 //die("here");
 AdminAuthentication();
 //die("here");

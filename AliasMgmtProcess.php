@@ -44,10 +44,14 @@ if(!empty($_REQUEST['near_place_type']))
    // $projectArr = getProjectArr($suburbId,'suburb',$orderby);
 }
 
-//die("here");
-$NearPlacesArr = array();
 
-	
+$AliasesArr = array();
+$AliasesArr = getAllAliases();
+//print_r($AliasesArr);
+//die("here");
+$smarty->assign('aliasesArr',$AliasesArr);
+
+/*	
 
 if(!empty($_REQUEST['suburb']))
 {
@@ -94,5 +98,6 @@ else if(!empty($cityId))
     //print_r($NearPlacesArr);
 
 }
-$smarty->assign('nearPlacesArr',$NearPlacesArr);
+*/
+
 ?>
