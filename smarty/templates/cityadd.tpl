@@ -114,25 +114,15 @@
 				</tr>
 				<tr>
 					<td width="20%" align="right">Aliases  : </td>
-					<td width="30%" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:red; font-weight: bold;"></label></td>
+					<td width="30%" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:green; font-weight: bold;"></label></td>
 				</tr>
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
 					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search: </label></td>
 					<td width="30%" align="left"><input id="search"></td></div>
-					<td width="10%" align="left"><button type="button" id="button" align="left">Save Alias</button></td><td><label align="left" id="onclicktext" style="color:red; font-weight: bold;"></label> </td>
+					<td width="10%" align="left"><button type="button" id="button" align="left">Save Alias</button></td><td><label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label> </td>
 					
 					
- 
-
-
-					<!--<td width="30%" align="left">
-						<div style="position: relative; height: 80px; width: auto" >
-                   			<input type="text" name="query" id="query"/>
-                  		 <div id="contain" style="width: auto"></div>
-                  		 </div>
-                    </td>-->
-                <!--</td>-->
 				</tr>
 
 

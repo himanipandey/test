@@ -153,6 +153,10 @@
             if($minLongitude == '')
                 $minLongitude = 'No Entry';
 
+
+
+           
+
             $smarty->assign("txtCityName", $txtCityName);
             $smarty->assign("txtMetaTitle", $txtMetaTitle);
             $smarty->assign("txtMetaKeywords", $txtMetaKeywords);
@@ -163,6 +167,15 @@
             $smarty->assign("minLatitude", $minLatitude);
             $smarty->assign("maxLongitude", $maxLongitude);	
             $smarty->assign("minLongitude", $minLongitude);
+            
     }
+
+
+            $getLandmarkAliasesArr = getLandmarkAliases('locality', $localityid);
+           $landmarkJson = json_encode($getLandmarkAliasesArr);
+           $smarty->assign("landmarkAliases", $getLandmarkAliasesArr);
+            $smarty->assign("landmarkJson", $landmarkJson);
+            //echo $landmarkJson;
+
  
 ?>
