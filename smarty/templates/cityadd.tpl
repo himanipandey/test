@@ -171,9 +171,7 @@
 
 jQuery(document).ready(function(){
 
-if({$genericJson}!=''){
-var bb = {$genericJson};
-}
+
 
 $('#aliases').tagsinput({
 
@@ -186,9 +184,7 @@ $('#aliases').tagsinput({
   	},
   	itemValue: 'value',
   	itemText: 'text',
-  	typeahead: {
-    	source: bb,
-  	}
+  	
   	
 });
 
@@ -203,7 +199,7 @@ for (index = 0; index < landmarkAliases.length; ++index) {
     $('#aliases').tagsinput('add', { "value": elm[1].id , "text": elm[1].name, "type": "landmark"    }); 
 }
 }
-
+/*
 if({$genericJson}!=''){
 var b = {$genericJson};
 var genericAliases = [];
@@ -228,23 +224,18 @@ for (index = 0; index < suburbAliases.length; ++index) {
     $('#aliases').tagsinput('add', { "value": elm[1].SUBURB_ID , "text": elm[1].LABEL, "type": "suburb"    }); 
 }
 }
-
+*/
 $("#aliases").on('itemRemoved', function(e) {
     //alert(e.item.text);
     var tableName = 'city';
     var tableId = {$cityid};
     var aliasTableName ='';
-    if(e.item.type=='landmark')
-    aliasTableName= 'locality_near_places';
-	else if(e.item.type=='generic')
-    aliasTableName= 'aliases';
-	else 
-		aliasTableName= 'suburb';
+    
     var aliasTableId = e.item.value;
     $.ajax({
             type: "POST",
             url: '/saveAliases.php',
-            data: { tableName : tableName, tableId : tableId, aliasTableName : aliasTableName, aliasTableId : aliasTableId, task : 'dettachAlias' },
+            data: { tableName : tableName, tableId : tableId, aliasTableId : aliasTableId, task : 'dettachAlias' },
             success:function(msg){
             	//alert(msg);
                if(msg == 1){
@@ -310,7 +301,7 @@ var options, d, selectedItem;
           data: {
             featureClass: "P",
             style: "full",
-            maxRows: 4,
+            maxRows: 10,
             name_startsWith: request.term
           },
           success: function( data ) {
@@ -367,13 +358,13 @@ var options, d, selectedItem;
         	
         	var tableName = 'city';
         	var tableId = {$cityid};
-        	var aliasTableName = selectedItem.table;
+        	//var aliasTableName = selectedItem.table;
         	var aliasTableId = selectedItem.id;
         	//alert("item :"+selectedItem.label);
         	$.ajax({
             type: "POST",
             url: '/saveAliases.php',
-            data: { tableName : tableName, tableId : tableId, aliasTableName : aliasTableName, aliasTableId : aliasTableId, task : 'attachAlias' },
+            data: { tableName : tableName, tableId : tableId, aliasTableId : aliasTableId, task : 'attachAlias' },
             success:function(msg){
             	//alert(msg);
                if(msg == 1){

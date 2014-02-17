@@ -130,14 +130,14 @@ elseif($cityid!=''){
 	
 	//getting city aliases
 	//$getAliasesArray = getAllAliases('city', $cityid);
-	$getSuburbAliasesArr = getSpecificAliases('city', $cityid, 'suburb');
-	$getLandmarkAliasesArr = getSpecificAliases('city', $cityid, 'locality_near_places');
-	$getGenericAliasesArr = getSpecificAliases('city', $cityid, 'aliases');
+	//$getSuburbAliasesArr = getSpecificAliases('city', $cityid, 'suburb');
+	$getLandmarkAliasesArr = getLandmarkAliases('city', $cityid);
+	//$getGenericAliasesArr = getSpecificAliases('city', $cityid, 'aliases');
 	//print_r($getGenericAliasesArr);
-	$genericJson = json_encode($getGenericAliasesArr);
+	//$genericJson = json_encode($getGenericAliasesArr);
 	$landmarkJson = json_encode($getLandmarkAliasesArr);
-	$suburbJson = json_encode($getSuburbAliasesArr);
-	//echo $suburbJson;
+	//$suburbJson = json_encode($getSuburbAliasesArr);
+	//echo $landmarkJson;
 
 
 	$smarty->assign("txtCityName", $txtCityName);
@@ -150,12 +150,12 @@ elseif($cityid!=''){
 	$smarty->assign("status", $status);
 	$smarty->assign("desc", $desc);
 	//$smarty->assign("allAliases", $getAliasesArray);
-	$smarty->assign("suburbAliases", $getSuburbAliasesArr);
+	//$smarty->assign("suburbAliases", $getSuburbAliasesArr);
 	$smarty->assign("landmarkAliases", $getLandmarkAliasesArr);
-	$smarty->assign("genericAliases", $getGenericAliasesArr);
+	//$smarty->assign("genericAliases", $getGenericAliasesArr);
 
-	$smarty->assign("genericJson", $genericJson);
-	$smarty->assign("suburbJson", $suburbJson);
+	//$smarty->assign("genericJson", $genericJson);
+	//$smarty->assign("suburbJson", $suburbJson);
 	$smarty->assign("landmarkJson", $landmarkJson);
 
 

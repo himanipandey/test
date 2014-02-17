@@ -104,7 +104,7 @@ function getAllAliases($pl_tb_name, $pl_tb_id)
 
 }
 */
-
+/*
 function getSpecificAliases($pl_tb_name, $pl_tb_id, $al_tb_name)
 {
 	$where = "pa.place_table_name='$pl_tb_name' and pa.place_table_id='$pl_tb_id'";
@@ -143,7 +143,31 @@ function getSpecificAliases($pl_tb_name, $pl_tb_id, $al_tb_name)
     return $arr;
 
 }
+*/
 
+function getLandmarkAliases($pl_tb_name, $pl_tb_id)
+{
+	$where = "pl.place_table_name='$pl_tb_name' and pl.place_table_id='$pl_tb_id'";
+	$query ='';
+	
+		$query = "SELECT l.id, l.name FROM ".place_landmark_mapping." pl 
+			inner join locality_near_places l on pl.landmark_id = l.id 
+			WHERE ".$where; 
+		
+
+		
+	$res = mysql_query($query) ;//or die(mysql_error());
+	//print_r($res);
+	$arr = array();
+     while ($data = mysql_fetch_assoc($res)) {
+        //echo $data;
+        //echo $data;
+       // print_r($data);
+        array_push($arr, $data);
+    }
+    return $arr;
+
+}
 
 function getAliasesbyId($pl_tb_name, $pl_tb_id, $al_tb_name, $al_tb_id)
 {
@@ -180,10 +204,10 @@ function getAliasesbyId($pl_tb_name, $pl_tb_id, $al_tb_name, $al_tb_id)
 
 
 
-function attachAliases($pl_tb_name, $pl_tb_id, $al_tb_name, $al_tb_id)
+function attachAliases($pl_tb_name, $pl_tb_id, $al_tb_id)
 {
 
-	$sql = "SELECT * FROM ".place_alias_mapping. " where place_table_name = '$pl_tb_name' and place_table_id = '$pl_tb_id' and alias_table_name='$al_tb_name'  and alias_table_id='$al_tb_id'";
+	$sql = "SELECT * FROM ".place_landmark_mapping. " where place_table_name = '$pl_tb_name' and place_table_id = '$pl_tb_id'  and landmark_id='$al_tb_id'";
 	$result=mysql_query($sql);
     
     if(mysql_fetch_array($result) !== false)
@@ -192,7 +216,7 @@ function attachAliases($pl_tb_name, $pl_tb_id, $al_tb_name, $al_tb_id)
 	}
 	else
 	{	
-	$query = "INSERT INTO ".place_alias_mapping." (place_table_name, place_table_id, alias_table_name, alias_table_id) VALUES ('$pl_tb_name', '$pl_tb_id', '$al_tb_name', '$al_tb_id')";
+	$query = "INSERT INTO ".place_landmark_mapping." (place_table_name, place_table_id, landmark_id) VALUES ('$pl_tb_name', '$pl_tb_id', '$al_tb_id')";
 	//echo $query;
 	$res = mysql_query($query) or die(mysql_error());
 	if(mysql_affected_rows()>0){
@@ -206,10 +230,10 @@ function attachAliases($pl_tb_name, $pl_tb_id, $al_tb_name, $al_tb_id)
 }
 
 
-function dettachAliases($pl_tb_name, $pl_tb_id, $al_tb_name, $al_tb_id)
+function dettachAliases($pl_tb_name, $pl_tb_id, $al_tb_id)
 {
 
-	$sql = "DELETE FROM ".place_alias_mapping. " where place_table_name = '$pl_tb_name' and place_table_id = '$pl_tb_id' and alias_table_name='$al_tb_name'  and alias_table_id='$al_tb_id'";
+	$sql = "DELETE FROM ".place_landmark_mapping. " where place_table_name = '$pl_tb_name' and place_table_id = '$pl_tb_id' and landmark_id='$al_tb_id'";
 	$result=mysql_query($sql);
     
    if(mysql_affected_rows()>0){

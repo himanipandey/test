@@ -16,10 +16,12 @@ error_reporting(1);
 	
 	$q=$_GET['name_startsWith'];
 	$limit = $_GET['maxRows'];
+	$returnArr = array();
+/*	
 	$query = "select id, name from aliases where name like '%$q%' order by name LIMIT $limit";
 	//echo $query;
 	$sql_res=mysql_query($query);
-	$returnArr = array();
+	
 	
 	while($row=mysql_fetch_array($sql_res))
 	{
@@ -35,7 +37,9 @@ error_reporting(1);
 
 
 	}
+*/	
 	$query = "select id, name from locality_near_places where name like '%$q%' order by name LIMIT $limit";
+	//echo $query;
 	$sql_res=mysql_query($query);
 	while($row=mysql_fetch_array($sql_res))
 	{
@@ -48,7 +52,7 @@ error_reporting(1);
 		array_push($returnArr, $data);
 
 	}
-	$query = "select SUBURB_ID, LABEL from suburb where LABEL like '%$q%' order by LABEL LIMIT $limit";
+/*	$query = "select SUBURB_ID, LABEL from suburb where LABEL like '%$q%' order by LABEL LIMIT $limit";
 	$sql_res=mysql_query($query);
 	while($row=mysql_fetch_array($sql_res))
 	{
@@ -61,7 +65,7 @@ error_reporting(1);
 		array_push($returnArr, $data);
 
 	}
-
+*/
 	echo json_encode($returnArr);
 	//echo "{'results':".json_encode($returnArr)."}";
     //echo "{query:"e", suggestions:["apple","coffee","delhi","delhi 3","delhi1","delhi4","delhi5","delhi6","delhi7","hello","hello1","hello2"], data:["4","6","9","11","10","12","13","14","15","1","2","3"]}";

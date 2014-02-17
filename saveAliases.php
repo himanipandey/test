@@ -13,24 +13,24 @@ AdminAuthentication();
 // ajax call for attaching, removing and creating a tag
 if($_POST['task']=='attachAlias'){
 	//die("here");
-	if(!empty($_POST['tableName']) && !empty($_POST['tableId']) && !empty($_POST['aliasTableName']) && !empty($_POST['aliasTableId']) ){
+	if(!empty($_POST['tableName']) && !empty($_POST['tableId']) && !empty($_POST['aliasTableId']) ){
 		//die("he");
 		$tbname = $_POST['tableName'];
 		$tbid = $_POST['tableId'];
-		$altbname = $_POST['aliasTableName'];
+		
 		$altbid = $_POST['aliasTableId'];
-		attachAliases($tbname, $tbid, $altbname, $altbid);
+		attachAliases($tbname, $tbid, $altbid);
 	}
 }
 else if($_POST['task']=='dettachAlias'){
 	//die("here");
-	if(!empty($_POST['tableName']) && !empty($_POST['tableId']) && !empty($_POST['aliasTableName']) && !empty($_POST['aliasTableId']) ){
+	if(!empty($_POST['tableName']) && !empty($_POST['tableId']) && !empty($_POST['aliasTableId']) ){
 		//die("he");
 		$tbname = $_POST['tableName'];
 		$tbid = $_POST['tableId'];
-		$altbname = $_POST['aliasTableName'];
+		
 		$altbid = $_POST['aliasTableId'];
-		dettachAliases($tbname, $tbid, $altbname, $altbid);
+		dettachAliases($tbname, $tbid, $altbid);
 	}
 }
 
