@@ -95,8 +95,8 @@ function getCSVRowFromArray($entry){
 }
 
 function importTableFromTmpCsv($tableName){
-    $command = 'mysqlimport --local --fields-terminated-by="'.CSV_FIELD_DELIMITER.'" --lines-terminated-by="'.CSV_LINE_DELIMITER.'" -u'.DB_PROJECT_USER.' -p'.DB_PROJECT_PASS.' '.DB_PROJECT_NAME.' /tmp/'.$tableName.'.csv';
-    exec($command);
+    $command = 'mysqlimport --local --fields-terminated-by='.CSV_FIELD_DELIMITER.' --fields-optionally-enclosed-by=" --lines-terminated-by=\r\n -u'.DB_PROJECT_USER.' -p'.DB_PROJECT_PASS.' '.DB_PROJECT_NAME.' /tmp/'.$tableName.'.csv';
+    echo exec(mysql_real_escape_string($command));
 }
 
 function getMonthShiftedDate($date, $shift){

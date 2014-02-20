@@ -17,6 +17,10 @@ class DInventoryPriceTmp extends Model
         self::delete_all(array('conditions'=>'effective_month < launch_date and launch_date is not null'));
     }
     
+    public function deleteInvalidPriceEntries(){
+        self::update_all(array('set'=>'average_price_per_unit_area = null, average_total_price = null', 'conditions'=>'inventory = 0'));
+    }
+    
     public static function populateDemand(){
         DInventoryPriceTmp::update_all(array('set'=>'customer_demand = ceil(rand()*10), investor_demand = ceil(rand()*10), demand = customer_demand+investor_demand'));
 }

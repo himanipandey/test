@@ -6,11 +6,7 @@
  */
 
 function runTests(){
-    $result = TRUE;
-    $result = $result && verifySupply();
-    $result = $result && verifyLaunched();
-    $result = $result && verifyPhases();
-    return $result;
+    return verifySupply() && verifyLaunched() && verifyPhases() && verifyNonZeroColumns();
 }
 
 function verifySupply(){
@@ -28,4 +24,8 @@ function verifyPhases(){
     return empty($count);
 }
 
+function verifyNonZeroColumns(){
+    $count = DInventoryPriceTmp::find('all', array('conditions' => 'average_price_per_unit_area = 0'));
+    return empty($count);
+}
 ?>
