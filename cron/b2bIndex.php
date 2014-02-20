@@ -1,11 +1,10 @@
 <?php
 ini_set('display_errors', '1');
-ini_set('memory_limit', '-1');
+ini_set('memory_limit', '1G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
 // TODO
-// Bulk Insert in table
 // Get demand data
 
 $currentDir = dirname(__FILE__);
@@ -38,7 +37,8 @@ $aProjectPhaseCount = ResiProjectPhase::getWebsitePhaseCountForProjects();
 $globalCondition = "rp.version = 'Website' and (uc.LABEL != 'Skip Updation' or uc.LABEL is null) and rp.STATUS = 'Active' and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched')";
 
 $aAllProjects = ResiProject::find_by_sql("select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_ID, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, c.CITY_ID, c.LABEL as CITY_NAME, psm.display_name as construction_status  from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where $globalCondition");
-$aAllIndexedProjects = indexProjects($aAllProjects);
+
+$aAllIndexedProjects = indexArrayOnKey($aAllProjects, 'project_id');
 
 $logger->info("Project And Phase Details Retrieved");
 
@@ -60,8 +60,8 @@ while($i< count($aAllProjects)){
     fillIntermediateMonths($aAllInventory);
     fillIntermediateMonths($aAllPrice);
     
-    indexPriceInventoryData($aAllInventory);
-    indexPriceInventoryData($aAllPrice);
+    $aAllInventory = indexArrayOnKey($aAllInventory, 'unique_key');
+    $aAllPrice = indexArrayOnKey($aAllPrice, 'unique_key');
     
     createDocuments($aAllInventory, $aAllPrice);
     $logger->info("Indexing complete for $i projects");
@@ -112,8 +112,12 @@ function createDocuments($aAllInventory, $aAllPrice){
         $entry['bedrooms'] = intval($arrayToPick->bedrooms);
         $entry['average_size'] = $arrayToPick->average_size;
         
-        if($arrayToPick->completion_date != INVALID_DATE)$entry['completion_date']= $arrayToPick->completion_date;
-        if($arrayToPick->launch_date != INVALID_DATE)$entry['launch_date'] = $arrayToPick->launch_date;
+        if($arrayToPick->completion_date != INVALID_DATE){
+            $entry['completion_date']= $arrayToPick->completion_date;
+        }
+        if($arrayToPick->launch_date != INVALID_DATE){
+            $entry['launch_date'] = $arrayToPick->launch_date;
+        }
         
         if(isset($aAllPrice[$key])){
             $entry['average_price_per_unit_area'] = $aAllPrice[$key]->average_price_per_unit_area;
@@ -184,22 +188,6 @@ function fillIntermediateMonths(&$aData){
     $aData = $aNewData;
 }
 
-function indexPriceInventoryData(&$aData){
-    global $logger;
-    $result = array();
-    foreach ($aData as $data) {
-        $result[$data->unique_key] = $data;
-    }
-    $logger->info("Indexing on unique key complete");
-    $aData = $result;
-}
-
-function getMonthShiftedDate($date, $shift){
-    $date = substr($date, 0, 10);
-    return date("Y-m-d", strtotime("$date $shift month"));
-}
-
-
 function indexProjectsWithLowerLaunchDate(){
     global $logger;
     global $handle;
@@ -268,14 +256,6 @@ function indexProjectsWithHigherCompletionDate(){
     $logger->info("Inserted $i missing completion date entries");
 }
 
-function indexProjects($aAllProjects){
-    $aAll = array();
-    foreach ($aAllProjects as $value) {
-        $aAll[$value->project_id] = $value;
-    }
-    return $aAll;
-}
-
 function setProjectLevelValues(&$entry){
     global $aAllIndexedProjects;
     
@@ -294,26 +274,5 @@ function setProjectLevelValues(&$entry){
     $entry['quarter'] = firstDayOf('quarter', $entry['effective_month']);
     $entry['half_year'] = firstDayOf('half_year', $entry['effective_month']);
     $entry['year'] = firstDayOf('year', $entry['effective_month']);
-}
-
-function importTableFromTmpCsv($tableName){
-    $command = 'mysqlimport --local --fields-terminated-by="'.CSV_FIELD_DELIMITER.'" --lines-terminated-by="'.CSV_LINE_DELIMITER.'" -u'.DB_PROJECT_USER.' -p'.DB_PROJECT_PASS.' '.DB_PROJECT_NAME.' /tmp/'.$tableName.'.csv';
-    exec($command);
-}
-
-function getCSVRowFromArray($entry){
-    return str_replace(
-            CSV_FIELD_DELIMITER.CSV_LINE_DELIMITER,
-            CSV_FIELD_DELIMITER.'NULL'.CSV_LINE_DELIMITER,
-            str_replace(
-                    CSV_FIELD_DELIMITER.CSV_FIELD_DELIMITER,
-                    CSV_FIELD_DELIMITER.'NULL'.CSV_FIELD_DELIMITER,
-                    str_replace(
-                            CSV_FIELD_DELIMITER.CSV_FIELD_DELIMITER,
-                            CSV_FIELD_DELIMITER.'NULL'.CSV_FIELD_DELIMITER,
-                            implode(CSV_FIELD_DELIMITER, $entry)
-                    )
-            ).CSV_LINE_DELIMITER
-    );
 }
 ?>

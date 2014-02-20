@@ -77,4 +77,43 @@ function firstDayOf($period, $date = null)
     }
     return $newDate;
 }
+
+function getCSVRowFromArray($entry){
+    return str_replace(
+            CSV_FIELD_DELIMITER.CSV_LINE_DELIMITER,
+            CSV_FIELD_DELIMITER.'NULL'.CSV_LINE_DELIMITER,
+            str_replace(
+                    CSV_FIELD_DELIMITER.CSV_FIELD_DELIMITER,
+                    CSV_FIELD_DELIMITER.'NULL'.CSV_FIELD_DELIMITER,
+                    str_replace(
+                            CSV_FIELD_DELIMITER.CSV_FIELD_DELIMITER,
+                            CSV_FIELD_DELIMITER.'NULL'.CSV_FIELD_DELIMITER,
+                            implode(CSV_FIELD_DELIMITER, $entry)
+                    )
+            ).CSV_LINE_DELIMITER
+    );
+}
+
+function importTableFromTmpCsv($tableName){
+    $command = 'mysqlimport --local --fields-terminated-by="'.CSV_FIELD_DELIMITER.'" --lines-terminated-by="'.CSV_LINE_DELIMITER.'" -u'.DB_PROJECT_USER.' -p'.DB_PROJECT_PASS.' '.DB_PROJECT_NAME.' /tmp/'.$tableName.'.csv';
+    exec($command);
+}
+
+function getMonthShiftedDate($date, $shift){
+    $date = substr($date, 0, 10);
+    return date("Y-m-d", strtotime("$date $shift month"));
+}
+
+function indexArrayOnKey(&$aData, $key){
+    $result = array();
+    foreach ($aData as $data) {
+        $result[$data->$key] = $data;
+    }
+    try {
+        global $logger;
+        $logger->info("Indexing on key:$key complete");
+    } catch (Exception $exc) {
+    }
+    return $result;
+}
 ?>
