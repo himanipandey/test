@@ -17,7 +17,7 @@ class DInventoryPriceTmp extends Model
         self::delete_all(array('conditions'=>'effective_month < launch_date and launch_date is not null'));
     }
     
-    public function deleteInvalidPriceEntries(){
+    public static function deleteInvalidPriceEntries(){
         self::update_all(array('set'=>'average_price_per_unit_area = null, average_total_price = null', 'conditions'=>'inventory = 0'));
     }
     
