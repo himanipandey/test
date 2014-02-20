@@ -36,7 +36,7 @@ $aProjectPhaseCount = ResiProjectPhase::getWebsitePhaseCountForProjects();
 
 $globalCondition = "rp.version = 'Website' and (uc.LABEL != 'Skip Updation' or uc.LABEL is null) and rp.STATUS = 'Active' and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched')";
 
-$aAllProjects = ResiProject::find_by_sql("select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_ID, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, c.CITY_ID, c.LABEL as CITY_NAME, psm.display_name as construction_status  from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where $globalCondition");
+$aAllProjects = ResiProject::find_by_sql("select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_ID, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, s.SUBURB_ID, s.LABEL as SUBURB_NAME, c.CITY_ID, c.LABEL as CITY_NAME, psm.display_name as construction_status  from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where $globalCondition");
 
 $aAllIndexedProjects = indexArrayOnKey($aAllProjects, 'project_id');
 
@@ -111,13 +111,8 @@ function createDocuments($aAllInventory, $aAllPrice){
         $entry['unit_type'] = $arrayToPick->unit_type;
         $entry['bedrooms'] = intval($arrayToPick->bedrooms);
         $entry['average_size'] = $arrayToPick->average_size;
-        
-        if($arrayToPick->completion_date != INVALID_DATE){
-            $entry['completion_date']= $arrayToPick->completion_date;
-        }
-        if($arrayToPick->launch_date != INVALID_DATE){
-            $entry['launch_date'] = $arrayToPick->launch_date;
-        }
+        $entry['completion_date']= $arrayToPick->completion_date;
+        $entry['launch_date'] = $arrayToPick->launch_date;
         
         if(isset($aAllPrice[$key])){
             $entry['average_price_per_unit_area'] = $aAllPrice[$key]->average_price_per_unit_area;
@@ -132,9 +127,11 @@ function createDocuments($aAllInventory, $aAllPrice){
             if(isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month){
                 $entry['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
             }
+            else{
+                $entry['units_sold'] = 0;
+            }
         }
         setProjectLevelValues($entry);
-        
         $prevKey = $key;
  
         $new = new DInventoryPriceTmp($entry);
@@ -149,7 +146,9 @@ function removeInvalidPhaseData(&$aData){
 
     $result = array();
     foreach ($aData as $value) {
-        if($value->phase_type == 'Actual' || $aProjectPhaseCount[$value->project_id] == 1)$result[] = $value;
+        if($value->phase_type == 'Actual' || $aProjectPhaseCount[$value->project_id] == 1){
+            $result[] = $value;
+        }
     }
     $logger->info("Remove invalid phase operation complete");
     $aData = $result;
@@ -249,6 +248,8 @@ function setProjectLevelValues(&$entry){
     $entry['project_name'] = $projectDetails->project_name;
     $entry['locality_id'] = $projectDetails->locality_id;
     $entry['locality_name'] = $projectDetails->locality_name;
+    $entry['suburb_id'] = $projectDetails->suburb_id;
+    $entry['suburb_name'] = $projectDetails->suburb_name;
     $entry['city_id'] = $projectDetails->city_id;
     $entry['city_name'] = $projectDetails->city_name;
     $entry['builder_id'] = $projectDetails->builder_id;
@@ -258,4 +259,3 @@ function setProjectLevelValues(&$entry){
     $entry['half_year'] = firstDayOf('half_year', $entry['effective_month']);
     $entry['year'] = firstDayOf('year', $entry['effective_month']);
 }
-?>

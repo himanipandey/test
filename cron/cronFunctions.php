@@ -105,13 +105,14 @@ function getMonthShiftedDate($date, $shift){
 }
 
 function indexArrayOnKey(&$aData, $key){
+    $t1 = microtime(TRUE);
     $result = array();
     foreach ($aData as $data) {
         $result[$data->$key] = $data;
     }
     try {
         global $logger;
-        $logger->info("Indexing on key:$key complete");
+        $logger->info("Indexing on key:$key complete. Took " . (microtime(TRUE)-$t1) . " second");
     } catch (Exception $exc) {
     }
     return $result;
@@ -124,4 +125,3 @@ function saveToFileOrDb($arRow, $bulkInsertFlag, $handle=NULL){
         $arRow->save();
     }
 }
-?>
