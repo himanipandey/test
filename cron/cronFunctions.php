@@ -116,4 +116,12 @@ function indexArrayOnKey(&$aData, $key){
     }
     return $result;
 }
+
+function saveToFileOrDb($arRow, $bulkInsertFlag, $handle=NULL){
+    if($bulkInsertFlag){
+        fwrite ($handle, getCSVRowFromArray($arRow->to_array()));
+    }else{
+        $arRow->save();
+    }
+}
 ?>
