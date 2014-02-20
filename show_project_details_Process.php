@@ -471,6 +471,25 @@ if ($_POST['forwardFlag'] == 'update') {
             $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
             $resStg = mysql_query($qryStg) or die(mysql_error());
             $stageId = mysql_fetch_assoc($resStg);
+            /*****code for update project assignment status is 
+            * done if project move in audit1 if assigned in survey ********/
+           if($v == 'Audit1') {
+            $qryCurrentAssign = "select pa.id from project_assignment pa 
+                join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
+                join resi_project rp on  pa.movement_history_id = rp.movement_history_id
+                where rp.project_id = $projectId and pa1.department = 'SURVEY' and rp.version = 'Cms' 
+                order by pa.movement_history_id desc limit 1";
+               $resAssigned = mysql_query($qryCurrentAssign) or die(mysql_error()." select query");
+               if(mysql_num_rows($resAssigned) >0 ) {
+                   $dataFetch = mysql_fetch_assoc($resAssigned);
+                   $qryUp = "update project_assignment set status = 'done' 
+                       where id = ".$dataFetch['id'];
+                   $resUp = mysql_query($qryUp) or die(mysql_error()." update query");
+               }
+           }
+
+           /********************/
+
             updateProjectPhase($projectId, $phaseId['id'], $stageId['id']);
         }
     }

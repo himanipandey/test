@@ -29,94 +29,33 @@ $newArrLead = array();
 while($dataLead = mysql_fetch_assoc($redLead)) {
     if($dataLead['role'] == 'teamLeader'){
         $newArrLead[$dataLead['adminid']] = $dataLead['fname'];
-        $arrLead[] = $dataLead;
-        $qryExeclead = "select distinct(a.admin_id),b.fname from proptiger_admin_city a 
-                        join proptiger_admin b on a.admin_id = b.adminid
-                        where a.city_id in (SELECT city_id FROM cms.proptiger_admin_city 
-                                where admin_id = ".$dataLead['adminid']."
-                        ) and admin_id != ".$dataLead['adminid']." and department != 'ADMINISTRATOR'";
-        $resExeclead = mysql_query($qryExeclead) or die(mysql_error());
-        while($dataExec = mysql_fetch_assoc($resExeclead)) {
-            $arrExecLead[$dataLead['adminid']][] = $dataExec;
-        }
     }
 }
 $smarty->assign('newArrLead',$newArrLead);
 /********end list of all leads***********/
-
-/******query for fetch all project id and history id which are in audit1 stage*****/
-$qry = "select 
-    rp.movement_history_id, rp.project_id
-from
-    project_stage_history h
-        right join
-    resi_project rp ON h.history_id = rp.movement_history_id
-    
-where
-    rp.version = 'Cms' and rp.status in ('Active' , 'ActiveInCms') and h.project_phase_id = ".phaseId_4;//die;
-$res = mysql_query($qry) or die(mysql_error());
-$historyId = array();
-
-while($auditStagePId = mysql_fetch_assoc($res)) {
-      $qryHistory = "select h.project_id,pa1.fname,pa1.role,pa1.adminid,h.date_time,s.city_id 
-            from project_stage_history h
-            join resi_project rp on h.project_id = rp.project_id
-            join locality l on rp.locality_id = l.locality_id
-            join suburb s on l.suburb_id = s.suburb_id
-            join city c on s.city_id = c.city_id
-            join project_assignment pa on h.history_id = pa.movement_history_id
-            join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
-            where 
-            h.history_id < ".$auditStagePId['movement_history_id']."
-            and h.project_id = ".$auditStagePId['project_id']." 
-            and pa1.department = 'SURVEY'
-            and h.project_phase_id != ".phaseId_4."
-            and rp.version = 'Cms' and rp.status in('Active' , 'ActiveInCms')
-            order by h.history_id desc limit 1";
-         $resInner = mysql_query($qryHistory) or die(mysql_error());
-         $historyInner =  mysql_fetch_assoc($resInner);
-         if($historyInner['project_id'] != '')
-             $historyId[$historyInner['adminid']][$historyInner['city_id']][] = $historyInner;
-}
-
+//echo "<pre>";
+//print_r($arrCity);
 $citywiseDone = array();
-foreach($historyId as $k=>$v) {
-    $cnt = 0;
-    $adminKey = 0;
+
     foreach($arrCity as $kCityId=>$vInner) {
-        if(in_array($kCityId,  array_keys($v))) {
-            $citywiseDone[$vInner['adminid']][$kCityId][] = count($historyId[$k][$kCityId]);
-                $cnt +=count($historyId[$k][$kCityId]);
-                $adminKey = $k;
-        }
-        else
-            $citywiseDone[$vInner['adminid']][$kCityId][] = 0;   
+        $qryExec = "select count(pa.movement_history_id) count from project_assignment pa
+                    join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
+                    join project_stage_history psh on pa.movement_history_id = psh.history_id
+                    where pa.status = 'done' and psh.project_id in(
+                        select project_id from resi_project rp join locality l on (rp.locality_id = l.locality_id)
+                        join suburb s on l.suburb_id = s.suburb_id
+                        where s.city_id = $kCityId
+                   )";
+        $resExec = mysql_query($qryExec) or die(mysql_query());
+        $dataExec = mysql_fetch_assoc($resExec);
+            $citywiseDone[$vInner['adminid']][$kCityId][] = $dataExec['count'];
+            
     }
-    $citywiseDone[$adminKey]['total'] = $cnt;
-    
-    
-}
+
 //echo "<pre>";
 //print_r($citywiseDone);
 $smarty->assign('citywiseDone',$citywiseDone);
-//die;
-/*$arrLeadProjectDone = array();
-foreach($arrLead as $k=>$v) {
-        $qryLeadCity = "select distinct city_id from proptiger_admin_city where admin_id = ".$v['admin_id'];
-        $resLeadCity = mysql_query($qryLeadCity) or die(mysql_error());
-        while($city = mysql_fetch_assoc($resLeadCity)) {
-            if(in_array($v['adminid'], array_keys($historyId))) {
-               */ 
-           //     $arrLeadProjectDone[$v['adminid']][$city['city_id']]['done'][] = count($historyId[$v['adminid']][[$city['city_id']]);
-               // $arrLeadProjectDone[$v['adminid']]['fname'] = $v['fname'];
 
-           /* }
-            else {
-                $arrLeadProjectDone[$v['adminid']]['done'] = 0;
-                $arrLeadProjectDone[$v['adminid']]['fname'] = $v['fname'];
-            }
-        }
-}*/
 /*******query for project not done************/
  $qryNotDone = "select rp.project_id,pa1.fname,pa1.role,pa1.adminid,pa.updation_time,s.city_id from 
                 resi_project rp join project_assignment pa on 

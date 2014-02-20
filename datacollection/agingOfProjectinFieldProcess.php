@@ -28,61 +28,31 @@ while($dataLead = mysql_fetch_assoc($redLead)) {
 //echo "<pre>";
 //print_r($arrExecLead);
 $smarty->assign("arrExecLead",$arrExecLead);
-/******query for fetch all project id and history id which are in audit1 stage*****/
-$qry = "select 
-    rp.movement_history_id, rp.project_id
-from
-    project_stage_history h
-        right join
-    resi_project rp ON h.history_id = rp.movement_history_id
-where
-    rp.version = 'Cms' and rp.status in ('Active' , 'ActiveInCms') and h.project_phase_id = ".phaseId_4;//die;
-$res = mysql_query($qry) or die(mysql_error());
-$historyId = array();
-
-while($auditStagePId = mysql_fetch_assoc($res)) {
-   $qryHistory = "select h.project_id,pa1.fname,pa1.role,pa1.adminid,h.date_time 
-       from project_stage_history h
-                    join resi_project rp on h.project_id = rp.project_id
-                    join project_assignment pa on h.history_id = pa.movement_history_id
-                    join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
-                    where 
-                    h.history_id < ".$auditStagePId['movement_history_id']."
-                    and h.project_id = ".$auditStagePId['project_id']." 
-                    and pa1.department = 'SURVEY'
-                    and h.project_phase_id != ".phaseId_4."
-                    and rp.version = 'Cms' and rp.status in('Active' , 'ActiveInCms')
-                     order by h.history_id desc limit 1";
-    $resInner = mysql_query($qryHistory) or die(mysql_error());
-    $historyInner =  mysql_fetch_assoc($resInner);
-    if($historyInner['project_id'] != '')
-        $historyId[$historyInner['adminid']][] = $historyInner;
-}
 
 $arrLeadProjectDone = array();
 $arrExecProjectDone = array();
+//echo "<pre>";
+//print_r($arrExecLead);//die;
 foreach($arrExecutive as $k=>$v) {
-    if(in_array($v['adminid'], array_keys($historyId))) {
-        $arrExecProjectDone[$v['adminid']]['done'] = count($historyId[$v['adminid']]);
-        $arrExecProjectDone[$v['adminid']]['fname'] = $v['fname'];
-    }
-    else {
-        $arrExecProjectDone[$v['adminid']]['done'] = 0;
-        $arrExecProjectDone[$v['adminid']]['fname'] = $v['fname'];
-    }
+    $qryExec = "select count(pa.movement_history_id) count from project_assignment pa
+ join proptiger_admin pa1 on pa.assigned_to = pa1.adminid     
+ where pa.status = 'done' and pa.assigned_to = ".$v['adminid'];
+    $resExec = mysql_query($qryExec) or die(mysql_query());
+    $dataExec = mysql_fetch_assoc($resExec);
+    $arrExecProjectDone[$v['adminid']]['done'] = $dataExec['count'];
+    $arrExecProjectDone[$v['adminid']]['fname'] = $v['fname'];
+
 }
 foreach($arrLead as $k=>$v) {
-    if(in_array($v['adminid'], array_keys($historyId))) {
-        $arrLeadProjectDone[$v['adminid']]['done'] = count($historyId[$v['adminid']]);
-        $arrLeadProjectDone[$v['adminid']]['fname'] = $v['fname'];
-    }
-    else {
-        $arrLeadProjectDone[$v['adminid']]['done'] = 0;
-        $arrLeadProjectDone[$v['adminid']]['fname'] = $v['fname'];
-    }
+    $qryExec = "select count(pa.movement_history_id) count from project_assignment pa
+    join proptiger_admin pa1 on pa.assigned_to = pa1.adminid     
+    where pa.status = 'done' and pa.assigned_to = ".$v['adminid'];
+    $resExec = mysql_query($qryExec) or die(mysql_query());
+    $dataExec = mysql_fetch_assoc($resExec);
+    $arrLeadProjectDone[$v['adminid']]['done'] = $dataExec['count'];
+    $arrLeadProjectDone[$v['adminid']]['fname'] = $v['fname'];
 }
-//echo "<pre>";
-//print_r($historyId);
+
   $qryNotDone = "select rp.project_id,pa1.fname,pa1.role,pa1.adminid,pa.updation_time from 
                 resi_project rp join project_assignment pa on 
                      rp.movement_history_id = pa.movement_history_id

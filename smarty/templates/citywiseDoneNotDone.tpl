@@ -87,22 +87,23 @@
                                                     {foreach from = $citywiseDone key=key item = item}
                                                         {$arrGrandTotal = array()}
                                                         {if $newArrLead[$key] != ''}
+                                                            {$total['total'] = array()}
                                                         <tr>
                                                             <td nowrap rowspan = 2>{$newArrLead[$key]}</td>
                                                             <td nowrap>Done</td>
                                                             {foreach $arrCity key=kDone item = itemCity}
                                                                 <td nowrap>
-                                                                    {if isset($item[$itemCity['city_id']])}
-                                                                        {$arrGrandTotal[$key][$itemCity['city_id']][] = array_sum($item[$itemCity['city_id']])}
-                                                                        {array_sum($item[$itemCity['city_id']])}
-                                                                    {else}
-                                                                        {$arrGrandTotal[$key][$itemCity['city_id']][] = 0}
-                                                                        0
-                                                                {/if}
+                                                                    {if isset($item[$itemCity['city_id']][0])}
+                                                                        {$arrGrandTotal[$key][$itemCity['city_id']][] = $item[$itemCity['city_id']][0]}
+                                                                        {$item[$itemCity['city_id']][0]}
+                                                                        {$total['total'][] = $item[$itemCity['city_id']][0]}
+                                                                    {else} 0 {$total['total'][] = 0}
+                                                                      {$arrGrandTotal[$key][$itemCity['city_id']][] = 0}
+                                                                    {/if}
                                                                 </td>
                                                             {/foreach}
-                                                            <td nowrap>{$item['total']}
-                                                            {$arrGrandTotal[$key]['grandTotal'][] = $item['total']}
+                                                            <td nowrap>{array_sum($total['total'])}
+                                                               {$arrGrandTotal[$key]['grandTotal'][] = array_sum($total['total'])}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -114,7 +115,7 @@
                                                                     {array_sum($citywiseNotDone[$key][$itemCity['city_id']])}
                                                                     {$arrGrandTotal[$key][$itemCity['city_id']][] = array_sum($citywiseNotDone[$key][$itemCity['city_id']])}
                                                                 {else}
-                                                                    {$arrGrandTotal[$key]['grandTotal'][] = 0}
+                                                                    {$arrGrandTotal[$key][$itemCity['city_id']][] = 0}
                                                                     0
                                                                 {/if}
                                                                 </td>
