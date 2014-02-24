@@ -740,4 +740,5 @@ $arrOtherCities =
 		"61"=>"Vijayawada",
 		"91"=>"Karnal"
   );
+   define("DND_SCUB","http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=");
 ?>
