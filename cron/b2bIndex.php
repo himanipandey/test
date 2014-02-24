@@ -22,7 +22,9 @@ define('CSV_FIELD_DELIMITER', '~#~');
 define('CSV_LINE_DELIMITER', "\r\n");
 
 $bulkInsert = FALSE;
-if(isset($argv[1]) && $argv[1] == 'bulkInsert')$bulkInsert = TRUE;
+if(isset($argv[1]) && $argv[1] == 'bulkInsert'){
+    $bulkInsert = TRUE;
+}
 
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
