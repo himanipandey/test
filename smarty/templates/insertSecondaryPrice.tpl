@@ -70,11 +70,21 @@
               {if $brokerId != ''}
                   <form name ="frm" method = "post">
                   <tr bgcolor = '#FCFCFC'>
-                      <td align ="left" valign ="top" colspan="2"  style = "padding-left:310px;">
+					   <td align ="right" valign ="top"  >
+				             <b>Phase :</b>&nbsp;<select id="phaseSelect" name="phaseSelect" onchange="change_phase();">
+                                                <option value="-1">Select Phase</option>
+                                                {foreach $phases as $p}
+                                                    <option value="{$p.id}" {if $currPhaseId == $p.id}selected{/if}>{$p.name}</option>
+                                                {/foreach}
+                                            </select>
+                      </td>
+                
+                      <td align ="left" valign ="top">
                         <b>Effective Date:</b>&nbsp;<input name="effectiveDate" value="{$effectiveDate}" type="text" class="formstyle2" id="f_date_c_from" size="5" /> 
                         <img src="images/cal_1.jpg" id="f_trigger_c_from" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                       </td>
                   </tr>
+       {if $currPhaseId != ''}
                   {if count($arrBrokerPriceByProject)>0}
                    <tr bgcolor = '#FCFCFC'>
                       <td align ="left" valign ="top" colspan="2"  style = "padding-left:200px;">
@@ -115,19 +125,20 @@
                                        <input type = "hidden" name = "unitType[]" value ="{$val}">
                                    </td>
                                    <td valign ="top" style ="padding-left: 10px;" align = "left">
-                                       <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$k]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$k]['MIN_PRICE'])}{else}{$arrMinPrice[$k]}{/if}">
+                                       
+                                       <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$val]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{else}{$arrMinPrice[$val]}{/if}">
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
                                        <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
-                                            maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$k]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$k]['MAX_PRICE'])}{else}{$arrMaxPrice[$k]}{/if}">
+                                            maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{else}{$arrMaxPrice[$val]}{/if}">
                                    </td>
                                    <td style ="padding-left: 10px;" align = "left">
                                     <div id = "mean_{$cnt}">
-                                        {if $arrBrokerPriceByProject[$k]['MAX_PRICE'] != ''}
-                                            {($arrBrokerPriceByProject[$k]['MAX_PRICE']+$arrBrokerPriceByProject[$k]['MIN_PRICE'])/2}
+                                        {if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}
+                                            {($arrBrokerPriceByProject[$val]['MAX_PRICE']+$arrBrokerPriceByProject[$val]['MIN_PRICE'])/2}
                                         {else}
-                                            {if $arrMeanPrice[$k] !=''}     
-                                                 {$arrMeanPrice[$k]}
+                                            {if $arrMeanPrice[$val] !=''}     
+                                                 {$arrMeanPrice[$val]}
                                              {else}
                                                  --
                                              {/if}
@@ -136,6 +147,7 @@
                                    </td>    
                                </tr>
                             {/foreach}
+                   {/if}
                             <tr class="headingrowcolor" height="30px;">
                                 <td class="whiteTxt" colspan = "4" align ="center">
                                     <input type = "hidden" name = "projectId" id = "projectId" value = "{$projectId}">
@@ -170,6 +182,7 @@
             </table>
 </div>
 <script>
+	 
     function isNumberKey(evt){
        var charCode = (evt.which) ? evt.which : event.keyCode;
           if(charCode == 99 || charCode == 118)
@@ -193,6 +206,30 @@
     }
     function refreshBroker(brokerId,projectId){
          window.location.assign("insertSecondaryPrice.php?projectId="+projectId+"&brokerId="+brokerId);
+    }
+    function change_phase() {
+        var new_id = $('#phaseSelect').val();
+        var newURL = updateURLParameter(window.location.href, 'phaseId', new_id);
+        window.location.href = newURL;
+    }
+    function updateURLParameter(url, param, paramVal) {
+        var newAdditionalURL = "";
+        var tempArray = url.split("?");
+        var baseURL = tempArray[0];
+        var additionalURL = tempArray[1];
+        var temp = "";
+        if (additionalURL) {
+            tempArray = additionalURL.split("&");
+            for (i = 0; i < tempArray.length; i++) {
+                if (tempArray[i].split('=')[0] != param) {
+                    newAdditionalURL += temp + tempArray[i];
+                    temp = "&";
+                }
+            }
+        }
+
+        var rows_txt = temp + "" + param + "=" + paramVal;
+        return baseURL + "?" + newAdditionalURL + rows_txt;
     }
 </script>
       

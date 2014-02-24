@@ -294,7 +294,7 @@ function getDateNow(){
               url:"submit_builder_contact.php",
               data:"name="+str1+"&phone="+phone1+"&email="+email1+"&builderId="+builderId+"&deleteval="+deleteval+"&id="+id+"&projects="+projects1,
               success:function(dt){
-                  window.location.href = "show_project_details.php?projectId="+pid;
+                  window.location.href = "show_project_details.php?projectId="+pid+"&flag="+dt;
               }
 
             }
@@ -390,6 +390,23 @@ function getDateNow(){
  {
 	window.location.href = "show_project_details.php?stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId;
  }
+ $(document).ready(function(){
+	 
+	 $('#diffButton').click(function(){
+		 projectID = $('#projectId').val();
+		 projectStage = "{$projectDetails[0]['PROJECT_STAGE_ID']}";
+		 projectPhase = "{$projectDetails[0]['PROJECT_PHASE_ID']}";
+		 $.ajax({
+	      type:"post",
+	      url:"project_stage_difference.php",
+	      data:"projectID="+projectID+"&stageID="+projectStage+"&phaseID="+projectPhase,
+	      success : function (dt) {
+			$('#diffContent td').html(dt);
+	      }
+	  });
+		
+	});
+});
 </script>
 
 
@@ -541,13 +558,22 @@ function getDateNow(){
             &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:<b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
             {/if}
            
-            <!-- End of Project Phases -->	   
+            <!-- End of Project Phases -->	
+            <!-- Project Diff -->
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            
+            {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission) && $projectDetails[0]['PROJECT_PHASE_ID'] > 3 && ($projectDetails[0]['PROJECT_STAGE_ID'] == 2 || $projectDetails[0]['PROJECT_STAGE_ID'] == 3)} 
+				&nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Stage Differenece:</b><button id="diffButton">Diff</button>
+		    {/if}
+            <!-- End of Project Diff -->	   
 			</td></tr>				   
 			<tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						
-						
+						<tr id="diffContent">
+							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"></td>						  
+						</tr>
 						<tr bgcolor = "#c2c2c2">
 							  <td colspan = "2" valign ="top"  nowrap="nowrap" width="1%" align="left"><b>Last Updated Detail</b></br>
 						  	  </br>
@@ -584,7 +610,9 @@ function getDateNow(){
 							  			<img src = "images/plus.jpg" width ="20px">
 							  		
 							  	</a>
-							  	</span>
+							  	</span>{if $callerMessage != ''}
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;<font color = "green"><b>{$callerMessage}</b></font>
+                                                              {/if}
 							  </td>
 						</tr>
 
@@ -1764,7 +1792,13 @@ function getDateNow(){
 									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 										
 											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
-													<img src="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+                                                                                            {$parts = explode('.', $ImageDataListingArr[data].PLAN_IMAGE)}
+                                                                                            {$last = array_pop($parts)}
+                                                                                            {$str1 = implode('.', $parts)}
+                                                                                            {$str1 = $str1|cat:'-thumb'}
+                                                                                            {$str2 = $str1|cat:'.'}
+                                                                                            {$finalStrWithThumb = $str2|cat:$last}
+                                                                                            <img src="{$imgDisplayPath}{$finalStrWithThumb}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
 												</a>
 												<br>
 											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
@@ -1785,7 +1819,17 @@ function getDateNow(){
 					</table>
 				</td>
 		   </tr>
-			
+			 <tr>
+ 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+						<tr>
+							<td align="left"  nowrap colspan ="4">
+								<b> Locality Average Price : </b> {$localityAvgPrice}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 			
 		  
 		  <tr>
@@ -1821,7 +1865,13 @@ function getDateNow(){
 										
 											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}
 														" target="_blank">
-												<img src="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
+                                                                                            {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
+                                                                                            {$lastFloor = array_pop($partsFloor)}
+                                                                                            {$strFloor1 = implode('.', $partsFloor)}
+                                                                                            {$strFloor1 = $strFloor1|cat:'-thumb'}
+                                                                                            {$strFloor2 = $strFloor1|cat:'.'}
+                                                                                            {$finalStrWithThumbFloor = $strFloor2|cat:$last}
+												<img src="{$imgDisplayPath}{$finalStrWithThumbFloor}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
 											</a>
 											<br>
 										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
@@ -2020,14 +2070,15 @@ function getDateNow(){
                  {/if}
 
                 <tr>
-                  <td align ="left" valign ="top" colspan="2"  style = "padding-left:30px;">
+                 <td align ="left" valign ="top" colspan="2"  style = "padding-left:30px;">
                         <table align="left" style = "border:1px solid;">
                             <tr class ="headingrowcolor">
                                 <td colspan="5">&nbsp;</td>
                                 <td colspan="{count($brokerIdList)}" align ="center" class ="whiteTxt"><b>Brokers</b></td>
-                                <td colspan="2">&nbsp;</td>
+                                <td colspan="3">&nbsp;</td>
                             </tr>
                             <tr class ="headingrowcolor" height="30px">
+								<th class ="whiteTxt" align = "left"><b>Phase Name</b></th>
                                 <th class ="whiteTxt" align = "left"><b>S.NO.</b></th>
                                  <th style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Unit Type</b></th>
                                  <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Min Price</b></th>
@@ -2039,47 +2090,54 @@ function getDateNow(){
                                     <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$oneMonthAgoDt}</b></th>
                                  <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$twoMonthAgoDt}</b></th>
                             </tr>
+            			{foreach from=$phase_prices key=phase_name item = phase_values}		
                             {$cnt = 0}
                             {foreach from= $arrPType key=k item = val}
-                                {$cnt = $cnt+1}
+                              
                                 {if $cnt%2 == 0}
                                     {$bgcolor = '#F7F7F7'}
                                 {else}
                                     {$bgcolor = '#FCFCFC'}
                                 {/if}
+                           {if isset($phase_values['latestMonthAllBrokerPrice'][$val])}
+								  {$cnt = $cnt+1}
                                 <tr bgcolor = "{$bgcolor}" height="30px">
+								
+									 <td valign ="top" align = "center">{if $cnt == 1}{$phase_name}{/if}</td>
                                    <td valign ="top" align = "center">{$cnt}</td>
                                    <td valign ="top" style ="padding-left: 10px;" align = "left">
                                        {$val}
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                       {min($minMaxSum[$val]['minPrice'])|string_format:"%d"}
+                                       {min($phase_values['minMaxSum'][$val]['minPrice'])|string_format:"%d"}
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                        {max($minMaxSum[$val]['maxPrice'])|string_format:"%d"}
+                                        {max($phase_values['minMaxSum'][$val]['maxPrice'])|string_format:"%d"}
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                       {$arrCnt = count($minMaxSum[$val]['minPrice'])+count($minMaxSum[$val]['maxPrice'])}
-                                       {$arrSum = array_sum($minMaxSum[$val]['minPrice'])+array_sum($minMaxSum[$val]['maxPrice'])}
+                                       {$arrCnt = count($phase_values['minMaxSum'][$val]['minPrice'])+count($phase_values['minMaxSum'][$val]['maxPrice'])}
+                                       {$arrSum = array_sum($phase_values['minMaxSum'][$val]['minPrice'])+array_sum($phase_values['minMaxSum'][$val]['maxPrice'])}
                                        {($arrSum/$arrCnt)|string_format:"%d"}
                                    </td>
-                                   {foreach from = $latestMonthAllBrokerPrice[$val] key=brokerId item = priceDetail}  
-                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                        {$priceDetail['minPrice']|string_format:"%d"} - {$priceDetail['maxPrice']|string_format:"%d"}
-                                    </td>
-                                   {/foreach}
+                                    {foreach from = $brokerIdList key=brokerkey item = brokerId}
+										<td  valign ="top" style ="padding-left: 10px;" align = "left">
+											{$phase_values['latestMonthAllBrokerPrice'][$val][$brokerId]['minPrice']|string_format:"%d"} - {$phase_values['latestMonthAllBrokerPrice'][$val][$brokerId]['maxPrice']|string_format:"%d"}
+										</td>
+                                    {/foreach}
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                       {$arrCnt = count($oneMonthAgoPrice[$val]['minPrice'])+count($oneMonthAgoPrice[$val]['maxPrice'])}
-                                       {$arrSumOneMonthAgo = array_sum($oneMonthAgoPrice[$val]['minPrice'])+array_sum($oneMonthAgoPrice[$val]['maxPrice'])}
+                                       {$arrCnt = count($phase_values['oneMonthAgoPrice'][$val]['minPrice'])+count($phase_values['oneMonthAgoPrice'][$val]['maxPrice'])}
+                                       {$arrSumOneMonthAgo = array_sum($phase_values['oneMonthAgoPrice'][$val]['minPrice'])+array_sum($phase_values['oneMonthAgoPrice'][$val]['maxPrice'])}
                                        {($arrSumOneMonthAgo/$arrCnt)|string_format:"%d"}
                                    </td>
                                    <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                       {$arrCnt = count($twoMonthAgoPrice[$val]['minPrice'])+count($twoMonthAgoPrice[$val]['maxPrice'])}
-                                       {$arrSumTwoMonthAgo = array_sum($twoMonthAgoPrice[$val]['minPrice'])+array_sum($twoMonthAgoPrice[$val]['maxPrice'])}
+                                       {$arrCnt = count($phase_values['twoMonthAgoPrice'][$val]['minPrice'])+count($phase_values['twoMonthAgoPrice'][$val]['maxPrice'])}
+                                       {$arrSumTwoMonthAgo = array_sum($phase_values['twoMonthAgoPrice'][$val]['minPrice'])+array_sum($phase_values['twoMonthAgoPrice'][$val]['maxPrice'])}
                                        {($arrSumTwoMonthAgo/$arrCnt)|string_format:"%d"}
                                    </td>
                                </tr>
+                               {/if}
                             {/foreach}
+                         {/foreach}
                         </table>
                    </td>
                  </tr>
@@ -2509,7 +2567,7 @@ function getDateNow(){
 							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>
 							  	{if $supplyEditPermissionAccess == 1} 
 									{if !$isSupplyLaunchVerified}
-										<button class="clickbutton" style="background-color: red" onclick="$(this).trigger('event17');">Verify Supply Change</button>
+										<button class="clickbutton" {if $isVerifiedFlagCheck}style="background-color: red"{/if} onclick="$(this).trigger('event17');">Verify Supply Change</button>
 									{/if}
 								{/if}	
 									<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>
