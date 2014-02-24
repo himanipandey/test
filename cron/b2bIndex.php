@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors', '1');
-ini_set('memory_limit', '1G');
+ini_set('memory_limit', '2G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -17,7 +17,7 @@ require_once ($currentDir . '/../dbConfig.php');
 define("INVALID_DATE", "0000-00-01");
 define('MIN_B2B_DATE', '2013-03-01');
 define('MAX_B2B_DATE', '2014-01-01');
-define('B2B_DOCUMENT_TYPE', 'B2B');
+define('B2B_DEMAND_START_DATE', '2013-06-01');
 define('CSV_FIELD_DELIMITER', '~#~');
 define('CSV_LINE_DELIMITER', "\r\n");
 
