@@ -398,15 +398,8 @@ $smarty->assign("projectOldComments", $projectOldComments);
 /******end code for project comment fetch from commeny history table*****/
 
 /**start code for fetch offer heading and desc from db**/
-    $qryOfferFetch = "select * from project_offers where project_id = $projectId";
-    $resOfferFetch = mysql_query($qryOfferFetch) or die(mysql_error());
-    $dataOffer = mysql_fetch_assoc($resOfferFetch);
-    $special_offer = $dataOffer['OFFER'];
-    $offer_heading = $dataOffer['OFFER_HEADING'];
-    $offer_desc = $dataOffer['OFFER_DESC'];
-    $smarty->assign("special_offer", $special_offer);
-    $smarty->assign("offer_heading", $offer_heading);
-    $smarty->assign("offer_desc", $offer_desc);
+    $dataOffer = ProjectOffers::find("all",array("conditions"=>array("project_id"=>$projectId)));
+    $smarty->assign("offer_desc", $dataOffer);
     /**end code for fetch offer heading and desc from db**/
     
 if (!isset($_GET['towerId']))

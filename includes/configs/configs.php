@@ -741,4 +741,9 @@ $arrOtherCities =
 		"91"=>"Karnal"
   );
    define("DND_SCUB","http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=");
+   
+$arrOfferTypes = 
+  array(
+    /*'SoldOut', 'NewLaunch', 'NoEmi',*/ 'No Pre-EMI', 'Part Now Part Later', 'No Additional Charges (PLC/Amenities)', 'Price Discount', 'Other'
+  );
 ?>

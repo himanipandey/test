@@ -91,6 +91,14 @@
 			$_REQUEST['Active'] = '';
 		$Status = $_REQUEST['Status'];
 		$Active	= $_REQUEST['Active'];
+		
+		if(!empty($_GET['offerId'])){
+			$offerId = $_GET['offerId'];
+			$smarty->assign("offerId",$offerId);
+		}else{
+			$withOffer = $_GET['withOffer'];
+			$smarty->assign("withAssign",$withOffer);
+		}
 
 		if($_GET['projectId'] != '')
 			$project_name= $ProjectDetail[0]['PROJECT_NAME'];
@@ -221,7 +229,7 @@
 			if(date($exp_supply_date_to) < date($exp_supply_date_from))
 				$errorMsg = '<font color = red>To Date must be greater than From Date.</font>';		
 		}
-	    	else if( count($arrSearchFields) > 0 ) { 
+	    	else if( count($arrSearchFields) > 0 || !empty($_GET['offerId']) || !empty($_GET['withOffer'])) { 
                     $getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
                     $NumRows = count($getSearchResult);
                     if(count($getSearchResult) == 0)

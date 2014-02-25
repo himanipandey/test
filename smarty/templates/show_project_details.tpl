@@ -24,12 +24,13 @@
 			["event11", "edit_floor_plan.php", true],
 			["event12", "/new/price", true],
 			["event13", "project_other_price.php", true],
-                        ["event14", "secondary_price.php", true],
-                        ["event15", "insertSecondaryPrice.php", true],
-                        ["event16", "updateSecondaryPrice.php", true],
-                        ["event17", "/new/supply-validation/", true],
-                        ["event18", "allCommentHistory.php"],
-                        ["event19", "/new/bulk_price_inventory/", true]
+            ["event14", "secondary_price.php", true],
+            ["event15", "insertSecondaryPrice.php", true],
+            ["event16", "updateSecondaryPrice.php", true],
+            ["event17", "/new/supply-validation/", true],
+            ["event18", "allCommentHistory.php"],
+            ["event19", "/new/bulk_price_inventory/", true],
+            ["event20", "project_offers.php", true]
 		]; 
 		for(var i=0; i< eventArray.length; i++){
 			$('.clickbutton').bind(eventArray[i][0], function(event){
@@ -566,6 +567,11 @@ function getDateNow(){
 				&nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Stage Differenece:</b><button id="diffButton">Diff</button>
 		    {/if}
             <!-- End of Project Diff -->	   
+            <!-- offer edit -->
+             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+            &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Offers:<b><button class="clickbutton" onclick="$(this).trigger('event20');">Edit</button>
+            {/if}
+            <!-- offer edit end -->
 			</td></tr>				   
 			<tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
@@ -1207,11 +1213,15 @@ function getDateNow(){
 						</tr>
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>Offer Description:</b>
+                                                            <b>Special Offer Description:</b>
                                                     </td>
                                                     <td>
-                                                        {if $offer_desc != ''}
-                                                                {$offer_desc}
+                                                        {if $offer_desc}
+                                                            {$count=1}
+															{foreach from=$offer_desc item=data}
+																 {$count++}. {$data->offer_desc}<br/>
+															{/foreach}
+                                                            
                                                         {else}
                                                                 --
                                                         {/if}
@@ -1759,8 +1769,7 @@ function getDateNow(){
 					  </table>
 				</td>
 			</tr>
-		  
-		   <tr>
+		    <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
@@ -1827,6 +1836,7 @@ function getDateNow(){
 								<b> Locality Average Price : </b> {$localityAvgPrice}
 							</td>
 						</tr>
+						
 					</table>
 				</td>
 			</tr>
