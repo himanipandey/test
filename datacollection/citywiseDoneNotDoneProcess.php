@@ -87,12 +87,13 @@ foreach($arrNotDone as $k=>$v) {
                 $cnt +=count($arrNotDone[$k][$kCityId]);
                 $adminKey = $k;
         }
-        else
-            $citywiseNotDone[$vInner['adminid']][$kCityId][] = 0;   
+        else{
+            $citywiseNotDone[$vInner['adminid']][$kCityId][] = 0;
+            $cnt +=0;
+        }
     }
     $citywiseNotDone[$adminKey]['total'] = $cnt;
 }
-
 $smarty->assign('citywiseNotDone',$citywiseNotDone);
 $smarty->assign('arrExecProjectDone',$arrExecProjectDone);
 ?>

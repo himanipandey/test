@@ -88,6 +88,7 @@
                                                         {$arrGrandTotal = array()}
                                                         {if $newArrLead[$key] != ''}
                                                             {$total['total'] = array()}
+                                                            {$total['totalNotDone'] = array()}
                                                         <tr>
                                                             <td nowrap rowspan = 2>{$newArrLead[$key]}</td>
                                                             <td nowrap>Done</td>
@@ -114,15 +115,17 @@
                                                                 {if isset($citywiseNotDone[$key][$itemCity['city_id']])}
                                                                     {array_sum($citywiseNotDone[$key][$itemCity['city_id']])}
                                                                     {$arrGrandTotal[$key][$itemCity['city_id']][] = array_sum($citywiseNotDone[$key][$itemCity['city_id']])}
+                                                                    {$total['totalNotDone'][] = array_sum($citywiseNotDone[$key][$itemCity['city_id']])}
                                                                 {else}
+                                                                    {$total['totalNotDone'][] = 0}
                                                                     {$arrGrandTotal[$key][$itemCity['city_id']][] = 0}
                                                                     0
                                                                 {/if}
                                                                 </td>
                                                             {/foreach}
                                                             <td nowrap>
-                                                                {$citywiseNotDone[$key]['total']}
-                                                                {$arrGrandTotal[$key]['grandTotal'][] = $citywiseNotDone[$key]['total']}
+                                                                {array_sum($total['totalNotDone'])}
+                                                                {$arrGrandTotal[$key]['grandTotal'][] = array_sum($total['totalNotDone'])}
                                                             </td>
                                                         </tr>
                                                         <tr bgcolor = '#c2c2c2'>
