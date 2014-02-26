@@ -6,6 +6,5 @@
     include("includes/configs/configs.php");
     include("builder_function.php");
     include("modelsConfig.php");
-    AdminAuthentication();
     include('isMetricsProcess.php');
 ?>
