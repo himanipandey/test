@@ -76,9 +76,12 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
 }
 
 function getProjectListForManagers($cityId, $department = '', $suburbId = '', $localityId = ''){
-    if($department == 'survey')
+    if($department == 'survey') {
         $departmentInner = "and pa1.DEPARTMENT = 'SURVEY'";
+        $innerJoin = " inner ";
+    }
     else {
+        $innerJoin = " left ";
         $departmentInner = "and pa1.DEPARTMENT in('CALLCENTER','SURVEY','DATAENTRY')";
     }
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,mbst.name as BOOKING_STATUS,
@@ -109,7 +112,7 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
          left join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
          left join project_assignment pa ON (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
             or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
-         left join proptiger_admin pa1 on 
+         $innerJoin join proptiger_admin pa1 on 
          (pa.ASSIGNED_TO = pa1.ADMINID $departmentInner) left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
          = uc.UPDATION_CYCLE_ID 
          where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
@@ -147,9 +150,12 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
 }
 
 function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
-    if($callingFieldFlag == 'survey')
+    if($callingFieldFlag == 'survey') {
         $department = "and pa1.DEPARTMENT = 'SURVEY'";
+        $innerJoin = " inner ";
+    }
     else {
+        $innerJoin = " left ";
         $department = "and pa1.DEPARTMENT in('CALLCENTER','SURVEY','DATAENTRY')";
     }
     $res = array();
@@ -183,7 +189,7 @@ function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
          left join 
          project_assignment pa ON (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
             or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
-         left join proptiger_admin pa1 on 
+         $innerJoin join proptiger_admin pa1 on 
          (pa.ASSIGNED_TO = pa1.ADMINID $department)  left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
          = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
@@ -473,7 +479,8 @@ function getCallCenterExecutive($executives = array()){
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
                where 
                ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
-               or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
+               or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) 
+                and rp.version ='Cms' and rp.status in ('ActiveInCms','Active')
                and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
                where pa.DEPARTMENT in ($department)  group by pa.ADMINID order by WORKLOAD;";
@@ -489,7 +496,8 @@ function getCallCenterExecutive($executives = array()){
             inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
             where ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') or 
-            (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version = 'Cms' 
+            (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) 
+            and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active')
             and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
             inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
             where pa.DEPARTMENT in ($department) and pa.ADMINID in 
