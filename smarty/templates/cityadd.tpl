@@ -113,12 +113,12 @@
 				 <td width="50%" align="left"></td>
 				</tr>
 				<tr>
-					<td width="20%" align="right">Aliases  : </td>
+					<td width="20%" align="right">Landmarks Attached: </td>
 					<td width="30%" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:green; font-weight: bold;"></label></td>
 				</tr>
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
-					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search: </label></td>
+					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search Landmarks: </label></td>
 					<td width="30%" align="left"><input id="search"></td></div>
 					<td width="10%" align="left"><button type="button" id="button" align="left">Save Alias</button></td><td><label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label> </td>
 					

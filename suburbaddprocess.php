@@ -16,6 +16,8 @@
             header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
     }
 
+    $localityDetailsArray =   ViewSuburbDetails($suburbid);
+
     if (isset($_POST['btnSave'])) {
                     $txtCityName			=	trim($_POST['txtCityName']);
                     $txtMetaTitle			=	trim($_POST['txtMetaTitle']);
@@ -25,7 +27,9 @@
                     $desc					=	trim($_POST['desc']);	
                     $old_sub_url			=	trim($_POST['old_sub_url']);
                     $old_sub_name			=	trim($_POST['old_sub_name']);
-
+                    $parent_id              =    trim($_POST['parent_id']);
+                    $parent_name              =    trim($_POST['parent_name']);
+ 
                     $smarty->assign("txtCityName", $txtCityName);
                     $smarty->assign("txtMetaTitle", $txtMetaTitle);
                     $smarty->assign("txtMetaKeywords", $txtMetaKeywords);
@@ -34,6 +38,8 @@
                     $smarty->assign("desc", $desc);
                     $smarty->assign("txtCityUrl", $txtCityUrl);
                     $smarty->assign("old_sub_url", $old_sub_url);
+                    $smarty->assign("parent_id", $parent_id);
+                    $smarty->assign("parent_name", $parent_name);
 
                     if( $txtCityName == '')   {
                             $ErrorMsg["txtCityName"] = "Please enter suburb name.";
@@ -65,10 +71,11 @@
                             LABEL 		=	'".$txtCityName."',
                             STATUS		=	'".$status."',
                             URL		=	'".$txtCityUrl."',
-                            DESCRIPTION	=	'".$desc."'
+                            DESCRIPTION	=	'".$desc."',
+                            parent_suburb_id = '".$parent_id."'
                             WHERE SUBURB_ID ='".$suburbid."'";
-
-                          $update_flag = mysql_query($updateQry);
+echo $updateQry;
+                          $update_flag = mysql_query($updateQry); 
                           if($update_flag){ 
                             $seoData['meta_title'] = $txtMetaTitle;
                             $seoData['meta_keywords'] = $txtMetaKeywords;
@@ -99,7 +106,7 @@
 
     else if($suburbid!=''){
 
-            $localityDetailsArray =   ViewSuburbDetails($suburbid);
+            
             $getSeoData           =   SeoData::getSeoData($suburbid, 'suburb');
             $txtCityName	  =	trim($localityDetailsArray['LABEL']);
             $txtMetaTitle	  =	$getSeoData[0]->meta_title;
@@ -114,6 +121,54 @@
             $smarty->assign("txtMetaDescription", $txtMetaDescription);
             $smarty->assign("status", $status);	
             $smarty->assign("desc", $desc);
+
+            }
+
+
+             $getLandmarkAliasesArr = getLandmarkAliases('suburb', $suburbid);
+           $landmarkJson = json_encode($getLandmarkAliasesArr);
+           $smarty->assign("landmarkAliases", $getLandmarkAliasesArr);
+            $smarty->assign("landmarkJson", $landmarkJson);
+
+
+            // add parent suburb
+             $suburbSelect = Array();
+    $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id FROM ".SUBURB." WHERE 
+            CITY_ID ='".$cityId ."'  ORDER BY LABEL ASC";
+
+    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
+    while ($dataArr = mysql_fetch_array($QueryExecute))
+    {
+           array_push($suburbSelect, $dataArr);
     }
+    $smarty->assign("suburbSelect", $suburbSelect);
+
+    $parent_id = $localityDetailsArray['parent_suburb_id'];
+    foreach ($suburbSelect as $k1 => $v1) {       
+        if ($v1['id']==$parent_id) {
+            $parent_name = $v1['label'];
+        }
+    }
+    $smarty->assign("parent_id", $parent_id);
+    $smarty->assign("parent_name", $parent_name);
+
+
+            // hierarchy map
+            $txtCityName      = trim($localityDetailsArray['LABEL']);
+            $suburbarr = Array();
+            $suburbarr['id'] = $suburbid;
+            $suburbarr['label'] = $txtCityName;
+
+            $suburbarr['parent_id'] = $parent_id;
+
+            $str = json_encode(getHierArr($cityId, $suburbarr));
+            //echo $str;
+            
+            $smarty->assign("suburb_str", $str);
+
+
+    
+
+   
  
 ?>

@@ -247,4 +247,196 @@ function dettachAliases($pl_tb_name, $pl_tb_id, $al_tb_id)
 }
 
 
+function getHierArr($cid, $subarr1){
+	$suburbArr = Array();   // only first level suburbs
+    $lowerSubArr = Array();    // only second and third level suburbs
+    $parent_id = 0;
+    $counter = 0;
+    $arr = Array();  //return array
+
+	$cityArray = getAllCities();
+	$suburbSelect = Array();
+    $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id as parent_id FROM ".SUBURB." WHERE 
+            CITY_ID ='".$cid ."'  ORDER BY LABEL ASC";
+
+    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
+    while ($dataArr = mysql_fetch_array($QueryExecute))
+    {
+           array_push($suburbSelect, $dataArr);
+    }
+
+    //get all localities in the city
+    $locArr = Array();
+    $qry = "SELECT a.LOCALITY_ID as id, a.LABEL as label, a.SUBURB_ID as parent_id FROM " . locality . " a
+              inner join suburb b
+                on a.SUBURB_ID = b.SUBURB_ID
+              inner join city c
+                on b.CITY_ID = c.CITY_ID
+             WHERE 
+                c.CITY_ID = '" . $cid . "' 
+            ORDER BY a.LABEL ASC";
+    $res = mysql_query($qry);
+    while ($dataArr = mysql_fetch_array($res))
+    {
+           array_push($locArr, $dataArr);
+    }
+
+    foreach ($suburbSelect as $k => $v) {     
+        
+        if($v['parent_id']>0){
+           array_push($lowerSubArr, $v);
+           
+        }
+        else{    
+        	$v['type'] = 'suburb';        
+            array_push($suburbArr, $v);
+        }  
+               
+    }
+
+ 
+    foreach ($cityArray as $k1 => $v1) {       
+
+        if ($v1['CITY_ID']==$cid) {
+            $cityName = $v1['LABEL'];
+        }
+        
+    }
+
+    $arr['id'] = 'node02';
+    $arr['name'] = $cityName; 
+    
+    $tmpArray = Array();
+    $tmpArray['placeType'] = 'city';
+    $arr['data'] = $tmpArray;
+    $tmpid = $subid;
+    $bool = true;
+    $subid = $subarr1['id'];
+    $subname = $subarr1['label'];
+    $parentid = $subarr1['parent_id'];
+    	
+    	while($bool){
+       
+    		$bool1 = true;
+    		foreach ($suburbSelect as $k => $v) {  
+        // echo $v['id'];
+      		    if($v['id']==$parentid){
+          		 $subid = $v['id'];
+               $subname = $v['label'];
+               $parentid = $v['parent_id'];
+          		 $bool1 = false;
+       			 }
+
+  		    }
+  		    if($bool1) $bool = false;
+
+    	}	
+
+    	$subArray = Array();
+    	 $subArray['id'] = 'node1001';
+    	  global $counter;
+    	 $counter +=1000;
+   		 $subArray['name'] = $subname;
+   		   $tmpArray1 = Array();
+    	$tmpArray1['placeType'] = 'suburb';
+    	$subArray['data'] = $tmpArray1;
+    	$child1Array = Array();
+    	
+    	$childArray = child_suburb($subid, $lowerSubArr, $locArr);
+  		if(count($childArray)>0){
+  			$subArray['children'] =  print_suburb($childArray, $lowerSubArr, $locArr);
+  			$subArray1 = Array();
+  			array_push($subArray1, $subArray);
+  			$arr['children'] = $subArray1;
+  		}
+    
+    else{
+   	 if(count($suburbSelect)>0){  
+   	 	$arr['children'] =  print_suburb($suburbArr, $lowerSubArr, $locArr);
+     }
+   }
+   
+  return $arr;
+}
+
+
+function print_suburb($childArray, $lowerSubArr, $locArr){
+    global $counter;
+    $counter +=1000;
+    $returnArr = Array();
+    foreach ($childArray as $k => $v) {
+     $counter++;
+     $tmpArray = Array();
+     $tmpArray['id'] = "node".$counter;
+    $tmpArray['name'] = $v['label']; 
+  	 $tmpArray1 = Array();
+  	 if($v['type'] == 'suburb')
+   		 $tmpArray1['placeType'] = 'suburb';
+	else if ($v['type'] == 'locality')
+		$tmpArray1['placeType'] = 'locality';
+    $tmpArray['data'] = $tmpArray1;
+  //echo $v['label'];
+  $child1Array = Array();
+  $child1Array1 = Array();
+  $tmpArray['children'] = Array();
+  $child1Array = child_suburb($v['id'], $lowerSubArr, $locArr);
+  if(count($child1Array)>0)
+  $tmpArray['children'] =  print_suburb($child1Array, $lowerSubArr, $locArr);
+ /* 
+  if($type == 'suburb'){
+  if(count($child1Array)>0){   
+  //echo "hi:".$v['label']; 
+   array_push($tmpArray['children'], print_suburb($child1Array, $lowerSubArr, $locArr, 'suburb'));
+   // $tmpArray['children'] =  print_suburb($child1Array, $lowerSubArr, $locArr, 'suburb');
+    
+  }
+  $child1Array1 = child_suburb($v['id'], $locArr);
+  if(count($child1Array1)>0){ 
+  //echo "10";   
+   array_push($tmpArray['children'], print_suburb($child1Array1, $lowerSubArr, $locArr, 'locality'));
+    //$tmpArray['children'] =  print_suburb($child1Array1, $lowerSubArr, $locArr, 'locality');
+    }
+  }
+  
+   */
+   array_push($returnArr, $tmpArray);
+ }
+ $counter -=1000;
+ //echo json_encode($returnArr);
+ return $returnArr;
+}
+
+
+
+
+function child_suburb($p_id, $arr1, $arr2){
+    $returnArr = Array();
+    
+    foreach ($arr1 as $k1 => $v1) {       
+        
+    
+        if ($v1['parent_id']==$p_id) {
+            //echo $v1['label'];
+            
+            $v1['type'] = 'suburb';
+            array_push($returnArr, $v1);
+        }
+        
+    }
+
+    foreach ($arr2 as $k1 => $v1) {       
+        
+    
+        if ($v1['parent_id']==$p_id) {
+            //echo $v1['label'];
+            
+            $v1['type'] = 'locality';
+            array_push($returnArr, $v1);
+        }
+        
+    }
+    //print_r($returnArr);
+    return $returnArr;
+ }
+
 ?> 
