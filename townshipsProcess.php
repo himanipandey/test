@@ -1,5 +1,13 @@
 <?php
 
+	 /*****************City Data************/
+	$CityDataArr = City::CityArr();
+	$smarty->assign("CityDataArr", $CityDataArr);
+	 $smarty->assign('dirname',$dirName);
+ 
+	$cityId = $_REQUEST['citydd'];
+    $smarty->assign('cityId',$cityId);
+    
     $smarty->assign("sort",$_GET['sort']);
     $smarty->assign("page",$_GET['page']);
     if(isset($_GET['page'])) {
@@ -20,15 +28,27 @@
         $Offset = ($PageNum - 1) * $RowsPerPage;
     }
      $brokerDataArr = array();
-    if($name != null)
-        $conditionsTownships = array("township_name like '$name%'");
+     $AND = '';
+    if($name != null){
+        $conditionsTownships = "township_name like '$name%'";
+        $AND = ' AND ';
+    }
     else
         $conditionsTownships = '';
+    if(!empty($cityId)){
+        $conditionsCity = $AND."city_id = '$cityId'";
+    }
+    else{
+        $conditionsCity = '';
+    }
     $join = " LEFT JOIN proptiger_admin pa on townships.updated_by = pa.adminid";
     $townshipsDetail = Townships::find('all',
-           array('joins' => $join,'conditions'=>$conditionsTownships,'order' => 'township_name asc',
+           array('joins' => $join,'conditions'=>array($conditionsTownships.$conditionsCity),'order' => 'township_name asc',
                 'limit' => "$RowsPerPage","offset" => "$Offset","select" => "townships.*, pa.fname"));
-    $NumRows 	  = count($townshipsDetail);
+    $townshipsDetailAll = Townships::find('all',
+           array('joins' => $join,'conditions'=>array($conditionsTownships.$conditionsCity),'order' => 'township_name asc',
+                "select" => "townships.*, pa.fname"));
+    $NumRows 	  = count($townshipsDetailAll);
     $townshipsArr = array();
     foreach ($townshipsDetail as $value){	
             array_push($townshipsArr, $value);

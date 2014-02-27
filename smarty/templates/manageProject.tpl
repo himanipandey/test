@@ -393,7 +393,7 @@ $(function() {
                                         <select name="townshipId" id="townshipId" >
                                           <option value="">Select Township</option>
                                            {foreach from = $arrTownshipDetail key = key item = value}
-                                               <option value="{$key}" {if $key == $townshipId} selected {/if}>{$value} </option>
+                                               <option value="{$key}" {if $key == $townshipId} selected {/if}>{$key} - {$value}</option>
                                            {/foreach}
                                        </select>
                                         </td>

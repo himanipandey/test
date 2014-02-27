@@ -1,6 +1,10 @@
 <?php
 $docroot = dirname(__FILE__) . "/../";
+
+
 require_once $docroot.'dbConfig.php';
+
+
 list($builders, $localities) = getActiveBuildersAndLocalites();
 $suburbs = getActiveSuburbs($localities);
 $cities = getActiveCities($suburbs);
@@ -24,8 +28,9 @@ function setEntityInActive($entityData, $columnName, $entityTable)
 {
     $entityStr = implode(",", $entityData);
     
-    $sql = <<<QRY
-        UPDATE $entityTable set status = "Inactive" WHERE $columnName NOT IN ($entityStr)
+
+    $sql = "UPDATE $entityTable set status = 'Inactive' WHERE $columnName NOT IN ($entityStr)";
+
 QRY;
     $rs = doQuery($sql);
 
@@ -40,9 +45,9 @@ function setEntityActive($entityData, $columnName, $entityTable)
 {
     $entityStr = implode(",", $entityData);
     
-    $sql = <<<QRY
-        UPDATE $entityTable set status = "Active" WHERE $columnName IN ($entityStr)
-QRY;
+
+    $sql = "UPDATE $entityTable set status = 'Active' WHERE $columnName IN ($entityStr)";
+
     $rs = doQuery($sql);
 
     if(empty($rs))
@@ -56,9 +61,9 @@ function getActiveCities($suburbs)
 {
     $suburbIdStr = implode(",", $suburbs);
 
-    $sql = <<<QRY
-        SELECT distinct(city_id) FROM cms.suburb WHERE suburb_id IN ($suburbIdStr)
-QRY;
+
+    $sql = "SELECT distinct(city_id) FROM cms.suburb WHERE suburb_id IN ($suburbIdStr)";
+
     $rs = doQuery($sql);
 
     $cities = array();
@@ -71,9 +76,9 @@ QRY;
 function getActiveSuburbs($localities)
 {
     $localityIdStr = implode(",", $localities);
-    $sql = <<<QRY
-        SELECT distinct(suburb_id) FROM cms.locality WHERE locality_id in ($localityIdStr)
-QRY;
+
+    $sql = "SELECT distinct(suburb_id) FROM cms.locality WHERE locality_id in ($localityIdStr)";
+
     $rs = doQuery($sql);
 
     $suburbs = array();
@@ -85,10 +90,10 @@ QRY;
 
 function getActiveBuildersAndLocalites()
 {
-    $sql = <<<QRY
-        SELECT project_id, locality_id, builder_id FROM cms.resi_project
-            where status in ("Active", "ActiveInCms")
-QRY;
+
+    $sql = "SELECT project_id, locality_id, builder_id FROM cms.resi_project
+            where status in ('Active', 'ActiveInCms')";
+
     $rs = doQuery($sql);
 
     $builders = array();
@@ -104,8 +109,10 @@ QRY;
     return array(array_keys($builders), array_keys($localities) );
 }
 
-function doQuery($sql) {
-    $res = mysql_query($sql) or die(mysql_error());
+
+function doQuery($qry) {
+    $res = mysql_query($qry) or die(mysql_error());
+
     return $res;
 }
 ?>

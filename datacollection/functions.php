@@ -65,7 +65,17 @@ function getCallCenterExecutiveWorkLoad($executives = array()){
     return $result = dbQuery($sql);
 }
 
-function getProjectListForManagers($cityId, $suburbId = ''){
+
+function getProjectListForManagers($cityId, $department = '', $suburbId = '', $localityId = ''){
+    if($department == 'survey') {
+        $departmentInner = "and pa1.DEPARTMENT = 'SURVEY'";
+        $innerJoin = " inner ";
+    }
+    else {
+        $innerJoin = " left ";
+        $departmentInner = "and pa1.DEPARTMENT in('CALLCENTER','SURVEY','DATAENTRY')";
+    }
+
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS,mbst.name as BOOKING_STATUS,
          psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
          max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE, pphs.name as PROJECT_PHASE, 
@@ -89,10 +99,15 @@ function getProjectListForManagers($cityId, $suburbId = ''){
          left join master_project_phases mppp on pshp.PROJECT_PHASE_ID = mppp.id
          inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id and rpphs.PHASE_TYPE = 'Logical' and rpphs.version = 'Cms'
          left join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
-         left join project_assignment pa 
-         on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
-         pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
-         = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
+
+
+         left join project_assignment pa ON (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
+         $innerJoin join proptiger_admin pa1 on 
+         (pa.ASSIGNED_TO = pa1.ADMINID $departmentInner) left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
+         = uc.UPDATION_CYCLE_ID 
+         where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
+
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms' ";
     
@@ -118,7 +133,17 @@ function getProjectListForManagers($cityId, $suburbId = ''){
     return  $res = dbQuery($sql); 
 }
 
-function getAssignedProjectsFromPIDs($pids){
+
+function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
+    if($callingFieldFlag == 'survey') {
+        $department = "and pa1.DEPARTMENT = 'SURVEY'";
+        $innerJoin = " inner ";
+    }
+    else {
+        $innerJoin = " left ";
+        $department = "and pa1.DEPARTMENT in('CALLCENTER','SURVEY','DATAENTRY')";
+    }
+
     $res = array();
     if(!empty($pids)){
        $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, ps.PROJECT_STATUS, mbst.name as BOOKING_STATUS, psh.DATE_TIME MOVEMENT_DATE, c.LABEL CITY, l.LABEL LOCALITY,
@@ -144,9 +169,13 @@ function getAssignedProjectsFromPIDs($pids){
          inner join master_project_phases pphs on rp.PROJECT_PHASE_ID = pphs.id
          left join master_project_stages mpsp on pshp.PROJECT_STAGE_ID = mpsp.id
          left join master_project_phases mppp on pshp.PROJECT_PHASE_ID = mppp.id
-         left join project_assignment pa 
-         on rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID left join proptiger_admin pa1 on 
-         pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
+
+         left join 
+         project_assignment pa ON (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
+         $innerJoin join proptiger_admin pa1 on 
+         (pa.ASSIGNED_TO = pa1.ADMINID $department)  left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
+
          = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'
@@ -331,4 +360,123 @@ function excel_file_download($data, $filename){
     flush();
     readfile($filename);
 }
+
+
+function arrSurveyTeamLeadCities($teamLeadId){
+    $qry = "select c.city_id,c.label from proptiger_admin_city a join city c 
+        on a.city_id = c.city_id where a.admin_id = $teamLeadId";
+    $res = mysql_query($qry) or die(mysql_error());
+    $arrSurveyTeamLeadCity = array();
+    while ($data = mysql_fetch_assoc($res)){
+        $arrSurveyTeamLeadCity[$data['city_id']] = $data['label'];
+    }
+    return $arrSurveyTeamLeadCity;
+}
+
+function surveyexecutiveList(){
+    $arrAllSurveyLeadCityList = arrSurveyTeamLeadCities($_SESSION['adminId']);
+       $sql = "select pa.ADMINID, pa.FNAME, max(t.TOTAL) WORKLOAD 
+            from 
+            (select pa.ADMINID, 0 TOTAL from proptiger_admin pa 
+            inner join proptiger_admin_city pac on pa.adminid = pac.admin_id
+              where pa.ROLE = 'executive' and pac.city_id in(".implode(',',array_keys($arrAllSurveyLeadCityList)).")
+                  and pa.DEPARTMENT in ('SURVEY')
+            union select pa.ASSIGNED_TO, 
+               count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
+               inner join resi_project rp
+               on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and (pa.updation_cycle_id = rp.updation_cycle_id or rp.updation_cycle_id is null))
+               inner join locality l on rp.locality_id = l.locality_id
+               inner join suburb s on l.suburb_id = s.suburb_id
+               inner join proptiger_admin_city pac on (s.city_id = pac.city_id and pa.assigned_to = pac.admin_id)
+               inner join master_project_phases mpp on rp.project_phase_id = mpp.id
+               inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
+               
+               where 
+                pac.city_id in(".implode(',',array_keys($arrAllSurveyLeadCityList)).") and
+               ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
+               or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
+               and pa.STATUS = 'notAttempted' and rp.status in ('ActiveInCms','Active') group by pa.ASSIGNED_TO) t 
+               inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
+               where pa.DEPARTMENT in ('SURVEY') and pa.adminid not in(".$_SESSION['adminId'].") group by pa.ADMINID order by WORKLOAD;";
+        $result = dbQuery($sql);
+    return $result;
+}
+
+/********functions for field team related*******/
+function getallprojectListForField(){
+        $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, ps.PROJECT_STATUS,
+        psh.DATE_TIME MOVEMENT_DATE,max(pa.UPDATION_TIME) as LAST_WORKED_AT, pstg.name as PROJECT_STAGE,
+        pphs.name as PROJECT_PHASE, 
+         mpsp.name as PREV_PROJECT_STAGE, mppp.name PREV_PROJECT_PHASE,pa1.fname,
+         rp.MOVEMENT_HISTORY_ID, GROUP_CONCAT(pa1.USERNAME order by pa.ID asc separator '|') ASSIGNED_TO, 
+         GROUP_CONCAT(pa1.DEPARTMENT order by pa.ID asc separator '|') 
+         DEPARTMENT, GROUP_CONCAT(pa.CREATION_TIME order by pa.ID asc separator '|') ASSIGNED_AT,
+         GROUP_CONCAT(pa.STATUS order by pa.ID asc separator '|') STATUS, 
+         GROUP_CONCAT(pa.EXECUTIVE_REMARK order by pa.ID asc separator '|') REMARK, 
+         if(uc.LABEL is null, 'No Label', uc.LABEL) LABEL from resi_project rp 
+         inner join project_status_master ps on rp.project_status_id = ps.id
+         inner join project_stage_history psh on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID 
+         left join project_stage_history pshp on psh.PREV_HISTORY_ID = pshp.HISTORY_ID 
+         inner join master_project_stages pstg on rp.project_stage_id = pstg.id
+         inner join master_project_phases pphs on rp.project_phase_id = pphs.id
+         left join master_project_stages mpsp on pshp.PROJECT_STAGE_ID = mpsp.id
+         left join master_project_phases mppp on pshp.PROJECT_PHASE_ID = mppp.id
+         inner join resi_project_phase rpphs on rp.project_id = rpphs.project_id 
+            and rpphs.PHASE_TYPE = 'Logical' and rpphs.version = 'Cms'
+         left join master_booking_statuses mbst on rpphs.booking_status_id = mbst.id
+         left join project_assignment pa 
+         on (rp.MOVEMENT_HISTORY_ID=pa.MOVEMENT_HISTORY_ID 
+         and rp.updation_cycle_id = pa.updation_cycle_id) left join proptiger_admin pa1 on 
+         pa.ASSIGNED_TO = pa1.ADMINID left join updation_cycle uc on rp.UPDATION_CYCLE_ID 
+         = uc.UPDATION_CYCLE_ID 
+         where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
+            (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
+         rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') 
+         and rp.version = 'Cms' and pa1.department = 'SURVEY' and role = 'teamleader'";
+    $sql = $sql . " group by pa1.adminid order by rp.PROJECT_ID;";
+    return  $res = dbQuery($sql); 
+}
+
+function getCallCenterExecutive($executives = array()){
+    $department = "'CALLCENTER', 'DATAENTRY'";
+    if(empty($executives)){
+        $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
+            from 
+            (select pa.ADMINID, 0 TOTAL from proptiger_admin pa 
+              where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, 
+               count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
+               inner join resi_project rp 
+               on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
+               inner join master_project_phases mpp on rp.project_phase_id = mpp.id
+               inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
+               where 
+               ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') 
+               or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) 
+                and rp.version ='Cms' and rp.status in ('ActiveInCms','Active')
+               and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
+               inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
+               where pa.DEPARTMENT in ($department)  group by pa.ADMINID order by WORKLOAD;";
+    }
+    else{
+        $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
+            from (select pa.ADMINID, 0 TOTAL from proptiger_admin pa 
+            where pa.ROLE = 'executive' union select pa.ASSIGNED_TO, count(rp.MOVEMENT_HISTORY_ID) TOTAL 
+            from project_assignment pa 
+            inner join resi_project rp 
+            on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
+            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
+            inner join master_project_phases mpp on rp.project_phase_id = mpp.id
+               inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
+            where ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') or 
+            (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) 
+            and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active')
+            and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
+            inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
+            where pa.DEPARTMENT in ($department) and pa.ADMINID in 
+            (".  implode(',', $executives).") group by pa.ADMINID order by WORKLOAD;";
+    }
+    return $result = dbQuery($sql);
+}
+
 ?>

@@ -294,7 +294,7 @@ function getDateNow(){
               url:"submit_builder_contact.php",
               data:"name="+str1+"&phone="+phone1+"&email="+email1+"&builderId="+builderId+"&deleteval="+deleteval+"&id="+id+"&projects="+projects1,
               success:function(dt){
-                  window.location.href = "show_project_details.php?projectId="+pid;
+                  window.location.href = "show_project_details.php?projectId="+pid+"&flag="+dt;
               }
 
             }
@@ -390,7 +390,7 @@ function getDateNow(){
  {
 	window.location.href = "show_project_details.php?stageName="+stageName+"&phasename="+phasename+"&projectId="+projectId;
  }
- 
+
  $(document).ready(function(){
 	 
 	 $('#diffButton').click(function(){
@@ -556,8 +556,10 @@ function getDateNow(){
             &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Phases:</b><button class="clickbutton" onclick="$(this).trigger('event6');">Edit</button>
             {/if}
            
-            <!-- End of Project Phases -->
-             <!-- Project Diff -->
+
+            <!-- End of Project Phases -->	
+            <!-- Project Diff -->
+
             &nbsp;&nbsp;&nbsp;&nbsp;
             
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission) && $projectDetails[0]['PROJECT_PHASE_ID'] > 3 && ($projectDetails[0]['PROJECT_STAGE_ID'] == 2 || $projectDetails[0]['PROJECT_STAGE_ID'] == 3)} 
@@ -608,7 +610,9 @@ function getDateNow(){
 							  			<img src = "images/plus.jpg" width ="20px">
 							  		
 							  	</a>
-							  	</span>
+							  	</span>{if $callerMessage != ''}
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;<font color = "green"><b>{$callerMessage}</b></font>
+                                                              {/if}
 							  </td>
 						</tr>
 
@@ -1788,7 +1792,13 @@ function getDateNow(){
 									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 										
 											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
-													<img src="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+                                                                                            {$parts = explode('.', $ImageDataListingArr[data].PLAN_IMAGE)}
+                                                                                            {$last = array_pop($parts)}
+                                                                                            {$str1 = implode('.', $parts)}
+                                                                                            {$str1 = $str1|cat:'-thumb'}
+                                                                                            {$str2 = $str1|cat:'.'}
+                                                                                            {$finalStrWithThumb = $str2|cat:$last}
+                                                                                            <img src="{$imgDisplayPath}{$finalStrWithThumb}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
 												</a>
 												<br>
 											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
@@ -1809,7 +1819,17 @@ function getDateNow(){
 					</table>
 				</td>
 		   </tr>
-			
+			 <tr>
+ 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+						<tr>
+							<td align="left"  nowrap colspan ="4">
+								<b> Locality Average Price : </b> {$localityAvgPrice}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 			
 		  
 		  <tr>
@@ -1845,7 +1865,13 @@ function getDateNow(){
 										
 											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}
 														" target="_blank">
-												<img src="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
+                                                                                            {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
+                                                                                            {$lastFloor = array_pop($partsFloor)}
+                                                                                            {$strFloor1 = implode('.', $partsFloor)}
+                                                                                            {$strFloor1 = $strFloor1|cat:'-thumb'}
+                                                                                            {$strFloor2 = $strFloor1|cat:'.'}
+                                                                                            {$finalStrWithThumbFloor = $strFloor2|cat:$last}
+												<img src="{$imgDisplayPath}{$finalStrWithThumbFloor}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
 											</a>
 											<br>
 										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
@@ -2054,7 +2080,7 @@ function getDateNow(){
                  {/if}
 
                 <tr>
-                  <td align ="left" valign ="top" colspan="2"  style = "padding-left:30px;">
+                 <td align ="left" valign ="top" colspan="2"  style = "padding-left:30px;">
                         <table align="left" style = "border:1px solid;">
                             <tr class ="headingrowcolor">
                                 <td colspan="5">&nbsp;</td>
@@ -2074,7 +2100,9 @@ function getDateNow(){
                                     <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$oneMonthAgoDt}</b></th>
                                  <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Price as on {$twoMonthAgoDt}</b></th>
                             </tr>
-                 		{foreach from=$phase_prices key=phase_name item = phase_values}		
+
+            			{foreach from=$phase_prices key=phase_name item = phase_values}		
+
                             {$cnt = 0}
                             {foreach from= $arrPType key=k item = val}
                               
@@ -2551,7 +2579,7 @@ function getDateNow(){
 							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>
 							  	{if $supplyEditPermissionAccess == 1} 
 									{if !$isSupplyLaunchVerified}
-										<button class="clickbutton" style="background-color: red" onclick="$(this).trigger('event17');">Verify Supply Change</button>
+										<button class="clickbutton" {if $isVerifiedFlagCheck}style="background-color: red"{/if} onclick="$(this).trigger('event17');">Verify Supply Change</button>
 									{/if}
 								{/if}	
 									<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>

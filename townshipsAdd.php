@@ -11,5 +11,6 @@
 	include('townshipsAddProcess.php');
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."townshipsAdd.tpl");
+	include("townships_suggest_auto.php");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 ?>

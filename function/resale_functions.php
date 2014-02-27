@@ -129,7 +129,9 @@
         return $arrProjectByBroker;
     }
     
-    function getBrokerPriceByProject($projectId){
+
+     function getBrokerPriceByProject($projectId){
+
 		
 		global $brokerIdList,$maxEffectiveDtAll;
 		

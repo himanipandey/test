@@ -344,7 +344,8 @@
                         $eligibleIds = implode(',', $eligibleIds);
 
                         $Qry = " UPDATE resi_project " . $SetQry . " 
-                                WHERE id IN (".$eligibleIds.") AND version = 'Cms'";
+                                WHERE id IN (".$eligibleIds.") AND version = 'Cms'
+                                    and updated_by = '".$_SESSION['adminId']."'";
                         $QueryExecute = mysql_query($Qry) or die(mysql_error());
                         $tot_affected_rows = mysql_affected_rows($Qry);	
 

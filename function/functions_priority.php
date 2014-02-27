@@ -541,6 +541,10 @@ function checkProjAvail($projectId = null, $priority = null, $mode = null, $mode
     return $data['CNT'];
 }
 
+
+
+
+
 function getNearPlacesArrfromCity($cityId, $order, $placeType=0)
 {
     global $orderBy;
@@ -843,3 +847,7 @@ function checkNearPlaceAvail($nearPlaceId = null, $priority = null, $mode = null
     return $data['CNT'];
 }
 ?>
+
+
+
+

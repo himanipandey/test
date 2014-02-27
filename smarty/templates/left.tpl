@@ -251,9 +251,41 @@
                 <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
                 <td align="left" height="22"><a class="leftnav" href="locality_near_places_priority.php"><font color = "#f15a22">Locality Near Places Priority</font></a></td>
             </tr>
+
             <tr>
                 <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
                 <td align="left" height="22"><a class="leftnav" href="alias_mgmt.php"><font color = "#f15a22">Alias Management</font></a></td>
+            </tr>
+
+        </table>
+    </td></tr>
+    {/if}
+    
+     {if $executivePerformanceAuth == 1}
+    <tr>
+        <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+        <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Executive Performance</font></a></td>
+    </tr>
+    <tr><td colspan='2' style="padding-left:10px;">
+        <table width='100%'>
+            <tr>
+                <td class="thinline" align="left" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="agingOfProjectinField.php"><font color = "#f15a22">Report With Aging</font></a></td>
+            </tr>
+            <tr>
+                <td class="thinline" align="left" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="citywiseDoneNotDone.php"><font color = "#f15a22">CityWise Report</font></a></td>
+            </tr>
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Report3</font></a></td>
+
             </tr>
         </table>
     </td></tr>

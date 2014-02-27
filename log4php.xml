@@ -6,8 +6,21 @@
         <param name="maxFileSize" value="1MB" />
         <param name="file" value="/var/log/php5.log" />
     </appender>
+
+    <appender name="errorMailAppender" class="LoggerAppenderMailEvent" threshold="ERROR">
+        <layout class="LoggerLayoutSimple" />
+        <param name="to" value="ankur.dhawan@proptiger.com,mandeep.dhir@proptiger.com,mohit.dargan@proptiger.com" />
+        <param name="from" value="mohit.dargan@proptiger.com" />
+        <param name="subject" value="Error Log for Migration" />
+    </appender>
+
     <root>
         <level value="INFO" />
         <appender_ref ref="myAppender" />
     </root>
+
+    <logger name="migration" additivity="false">
+        <appender_ref ref="myAppender" />
+        <appender_ref ref="errorMailAppender" />
+    </logger>
 </configuration>

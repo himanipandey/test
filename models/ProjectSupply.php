@@ -20,6 +20,8 @@ class ProjectSupply extends Objects {
         if($supply_new) {
             $supply_new = $supply_new[0];
             $attributes['updated_by']=$_SESSION['adminId'];
+            if($supply_new->supply != $supply || $supply_new->launched != $launchedUnit)
+				$supply_new->is_verified = 'false';
             $attributes['supply']=$supply;
             $attributes['launched']=$launchedUnit;
             $supply_new->update_attributes($attributes);
@@ -181,9 +183,8 @@ class ProjectSupply extends Objects {
         $project->no_of_flats = $total_count[0]->total_supply;
         $project->save();
     }
-    
     function isSupplyLaunchVerified($projectId){
-		
+ 		
 		$sql = "select l.id from project_supplies ps inner join listings l
                 on ps.listing_id = l.id
                 inner join resi_project_options rpo on l.option_id = rpo.options_id
@@ -195,6 +196,28 @@ class ProjectSupply extends Objects {
 			return FALSE;
 		  else
 			return TRUE;
+		
+	}
+	
+    function isVerifiedFlagCheck($projectId){		
+ 		$sql = "select rpp.phase_id,ps.* from project_supplies ps
+ 				inner join listings lst on lst.id = ps.listing_id
+ 				inner join resi_project_phase rpp on rpp.phase_id = lst.phase_id
+				where rpp.project_id = $projectId 
+				and lst.status = 'Active' and rpp.status = 'Active'
+				and ps.version = 'Cms'
+				and is_verified = 'false'";
+          $result = self::find_by_sql($sql);
+          
+         foreach($result as $key=>$value){
+				$sql_web_diff = "select supply, launched from project_supplies where listing_id = '$value->listing_id' and (supply != '$value->supply' or launched != '$value->launched') and version='Website'";
+				$result_diff = self::find_by_sql($sql_web_diff);
+			  if(count($result_diff)>0){
+				  return 1;
+			 }
+		}
+		
+		return 0;
 		
 	}
 	

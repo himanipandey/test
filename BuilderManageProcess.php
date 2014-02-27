@@ -92,4 +92,6 @@
     $smarty->assign("NumRows",$NumRows);
     $smarty->assign("builders",$_REQUEST['builders']);
     $smarty->assign("builderDataArr", $builderDataArr);
+    $smarty->assign("callerMessage", $_SESSION['callerMessage'][0]);
+    unset($_SESSION['callerMessage']);
 ?>

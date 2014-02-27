@@ -204,7 +204,7 @@ foreach ($res as $data) {
 }
 $supplyAllArray = array();
 $isSupplyLaunchVerified = ProjectSupply::isSupplyLaunchVerified($projectId);
-
+$isVerifiedFlagCheck = ProjectSupply::isVerifiedFlagCheck($projectId);
 foreach($supplyAll as $k=>$v) {
     foreach($v as $kMiddle=>$vMiddle) {
         foreach($vMiddle as $kLast=>$vLast) {
@@ -237,7 +237,7 @@ $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
 $smarty->assign("isSupplyLaunchVerified", $isSupplyLaunchVerified);
-
+$smarty->assign("isVerifiedFlagCheck", $isVerifiedFlagCheck);
 
 // Project Phases
 $phaseDetail = fetch_phaseDetails($projectId);
@@ -452,6 +452,22 @@ if ($_POST['forwardFlag'] == 'yes') {
         $qryNext = "select * from master_project_phases where name = '".$v."'";
         $resNext = mysql_query($qryNext) or die(mysql_error());
         $phaseIdNext = mysql_fetch_assoc($resNext);
+         /*****code for update project assignment status is 
+        * done if project move in audit1 if assigned in survey ********/
+       if($v == 'Audit1') {
+        $qryCurrentAssign = "select pa.id from project_assignment pa 
+            join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
+            join resi_project rp on  pa.movement_history_id = rp.movement_history_id
+            where rp.project_id = $projectId and pa1.department = 'SURVEY' and rp.version = 'Cms' 
+            order by pa.movement_history_id desc limit 1";
+           $resAssigned = mysql_query($qryCurrentAssign) or die(mysql_error()." select query");
+           if(mysql_num_rows($resAssigned) >0 ) {
+               $dataFetch = mysql_fetch_assoc($resAssigned);
+               $qryUp = "update project_assignment set status = 'done' 
+                   where id = ".$dataFetch['id'];
+               $resUp = mysql_query($qryUp) or die(mysql_error()." update query");
+           }
+       }
         if ($phaseIdCurrent['id'] == $phaseId['id']) {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
         }
@@ -470,6 +486,25 @@ if ($_POST['forwardFlag'] == 'update') {
             $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
             $resStg = mysql_query($qryStg) or die(mysql_error());
             $stageId = mysql_fetch_assoc($resStg);
+            /*****code for update project assignment status is 
+            * done if project move in audit1 if assigned in survey ********/
+           if($v == 'Audit1') {
+            $qryCurrentAssign = "select pa.id from project_assignment pa 
+                join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
+                join resi_project rp on  pa.movement_history_id = rp.movement_history_id
+                where rp.project_id = $projectId and pa1.department = 'SURVEY' and rp.version = 'Cms' 
+                order by pa.movement_history_id desc limit 1";
+               $resAssigned = mysql_query($qryCurrentAssign) or die(mysql_error()." select query");
+               if(mysql_num_rows($resAssigned) >0 ) {
+                   $dataFetch = mysql_fetch_assoc($resAssigned);
+                   $qryUp = "update project_assignment set status = 'done' 
+                       where id = ".$dataFetch['id'];
+                   $resUp = mysql_query($qryUp) or die(mysql_error()." update query");
+               }
+           }
+
+           /********************/
+
             updateProjectPhase($projectId, $phaseId['id'], $stageId['id']);
         }
     }
@@ -540,9 +575,12 @@ foreach ($allBrokerByProject as $key => $val) {
     $brikerList = getBrokerDetailById($key);
     $arrBrokerList[$key] = $brikerList;
 }
- $arrCalingSecondary = fetchProjectCallingLinks($projectId,'secondary',1);
- $smarty->assign("arrCalingSecondary", $arrCalingSecondary);
-     
+
+
+$arrCalingSecondary = fetchProjectCallingLinks($projectId, 'secondary');
+$smarty->assign("arrCalingSecondary", $arrCalingSecondary);
+
+
  $brokerIdList = array();
  $maxEffectiveDtAll = '';
      
@@ -553,23 +591,22 @@ foreach ($allBrokerByProject as $key => $val) {
  $oneMonthAgoDt = date('Y-m',$oneMonthAgo)."-01 00:00:00";
  $twoMonthAgo = mktime(0, 0, 0, $dateBreak[1]-2, 1, $dateBreak[0]);
  $twoMonthAgoDt = date('Y-m',$twoMonthAgo)."-01 00:00:00";
-    
- $projectDetails = ResiProject::virtual_find($projectId);
- $builderName = ResiBuilder::getBuilderById($projectDetails->builder_id);
- $localityName = Locality::getLocalityById($projectDetails->locality_id);
- $smarty->assign("builderName", $builderName);
- $smarty->assign("localityName", $localityName);
-     
- $smarty->assign("oneMonthAgoDt",  $oneMonthAgoDt);
- $smarty->assign("twoMonthAgoDt", $twoMonthAgoDt);
-     
- $smarty->assign('phase_prices', $phase_prices);
- $smarty->assign("brokerIdList", $brokerIdList);
-     
+
+
+
+
 $noPhasePhase = ResiProjectPhase::getNoPhaseForProject($projectId);
 $noPhasePhaseId = $noPhasePhase->phase_id;
 
+ $smarty->assign("oneMonthAgoDt",  $oneMonthAgoDt);
+ $smarty->assign("twoMonthAgoDt", $twoMonthAgoDt);
+
+$smarty->assign("twoMonthAgoPrice", $twoMonthAgoPrice);
+$smarty->assign("minMaxSum", $minMaxSum);
+
 $smarty->assign("allBrokerByProject", $arrBrokerList);
+
+ $smarty->assign('phase_prices', $phase_prices);
 $smarty->assign("brokerIdList", $brokerIdList);
 
 $smarty->assign("maxEffectiveDt", $maxEffectiveDtAll);
@@ -591,7 +628,6 @@ $updatedTypes = ProjectSecondaryPrice::getSecondryPriceUpdatedTypes($projectId);
 $arrPType = array_unique(array_merge($arrPType, $updatedTypes));
 $smarty->assign("arrPType", $arrPType);
 /* * code for secondary price dispaly*********** */
-
 function availebilitydescendingOrder($projectId) {
             $qry = "SELECT 
             resi_project_options.BEDROOMS as bedrooms,
@@ -628,4 +664,14 @@ function availebilitydescendingOrder($projectId) {
         $arrOrder['flg'] = $flag;
         return $arrOrder;  
 }
+$msg = '';
+if(isset($_REQUEST['flag'])){
+    if($_REQUEST['flag'] == 1)
+        $msg = "callerNumber Inserted Successfully";
+    else
+        $msg = "callerNumber Not Inserted";
+}
+$smarty->assign("callerMessage", $msg);
+$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
+
 ?>

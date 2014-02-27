@@ -116,7 +116,22 @@ else if($_REQUEST['type'] == 'project')
             );
         }
     }
-}
+
+ }else if($_REQUEST['type'] == 'townships')
+{
+	$rs = mysql_query('select township_name FROM townships where township_name like "'. mysql_real_escape_string($_REQUEST['term']) .'%"  order by township_name ASC limit 0,10');
+    if ($rs && mysql_num_rows($rs) )
+    {
+        while( $row = mysql_fetch_array($rs, MYSQL_ASSOC) )
+        {
+            $data[] = array(
+                'label' =>  $row['township_name'],
+                'value' => $row['township_name']
+            );
+        }
+    }
+ }
+
 echo json_encode($data);
 flush();
 ?>  

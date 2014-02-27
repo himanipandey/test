@@ -161,39 +161,87 @@
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-                                                        {foreach from = $projectList key=key item = item}
-                                                        <tr>
-                                                            <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
-                                                            <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
-                                                            <td>{$item['PROJECT_NAME']}</td>
-                                                            <td>{$item['BUILDER_NAME']}</td>
-                                                            <td>{$item['CITY']}</td>
-                                                            <td nowrap>{$item['LOCALITY']}</td>
-                                                            <td>{$item['PROJECT_STATUS']}</td>
-                                                            <td>{$item['BOOKING_STATUS']}</td>
-                                                            <td>{$item['LABEL']}</td>
-                                                            <td>{$item['PROJECT_PHASE']}</td>
-                                                            <td>{$item['PROJECT_STAGE']}</td>
-                                                            <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
-                                                            <td>{$item['LAST_WORKED_AT']}</td>
-                                                            <td>{$item['ASSIGNMENT_TYPE']}</td>
-                                                            <td>{$item['ASSIGNED_TO'][0]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][0]}</td>
-                                                            <td>{$item['STATUS'][0]}</td>
-                                                            <td>{$item['REMARK'][0]}</td>
-                                                            <td>{$item['ASSIGNED_TO'][1]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][1]}</td>
-                                                            <td>{$item['STATUS'][1]}</td>
-                                                            <td>{$item['REMARK'][1]}</td>
-                                                            <td>{$item['ASSIGNED_TO'][2]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][2]}</td>
-                                                            <td>{$item['STATUS'][2]}</td>
-                                                            <td>{$item['REMARK'][2]}</td>
-                                                            <td>{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}</td>
-                                                            <td>{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}</td>
-                                                            <td>{$item['STATUS'][count($item['STATUS']) -1]}</td>
-                                                            <td>{$item['REMARK'][count($item['REMARK']) -1]}</td>
-                                                        </tr>
+
+                                                    {foreach from = $projectList key=key item = item}
+                                                        {if $callingFieldFlag == 'survey' && $item['LAST_DEPARTMENT'] == 'SURVEY'}
+                                                            <tr>
+                                                                <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
+                                                                <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
+                                                                <td>{$item['PROJECT_NAME']}</td>
+                                                                <td>{$item['BUILDER_NAME']}</td>
+                                                                <td>{$item['CITY']}</td>
+                                                                <td nowrap>{$item['LOCALITY']}</td>
+                                                                <td>{$item['PROJECT_STATUS']}</td>
+                                                                <td>{$item['BOOKING_STATUS']}</td>
+                                                                <td>{$item['LABEL']}</td>
+                                                                <td>{$item['PROJECT_PHASE']}</td>
+                                                                <td>{$item['PROJECT_STAGE']}</td>
+                                                                <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
+                                                                <td>{$item['LAST_WORKED_AT']}</td>
+                                                                <td>
+                                                                    {$assignType1 = $item['ASSIGNMENT_TYPE']|replace:'RevertedFieldField_Assigned-':'RevertedAssigned-'} 
+                                                                    {$assignType = $assignType1|replace:'Field':'Unassigned'}
+                                                                    {$newType = $assignType|replace:'_lead':''}
+                                                                    {$otherType = $newType|replace:'Unassigned_':''}
+                                                                    {$otherType2 = $otherType|replace:'RevertedUnassignedAssigned':'Assigned'}
+                                                                    {$otherType = $otherType2|replace:'RevertedUnassignedUnassigned':'Unassigned'}
+                                                                     
+                                                                     {$otherType}
+                                                                </td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][0]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][2]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][count($item['STATUS']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][count($item['STATUS']) -1]}{else}&nbsp;{/if}</td>
+                                                            </tr>
+                                                        {elseif $callingFieldFlag == 'callcenter' && !strstr($item['ASSIGNMENT_TYPE'],'Field')}
+                                                           <tr>
+                                                                <td><input type="checkbox" name="assign[]" value="{$item['PROJECT_ID']}"></td>
+                                                                <td><a href="{$projectPageURL}{$item['PROJECT_ID']}" target="_blank">{$item['PROJECT_ID']}</a></td>
+                                                                <td>{$item['PROJECT_NAME']}</td>
+                                                                <td>{$item['BUILDER_NAME']}</td>
+                                                                <td>{$item['CITY']}</td>
+                                                                <td nowrap>{$item['LOCALITY']}</td>
+                                                                <td>{$item['PROJECT_STATUS']}</td>
+                                                                <td>{$item['BOOKING_STATUS']}</td>
+                                                                <td>{$item['LABEL']}</td>
+                                                                <td>{$item['PROJECT_PHASE']}</td>
+                                                                <td>{$item['PROJECT_STAGE']}</td>
+                                                                <td>{$projectLastAuditDate[$item['PROJECT_ID']]}</td>
+                                                                <td>{$item['LAST_WORKED_AT']}</td>
+                                                                <td>{$item['ASSIGNMENT_TYPE']}</td>
+                                                                <td>{$item['ASSIGNED_TO'][0]}</td>
+                                                                <td>{$item['ASSIGNED_AT'][0]}</td>
+                                                                <td>{$item['STATUS'][0]}</td>
+                                                                <td>{$item['REMARK'][0]}</td>
+                                                                <td>{$item['ASSIGNED_TO'][1]}</td>
+                                                                <td>{$item['ASSIGNED_AT'][1]}</td>
+                                                                <td>{$item['STATUS'][1]}</td>
+                                                                <td>{$item['REMARK'][1]}</td>
+                                                                <td>{$item['ASSIGNED_TO'][2]}</td>
+                                                                <td>{$item['ASSIGNED_AT'][2]}</td>
+                                                                <td>{$item['STATUS'][2]}</td>
+                                                                <td>{$item['REMARK'][2]}</td>
+                                                                <td>{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}</td>
+                                                                <td>{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}</td>
+                                                                <td>{$item['STATUS'][count($item['STATUS']) -1]}</td>
+                                                                <td>{$item['REMARK'][count($item['STATUS']) -1]}</td>
+                                                            </tr>
+                                                        {/if}    
+                                                        
+                                                        
+
                                                         {/foreach}
                                                     </tbody>
                                                 </table>
