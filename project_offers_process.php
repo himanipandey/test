@@ -10,92 +10,99 @@
     
     $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'=>$projectId)));
        
+    $price_unit = array(
+		'Lakhs' => '100000',
+		'Crores' => '10000000',
+		'Thousands' => '1000'
+    );
     
     if(isset($_POST['btnSave'])){
+		
+		// print "<pre>".print_r($_POST,1)."</pre>"; die;
 		
 		//saving offers into database
 		$offer_type = $_POST['offerType'];
 		$offer_desc = $_POST['offerDesc'];
 		$offer_period = '';
 		$offer_price = '';
+		$offer_price_type = '';
 		$discount_on = '';
+		$other_text = '';
 		
-		if($offer_type == 'No Pre-EMI'){
+		if($offer_type == 'NoPreEmi'){
+			$offer_type = 'NoPreEmi';
 			if($_POST['no_emi_period'] == 'months')
-				$offer_period = $_POST['no_emi_Months'] . " months"; 
-			else
-				$offer_period = 'till possession';
+				$offer_period = $_POST['no_emi_Months'];
+			elseif($_POST['no_emi_period'] == 'pos')
+				$offer_period = 'possession';
 			
-			if($_POST['no_emi_price'] == 'percent')
-				$offer_price = $_POST['no_emi_price_emiPer'] ."%"; 
-			elseif($_POST['no_emi_price'] == 'deci')
-				$offer_price = $_POST['no_emi_price_emiDeci'] ." ".$_POST['no_emi_price_emiUnit']; 		
+			if($_POST['no_emi_price'] == 'percent'){
+				$offer_price = $_POST['no_emi_price_emiPer'];
+				$offer_price_type = 'Percent';
+			}elseif($_POST['no_emi_price'] == 'deci'){
+				$offer_price = $_POST['no_emi_price_emiDeci'] * $price_unit[$_POST['no_emi_price_emiUnit']]; 	
+				$offer_price_type = 'Absolute';	
+			}
 						
-		}else if($offer_type == 'Part Now Part Later'){
+		}else if($offer_type == 'PartEmi'){
 			if($_POST['part_emi_period'] == 'months')
-				$offer_period = $_POST['part_emiMonths'] . " months"; 
+				$offer_period = $_POST['part_emiMonths'];
 			else
 				$offer_period = 'possession';
 			
-			if($_POST['part_emi_price'] == 'percent')
-				$offer_price = $_POST['part_emi_price_emiPer'] ."%"; 
-			else
-				$offer_price = $_POST['part_emi_price_emiDeci'] ." ".$_POST['[part_emi_price_emiUnit']; 	
+			if($_POST['part_emi_price'] == 'percent'){
+				$offer_price = $_POST['part_emi_price_emiPer'] ;
+				$offer_price_type = 'Percent'; 
+			}else{
+				$offer_price = $_POST['part_emi_price_emiDeci'] * $price_unit[$_POST['part_emi_price_emiUnit']]; 
+				$offer_price_type = 'Absolute';		
+			}
 			
-		}else if($offer_type == 'No Additional Charges (PLC/Amenities)'){
-			
-			$str = array();
-			if(isset($_POST['nac_plc']))
-				$str[] = $_POST['nac_plc'];
-			if(isset($_POST['nac_parking']))
-				$str[] = $_POST['nac_parking'];
-			if(isset($_POST['nac_clubMembership']))
-				$str[] = $_POST['nac_clubMembership'];
-			if(isset($_POST['nac_gymMembership']))
-				$str[] = $_POST['nac_gymMembership'];
-			if(isset($_POST['nac_other']))
-				$str[] = "@Other@".$_POST['nac_other_txt'];
+		}else if($offer_type == 'NoCharges'){
+			$discount_on = $_POST['nac_discount_on'];
+			if($discount_on == 'Other')
+				$other_text = $_POST['nac_other_txt'];
 				
-			$discount_on = implode(",",$str);
-			
-		}else if($offer_type == 'Price Discount'){
-			
-			if($_POST['pd_price'] == 'percent')
-				$offer_price = $_POST['pd_price_emiPer'] ."%"; 
-			else
-				$offer_price = $_POST['pd_price_emiDeci'] ." ".$_POST['[pd_price_emiUnit']; 	
+		}else if($offer_type == 'PriceDiscount'){
+			if($_POST['pd_price'] == 'percent'){
+				$offer_price = $_POST['pd_price_emiPer'];
+				$offer_price_type = 'Percent'; 
+			}else{
+				$offer_price = $_POST['pd_price_emiDeci']* $price_unit[$_POST['pd_price_emiUnit']];
+				$offer_price_type = 'Absolute';	
+			}
 			
 			if(isset($_POST['pd_date']))
-				$offer_period = $_POST['pd_date'];
+				$discount_date = $_POST['pd_date'];
 			
 			if(isset($_POST['pd_on'])){
-				$discount_on = ($_POST['pd_on'] == 'Other')?"@Other@".$_POST['pd_other_txt']:$_POST['pd_on'];
+				$discount_on = $_POST['pd_on'];
+				if($discount_on == 'Other')
+					$other_text  =  $_POST['pd_other_txt'];
 			}
 			
 		}		
 		
-		$is_project_offer = ProjectOffers::find("all",array("conditions"=>array("offer"=>$offer_type)));
+		if(isset($_GET['v']))
+			$project_offers = ProjectOffers::find($_GET['v']);
+		else
+			$project_offers = new ProjectOffers();
+		$project_offers->project_id = $projectId;
+		$project_offers->offer = $offer_type;
+		$project_offers->discount_on = $discount_on;
+		$project_offers->offer_period = $offer_period;
+		$project_offers->offer_price = $offer_price;
+		$project_offers->offer_price_type = $offer_price_type;
+		$project_offers->other_text = $other_text;
+		$project_offers->discount_date = $discount_date;
+		$project_offers->offer_desc = $offer_desc;
+		$project_offers->updated_by = $_SESSION['adminId'];
+		$project_offers->save();
 		
-		if(!$is_project_offer){
-			
-			if(isset($_GET['v']))
-				$project_offers = ProjectOffers::find($_GET['v']);
-			else
-				$project_offers = new ProjectOffers();
-			$project_offers->project_id = $projectId;
-			$project_offers->offer = $offer_type;
-			$project_offers->discount_on = $discount_on;
-			$project_offers->offer_period = $offer_period;
-			$project_offers->offer_price = $offer_price;
-			$project_offers->offer_desc = $offer_desc;
-			$project_offers->updated_by = $_SESSION['adminId'];
-			$project_offers->save();
-			
-			header("Location:project_offers.php?projectId=".$projectId."&edit=add&preview=true");
-		}else{
-			 $ErrorMsg["offerType"] = "Offer Type already exist.";
-			 $smarty->assign("ErrorMsg", $ErrorMsg);
-		}
+		//print "<pre>".print_r($project_offers,1)."</pre>"; die;
+		
+		header("Location:project_offers.php?projectId=".$projectId."&edit=add&preview=true");
+		
 	}elseif(isset($_POST['btnExit'])){
 		if(isset($_GET['v']))
 		  header("Location:project_offers.php?projectId=".$projectId."&edit=add&preview=true");
@@ -114,32 +121,32 @@
 	if($_GET['edit'] == 'edit' && isset($_GET['v'])){
 		$project_offers = ProjectOffers::find($_GET['v']);
 				
-		//fetching Integer value of Offer Period & Offer Price
-		if(strstr($project_offers->offer_period,"months")){
-			$periodInt = explode("months",$project_offers->offer_period);
-			$smarty->assign("periodInt",$periodInt[0]);
-		}
-		if(strstr($project_offers->offer_price,"%")){
-			$pricePer = explode("%",$project_offers->offer_price);
-			$smarty->assign("pricePer",$pricePer[0]);
-		}if(strstr($project_offers->offer_price," ")){
-			$priceDeci = explode(" ",$project_offers->offer_price);
-			$smarty->assign("priceDeci",$priceDeci[0]);
-			$smarty->assign("priceDeciUnit",$priceDeci[1]);
-		}
-		//fetching Discount ON
-		if(strstr($project_offers->discount_on,'@Other@')){
-			$discount_on_other = explode('@Other@',$project_offers->discount_on);
-			$smarty->assign("discount_on_txt",$discount_on_other[1]);
-			//print $discount_on_other[1];
-		}
-		$discount_on = explode(',',$project_offers->discount_on);
-		$smarty->assign("discountOn",$discount_on);
-		
 		$smarty->assign("currOffer", $project_offers->offer);
-		$smarty->assign("offerPeriod",$project_offers->offer_period);
-		$smarty->assign("offerPrice",$project_offers->offer_price);
-		$smarty->assign("currOfferDesc", $project_offers->offer_desc);
+		$smarty->assign("discount_on", $project_offers->discount_on);
+		$smarty->assign("offer_period", $project_offers->offer_period);
+		$smarty->assign("offer_price_type", $project_offers->offer_price_type);
+		$smarty->assign("other_text", $project_offers->other_text);
+		$smarty->assign("discount_date", $project_offers->discount_date);
+		$smarty->assign("offer_desc", $project_offers->offer_desc);
+		print $project_offers->discount_on;
+		//offer price unit
+		$offer_price = $project_offers->offer_price;$priceDeciUnit='';
+		if($project_offers->offer_price_type == 'Absolute'){
+			if($project_offers->offer_price >=10000000){
+				$priceDeciUnit = 'Crores';
+				$offer_price = $offer_price/10000000;
+			}elseif($project_offers->offer_price < 10000000 && $project_offers->offer_price > 99999){
+				$priceDeciUnit = 'Lakhs';
+				$offer_price = $offer_price/100000;
+			}
+			else{
+				$priceDeciUnit = 'Thousands';	
+				$offer_price = $offer_price/1000;
+			}		
+		}
+		$smarty->assign("offer_price", $offer_price);
+		$smarty->assign("priceDeciUnit", $priceDeciUnit);
+		$smarty->assign("offer_desc", $project_offers->offer_desc);
 		$smarty->assign("offerId", $_GET['v']);
 	}
     

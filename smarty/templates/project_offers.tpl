@@ -42,12 +42,12 @@
                             <td width="80%" align="left">
 								<select name="offerType" id="offerType" style="width:357px;">
 								  {if !$currOffer}<option value="">--Select Offer--</option>{/if}
-								  {foreach from=$arrOfferTypes item=val}
-								    {if $currOffer==$val}
-										<option value="{$val}" {if $val==$currOffer}selected{/if}>{$val}</option>
+								  {foreach from=$arrOfferTypes key=key item=val}
+								    {if $currOffer==$key}
+										<option value="{$key}" {if $key==$currOffer}selected{/if}>{$val}</option>
 									{/if}
 									{if !$currOffer}
-										<option value="{$val}">{$val}</option>
+										<option value="{$key}">{$val}</option>
 									{/if}
 								  {/foreach}
 								</select>
@@ -56,30 +56,30 @@
 						<tr>
 						  <td>&nbsp;</td>
 						  <td>
-						    <div id="field-group-1" style=" {if $currOffer == 'No Pre-EMI'}display:block{else}display:none{/if}">
+						    <div id="field-group-1" style=" {if $currOffer == 'NoPreEmi'}display:block{else}display:none{/if}">
 							  <table>
 								<tr>
 								  <td>
-								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months" onclick="populate_offer_desc()" {if $offerPeriod|strstr:"months"}checked{/if} />
+								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months" onclick="populate_offer_desc()" {if is_numeric($offer_period)}checked{/if} />
 								    <select id="no_emi_Months" name="no_emi_Months" onchange="populate_offer_desc()">
-									  {for $val=1 to 10}<option value="{$val*6}" {if $periodInt==($val*6)}selected{/if}>{$val*6}</option>{/for}
+									  {for $val=1 to 10}<option value="{$val*6}" {if $offer_period==($val*6)}selected{/if}>{$val*6}</option>{/for}
 								    </select> Months 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !$offerPeriod|strstr:"months"}checked{/if} onclick="populate_offer_desc()"/> Till Possession
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !is_numeric($offer_period)}checked{/if} onclick="populate_offer_desc()"/> Till Possession
 								  </td>
 								</tr>
 								<tr>
 								<td>
-								    <b>&nbsp;&nbsp;No EMI Price : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="percent" name="no_emi_price" onclick="populate_offer_desc()" {if $offerPrice|strstr:"%"}checked{/if} /> 
+								    <b>&nbsp;&nbsp;No EMI Price : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="percent" name="no_emi_price" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if} /> 
 								    <select id="no_emi_price_emiPer" name="no_emi_price_emiPer" onchange="populate_offer_desc()">
 									  <option value="">&nbsp;</option>
-									  {for $val=1 to 20}<option value="{$val*5}" {if $pricePer==($val*5)}selected{/if}>{$val*5}</option>{/for}
+									  {for $val=1 to 20}<option value="{$val*5}" {if $offer_price==($val*5)}selected{/if}>{$val*5}</option>{/for}
 								    </select>Percent 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_price" value="deci"  {if !$offerPrice|strstr:"%"}checked{/if} onclick="populate_offer_desc()"/>
-								    <input type="text" id="no_emi_price_emiDeci" name="no_emi_price_emiDeci" style="width:50px" onKeyUp="populate_offer_desc()" value="{$priceDeci}"/>
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} onclick="populate_offer_desc()"/>
+								    <input type="text" id="no_emi_price_emiDeci" name="no_emi_price_emiDeci" style="width:50px" onKeyUp="populate_offer_desc()" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
 								     <select id="no_emi_price_emiUnit" name="no_emi_price_emiUnit"  onclick="populate_offer_desc()">
 									  <option value="Lakhs"  {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
 									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
@@ -89,30 +89,30 @@
 								</tr>
 							  </table>
 						    </div>
-						    <div id="field-group-2" style="{if $currOffer == 'Part Now Part Later'}display:block{else}display:none{/if}">
+						    <div id="field-group-2" style="{if $currOffer == 'PartEmi'}display:block{else}display:none{/if}">
 							  <table>
 								<tr>
 								  <td>
-								    <b><font color = "red">*</font>EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="months" onclick="populate_offer_desc()" {if $offerPeriod|strstr:"months"}checked{/if}/>
+								    <b><font color = "red">*</font>EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="months" onclick="populate_offer_desc()" {if is_numeric($offer_period)}checked{/if}/>
 								    <select id="part_emiMonths" name="part_emiMonths" onchange="populate_offer_desc()">
-									  {for $val=1 to 10}<option value="{$val*6}" {if $periodInt==($val*6)}selected{/if}>{$val*6}</option>{/for}
+									  {for $val=1 to 10}<option value="{$val*6}" {if $offer_period==($val*6)}selected{/if}>{$val*6}</option>{/for}
 								    </select> Months 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="pos" onclick="populate_offer_desc()" {if !$offerPeriod|strstr:"months"}checked{/if}/> Possession
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="pos" onclick="populate_offer_desc()" {if !is_numeric($offer_period)}checked{/if}/> Possession
 								  </td>
 								</tr>
 								<tr>
 								<td>
-								    <b><font color = "red">*</font>EMI Price : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_price" value="percent" onclick="populate_offer_desc()" {if $offerPrice|strstr:"%"}checked{/if}/> 
+								    <b><font color = "red">*</font>EMI Price : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_price" value="percent" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if}/> 
 								    <select  name="part_emi_price_emiPer" id="part_emi_price_emiPer" onchange="populate_offer_desc()">
-										<option value=""></option>
-									  {for $val=1 to 20}<option value="{$val*5}" {if $pricePer==($val*5)}selected{/if}>{$val*5}</option>{/for}
+										<option value=""></option>Othe
+									  {for $val=1 to 20}<option value="{$val*5}" {if $offer_price==($val*5)}selected{/if}>{$val*5}</option>{/for}
 								    </select>Percent 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_price" value="deci" onclick="populate_offer_desc()" {if !$offerPrice|strstr:"%"}checked{/if} />
-								    <input type="text" name="part_emi_price_emiDeci" id="part_emi_price_emiDeci" style="width:50px" onkeyup="populate_offer_desc()" value="{$priceDeci}"/>
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_price" value="deci" onclick="populate_offer_desc()" {if $offer_price_type=='Absolute'}checked{/if} />
+								    <input type="text" name="part_emi_price_emiDeci" id="part_emi_price_emiDeci" style="width:50px" onkeyup="populate_offer_desc()" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
 								     <select id="part_emi_price_emiUnit" name="part_emi_price_emiUnit" onchange="populate_offer_desc()">
 									  <option value="Lakhs" {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
 									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
@@ -122,34 +122,34 @@
 								</tr>
 							  </table>
 						    </div>
-						    <div id="field-group-3" style="{if $currOffer == 'No Additional Charges (PLC/Amenities)'}display:block{else}display:none{/if}">
+						    <div id="field-group-3" style="{if $currOffer == 'NoCharges'}display:block{else}display:none{/if}">
 						      <table>
 							    <tr>
 								  <td>
-									  <input type="checkbox" {if in_array("PLC",$discountOn)}checked{/if} name="nac_plc"  id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
-									  <input type="checkbox"  {if in_array("Parking",$discountOn)}checked{/if}  name="nac_parking" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
-									  <input type="checkbox"  {if in_array("Club Membership",$discountOn)}checked{/if}  name="nac_clubMembership" id="nac_clubMembership" value="Club Membership" onclick="populate_offer_desc()"/>Club Membership <br/>
-									  <input type="checkbox"  {if in_array("Gym Membership",$discountOn)}checked{/if}  name="nac_gymMembership" id="nac_gymMembership" value="Gym Membership" onclick="populate_offer_desc()" />Gym Membership <br/>
-									  <input type="checkbox"  {if $discount_on_txt}checked{/if}  name="nac_other" id="nac_other" value="Other" onclick="populate_offer_desc()"/>Other <br/>
+									  <input type="radio" {if ("PLC"==$discount_on)}checked{/if} name="nac_discount_on"  id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
+									  <input type="radio"  {if ("Parking"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
+									  <input type="radio"  {if ("ClubMembership"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_clubMembership" value="ClubMembership" onclick="populate_offer_desc()"/>Club Membership <br/>
+									  <input type="radio"  {if ("GymMembership"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_gymMembership" value="GymMembership" onclick="populate_offer_desc()" />Gym Membership <br/>
+									  <input type="radio"  {if $other_text}checked{/if}  name="nac_discount_on" id="nac_other" value="Other" onclick="populate_offer_desc()"/>Other <br/>
 									  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<input type="text" name="nac_other_txt" id="nac_other_txt" style="width:300px;{if $discount_on_txt} display:block{else}display:none{/if}" onkeyup="populate_offer_desc()" value="{$discount_on_txt}" />
+										<input type="text" name="nac_other_txt" id="nac_other_txt" style="width:300px;{if $other_text} display:block{else}display:none{/if}" onkeyup="populate_offer_desc()" value="{$other_text}" />
 								  </td>
 								</tr>
 							  </table>
 						    </div>
-						    <div id="field-group-4" style="{if $currOffer == 'Price Discount'}display:block{else}display:none{/if}">
+						    <div id="field-group-4" style="{if $currOffer == 'PriceDiscount'}display:block{else}display:none{/if}">
 						      <table>
 							    <tr>
 							      <td>
-									  <b><font color="red">*</font>Price Discount Amount: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pd_price" value="percent" onclick="populate_offer_desc()" {if $offerPrice|strstr:"%"}checked{/if}/> 
+									  <b><font color="red">*</font>PriceDiscount Amount: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pd_price" value="percent" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if} /> 
 								    <select name="pd_price_emiPer" id="pd_price_emiPer" onchange="populate_offer_desc()">
 										<option value="">&nbsp;</option>
-									  {for $val=1 to 20}<option value="{$val*5}"  {if $pricePer==($val*5)}selected{/if}>{$val*5}</option>{/for}
+									  {for $val=1 to 20}<option value="{$val*5}"  {if $offer_price==($val*5)}selected{/if}>{$val*5}</option>{/for}
 								    </select>Percent 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;<input type="radio" name="pd_price" value="deci" onclick="populate_offer_desc()" {if !$offerPrice|strstr:"%"}checked{/if} />
-								    <input type="text" name="pd_price_emiDeci" id="pd_price_emiDeci" style="width:50px" onkeyup="populate_offer_desc()" value="{$priceDeci}"/>
+								    &nbsp;&nbsp;<input type="radio" name="pd_price" value="deci" onclick="populate_offer_desc()" {if $offer_price_type=='Absolute'}checked{/if} />
+								    <input type="text" name="pd_price_emiDeci" id="pd_price_emiDeci" style="width:50px" onkeyup="populate_offer_desc()" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
 								     <select id="pd_price_emiUnit" name="pd_price_emiUnit" onchange="populate_offer_desc()">
 									  <option value="Lakhs" {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
 									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
@@ -159,26 +159,26 @@
 							    </tr>
 							    <tr>
 							      <td>
-									  <b>Price Discount On: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									  <b>PriceDiscount On: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									  <select id="pd_on" name="pd_on" onchange="populate_offer_desc()">
 										<option value="">--Select--</option>  
-									    <option value="Rate" {if in_array("Rate",$discountOn)}selected{/if} >Rate</option>
-									    <option value="PLC" {if in_array("PLC",$discountOn)}selected{/if}>PLC</option>
-									    <option value="Booking Amount" {if in_array("Booking Amount",$discountOn)}checked{/if}>Booking Amount</option>
-									    <option value="Club Charges" {if in_array("Club Charges",$discountOn)}selected{/if}>Club Charges</option>
-									    <option value="Parking" {if in_array("Parking",$discountOn)}selected{/if}>Parking</option>
-									    <option value="Gym Membership" {if in_array("Gym Membership",$discountOn)}selected{/if}>Gym Membership</option>
-									    <option value="Other" {if $discount_on_txt}selected{/if}>Other</option>
+									    <option value="Rate" {if ("Rate"==$discount_on)}selected{/if} >Rate</option>
+									    <option value="PLC" {if ("PLC"==$discount_on)}selected{/if}>PLC</option>
+									    <option value="BookingAmount" {if ("BookingAmount"==$discount_on)}selected{/if}>Booking Amount</option>
+									    <option value="ClubMembership" {if ("ClubMembership"==$discount_on)}selected{/if}>Club Charges</option>
+									    <option value="Parking" {if ("Parking"==$discount_on)}selected{/if}>Parking</option>
+									    <option value="GymMembership" {if ("GymMembership"==$discount_on)}selected{/if}>Gym Membership</option>
+									    <option value="Other" {if $other_text}selected{/if}>Other</option>
 									  </select>
 									   <br/>
 									  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									  <input type="text" name="pd_other_txt" id="pd_other_txt"  style="width:300px;{if $discount_on_txt} display:block{else}display:none{/if}" value="{$discount_on_txt}" onkeyup="populate_offer_desc()"/>
+									  <input type="text" name="pd_other_txt" id="pd_other_txt"  style="width:300px;{if $other_text} display:block{else}display:none{/if}" value="{$other_text}" onkeyup="populate_offer_desc()"/>
 							      </td>
 							    </tr>
 							    <tr>
 							      <td>
-									  <b>Price Discount Date:  </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									  <input onchange="populate_offer_desc()" value="{$offerPeriod}" name="pd_date" value="{$pd_date}" type="text" class="formstyle2" id="pd_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="pd_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+									  <b>PriceDiscount Date:  </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									  <input onchange="populate_offer_desc()" value="{$discount_date}" name="pd_date" value="{$pd_date}" type="text" class="formstyle2" id="pd_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="pd_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
 							      </td>
 							    </tr>
 						      </table>
@@ -188,7 +188,7 @@
 						<tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Description : </td>
                             <td width="30%" align="left">
-								<textarea name="offerDesc" id="offerDesc" rows="5" cols="50">{$currOfferDesc}</textarea>
+								<textarea name="offerDesc" id="offerDesc" rows="5" cols="50">{$offer_desc}</textarea>
 							</td>
                             {if $ErrorMsg["offerDesc"] != ''}
                                <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["offerDesc"]}</font></td>{else} <td width="50%" align="left"></td>
@@ -229,7 +229,7 @@
 								{/if}
 								 <TR {$color}>
 									<TD>{$count}</TD>
-									<TD>{$data->offer}</TD>
+									<TD>{$arrOfferTypes[$data->offer]}</TD>
 									<TD>{$data->offer_desc}</TD>
 									<TD><a id="edit_offer" href="project_offers.php?projectId={$projectId}&edit=edit&v={$data->id}" title="Edit" >Edit</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a class="delete_offer" id="{$data->id}" href="#" title="Delete" >Delete</a></TD>
 								</TR>
@@ -262,7 +262,7 @@
 	  if(offer_type == ''){
 		alert("Offer Type is required!");
 		return false;
-	  }else if(offer_type == 'No Pre-EMI'){   //No Pre-EMI validation
+	  }else if(offer_type == 'NoPreEmi'){   //NoPreEmi validation
 	    noEmiDeci = $("input[name='no_emi_price_emiDeci']").val();
 	    
 		if($("input[name='no_emi_period']:checked").val() == undefined ){
@@ -282,7 +282,7 @@
 			alert("Please select EMI in Percent.");
 			return false;
 		}
-	  }else if(offer_type == 'Part Now Part Later'){ //Part Now Part Later validations
+	  }else if(offer_type == 'PartEmi'){ //PartEmi validations
 	    partEmiDeci = $("input[name='part_emi_price_emiDeci']").val();
 		if($("input[name='part_emi_period']:checked").val() == undefined ){
 			alert("EMI Period is required.");
@@ -304,8 +304,8 @@
 				return false;
 			}							
 		}        
-      }else if(offer_type == 'No Additional Charges (PLC/Amenities)'){ //No Additional Charges (PLC/Amenities) validations
-		  if(!$('#nac_plc').attr('checked') && !$('#nac_parking').attr('checked') && !$('#nac_clubMembership').attr('checked')  && !$('#nac_gymMembership').attr('checked') && !$('#nac_other').attr('checked')){
+      }else if(offer_type == 'NoCharges'){ //NoCharges validations
+		  if(!$("input[name='nac_discount_on']:checked").val()){
 			alert("Please check at least one checkbox.");
 			return false;
 		  }else if($('#nac_other').attr('checked') && $('#nac_other_txt').val().trim() == ''){
@@ -313,7 +313,7 @@
 		    return false;
 		 }
 		  
-	  }else if(offer_type == 'Price Discount'){ // Price Discount Validation
+	  }else if(offer_type == 'PriceDiscount'){ // PriceDiscount Validation
 		  pdEmiDeci = $("input[name='pd_price_emiDeci']").val();
 		 if($("input[name='pd_price']:checked").val() == undefined ){
 			alert("Discount Amount is required.");
@@ -334,6 +334,9 @@
 		}else if($('#pd_on').val() == '' && $('#pd_date').val() == ''){
 			alert("Please select Discount On or Discount Date.");
 			return false;
+		}else if($('#pd_on').val() == 'Other' && $('#pd_other_txt').val().trim() == ''){
+			alert("Please enter text in Other textbox");
+			return false;
 		}       
 	  }else if(offerDesc.trim() == ''){
 		alert("Offer Description is required!");
@@ -345,23 +348,23 @@
 	  $('#offerType').change(function(){
 		$('#offerDesc').val("");  
 		offer_type = $(this).val() ;
-		if(offer_type == 'No Pre-EMI'){
+		if(offer_type == 'NoPreEmi'){
 			$('#field-group-1').show();
 			$('#field-group-2').hide();
 			$('#field-group-3').hide();
 			$('#field-group-4').hide();
-		}else if(offer_type == 'Part Now Part Later'){
+		}else if(offer_type == 'PartEmi'){
 			$('#field-group-1').hide();
 			$('#field-group-2').show();
 			$('#field-group-3').hide();
 			$('#field-group-4').hide();
-		}else if(offer_type == 'No Additional Charges (PLC/Amenities)'){
+		}else if(offer_type == 'NoCharges'){
 			
 			$('#field-group-1').hide();
 			$('#field-group-2').hide();
 			$('#field-group-3').show();
 			$('#field-group-4').hide();
-		}else if(offer_type == 'Price Discount'){
+		}else if(offer_type == 'PriceDiscount'){
 			$('#field-group-1').hide();
 			$('#field-group-2').hide();
 			$('#field-group-3').hide();
@@ -375,13 +378,13 @@
 	  });
 		  
 	  ////// extra textboxes hanelding
-	  $('#nac_other').click(function(){
-		if($(this).attr("checked"))
-		  $('#nac_other_txt').show();
-		else
-		  $('#nac_other_txt').hide();
+	  $('input[name="nac_discount_on"]').click(function(){
+		  if($(this).val()=='Other')
+			$('#nac_other_txt').show();
+		  else
+		   $('#nac_other_txt').hide();
 	  })
-	  
+	  	  
 	  $('#pd_on').change(function(){
 		if($(this).val() == 'Other')
 		  $('#pd_other_txt').show();
@@ -391,6 +394,10 @@
 	 	 
 	  $('#offerDesc').focusin(function(){
 		populate_offer_desc();
+	  });
+	  
+	  $('#pd_date').click(function(){
+		$(this).val("");populate_offer_desc();  
 	  });
 	  
 	  //delete offer
@@ -409,7 +416,7 @@
 	function populate_offer_desc(){
 		 offer_type = $('#offerType').val();
 		offer_desc = '';
-	    if(offer_type == 'No Pre-EMI'){   //----------------No Pre-EMI Descirption Population
+	    if(offer_type == 'NoPreEmi'){   //----------------NoPreEmi Descirption Population
 		  noEmiPeriod = '';noEmiPrice = '';
 		  //fetching Emi Period Value
 		  if($("input[name='no_emi_period']:checked").val() == 'months')
@@ -423,12 +430,12 @@
 			noEmiPrice = $('#no_emi_price_emiDeci').val() +" "+$('#no_emi_price_emiUnit').val();
 				
 		  if($("input[name='no_emi_period']:checked").val() && $("input[name='no_emi_price']:checked").val()){
-			offer_desc = "Pay "+noEmiPrice+" now and avail no Pre-EMI till "+noEmiPeriod;
+			offer_desc = "Pay "+noEmiPrice+" now and avail No Pre-EMI till "+noEmiPeriod;
 		  }else if($("input[name='no_emi_period']:checked").val()){
 			offer_desc = "No Pre-EMI till " + noEmiPeriod;
 		  }
 		    $('#offerDesc').val(offer_desc);  
-		}else  if(offer_type == 'Part Now Part Later'){   //----------------Part Now Part Later Descirption Population
+		}else  if(offer_type == 'PartEmi'){   //----------------PartEmi Descirption Population
 		  partEmiPeriod = '';partEmiPrice = '';
 		  //fetching Emi Period Value
 		  if($("input[name='part_emi_period']:checked").val() == 'months')
@@ -445,7 +452,7 @@
 			offer_desc = "Pay "+partEmiPrice+" now and rest "+partEmiPeriod;
 		  }
 		    $('#offerDesc').val(offer_desc);  
-		}else if(offer_type == 'No Additional Charges (PLC/Amenities)'){   //----No Additional Charges (PLC/Amenities) Descirption Population
+		}else if(offer_type == 'NoCharges'){   //----NoCharges Descirption Population
 		  	str = new Array();cnt=0;popped='';
 		  	if($('#nac_plc').attr('checked'))
 		  	  str[cnt++] = $('#nac_plc').val();
@@ -464,7 +471,7 @@
 			}
 		  	offer_desc = "Book Now & pay zero charges for " + str.join(",") + popped;
 			$('#offerDesc').val(offer_desc);  
-		}else if(offer_type == 'Price Discount'){   //----Price Discount Descirption Population
+		}else if(offer_type == 'PriceDiscount'){   //----PriceDiscount Descirption Population
 			amount='';discount_on='';date='';	
 			//fetching Amounts
 			if($("input[name='pd_price']:checked").val() == 'percent')
@@ -474,10 +481,11 @@
 			//fetching Discount on 
 			if($('#pd_on').val()=='Other')
 				discount_on = $('#pd_other_txt').val();
-			else
-				discount_on = $('#pd_on').val();
+			else if($('#pd_on').val()!='')
+				discount_on = $('#pd_on :selected').html();
 			//Fetching Date On
-			date = $('#pd_date').val();
+			if($('#pd_date').val() != '0000-00-00')
+				date = $('#pd_date').val();
 			
 			if(amount && discount_on && date)
 				offer_desc = "Book by "+date+" and save "+amount+" on "+discount_on;
