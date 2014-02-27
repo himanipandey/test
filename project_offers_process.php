@@ -18,8 +18,6 @@
     
     if(isset($_POST['btnSave'])){
 		
-		// print "<pre>".print_r($_POST,1)."</pre>"; die;
-		
 		//saving offers into database
 		$offer_type = $_POST['offerType'];
 		$offer_desc = $_POST['offerDesc'];
@@ -128,7 +126,7 @@
 		$smarty->assign("other_text", $project_offers->other_text);
 		$smarty->assign("discount_date", $project_offers->discount_date);
 		$smarty->assign("offer_desc", $project_offers->offer_desc);
-		print $project_offers->discount_on;
+		
 		//offer price unit
 		$offer_price = $project_offers->offer_price;$priceDeciUnit='';
 		if($project_offers->offer_price_type == 'Absolute'){
