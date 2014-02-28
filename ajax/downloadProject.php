@@ -95,7 +95,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 
     $QueryMember1 = "SELECT RP.updation_cycle_id,RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,PP.name as PROJECT_PHASE,
                 PS.name as PROJECT_STAGE,ct.LABEL AS CITY_NAME, psm.project_status as 
-                    PROJECT_STATUS,rpp.booking_status_id,
+                    PROJECT_STATUS,rpp.phase_type,rpp.booking_status_id,
                 L.LABEL LOCALITY, PSH.DATE_TIME, PA.FNAME, UC.LABEL UPDATION_LABEL
                  FROM
                     resi_project RP
@@ -251,7 +251,8 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	
 	$proj_status = $ob1['PROJECT_STATUS'];
 	
-	$booking_status = $ob1['booking_status_id'];
+	$booking_status = ($ob1['phase_type'] == 'Logical')?$ob1['booking_status_id']:fetch_project_booking_status($projid);
+	
 	if ($booking_status > 0){
 			if ($booking_status == 1) $booking_status = "Available";
 			if ($booking_status == 2) $booking_status = "Sold out";
