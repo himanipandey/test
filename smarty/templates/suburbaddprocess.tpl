@@ -141,17 +141,17 @@
 
 function showHier(){
     //var j = '{$suburb_str}';
-    var j = JSON.parse('{$suburb_str}'); 
-   var jsonstring = JSON.stringify(j);
+    //var j = JSON.parse('{$suburb_str}'); 
+   //var jsonstring = JSON.stringify(j);
    //alert(jsonstring);
-   jsonstring = jsonstring.replace(/"/g, "'");
+   //jsonstring = jsonstring.replace(/"/g, "'");
    //alert(jsonstring);
 
   $.fancybox({
         'width'                :800,
         'height'               :800,
         'scrolling'            : 'no',
-        'href'                 : "/showHierarchy.php?json="+jsonstring,
+        'href'                 : "/showHierarchy.php?cityid={$cityId}&subid={$suburbid}&label={$txtCityName}&pid={$parent_id}",
         'type'                : 'iframe',
         
     })

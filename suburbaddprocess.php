@@ -11,7 +11,7 @@
     $smarty->assign("suburbid", $suburbid);
 
     $cityId = $_REQUEST['c'];
-
+    $smarty->assign("cityId", $cityId);
     if(isset($_POST['btnExit'])){
             header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
     }
@@ -155,16 +155,13 @@ echo $updateQry;
 
             // hierarchy map
             $txtCityName      = trim($localityDetailsArray['LABEL']);
-            $suburbarr = Array();
-            $suburbarr['id'] = $suburbid;
-            $suburbarr['label'] = $txtCityName;
+            
+            
 
-            $suburbarr['parent_id'] = $parent_id;
-
-            $str = json_encode(getHierArr($cityId, $suburbarr));
+            //$str = json_encode(getHierArr($cityId, $suburbarr));
             //echo $str;
             
-            $smarty->assign("suburb_str", $str);
+            //$smarty->assign("suburb_str", $str);
 
 
     

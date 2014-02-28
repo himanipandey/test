@@ -38,13 +38,13 @@ error_reporting(1);
 
 	}
 */	
-	$query = "select id, name from locality_near_places where name like '%$q%' order by name LIMIT $limit";
+	$query = "select id, name from landmarks where name like '%$q%' order by name LIMIT $limit";
 	//echo $query;
 	$sql_res=mysql_query($query);
 	while($row=mysql_fetch_array($sql_res))
 	{
 		$data = array();
-		$data['table'] = 'locality_near_places';
+		$data['table'] = 'landmarks';
 		$data['id'] = $row['id'];
 		$str = $row['name'];
 		$str = (strlen($str) > 50) ? substr($str,0,10).'...' : $str;

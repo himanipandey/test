@@ -2,6 +2,7 @@
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
@@ -9,10 +10,26 @@
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="js/tablesorter_default_table.js"></script>
+<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 
 
 
 <script language="javascript">
+
+function showHier(cid, sid, slabel, pid){
+  //alert(cid+sid+slabel+pid);  
+  $.fancybox({
+        'width'                :800,
+        'height'               :800,
+        'scrolling'            : 'no',
+        'href'                 : "/showHierarchy.php?cityid="+cid+"&subid="+sid+"&label="+slabel+"&pid="+pid,
+        'type'                : 'iframe',
+        
+    })
+}
+
+
+
 
 
 jQuery(document).ready(function(){
@@ -27,9 +44,9 @@ jQuery(document).ready(function(){
         var res = selectedItem.id.split("-");
         var tableName = res[1];
         if (tableName=='LOCALITY')
-        var tableId = parseInt(res[2])+50000;
+        var tableId = parseInt(res[2]);
         else if (tableName=='SUBURB')
-        var tableId = parseInt(res[2])+10000;
+        var tableId = parseInt(res[2]);
         else 
         var tableId = res[2];
         //alert(tableId);
@@ -267,10 +284,10 @@ jQuery(document).ready(function(){
                                   <TD align=center class=td-border>{$v.c_label}</TD>
                                   {elseif isset($v.l_label)}
                                   <TD align=center class=td-border>Locality</TD>
-                                  <TD align=center class=td-border>{$v.l_label}</TD>
+                                  <TD align=center class=td-border>{$v.l_label}, {$v.l_clabel}</TD>
                                   {elseif isset($v.s_label)}
                                   <TD align=center class=td-border>Suburb</TD>
-                                  <TD align=center class=td-border>{$v.s_label}</TD>
+                                  <TD align=center class=td-border><a href="#" onclick="showHier('{$v.s_cid}','{$v.s_id}','{$v.s_label}','{$v.s_pid}');">{$v.s_label}, {$v.s_clabel}</a></TD>
                                   {/if}
                                   <TD align=center class=td-border>{$v.alias_name}</TD>                                  
                                 </TR>

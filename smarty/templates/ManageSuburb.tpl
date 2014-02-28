@@ -21,6 +21,7 @@ function chkConfirm()
 	}
 
 function selectCity(value){
+  
 	document.getElementById('frmcity').submit();
 	window.location.href="{$dirname}/suburbList.php?page=1&sort=all&citydd="+value;
 }
@@ -33,17 +34,17 @@ function showHier(){
 
    
     //var j = '{$suburb_str}';
-    var j = JSON.parse('{$suburb_str}'); 
-   var jsonstring = JSON.stringify(j);
+    //var j = JSON.parse('{$suburb_str}'); 
+   //var jsonstring = JSON.stringify(j);
    //alert(jsonstring);
-   jsonstring = jsonstring.replace(/"/g, "'");
+   //jsonstring = jsonstring.replace(/"/g, "'");
    //alert(jsonstring);
 
   $.fancybox({
         'width'                :800,
         'height'               :800,
         'scrolling'            : 'no',
-        'href'                 : "/showHierarchy.php?json="+jsonstring,
+        'href'                 : "/showHierarchy.php?cityid="+'{$cityId}',
         'type'                : 'iframe',
         
     })

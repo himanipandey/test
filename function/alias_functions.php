@@ -41,7 +41,7 @@ function createAliases($pl_tb_name, $pl_tb_id, $al_name)
 	else
 	{
 		$qry = "INSERT INTO ".place_alias_mapping." (place_table_name, place_table_id, alias_name) VALUES ('$pl_tb_name', '$pl_tb_id', '$al_name')";
-		//echo $qry;
+		//echo $qry; die();
 		//echo $aliasName;
 		mysql_query($qry);
     	if(mysql_affected_rows()>0)
@@ -59,12 +59,11 @@ function createAliases($pl_tb_name, $pl_tb_id, $al_name)
 function getAllAliases()
 {
 	//$where = "pa.place_table_name='$pl_tb_name' and pa.place_table_id='$pl_tb_id'";
-	$query = "SELECT c.LABEL as c_label, s.LABEL as s_label, l.LABEL as l_label, pa.alias_name FROM ".place_alias_mapping." pa 
-		left join city c on pa.place_table_id = c.CITY_ID and pa.place_table_name = 'CITY'
-		left join locality l on pa.place_table_id = l.LOCALITY_ID and pa.place_table_name = 'LOCALITY'
-		left join suburb s on pa.place_table_id = s.SUBURB_ID and pa.place_table_name = 'SUBURB'
-		"; 
-		//echo $query;
+	/*$query = "SELECT c.LABEL as c_label, s.LABEL as s_label, s.SUBURB_ID as s_id, s.parent_suburb_id as s_pid, s.CITY_ID as s_cid, c1.LABEL as s_clabel, l.LABEL as l_label, c2.LABEL as l_clabel, pa.alias_name FROM ".place_alias_mapping." pa 	left join city c on pa.place_table_id = c.CITY_ID and pa.place_table_name = 'CITY'
+		left join (locality l inner join (suburb s1 inner join city c2 on s1.CITY_ID=c2.CITY_ID) on pa.place_table_id = l.LOCALITY_ID and pa.place_table_name = 'LOCALITY'
+		left join (suburb s inner join city c1 on s.CITY_ID=c1.CITY_ID) on pa.place_table_id = s.SUBURB_ID and pa.place_table_name = 'SUBURB'
+		"; */
+		 $query = "SELECT c.LABEL as c_label, s.LABEL as s_label, s.SUBURB_ID as s_id, s.parent_suburb_id as s_pid, s.CITY_ID as s_cid, c1.LABEL as s_clabel, l.LABEL as l_label, c2.LABEL as l_clabel, pa.alias_name FROM place_alias_mapping pa left join city c on pa.place_table_id = c.CITY_ID and pa.place_table_name = 'CITY' left join (locality l inner join (suburb s1 inner join city c2 on s1.CITY_ID=c2.CITY_ID) on l.SUBURB_ID=s1.SUBURB_ID) on pa.place_table_id = l.LOCALITY_ID and pa.place_table_name = 'LOCALITY' left join (suburb s inner join city c1 on s.CITY_ID=c1.CITY_ID) on pa.place_table_id = s.SUBURB_ID and pa.place_table_name = 'SUBURB'";
 	$res = mysql_query($query); //or die(mysql_error());
 	
 	$arr = array(); //echo 'yes';
@@ -151,7 +150,7 @@ function getLandmarkAliases($pl_tb_name, $pl_tb_id)
 	$query ='';
 	
 		$query = "SELECT l.id, l.name FROM ".place_landmark_mapping." pl 
-			inner join locality_near_places l on pl.landmark_id = l.id 
+			inner join landmarks l on pl.landmark_id = l.id 
 			WHERE ".$where; 
 		
 
@@ -181,10 +180,10 @@ function getAliasesbyId($pl_tb_name, $pl_tb_id, $al_tb_name, $al_tb_id)
 			WHERE pa.alias_table_name='aliases' and ".$where; 
 		break;
 
-		case "locality_near_places":
+		case "landmarks":
 		$query = "SELECT l.id, l.name FROM ".place_alias_mapping." pa 
-			inner join locality_near_places l on pa.alias_table_id = l.id 
-			WHERE pa.alias_table_name='locality_near_places' and ".$where;
+			inner join landmarks l on pa.alias_table_id = l.id 
+			WHERE pa.alias_table_name='landmarks' and ".$where;
 		break;
 
 		case "suburb":
@@ -309,7 +308,9 @@ function getHierArr($cid, $subarr1){
     $tmpArray = Array();
     $tmpArray['placeType'] = 'city';
     $arr['data'] = $tmpArray;
-    $tmpid = $subid;
+
+    if(isset($subarr1)){
+    
     $bool = true;
     $subid = $subarr1['id'];
     $subname = $subarr1['label'];
@@ -345,11 +346,12 @@ function getHierArr($cid, $subarr1){
     	$childArray = child_suburb($subid, $lowerSubArr, $locArr);
   		if(count($childArray)>0){
   			$subArray['children'] =  print_suburb($childArray, $lowerSubArr, $locArr);
-  			$subArray1 = Array();
-  			array_push($subArray1, $subArray);
-  			$arr['children'] = $subArray1;
+  			 			
   		}
-    
+      $finsubArray = Array();
+      array_push($finsubArray, $subArray);
+      $arr['children'] = $finsubArray;
+    }
     else{
    	 if(count($suburbSelect)>0){  
    	 	$arr['children'] =  print_suburb($suburbArr, $lowerSubArr, $locArr);

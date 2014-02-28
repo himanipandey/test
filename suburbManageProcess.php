@@ -125,7 +125,7 @@
            array_push($suburbSelect, $dataArr);
     }
     $smarty->assign("suburbSelect", $suburbSelect);
-
+   // print_r($suburbSelect);
 
 
 
@@ -179,7 +179,7 @@
     $str = json_encode(getHierArr($cityId));
 
     
-    $smarty->assign("suburb_str", $str);
+    //$smarty->assign("suburb_str", $str);
 /*
  function child_suburb($p_id, $parentArr){
     $returnArr = Array();

@@ -1,5 +1,31 @@
 <?php 
-$json = $_GET['json'];
+error_reporting(1);
+  ini_set('display_errors','1');
+  include("smartyConfig.php");
+  include("appWideConfig.php");
+  include("dbConfig.php");
+        include("modelsConfig.php");
+  include("includes/configs/configs.php");
+  include("builder_function.php");
+  include("function/alias_functions.php");
+  AdminAuthentication();
+  include('suburbManageProcess.php');
+
+
+$cityId = $_GET['cityid'];
+if(isset($_GET['subid'])){
+  $subid = $_GET['subid'];
+  $label = $_GET['label'];
+  $parentid = $_GET['pid'];
+  $suburbarr = Array();
+  $suburbarr['id'] = $subid;
+  $suburbarr['label'] = $label;
+  $suburbarr['parent_id'] = $parentid;
+  $json = json_encode(getHierArr($cityId, $suburbarr));
+}
+else
+ $json = json_encode(getHierArr($cityId));
+ //echo $str;
 //echo "<PRE>";
 //var_dump($json);
 
@@ -205,8 +231,9 @@ var Log = {
 
 function init(){
     //init data
-    var j = $('#json').val().replace(/'/g, '"');
-    var json =   jQuery.parseJSON(j); // JSON.stringify("<?php echo $j;?>");// ;
+    //var j = $('#json').val().replace(/'/g, '"');
+    
+    var json =   jQuery.parseJSON($('#json').val()); // JSON.stringify("<?php echo $j;?>");// ;
      //json = JSON.stringify(json);
     //var json = res.substring(1, res.length-1);
    /*

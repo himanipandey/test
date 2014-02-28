@@ -555,8 +555,8 @@ function getNearPlacesArrfromCity($cityId, $order, $placeType=0)
         $where = "np.city_id = $cityId and  np.place_type_id = $placeType"; //.$queryLessThenMax;
     $orderby = " ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
     $qry = "SELECT np.name, np.id, np.city_id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority
-            FROM " . locality_near_places. " np 
-            inner join near_place_types npt on npt.id = np.place_type_id
+            FROM " . landmarks. " np 
+            inner join landmark_types npt on npt.id = np.place_type_id
             WHERE ".$where." ". $orderby;
 
     $res = mysql_query($qry) or die(mysql_error());
@@ -658,9 +658,9 @@ function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
             $orderby = "ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
             
             $qry = "SELECT np.name, np.city_id, np.id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority
-            FROM " . locality_near_places. " np 
+            FROM " . landmarks. " np 
                 
-            inner join near_place_types npt on npt.id = np.place_type_id
+            inner join landmark_types npt on npt.id = np.place_type_id
             where get_distance_in_kms_between_geo_locations($lat, $lon, np.latitude, np.longitude) < 5"
             .$where." ".$orderby;
 
@@ -781,7 +781,7 @@ function updateNearPlace($nearPlaceId, $priority, $status, $mode = null, $modeid
         $update = " status = '$status'"; //die("hello1");
     }
        
-    $qry = "UPDATE " . locality_near_places . " SET $update WHERE id = '".$nearPlaceId."'";
+    $qry = "UPDATE " .landmarks. " SET $update WHERE id = '".$nearPlaceId."'";
     //die($qry);
     mysql_query($qry);
     if(mysql_affected_rows()>0){
@@ -840,7 +840,7 @@ function checkNearPlaceAvail($nearPlaceId = null, $priority = null, $mode = null
             $where = "locality_id = '" . $modeid . "'";
             break;
     }
-    $qry = "SELECT COUNT(*) AS CNT FROM " . locality_near_places . " WHERE ".$where." AND id = '".$nearPlaceId."'";
+    $qry = "SELECT COUNT(*) AS CNT FROM " . landmarks . " WHERE ".$where." AND id = '".$nearPlaceId."'";
     $res = mysql_query($qry);
     $data = mysql_fetch_assoc($res);
 
