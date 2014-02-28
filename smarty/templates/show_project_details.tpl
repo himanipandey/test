@@ -5,8 +5,9 @@
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
 <script type="text/javascript">
+	
     $(document).ready(function() {
-        var pid = '{$phaseId}';
+		var pid = '{$phaseId}';
         var noPhasePhaseId = '{$noPhasePhaseId}';
         $('select#phaseName').val(pid);
         var projectId = $('#projectId').val();
@@ -71,6 +72,8 @@ function builder_contact(builderId,buildernm)
            });
 
 }
+
+
 
     function updateURLParameter(url, param, paramVal){
         var newAdditionalURL = "";
@@ -215,7 +218,22 @@ function towerSelect(towerId)
 function getDateNow(){
 	return (new Date().getTime());
 }
+function broker_call_edit(callId, brokerId)
+{
+	//code for builder contact info popup
+    var url = "/broker_call_edit.php?callId="+callId+"&brokerId="+brokerId;
+   //  jQuery.fancybox({
+   //      'href' :  url
+   //  });
+     $.fancybox({
+        'width'                :720,
+        'height'               :200,
+      
+        'href'                 : url,
+        'type'                : 'iframe'
+    })
 
+}
 
 /*********builder contact info related js start here***********/
 
@@ -2018,6 +2036,7 @@ function getDateNow(){
                                          <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
                                          <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
                                          <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
+                                         <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Action</td>
                                 </tr>
 
                                 {foreach from = $arrCalingSecondary key = key item = item}
@@ -2044,6 +2063,9 @@ function getDateNow(){
                                         </td>
                                         <td width ="90%">
                                                 {$item['Remark']}
+                                        </td>
+                                        <td width ="90%">
+											<a href="javascript:void(0);" name="call_edit" value="Edit" onclick="return broker_call_edit({$item['CallId']},{$item['BROKER_ID']});" >Edit</a>
                                         </td>
                                 </tr>
                                 {/foreach}
