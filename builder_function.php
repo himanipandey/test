@@ -2323,5 +2323,36 @@ function project_aliases_detail($projectID){
 		$project_alias = mysql_fetch_object($project_alias);
 	return ($project_alias)?$project_alias:0;
 }
+
+function ViewUserDetails($ID){
+	$Sql = "SELECT * FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
+	$ExecSql = mysql_query($Sql);
+
+	if(mysql_num_rows($ExecSql)==1)	{
+
+		$Res = mysql_fetch_assoc($ExecSql);
+		$ResDetails['ADMINID'] 		 	=  $Res['ADMINID'];
+		$ResDetails['EMP_CODE']			=  $Res['EMP_CODE'];
+		$ResDetails['FNAME'] 		 	=  $Res['FNAME'];
+		$ResDetails['LNAME'] 		 	=  $Res['LNAME'];
+		$ResDetails['USERNAME']  		=  $Res['USERNAME'];
+		$ResDetails['ADMINPASSWORD'] 	=  $Res['ADMINPASSWORD'];
+		$ResDetails['ADMINEMAIL'] 		=  $Res['ADMINEMAIL'];
+		$ResDetails['MOBILE']  			=  $Res['MOBILE'];
+		$ResDetails['ADMINADDDATE'] 	=  $Res['ADMINADDDATE'];
+		$ResDetails['ADMINLASTLOGIN'] 	=  $Res['ADMINLASTLOGIN'];
+		$ResDetails['REGION'] 			=  $Res['REGION'];
+		$ResDetails['STATUS'] 		 	=  $Res['STATUS'];
+		$ResDetails['DEPARTMENT'] 		=  $Res['DEPARTMENT'];
+		$ResDetails['DESIGNATION'] 		=  $Res['DESIGNATION'];
+		$ResDetails['JOINING_DATE'] 	=  $Res['JOINING_DATE'];
+		$ResDetails['RESIGNATION_DATE']	=  $Res['RESIGNATION_DATE'];
+		return $ResDetails;
+	}
+	else
+	{
+		return 0;
+	}
+}
 ?>
 
