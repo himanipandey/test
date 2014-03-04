@@ -489,6 +489,25 @@ $(function() {
                                </table>
                                <br>
                                {if $flagcheck == 1}
+                               <table width="502" border="0" align="left" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;">
+                                    <tr bgcolor='#DCDCDC'>
+                                        <td height="35" align="center" colspan= "2" style='border-bottom:1px solid #c2c2c2;color:#333;'>
+                                           <b>Update Remark</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="25" align="center" colspan= "2"  style = "padding:10px;">
+                                          <textarea name="bulkRemark" rows=10 cols=60></textarea>
+                                        </td>
+                                    </tr>	
+                                     <tr>
+                                        <td height="25" align="center" colspan= "2"  style = "padding:10px;">
+                                          <input onclick = "removeExtraCode();" type = "submit" value = "Update Remark" name = "updateRemark" 
+                                            style="border:1px solid #c2c2c2;height:30px;width:125px;background:#999999;color:#fff;
+                                            font-weight:bold;cursor:hand;pointer:hand;">
+                                        </td>
+                                    </tr>	
+                                </table>
                                <table width="502" border="0" align="left" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;float:right">
                                     <tr bgcolor='#DCDCDC'>
                                         <td height="35" align="center" colspan= "2" style='border-bottom:1px solid #c2c2c2;color:#333;'>

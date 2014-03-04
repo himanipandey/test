@@ -437,7 +437,7 @@ if (!isset($_POST['forwardFlag']))
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
-    foreach ($newPhase as $k => $v) {
+     foreach ($newPhase as $k => $v) {
         $qry = "select * from master_project_phases where name = '".$k."'";
         $res = mysql_query($qry) or die(mysql_error());
         $phaseId = mysql_fetch_assoc($res);
@@ -471,6 +471,9 @@ if ($_POST['forwardFlag'] == 'yes') {
        }
         if ($phaseIdCurrent['id'] == $phaseId['id']) {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
+            //updating new remark
+            if($currentPhase=='Audit1' && $_POST['newRemarkId'])
+				update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");
@@ -507,6 +510,10 @@ if ($_POST['forwardFlag'] == 'update') {
            /********************/
 
             updateProjectPhase($projectId, $phaseId['id'], $stageId['id']);
+            
+            //updating new remark
+            if($currentPhase=='Audit1' && isset($_POST['newRemarkId']))
+				update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");

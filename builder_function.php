@@ -2333,5 +2333,9 @@ function project_aliases_detail($projectID){
 		$project_alias = mysql_fetch_object($project_alias);
 	return ($project_alias)?$project_alias:0;
 }
+function update_remark_status($cid,$type="Audit2",$status="Read"){
+	$sql = "UPDATE comments_history SET status = '$status' WHERE comment_id='$cid' AND comment_type='$type'";
+	mysql_query($sql) or die(mysql_error());	
+}
 ?>
 

@@ -121,6 +121,7 @@ function towerSelect(towerId)
 	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, 
             preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder)
 	{	
+		
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
@@ -178,14 +179,30 @@ function towerSelect(towerId)
 		
 		if(flgChk == 1)
 		{
+			isNewRemark = "{$projectComments['audit2Remark']->status}";
+			remarkTxt = "{$projectComments['audit2Remark']->comment_text}";
+			remarkId = "{$projectComments['audit2Remark']->comment_id}";
 			if(dir=='forward'){
-				if (confirm("Do you want to proceed ?"))
-				{
-					$('#forwardFlag').val('yes');
-					$('#currentPhase').val(phase);
-					$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
-					$('#changePhaseForm').submit();
+				if(isNewRemark == 'New' && phase == "Audit1"){
+					if (confirm("New Remark : '" + remarkTxt + "'\n\n Have you read the Above Remark ? (if yes then press OK and proceed)"))
+					{
+						$('#newRemarkId').val(remarkId);
+						$('#forwardFlag').val('yes');
+						$('#currentPhase').val(phase);
+						$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
+						$('#changePhaseForm').submit();
+					}
+					
+				}else{
+					if (confirm("Do you want to proceed ?"))
+					{
+						$('#forwardFlag').val('yes');
+						$('#currentPhase').val(phase);
+						$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
+						$('#changePhaseForm').submit();
+					}
 				}
+				
 			}
 			else if(dir=='backward')
 			{
@@ -200,13 +217,25 @@ function towerSelect(towerId)
 			}
 			else if(dir=='updation')
 			{
-				if (confirm("Do you want to proceed ?"))
-				{
-					$('#forwardFlag').val('update');
-					$('#currentPhase').val(phase);
-					$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
-					$('#changePhaseForm').submit();
-				}	
+				if(isNewRemark == 'New' && phase == "Audit1"){
+					if (confirm("New Remark : '" + remarkTxt + "'\n\n Have you read the Above Remark ? (if yes then press OK and proceed)"))
+					{   
+						$('#newRemarkId').val(remarkId);
+						$('#forwardFlag').val('update');
+						$('#currentPhase').val(phase);
+						$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
+						$('#changePhaseForm').submit();
+					}	
+				}else{
+					if (confirm("Do you want to proceed ?"))
+					{
+						$('#forwardFlag').val('update');
+						$('#currentPhase').val(phase);
+						$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
+						$('#changePhaseForm').submit();
+					}	
+				}
+				
 			}
 		}
 	
@@ -417,6 +446,7 @@ function getDateNow(){
   <input type="hidden" id="revertFlag" name="revertFlag" value=""/>
   <input type="hidden" id="returnURLPID" name="returnURLPID" value=""/>
   <input type="hidden" id="returnStage" name="returnStage" value=""/>
+  <input type="hidden" id="newRemarkId" name="newRemarkId" value=""/>
 </form>
 
 
@@ -1331,7 +1361,18 @@ function getDateNow(){
                                           </td>
                                       </tr>
                                       {/if}
-                                      {if array_key_exists('fieldSurveyRemark',$projectOldComments)}
+                                      {if array_key_exists('audit2Remark',$projectOldComments)}    
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Audit Team Remark:</b></td>
+
+                                            <td>
+												<b>[{$projectComments['audit2Remark']->status}]</b>&nbsp;
+                                                {$projectOldComments['audit2Remark']->comment_text}
+                                                &nbsp;<b>By </b>{$projectOldComments['audit2Remark']->fname} on {($projectOldComments['audit2Remark']->date_time)|date_format:'%b-%y'}
+                                          </td>
+                                      </tr>
+                                      {/if}
+                                     {if array_key_exists('fieldSurveyRemark',$projectOldComments)}
                                       <tr height="25px;">
                                           <td  nowrap="nowrap" width="1%" align="left"><b>Field Survey Team Remark:</b></td>
 
@@ -1398,7 +1439,19 @@ function getDateNow(){
                                                 {/if}
                                           </td>
                                       </tr>
+								<tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Audit2 Team Remark:</b></td>
 
+                                            <td>
+                                                {if array_key_exists('audit2Remark',$projectComments)}
+                                                      <b>[{$projectComments['audit2Remark']->status}]</b>&nbsp;
+                                                      {$projectComments['audit2Remark']->comment_text}
+                                                      &nbsp;<b>By </b>{$projectComments['audit2Remark']->fname} on {($projectComments['audit2Remark']->date_time)|date_format:'%b-%y'}
+                                                {else}
+                                                       --
+                                                {/if}
+                                          </td>
+                                      </tr>
                                       <tr height="25px;">
                                           <td  nowrap="nowrap" width="1%" align="left"><b>Field Survey Team Remark:</b></td>
 
