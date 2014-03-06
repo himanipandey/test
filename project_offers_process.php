@@ -89,7 +89,7 @@
 		$project_offers->offer = $offer_type;
 		$project_offers->discount_on = $discount_on;
 		$project_offers->offer_period = $offer_period;
-		$project_offers->offer_price = $offer_price;
+		$project_offers->offer_price = ($offer_price>0)?$offer_price:null;
 		$project_offers->offer_price_type = $offer_price_type;
 		$project_offers->other_text = $other_text;
 		$project_offers->discount_date = $discount_date;

@@ -32,7 +32,7 @@
              <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height="450"><BR>
                   <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
-					{if count($offerDetails)<10}  
+					{if count($offerDetails)<10 || $offerId != ''}
 					<form method="post" enctype="multipart/form-data">
 			          <div>
                         {if $ErrorMsg["offerType"] != ''}
@@ -260,6 +260,8 @@
 	  var intRegex = /^\d+$/;
 	  var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+))$/;
 	  
+	  $flag = 1;
+	  
 	  offer_type = $('#offerType').val();
 	  offerDesc  = $('#offerDesc').val();
 	
@@ -325,16 +327,9 @@
 		}else if($("input[name='pd_price']:checked").val() == 'percent' && $("select[name='pd_price_emiPer']").val() == ''){
 			alert("Please select Discount Amount. in Percent.");
 			return false;
-		}else if($("input[name='pd_price']:checked").val() == 'deci'){
-			if(intRegex.test(pdEmiDeci) || floatRegex.test(pdEmiDeci)){
-			  if(pdEmiDeci <= 0){
-				alert("Discount Amount value must be greater than 0");
-				return false;
-			  }
-			}else{
-				alert("Please enter a valid Discount Amount.");
-				return false;
-			}						
+		}else if(($("input[name='pd_price']:checked").val() == 'deci' && pdEmiDeci <= 0) || ($("input[name='pd_price']:checked").val() == 'deci' && (!intRegex.test(pdEmiDeci) || !floatRegex.test(pdEmiDeci)))){
+			alert("Discount Amount value must be numeric & greater than 0");
+				return false;					
 		}else if($('#pd_on').val() == '' && $('#pd_date').val() == ''){
 			alert("Please select Discount On or Discount Date.");
 			return false;
@@ -342,11 +337,14 @@
 			alert("Please enter text in Other textbox");
 			return false;
 		}       
-	  }else if(offerDesc.trim() == ''){
+	  }	  
+	  if(offerDesc.trim() == ''){
 		alert("Offer Description is required!");
 		return false;
 	  }
-	  return true;
+	  
+		return true;
+	  
 	}
 	$(document).ready(function(){
 	  $('#offerType').change(function(){

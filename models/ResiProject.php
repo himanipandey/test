@@ -109,15 +109,17 @@ class ResiProject extends Objects
    $ands = (count($arrSearch)>0)?" and ":"";
    
    	$offer_condition = '';
-	if(!empty($_GET['offerId'])){
-		$offer_id = mysql_real_escape_string($_GET['offerId']);
-		$offer_condition = " and resi_project.project_id in (select distinct(project_id) from project_offers where id = '$offer_id')";		
-	}else if(!empty($_GET['withOffer'])){
-		if($_GET['withOffer'] == 'Yes')
-			$offer_condition = " and resi_project.project_id in (select distinct(project_id) from project_offers)";
-		else if($_GET['withOffer'] == 'No')
-			$offer_condition = " and resi_project.project_id not in (select distinct(project_id) from project_offers) limit 1000";
-	}
+   	if(empty($_GET['projectId'])){
+		if(!empty($_GET['offerId'])){
+			$offer_id = mysql_real_escape_string($_GET['offerId']);
+			$offer_condition = " and resi_project.project_id in (select distinct(project_id) from project_offers where id = '$offer_id')";		
+		}else if(!empty($_GET['withOffer'])){
+			if($_GET['withOffer'] == 'Yes')
+				$offer_condition = " and resi_project.project_id in (select distinct(project_id) from project_offers)";
+			else if($_GET['withOffer'] == 'No')
+				$offer_condition = " and resi_project.project_id not in (select distinct(project_id) from project_offers) limit 1000";
+		}
+	 }
 	 $query = "SELECT resi_project.*, rpp.PHASE_ID as no_phase_id, b.builder_name,phases.name as phase_name,stages.name as stage_name FROM `resi_project` 
                 inner join resi_project_phase rpp
                     on resi_project.PROJECT_ID = rpp.PROJECT_ID and rpp.PHASE_TYPE = 'Logical' and rpp.version = 'Cms' 
