@@ -124,6 +124,8 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 }
             });
 
+			updateD_Availablitiy($projectId); // update D_availability  
+			
             /***********code related to completion date add/edit**************/
             $qryFetchPhaseId = "select phase_id from resi_project_phase 
                 where project_id = $projectId and phase_name = '".$phasename."' 
