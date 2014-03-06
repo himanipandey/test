@@ -13,7 +13,8 @@
     $price_unit = array(
 		'Lakhs' => '100000',
 		'Crores' => '10000000',
-		'Thousands' => '1000'
+		'Thousands' => '1000',
+		'Hundreds' => '100'
     );
     
     if(isset($_POST['btnSave'])){
@@ -137,10 +138,13 @@
 			}elseif($project_offers->offer_price < 10000000 && $project_offers->offer_price > 99999){
 				$priceDeciUnit = 'Lakhs';
 				$offer_price = $offer_price/100000;
-			}
-			else{
+			}elseif($project_offers->offer_price < 100000 && $project_offers->offer_price > 999){
 				$priceDeciUnit = 'Thousands';	
 				$offer_price = $offer_price/1000;
+			}
+			else{
+				$priceDeciUnit = 'Hundreds';	
+				$offer_price = $offer_price/100;
 			}		
 		}
 		$smarty->assign("offer_price", $offer_price);

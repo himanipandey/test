@@ -152,6 +152,7 @@
 								    &nbsp;&nbsp;<input type="radio" name="pd_price" value="deci" onclick="populate_offer_desc()" {if $offer_price_type=='Absolute'}checked{/if} />
 								    <input type="text" name="pd_price_emiDeci" id="pd_price_emiDeci" style="width:50px" onkeyup="populate_offer_desc()" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
 								     <select id="pd_price_emiUnit" name="pd_price_emiUnit" onchange="populate_offer_desc()">
+									  <option value="Hundreds" {if $priceDeciUnit=='Hundreds'}selected{/if} >Hundreds</option>
 									  <option value="Lakhs" {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
 									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
 									  <option value="Thousands" {if $priceDeciUnit=='Thousands'}selected{/if} >Thousands</option>
@@ -327,7 +328,13 @@
 		}else if($("input[name='pd_price']:checked").val() == 'percent' && $("select[name='pd_price_emiPer']").val() == ''){
 			alert("Please select Discount Amount. in Percent.");
 			return false;
-		}else if(($("input[name='pd_price']:checked").val() == 'deci' && pdEmiDeci <= 0) || ($("input[name='pd_price']:checked").val() == 'deci' && (!intRegex.test(pdEmiDeci) || !floatRegex.test(pdEmiDeci)))){
+		}else if($("input[name='pd_price']:checked").val() == 'deci' &&  pdEmiDeci.trim()==''){
+			alert("Discount Amount value must be numeric & greater than 0");
+				return false;					
+		}else if($("input[name='pd_price']:checked").val() == 'deci' &&  isNaN(pdEmiDeci)){
+			alert("Discount Amount value must be numeric & greater than 0");
+				return false;					
+		}else if($("input[name='pd_price']:checked").val() == 'deci' &&  pdEmiDeci <= 0){
 			alert("Discount Amount value must be numeric & greater than 0");
 				return false;					
 		}else if($('#pd_on').val() == '' && $('#pd_date').val() == ''){
