@@ -116,7 +116,7 @@ class ResiProject extends Objects
 		if($_GET['withOffer'] == 'Yes')
 			$offer_condition = " and resi_project.project_id in (select distinct(project_id) from project_offers)";
 		else if($_GET['withOffer'] == 'No')
-			$offer_condition = " and resi_project.project_id not in (select distinct(project_id) from project_offers)";
+			$offer_condition = " and resi_project.project_id not in (select distinct(project_id) from project_offers) limit 1000";
 	}
 	 $query = "SELECT resi_project.*, rpp.PHASE_ID as no_phase_id, b.builder_name,phases.name as phase_name,stages.name as stage_name FROM `resi_project` 
                 inner join resi_project_phase rpp

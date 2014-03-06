@@ -398,7 +398,7 @@ $smarty->assign("projectOldComments", $projectOldComments);
 /******end code for project comment fetch from commeny history table*****/
 
 /**start code for fetch offer heading and desc from db**/
-    $dataOffer = ProjectOffers::find("all",array("conditions"=>array("project_id"=>$projectId)));
+    $dataOffer = ProjectOffers::find("all",array("conditions"=>array("project_id"=>$projectId,'status'=>'Active')));
     $smarty->assign("offer_desc", $dataOffer);
     /**end code for fetch offer heading and desc from db**/
     

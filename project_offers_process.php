@@ -7,9 +7,9 @@
         unset($projectDetail[$key]);
     }
     $projectDetail     =   array($projectDetail);
-    
-    $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'=>$projectId)));
-       
+
+    $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'=>$projectId,'status'=>'Active')));
+
     $price_unit = array(
 		'Lakhs' => '100000',
 		'Crores' => '10000000',
@@ -111,7 +111,8 @@
     //offer deletion
     if($_GET['edit'] == 'delete' && isset($_GET['v'])){
 		$project_offers = ProjectOffers::find($_GET['v']);
-		$project_offers->delete();
+		$project_offers->status = 'Inactive';
+		$project_offers->save();
 		header("Location:project_offers.php?projectId=".$projectId."&edit=add&preview=true");
 	}
 	

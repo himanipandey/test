@@ -32,6 +32,7 @@
              <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height="450"><BR>
                   <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
+					{if count($offerDetails)<10}  
 					<form method="post" enctype="multipart/form-data">
 			          <div>
                         {if $ErrorMsg["offerType"] != ''}
@@ -66,7 +67,7 @@
 								    </select> Months 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !is_numeric($offer_period)}checked{/if} onclick="populate_offer_desc()"/> Till Possession
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if} onclick="populate_offer_desc()"/> Till Possession
 								  </td>
 								</tr>
 								<tr>
@@ -99,7 +100,7 @@
 								    </select> Months 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="pos" onclick="populate_offer_desc()" {if !is_numeric($offer_period)}checked{/if}/> Possession
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="pos" onclick="populate_offer_desc()" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if}/> Possession
 								  </td>
 								</tr>
 								<tr>
@@ -205,6 +206,9 @@
 							
                       </div>
                     </form>
+                    {else}
+						<b>You can create only 10 offers per Project.</b>
+                    {/if}
                   </TABLE>
                   <br/>
                   <br/>
