@@ -117,6 +117,9 @@
 		header("Location:project_offers.php?projectId=".$projectId."&edit=add&preview=true");
 	}
 	
+	$priceDeciUnit = 'Lakhs';
+	$smarty->assign("priceDeciUnit", $priceDeciUnit);
+	 
 	//edit offers
 	if($_GET['edit'] == 'edit' && isset($_GET['v'])){
 		$project_offers = ProjectOffers::find($_GET['v']);
@@ -152,7 +155,8 @@
 		$smarty->assign("offer_desc", $project_offers->offer_desc);
 		$smarty->assign("offerId", $_GET['v']);
 	}
-    
+	
+   
 	$smarty->assign("arrOfferTypes", $arrOfferTypes);
 	$smarty->assign("projectDetail", $projectDetail);
 	$smarty->assign("offerDetails", $offerDetails);
