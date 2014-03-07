@@ -213,7 +213,7 @@ function chkConfirm()
                         	{$regionArray[$userDataArr[data].REGION]}
                         </TD>
 
-			<TD align=center class=td-border>{if $userDataArr[data].DESIGNATION != ""}{strtoupper($userDataArr[data].DESIGNATION)}{else} NA {/if} / {$userDataArr[data].DEPARTMENT}</TD>
+			<TD align=center class=td-border>{if $userDataArr[data].ROLE != ""}{strtoupper($userDataArr[data].ROLE)}{else} NA {/if} / {$userDataArr[data].DEPARTMENT}</TD>
 						
 
                         <TD align=center class=td-border>                        	

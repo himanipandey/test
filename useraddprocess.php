@@ -104,7 +104,7 @@ if ($_POST['btnSave'] == "Save") {
                         REGION	= '".$region."',
                         STATUS	= 'Y',
                         DEPARTMENT = '".$department."',
-                        DESIGNATION = '".$designation."',
+                        ROLE = '".$designation."',
                         JOINING_DATE = '".$joiningdate."',
                         RESIGNATION_DATE = '".$resignationdate."'";
 		$DataInsert = mysql_query($sql) or die(mysql_error());
@@ -125,7 +125,7 @@ if ($_POST['btnSave'] == "Save") {
                     REGION = '".$region."',
                     STATUS	= '".$radioForStatus."',
                     DEPARTMENT ='".$department."',
-                    DESIGNATION = '".$designation."',
+                    ROLE = '".$designation."',
                     JOINING_DATE = '".$joiningdate."',
                     RESIGNATION_DATE = '".$resignationdate."'";
 
@@ -152,7 +152,7 @@ else if ($_GET['userid']!='') {
 	 $smarty->assign("txtregion", stripslashes($UserDetail['REGION']));
 	 $smarty->assign("status", stripslashes($UserDetail['STATUS']));
 	 $smarty->assign("txtdepartment", stripslashes($UserDetail['DEPARTMENT']));
-	 $smarty->assign("txtdesignation", stripslashes($UserDetail['DESIGNATION']));
+	 $smarty->assign("txtdesignation", stripslashes($UserDetail['ROLE']));
 	 $smarty->assign("joiningdate",stripslashes($UserDetail['JOINING_DATE']));
 	 $smarty->assign("resignationdate",stripslashes($UserDetail['RESIGNATION_DATE']));
 

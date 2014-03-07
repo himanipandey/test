@@ -2344,7 +2344,7 @@ function ViewUserDetails($ID){
 		$ResDetails['REGION'] 			=  $Res['REGION'];
 		$ResDetails['STATUS'] 		 	=  $Res['STATUS'];
 		$ResDetails['DEPARTMENT'] 		=  $Res['DEPARTMENT'];
-		$ResDetails['DESIGNATION'] 		=  $Res['DESIGNATION'];
+		$ResDetails['ROLE'] 		=  $Res['ROLE'];
 		$ResDetails['JOINING_DATE'] 	=  $Res['JOINING_DATE'];
 		$ResDetails['RESIGNATION_DATE']	=  $Res['RESIGNATION_DATE'];
 		return $ResDetails;
