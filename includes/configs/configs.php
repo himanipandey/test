@@ -404,7 +404,7 @@ $ArrModuleOld	=	array(
 
 /*************Array Department********************/
 
-	$departmentArray	=	array("ADMINISTRSTOR"=>"ADMINISTRSTOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
+	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
             "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
             "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES");
 	$smarty->assign("departmentArray", $departmentArray);
