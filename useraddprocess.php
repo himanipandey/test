@@ -1,5 +1,9 @@
 <?php
-	
+ $accessUserManage = '';
+ if( $userManagement == false )
+   $accessUserManage = "No Access";
+ $smarty->assign("accessUserManage",$accessUserManage);
+
 $userid = $_REQUEST['userid'];
 $smarty->assign("userid", $userid);
 

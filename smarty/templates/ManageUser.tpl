@@ -10,8 +10,8 @@ function chkConfirm()
 			var xmlHttp=null;
 			try
 			{
-					// Firefox, Opera 8.0+, Safari
-					xmlHttp=new XMLHttpRequest();
+                                // Firefox, Opera 8.0+, Safari
+                                xmlHttp=new XMLHttpRequest();
 			}
 			catch (e)
 			{
@@ -81,13 +81,18 @@ function chkConfirm()
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>User List</TD>
-                      <TD align=right colSpan=3><a href="useradd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add New User</b></a></TD>
+                      <TD align=right colSpan=3>
+                           {if $accessUserManage == ''} 
+                             <a href="useradd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add New User</b></a>
+                          {/if}
+                         </TD>
                     </TR>
 		  </TBODY></TABLE>
 		</TD>
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                     {if $accessUserManage == ''}
                   <!--<table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
@@ -103,6 +108,7 @@ function chkConfirm()
                   </table>-->
 
 				   <table cellSpacing=1 cellPadding=4 width="40%" align="center"  style = "border:1px solid" >
+                                      
 						<form name = "frm" id="frm" method = "post">
 						  
 						 <!-- <tr bgcolor = '#F7F7F7'><td align = "right"><b>Order No:</b></td><td align = "left"><input type = "text" name = "orderid" id = "orderid" value = "{$orderid}"></td></tr>-->
@@ -170,7 +176,7 @@ function chkConfirm()
                             </tr>
 							
 						</form>
-						
+                          
 					</table>
 				    
                     <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0 style="padding-top:20px;">
@@ -251,8 +257,8 @@ function chkConfirm()
                           <tr>
                             <td width="77%" height="25" align="center">
                             	{if $NumRows>30}
-									{$Pagginnation}
-								{/if}
+                                        {$Pagginnation}
+                                {/if}
                               
                             </td>
                             <td align="right">&nbsp;</td>
@@ -262,6 +268,9 @@ function chkConfirm()
                     </tr>
                   </table>
                   {/if}
+                  {else}
+                    <font color = "red">No Access</font>
+                 {/if}
 	      </TD>
             </TR>
           </TBODY></TABLE>

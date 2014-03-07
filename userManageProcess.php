@@ -1,6 +1,11 @@
 <?php	
-	$smarty->assign("sort",$_GET['sort']);
-	$smarty->assign("page",$_GET['page']);
+
+$accessUserManage = '';
+if( $userManagement == false )
+   $accessUserManage = "No Access";
+$smarty->assign("accessUserManage",$accessUserManage);
+$smarty->assign("sort",$_GET['sort']);
+$smarty->assign("page",$_GET['page']);
 if ($_GET['mode'] == 'delete') 
 {
     

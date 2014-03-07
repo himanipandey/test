@@ -31,6 +31,7 @@
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                    {if $accessUserManage == ''} 
 			 <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" id="frmusermgt" name="frmusermgt" action="">
 			      <div>
@@ -168,15 +169,8 @@
 			    </TABLE>
 				</td>
 		  </tr>
-		</TABLE>
-	      </TD>
-            </TR>
-          </TBODY></TABLE>
-        </TD>
-      </TR>
-
-
- <script type="text/javascript">
+		 </table>
+                                  <script type="text/javascript">
 
 	Calendar.setup({
 		inputField     :    "joiningdate",     // id of the input field
@@ -200,6 +194,14 @@
 
 </script>
 
+                  {else}
+                    <font color = "red">No Access</font>
+                 {/if}
+	      </TD>
+            </TR>
+          </TBODY></TABLE>
+        </TD>
+      </TR>
 <script type="text/javascript">
 
 jQuery(document).ready(function(){
