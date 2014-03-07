@@ -88,13 +88,13 @@
 			$project_offers = new ProjectOffers();
 		$project_offers->project_id = $projectId;
 		$project_offers->offer = $offer_type;
-		$project_offers->discount_on = $discount_on;
-		$project_offers->offer_period = $offer_period;
+		$project_offers->discount_on = ($discount_on)?$discount_on:null;
+		$project_offers->offer_period = ($offer_period)?$offer_period:null;
 		$project_offers->offer_price = ($offer_price>0)?$offer_price:null;
-		$project_offers->offer_price_type = $offer_price_type;
-		$project_offers->other_text = $other_text;
-		$project_offers->discount_date = $discount_date;
-		$project_offers->offer_desc = $offer_desc;
+		$project_offers->offer_price_type = ($offer_price_type)?$offer_price_type:null;
+		$project_offers->other_text = ($other_text)?$other_text:null;
+		$project_offers->discount_date = ($discount_date)?$discount_date:null;
+		$project_offers->offer_desc = ($offer_desc)?$offer_desc:null;
 		$project_offers->updated_by = $_SESSION['adminId'];
 		$project_offers->save();
 		
