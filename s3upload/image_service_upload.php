@@ -34,7 +34,18 @@ class ImageServiceUpload{
             "map"  => "map",
             "road" => "road",
             "school" => "school",
-            "hospital" => "hospital"
+            "hospital" => "hospital",
+            "hotel" => "hotel",
+            "bank" => "bank",
+            "station" => "station",
+            "gurdwara" => "gurdwara",
+            "mosque" => "mosque",
+            "bus-stand" => "bus-stand",
+            "park" => "park",
+            "hall" => "hall",
+            "office" => "office",
+            "buildings" => "buildings",
+            
         ),
         "bank" => array("logo" => "logo"));
 

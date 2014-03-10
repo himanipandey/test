@@ -73,7 +73,8 @@ function getPhoto( $data = array() ) {
     else {
         return NULL;
     }
-    $query = "SELECT IMAGE_ID, $column, IMAGE_NAME, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION FROM locality_image WHERE $column = $id";
+    $query = "SELECT IMAGE_ID, $column, IMAGE_NAME, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION,SERVICE_IMAGE_ID
+        FROM locality_image WHERE $column = $id";
     $data = dbQuery( $query );
     return $data;
 }
@@ -115,7 +116,7 @@ function updateThisPhotoProperty( $data = array() ) {
     return true;
 }
 
-function addImageToDB( $columnName, $areaId, $imageName ) {
+function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDisplayName, $imgDescription, $serviceImgId ) {
     if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID' ) ) ) {
 
     }
@@ -123,9 +124,12 @@ function addImageToDB( $columnName, $areaId, $imageName ) {
         $columnName = 'LOCALITY_ID';
     }
     $imageName = mysql_escape_string( $imageName );
-    $insertQuery = "INSERT INTO `locality_image` ( `$columnName`, `IMAGE_NAME` ) VALUES ( '$areaId', '$imageName' )";
+    $insertQuery = "INSERT INTO `locality_image` 
+            ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION, SERVICE_IMAGE_ID) 
+           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', '$imgDescription', $serviceImgId )";
 
     dbExecute( $insertQuery );
+    mysql_insert_id();
     return mysql_insert_id();
 }
 /********code for find current assigned cycle of a project************/

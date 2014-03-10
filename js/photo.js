@@ -155,6 +155,7 @@ function validateThisImg( img ) {
 
 function getPhotos() {
     toggleSaveBtn( 'hide' );
+    $("#submitBUtton").show();
     $('.image-block').html('');
     var data = getPhotosFromDB();
     if ( data != null && data.length > 0 ) {
@@ -176,19 +177,32 @@ function showThisPhoto( imgData ) {
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
                         '<div class="img-wrap" style="float:left;"> <img src="/images_new/locality/thumb_'+imgData['IMAGE_NAME']+'" /> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
-                            '<select name="imgCate_'+imgData['IMAGE_ID']+'">'+
+                            '<select name="imgCate_'+imgData['IMAGE_ID']+'[]">'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == '' ? 'selected' : '' ) +' value="">Category</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Mall' ? 'selected' : '' ) +' value="Mall">Mall</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Hospital' ? 'selected' : '' ) +' value="Hospital">Hospital</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Map' ? 'selected' : '' ) +' value="Map">Map</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'School' ? 'selected' : '' ) +' value="School">School</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Road' ? 'selected' : '' ) +' value="Road">Road</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Hospital' ? 'selected' : '' ) +' value="Hospital">Hospital</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'School' ? 'selected' : '' ) +' value="School">School</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Hotel' ? 'selected' : '' ) +' value="Hotel">Hotel</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Bank' ? 'selected' : '' ) +' value="Bank">Bank</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Station' ? 'selected' : '' ) +' value="Station">Station</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Gurdwara' ? 'selected' : '' ) +' value="Gurdwara">Gurdwara</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Mosque' ? 'selected' : '' ) +' value="Mosque">Mosque</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Bus Stand' ? 'selected' : '' ) +' value="Bus Stand">Bus Stand</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Park' ? 'selected' : '' ) +' value="Park">Park</option>'+
+                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Hall' ? 'selected' : '' ) +' value="Hall">Hall</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Office' ? 'selected' : '' ) +' value="Office">Office</option>'+
+                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Buildings' ? 'selected' : '' ) +' value="Buildings">Buildings</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Other' ? 'selected' : '' ) +' value="Other">Other</option>'+
                             '</select><br />'+
-                            '<input type="text" name="imgName_'+imgData['IMAGE_ID']+'" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
-                            '<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'">'+
-                            '<input type="hidden" name="img_path_'+imgData['IMAGE_ID']+'" value="'+imgData['IMAGE_NAME']+'">'+
-                            '<input type="hidden" name="img_service_id_'+imgData['IMAGE_ID']+'" value="'+imgData['SERVICE_IMAGE_ID']+'">'+
+                            '<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
+                            '<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'"><br>'+
+                            '<input type="hidden" name="img_id[]" value="'+imgData['IMAGE_ID']+'"><br>'+
+                            '<input type="file" name="img_'+imgData['IMAGE_ID']+'[]"><br>'+
+                            '<input type="radio" name="updateDelete_'+imgData['IMAGE_ID']+'[]" value=up> Update'+
+                            '<input type="radio" name="updateDelete_'+imgData['IMAGE_ID']+'[]" value=del> Delete'+
+                            '<input type="hidden" name="img_service_id_'+imgData['IMAGE_ID']+'[]" value="'+imgData['SERVICE_IMAGE_ID']+'">'+
                         '</div>'+
                         '<div class="clearfix" style="clear:both;"></div>'+
                     '</div>';
