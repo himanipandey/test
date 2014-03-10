@@ -188,7 +188,7 @@
             {
               array_push($suburb, $data);
             }
-            print_r($suburb);
+            
             $smarty->assign("sub_id", $suburb[0]['SUBURB_ID']);
             $smarty->assign("sub_label", $suburb[0]['LABEL']);
             $smarty->assign("sub_pid", $suburb[0]['parent_suburb_id']);
