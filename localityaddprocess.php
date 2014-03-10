@@ -11,7 +11,7 @@
     $smarty->assign("localityid", $localityid);
 
     $cityId = $_REQUEST['c'];
-
+    $smarty->assign("cityid", $cityId);
     if(isset($_POST['btnExit'])){
             header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
     }
@@ -168,14 +168,30 @@
             $smarty->assign("maxLongitude", $maxLongitude);	
             $smarty->assign("minLongitude", $minLongitude);
             
-    }
+    
 
 
             $getLandmarkAliasesArr = getLandmarkAliases('locality', $localityid);
            $landmarkJson = json_encode($getLandmarkAliasesArr);
            $smarty->assign("landmarkAliases", $getLandmarkAliasesArr);
             $smarty->assign("landmarkJson", $landmarkJson);
-            //echo $landmarkJson;
+            
+            // get suburb to display hierarchy
 
+            $qry = "select s.SUBURB_ID, s.LABEL, s.parent_suburb_id from locality l 
+                    inner join suburb s on l.SUBURB_ID = s.SUBURB_ID
+                    WHERE l.LOCALITY_ID=$localityid";
+
+            $res     = mysql_query($qry) or die(mysql_error());
+            $suburb = Array();
+            while ($data = mysql_fetch_array($res))
+            {
+              array_push($suburb, $data);
+            }
+            print_r($suburb);
+            $smarty->assign("sub_id", $suburb[0]['SUBURB_ID']);
+            $smarty->assign("sub_label", $suburb[0]['LABEL']);
+            $smarty->assign("sub_pid", $suburb[0]['parent_suburb_id']);
+    }
  
 ?>

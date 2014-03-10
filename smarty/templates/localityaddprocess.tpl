@@ -1,12 +1,12 @@
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="js/bootstrap-tagsinput/bootstrap-tagsinput.css">
-
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
 <script type="text/javascript" src="js/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
-
+<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 
 </TD>
   </TR>
@@ -67,7 +67,7 @@
 
 				<tr>
 					<td width="20%" align="right">Landmarks Attached: </td>
-					<td width="30%" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:green; font-weight: bold;"></label></td>
+					<td width="30%" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:green; font-weight: bold;"></label><a href="#" onclick="showHier();"><b>See Hierarchy</b></a></td>
 				</tr>
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
@@ -180,10 +180,19 @@
 </TR>
 <script type="text/javascript">
 
+function showHier(){
+  
+  $.fancybox({
+        'width'                :800,
+        'height'               :800,
+        'scrolling'            : 'no',
+        'href'                 : "/showHierarchy.php?cityid={$cityid}&subid={$sub_id}&label={$sub_label}&pid={$sub_pid}",
+        'type'                : 'iframe',
+        
+    })
+}
+
 jQuery(document).ready(function(){
-
-
-
 
 $('#aliases').tagsinput({
 
@@ -333,7 +342,7 @@ var options, d, selectedItem;
         	$("#onclicktext").text("NO Alias selected");
     		//return false;
         }
-   		else if($('#search').val() ==''){
+   		else if($('#search').val().trim() ==''){
    			$("#onclicktext").text("Empty Alias field.");
     		
         }

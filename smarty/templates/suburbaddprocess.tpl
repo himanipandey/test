@@ -81,10 +81,10 @@
                            <td height="50%" align="left">
                             <div id="mainsubcity">
                              
-                            <select name="suburbId" id = "parentSelect" class="suburbId" STYLE="width: auto" onchange= "return changeParent();">
+                            <select name="parentId" id = "parentSelect" class="suburbId" STYLE="width: auto" onchange= "return changeParent();">
                             <option value="">Select Parent Suburb (optional)</option>
                             {foreach from=$suburbSelect key=k item=v}
-                                           <option value="{$v.id}">{$v.label}</option>
+                                           <option value="{$v.id}" {if $v.id==$parent_id} selected = "selected" {/if}>{$v.label}</option>
                                        {/foreach}
                             </select> 
                             
@@ -93,20 +93,20 @@
                             <td height="25" align="left">
                             <div id="mainsubcity_txtbox">
                                     <input type="hidden" name="parent_id" id="parent_id" value="{$parent_id}">
-                                    <input type="text" name="parent_name" value="{$parent_name}" id="parent_name" maxLength="40">
+                                    
                                      
                                     
                             </div>
          </tr>			
 				<tr>
 					<td width="20%" align="right">Landmarks Attached: </td>
-					<td width="30%" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:green; font-weight: bold;"></label></td>
+					<td width="100" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:green; font-weight: bold;"></label><a href="#" onclick="showHier();"><b>See Hierarchy</b></a></td>
 				</tr>
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
 					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search Landmarks: </label></td>
-					<td width="30%" align="left"><input id="search"></td></div>
-					<td width="10%" align="left"><button type="button" id="button" align="left">Save Landmark</button> <a href="#" onclick="showHier();"><b>See Hierarchy</b></a></td><td><label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label> </td>
+					<td width="30%" align="left"><input id="search"><button type="button" id="button" align="left">Save Landmark</button> <label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label></td></div>
+					
 					
 					
 				</tr>
@@ -317,7 +317,7 @@ var options, d, selectedItem;
         	$("#onclicktext").text("NO Alias selected");
     		//return false;
         }
-   		else if($('#search').val() ==''){
+   		else if($('#search').val().trim() ==''){
    			$("#onclicktext").text("Empty Alias field.");
     		
         }

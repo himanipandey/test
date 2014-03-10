@@ -50,7 +50,7 @@ $AliasesArr = getAllAliases();
 //print_r($AliasesArr);
 //die("here");
 $smarty->assign('aliasesArr',$AliasesArr);
-
+ 
 /*	
 
 if(!empty($_REQUEST['suburb']))

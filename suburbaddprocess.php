@@ -27,7 +27,7 @@
                     $desc					=	trim($_POST['desc']);	
                     $old_sub_url			=	trim($_POST['old_sub_url']);
                     $old_sub_name			=	trim($_POST['old_sub_name']);
-                    $parent_id              =    trim($_POST['parent_id']);
+                    $parent_id              =    trim($_POST['parentId']);
                     $parent_name              =    trim($_POST['parent_name']);
  
                     $smarty->assign("txtCityName", $txtCityName);

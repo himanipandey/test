@@ -42,7 +42,7 @@ function showHier(){
 
   $.fancybox({
         'width'                :800,
-        'height'               :800,
+        'height'               :1000,
         'scrolling'            : 'no',
         'href'                 : "/showHierarchy.php?cityid="+'{$cityId}',
         'type'                : 'iframe',

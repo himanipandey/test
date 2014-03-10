@@ -8,6 +8,9 @@
 $cityid = $_REQUEST['cityid'];
 $smarty->assign("cityid", $cityid);
 
+$landmarkJson = json_encode($getLandmarkAliasesArr);
+$smarty->assign("landmarkJson", $landmarkJson);
+
 if(isset($_POST['btnExit'])){
 	header("Location:CityList.php?page=1&sort=all");
 }
@@ -135,7 +138,7 @@ elseif($cityid!=''){
 	//$getGenericAliasesArr = getSpecificAliases('city', $cityid, 'aliases');
 	//print_r($getGenericAliasesArr);
 	//$genericJson = json_encode($getGenericAliasesArr);
-	$landmarkJson = json_encode($getLandmarkAliasesArr);
+	
 	//$suburbJson = json_encode($getSuburbAliasesArr);
 	//echo $landmarkJson;
 
@@ -156,7 +159,7 @@ elseif($cityid!=''){
 
 	//$smarty->assign("genericJson", $genericJson);
 	//$smarty->assign("suburbJson", $suburbJson);
-	$smarty->assign("landmarkJson", $landmarkJson);
+	
 
 
 	

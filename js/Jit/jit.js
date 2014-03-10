@@ -7112,9 +7112,7 @@ Graph.Plot = {
          ctx = canvas.getCtx(), 
          min = Math.min,
          opt = opt || this.viz.controller;
-      aGraph.eachNode(function(node) {   
-        that.labels.plotLabel(canvas, node, opt);
-      });
+     
      opt.clearCanvas && canvas.clear();
        
      var root = aGraph.getNode(id);
@@ -7123,7 +7121,6 @@ Graph.Plot = {
      var T = !!root.visited;
      aGraph.eachNode(function(node) {
        var nodeAlpha = node.getData('alpha');
-       that.labels.plotLabel(canvas, node, opt);
        node.eachAdjacency(function(adj) {
          var nodeTo = adj.nodeTo;
          if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
@@ -7460,7 +7457,6 @@ Graph.Label.Native = new Class({
       ctx.textBaseline = node.getLabelData('textBaseline');
 
       this.renderLabel(canvas, node, controller);
-      controller.onCreateLabel(tag, node);
     },
 
     /*
@@ -7721,9 +7717,7 @@ Graph.Label.HTML = new Class({
         tag.id = id;
         tag.className = 'node';
         tag.style.position = 'absolute';
-        alert("hi");
         controller.onCreateLabel(tag, node);
-        alert("hello");
         container.appendChild(tag);
         this.labels[node.id] = tag;
       }
@@ -7779,7 +7773,6 @@ Graph.Label.SVG = new Class({
         controller.onCreateLabel(tag, node);
         this.labels[node.id] = tag;
       }
-      this.placeLabel(tag, node, controller);
       this.placeLabel(tag, node, controller);
     }
 });
@@ -9700,7 +9693,7 @@ $jit.ST.Label.DOM = new Class({
             sy = canvas.scaleOffsetY,
             posx = pos.x * sx + ox,
             posy = pos.y * sy + oy;
-            alert("hello");
+
         if(dim.align == "center") {
             labelPos= {
                 x: Math.round(posx - w / 2 + radius.width/2),
@@ -9739,13 +9732,7 @@ $jit.ST.Label.DOM = new Class({
         style.top  = labelPos.y + 'px';
         style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
         controller.onPlaceLabel(tag, node);
-    },
-
-    onCreateLabel: function(tag, node, controller) {
-      controller.onCreateLabel(tag, node);
     }
-
-
 });
 
 /*

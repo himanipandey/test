@@ -112,12 +112,12 @@
 				 </td>				   
 				 <td width="50%" align="left"></td>
 				</tr>
-				<tr>
+			<!--	<tr>
 					<td width="20%" align="right">Landmarks Attached: </td>
 					<td width="30%" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:green; font-weight: bold;"></label></td>
 				</tr>
 				<tr>
-					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
+					<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>
 					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search Landmarks: </label></td>
 					<td width="30%" align="left"><input id="search"></td></div>
 					<td width="10%" align="left"><button type="button" id="button" align="left">Save Alias</button></td><td><label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label> </td>
@@ -125,7 +125,7 @@
 					
 				</tr>
 
-
+          -->
 				<tr>
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
@@ -161,7 +161,7 @@
 
 jQuery(document).ready(function(){
 
-
+/*
 
 $('#aliases').tagsinput({
 
@@ -215,10 +215,14 @@ for (index = 0; index < suburbAliases.length; ++index) {
 }
 }
 */
+
+/*
 $("#aliases").on('itemRemoved', function(e) {
     //alert(e.item.text);
     var tableName = 'city';
+    {if $cityid!=''}
     var tableId = {$cityid};
+    {/if}
     var aliasTableName ='';
     
     var aliasTableId = e.item.value;
@@ -385,7 +389,10 @@ var options, d, selectedItem;
         	alert("Wrong Entry");
     
 	});
-});
+});  
+
+  
+*/
 
 //var genericAliases = $.parseJSON(b);
 //var a =genericAliases.toString();

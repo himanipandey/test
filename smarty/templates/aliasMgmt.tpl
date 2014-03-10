@@ -38,9 +38,10 @@ jQuery(document).ready(function(){
 
  $( "#createAlias").submit(function() {
   //alert(selectedItem);
-    if(jQuery.isEmptyObject(selectedItem)==false){
+    var placeName = $('#searchPlace').val().trim();
+    if(jQuery.isEmptyObject(selectedItem)==false && placeName!=''){
 
-        var aliasName   = $('#alias').val();
+        var aliasName   = $('#alias').val().trim();
         var res = selectedItem.id.split("-");
         var tableName = res[1];
         if (tableName=='LOCALITY')
@@ -82,6 +83,9 @@ jQuery(document).ready(function(){
                }
             }
         })
+    }
+    else{
+      alert("Please provide a location.");
     }
   });
 

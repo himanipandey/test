@@ -21,10 +21,19 @@ if(isset($_GET['subid'])){
   $suburbarr['id'] = $subid;
   $suburbarr['label'] = $label;
   $suburbarr['parent_id'] = $parentid;
-  $json = json_encode(getHierArr($cityId, $suburbarr));
+  $arr = getHierArr($cityId, $suburbarr);
+  $json = json_encode($arr[0]);
+  $loc_counter = $arr[1];
 }
-else
- $json = json_encode(getHierArr($cityId));
+else{
+ $arr = getHierArr($cityId);
+ $json = json_encode($arr[0]);
+
+  $loc_counter = $arr[1];
+}
+
+//echo $json;
+//echo $loc_counter;
  //echo $str;
 //echo "<PRE>";
 //var_dump($json);
@@ -48,7 +57,7 @@ else
 
 <script type="text/javascript" src="js/Jit/jit.js"></script>
 
-<script type="text/javascript" src="js/Jit/jit-yc.js"></script>
+
 
 <style type="text/css">
 
@@ -85,6 +94,7 @@ visibility: hidden;
    
     <form>
 <input type="hidden" name="Language" id="json" value="<?php echo htmlspecialchars($json); ?>">
+<input type="hidden" name="Language" id="tree-height" value="<?php echo $loc_counter; ?>">
 </form> 
 </div>
 
@@ -234,12 +244,13 @@ function init(){
     //var j = $('#json').val().replace(/'/g, '"');
     
     var json =   jQuery.parseJSON($('#json').val()); // JSON.stringify("<?php echo $j;?>");// ;
+    var loc_counter = $('#tree-height').val();
+    var treeHeight = loc_counter*40;
+    if(treeHeight<600) treeHeight=600;
+    //alert(treeHeight);
      //json = JSON.stringify(json);
-    //var json = res.substring(1, res.length-1);
-   /*
-   var json = {'id':'node02','name':'Delhi','children':[{'id':'node1001','name':'ad'},{'id':'node1002','name':'Delhi Central'},{'id':'node1003','name':'Delhi East'},{'id':'node1004','name':'Delhi South'},{'id':'node1005','name':'Delhi to Dwarka'},{'id':'node1006','name':'Dwarka'},{'id':'node1007','name':'ficti suburb','children':[{'id':'node2008','name':'ficti ficti 1 suburb'},{'id':'node2009','name':'ficti ficti suburb','children':[{'id':'node3010','name':'ficti ficti ficti suburb'},{'id':'node3011','name':'ficti ficti ficti1 suburb'}]}]},{'id':'node1012','name':'hello suburb'},{'id':'node1013','name':'hhhi'},{'id':'node1014','name':'hi'},{'id':'node1015','name':'New Delhi'},{'id':'node1016','name':'North Delhi'},{'id':'node1017','name':'West Delhi'}]};
-    */
-     //alert(json);
+   
+     //console.log(json);
     //init Node Types
     //Create a node rendering function that plots a fill
     //rectangle and a stroke rectangle for borders
@@ -274,17 +285,20 @@ function init(){
         constrained: false,
         levelsToShow: 5,
         offsetX: 300, 
-        offsetY: 50,
+        offsetY: 100,
         width: 800,
-        height: 1600,
+        height: treeHeight,
+        
         //set node, edge and label styles
         //set overridable=true for styling individual
         //nodes or edges
         Node: {
             overridable: true,
-            type: 'stroke-rect',
-            height: 20,
-            width: 100,
+            
+            height: 0,
+            width: 150,
+            autoHeight: false,
+            autoWidth: true,
 
             //canvas specific styles
             CanvasStyles: {
@@ -302,32 +316,25 @@ function init(){
         },
         Label: {
             overridable: true,
-            type: labelType,
+            type: "HTML",
             style: 'bold',
             size: 10,
             color: '#333'
         },
+        
 
-        Tips: {
-  $extend: true,
-  
-  enable: true,
-  type: 'auto',
-  offsetX: 20,
-  offsetY: 20,
-  force: false,
-  onShow: $.empty,
-  onHide: $.empty
-},
+        
 
         
         //This method is called on DOM label creation.
         //Use this method to add event handlers and styles to
         //your node.
+        
         onCreateLabel: function(label, node){
             
             label.innerHTML = node.name;
             label.id = node.id
+            console.log(label);
             //set label styles
             var style = label.style;
             style.width = 60 + 'px';
@@ -337,18 +344,25 @@ function init(){
             style.textAlign= 'center';
             style.paddingTop = '3px';
             var d = $(label);
-           ///*
-            d.setStyle('cursor', 'pointer')
+            d.mouseover(function(){
+              ddrivetip(node.data.alias);
+            });
+            d.mouseout(function(){
+              hideddrivetip("");
+            });
+            /*d.setStyle('cursor', 'pointer')
               .set('html', node.name).addEvent('mouseover',  function() {
-             // alert("hi");
-              ddrivetip("landmark tagged");
+              //alert("hi inside onCreateLabel");
+              ddrivetip(label.id);
             });
              d.addEvent('mouseout',  function() {
               hideddrivetip("");
             });
-          //*/
+           */
+            
         },
         onPlaceLabel: function(label, node) {
+          //console.log(node.name);
           var style = label.style;
           style.width = node.getData('width') + 'px';
           style.height = node.getData('height') + 'px';            
@@ -357,21 +371,11 @@ function init(){
           style.textAlign= 'center';
           style.paddingTop = '3px';
           var d = $(label);
-          alert("hi");
-           ///*
-            d.setStyle('cursor', 'pointer')
-              .set('html', node.name).addEvent('mouseover',  function() {
-             // alert("hi");
-              ddrivetip("landmark tagged");
-            });
-             d.addEvent('mouseout',  function() {
-              hideddrivetip("");
-            });
-          //*/
+          
         },
         onBeforePlotNode: function(node) {
         
-
+            //console.log(node.name);
       if(node.data.placeType=='city') {         
          node.setCanvasStyle('fillStyle', '#FF7F50'); 
          node.setCanvasStyle('strokeStyle', '#FF7F50');        
@@ -382,148 +386,23 @@ function init(){
       else if (node.data.placeType=='locality'){
         node.setCanvasStyle('fillStyle', '#00FF00'); 
       }
-
+      //st.onClick(node.id);
     }, 
+    
+
+    
+
     });
     //load json data
     st.loadJSON(json);
     //compute node positions and layout
-    st.compute();
+    st.compute('end');
     //emulate a click on the root node.
-    st.onClick(st.root);
+    st.select(st.root);
+    //st.onClick(st.root);
     //end
+   
     
-    //Add Select All/None actions
-    var nodeAll = $jit.id('select-all-nodes'),
-        nodeNone = $jit.id('select-none-nodes'),
-        edgeAll = $jit.id('select-all-edges'),
-        edgeNone = $jit.id('select-none-edges'),
-        labelAll = $jit.id('select-all-labels'),
-        labelNone = $jit.id('select-none-labels');
-    $jit.util.each([nodeAll, edgeAll, labelAll], function(elem) {
-      elem.onclick = function() {
-        var pn = elem.parentNode.parentNode.parentNode; //table
-        var inputs = pn.getElementsByTagName('input');
-        for(var i=0, l=inputs.length; i<l; i++) {
-          if(inputs[i].type == 'checkbox') {
-            inputs[i].checked = true;
-          }
-        }
-      };
-    });
-    $jit.util.each([nodeNone, edgeNone, labelNone], function(elem) {
-      elem.onclick = function() {
-        var pn = elem.parentNode.parentNode.parentNode; //table
-        var inputs = pn.getElementsByTagName('input');
-        for(var i=0, l=inputs.length; i<l; i++) {
-          if(inputs[i].type == 'checkbox') {
-            inputs[i].checked = false;
-          }
-        }
-      };
-    });
-    //get checkboxes
-    var nWidth = $jit.id('n-width'),
-        nHeight = $jit.id('n-height'),
-        nColor = $jit.id('n-color'),
-        nBorderColor = $jit.id('n-border-color'),
-        nBorderWidth = $jit.id('n-border-width'),
-        eLineWidth = $jit.id('e-line-width'),
-        eLineColor = $jit.id('e-line-color'),
-        lFontSize = $jit.id('l-font-size'),
-        lFontColor = $jit.id('l-font-color');
-    
-    //init Morphing Animations
-    var button = $jit.id('update'),
-        restore = $jit.id('restore'),
-        rand = Math.random,
-        floor = Math.floor,
-        colors = ['#33a', '#55b', '#77c', '#99d', '#aae', '#bf0', '#cf5', 
-                  '#dfa', '#faccff', '#ffccff', '#CCC', '#C37'],
-        colorLength = colors.length;
-    //add click event for restore
-    $jit.util.addEvent(restore, 'click', function() {
-      if(init.busy) return;
-      init.busy = true;
-      
-      st.graph.eachNode(function(n) {
-        //restore width and height node styles
-        n.setDataset('end', {
-          width: 60,
-          height: 20
-        });
-        //restore canvas specific styles
-
-        
-        n.setCanvasStyles('end', {
-          fillStyle: '#999',
-          strokeStyle: '#ffc',
-          lineWidth: 2
-        });
-     
-        //restore font styles
-        n.setLabelDataset('end', {
-          size: 10,
-          color: '#333'
-        });
-        //set adjacencies styles
-        n.eachAdjacency(function(adj) {
-          adj.setDataset('end', {
-            lineWidth: 1,
-            color: '#ffc'
-          });
-        });
-      });
-      st.compute('end');
-      st.geom.translate({x:-130, y:0}, 'end');
-      st.fx.animate({
-        modes: ['linear', 
-                'node-property:width:height',
-                'edge-property:lineWidth:color',
-                'label-property:size:color',
-                'node-style:fillStyle:strokeStyle:lineWidth'],
-        duration: 1500,
-        onComplete: function() {
-          init.busy = false;
-        }
-      });
-    });
-    //add click event for updating styles
-    $jit.util.addEvent(button, 'click', function() {
-      if(init.busy) return;
-      init.busy = true;
-      
-      st.graph.eachNode(function(n) {
-        //set random width and height node styles
-        nWidth.checked && n.setData('width', floor(rand() * 40 + 20), 'end');
-        nHeight.checked && n.setData('height', floor(rand() * 40 + 20), 'end');
-        //set random canvas specific styles
-        nColor.checked && n.setCanvasStyle('fillStyle', colors[floor(colorLength * rand())], 'end');
-        nBorderColor.checked && n.setCanvasStyle('strokeStyle', colors[floor(colorLength * rand())], 'end');
-        nBorderWidth.checked && n.setCanvasStyle('lineWidth', 10 * rand() + 1, 'end');
-        //set label styles
-        lFontSize.checked && n.setLabelData('size', 20 * rand() + 1, 'end');
-        lFontColor.checked && n.setLabelData('color', colors[floor(colorLength * rand())], 'end');
-        //set adjacency styles
-        n.eachAdjacency(function(adj) {
-          eLineWidth.checked && adj.setData('lineWidth', 10 * rand() + 1, 'end');
-          eLineColor.checked && adj.setData('color', colors[floor(colorLength * rand())], 'end');
-        });
-      });
-      st.compute('end');
-      st.geom.translate({x:-130, y:0}, 'end');
-      st.fx.animate({
-        modes: ['linear', 
-                'node-property:width:height',
-                'edge-property:lineWidth:color',
-                'label-property:size:color',
-                'node-style:fillStyle:strokeStyle:lineWidth'],
-        duration: 1500,
-        onComplete: function() {
-          init.busy = false;
-        }
-      });
-    });
     //end
 }
 

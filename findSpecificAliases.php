@@ -38,7 +38,7 @@ error_reporting(1);
 
 	}
 */	
-	$query = "select id, name from landmarks where name like '%$q%' order by name LIMIT $limit";
+	$query = "select id, concat(name, ' ', vicinity) as name from landmarks where name like '%$q%' order by name LIMIT $limit";
 	//echo $query;
 	$sql_res=mysql_query($query);
 	while($row=mysql_fetch_array($sql_res))
@@ -47,7 +47,7 @@ error_reporting(1);
 		$data['table'] = 'landmarks';
 		$data['id'] = $row['id'];
 		$str = $row['name'];
-		$str = (strlen($str) > 50) ? substr($str,0,10).'...' : $str;
+		//$str = (strlen($str) > 50) ? substr($str,0,10).'...' : $str;
 		$data['name'] = $str;
 		array_push($returnArr, $data);
 

@@ -31,6 +31,7 @@ function saveAliases($aliasName)
 function createAliases($pl_tb_name, $pl_tb_id, $al_name)
 {
 	//$return = 3;
+
 	$sql = "SELECT * FROM ".place_alias_mapping. " where place_table_name = '$pl_tb_name' and place_table_id = '$pl_tb_id' and alias_name='$al_name'";
 	$result=mysql_query($sql);
     
@@ -40,7 +41,7 @@ function createAliases($pl_tb_name, $pl_tb_id, $al_name)
 	}
 	else
 	{
-		$qry = "INSERT INTO ".place_alias_mapping." (place_table_name, place_table_id, alias_name) VALUES ('$pl_tb_name', '$pl_tb_id', '$al_name')";
+		$qry = "INSERT INTO ".place_alias_mapping." (place_table_name, place_table_id, alias_name, created_at, updated_by) VALUES ('$pl_tb_name', '$pl_tb_id', '$al_name', NOW(), ".$_SESSION["adminId"]." )";
 		//echo $qry; die();
 		//echo $aliasName;
 		mysql_query($qry);
@@ -215,7 +216,7 @@ function attachAliases($pl_tb_name, $pl_tb_id, $al_tb_id)
 	}
 	else
 	{	
-	$query = "INSERT INTO ".place_landmark_mapping." (place_table_name, place_table_id, landmark_id) VALUES ('$pl_tb_name', '$pl_tb_id', '$al_tb_id')";
+	$query = "INSERT INTO ".place_landmark_mapping." (place_table_name, place_table_id, landmark_id, created_at, updated_by) VALUES ('$pl_tb_name', '$pl_tb_id', '$al_tb_id', NOW(), ".$_SESSION['adminId'].")";
 	//echo $query;
 	$res = mysql_query($query) or die(mysql_error());
 	if(mysql_affected_rows()>0){
@@ -251,7 +252,10 @@ function getHierArr($cid, $subarr1){
     $lowerSubArr = Array();    // only second and third level suburbs
     $parent_id = 0;
     $counter = 0;
-    $arr = Array();  //return array
+    $loc_counter=0;
+
+    $arr = Array(); 
+    $return_arr = Array(); //return array
 
 	$cityArray = getAllCities();
 	$suburbSelect = Array();
@@ -307,6 +311,14 @@ function getHierArr($cid, $subarr1){
     
     $tmpArray = Array();
     $tmpArray['placeType'] = 'city';
+    $aliasArray = getLandmarkAliases('city', $cid);
+    $aliasString = '';
+    if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
+    foreach ($aliasArray as $k => $v) {
+       $aliasString .= $v['name'].", ";
+    }
+
+    $tmpArray['alias'] = $aliasString;
     $arr['data'] = $tmpArray;
 
     if(isset($subarr1)){
@@ -340,6 +352,14 @@ function getHierArr($cid, $subarr1){
    		 $subArray['name'] = $subname;
    		   $tmpArray1 = Array();
     	$tmpArray1['placeType'] = 'suburb';
+      $aliasArray = getLandmarkAliases('suburb', $subid);
+
+    $aliasString = '';
+    if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
+    foreach ($aliasArray as $k => $v) {
+       $aliasString .= $v['name'].", ";
+    }
+      $tmpArray1['alias'] = $aliasString;
     	$subArray['data'] = $tmpArray1;
     	$child1Array = Array();
     	
@@ -357,14 +377,18 @@ function getHierArr($cid, $subarr1){
    	 	$arr['children'] =  print_suburb($suburbArr, $lowerSubArr, $locArr);
      }
    }
-   
-  return $arr;
+   //echo $GLOBALS['loc_counter'];
+   array_push($return_arr, $arr);
+   array_push($return_arr, $GLOBALS['loc_counter']);
+  return $return_arr;
 }
 
 
 function print_suburb($childArray, $lowerSubArr, $locArr){
     global $counter;
+    
     $counter +=1000;
+    global $loc_counter;
     $returnArr = Array();
     foreach ($childArray as $k => $v) {
      $counter++;
@@ -372,10 +396,28 @@ function print_suburb($childArray, $lowerSubArr, $locArr){
      $tmpArray['id'] = "node".$counter;
     $tmpArray['name'] = $v['label']; 
   	 $tmpArray1 = Array();
-  	 if($v['type'] == 'suburb')
+  	 if($v['type'] == 'suburb'){
    		 $tmpArray1['placeType'] = 'suburb';
-	else if ($v['type'] == 'locality')
+       $aliasArray = getLandmarkAliases('suburb', $v['id']);
+    $aliasString = '';
+    if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
+    foreach ($aliasArray as $k => $v) {
+       $aliasString .= $v['name'].", ";
+    }
+       $tmpArray1['alias'] = $aliasString;
+    }
+	else if ($v['type'] == 'locality'){
 		$tmpArray1['placeType'] = 'locality';
+    $aliasArray = getLandmarkAliases('locality', $v['id']);
+    $aliasString = '';
+    if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
+    foreach ($aliasArray as $k => $v) {
+       $aliasString .= $v['name'].", ";
+    }
+    $tmpArray1['alias'] = $aliasString;
+    $GLOBALS['loc_counter']++;
+    //echo $loc_counter;
+  }
     $tmpArray['data'] = $tmpArray1;
   //echo $v['label'];
   $child1Array = Array();
