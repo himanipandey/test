@@ -129,7 +129,7 @@ function addImageToDB( $columnName, $areaId, $imageName ) {
     return mysql_insert_id();
 }
 /********code for find current assigned cycle of a project************/
-function currentCycleOfProject($projectId) {
+function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
     $currentCycle = '';
     $qry = "select a.department from resi_project rp join project_assignment pa
             on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
@@ -151,7 +151,13 @@ function currentCycleOfProject($projectId) {
         else
             $currentCycle = 'Not Assigned';
     }
-    else
-        $currentCycle = 'NA';
+    else{
+            if(($projectPhase == DcCallCenter_phase && $projectStage == NewProject_stage) ||
+                   $projectPhase == DataCollection_phase && $projectStage == UpdationCycle_stage ){
+                $currentCycle = 'Call Center';
+            }
+            else
+                $currentCycle = 'Not Assigned';
+    }
     return $currentCycle;
 }

@@ -459,7 +459,7 @@ function getallprojectListForField(){
 }
 
 function getCallCenterExecutive($executives = array()){
-    $department = "'CALLCENTER', 'DATAENTRY'";
+    $department = "'CALLCENTER'";
     if(empty($executives)){
         $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
             from 

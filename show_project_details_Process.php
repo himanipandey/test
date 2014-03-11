@@ -566,7 +566,7 @@ if ($_POST['forwardFlag'] == 'no') {
     header("Location:$returnURLPID");
 }
 /*****code for display updation cycle*********/
-    $currentCycle = currentCycleOfProject($projectId);
+    $currentCycle = currentCycleOfProject($projectId,$projectDetails[0]['PROJECT_PHASE'],$projectDetails[0]['PROJECT_STAGE']);
     $smarty->assign('currentCycle',$currentCycle);
 /************************************/
 include('builder_contact_info_process.php');
