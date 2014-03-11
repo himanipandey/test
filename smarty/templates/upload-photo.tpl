@@ -110,6 +110,22 @@
                                                 <input type="text" name="imgDescription" value="">
                                         </div>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="lbl">Image Display Priority</label>
+                                        <div class="valueField">
+                                            <select name = "displayPriority">
+                                                <option value="">Select Priority</option>
+                                                {$cnt = 0}
+                                                {section name=priorityLoop loop=10 step=1}
+                                                    {$cnt = $cnt+1}
+                                                    <option value="{$cnt}" {if $displayPriority == $cnt}selected{/if}>
+                                                        {$cnt}</option>
+                                                {/section}
+                                            </select>
+                                        </div>
+                                    </td>
                                 </tr>            
                                 <tr>
                                     <td>

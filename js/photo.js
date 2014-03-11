@@ -173,11 +173,13 @@ function showThisPhoto( imgData ) {
     imgData['IMAGE_DISPLAY_NAME'] = imgData['IMAGE_DISPLAY_NAME'] == null ? "" : imgData['IMAGE_DISPLAY_NAME'];
     imgData['IMAGE_CATEGORY'] = imgData['IMAGE_CATEGORY'] == null ? "" : imgData['IMAGE_CATEGORY'];
     imgData['IMAGE_DESCRIPTION'] = imgData['IMAGE_DESCRIPTION'] == null ? "" : imgData['IMAGE_DESCRIPTION'];
+    imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
+    var i=0;
     imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
                         '<div class="img-wrap" style="float:left;"> <img src="/images_new/locality/thumb_'+imgData['IMAGE_NAME']+'" /> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
-                            '<select name="imgCate_'+imgData['IMAGE_ID']+'[]">'+
+                            '<b>Category:</b>&nbsp;&nbsp;<select name="imgCate_'+imgData['IMAGE_ID']+'[]">'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == '' ? 'selected' : '' ) +' value="">Category</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Mall' ? 'selected' : '' ) +' value="Mall">Mall</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Map' ? 'selected' : '' ) +' value="Map">Map</option>'+
@@ -196,8 +198,20 @@ function showThisPhoto( imgData ) {
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Buildings' ? 'selected' : '' ) +' value="Buildings">Buildings</option>'+
                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Other' ? 'selected' : '' ) +' value="Other">Other</option>'+
                             '</select><br />'+
-                            '<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
-                            '<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'"><br>'+
+                            '<b>Name:</b>&nbsp;&nbsp;<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
+                            '<b>Description:</b>&nbsp;&nbsp;<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'"><br>'+
+                            '<b>Priority:</b>&nbsp;&nbsp;<select name = "priority_'+imgData['IMAGE_ID']+'[]"><option value = "">Select Priority</option>'+
+                            '<option '+ ( imgData['priority'] == '1' ? 'selected' : '' ) +' value = "1">1</option>'+
+                            '<option '+ ( imgData['priority'] == '2' ? 'selected' : '' ) +' value = "2">2</option>'+
+                            '<option '+ ( imgData['priority'] == '3' ? 'selected' : '' ) +' value = "3">3</option>'+
+                            '<option '+ ( imgData['priority'] == '4' ? 'selected' : '' ) +' value = "4">4</option>'+
+                            '<option '+ ( imgData['priority'] == '5' ? 'selected' : '' ) +' value = "5">5</option>'+
+                            '<option '+ ( imgData['priority'] == '6' ? 'selected' : '' ) +' value = "6">6</option>'+
+                            '<option '+ ( imgData['priority'] == '7' ? 'selected' : '' ) +' value = "7">7</option>'+
+                            '<option '+ ( imgData['priority'] == '8' ? 'selected' : '' ) +' value = "8">8</option>'+
+                            '<option '+ ( imgData['priority'] == '9' ? 'selected' : '' ) +' value = "9">9</option>'+
+                            '<option '+ ( imgData['priority'] == '10' ? 'selected' : '' ) +' value = "10">10</option>'+
+                             +'</select><br>'+
                             '<input type="hidden" name="img_id[]" value="'+imgData['IMAGE_ID']+'"><br>'+
                             '<input type="file" name="img_'+imgData['IMAGE_ID']+'[]"><br>'+
                             '<input type="radio" name="updateDelete_'+imgData['IMAGE_ID']+'[]" value=up> Update'+

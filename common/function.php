@@ -74,7 +74,7 @@ function getPhoto( $data = array() ) {
         return NULL;
     }
     $query = "SELECT IMAGE_ID, $column, IMAGE_NAME, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION,SERVICE_IMAGE_ID
-        FROM locality_image WHERE $column = $id";
+        ,priority FROM locality_image WHERE $column = $id";
     $data = dbQuery( $query );
     return $data;
 }
@@ -116,7 +116,7 @@ function updateThisPhotoProperty( $data = array() ) {
     return true;
 }
 
-function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDisplayName, $imgDescription, $serviceImgId ) {
+function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDisplayName, $imgDescription, $serviceImgId, $displayPriority ) {
     if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID' ) ) ) {
 
     }
@@ -125,8 +125,8 @@ function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDispl
     }
     $imageName = mysql_escape_string( $imageName );
     $insertQuery = "INSERT INTO `locality_image` 
-            ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION, SERVICE_IMAGE_ID) 
-           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', '$imgDescription', $serviceImgId )";
+            ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION, SERVICE_IMAGE_ID,priority ) 
+           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', '$imgDescription', $serviceImgId, $displayPriority )";
 
     dbExecute( $insertQuery );
     mysql_insert_id();

@@ -10,7 +10,7 @@
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 //echo "<pre>";
-///print_r($_REQUEST);
+//print_r($_REQUEST);
 //echo "<pre>";
 //print_r($_FILES);
 //die;
@@ -22,6 +22,7 @@
         $imgCategory = !empty( $_REQUEST['imgCategory'] ) ? $_REQUEST['imgCategory'] : '';
         $imgDisplayName = !empty( $_REQUEST['imgDisplayName'] ) ? $_REQUEST['imgDisplayName'] : '';
         $imgDescription = !empty( $_REQUEST['imgDescription'] ) ? $_REQUEST['imgDescription'] : '';
+        $displayPriority = !empty( $_REQUEST['displayPriority'] ) ? $_REQUEST['displayPriority'] : '999';
 
         if ( $city ) {
             $smarty->assign( 'cityId', $city );
@@ -40,6 +41,9 @@
         }
         if ( $imgDescription ) {
             $smarty->assign( 'imgDescription', $imgDescription );
+        }
+        if ( $displayPriority ) {
+            $smarty->assign( 'displayPriority', $displayPriority );
         }
 
         $errMsg = "";
@@ -127,7 +131,7 @@
                         mysql_close();
                         include("dbConfig.php");
                         $addedImgIdArr[] = addImageToDB( $columnName, $areaId, $imgName,
-                                $imgCategory, $imgDisplayName, $imgDescription,$serviceImgId );
+                                $imgCategory, $imgDisplayName, $imgDescription,$serviceImgId,$displayPriority );
                       
                         $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
                         
@@ -166,7 +170,6 @@
         $smarty->assign( 'message', $message );
     }
     else if($_REQUEST['updateDelete']) {   //code for image update or delete
-        
         foreach($_REQUEST['img_id'] as $ImgID) {
             $imgCat = "imgCate_".$ImgID;
             $imgCategory = $_REQUEST[$imgCat];
@@ -174,6 +177,8 @@
             $imgName = $_REQUEST[$imgNm];
             $imgDes = "imgDesc_".$ImgID;
             $imgDesc = $_REQUEST[$imgDes][0];
+            $imgPrior = "priority_".$ImgID;
+            $imgPriority = $_REQUEST[$imgPrior][0];
             $updateDel = "updateDelete_".$ImgID;
             $updateDelete = $_REQUEST[$updateDel];
             $imgServiceId = "img_service_id_".$ImgID;
@@ -205,6 +210,7 @@
             $imgCategory = !empty( $_REQUEST[$imgCat][0] ) ? $_REQUEST[$imgCat][0] : '';
             $imgDisplayName = !empty( $_REQUEST[$imgNm][0] ) ? $_REQUEST[$imgNm][0] : '';
             $imgDescription = !empty( $imgDesc ) ? $imgDesc : '';
+            $imagePriority = !empty( $imgPriority ) ? $imgPriority : '';
             
             $imgUpDel = "updateDelete_".$ImgID;
             if($_REQUEST[$imgUpDel][0] == 'up'){ //if wants to update image
@@ -278,7 +284,8 @@
                                         IMAGE_DESCRIPTION = '".$imgDescription."',
                                         IMAGE_DISPLAY_NAME = '".$imgDisplayName."',
                                         SERVICE_IMAGE_ID = $serviceImgId,
-                                        IMAGE_NAME = '".$imgName."'
+                                        IMAGE_NAME = '".$imgName."',
+                                        priority = '".$imagePriority."'    
                                      WHERE IMAGE_ID = $ImgID";
                                     $resImg = mysql_query($qryUpdate) or die(mysql_error());
                                     //$addedImgIdArr[] = addImageToDB( $columnName, $areaId, $imgName,
@@ -314,7 +321,8 @@
                         $qryUpdate = "update locality_image set 
                             IMAGE_CATEGORY = '".$imgCategory."',
                             IMAGE_DESCRIPTION = '".$imgDescription."',
-                            IMAGE_DISPLAY_NAME = '".$imgDisplayName."'
+                            IMAGE_DISPLAY_NAME = '".$imgDisplayName."',
+                            priority = '".$imagePriority."'    
                          WHERE IMAGE_ID = $ImgID";
                          $resImg = mysql_query($qryUpdate) or die(mysql_error());
                          $uploadStatus['img'][$ImgID] = "updated";

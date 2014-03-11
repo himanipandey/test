@@ -24,6 +24,7 @@ if ( !empty( $_REQUEST['upPh'] ) ) {
     $upPh = $_REQUEST['upPh'];
     $upPh = json_decode( $upPh, TRUE );
     $res = TRUE;
+    if($ab == 'test') echo "print";else echo "test";
     foreach( $upPh as $__cnt => $__newData ) {
         $image_name = $__newData["IMAGE_NAME"];
         $service_image_id = $__newData["SERVICE_IMAGE_ID"];
