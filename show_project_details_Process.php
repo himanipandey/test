@@ -398,15 +398,8 @@ $smarty->assign("projectOldComments", $projectOldComments);
 /******end code for project comment fetch from commeny history table*****/
 
 /**start code for fetch offer heading and desc from db**/
-    $qryOfferFetch = "select * from project_offers where project_id = $projectId";
-    $resOfferFetch = mysql_query($qryOfferFetch) or die(mysql_error());
-    $dataOffer = mysql_fetch_assoc($resOfferFetch);
-    $special_offer = $dataOffer['OFFER'];
-    $offer_heading = $dataOffer['OFFER_HEADING'];
-    $offer_desc = $dataOffer['OFFER_DESC'];
-    $smarty->assign("special_offer", $special_offer);
-    $smarty->assign("offer_heading", $offer_heading);
-    $smarty->assign("offer_desc", $offer_desc);
+    $dataOffer = ProjectOffers::find("all",array("conditions"=>array("project_id"=>$projectId,'status'=>'Active')));
+    $smarty->assign("offer_desc", $dataOffer);
     /**end code for fetch offer heading and desc from db**/
     
 if (!isset($_GET['towerId']))
@@ -437,7 +430,7 @@ if (!isset($_POST['forwardFlag']))
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
-    foreach ($newPhase as $k => $v) {
+     foreach ($newPhase as $k => $v) {
         $qry = "select * from master_project_phases where name = '".$k."'";
         $res = mysql_query($qry) or die(mysql_error());
         $phaseId = mysql_fetch_assoc($res);
@@ -453,8 +446,27 @@ if ($_POST['forwardFlag'] == 'yes') {
         $qryNext = "select * from master_project_phases where name = '".$v."'";
         $resNext = mysql_query($qryNext) or die(mysql_error());
         $phaseIdNext = mysql_fetch_assoc($resNext);
+         /*****code for update project assignment status is 
+        * done if project move in audit1 if assigned in survey ********/
+       if($v == 'Audit1') {
+        $qryCurrentAssign = "select pa.id from project_assignment pa 
+            join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
+            join resi_project rp on  pa.movement_history_id = rp.movement_history_id
+            where rp.project_id = $projectId and pa1.department = 'SURVEY' and rp.version = 'Cms' 
+            order by pa.movement_history_id desc limit 1";
+           $resAssigned = mysql_query($qryCurrentAssign) or die(mysql_error()." select query");
+           if(mysql_num_rows($resAssigned) >0 ) {
+               $dataFetch = mysql_fetch_assoc($resAssigned);
+               $qryUp = "update project_assignment set status = 'done' 
+                   where id = ".$dataFetch['id'];
+               $resUp = mysql_query($qryUp) or die(mysql_error()." update query");
+           }
+       }
         if ($phaseIdCurrent['id'] == $phaseId['id']) {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
+            //updating new remark
+            if($currentPhase=='Audit1' && $_POST['newRemarkId'])
+				update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");
@@ -471,7 +483,30 @@ if ($_POST['forwardFlag'] == 'update') {
             $qryStg = "select * from master_project_stages where name = '".$projectStage."'";
             $resStg = mysql_query($qryStg) or die(mysql_error());
             $stageId = mysql_fetch_assoc($resStg);
+            /*****code for update project assignment status is 
+            * done if project move in audit1 if assigned in survey ********/
+           if($v == 'Audit1') {
+            $qryCurrentAssign = "select pa.id from project_assignment pa 
+                join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
+                join resi_project rp on  pa.movement_history_id = rp.movement_history_id
+                where rp.project_id = $projectId and pa1.department = 'SURVEY' and rp.version = 'Cms' 
+                order by pa.movement_history_id desc limit 1";
+               $resAssigned = mysql_query($qryCurrentAssign) or die(mysql_error()." select query");
+               if(mysql_num_rows($resAssigned) >0 ) {
+                   $dataFetch = mysql_fetch_assoc($resAssigned);
+                   $qryUp = "update project_assignment set status = 'done' 
+                       where id = ".$dataFetch['id'];
+                   $resUp = mysql_query($qryUp) or die(mysql_error()." update query");
+               }
+           }
+
+           /********************/
+
             updateProjectPhase($projectId, $phaseId['id'], $stageId['id']);
+            
+            //updating new remark
+            if($currentPhase=='Audit1' && isset($_POST['newRemarkId']))
+				update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");

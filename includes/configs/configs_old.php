@@ -398,15 +398,13 @@ $ArrModuleOld	=	array(
 /***************************************/
 
 /*************Array Designation********************/
-	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader");
+	$designationArray	=	array("0"=>"Superadmin","1"=>"Business Head","2"=>"Sales Head","3"=>"Sr. Manager","4"=>" Manager","5"=>"Sr. Executive","6"=>"Executive","7"=>"Quality Analyst","11"=>"Finance","12"=>"Finance Executive","13"=>"Admin", "14"=>"Payroll","15"=>"HR", "21"=>"Home Loan","22"=>"Home Loan Executive","31"=>"Data Entry","32"=>"Data Entry Executive","36"=>"Customers Support","41"=>"Operation Manager","42"=>"Opeartion Executive","51"=>"IT Network","61"=>"Product Head","62"=>"Company Secretary","63"=>"Collection","64"=>"Online Marketing","65"=>"Content Writer","66"=>"Collection Executive");
 	$smarty->assign("designationArray", $designationArray);
 
 
 /*************Array Department********************/
 
-	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
-            "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
-            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES");
+	$departmentArray	=	array("MANAGEMENT"=>"MANAGEMENT","FINANCE"=>"FINANCE","SALES"=>"SALES","HOMELOAN"=>"HOMELOAN","OPERATIONS"=>"OPERATIONS","HR"=>"HR","IT"=>"IT","DESIGN"=>"DESIGN","DATAENTRY"=>"DATAENTRY","ADMIN"=>"ADMIN","CUSTOMERSUPPORT"=>"CUSTOMERSUPPORT","COMPANYSECRETARY"=>"COMPANYSECRETARY","COLLECTION"=>"COLLECTION","ONLINEMARKETING"=>"ONLINEMARKETING","CONTENTWRITER"=>"CONTENTWRITER");
 	$smarty->assign("departmentArray", $departmentArray);
 
 	/******add service tax for invoice**********/
@@ -741,14 +739,5 @@ $arrOtherCities =
 		"48"=>"Pondicherry",
 		"61"=>"Vijayawada",
 		"91"=>"Karnal"
-  );
-   define("DND_SCUB","http://hosted.ozonetel.com/proptiger_manualDial_WhiteList/InsertNumbers.php?callerNumber=");
-   
-$arrOfferTypes = array(
-    'NoPreEmi'=>'No Pre-EMI',
-    'PartEmi'=>'Part Now Part Later',
-    'NoCharges'=>'No Additional Charges (PLC/Amenities)',
-    'PriceDiscount'=>'Price Discount',
-    'Other'=>'Other'
   );
 ?>
