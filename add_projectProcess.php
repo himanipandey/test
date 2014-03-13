@@ -91,7 +91,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $secondaryRemarkDisplay = trim($_POST["secondaryRemarkDisplay"]);
             $fieldSurveyRemark = trim($_POST["fieldSurveyRemark"]);
             $fieldSurveyRemarkDisplay = trim($_POST["fieldSurveyRemarkDisplay"]);
-                   
+            $txtSecondaryAuditRemark = trim($_POST['txtSecondaryAuditRemark']);
+            $txtSecondaryAuditRemarkDisplay = trim($_POST['txtSecondaryAuditRemarkDisplay']);
+            $special_offer = trim($_POST["special_offer"]);
+            $offer_heading = trim($_POST["offer_heading"]);
+            $offer_desc = trim($_POST["offer_desc"]);
             $skipUpdationCycle = $_POST["skipUpdationCycle"];
             $updationCycleIdOld = $_POST["updationCycleIdOld"];
             $numberOfTowers = $_POST["numberOfTowers"];
@@ -446,6 +450,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             }
             if( $txtAuditRemark != '' ) {
                 $arrCommentTypeValue['Audit'] = $txtAuditRemark;
+            }
+             if( $txtSecondaryAuditRemark != '' ) {
+                $arrCommentTypeValue['SecondaryAudit'] = $txtSecondaryAuditRemark;
             }
             if( $fieldSurveyRemark != '' ) {
                 $arrCommentTypeValue['FieldSurvey'] = $fieldSurveyRemark;

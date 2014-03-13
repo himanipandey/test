@@ -5,8 +5,9 @@
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
 <script type="text/javascript">
+	
     $(document).ready(function() {
-        var pid = '{$phaseId}';
+		var pid = '{$phaseId}';
         var noPhasePhaseId = '{$noPhasePhaseId}';
         $('select#phaseName').val(pid);
         var projectId = $('#projectId').val();
@@ -72,6 +73,8 @@ function builder_contact(builderId,buildernm)
            });
 
 }
+
+
 
     function updateURLParameter(url, param, paramVal){
         var newAdditionalURL = "";
@@ -245,7 +248,22 @@ function towerSelect(towerId)
 function getDateNow(){
 	return (new Date().getTime());
 }
+function broker_call_edit(callId, brokerId)
+{
+	//code for builder contact info popup
+    var url = "/broker_call_edit.php?callId="+callId+"&brokerId="+brokerId;
+   //  jQuery.fancybox({
+   //      'href' :  url
+   //  });
+     $.fancybox({
+        'width'                :720,
+        'height'               :200,
+      
+        'href'                 : url,
+        'type'                : 'iframe'
+    })
 
+}
 
 /*********builder contact info related js start here***********/
 
@@ -1342,12 +1360,13 @@ function getDateNow(){
                                       <tr height="25px;">
                                             <td  nowrap="nowrap" width="1%" align="left"><b>Audit Team Remark:</b></td>
 
-                                            <td>
+                                            <td>#######################
                                                 {$projectOldComments['auditRemark']->comment_text}
                                                 &nbsp;<b>By </b>{$projectOldComments['auditRemark']->fname} on {($projectOldComments['auditRemark']->date_time)|date_format:'%b-%y'}
                                           </td>
                                       </tr>
                                       {/if}
+
                                       {if array_key_exists('audit2Remark',$projectOldComments)}    
                                       <tr height="25px;">
                                             <td  nowrap="nowrap" width="1%" align="left"><b>Audit Team Remark:</b></td>
@@ -1359,7 +1378,19 @@ function getDateNow(){
                                           </td>
                                       </tr>
                                       {/if}
-                                     {if array_key_exists('fieldSurveyRemark',$projectOldComments)}
+
+                                      {if array_key_exists('secondaryAuditRemark',$projectOldComments)}    
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Secondary Audit Team Remark:</b></td>
+
+                                            <td>
+                                                {$projectOldComments['secondaryAuditRemark']->comment_text}
+                                                &nbsp;<b>By </b>{$projectOldComments['secondaryAuditRemark']->fname} on {($projectOldComments['secondaryAuditRemark']->date_time)|date_format:'%b-%y'}
+                                          </td>
+                                      </tr>
+                                      {/if}
+                                      {if array_key_exists('fieldSurveyRemark',$projectOldComments)}
+
                                       <tr height="25px;">
                                           <td  nowrap="nowrap" width="1%" align="left"><b>Field Survey Team Remark:</b></td>
 
@@ -1426,9 +1457,23 @@ function getDateNow(){
                                                 {/if}
                                           </td>
                                       </tr>
-								<tr height="25px;">
-                                            <td  nowrap="nowrap" width="1%" align="left"><b>Audit2 Team Remark:</b></td>
 
+								
+
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Secondary Audit Team Remark:</b></td>
+
+                                            <td>
+                                                {if array_key_exists('secondaryAuditRemark',$projectComments)}
+                                                      {$projectComments['secondaryAuditRemark']->comment_text}
+                                                      &nbsp;<b>By </b>{$projectComments['secondaryAuditRemark']->fname} on {($projectComments['secondaryAuditRemark']->date_time)|date_format:'%b-%y'}
+                                                {else}
+                                                       --
+                                                {/if}
+                                          </td>
+                                      </tr>
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Audit2 Team Remark:</b></td>					
                                             <td>
                                                 {if array_key_exists('audit2Remark',$projectComments)}
                                                       <b>[{$projectComments['audit2Remark']->status}]</b>&nbsp;
@@ -2056,6 +2101,7 @@ function getDateNow(){
                                          <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
                                          <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
                                          <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
+                                         <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Action</td>
                                 </tr>
 
                                 {foreach from = $arrCalingSecondary key = key item = item}
@@ -2082,6 +2128,9 @@ function getDateNow(){
                                         </td>
                                         <td width ="90%">
                                                 {$item['Remark']}
+                                        </td>
+                                        <td width ="90%">
+											<a href="javascript:void(0);" name="call_edit" value="Edit" onclick="return broker_call_edit({$item['CallId']},{$item['BROKER_ID']});" >Edit</a>
                                         </td>
                                 </tr>
                                 {/foreach}

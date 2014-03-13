@@ -339,6 +339,29 @@
 								 </td>
 							   </tr>
                                                            {/if}
+                                                           
+                                                           {if $userDepartment == 'AUDIT-1' || $userDepartment == 'ADMINISTRATOR'}
+                                                               {if array_key_exists('secondaryAuditRemark',$projectComments)}    
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Secondary Audit Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectComments['secondaryAuditRemark']->comment_text}</td>
+                                                                </tr>
+                                                                {elseif array_key_exists('secondaryAuditRemark',$projectOldComments)}    
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign="top"><b>Secondary Audit Team Old Remark :</b> </td>
+                                                                    <td width="30%" align="left" colspan="2">{$projectOldComments['secondaryAuditRemark']->comment_text}</td>
+                                                                </tr>
+                                                               {/if}
+							    <tr>
+								  <td width="20%" align="right" valign="top"><b>Secondary Audit Team Remark :</b> </td>
+								  <td width="30%" align="left">
+									 <textarea name="txtSecondaryAuditRemark" rows="10" cols="45" id = "txtSecondaryAuditRemark">{$txtSecondaryAuditRemark}</textarea>
+								  </td>
+								  <td width="50%" align="left">
+									  &nbsp;
+								 </td>
+							   </tr>
+                                                           {/if}
 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Address :</b> </td>
