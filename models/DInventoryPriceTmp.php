@@ -29,7 +29,7 @@ class DInventoryPriceTmp extends Model
     }
     
     public static function populateProjectDemand(){
-        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.PROJECT_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE from crm.LEADS l inner join crm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID where l.PROJECT_TYPE is not null and l.PROJECT_TYPE <> '' and l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE >= '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.PROJECT_ID between 500000 and 999999 and lp.ACTIVE = '1' group by l.LEAD_ID, lp.PROJECT_ID order by lead_key";
+        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.PROJECT_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE from ptigercrm.LEADS l inner join ptigercrm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID where l.PROJECT_TYPE is not null and l.PROJECT_TYPE <> '' and l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE >= '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.PROJECT_ID between 500000 and 999999 and lp.ACTIVE = '1' group by l.LEAD_ID, lp.PROJECT_ID order by lead_key";
         $aAllLead = self::find_by_sql($allLeadSql);
         $aAllLead = groupOnKey($aAllLead, 'lead_key');
         
@@ -62,7 +62,7 @@ class DInventoryPriceTmp extends Model
     }
     
     public static function populateLocalityDemand(){
-        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.LOCALITY_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE, lp.PROJECT_ID from crm.LEADS l inner join crm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID where l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE > '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.LOCALITY_ID between 50000 and 99999 and lp.ACTIVE = '1' group by l.LEAD_ID, lp.LOCALITY_ID having count(distinct PROJECT_ID) = 1 and (PROJECT_ID is null or PROJECT_ID = 0) order by lead_key";
+        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.LOCALITY_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE, lp.PROJECT_ID from ptigercrm.LEADS l inner join ptigercrm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID where l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE > '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.LOCALITY_ID between 50000 and 99999 and lp.ACTIVE = '1' group by l.LEAD_ID, lp.LOCALITY_ID having count(distinct PROJECT_ID) = 1 and (PROJECT_ID is null or PROJECT_ID = 0) order by lead_key";
         $aAllLead = self::find_by_sql($allLeadSql);
         $aAllLead = groupOnKey($aAllLead, 'lead_key');
         
