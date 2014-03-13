@@ -222,7 +222,7 @@
                                                                 <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}{else}&nbsp;{/if}</td>
                                                                 <td>{if $item['leadAssignedType'] == 0}{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}{else}&nbsp;{/if}</td>
                                                                 <td>{if $item['leadAssignedType'] == 0}{$item['STATUS'][count($item['STATUS']) -1]}{else}&nbsp;{/if}</td>
-                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][count($item['REMARK']) -1]}{else}&nbsp;{/if}</td>
+                                                                <td>{if $item['leadAssignedType'] == 0}{$item['REMARK'][count($item['STATUS']) -1]}{else}&nbsp;{/if}</td>
                                                             </tr>
                                                         {elseif $callingFieldFlag == 'callcenter' && !strstr($item['ASSIGNMENT_TYPE'],'Field')}
                                                            <tr>
@@ -255,7 +255,7 @@
                                                                 <td>{$item['ASSIGNED_TO'][count($item['ASSIGNED_TO']) -1]}</td>
                                                                 <td>{$item['ASSIGNED_AT'][count($item['ASSIGNED_AT']) -1]}</td>
                                                                 <td>{$item['STATUS'][count($item['STATUS']) -1]}</td>
-                                                                <td>{$item['REMARK'][count($item['REMARK']) -1]}</td>
+                                                                <td>{$item['REMARK'][count($item['STATUS']) -1]}</td>
                                                             </tr>
                                                         {/if}    
                                                         

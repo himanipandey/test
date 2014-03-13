@@ -1148,7 +1148,7 @@ function updateProjectPhase($pID, $phase, $stage = '', $revert = FALSE) {
     }
    
     $r = mysql_query($ins);
-    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . " 
+    $sql = "update resi_project set MOVEMENT_HISTORY_ID = " . mysql_insert_id() . ", updated_by = ".$_SESSION['adminId']." 
         where PROJECT_ID = $pID and version = 'Cms';";
     mysql_query($sql) or die(mysql_error());
     mysql_query('commit');
@@ -2218,6 +2218,7 @@ function updateD_Availablitiy($projectId){
 	$sql_max_effective_month =  mysql_query("SELECT max(project_availabilities.effective_month) as max_effective_month FROM `resi_project` INNER JOIN `resi_project_phase` ON `resi_project_phase`.`PROJECT_ID` = `resi_project`.`PROJECT_ID` AND (resi_project_phase.version ='Cms' and resi_project_phase.STATUS='Active') INNER JOIN `listings` ON `listings`.`phase_id` = `resi_project_phase`.`PHASE_ID` AND (listings.STATUS='Active') INNER JOIN `project_supplies` ON `project_supplies`.`listing_id` = `listings`.`id` AND `project_supplies`.`version` = 'Cms' left join project_availabilities on project_supplies.id=project_availabilities.project_supply_id WHERE `resi_project`.`version` = 'Cms' AND (resi_project.PROJECT_ID = '$projectId') ".$condition);
 	
 	$total_av = null;
+
  	if($most_recent_updates){
  		
 		$max_effective_month = mysql_fetch_object($sql_max_effective_month)->max_effective_month;
@@ -2238,7 +2239,11 @@ function updateD_Availablitiy($projectId){
 	}
 
 	//update availability
-	mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+	if(is_numeric($total_av)){
+		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+	}else{
+		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = null WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+	}
     
 	
 	//update project booking status
@@ -2316,12 +2321,21 @@ function updatePhaseBookingStatus($projectId){
 	}
 	
 }
-
+function fetch_project_booking_status($projectId){
+		
+		$booking_status = mysql_fetch_object(mysql_query("select booking_status_id from resi_project_phase where project_id = '$projectId' and phase_type = 'Logical' and version = 'Cms'"));
+		
+		return $booking_status->booking_status_id;
+}
 function project_aliases_detail($projectID){
 	$project_alias = mysql_query("SELECT * FROM project_aliases WHERE original_project_id='$projectID'") or die(mysql_error());
 	if($project_alias)
 		$project_alias = mysql_fetch_object($project_alias);
 	return ($project_alias)?$project_alias:0;
+}
+function update_remark_status($cid,$type="Audit2",$status="Read"){
+	$sql = "UPDATE comments_history SET status = '$status' WHERE comment_id='$cid' AND comment_type='$type'";
+	mysql_query($sql) or die(mysql_error());	
 }
 ?>
 

@@ -48,7 +48,16 @@ function isNumberKey(evt)
 			      <div>
 				<tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>TownShip Name : </td>
-				  <td width="30%" align="left"><input type=text name="townshipsName"  value="{$townshipsName}" style="width:250px;"></td> {if $ErrorMsg["townshipsName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["townshipsName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				  <td width="30%" align="left"><input type=text name="townshipsName" id="townshipsName" value="{$townshipsName}" style="width:250px;"></td> {if $ErrorMsg["townshipsName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["townshipsName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				</tr>
+				<tr>
+                                    <td width="20%" align="right" ><font color = "red">*</font>City : </td>
+				  <td width="30%" align="left"><select name = "city" class="city">
+                                        <option value =''>Select City</option>
+                                        {foreach from = $CityDataArr key = key item = item}
+                                           <option {if $city == {$key}} selected {/if} value = {$key}>{$item}</option>
+                                         {/foreach}	
+                                    </select></td> {if $ErrorMsg["city"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["city"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
 				<tr>
                                     <td width="20%" align="right" >Total Area : </td>

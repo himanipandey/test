@@ -85,6 +85,7 @@
     $getProjectPhases = ProjectPhase::getProjectPhases();
     $smarty->assign("getProjectPhases", $getProjectPhases);
     
+    $updateRemark= $_REQUEST['updateRemark'];
     $transfer = $_REQUEST['transfer'];
     $search = $_REQUEST['search'];
     $city = $_REQUEST['city'];
@@ -118,7 +119,7 @@
     $smarty->assign("Availability", $Availability);
     $smarty->assign("Active", $_REQUEST['Active']);	
 
-    if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
+    if($search != '' OR $transfer != '' OR $_POST['projectId'] != '' OR $updateRemark !='')
     {
 		$project_name= $_REQUEST['project_name'];
 
@@ -270,6 +271,32 @@
         $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
     }
     
+    if($updateRemark != '' && trim($_POST['bulkRemark']) != '')
+    {
+	  	$arrPropId = array();
+		$QueryMember1 = $QueryMember1 . $QueryMember;
+        $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
+        $NumRows = mysql_num_rows($QueryExecute);
+		if($NumRows > 0)
+        {
+            while($data = mysql_fetch_assoc($QueryExecute))
+            {
+                $arrStagePhase[$data['PROJECT_ID']]=$data['PROJECT_STAGE_ID'];
+                array_push($arrPropId,$data['PROJECT_ID']);
+            }			
+            $getProjectId = implode(',',$arrPropId);
+        }
+        $arrCommentTypeValue['Audit2'] = mysql_real_escape_string($_POST['bulkRemark']);
+        foreach($arrStagePhase as $projectId=>$stage){
+		  $ProjectDetail = ResiProject::virtual_find($projectId);
+		  $qryStg = "select * from master_project_stages where id = '".$stage."'";
+          $resStg = mysql_query($qryStg) or die(mysql_error());
+          $stageId = mysql_fetch_assoc($resStg);
+          CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name']); 
+		} 
+       
+	}
+	
     if($transfer != '')
     {
         $arrPropId = array();
@@ -343,7 +370,8 @@
                         $eligibleIds = implode(',', $eligibleIds);
 
                         $Qry = " UPDATE resi_project " . $SetQry . " 
-                                WHERE id IN (".$eligibleIds.") AND version = 'Cms'";
+                                WHERE id IN (".$eligibleIds.") AND version = 'Cms'
+                                    and updated_by = '".$_SESSION['adminId']."'";
                         $QueryExecute = mysql_query($Qry) or die(mysql_error());
                         $tot_affected_rows = mysql_affected_rows($Qry);	
 

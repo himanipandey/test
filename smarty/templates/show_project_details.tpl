@@ -24,12 +24,13 @@
 			["event11", "edit_floor_plan.php", true],
 			["event12", "/new/price", true],
 			["event13", "project_other_price.php", true],
-                        ["event14", "secondary_price.php", true],
-                        ["event15", "insertSecondaryPrice.php", true],
-                        ["event16", "updateSecondaryPrice.php", true],
-                        ["event17", "/new/supply-validation/", true],
-                        ["event18", "allCommentHistory.php"],
-                        ["event19", "/new/bulk_price_inventory/", true]
+            ["event14", "secondary_price.php", true],
+            ["event15", "insertSecondaryPrice.php", true],
+            ["event16", "updateSecondaryPrice.php", true],
+            ["event17", "/new/supply-validation/", true],
+            ["event18", "allCommentHistory.php"],
+            ["event19", "/new/bulk_price_inventory/", true],
+            ["event20", "project_offers.php", true]
 		]; 
 		for(var i=0; i< eventArray.length; i++){
 			$('.clickbutton').bind(eventArray[i][0], function(event){
@@ -121,6 +122,7 @@ function towerSelect(towerId)
 	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, 
             preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder)
 	{	
+		
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
@@ -178,14 +180,30 @@ function towerSelect(towerId)
 		
 		if(flgChk == 1)
 		{
+			isNewRemark = "{$projectComments['audit2Remark']->status}";
+			remarkTxt = "{$projectComments['audit2Remark']->comment_text}";
+			remarkId = "{$projectComments['audit2Remark']->comment_id}";
 			if(dir=='forward'){
-				if (confirm("Do you want to proceed ?"))
-				{
-					$('#forwardFlag').val('yes');
-					$('#currentPhase').val(phase);
-					$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
-					$('#changePhaseForm').submit();
+				if(isNewRemark == 'New' && phase == "Audit1"){
+					if (confirm("New Remark : '" + remarkTxt + "'\n\n Have you read the Above Remark ? (if yes then press OK and proceed)"))
+					{
+						$('#newRemarkId').val(remarkId);
+						$('#forwardFlag').val('yes');
+						$('#currentPhase').val(phase);
+						$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
+						$('#changePhaseForm').submit();
+					}
+					
+				}else{
+					if (confirm("Do you want to proceed ?"))
+					{
+						$('#forwardFlag').val('yes');
+						$('#currentPhase').val(phase);
+						$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
+						$('#changePhaseForm').submit();
+					}
 				}
+				
 			}
 			else if(dir=='backward')
 			{
@@ -200,13 +218,25 @@ function towerSelect(towerId)
 			}
 			else if(dir=='updation')
 			{
-				if (confirm("Do you want to proceed ?"))
-				{
-					$('#forwardFlag').val('update');
-					$('#currentPhase').val(phase);
-					$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
-					$('#changePhaseForm').submit();
-				}	
+				if(isNewRemark == 'New' && phase == "Audit1"){
+					if (confirm("New Remark : '" + remarkTxt + "'\n\n Have you read the Above Remark ? (if yes then press OK and proceed)"))
+					{   
+						$('#newRemarkId').val(remarkId);
+						$('#forwardFlag').val('update');
+						$('#currentPhase').val(phase);
+						$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
+						$('#changePhaseForm').submit();
+					}	
+				}else{
+					if (confirm("Do you want to proceed ?"))
+					{
+						$('#forwardFlag').val('update');
+						$('#currentPhase').val(phase);
+						$("#returnURLPID").val("show_project_details.php?projectId=" + pId);
+						$('#changePhaseForm').submit();
+					}	
+				}
+				
 			}
 		}
 	
@@ -417,6 +447,7 @@ function getDateNow(){
   <input type="hidden" id="revertFlag" name="revertFlag" value=""/>
   <input type="hidden" id="returnURLPID" name="returnURLPID" value=""/>
   <input type="hidden" id="returnStage" name="returnStage" value=""/>
+  <input type="hidden" id="newRemarkId" name="newRemarkId" value=""/>
 </form>
 
 
@@ -566,6 +597,11 @@ function getDateNow(){
 				&nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Stage Differenece:</b><button id="diffButton">Diff</button>
 		    {/if}
             <!-- End of Project Diff -->	   
+            <!-- offer edit -->
+             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+            &nbsp;&nbsp;&nbsp;&nbsp;<b align="left">Project Offers:<b><button class="clickbutton" onclick="$(this).trigger('event20');">Edit</button>
+            {/if}
+            <!-- offer edit end -->
 			</td></tr>				   
 			<tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
@@ -1181,37 +1217,18 @@ function getDateNow(){
                                                         {/if}
                                                     </td>
 						</tr>
+                                               
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>Heighlight:</b>
+                                                            <b>Special Offer Description:</b>
                                                     </td>
                                                     <td>
-                                                        {if $special_offer != ''}
-                                                                {$special_offer}
-                                                        {else}
-                                                                --
-                                                        {/if}
-                                                    </td>
-						</tr>
-                                                <tr height="25px;">
-                                                    <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>Offer Heading:</b>
-                                                    </td>
-                                                    <td>
-                                                        {if $offer_heading != ''}
-                                                                {$offer_heading}
-                                                        {else}
-                                                                --
-                                                        {/if}
-                                                    </td>
-						</tr>
-                                                <tr height="25px;">
-                                                    <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>Offer Description:</b>
-                                                    </td>
-                                                    <td>
-                                                        {if $offer_desc != ''}
-                                                                {$offer_desc}
+                                                        {if $offer_desc}
+                                                            {$count=1}
+															{foreach from=$offer_desc item=data}
+																 {$count++}. {$data->offer_desc}<br/>
+															{/foreach}
+                                                            
                                                         {else}
                                                                 --
                                                         {/if}
@@ -1331,7 +1348,18 @@ function getDateNow(){
                                           </td>
                                       </tr>
                                       {/if}
-                                      {if array_key_exists('fieldSurveyRemark',$projectOldComments)}
+                                      {if array_key_exists('audit2Remark',$projectOldComments)}    
+                                      <tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Audit Team Remark:</b></td>
+
+                                            <td>
+												<b>[{$projectComments['audit2Remark']->status}]</b>&nbsp;
+                                                {$projectOldComments['audit2Remark']->comment_text}
+                                                &nbsp;<b>By </b>{$projectOldComments['audit2Remark']->fname} on {($projectOldComments['audit2Remark']->date_time)|date_format:'%b-%y'}
+                                          </td>
+                                      </tr>
+                                      {/if}
+                                     {if array_key_exists('fieldSurveyRemark',$projectOldComments)}
                                       <tr height="25px;">
                                           <td  nowrap="nowrap" width="1%" align="left"><b>Field Survey Team Remark:</b></td>
 
@@ -1398,7 +1426,19 @@ function getDateNow(){
                                                 {/if}
                                           </td>
                                       </tr>
+								<tr height="25px;">
+                                            <td  nowrap="nowrap" width="1%" align="left"><b>Audit2 Team Remark:</b></td>
 
+                                            <td>
+                                                {if array_key_exists('audit2Remark',$projectComments)}
+                                                      <b>[{$projectComments['audit2Remark']->status}]</b>&nbsp;
+                                                      {$projectComments['audit2Remark']->comment_text}
+                                                      &nbsp;<b>By </b>{$projectComments['audit2Remark']->fname} on {($projectComments['audit2Remark']->date_time)|date_format:'%b-%y'}
+                                                {else}
+                                                       --
+                                                {/if}
+                                          </td>
+                                      </tr>
                                       <tr height="25px;">
                                           <td  nowrap="nowrap" width="1%" align="left"><b>Field Survey Team Remark:</b></td>
 
@@ -1759,8 +1799,7 @@ function getDateNow(){
 					  </table>
 				</td>
 			</tr>
-		  
-		   <tr>
+		    <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
@@ -1792,7 +1831,13 @@ function getDateNow(){
 									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 										
 											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
-													<img src="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+                                                                                            {$parts = explode('.', $ImageDataListingArr[data].PLAN_IMAGE)}
+                                                                                            {$last = array_pop($parts)}
+                                                                                            {$str1 = implode('.', $parts)}
+                                                                                            {$str1 = $str1|cat:'-thumb'}
+                                                                                            {$str2 = $str1|cat:'.'}
+                                                                                            {$finalStrWithThumb = $str2|cat:$last}
+                                                                                            <img src="{$imgDisplayPath}{$finalStrWithThumb}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
 												</a>
 												<br>
 											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
@@ -1813,19 +1858,7 @@ function getDateNow(){
 					</table>
 				</td>
 		   </tr>
-			 <tr>
- 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-						<tr>
-							<td align="left"  nowrap colspan ="4">
-								<b> Locality Average Price : </b> {$localityAvgPrice}
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			
-		  
+
 		  <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 				{if is_array($ImageDataListingArrFloor)}
@@ -1859,7 +1892,13 @@ function getDateNow(){
 										
 											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}
 														" target="_blank">
-												<img src="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
+                                                                                            {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
+                                                                                            {$lastFloor = array_pop($partsFloor)}
+                                                                                            {$strFloor1 = implode('.', $partsFloor)}
+                                                                                            {$strFloor1 = $strFloor1|cat:'-thumb'}
+                                                                                            {$strFloor2 = $strFloor1|cat:'.'}
+                                                                                            {$finalStrWithThumbFloor = $strFloor2|cat:$last}
+												<img src="{$imgDisplayPath}{$finalStrWithThumbFloor}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
 											</a>
 											<br>
 										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
@@ -1873,8 +1912,7 @@ function getDateNow(){
 				{/if}
 				</td>
 		   </tr>
-		   
-		   
+		   		   
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 				{if is_array($ImageDataListingArrFloor)}
@@ -1920,6 +1958,18 @@ function getDateNow(){
 						 
 						{/if}
 						 </tr>
+						 
+			 <tr>
+ 				<td width = "100%" align = "center" colspan = "16">
+					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+						<tr>
+							<td align="left"  nowrap colspan ="4">
+								<b> Locality Average Price : </b> {$localityAvgPrice}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 						
                 {/if}
                     <tr class="headingrowcolor" height="30px;">

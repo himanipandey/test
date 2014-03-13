@@ -665,32 +665,7 @@
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
                                                            
-                                                          <tr>
-                                                                <td width="20%" align="right" valign="top"><b><b>Heighlight :</b> </td>
-                                                                <td width="30%" align="left">
-                                                                    <select name="special_offer">
-                                                                    <option value =''>No OFFER</option>
-                                                                    <option value ='NoEmi' {if $special_offer == 'NoEmi'}selected{/if}>No EMI</option>
-                                                                    <option value ='NewLaunch' {if $special_offer == 'NewLaunch'}selected{/if}>NEW LAUNCH</option>
-                                                                    <option value ='SoldOut' {if $special_offer == 'SoldOut'}selected{/if}>SOLD OUT</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td width="50%" align="left"></td>
-							   </tr>
-							    <tr>
-								  <td width="20%" align="right" valign ="top"><b>Offer Heading:</b> </td><td width="30%" align="left"> 
-                                                                    <input maxlength = "13" type = "text" name = "offer_heading" id = "offer_heading" value ="{$offer_heading}" style ="width:360px;">
-								  </td>
-								  <td width="50%" align="left"><font color="red"><span id = "offerHeading"></span></font></td>
-							   </tr>
-
-							    <tr>
-								  <td width="20%" align="right" valign ="top"><b>Offer Description:</b> </td><td width="30%" align="left">
-									<input maxlength = "40" type = "text" name = "offer_desc" id = "offer_desc" value ="{$offer_desc}" style ="width:360px;">
-								  </td>
-								  <td width="50%" align="left"><font color="red"><span id = "offerDesc"></span></font></td>
-							   </tr>
-
+                                                         
 							   <tr>
                                                                 <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
 

@@ -8,8 +8,8 @@ class CommentsHistory extends ActiveRecord\Model
         $updationCycleId = $updationCycleId."_".date("M-y");     
         foreach( $arrCommentTypeValue as $key=>$value ) {
 
-            $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? ",
-                $projectId, $key, $updationCycleId);
+            $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? AND status=?",
+                $projectId, $key, $updationCycleId,"New");
 
             $getComments = CommentsHistory::find('all', array("conditions" => $conditions));   
 
@@ -42,6 +42,7 @@ class CommentsHistory extends ActiveRecord\Model
         $commentTypeMap = array("Project" => 'projectRemark',
                    "Calling" => 'callingRemark', 
                    'Audit' => 'auditRemark',
+                   'Audit2' => 'audit2Remark',
                    'Secondary' => 'secondaryRemark',
                    'FieldSurvey' => 'fieldSurveyRemark'
                     );
@@ -72,6 +73,7 @@ class CommentsHistory extends ActiveRecord\Model
         $commentTypeMap = array("Project" => 'projectRemark',
                    "Calling" => 'callingRemark', 
                    'Audit' => 'auditRemark',
+                   'Audit2' => 'audit2Remark',
                    'Secondary' => 'secondaryRemark',
                    'FieldSurvey' => 'fieldSurveyRemark'
                     );

@@ -8,6 +8,12 @@
 	font-weight: bold;
 }
 </style>
+<script language="javascript">
+function selectCity(value){
+	document.getElementById('frmcity').submit();
+	window.location.href="{$dirname}/townships.php?page=1&citydd="+value;
+}
+</script>
 </TD>
   </TR>
   <TR>
@@ -50,6 +56,17 @@
                                     <label class="fwb">Enter Township Name : </label><input name="townshipsName" value="{$townshipsName}" class="button"> &nbsp;&nbsp;&nbsp;
                                     <input type="submit" name="search" id="search" value="Search" class="button">
                                 </form>
+                            </td>
+                            <td width="35%" height="25" align="right" style="padding-top:30px;padding-bottom:10px;">
+                             <form name="frmcity" id="frmcity" method="post">
+								 <label class="fwb">Select City: </label>
+								 <select id="citydd" name="citydd" onchange="selectCity(this.value)">
+                                            <option value=''>select</option>
+                                             {foreach from = $CityDataArr key = key item = item}
+                                           <option {if $cityId == {$key}} selected {/if} value = {$key}>{$item}</option>
+                                         {/foreach}	
+                                     </select>
+                            </form>
                             </td>
                           </tr>
                         </table>
@@ -97,7 +114,7 @@
                       </TBODY>
                     </FORM>
                     </TABLE>
-			{if $NumRows>30}
+			{if $NumRows>0}
                   <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>

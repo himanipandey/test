@@ -393,7 +393,7 @@ $(function() {
                                         <select name="townshipId" id="townshipId" >
                                           <option value="">Select Township</option>
                                            {foreach from = $arrTownshipDetail key = key item = value}
-                                               <option value="{$key}" {if $key == $townshipId} selected {/if}>{$value} </option>
+                                               <option value="{$key}" {if $key == $townshipId} selected {/if}>{$key} - {$value}</option>
                                            {/foreach}
                                        </select>
                                         </td>
@@ -423,7 +423,18 @@ $(function() {
                                                    </select>
                                           </td>
                                     </tr>      
-
+									 <tr><td>&nbsp;</td></tr>
+									<tr>
+                                          <td align="right" style = "padding-left:20px;"><b>With Offers:</b></td>
+                                          <td align="left" style = "padding-left:20px;">
+                                                <select name="withOffer" id="withOffer"  style="width:100px">
+													<option value="">Select</option>
+													<option value="Yes" {if $withAssign=='Yes'}selected{/if}>Yes</option>
+													<option value="No" {if $withAssign=='No'}selected{/if}>No</option>
+                                                </select>
+                                                &nbsp;Offer ID : <input type="text" name="offerId" id="offerId" value="{$offerId}" style="width:100px" />
+                                          </td>
+                                    </tr>    
                                     <tr><td>&nbsp;</td></tr>		 
                                   <tr> 
                                           <td align="right" style = "padding-left:20px;"><b>Expected Supply Date:</b></td>
