@@ -224,6 +224,11 @@
                                                                 <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
                                                                 <td width="30%" align="left">
                                                                        <textarea name="txtProjectDesc" rows="10" cols="45" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
+                                                                       <input type="hidden" name="txtProjectOldDesc" value="{$txtProjectDescription}" />
+                                                                      {if $dept=='ADMINISTRATOR' && isset($contentFlag)}
+                                                                       <br/><br/>
+                                                                       <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
+																	  {/if}
                                                                 </td>
                                                                 <td width="50%" align="left">
                                                                         <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>

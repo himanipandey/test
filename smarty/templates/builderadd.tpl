@@ -122,6 +122,11 @@
 				<tr>
 				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Builder Description :</td>
 				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" cols="45">{$txtBuilderDescription}</textarea>
+				   <input type="hidden" name="txtOldBuilderDescription" value="{$txtBuilderDescription}" />
+				  {if $dept=='ADMINISTRATOR' && isset($contentFlag)}
+                   <br/><br/>
+                   <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
+				  {/if}
 </td>
 					{if $ErrorMsg["txtBuilderDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtBuilderDescription"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
@@ -223,7 +228,7 @@
 				  <td width="20%" align="right" valign="top">Meta Description :</td>
 				  <td width="30%" align="left" >
 				  <textarea name="txtMetaDescription" rows="10" cols="45">{$txtMetaDescription}</textarea>
-                  </td>
+				  </td>
                   <td width="50%" align="left"></td>
 				</tr>
 

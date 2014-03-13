@@ -23,6 +23,8 @@
                     $txtMetaDescription		=	trim($_POST['txtMetaDescription']);
                     $status					=	trim($_POST['status']);
                     $desc					=	trim($_POST['desc']);	
+                    $oldDesc				=	trim($_POST['oldDesc']);
+					$content_flag			=	trim($_POST['content_flag']);			
                     $old_sub_url			=	trim($_POST['old_sub_url']);
                     $old_sub_name			=	trim($_POST['old_sub_name']);
 
@@ -77,6 +79,33 @@
                             $seoData['table_name'] = 'suburb';
                             $seoData['updated_by'] = $_SESSION['adminId'];
                             SeoData::insetUpdateSeoData($seoData);
+                            
+                            ## - desccripion content flag handeling
+							$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $suburbid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'suburb' )));					   
+							 if($cont_flag){
+								$content_flag = '';
+								if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
+									if(strcasecmp($desc,$oldDesc) != 0)
+										$content_flag = 0;								
+								}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+									  $content_flag = ($_POST["content_flag"])? 1 : 0;
+								}
+								if(is_numeric($content_flag)){
+									$cont_flag = TableAttributes::find($cont_flag[0]->id);
+									$cont_flag->updated_by = $_SESSION['adminId'];
+									$cont_flag->attribute_value = $content_flag;
+									$cont_flag->save();		
+								}
+							}elseif($_SESSION['DEPARTMENT'] == 'DATAENTRY' && strcasecmp($desc,$oldDesc)!= 0){
+								$cont_flag = new TableAttributes();
+								$cont_flag->table_name = 'suburb';
+								$cont_flag->table_id = $suburbid;
+								$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+								$cont_flag->attribute_value = 0;
+								$cont_flag->updated_by = $_SESSION['adminId'];
+								$cont_flag->save();				
+							}
+                                        
                             if ( $old_sub_name != $txtCityName ) {
                                 //  add to name change log
                                 addToNameChangeLog( 'suburb', $suburbid, $old_sub_name, $txtCityName );
@@ -114,6 +143,10 @@
             $smarty->assign("txtMetaDescription", $txtMetaDescription);
             $smarty->assign("status", $status);	
             $smarty->assign("desc", $desc);
+            $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $suburbid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'suburb')));   
+            
+			$smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
+			$smarty->assign("dept", $_SESSION['DEPARTMENT']);
     }
  
 ?>
