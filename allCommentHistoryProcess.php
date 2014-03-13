@@ -33,7 +33,9 @@
                     "Calling" => 'Calling Remark', 
                     'Audit' => 'Audit Remark',
                     'Secondary' => 'Secondary Remark',
-                    'FieldSurvey' => 'Field Survey Remark'
+                    'FieldSurvey' => 'Field Survey Remark',
+                    'SecondaryAudit' => 'Secondary Audit Remark',
+                    'Audit2' => 'Audit2 Remark'
                      );
      $smarty->assign("commentTypeMap",$commentTypeMap);
 

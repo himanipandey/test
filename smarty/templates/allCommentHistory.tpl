@@ -23,6 +23,8 @@
                     <option value="FieldSurvey" {if $commentType == 'FieldSurvey'} selected {/if}>Field Survey</option>
                     <option value="Audit" {if $commentType == 'Audit'} selected {/if}>Audit</option>
                     <option value="Secondary" {if $commentType == 'Secondary'} selected {/if}>Secondary</option>
+                    <option value="SecondaryAudit" {if $commentType == 'SecondaryAudit'} selected {/if}>Secondary Audit</option>
+                    <option value="Audit2" {if $commentType == 'Audit2'} selected {/if}>Audit-2</option>
                     <option value="all" {if $commentType == 'all'} selected {/if}>All</option>
                 </select>
                
