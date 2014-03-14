@@ -1,4 +1,7 @@
 <?php
+
+require_once ($currentDir . '/../modelsConfig.php');
+
 function put2DArrayIntoTable($data){
 	$table = "<table border='1'>";
 	$table .= getTableRowFromArray(array_keys($data[0]));
@@ -149,4 +152,9 @@ function getSumOfKeyValues($aData, $key){
         $sum += $value->$key;
     }
     return $sum;
+}
+
+function truncateTable($tableName){
+    $sql = "truncate table $tableName";
+    ActiveRecord\Connection::instance()->query($sql);
 }
