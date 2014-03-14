@@ -156,3 +156,7 @@ function truncateTable($tableName){
     $sql = "truncate table $tableName";
     ActiveRecord\Connection::instance()->query($sql);
 }
+
+function getDBDistanceQueryString($lon1Col, $lat1Col, $lon2Col, $lat2Col){
+    return "((ACOS(SIN($lat1Col * PI() / 180) * SIN($lat2Col * PI() / 180) + COS($lat1Col * PI() / 180) * COS($lat2Col * PI() / 180) * COS(($lon1Col - $lon2Col) * PI() / 180)) * 180 / PI()) * 60 * 1.1515 * 1609.34)";
+}
