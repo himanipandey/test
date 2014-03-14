@@ -23,8 +23,15 @@ require_once ($currentDir . '/../cron/cronFunctions.php');
 $aInvalidCoordinates = array(0,1,2,3,4,5,6,7,8,9);
 $aAllLandmarkTypes = array(1,2,5,7,8,9,13);
 
-$aMaxLandmarkDistance = array(1=>10000, 2=>5000);
-$aMaxLandmarkCount = array(1=>100, 2=>50);
+$aMaxLandmarkDistance = array(
+    1=>10000,   //school
+    2=>5000     // hospital
+    );
+
+$aMaxLandmarkCount = array(
+    1=>100,     // school
+    2=>50       // hospital
+    );
 
 $connection = ActiveRecord\Connection::instance();
 
