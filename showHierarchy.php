@@ -247,7 +247,7 @@ function init(){
     
     var json =   jQuery.parseJSON($('#json').val()); // JSON.stringify("<?php echo $j;?>");// ;
     var loc_counter = $('#tree-height').val();
-    var treeHeight = loc_counter*40;
+    var treeHeight = loc_counter*50;
     if(treeHeight<600) treeHeight=600;
     var node_max = $('#tree-width').val();
     var treeWidth = node_max*250;

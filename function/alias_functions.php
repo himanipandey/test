@@ -32,8 +32,9 @@ function createAliases($pl_tb_name, $pl_tb_id, $al_name)
 {
 	//$return = 3;
 
-	$sql = "SELECT * FROM ".place_alias_mapping. " where place_table_name = '$pl_tb_name' and place_table_id = '$pl_tb_id' and alias_name='$al_name'";
-	$result=mysql_query($sql);
+	$sql = "SELECT * FROM ".place_alias_mapping. " where place_table_name = '".addslashes($pl_tb_name)."' and place_table_id = '".addslashes($pl_tb_id)."' and alias_name='".addslashes($al_name)."'";
+	//echo $sql;
+  $result=mysql_query($sql);
     
     if(mysql_fetch_array($result) !== false)
 	{
@@ -41,7 +42,7 @@ function createAliases($pl_tb_name, $pl_tb_id, $al_name)
 	}
 	else
 	{
-		$qry = "INSERT INTO ".place_alias_mapping." (place_table_name, place_table_id, alias_name, created_at, updated_by) VALUES ('$pl_tb_name', '$pl_tb_id', '$al_name', NOW(), ".$_SESSION["adminId"]." )";
+		$qry = "INSERT INTO ".place_alias_mapping." (place_table_name, place_table_id, alias_name, created_at, updated_by) VALUES ('".addslashes($pl_tb_name)."', '".addslashes($pl_tb_id)."', '".addslashes($al_name)."', NOW(), ".$_SESSION["adminId"]." )";
 		//echo $qry; die();
 		//echo $aliasName;
 		mysql_query($qry);
