@@ -31,8 +31,8 @@ else{
 
   $loc_counter = $arr[1];
 }
+$node_max = $arr[2]+1;
 
-//echo $json;
 //echo $loc_counter;
  //echo $str;
 //echo "<PRE>";
@@ -95,6 +95,8 @@ visibility: hidden;
     <form>
 <input type="hidden" name="Language" id="json" value="<?php echo htmlspecialchars($json); ?>">
 <input type="hidden" name="Language" id="tree-height" value="<?php echo $loc_counter; ?>">
+<input type="hidden" name="Language" id="tree-width" value="<?php echo $node_max; ?>">
+
 </form> 
 </div>
 
@@ -247,6 +249,9 @@ function init(){
     var loc_counter = $('#tree-height').val();
     var treeHeight = loc_counter*40;
     if(treeHeight<600) treeHeight=600;
+    var node_max = $('#tree-width').val();
+    var treeWidth = node_max*250;
+    if(treeWidth<600) treeWidth=600;
     //alert(treeHeight);
      //json = JSON.stringify(json);
    
@@ -284,10 +289,11 @@ function init(){
         
         constrained: false,
         levelsToShow: 5,
-        offsetX: 300, 
+        offsetX: (treeWidth/2)-100, 
         offsetY: 100,
         width: 800,
         height: treeHeight,
+        width: treeWidth,
         
         //set node, edge and label styles
         //set overridable=true for styling individual
@@ -299,7 +305,7 @@ function init(){
             width: 150,
             autoHeight: false,
             autoWidth: true,
-
+            align: 'left',
             //canvas specific styles
             CanvasStyles: {
               overridable: true,

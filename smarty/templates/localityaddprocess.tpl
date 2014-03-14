@@ -72,8 +72,7 @@
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
 					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search Landmarks: </label></td>
-					<td width="30%" align="left"><input id="search"></td></div>
-					<td width="10%" align="left"><button type="button" id="button" align="left">Save Alias</button></td><td><label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label> </td>
+          <td width="30%" align="left"><input id="search"><button type="button" id="button" align="left">Save Landmark</button> <label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label></td></div>
 					
 					
 				</tr>

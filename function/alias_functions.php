@@ -253,6 +253,7 @@ function getHierArr($cid, $subarr1){
     $parent_id = 0;
     $counter = 0;
     $loc_counter=0;
+    $node_max = 1000;
 
     $arr = Array(); 
     $return_arr = Array(); //return array
@@ -314,10 +315,15 @@ function getHierArr($cid, $subarr1){
     $aliasArray = getLandmarkAliases('city', $cid);
     $aliasString = '';
     if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
-    foreach ($aliasArray as $k => $v) {
+    else{
+      foreach ($aliasArray as $k => $v) {
        $aliasString .= $v['name'].", ";
+      }
+      //echo $aliasString;
+      $aliasString = rtrim(trim($aliasString), ",");
+      //echo rtrim($aliasString, ",");
     }
-
+    
     $tmpArray['alias'] = $aliasString;
     $arr['data'] = $tmpArray;
 
@@ -356,9 +362,12 @@ function getHierArr($cid, $subarr1){
 
     $aliasString = '';
     if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
-    foreach ($aliasArray as $k => $v) {
+      else{
+      foreach ($aliasArray as $k => $v) {
        $aliasString .= $v['name'].", ";
-    }
+      }
+      $aliasString = rtrim(trim($aliasString), ",");
+      }
       $tmpArray1['alias'] = $aliasString;
     	$subArray['data'] = $tmpArray1;
     	$child1Array = Array();
@@ -379,7 +388,9 @@ function getHierArr($cid, $subarr1){
    }
    //echo $GLOBALS['loc_counter'];
    array_push($return_arr, $arr);
+   //echo $GLOBAL['node_max'];
    array_push($return_arr, $GLOBALS['loc_counter']);
+   array_push($return_arr, (int)($GLOBALS['node_max']/1000));
   return $return_arr;
 }
 
@@ -388,6 +399,7 @@ function print_suburb($childArray, $lowerSubArr, $locArr){
     global $counter;
     
     $counter +=1000;
+    if($GLOBALS['node_max']<$counter) $GLOBALS['node_max'] = $counter;
     global $loc_counter;
     $returnArr = Array();
     foreach ($childArray as $k => $v) {
@@ -401,18 +413,25 @@ function print_suburb($childArray, $lowerSubArr, $locArr){
        $aliasArray = getLandmarkAliases('suburb', $v['id']);
     $aliasString = '';
     if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
-    foreach ($aliasArray as $k => $v) {
+    else {
+      foreach ($aliasArray as $k => $v) {
        $aliasString .= $v['name'].", ";
+      }   
+      $aliasString = rtrim(trim($aliasString), ",");
     }
-       $tmpArray1['alias'] = $aliasString;
+      $tmpArray1['alias'] = $aliasString;
     }
 	else if ($v['type'] == 'locality'){
 		$tmpArray1['placeType'] = 'locality';
     $aliasArray = getLandmarkAliases('locality', $v['id']);
     $aliasString = '';
     if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
-    foreach ($aliasArray as $k => $v) {
+    else{
+      foreach ($aliasArray as $k => $v) {
        $aliasString .= $v['name'].", ";
+      }
+    
+    $aliasString = rtrim(trim($aliasString), ",");
     }
     $tmpArray1['alias'] = $aliasString;
     $GLOBALS['loc_counter']++;
