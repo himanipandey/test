@@ -40,3 +40,5 @@ LocalityLivability::populateDistanceIndex(9);
 LocalityLivability::populateDistanceIndex(1000);
 LocalityLivability::populateDistanceIndex(2000);
 LocalityLivability::populateDistanceIndex(3000);
+LocalityLivability::populateCompletionPercentage();
+LocalityLivability::populateOverAllLivability();
