@@ -35,6 +35,7 @@ class ProjectLivability extends ActiveRecord\Model {
         'builder' => 'CASE rb.DISPLAY_ORDER WHEN 1 THEN 1 WHEN 2 THEN 0.8 WHEN 3 THEN 0.6 WHEN 4 THEN 0.4 ELSE 0.2 END',
         'overall' => '(0.175*pl.school+0.175*pl.hospital+0.050*pl.restaurant+0.035*pl.metro_station+0.035*pl.bus_stand+0.035*pl.suburban_railway_station+0.025*pl.city_railway_station+0.025*pl.airport+0.1*pl.park+0.1*pl.market)*0.2+0.075*pl.clubhouse+0.075*pl.power_backup+0.075*pl.children_play_area+0.05*pl.security+0.05*pl.other_amenity_count+if(pl.unit_per_floor=0,0.2*pl.unit_count,0.1*pl.unit_count+0.1*pl.unit_per_floor)+0.225*pl.builder+0.05*ll.completion_percentage'
     );
+    static $min_max_livability = 0.95;
 
     static function repopulateProjectIds() {
         $sql = "insert into project_livability (project_id) select PROJECT_ID from resi_project group by PROJECT_ID;";
@@ -111,14 +112,19 @@ class ProjectLivability extends ActiveRecord\Model {
     }
 
     static function populateOverAllLivability() {
-        $sql = "update project_livability pl1 inner join project_livability pl on pl1.id = pl.id set pl1.livability = " . self::$custom_project_livability_expression['overall'];
+        $sql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Cms' inner join locality_livability ll on rp.LOCALITY_ID = ll.locality_id set pl.livability = " . self::$custom_project_livability_expression['overall'];
         self::connection()->query($sql);
+        $maxVal = self::getMaxValueForCoulmn('livability');
+        if($maxVal < self::$min_max_livability){
+            $factor = self::$min_max_livability/$maxVal;
+            self::update_all(array('set'=>"livability = livability*$factor"));
+        }
     }
 
     static function getMaxValueForCoulmn($columnName) {
         $max = self::find('first', array('order' => "$columnName desc", 'limit' => 1, 'select' => "$columnName max"));
-        if (count($max) > 0) {
-            return $max[0]->max;
+        if (!empty($max)) {
+            return $max->max;
         }
         return null;
     }

@@ -6,7 +6,7 @@ require_once "support/objects.php";
 class LocalityLivability extends ActiveRecord\Model {
 
     static $table_name = 'locality_livability';
-    static $livability_expression = '0.175*ll.school+0.175*ll.hospital+0.050*ll.restaurant+0.035*ll.metro_station+0.035*ll.bus_stand+0.035*ll.suburban_railway_station+0.025*ll.city_railway_station+0.025*ll.airport+0.05*ll.park+0.05*ll.market+0.1*ll.completion_percentage';
+    static $livability_expression = '0.175*school+0.175*hospital+0.050*restaurant+0.035*metro_station+0.035*bus_stand+0.035*suburban_railway_station+0.025*city_railway_station+0.025*airport+0.05*park+0.05*market+0.1*completion_percentage';
     static $column_name_for_landmark_type = array(
         1 => 'school',
         2 => 'hospital',
@@ -31,6 +31,8 @@ class LocalityLivability extends ActiveRecord\Model {
         2000 => 'count(*)',
         3000 => 'count(*)'
     );
+    
+    static $min_max_livability = 0.95;
 
     static function repopulateLocalityIds() {
         $sql = "insert into locality_livability (locality_id) select LOCALITY_ID from locality";
@@ -58,8 +60,21 @@ class LocalityLivability extends ActiveRecord\Model {
     }
 
     static function populateOverAllLivability() {
-        $sql = "update locality_livability ll1 inner join locality_livability ll on ll1.id = ll.id set ll1.livability = " . self::$livability_expression;
+        $sql = "update locality_livability set livability = " . self::$livability_expression;
         self::connection()->query($sql);
+        
+        $maxVal = self::getMaxValueForCoulmn('livability');
+        if($maxVal < self::$min_max_livability){
+            $factor = self::$min_max_livability/$maxVal;
+            self::update_all(array('set'=>"livability = livability*$factor"));
+        }
     }
 
+    static function getMaxValueForCoulmn($columnName) {
+        $max = self::find('first', array('order' => "$columnName desc", 'limit' => 1, 'select' => "$columnName max"));
+        if (!empty($max)) {
+            return $max->max;
+        }
+        return null;
+    }
 }
