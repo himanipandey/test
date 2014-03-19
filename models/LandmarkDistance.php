@@ -65,8 +65,7 @@ class LandmarkDistance extends ActiveRecord\Model {
     static function deleteEntriesBasedOnCount() {
 
         foreach (self::$max_landmark_count as $landmarkType => $count) {
-            $sql = "select object_id, object_type from landmark_distances where place_type_id = $landmarkType group by object_id, object_type";
-            $aRow = self::find('all', array('conditions' => array('place_type_id' => $landmarkType), 'group' => 'object_id, object_type', 'select' => 'object_id, object_type'));
+            $aRow = self::find('all', array('conditions' => array('place_type_id' => $landmarkType), 'group' => 'object_id, object_type', 'select' => 'object_id, object_type', 'having'=>"count(*)>$count"));
             foreach ($aRow as $row) {
                 $sql = "delete ld.* from landmark_distances ld inner join (select id, distance from landmark_distances where object_id = $row->object_id and object_type = '$row->object_type' and place_type_id = $landmarkType order by distance limit 100000 OFFSET $count) t on ld.id = t.id;";
                 self::connection()->query($sql);
