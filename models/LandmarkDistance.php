@@ -13,10 +13,15 @@ class LandmarkDistance extends ActiveRecord\Model {
         1, // school
         2, // hospital
         5, // restaurant
-        7, // subway_station
+        7, // metro_station
         8, // bus_station
         9, // train_station
-        13  // airport
+        2000, // parks
+        3000    // markets
+    );
+    static $city_independent_landmark_types = array(
+        13, // airport
+        1000    //city_railway_station
     );
     static $max_landmark_distance = array(
         1 => 10000,
@@ -24,13 +29,18 @@ class LandmarkDistance extends ActiveRecord\Model {
     );
     static $max_landmark_count = array(
         1 => 100,
-        2 => 50
+        2 => 50,
+        13 => 1,
+        1000 => 2
     );
 
     static function insertProjectDistance() {
         global $latLongList;
 
-        $sql = "insert into landmark_distances (object_id, object_type, landmark_id, distance, city_id, place_type_id, priority) select rp.PROJECT_ID, 'Project', ld.id, " . getDBDistanceQueryString('rp.LONGITUDE', 'rp.LATITUDE', 'ld.longitude', 'ld.latitude') . " AS distance, ld.city_id, ld.place_type_id, ld.priority from resi_project rp inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join landmarks ld on s.CITY_ID = ld.city_id where rp.version = 'Website' and rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in (" . $latLongList . ") and ld.status = 'Active' and ld.place_type_id in (" . implode(",", self::$all_landmark_type_ids) . ")";
+        $sql = "insert into landmark_distances (object_id, object_type, landmark_id, distance, city_id, place_type_id, priority) select rp.PROJECT_ID, 'Project', ld.id, " . getDBDistanceQueryString('rp.LONGITUDE', 'rp.LATITUDE', 'ld.longitude', 'ld.latitude') . " AS distance, ld.city_id, ld.place_type_id, ld.priority from resi_project rp inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join landmarks ld on s.CITY_ID = ld.city_id where rp.version = 'Cms' and rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in (" . $latLongList . ") and ld.status = 'Active' and ld.place_type_id in (" . implode(",", self::$all_landmark_type_ids) . ")";
+        self::connection()->query($sql);
+
+        $sql = "insert into landmark_distances (object_id, object_type, landmark_id, distance, city_id, place_type_id, priority) select rp.PROJECT_ID, 'Project', ld.id, " . getDBDistanceQueryString('rp.LONGITUDE', 'rp.LATITUDE', 'ld.longitude', 'ld.latitude') . " AS distance, ld.city_id, ld.place_type_id, ld.priority from resi_project rp inner join landmarks ld where rp.version = 'Cms' and rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in (" . $latLongList . ") and ld.status = 'Active' and ld.place_type_id in (" . implode(",", self::$city_independent_landmark_types) . ")";
         self::connection()->query($sql);
     }
 
