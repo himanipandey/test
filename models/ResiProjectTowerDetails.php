@@ -31,4 +31,8 @@ class ResiProjectTowerDetails extends Objects
         }
         return ResiProjectTowerDetails::query($qry_ins);
     }
+    
+    static function getFloorCountForAllProjects(){
+        return self::find('all', array('group'=>'PROJECT_ID', 'having'=>'FLOOR_COUNT > 0', 'select'=>'PROJECT_ID, sum(NO_OF_FLOORS) FLOOR_COUNT'));
+    }
 }

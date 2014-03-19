@@ -31,6 +31,21 @@ ProjectLivability::populateDistanceIndex(1000);
 ProjectLivability::populateDistanceIndex(2000);
 ProjectLivability::populateDistanceIndex(3000);
 
+ProjectLivability::populateChildrenPlayArea();
+ProjectLivability::populateClubhouse();
+ProjectLivability::populatePowerBackup();
+ProjectLivability::populateSecurity();
+
+ProjectLivability::populateBuilder();
+
+ProjectLivability::populateUnitCount();
+ProjectLivability::populateUnitPerFloor();
+
+ProjectLivability::populateOtherAmenity();
+
+ProjectLivability::populateOverAllLivability();
+
+
 LocalityLivability::populateDistanceIndex(1);
 LocalityLivability::populateDistanceIndex(2);
 LocalityLivability::populateDistanceIndex(5);
