@@ -566,7 +566,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 					$cont_flag->save();		
 		        }
 			}else{
-			 if( $_SESSION['DEPARTMENT'] == 'DATAENTRY' && || (empty($txtProjectOldDescription) || strcasecmp($txtProjectDescription,$txtProjectOldDescription) != 0)){ //add mode by dataEntry
+			 if( $_SESSION['DEPARTMENT'] == 'DATAENTRY' && (empty($txtProjectOldDescription) || strcasecmp($txtProjectDescription,$txtProjectOldDescription) != 0)){ //add mode by dataEntry
 				$cont_flag = new TableAttributes();
 				$cont_flag->table_name = 'resi_project';
 				$cont_flag->table_id = $returnProject->project_id;
