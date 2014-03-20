@@ -1,6 +1,9 @@
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.js"></script>
 <link href="fancybox/fancybox/jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script>
 <script type="text/javascript">
 
 function checkednewAll() 
@@ -173,12 +176,7 @@ $(".pt_reqflrplan").fancybox();
 														{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 														<div class="taggedDate">
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
-															<select name="tagged_date[{$cnt}]" >
-																<option value="0" >--Select Month--</option>
-																{foreach from=$dateDiv key=keys item=datas}
-																	<option value="{$keys}" {if ($ImageDataListingArr[data].tagged_month|strtotime|date_format:"%Y-%m") == $keys} selected {/if} >{$datas}</option>
-																{/foreach}
-															</select>
+															<input name="img_date{$cnt}" type="text" class="formstyle2" id="img_date{$cnt}" readonly="1" size="10"  value="{{$ImageDataListingArr[data].tagged_month}}" />  <img src="../images/cal_1.jpg" id="img_date_trigger{$cnt}" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
 															<br><br>
 															Tower:&nbsp;&nbsp;
 															<select name= "txtTowerId[{$cnt}]" >
@@ -244,3 +242,27 @@ $(".pt_reqflrplan").fancybox();
           </TBODY></TABLE>
         </TD>
       </TR>
+<script type="text/javascript">             
+                                                                                                                         
+        var cals_dict = {}
+        
+        for(i=0;i<=30;i++){
+            cals_dict["img_date_trigger"+i] = "img_date"+i;
+     
+        };
+
+        $.each(cals_dict, function(k, v) {
+            if ($('#' + k).length > 0) {
+                Calendar.setup({
+                    inputField: v, // id of the input field
+                    //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
+                    ifFormat: "%Y-%m-%d", // format of the input field
+                    button: k, // trigger for the calendar (button ID)
+                    align: "Tl", // alignment (defaults to "Bl")
+                    singleClick: true,
+                    showsTime: true
+                });
+            }
+        });
+   
+ </script>
