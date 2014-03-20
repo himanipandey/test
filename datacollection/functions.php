@@ -424,7 +424,7 @@ function surveyexecutiveList(){
                or (mpstg.name = '".UpdationCycle_stage."' and mpp.name = '".DataCollection_phase."')) and rp.version ='Cms' 
                and pa.STATUS = 'notAttempted' and rp.status in ('ActiveInCms','Active') group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
-               where pa.DEPARTMENT in ('SURVEY') and pa.adminid not in(".$_SESSION['adminId'].") group by pa.ADMINID order by WORKLOAD;";
+               where pa.DEPARTMENT in ('SURVEY') and pa.STATUS = 'Y' and pa.adminid not in(".$_SESSION['adminId'].") group by pa.ADMINID order by WORKLOAD;";
         $result = dbQuery($sql);
     return $result;
 }
@@ -459,13 +459,13 @@ function getallprojectListForField(){
          where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') 
-         and rp.version = 'Cms' and pa1.department = 'SURVEY' and role = 'teamleader'";
+         and rp.version = 'Cms' and pa1.department = 'SURVEY' and pa1.STATUS = 'Y' and role = 'teamleader'";
     $sql = $sql . " group by pa1.adminid order by rp.PROJECT_ID;";
     return  $res = dbQuery($sql); 
 }
 
 function getCallCenterExecutive($executives = array()){
-    $department = "'CALLCENTER', 'DATAENTRY'";
+    $department = "'CALLCENTER'";
     if(empty($executives)){
         $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
             from 
@@ -483,7 +483,7 @@ function getCallCenterExecutive($executives = array()){
                 and rp.version ='Cms' and rp.status in ('ActiveInCms','Active')
                and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
                inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
-               where pa.DEPARTMENT in ($department)  group by pa.ADMINID order by WORKLOAD;";
+               where pa.DEPARTMENT in ($department) and pa.STATUS = 'Y'  group by pa.ADMINID order by WORKLOAD;";
     }
     else{
         $sql = "select pa.ADMINID, pa.USERNAME, max(t.TOTAL) WORKLOAD 
@@ -500,7 +500,7 @@ function getCallCenterExecutive($executives = array()){
             and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active')
             and pa.STATUS = 'notAttempted' group by pa.ASSIGNED_TO) t 
             inner join proptiger_admin pa on t.ADMINID = pa.ADMINID 
-            where pa.DEPARTMENT in ($department) and pa.ADMINID in 
+            where pa.DEPARTMENT in ($department) and pa.STATUS = 'Y' and pa.ADMINID in 
             (".  implode(',', $executives).") group by pa.ADMINID order by WORKLOAD;";
     }
     return $result = dbQuery($sql);

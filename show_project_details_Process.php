@@ -398,15 +398,8 @@ $smarty->assign("projectOldComments", $projectOldComments);
 /******end code for project comment fetch from commeny history table*****/
 
 /**start code for fetch offer heading and desc from db**/
-    $qryOfferFetch = "select * from project_offers where project_id = $projectId";
-    $resOfferFetch = mysql_query($qryOfferFetch) or die(mysql_error());
-    $dataOffer = mysql_fetch_assoc($resOfferFetch);
-    $special_offer = $dataOffer['OFFER'];
-    $offer_heading = $dataOffer['OFFER_HEADING'];
-    $offer_desc = $dataOffer['OFFER_DESC'];
-    $smarty->assign("special_offer", $special_offer);
-    $smarty->assign("offer_heading", $offer_heading);
-    $smarty->assign("offer_desc", $offer_desc);
+    $dataOffer = ProjectOffers::find("all",array("conditions"=>array("project_id"=>$projectId,'status'=>'Active')));
+    $smarty->assign("offer_desc", $dataOffer);
     /**end code for fetch offer heading and desc from db**/
     
 if (!isset($_GET['towerId']))
@@ -437,7 +430,7 @@ if (!isset($_POST['forwardFlag']))
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
-    foreach ($newPhase as $k => $v) {
+     foreach ($newPhase as $k => $v) {
         $qry = "select * from master_project_phases where name = '".$k."'";
         $res = mysql_query($qry) or die(mysql_error());
         $phaseId = mysql_fetch_assoc($res);
@@ -471,6 +464,9 @@ if ($_POST['forwardFlag'] == 'yes') {
        }
         if ($phaseIdCurrent['id'] == $phaseId['id']) {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
+            //updating new remark
+            if($currentPhase=='Audit1' && $_POST['newRemarkId'])
+				update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");
@@ -507,6 +503,10 @@ if ($_POST['forwardFlag'] == 'update') {
            /********************/
 
             updateProjectPhase($projectId, $phaseId['id'], $stageId['id']);
+            
+            //updating new remark
+            if($currentPhase=='Audit1' && isset($_POST['newRemarkId']))
+				update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");
@@ -601,7 +601,7 @@ if ($_POST['forwardFlag'] == 'no') {
     header("Location:$returnURLPID");
 }
 /*****code for display updation cycle*********/
-    $currentCycle = currentCycleOfProject($projectId);
+    $currentCycle = currentCycleOfProject($projectId,$projectDetails[0]['PROJECT_PHASE'],$projectDetails[0]['PROJECT_STAGE']);
     $smarty->assign('currentCycle',$currentCycle);
 /************************************/
 include('builder_contact_info_process.php');
