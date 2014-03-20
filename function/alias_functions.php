@@ -286,8 +286,7 @@ function getHierArr($cid, $subarr1){
            array_push($locArr, $dataArr);
     }
 
-    foreach ($
-     as $k => $v) {     
+    foreach ($suburbSelect as $k => $v) {     
         
         if($v['parent_id']>0){
            array_push($lowerSubArr, $v);
