@@ -100,7 +100,12 @@
          </tr>			
 				<tr>
 					<td width="20%" align="right">Landmarks Attached: </td>
-					<td width="100" align="left" id='aliases' data-role="tagsinput"></td><td><label id="removetext1" style="color:green; font-weight: bold;"></label><a href="#" onclick="showHier();"><b>See Hierarchy</b></a></td>
+
+					<td width="100" align="left" >
+            <div id='aliases' data-role="tagsinput"></div>
+            <div><label id="removetext1" style="color:green; font-weight: bold;"></label><a href="#" onclick="showHier();"><b>See Hierarchy</b></a></div>
+          </td>
+         
 				</tr>
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->

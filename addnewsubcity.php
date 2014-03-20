@@ -74,8 +74,8 @@ else
     if($c==0 && $ins==0)
     {	
 
-           $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,parent_suburb_id,updated_by) 
-               value('".$subcityval."','".$cityid."','Active','".$parent_sub_id."','".$_SESSION['adminId']."')";
+           $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,parent_suburb_id, created_at,updated_by) 
+               value('".$subcityval."','".$cityid."','Active','".$parent_sub_id."', NOW(), '".$_SESSION['adminId']."')";
             $res = mysql_query($qry) or die(mysql_error()." insert");
             $ctid = mysql_insert_id();
             $sel_id = $ctid;
