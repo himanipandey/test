@@ -288,7 +288,7 @@ function init(){
         //set an X offset
         
         constrained: false,
-        levelsToShow: 5,
+        levelsToShow: 8,
         offsetX: (treeWidth/2)-100, 
         offsetY: 100,
         width: 800,

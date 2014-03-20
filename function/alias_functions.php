@@ -286,7 +286,8 @@ function getHierArr($cid, $subarr1){
            array_push($locArr, $dataArr);
     }
 
-    foreach ($suburbSelect as $k => $v) {     
+    foreach ($
+     as $k => $v) {     
         
         if($v['parent_id']>0){
            array_push($lowerSubArr, $v);
@@ -409,35 +410,36 @@ function print_suburb($childArray, $lowerSubArr, $locArr){
      $tmpArray['id'] = "node".$counter;
     $tmpArray['name'] = $v['label']; 
   	 $tmpArray1 = Array();
-  	 if($v['type'] == 'suburb'){
+
+  	if($v['type'] == 'suburb'){
    		 $tmpArray1['placeType'] = 'suburb';
        $aliasArray = getLandmarkAliases('suburb', $v['id']);
-    $aliasString = '';
-    if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
-    else {
-      foreach ($aliasArray as $k => $v) {
-       $aliasString .= $v['name'].", ";
-      }   
-      $aliasString = rtrim(trim($aliasString), ",");
-    }
+       $aliasString = '';
+      if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
+      else {
+        foreach ($aliasArray as $k1 => $v1) {
+          $aliasString .= $v1['name'].", ";
+        }   
+        $aliasString = rtrim(trim($aliasString), ",");
+      }
       $tmpArray1['alias'] = $aliasString;
     }
-	else if ($v['type'] == 'locality'){
-		$tmpArray1['placeType'] = 'locality';
-    $aliasArray = getLandmarkAliases('locality', $v['id']);
-    $aliasString = '';
-    if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
-    else{
-      foreach ($aliasArray as $k => $v) {
-       $aliasString .= $v['name'].", ";
-      }
+	  else if ($v['type'] == 'locality'){
+		  $tmpArray1['placeType'] = 'locality';
+      $aliasArray = getLandmarkAliases('locality', $v['id']);
+      $aliasString = '';
+      if(count($aliasArray)<1)$aliasString = 'No Landmarks tagged';
+      else{
+        foreach ($aliasArray as $k2 => $v2) {
+          $aliasString .= $v2['name'].", ";
+        }
     
-    $aliasString = rtrim(trim($aliasString), ",");
-    }
-    $tmpArray1['alias'] = $aliasString;
-    $GLOBALS['loc_counter']++;
+        $aliasString = rtrim(trim($aliasString), ",");
+      }
+      $tmpArray1['alias'] = $aliasString;
+      $GLOBALS['loc_counter']++;
     //echo $loc_counter;
-  }
+    }
     $tmpArray['data'] = $tmpArray1;
   //echo $v['label'];
   $child1Array = Array();
@@ -490,7 +492,7 @@ function child_suburb($p_id, $arr1, $arr2){
 
     foreach ($arr2 as $k1 => $v1) {       
         
-    
+    //if($p_id==10237){echo $v1['parent_id']." ";}
         if ($v1['parent_id']==$p_id) {
             //echo $v1['label'];
             
