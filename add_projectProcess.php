@@ -41,6 +41,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $suburbId =	trim($_POST['suburbId']);
             $localityId	= trim($_POST['localityId']);
             $txtProjectDescription = trim($_POST['txtProjectDesc']);
+            $txtProjectOldDescription = trim($_POST['txtProjectOldDesc']);
+            $content_flag = trim($_POST['content_flag']);
             $comments = trim($_POST['comments']);
             $txtProjectRemark =	trim($_POST['txtProjectRemark']);
             $txtProjectRemarkDisplay = trim($_POST['txtProjectRemarkDisplay']);
@@ -241,12 +243,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 			$ErrorMsg["txtproject_size"] = "Project size must be numeric and less than 500.";
 	    	}
 	    }
-	  /*   if($Active == 'Inactive' && isset($_POST['reason'])){
-			if($_POST['reason'] == 'duplicate' && trim($_POST['duplicate_pid']) == '')
-				$ErrorMsg["txtproject_alias"] = "Duplicate PID must be valid.";
-			elseif($_POST['reason'] == 'other_reason' && trim($_POST['other_reason_txt']) == '')
-				$ErrorMsg["txtproject_alias"] = "Please enter reason for inactive.";
-		}*/
 	   if(!empty($power_backup_capacity)){
 	    	if(!is_numeric($power_backup_capacity) || $power_backup_capacity > 10){
 			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";
@@ -549,6 +545,38 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 				$redev_pro->updated_by = $_SESSION['adminId'];
 				$redev_pro->save();
 			}
+			
+			
+			
+			## - desccripion content flag handeling
+			$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project' )));
+           
+           if($cont_flag){
+			  	$content_flag = '';
+				if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
+					if(strcasecmp($txtProjectDescription,$txtProjectOldDescription) != 0)
+						$content_flag = 0;
+				  	
+				}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+				  $content_flag = ($_POST["content_flag"])? 1 : 0;
+				}
+				if(is_numeric($content_flag)){
+					$cont_flag = TableAttributes::find($cont_flag[0]->id);
+					$cont_flag->updated_by = $_SESSION['adminId'];
+					$cont_flag->attribute_value = $content_flag;
+					$cont_flag->save();		
+		        }
+			}else{
+			 if( $_SESSION['DEPARTMENT'] == 'DATAENTRY' && (empty($txtProjectOldDescription) || strcasecmp($txtProjectDescription,$txtProjectOldDescription) != 0)){ //add mode by dataEntry
+				$cont_flag = new TableAttributes();
+				$cont_flag->table_name = 'resi_project';
+				$cont_flag->table_id = $returnProject->project_id;
+				$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+				$cont_flag->attribute_value = 0;
+				$cont_flag->updated_by = $_SESSION['adminId'];
+				$cont_flag->save();
+			 }				
+			}
            
            //echo $eff_date_to." heer";die;
            if (!ResiProjectPhase::find('all', array('conditions' => array('project_id' => $returnProject->project_id, 'phase_type' => 'Logical'))))
@@ -709,6 +737,9 @@ elseif ($projectId!='') {
     $redevelopmentProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));              
     $smarty->assign("redevelopmentProject", $redevelopmentProject[0]->attribute_value);
     
+     $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project' )));              
+    $smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
+    $smarty->assign("dept", $_SESSION['DEPARTMENT']);
     
  }
 

@@ -22,13 +22,15 @@ if ($_POST['btnSave'] == "Save")
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
         $legalEntity			=	trim($_POST['legalEntity']);
 	$txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
+	$txtOldBuilderDescription	=	trim($_POST['txtOldBuilderDescription']);
+	$content_flag		    =	trim($_POST['content_flag']);
 	$txtBuilderUrl			=	'';
 	$txtBuilderUrlOld		=	trim($_POST['txtBuilderUrlOld']);
 	$DisplayOrder			=	trim($_POST['DisplayOrder']);
 	$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
 	$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
 	$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
-        $img				=	trim($_POST['img']);
+	    $img				=	trim($_POST['img']);
         $oldbuilder			=	trim($_POST['oldbuilder']);
         $imgedit			=	trim($_POST['imgedit']);
         $address			=	trim($_POST['address']);
@@ -168,6 +170,16 @@ if ($_POST['btnSave'] == "Save")
                     $seoData['updated_by'] = $_SESSION['adminId'];
                     SeoData::insetUpdateSeoData($seoData);
                     
+					if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
+						$cont_flag = new TableAttributes();
+						$cont_flag->table_name = RESI_BUILDER;
+						$cont_flag->table_id = $builder_id;
+						$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+						$cont_flag->attribute_value = 0;
+						$cont_flag->updated_by = $_SESSION['adminId'];
+						$cont_flag->save();				
+					}
+                    
                     $txtBuilderUrl = createBuilderURL($txtBuilderName, $builder_id);
                     $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builder_id;
                     mysql_query($updateQuery) or die(mysql_error());
@@ -293,6 +305,34 @@ if ($_POST['btnSave'] == "Save")
                         $seoData['table_name'] = 'resi_builder';
                         $seoData['updated_by'] = $_SESSION['adminId'];
                         SeoData::insetUpdateSeoData($seoData);
+                        
+                        ## - desccripion content flag handeling
+						$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $builderid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => RESI_BUILDER )));					   
+					   if($cont_flag){
+							$content_flag = '';
+							if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
+								if(strcasecmp($txtBuilderDescription,$txtOldBuilderDescription) != 0)
+									$content_flag = 0;
+								
+							}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+							  $content_flag = ($_POST["content_flag"])? 1 : 0;
+							}
+							if(is_numeric($content_flag)){
+								$cont_flag = TableAttributes::find($cont_flag[0]->id);
+								$cont_flag->updated_by = $_SESSION['adminId'];
+								$cont_flag->attribute_value = $content_flag;
+								$cont_flag->save();		
+							}
+						}elseif($_SESSION['DEPARTMENT'] == 'DATAENTRY' && strcasecmp($txtBuilderDescription,$txtOldBuilderDescription) != 0){
+							$cont_flag = new TableAttributes();
+							$cont_flag->table_name = RESI_BUILDER;
+							$cont_flag->table_id = $builderid;
+							$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+							$cont_flag->attribute_value = 0;
+							$cont_flag->updated_by = $_SESSION['adminId'];
+							$cont_flag->save();				
+						}
+                        
                         $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
                         $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
                         mysql_query($updateQuery) or die(mysql_error());
@@ -345,7 +385,13 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("Contact", count($arrContact));
             $smarty->assign("arrContact", $arrContact);
             $smarty->assign("arrContactProjectMapping", $arrContactProjectMapping);
-
+            
+            $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $builderid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_builder')));   
+            
+			$smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
+			$smarty->assign("dept", $_SESSION['DEPARTMENT']);
+			
+			
     }
     else {
         $smarty->assign("DisplayOrder", 100);
