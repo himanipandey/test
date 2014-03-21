@@ -105,6 +105,9 @@
     $myProjectsSurveyAuth = isUserPermitted('myprojects_survey', 'access');
     $smarty->assign("myProjectsSurveyAuth", $myProjectsSurveyAuth);
     
+    $userManagement = isUserPermitted('user-management', 'access');
+    $smarty->assign("userManagement", $userManagement);
+    
     $executivePerformanceAuth = isUserPermitted('executive-performance', 'access');
     $smarty->assign("executivePerformanceAuth", $executivePerformanceAuth);
     

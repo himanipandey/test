@@ -243,7 +243,9 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 
 	$projid = $ob1['PROJECT_ID'];
 	$projname = $ob1['PROJECT_NAME'];
-	
+
+	$currentCycle = currentCycleOfProject($projid,$ob1['PROJECT_PHASE'],$ob1['PROJECT_STAGE']);
+
 	$cityname = $ob1['CITY_NAME'];
         $date_time = $ob1['DATE_TIME'];
         $stage_move_by = $ob1['FNAME'];

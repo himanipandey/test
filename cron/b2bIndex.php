@@ -1,43 +1,48 @@
 <?php
+ini_set('display_errors', '1');
+ini_set('memory_limit', '2G');
+set_time_limit(0);
+error_reporting(E_ALL);
+
+// TODO
+// Get demand data
+
 $currentDir = dirname(__FILE__);
-
-define('MIN_B2B_DATE', '2013-03-01');
-define('MAX_B2B_DATE', '2014-01-01');
-define('B2B_DOCUMENT_TYPE', 'B2B');
-
-//date_default_timezone_set ('UTC');
-
 require_once ($currentDir . '/../log4php/Logger.php');
 require_once ($currentDir . '/../modelsConfig.php');
 require_once ($currentDir . '/../cron/cronFunctions.php');
 require_once ($currentDir . '/../cron/b2bIndexTest.php');
+require_once ($currentDir . '/../dbConfig.php');
 
-//TODO
-// Bulk Insert in table
-// Get demand data
-// verify units sold data .. should be less than inventory
-
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
-
-ini_set('memory_limit', '-1');
-set_time_limit(0);
 define("INVALID_DATE", "0000-00-01");
+define('MIN_B2B_DATE', '2013-03-01');
+define('MAX_B2B_DATE', '2014-01-01');
+define('B2B_DEMAND_START_DATE', '2013-06-01');
+define('CSV_FIELD_DELIMITER', '~#~');
+define('CSV_LINE_DELIMITER', "\r\n");
+
+$bulkInsert = FALSE;
+if(isset($argv[1]) && $argv[1] == 'bulkInsert'){
+    $bulkInsert = TRUE;
+}
 
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
+$handle = fopen("/tmp/" . DInventoryPriceTmp::table_name() . ".csv", "w+");
 
-//DInventoryPriceTmp::connection()->query("set session sql_mode = 'STRICT_ALL_TABLES'");
 DInventoryPriceTmp::connection()->query("TRUNCATE TABLE d_inventory_prices_tmp");
 
 $logger->info("\n\n\nDeleted All rows");
 
 $aProjectPhaseCount = ResiProjectPhase::getWebsitePhaseCountForProjects();
-$aAllProjects = ResiProject::find_by_sql("select rp.PROJECT_ID, rb.BUILDER_ID, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, c.CITY_ID, c.LABEL as CITY_NAME, psm.display_name as construction_status  from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where rp.version = 'Website' and (uc.LABEL != 'Skip Updation' or uc.LABEL is null) and rp.STATUS = 'Active' and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched')");
-$aAllIndexedProjects = indexProjects($aAllProjects);
+
+$globalCondition = "rp.version = 'Website' and (uc.LABEL != 'Skip Updation' or uc.LABEL is null) and rp.STATUS = 'Active' and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched')";
+
+$aAllProjects = ResiProject::find_by_sql("select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_ID, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, s.SUBURB_ID, s.LABEL as SUBURB_NAME, c.CITY_ID, c.LABEL as CITY_NAME, psm.display_name as construction_status  from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where $globalCondition");
+
+$aAllIndexedProjects = indexArrayOnKey($aAllProjects, 'project_id');
 
 $logger->info("Project And Phase Details Retrieved");
-
 
 $i = 0;
 while($i< count($aAllProjects)){
@@ -47,26 +52,36 @@ while($i< count($aAllProjects)){
         $i=$i+1;
     }
     
-    $logger->info("Retrieving price and inventory data");
     $aAllInventory = ProjectAvailability::getInventoryForIndexing($aPid);
     $aAllPrice = ListingPrices::getPriceForIndexing($aPid);
     $logger->info("Price and inventory data retrieved");
     
-    $aAllInventory = removeInvalidPhaseData($aAllInventory, $aProjectPhaseCount);
-    $aAllPrice = removeInvalidPhaseData($aAllPrice, $aProjectPhaseCount);
+    removeInvalidPhaseData($aAllInventory);
+    removeInvalidPhaseData($aAllPrice);
     
     fillIntermediateMonths($aAllInventory);
     fillIntermediateMonths($aAllPrice);
-    indexPriceInventoryData($aAllInventory, $aAllPrice);
     
-    getSolrDocuments($aAllInventory, $aAllPrice);
+    $aAllInventory = indexArrayOnKey($aAllInventory, 'unique_key');
+    $aAllPrice = indexArrayOnKey($aAllPrice, 'unique_key');
     
+    createDocuments($aAllInventory, $aAllPrice);
     $logger->info("Indexing complete for $i projects");
 }
 
 indexProjectsWithLowerLaunchDate();
 indexProjectsWithHigherCompletionDate();
 
+if($bulkInsert){
+    importTableFromTmpCsv(DInventoryPriceTmp::table_name());
+    fclose($handle);
+}
+
+DInventoryPriceTmp::populateDemand();
+DInventoryPriceTmp::deleteEntriesBeforeLaunch();
+DInventoryPriceTmp::deleteInvalidPriceEntries();
+DInventoryPriceTmp::updateFirstPromoisedCompletionDate();
+DInventoryPriceTmp::updateSecondaryPriceForAllProjects();
 
 if(runTests()){
     DInventoryPriceTmp::connection()->query("rename table d_inventory_prices to d_inventory_prices_old, d_inventory_prices_tmp to d_inventory_prices, d_inventory_prices_old to d_inventory_prices_tmp;");
@@ -75,73 +90,72 @@ if(runTests()){
     $logger->error("Test Cases Failed.");
 }
 
-
-function getSolrDocuments($aAllInventory, $aAllPrice){
+function createDocuments($aAllInventory, $aAllPrice){
     global $logger;
+    global $handle;
+    global $bulkInsert;
+
     $aKey = array_unique(array_merge(array_keys($aAllInventory), array_keys($aAllPrice)));
     
     $i = 0;
     $prevKey = '';
     foreach ($aKey as $key) {
         $i++;
-        //Code used for storing the documents into mysql
-        $mysqlArray = array();
-        $mysqlArray['unique_key'] = $key;
         
-        $arrayToPick = isset($aAllInventory[$key])? $aAllInventory : $aAllPrice;
+        $entry = array();
+        $entry['unique_key'] = $key;
         
-        //hard coded values as of now
-        $mysqlArray['country_id'] = 1;
-        $mysqlArray['country_name'] = 'India';
-        $mysqlArray['project_id'] = $arrayToPick[$key]->project_id;
-        $mysqlArray['project_name'] = $arrayToPick[$key]->project_name;
-        $mysqlArray['phase_id'] = $arrayToPick[$key]->phase_id;
-        $mysqlArray['phase_name'] = $arrayToPick[$key]->phase_name;
-        $mysqlArray['phase_type'] =  $arrayToPick[$key]->phase_type;        
+        $arrayToPick = isset($aAllInventory[$key])? $aAllInventory[$key] : $aAllPrice[$key];
         
-        $effectiveMonth = $arrayToPick[$key]->effective_month;
-        $mysqlArray['effective_month'] = $effectiveMonth;
-        $mysqlArray['quarter'] = firstDayOf('quarter', $mysqlArray['effective_month']); //$arrayToPick[$key]->quarter;
-        $mysqlArray['half_year'] = firstDayOf('half_year', $mysqlArray['effective_month']); //$arrayToPick[$key]->half_year;
-        $mysqlArray['year'] = firstDayOf('year', $mysqlArray['effective_month']); //$arrayToPick[$key]->year;
-        if($arrayToPick[$key]->completion_date != INVALID_DATE)$mysqlArray['completion_date']= $arrayToPick[$key]->completion_date;
-        if($arrayToPick[$key]->launch_date != INVALID_DATE)$mysqlArray['launch_date'] = $arrayToPick[$key]->launch_date;
-        $bedrooms = $arrayToPick[$key]->bedrooms;
-        if(is_int($bedrooms))$mysqlArray['bedrooms'] = $bedrooms;
-        $mysqlArray['unit_type'] = isset($arrayToPick[$key])? $arrayToPick[$key]->unit_type : $aAllPrice[$key]->unit_type;
-        $mysqlArray['bedrooms'] = isset($arrayToPick[$key])? $arrayToPick[$key]->bedrooms : $aAllPrice[$key]->bedrooms;
+        $entry['project_id'] = $arrayToPick->project_id;
+        $entry['phase_id'] = $arrayToPick->phase_id;
+        $entry['phase_name'] = $arrayToPick->phase_name;
+        $entry['phase_type'] =  $arrayToPick->phase_type;
+        $entry['effective_month'] = $arrayToPick->effective_month;
+        $entry['unit_type'] = $arrayToPick->unit_type;
+        $entry['bedrooms'] = intval($arrayToPick->bedrooms);
+        $entry['average_size'] = $arrayToPick->average_size;
+        $entry['completion_date']= $arrayToPick->completion_date;
+        $entry['launch_date'] = $arrayToPick->launch_date;
         
         if(isset($aAllPrice[$key])){
-            $mysqlArray['average_price_per_unit_area'] = $aAllPrice[$key]->average_price_per_unit_area;
-            $mysqlArray['average_size'] = $aAllPrice[$key]->average_size;
-            $mysqlArray['all_size'] = json_encode(explode (',', $aAllPrice[$key]->size));
-            $mysqlArray['average_total_price'] = $aAllPrice[$key]->average_total_price;
+            $entry['average_price_per_unit_area'] = $aAllPrice[$key]->average_price_per_unit_area;
+            $entry['average_total_price'] = $aAllPrice[$key]->average_total_price;
         }
+        
         if(isset($aAllInventory[$key])){
-            $mysqlArray['supply'] = $aAllInventory[$key]->supply;
-            $mysqlArray['launched_unit'] = $aAllInventory[$key]->launched;
-            $mysqlArray['inventory'] = $aAllInventory[$key]->inventory;
-            if(isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month)$mysqlArray['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
+            $entry['supply'] = $aAllInventory[$key]->supply;
+            $entry['ltd_supply'] = $aAllInventory[$key]->ltd_supply;
+            $entry['launched_unit'] = $aAllInventory[$key]->launched;
+            $entry['inventory'] = $aAllInventory[$key]->inventory;
+            if(isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month){
+                $entry['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
+            }
+            else{
+                $entry['units_sold'] = 0;
+            }
         }
-        
-        setProjectLevelValues($mysqlArray);
-        
+        setProjectLevelValues($entry);
         $prevKey = $key;
-        
-        $x = DInventoryPriceTmp::create($mysqlArray);
-        $x->save();
+ 
+        $new = new DInventoryPriceTmp($entry);
+        saveToFileOrDb($new, $bulkInsert, $handle);
     }
     $logger->info($i . " documents inserted in mysql");
 }
 
-function removeInvalidPhaseData($aData, $aProjectPhaseCount){
+function removeInvalidPhaseData(&$aData){
     global $logger;
+    global $aProjectPhaseCount;
+
     $result = array();
     foreach ($aData as $value) {
-        if($value->phase_type == 'Actual' || $aProjectPhaseCount[$value->project_id] == 1)$result[] = $value;
+        if($value->phase_type == 'Actual' || $aProjectPhaseCount[$value->project_id] == 1){
+            $result[] = $value;
+        }
     }
     $logger->info("Remove invalid phase operation complete");
-    return $result;
+    $aData = $result;
 }
 
 function fillIntermediateMonths(&$aData){
@@ -153,12 +167,18 @@ function fillIntermediateMonths(&$aData){
         array_push($aNewData, clone $currData);
         
         $fillTill = MAX_B2B_DATE;
-        if(isset($aData[$i+1]) && $currData->key_without_month === $aData[$i+1]->key_without_month)$fillTill = getMonthShiftedDate($aData[$i+1]->effective_month, -1);
+        if(isset($aData[$i+1]) && $currData->key_without_month === $aData[$i+1]->key_without_month){
+            $fillTill = getMonthShiftedDate($aData[$i+1]->effective_month, -1);
+        }
         
         while(substr($currData->effective_month, 0, 10)<$fillTill){
             $nextMonth = getMonthShiftedDate($currData->effective_month, 1);
             $currData->unique_key = str_replace(substr($currData->effective_month, 0, 10), $nextMonth, $currData->unique_key);
             $currData->effective_month = $nextMonth;
+            if(isset($currData->supply)){
+                $currData->supply = ($currData->effective_month === $currData->launch_date) ? $currData->ltd_supply : null;
+                $currData->launched = ($currData->effective_month === $currData->launch_date) ? $currData->ltd_launched : null;
+            }
             array_push($aNewData, clone $currData);
         }
     }
@@ -166,54 +186,28 @@ function fillIntermediateMonths(&$aData){
     $aData = $aNewData;
 }
 
-function indexPriceInventoryData(&$aAllInventory, &$aAllPrice){
-    global $logger;
-    $aNewAllInventory = array();
-    foreach ($aAllInventory as $value) {
-        $key = $value->unique_key;
-        $aNewAllInventory[$key] = $value;
-    }
-    $aAllInventory = $aNewAllInventory;
-    
-    $aNewAllPrice = array();
-    foreach ($aAllPrice as $value) {
-        $key = $value->unique_key;
-        $aNewAllPrice[$key] = $value;
-    }
-    $aAllPrice = $aNewAllPrice;
-    $logger->info("Indexing price and inventory data complete");
-}
-
-function getMonthShiftedDate($date, $shift){
-    $date = substr($date, 0, 10);
-    return date("Y-m-d", strtotime("$date $shift month"));
-}
-
-
 function indexProjectsWithLowerLaunchDate(){
     global $logger;
-    global $aAllProjects;
-    global $aProjectPhaseCount;
-    
-    $sql = "select 1 as country_id, 'India' as country_name, rp.PROJECT_ID, rp.PROJECT_NAME, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, date_format(rpp.COMPLETION_DATE, '%Y-%m-01') COMPLETION_DATE, date_format(if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE), '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, group_concat(rpo1.SIZE) as all_size, ps.supply, ps.launched launched_unit from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and (date_format(if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE), '%Y-%m-01') = dip.effective_month) where rp.version = 'Website' and (uc.LABEL != 'Skip Updation' or uc.LABEL is null) and rp.STATUS = 'Active' and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched') and (rpp.LAUNCH_DATE != 0 or rp.PRE_LAUNCH_DATE != 0) and dip.id is null group by ps.id";
+    global $handle;
+    global $bulkInsert;
+    global $globalCondition;
+
+    $sql = "select rp.PROJECT_ID, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, date_format(if(rpp.COMPLETION_DATE=0, NULL, rpp.COMPLETION_DATE), '%Y-%m-01') COMPLETION_DATE, date_format(if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE), '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, ps.supply, ps.supply ltd_supply, ps.launched launched_unit from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and (date_format(if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE), '%Y-%m-01') = dip.effective_month) where $globalCondition and (rpp.LAUNCH_DATE != 0 or rp.PRE_LAUNCH_DATE != 0) and dip.id is null group by ps.id";
     $aData = DInventoryPriceTmp::find_by_sql($sql);
-    $aData = removeInvalidPhaseData($aData, $aProjectPhaseCount);
+    removeInvalidPhaseData($aData);
     $i = 0;
     foreach ($aData as $data) {
-        $mysqlArray = $data->to_array();
-        if($mysqlArray['launch_date'] != INVALID_DATE){
-            $mysqlArray['created_at'] = 'NOW()';
-            $mysqlArray['launch_date'] = substr($mysqlArray['launch_date'], 0, 10);
-            $mysqlArray['unique_key'] = $mysqlArray['project_id']."/".$mysqlArray['phase_id']."/".$mysqlArray['unit_type']."/".$mysqlArray['bedrooms']."/".$mysqlArray['launch_date'];
-            if($mysqlArray['completion_date'] == INVALID_DATE)unset ($mysqlArray['completion_date']);
-            $mysqlArray['effective_month'] = $mysqlArray['launch_date'];
-            $mysqlArray['year'] = firstDayOf('year', $mysqlArray['effective_month']);
-            $mysqlArray['half_year'] = firstDayOf('half_year', $mysqlArray['effective_month']);
-            $mysqlArray['quarter'] = firstDayOf('quarter', $mysqlArray['effective_month']);
+        $entry = $data->to_array();
+        if($entry['launch_date'] != INVALID_DATE){
+            $entry['created_at'] = 'NOW()';
+            $entry['launch_date'] = substr($entry['launch_date'], 0, 10);
+            $entry['unique_key'] = $entry['project_id']."/".$entry['phase_id']."/".$entry['unit_type']."/".$entry['bedrooms']."/".$entry['launch_date'];
+            $entry['effective_month'] = $entry['launch_date'];
             
-            setProjectLevelValues($mysqlArray);
+            setProjectLevelValues($entry);
             
-            DInventoryPriceTmp::create($mysqlArray)->save();
+            $new = new DInventoryPriceTmp($entry);
+            saveToFileOrDb($new, $bulkInsert, $handle);
             $i++;
         }
     }
@@ -222,53 +216,50 @@ function indexProjectsWithLowerLaunchDate(){
 
 function indexProjectsWithHigherCompletionDate(){
     global $logger;
-    global $aAllProjects;
-    global $aProjectPhaseCount;
-    
-    $sql = "select 1 as country_id, 'India' as country_name, rp.PROJECT_ID, rp.PROJECT_NAME, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, date_format(rpp.COMPLETION_DATE, '%Y-%m-01') COMPLETION_DATE, date_format(if(rpp.LAUNCH_DATE = 0, rp.PRE_LAUNCH_DATE, rpp.LAUNCH_DATE), '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, group_concat(rpo1.SIZE) as all_size, ps.supply, ps.launched launched_unit from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and date_format(rpp.COMPLETION_DATE, '%Y-%m-01') = dip.effective_month where rp.version = 'Website' and (uc.LABEL != 'Skip Updation' or uc.LABEL is null) and rp.STATUS = 'Active' and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched') and rpp.COMPLETION_DATE != 0 and dip.id is null group by ps.id";
+    global $handle;
+    global $bulkInsert;
+    global $globalCondition;
+
+    $sql = "select rp.PROJECT_ID, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, date_format(rpp.COMPLETION_DATE, '%Y-%m-01') COMPLETION_DATE, date_format(if(rpp.LAUNCH_DATE = 0, if(rp.PRE_LAUNCH_DATE=0, NULL, rp.PRE_LAUNCH_DATE), rpp.LAUNCH_DATE), '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, ps.supply ltd_supply from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and date_format(rpp.COMPLETION_DATE, '%Y-%m-01') = dip.effective_month where $globalCondition and rpp.COMPLETION_DATE != 0 and dip.id is null group by ps.id";
     $aData = DInventoryPriceTmp::find_by_sql($sql);
-    $aData = removeInvalidPhaseData($aData, $aProjectPhaseCount);
+    removeInvalidPhaseData($aData);
     $i = 0;
     foreach ($aData as $data) {
-        $mysqlArray = $data->to_array();
-        if($mysqlArray['completion_date'] != INVALID_DATE){
-            $mysqlArray['created_at'] = 'NOW()';
-            $mysqlArray['completion_date'] = substr($mysqlArray['completion_date'], 0, 10);
-            $mysqlArray['unique_key'] = $mysqlArray['project_id']."/".$mysqlArray['phase_id']."/".$mysqlArray['unit_type']."/".$mysqlArray['bedrooms']."/".$mysqlArray['completion_date'];
-            if($mysqlArray['launch_date'] == INVALID_DATE)unset ($mysqlArray['launch_date']);
-            $mysqlArray['effective_month'] = $mysqlArray['completion_date'];
-            $mysqlArray['year'] = firstDayOf('year', $mysqlArray['effective_month']);
-            $mysqlArray['half_year'] = firstDayOf('half_year', $mysqlArray['effective_month']);
-            $mysqlArray['quarter'] = firstDayOf('quarter', $mysqlArray['effective_month']);
+        $entry = $data->to_array();
+        if($entry['completion_date'] != INVALID_DATE){
+            $entry['created_at'] = 'NOW()';
+            $entry['completion_date'] = substr($entry['completion_date'], 0, 10);
+            $entry['unique_key'] = $entry['project_id']."/".$entry['phase_id']."/".$entry['unit_type']."/".$entry['bedrooms']."/".$entry['completion_date'];
+            $entry['effective_month'] = $entry['completion_date'];
             
-            setProjectLevelValues($mysqlArray);
+            setProjectLevelValues($entry);
             
-            DInventoryPriceTmp::create($mysqlArray)->save();
+            $new = new DInventoryPriceTmp($entry);
+            saveToFileOrDb($new, $bulkInsert, $handle);
             $i++;
         }
     }
     $logger->info("Inserted $i missing completion date entries");
 }
 
-function indexProjects($aAllProjects){
-    $aAll = array();
-    foreach ($aAllProjects as $value) {
-        $aAll[$value->project_id] = $value;
-    }
-    return $aAll;
-}
-
-function setProjectLevelValues(&$mysqlArray){
+function setProjectLevelValues(&$entry){
     global $aAllIndexedProjects;
     
-    $projectId = $mysqlArray['project_id'];
+    $projectDetails = $aAllIndexedProjects[$entry['project_id']];
     
-    $mysqlArray['locality_id'] = $aAllIndexedProjects[$projectId]->locality_id;
-    $mysqlArray['locality_name'] = $aAllIndexedProjects[$projectId]->locality_name;
-    $mysqlArray['city_id'] = $aAllIndexedProjects[$projectId]->city_id;
-    $mysqlArray['city_name'] = $aAllIndexedProjects[$projectId]->city_name;
-    $mysqlArray['builder_id'] = $aAllIndexedProjects[$projectId]->builder_id;
-    $mysqlArray['builder_name'] = $aAllIndexedProjects[$projectId]->builder_name;
-    $mysqlArray['construction_status'] = $aAllIndexedProjects[$projectId]->construction_status;
+    $entry['country_id'] = 1;
+    $entry['country_name'] = 'India';
+    $entry['project_name'] = $projectDetails->project_name;
+    $entry['locality_id'] = $projectDetails->locality_id;
+    $entry['locality_name'] = $projectDetails->locality_name;
+    $entry['suburb_id'] = $projectDetails->suburb_id;
+    $entry['suburb_name'] = $projectDetails->suburb_name;
+    $entry['city_id'] = $projectDetails->city_id;
+    $entry['city_name'] = $projectDetails->city_name;
+    $entry['builder_id'] = $projectDetails->builder_id;
+    $entry['builder_name'] = $projectDetails->builder_name;
+    $entry['construction_status'] = $projectDetails->construction_status;
+    $entry['quarter'] = firstDayOf('quarter', $entry['effective_month']);
+    $entry['half_year'] = firstDayOf('half_year', $entry['effective_month']);
+    $entry['year'] = firstDayOf('year', $entry['effective_month']);
 }
-?>

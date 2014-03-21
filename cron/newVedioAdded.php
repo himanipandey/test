@@ -43,6 +43,7 @@ $categoryValue = array();
 $categoryValueExist = array();
 $total = 0;
 $totalExist = 0;
+ksort($arrAllData);
 foreach($arrAllData as $key=>$value) {
     
     if($cnt == 0){
