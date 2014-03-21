@@ -138,7 +138,7 @@
 								if($arrTowerId[$k] > 0)
 									$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
 								else
-									$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."',";
+									$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."',TOWER_ID = NULL,";
 							}
 							else
 								$add_tower = " TOWER_ID = NULL, ";
@@ -1049,7 +1049,7 @@
 									   if($arrTowerId[$key] > 0)
 										$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."', TOWER_ID = $arrTowerId[$key], ";
 									   else
-										$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."',";
+										$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."',TOWER_ID = NULL,";
 									}else
 										$add_tower = " TOWER_ID = NULL, ";
 										
