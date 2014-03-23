@@ -111,4 +111,123 @@
     $cityArray = getAllCities();
     $smarty->assign("cityArray", $cityArray);
     $smarty->assign('dirname',$dirName);
+
+
+
+    //adding new suburb
+    $suburbSelect = Array();
+    $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id FROM ".SUBURB." WHERE 
+            CITY_ID ='".$cityId ."'  ORDER BY LABEL ASC";
+
+    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
+    while ($dataArr = mysql_fetch_array($QueryExecute))
+    {
+           array_push($suburbSelect, $dataArr);
+    }
+    $smarty->assign("suburbSelect", $suburbSelect);
+   // print_r($suburbSelect);
+
+
+
+    // parent child suburb array
+
+
+/*
+    $suburbArr = Array();
+    $str = "";
+    $parentArr = Array();
+    $parent_id = 0;
+    foreach ($suburbSelect as $k => $v) {     
+        
+     
+        if($v['parent_suburb_id']>0){
+           array_push($parentArr, $v);
+           
+        }
+        else{            
+            array_push($suburbArr, $v);
+        }      
+        
+        
+    }
+
+ 
+    foreach ($cityArray as $k1 => $v1) {       
+        
+    
+        if ($v1['CITY_ID']==$cityId) {
+            $cityName = $v1['LABEL'];
+        }
+        
+    }
+
+    $counter = 0;
+    $arr = Array();
+    
+    $arr['id'] = 'node02';
+    $arr['name'] = $cityName; 
+    
+    if(count($suburbSelect)>0){  
+  
+    
+    $arr['children'] =  print_suburb($suburbArr, $parentArr);
+  
+  }
+ */
+
+    
+    $str = json_encode(getHierArr($cityId));
+
+    
+    //$smarty->assign("suburb_str", $str);
+/*
+ function child_suburb($p_id, $parentArr){
+    $returnArr = Array();
+    
+    foreach ($parentArr as $k1 => $v1) {       
+        
+    
+        if ($v1['parent_suburb_id']==$p_id) {
+            
+            array_push($returnArr, $v1);
+        }
+        
+    }
+    return $returnArr;
+ }
+    
+function print_suburb($childArray, $parentArr){
+    global $counter;
+    $counter +=1000;
+    $returnArr = Array();
+    foreach ($childArray as $k => $v) {
+     $counter++;
+     $tmpArray = Array();
+     $tmpArray['id'] = "node".$counter;
+    $tmpArray['name'] = $v['label']; 
+  
+
+  $child1Array = Array();
+  $child1Array = child_suburb($v['id'], $parentArr);
+  if(count($child1Array)>0){    
+   
+   
+    $tmpArray['children'] =  print_suburb($child1Array, $parentArr);
+    
+  }
+  
+   
+   
+   array_push($returnArr, $tmpArray);
+ }
+ $counter -=1000;
+ //echo json_encode($returnArr);
+ return $returnArr;
+}
+   
+
+*/
+
+
+
 ?>
