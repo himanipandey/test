@@ -263,12 +263,10 @@ function getRemainingLocAndTypeList($city_id)
 	$debug = "";
 
 	$qry = <<<QRY
-		SELECT P.locality_id AS locality_id, GROUP_CONCAT(P.id) as type_id FROM 
-			(SELECT locality_id, id FROM proptiger.NEAR_PLACE_TYPES JOIN proptiger.LOCALITY 
-				$city_id_str $debug) AS P LEFT JOIN 
-			(SELECT locality_id, place_type_id FROM proptiger.LOCALITY_NEAR_PLACES $city_id_str) 
-				AS Q ON (P.locality_id = Q.locality_id and P.id=Q.place_type_id) 
-		WHERE Q.locality_id IS NULL GROUP BY P.locality_id;
+		SELECT P.city_id AS locality_id, GROUP_CONCAT(P.id) as type_id FROM 
+			(SELECT city_id, id FROM cms.landmarks JOIN cms.city 
+				$city_id_str $debug) AS P 
+		GROUP BY P.locality_id;
 QRY;
 	
 	$rs = mysql_query($qry) or ( logMysqlError($qry, "C03") and exit() );
