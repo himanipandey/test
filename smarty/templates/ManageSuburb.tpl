@@ -1,12 +1,151 @@
+
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script> 
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
+
+<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+
+
+
+
+
 <script language="javascript">
+
+
+
+
 function chkConfirm() 
 	{
 		return confirm("Are you sure! you want to delete this record.");
 	}
 
 function selectCity(value){
+  
 	document.getElementById('frmcity').submit();
 	window.location.href="{$dirname}/suburbList.php?page=1&sort=all&citydd="+value;
+}
+
+//jQuery(document).ready(function(){
+
+
+
+function showHier(){
+
+   
+    //var j = '{$suburb_str}';
+    //var j = JSON.parse('{$suburb_str}'); 
+   //var jsonstring = JSON.stringify(j);
+   //alert(jsonstring);
+   //jsonstring = jsonstring.replace(/"/g, "'");
+   //alert(jsonstring);
+
+  $.fancybox({
+        'width'                :800,
+        'height'               :1000,
+        'scrolling'            : 'no',
+        'href'                 : "/showHierarchy.php?cityid="+'{$cityId}',
+        'type'                : 'iframe',
+        
+    })
+
+  
+}
+
+function GetXmlHttpObject()
+{
+  var xmlHttp=null;
+  try
+  {
+    // Firefox, Opera 8.0+, Safari
+    xmlHttp=new XMLHttpRequest();
+  }
+  catch (e)
+  {
+    //Interne   t Explorer
+  try
+  {
+    xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+  }
+  catch (e)
+  {
+    xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+}
+return xmlHttp;
+}
+
+
+function addupdatesubcity()
+{
+  //id = $("#subcity_txtbox_hidden").val();
+  parent_id = $("#suburbId").val();
+  cityid = $("#citydd").val();
+  label = $("#subcity_txtbox").val();
+  //alert("label:"+label+" name:"+name);
+  xmlHttpadd1=GetXmlHttpObject();
+  if (xmlHttpadd1==null)
+  {
+    alert ("Browser does not support HTTP Request")
+    return false;
+  }
+  
+  var rtrn = specialCharacterValidation($("#subcity_txtbox").val());
+  if(rtrn == false)
+  {
+    alert("Special Characters are not allowed");
+    return false;
+  }
+  if(cityid == '')
+  {
+    alert("Please select city");
+    return false;
+  }
+  else if(label == '')
+  {
+    alert("Please enter suburb");
+    return false;
+  }
+  else
+  {
+    var url="addnewsubcity.php?cityid="+cityid+"&subcityval="+label+"&parent_id="+parent_id;
+
+    xmlHttpadd1.open("GET",url,false);
+    xmlHttpadd1.send(null);
+    var returnval=xmlHttpadd1.responseText;
+    
+                var stringSplitSuburb = new Array();
+                 stringSplitSuburb = returnval.split("#"); 
+                if(stringSplitSuburb.length >1) {
+                    alert("This suburb already exist");
+                }
+    else if(xmlHttpadd1)
+    {
+                    document.getElementById('mainsubcity').innerHTML = stringSplitSuburb[0];
+                    subcityselid=$("#suburbId :selected").val();                    
+                    alert("The record has been successfully updated.");
+                    window.location.reload(true);
+    }
+
+  }
+
+}
+
+function specialCharacterValidation(fieldVal)
+{
+  var lengthStr = fieldVal.length;
+  var iChars = "!@#$%^&*()+=-[]\\\';,./{}|\":<>?";
+  var flg = 0;
+  for (var i = 0; i < lengthStr; i++) {
+    var srch = iChars.search(fieldVal[i]);
+      if (srch != -1) {
+          flg = 1;
+          }
+    }
+  if(flg == 1)
+    return false;
+  else
+    return true;
 }
 
 </script>
@@ -33,7 +172,7 @@ function selectCity(value){
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Suburb List</TD>
-                      <!--<TD align=right colSpan=3><a href="localityadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Locality</b></a></TD>-->
+                     
                     </TR>
 		  </TBODY></TABLE>
 		</TD>
@@ -125,6 +264,47 @@ function selectCity(value){
                         </table>
                       </td>
                     </tr>
+
+                    <tr>
+    <td  height="25" align="right" style="padding-left:5px;">
+    Add Suburb:
+                            </td>
+                           <td height="50%" align="left">
+                            <div id="mainsubcity">
+                             
+                            <select name="suburbId" id = "suburbId" class="suburbId" STYLE="width: auto">
+                            <option value="">Select Parent Suburb (optional)</option>
+                            {foreach from=$suburbSelect key=k item=v}
+                                           <option value="{$v.id}">{$v.label}</option>
+                                       {/foreach}
+                            </select> 
+                            
+                            </div>
+                            </td>
+                            <td height="25" align="left">
+                            <div id="mainsubcity_txtbox">
+                                    <input type="hidden" name="subcity_txtbox_hidden" id="subcity_txtbox_hidden">
+                                    <input type="text" name="subcity_txtbox" id="subcity_txtbox" maxLength="40">
+                                    <a href="#" onclick="addupdatesubcity();"><b>Save</b></a>  
+                                    <a href="#" onclick="showHier();"><b>See Hierarchy</b></a>
+                            </div>
+                            </tr>
+                            <tr>
+                              <div>
+                               <ul id="organisation">
+               
+
+                    </ul>
+               
+                        
+            
+            </div>
+            
+            
+
+        </div>
+                            </tr>
+
                   </table>                
 		    {/if}
                  {else}
@@ -141,3 +321,5 @@ function selectCity(value){
 <TR>
  
 </TR>
+
+

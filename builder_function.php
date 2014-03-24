@@ -1237,6 +1237,7 @@ function ViewSuburbDetails($suburbID) {
         $ResDetails['ACTIVE'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
+        $ResDetails['parent_suburb_id'] = $Res['parent_suburb_id'];
         return $ResDetails;
     } else {
         return 0;
