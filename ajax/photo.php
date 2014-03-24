@@ -18,13 +18,12 @@ $json = array(
     'data' => ''
 );
 
-$data = array();
-
+//$data = array();
+//echo "<pre>";print_r($_REQUEST);die;
 if ( !empty( $_REQUEST['upPh'] ) ) {
     $upPh = $_REQUEST['upPh'];
     $upPh = json_decode( $upPh, TRUE );
     $res = TRUE;
-    if($ab == 'test') echo "print";else echo "test";
     foreach( $upPh as $__cnt => $__newData ) {
         $image_name = $__newData["IMAGE_NAME"];
         $service_image_id = $__newData["SERVICE_IMAGE_ID"];
@@ -61,19 +60,52 @@ else {
         $data['suburb'] = $_REQUEST['suburb'];
     }
     if ( !empty( $_REQUEST['getPh'] ) ) {
-        if ( !empty( $_REQUEST['locality'] ) ) {
-            $data['locality'] = $_REQUEST['locality'];
+        $objectId = '';
+        $objectType = '';
+         $data = array();
+        if(isset($_REQUEST['locality'])) {
+            $objectId = $_REQUEST['locality'];
+            $objectType = 'locality';
         }
-        $data = getPhoto( $data );
+        else if(isset($_REQUEST['suburb'])) {
+            $objectId = $_REQUEST['suburb'];
+            $objectType = 'suburb';
+        }
+        else if(isset($_REQUEST['city'])) {
+            $objectId = $_REQUEST['city'];
+            $objectType = 'city';
+        }
+        $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+        $content = file_get_contents($url);
+        $imgPath = json_decode($content);
+       
+       foreach($imgPath->data as $k=>$v){
+            $data[$k]['IMAGE_ID'] = $v->id;
+            $data[$k]['LOCALITY_ID'] = $v->objectId;
+            $data[$k]['priority'] = $v->priority;
+            $data[$k]['IMAGE_CATEGORY'] = $v->imageType->type;
+            $data[$k]['IMAGE_DISPLAY_NAME'] = $v->title;
+            $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
+            $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
+            $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+        }
+        
+         //echo "<pre>";
+        // print_r($data);die;
+         
     }
     else {
         $data = getListing( $data );
     }
 }
-
+$localityArr = array();
+ $localityType = ImageServiceUpload::$image_types;
+ $localityArr = $localityType['locality'];
+//echo "<pre>";print_r($imageType['locality']);die;
 if ( is_array( $data ) && count( $data ) ) {
     $json['result'] = TRUE;
     $json['data'] = $data;
+    $json['localityType'] = $localityArr;
 }
 
 echo json_encode( $json );

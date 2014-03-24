@@ -157,10 +157,10 @@ function getPhotos() {
     toggleSaveBtn( 'hide' );
     $("#submitBUtton").show();
     $('.image-block').html('');
-    var data = getPhotosFromDB();
-    if ( data != null && data.length > 0 ) {
-        for( var __imgNo = 0; __imgNo < data.length; __imgNo++ ) {
-            showThisPhoto( data[ __imgNo ] );
+    var dataResult = getPhotosFromDB();
+    if ( dataResult['data'] != null && dataResult['data'].length > 0 ) {
+        for( var __imgNo = 0; __imgNo < dataResult['data'].length; __imgNo++ ) {
+            showThisPhoto( dataResult['data'][ __imgNo ],dataResult['localityType'] );
         }
         toggleSaveBtn( 'show' );
     }
@@ -169,35 +169,46 @@ function getPhotos() {
     }
 }
 
-function showThisPhoto( imgData ) {
+function showThisPhoto( imgData,localityType ) {
+
     imgData['IMAGE_DISPLAY_NAME'] = imgData['IMAGE_DISPLAY_NAME'] == null ? "" : imgData['IMAGE_DISPLAY_NAME'];
     imgData['IMAGE_CATEGORY'] = imgData['IMAGE_CATEGORY'] == null ? "" : imgData['IMAGE_CATEGORY'];
     imgData['IMAGE_DESCRIPTION'] = imgData['IMAGE_DESCRIPTION'] == null ? "" : imgData['IMAGE_DESCRIPTION'];
     imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
+    imgData['CITY_ID'] = imgData['CITY_ID'] == null ? "" : imgData['CITY_ID'];
+    imgData['LOCALITY_ID'] = imgData['LOCALITY_ID'] == null ? "" : imgData['LOCALITY_ID'];
+    imgData['SUBURB_ID'] = imgData['SUBURB_ID'] == null ? "" : imgData['SUBURB_ID'];
+    imgData['SERVICE_IMAGE_PATH'] = imgData['SERVICE_IMAGE_PATH'] == null ? "" : imgData['SERVICE_IMAGE_PATH'];
+    
+    
+    if(imgData['CITY_ID'] != ''){
+        imgData['OBJECT_ID'] = imgData['CITY_ID'];
+        imgData['OBJECT_TYPE'] = 'city';
+    }
+    else if(imgData['LOCALITY_ID'] != ''){
+        imgData['OBJECT_ID'] = imgData['LOCALITY_ID'];
+        imgData['OBJECT_TYPE'] = 'locality';
+    }
+    else if(imgData['SUBURB_ID'] != ''){
+        imgData['OBJECT_ID'] = imgData['SUBURB_ID'];
+        imgData['OBJECT_TYPE'] = 'suburb';
+    }
+    imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
     var i=0;
     imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
-                        '<div class="img-wrap" style="float:left;"> <img src="/images_new/locality/thumb_'+imgData['IMAGE_NAME']+'" /> </div>'+
+                        '<div class="img-wrap" style="float:left;"> <img src="'+imgData['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 /> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
                             '<b>Category:</b>&nbsp;&nbsp;<select name="imgCate_'+imgData['IMAGE_ID']+'[]">'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == '' ? 'selected' : '' ) +' value="">Category</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Mall' ? 'selected' : '' ) +' value="Mall">Mall</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Map' ? 'selected' : '' ) +' value="Map">Map</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Road' ? 'selected' : '' ) +' value="Road">Road</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Hospital' ? 'selected' : '' ) +' value="Hospital">Hospital</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'School' ? 'selected' : '' ) +' value="School">School</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Hotel' ? 'selected' : '' ) +' value="Hotel">Hotel</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Bank' ? 'selected' : '' ) +' value="Bank">Bank</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Station' ? 'selected' : '' ) +' value="Station">Station</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Gurdwara' ? 'selected' : '' ) +' value="Gurdwara">Gurdwara</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Mosque' ? 'selected' : '' ) +' value="Mosque">Mosque</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Bus Stand' ? 'selected' : '' ) +' value="Bus Stand">Bus Stand</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Park' ? 'selected' : '' ) +' value="Park">Park</option>'+
-                                 '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Hall' ? 'selected' : '' ) +' value="Hall">Hall</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Office' ? 'selected' : '' ) +' value="Office">Office</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Buildings' ? 'selected' : '' ) +' value="Buildings">Buildings</option>'+
-                                '<option '+ ( imgData['IMAGE_CATEGORY'] == 'Other' ? 'selected' : '' ) +' value="Other">Other</option>'+
-                            '</select><br />'+
+                            '<option '+ ( imgData['IMAGE_CATEGORY'] == '' ? 'selected' : '' ) +' value="">Category</option>';
+      
+        for (var key in localityType) {
+            if (localityType.hasOwnProperty(key)) {
+              template +=  '<option '+ ( imgData['IMAGE_CATEGORY'] == key ? 'selected' : '' ) +' value='+key+'>'+key+'</option>';
+            }
+        }
+                   
+     template +=            '</select><br /><br />'+
                             '<b>Name:</b>&nbsp;&nbsp;<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
                             '<b>Description:</b>&nbsp;&nbsp;<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'"><br>'+
                             '<b>Priority:</b>&nbsp;&nbsp;<select name = "priority_'+imgData['IMAGE_ID']+'[]"><option value = "">Select Priority</option>'+
@@ -216,7 +227,9 @@ function showThisPhoto( imgData ) {
                             '<input type="file" name="img_'+imgData['IMAGE_ID']+'[]"><br>'+
                             '<input type="radio" name="updateDelete_'+imgData['IMAGE_ID']+'[]" value=up> Update'+
                             '<input type="radio" name="updateDelete_'+imgData['IMAGE_ID']+'[]" value=del> Delete'+
-                            '<input type="hidden" name="img_service_id_'+imgData['IMAGE_ID']+'[]" value="'+imgData['SERVICE_IMAGE_ID']+'">'+
+                            '<input type="hidden" name="locality_id" value="'+imgData['LOCALITY_ID']+'">'+
+                            '<input type="hidden" name="suburb_id" value="'+imgData['SUBURB_ID']+'">'+
+                            '<input type="hidden" name="city_id" value="'+imgData['CITY_ID']+'">'+
                         '</div>'+
                         '<div class="clearfix" style="clear:both;"></div>'+
                     '</div>';
@@ -245,7 +258,7 @@ function getPhotosFromDB() {
         success: function( json ) {
             var __json = JSON.parse( json );
             if ( __json['result'] == true ) {
-                res = __json['data'];
+                res = __json;
             }
             else {
                 res = null;

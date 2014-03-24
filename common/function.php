@@ -73,10 +73,10 @@ function getPhoto( $data = array() ) {
     else {
         return NULL;
     }
-    $query = "SELECT IMAGE_ID, $column, IMAGE_NAME, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION,SERVICE_IMAGE_ID
+   $query = "SELECT IMAGE_ID, $column, IMAGE_NAME, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION,SERVICE_IMAGE_ID
         ,priority FROM locality_image WHERE $column = $id";
     $data = dbQuery( $query );
-    return $data;
+   return $data;
 }
 
 function getPhotoById( $id ) {
