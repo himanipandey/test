@@ -188,7 +188,7 @@ function getPlaceTypes()
 	global $logger;
 
 	$qry = <<<QRY
-		SELECT id, name FROM proptiger.NEAR_PLACE_TYPES
+		SELECT id, name FROM cms.landmark_types
 QRY;
 	$rs = mysql_query($qry) or logMysqlError($qry, "C04");
 	
@@ -209,9 +209,9 @@ function getAllLocalityDetails($city_id)
 		$city_id_str = " AND city_id = {$city_id} ";
 
 	$query = <<<QRY
-					SELECT LOCALITY_ID, SUBURB_ID, CITY_ID, LABEL, LATITUDE, LONGITUDE
-						FROM proptiger.LOCALITY WHERE ACTIVE = 1 AND DELETED_FLAG = 1 AND LATITUDE > 3
-							AND LONGITUDE > 3 {$city_id_str}
+					SELECT l.LOCALITY_ID, l.SUBURB_ID, s.CITY_ID, l.LABEL, l.LATITUDE, l.LONGITUDE
+						FROM locality l 
+						inner join suburb s on s.SUBURB_ID=l.SUBURB_ID where s.CITY_ID= {$city_id}
 QRY;
 	
 	$rs = mysql_query($query) or logMysqlError($query, "C01");
@@ -240,10 +240,9 @@ function setNearPlaceData($locality_id, $place_id, $city_id, $info)
 	$info['is_details'] = (int)$info['is_details'];
 		
 	$qry = <<<QRY
-		INSERT INTO proptiger.LOCALITY_NEAR_PLACES (city_id, locality_id, place_type_id,
+		INSERT INTO cms.landmarks (city_id, place_type_id,
 			 name, address, google_place_id, reference, latitude, longitude, phone_number,
-			google_url, website, vicinity, is_details, rest_details) VALUES($city_id, 
-			$locality_id, $place_id, "{$info['name']}", "{$info['formatted_address']}", 
+			google_url, website, vicinity, is_details, rest_details) VALUES($city_id, $place_id, "{$info['name']}", "{$info['formatted_address']}", 
 			"{$info['id']}", "{$info['reference']}", {$info['geometry']['location']['lat']}, 
 			{$info['geometry']['location']['lng']}, "{$info['international_phone_number']}", 
 			"{$info['url']}", "{$info['website']}", "{$info['vicinity']}", 
@@ -263,9 +262,10 @@ function getRemainingLocAndTypeList($city_id)
 	$debug = "";
 
 	$qry = <<<QRY
-		SELECT P.city_id AS locality_id, GROUP_CONCAT(P.id) as type_id FROM 
-			(SELECT city_id, id FROM cms.landmarks JOIN cms.city 
-				$city_id_str $debug) AS P 
+		SELECT P.LOCALITY_ID AS locality_id, GROUP_CONCAT(P.id) as type_id FROM 
+			(SELECT l.LOCALITY_ID, lm.id FROM landmarks lm LEFT JOIN cms.locality l 
+			inner join suburb s on s.SUBURB_ID = l.SUBURB_ID 
+				WHERE s.CITY_ID={$city_id} $debug) AS P 
 		GROUP BY P.locality_id;
 QRY;
 	
@@ -303,7 +303,7 @@ function getCityId($city)
 		return -1;
     $city = str_replace(",", "','", $city);
 	$qry = <<<QRY
-		SELECT LABEL, CITY_ID from proptiger.CITY WHERE label IN ('{$city}')
+		SELECT LABEL, CITY_ID from cms.city WHERE label IN ('{$city}')
 QRY;
 	$rs = mysql_query($qry) or logMysqlError($qry, "C06");
     
