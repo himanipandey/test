@@ -13,7 +13,7 @@ error_reporting(1);
 
 	
 	//$q=$_GET['query'];
-	
+	$city_id = $_GET['cityId'];
 	$q=$_GET['name_startsWith'];
 	$limit = $_GET['maxRows'];
 	$returnArr = array();
@@ -38,7 +38,7 @@ error_reporting(1);
 
 	}
 */	
-	$query = "select id, concat(name, ' ', vicinity) as name from landmarks where name like '%$q%' order by name LIMIT $limit";
+	$query = "select id, concat(name, ' ', vicinity) as name from landmarks where name like '%$q%' and city_id={$city_id} order by name LIMIT $limit";
 	//echo $query;
 	$sql_res=mysql_query($query);
 	while($row=mysql_fetch_array($sql_res))

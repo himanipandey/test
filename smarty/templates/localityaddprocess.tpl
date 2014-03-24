@@ -304,7 +304,8 @@ var options, d, selectedItem;
             featureClass: "P",
             style: "full",
             maxRows: 10,
-            name_startsWith: request.term
+            name_startsWith: request.term,
+            cityId: {$cityid}
           },
           success: function( data ) {
           	
