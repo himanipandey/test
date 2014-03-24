@@ -284,7 +284,8 @@ var options, d, selectedItem;
             featureClass: "P",
             style: "full",
             maxRows: 10,
-            name_startsWith: request.term
+            name_startsWith: request.term,
+            cityId: {$cityId}
           },
           success: function( data ) {
           	
@@ -294,6 +295,7 @@ var options, d, selectedItem;
                 value: item.name,
                 table: item.table,
                 id: item.id,
+
               }
             }));
           }
