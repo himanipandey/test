@@ -31,11 +31,10 @@ class LocalityLivability extends ActiveRecord\Model {
         2000 => 'count(*)',
         3000 => 'count(*)'
     );
-    
     static $min_max_livability = 0.95;
 
     static function repopulateLocalityIds() {
-        $sql = "insert into locality_livability (locality_id) select LOCALITY_ID from locality";
+        $sql = "insert into locality_livability (locality_id) select LOCALITY_ID from locality where STATUS = 'Active'";
         self::delete_all();
         self::connection()->query($sql);
     }
@@ -44,30 +43,24 @@ class LocalityLivability extends ActiveRecord\Model {
         $expression = self::$distance_expression_for_landmark_type[$landmarkTypeId];
         $columnName = self::$column_name_for_landmark_type[$landmarkTypeId];
 
-        $localityMaxSql = "select $expression ranking from " . LandmarkDistance ::table_name() . " where place_type_id = $landmarkTypeId and object_type = 'Locality' group by object_id order by ranking desc limit 1";
+        $localityUpdateSql = "update " . self::table_name() . " ll inner join (select object_id, $expression ranking from " . LandmarkDistance::table_name() . " where place_type_id = $landmarkTypeId and object_type = 'Locality' group by object_id) t on ll.locality_id = t.object_id set ll.$columnName = t.ranking";
+        self::connection()->query($localityUpdateSql);
 
-        $localityMaxVal = self::find_by_sql($localityMaxSql);
-        if (count($localityMaxVal) > 0) {
-            $localityMaxVal = $localityMaxVal[0]->ranking;
-            $localityUpdateSql = "update " . self::table_name() . " ll inner join (select object_id, $expression/$localityMaxVal ranking from " . LandmarkDistance::table_name() . " where place_type_id = $landmarkTypeId and object_type = 'Locality' group by object_id) t on ll.locality_id = t.object_id set ll.$columnName = t.ranking";
-            self::connection()->query($localityUpdateSql);
-        }
+        self::normalizeColumnOnCity($columnName);
     }
 
     static function populateCompletionPercentage() {
-        $sql = "update locality_livability ll inner join (select LOCALITY_ID, (sum(complete)/(sum(complete)+sum(not_complete))) completion_percentage from (select rp.PROJECT_ID, rp.LOCALITY_ID, sum(if(rp.PROJECT_STATUS_ID in (4,5), supply, 0)) complete, sum(if(rp.PROJECT_STATUS_ID in (4,5), 0, supply)) not_complete, sum(supply) from resi_project rp inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Cms' and rp.version = 'Cms' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Cms' inner join (select rpp.PHASE_ID, rpp.PHASE_TYPE from resi_project_phase rpp inner join resi_project_phase rpp1 on rpp.PROJECT_ID = rpp1.PROJECT_ID and rpp1.version = 'Cms' and rpp.version = 'Cms' group by rpp.PHASE_ID having count(distinct rpp1.PHASE_TYPE) = 1 or rpp.PHASE_TYPE = 'Actual') t1 on rpp.PHASE_ID = t1.PHASE_ID group by rp.PROJECT_ID) t group by LOCALITY_ID) t on ll.locality_id = t.locality_id set ll.completion_percentage = t.completion_percentage where t.completion_percentage is not null";
+        $sql = "update locality_livability ll inner join (select LOCALITY_ID, (sum(complete)/(sum(complete)+sum(not_complete))) completion_percentage from (select rp.PROJECT_ID, rp.LOCALITY_ID, sum(if(rp.PROJECT_STATUS_ID in (4,5), supply, 0)) complete, sum(if(rp.PROJECT_STATUS_ID in (4,5), 0, supply)) not_complete, sum(supply) from resi_project rp inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' inner join (select rpp.PHASE_ID, rpp.PHASE_TYPE from resi_project_phase rpp inner join resi_project_phase rpp1 on rpp.PROJECT_ID = rpp1.PROJECT_ID and rpp1.version = 'Website' and rpp.version = 'Website' group by rpp.PHASE_ID having count(distinct rpp1.PHASE_TYPE) = 1 or rpp.PHASE_TYPE = 'Actual') t1 on rpp.PHASE_ID = t1.PHASE_ID group by rp.PROJECT_ID) t group by LOCALITY_ID) t on ll.locality_id = t.locality_id set ll.completion_percentage = t.completion_percentage where t.completion_percentage is not null";
         self::connection()->query($sql);
+        self::normalizeColumnOnCity('completion_percentage');
     }
 
     static function populateOverAllLivability() {
         $sql = "update locality_livability set livability = " . self::$livability_expression;
         self::connection()->query($sql);
         
-        $maxVal = self::getMaxValueForCoulmn('livability');
-        if($maxVal < self::$min_max_livability){
-            $factor = self::$min_max_livability/$maxVal;
-            self::update_all(array('set'=>"livability = livability*$factor"));
-        }
+        $cityNormalizeSql = "update locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, if(max(livability) > " . self::$min_max_livability . ", 1, " . self::$min_max_livability . "/max(livability)) factor from locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set ll.livability = ll.livability*t.factor";
+        self::connection()->query($cityNormalizeSql);
     }
 
     static function getMaxValueForCoulmn($columnName) {
@@ -76,5 +69,10 @@ class LocalityLivability extends ActiveRecord\Model {
             return $max->max;
         }
         return null;
+    }
+
+    static function normalizeColumnOnCity($columnName){
+        $sql = "update locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, max($columnName) max from locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set ll.$columnName = ll.$columnName/t.max";
+        self::connection()->query($sql);
     }
 }
