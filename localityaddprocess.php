@@ -12,6 +12,38 @@
 
     $cityId = $_REQUEST['c'];
     $smarty->assign("cityid", $cityId);
+
+
+
+
+    $suburbSelect = Array();
+    $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id FROM ".SUBURB." WHERE 
+            CITY_ID ='".$cityId ."'  ORDER BY LABEL ASC";
+
+    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
+    while ($dataArr = mysql_fetch_array($QueryExecute))
+    {
+           array_push($suburbSelect, $dataArr);
+    }
+    $smarty->assign("suburbSelect", $suburbSelect);
+
+
+
+    $parent_id = $localityDetailsArray['parent_suburb_id'];
+    foreach ($suburbSelect as $k1 => $v1) {       
+        if ($v1['id']==$parent_id) {
+            $parent_name = $v1['label'];
+        }
+    }
+    $smarty->assign("parent_id", $parent_id);
+    $smarty->assign("parent_name", $parent_name);
+
+
+
+
+
+
+
     if(isset($_POST['btnExit'])){
             header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
     }
@@ -25,6 +57,7 @@
                     $status		=	trim($_POST['status']);
                     $desc		=	trim($_POST['desc']);
                     $oldDesc		=	trim($_POST['oldDesc']);
+                    $parent_subId   = trim($_POST['parentId']);
                     $content_flag		=	trim($_POST['content_flag']);
                     $old_loc_url	=	trim($_POST['old_loc_url']);
                     $visibleInCms	=	trim($_POST['visibleInCms']);
@@ -42,6 +75,7 @@
                     $smarty->assign("txtMetaDescription", $txtMetaDescription);
                     $smarty->assign("status", $status);	
                     $smarty->assign("desc", $desc);
+                    $smarty->assign("parent_sub_id", $parent_subId);
                     $smarty->assign("visibleInCms", $visibleInCms);
                     $smarty->assign("maxLatitude", $maxLatitude);
                     $smarty->assign("minLatitude", $minLatitude);
@@ -101,7 +135,8 @@
                                               LABEL		=	'".$txtCityName."',
                                               STATUS		=	'".$status."',
                                               URL		=	'".$txtCityUrl."',
-                                              DESCRIPTION	=	'".$desc."'
+                                              DESCRIPTION	=	'".$desc."',
+                                              SUBURB_ID = '".$parent_subId."'
                                          WHERE
                                             LOCALITY_ID='".$localityid."'";
 
@@ -169,7 +204,8 @@
             $txtMetaDescription	  =	$getSeoData[0]->meta_description;
             $status		  =	trim($localityDetailsArray['status']);
             $desc		  =	trim($localityDetailsArray['DESCRIPTION']);
-            
+            $parent_sub_id = trim($localityDetailsArray['SUBURB_ID']);
+            //print_r($localityDetailsArray);
             $maxLatitude	  =	trim($localityDetailsArray['MAX_LATITUDE']);
             if($maxLatitude == '')
                 $maxLatitude = 'No Entry';
@@ -193,7 +229,7 @@
             $smarty->assign("minLatitude", $minLatitude);
             $smarty->assign("maxLongitude", $maxLongitude);	
             $smarty->assign("minLongitude", $minLongitude);
-
+            $smarty->assign("parent_sub_id", $parent_sub_id);
 
 
 

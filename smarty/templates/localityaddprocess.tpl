@@ -70,6 +70,31 @@
 				  </td>
 				</tr>
 
+        <tr>
+          <td  height="25" align="right" style="padding-left:5px;">
+             Parent Suburb:
+                            </td>
+                           <td height="50%" align="left">
+                            <div id="mainsubcity">
+                             
+                            <select name="parentId" id = "parentSelect" class="suburbId" STYLE="width: auto" onchange= "return changeParent();">
+                            
+                            {foreach from=$suburbSelect key=k item=v}
+                                           <option value="{$v.id}" {if $v.id==$parent_sub_id} selected = "selected" {/if}>{$v.label}</option>
+                                       {/foreach}
+                            </select> 
+                            
+                            </div>
+                            </td>
+                            <td height="25" align="left">
+                            <div id="mainsubcity_txtbox">
+                                    <input type="hidden" name="parent_id" id="parent_id" value="{$parent_id}">
+                                    
+                                     
+                                    
+                            </div>
+         </tr>
+
 				<tr>
           <td width="20%" align="right">Landmarks Attached: </td>
 
