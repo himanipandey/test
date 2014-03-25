@@ -8,16 +8,16 @@ class LocalityLivability extends ActiveRecord\Model {
     static $table_name = 'locality_livability';
     static $livability_expression = '0.175*school+0.175*hospital+0.050*restaurant+0.035*metro_station+0.035*bus_stand+0.035*suburban_railway_station+0.025*city_railway_station+0.025*airport+0.05*park+0.05*market+0.1*completion_percentage';
     static $column_name_for_landmark_type = array(
-        1 => 'school',
-        2 => 'hospital',
+        1 => 'school', // school
+        2 => 'hospital', // hospital
         5 => 'restaurant',
         7 => 'metro_station',
         8 => 'bus_stand',
         9 => 'suburban_railway_station',
         13 => 'airport',
-        1000 => 'city_railway_station',
-        2000 => 'park',
-        3000 => 'market'
+        16 => 'park',
+        17 => 'market',
+        1000 => 'city_railway_station'
     );
     static $distance_expression_for_landmark_type = array(
         1 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
@@ -27,9 +27,9 @@ class LocalityLivability extends ActiveRecord\Model {
         8 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
         9 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
         13 => 'sum(exp(-(greatest(500, distance)*(0.05)/1000))/priority)',
-        1000 => 'sum(exp(-(greatest(500, distance)*(0.03)/1000))/priority)',
-        2000 => 'count(*)',
-        3000 => 'count(*)'
+        16 => 'count(*)',
+        17 => 'count(*)',
+        1000 => 'sum(exp(-(greatest(500, distance)*(0.03)/1000))/priority)'
     );
     static $min_max_livability = 0.95;
 
@@ -58,7 +58,7 @@ class LocalityLivability extends ActiveRecord\Model {
     static function populateOverAllLivability() {
         $sql = "update locality_livability set livability = " . self::$livability_expression;
         self::connection()->query($sql);
-        
+
         $cityNormalizeSql = "update locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, if(max(livability) > " . self::$min_max_livability . ", 1, " . self::$min_max_livability . "/max(livability)) factor from locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set ll.livability = ll.livability*t.factor";
         self::connection()->query($cityNormalizeSql);
     }
@@ -71,8 +71,9 @@ class LocalityLivability extends ActiveRecord\Model {
         return null;
     }
 
-    static function normalizeColumnOnCity($columnName){
+    static function normalizeColumnOnCity($columnName) {
         $sql = "update locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, max($columnName) max from locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set ll.$columnName = ll.$columnName/t.max";
         self::connection()->query($sql);
     }
+
 }

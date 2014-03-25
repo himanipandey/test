@@ -8,16 +8,16 @@ class ProjectLivability extends ActiveRecord\Model {
 
     static $table_name = 'project_livability';
     static $column_name_for_landmark_type = array(
-        1 => 'school',
-        2 => 'hospital',
+        1 => 'school', // school
+        2 => 'hospital', // hospital
         5 => 'restaurant',
         7 => 'metro_station',
         8 => 'bus_stand',
         9 => 'suburban_railway_station',
         13 => 'airport',
-        1000 => 'city_railway_station',
-        2000 => 'park',
-        3000 => 'market'
+        16 => 'park',
+        17 => 'market',
+        1000 => 'city_railway_station'
     );
     static $distance_expression_for_landmark_type = array(
         1 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
@@ -27,9 +27,9 @@ class ProjectLivability extends ActiveRecord\Model {
         8 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
         9 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
         13 => 'sum(exp(-(greatest(500, distance)*(0.05)/1000))/priority)',
-        1000 => 'sum(exp(-(greatest(500, distance)*(0.03)/1000))/priority)',
-        2000 => 'count(*)',
-        3000 => 'count(*)'
+        16 => 'count(*)',
+        17 => 'count(*)',
+        1000 => 'sum(exp(-(greatest(500, distance)*(0.03)/1000))/priority)'
     );
     static $custom_project_livability_expression = array(
         'builder' => 'CASE rb.DISPLAY_ORDER WHEN 1 THEN 1 WHEN 2 THEN 1 WHEN 3 THEN 0.8 WHEN 4 THEN 0.8 WHEN 5 THEN 0.6 WHEN 6 THEN 0.6 WHEN 7 THEN 0.5 WHEN 8 THEN 0.5 WHEN 9 THEN 0.4 WHEN 10 THEN 0.4 WHEN 11 THEN 0.3 WHEN 12 THEN 0.3 WHEN 13 THEN 0.3 ELSE 0.1 END',

@@ -15,23 +15,21 @@ class LandmarkDistance extends ActiveRecord\Model {
         5, // restaurant
         7, // metro_station
         8, // bus_station
-        9, // train_station
-        2000, // parks
-        3000    // markets
+        9, // suburban_railway_station
+        16, // parks
+        17    // markets
     );
     static $city_independent_landmark_types = array(
         13, // airport
         1000    //city_railway_station
     );
     static $max_landmark_distance = array(
-        1 => 10000,
-        2 => 5000
+        16 => 10000,
+        17 => 5000
     );
     static $max_landmark_count = array(
-        1 => 100,
-        2 => 50,
-        13 => 1,
-        1000 => 2
+        1000 => 1,
+        13 => 1
     );
 
     static function insertProjectDistance() {
@@ -65,7 +63,7 @@ class LandmarkDistance extends ActiveRecord\Model {
     static function deleteEntriesBasedOnCount() {
 
         foreach (self::$max_landmark_count as $landmarkType => $count) {
-            $aRow = self::find('all', array('conditions' => array('place_type_id' => $landmarkType), 'group' => 'object_id, object_type', 'select' => 'object_id, object_type', 'having'=>"count(*)>$count"));
+            $aRow = self::find('all', array('conditions' => array('place_type_id' => $landmarkType), 'group' => 'object_id, object_type', 'select' => 'object_id, object_type', 'having' => "count(*)>$count"));
             foreach ($aRow as $row) {
                 $sql = "delete ld.* from landmark_distances ld inner join (select id, distance from landmark_distances where object_id = $row->object_id and object_type = '$row->object_type' and place_type_id = $landmarkType order by distance limit 100000 OFFSET $count) t on ld.id = t.id;";
                 self::connection()->query($sql);
