@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__.'/../../log4php/Logger.php';
-
-define("KEY", "AIzaSyAjGqIATvbau2Rg4Ujr1OKImkk88Lt4_bw");
+//AIzaSyB1PVKAvCD6-i8yG8IT01ocud8RMkAJmIA
+//my key: AIzaSyAjGqIATvbau2Rg4Ujr1OKImkk88Lt4_bw
+define("KEY", "AIzaSyB1PVKAvCD6-i8yG8IT01ocud8RMkAJmIA");
 define("URL", "https://maps.googleapis.com/maps/api/place/");
 define("NEARBYSEARCH_MAX_RESULTS", 60);
 define("RADARSEARCH_MAX_RESULTS", 200);

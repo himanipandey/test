@@ -71,7 +71,7 @@ function getNearPlacesList($city_id)
 			continue;
 		}
 
-		$city_id = $locality_info[$locality_id]['CITY_ID'];
+		//$city_id = $locality_info[$locality_id]['CITY_ID'];
 		foreach($loc_info as $place_id)
 		{
 			$logger->info("LOCATION ID : {$locality_id}, PLACE ID : {$place_id}, CITY ID : {$city_id}");
@@ -238,7 +238,19 @@ function setNearPlaceData($locality_id, $place_id, $city_id, $info)
 	$unused_data = getUnusedData($info);
 	$unused_data = json_encode($unused_data);	
 	$info['is_details'] = (int)$info['is_details'];
-		
+
+	$check_qry = <<<QRY
+			SELECT count(*) FROM cms.landmarks where google_place_id="{$info['id']}"
+QRY;
+	
+	$check_rs = mysql_query($qry) or logMysqlError($check_qry, "C05_0");	
+
+	if($check_rs>0){
+		logMysqlError("double entry avoided", "C05_0");
+		return 0;
+	} 
+
+	else{
 	$qry = <<<QRY
 		INSERT INTO cms.landmarks (city_id, place_type_id,
 			 name, address, google_place_id, reference, latitude, longitude, phone_number,
@@ -248,9 +260,10 @@ function setNearPlaceData($locality_id, $place_id, $city_id, $info)
 			"{$info['url']}", "{$info['website']}", "{$info['vicinity']}", 
 			{$info['is_details']}, '{$unused_data}')
 QRY;
-	$rs = mysql_query($qry) or logMysqlError($qry, "C05");
+	$rs = mysql_query($qry) or logMysqlError($qry, "C05_1");
 	
 	return $rs;
+	}
 }
 
 function getRemainingLocAndTypeList($city_id)
@@ -263,10 +276,10 @@ function getRemainingLocAndTypeList($city_id)
 
 	$qry = <<<QRY
 		SELECT P.LOCALITY_ID AS locality_id, GROUP_CONCAT(P.id) as type_id FROM 
-			(SELECT l.LOCALITY_ID, lm.id FROM landmarks lm LEFT JOIN cms.locality l 
-			inner join suburb s on s.SUBURB_ID = l.SUBURB_ID 
-				WHERE s.CITY_ID={$city_id} $debug) AS P 
-		GROUP BY P.locality_id;
+			(select l.LOCALITY_ID,  lmt.id, s.CITY_ID FROM landmark_types lmt JOIN locality l INNER 
+				JOIN suburb s on (s.SUBURB_ID = l.SUBURB_ID AND s.CITY_ID={$city_id})) AS P 
+				LEFT JOIN landmarks lm on (lm.city_id=P.CITY_ID and lm.place_type_id=P.id)
+			WHERE lm.place_type_id is null	GROUP BY P.LOCALITY_ID;
 QRY;
 	
 	$rs = mysql_query($qry) or ( logMysqlError($qry, "C03") and exit() );
@@ -321,13 +334,13 @@ function deleteNearPlacesData($city_id)
 	if( $city_id <=0  )
 	{
 		$qry = <<<QRY
-			TRUNCATE proptiger.LOCALITY_NEAR_PLACES;
+			TRUNCATE cms.landmarks;
 QRY;
 	}
 	else
 	{
 		$qry = <<<QRY
-			DELETE FROM proptiger.LOCALITY_NEAR_PLACES WHERE CITY_ID = {$city_id}
+			DELETE FROM cms.landmarks WHERE city_id = {$city_id}
 QRY;
 	}
 	
