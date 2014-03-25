@@ -2072,7 +2072,7 @@ function fetch_builderDetail($builderId) {
     return $databuild;
 }
 function ViewLocalityDetails($localityID) {
-    $Sql = "SELECT l.locality_id,l.status,l.description,l.url,l.label,s.city_id,
+    $Sql = "SELECT l.locality_id, l.suburb_id, l.status,l.description,l.url,l.label,s.city_id,
             l.max_latitude,l.min_latitude,l.max_longitude,l.min_longitude
             FROM " . LOCALITY . " l inner join suburb s on l.suburb_id = s.suburb_id 
                 WHERE LOCALITY_ID ='" . $localityID . "'";
@@ -2082,6 +2082,7 @@ function ViewLocalityDetails($localityID) {
         $Res = mysql_fetch_assoc($ExecSql);
         $ResDetails['LOCALITY_ID'] = $Res['locality_id'];
         $ResDetails['CITY_ID'] = $Res['city_id'];
+        $ResDetails['SUBURB_ID'] = $Res['suburb_id'];
         $ResDetails['LABEL'] = $Res['label'];
         $ResDetails['status'] = $Res['status'];
         $ResDetails['URL'] = $Res['url'];
