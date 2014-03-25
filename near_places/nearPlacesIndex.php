@@ -240,13 +240,13 @@ function setNearPlaceData($locality_id, $place_id, $city_id, $info)
 	$info['is_details'] = (int)$info['is_details'];
 
 	$check_qry = <<<QRY
-			SELECT count(*) FROM cms.landmarks where google_place_id="{$info['id']}"
+			SELECT * FROM cms.landmarks where google_place_id="{$info['id']} LIMIT 1"
 QRY;
 	
-	$check_rs = mysql_query($qry) or logMysqlError($check_qry, "C05_0");	
+	$check_rs = mysql_query($check_qry) or logMysqlError($check_qry, "C05_0");	
 
-	if($check_rs>0){
-		logMysqlError("double entry avoided", "C05_0");
+	if(mysql_fetch_array($check_rs) !== false){
+		logMysqlError("double entry avoided: {$info['name']} id:{$info['id']} ", "C05_0");
 		return 0;
 	} 
 
