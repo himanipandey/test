@@ -24,8 +24,8 @@ class LandmarkDistance extends ActiveRecord\Model {
         1000    //city_railway_station
     );
     static $max_landmark_distance = array(
-        16 => 10000,
-        17 => 5000
+        16 => 1000,
+        17 => 2000
     );
     static $max_landmark_count = array(
         1000 => 1,

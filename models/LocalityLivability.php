@@ -27,8 +27,8 @@ class LocalityLivability extends ActiveRecord\Model {
         8 => 'sum(exp(-(greatest(200, distance)*(0.1)/1000))/priority)',
         9 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
         13 => 'sum(exp(-(greatest(2000, distance)*(0.05)/1000))/priority)',
-        16 => 'count(*)',
-        17 => 'count(*)',
+        16 => 'sum(exp(-(greatest(100, distance)/1000))/priority)',
+        17 => 'sum(exp(-(greatest(200, distance)*(0.5)/1000))/priority)',
         1000 => 'sum(exp(-(greatest(500, distance)*(0.03)/1000))/priority)'
     );
     static $min_max_livability = 0.95;
@@ -50,7 +50,7 @@ class LocalityLivability extends ActiveRecord\Model {
     }
 
     static function populateCompletionPercentage() {
-        $sql = "update locality_livability ll inner join (select LOCALITY_ID, (sum(complete)/(sum(complete)+sum(not_complete))) completion_percentage from (select rp.PROJECT_ID, rp.LOCALITY_ID, sum(if(rp.PROJECT_STATUS_ID in (4,5), supply, 0)) complete, sum(if(rp.PROJECT_STATUS_ID in (4,5), 0, supply)) not_complete, sum(supply) from resi_project rp inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' inner join (select rpp.PHASE_ID, rpp.PHASE_TYPE from resi_project_phase rpp inner join resi_project_phase rpp1 on rpp.PROJECT_ID = rpp1.PROJECT_ID and rpp1.version = 'Website' and rpp.version = 'Website' group by rpp.PHASE_ID having count(distinct rpp1.PHASE_TYPE) = 1 or rpp.PHASE_TYPE = 'Actual') t1 on rpp.PHASE_ID = t1.PHASE_ID group by rp.PROJECT_ID) t group by LOCALITY_ID) t on ll.locality_id = t.locality_id set ll.completion_percentage = t.completion_percentage where t.completion_percentage is not null";
+        $sql = "update locality_livability ll inner join (select LOCALITY_ID, (sum(complete)/(sum(complete)+sum(not_complete))) completion_percentage from (select rp.PROJECT_ID, rp.LOCALITY_ID, sum(if(rp.PROJECT_STATUS_ID in (4,3), supply, 0)) complete, sum(if(rp.PROJECT_STATUS_ID in (4,3), 0, supply)) not_complete, sum(supply) from resi_project rp inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' inner join (select rpp.PHASE_ID, rpp.PHASE_TYPE from resi_project_phase rpp inner join resi_project_phase rpp1 on rpp.PROJECT_ID = rpp1.PROJECT_ID and rpp1.version = 'Website' and rpp.version = 'Website' group by rpp.PHASE_ID having count(distinct rpp1.PHASE_TYPE) = 1 or rpp.PHASE_TYPE = 'Actual') t1 on rpp.PHASE_ID = t1.PHASE_ID group by rp.PROJECT_ID) t group by LOCALITY_ID) t on ll.locality_id = t.locality_id set ll.completion_percentage = t.completion_percentage where t.completion_percentage is not null";
         self::connection()->query($sql);
         self::normalizeColumnOnCity('completion_percentage');
     }
@@ -75,5 +75,4 @@ class LocalityLivability extends ActiveRecord\Model {
         $sql = "update locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, max($columnName) max from locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set ll.$columnName = ll.$columnName/t.max";
         self::connection()->query($sql);
     }
-
 }
