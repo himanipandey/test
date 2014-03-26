@@ -22,11 +22,11 @@ class LocalityLivability extends ActiveRecord\Model {
     static $distance_expression_for_landmark_type = array(
         1 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
         2 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
-        5 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
-        7 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
-        8 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
+        5 => 'sum(exp(-(greatest(200, distance)*(0.1)/1000))/priority)',
+        7 => 'sum(exp(-(greatest(200, distance)*(0.1)/1000))/priority)',
+        8 => 'sum(exp(-(greatest(200, distance)*(0.1)/1000))/priority)',
         9 => 'sum(exp(-(greatest(500, distance)*(0.1)/1000))/priority)',
-        13 => 'sum(exp(-(greatest(500, distance)*(0.05)/1000))/priority)',
+        13 => 'sum(exp(-(greatest(2000, distance)*(0.05)/1000))/priority)',
         16 => 'count(*)',
         17 => 'count(*)',
         1000 => 'sum(exp(-(greatest(500, distance)*(0.03)/1000))/priority)'
