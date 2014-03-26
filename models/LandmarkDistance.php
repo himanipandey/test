@@ -25,7 +25,8 @@ class LandmarkDistance extends ActiveRecord\Model {
     );
     static $max_landmark_distance = array(
         16 => 1000,
-        17 => 2000
+        17 => 2000,
+        13 => 50000
     );
     static $max_landmark_count = array(
         1000 => 1,
