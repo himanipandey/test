@@ -35,7 +35,7 @@
 		if($offer_type == 'NoPreEmi'){
 			$offer_type = 'NoPreEmi';
 			if($_POST['no_emi_period'] == 'months')
-				$offer_period = $_POST['no_emi_Months'];
+				$offer_period = $_POST['no_emi_Months']."months";
 			elseif($_POST['no_emi_period'] == 'pos')
 				$offer_period = 'possession';
 			
@@ -51,7 +51,7 @@
 			$count=1;
 			while($count<=$_REQUEST['plp_noi']){
 			  if($_POST['plp_period_'.$count] == 'months')
-				$offer_period[$count] = $_POST['plp_Months_'.$count];
+				$offer_period[$count] = $_POST['plp_Months_'.$count]."months";
 			  else
 				$offer_period[$count] = 'possession';
 				
@@ -174,7 +174,10 @@
 		while($count<count($project_offers_details)){
 			$discount[$count] = $project_offers_details[$count]->discount_on; 
 			$other_text = ($project_offers_details[$count]->other_text)?$project_offers_details[$count]->other_text:"";
-			$plp_arr['offer_period'][$count+1]= $project_offers_details[$count]->offer_period;
+			
+			$offer_period = explode("months",$project_offers_details[0]->offer_period);
+			
+			$plp_arr['offer_period'][$count+1]= $offer_period[0];
 			$plp_arr['offer_price_type'][$count+1]= $project_offers_details[$count]->offer_price_type;
 			$plp_arr['offer_price'][$count+1]= $project_offers_details[$count]->offer_price;
 			//offer price unit
@@ -217,10 +220,13 @@
 			}		
 		}
 		
+		$offer_period = explode("months",$project_offers_details[0]->offer_period);
+		
+		
 		$smarty->assign("plp_arr",$plp_arr);
 		$smarty->assign("noi",count($project_offers_details));
 		$smarty->assign("discount_on", $discount);
-		$smarty->assign("offer_period", $project_offers_details[0]->offer_period);
+		$smarty->assign("offer_period", $offer_period[0]);
 		$smarty->assign("offer_price_type", $project_offers_details[0]->offer_price_type);
 		$smarty->assign("other_text", $other_text);
 		$smarty->assign("discount_date", substr($project_offers_details[0]->discount_date,0,11));		
