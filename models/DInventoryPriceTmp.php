@@ -120,4 +120,9 @@ class DInventoryPriceTmp extends Model
         $sql = "update " . self::table_name() . " dip inner join (select PHASE_ID, UNIT_TYPE, DATE_FORMAT(EFFECTIVE_DATE, '%Y-%m-01') DATE, avg((MIN_PRICE+MAX_PRICE)/2) AVG_PRICE from project_secondary_price group by PROJECT_ID, PHASE_ID, UNIT_TYPE, DATE_FORMAT(EFFECTIVE_DATE, '%Y-%m-01')) t on dip.phase_id = t.phase_id and dip.unit_type = t.UNIT_TYPE and dip.effective_month = t.DATE set dip.average_secondary_price_per_unit_area = t.AVG_PRICE";
         self::connection()->query($sql);
     }
+    
+    public static function setLaunchDateMonthSales(){
+        $sql = "update d_inventory_prices_tmp dipt inner join resi_project rp on dipt.project_id = rp.project_id and rp.version = 'Website' inner join resi_project_phase rpp on dipt.phase_id = rpp.phase_id and rpp.version = 'Website' set dipt.units_sold = dipt.ltd_launched_unit - dipt.inventory where (date_format(rp.pre_launch_date, '%Y-%m-01') = dipt.effective_month or (rp.pre_launch_date = 0 and date_format(rpp.launch_date, '%Y-%m-01') = dipt.effective_month) or (rp.pre_launch_date = 0 and rpp.launch_date = 0 and date_format(rp.launch_date, '%Y-%m-01') = dipt.effective_month)) and dipt.inventory is not null";
+        self::$connection()->query($sql);  
+    }
 }
