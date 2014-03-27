@@ -72,7 +72,7 @@ function broker_call_edit(project_id)
 									{/if}
 								  {/foreach}
 								</select>								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<input class="pt_click" type="button" title="Archieved Offers" value="Archieved Offers" onclick="return broker_call_edit({$projectId});" />
+								<input class="pt_click" type="button" title="Offers Archive" value="Offers Archive" onclick="return broker_call_edit({$projectId});" />
 							</td>
 						</tr>
 						<tr>
@@ -186,7 +186,7 @@ function broker_call_edit(project_id)
 							    <tr>
 							      <td>
 									  <b>PriceDiscount Date:  </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									  <input onchange="populate_offer_desc()" value="{$discount_date}" name="pd_date" value="{$pd_date}" type="text" class="formstyle2" id="pd_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="pd_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+									  <input onchange="populate_offer_desc()" value="{$discount_date}" name="pd_date" type="text" class="formstyle2" id="pd_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="pd_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
 							      </td>
 							    </tr>
 						      </table>
@@ -508,7 +508,7 @@ function broker_call_edit(project_id)
 			 popped = str.pop();
 			 popped = " and " + popped;
 			}
-		  	offer_desc = "Book Now & pay zero charges for " + str.join(",") + popped;
+		  	offer_desc = "Book Now & pay zero charges for " + str.join(", ") + popped;
 			$('#offerDesc').val(offer_desc);  
 		}else if(offer_type == 'PriceDiscount'){   //----PriceDiscount Descirption Population
 			amount='';discount_on='';date='';	
