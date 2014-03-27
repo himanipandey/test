@@ -14,7 +14,7 @@ function broker_call_edit(project_id)
    //      'href' :  url
    //  });
      $.fancybox({
-        'width'                :720,
+        'width'                :820,
         'height'               :200,
       
         'href'                 : url,

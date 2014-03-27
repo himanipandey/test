@@ -17,6 +17,8 @@ $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'
 								<TH class=whiteTxt width=1% align="center">SL</TH>
 								 <TH class=whiteTxt width=5% align="center">Offer Type</TH>                          
 								<TH class=whiteTxt width=23% align="left">Offer Desc</TH>
+								<TH class=whiteTxt width=5% align="left">Start Date</TH>
+								<TH class=whiteTxt width=5% align="left">End Date</TH>
 								<TH class=whiteTxt width=5% align="center">Status</TH>
 						  </TR>
 						  <?php if($offerDetails){
@@ -32,6 +34,8 @@ $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'
 									<TD>'.$count.'</TD>
 									<TD>'.$data->offer.'</TD>
 									<TD>'.$data->offer_desc.'</TD>
+									<TD>'.substr($data->created_at,0,11).'</TD>
+									<TD>'.(($data->status=='Inactive')?substr($data->created_at,0,11): '-').'</TD>
 									<TD>'.$data->status.'</TD>
 								</TR>';
 							}
