@@ -548,7 +548,7 @@ function broker_call_edit(project_id)
                 Calendar.setup({
                     inputField: v, // id of the input field
                     //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
-                    ifFormat: "%Y-%m-%d", // format of the input field
+                    ifFormat: "%d-%m-%Y", // format of the input field
                     button: k, // trigger for the calendar (button ID)
                     align: "Tl", // alignment (defaults to "Bl")
                     singleClick: true,

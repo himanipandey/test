@@ -98,12 +98,9 @@
 		}
 		else
 			$project_offers = new ProjectOffers();
-			
-		//print "->".$offer_desc = ;	
-		//$offer_desc = preg_replace('/[^\00-\255]+/u', '', $offer_desc); //special chars handeling
-						
-		//print "->".$offer_desc ; die;
-		
+
+		$offer_desc = preg_replace('/[^a-zA-Z0-9 ^{}<>?,:;|\'"!+=@#$%&*_%\[().\]\\/-]/s', '', $offer_desc); //special chars handeling
+				
 		$project_offers->project_id = $projectId;
 		$project_offers->offer = $offer_type;
 		$project_offers->offer_desc = ($offer_desc)?$offer_desc:null;
