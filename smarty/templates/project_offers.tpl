@@ -133,10 +133,10 @@ function broker_call_edit(project_id)
 						      <table>
 							    <tr>
 								  <td>
-									  <input type="checkbox" {if in_array("PLC",$discount_on)}checked{/if} name="nac_discount_on[]"  id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
-									  <input type="checkbox"  {if in_array("Parking",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
-									  <input type="checkbox"  {if in_array("ClubMembership",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_clubMembership" value="ClubMembership" onclick="populate_offer_desc()"/>Club Membership <br/>
-									  <input type="checkbox"  {if in_array("GymMembership",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_gymMembership" value="GymMembership" onclick="populate_offer_desc()" />Gym Membership <br/>
+									  <input type="checkbox" {if in_array("PLC",$discount_on)}checked{/if} name="nac_discount_on[]"  title="PLC" id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
+									  <input type="checkbox"  {if in_array("Parking",$discount_on)}checked{/if}  title="Parking" name="nac_discount_on[]" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
+									  <input type="checkbox"  {if in_array("ClubMembership",$discount_on)}checked{/if} title="Club Membership" name="nac_discount_on[]" id="nac_clubMembership" value="ClubMembership" onclick="populate_offer_desc()"/>Club Membership <br/>
+									  <input type="checkbox"  {if in_array("GymMembership",$discount_on)}checked{/if}  title="Gym Membership" name="nac_discount_on[]" id="nac_gymMembership" value="GymMembership" onclick="populate_offer_desc()" />Gym Membership <br/>
 									  <input type="checkbox"  {if in_array("Other",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_other" value="Other" onclick="populate_offer_desc()"/>Other <br/>
 									  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										<input type="text" name="nac_other_txt" id="nac_other_txt" style="width:300px;{if $other_text} display:block{else}display:none{/if}" onkeyup="populate_offer_desc()" value="{$other_text}" />
@@ -498,9 +498,9 @@ function broker_call_edit(project_id)
 		  	if($('#nac_parking').attr('checked'))
 		  	  str[cnt++] = $('#nac_parking').val();
 		  	if($('#nac_clubMembership').attr('checked'))
-		  	  str[cnt++] = $('#nac_clubMembership').val();
+		  	  str[cnt++] = $('#nac_clubMembership').attr('title');
 		  	if($('#nac_gymMembership').attr('checked'))
-		  	  str[cnt++] = $('#nac_gymMembership').val();
+		  	  str[cnt++] = $('#nac_gymMembership').attr('title');
 		  	if($('#nac_other').attr('checked'))
 		  	  str[cnt++] = $('#nac_other_txt').val();
 		  
