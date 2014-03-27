@@ -1,6 +1,7 @@
 <?php
+
 ini_set('display_errors', '1');
-ini_set('memory_limit', '2G');
+ini_set('memory_limit', '5G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -22,11 +23,11 @@ define('CSV_FIELD_DELIMITER', '~#~');
 define('CSV_LINE_DELIMITER', "\r\n");
 
 $bulkInsert = FALSE;
-if(isset($argv[1]) && $argv[1] == 'bulkInsert'){
+if (isset($argv[1]) && $argv[1] == 'bulkInsert') {
     $bulkInsert = TRUE;
 }
 
-Logger::configure( dirname(__FILE__) . '/../log4php.xml');
+Logger::configure(dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 $handle = fopen("/tmp/" . DInventoryPriceTmp::table_name() . ".csv", "w+");
 
@@ -45,26 +46,26 @@ $aAllIndexedProjects = indexArrayOnKey($aAllProjects, 'project_id');
 $logger->info("Project And Phase Details Retrieved");
 
 $i = 0;
-while($i< count($aAllProjects)){
+while ($i < count($aAllProjects)) {
     $aPid = array();
-    for($j=1; $j<=1000 && $i< count($aAllProjects); $j++){
+    for ($j = 1; $j <= 1000 && $i < count($aAllProjects); $j++) {
         $aPid[] = $aAllProjects[$i]->project_id;
-        $i=$i+1;
+        $i = $i + 1;
     }
-    
+
     $aAllInventory = ProjectAvailability::getInventoryForIndexing($aPid);
     $aAllPrice = ListingPrices::getPriceForIndexing($aPid);
     $logger->info("Price and inventory data retrieved");
-    
+
     removeInvalidPhaseData($aAllInventory);
     removeInvalidPhaseData($aAllPrice);
-    
+
     fillIntermediateMonths($aAllInventory);
     fillIntermediateMonths($aAllPrice);
-    
+
     $aAllInventory = indexArrayOnKey($aAllInventory, 'unique_key');
     $aAllPrice = indexArrayOnKey($aAllPrice, 'unique_key');
-    
+
     createDocuments($aAllInventory, $aAllPrice);
     $logger->info("Indexing complete for $i projects");
 }
@@ -72,7 +73,7 @@ while($i< count($aAllProjects)){
 indexProjectsWithLowerLaunchDate();
 indexProjectsWithHigherCompletionDate();
 
-if($bulkInsert){
+if ($bulkInsert) {
     importTableFromTmpCsv(DInventoryPriceTmp::table_name());
     fclose($handle);
 }
@@ -83,74 +84,73 @@ DInventoryPriceTmp::deleteInvalidPriceEntries();
 DInventoryPriceTmp::updateFirstPromoisedCompletionDate();
 DInventoryPriceTmp::updateSecondaryPriceForAllProjects();
 
-if(runTests()){
+if (runTests()) {
     DInventoryPriceTmp::connection()->query("rename table d_inventory_prices to d_inventory_prices_old, d_inventory_prices_tmp to d_inventory_prices, d_inventory_prices_old to d_inventory_prices_tmp;");
     $logger->info("Migration successful.");
-}else{
+} else {
     $logger->error("Test Cases Failed.");
 }
 
-function createDocuments($aAllInventory, $aAllPrice){
+function createDocuments($aAllInventory, $aAllPrice) {
     global $logger;
     global $handle;
     global $bulkInsert;
 
     $aKey = array_unique(array_merge(array_keys($aAllInventory), array_keys($aAllPrice)));
-    
+
     $i = 0;
     $prevKey = '';
     foreach ($aKey as $key) {
         $i++;
-        
+
         $entry = array();
         $entry['unique_key'] = $key;
-        
-        $arrayToPick = isset($aAllInventory[$key])? $aAllInventory[$key] : $aAllPrice[$key];
-        
+
+        $arrayToPick = isset($aAllInventory[$key]) ? $aAllInventory[$key] : $aAllPrice[$key];
+
         $entry['project_id'] = $arrayToPick->project_id;
         $entry['phase_id'] = $arrayToPick->phase_id;
         $entry['phase_name'] = $arrayToPick->phase_name;
-        $entry['phase_type'] =  $arrayToPick->phase_type;
+        $entry['phase_type'] = $arrayToPick->phase_type;
         $entry['effective_month'] = $arrayToPick->effective_month;
         $entry['unit_type'] = $arrayToPick->unit_type;
         $entry['bedrooms'] = intval($arrayToPick->bedrooms);
         $entry['average_size'] = $arrayToPick->average_size;
-        $entry['completion_date']= $arrayToPick->completion_date;
+        $entry['completion_date'] = $arrayToPick->completion_date;
         $entry['launch_date'] = $arrayToPick->launch_date;
-        
-        if(isset($aAllPrice[$key])){
+
+        if (isset($aAllPrice[$key])) {
             $entry['average_price_per_unit_area'] = $aAllPrice[$key]->average_price_per_unit_area;
             $entry['average_total_price'] = $aAllPrice[$key]->average_total_price;
         }
-        
-        if(isset($aAllInventory[$key])){
+
+        if (isset($aAllInventory[$key])) {
             $entry['supply'] = $aAllInventory[$key]->supply;
             $entry['ltd_supply'] = $aAllInventory[$key]->ltd_supply;
             $entry['launched_unit'] = $aAllInventory[$key]->launched;
             $entry['inventory'] = $aAllInventory[$key]->inventory;
-            if(isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month){
+            if (isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month) {
                 $entry['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
-            }
-            else{
+            } else {
                 $entry['units_sold'] = 0;
             }
         }
         setProjectLevelValues($entry);
         $prevKey = $key;
- 
+
         $new = new DInventoryPriceTmp($entry);
         saveToFileOrDb($new, $bulkInsert, $handle);
     }
     $logger->info($i . " documents inserted in mysql");
 }
 
-function removeInvalidPhaseData(&$aData){
+function removeInvalidPhaseData(&$aData) {
     global $logger;
     global $aProjectPhaseCount;
 
     $result = array();
     foreach ($aData as $value) {
-        if($value->phase_type == 'Actual' || $aProjectPhaseCount[$value->project_id] == 1){
+        if ($value->phase_type == 'Actual' || $aProjectPhaseCount[$value->project_id] == 1) {
             $result[] = $value;
         }
     }
@@ -158,24 +158,24 @@ function removeInvalidPhaseData(&$aData){
     $aData = $result;
 }
 
-function fillIntermediateMonths(&$aData){
+function fillIntermediateMonths(&$aData) {
     global $logger;
     $aNewData = array();
     $count = count($aData);
-    for($i=0; $i<$count; $i++){
+    for ($i = 0; $i < $count; $i++) {
         $currData = $aData[$i];
         array_push($aNewData, clone $currData);
-        
+
         $fillTill = MAX_B2B_DATE;
-        if(isset($aData[$i+1]) && $currData->key_without_month === $aData[$i+1]->key_without_month){
-            $fillTill = getMonthShiftedDate($aData[$i+1]->effective_month, -1);
+        if (isset($aData[$i + 1]) && $currData->key_without_month === $aData[$i + 1]->key_without_month) {
+            $fillTill = getMonthShiftedDate($aData[$i + 1]->effective_month, -1);
         }
-        
-        while(substr($currData->effective_month, 0, 10)<$fillTill){
+
+        while (substr($currData->effective_month, 0, 10) < $fillTill) {
             $nextMonth = getMonthShiftedDate($currData->effective_month, 1);
             $currData->unique_key = str_replace(substr($currData->effective_month, 0, 10), $nextMonth, $currData->unique_key);
             $currData->effective_month = $nextMonth;
-            if(isset($currData->supply)){
+            if (isset($currData->supply)) {
                 $currData->supply = ($currData->effective_month === $currData->launch_date) ? $currData->ltd_supply : null;
                 $currData->launched = ($currData->effective_month === $currData->launch_date) ? $currData->ltd_launched : null;
             }
@@ -186,7 +186,7 @@ function fillIntermediateMonths(&$aData){
     $aData = $aNewData;
 }
 
-function indexProjectsWithLowerLaunchDate(){
+function indexProjectsWithLowerLaunchDate() {
     global $logger;
     global $handle;
     global $bulkInsert;
@@ -198,14 +198,14 @@ function indexProjectsWithLowerLaunchDate(){
     $i = 0;
     foreach ($aData as $data) {
         $entry = $data->to_array();
-        if($entry['launch_date'] != INVALID_DATE){
+        if ($entry['launch_date'] != INVALID_DATE) {
             $entry['created_at'] = 'NOW()';
             $entry['launch_date'] = substr($entry['launch_date'], 0, 10);
-            $entry['unique_key'] = $entry['project_id']."/".$entry['phase_id']."/".$entry['unit_type']."/".$entry['bedrooms']."/".$entry['launch_date'];
+            $entry['unique_key'] = $entry['project_id'] . "/" . $entry['phase_id'] . "/" . $entry['unit_type'] . "/" . $entry['bedrooms'] . "/" . $entry['launch_date'];
             $entry['effective_month'] = $entry['launch_date'];
-            
+
             setProjectLevelValues($entry);
-            
+
             $new = new DInventoryPriceTmp($entry);
             saveToFileOrDb($new, $bulkInsert, $handle);
             $i++;
@@ -214,7 +214,7 @@ function indexProjectsWithLowerLaunchDate(){
     $logger->info("Inserted $i missing launch date entries");
 }
 
-function indexProjectsWithHigherCompletionDate(){
+function indexProjectsWithHigherCompletionDate() {
     global $logger;
     global $handle;
     global $bulkInsert;
@@ -226,14 +226,14 @@ function indexProjectsWithHigherCompletionDate(){
     $i = 0;
     foreach ($aData as $data) {
         $entry = $data->to_array();
-        if($entry['completion_date'] != INVALID_DATE){
+        if ($entry['completion_date'] != INVALID_DATE) {
             $entry['created_at'] = 'NOW()';
             $entry['completion_date'] = substr($entry['completion_date'], 0, 10);
-            $entry['unique_key'] = $entry['project_id']."/".$entry['phase_id']."/".$entry['unit_type']."/".$entry['bedrooms']."/".$entry['completion_date'];
+            $entry['unique_key'] = $entry['project_id'] . "/" . $entry['phase_id'] . "/" . $entry['unit_type'] . "/" . $entry['bedrooms'] . "/" . $entry['completion_date'];
             $entry['effective_month'] = $entry['completion_date'];
-            
+
             setProjectLevelValues($entry);
-            
+
             $new = new DInventoryPriceTmp($entry);
             saveToFileOrDb($new, $bulkInsert, $handle);
             $i++;
@@ -242,11 +242,11 @@ function indexProjectsWithHigherCompletionDate(){
     $logger->info("Inserted $i missing completion date entries");
 }
 
-function setProjectLevelValues(&$entry){
+function setProjectLevelValues(&$entry) {
     global $aAllIndexedProjects;
-    
+
     $projectDetails = $aAllIndexedProjects[$entry['project_id']];
-    
+
     $entry['country_id'] = 1;
     $entry['country_name'] = 'India';
     $entry['project_name'] = $projectDetails->project_name;
