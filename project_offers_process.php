@@ -221,17 +221,14 @@
 		}
 		
 		$offer_period = explode("months",$project_offers_details[0]->offer_period);
-		
-		$dis_date = explode("-",trim(substr($project_offers_details[0]->discount_date,0,11)));
-		$dis_date = $dis_date[2]."-".$dis_date[1]."-".$dis_date[0];
-		
+						
 		$smarty->assign("plp_arr",$plp_arr);
 		$smarty->assign("noi",count($project_offers_details));
 		$smarty->assign("discount_on", $discount);
 		$smarty->assign("offer_period", $offer_period[0]);
 		$smarty->assign("offer_price_type", $project_offers_details[0]->offer_price_type);
 		$smarty->assign("other_text", $other_text);
-		$smarty->assign("discount_date", $dis_date);		
+		$smarty->assign("discount_date", date("d-m-Y",strtotime(trim(substr($project_offers_details[0]->discount_date,0,11)))));		
 		$smarty->assign("offer_price", $offer_price);
 		$smarty->assign("priceDeciUnit", $priceDeciUnit);
 		

@@ -552,7 +552,7 @@ function broker_call_edit(project_id)
                     button: k, // trigger for the calendar (button ID)
                     align: "Tl", // alignment (defaults to "Bl")
                     singleClick: true,
-                    showsTime: true
+                    showsTime: false
                 });
             }
         });
