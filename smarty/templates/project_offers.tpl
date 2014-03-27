@@ -3,6 +3,26 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<script type="text/javascript">
+function broker_call_edit(project_id)
+{
+	//code for builder contact info popup
+    var url = "/archieved_offers.php?projectId="+project_id;
+   //  jQuery.fancybox({
+   //      'href' :  url
+   //  });
+     $.fancybox({
+        'width'                :720,
+        'height'               :200,
+      
+        'href'                 : url,
+        'type'                : 'iframe'
+    })
+
+}
+</script>
 </TD>
   </TR>
   <TR>
@@ -51,7 +71,8 @@
 										<option value="{$key}">{$val}</option>
 									{/if}
 								  {/foreach}
-								</select>
+								</select>								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<input class="pt_click" type="button" title="Archieved Offers" value="Archieved Offers" onclick="return broker_call_edit({$projectId});" />
 							</td>
 						</tr>
 						<tr>
@@ -63,7 +84,7 @@
 								  <td>
 								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months" onclick="populate_offer_desc()" {if is_numeric($offer_period)}checked{/if} />
 								    <select id="no_emi_Months" name="no_emi_Months" onchange="populate_offer_desc()">
-									  {for $val=1 to 10}<option value="{$val*6}" {if $offer_period==($val*6)}selected{/if}>{$val*6}</option>{/for}
+									  {for $val=1 to 15}<option value="{$val*3}" {if $offer_period==($val*3)}selected{/if}>{$val*3}</option>{/for}
 								    </select> Months 
 								  </td>
 								  <td>
@@ -94,32 +115,17 @@
 							  <table>
 								<tr>
 								  <td>
-								    <b><font color = "red">*</font>EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="months" onclick="populate_offer_desc()" {if is_numeric($offer_period)}checked{/if}/>
-								    <select id="part_emiMonths" name="part_emiMonths" onchange="populate_offer_desc()">
-									  {for $val=1 to 10}<option value="{$val*6}" {if $offer_period==($val*6)}selected{/if}>{$val*6}</option>{/for}
-								    </select> Months 
-								  </td>
-								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="pos" onclick="populate_offer_desc()" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if}/> Possession
+								    <b><font color = "red">*</font>No. of Installment:</b>
+								    <select id="plp_noi" name="plp_noi">
+										<option value="">-Select-</option>
+										{for $val=1 to 24}<option value="{$val}" {if $noi==$val}selected{/if}>{$val}</option>{/for}
+									</select>
 								  </td>
 								</tr>
+								  <td id="plp-fields">
+									  {include file='plp_offer_fields.tpl'}
+								  </td>
 								<tr>
-								<td>
-								    <b><font color = "red">*</font>EMI Price : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_price" value="percent" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if}/> 
-								    <select  name="part_emi_price_emiPer" id="part_emi_price_emiPer" onchange="populate_offer_desc()">
-										<option value=""></option>Othe
-									  {for $val=1 to 20}<option value="{$val*5}" {if $offer_price==($val*5)}selected{/if}>{$val*5}</option>{/for}
-								    </select>Percent 
-								  </td>
-								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_price" value="deci" onclick="populate_offer_desc()" {if $offer_price_type=='Absolute'}checked{/if} />
-								    <input type="text" name="part_emi_price_emiDeci" id="part_emi_price_emiDeci" style="width:50px" onkeyup="populate_offer_desc()" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
-								     <select id="part_emi_price_emiUnit" name="part_emi_price_emiUnit" onchange="populate_offer_desc()">
-									  <option value="Lakhs" {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
-									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
-									  <option value="Thousands" {if $priceDeciUnit=='Thousands'}selected{/if} >Thousands</option>
-								    </select>
-								  </td>
 								</tr>
 							  </table>
 						    </div>
@@ -127,11 +133,11 @@
 						      <table>
 							    <tr>
 								  <td>
-									  <input type="radio" {if ("PLC"==$discount_on)}checked{/if} name="nac_discount_on"  id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
-									  <input type="radio"  {if ("Parking"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
-									  <input type="radio"  {if ("ClubMembership"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_clubMembership" value="ClubMembership" onclick="populate_offer_desc()"/>Club Membership <br/>
-									  <input type="radio"  {if ("GymMembership"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_gymMembership" value="GymMembership" onclick="populate_offer_desc()" />Gym Membership <br/>
-									  <input type="radio"  {if $other_text}checked{/if}  name="nac_discount_on" id="nac_other" value="Other" onclick="populate_offer_desc()"/>Other <br/>
+									  <input type="checkbox" {if in_array("PLC",$discount_on)}checked{/if} name="nac_discount_on[]"  id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
+									  <input type="checkbox"  {if in_array("Parking",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
+									  <input type="checkbox"  {if in_array("ClubMembership",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_clubMembership" value="ClubMembership" onclick="populate_offer_desc()"/>Club Membership <br/>
+									  <input type="checkbox"  {if in_array("GymMembership",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_gymMembership" value="GymMembership" onclick="populate_offer_desc()" />Gym Membership <br/>
+									  <input type="checkbox"  {if in_array("Other",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_other" value="Other" onclick="populate_offer_desc()"/>Other <br/>
 									  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										<input type="text" name="nac_other_txt" id="nac_other_txt" style="width:300px;{if $other_text} display:block{else}display:none{/if}" onkeyup="populate_offer_desc()" value="{$other_text}" />
 								  </td>
@@ -289,30 +295,45 @@
 			alert("Please select EMI in Percent.");
 			return false;
 		}
-	  }else if(offer_type == 'PartEmi'){ //PartEmi validations
-	    partEmiDeci = $("input[name='part_emi_price_emiDeci']").val();
-		if($("input[name='part_emi_period']:checked").val() == undefined ){
-			alert("EMI Period is required.");
+	  }else if(offer_type == 'PartEmi'){ //PLP validations
+	     if($('#plp_noi').val()==''){
+			alert('Please select Number of Installments.');
 			return false;
-		}else if($("input[name='part_emi_price']:checked").val() == undefined ){
-			alert("EMI Price is required.");
-			return false;
-		}else if($("input[name='part_emi_price']:checked").val() == 'percent' && $("select[name='part_emi_price_emiPer']").val() == ''){
-			alert("Please select EMI in Percent.");
-			return false;
-		}else if($("input[name='part_emi_price']:checked").val() == 'deci'){
-			if(intRegex.test(partEmiDeci) || floatRegex.test(partEmiDeci)){
-			  if(partEmiDeci <= 0 || partEmiDeci > 99.9){
-				alert("Emi Price value must not be less than 1 and greater than 99.9");
-				return false;
-			  }
-			}else{
-				alert("Please enter a valid EMI Price.");
-				return false;
-			}							
-		}        
+		}else{
+			total_per = 0;
+		   for(i=1;i<=$('#plp_noi').val();i++){				   	
+				partEmiDeci = $("input[name='plp_Deci_"+i+"']").val();								
+				if($("input[name='plp_period_"+i+"']:checked").val() == undefined ){
+					alert("Installment-"+ i +": EMI Period is required.");
+					return false;
+				}else if($("input[name='plp_price_"+i+"']:checked").val() == undefined ){
+					alert("Installment-"+ i +": EMI Price is required.");
+					return false;
+				}else if($("input[name='plp_price_"+i+"']:checked").val() == 'percent' && $("select[name='plp_Per_"+i+"']").val() == ''){
+					alert("Installment-"+ i +": Please select EMI in Percent.");
+					return false;
+				}else if($("input[name='plp_price_"+i+"']:checked").val() == 'deci'){
+					if(intRegex.test(partEmiDeci) || floatRegex.test(partEmiDeci)){
+					  if(partEmiDeci <= 0 || partEmiDeci > 99.9){
+						alert("Installment-"+ i +": Emi Price value must not be less than 1 and greater than 99.9");
+						return false;
+					  }
+					}else{
+						alert("Installment-"+ i +": Please enter a valid EMI Price.");
+						return false;
+					}							
+				}    				
+				if($("input[name='plp_price_"+i+"']:checked").val() == 'percent' && $("select[name='plp_Per_"+i+"']").val() != ''){
+					total_per = parseInt(total_per) + parseInt($("select[name='plp_Per_"+i+"']").val());
+				}   
+			}			
+			if(total_per > 0 && total_per != 100){
+			  alert("Total EMI Price must be 100%.");
+			  return false;
+			}			
+		}
       }else if(offer_type == 'NoCharges'){ //NoCharges validations
-		  if(!$("input[name='nac_discount_on']:checked").val()){
+		  if(!$('#nac_plc').attr('checked') && !$('#nac_parking').attr('checked') && !$('#nac_clubMembership').attr('checked') && !$('#nac_gymMembership').attr('checked') && !$('#nac_other').attr('checked') ){
 			alert("Please check at least one checkbox.");
 			return false;
 		  }else if($('#nac_other').attr('checked') && $('#nac_other_txt').val().trim() == ''){
@@ -387,8 +408,8 @@
 	  });
 		  
 	  ////// extra textboxes hanelding
-	  $('input[name="nac_discount_on"]').click(function(){
-		  if($(this).val()=='Other')
+	  $('#nac_other').click(function(){
+		  if($(this).attr('checked'))
 			$('#nac_other_txt').show();
 		  else
 		   $('#nac_other_txt').hide();
@@ -418,6 +439,15 @@
 			window.location = "project_offers.php?projectId={$projectId}&edit=delete&v=" + offer_id;
 		
 	  });
+	  
+	  //plp fields population
+	  $('#plp_noi').change(function(){
+		  for(i=1; i<=12; i++)
+		    $('#inst-'+i).css('display','none');
+		  noi = $(this).val();
+		  for(i=1; i<=noi; i++)
+		    $('#inst-'+i).css('display','block');
+	  });
 	    
 	  
 	});
@@ -444,22 +474,22 @@
 			offer_desc = "No Pre-EMI till " + noEmiPeriod;
 		  }
 		    $('#offerDesc').val(offer_desc);  
-		}else  if(offer_type == 'PartEmi'){   //----------------PartEmi Descirption Population
-		  partEmiPeriod = '';partEmiPrice = '';
-		  //fetching Emi Period Value
-		  if($("input[name='part_emi_period']:checked").val() == 'months')
-			partEmiPeriod = "after "+ $('#part_emiMonths').val() + " months";
-		  else if($("input[name='part_emi_period']:checked").val() == 'pos')
-			partEmiPeriod = "on Possession";
-		 //fetching Emi Price ValueofferType
-		  if($("input[name='part_emi_price']:checked").val() == 'percent')
-			partEmiPrice = $('#part_emi_price_emiPer').val() + "%";
-		  else if($("input[name='part_emi_price']:checked").val() == 'deci')
-			partEmiPrice = $('#part_emi_price_emiDeci').val() +" "+$('#part_emi_price_emiUnit').val();
-				
-		  if($("input[name='part_emi_period']:checked").val() && $("input[name='part_emi_price']:checked").val()){
-			offer_desc = "Pay "+partEmiPrice+" now and rest "+partEmiPeriod;
-		  }
+		}else  if(offer_type == 'PartEmi'){   //----------------PLP Descirption Population
+			for(i=1;i<=$('#plp_noi').val();i++){		
+			  plpPeriod = '';partEmiPrice = '';
+			  //fetching Emi Period Value
+			  if($("input[name='plp_period_"+i+"']:checked").val() == 'months')
+				plpPeriod = "after "+ $('#plp_Months_'+i).val() + " months";
+			  //fetching Emi Price ValueofferType
+			  if($("input[name='plp_price_"+i+"']:checked").val() == 'percent')
+				plpPrice = $('#plp_Per_'+i).val() + "%";
+			  else if($("input[name='plp_price_"+i+"']:checked").val() == 'deci')
+				plpPrice = $('#plp_Deci_'+i).val() +" "+$('#plp_Unit_'+i).val();
+					
+			  if($("input[name='plp_period_"+i+"']:checked").val() && $("input[name='plp_price_"+i+"']:checked").val()){
+				offer_desc = offer_desc+"Installment-"+i+": Pay "+plpPrice+" "+plpPeriod+". ";
+			  }
+			}
 		    $('#offerDesc').val(offer_desc);  
 		}else if(offer_type == 'NoCharges'){   //----NoCharges Descirption Population
 		  	str = new Array();cnt=0;popped='';
@@ -492,7 +522,7 @@
 				discount_on = $('#pd_other_txt').val();
 			else if($('#pd_on').val()!='')
 				discount_on = $('#pd_on :selected').html();
-			//Fetching Date On
+			//Fetching Date On [plp_noi] => 2
 			if($('#pd_date').val() != '0000-00-00')
 				date = $('#pd_date').val();
 			
