@@ -658,26 +658,26 @@ $arrCampaign =
 $arrCampaignDids = 
   array(
 	"Select Campaign"=>'', 
-	"Delhi1"=>'911130715335', 
-	"Delhi2"=>'911166576784',
-	"Delhi3"=>'911130803958', 
-	"Pune1"=>'912030570487', 
-	"Pune_2"=>'912067265867', 
-	"Mumbai_1"=>'912233578126', 
-  	"Mumbai_2"=>'912233578362',
-	"Mumbai_3"=>'912261344831',
-	"Kolkata"=>'913330566348',
-	"Chennai"=>'914433012753',
+	"Delhi1"=>'911130908628', 
+	"Delhi2"=>'911166576875',
+	"Delhi3"=>'911130803513', 
+	"Pune1"=>'912066895988', 
+	"Pune_2"=>'912067265891', 
+	"Mumbai_1"=>'912233578221', 
+  	"Mumbai_2"=>'912267304976',
+	"Mumbai_3"=>'912233578202',
+	"Kolkata"=>'913330566061',
+	"Chennai"=>'914433012964',
 	"Bangalore_1"=>'918049653283',
 	"Bangalore_2"=>'918049653284',
 	"Bangalore_3"=>'918030860742',
-  	"Pune_New"=>'912030157469',
-    "Delhi_Resale1"=>'911166576882',
-    "Delhi_Resale2"=>'911130803890',
-    "Chennai_Campaign2"=>'914466949330',
-    "Kolkata_Campaign2"=>'913330566304',
-    "Hyderabad_campaign_1"=>'914030883984',
-    "Hyderabad_campaign_2"=>'914066588473'
+  	"Pune_New"=>'912030570453',
+    "Delhi_Resale1"=>'911166576776',
+    "Delhi_Resale2"=>'911130803985',
+    "Chennai_Campaign2"=>'914466949358',
+    "Kolkata_Campaign2"=>'913330871689',
+    "Hyderabad_campaign_1"=>'914066588416',
+    "Hyderabad_campaign_2"=>'914030952097'
 	);
 
 /**************Authentication*************/

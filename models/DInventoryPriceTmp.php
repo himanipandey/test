@@ -29,7 +29,7 @@ class DInventoryPriceTmp extends Model
     }
     
     public static function populateProjectDemand(){
-        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.PROJECT_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE from ptigercrm.LEADS l inner join ptigercrm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID where l.PROJECT_TYPE is not null and l.PROJECT_TYPE <> '' and l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE >= '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.PROJECT_ID between 500000 and 999999 and lp.ACTIVE = '1' group by l.LEAD_ID, lp.PROJECT_ID order by lead_key";
+        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.PROJECT_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE from ptigercrm.LEADS l inner join ptigercrm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID inner join resi_project_ids rpi on rpi.id = lp.PROJECT_ID where l.PROJECT_TYPE is not null and l.PROJECT_TYPE <> '' and l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE >= '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.ACTIVE = '1' group by l.LEAD_ID, lp.PROJECT_ID order by lead_key";
         $aAllLead = self::find_by_sql($allLeadSql);
         $aAllLead = groupOnKey($aAllLead, 'lead_key');
         
@@ -62,7 +62,7 @@ class DInventoryPriceTmp extends Model
     }
     
     public static function populateLocalityDemand(){
-        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.LOCALITY_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE, lp.PROJECT_ID from ptigercrm.LEADS l inner join ptigercrm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID where l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE > '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.LOCALITY_ID between 50000 and 99999 and lp.ACTIVE = '1' group by l.LEAD_ID, lp.LOCALITY_ID having count(distinct PROJECT_ID) = 1 and (PROJECT_ID is null or PROJECT_ID = 0) order by lead_key";
+        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.LOCALITY_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE, lp.PROJECT_ID from ptigercrm.LEADS l inner join ptigercrm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID inner join locality lo on lp.LOCALITY_ID = lo.LOCALITY_ID where l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE > '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.ACTIVE = '1' group by l.LEAD_ID, lp.LOCALITY_ID having count(distinct PROJECT_ID) = 1 and (PROJECT_ID is null or PROJECT_ID = 0) order by lead_key";
         $aAllLead = self::find_by_sql($allLeadSql);
         $aAllLead = groupOnKey($aAllLead, 'lead_key');
         
@@ -119,5 +119,10 @@ class DInventoryPriceTmp extends Model
     public static function updateSecondaryPriceForAllProjects(){
         $sql = "update " . self::table_name() . " dip inner join (select PHASE_ID, UNIT_TYPE, DATE_FORMAT(EFFECTIVE_DATE, '%Y-%m-01') DATE, avg((MIN_PRICE+MAX_PRICE)/2) AVG_PRICE from project_secondary_price group by PROJECT_ID, PHASE_ID, UNIT_TYPE, DATE_FORMAT(EFFECTIVE_DATE, '%Y-%m-01')) t on dip.phase_id = t.phase_id and dip.unit_type = t.UNIT_TYPE and dip.effective_month = t.DATE set dip.average_secondary_price_per_unit_area = t.AVG_PRICE";
         self::connection()->query($sql);
+    }
+    
+    public static function setLaunchDateMonthSales(){
+        $sql = "update d_inventory_prices_tmp dipt inner join resi_project rp on dipt.project_id = rp.project_id and rp.version = 'Website' inner join resi_project_phase rpp on dipt.phase_id = rpp.phase_id and rpp.version = 'Website' set dipt.units_sold = dipt.ltd_launched_unit - dipt.inventory where (date_format(rp.pre_launch_date, '%Y-%m-01') = dipt.effective_month or (rp.pre_launch_date = 0 and date_format(rpp.launch_date, '%Y-%m-01') = dipt.effective_month) or (rp.pre_launch_date = 0 and rpp.launch_date = 0 and date_format(rp.launch_date, '%Y-%m-01') = dipt.effective_month)) and dipt.inventory is not null";
+        self::connection()->query($sql);  
     }
 }
