@@ -432,7 +432,7 @@ function show_loc_inst(){
                                     <select id="placeType" name="loc" onchange="selectNearPlaceTypes(this.value)">
                                        <option value=''>select place type</option>
                                        {foreach from=$nearPlaceTypesArray key=k item=v}
-                                              <option value="{$v->id}" {if $nearPlaceTypesId==$v->id}  selected="selected" {/if}>{$v->display_name}</option>
+                                              <option value="{$v->id}" {if $nearPlaceTypesId==$v->id}  selected="selected" {/if}>{$v->name}</option>
                                        {/foreach}
                                     </select>
                                 </td>

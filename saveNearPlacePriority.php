@@ -88,7 +88,7 @@ else if($_POST['task']=='createLandmarkAlias'){
         if(mysql_affected_rows()>0)
             echo "1";
         else
-            echo "3";
+            echo "3".mysql_error();
     }
         
 }
