@@ -6,7 +6,7 @@ require_once "support/objects.php";
 class LocalityLivability extends ActiveRecord\Model {
 
     static $table_name = 'locality_livability';
-    static $livability_expression = '0.175*school+0.175*hospital+0.050*restaurant+0.035*metro_station+0.035*bus_stand+0.035*suburban_railway_station+0.025*city_railway_station+0.025*airport+0.05*park+0.05*market+0.1*completion_percentage';
+    static $livability_expression = '0.175*school+0.175*hospital+0.050*restaurant+0.25*metro_station+0.25*bus_stand+0.25*suburban_railway_station+0.025*city_railway_station+0.025*airport+0.1*park+0.1*market+0.1*completion_percentage';
     static $column_name_for_landmark_type = array(
         1 => 'school', // school
         2 => 'hospital', // hospital
@@ -50,7 +50,7 @@ class LocalityLivability extends ActiveRecord\Model {
     }
 
     static function populateCompletionPercentage() {
-        $sql = "update locality_livability ll inner join (select LOCALITY_ID, (sum(complete)/(sum(complete)+sum(not_complete))) completion_percentage from (select rp.PROJECT_ID, rp.LOCALITY_ID, sum(if(rp.PROJECT_STATUS_ID in (4,3), supply, 0)) complete, sum(if(rp.PROJECT_STATUS_ID in (4,3), 0, supply)) not_complete, sum(supply) from resi_project rp inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' inner join (select rpp.PHASE_ID, rpp.PHASE_TYPE from resi_project_phase rpp inner join resi_project_phase rpp1 on rpp.PROJECT_ID = rpp1.PROJECT_ID and rpp1.version = 'Website' and rpp.version = 'Website' group by rpp.PHASE_ID having count(distinct rpp1.PHASE_TYPE) = 1 or rpp.PHASE_TYPE = 'Actual') t1 on rpp.PHASE_ID = t1.PHASE_ID group by rp.PROJECT_ID) t group by LOCALITY_ID) t on ll.locality_id = t.locality_id set ll.completion_percentage = t.completion_percentage where t.completion_percentage is not null";
+        $sql = "update locality_livability ll inner join (select LOCALITY_ID, sum(complete) completion_percentage from (select rp.PROJECT_ID, rp.LOCALITY_ID, sum(if(rp.PROJECT_STATUS_ID in (4,3), supply, 0)) complete, sum(if(rp.PROJECT_STATUS_ID in (4,3), 0, supply)) not_complete, sum(supply) from resi_project rp inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' inner join (select rpp.PHASE_ID, rpp.PHASE_TYPE from resi_project_phase rpp inner join resi_project_phase rpp1 on rpp.PROJECT_ID = rpp1.PROJECT_ID and rpp1.version = 'Website' and rpp.version = 'Website' group by rpp.PHASE_ID having count(distinct rpp1.PHASE_TYPE) = 1 or rpp.PHASE_TYPE = 'Actual') t1 on rpp.PHASE_ID = t1.PHASE_ID group by rp.PROJECT_ID) t group by LOCALITY_ID) t on ll.locality_id = t.locality_id set ll.completion_percentage = t.completion_percentage where t.completion_percentage is not null";
         self::connection()->query($sql);
         self::normalizeColumnOnCity('completion_percentage');
     }
