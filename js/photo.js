@@ -36,7 +36,6 @@ function getData() {
 function getSubLocData() {
     var data = getData(),
         res = null;
-
     $.ajax({
         async: false,
         type : 'GET',
@@ -160,7 +159,7 @@ function getPhotos() {
     var dataResult = getPhotosFromDB();
     if ( dataResult['data'] != null && dataResult['data'].length > 0 ) {
         for( var __imgNo = 0; __imgNo < dataResult['data'].length; __imgNo++ ) {
-            showThisPhoto( dataResult['data'][ __imgNo ],dataResult['localityType'] );
+            showThisPhoto( dataResult['data'][ __imgNo ]);
         }
         toggleSaveBtn( 'show' );
     }
@@ -169,8 +168,7 @@ function getPhotos() {
     }
 }
 
-function showThisPhoto( imgData,localityType ) {
-
+function showThisPhoto( imgData ) {
     imgData['IMAGE_DISPLAY_NAME'] = imgData['IMAGE_DISPLAY_NAME'] == null ? "" : imgData['IMAGE_DISPLAY_NAME'];
     imgData['IMAGE_CATEGORY'] = imgData['IMAGE_CATEGORY'] == null ? "" : imgData['IMAGE_CATEGORY'];
     imgData['IMAGE_DESCRIPTION'] = imgData['IMAGE_DESCRIPTION'] == null ? "" : imgData['IMAGE_DESCRIPTION'];
@@ -194,19 +192,12 @@ function showThisPhoto( imgData,localityType ) {
         imgData['OBJECT_TYPE'] = 'suburb';
     }
     imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
-    var i=0;
     imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
                         '<div class="img-wrap" style="float:left;"> <img src="'+imgData['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 /> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
-                            '<b>Category:</b>&nbsp;&nbsp;<select name="imgCate_'+imgData['IMAGE_ID']+'[]">'+
-                            '<option '+ ( imgData['IMAGE_CATEGORY'] == '' ? 'selected' : '' ) +' value="">Category</option>';
-      
-        for (var key in localityType) {
-            if (localityType.hasOwnProperty(key)) {
-              template +=  '<option '+ ( imgData['IMAGE_CATEGORY'] == key ? 'selected' : '' ) +' value='+key+'>'+key+'</option>';
-            }
-        }
+                            '<b>Category:</b>&nbsp;&nbsp;'+imgData['IMAGE_CATEGORY'];
+       template +='<input type = "hidden" name="imgCate_'+imgData['IMAGE_ID']+'[]" value = "'+imgData['IMAGE_CATEGORY']+'">';
                    
      template +=            '</select><br /><br />'+
                             '<b>Name:</b>&nbsp;&nbsp;<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
@@ -249,7 +240,6 @@ function getPhotosFromDB() {
     initVar();
     var data = getData(),
         res = null;
-
     $.ajax({
         async: false,
         type : 'GET',

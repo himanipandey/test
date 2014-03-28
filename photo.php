@@ -11,11 +11,9 @@
     include("s3upload/s3_config.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
-//echo "<pre>";
-//print_r($_REQUEST);
 
 if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
-        //echo "<pre>"; print_r( $_REQUEST ); print_r( $_FILES ); die();
+       // echo "<pre>"; print_r( $_REQUEST ); print_r( $_FILES ); die();
         $city     = !empty( $_REQUEST['cityId'] ) ? $_REQUEST['cityId'] : 0;
         $suburb   = !empty( $_REQUEST['suburbId'] ) ? $_REQUEST['suburbId'] : 0;
         $locality = !empty( $_REQUEST['localityId'] ) ? $_REQUEST['localityId'] : 0;
@@ -112,7 +110,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         $dest = 'locality/'.$imgName;
                         $source = $newImagePath.$dest;
                         $s3upload = new ImageUpload($source, array("s3" => $s3,
-                            "image_path" => $dest, "object" => "locality","object_id" => $areaId,
+                            "image_path" => $dest, "object" => "$areaType","object_id" => $areaId,
                             "image_type" => strtolower($imgCategory),
                             "service_extra_params" => 
                                 array("priority"=>$displayPriority,"title"=>$imgDisplayName,"description"=>$imgDescription)));
@@ -168,7 +166,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
     else if($_REQUEST['updateDelete']) {   //code for image update or delete
          include("SimpleImage.php");
          $thumb = new SimpleImage();
-        //echo "<pre>"; print_r($_REQUEST);die;
+        //hiecho "<pre>"; print_r($_REQUEST);die;
         foreach($_REQUEST['img_id'] as $ImgID) {
             $imgCat = "imgCate_".$ImgID;
             $imgCategory = $_REQUEST[$imgCat][0];
@@ -186,7 +184,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
             $imgCityId = $_REQUEST['city_id'];
             $imgLocalityId = $_REQUEST['locality_id'];
             $imgSuburbId = $_REQUEST['suburb_id'];
-            
+            //echo "<pre>";
+            //print_r($_REQUEST);die;
             $city     = !empty( $imgCityId ) ? $imgCityId : 0;
             $locality   = !empty( $imgLocalityId ) ? $imgLocalityId : 0;
             $suburb = !empty( $imgSuburbId ) ? $imgSuburbId : 0;
