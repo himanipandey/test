@@ -6,6 +6,8 @@ include("includes/configs/configs.php");
 include("builder_function.php");
 include("modelsConfig.php");
 
+global $arrOfferTypes;
+
 $projectId			=	$_REQUEST['projectId'];
 $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'=>$projectId)));
 
@@ -32,7 +34,7 @@ $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'
 								}
 							 print '<TR '.$color.'>
 									<TD>'.$count.'</TD>
-									<TD>'.$data->offer.'</TD>
+									<TD>'.$arrOfferTypes[$data->offer].'</TD>
 									<TD>'.$data->offer_desc.'</TD>
 									<TD>'.substr($data->created_at,0,11).'</TD>
 									<TD>'.(($data->status=='Inactive')?substr($data->created_at,0,11): '-').'</TD>
