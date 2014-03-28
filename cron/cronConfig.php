@@ -7,7 +7,7 @@ require_once $docroot.'includes/send_mail_amazon.php';
 
 $latLongList = '0,1,2,3,4,5,6,7,8,9';
 $currentDate = date("Y-m-d");
-/*$dailyEmail = array(
+$dailyEmail = array(
 	array(
 		'sql'=>"SELECT 
                             rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, rp.PROJECT_URL, c.LABEL as CITY 
@@ -63,16 +63,16 @@ $currentDate = date("Y-m-d");
             'attachmentname'=>'Latitude_longitude_beyond_limit',
             'sendifnodata'=>0
         )
-);*/
+);
 
-$dailyEmail = array(
+$weeklyEmail = array(
      array(
             'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME from resi_project rp 
              where 
                 rp.version = 'Cms'
                 and rp.status in('Active','ActiveInCms') and project_status_id = 2;",
                 'subject'=>'Cancelled projects but not yet marked inactive',
-                'recipients'=>array('vimlesh.rajput@proptiger.com','manish.goyal@proptiger.com','mohit.dargan@proptiger.com'), 
+                'recipients'=>array('ankur.dhawan@proptiger.com'), 
                 'attachmentname'=>'Cancelled_projecst_but_not_yet_marked_inactive',
                 'sendifnodata'=>0
         ),
@@ -80,9 +80,9 @@ $dailyEmail = array(
             'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME from resi_project rp 
              where 
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and project_status_id in(8,1,7) and promised_completion_date < '$currentDate'
-                    and promised_completion_date != '0000-00-00';",
+                    and promised_completion_date != '0000-00-00' and promised_completion_date is not null;",
                'subject'=>'Projects whose status is Pre Launch,Under construction,Launch projects but Expected completion date is in past',
-               'recipients'=>array('vimlesh.rajput@proptiger.com','manish.goyal@proptiger.com','mohit.dargan@proptiger.com'), 
+               'recipients'=>array('ankur.dhawan@proptiger.com'), 
                'attachmentname'=>'projects_whose_status_is_pre_launch_under_construction_launch_projects_but_expected_completion_date_is_in_past',
                'sendifnodata'=>0
         )   
