@@ -33,13 +33,13 @@ class DInventoryPriceTmp extends Model
         $aAllLead = self::find_by_sql($allLeadSql);
         $aAllLead = groupOnKey($aAllLead, 'lead_key');
         
-        $aAllBedRoomCount = self::getMonthWiseBedroomCountForAllProjects();
-        $aAllPhaseCount = self::getMonthWisePhaseCountForAllProjects();
+        $aAllBedRoomCount = self::getBedroomCountForAllProjects();
+        $aAllPhaseCount = self::getPhaseCountForAllProjectBedrooms();
         
         foreach ($aAllLead as $aAllProjectLead){
             $leadProjectCount = count($aAllProjectLead);
             foreach ($aAllProjectLead as $projectLead){
-                $key = implode("/", array($projectLead->project_id, ucfirst($projectLead->unit_type), substr($projectLead->effective_month, 0, 10)));
+                $key = implode("/", array($projectLead->project_id, ucfirst($projectLead->unit_type)));
                 
                 $bedrooms = isset($aAllBedRoomCount[$key])? $aAllBedRoomCount[$key] : NULL;
                 if(!empty($bedrooms)){
@@ -47,7 +47,7 @@ class DInventoryPriceTmp extends Model
                     $leadBedrooms = array_intersect(explode(",", $projectLead->all_bedrooms), explode(",", $bedrooms));
                     $bedroomCount = count($leadBedrooms);
                     foreach ($leadBedrooms as $bedroom) {
-                        $phaseCount = $aAllPhaseCount[implode("/", array($projectLead->project_id, ucfirst($projectLead->unit_type), $bedroom, substr($projectLead->effective_month, 0, 10)))]->phase_count;
+                        $phaseCount = $aAllPhaseCount[implode("/", array($projectLead->project_id, ucfirst($projectLead->unit_type), $bedroom))]->phase_count;
                         if($projectLead->client_type === 'buyer'){
                             $updateStr = "customer_demand = (customer_demand+(1/($leadProjectCount*$bedroomCount*$phaseCount)))";
                         }
@@ -96,7 +96,8 @@ class DInventoryPriceTmp extends Model
         $result = array();
         if($sum == 0){
             foreach ($aData as $data) {
-                $result[$data->id] = 1;
+                $count = count($aData);
+                $result[$data->id] = 1/$count;
             }
         }else{
             foreach ($aData as $data) {
@@ -106,13 +107,13 @@ class DInventoryPriceTmp extends Model
         return $result;
     }
 
-    public static function getMonthWiseBedroomCountForAllProjects(){
-        $aData = self::find('all', array('select'=>"concat_ws('/', project_id, unit_type, effective_month) unique_key, project_id, unit_type, effective_month, group_concat(distinct bedrooms) all_bedrooms, count(distinct bedrooms) bedroom_count", 'group'=>'project_id, unit_type, effective_month'));
+    public static function getBedroomCountForAllProjects(){
+        $aData = self::find('all', array('select'=>"concat_ws('/', project_id, unit_type) unique_key, project_id, unit_type, effective_month, group_concat(distinct bedrooms) all_bedrooms, count(distinct bedrooms) bedroom_count", 'group'=>'project_id, unit_type'));
         return indexArrayOnKey($aData, 'unique_key');
     }
     
-    public static function getMonthWisePhaseCountForAllProjects(){
-        $aData = self::find('all', array('select'=>"concat_ws('/', project_id, unit_type, bedrooms, effective_month) unique_key, project_id, unit_type, effective_month, count(distinct phase_id) phase_count", 'group'=>'project_id, unit_type, bedrooms, effective_month'));
+    public static function getPhaseCountForAllProjectBedrooms(){
+        $aData = self::find('all', array('select'=>"concat_ws('/', project_id, unit_type, bedrooms) unique_key, project_id, unit_type, effective_month, count(distinct phase_id) phase_count", 'group'=>'project_id, unit_type, bedrooms, effective_month'));
         return indexArrayOnKey($aData, 'unique_key');
     }
     
