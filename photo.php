@@ -257,8 +257,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     $thumb->load( $IMG['tmp_name'][ $__imgCnt ] );
                                     $thumb->resize( $__width, $__height );
                                     
-                                    $thumb->save($newImagePath.$areaType.'/'.$imgName, $imgType);
-                                    $dest = $areaType.'/'.$imgName;
+                                    $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
+                                    $dest = 'locality/'.$imgName;
                                     $source = $newImagePath.$dest;
                                     //echo $imagePriority."==>".$imgDisplayName."==>".$imgDescription;die;
                                     $s3upload = new ImageUpload($source, array("s3" => $s3,
@@ -268,7 +268,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     $serviceResponse =  $s3upload->upload();
                                     $thumb->resize( $__thumbWidth, $__thumbHeight );
                                     $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
-                                    $dest = $areaType.'/thumb_'.$imgName;
+                                    $dest = 'locality/thumb_'.$imgName;
                                     $source = $newImagePath.$dest;
                                     $s3upload = new S3Upload($s3, $bucket, $source, $dest);
                                     $s3upload->upload();
@@ -367,9 +367,9 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
     if ( is_array( $cityList ) && count( $cityList ) ) {
         $smarty->assign( 'cityList', $cityList );
     }
-
     $smarty->assign( 'photoCSS', 1 );
-
+    $localityType = ImageServiceUpload::$image_types;
+    $smarty->assign( 'localityType', $localityType['locality'] );
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."upload-photo.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");

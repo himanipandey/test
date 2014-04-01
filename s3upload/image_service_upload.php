@@ -31,7 +31,6 @@ class ImageServiceUpload{
         "builder" => array("builder_image" => "logo"),
         "locality" => array(
             "locality_image" => "main",
-            "other" => "other",
             "mall" => "mall",
             "map"  => "map",
             "road" => "road",
@@ -47,11 +46,11 @@ class ImageServiceUpload{
             "hall" => "hall",
             "office" => "office",
             "buildings" => "buildings",
+            "other" => "other",
             
         ),
        "city" => array(
             "city_image" => "main",
-            "other" => "other",
             "mall" => "mall",
             "map"  => "map",
             "road" => "road",
@@ -67,11 +66,11 @@ class ImageServiceUpload{
             "hall" => "hall",
             "office" => "office",
             "buildings" => "buildings",
+             "other" => "other",
             
         ),
          "suburb" => array(
             "suburb_image" => "main",
-            "other" => "other",
             "mall" => "mall",
             "map"  => "map",
             "road" => "road",
@@ -87,6 +86,7 @@ class ImageServiceUpload{
             "hall" => "hall",
             "office" => "office",
             "buildings" => "buildings",
+             "other" => "other",
             
         ),
         "bank" => array("logo" => "logo"));

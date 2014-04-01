@@ -38,6 +38,7 @@
                                         <label class="lbl"> Select a City </label>
                                         <div class="valueField">
                                             <select id="city-list" name="cityId" onchange="areaTypeChanged('city')">
+                                                <option value="">Select City</option>
                                                 {foreach from=$cityList key=id item=cityName}
                                                     <option {if $cityId==$cityName.id}selected{/if} value="{$cityName.id}" id="drp-dwn-city-{$cityName.id}">
                                                         <span>{$cityName.name}</span>
@@ -53,7 +54,7 @@
                                         <div class="valueField">
                                             <input type="hidden" name="upImg" value="1">
                                             <select name="suburbId" id="area-type-sub" onchange="areaTypeChanged('suburb')">
-
+                                                <option value="">Select Suburb</option>
                                             </select>
                                         </div>
                                     </td>
@@ -64,7 +65,7 @@
                                         <div class="valueField">
                                             <input type="hidden" name="upImg" value="1">
                                             <select name="localityId" id="area-type-loc" onchange="updateDisplayLocation()">
-
+                                                <option value="">Select Locality</option>
                                             </select>
                                         </div>
                                     </td>
@@ -74,24 +75,10 @@
                                    <div class="valueField">
                                   
                                         <select name="imgCategory">
-                                            <option value="">Category</option>
-                                            <option value="Mall">Mall</option>
-                                            <option value="Map">Map</option>
-                                            <option value="Road">Road</option>
-                                            <option value="Hospital">Hospital</option>
-                                            <option value="School">School</option>
-                                            <option value="Hotel">Hotel</option>
-                                            <option value="Bank">Bank</option>
-                                            <option value="Station">Station</option>
-                                            <option value="Gurdwara">Gurdwara</option>
-                                            <option value="Mosque">Mosque</option>
-                                            <option value="Bus Stand">Bus Stand</option>
-                                            <option value="Park">Park</option>
-                                            <option value="Hall">Hall</option>
-                                            <option value="Office">Office</option>
-                                            <option value="Mosque">Mosque</option>
-                                            <option value="Buildings">Buildings</option>
-                                            <option value="Other">Other</option>
+                                            {foreach from = $localityType key = key item = item}
+                                                <option value="{$item}">{$item}</option>
+                                            {/foreach}
+                                            
                                         </select>
                                     </td>
                                 </tr>
@@ -116,7 +103,7 @@
                                         <label class="lbl">Image Display Priority</label>
                                         <div class="valueField">
                                             <select name = "displayPriority">
-                                                <option value="">Select Priority</option>
+                                                <option value="999">999</option>
                                                 {$cnt = 0}
                                                 {section name=priorityLoop loop=10 step=1}
                                                     {$cnt = $cnt+1}
