@@ -6,7 +6,7 @@
  */
 
 function runTests(){
-    return verifySupply() && verifyLaunched() && verifyPhases() && verifyNonZeroColumns(); //&& verifyNegativeUnitsSold();
+    return verifySupply() && verifyLaunched() && verifyPhases() && verifyNonZeroColumns(); //&& verifyNegativeUnitsSold() && verifyPlotBedrooms();
 }
 
 // verifying if supply and launched unit in d_inventory_price table is correct
@@ -36,5 +36,11 @@ function verifyNonZeroColumns(){
 // checking for negative units sold
 function verifyNegativeUnitsSold(){
     $count = DInventoryPriceTmp::count(array('conditions' => 'units_sold < 0'));
+    return ($count==0);
+}
+
+// verifies if plots have non zero bedrooms
+function verifyPlotBedrooms(){
+    $count = DInventoryPriceTmp::count(array('conditions' => "unit_type = 'Plot' and bedrooms != 0"));
     return ($count==0);
 }
