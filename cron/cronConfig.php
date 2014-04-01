@@ -61,6 +61,13 @@ $dailyEmail = array(
             'recipients'=>array('ankur.dhawan@proptiger.com'), 
             'attachmentname'=>'Latitude_longitude_beyond_limit',
             'sendifnodata'=>0
+        ),
+        array(
+            'sql'=>"SELECT project_id,OFFER,OFFER_DESC,created_at as start_date,OFFER_END_DATE,STATUS FROM `project_offers` WHERE STATUS = 'Inactive';",
+            'subject'=>'Expired Project Offers',
+            'recipients'=>array('ankur.dhawan@proptiger.com'), 
+            'attachmentname'=>'expired_project_offers',
+            'sendifnodata'=>0
         )
 );
 

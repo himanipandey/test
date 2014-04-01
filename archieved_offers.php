@@ -10,7 +10,6 @@ global $arrOfferTypes;
 
 $projectId			=	$_REQUEST['projectId'];
 $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'=>$projectId)));
-
 ?>
 <link href="css/css.css" rel="stylesheet" type="text/css">
 				<TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
@@ -37,7 +36,7 @@ $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'
 									<TD>'.$arrOfferTypes[$data->offer].'</TD>
 									<TD>'.$data->offer_desc.'</TD>
 									<TD>'.substr($data->created_at,0,11).'</TD>
-									<TD>'.(($data->status=='Inactive')?substr($data->created_at,0,11): '-').'</TD>
+									<TD>'.$data->offer_end_date.'</TD>
 									<TD>'.$data->status.'</TD>
 								</TR>';
 							}

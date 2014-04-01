@@ -2368,5 +2368,19 @@ function update_remark_status($cid,$type="Audit2",$status="Read"){
 	$sql = "UPDATE comments_history SET status = '$status' WHERE comment_id='$cid' AND comment_type='$type'";
 	mysql_query($sql) or die(mysql_error());	
 }
+function fetch_project_BSP($projectId){
+	$bspArr = array();
+	$sqlResult = mysql_query("select city.max_price_per_unit, city.min_price_per_unit from city 
+			  left join suburb on city.city_id = suburb.city_id
+			  left join locality on suburb.suburb_id = locality.suburb_id
+			  left join resi_project on locality.locality_id = resi_project.locality_id
+			   where resi_project.project_id = '$projectId'");
+	if($sqlResult){
+		$bsp = mysql_fetch_object($sqlResult);
+		$bspArr['min'] = $bsp->min_price_per_unit;
+		$bspArr['max'] = $bsp->max_price_per_unit;		
+	}
+	return $bspArr;
+}
 ?>
 
