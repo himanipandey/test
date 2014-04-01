@@ -62,13 +62,14 @@
 
 
 				</tr>
-                                 {if $userid==''}
+                                 
 				<tr >
 				  <td width="20%" align="right">Password: </td>
-				  <td width="30%" align="left"><input type="password" name="txt_password" id="txt_password" value="" style="width:220px;">
+				  <td width="30%" align="left"><input type="password" name="txt_password" id="txt_password" value="{$txtadminpassword}" style="width:220px;">
 				  {if $ErrorMsg["UserPasswordErr"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["UserPasswordErr"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
-				</tr>
-				{/if}
+                                    <input type = "hidden" name = "oldPass" value="{$txtadminpasswordOld}">
+                                </tr>
+				
 				<tr>
 				  <td width="20%" align="right">*Region : </td>
 				  <td width="30%" align="left" >
@@ -154,6 +155,11 @@
 						 <input type="radio" name="active" id="unactivebtn" value="N" {$uncheckActive}>&nbsp;Deactive
 				  </td>
 			   </tr>
+                           <tr>
+				  <td width="20%" align="right" >Cloud Agent Id : </td>
+				  <td width="30%" align="left" ><input type="text" name="cloudAgentId" id="cloudAgentId" value="{$cloudAgentId}" style="width:220px;"></td>
+				  <td width="50%" align="left"></td>
+			   </tr
 			   <tr>
 				  <input type="hidden" id="userid" name="userid" value="{$userid}">
 				  <input type="hidden" id="managerids"  name="managerids" value="">

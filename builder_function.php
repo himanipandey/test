@@ -2337,7 +2337,9 @@ function project_aliases_detail($projectID){
 }
 
 function ViewUserDetails($ID){
-	$Sql = "SELECT * FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
+	$Sql = "SELECT ADMINID,EMP_CODE,FNAME,LNAME,USERNAME,ADMINPASSWORD,ADMINEMAIL
+                ,MOBILE,ADMINADDDATE,ADMINLASTLOGIN,REGION,STATUS,DEPARTMENT
+                ,ROLE,JOINING_DATE,RESIGNATION_DATE FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
 	$ExecSql = mysql_query($Sql);
 
 	if(mysql_num_rows($ExecSql)==1)	{
@@ -2359,6 +2361,7 @@ function ViewUserDetails($ID){
 		$ResDetails['ROLE'] 		=  $Res['ROLE'];
 		$ResDetails['JOINING_DATE'] 	=  $Res['JOINING_DATE'];
 		$ResDetails['RESIGNATION_DATE']	=  $Res['RESIGNATION_DATE'];
+                $ResDetails['CLOUDAGENT_ID'] = $Res['CLOUDAGENT_ID'];
 		return $ResDetails;
 	}
 	else
