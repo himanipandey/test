@@ -104,7 +104,7 @@
                                         <label class="lbl">Image Display Priority</label>
                                         <div class="valueField">
                                             <select name = "displayPriority">
-                                                <option value="999">999</option>
+                                                <option value="999">Select Priority</option>
                                                 {$cnt = 0}
                                                 {section name=priorityLoop loop=10 step=1}
                                                     {$cnt = $cnt+1}
