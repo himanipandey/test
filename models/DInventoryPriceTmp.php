@@ -126,4 +126,10 @@ class DInventoryPriceTmp extends Model
         $sql = "update d_inventory_prices_tmp dipt inner join resi_project rp on dipt.project_id = rp.project_id and rp.version = 'Website' inner join resi_project_phase rpp on dipt.phase_id = rpp.phase_id and rpp.version = 'Website' set dipt.units_sold = dipt.ltd_launched_unit - dipt.inventory where (date_format(rp.pre_launch_date, '%Y-%m-01') = dipt.effective_month or (rp.pre_launch_date = 0 and date_format(rpp.launch_date, '%Y-%m-01') = dipt.effective_month) or (rp.pre_launch_date = 0 and rpp.launch_date = 0 and date_format(rp.launch_date, '%Y-%m-01') = dipt.effective_month)) and dipt.inventory is not null";
         self::connection()->query($sql);  
     }
+    
+    public static function setMissingSupply(){
+        $sql = "update d_inventory_prices_tmp a inner join listings d on a.phase_id = d.phase_id and d.status = 'Active' inner join resi_project_options e on d.option_id = e.options_id and e.bedrooms = a.bedrooms and a.unit_type = e.option_type and e.option_category = 'Logical' inner join project_supplies f on d.id = f.listing_id and f.version = 'Website' set a.ltd_supply = f.supply, a.ltd_launched_unit = f.launched";
+        self::connection()->query($sql);
+        self::update_all(array('set'=>'supply = ltd_supply, launched_unit = ltd_launched_unit', 'conditions'=>'launch_date = effective_month'));
+    }
 }

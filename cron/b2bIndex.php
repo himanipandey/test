@@ -78,6 +78,7 @@ if ($bulkInsert) {
     fclose($handle);
 }
 
+DInventoryPriceTmp::setMissingSupply();
 DInventoryPriceTmp::populateDemand();
 DInventoryPriceTmp::deleteEntriesBeforeLaunch();
 DInventoryPriceTmp::deleteInvalidPriceEntries();
