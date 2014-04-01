@@ -75,6 +75,7 @@
                                    <div class="valueField">
                                   
                                         <select name="imgCategory">
+                                            <option value="other">Select Category</option>
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
                                             {/foreach}
