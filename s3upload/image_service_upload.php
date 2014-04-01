@@ -30,7 +30,6 @@ class ImageServiceUpload{
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
         "locality" => array(
-            "locality_image" => "main",
             "mall" => "mall",
             "map"  => "map",
             "road" => "road",
@@ -50,7 +49,6 @@ class ImageServiceUpload{
             
         ),
        "city" => array(
-            "city_image" => "main",
             "mall" => "mall",
             "map"  => "map",
             "road" => "road",
@@ -70,7 +68,6 @@ class ImageServiceUpload{
             
         ),
          "suburb" => array(
-            "suburb_image" => "main",
             "mall" => "mall",
             "map"  => "map",
             "road" => "road",
