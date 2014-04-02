@@ -307,8 +307,16 @@ function archieved_offers(project_id)
 			alert('Please select Number of Installments.');
 			return false;
 		}else{
+			inst_price_flag_per = 0;
+			inst_price_flag_abs = 0;
 			total_per = 0;
-		   for(i=1;i<=$('#plp_noi').val();i++){				   	
+		  
+				
+		   for(i=1;i<=$('#plp_noi').val();i++){	
+			   if($("input[name='plp_price_"+i+"']:checked").val() == 'percent')
+					inst_price_flag_per = 1;
+			   if($("input[name='plp_price_"+i+"']:checked").val() == 'deci')
+					inst_price_flag_abs = 1;			   	
 				partEmiDeci = $("input[name='plp_Deci_"+i+"']").val();								
 				if($("input[name='plp_period_"+i+"']:checked").val() == undefined && i!=1 && i!=$('#plp_noi').val()){
 					alert("Installment-"+ i +": Instalment Period is required.");
@@ -336,7 +344,13 @@ function archieved_offers(project_id)
 				if($("input[name='plp_price_"+i+"']:checked").val() == 'percent' && $("input[name='plp_Per_"+i+"']").val() != ''){
 					total_per = parseInt(total_per) + parseInt($("input[name='plp_Per_"+i+"']").val());
 				}   
-			}			
+			}
+			
+			if(inst_price_flag_per && inst_price_flag_abs){
+			  alert("All Installment prices must be of same type(Percent or Absolute)");
+			  return false;
+			}
+						
 			if(total_per > 0 && total_per != 100){
 			  alert("Total Instalment Price must be 100%.");
 			  return false;
@@ -531,7 +545,7 @@ function archieved_offers(project_id)
 				}
 		   }
 			
-			offer_desc = offer_desc + " " +"at BSP of Rs. "+final_bsp+ " per sq. ft.";
+			offer_desc = offer_desc + " " +"at BSP of Rs."+final_bsp+ " per sq.ft.";
 		   
 		   }
 		  
@@ -560,7 +574,7 @@ function archieved_offers(project_id)
 				if(i==1 && $("input[name='plp_price_"+i+"']:checked").val())
 				 offer_desc = "Pay "+plpPrice+" "+plpPeriod;
 				else if(i==$('#plp_noi').val() && $("input[name='plp_price_"+i+"']:checked").val())
-				 offer_desc = offer_desc+", "+plpPrice+" "+plpPeriod;
+				 offer_desc = offer_desc+" and "+plpPrice+" "+plpPeriod;
 			  }		
 			}
 		    $('#offerDesc').val(offer_desc);  
