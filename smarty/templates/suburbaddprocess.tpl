@@ -105,19 +105,22 @@
                             </div>
          </tr>			
 				<tr>
+          <div>
 					<td width="20%" align="right">Landmarks Attached: </td>
 
 					<td width="100" align="left" >
             <div id='aliases' data-role="tagsinput"></div>
             <div><label id="removetext1" style="color:green; font-weight: bold;"></label><a href="#" onclick="showHier();"><b>See Hierarchy</b></a></div>
           </td>
-         
+         </div>
 				</tr>
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
 					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search Landmarks: </label></td>
 					<td width="30%" align="left"><input id="search"><button type="button" id="button" align="left">Save Landmark</button> <label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label></td></div>
 					
+          <div class="ui-widget"><td width="20%" align="right"><label for="create-landmark">Or Create new Landmark: </label></td>
+          <td width="30%" align="left"><input id="create-landmark"><button type="button" id="button-create" align="left">Create Landmark</button> <label align="left" id="onclick-create" style="color:green; font-weight: bold;"></label></td></div>
 					
 					
 				</tr>
@@ -381,9 +384,46 @@ var options, d, selectedItem;
     
 	});
 
+
+
 });
 
-
+  $("#button-create").click(function(){
+    
+    var landmark = $("#create-landmark").val(); 
+    var cityid = {$cityId};
+    if($('#create-landmark').val().trim() ==''){
+        $("#onclick-create").text("Empty Landmark field.");
+    }
+    else {
+      var landmark = $("#create-landmark").val().trim(); 
+      $.ajax({
+            type: "POST",
+            url: '/saveAliases.php',
+            data: { label : landmark, cityId : cityid, task : 'createLandmarkAlias' },
+            success:function(msg){
+              //alert(msg);
+               if(msg == 1){
+                //alert("saved");
+                $("#onclick-create").text("Landmark Successfully Created.");
+               }
+               if(msg == 2){
+                $("#onclick-create").text("Landmark Already Added.");
+                   
+                   //location.reload(true); 
+               }
+               if(msg == 3){
+                $("#onclick-create").text("Error in Adding Landmark.");
+                   
+               }
+               if(msg == 4){
+                $("#onclick-create").text("No Landmark Selected.");
+                   
+               }
+            },
+          });
+    }
+  });
 	
 
 	jQuery("#btnSave").click(function(){

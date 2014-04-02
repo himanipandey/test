@@ -81,6 +81,10 @@ jQuery(document).ready(function(){
                    alert("No Alias Provided.");
                    return false;
                }
+               if(msg == 5){
+                   alert("Alias name is same as either city or suburb or locality. So can not be created.");
+                   return false;
+               }
             }
         })
     }
