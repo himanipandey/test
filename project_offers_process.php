@@ -57,13 +57,13 @@
 		}else if($offer_type == 'PartEmi'){
 			$count=1;
 			while($count<=$_REQUEST['plp_noi']){
-			  if($_POST['plp_period_'.$count] == 'months'){
+			  if($_POST['plp_period_'.$count] == 'months' && $count!=$_REQUEST['plp_noi']){
 				$offer_period[$count] = $_POST['plp_Months_'.$count];
 			  }else{
 				if($count == 1)  
 					$offer_period[$count] = 0;
 				elseif($count == $_REQUEST['plp_noi'])
-					$offer_period[$count] = 999;
+					$offer_period[$count] = '999';
 			  }
 								
 			  if($_POST['plp_price_'.$count] == 'percent'){
