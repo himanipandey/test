@@ -72,10 +72,11 @@ $dailyEmail = array(
             'sendifnodata'=>0
         ),
         array(
-            'sql'=>"SELECT id,project_id,OFFER,OFFER_DESC,created_at as start_date,OFFER_END_DATE,STATUS FROM `project_offers` WHERE STATUS = 'Active' AND OFFER_END_DATE='".$future_date."';",
-            'subject'=>'Expired Project Offers',
-            'recipients'=>array('ankur.dhawan@proptiger.com'), 
+            'sql'=>"SELECT id as OFFER_ID,project_id as PROJECT_ID,OFFER,OFFER_DESC,created_at as START_DATE,OFFER_END_DATE,STATUS FROM `project_offers` WHERE STATUS = 'Active' AND OFFER_END_DATE='".$future_date."';",
+            'subject'=>'Project Offers Reaching Expiry Date',
+            'recipients'=>array('kuldeep.patel_c@proptiger.com'), 
             'attachmentname'=>'expired_project_offers',
+            'message'=>"Please extend the offers validity otherwise they will be deactivated.",
             'sendifnodata'=>0
         )
 );
