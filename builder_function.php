@@ -1237,6 +1237,7 @@ function ViewSuburbDetails($suburbID) {
         $ResDetails['ACTIVE'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
+        $ResDetails['parent_suburb_id'] = $Res['parent_suburb_id'];
         return $ResDetails;
     } else {
         return 0;
@@ -2071,7 +2072,7 @@ function fetch_builderDetail($builderId) {
     return $databuild;
 }
 function ViewLocalityDetails($localityID) {
-    $Sql = "SELECT l.locality_id,l.status,l.description,l.url,l.label,s.city_id,
+    $Sql = "SELECT l.locality_id, l.suburb_id, l.status,l.description,l.url,l.label,s.city_id,
             l.max_latitude,l.min_latitude,l.max_longitude,l.min_longitude
             FROM " . LOCALITY . " l inner join suburb s on l.suburb_id = s.suburb_id 
                 WHERE LOCALITY_ID ='" . $localityID . "'";
@@ -2081,6 +2082,7 @@ function ViewLocalityDetails($localityID) {
         $Res = mysql_fetch_assoc($ExecSql);
         $ResDetails['LOCALITY_ID'] = $Res['locality_id'];
         $ResDetails['CITY_ID'] = $Res['city_id'];
+        $ResDetails['SUBURB_ID'] = $Res['suburb_id'];
         $ResDetails['LABEL'] = $Res['label'];
         $ResDetails['status'] = $Res['status'];
         $ResDetails['URL'] = $Res['url'];
@@ -2335,7 +2337,9 @@ function project_aliases_detail($projectID){
 }
 
 function ViewUserDetails($ID){
-	$Sql = "SELECT * FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
+	$Sql = "SELECT ADMINID,EMP_CODE,FNAME,LNAME,USERNAME,ADMINPASSWORD,ADMINEMAIL
+                ,MOBILE,ADMINADDDATE,ADMINLASTLOGIN,REGION,STATUS,DEPARTMENT
+                ,ROLE,JOINING_DATE,RESIGNATION_DATE FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
 	$ExecSql = mysql_query($Sql);
 
 	if(mysql_num_rows($ExecSql)==1)	{
@@ -2357,6 +2361,7 @@ function ViewUserDetails($ID){
 		$ResDetails['ROLE'] 		=  $Res['ROLE'];
 		$ResDetails['JOINING_DATE'] 	=  $Res['JOINING_DATE'];
 		$ResDetails['RESIGNATION_DATE']	=  $Res['RESIGNATION_DATE'];
+                $ResDetails['CLOUDAGENT_ID'] = $Res['CLOUDAGENT_ID'];
 		return $ResDetails;
 	}
 	else

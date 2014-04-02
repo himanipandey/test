@@ -111,4 +111,36 @@
     $cityArray = getAllCities();
     $smarty->assign("cityArray", $cityArray);
     $smarty->assign('dirname',$dirName);
+
+
+
+    //adding new suburb
+    $suburbSelect = Array();
+    $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id FROM ".SUBURB." WHERE 
+            CITY_ID ='".$cityId ."'  ORDER BY LABEL ASC";
+
+    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
+    while ($dataArr = mysql_fetch_array($QueryExecute))
+    {
+           array_push($suburbSelect, $dataArr);
+    }
+    $smarty->assign("suburbSelect", $suburbSelect);
+   // print_r($suburbSelect);
+
+
+
+    // parent child suburb array
+
+
+
+
+    
+    //$str = json_encode(getHierArr($cityId));
+
+    
+    //$smarty->assign("suburb_str", $str);
+
+
+
+
 ?>

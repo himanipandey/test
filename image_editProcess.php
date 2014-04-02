@@ -34,16 +34,6 @@
     }    
      $smarty->assign("towerDetail", $towerDetail);
      
-       //date dropdown
-    $curdate = date("M-Y",time());
-    $date_div = array();
-    $date_div[date("Y-m",time())] =  $curdate ;
-    for($cmt=1;$cmt<=11;$cmt++){
-		$nextdate = strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " -$cmt month");
-		$date_div[date('Y-m',$nextdate)] =  date("M-Y",$nextdate) ;
-    }
-    $smarty->assign("dateDiv", $date_div);
-    
     //display order
     $display_order_div = array();
     for($cmt=1;$cmt<=5;$cmt++){
@@ -56,12 +46,7 @@
 	    {
 	      $ErrorMsg["title"] = "Please enter Image Title.";
 	    }
-		
-		if( isset($_REQUEST['tagged_month']) &&  !array_filter($_REQUEST['tagged_month']) )
-	    {
-	      $ErrorMsg["tagged_month"] = "Please enter Image Tagged Date.";
-	    }
-	   	if(isset($_POST['btnSave']) && empty($_REQUEST['chk_name']) )
+	  	if(isset($_POST['btnSave']) && empty($_REQUEST['chk_name']) )
 		{
 		  $ErrorMsg["tagged_month"] = "Please select edit or delete action.";
 		}
@@ -143,15 +128,22 @@
 												
 							
 							$arrTitle[$k] = $_REQUEST['title'][$k];
-							$arrTaggedDate[$k] = date("Y-m-d",strtotime($_REQUEST['tagged_date'][$k]));
+							$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
+							$arrTaggedDate[$k] = $tagged_date."-01";;
 							$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
 							$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
 							$service_image_id = $_REQUEST["service_image_id"][$k];
 							
-							if($arrTowerId[$key] > 0)
-								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
+							if(is_numeric($arrTowerId[$k])){
+								if($arrTowerId[$k] > 0)
+									$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
+								else
+									$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."',TOWER_ID = NULL,";
+							}
 							else
 								$add_tower = " TOWER_ID = NULL, ";
+								
+							
 							
 							//updating the image meta data
 							$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
@@ -177,7 +169,6 @@
 						}
 					}
 				}
-
 				/*if(count($arrValue) == 0)
 				{
 					$ErrorMsg["blankerror"] = "Please select atleast one image.";	
@@ -1053,11 +1044,15 @@
 										}
 									}
 									$add_tower = '';
-									if($arrTowerId[$key] > 0)
+												
+									if(is_numeric($arrTowerId[$key])){
+									   if($arrTowerId[$key] > 0)
 										$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."', TOWER_ID = $arrTowerId[$key], ";
-									else
+									   else
+										$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."',TOWER_ID = NULL,";
+									}else
 										$add_tower = " TOWER_ID = NULL, ";
-								
+										
 									$dbpath = explode("/images_new",$img_path);
 									$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 												SET 

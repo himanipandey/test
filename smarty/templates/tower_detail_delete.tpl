@@ -143,7 +143,13 @@
                            </td>
                         </tr>
 
-                        
+                        <tr>
+							<td colspan=7>
+								{if $ErrorMsg1}
+										<font color="red">{$ErrorMsg1}</font>
+								{/if}
+							</td>
+						</tr>
 
                         <tr class = "headingrowcolor" >
                           <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >

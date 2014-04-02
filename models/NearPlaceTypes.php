@@ -3,7 +3,7 @@
 class NearPlaceTypes extends ActiveRecord\Model
 
 {
-    static $table_name = 'near_place_types';
+    static $table_name = 'landmark_types';
     
     static function NearPlaceTypesArr() {
         $getNearPlaceTypes = NearPlaceTypes::find('all',array('select'=>'id, display_name','order'=>'display_name asc'));
