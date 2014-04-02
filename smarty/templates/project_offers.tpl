@@ -56,7 +56,7 @@ function archieved_offers(project_id)
 					<form method="post" enctype="multipart/form-data" id="project-offers-form">
 			          <div>
                         {if $ErrorMsg!= ''}
-                           <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg}</font></td></tr>
+                           <tr><td colspan = "2" align ="left" style="padding-left:120px;font-size:15px"><font color = "red">{$ErrorMsg}</font></td></tr>
                         {/if}
                         <tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Offer Type : </td>
@@ -374,7 +374,7 @@ function archieved_offers(project_id)
 		}       
 	  }	
 	  	
-				
+	  	
 	  if($('#offer_date').val() == ''){
 		alert("Offer Validity Date is required!");
 		return false;		  
@@ -387,10 +387,12 @@ function archieved_offers(project_id)
 		  alert("Offer Validity Date must be future date.");
 		  return false;
 		}
-	  }else if(offerDesc.trim() == ''){
+	  }
+	  
+	  if(offerDesc.trim() == ''){
 		alert("Offer Description is required!");
 		return false;
-	  }
+	  }		
 	  
 		return true;
 	  
@@ -500,15 +502,44 @@ function archieved_offers(project_id)
 		  }else if($("input[name='no_emi_period']:checked").val()){
 			offer_desc = "No Pre-EMI till " + noEmiPeriod;
 		  }
-		   if($("input[name='no_emi_special_bsp']:checked").val() == 'special_bsp')
-			offer_desc = offer_desc + " " +"at BSP of Rs. "+$('#no_emi_bsp').val() + " per sq. ft.";
+		   if($("input[name='no_emi_special_bsp']:checked").val() == 'special_bsp'){
+			bsp = $('#no_emi_bsp').val();
+			bsp = bsp.split("").reverse();
+			final_bsp = $('#no_emi_bsp').val();
+			new_bsp = new Array();
+			cnt = 1;knt=1;
+			if(bsp.length > 3){
+				$.each(bsp,function(k,v){
+					//alert(v);
+					new_bsp[knt] = v;
+				  if(cnt%3 == 0 && cnt>=3){
+					cnt++;
+					knt++;
+					new_bsp[knt] = ",";
+				  }else{
+					cnt++;
+				  }
+				  knt++;
+				  
+				});
+				if(knt>2){
+					new_bsp = new_bsp.reverse();					
+					final_bsp = new_bsp.join("");					
+					if(final_bsp.charAt(0)==',')
+						final_bsp = final_bsp.substr(1, final_bsp.length);
+				}
+		   }
+			
+			offer_desc = offer_desc + " " +"at BSP of Rs. "+final_bsp+ " per sq. ft.";
+		   
+		   }
 		  
 		    $('#offerDesc').val(offer_desc);  
 		}else  if(offer_type == 'PartEmi'){   //----------------PLP Descirption Population
 			for(i=1;i<=$('#plp_noi').val();i++){		
 			  plpPeriod = '';partEmiPrice = '';
 			  //fetching Emi Period Value
-			  if($("input[name='plp_period_"+i+"']:checked").val() == 'months'){
+			  if($("input[name='plp_period_"+i+"']:checked").val() == 'months' && i!=$('#plp_noi').val()){
 				 plpPeriod = "after "+ $('#plp_Months_'+i).val() + " months";
 			  }else{
 				if(i==1)
