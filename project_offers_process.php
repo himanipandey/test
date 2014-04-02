@@ -1,4 +1,5 @@
 <?php
+
 	$projectId			=	$_REQUEST['projectId'];
 	$projectDetail		=	ResiProject::virtual_find($projectId);
     $projectDetail     =   $projectDetail->to_array();

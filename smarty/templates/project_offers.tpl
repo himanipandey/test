@@ -568,7 +568,7 @@ function archieved_offers(project_id)
 			  else if($("input[name='plp_price_"+i+"']:checked").val() == 'deci')
 				plpPrice = $('#plp_Deci_'+i).val() +" "+$('#plp_Unit_'+i).val();
 					
-			  if($("input[name='plp_period_"+i+"']:checked").val() && $("input[name='plp_price_"+i+"']:checked").val()){
+			  if($("input[name='plp_period_"+i+"']:checked").val() && $("input[name='plp_price_"+i+"']:checked").val() && i!=$('#plp_noi').val()){
 				offer_desc = offer_desc+", "+plpPrice+" "+plpPeriod;
 			  }else{
 				if(i==1 && $("input[name='plp_price_"+i+"']:checked").val())

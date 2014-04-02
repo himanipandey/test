@@ -5,6 +5,8 @@ require_once $docroot.'dbConfig.php';
 require_once 'cronFunctions.php';
 require_once $docroot.'includes/send_mail_amazon.php';
 
+$past_date = date("Y-m-d",strtotime('-1 days'));
+$future_date = date("Y-m-d",strtotime('+1 days'));
 $latLongList = '0,1,2,3,4,5,6,7,8,9';
 $dailyEmail = array(
 	array(
@@ -62,8 +64,15 @@ $dailyEmail = array(
             'attachmentname'=>'Latitude_longitude_beyond_limit',
             'sendifnodata'=>0
         ),
+         array(
+            'sql'=>"UPDATE `project_offers` SET STATUS = 'Inactive' WHERE STATUS = 'Active' AND OFFER_END_DATE='".$past_date ."';",
+            'subject'=>'Expired Project Offers',
+            'recipients'=>array('ankur.dhawan@proptiger.com'), 
+            'attachmentname'=>'expired_project_offers',
+            'sendifnodata'=>0
+        ),
         array(
-            'sql'=>"SELECT project_id,OFFER,OFFER_DESC,created_at as start_date,OFFER_END_DATE,STATUS FROM `project_offers` WHERE STATUS = 'Inactive';",
+            'sql'=>"SELECT id,project_id,OFFER,OFFER_DESC,created_at as start_date,OFFER_END_DATE,STATUS FROM `project_offers` WHERE STATUS = 'Active' AND OFFER_END_DATE='".$future_date."';",
             'subject'=>'Expired Project Offers',
             'recipients'=>array('ankur.dhawan@proptiger.com'), 
             'attachmentname'=>'expired_project_offers',
