@@ -36,7 +36,7 @@ $offerDetails = ProjectOffers::find('all',array('conditions'=>array('project_id'
 									<TD>'.$arrOfferTypes[$data->offer].'</TD>
 									<TD>'.$data->offer_desc.'</TD>
 									<TD>'.date('d-m-Y',strtotime(trim(substr($data->created_at,0,11)))).'</TD>
-									<TD>'.date('d-m-Y',strtotime(trim(substr($data->created_at,0,11)))).'</TD>
+									<TD>'.date('d-m-Y',strtotime(trim(substr($data->offer_end_date,0,11)))).'</TD>
 									<TD>'.$data->status.'</TD>
 								</TR>';
 							}

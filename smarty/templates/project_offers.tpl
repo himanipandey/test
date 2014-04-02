@@ -466,6 +466,7 @@ function archieved_offers(project_id)
 	  
 	  //plp fields population
 	  $('#plp_noi').change(function(){
+		  $('#offerDesc').val("");  
 		  for(i=1; i<=24; i++)
 		    $('#inst-'+i+',#plpMnth-txt-wrapper-'+i).css('display','none');
 		  noi = $(this).val();
@@ -559,7 +560,7 @@ function archieved_offers(project_id)
 				if(i==1 && $("input[name='plp_price_"+i+"']:checked").val())
 				 offer_desc = "Pay "+plpPrice+" "+plpPeriod;
 				else if(i==$('#plp_noi').val() && $("input[name='plp_price_"+i+"']:checked").val())
-				 offer_desc = offer_desc+", "+plpPrice+" "+plpPeriod+".";
+				 offer_desc = offer_desc+", "+plpPrice+" "+plpPeriod;
 			  }		
 			}
 		    $('#offerDesc').val(offer_desc);  
