@@ -35,11 +35,22 @@ function createAliases($pl_tb_name, $pl_tb_id, $al_name)
 	$sql = "SELECT * FROM ".place_alias_mapping. " where place_table_name = '".addslashes($pl_tb_name)."' and place_table_id = '".addslashes($pl_tb_id)."' and alias_name='".addslashes($al_name)."'";
 	//echo $sql;
   $result=mysql_query($sql);
+
+  $sql1 = "SELECT * FROM city where LOWER(LABEL)=LOWER('".addslashes($al_name)."')"; 
+  $sql2 = "SELECT * FROM suburb where LOWER(LABEL)=LOWER('".addslashes($al_name)."')LOWER"; 
+  $sql3 = "SELECT * FROM locality where LOWER(LABEL)=LOWER('".addslashes($al_name)."')"; 
+  $result1=mysql_query($sql1);
+  $result2=mysql_query($sql2);
+  $result3=mysql_query($sql3);  
+
     
-    if(mysql_fetch_array($result) !== false)
-	{
-		echo "2";
-	}
+  if (mysql_fetch_array($result1) !== false || mysql_fetch_array($result2) !== false || mysql_fetch_array($result3) !== false) {
+    echo "5";
+  }
+  else if(mysql_fetch_array($result) !== false)
+  {
+    echo "2";
+  }
 	else
 	{
 		$qry = "INSERT INTO ".place_alias_mapping." (place_table_name, place_table_id, alias_name, created_at, updated_by) VALUES ('".addslashes($pl_tb_name)."', '".addslashes($pl_tb_id)."', '".addslashes($al_name)."', NOW(), ".$_SESSION["adminId"]." )";
@@ -246,6 +257,39 @@ function dettachAliases($pl_tb_name, $pl_tb_id, $al_tb_id)
 	
 
 }
+
+
+function createLandmarkAliases($label, $city_id)
+{
+  //$return = 3;
+
+  $sql = "SELECT * FROM ".landmarks. " where name = '".addslashes($label)."' and city_id = '".addslashes($city_id)."'";
+  //echo $sql;
+  $result=mysql_query($sql);
+
+  
+  if(mysql_fetch_array($result) !== false)
+  {
+    echo "2";
+  }
+  else
+  {
+    $qry = "INSERT INTO ".landmarks." (city_id, name, vicinity, place_type_id, status, created_at) VALUES ('".addslashes($city_id)."', '".addslashes($label)."', '', '1', 'Active', NOW())";
+    
+    //echo $aliasName;
+    mysql_query($qry)  or die(mysql_error());
+      if(mysql_affected_rows()>0)
+      {
+          echo "1";//$return = 1;
+      }
+      else
+      {
+          echo "3";//$return = 3;
+      }
+  }
+  //return $return;
+}
+
 
 
 function getHierArr($cid, $subarr1){

@@ -1250,7 +1250,7 @@ function broker_call_edit(callId, brokerId)
                                                         {if $offer_desc}
                                                             {$count=1}
 															{foreach from=$offer_desc item=data}
-																 {$count++}. {$data->offer_desc}<br/>
+																 {$count++}.[{$data->offer}] - {$data->offer_desc}<br/>
 															{/foreach}
                                                             
                                                         {else}

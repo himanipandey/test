@@ -32,6 +32,239 @@ function selectNearPlaceTypes(value){
   window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+locality_id+"&near_place_type="+value;
 }
 
+function isNumeric(val) {
+        var validChars = '0123456789.';
+        var validCharsforfirstdigit = '-01234567890';
+        if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
+                return false;
+        
+
+        for(var i = 1; i < val.length; i++) {
+            if(validChars.indexOf(val.charAt(i)) == -1)
+                return false;
+        }
+
+
+        return true;
+}
+
+function cleanFields(){
+    $("#lmkid").val('');
+    $("#placeTypeHidden").val('');
+    $("#lmkname").val('');
+    $("#lmkaddress").val('');
+    $("#lmklat").val('');
+    $("#lmklong").val('');
+    $("#lmkphone").val('');
+    $("#lmkweb").val('');
+    $("#lmkprio").val('');
+    $("#lmkstatus").val('');
+
+    $('#errmsgname').html('');
+    $('#errmsgaddress').html('');
+    $('#errmsglat').html('');
+    $('#errmsglong').html('');
+    
+
+}
+
+function landmarkEdit(id,cityid,placeid,lmkname,lmkaddress,lmklat,lmklong,lmkphone,lmkweb,lmkprio,lmkstatus){
+    cleanFields();
+    $("#lmkid").val(id);
+    $("#placeTypeHidden").val(placeid);
+    $("#lmkname").val(lmkname);
+    $("#lmkaddress").val(lmkaddress);
+    $("#lmklat").val(lmklat);
+    $("#lmklong").val(lmklong);
+    $("#lmkphone").val(lmkphone);
+    $("#lmkweb").val(lmkweb);
+    $("#lmkprio").val(lmkprio);
+    $("#lmkstatus").val(lmkstatus);
+    window.scrollTo(0, 0);
+    if($('#create_Landmark').css('display') == 'none'){ 
+     $('#create_Landmark').show('slow'); 
+    }
+}
+
+jQuery(document).ready(function(){  
+
+
+
+ String.prototype.isMatch = function(s){
+   var b = this.match(s)!==null
+   return b;
+}
+ 
+$("#create_button").click(function(){
+  cleanFields();
+   $('#create_Landmark').show('slow'); 
+});
+
+$("#exit_button").click(function(){
+  cleanFields();
+   $('#create_Landmark').hide('slow'); 
+});
+
+  $("#lmkSave").click(function(){
+
+    var cityid      = $('#citydd').val();
+    var placeid = $('#placeType').val();
+    if(!placeid)
+      var placeid = $('#placeTypeHidden').val();
+    var lmkid = $('#lmkid').val();
+    var lmkname = $("#lmkname").val().trim();
+    var lmkaddress = $("#lmkaddress").val().trim();
+    var lmklat = $("#lmklat").val().trim();
+    var lmklong = $("#lmklong").val().trim();
+    var lmkphone = $("#lmkphone").val().trim();
+    var lmkweb = $("#lmkweb").val().trim();
+    var lmkprio = $("#lmkprio").val().trim();
+    var lmkstatus = $("#lmkstatus").val().trim();
+    var error = 0;
+    var mode='';
+    if(lmkid) mode = 'update';
+    else mode='create';
+
+
+    
+
+    
+
+    if(!cityid){
+      alert("Please Select City.");
+      error=1;
+    }
+    if(!placeid){
+      alert("Please Select Place Type.");
+      error=1;
+    }
+    
+     //longitude      
+
+    if(lmklong==''){
+      $('#errmsglong').html('<font color="red">Please enter Landmark Longitude</font>');
+      $("#lmklong").focus();
+      error = 1;
+    }
+    
+    else if(!isNumeric(lmklong)) {
+      $('#errmsglong').html('<font color="red">Please enter numeric Longitude</font>');
+      $("#lmklong").focus();
+      error = 1;
+    }
+    else   {
+      if (!(parseInt(lmklong)<=180) || !(parseInt(lmklong)>=-180)) {
+        $('#errmsglong').html('<font color="red">Please enter Longitude between -180 and +180</font>');
+        $("#lmklong").focus();
+        error = 1;
+      }
+      else{
+        $('#errmsglong').html('');
+        }
+    }
+      
+    //latitude   
+    if(lmklat==''){
+      $('#errmsglat').html('<font color="red">Please enter Landmark latitude</font>');
+      $("#lmklat").focus();
+      error = 1;
+    }
+
+    
+    else if(!isNumeric(lmklat)) {
+      $('#errmsglat').html('<font color="red">Please enter Numeric Latitude</font>');
+      $("#lmklat").focus();
+      error=1;
+    }
+    else   {
+      
+      if (!(parseInt(lmklat)<=180) || !(parseInt(lmklat)>=-180)) {
+        $('#errmsglat').html('<font color="red">Please enter Latitude between -180 and +180</font>');
+        $("#lmklat").focus();
+        error = 1;
+      }
+      else{
+        $('#errmsglat').html('');
+        }
+    }
+
+
+    //address
+    if(lmkaddress==''){
+      $('#errmsgaddress').html('<font color="red">Please enter Landmark Address</font>');
+      $("#lmkaddress").focus();
+      error = 1;
+    }
+    else if (/[^\w#,.\- ]/.test(lmkaddress)){
+      
+      $('#errmsgaddress').html('<font color="red">Special characters are not allowed in Landmark name</font>');
+      $("#lmkaddress").focus();
+      error = 1;
+    }
+    else   {
+      $('#errmsgaddress').html('');
+    }
+
+    //name
+
+    if(lmkname==''){
+      $('#errmsgname').html('<font color="red">Please enter Landmark name</font>');
+      $("#lmkname").focus();
+      error = 1;
+    }
+    else if (/[^\w.\- ]/i.test(lmkname)){
+      
+      $('#errmsgname').html('<font color="red">Special characters are not allowed in Landmark name</font>');
+      $("#lmkname").focus();
+      error = 1;
+    }
+    else   {
+      $('#errmsgname').html('');
+    }
+
+    if (error==0){
+      
+      $.ajax({
+            type: "POST",
+            url: '/saveNearPlacePriority.php',
+            data: { id:lmkid, cid: cityid, placeid:placeid, name : lmkname, address : lmkaddress, lat : lmklat, lon : lmklong, phone:lmkphone, web:lmkweb, prio:lmkprio, status:lmkstatus, task : 'createLandmarkAlias' , mode:mode},
+            success:function(msg){
+              //alert(msg);
+               if(msg == 1){
+                alert("Saved");
+                location.reload(true);
+                //$("#onclick-create").text("Landmark Successfully Created.");
+               }
+               else if(msg == 2){
+                //$("#onclick-create").text("Landmark Already Added.");
+                   alert("Already Saved");
+                   location.reload(true); 
+               }
+               else if(msg == 3){
+                //$("#onclick-create").text("Error in Adding Landmark.");
+                   alert("error");
+               }
+               else if(msg == 4){
+                //$("#onclick-create").text("No Landmark Selected.");
+                   alert("no data");
+               }
+               else alert(msg);
+            },
+          });
+
+    }
+    
+
+  });
+
+
+
+});
+
+
+
+
+
 function openProjectPriorityAdd()
 {
     var cityid      = $('#citydd').val();
@@ -59,7 +292,7 @@ function nearPlacePriorityEdit(id,type)
     $.ajax({
             type: "POST",
             url: '/saveNearPlacePriority.php',
-            data: { nearPlaceId: id, prio:priority, cityId:cityid, loc:localityid, sub:suburbid, status:status },
+            data: { nearPlaceId: id, prio:priority, cityId:cityid, loc:localityid, sub:suburbid, status:status, task:'editpriority' },
             success:function(msg){
                if(msg == 1){
                    alert("Successfully updated");
@@ -163,7 +396,7 @@ function show_loc_inst(){
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                     <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                       <TR>
-                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Project Priority</TD>
+                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Landmarks Priority</TD>
                       </TR>
                     </TBODY></TABLE>
                   </TD>
@@ -183,14 +416,7 @@ function show_loc_inst(){
                                        {/foreach}
                                     </select>
                                 </td>
-                                <!--<td width="20%" height="25" align="left" valign="top">
-                                    <select id="sub" name="sub" onchange="selectSuburb(this.value)">
-                                       <option value=''>select suburb</option>
-                                       {foreach from=$suburbArr key=k item=v}
-                                           <option value="{$k}" {if $suburbId==$k}  selected="selected" {/if}>{$v}</option>
-                                       {/foreach}
-                                    </select>
-                                </td>-->
+                                
                                 <td width="20%" height="25" align="left" valign="top">
                                     <select id="loc" name="loc" onchange="selectLocality(this.value)">
                                        <option value=''>select locality</option>
@@ -201,30 +427,108 @@ function show_loc_inst(){
                                     </select>
                                 </td>
 
-                                <!--<td width="20%" height="25" align="left" valign="top">
-                                    <select id="loc" name="loc" onchange="selectProject(this.value)">
-                                       <option value=''>select project</option>
-                                       {foreach from=$projectArr key=k item=v}
-                                           <option value="{$v->project_id}" {if $projectId==$v->project_id}
-                                              selected="selected" {/if}>{$v->label}</option>
-                                       {/foreach}
-                                    </select>
-                                </td>-->
+                                
                                 <td width="20%" height="25" align="left" valign="top">
-                                    <select id="loc" name="loc" onchange="selectNearPlaceTypes(this.value)">
+                                    <select id="placeType" name="loc" onchange="selectNearPlaceTypes(this.value)">
                                        <option value=''>select place type</option>
                                        {foreach from=$nearPlaceTypesArray key=k item=v}
-                                              <option value="{$v->id}" {if $nearPlaceTypesId==$v->id}  selected="selected" {/if}>{$v->display_name}</option>
+                                              <option value="{$v->id}" {if $nearPlaceTypesId==$v->id}  selected="selected" {/if}>{$v->name}</option>
                                        {/foreach}
                                     </select>
                                 </td>
-                                <!--<td width="20%" height="25" align="left" valign="top"><input type="button" name="add" value="Add Near Place Priority" onclick="return openProjectPriorityAdd();" /></td>
-                                <td width="20%" height="25" align="center" valign="top"><img src="images/1376493783_help.png" onclick="show_loc_inst();" border="0" style="cursor: pointer;"/></td>-->
+                                
                           </tr>
                         </table>
                       </td>
                     </tr>
                   </table>
+
+                  <div align="left" style="margin-bottom:5px;">
+                  <button type="button" id="create_button" align="left">Create New Landmark</button>
+                </div>
+                  <div id='create_Landmark' style="display:none" align="left">
+                  <TABLE cellSpacing=2 cellPadding=4 width="93%" align="left" border=0 >
+                  <form method="post" enctype="multipart/form-data" id="formlmk" name="formlmk">
+                    <input type="hidden" name="old_sub_name" value="">
+                    <div>
+                    <tr>
+                    <td width="10%" align="center" colspan=2><b>Please first select City and Place Type</b></td>
+                    </tr> 
+
+                    
+
+                    <tr>
+                      <td width="10%" align="right" >*Name : </td>
+                      <td width="40%" align="left" ><input type=text name="lmkname" id="lmkname"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td><input type="hidden", id="placeTypeHidden"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" valign="top">*Address :</td>
+                      <td width="30%" align="left" >
+                      <textarea name="lmkaddress" rows="10" cols="35" id="lmkaddress" style="width:250px;"></textarea><td width="20%" align="left" id="errmsgaddress"></td>
+                      </td>
+                      <td><input type="hidden", id="lmkid">  </td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >*Latitude : </td>
+                      <td width="30%" align="left"><input type=text name="lmklat" id="lmklat"  style="width:250px;"></td> <td width="20%" align="left" id="errmsglat"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >*Longitude : </td>
+                      <td width="30%" align="left"><input type=text name="lmklong" id="lmklong"  style="width:250px;"></td> <td width="20%" align="left" id="errmsglong"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >Phone No. : </td>
+                      <td width="30%" align="left"><input type=text name="lmkphone" id="lmkphone"  style="width:250px;"></td> 
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >Website : </td>
+                      <td width="30%" align="left"><input type=text name="lmkweb" id="lmkweb" style="width:250px;"></td> 
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >*Priority : </td>
+                      <td width="30%" align="left"><select id="lmkprio" name="lmkprio"  >
+                        <option name=one value=1  >1</option>
+                        <option name=two value=2  >2</option>
+                        <option name=three value=3 >3</option>
+                        <option name=four value=4 >4</option>
+                        <option name=five value=5 >5</option>
+                        </select>
+                      </td> 
+                      
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >*Status : </td>
+                      <td width="30%" align="left"><select id="lmkstatus" name="lmkstatus" >
+                        <option name=one value='Active'> Active </option>
+                        <option name=two value='Inactive' > Inactive </option>
+                                
+                        </select>
+                      </td> 
+                    </tr>
+
+                    <tr>
+                      <td >&nbsp;</td>
+                      <td align="left" style="padding-left:50px;" >
+                      <input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp; <input type="button" name="exit_button" id="exit_button" value="Exit" style="cursor:pointer">                 
+                      </td>
+                    </tr>
+                    </div>
+                  </form>
+                  </table> 
+                  </div> 
+
+
+
+
+
                     <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
                         <form name="form1" method="post" action="">
                           <thead>
@@ -265,7 +569,7 @@ function show_loc_inst(){
                                       {$color = "bgcolor = '#FCFCFC'"}
                                     {/if}
                                 <TR {$color}>
-                                  <TD align=center class=td-border>{$i}</TD>
+                                  <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v.name}</TD>
                                   <TD align=center class=td-border>{$v.vicinity}</TD>
                                   <TD align=center class=td-border>{$v.display_name}</TD>
@@ -294,7 +598,7 @@ function show_loc_inst(){
       
 
       </TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Save</a></TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Save</a> <button type="button" id="edit_button{$v.id}" onclick="return landmarkEdit('{$v.id}', '{$v.city_id}', '{$v.place_type_id}', '{$v.name}', '{$v.vicinity}', '{$v.latitude}', '{$v.longitude}', '{$v.phone_number}', '{$v.website}', '{$v.priority}', '{$v.status}')" align="left">Edit</button></TD>
                                 </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->

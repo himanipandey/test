@@ -23,7 +23,7 @@ if ($_POST['btnSave'] == "Save") {
 	$radioForStatus	=	$_POST['active'];
 	$joiningdate	= $_POST['joiningdate'];
 	$resignationdate = $_POST['resignationdate'];
-        
+        $cloudAgentId = $_POST['cloudAgentId'];
 	$smarty->assign("txtadminid", $userid);
 	$smarty->assign("txtempcode", $txt_empcode);	
 	$smarty->assign("txtfname", $txt_name);
@@ -38,6 +38,7 @@ if ($_POST['btnSave'] == "Save") {
 	$smarty->assign("status",$radioForStatus);
 	$smarty->assign("joiningdate",$joiningdate);
 	$smarty->assign("resignationdate",$resignationdate);
+        $smarty->assign("cloudAgentId",$cloudAgentId);
 	
 	if($txt_empcode == '') 	{
 		$ErrorMsg["EmpCodeErr"] = "Please enter employee code.";
@@ -106,6 +107,7 @@ if ($_POST['btnSave'] == "Save") {
                         DEPARTMENT = '".$department."',
                         ROLE = '".$designation."',
                         JOINING_DATE = '".$joiningdate."',
+                        CLOUDAGENT_ID =  '".$cloudAgentId."',    
                         RESIGNATION_DATE = '".$resignationdate."'";
 		$DataInsert = mysql_query($sql) or die(mysql_error());
                 if($DataInsert)
@@ -114,10 +116,17 @@ if ($_POST['btnSave'] == "Save") {
 	}
 	else
 	{
-             $sql = "UPDATE ".ADMIN." SET 
+            if($_REQUEST['oldPass'] != $txt_password){
+                $passUpdate = md5($txt_password);
+            }
+            else{
+                $passUpdate = $txt_password;
+            }
+                 $sql = "UPDATE ".ADMIN." SET 
                     EMP_CODE = '".$txt_empcode."' ,
                     FNAME	= '".$txt_name."',
-                    USERNAME = '".$txt_username."', 		
+                    USERNAME = '".$txt_username."',
+                    ADMINPASSWORD = '".$passUpdate."',    
                     ADMINEMAIL = '".$txt_email."',
                     MOBILE = '".$txt_mobile	."',
                     ADMINADDDATE = '".date("Y-m-d")."',
@@ -127,6 +136,7 @@ if ($_POST['btnSave'] == "Save") {
                     DEPARTMENT ='".$department."',
                     ROLE = '".$designation."',
                     JOINING_DATE = '".$joiningdate."',
+                    CLOUDAGENT_ID =  '".$cloudAgentId."',    
                     RESIGNATION_DATE = '".$resignationdate."'";
 
             $sql .= " WHERE ADMINID='".$userid."'";
@@ -145,6 +155,7 @@ else if ($_GET['userid']!='') {
 	 $smarty->assign("txtlname", stripslashes($UserDetail['LNAME']));                                 
 	 $smarty->assign("txtusername", stripslashes($UserDetail['USERNAME']));	
 	 $smarty->assign("txtadminpassword", stripslashes($UserDetail['ADMINPASSWORD']));
+         $smarty->assign("txtadminpasswordOld", stripslashes($UserDetail['ADMINPASSWORD']));
 	 $smarty->assign("adminemail", stripslashes($UserDetail['ADMINEMAIL']));
 	 $smarty->assign("mobile", stripslashes($UserDetail['MOBILE']));	
 	 $smarty->assign("datecreated", stripslashes($UserDetail['ADMINADDDATE']));
@@ -155,6 +166,7 @@ else if ($_GET['userid']!='') {
 	 $smarty->assign("txtdesignation", stripslashes($UserDetail['ROLE']));
 	 $smarty->assign("joiningdate",stripslashes($UserDetail['JOINING_DATE']));
 	 $smarty->assign("resignationdate",stripslashes($UserDetail['RESIGNATION_DATE']));
+         $smarty->assign("cloudAgentId", stripslashes($UserDetail['CLOUDAGENT_ID']));
 
 }
 
