@@ -10,7 +10,8 @@
 		$smarty->assign("ProjectDetail", $projectDetail);
 		$ImageDataListingArr = allProjectImages($projectId);
 		$builderDetail	= fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
-	
+	print'<pre>';
+	print_r($ImageDataListingArr);
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 		$count =0;
 		$count+=count($ImageDataListingArr);

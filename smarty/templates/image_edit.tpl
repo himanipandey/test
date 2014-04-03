@@ -63,7 +63,7 @@ function check()
 	if (onechk_flg == 0)
 	{
 	   alert ("Please check at least one checkbox from list data.");
-	   return false;	  
+	   return false;
 	}
 	else
 	{
@@ -173,7 +173,7 @@ $(".pt_reqflrplan").fancybox();
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
 														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
-														{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
+														{if $c[data].PLAN_TYPE == 'Construction Status'}
 														<div class="taggedDate">
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
 															<input name="img_date{$cnt}" type="text" class="formstyle2" id="img_date{$cnt}" readonly="1" size="10"  value="{{$ImageDataListingArr[data].tagged_month}}" />  <img src="../images/cal_1.jpg" id="img_date_trigger{$cnt}" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
