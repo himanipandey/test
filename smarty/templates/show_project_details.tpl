@@ -124,14 +124,15 @@ function towerSelect(towerId)
 
 	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, 
             preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder,projectMoveValidation)
-	{	
+	{
+            alert(stg);
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
 		var flgChk = 0;	
                 /*******code for check user have access to move project or not******/
                 if(dir != 'backward' && projectMoveValidation <=0 && projectMoveValidation != -999 
-                    && (phase == 'DataCollection' || phase == 'DcCallCenter')){
+                    && ((phase == 'DataCollection' && (stg == 'UpdationCycle' || stg == 'SecondaryPriceCycle')) || phase == 'DcCallCenter')){
                     alert("This project is not assigned to you!");
                     return false;
                     
