@@ -125,7 +125,6 @@ function towerSelect(towerId)
 	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, 
             preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder,projectMoveValidation)
 	{
-            alert(stg);
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
