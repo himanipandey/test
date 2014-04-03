@@ -546,7 +546,7 @@ function getNearPlacesArrfromCity($cityId, $order, $placeType=0)
     else
         $where = "np.city_id = $cityId and  np.place_type_id = $placeType"; //.$queryLessThenMax;
     $orderby = " ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
-    $qry = "SELECT np.name, np.id, np.city_id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority
+    $qry = "SELECT np.name, np.id, np.city_id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority, np.place_type_id, np.phone_number, np.website
             FROM " . landmarks. " np 
             inner join landmark_types npt on npt.id = np.place_type_id
             WHERE ".$where." ". $orderby;
@@ -649,7 +649,7 @@ function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
            
             $orderby = "ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
             
-            $qry = "SELECT np.name, np.city_id, np.id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority
+            $qry = "SELECT np.name, np.city_id, np.id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority, np.place_type_id, np.phone_number, np.website
             FROM " . landmarks. " np 
                 
             inner join landmark_types npt on npt.id = np.place_type_id
