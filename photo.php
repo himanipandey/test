@@ -7,13 +7,11 @@
     include("includes/configs/configs.php");
     include("includes/db_query.php");
     include("common/function.php");
-
     include("s3upload/s3_config.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 
 if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
-       // echo "<pre>"; print_r( $_REQUEST ); print_r( $_FILES ); die();
         $city     = !empty( $_REQUEST['cityId'] ) ? $_REQUEST['cityId'] : 0;
         $suburb   = !empty( $_REQUEST['suburbId'] ) ? $_REQUEST['suburbId'] : 0;
         $locality = !empty( $_REQUEST['localityId'] ) ? $_REQUEST['localityId'] : 0;
@@ -216,7 +214,6 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                 $errMsg = "";
                 $imgId = 'img_'.$ImgID;
                 $IMG = $_FILES[$imgId]; 
-              //  echo count($_FILES)."----";
                 $uploadStatus = array();
                 if ( $errMsg == "" ) {
                     //  add images to DB and to public_html folder
@@ -242,7 +239,6 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                 else {
                                     //  unknown format !!
                                 }
-                                //echo $imgType."---->Here<br>";
                                 if ( $imgType == "" ) {
                                     $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "format not supported";
                                 }
@@ -260,7 +256,6 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
                                     $dest = 'locality/'.$imgName;
                                     $source = $newImagePath.$dest;
-                                    //echo $imagePriority."==>".$imgDisplayName."==>".$imgDescription;die;
                                     $s3upload = new ImageUpload($source, array("s3" => $s3,
                                         "image_path" => $dest, "object" => $areaType,"object_id" => $areaId,
                                         "image_type" => strtolower($imgCategory),
@@ -283,8 +278,6 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     $resImg = mysql_query($qryUpdate) or die(mysql_error());
                                     $s3upload = new ImageUpload(NULL, array("service_image_id" => $imgSevice));
                                     $response = $s3upload->delete();
-                                    //$addedImgIdArr[] = addImageToDB( $columnName, $areaId, $imgName,
-                                        //    $imgCategory, $imgDisplayName, $imgDescription,$serviceImgId );
                                     $uploadStatus[ $IMG['name'][0] ] = "uploaded";
                                  //   header("Location:photo.php");
                                 }
