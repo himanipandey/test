@@ -160,21 +160,7 @@ $("#exit_button").click(function(){
     
     
      //longitude      
-     if(lmkweb!=''){
-      {literal}
-      if (!lmkweb.match(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/)) {
-        $('#errmsgweb').html('<font color="red">Please enter full valid website address with http.</font>');
-        $("#lmkweb").focus();
-        error = 1;
-      }
-      else{
-          $('#errmsgweb').html('');
-      }
-      {/literal}
-    }
-    else{
-          $('#errmsgweb').html('');
-    }
+     
 
     if(lmkphone!=''){
       if(!isPhnumber(lmkphone)) {
