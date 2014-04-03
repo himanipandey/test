@@ -131,7 +131,7 @@ function towerSelect(towerId)
 		var flgChk = 0;	
                 /*******code for check user have access to move project or not******/
                 if(dir != 'backward' && projectMoveValidation <=0 && projectMoveValidation != -999){
-                    alert("You not have permission to move this project!");
+                    alert("This project is not assigned to you!");
                     return false;
                     
                 }
