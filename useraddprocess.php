@@ -101,7 +101,6 @@ if ($_POST['btnSave'] == "Save") {
                         ADMINPASSWORD =	'".md5($txt_password)."',
                         ADMINEMAIL = '".$txt_email."',
                         MOBILE	= '".$txt_mobile	."',
-                        ADMINADDDATE = '".date("Y-m-d")."',
                         REGION	= '".$region."',
                         STATUS	= 'Y',
                         DEPARTMENT = '".$department."',
