@@ -2339,7 +2339,7 @@ function project_aliases_detail($projectID){
 function ViewUserDetails($ID){
 	$Sql = "SELECT ADMINID,EMP_CODE,FNAME,LNAME,USERNAME,ADMINPASSWORD,ADMINEMAIL
                 ,MOBILE,ADMINADDDATE,ADMINLASTLOGIN,REGION,STATUS,DEPARTMENT
-                ,ROLE,JOINING_DATE,RESIGNATION_DATE FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
+                ,ROLE,JOINING_DATE,RESIGNATION_DATE,CLOUDAGENT_ID FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
 	$ExecSql = mysql_query($Sql);
 
 	if(mysql_num_rows($ExecSql)==1)	{
