@@ -374,11 +374,13 @@ $smarty->assign("builderDetail", $builderDetail);
 $completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
 $smarty->assign("completionDate", $completionDate);
 /* * ***code for promised completion date******* */
-
+$projectd = $projectDetails[0]['PROJECT_ID'];
+/* * ***code for completion effective date******* */
+$comp_eff_date = ResiProjExpectedCompletion::find("all",array("conditions" =>array(" project_id = {$projectId} and EXPECTED_COMPLETION_DATE like '{$completionDate}%'"),'select'=>'SUBMITTED_DATE','limit'=>1,'order'=>'SUBMITTED_DATE desc'));
+$smarty->assign("completionEffDate", $comp_eff_date[0]->submitted_date);
+/* * ***code for completion effective date******* */
 
 /********** booking status for project ***********/
- 
-$projectd = $projectDetails[0]['PROJECT_ID'];
  $project_booking_status = ResiProjectPhase::find("all", array("conditions" => array("project_id = {$projectId} and phase_type = 'Logical'"),'select' => 
                     'booking_status_id'));
 $smarty->assign("project_booking_status_id", $project_booking_status[0]->booking_status_id);

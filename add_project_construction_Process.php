@@ -21,7 +21,7 @@
         if(isset($_REQUEST['phaseId'])) {
             $phaseId = $_REQUEST['phaseId'];
             $qryHistory = "select * from ".RESI_PROJ_EXPECTED_COMPLETION." 
-             where project_id = $projectId and phase_id = $phaseId order by expected_completion_date desc";
+             where project_id = $projectId and phase_id = $phaseId order by submitted_date";
             $resHistory = mysql_query($qryHistory);
             $arrHistory = array();
             $EffectiveDateList = '';
@@ -30,6 +30,8 @@
                 $exp = explode("-",$data['SUBMITTED_DATE']);
                 $EffectiveDateList.= $exp[0]."-".$exp[1].'#';
             }
+			$arrHistoryAll = $arrHistory;
+			$current_element = array_pop($arrHistory);
             $smarty->assign("costDetail", $arrHistory); 
             $smarty->assign("EffectiveDateList", $EffectiveDateList); 
             
@@ -45,11 +47,15 @@
             $smarty->assign("year_expected_completion", $expCompletionDate[0]);
             $sumittedDate = explode("-",$current_phase[0]['submitted_date']);
             $smarty->assign("month_effective_date", $sumittedDate[1]);
-            $smarty->assign("year_effective_date", $sumittedDate[0]);
-            
+            $smarty->assign("year_effective_date", $sumittedDate[0]);         
             $qrySelect = ResiProjectPhase::virtual_find($phaseId);
             $phaseName = $qrySelect->phase_name;
             $smarty->assign("phaseName", $phaseName);
+            
+            //fetching remark of related submitted date
+            $submitted_date_string = $sumittedDate[0]."-".$sumittedDate[1];
+             $submitted_remark = ResiProjExpectedCompletion::find("all",array("conditions" =>array(" project_id = {$projectId} and SUBMITTED_DATE  like '{$submitted_date_string}%' and phase_id = {$phaseId}"),'select'=>'REMARK','limit'=>1));
+             $smarty->assign("submitted_remark", $submitted_remark[0]->remark);
         }
         foreach ($phaseDetail as $k => $val) {
             $p = Array();
@@ -63,6 +69,16 @@
         $smarty->assign("phaseId", $phaseId);
         $smarty->assign("phases", $phases);
         //end code for phase edit dropdown
+    
+    $hiserrorMsg = array();
+    
+    //saving history
+    include('histroy_updation_construction_Process.php');
+    if(isset($_GET['updated_ids']) && count($hiserrorMsg)==0){
+		 $smarty->assign("hist_update_arr", explode("-",$_GET['updated_ids']));
+		$smarty->assign("hist_update", $_GET['hist']);
+	}
+    
 	if(isset($_POST['btnSave']))
 	{
 		$remark	= $_REQUEST['remark'];
@@ -83,7 +99,7 @@
                     $effectiveDt = date('Y')."-".date('m')."-01";
                 else
                     $effectiveDt = $year_effective_date."-".$month_effective_date."-01";
-                $errorMsg = array();
+                
                 /********validation taken from project add/edit page*************/
                 $launchDate = $_REQUEST['launchDate'];
                 $pre_launch_date = $_REQUEST['pre_launch_date'];
@@ -129,8 +145,68 @@
                 }
                 /******end validation taken from project add/edit page*************/
                 
-                else if( ($month_effective_date <= date('m') && $year_effective_date == date('Y')) || $year_effective_date <= date('Y') ) {
+                else if(($month_effective_date <= date('m') && $year_effective_date == date('Y')) || $year_effective_date < date('Y')) {
+					
+					$updation_flag = 0;//flag of updation in phase and resi_project tables
+					
+					$submitted_date_string = $year_effective_date."-".(($month_effective_date<10)?"0".$month_effective_date:$month_effective_date);
+					
                     //code for update completion date history if month and year are same and already exists entry
+                    
+                    $exist_eff_date = ResiProjExpectedCompletion::find("all",array("conditions" =>array(" project_id = {$projectId} and SUBMITTED_DATE  like '{$submitted_date_string}%' and phase_id = {$phaseId}"),'select'=>'SUBMITTED_DATE','limit'=>1,'order'=>'SUBMITTED_DATE desc'));
+                    
+                    if($exist_eff_date){
+                       if($_REQUEST['updateOrInsertRow'] == 1){
+						  $qry = "UPDATE ".RESI_PROJ_EXPECTED_COMPLETION."
+                                SET	
+                                    EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."',
+                                    REMARK = '".$remark."',
+                                    SUBMITTED_DATE = '".$effectiveDt."'
+                                WHERE
+                                    PROJECT_ID = '".$projectId."' 
+                                AND
+                                    phase_id = '".$phaseId."'
+                                AND
+                                SUBMITTED_DATE  like '{$submitted_date_string}%'";
+                          $res = mysql_query($qry) OR die(mysql_error()." completion date update");
+                       }
+					}
+					else{
+						  $qry = "insert into ".RESI_PROJ_EXPECTED_COMPLETION."
+                                    SET	
+                                        EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."',
+                                        REMARK = '".$remark."',
+                                        PROJECT_ID = '".$projectId."',
+                                        phase_id = $phaseId,
+                                        SUBMITTED_DATE = '".$effectiveDt."'";   
+                           $res = mysql_query($qry) OR die(mysql_error()." completion date update");
+                    }
+                    
+                    //maintaining Ascending Order                    
+                    if($res){
+						
+						$check_rows = mysql_query("select * from resi_proj_expected_completion 
+										where project_id = '".$projectId."' and phase_id = '".$phaseId."' 
+										 and DATE_FORMAT(SUBMITTED_DATE, '%Y-%m-%d') < '".$effectiveDt."' 
+										 and DATE_FORMAT(EXPECTED_COMPLETION_DATE, '%Y-%m-%d') > '".$expectedCompletionDate."'");
+						
+						 if(mysql_num_rows($check_rows)){
+							mysql_query("UPDATE ".RESI_PROJ_EXPECTED_COMPLETION."
+                                SET	
+                                    EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."'
+                                WHERE
+                                    PROJECT_ID = '".$projectId."' 
+                                AND
+                                    phase_id = '".$phaseId."'
+                                 AND DATE_FORMAT(SUBMITTED_DATE, '%Y-%m-%d') < '".$effectiveDt."'") or die(mysql_error());
+
+						}		
+						
+					}
+                    
+                    //print "<pre>".print_r($exist_eff_date,1)."</pre>"; die;
+                    
+                    /*
                     $qryOldData = "select * from ".RESI_PROJ_EXPECTED_COMPLETION." 
                         where project_id = $projectId and phase_id = $phaseId";
                     $resOldData = mysql_query($qryOldData);
@@ -158,9 +234,10 @@
                                         PROJECT_ID = '".$projectId."',
                                         phase_id = $phaseId,
                                         SUBMITTED_DATE = '".$effectiveDt."'";                        
-                    }
-                    $res = mysql_query($qry) OR die(mysql_error()." completion date update");
-                    if($res) {
+                    }*/
+                    
+                    
+                    if($res && ($month_effective_date == date('m') && $year_effective_date == date('Y'))) { // updation only with current month data
                         //phase update
                         $qryPhaseUpdate = "update resi_project_phase 
                             set completion_date = '".$expectedCompletionDate."',
@@ -202,10 +279,10 @@
 	}
 	
 	/**************************************/
-	
 $smarty->assign('eff_date',$effectiveDt);
 
 $months = array(1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'May', 6 => 'Jun', 7 => 'Jul', 
     8 => 'Aug', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec');
 $smarty->assign('months',$months);
+
 ?>

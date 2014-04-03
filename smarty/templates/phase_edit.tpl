@@ -455,7 +455,7 @@
                 if(title=='Update Completion Date'){
                     jQuery(this).attr('href','javascript:void(0)');
                     window.open('add_project_construction.php?projectId='+projectId+"&phaseId="+phaseId,'AddProjectConstruction',
-                    'height=400,width=900,scrollbars=yes,toolbar=no,left=150,right=150,resizable=1,top=50');
+                    'height=400,width=1000,scrollbars=yes,toolbar=no,left=150,right=150,resizable=1,top=50');
                 }
             });
     });

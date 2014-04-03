@@ -626,11 +626,12 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                  $phaseIdSelet = mysql_fetch_assoc($resPhaseSelect);
                  if($eff_date_to_prom == '')
                      $eff_date_to_prom = '0000-00-00';
+                 $effectiveDt = date('Y')."-".date('m')."-01";
                  $qryCompletionDate = "insert into resi_proj_expected_completion 
                     set
                       project_id = $returnProject->project_id,
                       expected_completion_date = '".$eff_date_to_prom."',
-                      submitted_date = now(),
+                      submitted_date = '".$effectiveDt."',
                       phase_id = ".$phaseIdSelet['phase_id'];
                  mysql_query($qryCompletionDate);
                  header("Location:project_img_add.php?projectId=".$returnProject->project_id);

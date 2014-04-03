@@ -1164,6 +1164,14 @@ function broker_call_edit(callId, brokerId)
                                                     <td>
                                                         {$completionDate}</td>
 						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b>Completion Effective Date:</b>
+                                                    </td>
+                                                    <td>
+                                                       {if $completionDate!='0000-00-00'}{$completionEffDate|date_format:"%b %Y"}{/if}
+                                                    </td>
+						</tr>
 						
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
