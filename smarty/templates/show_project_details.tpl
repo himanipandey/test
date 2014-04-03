@@ -130,7 +130,7 @@ function towerSelect(towerId)
 		var val = $('input:radio[name=validationChk]:checked').val();
 		var flgChk = 0;	
                 /*******code for check user have access to move project or not******/
-                if(dir != 'backward' && projectMoveValidation <=0){
+                if(dir != 'backward' && projectMoveValidation <=0 && projectMoveValidation != -999){
                     alert("You not have permission to move this project!");
                     return false;
                     

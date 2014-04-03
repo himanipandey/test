@@ -707,6 +707,7 @@ $smarty->assign("callerMessage", $msg);
 $smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
 
 /*******code for check user have access to move in audit1 stage or not***********/
+if($_SESSION['DEPARTMENT'] == 'CALLCENTER') {
 $qryChk = ResiProject::virtual_find($projectId);
 $projectAssign = $qryAllProj = "select pa.* from project_assignment pa join proptiger_admin pa1
                     on pa.assigned_to = pa1.adminid
@@ -715,5 +716,9 @@ $projectAssign = $qryAllProj = "select pa.* from project_assignment pa join prop
                        and pa.assigned_to = '".$_SESSION['adminId']."'";
 $projectAssignData = ProjectAssignment::find_by_sql($projectAssign);
 $smarty->assign("projectMoveValidation", count($projectAssignData));
+}
+else {
+    $smarty->assign("projectMoveValidation", -999);
+}
 /*******end code for check user have access to move in audit1 stage or not***********/
 ?>
