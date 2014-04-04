@@ -96,6 +96,7 @@
                             
                             </div>
                             </td>
+                            {if $ErrorMsg["txtMetaParent"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaParent"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetaparent"></td>{/if}
                             <td height="25" align="left">
                             <div id="mainsubcity_txtbox">
                                     <input type="hidden" name="parent_id" id="parent_id" value="{$parent_id}">
@@ -105,20 +106,21 @@
                             </div>
          </tr>			
 				<tr>
+          <div>
 					<td width="20%" align="right">Landmarks Attached: </td>
 
 					<td width="100" align="left" >
             <div id='aliases' data-role="tagsinput"></div>
             <div><label id="removetext1" style="color:green; font-weight: bold;"></label><a href="#" onclick="showHier();"><b>See Hierarchy</b></a></div>
           </td>
-         
+         </div>
 				</tr>
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
 					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search Landmarks: </label></td>
 					<td width="30%" align="left"><input id="search"><button type="button" id="button" align="left">Save Landmark</button> <label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label></td></div>
 					
-					
+      				
 					
 				</tr>
 
@@ -381,9 +383,9 @@ var options, d, selectedItem;
     
 	});
 
+
+
 });
-
-
 	
 
 	jQuery("#btnSave").click(function(){

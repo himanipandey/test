@@ -129,7 +129,6 @@ if ($_POST['btnSave'] == "Save") {
                     ADMINPASSWORD = '".$passUpdate."',    
                     ADMINEMAIL = '".$txt_email."',
                     MOBILE = '".$txt_mobile	."',
-                    ADMINADDDATE = '".date("Y-m-d")."',
                     BRANCH_LOCATION	= '".$branch."',
                     REGION = '".$region."',
                     STATUS	= '".$radioForStatus."',
