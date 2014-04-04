@@ -230,9 +230,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if(!empty($txtProjectLongitude) && ($txtProjectLongitude <-180 || $txtProjectLongitude>180)){
 		$ErrorMsg["txtLongitude"] = "Longitude range should be between -180 to 180.";
 	    }
-	    if(empty($txtProjectLongitude)){
-		$ErrorMsg["txtLongitude"] = "Please enter project longitude.";
-	    }
+	    
 	    if(empty($Status)){
 		$ErrorMsg["txtStatus"] = "Please select project status.";
 	    }
