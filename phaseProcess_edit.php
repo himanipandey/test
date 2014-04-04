@@ -140,7 +140,7 @@ if (isset($_POST['btnSave'])) {
     $remark = $_REQUEST['remark'];
     $isLaunchedUnitPhase = $_REQUEST['isLaunchUnitPhase'];
     $sold_out_date = $_REQUEST['sold_out_date']; 
-
+   
     // Assign vars for smarty
     $smarty->assign("phasename", $phasename);
     $smarty->assign("launch_date", $launch_date);
@@ -162,6 +162,8 @@ if (isset($_POST['btnSave'])) {
             $completion_date = '';
         if($pre_launch_date == '0000-00-00')
             $pre_launch_date = '';
+        if($sold_out_date == '0000-00-00')
+            $sold_out_date = '';
         
         if( $launch_date != '' && $completion_date !='' ) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
@@ -182,6 +184,13 @@ if (isset($_POST['btnSave'])) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
           }
+         if($sold_out_date != ''){
+			$retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
+            if( $retdt <= 0 || $launch_date=='') {
+                $error_msg = "Sold out date to be always greater than Launch date";
+            } 			 
+			 
+		 }
          
      
             // Flats Config
