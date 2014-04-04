@@ -35,6 +35,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     $pre_launch_date = $_REQUEST['pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
+    $sold_out_date = $_REQUEST['sold_out_date']; 
     $bookingStatus = 1; //available
 
     // Flats Config
@@ -104,7 +105,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
           if($error_msg == ''){
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
-                global $projectId, $phasename, $launch_date, $completion_date, $remark, $towers, $bookingStatus, $phase;
+                global $projectId, $phasename, $launch_date, $completion_date, $remark, $towers, $bookingStatus, $phase, $sold_out_date;
     //          Creating a new phase
                 $phase = new ResiProjectPhase();
                 $phase->project_id = $projectId;
@@ -115,7 +116,9 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 $phase->status = 'Active';
                 $phase->booking_status_id = $bookingStatus;
                 $phase->updated_by = $_SESSION["adminId"];
+                $phase->sold_out_date = $sold_out_date;
                  $phase->submitted_date = date('Y-m-d');
+                 
                 $phase->virtual_save();
 
                  /***********end code related to completion date add/edit**************/
