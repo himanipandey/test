@@ -122,7 +122,10 @@ if ($_POST['btnSave'] == "Save") {
 		$DataInsert = mysql_query($sql) or die(mysql_error());
                 $lastId = mysql_insert_id();
                 //code for insert data in proptiger admin city
+                if($_REQUEST['city'][0] == '')
+                        unset($_REQUEST['city'][0]);
                 if(count($_REQUEST['city'])>0) {
+                    
                     $cityQry = "insert into proptiger_admin_city (admin_id,city_id) values ";
                     $comma = ',';
                     $cityData = '';
@@ -164,13 +167,19 @@ if ($_POST['btnSave'] == "Save") {
 
             $sql .= " WHERE ADMINID='".$userid."'";
             $DataUpdate = mysql_query($sql) or die(mysql_error()." update user");
+            if($department != 'SURVEY') {
+                $qryDel = "delete from proptiger_admin_city where admin_id = $userid";
+                $resDel = mysql_query($qryDel) or die(mysql_error());
+            }
             $qryCityData = "select city_id from proptiger_admin_city where admin_id = $userid";
             $resCityData = mysql_query($qryCityData) or ide(mysql_error());
             $arrCityList = array();
             while($cityDataFetch = mysql_fetch_assoc($resCityData)) {
                 $arrCityList[$cityDataFetch['city_id']] = $cityDataFetch;
             }
-            if(count($_REQUEST['city'])>0) {
+            if($_REQUEST['city'][0] == '')
+                 unset($_REQUEST['city'][0]);            
+            if(count($_REQUEST['city'])>0 && $department == 'SURVEY') {
                   //delete image if deselect
                     foreach($arrCityList as $k=>$v) {
                         if(!in_array($k,$_REQUEST['city'])) {
