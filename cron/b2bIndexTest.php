@@ -6,7 +6,7 @@
  */
 
 function runTests(){
-    return verifyLaunched() && verifyPhases() && verifyNonZeroColumns(); //&& verifyNegativeUnitsSold() && verifyPlotBedrooms() && verifySupply();
+    return verifySupply() && verifyLaunched() && verifyPhases() && verifyNonZeroColumns(); //&& verifyNegativeUnitsSold() && verifyPlotBedrooms();
 }
 
 // verifying if supply and launched unit in d_inventory_price table is correct
