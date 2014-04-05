@@ -466,7 +466,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['project_description'] = $txtProjectDescription;
             $arrInsertUpdateProject['comments'] = $comments;
             $arrInsertUpdateProject['project_address'] = $txtAddress;
+            if($txtProjectLattitude == '')
+                $txtProjectLattitude = null;
             $arrInsertUpdateProject['latitude'] = $txtProjectLattitude;
+            if($txtProjectLongitude == '')
+                $txtProjectLongitude = null;
             $arrInsertUpdateProject['longitude'] = $txtProjectLongitude;
             $arrInsertUpdateProject['display_order'] = getDisplayOrder($projectId);
             $arrInsertUpdateProject['status'] = $Active;
