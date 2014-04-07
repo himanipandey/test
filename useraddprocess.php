@@ -130,11 +130,11 @@ if ($_POST['btnSave'] == "Save") {
                     $comma = ',';
                     $cityData = '';
                     foreach($_REQUEST['city'] as $k=>$val){
-                        if($k == count($_REQUEST['city'])-1)
+                        if($k == count($_REQUEST['city']))
                             $comma = ' ';
                         $cityData .=  "($lastId,$val)$comma";
                     }
-                    $finalStr = $cityQry.$cityData;
+                      $finalStr = $cityQry.$cityData;
                     $resCity = mysql_query($finalStr) or die(mysql_error());
                 }
                 if($DataInsert)
