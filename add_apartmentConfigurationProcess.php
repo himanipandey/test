@@ -2,9 +2,9 @@
 
 	$RoomCategoryArr	=	RoomCategory::categoryList();
 	$projectId			=	$_REQUEST['projectId'];
-    $project = ResiProject::virtual_find($projectId);
+        $project = ResiProject::virtual_find($projectId);
 	$projectDetail		=	$project->to_custom_array();
-    $projectDetail = array($projectDetail);
+        $projectDetail = array($projectDetail);
 
 	$smarty->assign("ProjectDetail", $projectDetail);
 	$smarty->assign("typeA", APARTMENTS);

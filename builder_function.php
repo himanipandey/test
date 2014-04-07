@@ -685,6 +685,7 @@ function ProjectType($projectId) {
     global $arrProjectType_P;
     global $arrProjectType;
     global $arrProjectType_VA;
+    global $arrProjectType_COMM;
 
     $qry = "SELECT * FROM  " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' AND OPTION_CATEGORY = 'Actual'";
     $res = mysql_query($qry);
@@ -718,7 +719,18 @@ function ProjectType($projectId) {
             $arrProjectType_P['LENGTH_OF_PLOT'][] = $data['LENGTH_OF_PLOT'];
             $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
             $arrProjectType_P['STATUS'][] = $data['STATUS'];
-        } else {
+        }
+        else if ($data['OPTION_TYPE'] == 'Commercial') {
+            $arrProjectType_P['OPTIONS_ID'][] = $data['OPTIONS_ID'];
+            $arrProjectType_P['OPTION_NAME'][] = $data['OPTION_NAME'];
+            $arrProjectType_P['OPTION_TYPE'][] = $data['OPTION_TYPE'];
+            $arrProjectType_P['SIZE'][] = $data['SIZE'];
+            $arrProjectType_P['CREATED_AT'][] = $data['CREATED_AT'];
+            $arrProjectType_P['LENGTH_OF_PLOT'][] = $data['LENGTH_OF_PLOT'];
+            $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
+            $arrProjectType_P['STATUS'][] = $data['STATUS'];
+        }
+        else {
             $arrProjectType_VA['OPTIONS_ID'][] = $data['OPTIONS_ID'];
             $arrProjectType_VA['OPTION_NAME'][] = $data['OPTION_NAME'];
             $arrProjectType_VA['OPTION_TYPE'][] = $data['OPTION_TYPE'];
