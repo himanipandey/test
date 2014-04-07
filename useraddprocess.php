@@ -137,8 +137,8 @@ if ($_POST['btnSave'] == "Save") {
                     $finalStr = $cityQry.$cityData;
                     $resCity = mysql_query($finalStr) or die(mysql_error());
                 }
-               // if($DataInsert)
-                    //header("Location:userList.php");
+                if($DataInsert)
+                    header("Location:userList.php");
                }
 	}
 	else
