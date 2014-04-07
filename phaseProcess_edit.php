@@ -172,12 +172,16 @@ if (isset($_POST['btnSave'])) {
             if( $retdt <= 0 ) {
                 $error_msg = "Launch date to be always greater than Pre Launch date";
             }
+            
         } 
         if( $launch_date != '') {
             $retdt  = ((strtotime($launch_date) - strtotime(date('Y-m-d'))) / (60*60*24));
             if( $retdt > 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
+            if(checkAvailablityDate($phaseId, $launch_date) || checkListingPricesDate($phaseId, $launch_date) ){
+                $error_msg  .= " Inventory or Prices with effective date before {$launch_date} are present. So can not change the Launch Date.";
+            }
           }
          
      
@@ -325,6 +329,55 @@ if (isset($_POST['btnSave'])) {
         header("Location:show_project_details.php?projectId=" . $projectId);
     else
         header("Location:ProjectList.php?projectId=" . $projectId);
+}
+
+
+
+function checkAvailablityDate($phaseId, $date){
+    
+    $rows = [];
+
+    
+        $sql = "select pa.* from project_availabilities pa 
+        inner join project_supplies ps on (ps.id = pa.project_supply_id and ps.version='Cms') 
+        inner join listings l on (l.id = ps.listing_id and l.status='Active')
+        inner join resi_project_phase rpp on (rpp.PHASE_ID=l.phase_id and rpp.PHASE_ID='{$phaseId}' and rpp.version='Cms')
+        where pa.effective_month < '{$date}'";
+        //die($sql);
+        //$phase_availability = ProjectAvailability::findAvailabilityForPhase($projectId, $p->id);
+        $res = mysql_query($sql);
+         
+        while($row = mysql_fetch_array($res))
+        {
+            $rows[] = $row;
+        }
+    //print("<pre>");
+    //print_r($rows);
+    if(empty($rows)) return false;
+    else return true;
+}
+
+function checkListingPricesDate($phaseId, $date){
+   
+    $rows = [];
+    
+    $sql = "select lp.* from listing_prices lp 
+        inner join listings l on (l.id = lp.listing_id and lp.status='Active' and lp.version='Cms')
+        inner join resi_project_phase rpp on (rpp.PHASE_ID=l.phase_id and rpp.PHASE_ID='{$phaseId}' and rpp.version='Cms')
+        where lp.effective_date < '{$date}'";
+        $res = mysql_query($sql);
+         
+        while($row = mysql_fetch_array($res))
+        {
+           
+            $rows[] = $row;
+        }
+    
+  //print("<pre>");
+   // print_r($rows);
+
+    if(empty($rows)) return false;
+    else return true;
 }
 
 /* * *********************************** */
