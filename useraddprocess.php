@@ -167,7 +167,9 @@ if ($_POST['btnSave'] == "Save") {
 
             $sql .= " WHERE ADMINID='".$userid."'";
             $DataUpdate = mysql_query($sql) or die(mysql_error()." update user");
-            if($department != 'SURVEY') {
+            if($_REQUEST['city'][0] == '')
+                 unset($_REQUEST['city'][0]); 
+            if(count($_REQUEST['city']) == 0) {
                 $qryDel = "delete from proptiger_admin_city where admin_id = $userid";
                 $resDel = mysql_query($qryDel) or die(mysql_error());
             }
@@ -177,8 +179,7 @@ if ($_POST['btnSave'] == "Save") {
             while($cityDataFetch = mysql_fetch_assoc($resCityData)) {
                 $arrCityList[$cityDataFetch['city_id']] = $cityDataFetch;
             }
-            if($_REQUEST['city'][0] == '')
-                 unset($_REQUEST['city'][0]);            
+                       
             if(count($_REQUEST['city'])>0 && $department == 'SURVEY') {
                   //delete image if deselect
                     foreach($arrCityList as $k=>$v) {
