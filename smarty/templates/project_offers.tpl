@@ -3,6 +3,26 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<script type="text/javascript">
+function archieved_offers(project_id)
+{
+	//code for builder contact info popup
+    var url = "/archieved_offers.php?projectId="+project_id;
+   //  jQuery.fancybox({
+   //      'href' :  url
+   //  });
+     $.fancybox({
+        'width'                :820,
+        'height'               :400,
+      
+        'href'                 : url,
+        'type'                : 'iframe'
+    })
+
+}
+</script>
 </TD>
   </TR>
   <TR>
@@ -33,10 +53,10 @@
                 <TD vAlign=top align=middle class="backgorund-rt" height="450"><BR>
                   <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 					{if count($offerDetails)<10 || $offerId != ''}
-					<form method="post" enctype="multipart/form-data">
+					<form method="post" enctype="multipart/form-data" id="project-offers-form">
 			          <div>
-                        {if $ErrorMsg["offerType"] != ''}
-                           <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["offerType"]}</font></td></tr>
+                        {if $ErrorMsg!= ''}
+                           <tr><td colspan = "2" align ="left" style="padding-left:120px;font-size:15px"><font color = "red">{$ErrorMsg}</font></td></tr>
                         {/if}
                         <tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Offer Type : </td>
@@ -51,7 +71,8 @@
 										<option value="{$key}">{$val}</option>
 									{/if}
 								  {/foreach}
-								</select>
+								</select>								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<input class="pt_click" type="button" title="Offers Archive" value="Offers Archive" onclick="return archieved_offers({$projectId});" />
 							</td>
 						</tr>
 						<tr>
@@ -61,10 +82,9 @@
 							  <table>
 								<tr>
 								  <td>
-								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months" onclick="populate_offer_desc()" {if is_numeric($offer_period)}checked{/if} />
-								    <select id="no_emi_Months" name="no_emi_Months" onchange="populate_offer_desc()">
-									  {for $val=1 to 10}<option value="{$val*6}" {if $offer_period==($val*6)}selected{/if}>{$val*6}</option>{/for}
-								    </select> Months 
+								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months" onclick="populate_offer_desc()" {if is_numeric($offer_period)}checked{/if} />
+								    <input type="text" size="2"  maxlength="2" id="no_emi_Months" name="no_emi_Months" onkeyup="populate_offer_desc()" style="width:50px" onkeypress='return isNumberKey(event)' value="{if is_numeric($offer_period)}{$offer_period}{/if}"/>
+								    Months 
 								  </td>
 								  <td>
 								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if} onclick="populate_offer_desc()"/> Till Possession
@@ -72,11 +92,9 @@
 								</tr>
 								<tr>
 								<td>
-								    <b>&nbsp;&nbsp;No EMI Price : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="percent" name="no_emi_price" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if} /> 
-								    <select id="no_emi_price_emiPer" name="no_emi_price_emiPer" onchange="populate_offer_desc()">
-									  <option value="">&nbsp;</option>
-									  {for $val=1 to 20}<option value="{$val*5}" {if $offer_price==($val*5)}selected{/if}>{$val*5}</option>{/for}
-								    </select>Percent 
+								    <b>&nbsp;&nbsp;To Be Paid Now : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="percent" name="no_emi_price" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if} /> 
+								    <input type="text" size="3"  maxlength="3" id="no_emi_price_emiPer" name="no_emi_price_emiPer" onkeyup="populate_offer_desc()" style="width:50px" onkeypress='return isNumberKey(event)' value="{if $offer_price_type=='Percent'}{$offer_price}{/if}"/>
+								    Percent 
 								  </td>
 								  <td>
 								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} onclick="populate_offer_desc()"/>
@@ -88,38 +106,30 @@
 								    </select>
 								  </td>
 								</tr>
+								<tr>
+								  <td>
+								    <b>Special BSP : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_emi_special_bsp"  value="special_bsp" onclick="populate_offer_desc()" {if is_numeric($bsp)}checked{/if} />
+								    <input type="text"  id="no_emi_bsp" size="10"  maxlength="10" name="no_emi_bsp" onkeyup="populate_offer_desc()" style="width:50px" onkeypress='return isNumberKey(event)' value="{if is_numeric($bsp)}{$bsp}{/if}"/>
+								  </td>
+								  <td>&nbsp;</td>
+								</tr>
 							  </table>
 						    </div>
 						    <div id="field-group-2" style="{if $currOffer == 'PartEmi'}display:block{else}display:none{/if}">
 							  <table>
 								<tr>
 								  <td>
-								    <b><font color = "red">*</font>EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="months" onclick="populate_offer_desc()" {if is_numeric($offer_period)}checked{/if}/>
-								    <select id="part_emiMonths" name="part_emiMonths" onchange="populate_offer_desc()">
-									  {for $val=1 to 10}<option value="{$val*6}" {if $offer_period==($val*6)}selected{/if}>{$val*6}</option>{/for}
-								    </select> Months 
-								  </td>
-								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_period" value="pos" onclick="populate_offer_desc()" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if}/> Possession
+								    <b><font color = "red">*</font>No. of Installment:</b>
+								    <select id="plp_noi" name="plp_noi">
+										<option value="">-Select-</option>
+										{for $val=2 to 24}<option value="{$val}" {if $noi==$val}selected{/if}>{$val}</option>{/for}
+									</select>
 								  </td>
 								</tr>
+								  <td id="plp-fields">
+									  {include file='plp_offer_fields.tpl'}
+								  </td>
 								<tr>
-								<td>
-								    <b><font color = "red">*</font>EMI Price : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_price" value="percent" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if}/> 
-								    <select  name="part_emi_price_emiPer" id="part_emi_price_emiPer" onchange="populate_offer_desc()">
-										<option value=""></option>Othe
-									  {for $val=1 to 20}<option value="{$val*5}" {if $offer_price==($val*5)}selected{/if}>{$val*5}</option>{/for}
-								    </select>Percent 
-								  </td>
-								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="part_emi_price" value="deci" onclick="populate_offer_desc()" {if $offer_price_type=='Absolute'}checked{/if} />
-								    <input type="text" name="part_emi_price_emiDeci" id="part_emi_price_emiDeci" style="width:50px" onkeyup="populate_offer_desc()" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
-								     <select id="part_emi_price_emiUnit" name="part_emi_price_emiUnit" onchange="populate_offer_desc()">
-									  <option value="Lakhs" {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
-									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
-									  <option value="Thousands" {if $priceDeciUnit=='Thousands'}selected{/if} >Thousands</option>
-								    </select>
-								  </td>
 								</tr>
 							  </table>
 						    </div>
@@ -127,11 +137,11 @@
 						      <table>
 							    <tr>
 								  <td>
-									  <input type="radio" {if ("PLC"==$discount_on)}checked{/if} name="nac_discount_on"  id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
-									  <input type="radio"  {if ("Parking"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
-									  <input type="radio"  {if ("ClubMembership"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_clubMembership" value="ClubMembership" onclick="populate_offer_desc()"/>Club Membership <br/>
-									  <input type="radio"  {if ("GymMembership"==$discount_on)}checked{/if}  name="nac_discount_on" id="nac_gymMembership" value="GymMembership" onclick="populate_offer_desc()" />Gym Membership <br/>
-									  <input type="radio"  {if $other_text}checked{/if}  name="nac_discount_on" id="nac_other" value="Other" onclick="populate_offer_desc()"/>Other <br/>
+									  <input type="checkbox" {if in_array("PLC",$discount_on)}checked{/if} name="nac_discount_on[]"  title="PLC" id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
+									  <input type="checkbox"  {if in_array("Parking",$discount_on)}checked{/if}  title="Parking" name="nac_discount_on[]" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
+									  <input type="checkbox"  {if in_array("ClubMembership",$discount_on)}checked{/if} title="Club Membership" name="nac_discount_on[]" id="nac_clubMembership" value="ClubMembership" onclick="populate_offer_desc()"/>Club Membership <br/>
+									  <input type="checkbox"  {if in_array("GymMembership",$discount_on)}checked{/if}  title="Gym Membership" name="nac_discount_on[]" id="nac_gymMembership" value="GymMembership" onclick="populate_offer_desc()" />Gym Membership <br/>
+									  <input type="checkbox"  {if in_array("Other",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_other" value="Other" onclick="populate_offer_desc()"/>Other <br/>
 									  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										<input type="text" name="nac_other_txt" id="nac_other_txt" style="width:300px;{if $other_text} display:block{else}display:none{/if}" onkeyup="populate_offer_desc()" value="{$other_text}" />
 								  </td>
@@ -142,11 +152,9 @@
 						      <table>
 							    <tr>
 							      <td>
-									  <b><font color="red">*</font>PriceDiscount Amount: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pd_price" value="percent" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if} /> 
-								    <select name="pd_price_emiPer" id="pd_price_emiPer" onchange="populate_offer_desc()">
-										<option value="">&nbsp;</option>
-									  {for $val=1 to 20}<option value="{$val*5}"  {if $offer_price==($val*5)}selected{/if}>{$val*5}</option>{/for}
-								    </select>Percent 
+									  <b><font color="red">*</font>PriceDiscount Amount: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pd_price" value="percent" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if} />
+									  <input type="text" size="3"  maxlength="3" name="pd_price_emiPer" id="pd_price_emiPer" onkeyup="populate_offer_desc()" style="width:50px" onkeypress='return isNumberKey(event)' value="{if $offer_price_type=='Percent'}{$offer_price}{/if}"/> 
+								   Percent 
 								  </td>
 								  <td>
 								    &nbsp;&nbsp;<input type="radio" name="pd_price" value="deci" onclick="populate_offer_desc()" {if $offer_price_type=='Absolute'}checked{/if} />
@@ -164,37 +172,36 @@
 									  <b>PriceDiscount On: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									  <select id="pd_on" name="pd_on" onchange="populate_offer_desc()">
 										<option value="">--Select--</option>  
-									    <option value="Rate" {if ("Rate"==$discount_on)}selected{/if} >Rate</option>
-									    <option value="PLC" {if ("PLC"==$discount_on)}selected{/if}>PLC</option>
-									    <option value="BookingAmount" {if ("BookingAmount"==$discount_on)}selected{/if}>Booking Amount</option>
-									    <option value="ClubMembership" {if ("ClubMembership"==$discount_on)}selected{/if}>Club Charges</option>
-									    <option value="Parking" {if ("Parking"==$discount_on)}selected{/if}>Parking</option>
-									    <option value="GymMembership" {if ("GymMembership"==$discount_on)}selected{/if}>Gym Membership</option>
+									    <option value="BSP" {if ("BSP"==$discount_on[0])}selected{/if} >BSP</option>
+									    <option value="PLC" {if ("PLC"==$discount_on[0])}selected{/if}>PLC</option>
+									    <option value="BookingAmount" {if ("BookingAmount"==$discount_on[0])}selected{/if}>Booking Amount</option>
+									    <option value="ClubMembership" {if ("ClubMembership"==$discount_on[0])}selected{/if}>Club Charges</option>
+									    <option value="Parking" {if ("Parking"==$discount_on[0])}selected{/if}>Parking</option>
+									    <option value="GymMembership" {if ("GymMembership"==$discount_on[0])}selected{/if}>Gym Membership</option>
 									    <option value="Other" {if $other_text}selected{/if}>Other</option>
 									  </select>
 									   <br/>
 									  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									  <input type="text" name="pd_other_txt" id="pd_other_txt"  style="width:300px;{if $other_text} display:block{else}display:none{/if}" value="{$other_text}" onkeyup="populate_offer_desc()"/>
 							      </td>
-							    </tr>
-							    <tr>
-							      <td>
-									  <b>PriceDiscount Date:  </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									  <input onchange="populate_offer_desc()" value="{$discount_date}" name="pd_date" value="{$pd_date}" type="text" class="formstyle2" id="pd_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="pd_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
-							      </td>
-							    </tr>
+							    </tr>							   
 						      </table>
 						    </div>						    
 						  </td>
 						</tr>
+						 <tr>
+						   <td width="20%" align="right" ><font color = "red">*</font>Offer Validity Date : </td>
+						   <td>
+							  <input onchange="populate_offer_desc()" value="{$offer_date}" name="offer_date" type="text" class="formstyle2" id="offer_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="offer_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+						   </td>
+						   <td>&nbsp;</td>
+					    </tr>
 						<tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Description : </td>
                             <td width="30%" align="left">
 								<textarea name="offerDesc" id="offerDesc" rows="5" cols="50">{$offer_desc}</textarea>
 							</td>
-                            {if $ErrorMsg["offerDesc"] != ''}
-                               <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["offerDesc"]}</font></td>{else} <td width="50%" align="left"></td>
-                            {/if}
+                            <td>&nbsp;</td>
 						</tr>
 						<tr>
 						  <td></td>
@@ -275,44 +282,82 @@
 		if($("input[name='no_emi_period']:checked").val() == undefined ){
 			alert("EMI Period is required.");
 			return false;
+		}else if($("input[name='no_emi_period']:checked").val()=='months' && ($('#no_emi_Months').val()<=0 || $('#no_emi_Months').val()>60)){
+			alert("EMI Period must be between 1 to 60 in months.");
+			return false;
 		}else if($("input[name='no_emi_price']:checked").val() == 'deci') {
 			if((intRegex.test(noEmiDeci) || floatRegex.test(noEmiDeci))){
 				 if(noEmiDeci <= 0 || noEmiDeci > 99.9){
-					alert("Emi Price value must not be less than 1 and greater than 99.9");
+					alert("To Be Paid Now's value must not be less than 1 and greater than 99.9");
 					return false;
 				}
 			}else{
-				alert("Please enter a valid EMI Price.");
+				alert("Please enter a valid To Be Paid Now's value.");
 				return false;
 			}
-		}else if($("input[name='no_emi_price']:checked").val() == 'percent' && $("select[name='no_emi_price_emiPer']").val() == ''){
-			alert("Please select EMI in Percent.");
+		}else if($("input[name='no_emi_price']:checked").val() == 'percent' && $("#no_emi_price_emiPer").val()<=0 || $("#no_emi_price_emiPer").val()>100){
+			alert("To Be Paid Now's value must be between 1 to 100 in percent.");
+			return false;
+		}else if($("input[name='no_emi_special_bsp']:checked").val()=='special_bsp' && $('#no_emi_bsp').val()==''){
+			alert("Please enter BSP.");
 			return false;
 		}
-	  }else if(offer_type == 'PartEmi'){ //PartEmi validations
-	    partEmiDeci = $("input[name='part_emi_price_emiDeci']").val();
-		if($("input[name='part_emi_period']:checked").val() == undefined ){
-			alert("EMI Period is required.");
+	  }else if(offer_type == 'PartEmi'){ //PLP validations
+	     if($('#plp_noi').val()==''){
+			alert('Please select Number of Installments.');
 			return false;
-		}else if($("input[name='part_emi_price']:checked").val() == undefined ){
-			alert("EMI Price is required.");
-			return false;
-		}else if($("input[name='part_emi_price']:checked").val() == 'percent' && $("select[name='part_emi_price_emiPer']").val() == ''){
-			alert("Please select EMI in Percent.");
-			return false;
-		}else if($("input[name='part_emi_price']:checked").val() == 'deci'){
-			if(intRegex.test(partEmiDeci) || floatRegex.test(partEmiDeci)){
-			  if(partEmiDeci <= 0 || partEmiDeci > 99.9){
-				alert("Emi Price value must not be less than 1 and greater than 99.9");
-				return false;
-			  }
-			}else{
-				alert("Please enter a valid EMI Price.");
-				return false;
-			}							
-		}        
+		}else{
+			inst_price_flag_per = 0;
+			inst_price_flag_abs = 0;
+			total_per = 0;
+		  
+				
+		   for(i=1;i<=$('#plp_noi').val();i++){	
+			   if($("input[name='plp_price_"+i+"']:checked").val() == 'percent')
+					inst_price_flag_per = 1;
+			   if($("input[name='plp_price_"+i+"']:checked").val() == 'deci')
+					inst_price_flag_abs = 1;			   	
+				partEmiDeci = $("input[name='plp_Deci_"+i+"']").val();								
+				if($("input[name='plp_period_"+i+"']:checked").val() == undefined && i!=1 && i!=$('#plp_noi').val()){
+					alert("Installment-"+ i +": Instalment Period is required.");
+					return false;
+				}else if($("input[name='plp_period_"+i+"']:checked").val() == 'months' && ($("input[name='plp_Months_"+i+"']").val() == '' || $("input[name='plp_Months_"+i+"']").val() <=0 || $("input[name='plp_Months_"+i+"']").val()>60)){
+					alert("Installment-"+ i +": Instalment Period must be between 1 to 60.");
+					return false;
+				}else if($("input[name='plp_price_"+i+"']:checked").val() == undefined ){
+					alert("Installment-"+ i +": Instalment price is required.");
+					return false;
+				}else if($("input[name='plp_price_"+i+"']:checked").val() == 'percent' && ($("input[name='plp_Per_"+i+"']").val() == '' || $("input[name='plp_Per_"+i+"']").val() <=0 || $("input[name='plp_Per_"+i+"']").val()>100)){
+					alert("Installment-"+ i +": Instalment Price must be between 1 to 100.");
+					return false;
+				}else if($("input[name='plp_price_"+i+"']:checked").val() == 'deci'){
+					if(intRegex.test(partEmiDeci) || floatRegex.test(partEmiDeci)){
+					  if(partEmiDeci <= 0 || partEmiDeci > 99.9){
+						alert("Installment-"+ i +": Instalment Price value must not be less than 1 and greater than 99.9");
+						return false;
+					  }
+					}else{
+						alert("Installment-"+ i +": Please enter a valid Instalment Price.");
+						return false;
+					}							
+				}    				
+				if($("input[name='plp_price_"+i+"']:checked").val() == 'percent' && $("input[name='plp_Per_"+i+"']").val() != ''){
+					total_per = parseInt(total_per) + parseInt($("input[name='plp_Per_"+i+"']").val());
+				}   
+			}
+			
+			if(inst_price_flag_per && inst_price_flag_abs){
+			  alert("All Installment prices must be of same type(Percent or Absolute)");
+			  return false;
+			}
+						
+			if(total_per > 0 && total_per != 100){
+			  alert("Total Instalment Price must be 100%.");
+			  return false;
+			}			
+		}
       }else if(offer_type == 'NoCharges'){ //NoCharges validations
-		  if(!$("input[name='nac_discount_on']:checked").val()){
+		  if(!$('#nac_plc').attr('checked') && !$('#nac_parking').attr('checked') && !$('#nac_clubMembership').attr('checked') && !$('#nac_gymMembership').attr('checked') && !$('#nac_other').attr('checked') ){
 			alert("Please check at least one checkbox.");
 			return false;
 		  }else if($('#nac_other').attr('checked') && $('#nac_other_txt').val().trim() == ''){
@@ -325,8 +370,8 @@
 		 if($("input[name='pd_price']:checked").val() == undefined ){
 			alert("Discount Amount is required.");
 			return false;
-		}else if($("input[name='pd_price']:checked").val() == 'percent' && $("select[name='pd_price_emiPer']").val() == ''){
-			alert("Please select Discount Amount. in Percent.");
+		}else if($("input[name='pd_price']:checked").val() == 'percent' && ($("input[name='pd_price_emiPer']").val()<=0 || $("input[name='pd_price_emiPer']").val()>100 || $("input[name='pd_price_emiPer']").val()== '')){
+			alert("Discount Amount must be between 1 to 100 in Percent.");
 			return false;
 		}else if($("input[name='pd_price']:checked").val() == 'deci' &&  pdEmiDeci.trim()==''){
 			alert("Discount Amount value must be numeric & greater than 0");
@@ -337,24 +382,38 @@
 		}else if($("input[name='pd_price']:checked").val() == 'deci' &&  pdEmiDeci <= 0){
 			alert("Discount Amount value must be numeric & greater than 0");
 				return false;					
-		}else if($('#pd_on').val() == '' && $('#pd_date').val() == ''){
-			alert("Please select Discount On or Discount Date.");
-			return false;
 		}else if($('#pd_on').val() == 'Other' && $('#pd_other_txt').val().trim() == ''){
 			alert("Please enter text in Other textbox");
 			return false;
 		}       
-	  }	  
+	  }	
+	  	
+	  	
+	  if($('#offer_date').val() == ''){
+		alert("Offer Validity Date is required!");
+		return false;		  
+	  }else if($('#offer_date').val() != ''){
+		date = $('#offer_date').val();
+		dateArr = date.split("-");
+		d1 = new Date(dateArr[1]+"/"+dateArr[0]+"/"+dateArr[2]);
+		d2 = new Date();
+		if(d1<d2){
+		  alert("Offer Validity Date must be future date.");
+		  return false;
+		}
+	  }
+	  
 	  if(offerDesc.trim() == ''){
 		alert("Offer Description is required!");
 		return false;
-	  }
+	  }		
 	  
 		return true;
 	  
 	}
+	
 	$(document).ready(function(){
-	  $('#offerType').change(function(){
+	 $('#offerType').change(function(){
 		$('#offerDesc').val("");  
 		offer_type = $(this).val() ;
 		if(offer_type == 'NoPreEmi'){
@@ -387,8 +446,8 @@
 	  });
 		  
 	  ////// extra textboxes hanelding
-	  $('input[name="nac_discount_on"]').click(function(){
-		  if($(this).val()=='Other')
+	  $('#nac_other').click(function(){
+		  if($(this).attr('checked'))
 			$('#nac_other_txt').show();
 		  else
 		   $('#nac_other_txt').hide();
@@ -418,6 +477,21 @@
 			window.location = "project_offers.php?projectId={$projectId}&edit=delete&v=" + offer_id;
 		
 	  });
+	  
+	  //plp fields population
+	  $('#plp_noi').change(function(){
+		  $('#offerDesc').val("");  
+		  for(i=1; i<=24; i++)
+		    $('#inst-'+i+',#plpMnth-txt-wrapper-'+i).css('display','none');
+		  noi = $(this).val();
+		  for(i=1; i<=noi; i++)
+		    $('#inst-'+i+',#plpMnth-wrapper-'+i).css('display','block');		  
+		  //first & last Instalment period OFF
+		  $('#plpMnth-wrapper-1').css('display','none');
+		  $('#plpMnth-wrapper-'+noi).css('display','none');
+		  $('#plpMnth-txt-wrapper-1').css('display','block').html("Now");
+		  $('#plpMnth-txt-wrapper-'+noi).css('display','block').html("Possession");
+	  });
 	    
 	  
 	});
@@ -443,23 +517,66 @@
 		  }else if($("input[name='no_emi_period']:checked").val()){
 			offer_desc = "No Pre-EMI till " + noEmiPeriod;
 		  }
+		   if($("input[name='no_emi_special_bsp']:checked").val() == 'special_bsp'){
+			bsp = $('#no_emi_bsp').val();
+			bsp = bsp.split("").reverse();
+			final_bsp = $('#no_emi_bsp').val();
+			new_bsp = new Array();
+			cnt = 1;knt=1;
+			if(bsp.length > 3){
+				$.each(bsp,function(k,v){
+					//alert(v);
+					new_bsp[knt] = v;
+				  if(cnt%3 == 0 && cnt>=3){
+					cnt++;
+					knt++;
+					new_bsp[knt] = ",";
+				  }else{
+					cnt++;
+				  }
+				  knt++;
+				  
+				});
+				if(knt>2){
+					new_bsp = new_bsp.reverse();					
+					final_bsp = new_bsp.join("");					
+					if(final_bsp.charAt(0)==',')
+						final_bsp = final_bsp.substr(1, final_bsp.length);
+				}
+		   }
+			
+			offer_desc = offer_desc + " " +"at BSP of Rs."+final_bsp+ " per sq.ft.";
+		   
+		   }
+		  
 		    $('#offerDesc').val(offer_desc);  
-		}else  if(offer_type == 'PartEmi'){   //----------------PartEmi Descirption Population
-		  partEmiPeriod = '';partEmiPrice = '';
-		  //fetching Emi Period Value
-		  if($("input[name='part_emi_period']:checked").val() == 'months')
-			partEmiPeriod = "after "+ $('#part_emiMonths').val() + " months";
-		  else if($("input[name='part_emi_period']:checked").val() == 'pos')
-			partEmiPeriod = "on Possession";
-		 //fetching Emi Price ValueofferType
-		  if($("input[name='part_emi_price']:checked").val() == 'percent')
-			partEmiPrice = $('#part_emi_price_emiPer').val() + "%";
-		  else if($("input[name='part_emi_price']:checked").val() == 'deci')
-			partEmiPrice = $('#part_emi_price_emiDeci').val() +" "+$('#part_emi_price_emiUnit').val();
-				
-		  if($("input[name='part_emi_period']:checked").val() && $("input[name='part_emi_price']:checked").val()){
-			offer_desc = "Pay "+partEmiPrice+" now and rest "+partEmiPeriod;
-		  }
+		}else  if(offer_type == 'PartEmi'){   //----------------PLP Descirption Population
+			for(i=1;i<=$('#plp_noi').val();i++){		
+			  plpPeriod = '';partEmiPrice = '';
+			  //fetching Emi Period Value
+			  if($("input[name='plp_period_"+i+"']:checked").val() == 'months' && i!=$('#plp_noi').val()){
+				 plpPeriod = "after "+ $('#plp_Months_'+i).val() + " months";
+			  }else{
+				if(i==1)
+				  plpPeriod  = "now";
+				else if(i==$('#plp_noi').val())
+				  plpPeriod  = "on possession";
+			  }			  				
+			  //fetching Emi Price ValueofferType
+			  if($("input[name='plp_price_"+i+"']:checked").val() == 'percent')
+				plpPrice = $('#plp_Per_'+i).val() + "%";
+			  else if($("input[name='plp_price_"+i+"']:checked").val() == 'deci')
+				plpPrice = $('#plp_Deci_'+i).val() +" "+$('#plp_Unit_'+i).val();
+					
+			  if($("input[name='plp_period_"+i+"']:checked").val() && $("input[name='plp_price_"+i+"']:checked").val() && i!=$('#plp_noi').val()){
+				offer_desc = offer_desc+", "+plpPrice+" "+plpPeriod;
+			  }else{
+				if(i==1 && $("input[name='plp_price_"+i+"']:checked").val())
+				 offer_desc = "Pay "+plpPrice+" "+plpPeriod;
+				else if(i==$('#plp_noi').val() && $("input[name='plp_price_"+i+"']:checked").val())
+				 offer_desc = offer_desc+" and "+plpPrice+" "+plpPeriod;
+			  }		
+			}
 		    $('#offerDesc').val(offer_desc);  
 		}else if(offer_type == 'NoCharges'){   //----NoCharges Descirption Population
 		  	str = new Array();cnt=0;popped='';
@@ -468,9 +585,9 @@
 		  	if($('#nac_parking').attr('checked'))
 		  	  str[cnt++] = $('#nac_parking').val();
 		  	if($('#nac_clubMembership').attr('checked'))
-		  	  str[cnt++] = $('#nac_clubMembership').val();
+		  	  str[cnt++] = $('#nac_clubMembership').attr('title');
 		  	if($('#nac_gymMembership').attr('checked'))
-		  	  str[cnt++] = $('#nac_gymMembership').val();
+		  	  str[cnt++] = $('#nac_gymMembership').attr('title');
 		  	if($('#nac_other').attr('checked'))
 		  	  str[cnt++] = $('#nac_other_txt').val();
 		  
@@ -478,7 +595,7 @@
 			 popped = str.pop();
 			 popped = " and " + popped;
 			}
-		  	offer_desc = "Book Now & pay zero charges for " + str.join(",") + popped;
+		  	offer_desc = "Book Now & pay zero charges for " + str.join(", ") + popped;
 			$('#offerDesc').val(offer_desc);  
 		}else if(offer_type == 'PriceDiscount'){   //----PriceDiscount Descirption Population
 			amount='';discount_on='';date='';	
@@ -492,10 +609,14 @@
 				discount_on = $('#pd_other_txt').val();
 			else if($('#pd_on').val()!='')
 				discount_on = $('#pd_on :selected').html();
-			//Fetching Date On
-			if($('#pd_date').val() != '0000-00-00')
-				date = $('#pd_date').val();
-			
+			//Fetching Date On [plp_noi] => 2
+			if($('#offer_date').val() != '0000-00-00' && $('#offer_date').val() !=''){
+				var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+				date = $('#offer_date').val();
+				dateArr = date.split("-");
+				curr_mnth = monthNames[parseInt(dateArr[1])-1];
+				date = dateArr[0]+"-"+curr_mnth+"-"+dateArr[2];			
+			}			
 			if(amount && discount_on && date)
 				offer_desc = "Book by "+date+" and save "+amount+" on "+discount_on;
 			else if(amount && discount_on)
@@ -506,11 +627,20 @@
 			$('#offerDesc').val(offer_desc);  
 		}		
 	}
+  function isNumberKey(evt)
+  {
+ 	 var charCode = (evt.which) ? evt.which : event.keyCode;
+
+	 if (charCode > 31 && (charCode < 48 || charCode > 57) || (charCode == 13))
+		return false;
+
+	 return true;
+  }
 </script>
 <script type="text/javascript">             
                                                                                                                          
         var cals_dict = {
-            "pd_date_trigger": "pd_date"
+            "offer_date_trigger": "offer_date"
         };
 
         $.each(cals_dict, function(k, v) {
@@ -518,11 +648,11 @@
                 Calendar.setup({
                     inputField: v, // id of the input field
                     //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
-                    ifFormat: "%Y-%m-%d", // format of the input field
+                    ifFormat: "%d-%m-%Y", // format of the input field
                     button: k, // trigger for the calendar (button ID)
                     align: "Tl", // alignment (defaults to "Bl")
                     singleClick: true,
-                    showsTime: true
+                    showsTime: false
                 });
             }
         });

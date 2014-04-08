@@ -12,11 +12,37 @@
 
     $cityId = $_REQUEST['c'];
     $smarty->assign("cityId", $cityId);
+
+
+    // add parent suburb
+    $suburbSelect = Array();
+    $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id FROM ".SUBURB." WHERE 
+            CITY_ID ='".$cityId ."'  ORDER BY LABEL ASC";
+
+    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
+    while ($dataArr = mysql_fetch_array($QueryExecute))
+    {
+           array_push($suburbSelect, $dataArr);
+    }
+    $smarty->assign("suburbSelect", $suburbSelect);
+
+    $localityDetailsArray =   ViewSuburbDetails($suburbid);
+
+    $parent_id = $localityDetailsArray['parent_suburb_id'];
+    foreach ($suburbSelect as $k1 => $v1) {       
+        if ($v1['id']==$parent_id) {
+            $parent_name = $v1['label'];
+        }
+    }
+    $smarty->assign("parent_id", $parent_id);
+    $smarty->assign("parent_name", $parent_name);
+
+    // hierarchy map
+     $txtCityName      = trim($localityDetailsArray['LABEL']);
+
     if(isset($_POST['btnExit'])){
             header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
     }
-
-    $localityDetailsArray =   ViewSuburbDetails($suburbid);
 
     if (isset($_POST['btnSave'])) {
                     $txtCityName			=	trim($_POST['txtCityName']);
@@ -61,6 +87,10 @@
                              $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
                        }
 
+
+                    if(checkifParentIsChild($parent_id, $suburbid, $suburbSelect)){
+                        $ErrorMsg["txtMetaParent"] = "Selected Parent is already a child suburb. Choose other Parent.";
+                    }
                     if(!is_array($ErrorMsg))
                     {
                         $qryCity = "SELECT C.LABEL FROM suburb S join city C on (C.city_id = S.city_id) where S.suburb_id = $suburbid";
@@ -163,30 +193,12 @@
             $smarty->assign("landmarkJson", $landmarkJson);
 
 
-            // add parent suburb
-             $suburbSelect = Array();
-    $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id FROM ".SUBURB." WHERE 
-            CITY_ID ='".$cityId ."'  ORDER BY LABEL ASC";
+            
 
-    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
-    while ($dataArr = mysql_fetch_array($QueryExecute))
-    {
-           array_push($suburbSelect, $dataArr);
-    }
-    $smarty->assign("suburbSelect", $suburbSelect);
-
-    $parent_id = $localityDetailsArray['parent_suburb_id'];
-    foreach ($suburbSelect as $k1 => $v1) {       
-        if ($v1['id']==$parent_id) {
-            $parent_name = $v1['label'];
-        }
-    }
-    $smarty->assign("parent_id", $parent_id);
-    $smarty->assign("parent_name", $parent_name);
+    
 
 
-            // hierarchy map
-     $txtCityName      = trim($localityDetailsArray['LABEL']);
+            
             
             
 
@@ -195,4 +207,31 @@
             
             //$smarty->assign("suburb_str", $str);
  
+
+ function checkifParentIsChild($p_id, $c_id, $suburbSelect){
+        $bool = true;
+        
+        while($bool){
+            if ($p_id==$c_id) return true;
+            $bool1 = true;
+            foreach ($suburbSelect as $k => $v) {  
+                
+                if($v['id']==$p_id){
+                    if($v['parent_suburb_id'] <1 )
+                        return false;
+                    else if($v['parent_suburb_id'] == $c_id){
+                        return true;
+                    }
+                    else{
+                        $p_id = $v['parent_suburb_id'];
+                    }
+                      $bool1 = false;
+                }
+
+            }
+            if($bool1) $bool = false;
+
+        }  
+        return false; 
+ }
 ?>

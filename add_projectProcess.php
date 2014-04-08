@@ -227,11 +227,17 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    if(empty($project_type)){
 		$ErrorMsg["txtProject_type"] = "Please select project type.";
 	    }
-	    if(empty($txtProjectLattitude)){
-		$ErrorMsg["txtLattitude"] = "Please enter project lattitude.";
+	    if(!empty($txtProjectLattitude) && ($txtProjectLattitude <0 || $txtProjectLattitude>90)){
+		$ErrorMsg["txtLattitude"] = "Lattitude range should be between 0 to 90.";
 	    }
-	    if(empty($txtProjectLongitude)){
-		$ErrorMsg["txtLongitude"] = "Please enter project longitude.";
+            if(!empty($txtProjectLattitude) && !is_numeric($txtProjectLattitude)){
+		$ErrorMsg["txtLattitude"] = "Lattitude value should be numeric.";
+	    }
+            if(!empty($txtProjectLongitude) && ($txtProjectLongitude <-180 || $txtProjectLongitude>180)){
+		$ErrorMsg["txtLongitude"] = "Longitude range should be between -180 to 180.";
+	    }
+	    if(!empty($txtProjectLongitude) && !is_numeric($txtProjectLongitude)){
+		$ErrorMsg["txtLongitude"] = "Lattitude value should be numeric.";
 	    }
 	    if(empty($Status)){
 		$ErrorMsg["txtStatus"] = "Please select project status.";
@@ -483,7 +489,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['project_description'] = $txtProjectDescription;
             $arrInsertUpdateProject['comments'] = $comments;
             $arrInsertUpdateProject['project_address'] = $txtAddress;
+            if($txtProjectLattitude == '')
+                $txtProjectLattitude = null;
             $arrInsertUpdateProject['latitude'] = $txtProjectLattitude;
+            if($txtProjectLongitude == '')
+                $txtProjectLongitude = null;
             $arrInsertUpdateProject['longitude'] = $txtProjectLongitude;
             $arrInsertUpdateProject['display_order'] = getDisplayOrder($projectId);
             $arrInsertUpdateProject['status'] = $Active;
