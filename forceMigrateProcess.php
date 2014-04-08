@@ -25,10 +25,10 @@
         exec("/usr/bin/php ".strval(dirname(__FILE__))."/cron/migrateProjects.php  > /dev/null 2>/dev/null &");
         
         fclose($handle);
-        exec("cd /home/sysadmin/production/cron/migration; php migrateRefData.php; php main.php $tmpFile");	
+        exec("cd ".SERVER_PATH_SOLR_RESTART."/cron/migration; php migrateRefData.php; php main.php $tmpFile");
+        exec("php ".SERVER_PATH_SOLR_RESTART."/solr/solrIndex.php $projectId");
         $msg = "Successfully migrated following ProjectIds:<br>$projectId";
 
     }
     $smarty->assign("msg", $msg);
-
 ?>
