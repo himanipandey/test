@@ -197,7 +197,7 @@ $('#aliases').tagsinput({
   	
 });
 
-if({$landmarkJson}!=''){
+if(!jQuery.isEmptyObject({$landmarkJson})){
 var a= {$landmarkJson};
 var landmarkAliases = [];
 for(var i in a){
