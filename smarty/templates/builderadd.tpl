@@ -1,4 +1,5 @@
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/photo.js"></script>
 <script>
 	function showhide_row(numrow)
 	{
@@ -31,6 +32,42 @@
 
 	 return true;
   }
+
+
+  function getPhotos(){
+		var dataResult = getPhotosFromDB();
+		console.log(dataResult);
+		
+		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 />';
+
+		$("a#view").html( template );
+		$("a#view").fancybox();
+	
+	}
+
+	function getPhotosFromDB() {
+    //initVar();
+    //var data = getData(),
+      //  res = null;
+	     data = "bank="+{$bankid}+"&service_image_id="+{$service_image_id};
+	    $.ajax({
+	        async: false,
+	        type : 'GET',
+	        url  : '/ajax/photo.php',
+	        data : data+"&getPh=1",
+	        success: function( json ) {
+	            var __json = JSON.parse( json );
+	            if ( __json['result'] == true ) {
+	                res = __json;
+	            }
+	            else {
+	                res = null;
+	            }
+	        }
+	    });
+	    return res;
+	}
+
   $(document).ready(function(){
       $("#txtBuilderName").change(function(){
         var builderid = $(this).val();
@@ -171,12 +208,8 @@
 					
 					
 					<div id='content'>
-								<a id="view" href="{$imgDisplayPath}{$img}" title="Builder Logo">View Image</a>  
-								<script type="text/javascript">
-								$(document).ready(function() {
-								$("a#view").fancybox();
-								});
-								</script>
+								<a id="view" href="" onclick="getPhotos(); return false;" title="Builder Logo">View Image</a>  
+								
 					</div>
 				  
 				</tr>

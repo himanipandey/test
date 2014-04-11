@@ -22,6 +22,40 @@
 		}
 		return true;
 	}
+
+	function getPhotos(){
+		var dataResult = getPhotosFromDB();
+		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 />';
+
+		$("a#view").html( template );
+		$("a#view").fancybox();
+	
+	}
+
+	function getPhotosFromDB() {
+    //initVar();
+    //var data = getData(),
+      //  res = null;
+	     data = "bank="+{$bankid}+"&service_image_id="+{$service_image_id};
+	    $.ajax({
+	        async: false,
+	        type : 'GET',
+	        url  : '/ajax/photo.php',
+	        data : data+"&getPh=1",
+	        success: function( json ) {
+	            var __json = JSON.parse( json );
+	            if ( __json['result'] == true ) {
+	                res = __json;
+	            }
+	            else {
+	                res = null;
+	            }
+	        }
+	    });
+	    return res;
+	}
+
+
 	
 </script>
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -84,12 +118,9 @@
 								<td width="20%" align="right" valign = top><b>Current Logo : </b></td>
 								<td width="20%" align="left" >
 								<div id='current-logo'>
-											<a id="view" href="{$imgDisplayPath}bank_list/{$img}" title="Bank Logo">View Image</a>  
-											<script type="text/javascript">
-											$(document).ready(function() {
-											$("a#view").fancybox();
-											});
-											</script>
+											<a id="view" href="" onclick="getPhotos(); return false;" title="Bank Logo">View Image</a>  
+											
+
 											
 											&nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick="delete_logo()" title="Delete Logo"/>
 											<input type = "hidden" name = "bankLogo" id="bankLogo" value = "">

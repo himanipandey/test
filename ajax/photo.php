@@ -35,6 +35,11 @@ else if(!empty($_REQUEST['city'])) {
     $objectType = 'city';
     $obj = 'CITY_ID';
 }
+else if(!empty($_REQUEST['bank'])) {
+    $objectId = $_REQUEST['bank'];
+    $objectType = 'bank';
+    $obj = 'BANK_ID';
+}
 if ( !empty( $_REQUEST['upPh'] ) ) {
     $upPh = $_REQUEST['upPh'];
     $upPh = json_decode( $upPh, TRUE );
@@ -75,9 +80,9 @@ else {
         $data['suburb'] = $_REQUEST['suburb'];
     }
     if ( !empty( $_REQUEST['getPh'] ) ) {
-         $data = array();
-        
-       $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+        $data = array();
+        $service_image_id = $_REQUEST['service_image_id'];
+        $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&service_image_id=".$service_image_id;
         $content = file_get_contents($url);
         $imgPath = json_decode($content);
         

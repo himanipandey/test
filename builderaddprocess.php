@@ -190,11 +190,13 @@ if ($_POST['btnSave'] == "Save")
             else
             {
                 $newfold = '';
+                echo $imgedit; die();
                 if($imgedit == ''){
                     $foldername	= str_replace(' ','-',strtolower($legalEntity));
                     $createFolder =$newImagePath.$foldername;
                     mkdir($createFolder, 0777);
                     $newfold = $createFolder;
+                   // echo $newfold;die();
                 }
                 else{  
                      $cutpath	=	explode("/",$imgedit);
@@ -298,7 +300,7 @@ if ($_POST['btnSave'] == "Save")
                     $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                     if($return)
                     {
-			$seoData['meta_title'] = $txtMetaTitle;
+			             $seoData['meta_title'] = $txtMetaTitle;
                         $seoData['meta_keywords'] = $txtMetaKeywords;
                         $seoData['meta_description'] = $txtMetaDescription;
                         $seoData['table_id'] = $builderid;

@@ -56,10 +56,11 @@
         
         if($logo_name != ''){
 			$dest		=	$newImagePath."/bank_list/".$logo_name;
+			
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
+			
 			if($move)
 			{
-				
 				$s3upload = new ImageUpload($dest, array("s3" =>$s3,
 				  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
 				   "image_type" => "logo", "object_id" => $bankid,"service_image_id" => $service_image_id));
@@ -96,6 +97,7 @@
 		$smarty->assign("bankname",$bank->bank_name);
 		$smarty->assign("bank_detail",$bank->bank_detail);
 		$smarty->assign("img",$bank->bank_logo);
+		$smarty->assign("service_image_id",$bank->service_image_id);
 	}
 
 
