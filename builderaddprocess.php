@@ -47,6 +47,7 @@ if ($_POST['btnSave'] == "Save")
 	$website			=	trim($_POST['website']);
 	$revenue			=	trim($_POST['revenue']);
 	$debt				=	trim($_POST['debt']);
+    $imgSrc               =   trim($_POST['imgSrc']);
 	
 	$smarty->assign("txtBuilderName", $txtBuilderName);
         $smarty->assign("legalEntity", $legalEntity);
@@ -73,6 +74,7 @@ if ($_POST['btnSave'] == "Save")
 	$smarty->assign("website", $website);	
 	$smarty->assign("revenue", $revenue);
 	$smarty->assign("debt", $debt);
+    $smarty->assign("imgSrc", $imgSrc);
 
 	if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)){
 		$ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
@@ -190,7 +192,8 @@ if ($_POST['btnSave'] == "Save")
             else
             {
                 $newfold = '';
-                echo $imgedit; die();
+
+               // echo $imgedit; die();
                 if($imgedit == ''){
                     $foldername	= str_replace(' ','-',strtolower($legalEntity));
                     $createFolder =$newImagePath.$foldername;
@@ -393,6 +396,31 @@ if ($_POST['btnSave'] == "Save")
 			$smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
 			$smarty->assign("dept", $_SESSION['DEPARTMENT']);
 			
+            $objectType = "builder";
+            $objectId = $builderid;
+            $service_image_id = $dataedit['SERVICE_IMAGE_ID'];
+            $img_path = array();
+            
+            $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&service_image_id=".$service_image_id;
+            $content = file_get_contents($url);
+            $imgPath = json_decode($content);
+            $data = array();
+            foreach($imgPath->data as $k=>$v){
+                $data[$k]['IMAGE_ID'] = $v->id;
+                $data[$k][$obj] = $v->objectId;
+                $data[$k]['priority'] = $v->priority;
+                $data[$k]['IMAGE_CATEGORY'] = $v->imageType->type;
+                $data[$k]['IMAGE_DISPLAY_NAME'] = $v->title;
+                $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
+                $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
+                $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+            }
+            //array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
+            $smarty->assign("imgSrc", $data[0]['SERVICE_IMAGE_PATH']);
+            echo $url." path:".$data[0]['SERVICE_IMAGE_PATH']; 
+    //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
+
+
 			
     }
     else {

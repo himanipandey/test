@@ -17,6 +17,36 @@
 
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 
+		// get image path from image service
+
+		foreach ($ImageDataListingArr as $k => $v) {
+			$objectType = "option";
+			$img_path = array();
+			//$image_type = $v['NAME'];
+			$image_type = "floor_plan";
+		    $objectId = $v['OPTION_ID'];
+		    $service_image_id = $v['SERVICE_IMAGE_ID'];
+		    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&image_type=".$image_type."&service_image_id=".$service_image_id;
+		    //$url = "http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=option&objectId=5000059&image_type=floor_plan&service_image_id=6366";
+		    $content = file_get_contents($url);
+		    $imgPath = json_decode($content);
+		    $data = array();
+		    foreach($imgPath->data as $k=>$v){
+		        $data[$k]['IMAGE_ID'] = $v->id;
+		        $data[$k][$obj] = $v->objectId;
+		        $data[$k]['priority'] = $v->priority;
+		        $data[$k]['IMAGE_CATEGORY'] = $v->imageType->type;
+		        $data[$k]['IMAGE_DISPLAY_NAME'] = $v->title;
+		        $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
+		        $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
+		        $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+		    }
+		    echo $url."<br>".$data[0]['SERVICE_IMAGE_PATH']."<br>";
+		    array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
+
+		}
+		$smarty->assign("img_path", $img_path);
+
 		$count+=count($ImageDataFloorArr);
 		$count+=count($ImageDataListingArr);
 

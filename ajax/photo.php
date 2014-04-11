@@ -82,7 +82,8 @@ else {
     if ( !empty( $_REQUEST['getPh'] ) ) {
         $data = array();
         $service_image_id = $_REQUEST['service_image_id'];
-        $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&service_image_id=".$service_image_id;
+        //$url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&service_image_id=".$service_image_id;
+        $url = "http://nightly.proptiger-ws.com:8080/data/v1/entity/image?objectType=option&objectId=5065848&image_type=View Floor Plan&service_image_id=24208";
         $content = file_get_contents($url);
         $imgPath = json_decode($content);
         
