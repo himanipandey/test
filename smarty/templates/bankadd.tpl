@@ -26,8 +26,7 @@
 	function getPhotos(){
 		var dataResult = getPhotosFromDB();
 		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 />';
-		//console.log(template);
-		alert(template);
+		
 		$("a#view").html( template );
 		$("a#view").fancybox();
 	
