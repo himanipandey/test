@@ -412,14 +412,14 @@
 								  <td width="20%" align="right"><b>Project Latitude :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectLattitude" id="txtProjectLattitude" value="{$txtProjectLattitude}" style="width:360px;" /></td>
 								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtLattitude"] != ''} {$ErrorMsg["txtLattitude"]} {/if}<span id = "err_project_latt" style = "display:none;">Please enter project lattitude!</span></font>
+                                                                    {if $ErrorMsg['txtLattitude']}<font color="red">{$ErrorMsg['txtLattitude']}</span></font>{/if}
 								  </td>
 							   </tr>
 							   <tr>
 								  <td width="20%" align="right"><b>Project Longitude :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectLongitude" id="txtProjectLongitude" value="{$txtProjectLongitude}" style="width:360px;" /></td>
 								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtLongitude"] != ''} {$ErrorMsg["txtLongitude"]} {/if}<span id = "err_project_long" style = "display:none;">Please enter project longitude</span></font>
+									  {if $ErrorMsg['txtLongitude']}<font color="red">{$ErrorMsg['txtLongitude']}</span></font>{/if}
 								  </td>
 							   </tr>
 							  

@@ -179,8 +179,12 @@ $("#exit_button").click(function(){
     
 
 
-    
-    if (lmklong!=''){
+    if(lmklong==''){
+      $('#errmsglong').html('<font color="red">Please enter Latitude</font>');
+      $("#lmklong").focus();
+      error = 1;
+    }
+    else {
       if(!isNumeric(lmklong)) {
         $('#errmsglong').html('<font color="red">Please enter numeric Longitude</font>');
         $("#lmklong").focus();
@@ -197,14 +201,16 @@ $("#exit_button").click(function(){
         }
       }
     }
-  else{
-        $('#errmsglong').html('');
-  }
+ 
       
     //latitude   
     
-
-    if(lmklat!=''){
+    if(lmklat==''){
+      $('#errmsglat').html('<font color="red">Please enter Latitude</font>');
+      $("#lmklat").focus();
+      error = 1;
+    }
+    else{
       if(!isNumeric(lmklat)) {
         $('#errmsglat').html('<font color="red">Please enter Numeric Latitude</font>');
         $("#lmklat").focus();
@@ -219,20 +225,18 @@ $("#exit_button").click(function(){
         }
         else{
           $('#errmsglat').html('');
-          }
+        }
       }
     }
-  else{
-        $('#errmsglat').html('');
-  }
+  
 
     //address
-    if(lmkaddress==''){
+   /* if(lmkaddress==''){
       $('#errmsgaddress').html('<font color="red">Please enter Landmark Address</font>');
       $("#lmkaddress").focus();
       error = 1;
     }
-    else if (/[^\w#,.\- ]/.test(lmkaddress)){
+    else */if (/[^\w#,.\- ]/.test(lmkaddress)){
       
       $('#errmsgaddress').html('<font color="red">Special characters are not allowed in Landmark name</font>');
       $("#lmkaddress").focus();
@@ -537,7 +541,7 @@ function show_loc_inst(){
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">*Address :</td>
+                      <td width="20%" align="right" valign="top">Address :</td>
                       <td width="30%" align="left" >
                       <textarea name="lmkaddress" rows="10" cols="35" id="lmkaddress" style="width:250px;"></textarea><td width="20%" align="left" id="errmsgaddress"></td>
                       </td>
@@ -545,12 +549,12 @@ function show_loc_inst(){
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" >Latitude : </td>
+                      <td width="20%" align="right" >*Latitude : </td>
                       <td width="30%" align="left"><input type=text name="lmklat" id="lmklat"  style="width:250px;"></td> <td width="20%" align="left" id="errmsglat"></td>
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" >Longitude : </td>
+                      <td width="20%" align="right" >*Longitude : </td>
                       <td width="30%" align="left"><input type=text name="lmklong" id="lmklong"  style="width:250px;"></td> <td width="20%" align="left" id="errmsglong"></td>
                     </tr>
 
@@ -620,7 +624,7 @@ function show_loc_inst(){
                                   {/if}-->
                                   </TH> 
                                  <TH width=6% align="center">Status</TH> 
-				 <TH width=3% align="center">Save</TH>
+         <TH width=3% align="center">Save</TH>
                                 </TR>
                               
                           </thead>
@@ -663,7 +667,7 @@ function show_loc_inst(){
           </select>
           </TD>
         <TD align=center class=td-border>  
-	<select id="status{$v.id}" value=''>
+  <select id="status{$v.id}" value=''>
           <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
           <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
                   

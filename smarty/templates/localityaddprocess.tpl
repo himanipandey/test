@@ -240,7 +240,7 @@ $('#aliases').tagsinput({
   	
 });
 
-if({$landmarkJson}!=''){
+if(!jQuery.isEmptyObject({$landmarkJson})){
 var a= {$landmarkJson};
 var landmarkAliases = [];
 for(var i in a){
@@ -499,7 +499,6 @@ var options, d, selectedItem;
 
 
 function cleanedLocality(localityId) {
-
 $.ajax({
          type: "POST",
          url: 'ajax/cleanedLocality.php',
