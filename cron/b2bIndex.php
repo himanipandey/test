@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', '1');
-ini_set('memory_limit', '5G');
+ini_set('memory_limit', '2G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -79,6 +79,8 @@ if ($bulkInsert) {
 }
 
 DInventoryPriceTmp::setMissingSupply();
+DInventoryPriceTmp::updateProjectDominantType();
+DInventoryPriceTmp::deleteInvalidDates();
 DInventoryPriceTmp::populateDemand();
 DInventoryPriceTmp::deleteEntriesBeforeLaunch();
 DInventoryPriceTmp::deleteInvalidPriceEntries();
@@ -134,7 +136,10 @@ function createDocuments($aAllInventory, $aAllPrice) {
             $entry['inventory'] = $aAllInventory[$key]->inventory;
             if (isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month) {
                 $entry['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
-            } else {
+            } elseif($aAllInventory[$key]->effective_month === $aAllInventory[$key]->launch_date){
+                $entry['units_sold'] = $aAllInventory[$key]->ltd_launched - $aAllInventory[$key]->inventory;
+            }
+            else {
                 $entry['units_sold'] = 0;
             }
         }
