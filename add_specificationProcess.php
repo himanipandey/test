@@ -120,23 +120,40 @@
                 else
                 {
                     $specInsert = ResiProject::virtual_find($projectId);
-                    $specInsert->FLOORING_MASTER_BEDROOM = $master_bedroom_flooring;
-                    $specInsert->FLOORING_OTHER_BEDROOM = $other_bedroom_flooring;
-                    $specInsert->FLOORING_LIVING_DINING = $living_room_flooring;
-                    $specInsert->FLOORING_KITCHEN = $kitchen_flooring;
-                    $specInsert->FLOORING_TOILETS = $toilets_flooring;
-                    $specInsert->FLOORING_BALCONY = $balcony_flooring;
-                    $specInsert->WALLS_INTERIOR = $interior_walls;
-                    $specInsert->WALLS_EXTERIOR = $exterior_walls;
-                    $specInsert->WALLS_KITCHEN = $kitchen_walls;
-                    $specInsert->WALLS_TOILETS = $toilets_walls;
-                    $specInsert->FITTINGS_AND_FIXTURES_KITCHEN = $kitchen_fixtures;
-                    $specInsert->FITTINGS_AND_FIXTURES_TOILETS = $toilets_fixtures;
-                    $specInsert->DOORS_MAIN = $main_doors;
-                    $specInsert->DOORS_INTERNAL = $internal_doors;
-                    $specInsert->WINDOWS = $windows;
-                    $specInsert->ELECTRICAL_FITTINGS = $electrical_fitting;
-                    $specInsert->OTHER_SPECIFICATIONS = $others;
+                    if($master_bedroom_flooring != '')
+                        $specInsert->FLOORING_MASTER_BEDROOM = $master_bedroom_flooring;
+                    if($other_bedroom_flooring != '')
+                        $specInsert->FLOORING_OTHER_BEDROOM = $other_bedroom_flooring;
+                    if($living_room_flooring != '')
+                        $specInsert->FLOORING_LIVING_DINING = $living_room_flooring;
+                    if($kitchen_flooring != '')
+                        $specInsert->FLOORING_KITCHEN = $kitchen_flooring;
+                    if($toilets_flooring != '')
+                        $specInsert->FLOORING_TOILETS = $toilets_flooring;
+                    if($balcony_flooring != '')
+                        $specInsert->FLOORING_BALCONY = $balcony_flooring;
+                    if($interior_walls != '')
+                        $specInsert->WALLS_INTERIOR = $interior_walls;
+                    if($exterior_walls != '')
+                        $specInsert->WALLS_EXTERIOR = $exterior_walls;
+                    if($kitchen_walls != '')
+                        $specInsert->WALLS_KITCHEN = $kitchen_walls;
+                    if($toilets_walls != '')
+                        $specInsert->WALLS_TOILETS = $toilets_walls;
+                    if($kitchen_fixtures != '')
+                        $specInsert->FITTINGS_AND_FIXTURES_KITCHEN = $kitchen_fixtures;
+                    if($toilets_fixtures != '')
+                        $specInsert->FITTINGS_AND_FIXTURES_TOILETS = $toilets_fixtures;
+                    if($main_doors != '')
+                        $specInsert->DOORS_MAIN = $main_doors;
+                    if($internal_doors != '')
+                        $specInsert->DOORS_INTERNAL = $internal_doors;
+                    if($windows != '')
+                        $specInsert->WINDOWS = $windows;
+                    if($electrical_fitting != '')
+                        $specInsert->ELECTRICAL_FITTINGS = $electrical_fitting;
+                    if($others != '')
+                        $specInsert->OTHER_SPECIFICATIONS = $others;
                     $specInsert->project_id = $projectId;
                     $specInsert->set_attr_updated_by($_SESSION['adminId']);
                     $specInsert->virtual_save();
@@ -151,14 +168,14 @@
                 {
                         if($_POST['btnSave'] == "Save")
                         {
-                                if($preview == 'true')
-                                        header("Location:show_project_details.php?projectId=".$projectId);
-                                else
-                                        header("Location:ProjectList.php?projectId=".$projectId);
+                            if($preview == 'true')
+                                header("Location:show_project_details.php?projectId=".$projectId);
+                            else
+                               header("Location:ProjectList.php?projectId=".$projectId);
                         }
                         else
                         {
-                                header("Location:add_apartmentConfiguration.php?projectId=".$projectId);
+                             header("Location:add_apartmentConfiguration.php?projectId=".$projectId);
                         }
                 }
     } 
