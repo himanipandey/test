@@ -43,6 +43,7 @@ ProjectLivability::populateUnitPerFloor();
 ProjectLivability::populateOtherAmenity();
 
 ProjectLivability::populateOverAllLivability();
+ProjectLivability::ensureMinLivability();
 
 
 LocalityLivability::populateDistanceIndex(1);
