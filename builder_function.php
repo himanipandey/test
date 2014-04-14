@@ -1237,6 +1237,7 @@ function ViewSuburbDetails($suburbID) {
         $ResDetails['ACTIVE'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
+        $ResDetails['parent_suburb_id'] = $Res['parent_suburb_id'];
         return $ResDetails;
     } else {
         return 0;
@@ -2071,7 +2072,7 @@ function fetch_builderDetail($builderId) {
     return $databuild;
 }
 function ViewLocalityDetails($localityID) {
-    $Sql = "SELECT l.locality_id,l.status,l.description,l.url,l.label,s.city_id,
+    $Sql = "SELECT l.locality_id, l.suburb_id, l.status,l.description,l.url,l.label,s.city_id,
             l.max_latitude,l.min_latitude,l.max_longitude,l.min_longitude
             FROM " . LOCALITY . " l inner join suburb s on l.suburb_id = s.suburb_id 
                 WHERE LOCALITY_ID ='" . $localityID . "'";
@@ -2081,6 +2082,7 @@ function ViewLocalityDetails($localityID) {
         $Res = mysql_fetch_assoc($ExecSql);
         $ResDetails['LOCALITY_ID'] = $Res['locality_id'];
         $ResDetails['CITY_ID'] = $Res['city_id'];
+        $ResDetails['SUBURB_ID'] = $Res['suburb_id'];
         $ResDetails['LABEL'] = $Res['label'];
         $ResDetails['status'] = $Res['status'];
         $ResDetails['URL'] = $Res['url'];
@@ -2333,9 +2335,57 @@ function project_aliases_detail($projectID){
 		$project_alias = mysql_fetch_object($project_alias);
 	return ($project_alias)?$project_alias:0;
 }
+
+function ViewUserDetails($ID){
+	$Sql = "SELECT ADMINID,EMP_CODE,FNAME,LNAME,USERNAME,ADMINPASSWORD,ADMINEMAIL
+                ,MOBILE,ADMINADDDATE,ADMINLASTLOGIN,REGION,STATUS,DEPARTMENT
+                ,ROLE,JOINING_DATE,RESIGNATION_DATE,CLOUDAGENT_ID FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
+	$ExecSql = mysql_query($Sql);
+
+	if(mysql_num_rows($ExecSql)==1)	{
+
+		$Res = mysql_fetch_assoc($ExecSql);
+		$ResDetails['ADMINID'] 		 	=  $Res['ADMINID'];
+		$ResDetails['EMP_CODE']			=  $Res['EMP_CODE'];
+		$ResDetails['FNAME'] 		 	=  $Res['FNAME'];
+		$ResDetails['LNAME'] 		 	=  $Res['LNAME'];
+		$ResDetails['USERNAME']  		=  $Res['USERNAME'];
+		$ResDetails['ADMINPASSWORD'] 	=  $Res['ADMINPASSWORD'];
+		$ResDetails['ADMINEMAIL'] 		=  $Res['ADMINEMAIL'];
+		$ResDetails['MOBILE']  			=  $Res['MOBILE'];
+		$ResDetails['ADMINADDDATE'] 	=  $Res['ADMINADDDATE'];
+		$ResDetails['ADMINLASTLOGIN'] 	=  $Res['ADMINLASTLOGIN'];
+		$ResDetails['REGION'] 			=  $Res['REGION'];
+		$ResDetails['STATUS'] 		 	=  $Res['STATUS'];
+		$ResDetails['DEPARTMENT'] 		=  $Res['DEPARTMENT'];
+		$ResDetails['ROLE'] 		=  $Res['ROLE'];
+		$ResDetails['JOINING_DATE'] 	=  $Res['JOINING_DATE'];
+		$ResDetails['RESIGNATION_DATE']	=  $Res['RESIGNATION_DATE'];
+                $ResDetails['CLOUDAGENT_ID'] = $Res['CLOUDAGENT_ID'];
+		return $ResDetails;
+	}
+	else
+	{
+		return 0;
+	}
+}
 function update_remark_status($cid,$type="Audit2",$status="Read"){
 	$sql = "UPDATE comments_history SET status = '$status' WHERE comment_id='$cid' AND comment_type='$type'";
 	mysql_query($sql) or die(mysql_error());	
+}
+function fetch_project_BSP($projectId){
+	$bspArr = array();
+	$sqlResult = mysql_query("select city.max_price_per_unit, city.min_price_per_unit from city 
+			  left join suburb on city.city_id = suburb.city_id
+			  left join locality on suburb.suburb_id = locality.suburb_id
+			  left join resi_project on locality.locality_id = resi_project.locality_id
+			   where resi_project.project_id = '$projectId'");
+	if($sqlResult){
+		$bsp = mysql_fetch_object($sqlResult);
+		$bspArr['min'] = $bsp->min_price_per_unit;
+		$bspArr['max'] = $bsp->max_price_per_unit;		
+	}
+	return $bspArr;
 }
 ?>
 

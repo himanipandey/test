@@ -369,9 +369,8 @@
                     if(count($eligibleIds)>0){
                         $eligibleIds = implode(',', $eligibleIds);
 
-                        $Qry = " UPDATE resi_project " . $SetQry . " 
-                                WHERE id IN (".$eligibleIds.") AND version = 'Cms'
-                                    and updated_by = '".$_SESSION['adminId']."'";
+                        $Qry = " UPDATE resi_project " . $SetQry . " ,updated_by = '".$_SESSION['adminId']."'
+                                WHERE id IN (".$eligibleIds.") AND version = 'Cms'";
                         $QueryExecute = mysql_query($Qry) or die(mysql_error());
                         $tot_affected_rows = mysql_affected_rows($Qry);	
 

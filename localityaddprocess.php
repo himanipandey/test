@@ -11,6 +11,38 @@
     $smarty->assign("localityid", $localityid);
 
     $cityId = $_REQUEST['c'];
+    $smarty->assign("cityid", $cityId);
+
+
+
+
+    $suburbSelect = Array();
+    $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id FROM ".SUBURB." WHERE 
+            CITY_ID ='".$cityId ."'  ORDER BY LABEL ASC";
+
+    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
+    while ($dataArr = mysql_fetch_array($QueryExecute))
+    {
+           array_push($suburbSelect, $dataArr);
+    }
+    $smarty->assign("suburbSelect", $suburbSelect);
+
+
+
+    $parent_id = $localityDetailsArray['parent_suburb_id'];
+    foreach ($suburbSelect as $k1 => $v1) {       
+        if ($v1['id']==$parent_id) {
+            $parent_name = $v1['label'];
+        }
+    }
+    $smarty->assign("parent_id", $parent_id);
+    $smarty->assign("parent_name", $parent_name);
+
+
+
+
+
+
 
     if(isset($_POST['btnExit'])){
             header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
@@ -24,6 +56,9 @@
                     $txtMetaDescription	=	trim($_POST['txtMetaDescription']);
                     $status		=	trim($_POST['status']);
                     $desc		=	trim($_POST['desc']);
+                    $oldDesc		=	trim($_POST['oldDesc']);
+                    $parent_subId   = trim($_POST['parentId']);
+                    $content_flag		=	trim($_POST['content_flag']);
                     $old_loc_url	=	trim($_POST['old_loc_url']);
                     $visibleInCms	=	trim($_POST['visibleInCms']);
                     
@@ -40,6 +75,7 @@
                     $smarty->assign("txtMetaDescription", $txtMetaDescription);
                     $smarty->assign("status", $status);	
                     $smarty->assign("desc", $desc);
+                    $smarty->assign("parent_sub_id", $parent_subId);
                     $smarty->assign("visibleInCms", $visibleInCms);
                     $smarty->assign("maxLatitude", $maxLatitude);
                     $smarty->assign("minLatitude", $minLatitude);
@@ -99,7 +135,8 @@
                                               LABEL		=	'".$txtCityName."',
                                               STATUS		=	'".$status."',
                                               URL		=	'".$txtCityUrl."',
-                                              DESCRIPTION	=	'".$desc."'
+                                              DESCRIPTION	=	'".$desc."',
+                                              SUBURB_ID = '".$parent_subId."'
                                          WHERE
                                             LOCALITY_ID='".$localityid."'";
 
@@ -113,6 +150,34 @@
                                         $seoData['table_name'] = 'locality';
                                         $seoData['updated_by'] = $_SESSION['adminId'];
                                         SeoData::insetUpdateSeoData($seoData);
+                                        
+										## - desccripion content flag handeling
+										$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $localityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'locality' )));					   
+									   if($cont_flag){
+											$content_flag = '';
+											if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
+												if(strcasecmp($desc,$oldDesc) != 0)
+													$content_flag = 0;								
+											}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+											  $content_flag = ($_POST["content_flag"])? 1 : 0;
+											}
+											if(is_numeric($content_flag)){
+												$cont_flag = TableAttributes::find($cont_flag[0]->id);
+												$cont_flag->updated_by = $_SESSION['adminId'];
+												$cont_flag->attribute_value = $content_flag;
+												$cont_flag->save();		
+											}
+										}elseif($_SESSION['DEPARTMENT'] == 'DATAENTRY' && strcasecmp($desc,$oldDesc)!= 0){
+											$cont_flag = new TableAttributes();
+											$cont_flag->table_name = 'locality';
+											$cont_flag->table_id = $localityid;
+											$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+											$cont_flag->attribute_value = 0;
+											$cont_flag->updated_by = $_SESSION['adminId'];
+											$cont_flag->save();				
+										}
+                                        
+                                        
                                         if ( $txtCityName != trim( $localityDetailsArray['LABEL'] ) ) {
                                             //  locality name modified
                                             addToNameChangeLog( 'locality', $localityid, $localityDetailsArray['LABEL'], $txtCityName );
@@ -139,7 +204,8 @@
             $txtMetaDescription	  =	$getSeoData[0]->meta_description;
             $status		  =	trim($localityDetailsArray['status']);
             $desc		  =	trim($localityDetailsArray['DESCRIPTION']);
-            
+            $parent_sub_id = trim($localityDetailsArray['SUBURB_ID']);
+            //print_r($localityDetailsArray);
             $maxLatitude	  =	trim($localityDetailsArray['MAX_LATITUDE']);
             if($maxLatitude == '')
                 $maxLatitude = 'No Entry';
@@ -163,6 +229,41 @@
             $smarty->assign("minLatitude", $minLatitude);
             $smarty->assign("maxLongitude", $maxLongitude);	
             $smarty->assign("minLongitude", $minLongitude);
+            $smarty->assign("parent_sub_id", $parent_sub_id);
+
+
+
+            $getLandmarkAliasesArr = getLandmarkAliases('locality', $localityid);
+           $landmarkJson = json_encode($getLandmarkAliasesArr);
+           $smarty->assign("landmarkAliases", $getLandmarkAliasesArr);
+            $smarty->assign("landmarkJson", $landmarkJson);
+            
+            // get suburb to display hierarchy
+
+            $qry = "select s.SUBURB_ID, s.LABEL, s.parent_suburb_id from locality l 
+                    inner join suburb s on l.SUBURB_ID = s.SUBURB_ID
+                    WHERE l.LOCALITY_ID=$localityid";
+
+            $res     = mysql_query($qry) or die(mysql_error());
+            $suburb = Array();
+            while ($data = mysql_fetch_array($res))
+            {
+              array_push($suburb, $data);
+            }
+            
+            $smarty->assign("sub_id", $suburb[0]['SUBURB_ID']);
+            $smarty->assign("sub_label", $suburb[0]['LABEL']);
+            $smarty->assign("sub_pid", $suburb[0]['parent_suburb_id']);
+
+
+            
+
+
+            
+            $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $localityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'locality')));   
+            
+			$smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
+			$smarty->assign("dept", $_SESSION['DEPARTMENT']);
     }
  
 ?>

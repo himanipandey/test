@@ -244,7 +244,7 @@
 											
 //								$result = upload_file_to_img_server_using_ftp($source,$dest,1);
 								
-								$imgPathDb = explode("images_new/",$img_path);
+								$imgPathDb = explode("images_new",$img_path);
 								$qry = "UPDATE ".RESI_FLOOR_PLANS." 
                                                                         SET 
                                                                                 IMAGE_URL = '".$imgPathDb[1]."',

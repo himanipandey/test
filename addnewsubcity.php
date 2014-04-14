@@ -11,6 +11,8 @@ require $_SERVER['DOCUMENT_ROOT'].'/dbConfig.php';
 $subcityvalnew = $_GET['subcityval'];
 $subcityval = str_replace("@","&",$subcityvalnew);
 
+$parent_sub_id = $_GET['parent_id'];
+
 $id = $_GET['id'];
 $cityid = $_GET['cityid'];
 $sel_id = $_GET['id'];
@@ -72,8 +74,8 @@ else
     if($c==0 && $ins==0)
     {	
 
-           $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,updated_by) 
-               value('".$subcityval."','".$cityid."','Active','".$_SESSION['adminId']."')";
+           $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,parent_suburb_id, created_at,updated_by) 
+               value('".$subcityval."','".$cityid."','Active','".$parent_sub_id."', NOW(), '".$_SESSION['adminId']."')";
             $res = mysql_query($qry) or die(mysql_error()." insert");
             $ctid = mysql_insert_id();
             $sel_id = $ctid;

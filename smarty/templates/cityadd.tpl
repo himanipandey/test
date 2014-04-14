@@ -88,7 +88,15 @@
 								
 				<tr>
 				  <td width="20%" align="right" valign = top >*Description  : </td>
-				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea></td>	{if $ErrorMsg["desc"] != ''} <td valign = 'top' width="50%" align="left" ><font color = "red">{$ErrorMsg["desc"]}</font></td>{else} <td width="50%" align="left" id="errmsgdes"></td>{/if}
+				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea>
+				  <input type="hidden" name="oldDesc" value="{$desc}" />
+				  {if $dept=='ADMINISTRATOR' && isset($contentFlag)}
+                   <br/><br/>
+                   <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
+				  {/if}
+				  
+				  
+				  </td>	{if $ErrorMsg["desc"] != ''} <td valign = 'top' width="50%" align="left" ><font color = "red">{$ErrorMsg["desc"]}</font></td>{else} <td width="50%" align="left" id="errmsgdes"></td>{/if}
 				</tr>
 				<tr>
 				  <td width="20%" align="right">*Status  : </td>

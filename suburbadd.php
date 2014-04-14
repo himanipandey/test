@@ -7,6 +7,7 @@
         include("modelsConfig.php");
 	include("includes/configs/configs.php");
 	include("builder_function.php");
+	include("function/alias_functions.php");
 	AdminAuthentication();
 	include('suburbaddprocess.php');
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");

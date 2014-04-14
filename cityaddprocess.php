@@ -22,7 +22,9 @@ if (isset($_POST['btnSave'])) {
 		$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
 		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
 		$status					=	trim($_POST['status']);
-		$desc					=	trim($_POST['desc']);	
+		$desc					=	trim($_POST['desc']);
+		$oldDesc				=	trim($_POST['oldDesc']);
+		$content_flag			=	trim($_POST['content_flag']);	
 		
 		
 		$smarty->assign("txtCityName", $txtCityName);
@@ -86,6 +88,16 @@ if (isset($_POST['btnSave'])) {
                     $seoData['table_name'] = 'city';
                     $seoData['updated_by'] = $_SESSION['adminId'];
                     SeoData::insetUpdateSeoData($seoData);
+                    
+                    if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
+						$cont_flag = new TableAttributes();
+						$cont_flag->table_name = 'city';
+						$cont_flag->table_id = $city_id;
+						$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+						$cont_flag->attribute_value = 0;
+						$cont_flag->updated_by = $_SESSION['adminId'];
+						$cont_flag->save();				
+					}
         }
 		header("Location:CityList.php?page=1&sort=all");
 		
@@ -106,6 +118,32 @@ if (isset($_POST['btnSave'])) {
                     $seoData['table_name'] = 'city';
                     $seoData['updated_by'] = $_SESSION['adminId'];
                     SeoData::insetUpdateSeoData($seoData);
+                    
+                    ## - desccripion content flag handeling
+						$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $cityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'city' )));					   
+					   if($cont_flag){
+							$content_flag = '';
+							if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
+								if(strcasecmp($desc,$oldDesc) != 0)
+									$content_flag = 0;								
+							}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+							  $content_flag = ($_POST["content_flag"])? 1 : 0;
+							}
+							if(is_numeric($content_flag)){
+								$cont_flag = TableAttributes::find($cont_flag[0]->id);
+								$cont_flag->updated_by = $_SESSION['adminId'];
+								$cont_flag->attribute_value = $content_flag;
+								$cont_flag->save();		
+							}
+						}elseif($_SESSION['DEPARTMENT'] == 'DATAENTRY' && strcasecmp($desc,$oldDesc)!= 0){
+							$cont_flag = new TableAttributes();
+							$cont_flag->table_name = 'city';
+							$cont_flag->table_id = $cityid;
+							$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+							$cont_flag->attribute_value = 0;
+							$cont_flag->updated_by = $_SESSION['adminId'];
+							$cont_flag->save();				
+						}
         }
 		header("Location:CityList.php?page=1&sort=all");
 	}	
@@ -137,7 +175,11 @@ elseif($cityid!=''){
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);
 	$smarty->assign("status", $status);
 	$smarty->assign("desc", $desc);
-
+	
+	$contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $cityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'city')));   
+            
+	$smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
+	$smarty->assign("dept", $_SESSION['DEPARTMENT']);
 	
 }
 

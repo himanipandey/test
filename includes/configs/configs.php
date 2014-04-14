@@ -398,13 +398,15 @@ $ArrModuleOld	=	array(
 /***************************************/
 
 /*************Array Designation********************/
-	$designationArray	=	array("0"=>"Superadmin","1"=>"Business Head","2"=>"Sales Head","3"=>"Sr. Manager","4"=>" Manager","5"=>"Sr. Executive","6"=>"Executive","7"=>"Quality Analyst","11"=>"Finance","12"=>"Finance Executive","13"=>"Admin", "14"=>"Payroll","15"=>"HR", "21"=>"Home Loan","22"=>"Home Loan Executive","31"=>"Data Entry","32"=>"Data Entry Executive","36"=>"Customers Support","41"=>"Operation Manager","42"=>"Opeartion Executive","51"=>"IT Network","61"=>"Product Head","62"=>"Company Secretary","63"=>"Collection","64"=>"Online Marketing","65"=>"Content Writer","66"=>"Collection Executive");
+	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader");
 	$smarty->assign("designationArray", $designationArray);
 
 
 /*************Array Department********************/
 
-	$departmentArray	=	array("MANAGEMENT"=>"MANAGEMENT","FINANCE"=>"FINANCE","SALES"=>"SALES","HOMELOAN"=>"HOMELOAN","OPERATIONS"=>"OPERATIONS","HR"=>"HR","IT"=>"IT","DESIGN"=>"DESIGN","DATAENTRY"=>"DATAENTRY","ADMIN"=>"ADMIN","CUSTOMERSUPPORT"=>"CUSTOMERSUPPORT","COMPANYSECRETARY"=>"COMPANYSECRETARY","COLLECTION"=>"COLLECTION","ONLINEMARKETING"=>"ONLINEMARKETING","CONTENTWRITER"=>"CONTENTWRITER");
+	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
+            "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
+            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES");
 	$smarty->assign("departmentArray", $departmentArray);
 
 	/******add service tax for invoice**********/
@@ -656,26 +658,26 @@ $arrCampaign =
 $arrCampaignDids = 
   array(
 	"Select Campaign"=>'', 
-	"Delhi1"=>'911130715335', 
-	"Delhi2"=>'911166576784',
-	"Delhi3"=>'911130803958', 
-	"Pune1"=>'912030570487', 
-	"Pune_2"=>'912067265867', 
-	"Mumbai_1"=>'912233578126', 
-  	"Mumbai_2"=>'912233578362',
-	"Mumbai_3"=>'912261344831',
-	"Kolkata"=>'913330566348',
-	"Chennai"=>'914433012753',
+	"Delhi1"=>'911130908628', 
+	"Delhi2"=>'911166576875',
+	"Delhi3"=>'911130803513', 
+	"Pune1"=>'912066895988', 
+	"Pune_2"=>'912067265891', 
+	"Mumbai_1"=>'912233578221', 
+  	"Mumbai_2"=>'912267304976',
+	"Mumbai_3"=>'912233578202',
+	"Kolkata"=>'913330566061',
+	"Chennai"=>'914433012964',
 	"Bangalore_1"=>'918049653283',
 	"Bangalore_2"=>'918049653284',
 	"Bangalore_3"=>'918030860742',
-  	"Pune_New"=>'912030157469',
-    "Delhi_Resale1"=>'911166576882',
-    "Delhi_Resale2"=>'911130803890',
-    "Chennai_Campaign2"=>'914466949330',
-    "Kolkata_Campaign2"=>'913330566304',
-    "Hyderabad_campaign_1"=>'914030883984',
-    "Hyderabad_campaign_2"=>'914066588473'
+  	"Pune_New"=>'912030570453',
+    "Delhi_Resale1"=>'911166576776',
+    "Delhi_Resale2"=>'911130803985',
+    "Chennai_Campaign2"=>'914466949358',
+    "Kolkata_Campaign2"=>'913330871689',
+    "Hyderabad_campaign_1"=>'914066588416',
+    "Hyderabad_campaign_2"=>'914030952097'
 	);
 
 /**************Authentication*************/
@@ -744,7 +746,7 @@ $arrOtherCities =
    
 $arrOfferTypes = array(
     'NoPreEmi'=>'No Pre-EMI',
-    'PartEmi'=>'Part Now Part Later',
+    'PartEmi'=>'Possession Linked Plan',
     'NoCharges'=>'No Additional Charges (PLC/Amenities)',
     'PriceDiscount'=>'Price Discount',
     'Other'=>'Other'

@@ -36,20 +36,6 @@
     $tower_div .= "</select>";
     $smarty->assign("towerDetailDiv", $tower_div);
     
-    //date dropdown
-    
-    $curdate = date("M-Y",time());
-		
-    $date_div  = "<select name='txttagged_date[]' id='date_dropdown'>";
-    $date_div .="<option value='0' >--Select Month--</option>";
-    $date_div .="<option value='".date('Y-m-d',time())."' >".$curdate."</option>";
-    for($cmt=1;$cmt<=11;$cmt++){
-		$nextdate = strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . " -$cmt month");
-		$date_div .="<option value='".date('Y-m-d',$nextdate)."' >".date("M-Y",$nextdate)."</option>";
-	}    
-    $date_div .= "</select>";
-    $smarty->assign("dateDiv", $date_div);
-    
     //display order
     $display_order_div = "<select name='txtdisplay_order[]' id='display_order_dropdown'>";
     for($cmt=1;$cmt<=5;$cmt++){
@@ -112,13 +98,13 @@ if (isset($_POST['Next']))
 
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
-				$arrTaggedDate[$k] = $_REQUEST['txttagged_date'][$k+1];
+				$tagged_date = substr($_REQUEST['img_date'.($k+1)],0,7);
+				$arrTaggedDate[$k] = $tagged_date."-01";
 				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
 				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
 			}
 		}
-				
-	    if(count($arrValue) == 0)
+		if(count($arrValue) == 0)
 	    {
 		$ErrorMsg["blankerror"] = "Please select atleast one image.";
 	    }
@@ -132,10 +118,17 @@ if (isset($_POST['Next']))
 	    }else if( !array_filter($_REQUEST['title']))
 	    {
 	      $ErrorMsg["ptype"] = "Please enter Image Title.";
-	    }else if( !array_filter($_REQUEST['txttagged_date']) && $_REQUEST['PType'] == 'Construction Status')
-	    {
-	      $ErrorMsg["ptype"] = "Please enter Tagged Date.";
 	    }
+		    
+	     //validations for tagged months
+	    if($_REQUEST['PType'] == 'Construction Status'){
+			$count = 1;
+			while($count <= $_REQUEST['img']){
+				if($_REQUEST['img_date'.$count] == '')
+					$ErrorMsg["ptype"] = "Please enter Tagged Date.";
+				$count++;
+			}				
+		}
 	   
 	    //checking uniqness display order of elevation images
 	    if($_REQUEST['PType'] == 'Project Image'){

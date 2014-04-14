@@ -23,7 +23,7 @@ class ImageUpload{
         $this->validate_image();
         $this->raise_errors_if_any();
     }
-
+    
     function validate_options(){
         $keys = array_keys($this->options);
         $missing_params = array_diff(static::$required_options, $keys);
@@ -130,8 +130,6 @@ class ImageUpload{
         $image_id = NULL;
         if(array_key_exists("service_extra_params", $options)) $extra_params = $options["service_extra_params"];
         if(array_key_exists("service_image_id", $options)) $image_id = $options["service_image_id"];
-
-
 
         $service_object = new ImageServiceUpload($this->image, $object, $object_id, $image_type,  $extra_params, $request_type, $image_id);
         $service_object->upload();
