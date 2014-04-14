@@ -61,7 +61,7 @@ function verifyNegativeUnitsSold(){
 
 // verifies if plots have non zero bedrooms
 function verifyPlotBedrooms(){
-    $count = DInventoryPriceTmp::count(array('conditions' => "unit_type = 'Plot' and bedrooms != 0"));
+    $count = DInventoryPriceTmp::count(array('conditions' => "(unit_type in ('Plot', 'Commercial') and bedrooms != 0) or (unit_type not in ('Plot', 'Commercial') and bedrooms = 0)"));
     $result = ($count==0);
     if(!$result){
         logError("Error in Plot Bedroom Test");
