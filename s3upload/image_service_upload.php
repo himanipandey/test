@@ -10,7 +10,8 @@ class ImageServiceUpload{
         "locality" => "locality",
         "bank" => "bank",
         "city" => "city",
-        "suburb" => "suburb"
+        "suburb" => "suburb",
+        "landmark" => "landmark"
     );
 
     static $image_types = array(
@@ -84,6 +85,25 @@ class ImageServiceUpload{
             "office" => "office",
             "buildings" => "buildings",
              "other" => "other",
+            
+        ),
+         "landmark" => array(
+            "school" => "school",
+            "hospital"  => "hospital",
+            "bank" => "bank",
+            "bus_stand" => "bus_stand",
+            "park" => "park",
+            "atm" => "atm",
+            "restaurant" => "restaurant",
+            "gas_station" => "gas_station",
+            "subway_station" => "subway_station",
+            "bus_station" => "bus_station",
+            "train_station" => "train_station",
+            "airport" => "airport",
+            "shopping_mall" => "shopping_mall",
+            "grocery_or_supermarket" => "grocery_or_supermarket",
+            "office_complex" => "office_complex",
+            "other" => "other",
             
         ),
         "bank" => array("logo" => "logo"));
