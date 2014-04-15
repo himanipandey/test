@@ -82,7 +82,7 @@ else {
     if ( !empty( $_REQUEST['getPh'] ) ) {
         $data = array();
         $service_image_id = $_REQUEST['service_image_id'];
-        $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&service_image_id=".$service_image_id;
+        $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
         $content = file_get_contents($url);
         $imgPath = json_decode($content);
         

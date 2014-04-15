@@ -165,3 +165,86 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
     }
     return $currentCycle;
 }
+
+/*********************Write Image to image service*************************************************************/
+
+function writeToImageService($IMG, $objectType, $objectId){
+    $imageCount = count( $IMG['name'] );
+    $uploadStatus = array();   
+    $addedImgIdArr = array();
+     include("SimpleImage.php");
+     $thumb = new SimpleImage();
+
+    for( $__imgCnt = 0; $__imgCnt < $imageCount; $__imgCnt++ ) {
+        if ( $IMG['error'][ $__imgCnt ] == 0 ) {
+            $extension = explode( "/", $IMG['type'][ $__imgCnt ] );
+            $extension = $extension[ count( $extension ) - 1 ];
+            $imgType = "";
+            if ( strtolower( $extension ) == "jpg" || strtolower( $extension ) == "jpeg" ) {
+                $imgType = IMAGETYPE_JPEG;
+            }
+            elseif ( strtolower( $extension ) == "gif" ) {
+                $imgType = IMAGETYPE_GIF;
+            }
+            elseif ( strtolower( $extension ) == "png" ) {
+                $imgType = IMAGETYPE_PNG;
+            }
+            else {
+                //  unknown format !!
+            }
+            if ( $imgType == "" ) {
+                $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "format not supported";
+            }
+            else {
+                //  no error
+                $__width = "592";
+                $__height = "444";
+                $__thumbWidth = "91";
+                $__thumbHeight = "68";
+                $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension );
+                $thumb->load( $IMG['tmp_name'][ $__imgCnt ] );
+
+                $thumb->resize( $__width, $__height );
+                $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
+                $dest = 'locality/'.$imgName;
+                $source = $newImagePath.$dest;
+                
+                $s3upload = new ImageUpload($source, array("s3" => $s3,
+                    "image_path" => $dest, "object" => "$areaType","object_id" => $areaId,
+                    "image_type" => strtolower($imgCategory),
+                    "service_extra_params" => 
+                        array("priority"=>$displayPriority,"title"=>$imgDisplayName,"description"=>$imgDescription)));
+               $serviceResponse =  $s3upload->upload();
+               die("here");
+                $thumb->resize( $__thumbWidth, $__thumbHeight );
+                $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
+                $dest = 'locality/thumb_'.$imgName;
+                $source = $newImagePath.$dest;
+                $s3upload = new S3Upload($s3, $bucket, $source, $dest);
+                $s3upload->upload();
+                
+                //  add image to DB
+                /*$addedImgIdArr[] = addImageToDB( $columnName, $areaId, $imgName,
+                        $imgCategory, $imgDisplayName, $imgDescription,$serviceResponse['service']->response_body->data->id,$displayPriority );*/
+              
+                $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
+                
+            }
+        }
+        else {
+            $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "Error#".$IMG['error'][ $__imgCnt ];
+        }
+    }
+}
+
+
+
+
+
+
+
+/*********************Read Image to image service*************************************************************/
+
+function readToImageService(){
+    
+}

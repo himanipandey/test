@@ -81,7 +81,7 @@ $img_path = array();
 foreach ($projecttower as $k => $v) {
     $objectId = $v['BANK_ID'];
     $service_image_id = $v['SERVICE_IMAGE_ID'];
-    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&service_image_id=".$service_image_id;
+    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
     $data = array();

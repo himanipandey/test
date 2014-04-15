@@ -401,7 +401,7 @@ if ($_POST['btnSave'] == "Save")
             $service_image_id = $dataedit['SERVICE_IMAGE_ID'];
             $img_path = array();
             
-            $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&service_image_id=".$service_image_id;
+            $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
             $content = file_get_contents($url);
             $imgPath = json_decode($content);
             $data = array();
@@ -417,7 +417,7 @@ if ($_POST['btnSave'] == "Save")
             }
             //array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("imgSrc", $data[0]['SERVICE_IMAGE_PATH']);
-            echo $url." path:".$data[0]['SERVICE_IMAGE_PATH']; 
+          
     //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
 
 
