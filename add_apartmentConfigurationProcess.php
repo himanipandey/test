@@ -315,7 +315,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					$optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;
                     foreach ($optionTxtStrArray as $key1 => $value1) {
                         if($key!=$key1 && $optionTxt==$value1){
-                           // $ErrorMsg1 = 'Duplicate Option!';//die();
+                           $ErrorMsg1 = 'Duplicate Option!';//die();
                             $tmparr = array();
                             $tmparr['key']=$key1;
                             $tmparr['dupkey']=$key;
@@ -397,7 +397,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     
     
 
-    if(!is_array($ErrorMsg) && $ErrorMsg1 == '')
+    if(!is_array($ErrorMsg) && !is_array($ErrorMsg2) && $ErrorMsg1 == '')
     {
         if($flg_edit == 1)
         {
