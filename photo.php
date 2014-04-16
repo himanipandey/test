@@ -10,16 +10,20 @@
     include("s3upload/s3_config.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
-
+print"<pre>";
+print_r($_REQUEST);
 if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $city     = !empty( $_REQUEST['cityId'] ) ? $_REQUEST['cityId'] : 0;
         $suburb   = !empty( $_REQUEST['suburbId'] ) ? $_REQUEST['suburbId'] : 0;
         $locality = !empty( $_REQUEST['localityId'] ) ? $_REQUEST['localityId'] : 0;
+        $landmark = !empty( $_REQUEST['landmarkId'] ) ? $_REQUEST['landmarkId'] : 0;
+        $landmarkName = !empty( $_REQUEST['landmarkName'] ) ? $_REQUEST['landmarkName'] : 0;
         $imgCategory = !empty( $_REQUEST['imgCategory'] ) ? $_REQUEST['imgCategory'] : 'other';
         $imgDisplayName = !empty( $_REQUEST['imgDisplayName'] ) ? $_REQUEST['imgDisplayName'] : '';
         $imgDescription = !empty( $_REQUEST['imgDescription'] ) ? $_REQUEST['imgDescription'] : '';
         $displayPriority = !empty( $_REQUEST['displayPriority'] ) ? $_REQUEST['displayPriority'] : '999';
 
+        echo "loc:".$locality;
         if ( $city ) {
             $smarty->assign( 'cityId', $city );
         }
@@ -29,6 +33,11 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         if ( $locality ) {
             $smarty->assign( 'localityId', $locality );
         }
+        if ( $landmark ) {
+            $smarty->assign( 'landmarkId', $landmark );
+            $smarty->assign( 'landmarkName', $landmarkName );
+        }
+        
         if ( $imgCategory ) {
             $smarty->assign( 'imgCategory', $imgCategory );
         }
@@ -44,8 +53,14 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
 
         $errMsg = "";
         $columnName = "";
-        if ( $city || $suburb || $locality ) {
-            if ( $locality > 0 ) {
+        if ( $city || $suburb || $locality || $landmark) {
+
+            if ( $landmark > 0 ) {
+                $columnName = "LANDMARK_ID";
+                $areaType = 'landmark';
+                $areaId = $landmark;
+            }
+            elseif ( $locality > 0 ) {
                 $columnName = "LOCALITY_ID";
                 $areaType = 'locality';
                 $areaId = $locality;
@@ -60,6 +75,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                 $areaType = 'city';
                 $areaId = $city;
             }
+
+           
         }
         else {
             $errMsg = "Please select the area type (Locality/Suburb/City)";
@@ -69,10 +86,20 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $uploadStatus = array();
         if ( $errMsg == "" ) {
 
+
             //  add images to image service
+            $params = array(
+                "priority" => $displayPriority,
+                "description" => $imgDescription,
+                "image_type" => $imgCategory,
+                "title" => $imgDisplayName,
+                "column_name" => $columnName,
+                "folder" => "locality/"
+            );
             
-            $uploadStatus = writeToImageService($IMG, $areaType, $areaId);
-            die("here");
+            $uploadStatus = writeToImageService($s3, $IMG, $areaType, $areaId, $params, $newImagePath);
+            //die("here");
+
             $str = "";
             foreach( $uploadStatus as $__imgName => $__statusMsg ) {
                 if ( $str ) {

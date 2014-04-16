@@ -4,7 +4,7 @@ $google_api_conf = <<<JSON
 		"default":
 		{
 			"radius":"",
-			"numberofresults":20,
+			"numberofresults":60,
 			"language":"en",
 			"opennow":"false",
 			"minprice":0,

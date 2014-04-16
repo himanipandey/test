@@ -168,13 +168,15 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 
 /*********************Write Image to image service*************************************************************/
 
-function writeToImageService($IMG, $objectType, $objectId){
+function writeToImageService($s3, $IMG, $objectType, $objectId, $params, $newImagePath){
+    //include("includes/configs/configs.php");
     $imageCount = count( $IMG['name'] );
     $uploadStatus = array();   
     $addedImgIdArr = array();
      include("SimpleImage.php");
      $thumb = new SimpleImage();
-
+     //echo $objectType.$objectId;
+     //die("here0".$newImagePath);
     for( $__imgCnt = 0; $__imgCnt < $imageCount; $__imgCnt++ ) {
         if ( $IMG['error'][ $__imgCnt ] == 0 ) {
             $extension = explode( "/", $IMG['type'][ $__imgCnt ] );
@@ -201,31 +203,33 @@ function writeToImageService($IMG, $objectType, $objectId){
                 $__height = "444";
                 $__thumbWidth = "91";
                 $__thumbHeight = "68";
-                $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension );
+                $imgName = $objectType."_".$objectId."_".$__imgCnt."_".time().".".strtolower( $extension );
                 $thumb->load( $IMG['tmp_name'][ $__imgCnt ] );
 
                 $thumb->resize( $__width, $__height );
-                $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
-                $dest = 'locality/'.$imgName;
+                $thumb->save($newImagePath.$params['folder'].$imgName, $imgType);
+                $dest = $params['folder'].$imgName;
                 $source = $newImagePath.$dest;
-                
+                //echo "image path default".$newImagePath;
+                echo $source;
+                print_r($params);
                 $s3upload = new ImageUpload($source, array("s3" => $s3,
-                    "image_path" => $dest, "object" => "$areaType","object_id" => $areaId,
-                    "image_type" => strtolower($imgCategory),
+                    "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
+                    "image_type" => strtolower($params['image_type']),
                     "service_extra_params" => 
-                        array("priority"=>$displayPriority,"title"=>$imgDisplayName,"description"=>$imgDescription)));
-               $serviceResponse =  $s3upload->upload();
-               die("here");
-                $thumb->resize( $__thumbWidth, $__thumbHeight );
+                        array("priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'])));
+                $serviceResponse =  $s3upload->update();
+                
+                /*$thumb->resize( $__thumbWidth, $__thumbHeight );
                 $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
                 $dest = 'locality/thumb_'.$imgName;
                 $source = $newImagePath.$dest;
                 $s3upload = new S3Upload($s3, $bucket, $source, $dest);
                 $s3upload->upload();
-                
+                */
                 //  add image to DB
-                /*$addedImgIdArr[] = addImageToDB( $columnName, $areaId, $imgName,
-                        $imgCategory, $imgDisplayName, $imgDescription,$serviceResponse['service']->response_body->data->id,$displayPriority );*/
+                $addedImgIdArr[] = addImageToDB( $params['column_name'], $objectId, $imgName,
+                        $params['image_type'], $params['title'], $params['description'],$serviceResponse['service']->response_body->data->id,$params['priority'] );
               
                 $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
                 
@@ -234,12 +238,16 @@ function writeToImageService($IMG, $objectType, $objectId){
         else {
             $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "Error#".$IMG['error'][ $__imgCnt ];
         }
+
     }
+    return $uploadStatus;
 }
 
 
-
-
+/*********************update/delete  Image from image service*************************************************************/
+function readToImageService(){
+    
+}
 
 
 

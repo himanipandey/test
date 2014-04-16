@@ -3,7 +3,8 @@
  * Date: 7/23/13
  * Time: 7:10 PM
  */
-window.areaResponse = { suburb:0,locality:0,city:0 };
+window.areaResponse = { suburb:0,locality:0,city:0, landmark:0 };
+var selectedItem;
 
 $(document).ready(function(){
     initVar();
@@ -11,12 +12,78 @@ $(document).ready(function(){
     var response = getSubLocData();
     updateDropDown( response );
     updateDisplayLocation();
+
+
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {
+    _renderMenu: function( ul, items ) {
+      var that = this,
+        currentCategory = "";
+      $.each( items, function( index, item ) {
+        if ( item.table != currentCategory ) {
+          ul.append( "<li class='ui-autocomplete-category'><strong>" + item.table + "</strong></li>" );
+          currentCategory = item.table;
+        }
+        that._renderItemData( ul, item );
+      });
+    }
+    });
+
+    $( "#search" ).catcomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "/findSpecificAliases.php",
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full",
+            maxRows: 10,
+            name_startsWith: request.term,
+            cityId: window.areaResponse['city']
+          },
+          success: function( data ) {
+            
+            response( $.map( data, function( item ) {
+              return {
+                label: item.name,
+                value: item.name,
+                table: item.table,
+                id: item.id,
+
+              }
+            }));
+          }
+        });
+      },
+      minLength: 3,
+      select: function( event, ui ) {
+        selectedItem = ui.item;
+        $("#landmarkId").val(selectedItem.id);
+        $("#landmarkName").val(selectedItem.label);
+
+        //alert(selectedItem.label);
+        //log( ui.item ?
+         // "Selected: " + ui.item.label :
+          //"Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+
+
+    
+
+
 });
 
 function initVar() {
     window.areaResponse['city'] = $('#city-list').val();
     window.areaResponse['suburb'] = $('#area-type-sub').val();
     window.areaResponse['locality'] = $('#area-type-loc').val();
+    window.areaResponse['landmark'] = $('#landmarkId').val();
 }
 
 function getData() {
@@ -28,6 +95,9 @@ function getData() {
         }
         if ( window.areaResponse['locality'] ) {
             data += "&locality="+window.areaResponse['locality'];
+        }
+        if ( window.areaResponse['landmark'] ) {
+            data += "&landmark="+window.areaResponse['landmark'];
         }
     }
     return data;
@@ -240,6 +310,7 @@ function getPhotosFromDB() {
     initVar();
     var data = getData(),
         res = null;
+    
     $.ajax({
         async: false,
         type : 'GET',
@@ -298,3 +369,6 @@ function saveDetails() {
     //  reloading the photos and their corresponding data
     getPhotos();
 }
+
+//landmark related code
+

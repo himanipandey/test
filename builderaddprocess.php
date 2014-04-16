@@ -217,6 +217,16 @@ if ($_POST['btnSave'] == "Save")
                             $imgurl = $newfold."/".$name; 
                             $imgPath = explode("images_new/",$imgurl);
                             $ImgDbFinalPath = "/".$imgPath[1];
+
+                            $params = array(
+                                "priority" => $displayPriority,
+                                "description" => $imgDescription,
+                                "image_type" => $imgCategory,
+                                "title" => $imgDisplayName,
+                                "column_name" => $columnName,
+                                "folder" => "locality/"
+                            );
+                            
                             $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
                                 "image_type" => "builder_image","object_id" => $builderid, "service_image_id" => $_REQUEST["serviceImageId"],

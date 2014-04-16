@@ -20,7 +20,13 @@ $json = array(
  $objectType = '';
  $objectId = '';
  $obj = '';
-if(!empty($_REQUEST['locality'])) {
+
+if(!empty($_REQUEST['landmark'])) {
+    $objectId = $_REQUEST['landmark'];
+    $objectType = 'landmark';
+    $obj = 'LANDMARK_ID';
+} 
+else if(!empty($_REQUEST['locality'])) {
     $objectId = $_REQUEST['locality'];
     $objectType = 'locality';
     $obj = 'LOCALITY_ID';
