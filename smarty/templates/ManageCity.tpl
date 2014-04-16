@@ -45,7 +45,11 @@ function chkConfirm()
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="77%" height="25" align="left">
-                             {$Sorting} 
+                             {$Sorting} <br> <br>
+                             <form id="frm_build" method="post" action ="CityList.php?page=1&sort=all">
+                                 <b>City URL :</b> <input name="cityUrl" id="cityUrl" value="{$cityUrl}" class="button">
+                                 <input type="submit" name="search" id="search" value="Search" class="button">
+                             </form> <br>
                             </td>
                           </tr>
                         </table>

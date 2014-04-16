@@ -14,19 +14,18 @@ if(isset($_POST['btnExit'])){
 
 if (isset($_POST['btnSave'])) {
 
-		$txtCityName			=	trim($_POST['txtCityName']);
-		$txtCityUrl				=	'';
-		$txtCityUrlOld			=	trim($_POST['txtCityUrlOld']);
-		$DisplayOrder			=	trim($_POST['DisplayOrder']);
-		$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
-		$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
-		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
-		$status					=	trim($_POST['status']);
-		$desc					=	trim($_POST['desc']);
-		$oldDesc				=	trim($_POST['oldDesc']);
-		$content_flag			=	trim($_POST['content_flag']);	
-		
-		
+		$txtCityName = trim($_POST['txtCityName']);
+		$txtCityUrl = '';
+		$txtCityUrlOld = trim($_POST['txtCityUrlOld']);
+		$DisplayOrder = trim($_POST['DisplayOrder']);
+		$txtMetaTitle = trim($_POST['txtMetaTitle']);
+		$txtMetaKeywords = trim($_POST['txtMetaKeywords']);
+		$txtMetaDescription = trim($_POST['txtMetaDescription']);
+		$status = trim($_POST['status']);
+		$desc = trim($_POST['desc']);
+		$oldDesc = trim($_POST['oldDesc']);
+		$content_flag =	trim($_POST['content_flag']);	
+                
 		$smarty->assign("txtCityName", $txtCityName);
 		$smarty->assign("txtCityUrl", $txtCityUrl);
 		$smarty->assign("txtCityUrlOld", $txtCityUrlOld);
@@ -90,25 +89,25 @@ if (isset($_POST['btnSave'])) {
                     SeoData::insetUpdateSeoData($seoData);
                     
                     if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
-						$cont_flag = new TableAttributes();
-						$cont_flag->table_name = 'city';
-						$cont_flag->table_id = $city_id;
-						$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
-						$cont_flag->attribute_value = 0;
-						$cont_flag->updated_by = $_SESSION['adminId'];
-						$cont_flag->save();				
-					}
+                            $cont_flag = new TableAttributes();
+                            $cont_flag->table_name = 'city';
+                            $cont_flag->table_id = $city_id;
+                            $cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+                            $cont_flag->attribute_value = 0;
+                            $cont_flag->updated_by = $_SESSION['adminId'];
+                            $cont_flag->save();				
+                    }
         }
 		header("Location:CityList.php?page=1&sort=all");
 		
 	}else if($cityid!= ''){
 	
 		$updateQry = "UPDATE ".CITY." SET 
-					  LABEL					=	'".$txtCityName."',
-					  STATUS				=	'".$status."',
-					  URL					=	'".$txtCityUrl."',
-					  DISPLAY_ORDER			=	'".$DisplayOrder."',
-					  DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
+                            LABEL					=	'".$txtCityName."',
+                            STATUS				=	'".$status."',
+                            URL					=	'".$txtCityUrl."',
+                            DISPLAY_ORDER			=	'".$DisplayOrder."',
+                            DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
 		$rt = mysql_query($updateQry);
 		if($rt){
                     $seoData['meta_title'] = $txtMetaTitle;

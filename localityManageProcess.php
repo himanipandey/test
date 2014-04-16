@@ -49,7 +49,10 @@
      * *******************
      **/
     $localityDataArr = array();
-    if ($_GET['sort'] == "1") {
+    if($_REQUEST['localityUrl']!=''){
+        $QueryMember = "Select * FROM ".LOCALITY." WHERE URL = '".$_REQUEST['localityUrl']."' ORDER BY LOCALITY_ID DESC";
+    }
+    else if ($_GET['sort'] == "1") {
         $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id  WHERE l.LABEL BETWEEN '0' AND '9'  AND s.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
     } else if ($_GET['sort'] == "all") {
         $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id where s.CITY_ID ='".$cityId ."'  ORDER BY l.LOCALITY_ID DESC";
@@ -103,5 +106,6 @@
     //calling function for all the cities
     $cityArray = getAllCities();
     $smarty->assign("cityArray", $cityArray);
+    $smarty->assign("localityUrl", $_REQUEST['localityUrl']);
     $smarty->assign('dirname',$dirName);
 ?>

@@ -186,7 +186,11 @@ function specialCharacterValidation(fieldVal)
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="77%" height="25" align="left">
-                             {$Sorting} 
+                             {$Sorting}   <br> <br>
+                             <form id="frm_build" method="post" action ="suburbList.php?page=1&sort=all">
+                                 <b>Suburb URL :</b> <input name="suburbUrl" id="suburbUrl" value="{$suburbUrl}" class="button">
+                                 <input type="submit" name="search" id="search" value="Search" class="button">
+                             </form> <br>
                             </td>
 							<td width="35%" height="25" align="right" valign="top">
                              <form name="frmcity" id="frmcity" method="post">
