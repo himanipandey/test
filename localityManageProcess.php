@@ -48,9 +48,7 @@
      *  Query For Pagging
      * *******************
      **/
-     $localityDataArr = array();
-
-
+    $localityDataArr = array();
     if ($_GET['sort'] == "1") {
         $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id  WHERE l.LABEL BETWEEN '0' AND '9'  AND s.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
     } else if ($_GET['sort'] == "all") {
@@ -59,10 +57,9 @@
         $QueryMember = "SELECT l.LABEL, l.URL, l.STATUS,l.LOCALITY_ID FROM ".LOCALITY." l inner join suburb s on l.suburb_id = s.suburb_id WHERE  LEFT(l.LABEL,1)='".$_GET['sort']."' 
                 AND  s.CITY_ID ='".$cityId ."' ORDER BY l.LOCALITY_ID DESC";
     }
-
     //echo $QueryMember;
-    $QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
-    $NumRows 		= mysql_num_rows($QueryExecute);
+    $QueryExecute = mysql_query($QueryMember) or die(mysql_error());
+    $NumRows = mysql_num_rows($QueryExecute);
     $smarty->assign("NumRows",$NumRows);
 
     /**
@@ -73,9 +70,9 @@
     $PagingQuery = "LIMIT $Offset, $RowsPerPage";
     $QueryExecute_1 = mysql_query($QueryMember." ".$PagingQuery) ;
 
-    while($dataArr2 = mysql_fetch_assoc($QueryExecute_1))		 {
-                            array_push($localityDataArr, $dataArr2);
-                     }
+    while($dataArr2 = mysql_fetch_assoc($QueryExecute_1)) {
+       array_push($localityDataArr, $dataArr2);
+    }
 
     $smarty->assign("localityDataArr", $localityDataArr);
     $MaxPage = (ceil($NumRows/$RowsPerPage))?ceil($NumRows/$RowsPerPage):'1' ;
@@ -100,14 +97,10 @@
     $Pagginnation = "<DIV align=\"left\"><font style=\"font-size:11px; color:#000000;\">" . $First . $Prev . " Showing page <strong>$PageNum</strong> of <strong>$MaxPage</strong> pages " . $Next . $Last . "</font></DIV>";
 
     $smarty->assign("Pagginnation", $Pagginnation);
-
-
     $smarty->assign("Sorting", $Sorting);
     $statusArray = array("0"=>"Inactive","1"=>"Active"); 
     $smarty->assign("statusArray", $statusArray);
-
     //calling function for all the cities
-
     $cityArray = getAllCities();
     $smarty->assign("cityArray", $cityArray);
     $smarty->assign('dirname',$dirName);

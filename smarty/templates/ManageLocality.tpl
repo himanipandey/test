@@ -32,7 +32,7 @@ function selectCity(value){
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Locality List</TD>
-                      <!--<TD align=right colSpan=3><a href="localityadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Locality</b></a></TD>-->
+                      <TD align=right colSpan=3>{if $cityId != ''}<a href="localityadd.php?c={$cityId}" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Locality</b></a>{/if}</TD>
                     </TR>
 		  </TBODY></TABLE>
 		</TD>

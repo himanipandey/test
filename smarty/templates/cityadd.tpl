@@ -65,8 +65,8 @@
 				  <td width="30%" align="left" >				  				  				 						
 				  
 				  <select name="DisplayOrder"  id="DisplayOrder" class="field" style="width:150px;">						 						 	
-					 <option value="">Select </option>   							
-					{section name=foo start=1 loop=51 step=1}
+					 <option value="50">50 </option>   							
+					{section name=foo start=1 loop=50 step=1}
 						<option {if $DisplayOrder == {$smarty.section.foo.index}} value="{$DisplayOrder}" selected = 'selected' {else} value="{$smarty.section.foo.index}"{/if} >{$smarty.section.foo.index}</option>  							
 					 {/section}  							 	
  					</select>

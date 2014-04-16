@@ -172,7 +172,7 @@ function specialCharacterValidation(fieldVal)
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Suburb List</TD>
-                     
+                      <td align = "right">{if $cityId != ''}<a href="suburbadd.php?c={$cityId}" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Suburb</b></a>{/if}</td>
                     </TR>
 		  </TBODY></TABLE>
 		</TD>
