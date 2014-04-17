@@ -194,12 +194,17 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $servantroomsval[]			=	$servantrooms;
                 $poojaroomsval[]			=	$poojarooms;
                 $statusval[]				=	$status;
-                
+                $txtDisplayCarpetAreaval[]  =   $txtDisplayCarpetArea;     
+                $txtVillaPlotAreaval[]      =    $txtVillaPlotArea;
+                $txtVillaFloorsval[]        =    $txtVillaFloors;
+                $txtVillaTerraceAreaval[]   =    $txtVillaTerraceArea;
+                $txtVillaGardenAreaval[]    =    $txtVillaGardenArea;
+                $txtCarpetAreaInfoval[]     =    $txtCarpetAreaInfo;
                 $smarty->assign("pid", $pid);
-
+                
                 $smarty->assign("txtUnitNameval", $txtUnitNameval);
                 $smarty->assign("txtSizeval", $txtSizeval);
-                $smarty->assign("txtCarpetAreaInfo", $txtCarpetAreaInfo);
+                $smarty->assign("txtCarpetAreaInfo", $txtCarpetAreaInfoval);
                 $smarty->assign("txtPricePerUnitAreaval", $txtPricePerUnitAreaval);
                 $smarty->assign("txtPricePerUnitAreaDpval", $txtPricePerUnitAreaDpval);
                 $smarty->assign("txtPricePerUnitHighval", $txtPricePerUnitHigh);
@@ -221,21 +226,21 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("servantroomsval",$servantroomsval);
                 $smarty->assign("poojaroomsval",$poojaroomsval);
                 $smarty->assign("statusval",$statusval);
-                $smarty->assign("txtDisplayCarpetArea",$txtDisplayCarpetArea);
+                $smarty->assign("txtDisplayCarpetArea",$txtDisplayCarpetAreaval);
 
                 //incase of villa
                 $smarty->assign("txtUnitNameval_VA", $txtUnitNameval);
                 $smarty->assign("txtSizeval_VA", $txtSizeval);
-                $smarty->assign("txtCarpetAreaInfo_VA", $txtCarpetAreaInfo);
+                $smarty->assign("txtCarpetAreaInfo_VA", $txtCarpetAreaInfoval);
                 $smarty->assign("txtPricePerUnitAreaval_VA", $txtPricePerUnitAreaval);
                 $smarty->assign("txtPricePerUnitAreaDpval_VA", $txtPricePerUnitAreaDpval);
-                $smarty->assign("txtPricePerUnitHighval_VA", $txtPricePerUnitHigh);
-                $smarty->assign("txtPricePerUnitLowval_VA", $txtPricePerUnitLow);
+                $smarty->assign("txtPricePerUnitHighval_VA", $txtPricePerUnitHighval);
+                $smarty->assign("txtPricePerUnitLowval_VA", $txtPricePerUnitLowval);
                 $smarty->assign("no_of_floors_VA", $txtNoOfFloor);
-                $smarty->assign("txtVillaPlotArea_VA", $txtVillaPlotArea);
-                $smarty->assign("txtVillaFloors_VA", $txtVillaFloors);
-                $smarty->assign("txtVillaTerraceArea_VA", $txtVillaTerraceArea);
-                $smarty->assign("txtVillaGardenArea_VA", $txtVillaGardenArea);
+                $smarty->assign("txtVillaPlotArea_VA", $txtVillaPlotAreaval);
+                $smarty->assign("txtVillaFloors_VA", $txtVillaFloorsval);
+                $smarty->assign("txtVillaTerraceArea_VA", $txtVillaTerraceAreaval);
+                $smarty->assign("txtVillaGardenArea_VA", $txtVillaGardenAreaval);
 
                 $smarty->assign("txtPlotArea", $txtPlotArea);
                 $smarty->assign("txtSizeLen", $txtSizeLen);
