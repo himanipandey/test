@@ -85,20 +85,46 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $IMG = $_FILES['img'];
         $uploadStatus = array();
         if ( $errMsg == "" ) {
-
-
-            //  add images to image service
-            $params = array(
-                "priority" => $displayPriority,
-                "description" => $imgDescription,
-                "image_type" => $imgCategory,
-                "title" => $imgDisplayName,
-                "column_name" => $columnName,
-                "folder" => "locality/"
-            );
+            $imageCount = count( $IMG['name'] );
+            for( $__imgCnt = 0; $__imgCnt < $imageCount; $__imgCnt++ ) {
+                if ( $IMG['error'][ $__imgCnt ] == 0 ) {
+                    $img = array();
+                    $img['error'] = $IMG['error'][ $__imgCnt ];
+                    $img['type'] = $IMG['type'][ $__imgCnt ];
+                    $img['name'] = $IMG['name'][ $__imgCnt ];
+                    $img['tmp_name'] = $IMG['tmp_name'][ $__imgCnt ];
+                    $params = array(
+                        "priority" => $displayPriority,
+                        "description" => $imgDescription,
+                        "image_type" => $imgCategory,
+                        "title" => $imgDisplayName,
+                        "column_name" => $columnName,
+                        "folder" => "locality/",
+                        "count" => $__imgCnt
+                    );
+                    //  add images to image service
             
-            $uploadStatus = writeToImageService($s3, $IMG, $areaType, $areaId, $params, $newImagePath);
-            //die("here");
+                    $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
+                    $returnArr = writeToImageService($s3, $img, $areaType, $areaId, $params, $newImagePath);
+                      //die("here");
+                    $serviceResponse = $returnArr['serviceResponse'];
+                    if($returnArr['error']){
+                        $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $returnArr['error'];
+                    }
+                    else{
+                        // add to database
+                        $addedImgIdArr[] = addImageToDB( $params['column_name'], $areaId, $imgName,
+                            $params['image_type'], $params['title'], $params['description'],$returnArr['serviceResponse']['service']->response_body->data->id,$params['priority'] );
+                  
+                        $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
+                    }
+                }
+                else {
+                    $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "Error#".$IMG['error'][ $__imgCnt ];
+                }
+            }
+
+            
 
             $str = "";
             foreach( $uploadStatus as $__imgName => $__statusMsg ) {

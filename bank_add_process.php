@@ -19,17 +19,24 @@
         $bankid = $banks->bank_id;
         
         if($logo_name != '' && $bankid != ''){
-			$dest		=	$newImagePath."/bank_list/".$logo_name;
-			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
-			if($move)
+
+        	$params = array(
+                        "image_type" => "logo",
+                        "folder" => "bank_list/"
+
+            );
+        	$response 	= writeToImageService($s3, $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
+			/*$dest		=	$newImagePath."/bank_list/".$logo_name;
+			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);*/
+			if($response['serviceResponse'])
 			{
-				$s3upload = new ImageUpload($dest, array("s3" =>$s3,
+				/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
 				  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
 				   "image_type" => "logo", "object_id" => $bankid));
 				// Image id updation (next three lines could be written in single line but broken
 				// in three lines due to limitation of php 5.3)
-				$response = $s3upload->upload();
-				$image_id = $response["service"]->data();
+				$response = $s3upload->upload();*/
+				$image_id = $response['serviceResponse']["service"]->data();
 				$image_id = $image_id->id;
 			}
 		 }
@@ -55,6 +62,27 @@
         $service_image_id = $banks->service_image_id;
         
         if($logo_name != ''){
+
+        	$params = array(
+                        "image_type" => "logo",
+                        "folder" => "bank_list/"
+            );
+        	$response 	= writeToImageService($s3, $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
+			/*$dest		=	$newImagePath."/bank_list/".$logo_name;
+			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);*/
+			if($response['serviceResponse'])
+			{
+				/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
+				  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
+				   "image_type" => "logo", "object_id" => $bankid));
+				// Image id updation (next three lines could be written in single line but broken
+				// in three lines due to limitation of php 5.3)
+				$response = $s3upload->upload();*/
+				$image_id = $response['serviceResponse']["service"]->data();
+				$image_id = $image_id->id;
+			}
+
+        	/*
 			$dest		=	$newImagePath."/bank_list/".$logo_name;
 			
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
@@ -69,7 +97,7 @@
 				$response = $s3upload->update();
 				$image_id = $response["service"]->data();
 				$image_id = $image_id->id;
-			}
+			}*/
 		 }
 		 
 		$banks->bank_name = $bankname;
