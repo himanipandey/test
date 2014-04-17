@@ -416,6 +416,9 @@
 
 
                               {/foreach}
+                              {foreach from = $ErrorMsg2  key=k1 item = v1}
+                                  <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}Row {($v1['dupkey'])+1} is duplicate of Row {($v1['key'])+1} {/if}</font></td></tr>
+                              {/foreach}
                             <tr><td colspan="16"><b><span style='font-size:15px;'>VILLAS</span></b></td></tr>
                             <tr><td colspan="16"></td></tr>
                             <tr class = "headingrowcolor" >

@@ -27,7 +27,7 @@
 
 
 	$smarty->assign("projectId", $projectId);
-
+    $ErrorMsg = array();
     $ErrorMsg2 = array();
     
     //only to get available unique project option combinations so to avoid duplicate on add and edit 
@@ -153,6 +153,9 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $txtSize			=	$_REQUEST['txtSize'][$key];
                 
                 $txtCarpetAreaInfo  =   (int)($_REQUEST['txtCarpetAreaInfo_'.$key] == "on");
+                //echo (bool)$_REQUEST['txtCarpetAreaInfo_'.$key];
+               
+                $txtDisplayCarpetArea = (bool)($_REQUEST['txtCarpetAreaInfo_'.$key] == "on");
                 $txtPricePerUnitArea		=	$_REQUEST['txtPricePerUnitArea'][$key];
                 $txtPricePerUnitAreaDp		=	$_REQUEST['txtPricePerUnitAreaDp'][$key];
                 $txtPricePerUnitHigh		=	$_REQUEST['txtPricePerUnitHigh'][$key];
@@ -196,10 +199,11 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 
                 $smarty->assign("txtUnitNameval", $txtUnitNameval);
                 $smarty->assign("txtSizeval", $txtSizeval);
+                $smarty->assign("txtCarpetAreaInfo", $txtCarpetAreaInfo);
                 $smarty->assign("txtPricePerUnitAreaval", $txtPricePerUnitAreaval);
                 $smarty->assign("txtPricePerUnitAreaDpval", $txtPricePerUnitAreaDpval);
-                $smarty->assign("txtPricePerUnitHigh", $txtPricePerUnitHigh);
-                $smarty->assign("txtPricePerUnitLow", $txtPricePerUnitLow);
+                $smarty->assign("txtPricePerUnitHighval", $txtPricePerUnitHigh);
+                $smarty->assign("txtPricePerUnitLowval", $txtPricePerUnitLow);
                 $smarty->assign("txtNoOfFloor", $txtNoOfFloor);
                 $smarty->assign("txtVillaPlotArea", $txtVillaPlotArea);
                 $smarty->assign("txtVillaFloors", $txtVillaFloors);
@@ -217,6 +221,34 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("servantroomsval",$servantroomsval);
                 $smarty->assign("poojaroomsval",$poojaroomsval);
                 $smarty->assign("statusval",$statusval);
+                $smarty->assign("txtDisplayCarpetArea",$txtDisplayCarpetArea);
+
+                //incase of villa
+                $smarty->assign("txtUnitNameval_VA", $txtUnitNameval);
+                $smarty->assign("txtSizeval_VA", $txtSizeval);
+                $smarty->assign("txtCarpetAreaInfo_VA", $txtCarpetAreaInfo);
+                $smarty->assign("txtPricePerUnitAreaval_VA", $txtPricePerUnitAreaval);
+                $smarty->assign("txtPricePerUnitAreaDpval_VA", $txtPricePerUnitAreaDpval);
+                $smarty->assign("txtPricePerUnitHighval_VA", $txtPricePerUnitHigh);
+                $smarty->assign("txtPricePerUnitLowval_VA", $txtPricePerUnitLow);
+                $smarty->assign("no_of_floors_VA", $txtNoOfFloor);
+                $smarty->assign("txtVillaPlotArea_VA", $txtVillaPlotArea);
+                $smarty->assign("txtVillaFloors_VA", $txtVillaFloors);
+                $smarty->assign("txtVillaTerraceArea_VA", $txtVillaTerraceArea);
+                $smarty->assign("txtVillaGardenArea_VA", $txtVillaGardenArea);
+
+                $smarty->assign("txtPlotArea", $txtPlotArea);
+                $smarty->assign("txtSizeLen", $txtSizeLen);
+                $smarty->assign("txtSizeBre", $txtSizeBre);
+
+                $smarty->assign("bedval_VA", $bedval);
+                $smarty->assign("bathroomsval_VA",$bathroomsval);
+                $smarty->assign("balconysval_VA",$Balconysval);
+                $smarty->assign("studyroomsval_VA",$studyroomsval);
+                $smarty->assign("servantroomsval_VA",$servantroomsval);
+                $smarty->assign("poojaroomsval_VA",$poojaroomsval);
+                $smarty->assign("statusval_VA",$statusval);
+                $smarty->assign("txtDisplayCarpetArea",$txtDisplayCarpetArea);
                 
                 //array_push($ErrorMsg2, $key);
                 if ($_REQUEST['unitType'][$key]!='Plot' && $_REQUEST['unitType'][$key]!='Commercial') {
@@ -267,7 +299,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 }
 
 
-            if(!is_array($ErrorMsg))
+            if(empty($ErrorMsg))
             {
                 if($_REQUEST['delete'][$key] == '')
                 {
@@ -313,7 +345,19 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 //                    if($txtCarpetAreaInfo) $option->carpet_area = $option->size;
 					
 					$optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;
-                    foreach ($optionTxtStrArray as $key1 => $value1) {
+                    /*foreach ($optionTxtStrArray as $key1 => $value1) {
+                        if($key!=$key1 && $optionTxt==$value1){
+                           $ErrorMsg1 = 'Duplicate Option!';//die();
+                            $tmparr = array();
+                            $tmparr['key']=$key1;
+                            $tmparr['dupkey']=$key;
+                            $tmparr['error']='Duplicate Option!';
+                           
+                            array_push($ErrorMsg2, $tmparr);
+                        }
+                    }*/
+
+                    foreach ($option_txt_array as $key1 => $value1) {
                         if($key!=$key1 && $optionTxt==$value1){
                            $ErrorMsg1 = 'Duplicate Option!';//die();
                             $tmparr = array();
@@ -324,12 +368,11 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                             array_push($ErrorMsg2, $tmparr);
                         }
                     }
-					/*if(!empty($ErrorMsg2)){
-                        echo $key;
-						$ErrorMsg1 = 'Duplicate Option!';//die();
-                        $ErrorKey = $key;
-                        $ErrorMsg[$key] .= "Error in {$key} row";
-					}else{*/
+					/*if(in_array($optionTxt,$option_txt_array)){
+                        $ErrorMsg1 = 'Duplicate Option!';
+                    }else{
+                      $option_txt_array[] = $optionTxt;
+                      $result = $option->save();*/
                     if(empty($ErrorMsg2)){
 					  $option_txt_array[] = $optionTxt;
 					  $result = $option->save();
@@ -396,8 +439,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     }
     
     
-
-    if(!is_array($ErrorMsg) && !is_array($ErrorMsg2) && $ErrorMsg1 == '')
+    
+    if(empty($ErrorMsg) && empty($ErrorMsg2) && $ErrorMsg1 == '')
     {
         if($flg_edit == 1)
         {
