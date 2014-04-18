@@ -143,6 +143,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     
     foreach($_REQUEST['txtUnitName'] AS $key=>$val)
     {
+        
             if($val != '')
                     $flgins	=	1;
             if($_REQUEST['txtUnitName'][$key] != '')
@@ -373,13 +374,14 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                             array_push($ErrorMsg2, $tmparr);
                         }
                     }
+                    $option_txt_array[] = $optionTxt;
 					/*if(in_array($optionTxt,$option_txt_array)){
                         $ErrorMsg1 = 'Duplicate Option!';
                     }else{
                       $option_txt_array[] = $optionTxt;
                       $result = $option->save();*/
                     if(empty($ErrorMsg2)){
-					  $option_txt_array[] = $optionTxt;
+					  
 					  $result = $option->save();
                       if ($action == 'insert') {
                         $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
@@ -484,7 +486,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     $smarty->assign("ErrorMsg1", $ErrorMsg1);
     $smarty->assign("ErrorMsg2", $ErrorMsg2);
     $smarty->assign("projecteror", $projecteror);
-
+    
     
     function getProperty($typeId) {
         $property = array();
