@@ -67,7 +67,7 @@
                         "image_type" => "logo",
                         "folder" => "bank_list/"
             );
-        	$response 	= writeToImageService($s3, $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
+        	$response 	= updateToImageService($s3, $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
 			/*$dest		=	$newImagePath."/bank_list/".$logo_name;
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);*/
 			if($response['serviceResponse'])
@@ -107,8 +107,7 @@
 			$banks->bank_logo = $logo_name;
             $banks->service_image_id = $image_id;
          }elseif(isset($_POST['bankLogo']) && $_POST['bankLogo'] == 'del-logo'){
-			$s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
-			$s3upload->delete();
+         	$deleteVal = deleteFromImageService("bank", $bankid, $service_image_id);
 			$banks->bank_logo = '';
             $banks->service_image_id = 0;
 		 }

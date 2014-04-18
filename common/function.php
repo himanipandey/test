@@ -201,12 +201,13 @@ function writeToImageService($s3, $IMG, $objectType, $objectId, $params, $newIma
                 $move       =   move_uploaded_file($IMG['tmp_name'],$source);
                 
                 echo $source;
-                print_r($params);
+                print_r($params); echo $objectType.$objectId;
                 $s3upload = new ImageUpload($source, array("s3" => $s3,
                     "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
                     "image_type" => strtolower($params['image_type']),
                     "service_extra_params" => 
                         array("priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'])));
+                
                 $returnValue['serviceResponse'] =  $s3upload->upload();
                 
                 return $returnValue;
@@ -216,14 +217,15 @@ function writeToImageService($s3, $IMG, $objectType, $objectId, $params, $newIma
 
 
 /*********************update/delete  Image from image service*************************************************************/
-function updateToImageService(){
-    
+function deleteFromImageService($objectType, $objectId, $service_image_id){
+    $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $service_image_id));
+    $s3upload->delete();
 }
 
 
 
 /*********************Read Image to image service*************************************************************/
 
-function readToImageService(){
+function readFromImageService(){
     
 }

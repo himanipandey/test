@@ -193,7 +193,7 @@ if ($_POST['btnSave'] == "Save")
             {
                 $newfold = '';
 
-               // echo $imgedit; die();
+                //echo $imgedit; die();
                 if($imgedit == ''){
                     $foldername	= str_replace(' ','-',strtolower($legalEntity));
                     $createFolder =$newImagePath.$foldername;
@@ -203,31 +203,26 @@ if ($_POST['btnSave'] == "Save")
                 }
                 else{  
                      $cutpath	=	explode("/",$imgedit);
-                     $newfold	=	$newImagePath.$cutpath[1];
+                     $foldername = $cutpath[1];
+                     $foldername    = str_replace(' ','-',strtolower($legalEntity));
+                     $newfold	=	$newImagePath.$foldername;
+                      mkdir($newfold, 0777);
                 }
                 
                 $name	=	$_FILES["txtBuilderImg"]["name"];
                
                 if (($_FILES["txtBuilderImg"]["type"]))
                 {
-                        $imgdestpath = $newfold."/" . $name;
-                        $return  =	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], $imgdestpath);
-                        if($return)
-                        {				
-                            $imgurl = $newfold."/".$name; 
-                            $imgPath = explode("images_new/",$imgurl);
-                            $ImgDbFinalPath = "/".$imgPath[1];
+                        
 
                             $params = array(
-                                "priority" => $displayPriority,
-                                "description" => $imgDescription,
-                                "image_type" => $imgCategory,
-                                "title" => $imgDisplayName,
-                                "column_name" => $columnName,
-                                "folder" => "locality/"
+                                "image_type" => "builder_image",
+                                "folder" => $foldername."/"
                             );
-                            
-                            $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
+                        $response   = writeToImageService($s3, $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);
+                        if($response['serviceResponse'])
+                        {
+                           /* $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
                                 "image_type" => "builder_image","object_id" => $builderid, "service_image_id" => $_REQUEST["serviceImageId"],
                                 "service_extra_params" => array("addWaterMark" => "false")));
@@ -235,7 +230,17 @@ if ($_POST['btnSave'] == "Save")
                             // in three lines due to limitation of php 5.3)
                             $response = $s3upload->update();
                             $image_id = $response["service"]->data();
+                            $image_id = $image_id->id;*/
+                            $image_id = $response['serviceResponse']["service"]->data();
                             $image_id = $image_id->id;
+
+                           
+                        
+                                        
+                            $imgurl = $newfold."/".$name; 
+                            $imgPath = explode("images_new/",$imgurl);
+                            $ImgDbFinalPath = "/".$imgPath[1];
+
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$ImgDbFinalPath,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder, $image_id);
                             if($rt)
                             {
@@ -254,26 +259,26 @@ if ($_POST['btnSave'] == "Save")
                                 $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
                             /*************Resize images code***************************/
                            $createFolder = $newfold;//die;
-                            if ($handle = opendir($createFolder))
+                            /*if ($handle = opendir($createFolder))
                             {
                                 rewinddir($handle);
                                 while (false !== ($file = readdir($handle)))
                                 {
                                     /************Working for large***********************/
-                                    if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
+                                    /*if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
                                     {
                                         $image = new SimpleImage();
                                         $path = $createFolder."/".$file;
                                         $image->load($path);
 
                                         /************Working for large Img Backup***********************/
-                                        $image->resize(477,247);
+                                        /*$image->resize(477,247);
                                         $imgdestpath = $newfold."/". str_replace('.jpg','-rect.jpg',$file);
                                         $image->save($imgdestpath);
                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
                                          /************Resize and large to small*************/
-                                        $image->resize(95,65);
+                                        /*$image->resize(95,65);
                                         $newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
                                         $imgdestpath = $newfold."/".$newimg;
                                         $image->save($imgdestpath);
@@ -288,7 +293,7 @@ if ($_POST['btnSave'] == "Save")
                                         $s3upload->upload();
                                         /**********Working for watermark*******************/
                                         // Image path
-                                        $image_path =$newfold."/".$file;
+                                        /*$image_path =$newfold."/".$file;
                                         // Where to save watermarked image
                                         $imgdestpath = $newfold."/".$file;
                                          // Watermark image
@@ -301,11 +306,11 @@ if ($_POST['btnSave'] == "Save")
                                     }	
                                 }	 		
                                 header("Location:BuilderList.php");
-                            }	
+                            }	*/
                         }	
                         else 
                         {
-                           $ErrorMsg['img'] = "Problem in image upload";
+                           $ErrorMsg['img'] = "Problem in image upload: ".$response['error'];
                         }
                 }
                 else 
