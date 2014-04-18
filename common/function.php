@@ -117,7 +117,7 @@ function updateThisPhotoProperty( $data = array() ) {
 }
 
 function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDisplayName, $imgDescription, $serviceImgId, $displayPriority ) {
-    if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID' ) ) ) {
+    if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID', 'LANDMARK_ID' ) ) ) {
 
     }
     else {

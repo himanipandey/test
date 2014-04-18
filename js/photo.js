@@ -59,7 +59,7 @@ $(document).ready(function(){
         selectedItem = ui.item;
         $("#landmarkId").val(selectedItem.id);
         $("#landmarkName").val(selectedItem.label);
-
+        areaTypeChanged( 'landmark' );
         //alert(selectedItem.label);
         //log( ui.item ?
          // "Selected: " + ui.item.label :
@@ -83,7 +83,8 @@ function initVar() {
     window.areaResponse['city'] = $('#city-list').val();
     window.areaResponse['suburb'] = $('#area-type-sub').val();
     window.areaResponse['locality'] = $('#area-type-loc').val();
-    window.areaResponse['landmark'] = $('#landmarkId').val();
+    window.areaResponse['landmark'] = $('#landmarkName').val();
+    console.log(window.areaResponse['landmark']);
 }
 
 function getData() {
@@ -125,6 +126,7 @@ function getSubLocData() {
 }
 
 function areaTypeChanged( areaType ) {
+    
     initVar();
     if ( areaType == 'city' ) {
         window.areaResponse['suburb'] = 0;
@@ -172,7 +174,12 @@ function updateDisplayLocation() {
     var areaType  = "",
         elementId = "",
         areaName  = "";
-    if ( window.areaResponse['locality'] != 0 ) {
+        console.log(window.areaResponse['landmark']);
+    if ( window.areaResponse['landmark'] != 0 ) {
+        areaType = "landmark";
+        lmkvalue = $('#landmarkName').val();
+    }  
+    else if ( window.areaResponse['locality'] != 0 ) {
         areaType = "Locality";
         elementId = "drp-dwn-locality-" + window.areaResponse['locality'];
     }
@@ -183,6 +190,9 @@ function updateDisplayLocation() {
     else {
         areaType = "City";
         elementId = "drp-dwn-city-" + window.areaResponse['city'];
+    }
+    if ( window.areaResponse['landmark'] != 0 ) {
+       $('#area-txt-name').html( areaType + " : " + "hello"  );
     }
     areaName = $('#'+elementId).html();
     $('#area-txt-name').html( areaType + " : " + areaName );
