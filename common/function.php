@@ -233,6 +233,7 @@ function deleteFromImageService($objectType, $objectId, $service_image_id){
 
 /*********************Read Image to image service*************************************************************/
 
-function readFromImageService(){
-    
+function readFromImageService($objectType, $objectId){
+    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+    return $url;
 }

@@ -256,7 +256,11 @@ if (isset($_POST['Next']))
 						                        "image_type" => "location_plan",
 						                        "folder" => $extra_path,
 						                        "count" => "location_plan".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" =>
+						                        "title"
+						                        "tagge_month" =>
+						                        "tower_id"
 						                    );
 						                    //  add images to image service
 						            
@@ -464,6 +468,19 @@ if (isset($_POST['Next']))
 												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
 												break;
 											}
+
+
+
+											SET PLAN_IMAGE		=	'".$imgDbPath[1]."',
+													PROJECT_ID		=	'".$projectId."',
+													PLAN_TYPE		=	'".$_REQUEST['PType']."',
+													    BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
+													SERVICE_IMAGE_ID        =    ".$image_id.",
+													TITLE			=	'".$arrTitle[$key]."', 
+													DISPLAY_ORDER = '".$arrDisplayOrder[$key]."',
+													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
+													".$add_tower."
+													SUBMITTED_DATE	=	now()";
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
