@@ -194,11 +194,15 @@ if (isset($_POST['Next']))
 					$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 					$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
 				}
-
+				$imgName = $objectType."_".$objectId."_".$params['count']."_".time().".".strtolower( $extension );
+				$extra_path = $BuilderName."/".strtolower($ProjectName)."/";
+				$sorce = $newImagePath.$extra_path."project_".$projectId."_".time().".jpeg";
+				//echo $sorce;
 				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $img_path);
+				//$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $sorce);
                 //$s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath, "", $img_path));
                 //$s3upload->upload();
-
+				
 				if(!$txtlocationplan)
 					{
 					$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
@@ -222,18 +226,46 @@ if (isset($_POST['Next']))
 								rewinddir($handle);
 								while (false !== ($file = readdir($handle)))
 								{
+									
 								/************Working for location plan***********************/
 									if(strstr($file,'loc-plan'))
 									{
 										if(strstr($file,$val))
 		 								{
+
 											$image = new SimpleImage();
 											$path=$createFolder."/".$file;
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
 											$image->save($imgdestpath);
 
-											
+											$image = new SimpleImage();
+											$path=$createFolder."/".$file;
+											$image->load($path);
+                                            $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
+											$image->save($imgdestpath);
+
+											$params = array(
+						                        "image_type" => "location_plan",
+						                        "folder" => $extra_path,
+						                        "count" => "location_plan".$key,
+						                        "image" => $file
+						                    );
+						                    //  add images to image service
+						            
+						                    
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    print_r($returnArr);
+						                    $serviceResponse = $returnArr['serviceResponse'];
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												echo $returnArr['error'];
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -313,16 +345,25 @@ if (isset($_POST['Next']))
 
 											$params = array(
 						                        "image_type" => "layout_plan",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "folder" => $extra_path,
+						                        "count" => "layout_plan".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
-						                    $image_id = $response['serviceResponse']["service"]->data();
-											$image_id = $image_id->id;
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												echo $returnArr['error'];
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -397,17 +438,25 @@ if (isset($_POST['Next']))
 
 											$params = array(
 						                        "image_type" => "site_plan",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "folder" => $extra_path,
+						                        "count" => "site_plan".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
-						                    $image_id = $response['serviceResponse']["service"]->data();
-											$image_id = $image_id->id;
-
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												echo $returnArr['error'];
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
@@ -481,16 +530,25 @@ if (isset($_POST['Next']))
                                             
 											$params = array(
 						                        "image_type" => "master_plan",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "folder" => $extra_path,
+						                        "count" => "master_plan".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
-						                    $image_id = $response['serviceResponse']["service"]->data();
-											$image_id = $image_id->id;
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												echo $returnArr['error'];
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -565,18 +623,27 @@ if (isset($_POST['Next']))
                                             
 											$params = array(
 						                        "image_type" => "cluster_plan",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "folder" => $extra_path,
+						                        "count" => "cluster_plan".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-						                    $image_id = $response['serviceResponse']["service"]->data();
-											$image_id = $image_id->id;
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+											
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
-                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                            /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
                                                 "image_type" => "cluster_plan"));
@@ -584,7 +651,7 @@ if (isset($_POST['Next']))
                                             // Image id updation (next three lines could be written in single line but broken
                                             // in three lines due to limitation of php 5.3)
                                             $image_id = $response["service"]->data();
-                                            $image_id = $image_id->id;
+                                            $image_id = $image_id->id;*/
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 											/**********Working for watermark*******************/
@@ -649,16 +716,25 @@ if (isset($_POST['Next']))
                                         
 										$params = array(
 						                        "image_type" => "construction_status",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "folder" => $extra_path,
+						                        "count" => "construction_status".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-						                    $image_id = $response['serviceResponse']["service"]->data();
-											$image_id = $image_id->id;
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+											
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -742,16 +818,25 @@ if (isset($_POST['Next']))
                                         
 										$params = array(
 						                        "image_type" => "payment_plan",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "folder" => $extra_path,
+						                        "count" => "payment_plan".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
-					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-					                    $serviceResponse = $returnArr['serviceResponse'];
-					                    $image_id = $response['serviceResponse']["service"]->data();
-										$image_id = $image_id->id;
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                  
+						                    $serviceResponse = $returnArr['serviceResponse'];
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+											
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -821,16 +906,25 @@ if (isset($_POST['Next']))
                                         
 										$params = array(
 						                        "image_type" => "specification",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "folder" => $extra_path,
+						                        "count" => "specification".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
-					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-					                    $serviceResponse = $returnArr['serviceResponse'];
-					                    $image_id = $response['serviceResponse']["service"]->data();
-										$image_id = $image_id->id;
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                  
+						                    $serviceResponse = $returnArr['serviceResponse'];
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+											
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -896,17 +990,26 @@ if (isset($_POST['Next']))
 										$image->save($imgdestpath);
                                         
 										$params = array(
-						                        "image_type" => "specification",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "image_type" => "price_list",
+						                        "folder" => $extra_path,
+						                        "count" => "price_list".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
-					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-					                    $serviceResponse = $returnArr['serviceResponse'];
-					                    $image_id = $response['serviceResponse']["service"]->data();
-										$image_id = $image_id->id;
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                  
+						                    $serviceResponse = $returnArr['serviceResponse'];
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+											
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -972,17 +1075,26 @@ if (isset($_POST['Next']))
 										$image->save($imgdestpath);
                                         
 										$params = array(
-						                        "image_type" => "specification",
-						                        "folder" => $createFolder,
-						                        "count" => $key
+						                        "image_type" => "application_form",
+						                        "folder" => $extra_path,
+						                        "count" => "application_form".$key,
+						                        "image" => $file
 						                    );
 						                    //  add images to image service
 						            
 						                    
-					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-					                    $serviceResponse = $returnArr['serviceResponse'];
-					                    $image_id = $response['serviceResponse']["service"]->data();
-										$image_id = $image_id->id;
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                  
+						                    $serviceResponse = $returnArr['serviceResponse'];
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+											
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -1054,17 +1166,26 @@ if (isset($_POST['Next']))
                                             
 											$params = array(
 						                        "image_type" => "project_image",
-						                        "folder" => $createFolder,
-						                        "count" => $key,
+						                        "folder" => $extra_path,
+						                        "count" => "project_image".$key,
+						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key]
 						                    );
 						                    //  add images to image service
 						            
 						                    
-					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-					                    $serviceResponse = $returnArr['serviceResponse'];
-					                    $image_id = $response['serviceResponse']["service"]->data();
-										$image_id = $image_id->id;
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                  
+						                    $serviceResponse = $returnArr['serviceResponse'];
+							                    if($serviceResponse){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+											
+												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												break;
+											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -1169,7 +1290,7 @@ if (isset($_POST['Next']))
                                                         DISPLAY_ORDER = '".$arrDisplayOrder[$key]."',
                                                         TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
-								$res	=	mysql_query($qry) or die(mysql_error());
+								 $res	=	mysql_query($qry) or die(mysql_error());
 							}
 							else
 							{
@@ -1184,7 +1305,7 @@ if (isset($_POST['Next']))
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													SUBMITTED_DATE	=	now()";
-								$resinsert	=	mysql_query($qryinsert) or die(mysql_error());
+								 $resinsert	=	mysql_query($qryinsert) or die(mysql_error());
 							}
 					if($flag==1)
 					{

@@ -169,7 +169,7 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 /*********************Write Image to image service*************************************************************/
 
 function writeToImageService($s3, $IMG, $objectType, $objectId, $params, $newImagePath){
-    
+            print_r($IMG);
             $returnValue = array();
             $extension = explode( "/", $IMG['type'] );
             $extension = $extension[ count( $extension ) - 1 ];
@@ -191,15 +191,22 @@ function writeToImageService($s3, $IMG, $objectType, $objectId, $params, $newIma
             }
             else {
                 //  no error
+                if($params['image']){
+                    
+                    $imgName = $params['image']; 
+                    $dest = $params['folder'].$imgName;
+                    $source = $newImagePath.$dest;
+                }
+                else{
+                    $imgName = $objectType."_".$objectId."_".$params['count']."_".time().".".strtolower( $extension );
+                    
+                    $dest = $params['folder'].$imgName;
+                    $source = $newImagePath.$dest;
+                    
+                    
+                    $move = move_uploaded_file($IMG['tmp_name'],$source);
+                }
                 
-                $imgName = $objectType."_".$objectId."_".$params['count']."_".time().".".strtolower( $extension );
-                //$thumb->load( $IMG['tmp_name'][ $__imgCnt ] );
-
-                //$thumb->resize( $__width, $__height );
-                $dest = $params['folder'].$imgName;
-                $source = $newImagePath.$dest;
-                $move       =   move_uploaded_file($IMG['tmp_name'],$source);
-                echo "move:".$move;die();
                 //echo $source;
                 //print_r($params); echo $objectType.$objectId;
                 $s3upload = new ImageUpload($source, array("s3" => $s3,
