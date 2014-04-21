@@ -11,7 +11,8 @@
 		$ImageDataListingArr = allProjectImages($projectId);
 		
 		$builderDetail	= fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
-	
+	//print'<pre>';
+	//print_r($ImageDataListingArr);
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 
 		//get image path from image service

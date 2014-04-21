@@ -21,7 +21,7 @@
     //tower dropdown
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
-    $tower_div = "<select name= 'txtTowerId[]' id='tower_dropdown'>";
+    $tower_div = "<select name= 'txtTowerId[]' id='tower_dropdown' onchange='tower_change(this)'>";
     $tower_div .="<option value='0' >--Select Tower--</option>";
     foreach($towerDetail_object as $s){
         $s = $s->to_array();
@@ -76,6 +76,8 @@ if (isset($_POST['Next']))
 	$arrTaggedDate = array();
 	$arrTowerId = array();
 	$arrDisplayOrder = array();
+	//print("<pre>");
+	//print_r($_FILES['txtlocationplan']);
 	  	foreach($_FILES['txtlocationplan']['name'] as $k=>$v)
 		{
 			if($v != '')
@@ -160,6 +162,7 @@ if (isset($_POST['Next']))
 	}
 	else
 	{
+
 		$flag=0;
 		$projectFolderCreated=0;
 		/*******************Update location,site,layout and master plan from db and also from table*********/
@@ -169,9 +172,11 @@ if (isset($_POST['Next']))
 			{
 				$lowerdir	=	strtolower($BuilderName);
 				$newdir		=	$newImagePath."".$lowerdir;
-				mkdir($newdir, 0777);
+				
+				 mkdir($newdir, 0777);
 				$flag=1;
 			}
+			//echo "dir:".$lowerdir.":new:".$newdir;
 			/****************project folder check**********/
 			$newdirpro		=	$newImagePath.$BuilderName."/".$ProjectName;
 			$foldname		=	strtolower($ProjectName);
@@ -194,15 +199,17 @@ if (isset($_POST['Next']))
 					$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 					$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
 				}
-				$imgName = $objectType."_".$objectId."_".$params['count']."_".time().".".strtolower( $extension );
+
+				
 				$extra_path = $BuilderName."/".strtolower($ProjectName)."/";
-				$sorce = $newImagePath.$extra_path."project_".$projectId."_".time().".jpeg";
+				
 				//echo $sorce;
 				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $img_path);
 				//$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $sorce);
                 //$s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath, "", $img_path));
                 //$s3upload->upload();
 				
+
 				if(!$txtlocationplan)
 					{
 					$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";

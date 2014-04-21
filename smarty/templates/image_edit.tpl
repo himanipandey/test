@@ -63,7 +63,7 @@ function check()
 	if (onechk_flg == 0)
 	{
 	   alert ("Please check at least one checkbox from list data.");
-	   return false;	  
+	   return false;
 	}
 	else
 	{
@@ -93,6 +93,123 @@ function check()
 }
 
 $(".pt_reqflrplan").fancybox();
+
+function tagged_date_change(e)
+{
+	//alert("hellooo");
+	if($('select#PType').val() == 'Construction Status')
+	{
+		taggedYear = $("#"+e.id).val().substring(0,4);
+		taggedMonth = $("#"+e.id).val().substring(5,7);
+		//alert(taggedMonth);
+		if(taggedMonth=="01")taggedMonth="January";
+		else if(taggedMonth=="02")taggedMonth="February";
+		else if(taggedMonth=="03")taggedMonth="March";
+		else if(taggedMonth=="04")taggedMonth="April";
+		else if(taggedMonth=="05")taggedMonth="May";
+		else if(taggedMonth=="06")taggedMonth="June";
+		else if(taggedMonth=="07")taggedMonth="July";
+		else if(taggedMonth=="08")taggedMonth="August";
+		else if(taggedMonth=="09")taggedMonth="September";
+		else if(taggedMonth=="10")taggedMonth="October";
+		else if(taggedMonth=="11")taggedMonth="November";
+		else if(taggedMonth=="12")taggedMonth="December";
+
+		taggedMonthval = taggedMonth+" "+taggedYear;
+
+
+		var element = $(e).parent('div').parent('div').children(":text");
+		var towertext = $(e).parent().parent().children(".taggedDate").children("select").children(":selected").text();
+		if(towertext.toLowerCase().search(/select|other/i) >= 0)
+			element.val($('select#PType').val()+" " +taggedMonthval);
+		else
+			element.val(towertext+ " " + $('select#PType').val()+" " +taggedMonthval);
+	}
+	
+}
+
+function tower_change(e)
+{
+	
+	if($('select#PType').val() == 'Construction Status' || $('select#PType').val() == 'Cluster Plan')
+	{
+		var element = $(e).parent('div').parent('div').children(":text");
+		var floorfrom = $(e).siblings("input:[id='floor_from']").val();
+		var floorto = $(e).siblings("input:[id='floor_to']").val();
+		var date = $(e).parent().parent().children(".taggedMonth").children("input:text").val();
+		if($('select#PType').val() == 'Cluster Plan'){
+			if($(e).children(":selected").text().toLowerCase().search(/select|other/i) >= 0)
+			element.val($('select#PType').val()+" from "+ floorfrom+" to "+floorto);
+			else
+			element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" from "+ floorfrom+" to "+floorto);
+		}
+		else if($('select#PType').val() == 'Construction Status'){
+
+			taggedYear = date.substring(0,4);
+		taggedMonth = date.substring(5,7);
+		if(taggedMonth=="01")taggedMonth="January";
+		else if(taggedMonth=="02")taggedMonth="February";
+		else if(taggedMonth=="03")taggedMonth="March";
+		else if(taggedMonth=="04")taggedMonth="April";
+		else if(taggedMonth=="05")taggedMonth="May";
+		else if(taggedMonth=="06")taggedMonth="June";
+		else if(taggedMonth=="07")taggedMonth="July";
+		else if(taggedMonth=="08")taggedMonth="August";
+		else if(taggedMonth=="09")taggedMonth="September";
+		else if(taggedMonth=="10")taggedMonth="October";
+		else if(taggedMonth=="11")taggedMonth="November";
+		else if(taggedMonth=="12")taggedMonth="December";
+
+		taggedMonthval = taggedMonth+" "+taggedYear;
+
+			if($(e).children(":selected").text().toLowerCase().search(/select|other/i) >= 0)
+			element.val($('select#PType').val()+" "+ taggedMonthval);
+			else
+			element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" "+ taggedMonthval);
+		}
+
+		
+			
+	}
+	
+}
+
+function floor_change_from(e)
+{
+	
+	if($('select#PType').val() == 'Cluster Plan')
+	{
+		
+		var titlefield = $(e).parent('div').parent('div').children(":text");
+		var	floor_to = $(e).siblings(":text");
+		var towertext = $(e).siblings("select").children(":selected").text();
+		if(towertext.toLowerCase().search(/select|other/i) >= 0)
+			titlefield.val("Cluster Plan from " +$(e).val()+" to "+floor_to.val());
+		else
+			titlefield.val(towertext+ " Cluster Plan from " +$(e).val()+" to "+floor_to.val());
+			
+			
+	}
+	
+}
+
+function floor_change_to(e)
+{
+	
+	if($('select#PType').val() == 'Cluster Plan')
+	{
+		
+		var titlefield = $(e).parent('div').parent('div').children(":text");
+		var	floor_from = $(e).siblings(":text");
+		var towertext = $(e).siblings("select").children(":selected").text();
+		if(towertext.toLowerCase().search(/select|other/i) >= 0)
+			titlefield.val("Cluster Plan from " +floor_from.val()+" to "+$(e).val());
+		else
+			titlefield.val(towertext+ " Cluster Plan from "+floor_from.val()+" to "+$(e).val());
+			
+	}
+	
+}
 
 </script>
 </TD>
@@ -170,20 +287,36 @@ $(".pt_reqflrplan").fancybox();
 
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
-														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
+														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;" id="title{$cnt}"/><br><br>
 														{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 														<div class="taggedDate">
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
-															<input name="img_date{$cnt}" type="text" class="formstyle2" id="img_date{$cnt}" readonly="1" size="10"  value="{{$ImageDataListingArr[data].tagged_month}}" />  <img src="../images/cal_1.jpg" id="img_date_trigger{$cnt}" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+															<input name="img_date{$cnt}" type="text" class="formstyle2" id="img_date{$cnt}" readonly="1" size="10"  value="{{$ImageDataListingArr[data].tagged_month}}" onchange="tagged_date_change(this)"/>  <img src="../images/cal_1.jpg" id="img_date_trigger{$cnt}" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
 															<br><br>
 															Tower:&nbsp;&nbsp;
-															<select name= "txtTowerId[{$cnt}]" >
+															<select name= "txtTowerId[{$cnt}]" onchange='tower_change(this)' id="tower{$cnt}">
 																<option value="0" >--Select Tower--</option>
 																{section name=towerdata loop=$towerDetail}
 																	<option value="{$towerDetail[towerdata].TOWER_ID}" {if $ImageDataListingArr[data].tower_id == $towerDetail[towerdata].TOWER_ID} selected {/if} >{$towerDetail[towerdata].TOWER_NAME}</option>
 																{/section}
 																	<option value="-1" {if $ImageDataListingArr[data].tower_id == null} selected {/if}>Other</option>
 															</select>
+														</div>
+														{/if}
+														{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
+														<div class="taggedDate1">
+															Tower:&nbsp;&nbsp;
+															<select name= "txtTowerId[{$cnt}]" onchange='tower_change(this)' id="tower{$cnt}">
+																<option value="0" >--Select Tower--</option>
+																{section name=towerdata loop=$towerDetail}
+																	<option value="{$towerDetail[towerdata].TOWER_ID}" {if $ImageDataListingArr[data].tower_id == $towerDetail[towerdata].TOWER_ID} selected {/if} >{$towerDetail[towerdata].TOWER_NAME}</option>
+																{/section}
+																	<option value="-1" {if $ImageDataListingArr[data].tower_id == null} selected {/if}>Other</option>
+															</select>
+															<br><br>
+															Floor No. From:<font color = "red"></font>&nbsp;&nbsp;<input name="floor_from{$cnt}" type="text" class="formstyle2" id="floor_from{$cnt}" size="10"  onchange="floor_change_from(this)" />	
+															&nbsp;&nbsp;<br>Floor No. To:<font color = "red"></font>&nbsp;&nbsp;
+																<input name="floor_to[{$cnt}]" type="text" class="formstyle2" id="floor_to{$cnt}" size="10"  onchange="floor_change_to(this)" />
 														</div>
 														{/if}
 														{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
