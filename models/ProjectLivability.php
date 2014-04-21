@@ -95,7 +95,7 @@ class ProjectLivability extends ActiveRecord\Model {
 
     static function populateUnitPerFloor() {
         $aFloorCount = ResiProjectTowerDetails::getFloorCountForAllProjects();
-        $aProjectSupply = ProjectSupply::getSupplyForAllProjects();
+        $aProjectSupply = ProjectSupply::getWebsiteVersionSupplyForAllProjects();
         $aProjectSupply = indexArrayOnKey($aProjectSupply, 'project_id');
         foreach ($aFloorCount as $floorCount) {
             $projectId = $floorCount->project_id;
@@ -106,9 +106,6 @@ class ProjectLivability extends ActiveRecord\Model {
         }
 
         self::normalizeColumnOnCity('unit_per_floor');
-
-//        $maxval = self::getMaxValueForCoulmn('unit_per_floor');
-//        self::update_all(array('set' => "unit_per_floor = unit_per_floor/$maxval"));
     }
 
     static function populateBuilder() {
