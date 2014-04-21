@@ -178,6 +178,7 @@ if (isset($_POST['Next']))
 			$andnewdirpro	=	 $newImagePath.$BuilderName."/".$foldname;
 			foreach($arrValue as $key=>$val)
 			{
+				
 				if((!is_dir($newdirpro)) && (!is_dir($andnewdirpro)))
 				{
 					$lowerpro	=	strtolower($ProjectName);
@@ -195,8 +196,8 @@ if (isset($_POST['Next']))
 				}
 
 				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $img_path);
-                $s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath, "", $img_path));
-                $s3upload->upload();
+                //$s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath, "", $img_path));
+                //$s3upload->upload();
 
 				if(!$txtlocationplan)
 					{
@@ -210,6 +211,11 @@ if (isset($_POST['Next']))
 				$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$val;
 
 				$projecttbl			=	"/".$BuilderName."/".strtolower($ProjectName);
+				$img = array();
+                $img['error'] = $_FILES["txtlocationplan"]["error"][$key];
+                $img['type'] = $_FILES["txtlocationplan"]["type"][$key];
+                $img['name'] = $_FILES["txtlocationplan"]["name"][$key];
+                $img['tmp_name'] = $_FILES["txtlocationplan"]["tmp_name"][$key];
 
 						if ($handle = opendir($createFolder))
 						{
@@ -220,32 +226,40 @@ if (isset($_POST['Next']))
 									if(strstr($file,'loc-plan'))
 									{
 										if(strstr($file,$val))
-										{
+		 								{
 											$image = new SimpleImage();
 											$path=$createFolder."/".$file;
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+
+											
+											
+                                            /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
                                                 "image_type" => "location_plan"));
-                                            $response = $s3upload->upload();
+                                            $response = $s3upload->upload();*/
                                             // Image id updation (next three lines could be written in single line but broken
                                             // in three lines due to limitation of php 5.3)
-                                            $image_id = $response["service"]->data();
-                                            $image_id = $image_id->id;
+
+                                            
+                                            //$image_id = $response["service"]->data();
+                                            //$image_id = $image_id->id;
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
+
+											
+                    
 											/**********Working for watermark*******************/
-											$img = new Zubrag_watermark($path);
+											/*$img = new Zubrag_watermark($path);
 											$img->ApplyWatermark($watermark_path);
 											$img->SaveAsFile($path);
                                             $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(485,320);
+											/*$image->resize(485,320);
 											$newimg	=	str_replace('loc-plan','loc-plan-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -255,7 +269,7 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											/**********Working for watermark*******************/
 										    // Image path
-											$image_path =$createFolder."/".$newimg;
+											/*$image_path =$createFolder."/".$newimg;
 											// Where to save watermarked image
 											$imgdestpath = $createFolder."/".$newimg;
 											// Watermark image
@@ -266,7 +280,7 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(95,65);
+											/*$image->resize(95,65);
 											$newimg	=	str_replace('loc-plan','loc-plan-sm-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -276,14 +290,14 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 											/************Resize and large to thumb*************/
-											$image->resize(77,70);
+											/*$image->resize(77,70);
 											$newimg	=	str_replace('loc-plan','loc-plan-thumb',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
 								}
 								/************Working for layout plan***********************/
@@ -296,7 +310,21 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+
+											$params = array(
+						                        "image_type" => "layout_plan",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $serviceResponse = $returnArr['serviceResponse'];
+						                    $image_id = $response['serviceResponse']["service"]->data();
+											$image_id = $image_id->id;
+
+                                            /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
                                                 "image_type" => "layout_plan"));
@@ -304,18 +332,18 @@ if (isset($_POST['Next']))
                                             // Image id updation (next three lines could be written in single line but broken
                                             // in three lines due to limitation of php 5.3)
                                             $image_id = $response["service"]->data();
-                                            $image_id = $image_id->id;
+                                            $image_id = $image_id->id;*/
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
 											/**********Working for watermark*******************/
-											$img = new Zubrag_watermark($path);
+											/*$img = new Zubrag_watermark($path);
 											$img->ApplyWatermark($watermark_path);
 											$img->SaveAsFile($path);
                                             $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(485,320);
+											/*$image->resize(485,320);
 											$newimg	=	str_replace('layout-plan','layout-plan-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -325,7 +353,7 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											/**********Working for watermark*******************/
 											// Image path
-											$image_path =$createFolder."/".$newimg;
+											/*$image_path =$createFolder."/".$newimg;
 											// Where to save watermarked image
 											$imgdestpath = $createFolder."/".$newimg;
 											// Watermark image
@@ -336,7 +364,7 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(95,65);
+											/*$image->resize(95,65);
 											$newimg	=	str_replace('layout-plan','layout-plan-sm-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -346,14 +374,14 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 											/************Resize and large to thumb*************/
-											$image->resize(77,70);
+											/*$image->resize(77,70);
 											$newimg	=	str_replace('layout-plan','layout-plan-thumb',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 										}
 									}
 									/************Working for site plan***********************/
@@ -366,7 +394,21 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+
+											$params = array(
+						                        "image_type" => "site_plan",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $serviceResponse = $returnArr['serviceResponse'];
+						                    $image_id = $response['serviceResponse']["service"]->data();
+											$image_id = $image_id->id;
+
+                                            /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
                                                 "image_type" => "site_plan"));
@@ -374,18 +416,18 @@ if (isset($_POST['Next']))
                                             // Image id updation (next three lines could be written in single line but broken
                                             // in three lines due to limitation of php 5.3)
                                             $image_id = $response["service"]->data();
-                                            $image_id = $image_id->id;
+                                            $image_id = $image_id->id;*/
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
 											/**********Working for watermark*******************/
-											$img = new Zubrag_watermark($path);
+											/*$img = new Zubrag_watermark($path);
 											$img->ApplyWatermark($watermark_path);
 											$img->SaveAsFile($path);
                                             $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(485,320);
+											/*$image->resize(485,320);
 											$newimg	=	str_replace('site-plan','site-plan-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -395,7 +437,7 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											/**********Working for watermark*******************/
 											// Image path
-											$image_path =$createFolder."/".$newimg;
+											/*$image_path =$createFolder."/".$newimg;
 											// Where to save watermarked image
 											$imgdestpath = $createFolder."/".$newimg;
 											// Watermark image
@@ -406,7 +448,7 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(95,65);
+											/*$image->resize(95,65);
 											$newimg	=	str_replace('site-plan','site-plan-sm-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -416,14 +458,14 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 											/************Resize and large to thumb*************/
-											$image->resize(77,70);
+											/*$image->resize(77,70);
 											$newimg	=	str_replace('site-plan','site-plan-thumb',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 										}
 									}
 									/************Working for master plan***********************/
@@ -436,7 +478,21 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                            
+											$params = array(
+						                        "image_type" => "master_plan",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $serviceResponse = $returnArr['serviceResponse'];
+						                    $image_id = $response['serviceResponse']["service"]->data();
+											$image_id = $image_id->id;
+
+                                            /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
                                                 "image_type" => "master_plan"));
@@ -444,18 +500,18 @@ if (isset($_POST['Next']))
                                             // Image id updation (next three lines could be written in single line but broken
                                             // in three lines due to limitation of php 5.3)
                                             $image_id = $response["service"]->data();
-                                            $image_id = $image_id->id;
+                                            $image_id = $image_id->id;*/
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
 											/**********Working for watermark*******************/
-											$img = new Zubrag_watermark($path);
+											/*$img = new Zubrag_watermark($path);
 											$img->ApplyWatermark($watermark_path);
 											$img->SaveAsFile($path);
                                             $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(485,320);
+											/*$image->resize(485,320);
 											$newimg	=	str_replace('master-plan','master-plan-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -465,7 +521,7 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											/**********Working for watermark*******************/
 											// Image path
-											$image_path =$createFolder."/".$newimg;
+											/*$image_path =$createFolder."/".$newimg;
 											// Where to save watermarked image
 											$imgdestpath = $createFolder."/".$newimg;
 											// Watermark image
@@ -476,7 +532,7 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(95,65);
+											/*$image->resize(95,65);
 											$newimg	=	str_replace('master-plan','master-plan-sm-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -486,14 +542,14 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 											/************Resize and large to thumb*************/
-											$image->resize(77,70);
+											/*$image->resize(77,70);
 											$newimg	=	str_replace('master-plan','master-plan-thumb',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 										}
 									}
 									/************Working for cluster plan***********************/
@@ -506,6 +562,20 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 											$image->save($imgdestpath);
+                                            
+											$params = array(
+						                        "image_type" => "cluster_plan",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $serviceResponse = $returnArr['serviceResponse'];
+						                    $image_id = $response['serviceResponse']["service"]->data();
+											$image_id = $image_id->id;
+
                                             $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
@@ -518,14 +588,14 @@ if (isset($_POST['Next']))
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 											/**********Working for watermark*******************/
-											$img = new Zubrag_watermark($path);
+											/*$img = new Zubrag_watermark($path);
 											$img->ApplyWatermark($watermark_path);
 											$img->SaveAsFile($path);
                                             $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(485,320);
+											/*$image->resize(485,320);
 											$newimg	=	str_replace('cluster-plan','cluster-plan-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -535,7 +605,7 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											/**********Working for watermark*******************/
 											// Image path
-											$image_path =$createFolder."/".$newimg;
+											/*$image_path =$createFolder."/".$newimg;
 											// Where to save watermarked image
 											$imgdestpath = $createFolder."/".$newimg;
 											// Watermark image
@@ -546,7 +616,7 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$img->Free();
 											/************Resize and large to small*************/
-											$image->resize(95,65);
+											/*$image->resize(95,65);
 											$newimg	=	str_replace('cluster-plan','cluster-plan-sm-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -556,14 +626,14 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 											/************Resize and large to thumb*************/
-											$image->resize(77,70);
+											/*$image->resize(77,70);
 											$newimg	=	str_replace('cluster-plan','cluster-plan-thumb',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
                                             $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
 								}
 								/************Working for construction plan***********************/
@@ -576,7 +646,21 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                        
+										$params = array(
+						                        "image_type" => "construction_status",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $serviceResponse = $returnArr['serviceResponse'];
+						                    $image_id = $response['serviceResponse']["service"]->data();
+											$image_id = $image_id->id;
+
+                                        /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                             "object" => "project", "object_id" => $projectId,
                                             "image_type" => "construction_status"));
@@ -584,18 +668,18 @@ if (isset($_POST['Next']))
                                         // Image id updation (next three lines could be written in single line but broken
                                         // in three lines due to limitation of php 5.3)
                                         $image_id = $response["service"]->data();
-                                        $image_id = $image_id->id;
+                                        $image_id = $image_id->id;*/
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
 										/**********Working for watermark*******************/
-										$img = new Zubrag_watermark($path);
+										/*$img = new Zubrag_watermark($path);
 										$img->ApplyWatermark($watermark_path);
 										$img->SaveAsFile($path);
                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
                                         $s3upload->upload();
 										$img->Free();
 										/************Resize and large to small*************/
-										$image->resize(485,320);
+										/*$image->resize(485,320);
 										$newimg	=	str_replace('const-status','const-status-rect-img',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
 										$image->save($imgdestpath);
@@ -605,7 +689,7 @@ if (isset($_POST['Next']))
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 										/**********Working for watermark*******************/
 										// Image path
-										$image_path =$createFolder."/".$newimg;
+										/*$image_path =$createFolder."/".$newimg;
 										// Where to save watermarked image
 										$imgdestpath = $createFolder."/".$newimg;
 										// Watermark image
@@ -616,7 +700,7 @@ if (isset($_POST['Next']))
                                         $s3upload->upload();
 										$img->Free();
 										/************Resize and large to small*************/
-										$image->resize(95,65);
+										/*$image->resize(95,65);
 										$newimg	=	str_replace('const-status','const-status-sm-rect-img',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
 										$image->save($imgdestpath);
@@ -625,7 +709,7 @@ if (isset($_POST['Next']))
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 										/************Resize and large to small*************/
-										$image->resize(125,78);
+										/*$image->resize(125,78);
 										$newimg	=	str_replace('const-status','const-status-small',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
 										$image->save($imgdestpath);
@@ -635,14 +719,14 @@ if (isset($_POST['Next']))
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 										/************Resize and large to thumb*************/
-										$image->resize(77,70);
+										/*$image->resize(77,70);
 										$newimg	=	str_replace('const-status','const-status-thumb',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
 										$image->save($imgdestpath);
                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
 								}
 								/************Working for Payment plan***********************/
@@ -655,7 +739,21 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                        
+										$params = array(
+						                        "image_type" => "payment_plan",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+					                    $serviceResponse = $returnArr['serviceResponse'];
+					                    $image_id = $response['serviceResponse']["service"]->data();
+										$image_id = $image_id->id;
+
+                                        /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                             "object" => "project", "object_id" => $projectId,
                                             "image_type" => "payment_plan"));
@@ -663,11 +761,11 @@ if (isset($_POST['Next']))
                                         // Image id updation (next three lines could be written in single line but broken
                                         // in three lines due to limitation of php 5.3)
                                         $image_id = $response["service"]->data();
-                                        $image_id = $image_id->id;
+                                        $image_id = $image_id->id;*/
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);
 										/**********Working for watermark*******************/
-										$img = new Zubrag_watermark($path);
+										/*$img = new Zubrag_watermark($path);
 										$img->ApplyWatermark($watermark_path);
 										$img->SaveAsFile($path);
                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
@@ -678,7 +776,7 @@ if (isset($_POST['Next']))
 										$imgdestpath = $createFolder."/".$newimg;
 										/************Resize and large to small*************/
 										//echo $image->getWidth($imgdestpath);
-										if($image->getWidth($imgdestpath)>630)
+										/*if($image->getWidth($imgdestpath)>630)
 										{
 										$returnVal = scaleDimensions($image->getWidth($imgdestpath), $image->getHeight($imgdestpath), '620', '1200');
 											$widht =  $returnVal[0];
@@ -700,14 +798,14 @@ if (isset($_POST['Next']))
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 										/************Resize and large to thumb*************/
-										$image->resize(77,70);
+										/*$image->resize(77,70);
 										$newimg	=	str_replace('payment-plan','payment-plan-thumb',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
 										$image->save($imgdestpath);
                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
 								}
 								/************Working for Specification***********************/
@@ -720,7 +818,21 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                        
+										$params = array(
+						                        "image_type" => "specification",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+					                    $serviceResponse = $returnArr['serviceResponse'];
+					                    $image_id = $response['serviceResponse']["service"]->data();
+										$image_id = $image_id->id;
+
+                                        /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                             "object" => "project", "object_id" => $projectId,
                                             "image_type" => "specification"));
@@ -728,11 +840,11 @@ if (isset($_POST['Next']))
                                         // Image id updation (next three lines could be written in single line but broken
                                         // in three lines due to limitation of php 5.3)
                                         $image_id = $response["service"]->data();
-                                        $image_id = $image_id->id;
+                                        $image_id = $image_id->id;*/
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
 										/**********Working for watermark*******************/
-										$img = new Zubrag_watermark($path);
+										/*$img = new Zubrag_watermark($path);
 										$img->ApplyWatermark($watermark_path);
 										$img->SaveAsFile($path);
                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
@@ -740,7 +852,7 @@ if (isset($_POST['Next']))
 										$img->Free();
 										/************Resize and large to small*************/
 										//echo $image->getWidth($imgdestpath);
-										if($image->getWidth($imgdestpath)>630)
+										/*if($image->getWidth($imgdestpath)>630)
 										{
 										$returnVal = scaleDimensions($image->getWidth($imgdestpath), $image->getHeight($imgdestpath), '620', '1200');
 											$widht =  $returnVal[0];
@@ -762,14 +874,14 @@ if (isset($_POST['Next']))
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 										/************Resize and large to thumb*************/
-										$image->resize(77,70);
+										/*$image->resize(77,70);
 										$newimg	=	str_replace('specification','specification-thumb',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
 										$image->save($imgdestpath);
                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
 								}
 								/************Working for Price List***********************/
@@ -782,7 +894,21 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                        
+										$params = array(
+						                        "image_type" => "specification",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+					                    $serviceResponse = $returnArr['serviceResponse'];
+					                    $image_id = $response['serviceResponse']["service"]->data();
+										$image_id = $image_id->id;
+
+                                        /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                             "object" => "project", "object_id" => $projectId,
                                             "image_type" => "price_list"));
@@ -790,11 +916,11 @@ if (isset($_POST['Next']))
                                         // Image id updation (next three lines could be written in single line but broken
                                         // in three lines due to limitation of php 5.3)
                                         $image_id = $response["service"]->data();
-                                        $image_id = $image_id->id;
+                                        $image_id = $image_id->id;*/
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
 										/**********Working for watermark*******************/
-										$img = new Zubrag_watermark($path);
+										/*$img = new Zubrag_watermark($path);
 										$img->ApplyWatermark($watermark_path);
 										$img->SaveAsFile($path);
                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
@@ -802,7 +928,7 @@ if (isset($_POST['Next']))
 										$img->Free();
 										/************Resize and large to small*************/
 										//echo $image->getWidth($imgdestpath);
-										if($image->getWidth($imgdestpath)>630)
+										/*if($image->getWidth($imgdestpath)>630)
 										{
 										$returnVal = scaleDimensions($image->getWidth($imgdestpath), $image->getHeight($imgdestpath), '620', '1200');
 											$widht =  $returnVal[0];
@@ -824,14 +950,14 @@ if (isset($_POST['Next']))
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 										/***********resize thumb**********/
-										$image->resize(77,70);
+										/*$image->resize(77,70);
 										$newimg	=	str_replace('price-list','price-list-thumb',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
 										$image->save($imgdestpath);
                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
 								}
 								/************Working for Application Form***********************/
@@ -844,7 +970,21 @@ if (isset($_POST['Next']))
 										$image->load($path);
                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('app-form','app-form-bkp',$file);
 										$image->save($imgdestpath);
-                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                        
+										$params = array(
+						                        "image_type" => "specification",
+						                        "folder" => $createFolder,
+						                        "count" => $key
+						                    );
+						                    //  add images to image service
+						            
+						                    
+					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+					                    $serviceResponse = $returnArr['serviceResponse'];
+					                    $image_id = $response['serviceResponse']["service"]->data();
+										$image_id = $image_id->id;
+
+                                        /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                             "object" => "project", "object_id" => $projectId,
                                             "image_type" => "application_form"));
@@ -852,11 +992,11 @@ if (isset($_POST['Next']))
                                         // Image id updation (next three lines could be written in single line but broken
                                         // in three lines due to limitation of php 5.3)
                                         $image_id = $response["service"]->data();
-                                        $image_id = $image_id->id;
+                                        $image_id = $image_id->id;*/
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('app-form','app-form-bkp',$file);
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('app-form','app-form-bkp',$file);
 										/**********Working for watermark*******************/
-										$img = new Zubrag_watermark($path);
+										/*$img = new Zubrag_watermark($path);
 										$img->ApplyWatermark($watermark_path);
 										$img->SaveAsFile($path);
                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath, "", $path));
@@ -864,7 +1004,7 @@ if (isset($_POST['Next']))
 										$img->Free();
 										/************Resize and large to small*************/
 										//echo $image->getWidth($imgdestpath);
-										if($image->getWidth($imgdestpath)>630)
+										/*if($image->getWidth($imgdestpath)>630)
 										{
 										$returnVal = scaleDimensions($image->getWidth($imgdestpath), $image->getHeight($imgdestpath), '620', '1200');
 											$widht =  $returnVal[0];
@@ -886,14 +1026,14 @@ if (isset($_POST['Next']))
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 										/***********resize thumb**********/
-										$image->resize(77,70);
+										/*$image->resize(77,70);
 										$newimg	=	str_replace('app-form','app-form-thumb',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
 										$image->save($imgdestpath);
                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
 								}
 								/************Working for large***********************/
@@ -911,7 +1051,22 @@ if (isset($_POST['Next']))
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 											$image->save($imgdestpath);
 											
-                                            $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+                                            
+											$params = array(
+						                        "image_type" => "project_image",
+						                        "folder" => $createFolder,
+						                        "count" => $key,
+						                        "priority" => $arrDisplayOrder[$key]
+						                    );
+						                    //  add images to image service
+						            
+						                    
+					                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+					                    $serviceResponse = $returnArr['serviceResponse'];
+					                    $image_id = $response['serviceResponse']["service"]->data();
+										$image_id = $image_id->id;
+
+                                            /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
                                                 "image_type" => "project_image","service_extra_params" => array("priority" => $arrDisplayOrder[$key])));
@@ -922,12 +1077,12 @@ if (isset($_POST['Next']))
                                             // Image id updation (next three lines could be written in single line but broken
                                             // in three lines due to limitation of php 5.3)
                                             $image_id = $response["service"]->data();
-                                            $image_id = $image_id->id;
+                                            $image_id = $image_id->id;*/
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 											
 											/************Resize and large to small*************/
-											$image->resize(485,320);
+											/*$image->resize(485,320);
 											$newimg	=	str_replace('large','large-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newimg;
 											$image->save($imgdestpath);
@@ -937,7 +1092,7 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											/**********Working for watermark*******************/
 											// Image path
-											$image_path = $createFolder."/".$file;
+											/*$image_path = $createFolder."/".$file;
 											$imgdestpath = $createFolder."/".$file;
 											$img = new Zubrag_watermark($image_path);
 											$img->ApplyWatermark($watermark_path);
@@ -946,7 +1101,7 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$img->Free();
 											/*********update project table for samall image***********/
-											$pathProject	=	"/".$BuilderName."/".strtolower($ProjectName);
+											/*$pathProject	=	"/".$BuilderName."/".strtolower($ProjectName);
 											$qry	=	"UPDATE ".RESI_PROJECT." SET PROJECT_SMALL_IMAGE = '".$pathProject."/".str_replace('-large','-small',$file)."'
 														 WHERE PROJECT_ID = '".$projectId."'";	//die("here");
 											$res	=	mysql_query($qry);
@@ -960,7 +1115,7 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newrect;
 											/**********Working for watermark*******************/
 											// Image path
-											$image_path = $createFolder."/".$newimg;
+											/*$image_path = $createFolder."/".$newimg;
 											// Where to save watermarked image
 											$imgdestpath = $createFolder."/".$newimg;
 											// Watermark image
@@ -971,7 +1126,7 @@ if (isset($_POST['Next']))
                                              $s3upload->upload();
 											$img->Free();
 											/************Resize and rect small img*************/
-											$image->resize(95,65);
+											/*$image->resize(95,65);
 											$newsmrect	=	str_replace('large','large-sm-rect-img',$file);
                                             $imgdestpath = $createFolder."/".$newsmrect;
 											$image->save($imgdestpath);
@@ -981,14 +1136,14 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
 
 											/************Resize and thumb*************/
-											$image->resize(77,70);
+											/*$image->resize(77,70);
 											$newsmrect	=	str_replace('large','large-thumb',$file);
                                             $imgdestpath = $createFolder."/".$newsmrect;
 											$image->save($imgdestpath);
                                              $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                              $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
-											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
+											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;*/
 										}
 									 }
 							}
@@ -1049,7 +1204,9 @@ if (isset($_POST['Next']))
 
 					}
 
-					$result = upload_file_to_img_server_using_ftp($source,$dest,1);
+
+					//$result = upload_file_to_img_server_using_ftp($source,$dest,1);
+					//image_idPOST['Next'] == 'Save')
 			if($_POST['Next'] == 'Add More')
 				header("Location:project_img_add.php?projectId=".$projectId);
 			else if($_POST['Next'] == 'Save')

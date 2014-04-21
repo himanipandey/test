@@ -59,6 +59,7 @@ $(document).ready(function(){
         selectedItem = ui.item;
         $("#landmarkId").val(selectedItem.id);
         $("#landmarkName").val(selectedItem.label);
+        window.areaResponse['landmark'] = selectedItem.id;
         areaTypeChanged( 'landmark' );
         //alert(selectedItem.label);
         //log( ui.item ?
@@ -83,13 +84,17 @@ function initVar() {
     window.areaResponse['city'] = $('#city-list').val();
     window.areaResponse['suburb'] = $('#area-type-sub').val();
     window.areaResponse['locality'] = $('#area-type-loc').val();
-    window.areaResponse['landmark'] = $('#landmarkName').val();
-    console.log(window.areaResponse['landmark']);
+    window.areaResponse['landmark'] = $('#landmarkId').val();
+    
 }
 
 function getData() {
     var data = "";
-    if ( window.areaResponse['city'] ) {
+    if ($("#search").val().trim()!='' && $("#landmarkId").val() > 0) {
+         data = "&landmark="+window.areaResponse['landmark'];
+         //alert(data);
+    }
+    else if ( window.areaResponse['city'] ) {
         data = "city="+window.areaResponse['city'];
         if ( window.areaResponse['suburb'] ) {
             data += "&suburb="+window.areaResponse['suburb'];
@@ -175,9 +180,12 @@ function updateDisplayLocation() {
         elementId = "",
         areaName  = "";
         console.log(window.areaResponse['landmark']);
-    if ( window.areaResponse['landmark'] != 0 ) {
+
+    if ( $('#search').val().trim()!='') {
         areaType = "landmark";
-        lmkvalue = $('#landmarkName').val();
+        value = $('#landmarkName').val();
+        $('#area-txt-name').html( areaType + " : " + value );
+        return;
     }  
     else if ( window.areaResponse['locality'] != 0 ) {
         areaType = "Locality";
@@ -249,6 +257,7 @@ function getPhotos() {
 }
 
 function showThisPhoto( imgData ) {
+    console.log(imgData);
     imgData['IMAGE_DISPLAY_NAME'] = imgData['IMAGE_DISPLAY_NAME'] == null ? "" : imgData['IMAGE_DISPLAY_NAME'];
     imgData['IMAGE_CATEGORY'] = imgData['IMAGE_CATEGORY'] == null ? "" : imgData['IMAGE_CATEGORY'];
     imgData['IMAGE_DESCRIPTION'] = imgData['IMAGE_DESCRIPTION'] == null ? "" : imgData['IMAGE_DESCRIPTION'];
@@ -256,6 +265,8 @@ function showThisPhoto( imgData ) {
     imgData['CITY_ID'] = imgData['CITY_ID'] == null ? "" : imgData['CITY_ID'];
     imgData['LOCALITY_ID'] = imgData['LOCALITY_ID'] == null ? "" : imgData['LOCALITY_ID'];
     imgData['SUBURB_ID'] = imgData['SUBURB_ID'] == null ? "" : imgData['SUBURB_ID'];
+    imgData['LANDMARK_ID'] = imgData['LANDMARK_ID'] == null ? "" : imgData['LANDMARK_ID'];
+
     imgData['SERVICE_IMAGE_PATH'] = imgData['SERVICE_IMAGE_PATH'] == null ? "" : imgData['SERVICE_IMAGE_PATH'];
     
     
@@ -270,6 +281,10 @@ function showThisPhoto( imgData ) {
     else if(imgData['SUBURB_ID'] != ''){
         imgData['OBJECT_ID'] = imgData['SUBURB_ID'];
         imgData['OBJECT_TYPE'] = 'suburb';
+    }
+    else if(imgData['LANDMARK_ID'] != ''){
+        imgData['OBJECT_ID'] = imgData['LANDMARK_ID'];
+        imgData['OBJECT_TYPE'] = 'landmark';
     }
     imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
     imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
@@ -301,6 +316,7 @@ function showThisPhoto( imgData ) {
                             '<input type="hidden" name="locality_id" value="'+imgData['LOCALITY_ID']+'">'+
                             '<input type="hidden" name="suburb_id" value="'+imgData['SUBURB_ID']+'">'+
                             '<input type="hidden" name="city_id" value="'+imgData['CITY_ID']+'">'+
+                            '<input type="hidden" name="landmark_id" value="'+imgData['LANDMARK_ID']+'">'+
                         '</div>'+
                         '<div class="clearfix" style="clear:both;"></div>'+
                     '</div>';

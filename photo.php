@@ -10,8 +10,7 @@
     include("s3upload/s3_config.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
-print"<pre>";
-print_r($_REQUEST);
+
 if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $city     = !empty( $_REQUEST['cityId'] ) ? $_REQUEST['cityId'] : 0;
         $suburb   = !empty( $_REQUEST['suburbId'] ) ? $_REQUEST['suburbId'] : 0;
@@ -23,7 +22,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $imgDescription = !empty( $_REQUEST['imgDescription'] ) ? $_REQUEST['imgDescription'] : '';
         $displayPriority = !empty( $_REQUEST['displayPriority'] ) ? $_REQUEST['displayPriority'] : '999';
 
-        echo "loc:".$locality;
+       
         if ( $city ) {
             $smarty->assign( 'cityId', $city );
         }
@@ -175,11 +174,18 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
             $imgCityId = $_REQUEST['city_id'];
             $imgLocalityId = $_REQUEST['locality_id'];
             $imgSuburbId = $_REQUEST['suburb_id'];
+            $imgLandmarkId = $_REQUEST['landmark_id'];
             //echo "<pre>";
             //print_r($_REQUEST);die;
             $city     = !empty( $imgCityId ) ? $imgCityId : 0;
             $locality   = !empty( $imgLocalityId ) ? $imgLocalityId : 0;
             $suburb = !empty( $imgSuburbId ) ? $imgSuburbId : 0;
+            $landmark = !empty( $imgLandmarkId ) ? $imgLandmarkId : 0;
+            if($landmark > 0){
+                $columnName = "LANDMARK_ID";
+                $areaType = 'landmark';
+                $areaId = $landmark;
+            }
             if ( $city || $suburb || $locality ) {
                 if ( $locality > 0 ) {
                     $columnName = "LOCALITY_ID";
@@ -254,12 +260,12 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                         "image_type" => strtolower($imgCategory),
                                         "service_extra_params" => array("priority"=>$imagePriority,"title"=>$imgDisplayName,"description"=>$imgDescription)));
                                     $serviceResponse =  $s3upload->upload();
-                                    $thumb->resize( $__thumbWidth, $__thumbHeight );
+                                    /*$thumb->resize( $__thumbWidth, $__thumbHeight );
                                     $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
                                     $dest = 'locality/thumb_'.$imgName;
                                     $source = $newImagePath.$dest;
                                     $s3upload = new S3Upload($s3, $bucket, $source, $dest);
-                                    $s3upload->upload();
+                                    $s3upload->upload();*/
                                     //  add image to DB
                                     $qryUpdate = "update locality_image set 
                                         IMAGE_CATEGORY = '".$imgCategory."',
@@ -337,11 +343,12 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                 }
                 $smarty->assign( 'message', $message );
           }elseif($_REQUEST[$imgUpDel][0] == 'del') {    //if wants to delete image
-                $s3upload = new ImageUpload(NULL, array("service_image_id" => $imgSevice));
-                $response = $s3upload->delete();
+                
+                $response = deleteFromImageService($areaType, $areaId, $imgSevice);
 
                  $qryUpdate = "delete from locality_image WHERE SERVICE_IMAGE_ID = $imgSevice";
                  $resImg = mysql_query($qryUpdate) or die(mysql_error());
+                 
             }
         }
     }

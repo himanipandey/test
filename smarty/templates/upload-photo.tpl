@@ -76,7 +76,7 @@
                                 
 
                                 <tr>
-                                    <td>
+                                    <td width="200px">
                                         <label class="lbl"> Search a Landmark </label>
                                     <div class="ui-widget">
                                         <input type="hidden" name="upImg" value="1">

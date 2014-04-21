@@ -65,7 +65,8 @@
 
         	$params = array(
                         "image_type" => "logo",
-                        "folder" => "bank_list/"
+                        "folder" => "bank_list/",
+                        "action" => "update"
             );
         	$response 	= updateToImageService($s3, $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
 			/*$dest		=	$newImagePath."/bank_list/".$logo_name;

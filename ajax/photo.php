@@ -56,7 +56,7 @@ if ( !empty( $_REQUEST['upPh'] ) ) {
         unset($__newData["IMAGE_NAME"]);
         unset($__newData["SERVICE_IMAGE_ID"]);
         $res &= updateThisPhotoProperty( $__newData );
-
+die("here");
         if($__newData["IMAGE_ID"]){
             $dest = 'locality/'.$image_name;
             $source = $newImagePath.$dest;
