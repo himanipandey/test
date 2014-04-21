@@ -14,6 +14,9 @@ error_reporting(E_ERROR|E_PARSE);
  * 5: php nearPlacesIndex.php city1,city2,city3 [deleteThenInsert] For Running 
  *    multiple cities at once, seperate the cities name with comma. 
  *    deleteThenInsert is optional.
+ * 6: php nearPlacesIndex.php city1,city2 landmarktype
+ * 7: php nearPlacesIndex.php city landmarktype1,landmarktype2,landmarktype3
+ * 8: php nearPlacesIndex.php city_name all => for all landmark types without deleting or overwriting
  */
 
 require_once '../dbConfig.php';
@@ -35,7 +38,8 @@ function retrieveGooglePlaceList($argv)
 {
     global $logger;
 	$cityData = getCityId($argv[1]);
-
+	$placeTypeId = getPlaceTypeId($argv[2]);
+	$logger->info($placeTypeId);
     $numberOfCities = count($cityData);
     $numberOfCities = $numberOfCities<=0? 1: $numberOfCities;
     for($i=0; $i<$numberOfCities; $i++)
@@ -45,18 +49,47 @@ function retrieveGooglePlaceList($argv)
 		    deleteNearPlacesData($city_id);
 
         $logger->info(" STARTED retrieving data for CITY {$cityData[$i]['CITY_ID']} ");
+
+        if($placeTypeId>0){
+        	$logger->info("here0");
+	        foreach ($placeTypeId as $k => $v) {
+	        	$placeid = $v['id'];
+	        	$logger->info(" STARTED retrieving data for Landmark Type {$v['name']} ");
+	        	getNearPlacesList($city_id, $placeid);
+	        	$logger->info(" ENDED retrieving data for Landmark Type {$v['name']} ");
+	        }
+	    }
+	    elseif($argv[1] == "all" or $argv[2] == "all"){
+	    	$logger->info("here000000");
+	    	getNearPlacesList($city_id, "all");
+	    }
+	    else{
+	    	$logger->info("here1");
+	    	getNearPlacesList($city_id, "0");
+
+	    }
         
-    	getNearPlacesList($city_id);
+    	
 
         $logger->info(" ENDED retrieving data for CITY {$cityData[$i]['CITY_ID']} ");
     }
 } 
 
 
-function getNearPlacesList($city_id)
+function getNearPlacesList($city_id, $placeid=0)
 {
+	
 	global $logger;
-
+	$logger->info("inside getNearPlacesList".$placeid);
+	if($placeid>0){
+		$logger->info("here0121212");
+		$location_place_info = getRemainingLocAndTypeList($city_id, $placeid);
+	}
+	elseif($placeid=='all'){
+		$logger->info("here3");
+		$location_place_info = getRemainingLocAndTypeList($city_id, $placeid);
+	}
+	else
 	$location_place_info = getRemainingLocAndTypeList($city_id);
 	$place_info = getPlaceTypes();
 	$locality_info = getAllLocalityDetails($city_id);
@@ -240,25 +273,26 @@ function setNearPlaceData($locality_id, $place_id, $city_id, $info)
 	$info['is_details'] = (int)$info['is_details'];
 
 	$check_qry = <<<QRY
-			SELECT * FROM cms.landmarks where google_place_id="{$info['id']} LIMIT 1"
+			SELECT * FROM cms.landmarks where google_place_id="{$info['id']}" LIMIT 1
 QRY;
 	
 	$check_rs = mysql_query($check_qry) or logMysqlError($check_qry, "C05_0");	
 
-	if(mysql_fetch_array($check_rs) !== false){
+if(mysql_num_rows($check_rs) > 0){
+	//if(mysql_fetch_array($check_rs) !== false){
 		logMysqlError("double entry avoided: {$info['name']} id:{$info['id']} ", "C05_0");
 		return 0;
 	} 
 
 	else{
 	$qry = <<<QRY
-		INSERT INTO cms.landmarks (city_id, place_type_id,
+		INSERT IGNORE INTO cms.landmarks (city_id, place_type_id,
 			 name, address, google_place_id, reference, latitude, longitude, phone_number,
-			google_url, website, vicinity, is_details, rest_details) VALUES($city_id, $place_id, "{$info['name']}", "{$info['formatted_address']}", 
-			"{$info['id']}", "{$info['reference']}", {$info['geometry']['location']['lat']}, 
-			{$info['geometry']['location']['lng']}, "{$info['international_phone_number']}", 
+			google_url, website, vicinity, is_details, rest_details, priority, status, created_at) VALUES($city_id, $place_id, "{$info['name']}", "{$info['formatted_address']}", 
+			"{$info['id']}", "{$info['reference']}", "{$info['geometry']['location']['lat']}", 
+			"{$info['geometry']['location']['lng']}", "{$info['international_phone_number']}", 
 			"{$info['url']}", "{$info['website']}", "{$info['vicinity']}", 
-			{$info['is_details']}, '{$unused_data}')
+			{$info['is_details']}, '{$unused_data}', '5', 'Inactive', NOW())
 QRY;
 	$rs = mysql_query($qry) or logMysqlError($qry, "C05_1");
 	
@@ -266,21 +300,44 @@ QRY;
 	}
 }
 
-function getRemainingLocAndTypeList($city_id)
+function getRemainingLocAndTypeList($city_id,$placeid=0)
 {
 	global $logger;
 	
 	if($city_id > 0)
 		$city_id_str = " WHERE city_id = {$city_id} ";
 	$debug = "";
+$logger->info("here34".$placeid);
+	if($placeid=='all'){
 
-	$qry = <<<QRY
-		SELECT P.LOCALITY_ID AS locality_id, GROUP_CONCAT(P.id) as type_id FROM 
+		$qry = <<<QRY
+		select l.LOCALITY_ID as locality_id,  lmt.id as type_id, s.CITY_ID FROM locality l 
+			INNER JOIN suburb s on (s.SUBURB_ID = l.SUBURB_ID AND s.CITY_ID={$city_id}) 
+			join landmark_types lmt 
+			GROUP BY l.LOCALITY_ID;
+		
+QRY;
+	}
+	elseif($placeid > 0){
+		$logger->info("here4");
+		$qry = <<<QRY
+			select l.LOCALITY_ID as locality_id,  lmt.id as type_id, s.CITY_ID FROM locality l 
+			INNER JOIN suburb s on (s.SUBURB_ID = l.SUBURB_ID AND s.CITY_ID={$city_id}) 
+			left join landmark_types lmt on lmt.id={$placeid} 
+			GROUP BY l.LOCALITY_ID;
+QRY;
+	}
+	else{
+		$qry = <<<QRY
+			SELECT P.LOCALITY_ID AS locality_id, GROUP_CONCAT(P.id) as type_id FROM 
 			(select l.LOCALITY_ID,  lmt.id, s.CITY_ID FROM landmark_types lmt JOIN locality l INNER 
 				JOIN suburb s on (s.SUBURB_ID = l.SUBURB_ID AND s.CITY_ID={$city_id})) AS P 
 				LEFT JOIN landmarks lm on (lm.city_id=P.CITY_ID and lm.place_type_id=P.id)
 			WHERE lm.place_type_id is null	GROUP BY P.LOCALITY_ID;
+			
 QRY;
+	}
+
 	
 	$rs = mysql_query($qry) or ( logMysqlError($qry, "C03") and exit() );
 	
@@ -328,6 +385,28 @@ QRY;
 
 	return $cityData;
 }
+
+function getPlaceTypeId($placeType)
+{
+	if($placeType == "" || $placeType== "deleteThenInsert")
+		return -1;
+	if($placeType == "all")
+		return -1;
+    $placeType = str_replace(",", "','", $placeType);
+	$qry = <<<QRY
+		SELECT name, id from cms.landmark_types WHERE name IN ('{$placeType}')
+QRY;
+	$rs = mysql_query($qry) or logMysqlError($qry, "C06_01");
+    
+    $placeTypeData = array();
+    while( ($row = mysql_fetch_assoc($rs))!== FALSE)
+        $placeTypeData[] = $row;
+
+	checkAndlogMysqlRowError($qry, $placeTypeData, " INVALID PLACE TYPE ");
+
+	return $placeTypeData;
+}
+
 
 function deleteNearPlacesData($city_id)
 {

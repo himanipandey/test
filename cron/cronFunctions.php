@@ -1,4 +1,7 @@
 <?php
+
+require_once (dirname(__FILE__) . '/../modelsConfig.php');
+
 function put2DArrayIntoTable($data){
 	$table = "<table border='1'>";
 	$table .= getTableRowFromArray(array_keys($data[0]));
@@ -105,20 +108,20 @@ function getMonthShiftedDate($date, $shift){
 }
 
 function indexArrayOnKey($aData, $key){
+    global $logger;
     $t1 = microtime(TRUE);
     $result = array();
     foreach ($aData as $data) {
         $result[$data->$key] = $data;
     }
-    try {
-        global $logger;
+    if(isset($logger)){
         $logger->info("Indexing on key:$key complete. Took " . (microtime(TRUE)-$t1) . " second");
-    } catch (Exception $exc) {
     }
     return $result;
 }
 
 function groupOnKey($aData, $key){
+    global $logger;
     $t1 = microtime(TRUE);
     $result = array();
     foreach ($aData as $data) {
@@ -127,10 +130,8 @@ function groupOnKey($aData, $key){
         }
         $result[$data->$key][] = $data;
     }
-    try {
-        global $logger;
+    if(isset($logger)){
         $logger->info("Indexing on key:$key complete. Took " . (microtime(TRUE)-$t1) . " second");
-    } catch (Exception $exc) {
     }
     return $result;
 }
@@ -149,4 +150,9 @@ function getSumOfKeyValues($aData, $key){
         $sum += $value->$key;
     }
     return $sum;
+}
+
+function truncateTable($tableName){
+    $sql = "truncate table $tableName";
+    ActiveRecord\Connection::instance()->query($sql);
 }

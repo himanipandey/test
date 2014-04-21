@@ -73,9 +73,10 @@ function getPhoto( $data = array() ) {
     else {
         return NULL;
     }
-    $query = "SELECT IMAGE_ID, $column, IMAGE_NAME, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION FROM locality_image WHERE $column = $id";
+   $query = "SELECT IMAGE_ID, $column, IMAGE_NAME, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION,SERVICE_IMAGE_ID
+        ,priority FROM locality_image WHERE $column = $id";
     $data = dbQuery( $query );
-    return $data;
+   return $data;
 }
 
 function getPhotoById( $id ) {
@@ -115,7 +116,7 @@ function updateThisPhotoProperty( $data = array() ) {
     return true;
 }
 
-function addImageToDB( $columnName, $areaId, $imageName ) {
+function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDisplayName, $imgDescription, $serviceImgId, $displayPriority ) {
     if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID' ) ) ) {
 
     }
@@ -123,9 +124,12 @@ function addImageToDB( $columnName, $areaId, $imageName ) {
         $columnName = 'LOCALITY_ID';
     }
     $imageName = mysql_escape_string( $imageName );
-    $insertQuery = "INSERT INTO `locality_image` ( `$columnName`, `IMAGE_NAME` ) VALUES ( '$areaId', '$imageName' )";
+    $insertQuery = "INSERT INTO `locality_image` 
+            ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION, SERVICE_IMAGE_ID ) 
+           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', '$imgDescription', $serviceImgId )";
 
     dbExecute( $insertQuery );
+    mysql_insert_id();
     return mysql_insert_id();
 }
 /********code for find current assigned cycle of a project************/
@@ -160,4 +164,8 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
                 $currentCycle = 'Not Assigned';
     }
     return $currentCycle;
+}
+
+function getDBDistanceQueryString($lon1Col, $lat1Col, $lon2Col, $lat2Col){
+    return "((ACOS(SIN($lat1Col * PI() / 180) * SIN($lat2Col * PI() / 180) + COS($lat1Col * PI() / 180) * COS($lat2Col * PI() / 180) * COS(($lon1Col - $lon2Col) * PI() / 180)) * 180 / PI()) * 60 * 1.1515 * 1609.34)";
 }
