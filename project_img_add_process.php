@@ -257,16 +257,22 @@ if (isset($_POST['Next']))
 						                        "folder" => $extra_path,
 						                        "count" => "location_plan".$key,
 						                        "image" => $file,
-						                        "priority" =>
-						                        "title"
-						                        "tagge_month" =>
-						                        "tower_id"
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "created_at" => time(),
+						                        "jsonDump" => array(
+						                        	"tagge_month" => $arrTaggedDate[$key], 
+						                        	"builder_id" => $builderDetail['BUILDER_ID'],
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
+
+
 						                    //  add images to image service
-						            
+
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-						                    print_r($returnArr);
+						                    //print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
@@ -457,7 +463,7 @@ if (isset($_POST['Next']))
 						            
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-						                    print_r($returnArr);
+						                    
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
@@ -471,16 +477,7 @@ if (isset($_POST['Next']))
 
 
 
-											SET PLAN_IMAGE		=	'".$imgDbPath[1]."',
-													PROJECT_ID		=	'".$projectId."',
-													PLAN_TYPE		=	'".$_REQUEST['PType']."',
-													    BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
-													SERVICE_IMAGE_ID        =    ".$image_id.",
-													TITLE			=	'".$arrTitle[$key]."', 
-													DISPLAY_ORDER = '".$arrDisplayOrder[$key]."',
-													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
-													".$add_tower."
-													SUBMITTED_DATE	=	now()";
+											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,

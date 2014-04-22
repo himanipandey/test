@@ -8,46 +8,65 @@
 		 $projectId = $_GET['projectId'];
 		$projectDetail	= ProjectDetail($projectId);
 		$smarty->assign("ProjectDetail", $projectDetail);
-		$ImageDataListingArr = allProjectImages($projectId);
+		//$ImageDataListingArr = allProjectImages($projectId);
+		//get image path from image service
+		$objectType = "project";
+		$ImageDataListingArr = array(); //Image data from Image service
 		
+	    $objectId = $projectId;
+	    
+	    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+	    $content = file_get_contents($url);
+	    $imgPath = json_decode($content);
+	    print'<pre>';
+		print_r($imgPath);
+	    foreach($imgPath->data as $k=>$v){
+	    	$data = array();
+	        $data['SERVICE_IMAGE_ID'] = $v->id;
+	        $data['objectType'] = $v->imageType->objectType->type;
+	        $data['objectId'] = $v->objectId; 
+	        
+	        
+	        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
+	        $str = ucfirst (implode(" ",$arr));
+	        if($str=='Main')
+	        	$data['PLAN_TYPE'] = "Project Image";
+	        else
+	        	$data['PLAN_TYPE'] = $str;
+	         
+	        if ($data['PLAN_TYPE']=="Project Image" && $v->priority==0 )
+	        	$data['display_order'] = 5;
+	        else
+	        	$data['display_order'] = $v->priority;
+	        $data['TITLE'] = $v->title;
+	        $data['IMAGE_DESCRIPTION'] = $v->description;
+	        $data['SERVICE_IMAGE_ID'] = $v->id;
+	        $data['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+	        $data['tagged_month'] = gmdate("Y-m-d", $v->jsonDump->tagged_month);
+	       
+	        $data['tower_id'] = $v->jsonDump->tower_id;
+	        $data['PROJECT_ID'] = $v->objectId;
+	        $data['STATUS'] = $v->active;
+	        array_push($ImageDataListingArr, $data);
+
+	    }
+	    	
+ print'<pre>';
+		print_r($ImageDataListingArr);
+
+
 		$builderDetail	= fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
-	print'<pre>';
-	print_r($ImageDataListingArr);
+	//print'<pre>';
+	//print_r($ImageDataListingArr);
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 
-		//get image path from image service
-		foreach ($ImageDataListingArr as $k => $v) {
-			$objectType = "project";
-			$img_path = array();
-			$image_type = $v['PLAN_TYPE'];
-			$image_type = str_replace(" ", "_", strtolower($image_type));
-			//$image_type = str_replace(" ", "", lcfirst($image_type));
-		    $objectId = $v['PROJECT_ID'];
-		    $service_image_id = $v['SERVICE_IMAGE_ID'];
-		    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId."&image_type=".$image_type."&service_image_id=".$service_image_id;
-		    $content = file_get_contents($url);
-		    $imgPath = json_decode($content);
-		    $data = array();
-		    foreach($imgPath->data as $k=>$v){
-		        $data[$k]['IMAGE_ID'] = $v->id;
-		        $data[$k][$obj] = $v->objectId;
-		        $data[$k]['priority'] = $v->priority;
-		        $data[$k]['IMAGE_CATEGORY'] = $v->imageType->type;
-		        $data[$k]['IMAGE_DISPLAY_NAME'] = $v->title;
-		        $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
-		        $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
-		        $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
-		    }
-		   
-		    array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
-		    //array_push($img_path, "http://im.proptiger.com/1/34/3/353377.jpeg");
+		
 
-		}
-		$smarty->assign("img_path", $img_path);
+
 
 
 		$count =0;
-		$count+=count($ImageDataListingArr);
+		$count+=count($imgData);
 		if(!isset($_REQUEST['preview']))
 			$_REQUEST['preview'] = '';
 		$preview = $_REQUEST['preview'];
@@ -67,7 +86,7 @@
             array_push($towerDetail, $s);
     }    
      $smarty->assign("towerDetail", $towerDetail);
-     
+      
     //display order
     $display_order_div = array();
     for($cmt=1;$cmt<=5;$cmt++){

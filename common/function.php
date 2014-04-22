@@ -213,7 +213,7 @@ function writeToImageService($s3, $IMG, $objectType, $objectId, $params, $newIma
                     "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
                     "image_type" => strtolower($params['image_type']),
                     "service_extra_params" => 
-                        array("priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'])));
+                        array("priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'], "created_at"=>$params['created_at'], "jsonDump"=>$params['jsonDump'])));
                 
                 $returnValue['serviceResponse'] =  $s3upload->upload();
                 
