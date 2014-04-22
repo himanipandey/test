@@ -180,7 +180,6 @@ if (isset($_POST['btnSave'])) {
                 }
           }
          
-     
             // Flats Config
             $flats_config = array();
             foreach ($_REQUEST as $key => $value) {
@@ -207,11 +206,11 @@ if (isset($_POST['btnSave'])) {
                 }
             }
             
-         if ($_POST['plotvilla'] != '') { 
+         if ($_POST['plotvilla'] != '' && !isset($_POST['options'])) { 
 			 if($_POST['supply'] < $_POST['launched'])
 						$error_msg = "Supply Unit must be greater than Launched Unit.";
             if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
-                    $error_msg = "Launched Unit must be greater than Availability.";
+                   $error_msg = "Launched Unit must be greater than Availability.";
 		 }
 		 				
          if( $error_msg == '' ){
