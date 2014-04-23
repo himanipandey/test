@@ -248,6 +248,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					ResiProject::transaction(function(){
 						
 						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1;
+						
+						$flag = 0;
 																	
 						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive')");
 						
@@ -255,6 +257,18 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 							$qryDel_list = "DELETE FROM ".LISTINGS." WHERE  ID = '".$list_id->id."'";
                             $resDel_list = mysql_query($qryDel_list);
 						}
+						/*
+						$sql_list =  mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Actual' or rpp.status = 'Active' or lst.status = 'Active') and rpp.version='Cms'");
+						
+						if($sql_list){
+							$sql_list = mysql_fetch_object($sql_list);
+							if(!$sql_list->cnt)
+							  $flag=1;	
+						}
+						
+						if($flag){*/
+						  mysql_query("DELETE FROM `resi_proj_options_room_size` WHERE  `options_id` ='".$list_option_id."'");
+						//}
 																																	
 						                                                  
 						$qryDel = "DELETE FROM ".RESI_PROJECT_OPTIONS." 
