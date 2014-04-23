@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', '1');
-ini_set('memory_limit', '5G');
+ini_set('memory_limit', '3G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -79,6 +79,8 @@ if ($bulkInsert) {
 }
 
 DInventoryPriceTmp::setMissingSupply();
+DInventoryPriceTmp::updateProjectDominantType();
+DInventoryPriceTmp::deleteInvalidDates();
 DInventoryPriceTmp::populateDemand();
 DInventoryPriceTmp::deleteEntriesBeforeLaunch();
 DInventoryPriceTmp::deleteInvalidPriceEntries();
@@ -86,7 +88,7 @@ DInventoryPriceTmp::updateFirstPromoisedCompletionDate();
 DInventoryPriceTmp::updateSecondaryPriceForAllProjects();
 DInventoryPriceTmp::setLaunchDateMonthSales();
 
-if (runTests() || true) {
+if (runTests()) {
     DInventoryPriceTmp::connection()->query("rename table d_inventory_prices to d_inventory_prices_old, d_inventory_prices_tmp to d_inventory_prices, d_inventory_prices_old to d_inventory_prices_tmp;");
     $logger->info("Migration successful.");
 } else {
@@ -134,7 +136,10 @@ function createDocuments($aAllInventory, $aAllPrice) {
             $entry['inventory'] = $aAllInventory[$key]->inventory;
             if (isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month) {
                 $entry['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
-            } else {
+            } elseif($aAllInventory[$key]->effective_month === $aAllInventory[$key]->launch_date){
+                $entry['units_sold'] = $aAllInventory[$key]->ltd_launched - $aAllInventory[$key]->inventory;
+            }
+            else {
                 $entry['units_sold'] = 0;
             }
         }

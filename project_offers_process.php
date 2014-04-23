@@ -116,6 +116,7 @@
 					
 			$project_offers->project_id = $projectId;
 			$project_offers->offer = $offer_type;
+			$project_offers->offer_heading = $arrOfferTypes[$offer_type];
 			$project_offers->offer_desc = ($offer_desc)?$offer_desc:null;
 			$project_offers->offer_end_date = $offer_end_date;
 			$project_offers->updated_by = $_SESSION['adminId'];
