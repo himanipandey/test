@@ -275,7 +275,7 @@ function floor_change_to(e)
 															<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}
 															
 															" target="_blank">
-																<img src="{$img_path[data]}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+																<img src="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
 															</a>
 															<br>
 														Image Type:{$ImageDataListingArr[data].PLAN_IMAGE}<input type = "text" readonly name = "PType[{$cnt}]"

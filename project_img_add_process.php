@@ -261,8 +261,6 @@ if (isset($_POST['Next']))
 						                        "title" => $arrTitle[$key],
 						                        "created_at" => time(),
 						                        "jsonDump" => array(
-						                        	"tagge_month" => $arrTaggedDate[$key], 
-						                        	"builder_id" => $builderDetail['BUILDER_ID'],
 						                        	"tower_id" => $arrTowerId[$key],
 						                        )
 						                    );
