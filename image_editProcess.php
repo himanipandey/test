@@ -50,7 +50,7 @@
         $data['tower_id'] = $v->jsonDump->tower_id;
         $data['PROJECT_ID'] = $v->objectId;
         $data['STATUS'] = $v->active;
-        if($k == 8 || $k == 9)
+        echo $v->id."<br>";
         array_push($ImageDataListingArr, $data);
 
     }
@@ -196,6 +196,43 @@
 					//echo $_FILES['img']['name'][$k]; die();
 					//print("<pre>");print_r($arrImg);die();					
 					//////////////////////////////////
+						$arrTitle[$k] = $_REQUEST['title'][$k];
+						$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
+						$arrTaggedDate[$k] = $tagged_date."-01";;
+						$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
+						$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
+						$service_image_id = $_REQUEST["service_image_id"][$k];
+					if(trim($_FILES['img']['name'][$k])== ''){
+						
+						
+						if(is_numeric($arrTowerId[$k])){
+							if($arrTowerId[$k] > 0)
+								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
+							else
+								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."',TOWER_ID = NULL,";
+						}
+						else
+							$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = NULL, ";
+							
+						
+						
+						//updating the image meta data
+						$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
+									SET 
+										TITLE	   = '".$arrTitle[$k]."',
+										".$add_tower."
+										DISPLAY_ORDER = '".$arrDisplayOrder[$k]."'
+										
+									WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
+						$res	=	mysql_query($qry);
+						echo $service_image_id.$qry; die();
+						if($preview == 'true')
+							header("Location:show_project_details.php?projectId=".$projectId);
+						else
+							header("Location:ProjectList.php?projectId=".$projectId);
+					}
+
+
 					if($_FILES['img']['name'][$k] != '')
 					{
 						if(!in_array(strtolower($_FILES['img']['type'][$k]), $arrImg))
@@ -225,10 +262,10 @@
 					
 				
 			
-					if(count($arrValue) == 0)
+					/*if(count($arrValue) == 0)
 					{
 						$ErrorMsg["blankerror"] = "Please select atleast one image.";	
-					}
+					}*/
 					if(is_array($ErrorMsg)) {
 						print'<pre>';
 						print_r($ErrorMsg);
@@ -240,32 +277,7 @@
 						$flag=0;
 					
 		/*******************Update location,site,layout and master plan from db and also from table*********/	
-						$arrTitle[$k] = $_REQUEST['title'][$k];
-						$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
-						$arrTaggedDate[$k] = $tagged_date."-01";;
-						$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
-						$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
-						$service_image_id = $_REQUEST["service_image_id"][$k];
 						
-						if(is_numeric($arrTowerId[$k])){
-							if($arrTowerId[$k] > 0)
-								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
-							else
-								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."',TOWER_ID = NULL,";
-						}
-						else
-							$add_tower = " TOWER_ID = NULL, ";
-							
-						
-						
-						//updating the image meta data
-						$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
-									SET 
-										TITLE	   = '".$arrTitle[$k]."',
-										".$add_tower."
-										DISPLAY_ORDER = '".$arrDisplayOrder[$k]."'
-									WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
-						$res	=	mysql_query($qry);
 				
 						$builderPath = $newImagePath.strtolower($BuilderName);
 						
@@ -316,7 +328,7 @@
 							{
 									rewinddir($handle);							
 									while (false !== ($file = readdir($handle)))
-									{								
+									{		echo "tower".$arrTowerId[$key]."tagged_date".strtotime($arrTaggedDate[$k]);						
 									/************Working for location plan***********************/
 										if(strstr($file,'loc-plan'))
 										{
@@ -1523,7 +1535,7 @@
 							   else
 								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."',TOWER_ID = NULL,";
 							}else
-								$add_tower = " TOWER_ID = NULL, ";
+								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$key]."', TOWER_ID = NULL, ";
 								
 							$dbpath = explode("/images_new",$img_path);
 							$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
@@ -1554,11 +1566,16 @@
 
 							}							
 										
-							$result = upload_file_to_img_server_using_ftp($source,$dest,1);
+							//$result = upload_file_to_img_server_using_ftp($source,$dest,1);
 						
 						
 							}
-						}	
+						}
+
+						if($preview == 'true')
+							header("Location:show_project_details.php?projectId=".$projectId);
+						else
+							header("Location:ProjectList.php?projectId=".$projectId);	
 				
 					}
 				}
@@ -1566,10 +1583,7 @@
 
 		}	 
 				
-		if($preview == 'true')
-			header("Location:show_project_details.php?projectId=".$projectId);
-		else
-			header("Location:ProjectList.php?projectId=".$projectId);
+		
 	}
 		
 	else if(isset($_POST['btnExit']))
