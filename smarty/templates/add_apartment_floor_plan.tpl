@@ -8,6 +8,8 @@
  
  <SCRIPT language=Javascript>
      
+
+
       function isNumberKey(evt)
       {
          var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -19,7 +21,26 @@
          return true;
       }
       
-      
+      function onSelectOption(c){
+      	value = $("#options_"+c+" option:selected").text();
+      	//alert(value);
+      	//$("#floor_name_"+c).text(value);
+      	imgName1 = value+" 1";
+      	imgName2 = value+" 2";
+      	if(value == "Floor Plan"){
+      		$('#opt1').val(imgName1).text(imgName1);
+      		$('#opt2').hide();
+      	}
+      	else{
+      		$('#opt2').show();
+      		$('#opt1').val(imgName1).text(imgName1);
+      		$('#opt2').val(imgName2).text(imgName2);
+      	}
+      	//$('<option>').val(imgName1).text(imgName1).appendTo('#floor_name_'+c);
+      	//$('<option>').val(imgName2).text(imgName2).appendTo('#floor_name_'+c);
+      }
+
+
    /* function showHideDiv(divid,ctrl)
     {
       //alert(divid);
@@ -105,6 +126,7 @@
 				  <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
 				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Unit Type</td>
+				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Floor Plan Options</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt><font color="red">*</font>Floor Plan Name</td>
 			
 				   <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color="red">*</font>Image <span style = "font-size:10px">(image name must content floor-plan)</span></td>
@@ -141,7 +163,24 @@
 				 
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}</td>
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_TYPE']}</td>
-				  <td><input type = "text" name = "floor_name[]"</td>
+				  <td><select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
+				  	<Option value="0">Select Floor Plan Options</Option>
+				  	
+					   {foreach from=$floorPlanOptionsArr[$smarty.section.foo.index] item=data}
+					   		<Option >{$data}</Option>
+					   {/foreach}
+				  </select></td>
+				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
+				  	<td><select name = "floor_name[]" id = "floor_name_{($smarty.section.foo.index+1)}" width="60px">
+				  		<option id="opt1"></option>
+				  		<option id ="opt2"></option>
+				  	</select></td>
+				  {else}
+				  	<td><input type = "text" name = "floor_name[]"  readonly="readonly" {if $plot[$smarty.section.foo.index] == 'yes'} value="View Plot Plan"
+				  		{elseif $commercial[$smarty.section.foo.index] == 'yes'}value = "View Commercial Plan" {/if}>
+				  	</td>
+				  {/if}
+				  
 					
 				  <td><input type = "file" name = "imgurl[]"></td> 
 

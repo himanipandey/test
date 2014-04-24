@@ -5,6 +5,7 @@ require_once dirname(__FILE__)."/image_service_upload.php";
 class ImageUpload{
 
     static $required_options = array("object_id", "object", "image_type", "s3", "image_path");
+    //static $required_options = array("object_id", "object", "s3");
     static $max_file_size = 6;
     static $supported_formats = array("jpg", "png", "gif", "bmp","jpeg","PNG","JPG","JPEG","GIF","BMP");
     static $s3_bucket = "proptiger-testing";
@@ -57,14 +58,23 @@ class ImageUpload{
         $this->validate();
         $options = $this->options;
         $s3_object = $this->upload_s3();
+        print'<pre>';print_r($options); 
         if($options["service_image_id"])
             $service_object = $this->update_service();
-        else
+        else{
             $service_object = $this->upload_service();
+
+        }
         return array("s3" => $s3_object, "service" => $service_object);
     }
 
-
+    function updateWithoutImage(){
+        $options = $this->options;
+        $service_object = array();
+        if($options["service_image_id"])
+            $service_object = $this->update_service_without_image();
+        return array("service" => $service_object);
+    }
     function delete(){
         $options = $this->options;
         $service_object = array();
@@ -102,18 +112,24 @@ class ImageUpload{
     }
 
     function upload_service(){
+       
         return $this->send_service_request("POST");
+
     }
 
     function update_service(){
         return $this->send_service_request("PUT");
     }
 
+    function update_service_without_image(){
+        return $this->send_service_request("PUT", "");
+    }
+
     function delete_service(){
         return $this->send_service_request("DELETE");
     }
 
-    function send_service_request($request_type){
+    function send_service_request($request_type, $str){
         $options = $this->options;
         if($request_type != "DELETE"){
             $object = $options["object"];

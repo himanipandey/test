@@ -117,12 +117,18 @@ class ImageServiceUpload{
         $this->method = trim($method);
         $this->extra_params = $extra_params;
         $this->errors = array();
+        if(isset($image))
         $this->validate();
     }
 
     function upload(){
-        $params = array('image'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
+        if(!isset($this->image))
+            $params = array('image'=>$this->image,'objectType'=>static::$object_types[$this->object],
             'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
+        else
+             $params = array('image'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
+            'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
+
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
         if($this->method == "DELETE")
@@ -169,6 +175,7 @@ class ImageServiceUpload{
     }
 
     static function create($post){
+        var_dump($post);var_dump(static::$image_upload_url);//die("heool");
         return static::curl_request($post, 'POST', static::$image_upload_url);
     }
 
@@ -179,6 +186,8 @@ class ImageServiceUpload{
 
     static function update($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
+        //$post = json_encode($post);
+        var_dump($post);var_dump($url);//die("heool");//
         return static::curl_request($post, 'POST', $url);
     }
 

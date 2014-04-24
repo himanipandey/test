@@ -101,7 +101,7 @@ if (isset($_POST['Next']))
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
 				$tagged_date = substr($_REQUEST['img_date'.($k+1)],0,7);
-				$arrTaggedDate[$k] = $tagged_date."-01";
+				$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
 				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
 				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
 			}
@@ -227,7 +227,7 @@ if (isset($_POST['Next']))
                 $img['type'] = $_FILES["txtlocationplan"]["type"][$key];
                 $img['name'] = $_FILES["txtlocationplan"]["name"][$key];
                 $img['tmp_name'] = $_FILES["txtlocationplan"]["tmp_name"][$key];
-
+                //print_r($arrTitle); die();
 						if ($handle = opendir($createFolder))
 						{
 								rewinddir($handle);
@@ -259,7 +259,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        "created_at" => time(),
+						                        "tagged_date" =>  $arrTaggedDate[$key],
 						                        "jsonDump" => array(
 						                        	"tower_id" => $arrTowerId[$key],
 						                        )
@@ -362,7 +362,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "layout_plan",
 						                        "folder" => $extra_path,
 						                        "count" => "layout_plan".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -455,7 +461,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "site_plan",
 						                        "folder" => $extra_path,
 						                        "count" => "site_plan".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -551,7 +563,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "master_plan",
 						                        "folder" => $extra_path,
 						                        "count" => "master_plan".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -644,7 +662,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "cluster_plan",
 						                        "folder" => $extra_path,
 						                        "count" => "cluster_plan".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -737,7 +761,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "construction_status",
 						                        "folder" => $extra_path,
 						                        "count" => "construction_status".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -839,7 +869,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "payment_plan",
 						                        "folder" => $extra_path,
 						                        "count" => "payment_plan".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -927,7 +963,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "specification",
 						                        "folder" => $extra_path,
 						                        "count" => "specification".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -1012,7 +1054,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "price_list",
 						                        "folder" => $extra_path,
 						                        "count" => "price_list".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -1097,7 +1145,13 @@ if (isset($_POST['Next']))
 						                        "image_type" => "application_form",
 						                        "folder" => $extra_path,
 						                        "count" => "application_form".$key,
-						                        "image" => $file
+						                        "image" => $file,
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            
@@ -1188,7 +1242,12 @@ if (isset($_POST['Next']))
 						                        "folder" => $extra_path,
 						                        "count" => "project_image".$key,
 						                        "image" => $file,
-						                        "priority" => $arrDisplayOrder[$key]
+						                        "priority" => $arrDisplayOrder[$key],
+						                        "title" => $arrTitle[$key],
+						                        "tagged_date" =>  $arrTaggedDate[$key],
+						                        "jsonDump" => array(
+						                        	"tower_id" => $arrTowerId[$key],
+						                        )
 						                    );
 						                    //  add images to image service
 						            

@@ -158,7 +158,7 @@ $(".pt_reqflrplan").fancybox();
 															<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}														
 															
 															" target="_blank">
-																<img src="{$img_path[data]}" height="70px" width="70px" title = "{$ImageDataListingArr[data].IMAGE_URL}" alt ="{$ImageDataListingArr[data].IMAGE_URL}" />
+																<img src="{$ImageDataListingArr[data].IMAGE_URL}" height="70px" width="70px" title = "{$ImageDataListingArr[data].IMAGE_URL}" alt ="{$ImageDataListingArr[data].IMAGE_URL}" />
 															</a>
 															
 															
