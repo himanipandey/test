@@ -245,8 +245,11 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					############## Transaction Start##############
 					 ResiProject::transaction(function(){
 						
-						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed;
+						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed,$unitType;
 												
+						if($unitType == 'Plot')
+							$bed = 0;
+																		
 						$flag = 0;
 						try{
 						
@@ -274,11 +277,18 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 							  //now inactive the logical
 							  $logical_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Logical')));
 							  $log_option_ids = $logical_bed_options[0]->id;
-							  print $log_option_ids;
+							  print $log_option_ids; 
+							  
 							  //deleting supplies
-							  $log_lst_id = Listings::find('all',array('conditions'=>array("option_id in ($log_option_ids)")));	
-							 
-							  $all_log_supplies = mysql_query("select * from project_supplies where listing_id in (".$log_lst_id[0]->id.")");
+							  $log_lst_ids = Listings::find('all',array('conditions'=>array("option_id in ($log_option_ids)")));	
+							  $all_log_lst_ids = array();
+												
+							  foreach($log_lst_ids as $k => $v){
+									$all_log_lst_ids[] = $v->id;
+							  }
+							  $all_log_lst_ids = implode(",",$all_log_lst_ids);
+							 							 
+							  $all_log_supplies = mysql_query("select * from project_supplies where listing_id in (".$all_log_lst_ids.")");
 							  							  
 							  if($all_log_supplies){
 								  $log_supplies = array();
@@ -300,8 +310,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 							  ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $log_option_ids,$projectId)));		
 						  }
 						}
-						
-											
+		
 						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive') and rpp.version = 'Cms'");
 						
 						$all_listings = array();
@@ -328,7 +337,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					
 						}catch(Exception $e)
 						{
-							$ErrorMsg1 = $e;
+							$ErrorMsg1 = 'Couuld not delete!';
 							return false;
 						}					
 								
