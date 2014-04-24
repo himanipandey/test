@@ -245,19 +245,64 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					############## Transaction Start##############
 					 ResiProject::transaction(function(){
 						
-						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1;
-						
+						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed;
+												
 						$flag = 0;
-						try{		
-				
+						try{
+						
+										
 						$actual_listing = Listings::find_by_sql("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and phase_type = 'Actual' 
 											and lst.status = 'Active' and rpp.version = 'Cms'");											
 						if(!$actual_listing){
 							Listings::update_all(array('set' => 'status = "Inactive"','conditions' => array('option_id' => $list_option_id)));
 						}
-															
-						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive') and rpp.version = 'Cms'");
 						
+						
+						//fetch all the options of bedrooms----------
+						$all_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Actual')));
+																								
+						$all_options = array();
+						//print "<pre>".print_r($all_bed_options,1)."</pre>";
+						if($all_bed_options){
+						  foreach($all_bed_options as $key => $val){
+							  $all_options[] = $val->options_id;
+						  }
+						  $all_options = implode(",",$all_options);
+						  $all_active_listing = Listings::find('all',array('conditions'=>array("option_id in ($all_options) and status='Active'")));
+						  if(!$all_active_listing){
+							  $log_option_ids = '';
+							  //now inactive the logical
+							  $logical_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Logical')));
+							  $log_option_ids = $logical_bed_options[0]->id;
+							  print $log_option_ids;
+							  //deleting supplies
+							  $log_lst_id = Listings::find('all',array('conditions'=>array("option_id in ($log_option_ids)")));	
+							 
+							  $all_log_supplies = mysql_query("select * from project_supplies where listing_id in (".$log_lst_id[0]->id.")");
+							  							  
+							  if($all_log_supplies){
+								  $log_supplies = array();
+								  while($val = mysql_fetch_object($all_log_supplies)){
+									$log_supplies[] = $val->id;
+								  }
+								  $log_supplies = implode(",",$log_supplies);
+								  print $log_supplies; 
+								//remove supplies and inventories
+								 // print $all_log_supplies[0]->id;
+								 // $log_avail = ProjectAvailability::find("all",array('conditions'=>array("project_supply_id = ?",$all_log_supplies[0]->id)));
+								 ProjectAvailability::delete_all(array('conditions'=>array("project_supply_id in (".$log_supplies.")")));
+								 ProjectSupply::delete_all(array('conditions'=>array("id in (".$log_supplies.")"))); 
+								  
+							  }
+							 
+							  Listings::delete_all(array('conditions'=>array("option_id in ($log_option_ids)")));
+							
+							  ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $log_option_ids,$projectId)));		
+						  }
+						}
+						
+											
+						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive') and rpp.version = 'Cms'");
 						
 						$all_listings = array();
 						while($list_id = mysql_fetch_object($list_id_res)){
@@ -266,6 +311,15 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						if(count($all_listings) > 0){
 							$all_listings = implode(",",$all_listings);
 							Listings::delete_all(array('conditions'=>array("id in ($all_listings)")));
+							//removing supply and inventory for these listings
+							/*$all_supplies = ProjectSupply::find('all',array('conditions'=>array("listing_id in ($all_listings)")));
+							if($all_supplies){
+							  print $all_supplies[0]->id;
+							  
+							}
+							
+							//ProjectSupply::delete_all(array('conditions'=>array("listing_id in ($all_listings)")));
+							//ProjectAvailability::delete_all(array('conditions'=>array("listing_id in ($all_listings)")));	*/						
 						}
 																	
 						ResiProjOptionsRoomSize::delete_all(array('conditions' => array('options_id' => $list_option_id)));	
@@ -274,7 +328,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					
 						}catch(Exception $e)
 						{
-							$ErrorMsg1 = 'Could not delete!';
+							$ErrorMsg1 = $e;
 							return false;
 						}					
 								
