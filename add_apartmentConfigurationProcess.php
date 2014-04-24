@@ -241,37 +241,42 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 else
                 {
 					$list_option_id = $_REQUEST['typeid_edit'][$key]; 
-					
-					//print $list_option_id; die;
-					
+															
 					############## Transaction Start##############
-					ResiProjOptionsRoomSize::transaction(function(){
+					 ResiProject::transaction(function(){
 						
 						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1;
 						
 						$flag = 0;
-																	
-						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive')");
+						try{		
+				
+						$actual_listing = Listings::find_by_sql("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and phase_type = 'Actual' 
+											and lst.status = 'Active' and rpp.version = 'Cms'");											
+						if(!$actual_listing){
+							Listings::update_all(array('set' => 'status = "Inactive"','conditions' => array('option_id' => $list_option_id)));
+						}
+															
+						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive') and rpp.version = 'Cms'");
 						
+						
+						$all_listings = array();
 						while($list_id = mysql_fetch_object($list_id_res)){
-							$qryDel_list = "DELETE FROM ".LISTINGS." WHERE  ID = '".$list_id->id."'";
-                            $resDel_list = mysql_query($qryDel_list);
+							$all_listings[] = $list_id->id;
 						}
+						if(count($all_listings) > 0){
+							$all_listings = implode(",",$all_listings);
+							Listings::delete_all(array('conditions'=>array("id in ($all_listings)")));
+						}
+																	
+						ResiProjOptionsRoomSize::delete_all(array('conditions' => array('options_id' => $list_option_id)));	
 						
-						
-						mysql_query("DELETE FROM `resi_proj_options_room_size` WHERE  `options_id` ='".$list_option_id."'");
-																																							
-						                                                  
-						$qryDel = "DELETE FROM ".RESI_PROJECT_OPTIONS." 
-                    WHERE
-                        OPTIONS_ID = '".$list_option_id."'
-                    AND
-                        PROJECT_ID = '".$projectId."'";
-						$resDel	= mysql_query($qryDel);
-						$flg_delete = 1;
-						if(!$resDel){
+						ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $list_option_id,$projectId)));
+					
+						}catch(Exception $e)
+						{
 							$ErrorMsg1 = 'Could not delete!';
-						}
+							return false;
+						}					
 								
 					});					
 					############## Transaction End ##############
