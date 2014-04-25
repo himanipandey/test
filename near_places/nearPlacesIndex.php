@@ -252,13 +252,13 @@ QRY;
 
 	else{
 	$qry = <<<QRY
-		INSERT INTO cms.landmarks (city_id, place_type_id,
+		INSERT IGNORE INTO cms.landmarks (city_id, place_type_id,
 			 name, address, google_place_id, reference, latitude, longitude, phone_number,
-			google_url, website, vicinity, is_details, rest_details) VALUES($city_id, $place_id, "{$info['name']}", "{$info['formatted_address']}", 
+			google_url, website, vicinity, is_details, rest_details, priority, status, created_at) VALUES($city_id, $place_id, "{$info['name']}", "{$info['formatted_address']}", 
 			"{$info['id']}", "{$info['reference']}", {$info['geometry']['location']['lat']}, 
 			{$info['geometry']['location']['lng']}, "{$info['international_phone_number']}", 
 			"{$info['url']}", "{$info['website']}", "{$info['vicinity']}", 
-			{$info['is_details']}, '{$unused_data}')
+			{$info['is_details']}, '{$unused_data}', '5', 'Inactive', NOW())
 QRY;
 	$rs = mysql_query($qry) or logMysqlError($qry, "C05_1");
 	

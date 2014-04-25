@@ -48,9 +48,23 @@ function isNumeric(val) {
         return true;
 }
 
+function isPhnumber(val) {
+        var validChars = '0123456789+-';
+        for(var i = 1; i < val.length; i++) {
+            if(validChars.indexOf(val.charAt(i)) == -1)
+                return false;
+        }
+        if(val.length >14 || val.length < 6)
+          return false;
+
+
+        return true;
+}
+
 function cleanFields(){
     $("#lmkid").val('');
-    $("#placeTypeHidden").val('');
+    $('#cityddEdit').val('');
+    $("#placeTypeEdit").val('');
     $("#lmkname").val('');
     $("#lmkaddress").val('');
     $("#lmklat").val('');
@@ -60,18 +74,23 @@ function cleanFields(){
     $("#lmkprio").val('');
     $("#lmkstatus").val('');
 
+    $('#errmsgcity').html('');
+    $('#errmsgplacetype').html('');
     $('#errmsgname').html('');
     $('#errmsgaddress').html('');
     $('#errmsglat').html('');
     $('#errmsglong').html('');
-    
+    $('#errmsgphone').html('');
+    $('#errmsgweb').html('');
 
 }
 
 function landmarkEdit(id,cityid,placeid,lmkname,lmkaddress,lmklat,lmklong,lmkphone,lmkweb,lmkprio,lmkstatus){
     cleanFields();
     $("#lmkid").val(id);
-    $("#placeTypeHidden").val(placeid);
+    $('#cityddEdit').val(cityid);
+    $("#placeTypeEdit").val(placeid);
+    $("#Edit").val(placeid);
     $("#lmkname").val(lmkname);
     $("#lmkaddress").val(lmkaddress);
     $("#lmklat").val(lmklat);
@@ -80,7 +99,10 @@ function landmarkEdit(id,cityid,placeid,lmkname,lmkaddress,lmklat,lmklong,lmkpho
     $("#lmkweb").val(lmkweb);
     $("#lmkprio").val(lmkprio);
     $("#lmkstatus").val(lmkstatus);
+    $('#search-top').hide('slow');
+    $('#search-bottom').hide('slow');
     window.scrollTo(0, 0);
+
     if($('#create_Landmark').css('display') == 'none'){ 
      $('#create_Landmark').show('slow'); 
     }
@@ -88,7 +110,8 @@ function landmarkEdit(id,cityid,placeid,lmkname,lmkaddress,lmklat,lmklong,lmkpho
 
 jQuery(document).ready(function(){  
 
-
+$('#search-top').show('slow');
+    $('#search-bottom').show('slow');
 
  String.prototype.isMatch = function(s){
    var b = this.match(s)!==null
@@ -97,18 +120,22 @@ jQuery(document).ready(function(){
  
 $("#create_button").click(function(){
   cleanFields();
+  $('#search-top').hide('slow');
+    $('#search-bottom').hide('slow');
    $('#create_Landmark').show('slow'); 
 });
 
 $("#exit_button").click(function(){
   cleanFields();
    $('#create_Landmark').hide('slow'); 
+   $('#search-top').show('slow');
+    $('#search-bottom').show('slow');
 });
 
   $("#lmkSave").click(function(){
 
-    var cityid      = $('#citydd').val();
-    var placeid = $('#placeType').val();
+    var cityid      = $('#cityddEdit').children(":selected").val();
+    var placeid = $('#placeTypeEdit').children(":selected").val();
     if(!placeid)
       var placeid = $('#placeTypeHidden').val();
     var lmkid = $('#lmkid').val();
@@ -130,72 +157,86 @@ $("#exit_button").click(function(){
 
     
 
-    if(!cityid){
-      alert("Please Select City.");
-      error=1;
-    }
-    if(!placeid){
-      alert("Please Select Place Type.");
-      error=1;
-    }
+    
     
      //longitude      
+     
+
+    if(lmkphone!=''){
+      if(!isPhnumber(lmkphone)) {
+        $('#errmsgphone').html('<font color="red">Phone No. must be numeric and 6-14 characters</font>');
+        $("#lmkphone").focus();
+        error=1;
+      }
+      else{
+          $('#errmsgphone').html('');
+          }
+      }
+    else{
+          $('#errmsgphone').html('');
+    }
+
+    
+
 
     if(lmklong==''){
-      $('#errmsglong').html('<font color="red">Please enter Landmark Longitude</font>');
+      $('#errmsglong').html('<font color="red">Please enter Latitude</font>');
       $("#lmklong").focus();
       error = 1;
     }
-    
-    else if(!isNumeric(lmklong)) {
-      $('#errmsglong').html('<font color="red">Please enter numeric Longitude</font>');
-      $("#lmklong").focus();
-      error = 1;
-    }
-    else   {
-      if (!(parseInt(lmklong)<=180) || !(parseInt(lmklong)>=-180)) {
-        $('#errmsglong').html('<font color="red">Please enter Longitude between -180 and +180</font>');
+    else {
+      if(!isNumeric(lmklong)) {
+        $('#errmsglong').html('<font color="red">Please enter numeric Longitude</font>');
         $("#lmklong").focus();
         error = 1;
       }
-      else{
-        $('#errmsglong').html('');
+      else   {
+        if (!(parseInt(lmklong)<=180) || !(parseInt(lmklong)>=-180)) {
+          $('#errmsglong').html('<font color="red">Please enter Longitude between -180 and +180</font>');
+          $("#lmklong").focus();
+          error = 1;
         }
+        else{
+          $('#errmsglong').html('');
+        }
+      }
     }
+ 
       
     //latitude   
+    
     if(lmklat==''){
-      $('#errmsglat').html('<font color="red">Please enter Landmark latitude</font>');
+      $('#errmsglat').html('<font color="red">Please enter Latitude</font>');
       $("#lmklat").focus();
       error = 1;
     }
-
-    
-    else if(!isNumeric(lmklat)) {
-      $('#errmsglat').html('<font color="red">Please enter Numeric Latitude</font>');
-      $("#lmklat").focus();
-      error=1;
-    }
-    else   {
-      
-      if (!(parseInt(lmklat)<=180) || !(parseInt(lmklat)>=-180)) {
-        $('#errmsglat').html('<font color="red">Please enter Latitude between -180 and +180</font>');
+    else{
+      if(!isNumeric(lmklat)) {
+        $('#errmsglat').html('<font color="red">Please enter Numeric Latitude</font>');
         $("#lmklat").focus();
-        error = 1;
+        error=1;
       }
-      else{
-        $('#errmsglat').html('');
+      else   {
+        
+        if (!(parseInt(lmklat)<=180) || !(parseInt(lmklat)>=-180)) {
+          $('#errmsglat').html('<font color="red">Please enter Latitude between -180 and +180</font>');
+          $("#lmklat").focus();
+          error = 1;
         }
+        else{
+          $('#errmsglat').html('');
+        }
+      }
     }
-
+  
 
     //address
-    if(lmkaddress==''){
+   /* if(lmkaddress==''){
       $('#errmsgaddress').html('<font color="red">Please enter Landmark Address</font>');
       $("#lmkaddress").focus();
       error = 1;
     }
-    else if (/[^\w#,.\- ]/.test(lmkaddress)){
+    else */if (/[^\w#,.\- ]/.test(lmkaddress)){
       
       $('#errmsgaddress').html('<font color="red">Special characters are not allowed in Landmark name</font>');
       $("#lmkaddress").focus();
@@ -221,6 +262,22 @@ $("#exit_button").click(function(){
     else   {
       $('#errmsgname').html('');
     }
+
+    if(!placeid){
+      $('#errmsgplacetype').html('<font color="red">Please select Place Type.</font>');
+        $("#placeTypeEdit").focus();
+      error=1;
+    }
+    else $('#errmsgplacetype').html('');
+
+    if(!cityid){
+      $('#errmsgcity').html('<font color="red">Please select City.</font>');
+        $("#cityddEdit").focus();
+      error=1;
+    }
+    else $('#errmsgcity').html('');
+    
+
 
     if (error==0){
       
@@ -406,6 +463,7 @@ function show_loc_inst(){
                   <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
+                        <div id="search-top">
                         <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">
                           <tr>
                                 <td width="20%" height="25" align="left" valign="top">
@@ -432,13 +490,14 @@ function show_loc_inst(){
                                     <select id="placeType" name="loc" onchange="selectNearPlaceTypes(this.value)">
                                        <option value=''>select place type</option>
                                        {foreach from=$nearPlaceTypesArray key=k item=v}
-                                              <option value="{$v->id}" {if $nearPlaceTypesId==$v->id}  selected="selected" {/if}>{$v->name}</option>
+                                              <option value="{$v->id}" {if $nearPlaceTypesId==$v->id}  selected="selected" {/if}>{$v->display_name}</option>
                                        {/foreach}
                                     </select>
                                 </td>
                                 
                           </tr>
                         </table>
+                      </div>
                       </td>
                     </tr>
                   </table>
@@ -452,11 +511,29 @@ function show_loc_inst(){
                     <input type="hidden" name="old_sub_name" value="">
                     <div>
                     <tr>
-                    <td width="10%" align="center" colspan=2><b>Please first select City and Place Type</b></td>
-                    </tr> 
-
-                    
-
+                      <td width="10%" align="right" >*City : </td>
+                                  <td width="20%" height="25" align="left" valign="top">
+                                      <select id="cityddEdit" name="cityddEdit" >
+                                         <option value=''>select city</option>
+                                         {foreach from=$cityArray key=k item=v}
+                                             <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
+                                         {/foreach}
+                                      </select>
+                                  </td>
+                      <td width="40%" align="left" id="errmsgcity"></td>
+                    </tr>
+                    <tr>
+                      <td width="10%" align="right" >*Place Type: </td>
+                        <td width="20%" height="25" align="left" valign="top">
+                                    <select id="placeTypeEdit" name="placeEdit" >
+                                       <option value=''>select place type</option>
+                                       {foreach from=$nearPlaceTypesArray key=k item=v}
+                                              <option value="{$v->id}" {if $nearPlaceTypesId==$v->id}  selected="selected" {/if}>{$v->display_name}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                    </tr>
                     <tr>
                       <td width="10%" align="right" >*Name : </td>
                       <td width="40%" align="left" ><input type=text name="lmkname" id="lmkname"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
@@ -464,7 +541,7 @@ function show_loc_inst(){
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">*Address :</td>
+                      <td width="20%" align="right" valign="top">Address :</td>
                       <td width="30%" align="left" >
                       <textarea name="lmkaddress" rows="10" cols="35" id="lmkaddress" style="width:250px;"></textarea><td width="20%" align="left" id="errmsgaddress"></td>
                       </td>
@@ -483,12 +560,12 @@ function show_loc_inst(){
 
                     <tr>
                       <td width="20%" align="right" >Phone No. : </td>
-                      <td width="30%" align="left"><input type=text name="lmkphone" id="lmkphone"  style="width:250px;"></td> 
+                      <td width="30%" align="left"><input type=text name="lmkphone" id="lmkphone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgphone"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" >Website : </td>
-                      <td width="30%" align="left"><input type=text name="lmkweb" id="lmkweb" style="width:250px;"></td> 
+                      <td width="30%" align="left"><input type=text name="lmkweb" id="lmkweb" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
                     </tr>
 
                     <tr>
@@ -528,7 +605,7 @@ function show_loc_inst(){
 
 
 
-
+                    <div id="search-bottom">
                     <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
                         <form name="form1" method="post" action="">
                           <thead>
@@ -547,7 +624,7 @@ function show_loc_inst(){
                                   {/if}-->
                                   </TH> 
                                  <TH width=6% align="center">Status</TH> 
-				 <TH width=3% align="center">Save</TH>
+         <TH width=3% align="center">Save</TH>
                                 </TR>
                               
                           </thead>
@@ -590,7 +667,7 @@ function show_loc_inst(){
           </select>
           </TD>
         <TD align=center class=td-border>  
-	<select id="status{$v.id}" value=''>
+  <select id="status{$v.id}" value=''>
           <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
           <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
                   
@@ -624,6 +701,7 @@ function show_loc_inst(){
                            </tfoot>
                         </form>
                     </TABLE>
+                  </div>
                  </TD>
             </TR>
           </TBODY></TABLE>

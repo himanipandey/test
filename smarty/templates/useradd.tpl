@@ -101,7 +101,7 @@
 				  <td width="20%" align="right">*Department : </td>
 				  <td width="30%" align="left" >
 
-				   <select name="dept"  id="dept" class="field" style="width:222px;" onchange="SelectTargetLevelForSales(this.value,'department')">
+                                      <select name="dept" style="width:222px;" onchange="showHideCity(this.value);">
 				   <option value="">Select </option>
 
 						{foreach from=$departmentArray key=k item=v}
@@ -112,8 +112,24 @@
 				  </td>
 				    {if $ErrorMsg["selectDepartmentErr"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["selectDepartmentErr"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
-
-				
+                                {if $txtdepartment == 'SURVEY'}
+                                    {$stye = ""}
+                                {else}
+                                     
+                                     {$stye = 'style = "display:none;"'}
+                                {/if}
+				<tr id = 'showhide' {$stye}>
+				  <td width="20%" align="right" valign = "top">Mapped City : </td>
+				  <td width="30%" align="left" >
+                                      <select name="city[]" multiple="" style="width:220px;">
+                                          <option value="">Select City</option>
+                                          {foreach from = $arrCity key = key item = item}
+                                            <option {if in_array($key,$arrExistingCity)} selected {/if} value="{$key}">{$item}</option>
+                                          {/foreach}
+                                      </select>
+                                  </td>
+				  <td width="50%" align="left"></td>
+                                </tr>
 				<tr>
 				  <td width="20%" align="right">*Role : </td>
 				  <td width="30%" align="left" >
@@ -159,7 +175,8 @@
 				  <td width="20%" align="right" >Cloud Agent Id : </td>
 				  <td width="30%" align="left" ><input type="text" name="cloudAgentId" id="cloudAgentId" value="{$cloudAgentId}" style="width:220px;"></td>
 				  <td width="50%" align="left"></td>
-			   </tr
+			   </tr>
+                           
 			   <tr>
 				  <input type="hidden" id="userid" name="userid" value="{$userid}">
 				  <input type="hidden" id="managerids"  name="managerids" value="">
@@ -169,7 +186,8 @@
 				  <input type="submit" name="btnSave" id="btnSave" value="Save">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit">
 				  </td>
-				</tr>
+			    </tr>
+                            
 			      </div>
 			    </form>
 			    </TABLE>
@@ -209,7 +227,14 @@
         </TD>
       </TR>
 <script type="text/javascript">
-
+//function for show hide department only display city list when department is survey
+function showHideCity(department) {
+    if(department == 'SURVEY') {
+        jQuery("#showhide").show();
+    }else {
+        jQuery("#showhide").hide();
+    }
+}
 jQuery(document).ready(function(){
 
 	jQuery("#txt_username").blur(function(){

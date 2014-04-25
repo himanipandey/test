@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', '1');
-ini_set('memory_limit', '5G');
+ini_set('memory_limit', '3G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -79,6 +79,8 @@ if ($bulkInsert) {
 }
 
 DInventoryPriceTmp::setMissingSupply();
+DInventoryPriceTmp::updateProjectDominantType();
+DInventoryPriceTmp::deleteInvalidDates();
 DInventoryPriceTmp::populateDemand();
 DInventoryPriceTmp::deleteEntriesBeforeLaunch();
 DInventoryPriceTmp::deleteInvalidPriceEntries();
@@ -134,7 +136,10 @@ function createDocuments($aAllInventory, $aAllPrice) {
             $entry['inventory'] = $aAllInventory[$key]->inventory;
             if (isset($aAllInventory[$prevKey]) && $aAllInventory[$key]->key_without_month === $aAllInventory[$prevKey]->key_without_month) {
                 $entry['units_sold'] = $aAllInventory[$prevKey]->inventory - $aAllInventory[$key]->inventory;
-            } else {
+            } elseif($aAllInventory[$key]->effective_month === $aAllInventory[$key]->launch_date){
+                $entry['units_sold'] = $aAllInventory[$key]->ltd_launched - $aAllInventory[$key]->inventory;
+            }
+            else {
                 $entry['units_sold'] = 0;
             }
         }
@@ -195,7 +200,7 @@ function addMissingLaunchDates() {
     global $bulkInsert;
     global $globalCondition;
 
-    $sql = "select rp.PROJECT_ID, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, date_format(if(rpp.COMPLETION_DATE=0, NULL, rpp.COMPLETION_DATE), '%Y-%m-01') COMPLETION_DATE, date_format(" . ResiProjectPhase::$custom_launch_date_string . ", '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, ps.supply, ps.supply ltd_supply, ps.launched launched_unit, ps.launched ltd_launched_unit from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and (date_format(" . ResiProjectPhase::$custom_launch_date_string . ", '%Y-%m-01') = dip.effective_month) where $globalCondition and (rpp.LAUNCH_DATE != 0 or rp.LAUNCH_DATE != 0 or rp.PRE_LAUNCH_DATE != 0) and dip.id is null group by ps.id";
+    $sql = "select rp.PROJECT_ID, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, date_format(if(rpp.COMPLETION_DATE=0, NULL, rpp.COMPLETION_DATE), '%Y-%m-01') COMPLETION_DATE, date_format(" . ResiProjectPhase::$custom_launch_date_string . ", '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, ps.supply, ps.supply ltd_supply, ps.launched launched_unit, ps.launched ltd_launched_unit from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and rpo.BEDROOMS = dip.bedrooms and (date_format(" . ResiProjectPhase::$custom_launch_date_string . ", '%Y-%m-01') = dip.effective_month) where $globalCondition and (rpp.LAUNCH_DATE != 0 or rp.LAUNCH_DATE != 0 or rp.PRE_LAUNCH_DATE != 0) and dip.id is null group by ps.id";
     $aData = DInventoryPriceTmp::find_by_sql($sql);
     removeInvalidPhaseData($aData);
     $i = 0;
@@ -223,7 +228,7 @@ function addMissingCompletionDates() {
     global $bulkInsert;
     global $globalCondition;
 
-    $sql = "select rp.PROJECT_ID, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, date_format(rpp.COMPLETION_DATE, '%Y-%m-01') COMPLETION_DATE, date_format(" . ResiProjectPhase::$custom_launch_date_string . ", '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, ps.supply ltd_supply, ps.launched ltd_launched_unit from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and (rpo.BEDROOMS = dip.bedrooms or rpo.BEDROOMS is null) and date_format(rpp.COMPLETION_DATE, '%Y-%m-01') = dip.effective_month where $globalCondition and rpp.COMPLETION_DATE != 0 and dip.id is null group by ps.id";
+    $sql = "select rp.PROJECT_ID, rpp.PHASE_ID, rpp.PHASE_NAME, rpp.PHASE_TYPE, date_format(rpp.COMPLETION_DATE, '%Y-%m-01') COMPLETION_DATE, date_format(" . ResiProjectPhase::$custom_launch_date_string . ", '%Y-%m-01') LAUNCH_DATE, rpo.OPTION_TYPE as unit_type, rpo.BEDROOMS, avg(rpo1.SIZE) as average_size, ps.supply ltd_supply, ps.launched ltd_launched_unit from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rpp.status = 'Active' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID and rpo.OPTION_CATEGORY = 'Logical' inner join resi_project_options rpo1 on rpo.PROJECT_ID = rpo1.PROJECT_ID and rpo.OPTION_TYPE = rpo1.OPTION_TYPE and rpo.BEDROOMS = rpo1.BEDROOMS and rpo1.OPTION_CATEGORY = 'Actual' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' left join d_inventory_prices_tmp dip on rpp.phase_id = dip.phase_id and rpo.OPTION_TYPE = dip.unit_type and rpo.BEDROOMS = dip.bedrooms and date_format(rpp.COMPLETION_DATE, '%Y-%m-01') = dip.effective_month where $globalCondition and rpp.COMPLETION_DATE != 0 and dip.id is null group by ps.id";
     $aData = DInventoryPriceTmp::find_by_sql($sql);
     removeInvalidPhaseData($aData);
     $i = 0;

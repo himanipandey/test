@@ -128,8 +128,17 @@ class DInventoryPriceTmp extends Model
     }
     
     public static function setMissingSupply(){
-        $sql = "update d_inventory_prices_tmp a inner join listings d on a.phase_id = d.phase_id and d.status = 'Active' inner join resi_project_options e on d.option_id = e.options_id and e.bedrooms = a.bedrooms and a.unit_type = e.option_type and e.option_category = 'Logical' inner join project_supplies f on d.id = f.listing_id and f.version = 'Website' set a.ltd_supply = f.supply, a.ltd_launched_unit = f.launched";
+        $sql = "update d_inventory_prices_tmp a inner join listings d on a.phase_id = d.phase_id and d.status = 'Active' inner join resi_project_options e on d.option_id = e.options_id and (e.bedrooms = a.bedrooms or (a.bedrooms = 0 and e.bedrooms is null)) and a.unit_type = e.option_type and e.option_category = 'Logical' inner join project_supplies f on d.id = f.listing_id and f.version = 'Website' set a.ltd_supply = f.supply, a.ltd_launched_unit = f.launched";
         self::connection()->query($sql);
         self::update_all(array('set'=>'supply = ltd_supply, launched_unit = ltd_launched_unit', 'conditions'=>'launch_date = effective_month'));
+    }
+    
+    public static function updateProjectDominantType(){
+        $sql = "update d_inventory_prices_tmp a inner join (select project_id, substring_index(group_concat(unit_type order by supply desc), ',', 1) unit_type from (select project_id, unit_type, sum(supply) supply from d_inventory_prices group by project_id, unit_type having supply > 0) t group by project_id) b  on a.project_id = b.project_id and a.unit_type = b.unit_type set a.is_dominant_project_unit_type = 'True'";
+        self::connection()->query($sql);
+    }
+    
+    public static function deleteInvalidDates(){
+        self::delete_all(array('conditions'=>'day(effective_month) != 1'));
     }
 }
