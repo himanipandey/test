@@ -133,6 +133,7 @@
                                     </td>
                                 </tr>
                                 
+                                
                                 <tr>
                                     <td width="20%" align="right" valign="top"><b>Pre Launch Date  :</b> </td>
                                     <td width="30%" align="left">{$pre_launch_date}
@@ -151,6 +152,16 @@
                                         <font color="red"><span id = "err_completion_date" style = "display:none;">Enter Actual Launch Date</span></font>
                                     </td>
                                 </tr>
+                                
+                                 <tr>
+                                                <td width="20%" align="right" valign="top"><b>Sold Out Date  :</b> </td>
+                                                <td width="30%" align="left">
+                                                    <input name="sold_out_date" value="{$sold_out_date}" type="text" class="formstyle2" id="sold_out_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="sold_out_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                </td>
+                                                <td width="50%" align="left">
+                                                    <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
+                                                </td>
+                                            </tr>
 
 								{if $ProjectDetail[0]['PROJECT_TYPE_ID']==0}
 								<tr>
@@ -218,7 +229,8 @@
 <script type="text/javascript">
     var cals_dict = {
         "launch_date_trigger" : "launch_date",
-        "completion_date_trigger" : "completion_date"
+        "completion_date_trigger" : "completion_date",
+        "sold_out_date_trigger": "sold_out_date",
     };
 
     $.each(cals_dict, function(k, v) {
