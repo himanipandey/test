@@ -4,6 +4,7 @@
 	include("dbConfig.php");
 	include("includes/configs/configs.php");
 	include("builder_function.php");
+	include("common/function.php");
 	include("s3upload/s3_config.php");
 	AdminAuthentication();
 	    

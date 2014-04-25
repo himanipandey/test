@@ -56,7 +56,7 @@ if ( !empty( $_REQUEST['upPh'] ) ) {
         unset($__newData["IMAGE_NAME"]);
         unset($__newData["SERVICE_IMAGE_ID"]);
         $res &= updateThisPhotoProperty( $__newData );
-die("here");
+//die("here");
         if($__newData["IMAGE_ID"]){
             $dest = 'locality/'.$image_name;
             $source = $newImagePath.$dest;
@@ -87,7 +87,7 @@ else {
     }
     if ( !empty( $_REQUEST['getPh'] ) ) {
         $data = array();
-        $service_image_id = $_REQUEST['service_image_id'];
+        //$service_image_id = $_REQUEST['service_image_id'];
         $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
         $content = file_get_contents($url);
         $imgPath = json_decode($content);

@@ -244,7 +244,7 @@ function getPhotos() {
     toggleSaveBtn( 'hide' );
     $("#submitBUtton").show();
     $('.image-block').html('');
-    var dataResult = getPhotosFromDB();
+    var dataResult = getPhotosFromImageService();
     if ( dataResult['data'] != null && dataResult['data'].length > 0 ) {
         for( var __imgNo = 0; __imgNo < dataResult['data'].length; __imgNo++ ) {
             showThisPhoto( dataResult['data'][ __imgNo ]);
@@ -257,7 +257,7 @@ function getPhotos() {
 }
 
 function showThisPhoto( imgData ) {
-    console.log(imgData);
+    //console.log(imgData);
     imgData['IMAGE_DISPLAY_NAME'] = imgData['IMAGE_DISPLAY_NAME'] == null ? "" : imgData['IMAGE_DISPLAY_NAME'];
     imgData['IMAGE_CATEGORY'] = imgData['IMAGE_CATEGORY'] == null ? "" : imgData['IMAGE_CATEGORY'];
     imgData['IMAGE_DESCRIPTION'] = imgData['IMAGE_DESCRIPTION'] == null ? "" : imgData['IMAGE_DESCRIPTION'];
@@ -332,7 +332,7 @@ function toggleSaveBtn( sh ) {
     }
 }
 
-function getPhotosFromDB() {
+function getPhotosFromImageService() {
     initVar();
     var data = getData(),
         res = null;

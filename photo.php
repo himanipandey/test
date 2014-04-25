@@ -92,6 +92,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     $img['type'] = $IMG['type'][ $__imgCnt ];
                     $img['name'] = $IMG['name'][ $__imgCnt ];
                     $img['tmp_name'] = $IMG['tmp_name'][ $__imgCnt ];
+                    
+
                     $params = array(
                         "priority" => $displayPriority,
                         "description" => $imgDescription,
@@ -99,7 +101,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         "title" => $imgDisplayName,
                         "column_name" => $columnName,
                         "folder" => "locality/",
-                        "count" => $__imgCnt
+                        "count" => $__imgCnt,
+                        
                     );
                     //  add images to image service
             
@@ -223,7 +226,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         $addedImgIdArr = array();
                         for( $__imgCnt = 0; $__imgCnt < $imageCount; $__imgCnt++ ) {
                             if ( $IMG['error'][ $__imgCnt ] == 0 ) {
-                                $extension = explode( "/", $IMG['type'][ $__imgCnt ] );
+                                /*$extension = explode( "/", $IMG['type'][ $__imgCnt ] );
                                 $extension = $extension[ count( $extension ) - 1 ];
                                 $imgType = "";
                                 if ( strtolower( $extension ) == "jpg" || strtolower( $extension ) == "jpeg" ) {
@@ -265,7 +268,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     $dest = 'locality/thumb_'.$imgName;
                                     $source = $newImagePath.$dest;
                                     $s3upload = new S3Upload($s3, $bucket, $source, $dest);
-                                    $s3upload->upload();*/
+                                    $s3upload->upload();
                                     //  add image to DB
                                     $qryUpdate = "update locality_image set 
                                         IMAGE_CATEGORY = '".$imgCategory."',
@@ -279,6 +282,49 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     $response = $s3upload->delete();
                                     $uploadStatus[ $IMG['name'][0] ] = "uploaded";
                                  //   header("Location:photo.php");
+                                }*/
+
+
+                                $img = array();
+                                $img['error'] = $IMG['error'][ $__imgCnt ];
+                                $img['type'] = $IMG['type'][ $__imgCnt ];
+                                $img['name'] = $IMG['name'][ $__imgCnt ];
+                                $img['tmp_name'] = $IMG['tmp_name'][ $__imgCnt ];
+                                
+
+                                $params = array(
+                                     "folder" => "locality/",
+                                    "count" => $__imgCnt,
+                                    "priority" => $imagePriority,
+                                    "title" => $imgDisplayName,
+                                    "description" => $imgDescription,
+                                    "service_image_id" => $ImgID,
+                                    "update" => "update",
+                                    "image_type" => $imgCategory
+                                    
+                                );
+                                //  add images to image service
+                        
+                                $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
+                                $returnArr = writeToImageService($s3, $img, $areaType, $areaId, $params, $newImagePath);
+                                  //die("here");
+                                $serviceResponse = $returnArr['serviceResponse'];
+                                if($returnArr['error']){
+                                    $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $returnArr['error'];
+                                }
+                                else{
+                                    //deleteFromImageService($areaType, $areaId, );
+                                    // add to database
+                                    $qryUpdate = "update locality_image set 
+                                        IMAGE_CATEGORY = '".$imgCategory."',
+                                        IMAGE_DESCRIPTION = '".$imgDescription."',
+                                        IMAGE_DISPLAY_NAME = '".$imgDisplayName."',
+                                        SERVICE_IMAGE_ID = ".$serviceResponse['service']->response_body->data->id.",
+                                        IMAGE_NAME = '".$imgName."'    
+                                     WHERE IMAGE_ID = $ImgID";
+                                    $resImg = mysql_query($qryUpdate) or die(mysql_error());
+                                    
+                                    $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
                                 }
                             }
                             else {
@@ -305,12 +351,27 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                             }
                         }
                     }else{
-                         $arrPost = array();
+                        /* $arrPost = array();
                          $arrPost['priority'] = $imagePriority;
                          $arrPost['title'] = $imgDisplayName;
                          $arrPost['description'] = $imgDescription;
-                         $arrPost['image_type'] = strtolower($imgCategory);
-                         $url = ImageServiceUpload::$image_upload_url."/".$imgSevice;
+                         $arrPost['image_type'] = strtolower($imgCategory);*/
+                         
+                         $params = array(
+                            
+                            
+                            "priority" => $imagePriority,
+                            "title" => $imgDisplayName,
+                            "description" => $imgDescription,
+                            "service_image_id" => $ImgID,
+                            "update" => "update",
+                            "image_type" => $imgCategory
+                           
+                        );
+
+                         $returnArr = writeToImageService($s3, "", $areaType, $areaId, $params, $newImagePath);
+
+                        /* $url = ImageServiceUpload::$image_upload_url."/".$imgSevice;
                          $ch = curl_init();
                          $method = 'POST';
                         curl_setopt($ch, CURLOPT_URL,$url);
@@ -325,14 +386,15 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         $response_header = substr($response, 0, $header_size);
                         $response_body = json_decode(substr($response, $header_size));
                         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                        curl_close ($ch);
+                        curl_close ($ch);*/
+
                         $qryUpdate = "update locality_image set 
                             IMAGE_CATEGORY = '".$imgCategory."',
                             IMAGE_DESCRIPTION = '".$imgDescription."',
                             IMAGE_DISPLAY_NAME = '".$imgDisplayName."'   
                          WHERE SERVICE_IMAGE_ID = $ImgID";
                          $resImg = mysql_query($qryUpdate) or die(mysql_error());
-                         $uploadStatus['img'][$ImgID] = "updated";
+                         $uploadStatus[$imgName] = "updated";
                     }
                 }
                 else {

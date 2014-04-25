@@ -170,14 +170,20 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 
 function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $newImagePath){
             //print_r($IMG);
+        $service_extra_paramsArr = array( 
+            "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']));
+
+        if(!isset($params['tagged_date']) || empty($params['tagged_date']))
+                    unset($service_extra_paramsArr["takenAt"]);
+
+
     if($IMG==""){
         print'<pre>';
                 print_r($params);//die();
+                
         $s3upload = new ImageUpload(NULL, array("s3" => $s3,
                      "object" => $objectType,"object_id" => $objectId,
-                     "service_image_id"=>$params['service_image_id'],
-                    "service_extra_params" => array( 
-                    "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']))));
+                     "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));
         $returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
     }
          
@@ -221,13 +227,11 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
 
                 print'<pre>';
                 print_r($params); //die();
-                if(!isset($params['tagged_date']))
-                    $params['tagged_date']="2014-04-22T00:00:00Z";
+                
                 $s3upload = new ImageUpload($source, array("s3" => $s3,
                     "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
                     "image_type" => strtolower($params['image_type']), "service_image_id"=>$params['service_image_id'],
-                    "service_extra_params" => array( 
-                    "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']))));
+                    "service_extra_params" => $service_extra_paramsArr));
                 
                 if(isset($params['update']))
                     $returnValue['serviceResponse'] =  $s3upload->update();
@@ -245,7 +249,7 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
 
 
 /*********************update/delete  Image from image service*************************************************************/
-function deleteFromImageService($objectType, $objectId, $service_image_id){
+function deleteFromImageService($objectType="", $objectId=0, $service_image_id){
    // die($service_image_id);
     $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $service_image_id));
     return $s3upload->delete();

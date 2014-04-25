@@ -74,7 +74,7 @@ if ($_POST['btnSave'] == "Save")
 	$smarty->assign("website", $website);	
 	$smarty->assign("revenue", $revenue);
 	$smarty->assign("debt", $debt);
-    $smarty->assign("imgSrc", $imgSrc);
+    //$smarty->assign("imgSrc", $imgSrc);
 
 	if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)){
 		$ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
@@ -416,7 +416,7 @@ if ($_POST['btnSave'] == "Save")
             $service_image_id = $dataedit['SERVICE_IMAGE_ID'];
             $img_path = array();
             
-            $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+            $url = readFromImageService($objectType, $objectId);
             $content = file_get_contents($url);
             $imgPath = json_decode($content);
             $data = array();

@@ -18,11 +18,8 @@
     $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
-    $st = strtotime("2014-04-23");
-    var_dump($st);
-    $tim = gmdate("Y-m-d h:i:s", "1398319845000");
-    var_dump($tim);
-
+   
+    
 print'<pre>';
 	print_r($imgPath);
 
@@ -49,10 +46,14 @@ print'<pre>';
 	        $data['IMAGE_DESCRIPTION'] = $v->description;
 	        $data['SERVICE_IMAGE_ID'] = $v->id;
 	        $data['SERVICE_IMAGE_PATH'] = $v->absolutePath;
-	        if(isset($v->takenAt))//if($v->created_at)
-	        	$data['tagged_month'] = gmdate("Y-m-d", $v->takenAt);
-	        else
-	        	$data['tagged_month'] = gmdate("Y-m-d", time());
+	       
+	        if(isset($v->takenAt)){
+	        	$t = $v->takenAt/1000;
+				$data['tagged_month'] =  date("Y-m-d", $t);
+		    }
+		   // echo date("Y-m-d H:i:s", $epoch);
+	        //else
+	        //	$data['tagged_month'] = gmdate("Y-m-d", time());
 
 	         $str = trim(trim($v->jsonDump, '{'), '}');
 	        $towerarr = explode(":", $str);
@@ -60,7 +61,7 @@ print'<pre>';
 	       //var_dump($data['tower_id']);
 	        $data['PROJECT_ID'] = $v->objectId;
 	        $data['STATUS'] = $v->active;
-	        echo $v->takenAt;
+	        //echo $v->takenAt;
 	        //echo $data['tower_id'].$data['tagged_month']."<br>";
 	        //print_r($v->jsonDump);
 	        array_push($ImageDataListingArr, $data);

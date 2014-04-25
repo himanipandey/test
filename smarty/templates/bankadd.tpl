@@ -24,7 +24,7 @@
 	}
 
 	function getPhotos(){
-		var dataResult = getPhotosFromDB();
+		var dataResult = getPhotosFromImageService();
 		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 />';
 		
 		$("a#view").html( template );
@@ -32,7 +32,7 @@
 	
 	}
 
-	function getPhotosFromDB() {
+	function getPhotosFromImageService() {
     //initVar();
     //var data = getData(),
       //  res = null;
