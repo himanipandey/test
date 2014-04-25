@@ -30,8 +30,8 @@
 		else if($v['OPTION_TYPE']=='commercial')
 			$commercial[$k] = "yes";
 	}
-	print("<pre>");
-	print_r($ProjectOptionDetail);
+	//print("<pre>");
+	//print_r($ProjectOptionDetail);
 	
 
 
@@ -68,8 +68,7 @@
 				$flgins	=	1;	
 			if($_REQUEST['floor_name'][$key] != '')
 			{
-	   	print_r($arrImg);
-	   	print_r($_FILES);
+	   
 	   	echo strtolower($_FILES["imgurl"]["type"][$key]);
 	   		  if($_FILES['imgurl']['name'][$key] != '')
 	   		  {
@@ -193,7 +192,7 @@
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}

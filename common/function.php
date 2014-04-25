@@ -178,8 +178,8 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
 
 
     if($IMG==""){
-        print'<pre>';
-                print_r($params);//die();
+                //print'<pre>';
+                //print_r($params);//die();
                 
         $s3upload = new ImageUpload(NULL, array("s3" => $s3,
                      "object" => $objectType,"object_id" => $objectId,
@@ -225,8 +225,8 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
                     $move = move_uploaded_file($IMG['tmp_name'],$source);
                 }
 
-                print'<pre>';
-                print_r($params); //die();
+                //print'<pre>';
+                //print_r($params); //die();
                 
                 $s3upload = new ImageUpload($source, array("s3" => $s3,
                     "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,

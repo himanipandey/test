@@ -58,7 +58,7 @@ class ImageUpload{
         $this->validate();
         $options = $this->options;
         $s3_object = $this->upload_s3();
-        print'<pre>';print_r($options); 
+        //print'<pre>';print_r($options); 
         if($options["service_image_id"])
             $service_object = $this->update_service();
         else{

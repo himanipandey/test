@@ -175,7 +175,7 @@ class ImageServiceUpload{
     }
 
     static function create($post){
-        var_dump($post);var_dump(static::$image_upload_url);//die("heool");
+        //var_dump($post);var_dump(static::$image_upload_url);//die("heool");
         return static::curl_request($post, 'POST', static::$image_upload_url);
     }
 
@@ -186,8 +186,7 @@ class ImageServiceUpload{
 
     static function update($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
-        //$post = json_encode($post);
-        var_dump($post);var_dump($url);//die("heool");//
+        //var_dump($post);var_dump($url);//die("heool");//
         return static::curl_request($post, 'POST', $url);
     }
 

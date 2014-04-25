@@ -15,12 +15,11 @@
 		
 
 		// get image path from image service
-	print'<pre>';
-	print_r($ImageDataListings);
+	//print'<pre>';
+	//print_r($ImageDataListings);
 		$ImageDataListingArr = array();
 		$optionsArr = getAllProjectOptions($projectId);
-		print'<pre>';
-	//print_r($optionsArr);
+		
 		foreach ($optionsArr as $k1 => $v1) {
 			$objectType = "property";
 			
@@ -71,13 +70,6 @@
 		}
 		
 
-
-
-
-		print'<pre>';
-		print_r($ImageDataListingArr);
-		print'<pre>';
-		//print_r($ImageDataListingArr);
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 		//$smarty->assign("img_path", $img_path);
 
@@ -101,7 +93,7 @@
 	      {
 	        $ErrorMsg["title"] = "Please enter Image Title.";
 	      }
-	      print_r($ErrorMsg);
+	      //print_r($ErrorMsg);
 
 			if (isset($_POST['btnSave'])  && !is_array($ErrorMsg)) 
 			{
@@ -261,7 +253,7 @@
 																//$image_id = $image_id->id;
 															}
 															else {
-																echo $returnArr['error'];
+																//echo $returnArr['error'];
 																$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 																break;
 															}
@@ -360,7 +352,7 @@
                                                                                 SERVICE_IMAGE_ID = '".$service_image_id."'
                                                                         AND 
                                                                                 OPTION_ID	= '".$arrOptionId[$key]."'";
-								echo $qry;
+								
 								$res = mysql_query($qry);
 							
 								if($res)

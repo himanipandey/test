@@ -374,7 +374,7 @@ if (isset($_POST['Next']))
 						            
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-						                    print_r($returnArr);
+						                   // print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
@@ -575,7 +575,7 @@ if (isset($_POST['Next']))
 						            
 						                    
 						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-						                    print_r($returnArr);
+						                    //print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;

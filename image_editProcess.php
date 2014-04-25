@@ -19,9 +19,7 @@
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
    
-    
-print'<pre>';
-	print_r($imgPath);
+ 
 
     foreach($imgPath->data as $k=>$v){
     	
@@ -51,25 +49,20 @@ print'<pre>';
 	        	$t = $v->takenAt/1000;
 				$data['tagged_month'] =  date("Y-m-d", $t);
 		    }
-		   // echo date("Y-m-d H:i:s", $epoch);
-	        //else
-	        //	$data['tagged_month'] = gmdate("Y-m-d", time());
+		   
 
-	         $str = trim(trim($v->jsonDump, '{'), '}');
+	        $str = trim(trim($v->jsonDump, '{'), '}');
 	        $towerarr = explode(":", $str);
 	        $data['tower_id'] = (int)trim($towerarr[1],"\"");
 	       //var_dump($data['tower_id']);
 	        $data['PROJECT_ID'] = $v->objectId;
 	        $data['STATUS'] = $v->active;
-	        //echo $v->takenAt;
-	        //echo $data['tower_id'].$data['tagged_month']."<br>";
-	        //print_r($v->jsonDump);
+	       
 	        array_push($ImageDataListingArr, $data);
     	
     }
     	
-	//	print'<pre>';
-//	print_r($ImageDataListingArr);
+	
 
 
 	$builderDetail	= fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
@@ -109,7 +102,7 @@ print'<pre>';
     for($cmt=1;$cmt<=5;$cmt++){
 		$display_order_div[$cmt] =  $cmt ;
     }
-    print_r($_REQUEST['chk_name']);
+    //print_r($_REQUEST['chk_name']);
     $smarty->assign("display_order_div", $display_order_div);
    
 			 
@@ -163,8 +156,6 @@ print'<pre>';
 	}
 	
 
-	print'<pre>';
-	print_r($ErrorMsg);
 	$source=array();
 	$dest=array();
 	 /*********edit images code start here*******************/
@@ -206,8 +197,7 @@ print'<pre>';
 				}
 				else if($v == 'edit_img')
 				{
-					//echo $_FILES['img']['name'][$k]; die();
-					//print("<pre>");print_r($arrImg);die();					
+										
 					//////////////////////////////////
 						$arrTitle[$k] = $_REQUEST['title'][$k];
 						$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
@@ -273,7 +263,7 @@ print'<pre>';
 								header("Location:ProjectList.php?projectId=".$projectId);
 						}
 						else {
-							echo $returnArr['error'];
+							//echo $returnArr['error'];
 							$ErrorMsg["ImgError"] = "Problem in Update Please Try Again.";
 							break;
 						}
@@ -319,9 +309,7 @@ print'<pre>';
 						$ErrorMsg["blankerror"] = "Please select atleast one image.";	
 					}*/
 					if(is_array($ErrorMsg)) {
-						print'<pre>';
-						print_r($ErrorMsg);
-					//die("helohi");
+						
 					} 
 						
 					else
@@ -347,7 +335,7 @@ print'<pre>';
 
 						//foreach($arrValue as $key=>$val)
 						//{
-						echo $k.$val;
+						//echo $k.$val;
 
 							
 							$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
@@ -412,14 +400,14 @@ print'<pre>';
 
 							                    
 							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
-							                    //print_r($returnArr);
+							                    
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
 								                    $image_id = $serviceResponse["service"]->response_body->data->id;
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -470,7 +458,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -521,7 +509,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -572,7 +560,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -623,7 +611,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -675,7 +663,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -726,7 +714,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -777,7 +765,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -828,7 +816,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -879,7 +867,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
@@ -933,7 +921,7 @@ print'<pre>';
 													//$image_id = $image_id->id;
 												}
 												else {
-													echo $returnArr['error'];
+													//echo $returnArr['error'];
 													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
 													break;
 												}
