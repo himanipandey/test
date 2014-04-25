@@ -382,7 +382,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $retdt < 0 ) {
                 $ErrorMsg['preLaunchDate'] = "Pre Launch date should be less or equal to current date";
             }
-            if(checkAvailablityDate($projectId, $preLaunchDt) || checkListingPricesDate($projectId, $preLaunchDt)){
+            if(projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $preLaunchDt) || checkListingPricesDate($projectId, $preLaunchDt))) { 
                 $ErrorMsg['preLaunchDateAvailabilities'] = "Inventory or Prices with effective date before {$preLaunchDt} are present. So can not change the Pre Launch Date.";
             }
             /*if(checkListingPricesDate($projectId, $preLaunchDt)){
@@ -396,7 +396,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $retdt < 0 ) {
                 $ErrorMsg['launchDateGreater'] = "Launch date should be less or equal to current date";
             }
-            if(checkAvailablityDate($projectId, $launchDt) || checkListingPricesDate($projectId, $launchDt) ){
+            if($preLaunchDt == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launchDt) || checkListingPricesDate($projectId, $launchDt) )) {
                 $ErrorMsg['launchDateAvailabilities'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
             }
             /*if(checkListingPricesDate($projectId, $launchDt)){
@@ -855,6 +855,14 @@ function checkListingPricesDate($projectId, $date){
 
     if(empty($rows)) return false;
     else return true;
+}
+
+function projectStageName($projectId){
+    $ProjectDetail = ResiProject::virtual_find($projectId);
+    $qryStg = "select * from master_project_stages where id = '".$ProjectDetail->project_stage_id."'";
+    $resStg = mysql_query($qryStg) or die(mysql_error());
+    $stageId = mysql_fetch_assoc($resStg);
+    return $stageId['name'];
 }
     
 ?>
