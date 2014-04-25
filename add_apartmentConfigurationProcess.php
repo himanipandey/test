@@ -417,7 +417,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("txtSizeLenval_P", $arrProjectType_P['LENGTH_OF_PLOT']);
         $smarty->assign("txtSizeBreval_P", $arrProjectType_P['BREADTH_OF_PLOT']);
         $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);
- //echo "<pre>";print_r($arrProjectType_VA); die;
+ //echo "<pre>";print_r($arrProjectType_VA); //die;
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['OPTION_NAME']);
         $smarty->assign("txtSizeval_VA", $arrProjectType_VA['SIZE']);
