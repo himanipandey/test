@@ -203,9 +203,8 @@
 						
 						if(isset($_REQUEST['img_date'.$k])){
 							$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
-							$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
+							$arrTaggedDate[$k] = $tagged_date."-01";
 						}
-						
 						else	$arrTaggedDate[$k] = NULL; //"0000-00-00T00:00:00Z"
 						$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
 						$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
