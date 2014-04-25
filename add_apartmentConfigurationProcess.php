@@ -251,18 +251,16 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 							$bed = 0;
 																		
 						$flag = 0;
-						try{
-						
+						try{						
 										
 						$actual_listing = Listings::find_by_sql("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and phase_type = 'Actual' 
 											and lst.status = 'Active' and rpp.version = 'Cms'");											
 						if(!$actual_listing){
 							Listings::update_all(array('set' => 'status = "Inactive"','conditions' => array('option_id' => $list_option_id)));
-						}
-						
+						}						
 						
 						//fetch all the options of bedrooms----------
-						$all_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Actual')));
+						$all_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Actual','option_type'=>$unitType)));
 																								
 						$all_options = array();
 						//print "<pre>".print_r($all_bed_options,1)."</pre>";
@@ -275,40 +273,38 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						  if(!$all_active_listing){
 							  $log_option_ids = '';
 							  //now inactive the logical
-							  $logical_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Logical')));
+							  $logical_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Logical','option_type'=>$unitType)));
 							  $log_option_ids = $logical_bed_options[0]->id;
-							  print $log_option_ids; 
-							  
+							 							  
 							  //deleting supplies
-							  $log_lst_ids = Listings::find('all',array('conditions'=>array("option_id in ($log_option_ids)")));	
-							  $all_log_lst_ids = array();
-												
-							  foreach($log_lst_ids as $k => $v){
-									$all_log_lst_ids[] = $v->id;
-							  }
-							  $all_log_lst_ids = implode(",",$all_log_lst_ids);
-							 							 
-							  $all_log_supplies = mysql_query("select * from project_supplies where listing_id in (".$all_log_lst_ids.")");
-							  							  
-							  if($all_log_supplies){
-								  $log_supplies = array();
-								  while($val = mysql_fetch_object($all_log_supplies)){
-									$log_supplies[] = $val->id;
+							  if($log_option_ids){
+								  $log_lst_ids = Listings::find('all',array('conditions'=>array("option_id in ($log_option_ids)")));	
+								  $all_log_lst_ids = array();
+													
+								  foreach($log_lst_ids as $k => $v){
+										$all_log_lst_ids[] = $v->id;
 								  }
-								  $log_supplies = implode(",",$log_supplies);
-								  print $log_supplies; 
-								//remove supplies and inventories
-								 // print $all_log_supplies[0]->id;
-								 // $log_avail = ProjectAvailability::find("all",array('conditions'=>array("project_supply_id = ?",$all_log_supplies[0]->id)));
-								 ProjectAvailability::delete_all(array('conditions'=>array("project_supply_id in (".$log_supplies.")")));
-								 ProjectSupply::delete_all(array('conditions'=>array("id in (".$log_supplies.")"))); 
-								  
+								  $all_log_lst_ids = implode(",",$all_log_lst_ids);
+															 
+								  $all_log_supplies = mysql_query("select * from project_supplies where listing_id in (".$all_log_lst_ids.")");
+															  
+								  if($all_log_supplies){
+									  $log_supplies = array();
+									  while($val = mysql_fetch_object($all_log_supplies)){
+										$log_supplies[] = $val->id;
+									  }
+									  $log_supplies = implode(",",$log_supplies);
+									 
+									 ProjectAvailability::delete_all(array('conditions'=>array("project_supply_id in (".$log_supplies.")")));
+									 ProjectSupply::delete_all(array('conditions'=>array("id in (".$log_supplies.")"))); 
+									  
+								  }
+								 
+								  Listings::delete_all(array('conditions'=>array("option_id in ($log_option_ids)")));
+								
+								  ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $log_option_ids,$projectId)));		
 							  }
-							 
-							  Listings::delete_all(array('conditions'=>array("option_id in ($log_option_ids)")));
-							
-							  ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $log_option_ids,$projectId)));		
-						  }
+							 }
 						}
 		
 						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive') and rpp.version = 'Cms'");
@@ -319,16 +315,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						}
 						if(count($all_listings) > 0){
 							$all_listings = implode(",",$all_listings);
-							Listings::delete_all(array('conditions'=>array("id in ($all_listings)")));
-							//removing supply and inventory for these listings
-							/*$all_supplies = ProjectSupply::find('all',array('conditions'=>array("listing_id in ($all_listings)")));
-							if($all_supplies){
-							  print $all_supplies[0]->id;
-							  
-							}
-							
-							//ProjectSupply::delete_all(array('conditions'=>array("listing_id in ($all_listings)")));
-							//ProjectAvailability::delete_all(array('conditions'=>array("listing_id in ($all_listings)")));	*/						
+							Listings::delete_all(array('conditions'=>array("id in ($all_listings)")));												
 						}
 																	
 						ResiProjOptionsRoomSize::delete_all(array('conditions' => array('options_id' => $list_option_id)));	
