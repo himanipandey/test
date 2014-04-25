@@ -170,6 +170,7 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 
 function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $newImagePath){
             //print_r($IMG);
+    include_once("s3upload/image_service_upload.php");
         $service_extra_paramsArr = array( 
             "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']));
 
@@ -181,9 +182,11 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
                 //print'<pre>';
                 //print_r($params);//die();
                 
-        $s3upload = new ImageUpload(NULL, array("s3" => $s3,
+        /*$s3upload = new ImageUpload(NULL, array("s3" => $s3,
                      "object" => $objectType,"object_id" => $objectId,
-                     "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));
+                     "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));*/
+//$image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL
+        $s3upload = new ImageServiceUpload(NULL, $objectType, $objectId, strtolower($params['image_type']), $service_extra_paramsArr, "PUT", $params['service_image_id']);
         $returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
     }
          
@@ -228,11 +231,11 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
                 //print'<pre>';
                 //print_r($params); //die();
                 
-                $s3upload = new ImageUpload($source, array("s3" => $s3,
+                /*$s3upload = new ImageUpload($source, array("s3" => $s3,
                     "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
                     "image_type" => strtolower($params['image_type']), "service_image_id"=>$params['service_image_id'],
-                    "service_extra_params" => $service_extra_paramsArr));
-                
+                    "service_extra_params" => $service_extra_paramsArr));*/
+                $s3upload = new ImageServiceUpload(NULL, $objectType, $objectId, strtolower($params['image_type']), $service_extra_paramsArr, "PUT", $params['service_image_id']);
                 if(isset($params['update']))
                     $returnValue['serviceResponse'] =  $s3upload->update();
                 else{
