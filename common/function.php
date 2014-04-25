@@ -221,6 +221,8 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
 
                 print'<pre>';
                 print_r($params); //die();
+                if(!isset($params['tagged_date']))
+                    $params['tagged_date']="2014-04-22T00:00:00Z";
                 $s3upload = new ImageUpload($source, array("s3" => $s3,
                     "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
                     "image_type" => strtolower($params['image_type']), "service_image_id"=>$params['service_image_id'],

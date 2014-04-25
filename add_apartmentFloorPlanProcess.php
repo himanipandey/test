@@ -30,8 +30,8 @@
 		else if($v['OPTION_TYPE']=='commercial')
 			$commercial[$k] = "yes";
 	}
-	//print("<pre>");
-	//print_r($ProjectOptionDetail);
+	print("<pre>");
+	print_r($ProjectOptionDetail);
 	
 
 
@@ -68,10 +68,14 @@
 				$flgins	=	1;	
 			if($_REQUEST['floor_name'][$key] != '')
 			{
-	   
+	   	print_r($arrImg);
+	   	print_r($_FILES);
+	   	echo strtolower($_FILES["imgurl"]["type"][$key]);
+	   		  if($_FILES['imgurl']['name'][$key] != '')
+	   		  {
 				if(!in_array(strtolower($_FILES["imgurl"]["type"][$key]), $arrImg))
 				{
-					$ErrorMsg1 = "You can upload only jpg / jpeg gif png images.";
+					$ErrorMsg1 = "You can upload only jpg / jpeg gif png images.";//die("here");
 				}   
 				else if(!preg_match("/-floor-plan\.[a-z]{3,4}$/", $_FILES["imgurl"]["name"][$key]))
 				{
@@ -173,7 +177,7 @@
 							                        "image" => $file,
 							                        "priority" => 1,
 							                        "title" => $floor_name,
-							                        "tagged_date" => "2014-04-22T00:00:00Z"
+							                        "tagged_date" => "2014-04-22T00:00:00Z",
 							                        "active" => "1",
 							                );
 
@@ -281,6 +285,8 @@
 						}
 					}
 						/*********************end code for floor plan add************************/
+				  }
+
 				}
 				else
 				{
@@ -294,7 +300,7 @@
 		
 		if($flgins == 0)
 		{
-			 $ErrorMsg1	=	'Please select atleast one floor plan name';
+			 $ErrorMsg1	=	'Please select atleast one floor plan Image';
 		}
 		if($ErrorMsg1 == '' AND $insertlist != '')
 		{

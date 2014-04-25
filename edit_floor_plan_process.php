@@ -144,14 +144,16 @@
 						}
 						else
 						{
-                                                    /********delete image from db if checked but not browes new image*********/
+                                                   /********delete image from db if checked but not browes new image*********/
+                               $service_image_id = $_REQUEST['service_image_id'][$k];
+                               //echo $service_image_id; 
                                                     $qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
                                                                         WHERE 
-                                                                                FLOOR_PLAN_ID	= '".$_REQUEST['plan_id'][$k]."'
+                                                                                SERVICE_IMAGE_ID	= '".$service_image_id."'
                                                                                 AND OPTION_ID	= '".$_REQUEST['option_id'][$k]."'";
                                                     $res	=	mysql_query($qry);
 							/********delete image from db if checked but not browes new image*********/
-                            $service_image_id = $_REQUEST['service_image_id'][$k];
+                            //$service_image_id = $_REQUEST['service_image_id'][$k];
 
                    
                     		$deleteVal = deleteFromImageService("option", $arrOptionId[$k], $service_image_id);
@@ -352,11 +354,13 @@
 								$qry = "UPDATE ".RESI_FLOOR_PLANS." 
                                                                         SET 
                                                                                 IMAGE_URL = '".$imgPathDb[1]."',
-                                                                                NAME	  = '".$arrTitle[$key]."'
+                                                                                NAME	  = '".$arrTitle[$key]."',
+                                                                                SERVICE_IMAGE_ID = '".$image_id."'
                                                                         WHERE 
-                                                                                FLOOR_PLAN_ID = '".$arrplanId[$key]."'
+                                                                                SERVICE_IMAGE_ID = '".$service_image_id."'
                                                                         AND 
                                                                                 OPTION_ID	= '".$arrOptionId[$key]."'";
+								echo $qry;
 								$res = mysql_query($qry);
 							
 								if($res)
