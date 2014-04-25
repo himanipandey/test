@@ -200,10 +200,13 @@
 										
 					//////////////////////////////////
 						$arrTitle[$k] = $_REQUEST['title'][$k];
-						$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
-						if(isset($_REQUEST['img_date'.$k]))
-						$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
-						else	$arrTaggedDate[$k] = "2013-12-23T00:00:00Z"; //"0000-00-00T00:00:00Z"
+						
+						if(isset($_REQUEST['img_date'.$k])){
+							$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
+							$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
+						}
+						
+						else	$arrTaggedDate[$k] = NULL; //"0000-00-00T00:00:00Z"
 						$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
 						$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
 						$service_image_id = $_REQUEST["service_image_id"][$k];

@@ -181,7 +181,7 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
     if($IMG==""){
                 //print'<pre>';
                 //print_r($params);//die();
-                
+                die("here");
         /*$s3upload = new ImageUpload(NULL, array("s3" => $s3,
                      "object" => $objectType,"object_id" => $objectId,
                      "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));*/
@@ -235,7 +235,7 @@ function writeToImageService($s3, $IMG="", $objectType, $objectId, $params, $new
                     "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
                     "image_type" => strtolower($params['image_type']), "service_image_id"=>$params['service_image_id'],
                     "service_extra_params" => $service_extra_paramsArr));*/
-                $s3upload = new ImageServiceUpload(NULL, $objectType, $objectId, strtolower($params['image_type']), $service_extra_paramsArr, "PUT", $params['service_image_id']);
+                $s3upload = new ImageServiceUpload($source, $objectType, $objectId, strtolower($params['image_type']), $service_extra_paramsArr, "PUT", $params['service_image_id']);
                 if(isset($params['update']))
                     $returnValue['serviceResponse'] =  $s3upload->update();
                 else{
