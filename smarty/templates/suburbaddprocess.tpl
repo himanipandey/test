@@ -64,7 +64,7 @@
 				  <td width="20%" align="right" valign = top >Description  : </td>
 				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea>
 				   <input type="hidden" name="oldDesc" value="{$desc}" />
-				    {if $dept=='ADMINISTRATOR' && isset($contentFlag)}
+				    {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                      <br/><br/>
                      <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 				    {/if}
@@ -197,7 +197,7 @@ $('#aliases').tagsinput({
   	
 });
 
-if({$landmarkJson}!=''){
+if(!jQuery.isEmptyObject({$landmarkJson})){
 var a= {$landmarkJson};
 var landmarkAliases = [];
 for(var i in a){

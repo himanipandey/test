@@ -132,4 +132,13 @@ class DInventoryPriceTmp extends Model
         self::connection()->query($sql);
         self::update_all(array('set'=>'supply = ltd_supply, launched_unit = ltd_launched_unit', 'conditions'=>'launch_date = effective_month'));
     }
+    
+    public static function updateProjectDominantType(){
+        $sql = "update d_inventory_prices_tmp a inner join (select project_id, substring_index(group_concat(unit_type order by supply desc), ',', 1) unit_type from (select project_id, unit_type, sum(supply) supply from d_inventory_prices group by project_id, unit_type having supply > 0) t group by project_id) b  on a.project_id = b.project_id and a.unit_type = b.unit_type set a.is_dominant_project_unit_type = 'True'";
+        self::connection()->query($sql);
+    }
+    
+    public static function deleteInvalidDates(){
+        self::delete_all(array('conditions'=>'day(effective_month) != 1'));
+    }
 }

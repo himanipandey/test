@@ -166,6 +166,7 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
     return $currentCycle;
 }
 
+
 /*********************Write Image to image service*************************************************************/
 
 function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImagePath){
@@ -256,9 +257,16 @@ function deleteFromImageService($objectType="", $objectId=0, $service_image_id){
 
 
 
-/*********************Read Image to image service*************************************************************/
+/*********************Read Images from image service*************************************************************/
 
 function readFromImageService($objectType, $objectId){
     $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
     return $url;
+}
+
+
+
+function getDBDistanceQueryString($lon1Col, $lat1Col, $lon2Col, $lat2Col){
+    return "((ACOS(SIN($lat1Col * PI() / 180) * SIN($lat2Col * PI() / 180) + COS($lat1Col * PI() / 180) * COS($lat2Col * PI() / 180) * COS(($lon1Col - $lon2Col) * PI() / 180)) * 180 / PI()) * 60 * 1.1515 * 1609.34)";
+
 }

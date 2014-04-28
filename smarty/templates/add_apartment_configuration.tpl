@@ -670,7 +670,12 @@
                       <br />
                       <TABLE cellSpacing=2 cellPadding=4 width="60%" align="left" style="border:1px solid #c2c2c2;" border="0">
                         <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
-                        <div>  {foreach from = $ErrorMsg  key=k item = datafirst}
+                        
+                        <div>  
+                        
+                        
+                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeP || $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeC}
+                           {foreach from = $ErrorMsg  key=k item = datafirst}
                                 <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                         <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
                                         {else if $k == 3} Fourth row errors {else if $k == 4} Fifth row errors {else if $k == 5} Sixth row errors {else if $k == 6} Seventh row errors
@@ -682,6 +687,7 @@
 
 
                               {/foreach}
+                            {/if}
                             <tr><td colspan="7"><b><span style='font-size:15px;'>{$typeName}</span></b></td></tr>
 
                             <tr><td colspan="7"></td></tr>
