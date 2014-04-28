@@ -1179,6 +1179,7 @@ function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
 			URL					= '" . d_($txtCityUrl) . "',
 			DISPLAY_ORDER		= '" . d_($DisplayOrder) . "',
 			DESCRIPTION			= '" . d_($desc) . "',
+                        created_at = now(),    
 			updated_by			= '" .$_SESSION['adminId']."'";
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertCity()');
     $lastId = mysql_insert_id();

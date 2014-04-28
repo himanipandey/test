@@ -8,7 +8,7 @@ class Locality extends ActiveRecord\Model
         $locality = Locality::find('all',array('conditions'=>array("suburb_id = $suburbId AND status = 'active'"),'order' => 'label asc'));
         $arrLocality = array();
         foreach ($locality  as $value) {
-           $arrLocality[$value->locality_id] = $value->label;
+           $arrLocality[$valuelocality_id] = $value->label;
         }
         return $arrLocality;
     }

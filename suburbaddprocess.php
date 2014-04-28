@@ -105,6 +105,7 @@
                             STATUS = '".$status."',
                             URL	= '".$txtCityUrl."',
                             DESCRIPTION	= '".$desc."',
+                            updated_at	= now(),
                             parent_suburb_id = '".$parent_id."'
                             WHERE SUBURB_ID ='".$suburbid."'";
 
@@ -160,9 +161,9 @@
                         }
                         else {
                             //insert new suburb
-                             $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,parent_suburb_id, created_at,updated_by,DESCRIPTION) 
-                                        value('".$txtCityName."','".$cityId."','Active','".$parent_id."', NOW(), '".$_SESSION['adminId']."','".$desc."')";
-                                     $res = mysql_query($qry) or die(mysql_error()." insert");
+                           echo  $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,parent_suburb_id, created_at,updated_by,DESCRIPTION,PRIORITY) 
+                                        value('".$txtCityName."','".$cityId."','".$_REQUEST['status']."','".$parent_id."', NOW(), '".$_SESSION['adminId']."','".$desc."',999)";
+                                 die("here");    $res = mysql_query($qry) or die(mysql_error()." insert");
                                      $suburbId = mysql_insert_id();
                                      $cityName = City::find($cityId);
                                      $url = createLocalityURL($txtCityName, $cityName->label, $suburbId, 'suburb'); 
@@ -178,7 +179,7 @@
                             $seoData['table_name'] = 'suburb';
                             $seoData['updated_by'] = $_SESSION['adminId'];
                             SeoData::insetUpdateSeoData($seoData);
-                            header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
+                           // header("Location:suburbList.php?page=1&sort=all&citydd={$cityId}");
                         }
                     }
                     else

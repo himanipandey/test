@@ -48,7 +48,7 @@
                                 <tr>
 				  <td width="20%" align="right" ><b>Locality URL :</b> </td>
                                   <td width="30%" align="left"><input type=text name=locUrl id=locUrl value="{$locUrl}" readonly="" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
-				</tr>
+				</tr><input type = "hidden" name = "old_loc_url" value = "{$old_loc_url}">
 				<tr>
                                     <td width="20%" align="right" ><b>* Meta Title :</b> </td>
 				  <td width="30%" align="left" ><input type=text name=txtMetaTitle id=txtMetaTitle value="{$txtMetaTitle}" style="width:250px;"></td>				   {if $ErrorMsg["txtMetaTitle"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaTitle"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetatitle"></td>{/if}

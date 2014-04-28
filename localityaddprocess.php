@@ -156,7 +156,8 @@
                                            DESCRIPTION = '".$desc."',
                                            SUBURB_ID = '".$parent_subId."',
                                            LATITUDE = '".$txtLocalityLattitude."',
-                                           LONGITUDE = '".$txtLocalityLongitude."'
+                                           LONGITUDE = '".$txtLocalityLongitude."',
+                                           updated_at = now()
                                       WHERE
                                          LOCALITY_ID='".$localityid."'";
                                  $up = mysql_query($updateQry);
@@ -198,20 +199,30 @@
                                          //  locality name modified
                                          addToNameChangeLog( 'locality', $localityid, $localityDetailsArray['LABEL'], $txtCityName );
                                      }
-                                         //if($txtCityUrl != $old_loc_url)
-                                         //        insertUpdateInRedirectTbl($txtCityUrl,$old_loc_url);
+                                         if($txtCityUrl != $old_loc_url)
+                                         {
+                                             $arrLocId['locality_id'] = $localityid;
+                                            $projList = ResiProject::getAllSearchResult($arrLocId); //all project of a locality
+                                            foreach($projList as $value) {
+                                                $projUrl = createProjectURL($localityList->cityname, $txtCityName, $value->builder_name, $value->project_name, $value->project_id);
+                                                $qryProUrl = "update resi_project set 
+                                                              project_url = '".$projUrl."',updated_by = '".$_SESSION['adminId']."' where project_id = '".$value->project_id."'";
+                                                $resProjUrl = mysql_query($qryProUrl) or die(mysql_error());
+                                            }
+                                         }      
+                                             
                                          header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
                                  }
                             }
                             else{
                                 //code for insert new locality
-                                $qry = "INSERT INTO ".LOCALITY." (LABEL,SUBURB_ID,status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by)
-                                      value('".$txtCityName."','".$parent_subId."','".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','".$desc."','".$_SESSION['adminId']."')";
+                                $qry = "INSERT INTO ".LOCALITY." (LABEL,SUBURB_ID,status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
+                                      value('".$txtCityName."','".$parent_subId."','".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','".$desc."','".$_SESSION['adminId']."',now(),999)";
                                 $res = mysql_query($qry) or die(mysql_error());
                                 $locId = mysql_insert_id();
                                 $cityFind = City::find($cityId);  
                                 $url = createLocalityURL($txtCityName, $cityFind->label, $locId, 'locality');
-                                $qry = "UPDATE ".LOCALITY." SET URL = '$url',updated_by = '".$_SESSION['adminId']."'
+                                $qry = "UPDATE ".LOCALITY." SET URL = '$url',updated_by = '".$_SESSION['adminId']."',updated_at = now()
                                   WHERE LOCALITY_ID=".$locId;
                                 $res = mysql_query($qry) or die(mysql_error());
                                 
@@ -236,6 +247,7 @@
             $getSeoData           =   SeoData::getSeoData($localityid, 'locality');
             $txtCityName	  =	trim($localityDetailsArray['LABEL']);
             $locUrl = trim($localityDetailsArray['URL']);
+            $old_loc_url = trim($localityDetailsArray['URL']);
             $txtMetaTitle	  =	$getSeoData[0]->meta_title;
             $txtMetaKeywords	  =	$getSeoData[0]->meta_keywords;
             $txtMetaDescription	  =	$getSeoData[0]->meta_description;
@@ -258,6 +270,7 @@
 
             $smarty->assign("txtCityName", $txtCityName);
             $smarty->assign("locUrl", $locUrl);
+            $smarty->assign("old_loc_url", $old_loc_url);
             $smarty->assign("txtMetaTitle", $txtMetaTitle);
             $smarty->assign("txtMetaKeywords", $txtMetaKeywords);
             $smarty->assign("txtMetaDescription", $txtMetaDescription);

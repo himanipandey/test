@@ -235,7 +235,7 @@ function specialCharacterValidation(fieldVal)
 						<TD align=left class=td-border>{if $localityDataArr[data].STATUS!=''}{$localityDataArr[data].STATUS}{else}-{/if}</TD>
 
 						 <TD  class="td-border" align=left>
-                                                    <a href="suburbadd.php?suburbid={$localityDataArr[data].SUBURB_ID}&c={$cityId}" title="Edit">Edit</a>
+                                                    <a href="suburbadd.php?suburbid={$localityDataArr[data].SUBURB_ID}&c={$localityDataArr[data].CITY_ID}" title="Edit">Edit</a>
                                                 </TD>
                       </TR>
                        {/section}

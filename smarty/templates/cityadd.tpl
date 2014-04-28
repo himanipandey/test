@@ -41,7 +41,6 @@
 				  <td width="20%" align="right" >*City URL : </td>
 				  <td width="30%" align="left" ><input type=text disabled name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;"></td>				   
 					<input type = "hidden" name = "txtCityUrlOld" value = "{$txtCityUrlOld}">
-				 
 				  	<td width="50%" align="left" >
 				  		<font color = "red">
 

@@ -96,7 +96,7 @@ function selectCity(value){
                         <TD align=left class=td-border>{if $localityDataArr[data].STATUS!=''}{$localityDataArr[data].STATUS}{else}-{/if}</TD>
                        
                         <TD  class="td-border" align=left>
-                            <a href="localityadd.php?localityid={$localityDataArr[data].LOCALITY_ID}&c={$cityId}" title="Edit">Edit </a>
+                            <a href="localityadd.php?localityid={$localityDataArr[data].LOCALITY_ID}&c={$localityDataArr[data].city_id}" title="Edit">Edit </a>
                          </TD>
                       </TR>
                        {/section}
