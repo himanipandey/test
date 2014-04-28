@@ -102,20 +102,20 @@ function tagged_date_change(e)
 		taggedYear = $("#img_date"+e).val().substring(0,4);
 		taggedMonth = $("#img_date"+e).val().substring(5,7);
 		//alert(taggedMonth);
-		if(taggedMonth=="01")taggedMonth="January";
-		else if(taggedMonth=="02")taggedMonth="February";
+		if(taggedMonth=="01")taggedMonth="Jan";
+		else if(taggedMonth=="02")taggedMonth="Feb";
 		else if(taggedMonth=="03")taggedMonth="March";
-		else if(taggedMonth=="04")taggedMonth="April";
+		else if(taggedMonth=="04")taggedMonth="Apr";
 		else if(taggedMonth=="05")taggedMonth="May";
 		else if(taggedMonth=="06")taggedMonth="June";
 		else if(taggedMonth=="07")taggedMonth="July";
-		else if(taggedMonth=="08")taggedMonth="August";
-		else if(taggedMonth=="09")taggedMonth="September";
-		else if(taggedMonth=="10")taggedMonth="October";
-		else if(taggedMonth=="11")taggedMonth="November";
-		else if(taggedMonth=="12")taggedMonth="December";
+		else if(taggedMonth=="08")taggedMonth="Aug";
+		else if(taggedMonth=="09")taggedMonth="Sept";
+		else if(taggedMonth=="10")taggedMonth="Oct";
+		else if(taggedMonth=="11")taggedMonth="Nov";
+		else if(taggedMonth=="12")taggedMonth="Dec";
 
-		taggedMonthval = taggedMonth+" "+taggedYear;
+		taggedMonthval = taggedMonth+"-"+taggedYear;
 
 //alert("hellooo".taggedMonthval);
 		//var element = $(e).parent('div').parent('div').children(":text");
@@ -149,20 +149,20 @@ function tower_change(e)
 
 			taggedYear = date.substring(0,4);
 		taggedMonth = date.substring(5,7);
-		if(taggedMonth=="01")taggedMonth="January";
-		else if(taggedMonth=="02")taggedMonth="February";
+		if(taggedMonth=="01")taggedMonth="Jan";
+		else if(taggedMonth=="02")taggedMonth="Feb";
 		else if(taggedMonth=="03")taggedMonth="March";
-		else if(taggedMonth=="04")taggedMonth="April";
+		else if(taggedMonth=="04")taggedMonth="Apr";
 		else if(taggedMonth=="05")taggedMonth="May";
 		else if(taggedMonth=="06")taggedMonth="June";
 		else if(taggedMonth=="07")taggedMonth="July";
-		else if(taggedMonth=="08")taggedMonth="August";
-		else if(taggedMonth=="09")taggedMonth="September";
-		else if(taggedMonth=="10")taggedMonth="October";
-		else if(taggedMonth=="11")taggedMonth="November";
-		else if(taggedMonth=="12")taggedMonth="December";
+		else if(taggedMonth=="08")taggedMonth="Aug";
+		else if(taggedMonth=="09")taggedMonth="Sept";
+		else if(taggedMonth=="10")taggedMonth="Oct";
+		else if(taggedMonth=="11")taggedMonth="Nov";
+		else if(taggedMonth=="12")taggedMonth="Dec";
 
-		taggedMonthval = taggedMonth+" "+taggedYear;
+		taggedMonthval = taggedMonth+"-"+taggedYear;
 
 			if($("#tower"+e+" option:selected").text().toLowerCase().search(/select|other/i) >= 0)
 			element.val($('#PType'+e).val()+" "+ taggedMonthval);

@@ -37,7 +37,7 @@ function tagged_date_change(e)
 		else if(taggedMonth=="11")taggedMonth="Nov";
 		else if(taggedMonth=="12")taggedMonth="Dec";
 
-		taggedMonthval = taggedMonth+" "+taggedYear;
+		taggedMonthval = taggedMonth+"-"+taggedYear;
 
 
 		var element = $(e).parent('div').parent('div').children(":text");
@@ -64,13 +64,13 @@ function tower_change(e)
 				if(floorfrom=="" && floorto=="")
 					element.val($('select#PType').val());
 				else
-					element.val($('select#PType').val()+" from "+ floorfrom+"th to "+floorto+"th");
+					element.val($('select#PType').val()+" from "+ appendToNo(floorfrom)+" to "+appendToNo(floorto));
 			}
 			else{
 				if(floorfrom=="" && floorto=="")
 					element.val($(e).children(":selected").text() + " "+$('select#PType').val());
 				else
-					element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" from "+ floorfrom+"th to "+floorto+"th");
+					element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" from "+ appendToNo(floorfrom)+" to "+appendToNo(floorto));
 			}	
 		}
 		else if($('select#PType').val() == 'Construction Status'){
@@ -90,7 +90,7 @@ function tower_change(e)
 		else if(taggedMonth=="11")taggedMonth="Nov";
 		else if(taggedMonth=="12")taggedMonth="Dec";
 
-		taggedMonthval = taggedMonth+" "+taggedYear;
+		taggedMonthval = taggedMonth+"-"+taggedYear;
 
 			if($(e).children(":selected").text().toLowerCase().search(/select|other/i) >= 0)
 			element.val($('select#PType').val()+" "+ taggedMonthval);
@@ -120,56 +120,80 @@ function isNumeric(val) {
 }
 function floor_change_from(e)
 {
-	//if(isNumeric(val))
-	if($('select#PType').val() == 'Cluster Plan')
+	if(isNumeric($(e).val()))
 	{
-		
-		var titlefield = $(e).parent('div').parent('div').children(":text");
-		var	floor_to = $(e).siblings(":text");
-		var towertext = $(e).siblings("select").children(":selected").text();
-		if(towertext.toLowerCase().search(/select|other/i) >= 0){
-			if($(e).val()=="" && floor_to.val()=="")
-				titlefield.val("Cluster Plan");
-			else
-				titlefield.val("Cluster Plan from " +$(e).val()+"th to "+floor_to.val()+"th");
-		}
-		else{
-			if($(e).val()=="" && floor_to.val()=="")
-				titlefield.val(towertext+ " Cluster Plan");
-			else
-				titlefield.val(towertext+ " Cluster Plan from " +$(e).val()+"th to "+floor_to.val()+"th");
-		}
+		if($('select#PType').val() == 'Cluster Plan')
+		{
 			
+			var titlefield = $(e).parent('div').parent('div').children(":text");
+			var	floor_to = $(e).siblings(":text");
+			var towertext = $(e).siblings("select").children(":selected").text();
+			if(towertext.toLowerCase().search(/select|other/i) >= 0){
+				if($(e).val()=="" && floor_to.val()=="")
+					titlefield.val("Cluster Plan");
+				else
+					titlefield.val("Cluster Plan from " +appendToNo($(e).val())+" to "+appendToNo(floor_to.val()));
+			}
+			else{
+				if($(e).val()=="" && floor_to.val()=="")
+					titlefield.val(towertext+ " Cluster Plan");
+				else
+					titlefield.val(towertext+ " Cluster Plan from " +appendToNo($(e).val())+" to "+appendToNo(floor_to.val()));
+			}
+				
+		}
 	}
-	
+	else
+		alert("Please Provide a numeric Value in Floor No. fields.");
 }
 
 function floor_change_to(e)
 {
 	
-	if($('select#PType').val() == 'Cluster Plan')
+	if(isNumeric($(e).val()))
 	{
-		
-		var titlefield = $(e).parent('div').parent('div').children(":text");
-		var	floor_from = $(e).siblings(":text");
-		var towertext = $(e).siblings("select").children(":selected").text();
-		if(towertext.toLowerCase().search(/select|other/i) >= 0){
-			if($(e).val()=="" && floor_from.val()=="")
-				titlefield.val("Cluster Plan");
-			else
-				titlefield.val("Cluster Plan from " +floor_from.val()+"th to "+$(e).val()+"th");
-		}
-		else{
-			if($(e).val()=="" && floor_from.val()=="")
-				titlefield.val(towertext+ " Cluster Plan");
-			else
-				titlefield.val(towertext+ " Cluster Plan from "+floor_from.val()+"th to "+$(e).val()+"th");
-		}
+		if($('select#PType').val() == 'Cluster Plan')
+		{
 			
+			var titlefield = $(e).parent('div').parent('div').children(":text");
+			var	floor_from = $(e).siblings(":text");
+			var towertext = $(e).siblings("select").children(":selected").text();
+			if(towertext.toLowerCase().search(/select|other/i) >= 0){
+				if($(e).val()=="" && floor_from.val()=="")
+					titlefield.val("Cluster Plan");
+				else
+					titlefield.val("Cluster Plan from " +appendToNo(floor_from.val())+" to "+appendToNo($(e).val()));
+			}
+			else{
+				if($(e).val()=="" && floor_from.val()=="")
+					titlefield.val(towertext+ " Cluster Plan");
+				else
+					titlefield.val(towertext+ " Cluster Plan from "+appendToNo(floor_from.val())+" to "+appendToNo($(e).val()));
+			}
+				
+		}
 	}
-	
+	else
+		alert("Please Provide a numeric Value in Floor No. fields.");
 }
 
+
+function appendToNo(no){
+	var returnVal;
+	if(isNumeric(no))
+	{
+		var mod = no%100;
+		if(mod==0) returnVal=mod+"th";
+		else if(mod==1) returnVal=mod+"st";
+		else if(mod==2) returnVal=mod+"nd";
+		else if(mod==3) returnVal=mod+"rd";
+		else returnVal=mod+"th";
+		
+	}
+	else
+		returnVal = no;
+	return returnVal
+}
 
 $(document).ready(function(){
 	
