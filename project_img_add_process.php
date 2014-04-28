@@ -100,9 +100,12 @@ if (isset($_POST['Next']))
 
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
-				if(isset($_REQUEST['img_date'.($k+1)])){
+				$tagDate = $_REQUEST['img_date'.($k+1)];
+				echo $_REQUEST['img_date'.($k+1)];//die();
+				if(isset($tagDate) && !null == $tagDate) {
 					$tagged_date = substr($_REQUEST['img_date'.($k+1)],0,7);
 					$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
+					//$arrTaggedDate[$k] = null;
 				}
 				else
 				$arrTaggedDate[$k] = null;
