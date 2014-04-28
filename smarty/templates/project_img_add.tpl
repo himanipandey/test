@@ -24,18 +24,18 @@ function tagged_date_change(e)
 	{
 		taggedYear = $("#"+e.id).val().substring(0,4);
 		taggedMonth = $("#"+e.id).val().substring(5,7);
-		if(taggedMonth=="01")taggedMonth="January";
-		else if(taggedMonth=="02")taggedMonth="February";
+		if(taggedMonth=="01")taggedMonth="Jan";
+		else if(taggedMonth=="02")taggedMonth="Feb";
 		else if(taggedMonth=="03")taggedMonth="March";
-		else if(taggedMonth=="04")taggedMonth="April";
+		else if(taggedMonth=="04")taggedMonth="Apr";
 		else if(taggedMonth=="05")taggedMonth="May";
 		else if(taggedMonth=="06")taggedMonth="June";
 		else if(taggedMonth=="07")taggedMonth="July";
-		else if(taggedMonth=="08")taggedMonth="August";
-		else if(taggedMonth=="09")taggedMonth="September";
-		else if(taggedMonth=="10")taggedMonth="October";
-		else if(taggedMonth=="11")taggedMonth="November";
-		else if(taggedMonth=="12")taggedMonth="December";
+		else if(taggedMonth=="08")taggedMonth="Aug";
+		else if(taggedMonth=="09")taggedMonth="Sept";
+		else if(taggedMonth=="10")taggedMonth="Oct";
+		else if(taggedMonth=="11")taggedMonth="Nov";
+		else if(taggedMonth=="12")taggedMonth="Dec";
 
 		taggedMonthval = taggedMonth+" "+taggedYear;
 
@@ -77,18 +77,18 @@ function tower_change(e)
 
 			taggedYear = date.substring(0,4);
 		taggedMonth = date.substring(5,7);
-		if(taggedMonth=="01")taggedMonth="January";
-		else if(taggedMonth=="02")taggedMonth="February";
+		if(taggedMonth=="01")taggedMonth="Jan";
+		else if(taggedMonth=="02")taggedMonth="Feb";
 		else if(taggedMonth=="03")taggedMonth="March";
-		else if(taggedMonth=="04")taggedMonth="April";
+		else if(taggedMonth=="04")taggedMonth="Apr";
 		else if(taggedMonth=="05")taggedMonth="May";
 		else if(taggedMonth=="06")taggedMonth="June";
 		else if(taggedMonth=="07")taggedMonth="July";
-		else if(taggedMonth=="08")taggedMonth="August";
-		else if(taggedMonth=="09")taggedMonth="September";
-		else if(taggedMonth=="10")taggedMonth="October";
-		else if(taggedMonth=="11")taggedMonth="November";
-		else if(taggedMonth=="12")taggedMonth="December";
+		else if(taggedMonth=="08")taggedMonth="Aug";
+		else if(taggedMonth=="09")taggedMonth="Sept";
+		else if(taggedMonth=="10")taggedMonth="Oct";
+		else if(taggedMonth=="11")taggedMonth="Nov";
+		else if(taggedMonth=="12")taggedMonth="Dec";
 
 		taggedMonthval = taggedMonth+" "+taggedYear;
 
@@ -103,10 +103,24 @@ function tower_change(e)
 	}
 	
 }
+function isNumeric(val) {
+        var validChars = '0123456789.';
+        var validCharsforfirstdigit = '-01234567890';
+        if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
+                return false;
+        
 
+        for(var i = 1; i < val.length; i++) {
+            if(validChars.indexOf(val.charAt(i)) == -1)
+                return false;
+        }
+
+
+        return true;
+}
 function floor_change_from(e)
 {
-	
+	//if(isNumeric(val))
 	if($('select#PType').val() == 'Cluster Plan')
 	{
 		
@@ -348,9 +362,9 @@ $(document).ready(function(){
                                                     <option value ='Cluster Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Cluster Plan'} selected {/if}>Cluster Plan</option>
                                                     <option value ='Construction Status' {if $PType == 'Construction Status' || $imagetype == 'const'} selected {/if}>Construction Status</option>
                                                     <option value ='Payment Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Payment Plan'} selected {/if}>Payment Plan</option>
-                                                    <option value ='Specification' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Specification'} selected {/if}>Specification</option>
+                                                    <!--<option value ='Specification' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Specification'} selected {/if}>Specification</option>
                                                     <option value ='Price List' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Price List'} selected {/if}>Price List</option>
-                                                    <option value ='Application Form' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Application Form'} selected {/if}>Application Form</option>
+                                                    <option value ='Application Form' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Application Form'} selected {/if}>Application Form</option>-->
 						{else}
                                                     <option value ='Construction Status' {if $PType == 'Construction Status' || $imagetype == 'const'} selected {/if}>Construction Status</option>
                                                 {/if}

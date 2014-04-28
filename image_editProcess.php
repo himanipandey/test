@@ -201,7 +201,7 @@
 					//////////////////////////////////
 						$arrTitle[$k] = $_REQUEST['title'][$k];
 						
-						if(isset($_REQUEST['img_date'.$k])){
+						if(isset($_REQUEST['img_date'.$k]) && !null == $_REQUEST['img_date'.$k]){
 							$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
 							$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
 						}
