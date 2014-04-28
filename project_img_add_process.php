@@ -100,9 +100,12 @@ if (isset($_POST['Next']))
 
 				$arrValue[$k] = $v;
 				$arrTitle[$k] = $_REQUEST['title'][$k];
+
 				if(isset($_REQUEST['img_date'.($k+1)]) && !null == $_REQUEST['img_date'.($k+1)]) {
+
 					$tagged_date = substr($_REQUEST['img_date'.($k+1)],0,7);
 					$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
+					//$arrTaggedDate[$k] = null;
 				}
 				else
 				$arrTaggedDate[$k] = null;
@@ -185,6 +188,7 @@ if (isset($_POST['Next']))
 			$newdirpro		=	$newImagePath.$BuilderName."/".$ProjectName;
 			$foldname		=	strtolower($ProjectName);
 			$andnewdirpro	=	 $newImagePath.$BuilderName."/".$foldname;
+			print_r($arrValue);
 			foreach($arrValue as $key=>$val)
 			{
 				
@@ -237,7 +241,7 @@ if (isset($_POST['Next']))
 								rewinddir($handle);
 								while (false !== ($file = readdir($handle)))
 								{
-									
+									echo $file; echo $val;
 								/************Working for location plan***********************/
 									if(strstr($file,'loc-plan'))
 									{
@@ -739,7 +743,7 @@ if (isset($_POST['Next']))
 								}
 								/************Working for construction plan***********************/
 								if(strstr($file,'const-status'))
-								{
+								{ 
 									if(strstr($file,$val))
 									{
 										$image = new SimpleImage();
@@ -766,13 +770,17 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
+
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
+
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
 												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+ 
 												break 2;
+
 											}
 
 
@@ -844,7 +852,9 @@ if (isset($_POST['Next']))
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
+									
 								}
+								
 								/************Working for Payment plan***********************/
 								if(strstr($file,'payment-plan'))
 								{
@@ -1354,7 +1364,9 @@ if (isset($_POST['Next']))
                                                         TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								 $res	=	mysql_query($qry) or die(mysql_error());
-							}*/
+
+							} */
+
 							//else
 							//{
 							if($image_id)
@@ -1370,13 +1382,15 @@ if (isset($_POST['Next']))
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													SUBMITTED_DATE	=	now()";
-								 echo $qryinsert;
+								 echo "query".$qryinsert;
 								 $resinsert	=	mysql_query($qryinsert) or die(mysql_error());
 								
 							//}
 							}
+
 						}
 					}
+
 					if($flag==1)
 					{
 						$builderfolder=strtolower($BuilderName);

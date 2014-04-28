@@ -172,11 +172,13 @@ class ImageServiceUpload{
         $response_body = json_decode(substr($response, $header_size));
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close ($ch);
+        print("<pre>"); echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
+        //die();
         return array("header" => $response_header, "body" => $response_body, "status" => $status);
     }
 
     static function create($post){
-        //var_dump($post);var_dump(static::$image_upload_url);//die("heool");
+        print("<pre>");var_dump($post);var_dump(static::$image_upload_url);//die("heool");
         return static::curl_request($post, 'POST', static::$image_upload_url);
     }
 
