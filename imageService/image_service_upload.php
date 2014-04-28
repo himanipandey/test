@@ -141,7 +141,7 @@ class ImageServiceUpload{
         $this->response_body = $response["body"];
         $this->status = $response["status"];
         $this->verify_status();
-        $this->raise_errors_if_any();
+        //$this->raise_errors_if_any();
        
     }
 

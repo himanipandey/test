@@ -274,14 +274,13 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                    //print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-												echo $returnArr['error'];
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
 											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -376,14 +375,13 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                   // print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-												echo $returnArr['error'];
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -473,14 +471,13 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                    
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-												echo $returnArr['error'];
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
 
 
@@ -573,14 +570,13 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                    //print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-												echo $returnArr['error'];
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -672,14 +668,13 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-											
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -771,15 +766,15 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-											
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
+
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -877,15 +872,15 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-											
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
+
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -971,15 +966,15 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-											
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
+
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -1060,15 +1055,15 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-											
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
+
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                             "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -1245,15 +1240,15 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-											
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
 											}
+
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -1335,13 +1330,13 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;*/
 										}
 									 }
-							}
-						}
+							
+						
 							$add_tower = '';
 							if($arrTowerId[$key] > 0)
 									$add_tower = " TOWER_ID = $arrTowerId[$key], ";
 							$imgDbPath = explode("/images_new",$img_path);
-							$selqry	=	"SELECT PLAN_IMAGE FROM ".PROJECT_PLAN_IMAGES." WHERE PROJECT_ID = '".$projectId."' AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$imgDbPath[1]."'";
+							/*$selqry	=	"SELECT PLAN_IMAGE FROM ".PROJECT_PLAN_IMAGES." WHERE PROJECT_ID = '".$projectId."' AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$imgDbPath[1]."'";
 							$selres	=	mysql_query($selqry);
 							if(mysql_num_rows($selres)>0)
 							{
@@ -1359,8 +1354,10 @@ if (isset($_POST['Next']))
                                                         TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								 $res	=	mysql_query($qry) or die(mysql_error());
-							}
-							else
+							}*/
+							//else
+							//{
+							if($image_id)
 							{
 								$qryinsert = "INSERT INTO ".PROJECT_PLAN_IMAGES."
 												SET PLAN_IMAGE		=	'".$imgDbPath[1]."',
@@ -1376,13 +1373,16 @@ if (isset($_POST['Next']))
 								 echo $qryinsert;
 								 $resinsert	=	mysql_query($qryinsert) or die(mysql_error());
 								
+							//}
 							}
+						}
+					}
 					if($flag==1)
 					{
 						$builderfolder=strtolower($BuilderName);
 						$destBuilderFolder = '';
 						$sourceBuilderFolder = "public_html/images_new/$builderfolder";
-						$result = upload_file_to_img_server_using_ftp($sourceBuilderFolder,$destBuilderFolder,4);
+						//$result = upload_file_to_img_server_using_ftp($sourceBuilderFolder,$destBuilderFolder,4);
 
 					}
 					if($projectFolderCreated==1)
@@ -1391,7 +1391,7 @@ if (isset($_POST['Next']))
 						$projectNameFolder=strtolower($ProjectName);
 						$destProjectFolder = '';
 						$sourceProjectFolder = "public_html/images_new/$builderfolder/$projectNameFolder";
-						$result = upload_file_to_img_server_using_ftp($sourceProjectFolder,$destProjectFolder,4);
+						//$result = upload_file_to_img_server_using_ftp($sourceProjectFolder,$destProjectFolder,4);
 
 					}
 
