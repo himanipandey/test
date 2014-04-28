@@ -1195,7 +1195,7 @@ function DeleteCity($ID) {
 
 function ViewCityDetails($cityID) {
     $Sql = "SELECT * FROM " . CITY . " WHERE CITY_ID ='" . $cityID . "'";
-    $ExecSql = mysql_query($Sql);
+    $ExecSql = mysql_query($Sql) or die (mysql_error());
 
     if (mysql_num_rows($ExecSql) == 1) {
 
