@@ -141,7 +141,7 @@ class ImageServiceUpload{
         $this->response_body = $response["body"];
         $this->status = $response["status"];
         $this->verify_status();
-        $this->raise_errors_if_any();
+        //$this->raise_errors_if_any();
        
     }
 
@@ -172,6 +172,8 @@ class ImageServiceUpload{
         $response_body = json_decode(substr($response, $header_size));
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close ($ch);
+        print("<pre>"); echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
+        //die();
         return array("header" => $response_header, "body" => $response_body, "status" => $status);
     }
 

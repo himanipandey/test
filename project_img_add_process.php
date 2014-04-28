@@ -188,6 +188,7 @@ if (isset($_POST['Next']))
 			$newdirpro		=	$newImagePath.$BuilderName."/".$ProjectName;
 			$foldname		=	strtolower($ProjectName);
 			$andnewdirpro	=	 $newImagePath.$BuilderName."/".$foldname;
+			print_r($arrValue);
 			foreach($arrValue as $key=>$val)
 			{
 				
@@ -240,7 +241,7 @@ if (isset($_POST['Next']))
 								rewinddir($handle);
 								while (false !== ($file = readdir($handle)))
 								{
-									
+									echo $file; echo $val;
 								/************Working for location plan***********************/
 									if(strstr($file,'loc-plan'))
 									{
@@ -755,7 +756,7 @@ if (isset($_POST['Next']))
 								}
 								/************Working for construction plan***********************/
 								if(strstr($file,'const-status'))
-								{
+								{ echo "diehere12";
 									if(strstr($file,$val))
 									{
 										$image = new SimpleImage();
@@ -782,14 +783,18 @@ if (isset($_POST['Next']))
 						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
-							                    if($serviceResponse){
+
+							                if(empty($serviceResponse["service"]->response_body->error->msg)) { echo "here"; die();
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											}
 											else {
-											
-												$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
-												break;
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												//$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+												echo "here1"; //die();
+												break 2;
+
+
 											}
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -860,7 +865,9 @@ if (isset($_POST['Next']))
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
 									}
+									
 								}
+								
 								/************Working for Payment plan***********************/
 								if(strstr($file,'payment-plan'))
 								{
@@ -1352,13 +1359,13 @@ if (isset($_POST['Next']))
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;*/
 										}
 									 }
-							}
-						}
+							
+						
 							$add_tower = '';
 							if($arrTowerId[$key] > 0)
 									$add_tower = " TOWER_ID = $arrTowerId[$key], ";
 							$imgDbPath = explode("/images_new",$img_path);
-							$selqry	=	"SELECT PLAN_IMAGE FROM ".PROJECT_PLAN_IMAGES." WHERE PROJECT_ID = '".$projectId."' AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$imgDbPath[1]."'";
+							/*$selqry	=	"SELECT PLAN_IMAGE FROM ".PROJECT_PLAN_IMAGES." WHERE PROJECT_ID = '".$projectId."' AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$imgDbPath[1]."'";
 							$selres	=	mysql_query($selqry);
 							if(mysql_num_rows($selres)>0)
 							{
@@ -1376,8 +1383,10 @@ if (isset($_POST['Next']))
                                                         TAGGED_MONTH = '".$arrTaggedDate[$key]."'                                                       
 													WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$val."'";
 								 $res	=	mysql_query($qry) or die(mysql_error());
-							}
-							else
+							} */
+							//else
+							//{
+							if($image_id)
 							{
 								$qryinsert = "INSERT INTO ".PROJECT_PLAN_IMAGES."
 												SET PLAN_IMAGE		=	'".$imgDbPath[1]."',
@@ -1390,10 +1399,14 @@ if (isset($_POST['Next']))
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													SUBMITTED_DATE	=	now()";
-								 echo $qryinsert;
+								 echo "query".$qryinsert;
 								 $resinsert	=	mysql_query($qryinsert) or die(mysql_error());
 								
+							//}
 							}
+
+						}
+					}	
 					if($flag==1)
 					{
 						$builderfolder=strtolower($BuilderName);
