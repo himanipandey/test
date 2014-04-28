@@ -60,10 +60,18 @@ function tower_change(e)
 		var floorto = $(e).siblings("input:[id='floor_to']").val();
 		var date = $(e).parent().parent().children(".taggedMonth").children("input:text").val();
 		if($('select#PType').val() == 'Cluster Plan'){
-			if($(e).children(":selected").text().toLowerCase().search(/select|other/i) >= 0)
-			element.val($('select#PType').val()+" from "+ floorfrom+" to "+floorto);
-			else
-			element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" from "+ floorfrom+" to "+floorto);
+			if($(e).children(":selected").text().toLowerCase().search(/select|other/i) >= 0){
+				if(floorfrom=="" && floorto=="")
+					element.val($('select#PType').val());
+				else
+					element.val($('select#PType').val()+" from "+ floorfrom+"th to "+floorto+"th");
+			}
+			else{
+				if(floorfrom=="" && floorto=="")
+					element.val($(e).children(":selected").text() + " "+$('select#PType').val());
+				else
+					element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" from "+ floorfrom+"th to "+floorto+"th");
+			}	
 		}
 		else if($('select#PType').val() == 'Construction Status'){
 
@@ -105,11 +113,18 @@ function floor_change_from(e)
 		var titlefield = $(e).parent('div').parent('div').children(":text");
 		var	floor_to = $(e).siblings(":text");
 		var towertext = $(e).siblings("select").children(":selected").text();
-		if(towertext.toLowerCase().search(/select|other/i) >= 0)
-			titlefield.val("Cluster Plan from " +$(e).val()+" to "+floor_to.val());
-		else
-			titlefield.val(towertext+ " Cluster Plan from " +$(e).val()+" to "+floor_to.val());
-			
+		if(towertext.toLowerCase().search(/select|other/i) >= 0){
+			if($(e).val()=="" && floor_to.val()=="")
+				titlefield.val("Cluster Plan");
+			else
+				titlefield.val("Cluster Plan from " +$(e).val()+"th to "+floor_to.val()+"th");
+		}
+		else{
+			if($(e).val()=="" && floor_to.val()=="")
+				titlefield.val(towertext+ " Cluster Plan");
+			else
+				titlefield.val(towertext+ " Cluster Plan from " +$(e).val()+"th to "+floor_to.val()+"th");
+		}
 			
 	}
 	
@@ -124,10 +139,18 @@ function floor_change_to(e)
 		var titlefield = $(e).parent('div').parent('div').children(":text");
 		var	floor_from = $(e).siblings(":text");
 		var towertext = $(e).siblings("select").children(":selected").text();
-		if(towertext.toLowerCase().search(/select|other/i) >= 0)
-			titlefield.val("Cluster Plan from " +floor_from.val()+" to "+$(e).val());
-		else
-			titlefield.val(towertext+ " Cluster Plan from "+floor_from.val()+" to "+$(e).val());
+		if(towertext.toLowerCase().search(/select|other/i) >= 0){
+			if($(e).val()=="" && floor_from.val()=="")
+				titlefield.val("Cluster Plan");
+			else
+				titlefield.val("Cluster Plan from " +floor_from.val()+"th to "+$(e).val()+"th");
+		}
+		else{
+			if($(e).val()=="" && floor_from.val()=="")
+				titlefield.val(towertext+ " Cluster Plan");
+			else
+				titlefield.val(towertext+ " Cluster Plan from "+floor_from.val()+"th to "+$(e).val()+"th");
+		}
 			
 	}
 	
@@ -140,7 +163,9 @@ $(document).ready(function(){
 	  $('.taggedMonth').hide();
 	  $('input[name= "title[]"]').each(function(){
 						
-					 $(this).val($('select#PType').val());	
+					 $(this).val($('select#PType').val());
+					 
+
 				});
 	if($('select#PType').val() == 'Construction Status'){
 			$('.taggedDate').each(function(){
@@ -170,6 +195,7 @@ $(document).ready(function(){
 				});
 			 }
 	if($('select#PType').val() == 'Cluster Plan'){
+				
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  
@@ -188,7 +214,13 @@ $(document).ready(function(){
 
 	 			$('input[name= "title[]"]').each(function(){
 						
-					 $(this).val($('select#PType').val());	
+					 $(this).val($('select#PType').val());
+					// $(this).attr("readonly", true);
+					 if($('select#PType').val() != "Cluster Plan"){	
+					 	console.log("here");$(this).attr("readonly", true);
+					}	
+					else
+						$(this).attr("readonly", false);
 				});
 	 	
 			$('.taggedDate').each(function(){
@@ -197,7 +229,7 @@ $(document).ready(function(){
 			 $('.taggedMonth').each(function(){
 						
 					 $(this).hide();	
-				});
+				})
 			 if($(this).val() == 'Construction Status'){
 				 $('.taggedDate').each(function(){
 					 $(this).show();
@@ -227,6 +259,7 @@ $(document).ready(function(){
 				});
 			 }
 	    if($('select#PType').val() == 'Cluster Plan'){
+	    		
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  

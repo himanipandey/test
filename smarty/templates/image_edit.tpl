@@ -213,6 +213,19 @@ function floor_change_to(e)
 	
 }
 
+$(document).ready(function(){
+	$('input[name= "title[]"]').each(function(){
+						
+					 if($('#PType'+e).val() == 'Cluster Plan'){	
+					 	console.log("here");$(this).attr("readonly", true);
+					}	
+					else
+						$(this).attr("readonly", false);
+					 
+
+				});
+}
+
 </script>
 </TD>
   </TR>
@@ -289,7 +302,7 @@ function floor_change_to(e)
 
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
-														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;" id="title{$cnt}"/><br><br>
+														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" {if $ImageDataListingArr[data].PLAN_TYPE != 'Cluster Plan'}readonly="readonly" {/if} value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;" id="title{$cnt}"/><br><br>
 														{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 														<div class="taggedDate">
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
