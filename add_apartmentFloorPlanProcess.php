@@ -184,7 +184,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "option", $option_id, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "option", $option_id, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){

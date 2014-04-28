@@ -7,7 +7,7 @@
     include("includes/configs/configs.php");
     include("includes/db_query.php");
     include("common/function.php");
-    include("s3upload/s3_config.php");
+    include("imageService/image_upload.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 
@@ -107,7 +107,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     //  add images to image service
             
                     $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
-                    $returnArr = writeToImageService($s3, $img, $areaType, $areaId, $params, $newImagePath);
+                    $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                       //die("here");
                     $serviceResponse = $returnArr['serviceResponse'];
                     if($returnArr['error']){
@@ -306,7 +306,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                 //  add images to image service
                         
                                 $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
-                                $returnArr = writeToImageService($s3, $img, $areaType, $areaId, $params, $newImagePath);
+                                $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                                   //die("here");
                                 $serviceResponse = $returnArr['serviceResponse'];
                                 if($returnArr['error']){
@@ -369,7 +369,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                            
                         );
 
-                         $returnArr = writeToImageService($s3, "", $areaType, $areaId, $params, $newImagePath);
+                         $returnArr = writeToImageService(  "", $areaType, $areaId, $params, $newImagePath);
 
                         /* $url = ImageServiceUpload::$image_upload_url."/".$imgSevice;
                          $ch = curl_init();

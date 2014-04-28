@@ -102,7 +102,7 @@ if (isset($_POST['Next']))
 				$arrTitle[$k] = $_REQUEST['title'][$k];
 				if(isset($_REQUEST['img_date'.($k+1)])){
 					$tagged_date = substr($_REQUEST['img_date'.($k+1)],0,7);
-					$arrTaggedDate[$k] = $tagged_date."-01";
+					$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
 				}
 				else
 				$arrTaggedDate[$k] = null;
@@ -273,7 +273,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                    //print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -377,7 +377,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                   // print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -476,7 +476,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                    
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -578,7 +578,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                    //print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -677,7 +677,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -776,7 +776,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -884,7 +884,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -978,7 +978,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -1069,7 +1069,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -1160,7 +1160,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -1256,7 +1256,7 @@ if (isset($_POST['Next']))
 						                    //  add images to image service
 						            
 						                    
-						                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+						                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 						                  
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                    if($serviceResponse){
@@ -1387,7 +1387,9 @@ if (isset($_POST['Next']))
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													SUBMITTED_DATE	=	now()";
+								 echo $qryinsert;
 								 $resinsert	=	mysql_query($qryinsert) or die(mysql_error());
+								
 							}
 					if($flag==1)
 					{

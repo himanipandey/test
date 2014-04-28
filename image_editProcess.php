@@ -181,7 +181,7 @@
 		foreach($_REQUEST['chk_name'] as $k=>$v)
 		{
 			if($v != '')
-			{
+			{ 
 				if($v == 'delete_img'){
 					/********delete image from db if checked but not browes new image*********/
                     $service_image_id = $_REQUEST['service_image_id'][$k];
@@ -191,7 +191,7 @@
                                                                  WHERE 
                                                                        PROJECT_ID = '".$projectId."'
                                                                        AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."'
-                                                                       AND PLAN_IMAGE = '".$_REQUEST['property_image_path'][$k]."'";
+                                                                       AND SERVICE_IMAGE_ID = '".$service_image_id."'";
 					$res	=	mysql_query($qry);		
 												
 				}
@@ -203,7 +203,7 @@
 						
 						if(isset($_REQUEST['img_date'.$k])){
 							$tagged_date = substr($_REQUEST['img_date'.$k],0,7);
-							$arrTaggedDate[$k] = $tagged_date."-01";
+							$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
 						}
 						else	$arrTaggedDate[$k] = NULL; //"0000-00-00T00:00:00Z"
 						$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
@@ -234,12 +234,12 @@
 	                    //  add images to image service
 
 	                    
-	                    $returnArr = writeToImageService($s3, "", "project", $projectId, $params, $newImagePath);
+	                    $returnArr = writeToImageService(  "", "project", $projectId, $params, $newImagePath);
 	                    //print_r($returnArr);
 	                    $serviceResponse = $returnArr['serviceResponse'];
 		                if($serviceResponse){
 		                    $image_id = $serviceResponse["service"]->response_body->data->id;
-							$add_tower = '';
+							$add_tower = '';//die();
 										
 							if(is_numeric($arrTowerId[$k])){
 							   if($arrTowerId[$k] > 0)
@@ -252,13 +252,13 @@
 							//$dbpath = explode("/images_new",$img_path);
 							$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 										SET 
-											PLAN_IMAGE = '".$_REQUEST['property_image_path'][$k]."',
+											
 											TITLE	   = '".$arrTitle[$k]."',
 											".$add_tower."
 											DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',
 											SERVICE_IMAGE_ID   = ".$_REQUEST["service_image_id"][$k]."
 										WHERE PROJECT_ID = '".$projectId."' AND SERVICE_IMAGE_ID = '".$_REQUEST["service_image_id"][$k]."'";
-							$res	=	mysql_query($qry);
+							$res	=	mysql_query($qry); //die($qry);
 							if($preview == 'true')
 								header("Location:show_project_details.php?projectId=".$projectId);
 							else
@@ -311,7 +311,7 @@
 						$ErrorMsg["blankerror"] = "Please select atleast one image.";	
 					}*/
 					if(is_array($ErrorMsg)) {
-						
+						break;
 					} 
 						
 					else
@@ -342,7 +342,7 @@
 							
 							$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 							$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
-							$oldpath		=	$_REQUEST['property_image_path'][$k];
+							//$oldpath		=	$_REQUEST['property_image_path'][$k];
 			                $service_image_id = $_REQUEST["service_image_id"][$k];
 
 							//unlink($oldpath);
@@ -401,7 +401,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -452,7 +452,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -503,7 +503,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -554,7 +554,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -605,7 +605,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -657,7 +657,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -708,7 +708,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -759,7 +759,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -810,7 +810,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -861,7 +861,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -915,7 +915,7 @@
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService($s3, $img, "project", $projectId, $params, $newImagePath);
+							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                    if($serviceResponse){
@@ -955,8 +955,8 @@
 											".$add_tower."
 											DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',
 											SERVICE_IMAGE_ID   = ".$image_id."
-										WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND PLAN_IMAGE = '".$oldpath."'";
-							$res	=	mysql_query($qry);
+										WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
+							$res	=	mysql_query($qry); //die($qry);
 
 							if($flag==1)
 							{

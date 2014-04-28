@@ -8,7 +8,7 @@ require_once "$_SERVER[DOCUMENT_ROOT]/smartyConfig.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/appWideConfig.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/dbConfig.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/modelsConfig.php";
-require_once "$_SERVER[DOCUMENT_ROOT]/s3upload/s3_config.php";
+require_once "$_SERVER[DOCUMENT_ROOT]/imageService/image_upload.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/includes/configs/configs.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/common/function.php";
@@ -61,8 +61,7 @@ if ( !empty( $_REQUEST['upPh'] ) ) {
             $dest = 'locality/'.$image_name;
             $source = $newImagePath.$dest;
             $locality_image = LocalityImage::find($__newData["IMAGE_ID"]);
-            $s3upload = new ImageUpload($source, array("s3" => $s3,
-                "image_path" => $dest, "object" => "locality","object_id" => $locality_image->locality_id,
+            $s3upload = new ImageUpload($source, array( "image_path" => $dest, "object" => "locality","object_id" => $locality_image->locality_id,
                 "image_type" => strtolower($__newData["IMAGE_CATEGORY"]), "service_image_id" => $service_image_id));
             $response = $s3upload->update();
             $image_id = $response["service"]->data();

@@ -219,7 +219,7 @@ if ($_POST['btnSave'] == "Save")
                                 "image_type" => "builder_image",
                                 "folder" => $foldername."/"
                             );
-                        $response   = writeToImageService($s3, $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);
+                        $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);
                         if($response['serviceResponse'])
                         {
                            /* $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,

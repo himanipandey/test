@@ -5,7 +5,7 @@
 	include("includes/configs/configs.php");
 	include("builder_function.php");
 	include("common/function.php");
-	include("s3upload/s3_config.php");
+	include("imageService/image_upload.php");
 	AdminAuthentication();
 	    
 	include('bank_list_proc.php');

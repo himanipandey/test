@@ -25,7 +25,7 @@
                         "folder" => "bank_list/"
 
             );
-        	$response 	= writeToImageService($s3, $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
+        	$response 	= writeToImageService(  $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
 			/*$dest		=	$newImagePath."/bank_list/".$logo_name;
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);*/
 			if($response['serviceResponse'])
@@ -69,7 +69,7 @@
                         "action" => "update",
                         "service_image_id" => $service_image_id
             );
-        	$response 	= writeToImageService($s3, $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
+        	$response 	= writeToImageService(  $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
 			/*$dest		=	$newImagePath."/bank_list/".$logo_name;
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);*/
 			if($response['serviceResponse'])
