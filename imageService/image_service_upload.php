@@ -189,7 +189,7 @@ class ImageServiceUpload{
 
     static function update($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
-        //print("<pre>");var_dump($post);var_dump($url);//die("heool");//
+        //print("<pre>");var_dump($post);var_dump($url);die("heool");//
         return static::curl_request($post, 'POST', $url);
     }
 

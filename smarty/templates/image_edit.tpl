@@ -100,7 +100,7 @@ function tagged_date_change(e)
 	
 	if($('#PType'+e).val() == 'Construction Status')
 	{
-		taggedYear = $("#img_date"+e).val().substring(0,4);
+		taggedYear = $("#img_date"+e).val().substring(2,4);
 		taggedMonth = $("#img_date"+e).val().substring(5,7);
 		//alert(taggedMonth);
 		if(taggedMonth=="01")taggedMonth="Jan";
@@ -148,7 +148,7 @@ function tower_change(e)
 		}
 		else if($('#PType'+e).val() == 'Construction Status'){
 
-			taggedYear = date.substring(0,4);
+			taggedYear = date.substring(2,4);
 		taggedMonth = date.substring(5,7);
 		if(taggedMonth=="01")taggedMonth="Jan";
 		else if(taggedMonth=="02")taggedMonth="Feb";

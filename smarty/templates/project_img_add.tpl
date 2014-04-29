@@ -22,7 +22,7 @@ function tagged_date_change(e)
 	
 	if($('select#PType').val() == 'Construction Status')
 	{
-		taggedYear = $("#"+e.id).val().substring(0,4);
+		taggedYear = $("#"+e.id).val().substring(2,4);
 		taggedMonth = $("#"+e.id).val().substring(5,7);
 		if(taggedMonth=="01")taggedMonth="Jan";
 		else if(taggedMonth=="02")taggedMonth="Feb";
@@ -75,7 +75,7 @@ function tower_change(e)
 		}
 		else if($('select#PType').val() == 'Construction Status'){
 
-			taggedYear = date.substring(0,4);
+			taggedYear = date.substring(2,4);
 		taggedMonth = date.substring(5,7);
 		if(taggedMonth=="01")taggedMonth="Jan";
 		else if(taggedMonth=="02")taggedMonth="Feb";
@@ -143,8 +143,10 @@ function floor_change_from(e)
 				
 		}
 	}
-	else
+	else{
 		alert("Please Provide a numeric Value in Floor No. fields.");
+		$(e).val("");
+	}
 }
 
 function floor_change_to(e)
@@ -173,8 +175,10 @@ function floor_change_to(e)
 				
 		}
 	}
-	else
+	else{
 		alert("Please Provide a numeric Value in Floor No. fields.");
+		$(e).val("");
+	}
 }
 
 

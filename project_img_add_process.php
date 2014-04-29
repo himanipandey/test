@@ -222,7 +222,7 @@ if (isset($_POST['Next']))
 
 				if(!$txtlocationplan)
 					{
-					$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+					$ErrorMsg["ImgError"] .= "Problem in Image Upload Please Try Again.";
 					break;
 				}
 				else
@@ -285,8 +285,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -386,8 +388,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -482,8 +486,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
 
@@ -581,8 +587,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -678,8 +686,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -778,10 +788,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
- 
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
 
+												break 1;
 											}
 
 
@@ -888,8 +898,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
 
@@ -1256,8 +1268,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
 
@@ -1414,15 +1428,17 @@ if (isset($_POST['Next']))
 
 					//$result = upload_file_to_img_server_using_ftp($source,$dest,1);
 					//image_idPOST['Next'] == 'Save')
-			if($_POST['Next'] == 'Add More')
-				header("Location:project_img_add.php?projectId=".$projectId);
-			else if($_POST['Next'] == 'Save')
-				header("Location:ProjectList.php?projectId=".$projectId);
-			else
-				header("Location:add_specification.php?projectId=".$projectId);
+			
 				}
 		}
-
+		if(empty($ErrorMsg)){
+			if($_POST['Next'] == 'Add More')
+					header("Location:project_img_add.php?projectId=".$projectId);
+			else if($_POST['Next'] == 'Save')
+					header("Location:ProjectList.php?projectId=".$projectId);
+			else
+				header("Location:add_specification.php?projectId=".$projectId);
+		}
 	}
 }
 else if(isset($_POST['Skip']))

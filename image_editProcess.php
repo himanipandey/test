@@ -66,8 +66,8 @@
 
 
 	$builderDetail	= fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
-//print'<pre>';
-//print_r($ImageDataListingArr);
+print'<pre>';
+print_r($ImageDataListingArr);
 	$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 
 		
@@ -131,6 +131,7 @@
 					  	}
 					  	else {//checking duplicacy
 							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k],$_REQUEST['currentPlanId'][$k]);
+
 							if($ext_vlinks){
 								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist."; 
 							}
@@ -261,15 +262,12 @@
 											SERVICE_IMAGE_ID   = ".$_REQUEST["service_image_id"][$k]."
 										WHERE PROJECT_ID = '".$projectId."' AND SERVICE_IMAGE_ID = '".$_REQUEST["service_image_id"][$k]."'";
 							$res	=	mysql_query($qry); //die($qry);
-							if($preview == 'true')
-								header("Location:show_project_details.php?projectId=".$projectId);
-							else
-								header("Location:ProjectList.php?projectId=".$projectId);
+							continue;
 						}
 						else {
 							//echo $returnArr['error'];
-							$ErrorMsg["ImgError"] = "Problem in Update Please Try Again.";
-							break;
+							$ErrorMsg["ImgError"] .= "Problem in Update for Image No ".($k+1);
+							continue;
 						}
 
                         
@@ -280,7 +278,7 @@
 
 
 					else 
-					{
+					{  
 						if(!in_array(strtolower($_FILES['img']['type'][$k]), $arrImg))
 						{
 						  $ErrorMsg["ImgError"] = "You can upload only ".ucwords(implode(" / ",$arrImg))." images.";
@@ -291,18 +289,20 @@
 							{
 								if(!preg_match("/-".$imgNamePart."\.[a-z]{3,4}$/", $_FILES['img']['name'][$k]) && $_FILES['img']['name'][$k] != '')
 								{
-									$ErrorMsg["ImgError"] = "The word ".$imgNamePart." should be part of image name at end.";	
+									$ErrorMsg["ImgError"] .= "The word ".$imgNamePart." should be part of image name at end.";	
 								}
 							}
 
 
 						}
+						$arrValue[$k] = $_FILES['img']['name'][$k];
 						
-						
-						$val = $_FILES['img']['name'][$k];
+						//$val = $_FILES['img']['name'][$k];
 						
 					}
-					//////////////////////////////////					
+				}
+			}
+		}		//////////////////////////////////					
 									
 					
 					
@@ -317,7 +317,7 @@
 					} 
 						
 					else
-					{
+					{  
 						$flag=0;
 					
 		/*******************Update location,site,layout and master plan from db and also from table*********/	
@@ -337,8 +337,9 @@
 							mkdir($proDir, 0777);
 						}
 
-						//foreach($arrValue as $key=>$val)
-						//{
+						foreach($arrValue as $k=>$val)
+						{
+							//die("here1");
 						//echo $k.$val;
 
 							
@@ -409,8 +410,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
 
@@ -457,8 +460,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                                 
@@ -505,8 +510,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                                
@@ -553,8 +560,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
                                                
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
@@ -602,8 +611,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                                 
@@ -653,8 +664,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                            
@@ -701,8 +714,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                           
@@ -751,8 +766,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                          
@@ -867,6 +884,7 @@
 										{
 											if(strstr($file,$val))
 											{
+
 												$image = new SimpleImage();
 												$path	=	$createFolder."/".$file;
 												$image->load($path);
@@ -875,7 +893,7 @@
 												$image->load($path);
                                                 $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 												$image->save($imgdestpath);
-
+												
 
 												$params = array(
 							                        "image_type" => "project_image",
@@ -903,8 +921,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                                
@@ -964,20 +984,20 @@
 							}
 
 						}
+						}
+					
 					}
 					
-				}
-				if($preview == 'true')
-							header("Location:show_project_details.php?projectId=".$projectId);
-						else
-							header("Location:ProjectList.php?projectId=".$projectId);	
 
 
-			}
+				 
+		if(empty($ErrorMsg)){		
+			if($preview == 'true')
+				header("Location:show_project_details.php?projectId=".$projectId);
+			else
+				header("Location:ProjectList.php?projectId=".$projectId);
+		}
 
-		}	 
-				
-		
 	}
 		
 	else if(isset($_POST['btnExit']))
