@@ -8,6 +8,7 @@
 
 function checkednewAll() 
 {
+	
 	var rowCount = document.getElementById("rowcount").innerHTML;
 	//alert(rowCount+" HHHH");
 	var j=0;
@@ -224,7 +225,7 @@ $(document).ready(function(){
 					 
 
 				});
-}
+});
 
 </script>
 </TD>
@@ -271,7 +272,7 @@ $(document).ready(function(){
 						<td width="100%" align="left" >
 				  
 						<div id="imagesDiv">
-						Delete all: <input type='checkbox'  id="hdnCheckUncheck" value='0' name='checkall' onclick='checkednewAll();'>
+						Delete all: <input type='checkbox'  id="hdnCheckUncheck" value='0' name='checkall' onclick=" checkednewAll()">
 							<br>
 						<form name="f1" id="f1" method="post" action ="" enctype = "multipart/form-data">
 							<table cellpadding=0 cellspacing=1>
@@ -302,7 +303,7 @@ $(document).ready(function(){
 
 														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
-														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" {if $ImageDataListingArr[data].PLAN_TYPE != 'Cluster Plan'}readonly="readonly" {/if} value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;" id="title{$cnt}"/><br><br>
+														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" {if $ImageDataListingArr[data].PLAN_TYPE != 'Cluster Plan'}{/if} value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;" id="title{$cnt}"/><br><br>
 														{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 														<div class="taggedDate">
 															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;

@@ -76,7 +76,7 @@
 
 
 	$count =0;
-	$count+=count($imgData);
+	$count+=count($ImageDataListingArr);
 	if(!isset($_REQUEST['preview']))
 		$_REQUEST['preview'] = '';
 	$preview = $_REQUEST['preview'];
@@ -211,19 +211,25 @@
 						$service_image_id = $_REQUEST["service_image_id"][$k];
 					
 
+						if($_REQUEST['PType'][$k]=="Construction Status" || $_REQUEST['PType'][$k]=="Cluster Plan")
+							$jsonDump = array(
+	                        	"tower_id" => $arrTowerId[$k],
+	                        );
+						else $jsonDump = null;
+						if($_REQUEST['PType'][$k]=="Construction Status" )
+							$taggedDate = $arrTaggedDate[$k];
+						else
+							$taggedDate = null;
 
-					
 					if($_FILES['img']['name'][$k] == ''){
 						$params = array(
 	                        "image" => $file,
 	                        "priority" => $arrDisplayOrder[$k],
 	                        "title" => $arrTitle[$k],
 	                        "service_image_id" => $service_image_id,
-	                        "tagged_date" => $arrTaggedDate[$k],
+	                        "tagged_date" => $taggedDate,
 	                        "update" => "update",
-	                        "jsonDump" => array(
-	                        	"tower_id" => $arrTowerId[$k],
-	                        )
+	                        "jsonDump" => $jsonDump
 	                    );
 
 
@@ -921,7 +927,7 @@
 											$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = NULL, ";
 											
 										$dbpath = explode("/images_new",$img_path);
-										if($image_id){
+										if($image_id>0){
 											$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 														SET 
 															PLAN_IMAGE = '".$dbpath[1]."',
@@ -932,6 +938,7 @@
 														WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
 											$res	=	mysql_query($qry); //die($qry);
 										}
+										$image_id=0;
 										if($flag==1)
 										{
 											$builderfolder=strtolower($BuilderName);

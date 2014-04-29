@@ -105,12 +105,14 @@ if (isset($_POST['Next']))
 
 					$tagged_date = substr($_REQUEST['img_date'.($k+1)],0,7);
 					$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
+
 					//$arrTaggedDate[$k] = null;
 				}
 				else
 				$arrTaggedDate[$k] = null;
 				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
 				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
+				//die($arrTaggedDate[$k].$arrTowerId[$k]);
 			}
 		}
 		if(count($arrValue) == 0)
@@ -241,7 +243,7 @@ if (isset($_POST['Next']))
 								rewinddir($handle);
 								while (false !== ($file = readdir($handle)))
 								{
-									echo $file; echo $val;
+									
 								/************Working for location plan***********************/
 									if(strstr($file,'loc-plan'))
 									{
@@ -1368,7 +1370,7 @@ if (isset($_POST['Next']))
 
 							//else
 							//{
-							if($image_id)
+							if($image_id>0)
 							{
 								$qryinsert = "INSERT INTO ".PROJECT_PLAN_IMAGES."
 												SET PLAN_IMAGE		=	'".$imgDbPath[1]."',
@@ -1386,6 +1388,7 @@ if (isset($_POST['Next']))
 								
 							//}
 							}
+							$image_id=0;
 
 						}
 					}

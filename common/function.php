@@ -170,15 +170,19 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 /*********************Write Image to image service*************************************************************/
 
 function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImagePath){
-          
+          print'<pre>';
+                print_r($params);
         $service_extra_paramsArr = array( 
             "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']));
 
         if(!isset($params['tagged_date']) || empty($params['tagged_date']))
                     unset($service_extra_paramsArr["takenAt"]);
-        if(!isset($params['jsonDump']) || empty($params['tagged_date']))
+        if(!isset($params['jsonDump']) || empty($params['jsonDump']))
                     unset($service_extra_paramsArr["jsonDump"]);
 
+
+                print'<pre>';
+                print_r($service_extra_paramsArr);//die();
     if($IMG==""){
                 //print'<pre>';
                 //print_r($params);//die();
