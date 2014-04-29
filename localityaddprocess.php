@@ -149,7 +149,7 @@
                              $txtLocalityLattitude = null;
                          if($txtLocalityLongitude == '')
                              $txtLocalityLongitude = null;
-                          echo $updateQry = "UPDATE ".LOCALITY." SET 
+                             $updateQry = "UPDATE ".LOCALITY." SET 
                                            LABEL = '".$txtCityName."',
                                            STATUS = '".$status."',
                                            URL = '".$txtCityUrl."',
@@ -159,7 +159,7 @@
                                            LONGITUDE = '".$txtLocalityLongitude."',
                                            updated_at = now()
                                       WHERE
-                                         LOCALITY_ID='".$localityid."'";die;
+                                         LOCALITY_ID='".$localityid."'";
                                  $up = mysql_query($updateQry) or die(mysql_error());
                                  if($up)
                                  {
