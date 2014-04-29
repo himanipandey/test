@@ -178,7 +178,7 @@ class ImageServiceUpload{
     }
 
     static function create($post){
-        print("<pre>");var_dump($post);var_dump(static::$image_upload_url);//die("heool");
+        print("<pre>");var_dump($post);var_dump(static::$image_upload_url);die("heool");
         return static::curl_request($post, 'POST', static::$image_upload_url);
     }
 
