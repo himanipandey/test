@@ -54,7 +54,7 @@
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
                                                 }
                                                 if( eventArray[i][1] == 'allCommentHistory.php' ) {
-                                                    window.open(url,'All Comment List','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
+                                                    window.open(url,'All Comment List','height=600,width=800,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
                                                 }
                                                 else 
                                                     $(location).attr('href',url);
