@@ -709,8 +709,7 @@
                                       <option value="">Select Name</option>
                                       <option value="shops" {if $txtUnitNameval_P[$new_index] == 'shops'}selected{/if}>Shops</option>
                                       <option value="office" {if $txtUnitNameval_P[$new_index] == 'office'}selected{/if}>Office</option>
-                                      <option value="serviced" {if $txtUnitNameval_P[$new_index] == 'serviced'}selected{/if}>Serviced</option>
-                                      <option value="appt" {if $txtUnitNameval_P[$new_index] == 'appt'}selected{/if}>Appt.</option>
+                                      <option value="serviced" {if $txtUnitNameval_P[$new_index] == 'serviced appt'}selected{/if}>Serviced Appt.</option>
                                   </select>
                                     <input type='hidden' value={$projectId} name='projectId' tempName="projectId"   />
                                     <input type='hidden' value='{$typeName}' name='unitType[]' tempName="unitType"   />
