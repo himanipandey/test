@@ -137,14 +137,14 @@
                    if(!is_array($ErrorMsg))
                    {
                        if($localityid != '') { //code for update a locality
-                        $qryCity = "SELECT C.LABEL,c.label as cityname FROM locality L 
+                        $qryCity = "SELECT C.LABEL as cityname FROM locality L 
                             inner join suburb s on L.suburb_id = s.suburb_id
                             inner join city C on (C.city_id = s.city_id) 
                             where L.locality_id = $localityid";
                         $resCity = mysql_query($qryCity);
                         $dataCity = mysql_fetch_assoc($resCity);
                         mysql_free_result($resCity);
-                        $txtCityUrl = createLocalityURL($txtCityName, $dataCity['LABEL'], $localityid, 'locality');
+                        $txtCityUrl = createLocalityURL($txtCityName, $dataCity['cityname'], $localityid, 'locality');
                         if($txtLocalityLattitude == '')
                              $txtLocalityLattitude = null;
                          if($txtLocalityLongitude == '')
