@@ -205,13 +205,13 @@
                                             $projList = ResiProject::getAllSearchResult($arrLocId); //all project of a locality
                                             foreach($projList as $value) {
                                                 $projUrl = createProjectURL($dataCity['cityname'],$txtCityName,$value->builder_name,$value->project_name, $value->project_id);
-                                                $qryProUrl = "update resi_project set 
+                                               echo "<br>", $qryProUrl = "update resi_project set 
                                                               project_url = '".$projUrl."',updated_by = '".$_SESSION['adminId']."' where project_id = '".$value->project_id."'";
-                                                $resProjUrl = mysql_query($qryProUrl) or die(mysql_error());
+                                                //$resProjUrl = mysql_query($qryProUrl) or die(mysql_error());
                                             }
                                          }      
                                              
-                                         header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+                                         //header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
                                  }
                             }
                             else{
