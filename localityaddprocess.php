@@ -103,8 +103,8 @@
                    if($txtLocalityLongitude == ''){
                      $ErrorMsg["txtLongitude"] = "Longitude can not blank";
                    }
-                   if(!empty($txtLocalityLattitude) && ($txtLocalityLattitude <0 || $txtLocalityLattitude>90)){
-                     $ErrorMsg["txtLattitude"] = "Lattitude range should be between 0 to 90.";
+                   if(!empty($txtLocalityLattitude) && ($txtLocalityLattitude <-90 || $txtLocalityLattitude>90)){
+                     $ErrorMsg["txtLattitude"] = "Lattitude range should be between -90 to 90.";
                    }
                    if(!empty($txtLocalityLattitude) && !is_numeric($txtLocalityLattitude)){
                      $ErrorMsg["txtLattitude"] = "Lattitude value should be numeric.";
