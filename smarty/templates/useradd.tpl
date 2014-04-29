@@ -112,8 +112,13 @@
 				  </td>
 				    {if $ErrorMsg["selectDepartmentErr"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["selectDepartmentErr"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
-
-				<tr id = 'showhide'>
+                                {if $txtdepartment == 'SURVEY'}
+                                    {$stye = ""}
+                                {else}
+                                     
+                                     {$stye = 'style = "display:none;"'}
+                                {/if}
+				<tr id = 'showhide' {$stye}>
 				  <td width="20%" align="right" valign = "top">Mapped City : </td>
 				  <td width="30%" align="left" >
                                       <select name="city[]" multiple="" style="width:220px;">

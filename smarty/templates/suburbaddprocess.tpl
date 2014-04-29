@@ -29,7 +29,7 @@
                 <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
-                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Edit Suburb</TD>
+                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Add/Edit Suburb</TD>
                       <TD align=right ></TD>
                     </TR>
 		  </TBODY></TABLE>
@@ -45,7 +45,11 @@
 				<tr>
 				  <td width="20%" align="right" >*Suburb Name : </td>
 				  <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
-				</tr>								
+				</tr>
+                                <tr>
+				  <td width="20%" align="right" >URL : </td>
+                                  <td width="30%" align="left"><input type=text name=url id=txtCityName value="{$url}" readonly="" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				</tr>
 				<tr>
 				  <td width="20%" align="right" >* Meta Title : </td>
 				  <td width="30%" align="left" ><input type=text name=txtMetaTitle id=txtMetaTitle value="{$txtMetaTitle}" style="width:250px;"></td>				   {if $ErrorMsg["txtMetaTitle"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaTitle"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetatitle"></td>{/if}
@@ -197,7 +201,7 @@ $('#aliases').tagsinput({
   	
 });
 
-if({$landmarkJson}!=''){
+if(!jQuery.isEmptyObject({$landmarkJson})){
 var a= {$landmarkJson};
 var landmarkAliases = [];
 for(var i in a){

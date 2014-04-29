@@ -14,19 +14,18 @@ if(isset($_POST['btnExit'])){
 
 if (isset($_POST['btnSave'])) {
 
-		$txtCityName			=	trim($_POST['txtCityName']);
-		$txtCityUrl				=	'';
-		$txtCityUrlOld			=	trim($_POST['txtCityUrlOld']);
-		$DisplayOrder			=	trim($_POST['DisplayOrder']);
-		$txtMetaTitle			=	trim($_POST['txtMetaTitle']);
-		$txtMetaKeywords		=	trim($_POST['txtMetaKeywords']);
-		$txtMetaDescription		=	trim($_POST['txtMetaDescription']);
-		$status					=	trim($_POST['status']);
-		$desc					=	trim($_POST['desc']);
-		$oldDesc				=	trim($_POST['oldDesc']);
-		$content_flag			=	trim($_POST['content_flag']);	
-		
-		
+		$txtCityName = trim($_POST['txtCityName']);
+		$txtCityUrl = '';
+		$txtCityUrlOld = trim($_POST['txtCityUrlOld']);
+		$DisplayOrder = trim($_POST['DisplayOrder']);
+		$txtMetaTitle = trim($_POST['txtMetaTitle']);
+		$txtMetaKeywords = trim($_POST['txtMetaKeywords']);
+		$txtMetaDescription = trim($_POST['txtMetaDescription']);
+		$status = trim($_POST['status']);
+		$desc = trim($_POST['desc']);
+		$oldDesc = trim($_POST['oldDesc']);
+		$content_flag =	trim($_POST['content_flag']);	
+                
 		$smarty->assign("txtCityName", $txtCityName);
 		$smarty->assign("txtCityUrl", $txtCityUrl);
 		$smarty->assign("txtCityUrlOld", $txtCityUrlOld);
@@ -90,27 +89,61 @@ if (isset($_POST['btnSave'])) {
                     SeoData::insetUpdateSeoData($seoData);
                     
                     if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
-						$cont_flag = new TableAttributes();
-						$cont_flag->table_name = 'city';
-						$cont_flag->table_id = $city_id;
-						$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
-						$cont_flag->attribute_value = 0;
-						$cont_flag->updated_by = $_SESSION['adminId'];
-						$cont_flag->save();				
-					}
+                            $cont_flag = new TableAttributes();
+                            $cont_flag->table_name = 'city';
+                            $cont_flag->table_id = $city_id;
+                            $cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+                            $cont_flag->attribute_value = 0;
+                            $cont_flag->updated_by = $_SESSION['adminId'];
+                            $cont_flag->save();				
+                    }
         }
-		header("Location:CityList.php?page=1&sort=all");
+	header("Location:CityList.php?page=1&sort=all");
 		
 	}else if($cityid!= ''){
 	
 		$updateQry = "UPDATE ".CITY." SET 
-					  LABEL					=	'".$txtCityName."',
-					  STATUS				=	'".$status."',
-					  URL					=	'".$txtCityUrl."',
-					  DISPLAY_ORDER			=	'".$DisplayOrder."',
-					  DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
+                            LABEL					=	'".$txtCityName."',
+                            STATUS				=	'".$status."',
+                            URL					=	'".$txtCityUrl."',
+                            DISPLAY_ORDER			=	'".$DisplayOrder."',
+                            updated_at = now(),
+                            DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
 		$rt = mysql_query($updateQry);
 		if($rt){
+                    if($txtCityUrlOld != $txtCityUrl) { //update locality project and suburb url
+                        $localityList = Locality::getLocalityByCity($cityid);
+                        $projList = array();
+                        foreach($localityList as $localityList) {
+                                $locId['locality_id'] = $localityList->locality_id;
+                                if($locId['locality_id'] != '') {
+                                    $projList = ResiProject::getAllSearchResult($locId); //all project of a locality
+                                    foreach($projList as $value) {
+                                        $projUrl = createProjectURL($localityList->cityname, $localityList->label, $value->builder_name, $value->project_name, $value->project_id);
+                                        $qryProUrl = "update resi_project set 
+                                                      project_url = '".$projUrl."' where project_id = '".$value->project_id."'";
+                                        $resProjUrl = mysql_query($qryProUrl) or die(mysql_error());
+                                        
+                                    }
+                                }
+
+                            $locUrl = createLocalityURL($localityList->label,$txtCityName,$localityList->locality_id,'locality');
+                            $updateLoc = "UPDATE ".LOCALITY." SET 
+                                URL	= '".$locUrl."',
+                                updated_at = now() WHERE LOCALITY_ID='".$localityList->locality_id."'";
+                            $rt = mysql_query($updateLoc) or die(mysql_error()." loc url update");
+                            
+                        }
+                        $subArr = Suburb::SuburbArr($cityid);
+                        foreach($subArr as $k=>$subList) {
+                            $subUrl = createLocalityURL($subList,$txtCityName,$k,'suburb');
+                            $updateSub = "UPDATE ".SUBURB." SET 
+                                URL	= '".$subUrl."',
+                                updated_at = now() WHERE SUBURB_ID='".$k."'";
+                            $rt = mysql_query($updateSub) or die(mysql_error()." sub url update");
+                        }
+                       
+                    }
                     $seoData['meta_title'] = $txtMetaTitle;
                     $seoData['meta_keywords'] = $txtMetaKeywords;
                     $seoData['meta_description'] = $txtMetaDescription;
@@ -119,7 +152,7 @@ if (isset($_POST['btnSave'])) {
                     $seoData['updated_by'] = $_SESSION['adminId'];
                     SeoData::insetUpdateSeoData($seoData);
                     
-                    ## - desccripion content flag handeling
+                    ## - descripion content flag handeling
 						$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $cityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'city' )));					   
 					   if($cont_flag){
 							$content_flag = '';
