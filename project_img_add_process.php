@@ -267,7 +267,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        "tagged_date" =>  $arrTaggedDate[$key],
+
 						                        
 						                    );
 
@@ -370,7 +370,6 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        "tagged_date" =>  $arrTaggedDate[$key],
 						                        
 						                    );
 						                    //  add images to image service
@@ -466,7 +465,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        "tagged_date" =>  $arrTaggedDate[$key],
+
 						                        
 						                    );
 						                    //  add images to image service
@@ -565,7 +564,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        "tagged_date" =>  $arrTaggedDate[$key],
+
 						                        
 						                    );
 						                    //  add images to image service
@@ -661,7 +660,6 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        "tagged_date" =>  $arrTaggedDate[$key],
 						                        "jsonDump" => array(
 						                        	"tower_id" => $arrTowerId[$key],
 						                        )
@@ -873,7 +871,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        "tagged_date" =>  $arrTaggedDate[$key],
+
 						                        
 						                    );
 						                    //  add images to image service
@@ -1241,7 +1239,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        "tagged_date" =>  $arrTaggedDate[$key],
+
 						                       
 						                    );
 						                    //  add images to image service

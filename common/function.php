@@ -176,7 +176,8 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
 
         if(!isset($params['tagged_date']) || empty($params['tagged_date']))
                     unset($service_extra_paramsArr["takenAt"]);
-
+        if(!isset($params['jsonDump']) || empty($params['tagged_date']))
+                    unset($service_extra_paramsArr["jsonDump"]);
 
     if($IMG==""){
                 //print'<pre>';

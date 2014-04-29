@@ -215,13 +215,9 @@
 					
 					if($_FILES['img']['name'][$k] == ''){
 						$params = array(
-	                        "image_type" => "layout_plan",
-	                        "folder" => $extra_path,
-	                        "count" => "layout_plan".$k,
 	                        "image" => $file,
 	                        "priority" => $arrDisplayOrder[$k],
 	                        "title" => $arrTitle[$k],
-	                        "active" => "1",
 	                        "service_image_id" => $service_image_id,
 	                        "tagged_date" => $arrTaggedDate[$k],
 	                        "update" => "update",
@@ -390,11 +386,9 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                        "tagged_date" => $arrTaggedDate[$k],
+							                        
 							                        "update" => "update",
-							                        "jsonDump" => array(
-							                        	"tower_id" => $arrTowerId[$k],
-							                        )
+							                        
 							                    );
 
 
@@ -404,15 +398,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
 
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('loc-plan','loc-plan-bkp',$file);
@@ -441,11 +434,9 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                        "tagged_date" =>  $arrTaggedDate[$k],
+							                   
 							                        "update" => "update",
-							                        "jsonDump" => array(
-							                        	"tower_id" => $arrTowerId[$k],
-							                        )
+							                       
 							                    );
 
 
@@ -455,15 +446,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                    if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
                                                 
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('layout-plan','layout-plan-bkp',$file);
@@ -492,11 +482,9 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                        "tagged_date" =>  $arrTaggedDate[$k],
+							                       
 							                        "update" => "update",
-							                        "jsonDump" => array(
-							                        	"tower_id" => $arrTowerId[$k],
-							                        )
+							                        
 							                    );
 
 
@@ -506,15 +494,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
                                                
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('site-plan','site-plan-bkp',$file);
@@ -543,11 +530,9 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                        "tagged_date" =>  $arrTaggedDate[$k],
+							                       
 							                        "update" => "update",
-							                        "jsonDump" => array(
-							                        	"tower_id" => $arrTowerId[$k],
-							                        )
+							                        
 							                    );
 
 
@@ -557,16 +542,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
-
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
                                                
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
 												$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
@@ -594,7 +577,7 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                        "tagged_date" =>  $arrTaggedDate[$k],
+							                       
 							                        "update" => "update",
 							                        "jsonDump" => array(
 							                        	"tower_id" => $arrTowerId[$k],
@@ -608,15 +591,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
                                                 
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
@@ -660,15 +642,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
                                            
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('const-status','const-status-bkp',$file);
@@ -697,11 +678,9 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                        "tagged_date" =>  $arrTaggedDate[$k],
+							                     
 							                        "update" => "update",
-							                        "jsonDump" => array(
-							                        	"tower_id" => $arrTowerId[$k],
-							                        )
+							                        
 							                    );
 
 
@@ -711,15 +690,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
                                           
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('payment-plan','payment-plan-bkp',$file);
@@ -762,15 +740,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
                                          
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('specification','specification-bkp',$file);
@@ -813,15 +790,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
                                            
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('price-list','price-list-bkp',$file);
@@ -904,11 +880,9 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                        "tagged_date" =>  $arrTaggedDate[$k],
+							                       
 							                        "update" => "update",
-							                        "jsonDump" => array(
-							                        	"tower_id" => $arrTowerId[$k],
-							                        )
+							                       
 							                    );
 
 
@@ -918,15 +892,14 @@
 							                    $returnArr = writeToImageService(  $img, "project", $projectId, $params, $newImagePath);
 							                    //print_r($returnArr);
 							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+								                if(empty($serviceResponse["service"]->response_body->error->msg)){
+							                    $image_id = $serviceResponse["service"]->response_body->data->id;
+												//$image_id = $image_id->id;
+											}
+											else {
+												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
+												break 2;
+											}
 
                                                
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
@@ -935,55 +908,56 @@
 												
 											}	
 										 }
-								}
-							}
-							$add_tower = '';
-										
-							if(is_numeric($arrTowerId[$k])){
-							   if($arrTowerId[$k] > 0)
-								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
-							   else
-								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."',TOWER_ID = NULL,";
-							}else
-								$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = NULL, ";
-								
-							$dbpath = explode("/images_new",$img_path);
-							$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
-										SET 
-											PLAN_IMAGE = '".$dbpath[1]."',
-											TITLE	   = '".$arrTitle[$k]."',
-											".$add_tower."
-											DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',
-											SERVICE_IMAGE_ID   = ".$image_id."
-										WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
-							$res	=	mysql_query($qry); //die($qry);
-
-							if($flag==1)
-							{
-								$builderfolder=strtolower($BuilderName);
-								$destBuilderFolder = '';
-								$sourceBuilderFolder = $newImagePath.$builderfolder;
-								$result = upload_file_to_img_server_using_ftp($sourceBuilderFolder,$destBuilderFolder,4);
 							
-							}				
-							if($projectFolderCreated==1)
-							{
-								$builderfolder=strtolower($BuilderName);
-								$projectNameFolder=strtolower($ProjectName);					
-								$destProjectFolder = '';
-								$sourceProjectFolder = $newImagePath.$builderfolder."/.".$projectNameFolder;
-								$result = upload_file_to_img_server_using_ftp($sourceProjectFolder,$destProjectFolder,4);					
+							
+										$add_tower = '';
+													
+										if(is_numeric($arrTowerId[$k])){
+										   if($arrTowerId[$k] > 0)
+											$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = $arrTowerId[$k], ";
+										   else
+											$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."',TOWER_ID = NULL,";
+										}else
+											$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = NULL, ";
+											
+										$dbpath = explode("/images_new",$img_path);
+										if($image_id){
+											$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
+														SET 
+															PLAN_IMAGE = '".$dbpath[1]."',
+															TITLE	   = '".$arrTitle[$k]."',
+															".$add_tower."
+															DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',
+															SERVICE_IMAGE_ID   = ".$image_id."
+														WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
+											$res	=	mysql_query($qry); //die($qry);
+										}
+										if($flag==1)
+										{
+											$builderfolder=strtolower($BuilderName);
+											$destBuilderFolder = '';
+											$sourceBuilderFolder = $newImagePath.$builderfolder;
+											//$result = upload_file_to_img_server_using_ftp($sourceBuilderFolder,$destBuilderFolder,4);
+										
+										}				
+										if($projectFolderCreated==1)
+										{
+											$builderfolder=strtolower($BuilderName);
+											$projectNameFolder=strtolower($ProjectName);					
+											$destProjectFolder = '';
+											$sourceProjectFolder = $newImagePath.$builderfolder."/.".$projectNameFolder;
+											//$result = upload_file_to_img_server_using_ftp($sourceProjectFolder,$destProjectFolder,4);					
 
-							}							
+										}							
 										
 							//$result = upload_file_to_img_server_using_ftp($source,$dest,1);
 						
-						
+							
+								}
 							}
-						}
 
-						
-				
+						}
+					}
 					
 				}
 				if($preview == 'true')
