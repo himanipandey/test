@@ -137,20 +137,19 @@
                    if(!is_array($ErrorMsg))
                    {
                        if($localityid != '') { //code for update a locality
-                       echo $qryCity = "SELECT C.LABEL as cityname FROM locality L 
+                        $qryCity = "SELECT C.LABEL as cityname FROM locality L 
                             inner join suburb s on L.suburb_id = s.suburb_id
                             inner join city C on (C.city_id = s.city_id) 
                             where L.locality_id = $localityid";
                         $resCity = mysql_query($qryCity) or die(mysql_error());
                         $dataCity = mysql_fetch_assoc($resCity);
                         mysql_free_result($resCity);
-                        echo $txtCityName, $dataCity['cityname'], $localityid;die;
                         $txtCityUrl = createLocalityURL($txtCityName, $dataCity['cityname'], $localityid, 'locality');
                         if($txtLocalityLattitude == '')
                              $txtLocalityLattitude = null;
                          if($txtLocalityLongitude == '')
                              $txtLocalityLongitude = null;
-                           $updateQry = "UPDATE ".LOCALITY." SET 
+                          echo $updateQry = "UPDATE ".LOCALITY." SET 
                                            LABEL = '".$txtCityName."',
                                            STATUS = '".$status."',
                                            URL = '".$txtCityUrl."',
@@ -160,8 +159,8 @@
                                            LONGITUDE = '".$txtLocalityLongitude."',
                                            updated_at = now()
                                       WHERE
-                                         LOCALITY_ID='".$localityid."'";
-                                 $up = mysql_query($updateQry);
+                                         LOCALITY_ID='".$localityid."'";die;
+                                 $up = mysql_query($updateQry) or die(mysql_error());
                                  if($up)
                                  {
                                      $seoData['meta_title'] = $txtMetaTitle;
@@ -212,7 +211,7 @@
                                             }
                                          }      
                                              
-                                         header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+                                        // header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
                                  }
                             }
                             else{
