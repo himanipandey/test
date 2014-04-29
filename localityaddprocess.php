@@ -163,7 +163,6 @@
                                  $up = mysql_query($updateQry) or die(mysql_error());
                                  if($up)
                                  {
-                                     die("inner");
                                      $seoData['meta_title'] = $txtMetaTitle;
                                      $seoData['meta_keywords'] = $txtMetaKeywords;
                                      $seoData['meta_description'] = $txtMetaDescription;
@@ -212,8 +211,8 @@
                                             }
                                          }      
                                              
-                                        // header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
-                                 }else die("outer");
+                                         header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+                                 }
                             }
                             else{
                                 //code for insert new locality
