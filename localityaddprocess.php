@@ -137,7 +137,7 @@
                    if(!is_array($ErrorMsg))
                    {
                        if($localityid != '') { //code for update a locality
-                        $qryCity = "SELECT C.LABEL FROM locality L 
+                        $qryCity = "SELECT C.LABEL,c.label as cityname FROM locality L 
                             inner join suburb s on L.suburb_id = s.suburb_id
                             inner join city C on (C.city_id = s.city_id) 
                             where L.locality_id = $localityid";
@@ -204,7 +204,7 @@
                                              $arrLocId['locality_id'] = $localityid;
                                             $projList = ResiProject::getAllSearchResult($arrLocId); //all project of a locality
                                             foreach($projList as $value) {
-                                                $projUrl = createProjectURL($localityList->cityname, $txtCityName, $value->builder_name, $value->project_name, $value->project_id);
+                                                $projUrl = createProjectURL($dataCity['cityname'], $txtCityName, $value->builder_name, $value->project_name, $value->project_id);
                                                 $qryProUrl = "update resi_project set 
                                                               project_url = '".$projUrl."',updated_by = '".$_SESSION['adminId']."' where project_id = '".$value->project_id."'";
                                                 $resProjUrl = mysql_query($qryProUrl) or die(mysql_error());

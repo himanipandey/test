@@ -98,7 +98,7 @@ if (isset($_POST['btnSave'])) {
                             $cont_flag->save();				
                     }
         }
-		header("Location:CityList.php?page=1&sort=all");
+	header("Location:CityList.php?page=1&sort=all");
 		
 	}else if($cityid!= ''){
 	
@@ -119,7 +119,7 @@ if (isset($_POST['btnSave'])) {
                                 if($locId['locality_id'] != '') {
                                     $projList = ResiProject::getAllSearchResult($locId); //all project of a locality
                                     foreach($projList as $value) {
-                                        $projUrl = createProjectURL($localityList->cityname, $txtCityName, $value->builder_name, $value->project_name, $value->project_id);
+                                        $projUrl = createProjectURL($localityList->cityname, $localityList->label, $value->builder_name, $value->project_name, $value->project_id);
                                         $qryProUrl = "update resi_project set 
                                                       project_url = '".$projUrl."' where project_id = '".$value->project_id."'";
                                         $resProjUrl = mysql_query($qryProUrl) or die(mysql_error());
@@ -127,19 +127,19 @@ if (isset($_POST['btnSave'])) {
                                     }
                                 }
 
-                            $locUrl = createLocalityURL($txtCityName, $localityList->label,$localityList->locality_id,'locality');
+                            $locUrl = createLocalityURL($localityList->label,$txtCityName,$localityList->locality_id,'locality');
                             $updateLoc = "UPDATE ".LOCALITY." SET 
                                 URL	= '".$locUrl."',
                                 updated_at = now() WHERE LOCALITY_ID='".$localityList->locality_id."'";
                             $rt = mysql_query($updateLoc) or die(mysql_error()." loc url update");
                             
                         }
-                        $subList = Suburb::SuburbArr($cityid);
-                        foreach($subList as $subList) {
-                            $subUrl = createLocalityURL($txtCityName, $subList->label,$subList->suburb_id,'suburb');
+                        $subArr = Suburb::SuburbArr($cityid);
+                        foreach($subArr as $k=>$subList) {
+                            $subUrl = createLocalityURL($subList,$txtCityName,$k,'suburb');
                             $updateSub = "UPDATE ".SUBURB." SET 
                                 URL	= '".$subUrl."',
-                                updated_at = now() WHERE SUBURB_ID='".$subList->suburb_id."'";
+                                updated_at = now() WHERE SUBURB_ID='".$k."'";
                             $rt = mysql_query($updateSub) or die(mysql_error()." sub url update");
                         }
                        
@@ -152,7 +152,7 @@ if (isset($_POST['btnSave'])) {
                     $seoData['updated_by'] = $_SESSION['adminId'];
                     SeoData::insetUpdateSeoData($seoData);
                     
-                    ## - desccripion content flag handeling
+                    ## - descripion content flag handeling
 						$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $cityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'city' )));					   
 					   if($cont_flag){
 							$content_flag = '';

@@ -268,47 +268,7 @@ function specialCharacterValidation(fieldVal)
                         </table>
                       </td>
                     </tr>
-
-                    <tr>
-    <td  height="25" align="right" style="padding-left:5px;">
-    Add Suburb:
-                            </td>
-                           <td height="50%" align="left">
-                            <div id="mainsubcity">
-                             
-                            <select name="suburbId" id = "suburbId" class="suburbId" STYLE="width: auto">
-                            <option value="">Select Parent Suburb (optional)</option>
-                            {foreach from=$suburbSelect key=k item=v}
-                                           <option value="{$v.id}">{$v.label}</option>
-                                       {/foreach}
-                            </select> 
-                            
-                            </div>
-                            </td>
-                            <td height="25" align="left">
-                            <div id="mainsubcity_txtbox">
-                                    <input type="hidden" name="subcity_txtbox_hidden" id="subcity_txtbox_hidden">
-                                    <input type="text" name="subcity_txtbox" id="subcity_txtbox" maxLength="40">
-                                    <a href="#" onclick="addupdatesubcity();"><b>Save</b></a>  
-                                    <a href="#" onclick="showHier();"><b>See Hierarchy</b></a>
-                            </div>
-                            </tr>
-                            <tr>
-                              <div>
-                               <ul id="organisation">
-               
-
-                    </ul>
-               
-                        
-            
-            </div>
-            
-            
-
-        </div>
-                            </tr>
-
+              
                   </table>                
 		    {/if}
                  {else}
