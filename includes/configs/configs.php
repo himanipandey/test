@@ -746,9 +746,10 @@ $arrOtherCities =
    
 $arrOfferTypes = array(
     'NoPreEmi'=>'No Pre-EMI',
-    'PartEmi'=>'Part Now Part Later',
-    'NoCharges'=>'No Additional Charges (PLC/Amenities)',
+    'PartEmi'=>'Possession Linked Plan',
+    'NoCharges'=>'No Additional Charges',
     'PriceDiscount'=>'Price Discount',
-    'Other'=>'Other'
+    'Other'=>'Offer'
   );
+
 ?>

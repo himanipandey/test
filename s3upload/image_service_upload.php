@@ -8,7 +8,9 @@ class ImageServiceUpload{
         "option" => "property",
         "builder" => "builder",
         "locality" => "locality",
-        "bank" => "bank"
+        "bank" => "bank",
+        "city" => "city",
+        "suburb" => "suburb"
     );
 
     static $image_types = array(
@@ -28,13 +30,61 @@ class ImageServiceUpload{
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
         "locality" => array(
-            "locality_image" => "main",
-            "other" => "other",
             "mall" => "mall",
             "map"  => "map",
             "road" => "road",
             "school" => "school",
-            "hospital" => "hospital"
+            "hospital" => "hospital",
+            "hotel" => "hotel",
+            "bank" => "bank",
+            "station" => "station",
+            "gurdwara" => "gurdwara",
+            "mosque" => "mosque",
+            "bus stand" => "bus stand",
+            "park" => "park",
+            "hall" => "hall",
+            "office" => "office",
+            "buildings" => "buildings",
+            "other" => "other",
+            
+        ),
+       "city" => array(
+            "mall" => "mall",
+            "map"  => "map",
+            "road" => "road",
+            "school" => "school",
+            "hospital" => "hospital",
+            "hotel" => "hotel",
+            "bank" => "bank",
+            "station" => "station",
+            "gurdwara" => "gurdwara",
+            "mosque" => "mosque",
+            "bus stand" => "bus stand",
+            "park" => "park",
+            "hall" => "hall",
+            "office" => "office",
+            "buildings" => "buildings",
+             "other" => "other",
+            
+        ),
+         "suburb" => array(
+            "mall" => "mall",
+            "map"  => "map",
+            "road" => "road",
+            "school" => "school",
+            "hospital" => "hospital",
+            "hotel" => "hotel",
+            "bank" => "bank",
+            "station" => "station",
+            "gurdwara" => "gurdwara",
+            "mosque" => "mosque",
+            "bus stand" => "bus stand",
+            "park" => "park",
+            "hall" => "hall",
+            "office" => "office",
+            "buildings" => "buildings",
+             "other" => "other",
+            
         ),
         "bank" => array("logo" => "logo"));
 

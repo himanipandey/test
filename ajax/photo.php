@@ -17,9 +17,24 @@ $json = array(
     'result' => FALSE,
     'data' => ''
 );
-
-$data = array();
-
+ $objectType = '';
+ $objectId = '';
+ $obj = '';
+if(!empty($_REQUEST['locality'])) {
+    $objectId = $_REQUEST['locality'];
+    $objectType = 'locality';
+    $obj = 'LOCALITY_ID';
+}
+else if(!empty($_REQUEST['suburb'])) {
+    $objectId = $_REQUEST['suburb'];
+    $objectType = 'suburb';
+    $obj = 'SUBURB_ID';
+}
+else if(!empty($_REQUEST['city'])) {
+    $objectId = $_REQUEST['city'];
+    $objectType = 'city';
+    $obj = 'CITY_ID';
+}
 if ( !empty( $_REQUEST['upPh'] ) ) {
     $upPh = $_REQUEST['upPh'];
     $upPh = json_decode( $upPh, TRUE );
@@ -60,20 +75,37 @@ else {
         $data['suburb'] = $_REQUEST['suburb'];
     }
     if ( !empty( $_REQUEST['getPh'] ) ) {
-        if ( !empty( $_REQUEST['locality'] ) ) {
-            $data['locality'] = $_REQUEST['locality'];
+         $data = array();
+        
+       $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+        $content = file_get_contents($url);
+        $imgPath = json_decode($content);
+        
+       foreach($imgPath->data as $k=>$v){
+            $data[$k]['IMAGE_ID'] = $v->id;
+            $data[$k][$obj] = $v->objectId;
+            $data[$k]['priority'] = $v->priority;
+            $data[$k]['IMAGE_CATEGORY'] = $v->imageType->type;
+            $data[$k]['IMAGE_DISPLAY_NAME'] = $v->title;
+            $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
+            $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
+            $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
         }
-        $data = getPhoto( $data );
+        
     }
     else {
         $data = getListing( $data );
     }
 }
-
+$localityArr = array();
+ $localityType = ImageServiceUpload::$image_types;
+ $localityArr = $localityType[$objectType];
+//echo "<pre>";print_r($localityArr);die;
 if ( is_array( $data ) && count( $data ) ) {
     $json['result'] = TRUE;
     $json['data'] = $data;
+    $json[$objectType] = $localityArr;
+    $json['objectType'] = $objectType;
 }
-
 echo json_encode( $json );
 exit;
