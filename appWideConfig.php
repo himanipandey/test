@@ -1,6 +1,6 @@
 
 <?php
-require_once "$_SERVER[DOCUMENT_ROOT]/includes/session.php";
+require_once "/home/sysadmin/nightlytest.proptiger.com/includes/session.php";
 
 $gblData = array();
 if(!isset($noObStart))
