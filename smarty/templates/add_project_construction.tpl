@@ -97,8 +97,8 @@
   	}
   	else 
   	{
-  		 document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhistory('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
-       document.getElementById("history_showHide").style.display = '';
+		document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhistory('plus');><img src = '../images/plus.jpg' width ='20px'></a>";
+       document.getElementById("history_showHide").style.display = 'none';
   	}
   }
 </script>
