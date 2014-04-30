@@ -89,6 +89,48 @@ function check()
 	}	
 }
 
+function onSelectOption(c){
+
+      	$("#floor_name_"+c+" option").each(function() {
+		    $(this).remove();
+		});
+      	value = $("#options_"+c+" option:selected").text().trim();
+      	//alert(value);
+      	//$("#floor_name_"+c).text(value);
+      	//imgName1 = value+" 1";
+      	//imgName2 = value+" 2";
+      	//alert(value);
+      	if(value == "Floor Plan" || value == "Simplex"){
+      		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
+      	}
+      	else if(value == "Basement Floor" || value == "Stilt Floor" || value == "First Floor" || value == "Second Floor"|| value == "Third Floor" || value == "Terrace Floor" )
+      		$('<option>').val(value+" Plan").text(value+" Plan").appendTo('#floor_name_'+c);
+      	else if(value== "Duplex"){
+      		{foreach from=$duplex item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	else if(value== "Triplex"){
+      		{foreach from=$triplex item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	else if(value== "Penthouse"){
+      		{foreach from=$penthouse item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	else if(value== "Ground Floor"){
+      		{foreach from=$ground_floor item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	
+      	//$('<option>').val(imgName1).text(imgName1).appendTo('#floor_name_'+c);
+      	//$('<option>').val(imgName2).text(imgName2).appendTo('#floor_name_'+c);
+    }
+
+
 $(".pt_reqflrplan").fancybox();
 
 </script>
@@ -174,8 +216,9 @@ $(".pt_reqflrplan").fancybox();
 														<input type="hidden" value="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}" name="property_image_path[{$cnt}]" /><br><br>
 														
 														<b>Image Title:<font color = "red">*</font></b><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].NAME}" readonly="readonly" STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
-														<b>Delete/Edit:</b><input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
-														<b>New Image?:</b><input type="file" name="img[{$cnt}]"/>
+														
+														<b>Delete:</b><input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
+														
 
 
 													</div>

@@ -21,24 +21,50 @@
          return true;
       }
       
-      function onSelectOption(c){
-      	value = $("#options_"+c+" option:selected").text();
-      	//alert(value);
-      	//$("#floor_name_"+c).text(value);
-      	imgName1 = value+" 1";
-      	imgName2 = value+" 2";
-      	if(value == "Floor Plan"){
-      		$('#opt1').val(imgName1).text(imgName1);
-      		$('#opt2').hide();
+    function onSelectOption(c){
+
+      	$("#floor_name_"+c+" option").each(function() {
+		    $(this).remove();
+		});
+      	value = $("#options_"+c+" option:selected").text().trim();
+      	
+
+      	if(value == "Floor Plan" || value == "Simplex"){
+      		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
-      	else{
-      		$('#opt2').show();
-      		$('#opt1').val(imgName1).text(imgName1);
-      		$('#opt2').val(imgName2).text(imgName2);
+      	else if(value == "Basement Floor" || value == "Stilt Floor" || value == "First Floor" || value == "Second Floor"|| value == "Third Floor" || value == "Terrace Floor" )
+      		$('<option>').val(value+" Plan").text(value+" Plan").appendTo('#floor_name_'+c);
+      	else if(value== "Duplex"){
+      		{foreach from=$duplex item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
       	}
+      	else if(value== "Triplex"){
+      		{foreach from=$triplex item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	else if(value== "Penthouse"){
+      		{foreach from=$penthouse item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	else if(value== "Ground Floor"){
+      		{foreach from=$ground_floor item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+
+      	$("#floor_name_"+c+" option").each(function() {
+      		var str = $("#uploaded_"+c).val();
+      		//alert(str);
+      		if (str.indexOf($(this).text()) >= 0)
+		    	$(this).attr("disabled", true);
+		});
+      	
       	//$('<option>').val(imgName1).text(imgName1).appendTo('#floor_name_'+c);
       	//$('<option>').val(imgName2).text(imgName2).appendTo('#floor_name_'+c);
-      }
+    }
 
 
    /* function showHideDiv(divid,ctrl)
@@ -163,6 +189,7 @@
 				 
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}</td>
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_TYPE']}</td>
+				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
 				  <td><select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
 				  	<Option value="0">Select Floor Plan Options</Option>
 				  	
@@ -170,14 +197,15 @@
 					   		<Option >{$data}</Option>
 					   {/foreach}
 				  </select></td>
-				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
+				  
 				  	<td><select name = "floor_name[]" id = "floor_name_{($smarty.section.foo.index+1)}" width="60px">
-				  		<option id="opt1"></option>
-				  		<option id ="opt2"></option>
+				  		
 				  	</select></td>
+				  	<input type = "hidden" id = "uploaded_{($smarty.section.foo.index+1)}" value="{$uploadedStr[$smarty.section.foo.index]}">
 				  {else}
-				  	<td><input type = "text" name = "floor_name[]"  readonly="readonly" {if $plot[$smarty.section.foo.index] == 'yes'} value="View Plot Plan"
-				  		{elseif $commercial[$smarty.section.foo.index] == 'yes'}value = "View Commercial Plan" {/if}>
+				  <td></td>
+				  	<td><input type = "text" name = "floor_name[]"   {if $plot[$smarty.section.foo.index] == 'yes'} 
+				  		{elseif $commercial[$smarty.section.foo.index] == 'yes'} {/if}>
 				  	</td>
 				  {/if}
 				  

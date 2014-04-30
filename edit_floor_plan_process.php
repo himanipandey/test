@@ -3,7 +3,16 @@
 		ini_set("memory_limit","256M");
 		include("ftp.new.php");
 		$ErrorMsg='';
-
+		$floorPlanOptionsArr = array();
+	$villApartment = array();
+	$plot = array();
+	$commercial = array();
+	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor");
+	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
+	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan");
+	$triplex = array("Ground Floor Plan", "First Floor Plan", "Second Floor Plan");
+	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan");
 		$watermark_path = 'images/pt_shadow1.png';
 		 $projectId = $_GET['projectId'];
 		$projectDetail = ProjectDetail($projectId);
@@ -19,7 +28,7 @@
 	//print_r($ImageDataListings);
 		$ImageDataListingArr = array();
 		$optionsArr = getAllProjectOptions($projectId);
-		
+	
 		foreach ($optionsArr as $k1 => $v1) {
 			$objectType = "property";
 			
@@ -38,6 +47,26 @@
 			    $data['UNIT_TYPE'] = $v1['UNIT_TYPE'];
 			    $data['SIZE'] = $v1['SIZE'];
 			    $data['UNIT_NAME'] = $v1['UNIT_NAME'];
+			    if($v1['UNIT_TYPE']=='Apartment'){
+			    	//array_push($floorPlanOptionsArr, $apartmentArr);
+					$floorPlanOptionsArr[count($ImageDataListingArr)] = $apartmentArr;
+					//array_push($villApartment, )
+					$villApartment[count($ImageDataListingArr)] = "yes";
+					//echo $k;
+				}
+				else if($v1['UNIT_TYPE']=='Villa'){
+					//array_push($floorPlanOptionsArr, $villaArray);
+					$floorPlanOptionsArr[count($ImageDataListingArr)] = $villaArray;
+					$villApartment[count($ImageDataListingArr)] = "yes";
+				}
+				else if($v1['UNIT_TYPE']=='Plot'){
+					//unset($ProjectOptionDetail[$k]);
+					$plot[count($ImageDataListingArr)] = "yes";
+				}
+					
+				else if($v1['UNIT_TYPE']=='commercial')
+					$commercial[count($ImageDataListingArr)] = "yes";
+
 		        $data['SERVICE_IMAGE_ID'] = $v->id;
 		        //$data['objectType'] = $v->imageType->objectType->type;
 		        //$data['objectId'] = $v->objectId; 
@@ -64,15 +93,27 @@
 		        //echo $data['tower_id'].$data['tagged_month']."<br>";
 		        //print_r($v->jsonDump);
 		        array_push($ImageDataListingArr, $data);
+		        //echo $data['NAME']; 
+		       
 
 			}
 
 		}
-		
-
+		 print'<pre>';
+	print_r($floorPlanOptionsArr);
+print'<pre>';
+	print_r($villApartment);
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 		//$smarty->assign("img_path", $img_path);
-
+		
+		$smarty->assign("floorPlanOptionsArr", $floorPlanOptionsArr);
+	$smarty->assign("villApartment", $villApartment);
+	$smarty->assign("plot", $plot);
+	$smarty->assign("commercial", $commercial);
+	$smarty->assign("duplex", $duplex);
+	$smarty->assign("triplex", $triplex);
+	$smarty->assign("penthouse", $penthouse);
+	$smarty->assign("ground_floor", $ground_floor);
 		$count+=count($ImageDataFloorArr);
 		$count+=count($ImageDataListingArr);
 
@@ -89,10 +130,10 @@
 			$preview = $_REQUEST['preview'];
 			$smarty->assign("preview", $preview);
 			
-		 if( isset($_REQUEST['title']) &&  array_filter($_REQUEST['title'], empty_test) )
+		 /*if( isset($_REQUEST['title']) &&  array_filter($_REQUEST['title'], empty_test) )
 	      {
 	        $ErrorMsg["title"] = "Please enter Image Title.";
-	      }
+	      }*/
 	      //print_r($ErrorMsg);
 
 			if (isset($_POST['btnSave'])  && !is_array($ErrorMsg)) 
@@ -151,12 +192,12 @@
                     		$deleteVal = deleteFromImageService("option", $arrOptionId[$k], $service_image_id);
                             //$s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
                             //$s3upload->delete();
-                            header("Location:edit_floor_plan.php?projectId=$projectId&edit=edit");
+                            //header("Location:edit_floor_plan.php?projectId=$projectId&edit=edit");
 						}
 					}
 				}
 
-				if( $projectId == '') 
+				/*if( $projectId == '') 
 				{
 				  $ErrorMsg["projectId"] = "Please select Project name.";
 				}
@@ -170,7 +211,7 @@
 					$flag=0;
 					
 					/*******************Update location,site,layout and master plan from db and also from table*********/
-						$builderPath = $newImagePath.strtolower($BuilderName);
+						/*$builderPath = $newImagePath.strtolower($BuilderName);
 							
 						if(!is_dir($builderPath))
 						{
@@ -218,7 +259,7 @@
 											while (false !== ($file = readdir($handle)))
 											{								
 											/************Working for location plan***********************/
-												if(strstr($file,'floor-plan'))
+											/*	if(strstr($file,'floor-plan'))
 												{
 													if(strstr($file,$val))
 													{											
@@ -234,9 +275,7 @@
 										                        "folder" => $extra_path,
 										                        "count" => "floor_plan".$key,
 										                        "image" => $file,
-										                        "priority" => 1,
 										                        "title" => $arrTitle[$k],
-										                        "active" => "1",
 										                        "update" => "update",
 										                        "service_image_id" => $service_image_id
 										                );
@@ -316,7 +355,7 @@
                                                         $s3upload->upload();
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
-												}																						
+											/*	}																						
 											}
 											
 										}
@@ -365,7 +404,7 @@
 							}
 					}
 				
-				} 
+				} */
 			}
 			else if(isset($_POST['btnExit']))
 			{

@@ -22,7 +22,7 @@
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
     $tower_div = "<select name= 'txtTowerId[]' id='tower_dropdown' onchange='tower_change(this)'>";
-    $tower_div .="<option value='0' >--Select Tower--</option>";
+    $tower_div .="<option value='' >--Select Tower--</option>";
     foreach($towerDetail_object as $s){
         $s = $s->to_array();
         foreach($s as $key=>$value){
@@ -32,7 +32,7 @@
         }
         $tower_div .="<option value='".$s['TOWER_ID']."' >".$s['TOWER_NAME']."</option>";
     }
-    $tower_div .= "<option value='-1'>Other</option>";
+    $tower_div .= "<option value='0'>Other</option>";
     $tower_div .= "</select>";
     $smarty->assign("towerDetailDiv", $tower_div);
     
@@ -110,7 +110,10 @@ if (isset($_POST['Next']))
 				}
 				else
 				$arrTaggedDate[$k] = null;
-				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
+				if( $_REQUEST['txtTowerId'][$k+1]=="")
+							$arrTowerId[$k] = null;
+				else
+					$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
 				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
 				//die($arrTaggedDate[$k].$arrTowerId[$k]);
 			}

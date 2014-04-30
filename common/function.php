@@ -179,10 +179,15 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
                     unset($service_extra_paramsArr["takenAt"]);
         if(!isset($params['jsonDump']) || empty($params['jsonDump']))
                     unset($service_extra_paramsArr["jsonDump"]);
-
+         if(!isset($params['priority']) || empty($params['priority']))
+                    unset($service_extra_paramsArr["priority"]);
+        if(!isset($params['description']) || empty($params['description']))
+                    unset($service_extra_paramsArr["description"]);
+        if(!isset($params['title']) || empty($params['title']))
+                    unset($service_extra_paramsArr["title"]);
 
                 print'<pre>';
-                print_r($service_extra_paramsArr);//die();
+                print_r($service_extra_paramsArr);die();
     if($IMG==""){
                 //print'<pre>';
                 //print_r($params);//die();

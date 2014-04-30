@@ -50,10 +50,13 @@
 				$data['tagged_month'] =  date("Y-m-d", $t);
 		    }
 		   
-
+		    
 	        $str = trim(trim($v->jsonDump, '{'), '}');
 	        $towerarr = explode(":", $str);
-	        $data['tower_id'] = (int)trim($towerarr[1],"\"");
+	        if(trim($towerarr[1],"\"") == "null")
+	        	$data['tower_id']==null;
+	        else
+	       		$data['tower_id'] = (int)trim($towerarr[1],"\"");
 	       //var_dump($data['tower_id']);
 	        $data['PROJECT_ID'] = $v->objectId;
 	        $data['STATUS'] = $v->active;
@@ -207,7 +210,10 @@ print_r($ImageDataListingArr);
 							$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
 						}
 						else	$arrTaggedDate[$k] = NULL; //"0000-00-00T00:00:00Z"
-						$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
+						if( $_REQUEST['txtTowerId'][$k]=="")
+							$arrTowerId[$k] = null;
+						else
+							$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
 						$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
 						$service_image_id = $_REQUEST["service_image_id"][$k];
 					
@@ -893,7 +899,7 @@ print_r($ImageDataListingArr);
 												$image->load($path);
                                                 $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 												$image->save($imgdestpath);
-												
+
 
 												$params = array(
 							                        "image_type" => "project_image",
@@ -990,8 +996,9 @@ print_r($ImageDataListingArr);
 					
 
 
-				 
-		if(empty($ErrorMsg)){		
+		print_r($ErrorMsg);		 
+		if(empty($ErrorMsg)){	
+		//die("here");	
 			if($preview == 'true')
 				header("Location:show_project_details.php?projectId=".$projectId);
 			else

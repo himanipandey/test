@@ -22,12 +22,15 @@
 
         	$params = array(
                         "image_type" => "logo",
-                        "folder" => "bank_list/"
+                        "folder" => "bank_list/",
+                        "image" => $logo_name,
+                        "title" => $bankname
 
             );
+            $dest		=	$newImagePath."bank_list/".$logo_name;
+			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
         	$response 	= writeToImageService(  $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
-			/*$dest		=	$newImagePath."/bank_list/".$logo_name;
-			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);*/
+			/**/
 			if($response['serviceResponse'])
 			{
 				/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
@@ -65,13 +68,16 @@
 
         	$params = array(
                         "image_type" => "logo",
+                        "title" => $bankname,
                         "folder" => "bank_list/",
+                        "image" => $logo_name,
                         "action" => "update",
                         "service_image_id" => $service_image_id
             );
+            $dest		=	$newImagePath."bank_list/".$logo_name;
+			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
         	$response 	= writeToImageService(  $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
-			/*$dest		=	$newImagePath."/bank_list/".$logo_name;
-			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);*/
+			/**/
 			if($response['serviceResponse'])
 			{
 				/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
