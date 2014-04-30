@@ -1,7 +1,6 @@
 
 <?php
-echo $_SERVER[DOCUMENT_ROOT];die("here");
-require_once "$_SERVER[DOCUMENT_ROOT]/includes/session.php";
+include "$_SERVER[DOCUMENT_ROOT]/includes/session.php";
 
 $gblData = array();
 if(!isset($noObStart))
