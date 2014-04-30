@@ -113,6 +113,7 @@ if ($_SERVER['REQUEST_METHOD']) {
     $projectDetail = projectDetailById($projectId);
     $smarty->assign("pre_launch_date", $projectDetail[0]['PRE_LAUNCH_DATE']);
     $smarty->assign("remark", $current_phase[0]['REMARKS']);
+    $smarty->assign("sold_out_date", $current_phase[0]['sold_out_date']);
     
     $towerDetail = fetch_towerDetails_for_phase($projectId, $phaseId);
     $smarty->assign("TowerDetails", $towerDetail);
@@ -138,13 +139,15 @@ if (isset($_POST['btnSave'])) {
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $isLaunchedUnitPhase = $_REQUEST['isLaunchUnitPhase'];
-
+    $sold_out_date = $_REQUEST['sold_out_date']; 
+   
     // Assign vars for smarty
     $smarty->assign("phasename", $phasename);
     $smarty->assign("launch_date", $launch_date);
     $smarty->assign("completion_date", $completion_date);
     $smarty->assign("remark", $remark);
     $smarty->assign("pre_launch_date",$pre_launch_date);
+     $smarty->assign("sold_out_date",$sold_out_date);
 
     $PhaseExists = searchPhase($phaseDetail, $phasename);
     if ($PhaseExists != -1 && $phasename != $old_phase_name) {
@@ -159,6 +162,8 @@ if (isset($_POST['btnSave'])) {
             $completion_date = '';
         if($pre_launch_date == '0000-00-00')
             $pre_launch_date = '';
+        if($sold_out_date == '0000-00-00')
+            $sold_out_date = '';
         
         if( $launch_date != '' && $completion_date !='' ) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
@@ -179,6 +184,13 @@ if (isset($_POST['btnSave'])) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
           }
+         if($sold_out_date != ''){
+			$retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
+            if( $retdt <= 0 || $launch_date=='') {
+                $error_msg = "Sold out date to be always greater than Launch date";
+            } 			 
+			 
+		 }
          
      
             // Flats Config
@@ -218,7 +230,7 @@ if (isset($_POST['btnSave'])) {
             // Update
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
-                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers;
+                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date;
                 if($phaseId != '0'){
                     //          Updating existing phase
                     $phase = ResiProjectPhase::virtual_find($phaseId);
@@ -226,6 +238,7 @@ if (isset($_POST['btnSave'])) {
                     $phase->phase_name = $phasename;
                     $phase->launch_date = $launch_date;
                     $phase->remarks = $remark;
+                    $phase->sold_out_date = $sold_out_date;
                     $phase->save();
                     if($phasename == 'No Phase') {
                         $qryUpdateProjectLaunchDate = "update resi_project 
