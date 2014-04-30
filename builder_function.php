@@ -797,6 +797,21 @@ function allProjectFloorImages($projectId) {
    return $ImageDataListingArr;
 }
 
+
+
+function getAllProjectOptions($projectId){
+    $qryOpt = "SELECT OPTIONS_ID as OPTION_ID, OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
+        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+    $resOpt = mysql_query($qryOpt);
+    $OptionsArr = array();
+    while ($dataOpt = mysql_fetch_assoc($resOpt)) {
+            
+            
+            $OptionsArr[] = $dataOpt;
+    }
+    return $OptionsArr;
+
+}
 /* * *******search a tower exists or not in given array************** */
 
 function searchTower($towerArray, $newTower) {

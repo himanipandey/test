@@ -158,7 +158,7 @@ $(".pt_reqflrplan").fancybox();
 															<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}														
 															
 															" target="_blank">
-																<img src="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}" height="70px" width="70px" title = "{$ImageDataListingArr[data].IMAGE_URL}" alt ="{$ImageDataListingArr[data].IMAGE_URL}" />
+																<img src="{$ImageDataListingArr[data].IMAGE_URL}" height="70px" width="70px" title = "{$ImageDataListingArr[data].IMAGE_URL}" alt ="{$ImageDataListingArr[data].IMAGE_URL}" />
 															</a>
 															
 															
@@ -173,7 +173,7 @@ $(".pt_reqflrplan").fancybox();
 
 														<input type="hidden" value="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}" name="property_image_path[{$cnt}]" /><br><br>
 														
-														<b>Image Title:<font color = "red">*</font></b><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].NAME}"  STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
+														<b>Image Title:<font color = "red">*</font></b><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].NAME}" readonly="readonly" STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
 														<b>Delete/Edit:</b><input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
 														<b>New Image?:</b><input type="file" name="img[{$cnt}]"/>
 

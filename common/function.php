@@ -117,7 +117,7 @@ function updateThisPhotoProperty( $data = array() ) {
 }
 
 function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDisplayName, $imgDescription, $serviceImgId, $displayPriority ) {
-    if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID' ) ) ) {
+    if ( in_array( $columnName, array( 'LOCALITY_ID', 'SUBURB_ID', 'CITY_ID', 'LANDMARK_ID' ) ) ) {
 
     }
     else {
@@ -166,6 +166,108 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
     return $currentCycle;
 }
 
+
+/*********************Write Image to image service*************************************************************/
+
+function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImagePath){
+          
+        $service_extra_paramsArr = array( 
+            "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']));
+
+        if(!isset($params['tagged_date']) || empty($params['tagged_date']))
+                    unset($service_extra_paramsArr["takenAt"]);
+        if(!isset($params['jsonDump']) || empty($params['tagged_date']))
+                    unset($service_extra_paramsArr["jsonDump"]);
+
+    if($IMG==""){
+                //print'<pre>';
+                //print_r($params);//die();
+                //die("here");
+        $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId,
+                     "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));
+
+        $returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
+    }
+         
+    else{
+            $returnValue = array();
+            $extension = explode( "/", $IMG['type'] );
+            $extension = $extension[ count( $extension ) - 1 ];
+            $imgType = "";
+            if ( strtolower( $extension ) == "jpg" || strtolower( $extension ) == "jpeg" ) {
+                $imgType = IMAGETYPE_JPEG;
+            }
+            elseif ( strtolower( $extension ) == "gif" ) {
+                $imgType = IMAGETYPE_GIF;
+            }
+            elseif ( strtolower( $extension ) == "png" ) {
+                $imgType = IMAGETYPE_PNG;
+            }
+            else {
+                //  unknown format !!
+            }
+            if ( $imgType == "" ) {
+                $returnValue['error'] = "format not supported";
+            }
+            else {
+                //  no error
+                if($params['image']){
+                    
+                    $imgName = $params['image']; 
+                    $dest = $params['folder'].$imgName;
+                    $source = $newImagePath.$dest;
+                }
+                else{
+                    $imgName = $objectType."_".$objectId."_".$params['count']."_".time().".".strtolower( $extension );
+                    
+                    $dest = $params['folder'].$imgName;
+                    $source = $newImagePath.$dest;
+                    
+                    
+                    $move = move_uploaded_file($IMG['tmp_name'],$source);
+                }
+
+                //print'<pre>';
+                //print_r($params); //die();
+                
+                $s3upload = new ImageUpload($source, array( "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
+                    "image_type" => strtolower($params['image_type']), "service_image_id"=>$params['service_image_id'],
+                    "service_extra_params" => $service_extra_paramsArr));
+               
+                if(isset($params['update']))
+                    $returnValue['serviceResponse'] =  $s3upload->update();
+                else{
+                    
+                    $returnValue['serviceResponse'] =  $s3upload->upload();
+                }
+                
+                
+                
+            }
+        }
+    return $returnValue;
+}
+
+
+/*********************update/delete  Image from image service*************************************************************/
+function deleteFromImageService($objectType="", $objectId=0, $service_image_id){
+   // die($service_image_id);
+    $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $service_image_id));
+    return $s3upload->delete();
+}
+
+
+
+/*********************Read Images from image service*************************************************************/
+
+function readFromImageService($objectType, $objectId){
+    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+    return $url;
+}
+
+
+
 function getDBDistanceQueryString($lon1Col, $lat1Col, $lon2Col, $lat2Col){
     return "((ACOS(SIN($lat1Col * PI() / 180) * SIN($lat2Col * PI() / 180) + COS($lat1Col * PI() / 180) * COS($lat2Col * PI() / 180) * COS(($lon1Col - $lon2Col) * PI() / 180)) * 180 / PI()) * 60 * 1.1515 * 1609.34)";
+
 }

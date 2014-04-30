@@ -1,3 +1,6 @@
+
+
+
 </td>
 </tr>
 <tr xmlns="http://www.w3.org/1999/html">
@@ -70,6 +73,21 @@
                                         </div>
                                     </td>
                                 </tr>
+                                
+
+                                <tr>
+                                    <td width="200px">
+                                        <label class="lbl"> Search a Landmark </label>
+                                    <div class="ui-widget">
+                                        <input type="hidden" name="upImg" value="1">
+                                        <input type="hidden" name="landmarkId"  id = "landmarkId">
+                                        <input type="hidden" name="landmarkName"  id = "landmarkName">
+                                        <input id="search" onchange="areaTypeChanged('landmark')"></td></div>
+                                    
+                                    
+                                    
+                                </tr>
+
                                 <tr>
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
@@ -171,4 +189,10 @@
 <div id="locality-id">{$localityId}</div>
 {/if}
 </div>
+
+
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
+
 <script type="text/javascript" src="js/photo.js"></script>

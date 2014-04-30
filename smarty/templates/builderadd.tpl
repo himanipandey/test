@@ -1,4 +1,5 @@
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/photo.js"></script>
 <script>
 	function showhide_row(numrow)
 	{
@@ -31,6 +32,19 @@
 
 	 return true;
   }
+
+
+  function getPhotos(){
+			
+		var template = '<img src="{$imgSrc}" width = 150 height = 100 />';
+
+		$("a#view").html( template );
+		$("a#view").fancybox();
+	
+	}
+
+	
+
   $(document).ready(function(){
       $("#txtBuilderName").change(function(){
         var builderid = $(this).val();
@@ -163,6 +177,7 @@
 
 				</tr>
 				<input type = 'hidden' name = 'imgedit' value = '{$imgedit}'>
+				<input type = 'hidden' name = 'imgSrc' value = '{$imgSrc}'>
 					{if $img != ''}
 				
 				<tr>
@@ -171,12 +186,7 @@
 					
 					
 					<div id='content'>
-								<a id="view" href="{$imgDisplayPath}{$img}" title="Builder Logo">View Image</a>  
-								<script type="text/javascript">
-								$(document).ready(function() {
-								$("a#view").fancybox();
-								});
-								</script>
+								<a id="view" href="" onclick="getPhotos(); return false;" title="Builder Logo">View Image</a>  
 					</div>
 				  
 				</tr>
