@@ -26,7 +26,7 @@
         
         fclose($handle);
         exec("cd ".SERVER_PATH_SOLR_RESTART."/cron/migration; php migrateRefData.php; php main.php $tmpFile");
-        exec("php ".SERVER_PATH_SOLR_RESTART."/solr/solrIndex.php $projectId");
+        exec("cd  ".SERVER_PATH_SOLR_RESTART."/solr; php solrIndex.php $projectId");
         $msg = "Successfully migrated following ProjectIds:<br>$projectId";
 
     }
