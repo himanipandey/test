@@ -8,8 +8,9 @@ class CommentsHistory extends ActiveRecord\Model
         $updationCycleId = $updationCycleId."_".date("M-y");     
         foreach( $arrCommentTypeValue as $key=>$value ) {
 
-            $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? AND status=?",
-                $projectId, $key, $updationCycleId,"New");
+            $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? 
+                           AND status=? AND UPDATION_CYCLE_ID = ?",
+                $projectId, $key, $updationCycleId,"New",$projectUpdationCycleId);
 
             $getComments = CommentsHistory::find('all', array("conditions" => $conditions));   
 

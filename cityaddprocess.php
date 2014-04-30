@@ -112,7 +112,7 @@ if (isset($_POST['btnSave'])) {
 		$rt = mysql_query($updateQry);
 		if($rt){
                     if($txtCityUrlOld != $txtCityUrl) { //update locality project and suburb url
-                        $localityList = Locality::getLocalityByCity($cityid);
+                        $localityList = Locality::getAllLocalityByCity($cityid);
                         $projList = array();
                         foreach($localityList as $localityList) {
                                 $locId['locality_id'] = $localityList->locality_id;
