@@ -3,7 +3,7 @@
 	ini_set("memory_limit","256M");
 	include("ftp.new.php");
 	$ErrorMsg='';
-
+	$image_id=0;
 	$watermark_path = "images/pt_shadow1.png";
 	 $projectId = $_GET['projectId'];
 	$projectDetail	= ProjectDetail($projectId);
@@ -924,12 +924,13 @@
 							                    $serviceResponse = $returnArr['serviceResponse'];
 								                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
-												//$image_id = $image_id->id;
+												//echo " no error".($key+1)." ".$image_id;
 											}
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												$image_id=0;
+												//die();//echo " error".($key+1)." ".$image_id;
 												break 1;
 											}
 
@@ -953,6 +954,7 @@
 											$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = NULL, ";
 											
 										$dbpath = explode("/images_new",$img_path);
+										echo $image_id;
 										if($image_id>0){
 											$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 														SET 
@@ -961,10 +963,10 @@
 															".$add_tower."
 															DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',
 															SERVICE_IMAGE_ID   = ".$image_id."
-														WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
-											$res	=	mysql_query($qry); //die($qry);
+														WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$_REQUEST['service_image_id'][$k]."'";
+											$res	=	mysql_query($qry); echo $qry;//die($qry);
 										}
-										$image_id=0;
+										$image_id=0; //die();
 										if($flag==1)
 										{
 											$builderfolder=strtolower($BuilderName);
