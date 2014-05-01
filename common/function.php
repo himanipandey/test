@@ -171,7 +171,7 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 
 function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImagePath){
           print'<pre>';
-                print_r($params);
+                print_r($params);//die();
         $service_extra_paramsArr = array( 
             "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']));
 

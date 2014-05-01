@@ -146,7 +146,7 @@
                                     <td>
                                         <label class="lbl">Upload Pictures</label>
                                         <div class="valueField">
-                                            <input id="area-img" type="file" name="img[]" multiple  /><br />
+                                            <input id="area-img" type="file" name="img[]" autocomplete="off" multiple  /><br />
                                             <button>Upload</button>
                                         </div>
                                     </td>

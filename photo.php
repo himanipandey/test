@@ -85,7 +85,9 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $uploadStatus = array();
         if ( $errMsg == "" ) {
             $imageCount = count( $IMG['name'] );
+            echo $imageCount;
             for( $__imgCnt = 0; $__imgCnt < $imageCount; $__imgCnt++ ) {
+                echo "here0";
                 if ( $IMG['error'][ $__imgCnt ] == 0 ) {
                     $img = array();
                     $img['error'] = $IMG['error'][ $__imgCnt ];
@@ -116,8 +118,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                       //die("here");
                     $serviceResponse = $returnArr['serviceResponse'];
-                    if($returnArr['error']){
-                        $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $returnArr['error'];
+                    if(!empty($serviceResponse["service"]->response_body->error->msg)){
+                        $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $serviceResponse["service"]->response_body->error->msg;
                     }
                     else{
                         // add to database
@@ -315,21 +317,22 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                 $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                                   //die("here");
                                 $serviceResponse = $returnArr['serviceResponse'];
-                                if($returnArr['error']){
-                                    $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $returnArr['error'];
+                                if(!empty($serviceResponse["service"]->response_body->error->msg)){
+                                    $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $serviceResponse["service"]->response_body->error->msg;
                                 }
                                 else{
+                                    $image_id = $serviceResponse["service"]->response_body->data->id;
                                     //deleteFromImageService($areaType, $areaId, );
                                     // add to database
                                     $qryUpdate = "update locality_image set 
                                         IMAGE_CATEGORY = '".$imgCategory."',
                                         IMAGE_DESCRIPTION = '".$imgDescription."',
                                         IMAGE_DISPLAY_NAME = '".$imgDisplayName."',
-                                        SERVICE_IMAGE_ID = ".$serviceResponse['service']->response_body->data->id.",
+                                        SERVICE_IMAGE_ID = '".$image_id."',
                                         IMAGE_NAME = '".$imgName."'    
-                                     WHERE IMAGE_ID = $ImgID";
+                                     WHERE SERVICE_IMAGE_ID = $ImgID";
                                     $resImg = mysql_query($qryUpdate) or die(mysql_error());
-                                    
+                                    //echo $qryUpdate;die();
                                     $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
                                 }
                             }

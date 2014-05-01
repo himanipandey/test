@@ -132,7 +132,7 @@
 						{/if}
 						<tr bgcolor = '#F7F7F7'>
 							<td align = "right"><b>Bank Logo:</b></td>
-							<td align = "left"><input type = "file" name = "logo"></td>
+							<td align = "left"><input type = "file" name = "logo" autocomplete="off" ></td>
 						</tr>
 						<tr bgcolor = '#F7F7F7'>
 							<td align = "right" valign ="top"><font color="red">*</font><b>Bank Detail:</b></td>
