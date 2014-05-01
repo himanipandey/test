@@ -82,13 +82,14 @@
 	}
  
   function history_validation($month_expected_completion,$year_expected_completion,$month_effective_date,$year_effective_date){
-	global $hiserrorMsg;
+	global $hiserrorMsg,$current_element;
+	
 	  
     if(strlen($month_expected_completion)==1)
       $month_expected_completion = "0".$month_expected_completion;
       
     $expectedCompletionDate  = $year_expected_completion."-".$month_expected_completion."-01";
-    
+        
     if($month_effective_date == '' && $year_effective_date == '')
       $effectiveDt = date('Y')."-".date('m')."-01";
     else
@@ -105,6 +106,8 @@
       $expectedCompletionDate = '';
     if($pre_launch_date == '0000-00-00')
       $pre_launch_date = '';
+    if($expectedCompletionDate > $current_element['EXPECTED_COMPLETION_DATE'])
+       $hiserrorMsg['CompletionDateGreater'] = "History Updation: Completion date($expectedCompletionDate) to be always less the latest completion date.";
     if($launchDate != '' && ($year_expected_completion < $expLaunchDate[0] 
           || ( $year_expected_completion == $expLaunchDate[0] && $month_expected_completion <= $expLaunchDate[1])) ){
       $hiserrorMsg['CompletionDateGreater'] = "History Updation: Completion date($expectedCompletionDate) to be always greater than launch date.";

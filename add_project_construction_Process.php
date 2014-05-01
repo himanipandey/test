@@ -95,6 +95,7 @@
                 $year_effective_date = $_REQUEST['year_effective_date'];
                 $smarty->assign("month_effective_date", $month_effective_date);
                 $smarty->assign("year_effective_date", $year_effective_date);
+                $month_effective_date = ($month_effective_date<9)?"0".$month_effective_date:$month_effective_date;
                 if($month_effective_date == '' && $year_effective_date == '')
                     $effectiveDt = date('Y')."-".date('m')."-01";
                 else
@@ -139,8 +140,12 @@
                     if( $retdt <= 0 ) {
                         $errorMsg['CompletionDateGreater'] = "Completion date to be always greater than Pre Launch date";
                     }
-                 }
-                if(count($errorMsg)>0){
+                 }                
+                $submitted_date_string = $year_effective_date."-".$month_effective_date."-01";
+                if(strtotime($expectedCompletionDate) > strtotime($current_element['EXPECTED_COMPLETION_DATE']) && strtotime($submitted_date_string) < strtotime($current_element['SUBMITTED_DATE'])){
+				  	$errorMsg['CompletionDateGreater'] = "Completion date($expectedCompletionDate) to be always less the latest completion date.";
+				}
+			    if(count($errorMsg)>0){
                     $smarty->assign('errorMsg',$errorMsg);
                 }
                 /******end validation taken from project add/edit page*************/
@@ -149,7 +154,7 @@
 					
 					$updation_flag = 0;//flag of updation in phase and resi_project tables
 					
-					$submitted_date_string = $year_effective_date."-".(($month_effective_date<10)?"0".$month_effective_date:$month_effective_date);
+					$submitted_date_string = $year_effective_date."-".$month_effective_date;
 					
                     //code for update completion date history if month and year are same and already exists entry
                     
@@ -184,8 +189,7 @@
                     
                     //maintaining Ascending Order                    
                     if($res){
-						$month = ($month_effective_date<9)?"0".$month_effective_date:$month_effective_date;
-						$effectiveDt = $year_effective_date."-".$month."-01";
+						$effectiveDt = $year_effective_date."-".$month_effective_date."-01";
 						$check_rows = mysql_query("select * from resi_proj_expected_completion 
 										where project_id = '".$projectId."' and phase_id = '".$phaseId."' 
 										 and DATE_FORMAT(SUBMITTED_DATE, '%Y-%m-%d') < '".$effectiveDt."' 
@@ -203,42 +207,8 @@
 
 						}		
 						
-					}
-                    
-                    //print "<pre>".print_r($exist_eff_date,1)."</pre>"; die;
-                    
-                    /*
-                    $qryOldData = "select * from ".RESI_PROJ_EXPECTED_COMPLETION." 
-                        where project_id = $projectId and phase_id = $phaseId";
-                    $resOldData = mysql_query($qryOldData);
-                    if(mysql_num_rows($resOldData)>0 && $_REQUEST['updateOrInsertRow'] == 1) {
-                        $submittted_dateMin = $year_effective_date."-".$month_effective_date."-01";
-                        $submittted_dateMax = $year_effective_date."-".$month_effective_date."-31";
-                        $qry = "UPDATE ".RESI_PROJ_EXPECTED_COMPLETION."
-                                SET	
-                                    EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."',
-                                    REMARK = '".$remark."',
-                                    SUBMITTED_DATE = '".$effectiveDt."'
-                                WHERE
-                                    PROJECT_ID = '".$projectId."' 
-                                AND
-                                    phase_id = $phaseId
-                                AND submitted_date >= '".$submittted_dateMin."' 
-                                and submitted_date <= '".$submittted_dateMax."'";
-                    }
-                    else {
-                        
-                          $qry = "insert into ".RESI_PROJ_EXPECTED_COMPLETION."
-                                    SET	
-                                        EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."',
-                                        REMARK = '".$remark."',
-                                        PROJECT_ID = '".$projectId."',
-                                        phase_id = $phaseId,
-                                        SUBMITTED_DATE = '".$effectiveDt."'";                        
-                    }*/
-                    
-                    
-                    if($res && ($month_effective_date == date('m') && $year_effective_date == date('Y'))) { // updation only with current month data
+					}     
+					if($res && ($month_effective_date == date('m') && $year_effective_date == date('Y'))) { // updation only with latest month data
                         //phase update
                         $qryPhaseUpdate = "update resi_project_phase 
                             set completion_date = '".$expectedCompletionDate."',
