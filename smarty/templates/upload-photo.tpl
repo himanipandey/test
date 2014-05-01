@@ -83,7 +83,7 @@
                                         <input type="hidden" name="landmarkId"  id = "landmarkId">
                                         <input type="hidden" name="landmarkName"  id = "landmarkName">
                                         <input id="search" onchange="areaTypeChanged('landmark')"></td></div>
-                                    
+                                        <input type="hidden" id="imgName" name="imgDisplayName">
                                     
                                     
                                 </tr>
@@ -105,7 +105,8 @@
                                     <td>
                                         <label class="lbl">Image Display Name</label>
                                         <div class="valueField">
-                                                <span id="img-name" ></span>
+                                                <label id="img-name"></label>
+                                                 
                                         </div>
                                     </td>
                                 </tr> 
