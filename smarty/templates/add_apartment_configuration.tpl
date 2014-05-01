@@ -212,9 +212,9 @@
                                 {$color = "bgcolor = '#FCFCFC'"}
                             {/if}
 
-                            {if $txtUnitNameval[$smarty.section.foo.index] != ''}
+                            {* if $txtUnitNameval[$smarty.section.foo.index] != '' *}
                                 {$flg = $flg+1}
-                            {/if}
+                            {* /if *}
                         <tr {$color} id="row_{($smarty.section.foo.index+1)}">
                           <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}"></td>
                            {$globalDelete = $globalDelete+1}
