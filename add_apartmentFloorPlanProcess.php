@@ -6,8 +6,14 @@
 	$villApartment = array();
 	$plot = array();
 	$commercial = array();
-	$apartmentArr = array("Floor Plan", "Lower Level Duplex", "Upper Level Duplex", "Lower Level Penthouse", "Upper Level Penthouse");
-	$villaArray = array("Basement Floor Plan", "Stilt Floor Plan", "Ground Floor Plan", "First Floor Plan", "Second Floor Plan", "Terrace Floor Plan", "Lower Level Duplex", "Upper Level Duplex");
+	$uploadedArr = array();
+	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor");
+	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
+	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan");
+	$triplex = array("Ground Floor Plan", "First Floor Plan", "Second Floor Plan");
+	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan");
+
 	$watermark_path = 'images/pt_shadow1.png';
 	$projectId				=	$_REQUEST['projectId'];
     $projectDetail = ResiProject::virtual_find($projectId);
@@ -16,22 +22,43 @@
     $builderDetail = $builderDetail->to_custom_array();
 	$ProjectOptionDetail	=	ProjectOptionDetail($projectId);
 
+
+
 	foreach ($ProjectOptionDetail as $k => $v) {
+		$objectType = "property";
+		$image_type = "floor_plan";
+	    $objectId = $v['OPTIONS_ID'];
+	    
+	    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+	    //echo $url;
+	    $content = file_get_contents($url);
+	    $imgPath = json_decode($content);
+	    
+	    $arr = array();
+	    foreach($imgPath->data as $k1=>$v1){
+				array_push($arr, $v1->title);
+		}
+		$uploadedArr[$k] = implode("-", $arr);
 		if($v['OPTION_TYPE']=='Apartment'){
 			$floorPlanOptionsArr[$k] = $apartmentArr;
 			$villApartment[$k] = "yes";
+			
 		}
 		else if($v['OPTION_TYPE']=='Villa'){
 			$floorPlanOptionsArr[$k] = $villaArray;
 			$villApartment[$k] = "yes";
 		}
-		else if($v['OPTION_TYPE']=='Plot')
+		else if($v['OPTION_TYPE']=='Plot'){
+			unset($ProjectOptionDetail[$k]);
 			$plot[$k] = "yes";
+		}
+			
 		else if($v['OPTION_TYPE']=='commercial')
 			$commercial[$k] = "yes";
+
 	}
 	//print("<pre>");
-	//print_r($ProjectOptionDetail);
+	//print_r($uploadedArr);
 	
 
 
@@ -44,6 +71,11 @@
 	$smarty->assign("villApartment", $villApartment);
 	$smarty->assign("plot", $plot);
 	$smarty->assign("commercial", $commercial);
+	$smarty->assign("duplex", $duplex);
+	$smarty->assign("triplex", $triplex);
+	$smarty->assign("penthouse", $penthouse);
+	$smarty->assign("ground_floor", $ground_floor);
+	$smarty->assign("uploadedStr", $uploadedArr);
 	if(isset($_GET['edit']))
 	{
 		$smarty->assign("edit_projct", $projectId);
@@ -63,15 +95,16 @@
 		$flgins	=	0;
 		foreach($_REQUEST['floor_name'] AS $key=>$val)
 		{
-			
+			//die($_REQUEST['floor_name'][$key]);
 			if($val != '')
-				$flgins	=	1;	
-			if($_REQUEST['floor_name'][$key] != '')
+				
+			if($_REQUEST['floor_name'][$key] != '' && $_REQUEST['floor_name'][$key] != "0")
 			{
 	   
-	   	echo strtolower($_FILES["imgurl"]["type"][$key]);
+	   	//echo strtolower($_FILES["imgurl"]["type"][$key]);
 	   		  if($_FILES['imgurl']['name'][$key] != '')
 	   		  {
+	   		  	$flgins	=	1;	
 				if(!in_array(strtolower($_FILES["imgurl"]["type"][$key]), $arrImg))
 				{
 					$ErrorMsg1 = "You can upload only jpg / jpeg gif png images.";//die("here");
@@ -137,7 +170,7 @@
 
 								if(!$txtlocationplan)
 								{
-									$ErrorMsg1 = "Problem in Image Upload Please Try Again.";
+									$ErrorMsg1 .= "Problem in Image Upload Please Try Again.";
 									break;
 								}
 								else
@@ -174,28 +207,28 @@
 							                        "folder" => $extra_path,
 							                        "count" => "floor_plan".$key,
 							                        "image" => $file,
-							                        "priority" => 1,
 							                        "title" => $floor_name,
-							                        "tagged_date" => "2014-04-22T00:00:00Z",
-							                        "active" => "1",
+							                        
+							                       
 							                );
 
 
 							                    //  add images to image service
 
 							                    
-							                    $returnArr = writeToImageService(  $img, "option", $option_id, $params, $newImagePath);
-							                    //print_r($returnArr);
-							                    $serviceResponse = $returnArr['serviceResponse'];
-								                    if($serviceResponse){
-								                    $image_id = $serviceResponse["service"]->response_body->data->id;
-													//$image_id = $image_id->id;
-												}
-												else {
-													//echo $returnArr['error'];
-													$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
-													break;
-												}
+						                    $returnArr = writeToImageService(  $img, "option", $option_id, $params, $newImagePath);
+						                    //print_r($returnArr);
+						                    $serviceResponse = $returnArr['serviceResponse'];
+							                if(empty($serviceResponse["service"]->response_body->error->msg)){
+						                    $image_id = $serviceResponse["service"]->response_body->data->id;
+											//$image_id = $image_id->id;
+											}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
+											}
 
                                             /*$s3upload = new ImageUpload($absolute_path,array("s3" => $s3,
                                                 "image_path" => $local_path, "object" => "option",
@@ -277,7 +310,11 @@
 										}
 									} 
 								}
+								if($image_id>0){
 									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8','1', $image_id),";
+									 $image_id=0;
+								}
+
 							}
 							}
 								
@@ -291,7 +328,8 @@
 				{
 					if ($_FILES["imgurl"]["type"][$key])
 					{
-						 $ErrorMsg1	=	'You can not enter image without floor name';
+						 $ErrorMsg1	.=	'You can not enter image without floor name';
+						 $flgins = 1;
 					}
 				}
 			}
@@ -299,9 +337,9 @@
 		
 		if($flgins == 0)
 		{
-			 $ErrorMsg1	=	'Please select atleast one floor plan Image';
+			 $ErrorMsg1	.=	'Please select atleast one floor plan Image';
 		}
-		if($ErrorMsg1 == '' AND $insertlist != '')
+		if($ErrorMsg1 == '' AND $insertlist != '' )
 		{
 			
 			$qry	 =  "INSERT INTO ".RESI_FLOOR_PLANS." (OPTION_ID,NAME,IMAGE_URL,DISPLAY_ORDER,SERVICE_IMAGE_ID) VALUES ";
@@ -309,7 +347,7 @@
 			$fullQry =  substr($str,0,-1);
 			$res	 =	mysql_query($fullQry) or die(mysql_error());
 			$lastid  =  mysql_insert_id();	
-			if($res)
+			if($res && empty($ErrorMsg))
 			{				
 				if($_POST['Next'] == 'Add More')
 				{
@@ -341,6 +379,6 @@
 		  header("Location:project_other_price.php?projectId=".$projectId);
 	}
 
-	$smarty->assign("ErrorMsg1", $ErrorMsg1);
+	$smarty->assign("ErrorMsg1", $ErrorMsg1."<br>".$ErrorMsg['ImgError']);
 
 ?>

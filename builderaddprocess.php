@@ -19,6 +19,7 @@ if ($_POST['btnExit'] == "Exit")
 
 if ($_POST['btnSave'] == "Save")
 {
+    //die($_REQUEST['serviceImageId']);
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
         $legalEntity			=	trim($_POST['legalEntity']);
 	$txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
@@ -210,15 +211,21 @@ if ($_POST['btnSave'] == "Save")
                 }
                 
                 $name	=	$_FILES["txtBuilderImg"]["name"];
-               
-                if (($_FILES["txtBuilderImg"]["type"]))
+               $dest       =   $newImagePath.$foldername."/".$name;
+                $move       =   move_uploaded_file($_FILES['txtBuilderImg']['tmp_name'],$dest);
+                if (($_FILES["txtBuilderImg"]["type"]) && $move)
                 {
                         
 
                             $params = array(
                                 "image_type" => "builder_image",
-                                "folder" => $foldername."/"
+                                "folder" => $foldername."/",
+                                "image" => $name,
+                                "title" => strtolower($legalEntity),
+                                "service_image_id" => $_REQUEST['serviceImageId'],
+                                "update" => "update",
                             );
+
                         $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);
                         if($response['serviceResponse'])
                         {
@@ -398,7 +405,7 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("website", $dataedit['WEBSITE']);
             $smarty->assign("revenue", $dataedit['REVENUE']);
             $smarty->assign("debt", $dataedit['DEBT']);
-            $smarty->assign("service_image_id", $dataedit['SERVICE_IMAGE_ID']);
+            //$smarty->assign("service_image_id", $dataedit['SERVICE_IMAGE_ID']);
 
             $arrContact = BuilderContactInfo($builderid);
             $arrContactProjectMapping = builderContactProjectMapping($builderid);
@@ -432,7 +439,7 @@ if ($_POST['btnSave'] == "Save")
             }
             //array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("imgSrc", $data[0]['SERVICE_IMAGE_PATH']);
-          
+            $smarty->assign("service_image_id", $data[0]['SERVICE_IMAGE_ID']);
     //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
 
 

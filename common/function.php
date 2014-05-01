@@ -170,15 +170,24 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 /*********************Write Image to image service*************************************************************/
 
 function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImagePath){
-          
+         // print'<pre>';
+                //print_r($params);
         $service_extra_paramsArr = array( 
             "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']));
 
         if(!isset($params['tagged_date']) || empty($params['tagged_date']))
                     unset($service_extra_paramsArr["takenAt"]);
-        if(!isset($params['jsonDump']) || empty($params['tagged_date']))
+        if(!isset($params['jsonDump']) || empty($params['jsonDump']))
                     unset($service_extra_paramsArr["jsonDump"]);
+         if(!isset($params['priority']) || empty($params['priority']))
+                    unset($service_extra_paramsArr["priority"]);
+        if(!isset($params['description']) || empty($params['description']))
+                    unset($service_extra_paramsArr["description"]);
+        if(!isset($params['title']) || empty($params['title']))
+                    unset($service_extra_paramsArr["title"]);
 
+               // print'<pre>';
+               // print_r($service_extra_paramsArr);//die();
     if($IMG==""){
                 //print'<pre>';
                 //print_r($params);//die();
@@ -251,7 +260,7 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
 
 /*********************update/delete  Image from image service*************************************************************/
 function deleteFromImageService($objectType="", $objectId=0, $service_image_id){
-   // die($service_image_id);
+    //die($service_image_id);
     $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $service_image_id));
     return $s3upload->delete();
 }

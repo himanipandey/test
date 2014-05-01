@@ -22,7 +22,7 @@
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
     $tower_div = "<select name= 'txtTowerId[]' id='tower_dropdown' onchange='tower_change(this)'>";
-    $tower_div .="<option value='0' >--Select Tower--</option>";
+    $tower_div .="<option value='' >--Select Tower--</option>";
     foreach($towerDetail_object as $s){
         $s = $s->to_array();
         foreach($s as $key=>$value){
@@ -32,7 +32,7 @@
         }
         $tower_div .="<option value='".$s['TOWER_ID']."' >".$s['TOWER_NAME']."</option>";
     }
-    $tower_div .= "<option value='-1'>Other</option>";
+    $tower_div .= "<option value='0'>Other</option>";
     $tower_div .= "</select>";
     $smarty->assign("towerDetailDiv", $tower_div);
     
@@ -105,12 +105,17 @@ if (isset($_POST['Next']))
 
 					$tagged_date = substr($_REQUEST['img_date'.($k+1)],0,7);
 					$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
+
 					//$arrTaggedDate[$k] = null;
 				}
 				else
 				$arrTaggedDate[$k] = null;
-				$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
+				if( $_REQUEST['txtTowerId'][$k+1]=="")
+							$arrTowerId[$k] = null;
+				else
+					$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
 				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
+				//die($arrTaggedDate[$k].$arrTowerId[$k]);
 			}
 		}
 		if(count($arrValue) == 0)
@@ -188,7 +193,7 @@ if (isset($_POST['Next']))
 			$newdirpro		=	$newImagePath.$BuilderName."/".$ProjectName;
 			$foldname		=	strtolower($ProjectName);
 			$andnewdirpro	=	 $newImagePath.$BuilderName."/".$foldname;
-			print_r($arrValue);
+			//print_r($arrValue);
 			foreach($arrValue as $key=>$val)
 			{
 				
@@ -220,7 +225,7 @@ if (isset($_POST['Next']))
 
 				if(!$txtlocationplan)
 					{
-					$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
+					$ErrorMsg["ImgError"] .= "Problem in Image Upload Please Try Again.";
 					break;
 				}
 				else
@@ -241,7 +246,7 @@ if (isset($_POST['Next']))
 								rewinddir($handle);
 								while (false !== ($file = readdir($handle)))
 								{
-									echo $file; echo $val;
+									
 								/************Working for location plan***********************/
 									if(strstr($file,'loc-plan'))
 									{
@@ -283,8 +288,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -383,8 +390,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -479,8 +488,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
 
@@ -578,8 +589,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -675,8 +688,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -775,10 +790,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
- 
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
 
+												break 1;
 											}
 
 
@@ -885,8 +900,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
 
@@ -1253,8 +1270,10 @@ if (isset($_POST['Next']))
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
 
@@ -1367,7 +1386,7 @@ if (isset($_POST['Next']))
 
 							//else
 							//{
-							if($image_id)
+							if($image_id>0)
 							{
 								$qryinsert = "INSERT INTO ".PROJECT_PLAN_IMAGES."
 												SET PLAN_IMAGE		=	'".$imgDbPath[1]."',
@@ -1380,11 +1399,12 @@ if (isset($_POST['Next']))
 													TAGGED_MONTH = '".$arrTaggedDate[$key]."',
 													".$add_tower."
 													SUBMITTED_DATE	=	now()";
-								 echo "query".$qryinsert;
+								 //echo "query".$qryinsert;
 								 $resinsert	=	mysql_query($qryinsert) or die(mysql_error());
 								
 							//}
 							}
+							$image_id=0;
 
 						}
 					}
@@ -1410,15 +1430,17 @@ if (isset($_POST['Next']))
 
 					//$result = upload_file_to_img_server_using_ftp($source,$dest,1);
 					//image_idPOST['Next'] == 'Save')
-			if($_POST['Next'] == 'Add More')
-				header("Location:project_img_add.php?projectId=".$projectId);
-			else if($_POST['Next'] == 'Save')
-				header("Location:ProjectList.php?projectId=".$projectId);
-			else
-				header("Location:add_specification.php?projectId=".$projectId);
+			
 				}
 		}
-
+		if(empty($ErrorMsg)){
+			if($_POST['Next'] == 'Add More')
+					header("Location:project_img_add.php?projectId=".$projectId);
+			else if($_POST['Next'] == 'Save')
+					header("Location:ProjectList.php?projectId=".$projectId);
+			else
+				header("Location:add_specification.php?projectId=".$projectId);
+		}
 	}
 }
 else if(isset($_POST['Skip']))

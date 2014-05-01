@@ -22,7 +22,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $imgDescription = !empty( $_REQUEST['imgDescription'] ) ? $_REQUEST['imgDescription'] : '';
         $displayPriority = !empty( $_REQUEST['displayPriority'] ) ? $_REQUEST['displayPriority'] : '999';
 
-       
+       //die($imgDisplayName);
         if ( $city ) {
             $smarty->assign( 'cityId', $city );
         }
@@ -92,7 +92,12 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     $img['type'] = $IMG['type'][ $__imgCnt ];
                     $img['name'] = $IMG['name'][ $__imgCnt ];
                     $img['tmp_name'] = $IMG['tmp_name'][ $__imgCnt ];
-                    
+                    $extension = explode( "/", $img['type'] );
+                    $extension = $extension[ count( $extension ) - 1 ];
+                    $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
+
+                    $dest       =   $newImagePath."locality/".$imgName;
+                    $move       =   move_uploaded_file($IMG['tmp_name'][ $__imgCnt ],$dest);
 
                     $params = array(
                         "priority" => $displayPriority,
@@ -101,12 +106,13 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         "title" => $imgDisplayName,
                         "column_name" => $columnName,
                         "folder" => "locality/",
+                        "image" => $imgName,
                         "count" => $__imgCnt,
                         
                     );
                     //  add images to image service
             
-                    $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
+                    
                     $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                       //die("here");
                     $serviceResponse = $returnArr['serviceResponse'];
