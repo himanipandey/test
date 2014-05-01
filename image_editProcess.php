@@ -50,10 +50,13 @@
 				$data['tagged_month'] =  date("Y-m-d", $t);
 		    }
 		   
-
+		    
 	        $str = trim(trim($v->jsonDump, '{'), '}');
 	        $towerarr = explode(":", $str);
-	        $data['tower_id'] = (int)trim($towerarr[1],"\"");
+	        if(trim($towerarr[1],"\"") == "null")
+	        	$data['tower_id']==null;
+	        else
+	       		$data['tower_id'] = (int)trim($towerarr[1],"\"");
 	       //var_dump($data['tower_id']);
 	        $data['PROJECT_ID'] = $v->objectId;
 	        $data['STATUS'] = $v->active;
@@ -76,7 +79,7 @@
 
 
 	$count =0;
-	$count+=count($imgData);
+	$count+=count($ImageDataListingArr);
 	if(!isset($_REQUEST['preview']))
 		$_REQUEST['preview'] = '';
 	$preview = $_REQUEST['preview'];
@@ -131,6 +134,7 @@
 					  	}
 					  	else {//checking duplicacy
 							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k],$_REQUEST['currentPlanId'][$k]);
+
 							if($ext_vlinks){
 								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist."; 
 							}
@@ -206,24 +210,33 @@
 							$arrTaggedDate[$k] = $tagged_date."-01T00:00:00Z";
 						}
 						else	$arrTaggedDate[$k] = NULL; //"0000-00-00T00:00:00Z"
-						$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
+						if( $_REQUEST['txtTowerId'][$k]=="")
+							$arrTowerId[$k] = null;
+						else
+							$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k];
 						$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k];
 						$service_image_id = $_REQUEST["service_image_id"][$k];
 					
 
+						if($_REQUEST['PType'][$k]=="Construction Status" || $_REQUEST['PType'][$k]=="Cluster Plan")
+							$jsonDump = array(
+	                        	"tower_id" => $arrTowerId[$k],
+	                        );
+						else $jsonDump = null;
+						if($_REQUEST['PType'][$k]=="Construction Status" )
+							$taggedDate = $arrTaggedDate[$k];
+						else
+							$taggedDate = null;
 
-					
 					if($_FILES['img']['name'][$k] == ''){
 						$params = array(
 	                        "image" => $file,
 	                        "priority" => $arrDisplayOrder[$k],
 	                        "title" => $arrTitle[$k],
 	                        "service_image_id" => $service_image_id,
-	                        "tagged_date" => $arrTaggedDate[$k],
+	                        "tagged_date" => $taggedDate,
 	                        "update" => "update",
-	                        "jsonDump" => array(
-	                        	"tower_id" => $arrTowerId[$k],
-	                        )
+	                        "jsonDump" => $jsonDump
 	                    );
 
 
@@ -255,15 +268,12 @@
 											SERVICE_IMAGE_ID   = ".$_REQUEST["service_image_id"][$k]."
 										WHERE PROJECT_ID = '".$projectId."' AND SERVICE_IMAGE_ID = '".$_REQUEST["service_image_id"][$k]."'";
 							$res	=	mysql_query($qry); //die($qry);
-							if($preview == 'true')
-								header("Location:show_project_details.php?projectId=".$projectId);
-							else
-								header("Location:ProjectList.php?projectId=".$projectId);
+							continue;
 						}
 						else {
 							//echo $returnArr['error'];
-							$ErrorMsg["ImgError"] = "Problem in Update Please Try Again.";
-							break;
+							$ErrorMsg["ImgError"] .= "Problem in Update for Image No ".($k+1);
+							continue;
 						}
 
                         
@@ -274,7 +284,7 @@
 
 
 					else 
-					{
+					{  
 						if(!in_array(strtolower($_FILES['img']['type'][$k]), $arrImg))
 						{
 						  $ErrorMsg["ImgError"] = "You can upload only ".ucwords(implode(" / ",$arrImg))." images.";
@@ -285,18 +295,20 @@
 							{
 								if(!preg_match("/-".$imgNamePart."\.[a-z]{3,4}$/", $_FILES['img']['name'][$k]) && $_FILES['img']['name'][$k] != '')
 								{
-									$ErrorMsg["ImgError"] = "The word ".$imgNamePart." should be part of image name at end.";	
+									$ErrorMsg["ImgError"] .= "The word ".$imgNamePart." should be part of image name at end.";	
 								}
 							}
 
 
 						}
+						$arrValue[$k] = $_FILES['img']['name'][$k];
 						
-						
-						$val = $_FILES['img']['name'][$k];
+						//$val = $_FILES['img']['name'][$k];
 						
 					}
-					//////////////////////////////////					
+				}
+			}
+		}		//////////////////////////////////					
 									
 					
 					
@@ -311,7 +323,7 @@
 					} 
 						
 					else
-					{
+					{  
 						$flag=0;
 					
 		/*******************Update location,site,layout and master plan from db and also from table*********/	
@@ -331,8 +343,9 @@
 							mkdir($proDir, 0777);
 						}
 
-						//foreach($arrValue as $key=>$val)
-						//{
+						foreach($arrValue as $k=>$val)
+						{
+							//die("here1");
 						//echo $k.$val;
 
 							
@@ -403,8 +416,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
 
@@ -451,8 +466,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                                 
@@ -499,8 +516,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                                
@@ -547,8 +566,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
                                                
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('master-plan','master-plan-bkp',$file);
@@ -596,8 +617,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                                 
@@ -647,8 +670,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                            
@@ -695,8 +720,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                           
@@ -745,8 +772,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                          
@@ -861,6 +890,7 @@
 										{
 											if(strstr($file,$val))
 											{
+
 												$image = new SimpleImage();
 												$path	=	$createFolder."/".$file;
 												$image->load($path);
@@ -897,8 +927,10 @@
 												//$image_id = $image_id->id;
 											}
 											else {
-												$ErrorMsg["ImgError"] = $serviceResponse["service"]->response_body->error->msg;
-												break 2;
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+
+												break 1;
 											}
 
                                                
@@ -921,7 +953,7 @@
 											$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = NULL, ";
 											
 										$dbpath = explode("/images_new",$img_path);
-										if($image_id){
+										if($image_id>0){
 											$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 														SET 
 															PLAN_IMAGE = '".$dbpath[1]."',
@@ -932,6 +964,7 @@
 														WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$service_image_id."'";
 											$res	=	mysql_query($qry); //die($qry);
 										}
+										$image_id=0;
 										if($flag==1)
 										{
 											$builderfolder=strtolower($BuilderName);
@@ -957,20 +990,21 @@
 							}
 
 						}
+						}
+					
 					}
 					
-				}
-				if($preview == 'true')
-							header("Location:show_project_details.php?projectId=".$projectId);
-						else
-							header("Location:ProjectList.php?projectId=".$projectId);	
 
 
-			}
+		//print_r($ErrorMsg);		 
+		if(empty($ErrorMsg)){	
+		//die("here");	
+			if($preview == 'true')
+				header("Location:show_project_details.php?projectId=".$projectId);
+			else
+				header("Location:ProjectList.php?projectId=".$projectId);
+		}
 
-		}	 
-				
-		
 	}
 		
 	else if(isset($_POST['btnExit']))

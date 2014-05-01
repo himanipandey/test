@@ -179,12 +179,36 @@ function updateDisplayLocation() {
     var areaType  = "",
         elementId = "",
         areaName  = "";
-        console.log(window.areaResponse['landmark']);
+    var imgType = $("#imgCat :selected").text();
+    if(imgType.indexOf('Select') >= 0)
+        imgType = "";
+        console.log(window.areaResponse);
 
-    if ( $('#search').val().trim()!='') {
+    if ( $('#search').val()!='') {
         areaType = "landmark";
         value = $('#landmarkName').val();
         $('#area-txt-name').html( areaType + " : " + value );
+        //fill display name for landmarks
+        if ( window.areaResponse['city'] != 0 ) {
+            elementId = "drp-dwn-city-" + window.areaResponse['city'];
+            var cityName = $('#'+elementId).html();
+            if(imgType!="")
+                $('#img-name').html(imgType+"-"+value+", "+cityName).val(imgType+"-"+value+", "+cityName); 
+            else if(imgType=="")
+                $('#img-name').html(value+", "+cityName).val(value+", "+cityName);
+            else 
+                $('#img-name').html("").val("");
+     
+        }
+        else{
+            if(imgType!="")
+             $('#img-name').html(imgType+"-"+value).val(imgType+"-"+value);
+            else if(imgType=="")
+             $('#img-name').html(value).val(value);
+            else 
+                 $('#img-name').html("").val("");
+        }
+        $("#imgName").val($('#img-name').val()); 
         return;
     }  
     else if ( window.areaResponse['locality'] != 0 ) {
@@ -204,6 +228,21 @@ function updateDisplayLocation() {
     }
     areaName = $('#'+elementId).html();
     $('#area-txt-name').html( areaType + " : " + areaName );
+
+//fill display name
+    var cityid = "drp-dwn-city-" + window.areaResponse['city'];
+    var cityName = $('#'+cityid).html();
+    if(imgType!="" && areaType != "City")
+            $('#img-name').html(imgType+"-"+areaName+","+cityName).val(imgType+"-"+areaName+","+cityName);
+    else if(imgType=="" && areaType != "City")
+            $('#img-name').html(areaName+", "+cityName).val(areaName+", "+cityName);
+    else if(imgType=="" && areaType == "City")
+         $('#img-name').html(areaName).val(areaName);
+    else  if(imgType!="" && areaType == "City")
+        $('#img-name').html(imgType+"-"+areaName).val(imgType+"-"+areaName);
+    else 
+         $('#img-name').html("").val("");
+    $("#imgName").val($('#img-name').val()); 
 }
 
 function verifyPhotoFormData() {

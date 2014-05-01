@@ -2217,7 +2217,7 @@ function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=
         else
             $currentPlanId = "and PROJECT_PLAN_ID != ".$currentPlanId;
 	$condition = '';
-	if($plan_id)
+	if($service_image_id)
 		$condition = " AND SERVICE_IMAGE_ID != '$service_image_id'";
 	$display_order = mysql_real_escape_string($display_order);
 	$Sql = "SELECT count(*) as cnt FROM " . PROJECT_PLAN_IMAGES . " WHERE 
