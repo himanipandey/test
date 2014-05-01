@@ -73,7 +73,7 @@ $dailyEmail = array(
             'sendifnodata'=>0
         ),
         array(
-            'sql'=>"SELECT id as OFFER_ID,project_id as PROJECT_ID,OFFER,OFFER_DESC,created_at as START_DATE,OFFER_END_DATE,STATUS FROM `project_offers` WHERE STATUS = 'Active' AND OFFER_END_DATE='".$future_date."';",
+            'sql'=>"SELECT pof.id as OFFER_ID,pof.project_id as PROJECT_ID,pof.OFFER,pof.OFFER_DESC,pof.created_at as START_DATE,pof.OFFER_END_DATE,pof.STATUS FROM `project_offers` pof inner join resi_project rp on rp.project_id = pof.project_id and rp.version='Cms' and rp.status in('Active','ActiveInCms') WHERE pof.STATUS = 'Active' AND pof.OFFER_END_DATE='".$future_date."';",
             'subject'=>'Project Offers Reaching Expiry Date',
             'recipients'=>array('ankur.dhawan@proptiger.com'), 
             'attachmentname'=>'expired_project_offers',
