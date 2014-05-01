@@ -358,7 +358,7 @@
                                                                                                                             </tr>
                                                                                                                         {/if}
                                                                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
-                                                                                                                           {if count($phase_quantity) == 0 || ($PlotQuantity[0]['supply'] != '' || $PlotQuantity[0]['supply'] != 0) || ($PlotQuantity[0]['launched'] != '' || $PlotQuantity[0]['launched'] != 0)}
+                                                                                                                           {if count($bedrooms_hash['Plot'])>0}
                                                                                                                                {$showHide = ""}
                                                                                                                            {else}
                                                                                                                                {$showHide = "style = 'display:none;'"}
