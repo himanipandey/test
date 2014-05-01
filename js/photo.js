@@ -226,7 +226,7 @@ function updateDisplayLocation() {
     if ( window.areaResponse['landmark'] != 0 ) {
        $('#area-txt-name').html( areaType + " : " + "hello"  );
     }
-    areaName = $('#'+elementId).html().trim();
+    areaName = $('#'+elementId).html();
     $('#area-txt-name').html( areaType + " : " + areaName );
 
 //fill display name
