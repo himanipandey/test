@@ -6,7 +6,7 @@
     include("dbConfig.php");
     include("includes/configs/configs.php");
     include("includes/db_query.php");
-    include("common/function.php");
+    require_once("common/function.php");
     include("imageService/image_upload.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
