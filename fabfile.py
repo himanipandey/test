@@ -16,4 +16,4 @@ def deploy_branch(branch):
 def deploy_branch(branch):
   local("git archive --format tar.gz --output /tmp/cms.tar.gz remotes/origin/%s" %(branch))
   put('/tmp/cms.tar.gz', '/tmp')
-  run("cd /home/sysadmin && mkdir cms_dev && cd cms_dev && tar -xf /tmp/cms.tar.gz && ln -s /home/sysadmin/public_html/images_new images_new && cp -r /home/sysadmin/cms_config_staging/* . && cd /home/sysadmin && mv cms cms_old && mv cms_dev cms && echo %s > cms/version && sudo rm -rf /tmp/*.tpl.php && rm -r cms_old" %(branch))
+  run("cd /home/sysadmin && mkdir cmsdev_new && cd cmsdev_new && tar -xf /tmp/cms.tar.gz && ln -s /home/sysadmin/public_html/images_new images_new && cp -r /home/sysadmin/cms_config_staging/* . && cd /home/sysadmin && mv cmsdev cmsdev_old && mv cmsdev_new cmsdev && echo %s > cmsdev/version && sudo rm -rf /tmp/*.tpl.php && rm -r cmsdev_old" %(branch))
