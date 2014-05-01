@@ -7,7 +7,6 @@ class CommentsHistory extends ActiveRecord\Model
     static function insertUpdateComments( $projectId, $arrCommentTypeValue, $updationCycleId, $projectUpdationCycleId = null ) {
         $updationCycleId = $updationCycleId."_".date("M-y");     
         foreach( $arrCommentTypeValue as $key=>$value ) {
-
             $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? 
                            AND status=? AND UPDATION_CYCLE_ID = ?",
                 $projectId, $key, $updationCycleId,"New",$projectUpdationCycleId);

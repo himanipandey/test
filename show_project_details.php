@@ -7,7 +7,7 @@
         include("modelsConfig.php");
 	include("includes/configs/configs.php");
 	include("builder_function.php");
-        include("common/function.php");
+        require_once("common/function.php");
 	AdminAuthentication();
 	$dept = $_SESSION['DEPARTMENT'];
 	$smarty->assign("arrProjEditPermission", $ARR_PROJ_EDIT_PERMISSION[$dept]);

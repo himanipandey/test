@@ -108,7 +108,7 @@ if (isset($_POST['btnSave'])) {
                             URL					=	'".$txtCityUrl."',
                             DISPLAY_ORDER			=	'".$DisplayOrder."',
                             updated_at = now(),
-                            DESCRIPTION			=	'".$desc."' WHERE CITY_ID='".$cityid."'";
+                            DESCRIPTION	= '".$desc."' WHERE CITY_ID='".$cityid."'";
 		$rt = mysql_query($updateQry);
 		if($rt){
                     if($txtCityUrlOld != $txtCityUrl) { //update locality project and suburb url

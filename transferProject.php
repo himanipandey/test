@@ -292,7 +292,7 @@
 		  $qryStg = "select * from master_project_stages where id = '".$stage."'";
           $resStg = mysql_query($qryStg) or die(mysql_error());
           $stageId = mysql_fetch_assoc($resStg);
-          CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name']); 
+          CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name'],$ProjectDetail['UPDATION_CYCLE_ID']); 
 		} 
        
 	}

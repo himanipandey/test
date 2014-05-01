@@ -73,8 +73,9 @@
                 {$bgcolor = '#FCFCFC'}
             {/if}
             <tr bgcolor = "{$bgcolor}">
-                <td valign ="top" style ="padding-left: 10px; font-size: 14px;" align = "left"><b>{$commentTypeMap[$val->comment_type]}:</b></td>
-                <td valign ="top" style ="padding-left: 10px; font-size: 14px;" align = "left">{$val->comment_text} <b>By {$val->fname} on {($val->date_time)|date_format:'%b-%y'} </b></td>
+                <td valign ="top" style ="padding-left: 10px; font-size: 14px;" align = "left"><b>{$commentTypeMap[$val->comment_type]} 
+                         :</b></td>
+                <td valign ="top" style ="padding-left: 10px; font-size: 14px;" align = "left">{if $val->comment_type == 'Audit2'} [{$val->status}] {/if}&nbsp;{$val->comment_text} <b>By {$val->fname} on {($val->date_time)|date_format:'%b-%y'} </b></td>
            </tr>
         {/foreach}
         <input type = "hidden" name = "projectId" value ="{$projectId}">

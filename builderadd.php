@@ -5,7 +5,7 @@
         include("modelsConfig.php");
 	include("includes/configs/configs.php");
 	include("builder_function.php");
-	include("common/function.php");
+	require_once("common/function.php");
     include("imageService/image_upload.php");
 	include("SimpleImage.php");
 	include("watermark_image.class.php");
