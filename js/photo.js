@@ -184,9 +184,9 @@ function updateDisplayLocation() {
         imgType = "";
         console.log(window.areaResponse);
 
-    if ( $('#search').val().trim()!='') {
+    if ( $('#search').val()!='') {
         areaType = "landmark";
-        value = $('#landmarkName').val().trim();
+        value = $('#landmarkName').val();
         $('#area-txt-name').html( areaType + " : " + value );
         //fill display name for landmarks
         if ( window.areaResponse['city'] != 0 ) {
@@ -226,7 +226,7 @@ function updateDisplayLocation() {
     if ( window.areaResponse['landmark'] != 0 ) {
        $('#area-txt-name').html( areaType + " : " + "hello"  );
     }
-    areaName = $('#'+elementId).html().trim();
+    areaName = $('#'+elementId).html();
     $('#area-txt-name').html( areaType + " : " + areaName );
 
 //fill display name
