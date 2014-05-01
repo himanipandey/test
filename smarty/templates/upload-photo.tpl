@@ -92,7 +92,7 @@
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="imgCategory">
+                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
                                             <option value="other">Select Category</option>
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
@@ -105,7 +105,7 @@
                                     <td>
                                         <label class="lbl">Image Display Name</label>
                                         <div class="valueField">
-                                                <input type="text" name="imgDisplayName" value="">
+                                                <span id="img-name" ></span>
                                         </div>
                                     </td>
                                 </tr> 
@@ -121,7 +121,7 @@
                                     <td>
                                         <label class="lbl">Image Display Priority</label>
                                         <div class="valueField">
-                                            <select name = "displayPriority">
+                                            <select name = "displayPriority" id="imgType">
                                                 <option value="999">Select Priority</option>
                                                 {$cnt = 0}
                                                 {section name=priorityLoop loop=10 step=1}

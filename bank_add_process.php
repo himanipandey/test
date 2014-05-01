@@ -71,7 +71,7 @@
                         "title" => $bankname,
                         "folder" => "bank_list/",
                         "image" => $logo_name,
-                        "action" => "update",
+                        "update" => "update",
                         "service_image_id" => $service_image_id
             );
             $dest		=	$newImagePath."bank_list/".$logo_name;

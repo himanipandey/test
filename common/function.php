@@ -187,7 +187,7 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
                     unset($service_extra_paramsArr["title"]);
 
                 print'<pre>';
-                print_r($service_extra_paramsArr);die();
+                print_r($service_extra_paramsArr);//die();
     if($IMG==""){
                 //print'<pre>';
                 //print_r($params);//die();
@@ -260,7 +260,7 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
 
 /*********************update/delete  Image from image service*************************************************************/
 function deleteFromImageService($objectType="", $objectId=0, $service_image_id){
-   // die($service_image_id);
+    //die($service_image_id);
     $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $service_image_id));
     return $s3upload->delete();
 }

@@ -19,7 +19,7 @@ if ($_POST['btnExit'] == "Exit")
 
 if ($_POST['btnSave'] == "Save")
 {
-    die($_REQUEST['serviceImageId']);
+    //die($_REQUEST['serviceImageId']);
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
         $legalEntity			=	trim($_POST['legalEntity']);
 	$txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
@@ -211,16 +211,19 @@ if ($_POST['btnSave'] == "Save")
                 }
                 
                 $name	=	$_FILES["txtBuilderImg"]["name"];
-               
-                if (($_FILES["txtBuilderImg"]["type"]))
+               $dest       =   $newImagePath.$foldername."/".$name;
+                $move       =   move_uploaded_file($_FILES['txtBuilderImg']['tmp_name'],$dest);
+                if (($_FILES["txtBuilderImg"]["type"]) && $move)
                 {
                         
 
                             $params = array(
                                 "image_type" => "builder_image",
                                 "folder" => $foldername."/",
+                                "image" => $name,
                                 "title" => strtolower($legalEntity),
-                                "service_image_id" => $_REQUEST['serviceImageId']
+                                "service_image_id" => $_REQUEST['serviceImageId'],
+                                "update" => "update",
                             );
 
                         $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);

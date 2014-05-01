@@ -196,7 +196,10 @@ print'<pre>';
 						}
 					}
 				}
-
+				if($preview == 'true')
+									header("Location:show_project_details.php?projectId=".$projectId);
+								else
+									header("Location:ProjectList.php?projectId=".$projectId);
 				/*if( $projectId == '') 
 				{
 				  $ErrorMsg["projectId"] = "Please select Project name.";

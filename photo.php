@@ -92,7 +92,9 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     $img['type'] = $IMG['type'][ $__imgCnt ];
                     $img['name'] = $IMG['name'][ $__imgCnt ];
                     $img['tmp_name'] = $IMG['tmp_name'][ $__imgCnt ];
-                    
+                    $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
+                    $dest       =   $newImagePath."locality/".$imgName;
+                    $move       =   move_uploaded_file($_FILES['img']['tmp_name'],$dest);
 
                     $params = array(
                         "priority" => $displayPriority,
@@ -101,12 +103,13 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         "title" => $imgDisplayName,
                         "column_name" => $columnName,
                         "folder" => "locality/",
+                        "image" => $imgName,
                         "count" => $__imgCnt,
                         
                     );
                     //  add images to image service
             
-                    $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
+                    
                     $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                       //die("here");
                     $serviceResponse = $returnArr['serviceResponse'];

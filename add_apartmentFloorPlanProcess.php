@@ -58,7 +58,7 @@
 
 	}
 	print("<pre>");
-	print_r($uploadedArr);
+	//print_r($uploadedArr);
 	
 
 
@@ -95,15 +95,16 @@
 		$flgins	=	0;
 		foreach($_REQUEST['floor_name'] AS $key=>$val)
 		{
-			
+			//die($_REQUEST['floor_name'][$key]);
 			if($val != '')
-				$flgins	=	1;	
-			if($_REQUEST['floor_name'][$key] != '')
+				
+			if($_REQUEST['floor_name'][$key] != '' && $_REQUEST['floor_name'][$key] != "0")
 			{
 	   
 	   	//echo strtolower($_FILES["imgurl"]["type"][$key]);
 	   		  if($_FILES['imgurl']['name'][$key] != '')
 	   		  {
+	   		  	$flgins	=	1;	
 				if(!in_array(strtolower($_FILES["imgurl"]["type"][$key]), $arrImg))
 				{
 					$ErrorMsg1 = "You can upload only jpg / jpeg gif png images.";//die("here");
@@ -327,7 +328,8 @@
 				{
 					if ($_FILES["imgurl"]["type"][$key])
 					{
-						 $ErrorMsg1	=	'You can not enter image without floor name';
+						 $ErrorMsg1	.=	'You can not enter image without floor name';
+						 $flgins = 1;
 					}
 				}
 			}
@@ -335,7 +337,7 @@
 		
 		if($flgins == 0)
 		{
-			 $ErrorMsg1	=	'Please select atleast one floor plan Image';
+			 $ErrorMsg1	.=	'Please select atleast one floor plan Image';
 		}
 		if($ErrorMsg1 == '' AND $insertlist != '' )
 		{
