@@ -179,7 +179,7 @@ if (isset($_POST['btnSave'])) {
             if( $retdt > 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
-            if(checkAvailablityDate($phaseId, $launch_date) || checkListingPricesDate($phaseId, $launch_date) ){
+            if($pre_launch_date == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launch_date) || checkListingPricesDate($projectId, $launch_date))) {
                 $error_msg  .= " Inventory or Prices with effective date before {$launch_date} are present. So can not change the Launch Date.";
             }
           }
@@ -333,15 +333,18 @@ if (isset($_POST['btnSave'])) {
 
 
 
-function checkAvailablityDate($phaseId, $date){
-    
+function checkAvailablityDate($projectId, $date){
+    $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active', "version" => 'Cms'), "order" => "phase_name asc"));
+    //print("<pre>");
+    //print_r($phases);
+    //$phasesArr = $phases->toArray();
     $rows = [];
 
-    
+    foreach ($phases as $p) {
         $sql = "select pa.* from project_availabilities pa 
         inner join project_supplies ps on (ps.id = pa.project_supply_id and ps.version='Cms') 
         inner join listings l on (l.id = ps.listing_id and l.status='Active')
-        inner join resi_project_phase rpp on (rpp.PHASE_ID=l.phase_id and rpp.PHASE_ID='{$phaseId}' and rpp.version='Cms')
+        inner join resi_project_phase rpp on (rpp.PHASE_ID=l.phase_id and rpp.PHASE_ID='{$p->phase_id}' and rpp.version='Cms')
         where pa.effective_month < '{$date}'";
         //die($sql);
         //$phase_availability = ProjectAvailability::findAvailabilityForPhase($projectId, $p->id);
@@ -351,19 +354,23 @@ function checkAvailablityDate($phaseId, $date){
         {
             $rows[] = $row;
         }
+    }
     //print("<pre>");
     //print_r($rows);
     if(empty($rows)) return false;
     else return true;
 }
 
-function checkListingPricesDate($phaseId, $date){
-   
+function checkListingPricesDate($projectId, $date){
+    $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active', "version" => 'Cms'), "order" => "phase_name asc"));
+    //print("<pre>");
+    //print_r($phases);
+    //$phasesArr = $phases->toArray();
     $rows = [];
-    
+    foreach ($phases as $p) {
     $sql = "select lp.* from listing_prices lp 
-        inner join listings l on (l.id = lp.listing_id and lp.status='Active' and lp.version='Cms')
-        inner join resi_project_phase rpp on (rpp.PHASE_ID=l.phase_id and rpp.PHASE_ID='{$phaseId}' and rpp.version='Cms')
+        inner join listings l on (l.id = lp.listing_id and lp.status='Active' and lp.version='Cms' and l.status='Active')
+        inner join resi_project_phase rpp on (rpp.PHASE_ID=l.phase_id and rpp.PHASE_ID='{$p->phase_id}' and rpp.version='Cms')
         where lp.effective_date < '{$date}'";
         $res = mysql_query($sql);
          
@@ -372,12 +379,20 @@ function checkListingPricesDate($phaseId, $date){
            
             $rows[] = $row;
         }
-    
-  //print("<pre>");
-   // print_r($rows);
+    }
+    //print("<pre>");
+    //print_r($rows);
 
     if(empty($rows)) return false;
     else return true;
+}
+
+function projectStageName($projectId){
+    $ProjectDetail = ResiProject::virtual_find($projectId);
+    $qryStg = "select * from master_project_stages where id = '".$ProjectDetail->project_stage_id."'";
+    $resStg = mysql_query($qryStg) or die(mysql_error());
+    $stageId = mysql_fetch_assoc($resStg);
+    return $stageId['name'];
 }
 
 /* * *********************************** */
