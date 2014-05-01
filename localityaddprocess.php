@@ -16,7 +16,7 @@
 //print_r($_REQUEST);//die("herer");
     $suburbSelect = Array();
     $QueryMember = "SELECT SUBURB_ID as id, LABEL as label, parent_suburb_id FROM ".SUBURB." WHERE 
-            CITY_ID ='".$cityId ."'  ORDER BY LABEL ASC";
+            CITY_ID ='".$cityId ."' and  STATUS = 'Active' ORDER BY LABEL ASC";
 
     $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
     while ($dataArr = mysql_fetch_array($QueryExecute))

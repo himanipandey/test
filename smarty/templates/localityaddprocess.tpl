@@ -98,8 +98,8 @@
                             <select name="parentId" id = "parentSelect" class="suburbId" STYLE="width: auto" onchange= "return changeParent();">
                             
                             {foreach from=$suburbSelect key=k item=v}
-                                           <option value="{$v.id}" {if $v.id==$parent_sub_id} selected = "selected" {/if}>{$v.label}</option>
-                                       {/foreach}
+                                <option value="{$v.id}" {if $v.id==$parent_sub_id} selected = "selected" {/if}>{$v.label}</option>
+                            {/foreach}
                             </select> 
                             
                             </div>
