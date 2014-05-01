@@ -184,7 +184,8 @@
                     
                     //maintaining Ascending Order                    
                     if($res){
-						
+						$month = ($month_effective_date<9)?"0".$month_effective_date:$month_effective_date;
+						$effectiveDt = $year_effective_date."-".$month."-01";
 						$check_rows = mysql_query("select * from resi_proj_expected_completion 
 										where project_id = '".$projectId."' and phase_id = '".$phaseId."' 
 										 and DATE_FORMAT(SUBMITTED_DATE, '%Y-%m-%d') < '".$effectiveDt."' 
