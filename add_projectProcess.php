@@ -301,6 +301,26 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 }
             }
         }
+        if($projectId !='' && $ErrorMsg['showTypeError'] == '') {
+			
+            if($_REQUEST['project_type_hidden'] != '' && $_REQUEST['project_type_hidden'] != 0)
+            {
+                if($project_type != $_REQUEST['project_type_hidden'])
+                {
+				   $all_config = mysql_query("select count(options_id) as cnt from resi_project_options where project_id = '$projectId'");
+				   if($all_config){
+					 $all_config = mysql_fetch_object($all_config);
+				     $all_config = ($all_config)?$all_config->cnt:0;
+				     if($all_config > 0){
+                       $ErrorMsgType['showTypeError'] = 'Before update the Project Type please delete all the config and config dependent data!';
+                       $ErrorMsg['showTypeError'] = 'error';
+				     }else
+                       $ErrorMsgType['showTypeError'] = '';
+				   }                 
+                }
+                
+            }
+        }
         if( $exp_launch_date != '' && $exp_launch_date != '0000-00-00' ) {
              $retdt  = ((strtotime($exp_launch_date)-strtotime(date("Y-m-d")))/(60*60*24));
             if( $retdt <= 0 ) {

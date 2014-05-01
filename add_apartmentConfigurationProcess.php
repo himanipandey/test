@@ -241,32 +241,92 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 else
                 {
 					$list_option_id = $_REQUEST['typeid_edit'][$key]; 
-					
-					//print $list_option_id; die;
-					
+															
 					############## Transaction Start##############
-					ResiProject::transaction(function(){
+					 ResiProject::transaction(function(){
 						
-						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1;
-																	
-						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive')");
+						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed,$unitType;
+												
+						if($unitType == 'Plot')
+							$bed = 0;
+																		
+						$flag = 0;
+						try{						
+										
+						$actual_listing = Listings::find_by_sql("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and phase_type = 'Actual' 
+											and lst.status = 'Active' and rpp.version = 'Cms'");											
+						if(!$actual_listing){
+							Listings::update_all(array('set' => 'status = "Inactive"','conditions' => array('option_id' => $list_option_id)));
+						}						
 						
+						//fetch all the options of bedrooms----------
+						$all_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Actual','option_type'=>$unitType)));
+																								
+						$all_options = array();
+						//print "<pre>".print_r($all_bed_options,1)."</pre>";
+						if($all_bed_options){
+						  foreach($all_bed_options as $key => $val){
+							  $all_options[] = $val->options_id;
+						  }
+						  $all_options = implode(",",$all_options);
+						  $all_active_listing = Listings::find('all',array('conditions'=>array("option_id in ($all_options) and status='Active'")));
+						  if(!$all_active_listing){
+							  $log_option_ids = '';
+							  //now inactive the logical
+							  $logical_bed_options = ResiProjectOptions::find('all',array('conditions'=>array('bedrooms'=>$bed,'project_id'=>$projectId,'option_category'=>'Logical','option_type'=>$unitType)));
+							  $log_option_ids = $logical_bed_options[0]->id;
+							 							  
+							  //deleting supplies
+							  if($log_option_ids){
+								  $log_lst_ids = Listings::find('all',array('conditions'=>array("option_id in ($log_option_ids)")));	
+								  $all_log_lst_ids = array();
+													
+								  foreach($log_lst_ids as $k => $v){
+										$all_log_lst_ids[] = $v->id;
+								  }
+								  $all_log_lst_ids = implode(",",$all_log_lst_ids);
+															 
+								  $all_log_supplies = mysql_query("select * from project_supplies where listing_id in (".$all_log_lst_ids.")");
+															  
+								  if($all_log_supplies){
+									  $log_supplies = array();
+									  while($val = mysql_fetch_object($all_log_supplies)){
+										$log_supplies[] = $val->id;
+									  }
+									  $log_supplies = implode(",",$log_supplies);
+									 
+									 ProjectAvailability::delete_all(array('conditions'=>array("project_supply_id in (".$log_supplies.")")));
+									 ProjectSupply::delete_all(array('conditions'=>array("id in (".$log_supplies.")"))); 
+									  
+								  }
+								 
+								  Listings::delete_all(array('conditions'=>array("option_id in ($log_option_ids)")));
+								
+								  ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $log_option_ids,$projectId)));		
+							  }
+							 }
+						}
+		
+						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive') and rpp.version = 'Cms'");
+						
+						$all_listings = array();
 						while($list_id = mysql_fetch_object($list_id_res)){
-							$qryDel_list = "DELETE FROM ".LISTINGS." WHERE  ID = '".$list_id->id."'";
-                            $resDel_list = mysql_query($qryDel_list);
+							$all_listings[] = $list_id->id;
 						}
-																																	
-						                                                  
-						$qryDel = "DELETE FROM ".RESI_PROJECT_OPTIONS." 
-                    WHERE
-                        OPTIONS_ID = '".$list_option_id."'
-                    AND
-                        PROJECT_ID = '".$projectId."'";
-						$resDel	= mysql_query($qryDel);
-						$flg_delete = 1;
-						if(!$resDel){
-							$ErrorMsg1 = 'Could not delete!';
+						if(count($all_listings) > 0){
+							$all_listings = implode(",",$all_listings);
+							Listings::delete_all(array('conditions'=>array("id in ($all_listings)")));												
 						}
+																	
+						ResiProjOptionsRoomSize::delete_all(array('conditions' => array('options_id' => $list_option_id)));	
+						
+						ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $list_option_id,$projectId)));
+					
+						}catch(Exception $e)
+						{
+							$ErrorMsg1 = 'Couuld not delete!';
+							return false;
+						}					
 								
 					});					
 					############## Transaction End ##############
@@ -357,7 +417,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("txtSizeLenval_P", $arrProjectType_P['LENGTH_OF_PLOT']);
         $smarty->assign("txtSizeBreval_P", $arrProjectType_P['BREADTH_OF_PLOT']);
         $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);
- //echo "<pre>";print_r($arrProjectType_VA); die;
+ //echo "<pre>";print_r($arrProjectType_VA); //die;
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['OPTION_NAME']);
         $smarty->assign("txtSizeval_VA", $arrProjectType_VA['SIZE']);

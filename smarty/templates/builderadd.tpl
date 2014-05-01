@@ -123,7 +123,7 @@
 				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Builder Description :</td>
 				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" cols="45">{$txtBuilderDescription}</textarea>
 				   <input type="hidden" name="txtOldBuilderDescription" value="{$txtBuilderDescription}" />
-				  {if $dept=='ADMINISTRATOR' && isset($contentFlag)}
+				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>
                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 				  {/if}
