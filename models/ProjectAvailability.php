@@ -75,6 +75,29 @@ class ProjectAvailability extends Model {
 			}
         }
         
+         //removing orphan prices and inventory
+        $orphan_inventory = ProjectAvailability::find("all", array("joins"=>"inner join project_supplies b on project_availabilities.project_supply_id = b.id and b.version = 'Website' inner join project_supplies c on b.listing_id = c.listing_id and c.version = 'Cms' 
+         left join project_availabilities d on c.id = d.project_supply_id and d.effective_month = project_availabilities.effective_month
+         left join listings lst on lst.id = b.listing_id and lst.id = c.listing_id
+         inner join resi_project_phase rpp on rpp.phase_id = lst.phase_id and rpp.version = 'Cms'  and rpp.project_id = '$projectId' and d.id is null"));
+		$all_orphan_avails = array();		
+		foreach($orphan_inventory as $key=>$value){
+		  $all_orphan_avails[] = $value->id;
+		}
+		$all_orphan_avails = implode(",", $all_orphan_avails);		
+		if($all_orphan_avails)
+		  ProjectAvailability::delete_all(array('conditions'=>array("id in (".$all_orphan_avails.")")));
+
+		$orphan_prices = ListingPrices::find("all",array("joins"=> "left join listing_prices b on listing_prices.listing_id = b.listing_id and listing_prices.effective_date = b.effective_date and b.version = 'Cms' inner join listings lst on lst.id = listing_prices.listing_id inner join resi_project_phase rpp on rpp.phase_id = lst.phase_id and rpp.version = 'Cms' and rpp.project_id = '$projectId' and b.id is null","conditions"=>array('version'=>'Website')));		
+		$all_orphan_prices = array();		
+		foreach($orphan_prices as $key=>$value){
+		  $all_orphan_prices[] = $value->id;
+		}
+		 $all_orphan_prices = implode(",", $all_orphan_prices);
+		if($all_orphan_prices)
+		  ListingPrices::delete_all(array('conditions'=>array("id in (".$all_orphan_prices.")")));	
+        
+        
         $all_inventory_data = self::find('all', array('project_supply_id'=>$all_supply_ids));
         
         $indexed_inventory_data = array();
