@@ -208,7 +208,7 @@
 						}		
 						
 					}     
-					if($res && ($month_effective_date == date('m') && $year_effective_date == date('Y'))) { // updation only with latest month data
+					if($res && ($month_effective_date == date('m',strtotime($current_element['SUBMITTED_DATE'])) && $year_effective_date == date('Y',strtotime($current_element['SUBMITTED_DATE'])))) { // updation only with latest month data
                         //phase update
                         $qryPhaseUpdate = "update resi_project_phase 
                             set completion_date = '".$expectedCompletionDate."',
