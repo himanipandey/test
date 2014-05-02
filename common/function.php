@@ -175,7 +175,7 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
                 //print_r($params);
 
         $service_extra_paramsArr = array( 
-            "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']));
+            "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'],"altText"=>$params['altText'], "jsonDump"=>json_encode($params['jsonDump']));
 
         if(!isset($params['tagged_date']) || empty($params['tagged_date']))
                     unset($service_extra_paramsArr["takenAt"]);
@@ -187,6 +187,8 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
                     unset($service_extra_paramsArr["description"]);
         if(!isset($params['title']) || empty($params['title']))
                     unset($service_extra_paramsArr["title"]);
+        if(!isset($params['altText']) || empty($params['altText']))
+                    unset($service_extra_paramsArr["altText"]);
 
                // print'<pre>';
                // print_r($service_extra_paramsArr);//die();

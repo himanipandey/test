@@ -241,6 +241,7 @@ if (isset($_POST['Next']))
                 $img['name'] = $_FILES["txtlocationplan"]["name"][$key];
                 $img['tmp_name'] = $_FILES["txtlocationplan"]["tmp_name"][$key];
                 //print_r($arrTitle); die();
+                $altText = $BuilderName." ".strtolower($ProjectName)." ".$arrTitle[$key];
 						if ($handle = opendir($createFolder))
 						{
 								rewinddir($handle);
@@ -268,7 +269,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-
+						                        "altText" => $altText,
 						                        
 						                    );
 
@@ -373,7 +374,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-						                        
+						                        "altText" => $altText,
 						                    );
 						                    //  add images to image service
 						            
@@ -470,7 +471,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-
+						                        "altText" => $altText,
 						                        
 						                    );
 						                    //  add images to image service
@@ -571,7 +572,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-
+						                        "altText" => $altText,
 						                        
 						                    );
 						                    //  add images to image service
@@ -661,7 +662,8 @@ if (isset($_POST['Next']))
 											$image->load($path);
                                             $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 											$image->save($imgdestpath);
-                                            
+                                            if($arrTitle[$key]==null || empty($arrTitle[$key]))
+                                            	$altText = $BuilderName." ".strtolower($ProjectName)." Cluster Plan";
 											$params = array(
 						                        "image_type" => "cluster_plan",
 						                        "folder" => $extra_path,
@@ -671,7 +673,8 @@ if (isset($_POST['Next']))
 						                        "title" => $arrTitle[$key],
 						                        "jsonDump" => array(
 						                        	"tower_id" => $arrTowerId[$key],
-						                        )
+						                        ),
+						                        "altText" => $altText,
 						                    );
 						                    //  add images to image service
 						            
@@ -771,7 +774,8 @@ if (isset($_POST['Next']))
 						                        "tagged_date" =>  $arrTaggedDate[$key],
 						                        "jsonDump" => array(
 						                        	"tower_id" => $arrTowerId[$key],
-						                        )
+						                        ),
+						                        "altText" => $altText,
 						                    );
 						                    //  add images to image service
 						            
@@ -882,7 +886,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-
+						                        "altText" => $altText,
 						                        
 						                    );
 						                    //  add images to image service
@@ -1252,7 +1256,7 @@ if (isset($_POST['Next']))
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
 						                        "title" => $arrTitle[$key],
-
+						                        "altText" => $altText,
 						                       
 						                    );
 						                    //  add images to image service
