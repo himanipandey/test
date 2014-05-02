@@ -110,6 +110,8 @@ if (isset($_POST['Next']))
 				}
 				else
 				$arrTaggedDate[$k] = null;
+
+			//echo $arrTaggedDate[$k]
 				if( $_REQUEST['txtTowerId'][$k+1]=="")
 							$arrTowerId[$k] = null;
 				else
@@ -222,7 +224,7 @@ if (isset($_POST['Next']))
 				}
 				$tmp_path = $tmpDir.$val;
 				//echo $sorce;
-				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $tmp_path);
+				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $img_path);
 				//$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $sorce);
                 //$s3upload = new S3Upload($s 3, $bucket, $img_path, str_replace($newImagePath, "", $img_path));
                 //$s3upload->upload();
@@ -258,7 +260,7 @@ foreach($files as $file){ // iterate files
                 //unlink($img_path); die();
                 //die();
                 $altText = $BuilderName." ".strtolower($ProjectName)." ".$arrTitle[$key];
-						if ($handle = opendir($tmpDir))
+						if ($handle = opendir($createFolder))
 						{
 								rewinddir($handle);
 								while (false !== ($file = readdir($handle)))
@@ -299,7 +301,7 @@ foreach($files as $file){ // iterate files
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											move_uploaded_file($tmp_path, $img_path);
+											//move_uploaded_file($tmp_path, $img_path);
 											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -1276,7 +1278,7 @@ foreach($files as $file){ // iterate files
                                             
 											$params = array(
 						                        "image_type" => "project_image",
-						                        "folder" => $extra_path,
+						                        "folder" => $extra_path,//"tmp/",
 						                        "count" => "project_image".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -1294,7 +1296,7 @@ foreach($files as $file){ // iterate files
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
 											
-							                    move_uploaded_file($tmp_path, $img_path);
+							                    //move_uploaded_file($tmp_path, $img_path);
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
