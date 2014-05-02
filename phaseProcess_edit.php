@@ -190,13 +190,12 @@ if (isset($_POST['btnSave'])) {
                 $error_msg  .= " Inventory or Prices with effective date before {$launch_date} are present. So can not change the Launch Date.";
             }
           }
-         if($sold_out_date != '' && $_REQUEST['phaseName'] == 'No Phase'){
-			$retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
+         if($sold_out_date != ''){
+	    $retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
             if( $retdt <= 0 || $launch_date=='') {
                 $error_msg = "Sold out date to be always greater than Launch date";
-            } 			 
-			 
-		 }
+            } 			 		 
+        }
          
      
             // Flats Config

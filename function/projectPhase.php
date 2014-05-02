@@ -3,13 +3,8 @@
 /*
  * functions for launch and pre launch date updation validation
  */
-
-
 function checkAvailablityDate($projectId, $date){
     $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active', "version" => 'Cms'), "order" => "phase_name asc"));
-    //print("<pre>");
-    //print_r($phases);
-    //$phasesArr = $phases->toArray();
     $rows = [];
 
     foreach ($phases as $p) {
@@ -18,8 +13,6 @@ function checkAvailablityDate($projectId, $date){
         inner join listings l on (l.id = ps.listing_id and l.status='Active')
         inner join resi_project_phase rpp on (rpp.PHASE_ID=l.phase_id and rpp.PHASE_ID='{$p->phase_id}' and rpp.version='Cms')
         where pa.effective_month <= '{$date}'";
-        //die($sql);
-        //$phase_availability = ProjectAvailability::findAvailabilityForPhase($projectId, $p->id);
         $res = mysql_query($sql);
          
         while($row = mysql_fetch_array($res))
@@ -27,17 +20,12 @@ function checkAvailablityDate($projectId, $date){
             $rows[] = $row;
         }
     }
-    //print("<pre>");
-    //print_r($rows);
     if(empty($rows)) return false;
     else return true;
 }
 
 function checkListingPricesDate($projectId, $date){
     $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active', "version" => 'Cms'), "order" => "phase_name asc"));
-    //print("<pre>");
-    //print_r($phases);
-    //$phasesArr = $phases->toArray();
     $rows = [];
     foreach ($phases as $p) {
     $sql = "select lp.* from listing_prices lp 
@@ -48,12 +36,9 @@ function checkListingPricesDate($projectId, $date){
          
         while($row = mysql_fetch_array($res))
         {
-           
             $rows[] = $row;
         }
     }
-    //print("<pre>");
-    //print_r($rows);
 
     if(empty($rows)) return false;
     else return true;
