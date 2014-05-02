@@ -179,8 +179,6 @@ if (isset($_POST['btnSave'])) {
             }
             
         } 
-        echo "<pre>";
-        print_r($_REQUEST);die;
         if( $launch_date != '' && $_REQUEST['phaseName'] == 'No Phase') {
             $retdt  = ((strtotime($launch_date) - strtotime(date('Y-m-d'))) / (60*60*24));
             if( $retdt > 0 ) {
@@ -294,7 +292,6 @@ if (isset($_POST['btnSave'])) {
                     join project_supplies ps on (l.id = ps.listing_id and ps.version = 'Cms')
                     where rpo.option_type =  'plot' and l.phase_id = $phaseId order by l.id desc";
                     $resPlotCase = mysql_query($qryPlotCase);
-                    echo mysql_num_rows($resPlotCase);
                     $dataPlotcase = mysql_fetch_assoc($resPlotCase);
                     if(($_POST['launched'] == '' || $_POST['launched'] == 0) && mysql_num_rows($resPlotCase)>0) {
                         $_POST['launched'] = $dataPlotcase['launched'];
