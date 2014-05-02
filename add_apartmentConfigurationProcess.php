@@ -534,11 +534,11 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
           header("Location:add_apartmentFloorPlan.php?projectId=".$projectId);
     }
 
-    if($_REQUEST['edit'] == 'edit')
+    /*if($_REQUEST['edit'] == 'edit')
     {
         /**********************Query for select values according project type for update**********************/
     	
-        $ProjectType = ProjectType($projectId);
+        /*$ProjectType = ProjectType($projectId);
         
         //echo "<pre>";
         //($arrProjectType_V);
@@ -601,7 +601,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         $smarty->assign("statusval_VA",$arrProjectType_VA['STATUS']);
 
         /***************query for project name display if edit********************/
-    }
+    //}
 
 //print "<pre>--".print_r($ErrorMsg,1); die;
     

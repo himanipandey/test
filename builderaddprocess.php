@@ -227,7 +227,7 @@ if ($_POST['btnSave'] == "Save")
                             );
 
                         $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);
-                        if($response['serviceResponse'])
+                        if(!empty($serviceResponse["service"]->response_body->error->msg))
                         {
                            /* $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
@@ -266,41 +266,41 @@ if ($_POST['btnSave'] == "Save")
                                 $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
                             /*************Resize images code***************************/
                            $createFolder = $newfold;//die;
-                            /*if ($handle = opendir($createFolder))
+                            if ($handle = opendir($createFolder))
                             {
                                 rewinddir($handle);
                                 while (false !== ($file = readdir($handle)))
                                 {
                                     /************Working for large***********************/
-                                    /*if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
+                                    if(strstr($file,$_FILES["txtBuilderImg"]["name"]))
                                     {
                                         $image = new SimpleImage();
                                         $path = $createFolder."/".$file;
                                         $image->load($path);
 
                                         /************Working for large Img Backup***********************/
-                                        /*$image->resize(477,247);
+                                        $image->resize(477,247);
                                         $imgdestpath = $newfold."/". str_replace('.jpg','-rect.jpg',$file);
                                         $image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
                                          /************Resize and large to small*************/
-                                        /*$image->resize(95,65);
+                                        $image->resize(95,65);
                                         $newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
                                         $imgdestpath = $newfold."/".$newimg;
                                         $image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                        $s3upload->upload();
+                                        /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        $s3upload->upload();*/
 
                                         $image->resize(80,36);
                                         $newimg	=	str_replace('.jpg','-thumb.jpg',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
                                         $image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
                                         /**********Working for watermark*******************/
                                         // Image path
-                                        /*$image_path =$newfold."/".$file;
+                                        $image_path =$newfold."/".$file;
                                         // Where to save watermarked image
                                         $imgdestpath = $newfold."/".$file;
                                          // Watermark image
@@ -313,11 +313,11 @@ if ($_POST['btnSave'] == "Save")
                                     }	
                                 }	 		
                                 header("Location:BuilderList.php");
-                            }	*/
+                            }	
                         }	
                         else 
                         {
-                           $ErrorMsg['img'] = "Problem in image upload: ".$response['error'];
+                           $ErrorMsg['img'] = "Problem in image upload: ".$serviceResponse["service"]->response_body->error->msg;
                         }
                 }
                 else 

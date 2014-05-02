@@ -8,6 +8,7 @@
     include("includes/db_query.php");
     require_once("common/function.php");
     include("imageService/image_upload.php");
+    include_once("SimpleImage.php");
     require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
     AdminAuthentication();
 
@@ -83,10 +84,14 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
 
         $IMG = $_FILES['img'];
         $uploadStatus = array();
+        
         if ( $errMsg == "" ) {
             $imageCount = count( $IMG['name'] );
+            //echo $imageCount;
             for( $__imgCnt = 0; $__imgCnt < $imageCount; $__imgCnt++ ) {
+                //echo "here0";
                 if ( $IMG['error'][ $__imgCnt ] == 0 ) {
+
                     $img = array();
                     $img['error'] = $IMG['error'][ $__imgCnt ];
                     $img['type'] = $IMG['type'][ $__imgCnt ];
@@ -95,9 +100,22 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     $extension = explode( "/", $img['type'] );
                     $extension = $extension[ count( $extension ) - 1 ];
                     $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
-
+                    
                     $dest       =   $newImagePath."locality/".$imgName;
-                    $move       =   move_uploaded_file($IMG['tmp_name'][ $__imgCnt ],$dest);
+                    $move       =   move_uploaded_file($IMG['tmp_name'][ $__imgCnt ],$dest); 
+                    $thumb = new SimpleImage();
+                    $__width = "592";
+                    $__height = "444";
+                    $__thumbWidth = "91";
+                    $__thumbHeight = "68";
+                    $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension );
+                    $thumb->load( $dest);
+                    $thumb->resize( $__width, $__height );
+                    
+                    $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
+                    $thumb->resize( $__thumbWidth, $__thumbHeight );
+                    $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
+                   
 
                     $params = array(
                         "priority" => $displayPriority,
@@ -116,8 +134,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                       //die("here");
                     $serviceResponse = $returnArr['serviceResponse'];
-                    if($returnArr['error']){
-                        $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $returnArr['error'];
+                    if(!empty($serviceResponse["service"]->response_body->error->msg)){
+                        $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $serviceResponse["service"]->response_body->error->msg;
                     }
                     else{
                         // add to database
@@ -163,7 +181,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $smarty->assign( 'message', $message );
     }
     else if($_REQUEST['updateDelete']) {   //code for image update or delete
-         include("SimpleImage.php");
+         
          $thumb = new SimpleImage();
         //hiecho "<pre>"; print_r($_REQUEST);die;
         foreach($_REQUEST['img_id'] as $ImgID) {
@@ -232,7 +250,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         $addedImgIdArr = array();
                         for( $__imgCnt = 0; $__imgCnt < $imageCount; $__imgCnt++ ) {
                             if ( $IMG['error'][ $__imgCnt ] == 0 ) {
-                                /*$extension = explode( "/", $IMG['type'][ $__imgCnt ] );
+                                $extension = explode( "/", $IMG['type'][ $__imgCnt ] );
                                 $extension = $extension[ count( $extension ) - 1 ];
                                 $imgType = "";
                                 if ( strtolower( $extension ) == "jpg" || strtolower( $extension ) == "jpeg" ) {
@@ -262,16 +280,16 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     $thumb->resize( $__width, $__height );
                                     
                                     $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
-                                    $dest = 'locality/'.$imgName;
+                                    /*$dest = 'locality/'.$imgName;
                                     $source = $newImagePath.$dest;
                                     $s3upload = new ImageUpload($source, array("s3" => $s3,
                                         "image_path" => $dest, "object" => $areaType,"object_id" => $areaId,
                                         "image_type" => strtolower($imgCategory),
                                         "service_extra_params" => array("priority"=>$imagePriority,"title"=>$imgDisplayName,"description"=>$imgDescription)));
-                                    $serviceResponse =  $s3upload->upload();
-                                    /*$thumb->resize( $__thumbWidth, $__thumbHeight );
+                                    $serviceResponse =  $s3upload->upload();*/
+                                    $thumb->resize( $__thumbWidth, $__thumbHeight );
                                     $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
-                                    $dest = 'locality/thumb_'.$imgName;
+                                    /*$dest = 'locality/thumb_'.$imgName;
                                     $source = $newImagePath.$dest;
                                     $s3upload = new S3Upload($s3, $bucket, $source, $dest);
                                     $s3upload->upload();
@@ -300,6 +318,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
 
                                 $params = array(
                                      "folder" => "locality/",
+                                     "image" => $imgName,
                                     "count" => $__imgCnt,
                                     "priority" => $imagePriority,
                                     "title" => $imgDisplayName,
@@ -311,27 +330,29 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                 );
                                 //  add images to image service
                         
-                                $imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
+                                //$imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
                                 $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                                   //die("here");
                                 $serviceResponse = $returnArr['serviceResponse'];
-                                if($returnArr['error']){
-                                    $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $returnArr['error'];
+                                if(!empty($serviceResponse["service"]->response_body->error->msg)){
+                                    $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $serviceResponse["service"]->response_body->error->msg;
                                 }
                                 else{
+                                    $image_id = $serviceResponse["service"]->response_body->data->id;
                                     //deleteFromImageService($areaType, $areaId, );
                                     // add to database
                                     $qryUpdate = "update locality_image set 
                                         IMAGE_CATEGORY = '".$imgCategory."',
                                         IMAGE_DESCRIPTION = '".$imgDescription."',
                                         IMAGE_DISPLAY_NAME = '".$imgDisplayName."',
-                                        SERVICE_IMAGE_ID = ".$serviceResponse['service']->response_body->data->id.",
+                                        SERVICE_IMAGE_ID = '".$image_id."',
                                         IMAGE_NAME = '".$imgName."'    
-                                     WHERE IMAGE_ID = $ImgID";
+                                     WHERE SERVICE_IMAGE_ID = $ImgID";
                                     $resImg = mysql_query($qryUpdate) or die(mysql_error());
-                                    
+                                    //echo $qryUpdate;die();
                                     $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
                                 }
+                            }
                             }
                             else {
                                 $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "Error#".$IMG['error'][ $__imgCnt ];
