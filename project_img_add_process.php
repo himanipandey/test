@@ -215,14 +215,27 @@ if (isset($_POST['Next']))
 
 				
 				$extra_path = $BuilderName."/".strtolower($ProjectName)."/";
-				
+				$tmpDir = $newImagePath."tmp/";
+				if(!is_dir($tmpDir)) 
+				{
+					mkdir($tmpDir, 0777);
+				}
+				$tmp_path = $tmpDir.$val;
 				//echo $sorce;
-				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $img_path);
+				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $tmp_path);
 				//$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $sorce);
-                //$s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath, "", $img_path));
+                //$s3upload = new S3Upload($s 3, $bucket, $img_path, str_replace($newImagePath, "", $img_path));
                 //$s3upload->upload();
-				
-
+                
+				//rmdir($extra_path);
+				//echo $img_path;
+				/*$files = glob('path/to/temp/*'); // get all file names
+foreach($files as $file){ // iterate files
+  if(is_file($file))
+    unlink($file); // delete file
+}*/
+				//unlink($img_path);
+				//die();
 				if(!$txtlocationplan)
 					{
 					$ErrorMsg["ImgError"] .= "Problem in Image Upload Please Try Again.";
@@ -241,8 +254,11 @@ if (isset($_POST['Next']))
                 $img['name'] = $_FILES["txtlocationplan"]["name"][$key];
                 $img['tmp_name'] = $_FILES["txtlocationplan"]["tmp_name"][$key];
                 //print_r($arrTitle); die();
+                //echo $img_path;
+                //unlink($img_path); die();
+                //die();
                 $altText = $BuilderName." ".strtolower($ProjectName)." ".$arrTitle[$key];
-						if ($handle = opendir($createFolder))
+						if ($handle = opendir($tmpDir))
 						{
 								rewinddir($handle);
 								while (false !== ($file = readdir($handle)))
@@ -283,13 +299,7 @@ if (isset($_POST['Next']))
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											}
-											else {
-												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
-												break 1;
-											}
+											move_uploaded_file($tmp_path, $img_path);
 											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -354,6 +364,15 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
+
+											}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												unlink($img_path);
+
+												break 1;
+											}
 									}
 								}
 								/************Working for layout plan***********************/
@@ -385,13 +404,7 @@ if (isset($_POST['Next']))
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											}
-											else {
-												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
-												break 1;
-											}
+											
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -451,6 +464,13 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
+											}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												unlink($img_path);
+												break 1;
+											}
 										}
 									}
 									/************Working for site plan***********************/
@@ -483,13 +503,7 @@ if (isset($_POST['Next']))
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											}
-											else {
-												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
-												break 1;
-											}
+											
 
 
 
@@ -552,6 +566,13 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
+											}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												unlink($img_path);
+												break 1;
+											}
 										}
 									}
 									/************Working for master plan***********************/
@@ -584,14 +605,7 @@ if (isset($_POST['Next']))
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											}
-											else {
-												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
-												break 1;
-											}
-
+											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
@@ -650,6 +664,14 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
+											}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												unlink($img_path);
+												break 1;
+											}
+
 										}
 									}
 									/************Working for cluster plan***********************/
@@ -685,14 +707,7 @@ if (isset($_POST['Next']))
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											}
-											else {
-												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
-												break 1;
-											}
-
+											
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
                                                 "object" => "project", "object_id" => $projectId,
@@ -751,6 +766,14 @@ if (isset($_POST['Next']))
                                             $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
+											}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												unlink($img_path);
+												break 1;
+											}
+
 									}
 								}
 								/************Working for construction plan***********************/
@@ -788,13 +811,7 @@ if (isset($_POST['Next']))
 
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											}
-											else {
-												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
-												break 1;
-											}
+											
 
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -864,6 +881,13 @@ if (isset($_POST['Next']))
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
+										}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												unlink($img_path);
+												break 1;
+											}
 									}
 									
 								}
@@ -898,13 +922,7 @@ if (isset($_POST['Next']))
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											}
-											else {
-												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
-												break 1;
-											}
+											
 
 
                                         /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
@@ -960,6 +978,13 @@ if (isset($_POST['Next']))
                                         $s3upload->upload();
 										$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 										$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
+										}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												unlink($img_path);
+												break 1;
+											}
 									}
 								}
 								/************Working for Specification***********************/
@@ -1268,14 +1293,8 @@ if (isset($_POST['Next']))
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
 												//$image_id = $image_id->id;
-											}
-											else {
-												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
-												break 1;
-											}
-
+											
+							                    move_uploaded_file($tmp_path, $img_path);
 
                                             /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                 "image_path" => str_replace($newImagePath, "", $imgdestpath),
@@ -1355,6 +1374,13 @@ if (isset($_POST['Next']))
                                              $s3upload->upload();
 											$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newsmrect;*/
+											}
+											else {
+												$strErr = " Error in uploading Image No".($key+1)." ";
+												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												unlink($img_path);
+												break 1;
+											}
 										}
 									 }
 							

@@ -78,7 +78,7 @@
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
         	$response 	= writeToImageService(  $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
 			/**/
-			if($response['serviceResponse'])
+			if(empty($serviceResponse["service"]->response_body->error->msg))
 			{
 				/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
 				  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
