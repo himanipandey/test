@@ -314,7 +314,7 @@
 									} 
 								}
 								if($image_id>0){
-									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8','1', $image_id),";
+									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8', null , $image_id),";
 									 $image_id=0;
 								}
 

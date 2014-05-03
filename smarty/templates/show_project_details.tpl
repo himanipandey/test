@@ -1903,7 +1903,7 @@ function broker_call_edit(callId, brokerId)
 											<b>Display Order </b>:{$ImageDataListingArr[data].display_order}<br><br>
 										{/if}
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
 										{/if}
 
 									</div>
