@@ -80,7 +80,7 @@ function chkConfirm()
                           <TD align="left" class="td-border" valign = "top">
                         		                        	
                         	
-                        	<img src = "{$image_path[$smarty.section.data.index]}"  width ="100px" height = "100px;" alt = "{$image_alt[$smarty.section.data.index]}">
+                        	<img src = "{$image_path[data]}"  width ="100px" height = "100px;" alt = "{$image_alt[data]}">
                         	
                          </TD>
                         <TD align="left" class="td-border"  valign = "top">{nl2br($projecttower[data].BANK_DETAIL)}</TD>

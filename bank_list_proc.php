@@ -82,15 +82,15 @@ $img_alt = array();
 foreach ($projecttower as $k => $v) {
     $objectId = $v['BANK_ID'];
     $service_image_id = $v['SERVICE_IMAGE_ID'];
-    $url = readFromImageService($objectType, $objectId);
-    //$url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+    //$url = readFromImageService($objectType, $objectId);
+    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
     $data = array();
     foreach($imgPath->data as $k1=>$v1){
         
-        $data[$k]['SERVICE_IMAGE_PATH'] = $v1->absolutePath;
-        $data[$k]['alt_text'] = $v1->altText;
+        $data[$k1]['SERVICE_IMAGE_PATH'] = $v1->absolutePath;
+        $data[$k1]['alt_text'] = $v1->altText;
     }
     $img_path[$k] = $data[0]['SERVICE_IMAGE_PATH'];
     $img_alt[$k] = $data[0]['alt_text'];

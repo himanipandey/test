@@ -171,6 +171,7 @@ $objectId = $projectId;
 $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
 $content = file_get_contents($url);
 $imgPath = json_decode($content);
+
 foreach($imgPath->data as $k=>$v){
     
         $data = array();
@@ -205,14 +206,21 @@ foreach($imgPath->data as $k=>$v){
         $str = trim(trim($v->jsonDump, '{'), '}');
         $towerarr = explode(":", $str);
         if(trim($towerarr[1],"\"") == "null")
-            $data['tower_id']==null;
+            $data['tower_id']=null;
+        else if(trim($towerarr[1],"\"") == "0"){
+             $data['tower_id']="0";
+            $data['TOWER_NAME']= "Other";
+        }
         else
             $data['tower_id'] = (int)trim($towerarr[1],"\"");
+        
         foreach ($towerDetail as $k1 => $v1) {
             if($v1['TOWER_ID']==$data['tower_id'])
                 $data['TOWER_NAME']= $v1['TOWER_NAME'];
 
        }
+       //echo $data['tower_id'];
+       //if($data['tower_id'] == 0) $data['TOWER_NAME']="Other";
        //var_dump($data['tower_id']);
         $data['PROJECT_ID'] = $v->objectId;
         $data['STATUS'] = $v->active;
@@ -229,7 +237,7 @@ $smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 
 $ImageDataListingArrFloor = allProjectFloorImages($projectId);
 //print'<pre>';
-//print_r($ImageDataListingArrFloor);
+//print_r($ImageDataListingArr);
 $ImageDataListingArrFloor = array();
 $optionsArr = getAllProjectOptionsExceptPlot($projectId);
 //print'<pre>';

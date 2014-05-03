@@ -1897,13 +1897,13 @@ function broker_call_edit(callId, brokerId)
 										<b>Image Title </b>:{$ImageDataListingArr[data].TITLE}<br><br>
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 											<b>Tagged Date </b>:{$ImageDataListingArr[data].tagged_month|strtotime|date_format:"%B %Y"}<br><br>
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{else}Other{/if}<br><br>
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
 										{/if}
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
 											<b>Display Order </b>:{$ImageDataListingArr[data].display_order}<br><br>
 										{/if}
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{else}Other{/if}<br><br>
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
 										{/if}
 
 									</div>

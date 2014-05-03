@@ -42,11 +42,10 @@
 				$response = $s3upload->upload();*/
 				$image_id = $response['serviceResponse']["service"]->response_body->data->id;
 				//$image_id = $image_id->id;
-				echo $image_id; echo "submit";die();
 			}
 			else {
 				$Error = $response['serviceResponse']["service"]->response_body->error->msg;
-				echo $Error; die();
+				
 			}
 		 }
         
@@ -73,6 +72,8 @@
 		else
         	$service_image_id = 0;
         $altText = $bankname." "."Home Loan";
+        
+
         if($logo_name != ''){
 	        if($service_image_id>0){
 	        	$params = array(
@@ -115,7 +116,7 @@
 			}
 			else {
 				$Error = $response['serviceResponse']["service"]->response_body->error->msg;
-				echo $Error; //die();
+			
 			}
 
         	/*

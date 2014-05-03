@@ -22,7 +22,7 @@
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
     $tower_div = "<select name= 'txtTowerId[]' id='tower_dropdown' onchange='tower_change(this)'>";
-    $tower_div .="<option value='' >--Select Tower--</option>";
+    $tower_div .="<option value='Select'>--Select Tower--</option>";
     foreach($towerDetail_object as $s){
         $s = $s->to_array();
         foreach($s as $key=>$value){
@@ -112,10 +112,11 @@ if (isset($_POST['Next']))
 				$arrTaggedDate[$k] = null;
 
 			//echo $arrTaggedDate[$k]
-				if( $_REQUEST['txtTowerId'][$k+1]=="")
+				if( $_REQUEST['txtTowerId'][$k+1]=="Select")
 							$arrTowerId[$k] = null;
 				else
 					$arrTowerId[$k] = $_REQUEST['txtTowerId'][$k+1]; 
+				//echo $arrTowerId[$k]; die();
 				$arrDisplayOrder[$k] = $_REQUEST['txtdisplay_order'][$k+1];
 				//die($arrTaggedDate[$k].$arrTowerId[$k]);
 			}
@@ -1388,8 +1389,10 @@ foreach($files as $file){ // iterate files
 							
 						
 							$add_tower = '';
+
 							if($arrTowerId[$key] > 0)
 									$add_tower = " TOWER_ID = $arrTowerId[$key], ";
+							
 							$imgDbPath = explode("/images_new",$img_path);
 							/*$selqry	=	"SELECT PLAN_IMAGE FROM ".PROJECT_PLAN_IMAGES." WHERE PROJECT_ID = '".$projectId."' AND PLAN_TYPE = '".$_REQUEST['PType']."' AND PLAN_IMAGE = '".$imgDbPath[1]."'";
 							$selres	=	mysql_query($selqry);

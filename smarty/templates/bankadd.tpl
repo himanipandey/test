@@ -25,9 +25,10 @@
 
 	function getPhotos(){
 		var dataResult = getPhotosFromImageService();
-		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 alt="'+dataResult['data'][0]['alt_text']+'"/>
-		<input type="hidden" name="image_id" id="image_id" value="'.dataResult['data'][0]['SERVICE_IMAGE_ID'].'"/>';
-		
+		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 alt="'+dataResult['data'][0]['alt_text']+'"/>';
+
+		$("#image_id").val(dataResult['data'][0]['SERVICE_IMAGE_ID']);
+
 		$("a#view").html( template );
 		$("a#view").fancybox();
 	
@@ -140,6 +141,7 @@
 							<td align = "right" valign ="top"><font color="red">*</font><b>Bank Detail:</b></td>
 							<td align = "left">
 								<textarea name = "bank_detail" id = "bank_detail" rows="15" cols="30">{$bank_detail}</textarea>
+								<input type="hidden" id="image_id" name="image_id"></input>
 							</td>
 						</tr>
 							<tr  class = "headingrowcolor">
