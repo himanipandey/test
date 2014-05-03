@@ -1,3 +1,6 @@
+
+
+
 </td>
 </tr>
 <tr xmlns="http://www.w3.org/1999/html">
@@ -70,11 +73,26 @@
                                         </div>
                                     </td>
                                 </tr>
+                                
+
+                                <tr>
+                                    <td width="200px">
+                                        <label class="lbl"> Search a Landmark </label>
+                                    <div class="ui-widget">
+                                        <input type="hidden" name="upImg" value="1">
+                                        <input type="hidden" name="landmarkId"  id = "landmarkId">
+                                        <input type="hidden" name="landmarkName"  id = "landmarkName">
+                                        <input id="search" onchange="areaTypeChanged('landmark')"></td></div>
+                                        <input type="hidden" id="imgName" name="imgDisplayName">
+                                    
+                                    
+                                </tr>
+
                                 <tr>
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="imgCategory">
+                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
                                             <option value="other">Select Category</option>
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
@@ -87,7 +105,8 @@
                                     <td>
                                         <label class="lbl">Image Display Name</label>
                                         <div class="valueField">
-                                                <input type="text" name="imgDisplayName" value="">
+                                                <label id="img-name"></label>
+                                                 
                                         </div>
                                     </td>
                                 </tr> 
@@ -103,7 +122,7 @@
                                     <td>
                                         <label class="lbl">Image Display Priority</label>
                                         <div class="valueField">
-                                            <select name = "displayPriority">
+                                            <select name = "displayPriority" id="imgType">
                                                 <option value="999">Select Priority</option>
                                                 {$cnt = 0}
                                                 {section name=priorityLoop loop=10 step=1}
@@ -127,7 +146,7 @@
                                     <td>
                                         <label class="lbl">Upload Pictures</label>
                                         <div class="valueField">
-                                            <input id="area-img" type="file" name="img[]" multiple  /><br />
+                                            <input id="area-img" type="file" name="img[]" autocomplete="off" multiple  /><br />
                                             <button>Upload</button>
                                         </div>
                                     </td>
@@ -171,4 +190,10 @@
 <div id="locality-id">{$localityId}</div>
 {/if}
 </div>
+
+
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
+
 <script type="text/javascript" src="js/photo.js"></script>

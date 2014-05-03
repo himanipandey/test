@@ -42,25 +42,29 @@
 			    <form method="post" enctype="multipart/form-data" id="frmcity" name="frmcity">
 			      <div>
 				<tr>
-				  <td width="20%" align="right" >*Locality Name : </td>
+				  <td width="20%" align="right" ><b>*Locality Name :</b> </td>
 				  <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
-				</tr>				
+				</tr>
+                                <tr>
+				  <td width="20%" align="right" ><b>Locality URL :</b> </td>
+                                  <td width="30%" align="left"><input type=text name=locUrl id=locUrl value="{$locUrl}" readonly="" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				</tr><input type = "hidden" name = "old_loc_url" value = "{$old_loc_url}">
 				<tr>
-				  <td width="20%" align="right" >* Meta Title : </td>
+                                    <td width="20%" align="right" ><b>* Meta Title :</b> </td>
 				  <td width="30%" align="left" ><input type=text name=txtMetaTitle id=txtMetaTitle value="{$txtMetaTitle}" style="width:250px;"></td>				   {if $ErrorMsg["txtMetaTitle"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaTitle"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetatitle"></td>{/if}
 				</tr>				<tr>
-				  <td width="20%" align="right" valign="top">*Meta Keywords :</td>
+				  <td width="20%" align="right" valign="top"><b>*Meta Keywords :</b></td>
 				  <td width="30%" align="left" >
 				  <textarea name="txtMetaKeywords" rows="10" cols="35" id="txtMetaKeywords" style="width:250px;">{$txtMetaKeywords}</textarea>
                   </td>{if $ErrorMsg["txtMetaKeywords"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaKeywords"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetakey"></td>{/if}
 				</tr>				<tr>
-				  <td width="20%" align="right" valign="top">*Meta Description :</td>
+                                    <td width="20%" align="right" valign="top"><b>*Meta Description :</b></td>
 				  <td width="30%" align="left" >
 				  <textarea name="txtMetaDescription" rows="10" cols="35" id="txtMetaDescription" style="width:250px;">{$txtMetaDescription}</textarea>
                   </td>{if $ErrorMsg["txtMetaDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaDescription"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetades"></td>{/if}
 				</tr>									
 				<tr>
-				  <td width="20%" align="right" valign = top >Description  : </td>
+                                    <td width="20%" align="right" valign = top ><b>Description  :</b> </td>
 				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea>
 				   <input type="hidden" name="oldDesc" value="{$desc}" />
 				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
@@ -69,10 +73,24 @@
 				  {/if}
 				  </td>
 				</tr>
+                                <tr>
+                                    <td width="20%" align="right"><b>*Locality Latitude :</b> </td>
+                                    <td width="30%" align="left"><input type="text" name="txtLocalityLattitude" id="txtLocalityLattitude" value="{$txtLocalityLattitude}" style="width:250px;" /></td>
+                                    <td width="50%" align="left">
+                                      {if $ErrorMsg['txtLattitude']}<font color="red">{$ErrorMsg['txtLattitude']}</span></font>{/if}
+                                    </td>
+                             </tr>
+                             <tr>
+                                    <td width="20%" align="right"><b>*Locality Longitude :</b> </td>
+                                    <td width="30%" align="left"><input type="text" name="txtLocalityLongitude" id="txtLocalityLongitude" value="{$txtLocalityLongitude}" style="width:250px;" /></td>
+                                    <td width="50%" align="left">
+                                            {if $ErrorMsg['txtLongitude']}<font color="red">{$ErrorMsg['txtLongitude']}</span></font>{/if}
+                                    </td>
+                             </tr>
 
         <tr>
           <td  height="25" align="right" style="padding-left:5px;">
-             Parent Suburb:
+              <b>*Parent Suburb:</b>
                             </td>
                            <td height="50%" align="left">
                             <div id="mainsubcity">
@@ -80,23 +98,21 @@
                             <select name="parentId" id = "parentSelect" class="suburbId" STYLE="width: auto" onchange= "return changeParent();">
                             
                             {foreach from=$suburbSelect key=k item=v}
-                                           <option value="{$v.id}" {if $v.id==$parent_sub_id} selected = "selected" {/if}>{$v.label}</option>
-                                       {/foreach}
+                                <option value="{$v.id}" {if $v.id==$parent_sub_id} selected = "selected" {/if}>{$v.label}</option>
+                            {/foreach}
                             </select> 
                             
                             </div>
                             </td>
+                            {if $ErrorMsg["txtMetaParent"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaParent"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetaparent"></td>{/if}
                             <td height="25" align="left">
                             <div id="mainsubcity_txtbox">
-                                    <input type="hidden" name="parent_id" id="parent_id" value="{$parent_id}">
-                                    
-                                     
-                                    
+                               <input type="hidden" name="parent_id" id="parent_id" value="{$parent_id}">     
                             </div>
          </tr>
 
 				<tr>
-          <td width="20%" align="right">Landmarks Attached: </td>
+                                    <td width="20%" align="right"><b>Landmarks Attached:</b> </td>
 
           <td width="100" align="left" >
             <div id='aliases' data-role="tagsinput"></div>
@@ -106,14 +122,14 @@
         </tr>
 				<tr>
 					<!--<td width="20%" align="right" style="vertical-align: top;">Add New Aliases  : </td>-->
-					<div class="ui-widget"><td width="20%" align="right"><label for="search">Search Landmarks: </label></td>
-          <td width="30%" align="left"><input id="search"><button type="button" id="button" align="left">Save Landmark</button> <label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label></td></div>
+                                <div class="ui-widget"><td width="20%" align="right"><label for="search"><b>Search Landmarks:</b> </label></td>
+                                    <td width="30%" align="left"><input id="search"><button type="button" id="button" align="left"><b>Save Landmark</b></button> <label align="left" id="onclicktext" style="color:green; font-weight: bold;"></label></td></div>
 					          
 					
 				</tr>
 				
 				<tr>
-				  <td width="20%" align="right">*Status  : </td>
+                                    <td width="20%" align="right"><b>*Status  :</b> </td>
 				  <td width="30%" align="left" >
 				    <select name = "status" id="status" style="width:150px;"> 
 					  <option  value = "Active" {if $status == 'Active'}selected{/if}>Active</option>
@@ -141,7 +157,7 @@
 				</tr>-->
                                 {if $localityCleanedAccess == 1}
                                 <tr>
-				  <td width="20%" align="right">Locality Cleaned  : </td>
+                                    <td width="20%" align="right"><b>Locality Cleaned  :</b> </td>
 				  <td width="30%" align="left" >
                                       <input type = "button" name ="localityCleaned" onclick = "cleanedLocality({$localityid});" value="Click To Save">
 				 </td>				   
@@ -149,7 +165,7 @@
 				</tr>
                                    
                                 <tr class="latLong">
-                                  <td width="20%" align="right">Max Latitude  : </td>
+                                    <td width="20%" align="right"><b>Max Latitude  :</b> </td>
                                   <td width="30%" align="left" >
                                       {$maxLatitude}
                                       <input type = "hidden" name ="maxLatitude" value="{$maxLatitude}">
@@ -158,7 +174,7 @@
                                 </tr>
 
                                 <tr class="latLong">
-                                  <td width="20%" align="right">Min Latitude  : </td>
+                                    <td width="20%" align="right"><b>Min Latitude  :</b> </td>
                                   <td width="30%" align="left" >
                                       {$minLatitude}
                                       <input type = "hidden" name ="minLatitude" value="{$minLatitude}">
@@ -167,7 +183,7 @@
                                 </tr>
 
                                 <tr class="latLong">
-                                  <td width="20%" align="right">Max Longitude  : </td>
+                                    <td width="20%" align="right"><b>Max Longitude  :</b> </td>
                                   <td width="30%" align="left" >
                                       {$maxLongitude}
                                       <input type = "hidden" name ="maxLongitude" value="{$maxLongitude}">
@@ -176,7 +192,7 @@
                                 </tr>
 
                                  <tr class="latLong">
-                                  <td width="20%" align="right">Min Longitude  : </td>
+                                     <td width="20%" align="right"><b>Min Longitude  :</b> </td>
                                   <td width="30%" align="left" >
                                       {$minLongitude}
                                       <input type = "hidden" name ="minLongitude" value="{$minLongitude}">

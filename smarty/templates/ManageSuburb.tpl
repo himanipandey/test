@@ -172,7 +172,7 @@ function specialCharacterValidation(fieldVal)
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18>Suburb List</TD>
-                     
+                      <td align = "right">{if $cityId != ''}<a href="suburbadd.php?c={$cityId}" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Suburb</b></a>{/if}</td>
                     </TR>
 		  </TBODY></TABLE>
 		</TD>
@@ -186,7 +186,11 @@ function specialCharacterValidation(fieldVal)
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="77%" height="25" align="left">
-                             {$Sorting} 
+                             {$Sorting}   <br> <br>
+                             <form id="frm_build" method="post" action ="suburbList.php?page=1&sort=all">
+                                 <b>Suburb URL :</b> <input name="suburbUrl" id="suburbUrl" value="{$suburbUrl}" class="button">
+                                 <input type="submit" name="search" id="search" value="Search" class="button">
+                             </form> <br>
                             </td>
 							<td width="35%" height="25" align="right" valign="top">
                              <form name="frmcity" id="frmcity" method="post">
@@ -231,7 +235,7 @@ function specialCharacterValidation(fieldVal)
 						<TD align=left class=td-border>{if $localityDataArr[data].STATUS!=''}{$localityDataArr[data].STATUS}{else}-{/if}</TD>
 
 						 <TD  class="td-border" align=left>
-                                                    <a href="suburbadd.php?suburbid={$localityDataArr[data].SUBURB_ID}&c={$cityId}" title="Edit">Edit</a>
+                                                    <a href="suburbadd.php?suburbid={$localityDataArr[data].SUBURB_ID}&c={$localityDataArr[data].CITY_ID}" title="Edit">Edit</a>
                                                 </TD>
                       </TR>
                        {/section}
@@ -264,47 +268,7 @@ function specialCharacterValidation(fieldVal)
                         </table>
                       </td>
                     </tr>
-
-                    <tr>
-    <td  height="25" align="right" style="padding-left:5px;">
-    Add Suburb:
-                            </td>
-                           <td height="50%" align="left">
-                            <div id="mainsubcity">
-                             
-                            <select name="suburbId" id = "suburbId" class="suburbId" STYLE="width: auto">
-                            <option value="">Select Parent Suburb (optional)</option>
-                            {foreach from=$suburbSelect key=k item=v}
-                                           <option value="{$v.id}">{$v.label}</option>
-                                       {/foreach}
-                            </select> 
-                            
-                            </div>
-                            </td>
-                            <td height="25" align="left">
-                            <div id="mainsubcity_txtbox">
-                                    <input type="hidden" name="subcity_txtbox_hidden" id="subcity_txtbox_hidden">
-                                    <input type="text" name="subcity_txtbox" id="subcity_txtbox" maxLength="40">
-                                    <a href="#" onclick="addupdatesubcity();"><b>Save</b></a>  
-                                    <a href="#" onclick="showHier();"><b>See Hierarchy</b></a>
-                            </div>
-                            </tr>
-                            <tr>
-                              <div>
-                               <ul id="organisation">
-               
-
-                    </ul>
-               
-                        
-            
-            </div>
-            
-            
-
-        </div>
-                            </tr>
-
+              
                   </table>                
 		    {/if}
                  {else}

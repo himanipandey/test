@@ -3,20 +3,117 @@
 		ini_set("memory_limit","256M");
 		include("ftp.new.php");
 		$ErrorMsg='';
-
+		$floorPlanOptionsArr = array();
+	$villApartment = array();
+	$plot = array();
+	$commercial = array();
+	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor");
+	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
+	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan");
+	$triplex = array("Ground Floor Plan", "First Floor Plan", "Second Floor Plan");
+	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan");
 		$watermark_path = 'images/pt_shadow1.png';
 		 $projectId = $_GET['projectId'];
 		$projectDetail = ProjectDetail($projectId);
 		$smarty->assign("ProjectDetail", $projectDetail);
-		$ImageDataListingArr = allProjectFloorImages($projectId);
-
-		//echo "<pre>";
-		//print_r($ImageDataListingArr);
-		//echo "</pre>";
+		$ImageDataListings = allProjectFloorImages($projectId);
+		
 		$builderDetail	= fetch_builderDetail($projectDetail[0]['BUILDER_ID']);
 
-		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
+		
 
+		// get image path from image service
+	//print'<pre>';
+	//print_r($ImageDataListings);
+		$ImageDataListingArr = array();
+		$optionsArr = getAllProjectOptions($projectId);
+	
+		foreach ($optionsArr as $k1 => $v1) {
+			$objectType = "property";
+			
+			
+			$image_type = "floor_plan";
+		    $objectId = $v1['OPTION_ID'];
+		    
+		    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+		    //echo $url;
+		    $content = file_get_contents($url);
+		    $imgPath = json_decode($content);
+		    $data = array();
+			foreach($imgPath->data as $k=>$v){
+			    $data = array();
+			    $data['OPTION_ID'] = $v1['OPTION_ID'];
+			    $data['UNIT_TYPE'] = $v1['UNIT_TYPE'];
+			    $data['SIZE'] = $v1['SIZE'];
+			    $data['UNIT_NAME'] = $v1['UNIT_NAME'];
+			    if($v1['UNIT_TYPE']=='Apartment'){
+			    	//array_push($floorPlanOptionsArr, $apartmentArr);
+					$floorPlanOptionsArr[count($ImageDataListingArr)] = $apartmentArr;
+					//array_push($villApartment, )
+					$villApartment[count($ImageDataListingArr)] = "yes";
+					//echo $k;
+				}
+				else if($v1['UNIT_TYPE']=='Villa'){
+					//array_push($floorPlanOptionsArr, $villaArray);
+					$floorPlanOptionsArr[count($ImageDataListingArr)] = $villaArray;
+					$villApartment[count($ImageDataListingArr)] = "yes";
+				}
+				else if($v1['UNIT_TYPE']=='Plot'){
+					//unset($ProjectOptionDetail[$k]);
+					$plot[count($ImageDataListingArr)] = "yes";
+				}
+					
+				else if($v1['UNIT_TYPE']=='commercial')
+					$commercial[count($ImageDataListingArr)] = "yes";
+
+		        $data['SERVICE_IMAGE_ID'] = $v->id;
+		        //$data['objectType'] = $v->imageType->objectType->type;
+		        //$data['objectId'] = $v->objectId; 
+		        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
+		        $str = ucfirst (implode(" ",$arr));
+		        $data['PLAN_TYPE'] = "View ".$str;
+		        $data['DISPLAY_ORDER'] = $v->priority;
+		        $data['IMAGE_DESCRIPTION'] = $v->description;
+		        $data['IMAGE_URL'] = $v->absolutePath;
+		        $data['NAME'] = $v->title;
+		        
+		        $data['STATUS'] = $v->active;
+		        //if(isset($v->createdAt))//if($v->created_at)
+		        //	$data['tagged_month'] = gmdate("Y-m-d", $v->createdAt);
+		        //else
+		        	//$data['tagged_month'] = gmdate("Y-m-d", time());
+
+		         //$str = trim(trim($v->jsonDump, '{'), '}');
+		        //$towerarr = explode(":", $str);
+		        //$data['tower_id'] = (int)trim($towerarr[1],"\"");
+		       //var_dump($data['tower_id']);
+		        
+		       // echo $data['tower_id'];
+		        //echo $data['tower_id'].$data['tagged_month']."<br>";
+		        //print_r($v->jsonDump);
+		        array_push($ImageDataListingArr, $data);
+		        //echo $data['NAME']; 
+		       
+
+			}
+
+		}
+		 //print'<pre>';
+	//print_r($floorPlanOptionsArr);
+//print'<pre>';
+	//print_r($villApartment);
+		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
+		//$smarty->assign("img_path", $img_path);
+		
+		$smarty->assign("floorPlanOptionsArr", $floorPlanOptionsArr);
+	$smarty->assign("villApartment", $villApartment);
+	$smarty->assign("plot", $plot);
+	$smarty->assign("commercial", $commercial);
+	$smarty->assign("duplex", $duplex);
+	$smarty->assign("triplex", $triplex);
+	$smarty->assign("penthouse", $penthouse);
+	$smarty->assign("ground_floor", $ground_floor);
 		$count+=count($ImageDataFloorArr);
 		$count+=count($ImageDataListingArr);
 
@@ -33,10 +130,11 @@
 			$preview = $_REQUEST['preview'];
 			$smarty->assign("preview", $preview);
 			
-		 if( isset($_REQUEST['title']) &&  !array_filter($_REQUEST['title']) )
+		 /*if( isset($_REQUEST['title']) &&  array_filter($_REQUEST['title'], empty_test) )
 	      {
 	        $ErrorMsg["title"] = "Please enter Image Title.";
-	      }
+	      }*/
+	      //print_r($ErrorMsg);
 
 			if (isset($_POST['btnSave'])  && !is_array($ErrorMsg)) 
 			{
@@ -79,22 +177,30 @@
 						}
 						else
 						{
-                                                    /********delete image from db if checked but not browes new image*********/
+                                                   /********delete image from db if checked but not browes new image*********/
+                               $service_image_id = $_REQUEST['service_image_id'][$k];
+                               //echo $service_image_id; 
                                                     $qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
                                                                         WHERE 
-                                                                                FLOOR_PLAN_ID	= '".$_REQUEST['plan_id'][$k]."'
+                                                                                SERVICE_IMAGE_ID	= '".$service_image_id."'
                                                                                 AND OPTION_ID	= '".$_REQUEST['option_id'][$k]."'";
                                                     $res	=	mysql_query($qry);
 							/********delete image from db if checked but not browes new image*********/
-                            $service_image_id = $_REQUEST['service_image_id'][$k];
-                            $s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
-                            $s3upload->delete();
-                            header("Location:edit_floor_plan.php?projectId=$projectId&edit=edit");
+                            //$service_image_id = $_REQUEST['service_image_id'][$k];
+
+                   
+                    		$deleteVal = deleteFromImageService("option", $arrOptionId[$k], $service_image_id);
+                            //$s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
+                            //$s3upload->delete();
+                            //header("Location:edit_floor_plan.php?projectId=$projectId&edit=edit");
 						}
 					}
 				}
-
-				if( $projectId == '') 
+				if($preview == 'true')
+									header("Location:show_project_details.php?projectId=".$projectId);
+								else
+									header("Location:ProjectList.php?projectId=".$projectId);
+				/*if( $projectId == '') 
 				{
 				  $ErrorMsg["projectId"] = "Please select Project name.";
 				}
@@ -108,7 +214,7 @@
 					$flag=0;
 					
 					/*******************Update location,site,layout and master plan from db and also from table*********/
-						$builderPath = $newImagePath.strtolower($BuilderName);
+						/*$builderPath = $newImagePath.strtolower($BuilderName);
 							
 						if(!is_dir($builderPath))
 						{
@@ -129,10 +235,10 @@
 							$createFolder = $newImagePath.$BuilderName."/".strtolower($ProjectName);
 							$oldpath = $_REQUEST['property_image_path'][$key]; 
                             $service_image_id = $_REQUEST['service_image_id'][$key];
-
+                            $extra_path = strtolower($BuilderName)."/".strtolower($ProjectName)."/";
 							$txtlocationplan 	= move_uploaded_file($_FILES["img"]["tmp_name"][$key], $img_path);
-                            $s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath,"",$img_path));
-                            $s3upload->upload();
+                            //$s3upload = new S3Upload($s3, $bucket, $img_path, str_replace($newImagePath,"",$img_path));
+                            //$s3upload->upload();
 							if(!$txtlocationplan)
 							{
 								$ErrorMsg["ImgError"] = "Problem in Image Upload Please Try Again.";
@@ -145,13 +251,18 @@
 							
 							$projecttbl			=	"/".$BuilderName."/".strtolower($ProjectName);
 
+								$img = array();
+			                $img['error'] = $_FILES["img"]["error"][$key];
+			                $img['type'] = $_FILES["img"]["type"][$key];
+			                $img['name'] = $_FILES["img"]["name"][$key];
+			                $img['tmp_name'] = $_FILES["img"]["tmp_name"][$key];
 									if ($handle = opendir($createFolder))
 									{
 											rewinddir($handle);							
 											while (false !== ($file = readdir($handle)))
 											{								
 											/************Working for location plan***********************/
-												if(strstr($file,'floor-plan'))
+											/*	if(strstr($file,'floor-plan'))
 												{
 													if(strstr($file,$val))
 													{											
@@ -160,26 +271,55 @@
 														$image->load($path);
                                                         $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 														$image->save($imgdestpath);
-                                                        $s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
+
+
+														$params = array(
+										                        "image_type" => "floor_plan",
+										                        "folder" => $extra_path,
+										                        "count" => "floor_plan".$key,
+										                        "image" => $file,
+										                        "title" => $arrTitle[$k],
+										                        "update" => "update",
+										                        "service_image_id" => $service_image_id
+										                );
+
+
+										                    //  add images to image service
+
+										                    
+										                    $returnArr = writeToImageService(  $img, "option", $arrOptionId[$k], $params, $newImagePath);
+										                    //print_r($returnArr);
+										                    $serviceResponse = $returnArr['serviceResponse'];
+											                    if($serviceResponse){
+											                    $image_id = $serviceResponse["service"]->response_body->data->id;
+																//$image_id = $image_id->id;
+															}
+															else {
+																//echo $returnArr['error'];
+																$ErrorMsg["ImgError"] = "Problem in Image Update Please Try Again.";
+																break;
+															}
+
+                                                        /*$s3upload = new ImageUpload($imgdestpath, array("s3" => $s3,
                                                             "image_path" => str_replace($newImagePath,"",$imgdestpath),
                                                             "object" => "option", "image_type" => "floor_plan",
                                                             "object_id" => $arrOptionId[$key], "service_image_id" => $service_image_id));
                                                         $response = $s3upload->update();
                                                         // Image id updation (next three lines could be written in single line but broken
                                                         // in three lines due to limitation of php 5.3)
-                                                        $image_id = $response["service"]->data();
+                                                        /*$image_id = $response["service"]->data();
                                                         $image_id = $image_id->id;
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);		
 														/**********Working for watermark*******************/
-														$img = new Zubrag_watermark($path);
+														/*$img = new Zubrag_watermark($path);
 														$img->ApplyWatermark($watermark_path);
 														$img->SaveAsFile($path);
                                                         $s3upload = new S3Upload($s3, $bucket, $path, str_replace($newImagePath,"",$path));
                                                         $s3upload->upload();
 														$img->Free(); 
 														/************Resize and large to small*************/
-														$image->resize(485,320);
+														/*$image->resize(485,320);
 														$newimg	=	str_replace('floor-plan','floor-plan-rect-img',$file);
                                                         $imgdestpath = $createFolder."/".$newimg;
 														$image->save($imgdestpath);
@@ -189,7 +329,7 @@
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 														/**********Working for watermark*******************/
 														// Image path
-														$image_path =$createFolder."/".$newimg;
+														/*$image_path =$createFolder."/".$newimg;
 														// Where to save watermarked image
 														$imgdestpath = $createFolder."/".$newimg;
 														// Watermark image
@@ -200,7 +340,7 @@
                                                         $s3upload->upload();
 														$img->Free();  				 						
 														/************Resize and large to small*************/
-														$image->resize(95,65);
+														/*$image->resize(95,65);
 														$newimg	=	str_replace('floor-plan','floor-plan-sm-rect-img',$file);
                                                         $imgdestpath = $createFolder."/".$newimg;
 														$image->save($imgdestpath);
@@ -210,15 +350,15 @@
 														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
 
 														/************Resize and large to thumb*************/
-														$image->resize(77,70);
+														/*$image->resize(77,70);
 														$newimg	=	str_replace('floor-plan','floor-plan-thumb',$file);
                                                         $imgdestpath = $createFolder."/".$newimg;
 														$image->save($imgdestpath);
                                                         $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
                                                         $s3upload->upload();
 														$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-												}																						
+														$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;*/
+											/*	}																						
 											}
 											
 										}
@@ -248,11 +388,13 @@
 								$qry = "UPDATE ".RESI_FLOOR_PLANS." 
                                                                         SET 
                                                                                 IMAGE_URL = '".$imgPathDb[1]."',
-                                                                                NAME	  = '".$arrTitle[$key]."'
+                                                                                NAME	  = '".$arrTitle[$key]."',
+                                                                                SERVICE_IMAGE_ID = '".$image_id."'
                                                                         WHERE 
-                                                                                FLOOR_PLAN_ID = '".$arrplanId[$key]."'
+                                                                                SERVICE_IMAGE_ID = '".$service_image_id."'
                                                                         AND 
                                                                                 OPTION_ID	= '".$arrOptionId[$key]."'";
+								
 								$res = mysql_query($qry);
 							
 								if($res)
@@ -265,7 +407,7 @@
 							}
 					}
 				
-				} 
+				} */
 			}
 			else if(isset($_POST['btnExit']))
 			{
@@ -277,5 +419,7 @@
 
 			 $smarty->assign("ErrorMsg", $ErrorMsg);
 		 /*******************************************************/
-		 	
+	function empty_test($val) {
+	    return empty($val);
+	}	 	
 ?>

@@ -508,7 +508,14 @@
                                    <td width="30%" align="left">
                                        <input name="pre_launch_date" value="{$pre_launch_date}" type="text" class="formstyle2" id="pre_f_date_c_to" size="10" />  <img src="images/cal_1.jpg" id="pre_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                    </td>
-                                   <td width="50%" align="left"><font color="red">{if count($ErrorMsg["preLaunchDate"])>0}{$ErrorMsg["preLaunchDate"]}{/if}</font></td>
+                                   <td width="50%" align="left"><font color="red">{if count($ErrorMsg["preLaunchDate"])>0}{$ErrorMsg["preLaunchDate"]}{/if}
+                                   	{if count($ErrorMsg["preLaunchDateAvailabilities"])>0}
+                                    	{$ErrorMsg["preLaunchDateAvailabilities"]}
+                                    {/if}
+                                    {if count($ErrorMsg["preLaunchDatePrices"])>0}
+                                    	{$ErrorMsg["preLaunchDatePrices"]}
+                                    {/if}
+                                   </font></td>
                                </tr>
 							   <tr>
 							   <td width="20%" align="right" valign="top"><b>Launch Date :</b> </td>
@@ -518,8 +525,15 @@
 							   <td width="50%" align="left"><font color="red">
                                                             {if count($ErrorMsg['launchDate'])>0}
                                                                 {$ErrorMsg['launchDate']}
+                                                           
                                                             {else}
                                                                 {if count($ErrorMsg["launchDateGreater"])>0}{$ErrorMsg["launchDateGreater"]}{/if}
+                                                            {/if}
+                                                            {if count($ErrorMsg["launchDateAvailabilities"])>0}
+                                                            	{$ErrorMsg["launchDateAvailabilities"]}
+                                                            {/if}
+                                                            {if count($ErrorMsg["launchDatePrices"])>0}
+                                                            	{$ErrorMsg["launchDatePrices"]}
                                                             {/if}
                                                                 </font></td>
 							   </tr>

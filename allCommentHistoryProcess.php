@@ -4,12 +4,13 @@
     $smarty->assign("ProjectDetail",$ProjectDetail);
     $errorMsg = array();
     if( isset($_REQUEST['submit']) ) {
-
         $commentType = $_REQUEST['commentType'];
         $commentCycle = $_REQUEST['commentCycle'];
+        $commentCycleActual = $_REQUEST['commentCycleActual'];
         $smarty->assign("commentType",$commentType);
         $smarty->assign("commentCycle",$commentCycle);
-        if( $commentType == '' && $commentCycle == '') {
+        $smarty->assign("commentCycleActual",$commentCycleActual);
+        if( $commentType == '' && $commentCycle == '' && $commentCycleActual == '') {
             $errorMsg['commentType'] = "<font color = 'red'>Please select atleast one value</font>";
         }
         if( count($errorMsg) == 0 ) {
@@ -18,7 +19,7 @@
                 $commentType = '';
             if( $commentCycle == 'all' )
                 $commentCycle = '';
-            $commentList = CommentsHistory::getAllCommentsByProjectId($projectId, $commentType, $commentCycle);
+            $commentList = CommentsHistory::getAllCommentsByProjectId($projectId, $commentType, $commentCycle, $commentCycleActual);
             if( count($commentList) == 0 )
                 $errorMsg['noRecord'] = "<font color = 'red'>No Record Found</font>";
             $smarty->assign("commentList", $commentList);
@@ -27,8 +28,8 @@
     }
     $smarty->assign("errorMsg",$errorMsg);
     $allCycle = CommentsHistory::getAllCycleByProjectId($projectId);
-    $smarty->assign("allCycle",$allCycle);
-    
+    $smarty->assign("allCycle",$allCycle['updationCycleMonth']);
+    $smarty->assign("allCycleActual",$allCycle['updationCycleActual']);
      $commentTypeMap = array("Project" => 'Project Remark',
                     "Calling" => 'Calling Remark', 
                     'Audit' => 'Audit Remark',
