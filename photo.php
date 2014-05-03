@@ -20,9 +20,9 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $landmarkName = !empty( $_REQUEST['landmarkName'] ) ? $_REQUEST['landmarkName'] : 0;
         $imgCategory = !empty( $_REQUEST['imgCategory'] ) ? $_REQUEST['imgCategory'] : 'other';
         $imgDisplayName = !empty( $_REQUEST['imgDisplayName'] ) ? $_REQUEST['imgDisplayName'] : '';
-        $imgDescription = !empty( $_REQUEST['imgDescription'] ) ? $_REQUEST['imgDescription'] : '';
+        $imgDescription = !empty( $_REQUEST['imgDescription'] ) ? $_REQUEST['imgDescription'] : null;
         $displayPriority = !empty( $_REQUEST['displayPriority'] ) ? $_REQUEST['displayPriority'] : '999';
-
+        $imgDisplayName = trim($imgDisplayName);
        //die($imgDisplayName);
         if ( $city ) {
             $smarty->assign( 'cityId', $city );
@@ -115,7 +115,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     $thumb->save($newImagePath.'locality/'.$imgName, $imgType);
                     $thumb->resize( $__thumbWidth, $__thumbHeight );
                     $thumb->save($newImagePath.'locality/thumb_'.$imgName, $imgType);
-                   
+                   echo strlen($imgDisplayName);
 
                     $params = array(
                         "priority" => $displayPriority,
@@ -232,7 +232,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
             }
             $imgCategory = !empty( $_REQUEST[$imgCat][0] ) ? $_REQUEST[$imgCat][0] : '';
             $imgDisplayName = !empty( $_REQUEST[$imgNm][0] ) ? $_REQUEST[$imgNm][0] : '';
-            $imgDescription = !empty( $imgDesc ) ? $imgDesc : '';
+            $imgDescription = !empty( $imgDesc ) ? $imgDesc : null;
             $imagePriority = !empty( $imgPriority ) ? $imgPriority : '';
             
             $imgUpDel = "updateDelete_".$ImgID;

@@ -44,8 +44,8 @@
 				//$image_id = $image_id->id;
 			}
 			else {
-				$Error = $response['serviceResponse']["service"]->response_body->error->msg;
 				
+				$Error = $response['serviceResponse']["service"]->response_body->error->msg;
 			}
 		 }
         
@@ -55,7 +55,7 @@
         }
         
         $banks->save();
-        
+        if(empty($Error))
 		header("Location:bank_list.php?page=1&sort=all");
 		
 	}else if ($_REQUEST['update'] == "Update") //edit

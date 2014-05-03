@@ -334,7 +334,7 @@ function showThisPhoto( imgData ) {
        template +='<input type = "hidden" name="imgCate_'+imgData['IMAGE_ID']+'[]" value = "'+imgData['IMAGE_CATEGORY']+'">';
                    
      template +=            '</select><br /><br />'+
-                            '<b>Name:</b>&nbsp;&nbsp;<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
+                            '<b>Name:</b>&nbsp;&nbsp;<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" readonly="readonly" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
                             '<b>Description:</b>&nbsp;&nbsp;<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'"><br>'+
                             '<b>Priority:</b>&nbsp;&nbsp;<select name = "priority_'+imgData['IMAGE_ID']+'[]"><option value = "999">Select Priority</option>'+
                             '<option '+ ( imgData['priority'] == '1' ? 'selected' : '' ) +' value = "1">1</option>'+

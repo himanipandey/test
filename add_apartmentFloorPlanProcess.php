@@ -1,12 +1,7 @@
-<?php 
-echo "here";
-error_reporting(1);
-init_set("display_errors", 1);
-
-die("here");
+<?php
 	set_time_limit(0);
 	ini_set("memory_limit","256M");
-	include("ftp.new.php"); //echo "here"; die();
+	include("ftp.new.php");
 	$floorPlanOptionsArr = array();
 	$villApartment = array();
 	$plot = array();
@@ -320,7 +315,7 @@ die("here");
 									} 
 								}
 								if($image_id>0){
-									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8', "0" , $image_id),";
+									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8', '0' , $image_id),";
 									 $image_id=0;
 								}
 
