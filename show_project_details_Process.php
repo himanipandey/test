@@ -217,7 +217,7 @@ foreach($imgPath->data as $k=>$v){
         $data['PROJECT_ID'] = $v->objectId;
         $data['STATUS'] = $v->active;
         $data['thumb_path'] = $v->absolutePath."?width=130&height=100";
-       
+       $data['alt_text'] = $v->altText;
         array_push($ImageDataListingArr, $data);
     
 }

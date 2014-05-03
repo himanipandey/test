@@ -78,6 +78,7 @@ while ($dataArr2 = mysql_fetch_array($QueryExecute_1))
 //Read image from image service
 $objectType = "bank";
 $img_path = array();
+$img_alt = array();
 foreach ($projecttower as $k => $v) {
     $objectId = $v['BANK_ID'];
     $service_image_id = $v['SERVICE_IMAGE_ID'];
@@ -86,23 +87,19 @@ foreach ($projecttower as $k => $v) {
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
     $data = array();
-    foreach($imgPath->data as $k=>$v){
-        $data[$k]['IMAGE_ID'] = $v->id;
-        $data[$k][$obj] = $v->objectId;
-        $data[$k]['priority'] = $v->priority;
-        $data[$k]['IMAGE_CATEGORY'] = $v->imageType->type;
-        $data[$k]['IMAGE_DISPLAY_NAME'] = $v->title;
-        $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
-        $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
-        $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+    foreach($imgPath->data as $k1=>$v1){
+        
+        $data[$k]['SERVICE_IMAGE_PATH'] = $v1->absolutePath;
+        $data[$k]['alt_text'] = $v1->altText;
     }
-    array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
-    //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
-
+    $img_path[$k] = $data[0]['SERVICE_IMAGE_PATH'];
+    $img_alt[$k] = $data[0]['alt_text'];
+    
 }
 
 $smarty->assign("projecttower", $projecttower);
 $smarty->assign("image_path", $img_path);
+$smarty->assign("image_alt", $img_alt);
 $MaxPage = (ceil($NumRows/$RowsPerPage))?ceil($NumRows/$RowsPerPage):'1' ;
 $Num = $_GET['num'];
 $Sort = $_GET['sort'];

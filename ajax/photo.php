@@ -100,6 +100,7 @@ else {
             $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
             $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
             $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+            $data[$k]['alt_text'] = $v->altText;
         }
         
     }

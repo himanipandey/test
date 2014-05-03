@@ -1889,7 +1889,7 @@ function broker_call_edit(callId, brokerId)
                                                                                             {$str1 = $str1|cat:'-thumb'}
                                                                                             {$str2 = $str1|cat:'.'}
                                                                                             {$finalStrWithThumb = $str2|cat:$last}
-                                                                                            <img src="{$ImageDataListingArr[data].thumb_path}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+                                                                                            <img src="{$ImageDataListingArr[data].thumb_path}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].alt_text}" />
 												</a>
 												<br>
 											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}

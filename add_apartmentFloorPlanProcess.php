@@ -186,7 +186,7 @@
 			                $img['name'] = $_FILES["imgurl"]["name"][$key];
 			                $img['tmp_name'] = $_FILES["imgurl"]["tmp_name"][$key];	
 			                
-			                $altText = $BuilderName." ".strtolower($ProjectName)." "."Floor Plan".$floor_name;
+			                $altText = $BuilderName." ".strtolower($ProjectName)." "."Floor Plan"." ".$floor_name;
 									/*************Resize images code***************************/
 								if ($handle = opendir($createFolder))
 								{
@@ -210,6 +210,7 @@
 							                        "count" => "floor_plan".$key,
 							                        "image" => $file,
 							                        "title" => $floor_name,
+							                        "altText" => $altText,
 							                        
 							                       
 							                );
