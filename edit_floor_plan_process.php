@@ -27,7 +27,7 @@
 	//print'<pre>';
 	//print_r($ImageDataListings);
 		$ImageDataListingArr = array();
-		$optionsArr = getAllProjectOptions($projectId);
+		$optionsArr = getAllProjectOptionsExceptPlot($projectId);
 	
 		foreach ($optionsArr as $k1 => $v1) {
 			$objectType = "property";

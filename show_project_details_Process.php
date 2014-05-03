@@ -231,7 +231,7 @@ $ImageDataListingArrFloor = allProjectFloorImages($projectId);
 //print'<pre>';
 //print_r($ImageDataListingArrFloor);
 $ImageDataListingArrFloor = array();
-$optionsArr = getAllProjectOptions($projectId);
+$optionsArr = getAllProjectOptionsExceptPlot($projectId);
 //print'<pre>';
 //print_r($towerDetail);
         foreach ($optionsArr as $k1 => $v1) {

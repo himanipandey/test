@@ -787,9 +787,9 @@ function allProjectFloorImages($projectId) {
 
 
 
-function getAllProjectOptions($projectId){
+function getAllProjectOptionsExceptPlot($projectId){
     $qryOpt = "SELECT OPTIONS_ID as OPTION_ID, OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
-        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId. " AND OPTION_CATEGORY = 'Actual' AND OPTION_TYPE != 'Plot'";
     $resOpt = mysql_query($qryOpt);
     $OptionsArr = array();
     while ($dataOpt = mysql_fetch_assoc($resOpt)) {
