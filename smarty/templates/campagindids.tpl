@@ -78,14 +78,20 @@
       </TR>
     </TBODY></TABLE>
 <script type="text/javascript">
-$(document).ready(function(){
-  alert("hello");	
-});
  function chkConfirm(){
 	return confirm("Are you sure! you want to delete this record.");
  }
  function validate_dids(){
-   alert("Activated");
-   return false;  
+    campName = $('#campName').val();
+    campDid = $('#campDid').val();
+  if(campName.trim() == ''){
+    alert("Campaign Name must not be blank.");
+    return false;
+  }else if(campDid.trim() == ''){
+    alert("Campaign DID must not be blank.");
+    return false;
+  }
+  return true;
+   
  }
 </script>
