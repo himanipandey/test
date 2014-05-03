@@ -2197,7 +2197,33 @@ function getLocalityAveragePrice($locId)
 	return $average_price ;
 }
 function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $currentPlanId =''){
-	if($currentPlanId == '')
+	
+    $url = ImageServiceUpload::$image_upload_url."?objectType='project'&objectId=".$projectId;
+
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+
+    $orderArr = array();
+    $cnt=0;
+    foreach($imgPath->data as $k=>$v){
+
+        if($service_image_id==$v->id){
+
+        }
+        else if($v->imageType->type=="main" && $v->priority!=5){
+           // if (!in_array($v->priority, $orderArr)){
+             //   array_push($orderArr, $v->priority)
+           // }
+
+            if($v->priority==$display_order)
+                $cnt=1;
+        }
+
+    }
+
+    return $cnt;
+   
+   /*if($currentPlanId == '')
             $currentPlanId = '';
         else
             $currentPlanId = "and PROJECT_PLAN_ID != ".$currentPlanId;
@@ -2215,7 +2241,7 @@ function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=
 		$vcount = mysql_fetch_object($qrySelect);
 		
 				
-	return ($vcount->cnt)? $vcount->cnt : 0; 
+	return ($vcount->cnt)? $vcount->cnt : 0; */
 }
 function updateD_Availablitiy($projectId){
 	
