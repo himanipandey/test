@@ -1,7 +1,12 @@
-<?php
+<?php 
+echo "here";
+error_reporting(1);
+init_set("display_errors", 1);
+
+die("here");
 	set_time_limit(0);
 	ini_set("memory_limit","256M");
-	include("ftp.new.php");
+	include("ftp.new.php"); //echo "here"; die();
 	$floorPlanOptionsArr = array();
 	$villApartment = array();
 	$plot = array();
@@ -86,6 +91,7 @@
 	$optionId				=	'';
 	$insertlist				=	'';
 	$ErrorMsg1				=   '';
+	//print("<pre>");var_dump($_REQUEST); die();
 	if(($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST['Next'] == "Add More"))
 	{
 		/*************Add new project type if projectid is blank*********************************/
@@ -314,7 +320,7 @@
 									} 
 								}
 								if($image_id>0){
-									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8', null , $image_id),";
+									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8', "0" , $image_id),";
 									 $image_id=0;
 								}
 

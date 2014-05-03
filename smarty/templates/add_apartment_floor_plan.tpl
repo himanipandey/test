@@ -182,7 +182,7 @@
 				  <td>
 						  <input type='hidden' value='{$projectId}' name='projectId' />
 						{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_NAME']}
-						<input type="hidden" name = "option_id[]" value = "{$ProjectOptionDetail[$smarty.section.foo.index]['OPTIONS_ID']}">		  
+						<input type="hidden" name = "option_id[]" value = "{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_ID']}">		  
 				  
 				  </td>
 				 

@@ -12,7 +12,7 @@
     include("imageService/image_upload.php");
 	AdminAuthentication();
 
-	include('add_apartmentFloorPlanProcess.php');
+	include('add_apartmentFloorPlanProcess.php');  
 	//$smarty->display(SERVER_PATH."/smarty/templates/admin/crawler/header.tpl");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 

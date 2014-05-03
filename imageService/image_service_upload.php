@@ -200,7 +200,7 @@ class ImageServiceUpload{
             $this->validate_keys();
         }
         $this->check_extra_params();
-        $this->raise_errors_if_any();
+        //$this->raise_errors_if_any();
     }
 
 
