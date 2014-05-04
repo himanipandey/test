@@ -104,8 +104,8 @@
                                  <tr>
                                     <td>
                                         <label class="lbl">Image Display Name</label>
-                                        <div class="valueField">
-                                                <input readonly="readonly" id="img-name"/>
+                                        <div >
+                                                <span class="lbl" id="img-name"/>
                                                  
                                         </div>
                                     </td>

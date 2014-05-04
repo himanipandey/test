@@ -93,6 +93,7 @@ function initVar() {
 
 function getData() {
     var data = "";
+
     if ($("#search").val().trim()!='' && $("#landmarkId").val() > 0) {
          data = "&landmark="+window.areaResponse['landmark'];
          //alert(data);
@@ -105,9 +106,9 @@ function getData() {
         if ( window.areaResponse['locality'] ) {
             data += "&locality="+window.areaResponse['locality'];
         }
-        if ( window.areaResponse['landmark'] ) {
-            data += "&landmark="+window.areaResponse['landmark'];
-        }
+        //if ( window.areaResponse['landmark'] ) {
+          //  data += "&landmark="+window.areaResponse['landmark'];
+       // }
     }
     return data;
 }
@@ -146,7 +147,24 @@ function areaTypeChanged( areaType ) {
 
 function updateDropDown( response ) {
     if ( response['result'] == true ) {
+        if ( typeof  response['landmark'] != 'undefined' ) {
+            updateImageCategory(response['landmark'] );
+        }
+        else if ( typeof  response['locality'] != 'undefined' ) {
+            updateImageCategory(response['locality'] );
+        }
+        else if ( typeof  response['suburb'] != 'undefined' ) {
+            updateImageCategory(response['suburb'] );
+        }
+        else if ( typeof  response['city'] != 'undefined' ) {
+            updateImageCategory(response['city'] );
+        }
+
         response = response['data'];
+        //console.log(response['data']);
+        if ( typeof  response['landmark'] != 'undefined' ) {
+            updateImageCategory(response['landmark'] );
+        }
         if ( typeof  response['suburb'] != 'undefined' ) {
             updateDropDownOption( 'area-type-sub', 'suburb', response['suburb'] );
         }
@@ -154,6 +172,17 @@ function updateDropDown( response ) {
             updateDropDownOption( 'area-type-loc', 'locality', response['locality'] );
         }
     }
+}
+
+function updateImageCategory(data){
+    $("#imgCat option").each(function() {
+            $(this).remove();
+    });
+
+    
+    $.each(data, function(k, v){
+        $('<option>').val(v).text(v).appendTo('#imgCat');
+    });
 }
 
 function updateDropDownOption( areaId, areaType, data ) {
@@ -185,7 +214,7 @@ function updateDisplayLocation() {
     var imgType = $("#imgCat :selected").text();
     if(imgType.indexOf('Select') >= 0)
         imgType = "";
-        console.log(window.areaResponse);
+        //console.log(window.areaResponse);
 
     if ( $('#search').val()!='') {
         areaType = "landmark";

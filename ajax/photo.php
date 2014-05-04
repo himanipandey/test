@@ -110,7 +110,7 @@ else {
 }
 $localityArr = array();
  $localityType = ImageServiceUpload::$image_types;
- $localityArr = $localityType[$objectType];
+ $localityArr = $localityType[$objectType]; 
 //echo "<pre>";print_r($localityArr);die;
 if ( is_array( $data ) && count( $data ) ) {
     $json['result'] = TRUE;
