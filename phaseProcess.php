@@ -144,12 +144,12 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                     and version = 'Cms' ";
             $resFetchPhaseId = mysql_query($qryFetchPhaseId) or die(mysql_error());
             $dataFetchPhaseId = mysql_fetch_assoc($resFetchPhaseId);
-
+			$effectiveDt = date('Y')."-".date('m')."-01";
             $qryCompletionDate = "insert into resi_proj_expected_completion 
                 set
                   project_id = $projectId,
                   expected_completion_date = '".$completion_date."',
-                  submitted_date = now(),
+                  submitted_date = '".$effectiveDt."',
                   phase_id = ".$dataFetchPhaseId['phase_id'];
              $successCompletionDate =  mysql_query($qryCompletionDate) or die(mysql_error());
              if($successCompletionDate) {

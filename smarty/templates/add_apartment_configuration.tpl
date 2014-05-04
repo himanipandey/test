@@ -712,7 +712,7 @@
                                <td align="center">
                                      {($smarty.section.foo.index+1)}
                               </td>
-							   {if $flg != 0}
+				{if $flg != 0}
                                     {$new_index = $smarty.section.foo.index-15}
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
@@ -726,10 +726,20 @@
                                      <span {if ($txtUnitNameval_P[$new_index] =='') && ($edit_project == '')}style = "display:none;" {/if} id = "add_{($smarty.section.foo.index+1)}" class="insertProject" rel="{($smarty.section.foo.index+1)}"><a href='#' >Add</a></span>
                               </td>-->
                               <td>
+                                  {if $typeName == 'Commercial'}
+                                    <select name="txtUnitName[]" id="txtUnitName_{($smarty.section.foo.index+1)}">
+                                        <option value="">Select Name</option>
+                                        <option value="shops" {if $txtUnitNameval_P[$new_index] == 'shops'}selected{/if}>Shops</option>
+                                        <option value="office" {if $txtUnitNameval_P[$new_index] == 'office'}selected{/if}>Office</option>
+                                        <option value="serviced appt" {if $txtUnitNameval_P[$new_index] == 'serviced appt'}selected{/if}>Serviced Appt.</option>
+                                    </select>
+                                  {else}
+                                      <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
+                                  {/if}
                                     <input type='hidden' value={$projectId} name='projectId' tempName="projectId"   />
                                     <input type='hidden' value='{$typeName}' name='unitType[]' tempName="unitType"   />
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
-                                    <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
+                                   <!-- <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">-->
                               </td>
                               <td align="left" >
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeLenval_P[$new_index]} == '') OR !is_numeric({$txtSizeLenval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">

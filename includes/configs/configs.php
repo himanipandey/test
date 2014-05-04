@@ -406,7 +406,7 @@ $ArrModuleOld	=	array(
 
 	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
             "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
-            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES");
+            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT");
 	$smarty->assign("departmentArray", $departmentArray);
 
 	/******add service tax for invoice**********/

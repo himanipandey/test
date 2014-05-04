@@ -4,7 +4,7 @@ include("../dbConfig.php");
 include("../modelsConfig.php");
 include("../appWideConfig.php");
 include("../builder_function.php");
-include("../common/function.php");
+require_once("../common/function.php");
 include("../includes/configs/phaseStageConfig.php");
 date_default_timezone_set('Asia/Kolkata');
 

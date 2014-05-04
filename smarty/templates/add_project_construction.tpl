@@ -88,6 +88,30 @@
 		return true;
             }
     }
+  function showhistory(plsmns)
+  {
+  	if(plsmns == 'plus')
+  	{
+       document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhistory('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
+       document.getElementById("history_showHide").style.display = '';
+  	}
+  	else 
+  	{
+		document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhistory('plus');><img src = '../images/plus.jpg' width ='20px'></a>";
+       document.getElementById("history_showHide").style.display = 'none';
+  	}
+  }
+</script>
+<script>
+	$(document).ready(function(){
+	  hist = "{$hist_update}";
+	  histerrorMsg = "{$histerrorMsg}";
+	  if(hist || histerrorMsg){
+		 document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhistory('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
+       document.getElementById("history_showHide").style.display = '';
+	  }
+			
+	});
 </script>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -140,6 +164,7 @@
 			 
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 					 <form method="post" id="formss" enctype="multipart/form-data">
+											
                                              {if count($errorMsg)>0}
                                                  <tr>
                                                      <td colspan="2" nowrap><font color = "red">
@@ -239,9 +264,99 @@
                                                        </td>
                                               </tr>
                                               <tr>
+                                                     <td width="20%" align="right" valign="top"><b>Update Histroy :</b></td>
+                                                     <td width="80%" align="left">
+														 <span id = "plusMinusImg">
+														   <a href = "javascript:void(0);" onclick = "showhistory('plus');">
+																<img src = "images/plus.jpg" width ="20px">
+															</a>
+															
+														 </span>
+														 {if $hist_update && count($histerrorMsg)==0}
+																<font color = "green">History updated successfuly.</font>
+														 {/if}
+														 {if count($histerrorMsg)>0}
+															<font color = "red">																 	{foreach from = $histerrorMsg item = item key = key}
+																	  {$item}<br>
+																	 {/foreach}
+															 </font>
+														
+														 {/if}
+                                                     </td>
+                                                     <td width="50%" align="left">
+                                                            &nbsp;						 
+                                                      </td>
+                                              </tr>	
+                                               <tr id = "history_showHide" style = "display:none;">
+                                                     <td width="20%" align="right" valign="top">&nbsp;</td>
+                                                     <td width="30%" align="left" colspan=2>
+														 <table style="width:700px;border:1px solid#aaa">
+															 <tr><td style="background:#555">&nbsp;</td>
+																 <td style="padding-left:100px;color:#fff;background:#555"><b>Effective Date</b></td>
+																 <td style="padding-left:100px;color:#fff;background:#555"><b>Completion Date</b></td>
+															 </tr>														 
+															 {foreach from = $costDetail key=keys item = items}
+															   {$sub_month = $items['SUBMITTED_DATE']|date_format:"%b"}
+															   {$sub_year = $items['SUBMITTED_DATE']|date_format:"%Y"}
+															   {$exp_month = $items['EXPECTED_COMPLETION_DATE']|date_format:"%b"}
+															   {$exp_year = $items['EXPECTED_COMPLETION_DATE']|date_format:"%Y"}
+															   <tr>
+																<td>
+																	{if in_array($items['EXPECTED_COMPLETION_ID'],$hist_update_arr)}<img src = "images/ok.png" width ="20px">{/if}
+																	{if $error_id == $items['EXPECTED_COMPLETION_ID']}<img src = "images/exclamation.png" width ="20px">{/if}
+																</td>
+																<td>																	
+													
+																	Month:<select name = "hist_month_eff[]" id = "hist_month_eff_{$keys}">
+																		<option value="">Select Month</option>
+																		{foreach from = $months key = key item = item}
+																			   <option value="{$key}"
+																				 {if $sub_month == $item} selected {/if}>{$item}</option>
+																		   {/foreach}
+																	</select>
+
+																	Year:<select name = "hist_year_eff[]" id = "hist_year_eff_{$keys}">
+																		<option value="">Select Year</option>
+																		{section name=foo start=$YearStart loop=$yearEnd step=1}
+																			<option value="{$smarty.section.foo.index}"
+																			{if $sub_year == $smarty.section.foo.index} selected {/if}>{$smarty.section.foo.index}</option>
+																		{/section}
+																	</select>
+																</td>
+																<td>
+																	
+																
+																Month:<select name = "hist_month_comp[]" id="hist_month_comp_{$keys}">
+																		<option value="">Select Month</option>
+																		{foreach from = $months key = key item = item}
+																			   <option value="{$key}"
+																				 {if $exp_month == $item} selected {/if}>{$item}</option>
+																		   {/foreach}
+																	</select>
+
+																	Year:<select name = "hist_year_comp[]" id = "hist_year_comp_{$keys}">
+																		<option value="">Select Year</option>
+																		{section name=foo start=$YearStart loop=$yearEnd step=1}
+																			<option value="{$smarty.section.foo.index}"
+																			{if $exp_year == $smarty.section.foo.index} selected {/if}>{$smarty.section.foo.index}</option>
+																		{/section}
+																	</select>
+																</td>
+																
+																</tr>
+															{/foreach}
+															<tr>
+																<td colspan=3 style="text-align:center;background:#ccc"> 
+																  <input type="submit" name="btnHistSave" id="btnHistSave" value="Save History"  />
+																</td>																
+															</tr>
+														</table>
+                                                     </td>                                                     
+                                              </tr>
+                                              <tr>
                                                      <td width="20%" align="right" valign="top"><b><font color ="red">*</font><b>Remarks :</b> </td>
                                                      <td width="30%" align="left">
-                                                            <textarea name="remark" rows="10" cols="30" id="remark">{$costDetail[0]['REMARK']}</textarea>
+                                                            <textarea name="remark" rows="10" cols="30" id="remark">{$submitted_remark}</textarea>
                                                      </td>
                                                      <td width="50%" align="left">
                                                              <font color="red"><span id = "err_edit_reson" style = "display:none;">Please enter reason for updating expected completion date</span></font>  								 
@@ -262,18 +377,7 @@
 				</table>
 				</form>
 			</TD>
-                        <td vAlign="top" align="middle" class="backgorund-rt" height="450" nowrap>
-                            <b>Old History</b><br>
-                            {foreach from = $costDetail key=key item = item}
-                                <b>Effective Date: </b>{$item['SUBMITTED_DATE']|date_format:"%b %Y"}
-                                <b>Completion Date: </b>
-                                {if $item['EXPECTED_COMPLETION_DATE'] == '0000-00-00 00:00:00'}
-                                    0000-00-00 00:00:00
-                                {else}
-                                {$item['EXPECTED_COMPLETION_DATE']|date_format:"%b %Y"}
-                                {/if}<br>
-                            {/foreach}
-                        </td>
+                      
 		</TR>
                 <tr><td colspan="2">&nbsp;</td></tr>
  

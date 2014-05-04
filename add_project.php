@@ -8,6 +8,7 @@ ini_set('display_errors','1');
 	include("builder_function.php");
         include("modelsConfig.php"); 
 	AdminAuthentication();
+        include("function/projectPhase.php");
 	include('add_projectProcess.php');
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 
