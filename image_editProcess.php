@@ -136,7 +136,7 @@
 							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k],$_REQUEST['currentPlanId'][$k]);
 
 							if($ext_vlinks){
-								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist."; 
+								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist.";
 							}
 					  	}
 					  	if($_REQUEST['txtdisplay_order'][$k] != 5)

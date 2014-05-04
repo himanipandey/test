@@ -157,8 +157,6 @@ if (isset($_POST['Next']))
 					$ErrorMsg["ptype"] = "Please enter Display Order."; break;
 				}else{
 
-					echo checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$count]);
-						die();			
 				  if(array_key_exists($_REQUEST['txtdisplay_order'][$count], $temp_arr)){
 					  $ErrorMsg["ptype"] = "Display order must be unique."; break;				  
 				  }else {//checking duplicacy

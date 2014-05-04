@@ -18,11 +18,14 @@ $(document).ready(function(){
     _renderMenu: function( ul, items ) {
       var that = this,
         currentCategory = "";
+         ul.css("fontsize", "2");
       $.each( items, function( index, item ) {
         if ( item.table != currentCategory ) {
-          ul.append( "<li class='ui-autocomplete-category'><strong>" + item.table + "</strong></li>" );
+          ul.append( "<li class='ui-autocomplete-category'><font size='3'><strong>" + item.table + "</strong></font></li>" );
+
           currentCategory = item.table;
         }
+         ul.css({ 'font-size': 12});
         that._renderItemData( ul, item );
       });
     }

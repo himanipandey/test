@@ -379,7 +379,7 @@ $(document).ready(function(){
 				  <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=1 style = "border:1px solid;">
 					<form method="post" enctype="multipart/form-data">
 					<tr>
-					<td  align = "center" colspan = "2">
+					<td  align = "left" colspan = "2">
 						{if count($ErrorMsg)>0}
 					   {foreach from=$ErrorMsg item=data}
 					   <font color = "red" style="font-size:17px;">{$data}</font><br>

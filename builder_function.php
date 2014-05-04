@@ -2198,15 +2198,15 @@ function getLocalityAveragePrice($locId)
 }
 function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $currentPlanId =''){
 	
-    $url = ImageServiceUpload::$image_upload_url."?objectType='project'&objectId=".$projectId;
+    $url = ImageServiceUpload::$image_upload_url."?objectType=project&objectId=".$projectId;
 
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
-
+//print_r($imgPath);
     $orderArr = array();
-    $cnt=0;
+    $cnt=0; 
     foreach($imgPath->data as $k=>$v){
-
+//echo $v->priority;
         if($service_image_id==$v->id){
 
         }
