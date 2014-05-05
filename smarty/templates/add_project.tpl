@@ -225,7 +225,7 @@
                                                                 <td width="30%" align="left">
                                                                        <textarea name="txtProjectDesc" rows="10" cols="45" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
                                                                        <input type="hidden" name="txtProjectOldDesc" value="{$txtProjectDescription}" />
-                                                                      {if $dept=='ADMINISTRATOR' && isset($contentFlag)}
+                                                                      {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                                                                        <br/><br/>
                                                                        <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 																	  {/if}
@@ -409,17 +409,17 @@
 							   </tr>
 
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Project Latitude :</b> </td>
+								  <td width="20%" align="right"><b>Project Latitude :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectLattitude" id="txtProjectLattitude" value="{$txtProjectLattitude}" style="width:360px;" /></td>
 								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtLattitude"] != ''} {$ErrorMsg["txtLattitude"]} {/if}<span id = "err_project_latt" style = "display:none;">Please enter project lattitude!</span></font>
+                                                                    {if $ErrorMsg['txtLattitude']}<font color="red">{$ErrorMsg['txtLattitude']}</span></font>{/if}
 								  </td>
 							   </tr>
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Project Longitude :</b> </td>
+								  <td width="20%" align="right"><b>Project Longitude :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectLongitude" id="txtProjectLongitude" value="{$txtProjectLongitude}" style="width:360px;" /></td>
 								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtLongitude"] != ''} {$ErrorMsg["txtLongitude"]} {/if}<span id = "err_project_long" style = "display:none;">Please enter project longitude</span></font>
+									  {if $ErrorMsg['txtLongitude']}<font color="red">{$ErrorMsg['txtLongitude']}</span></font>{/if}
 								  </td>
 							   </tr>
 							  
@@ -487,31 +487,20 @@
 									  <font color="red">{if $ErrorMsg["txtStatus"] != ''} {$ErrorMsg["txtStatus"]} {/if}<span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
-							                                                           
+							   {if $projectId != ''}                                                        
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
 								  <td width="30%" align="left">
-								  	{if $projectId != '' && $urlEditAccess == 0}
-								  		<input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
-								  	{else}
-								  		<input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" />
-								  		<br><span style = "font-size:10px">Like:noida/sector-50/dlf-group</font>
-								  	{/if}
-								  	
-								  	<input type = "hidden" name = "txtProjectURLOld" value = "{$txtProjectURLOld}">
-								  	
-
-
+                                                                        <input type="text" disabled name="txtProjectURL" id="txtProjectURL" value="{$txtProjectURL}" style="width:360px;" readonly />
+                                                                        <input type = "hidden" name = "txtProjectURLOld" value = "{$txtProjectURLOld}">
 								  	</td>
 								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtProjectURL"] != ''} {$ErrorMsg["txtProjectURL"]} {/if}
-
-									  	{if $ErrorMsg["txtProjectUrlDuplicate"] != ''} {$ErrorMsg["txtProjectUrlDuplicate"]} {/if}
-
-									  	
-									   <span id = "err_project_url" style = "display:none;">Please enter project url!</span></font>
+                                                                        <font color="red">{if $ErrorMsg["txtProjectURL"] != ''} {$ErrorMsg["txtProjectURL"]} {/if}
+                                                                          {if $ErrorMsg["txtProjectUrlDuplicate"] != ''} {$ErrorMsg["txtProjectUrlDuplicate"]} {/if}
+                                                                          <span id = "err_project_url" style = "display:none;">Please enter project url!</span></font>
 								  </td>
 							   </tr>
+                                                           {/if}
 
 							  
                                <tr>
@@ -519,7 +508,14 @@
                                    <td width="30%" align="left">
                                        <input name="pre_launch_date" value="{$pre_launch_date}" type="text" class="formstyle2" id="pre_f_date_c_to" size="10" />  <img src="images/cal_1.jpg" id="pre_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
                                    </td>
-                                   <td width="50%" align="left"><font color="red">{if count($ErrorMsg["preLaunchDate"])>0}{$ErrorMsg["preLaunchDate"]}{/if}</font></td>
+                                   <td width="50%" align="left"><font color="red">{if count($ErrorMsg["preLaunchDate"])>0}{$ErrorMsg["preLaunchDate"]}{/if}
+                                   	{if count($ErrorMsg["preLaunchDateAvailabilities"])>0}
+                                    	{$ErrorMsg["preLaunchDateAvailabilities"]}
+                                    {/if}
+                                    {if count($ErrorMsg["preLaunchDatePrices"])>0}
+                                    	{$ErrorMsg["preLaunchDatePrices"]}
+                                    {/if}
+                                   </font></td>
                                </tr>
 							   <tr>
 							   <td width="20%" align="right" valign="top"><b>Launch Date :</b> </td>
@@ -529,8 +525,15 @@
 							   <td width="50%" align="left"><font color="red">
                                                             {if count($ErrorMsg['launchDate'])>0}
                                                                 {$ErrorMsg['launchDate']}
+                                                           
                                                             {else}
                                                                 {if count($ErrorMsg["launchDateGreater"])>0}{$ErrorMsg["launchDateGreater"]}{/if}
+                                                            {/if}
+                                                            {if count($ErrorMsg["launchDateAvailabilities"])>0}
+                                                            	{$ErrorMsg["launchDateAvailabilities"]}
+                                                            {/if}
+                                                            {if count($ErrorMsg["launchDatePrices"])>0}
+                                                            	{$ErrorMsg["launchDatePrices"]}
                                                             {/if}
                                                                 </font></td>
 							   </tr>

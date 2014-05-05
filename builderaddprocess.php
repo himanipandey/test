@@ -19,6 +19,7 @@ if ($_POST['btnExit'] == "Exit")
 
 if ($_POST['btnSave'] == "Save")
 {
+    //die($_REQUEST['serviceImageId']);
 	$txtBuilderName			=	trim($_POST['txtBuilderName']);
         $legalEntity			=	trim($_POST['legalEntity']);
 	$txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
@@ -47,6 +48,7 @@ if ($_POST['btnSave'] == "Save")
 	$website			=	trim($_POST['website']);
 	$revenue			=	trim($_POST['revenue']);
 	$debt				=	trim($_POST['debt']);
+    $imgSrc               =   trim($_POST['imgSrc']);
 	
 	$smarty->assign("txtBuilderName", $txtBuilderName);
         $smarty->assign("legalEntity", $legalEntity);
@@ -73,6 +75,7 @@ if ($_POST['btnSave'] == "Save")
 	$smarty->assign("website", $website);	
 	$smarty->assign("revenue", $revenue);
 	$smarty->assign("debt", $debt);
+    //$smarty->assign("imgSrc", $imgSrc);
 
 	if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)){
 		$ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
@@ -190,29 +193,47 @@ if ($_POST['btnSave'] == "Save")
             else
             {
                 $newfold = '';
+
+                //echo $imgedit; die();
                 if($imgedit == ''){
                     $foldername	= str_replace(' ','-',strtolower($legalEntity));
                     $createFolder =$newImagePath.$foldername;
                     mkdir($createFolder, 0777);
                     $newfold = $createFolder;
+                   // echo $newfold;die();
                 }
                 else{  
                      $cutpath	=	explode("/",$imgedit);
-                     $newfold	=	$newImagePath.$cutpath[1];
+                     $foldername = $cutpath[1];
+                     $foldername    = str_replace(' ','-',strtolower($legalEntity));
+                     $newfold	=	$newImagePath.$foldername;
+                      mkdir($newfold, 0777);
                 }
                 
                 $name	=	$_FILES["txtBuilderImg"]["name"];
-               
-                if (($_FILES["txtBuilderImg"]["type"]))
+               $dest       =   $newImagePath.$foldername."/".$name;
+                $move       =   move_uploaded_file($_FILES['txtBuilderImg']['tmp_name'],$dest);
+                if (($_FILES["txtBuilderImg"]["type"]) && $move)
                 {
-                        $imgdestpath = $newfold."/" . $name;
-                        $return  =	 move_uploaded_file($_FILES["txtBuilderImg"]["tmp_name"], $imgdestpath);
-                        if($return)
-                        {				
-                            $imgurl = $newfold."/".$name; 
-                            $imgPath = explode("images_new/",$imgurl);
-                            $ImgDbFinalPath = "/".$imgPath[1];
-                            $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
+                        
+
+                            $params = array(
+                                "image_type" => "builder_image",
+                                "folder" => $foldername."/",
+                                "image" => $name,
+                                "title" => strtolower($legalEntity),
+                                "service_image_id" => $_REQUEST['serviceImageId'],
+                                "update" => "update",
+                            );
+
+                        $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);//echo "here";
+                       
+                        
+                        if(empty($response["serviceResponse"]["service"]->response_body->error->msg))
+                        {
+
+                            
+                           /* $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
                                 "image_type" => "builder_image","object_id" => $builderid, "service_image_id" => $_REQUEST["serviceImageId"],
                                 "service_extra_params" => array("addWaterMark" => "false")));
@@ -220,7 +241,16 @@ if ($_POST['btnSave'] == "Save")
                             // in three lines due to limitation of php 5.3)
                             $response = $s3upload->update();
                             $image_id = $response["service"]->data();
-                            $image_id = $image_id->id;
+                            $image_id = $image_id->id;*/
+                            //$image_id = $response['serviceResponse']["service"]->data();
+                            //$image_id = $image_id->id;
+                             $image_id = $response["serviceResponse"]["service"]->response_body->data->id;
+                           
+                         
+                            $imgurl = $newfold."/".$name; 
+                            $imgPath = explode("images_new/",$imgurl);
+                            $ImgDbFinalPath = "/".$imgPath[1];
+
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$ImgDbFinalPath,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder, $image_id);
                             if($rt)
                             {
@@ -255,21 +285,21 @@ if ($_POST['btnSave'] == "Save")
                                         $image->resize(477,247);
                                         $imgdestpath = $newfold."/". str_replace('.jpg','-rect.jpg',$file);
                                         $image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
                                          /************Resize and large to small*************/
                                         $image->resize(95,65);
                                         $newimg	=	str_replace('.jpg','-sm-rect.jpg',$file);
                                         $imgdestpath = $newfold."/".$newimg;
                                         $image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
-                                        $s3upload->upload();
+                                        /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        $s3upload->upload();*/
 
                                         $image->resize(80,36);
                                         $newimg	=	str_replace('.jpg','-thumb.jpg',$file);
                                         $imgdestpath = $createFolder."/".$newimg;
                                         $image->save($imgdestpath);
-                                        $s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
+                                        /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath, "", $imgdestpath));
                                         $s3upload->upload();
                                         /**********Working for watermark*******************/
                                         // Image path
@@ -290,7 +320,8 @@ if ($_POST['btnSave'] == "Save")
                         }	
                         else 
                         {
-                           $ErrorMsg['img'] = "Problem in image upload";
+                           $ErrorMsg2 = "Problem in image upload: ".($response["serviceResponse"]["service"]->response_body->error->msg);
+                            
                         }
                 }
                 else 
@@ -298,7 +329,7 @@ if ($_POST['btnSave'] == "Save")
                     $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$imgedit,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder);
                     if($return)
                     {
-			$seoData['meta_title'] = $txtMetaTitle;
+			             $seoData['meta_title'] = $txtMetaTitle;
                         $seoData['meta_keywords'] = $txtMetaKeywords;
                         $seoData['meta_description'] = $txtMetaDescription;
                         $seoData['table_id'] = $builderid;
@@ -378,7 +409,7 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("website", $dataedit['WEBSITE']);
             $smarty->assign("revenue", $dataedit['REVENUE']);
             $smarty->assign("debt", $dataedit['DEBT']);
-            $smarty->assign("service_image_id", $dataedit['SERVICE_IMAGE_ID']);
+            //$smarty->assign("service_image_id", $dataedit['SERVICE_IMAGE_ID']);
 
             $arrContact = BuilderContactInfo($builderid);
             $arrContactProjectMapping = builderContactProjectMapping($builderid);
@@ -391,6 +422,31 @@ if ($_POST['btnSave'] == "Save")
 			$smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
 			$smarty->assign("dept", $_SESSION['DEPARTMENT']);
 			
+            $objectType = "builder";
+            $objectId = $builderid;
+            $service_image_id = $dataedit['SERVICE_IMAGE_ID'];
+            $img_path = array();
+            
+            $url = readFromImageService($objectType, $objectId);
+            $content = file_get_contents($url);
+            $imgPath = json_decode($content);
+            $data = array();
+            foreach($imgPath->data as $k=>$v){
+                $data[$k]['IMAGE_ID'] = $v->id;
+                $data[$k][$obj] = $v->objectId;
+                $data[$k]['priority'] = $v->priority;
+                $data[$k]['IMAGE_CATEGORY'] = $v->imageType->type;
+                $data[$k]['IMAGE_DISPLAY_NAME'] = $v->title;
+                $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
+                $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
+                $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+            }
+            //array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
+            $smarty->assign("imgSrc", $data[0]['SERVICE_IMAGE_PATH']);
+            $smarty->assign("service_image_id", $data[0]['SERVICE_IMAGE_ID']);
+    //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
+
+
 			
     }
     else {
@@ -421,6 +477,7 @@ if ($_POST['btnSave'] == "Save")
             $BuilderDataArr[]	=	$data;		
      }
      $smarty->assign("BuilderDataArr", $BuilderDataArr);
+     $smarty->assign("ErrorMsg2", $ErrorMsg2);
      
      function builderContactProjectMapping($builderId) {
          $qry = "select * from project_builder_contact_mappings 

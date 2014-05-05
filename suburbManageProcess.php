@@ -50,8 +50,10 @@
      **/
      $localityDataArr = array();
 
-
-    if ($_GET['sort'] == "1") {
+    if($_REQUEST['suburbUrl']!=''){
+        $QueryMember = "Select * FROM ".SUBURB." WHERE URL = '".$_REQUEST['suburbUrl']."' ORDER BY SUBURB_ID DESC";
+    }
+    else if ($_GET['sort'] == "1") {
         $QueryMember = "SELECT * FROM ".SUBURB." WHERE LABEL BETWEEN '0' AND '9'
             AND CITY_ID ='".$cityId ."' ORDER BY SUBURB_ID DESC";
     } else if ($_GET['sort'] == "all") {
@@ -125,6 +127,7 @@
            array_push($suburbSelect, $dataArr);
     }
     $smarty->assign("suburbSelect", $suburbSelect);
+    $smarty->assign("suburbUrl", $_REQUEST['suburbUrl']);
    // print_r($suburbSelect);
 
 

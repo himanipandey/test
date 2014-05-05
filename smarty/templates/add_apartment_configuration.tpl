@@ -95,6 +95,15 @@
                 $("#"+id).val(valOld); 
                 return false;
           }
+      }
+
+      function onChangeActionBath(id,edit_project) {
+           var oldBed = id+"_old";
+            var valOld = $("#"+oldBed).val();
+            if (edit_project != '' && valOld != '0' && valOld != '') {
+                //$("#"+id).val(valOld); 
+                return false;
+          }
       };
 </SCRIPT>
 
@@ -172,7 +181,10 @@
                           {/foreach}
 
                         <tr><td colspan="17"><b><span style='font-size:15px;'>APARTMENTS</span></b></td></tr>
-                            <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
+                        <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
+                        {foreach from = $ErrorMsg2  key=k1 item = v1}
+                            <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}Row {($v1['dupkey'])+1} is duplicate of Row {($v1['key'])+1} {/if}</font></td></tr>
+                        {/foreach}
                         <tr class = "headingrowcolor" >
                           <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >
                              Delete
@@ -226,7 +238,7 @@
                           </td>
                           <td align="center">
                               <input type = "hidden" name = "bed_{($smarty.section.foo.index+1)}_old" id = "bed_{($smarty.section.foo.index+1)}_old" value ="{$bedval[{$smarty.section.foo.index}]}">
-                                <select id="bed_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bed_{($smarty.section.foo.index+1)}',{$edit_project}), show_add({$smarty.section.foo.index}); fillUnitName({$smarty.section.foo.index});" tempName="bed" name = 'bed[]' style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$bedval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$bedval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
+                                <select id="bed_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bed_{($smarty.section.foo.index+1)}',{$edit_project}), show_add({$smarty.section.foo.index}); fillUnitName({$smarty.section.foo.index});" tempName="bed" name = 'bed[]' style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (array_key_exists($var, $ErrorMsg)) && (({$bedval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$bedval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
                                     <option value = "0">Select</option>
                                     <option {if $bedval[{$smarty.section.foo.index}] == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>1</option>
                                     <option {if $bedval[{$smarty.section.foo.index}] == '2'} value = "2" selected = 'selected' {else} value = "2" {/if}>2</option>
@@ -245,7 +257,7 @@
                             
                           <td>
                               <input type = "hidden" name = "bathrooms_{($smarty.section.foo.index+1)}_old" id = "bathrooms_{($smarty.section.foo.index+1)}_old" value ="{$bathroomsval[{$smarty.section.foo.index}]}">
-                                 <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bathrooms_{($smarty.section.foo.index+1)}',{$edit_project}), fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
+                                 <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeActionBath('bathrooms_{($smarty.section.foo.index+1)}',{$edit_project}), fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
                                     <option value = "0">Select</option>
                                     <option {if $bathroomsval[{$smarty.section.foo.index}] == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>1</option>
                                     <option {if $bathroomsval[{$smarty.section.foo.index}] == '2'} value = "2" selected = 'selected' {else} value = "2" {/if}>2</option>
@@ -404,6 +416,9 @@
 
 
                               {/foreach}
+                              {foreach from = $ErrorMsg2  key=k1 item = v1}
+                                  <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}Row {($v1['dupkey'])+1} is duplicate of Row {($v1['key'])+1} {/if}</font></td></tr>
+                              {/foreach}
                             <tr><td colspan="16"><b><span style='font-size:15px;'>VILLAS</span></b></td></tr>
                             <tr><td colspan="16"></td></tr>
                             <tr class = "headingrowcolor" >
@@ -481,7 +496,7 @@
                               </td>
                               <input type = "hidden" name = "bathrooms_{($smarty.section.foo.index+1)}_old" id = "bathrooms_{($smarty.section.foo.index+1)}_old" value ="{$bathroomsval_VA[$new_index]}">
                               <td>
-                                     <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bathrooms_{($smarty.section.foo.index+1)}', {$edit_project}),fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
+                                     <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeActionBath('bathrooms_{($smarty.section.foo.index+1)}', {$edit_project}),fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
                                         <option value = "0">Select</option>
                                         <option {if $bathroomsval_VA[$new_index] == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>1</option>
                                         <option {if $bathroomsval_VA[$new_index] == '2'} value = "2" selected = 'selected' {else} value = "2" {/if}>2</option>
@@ -655,7 +670,12 @@
                       <br />
                       <TABLE cellSpacing=2 cellPadding=4 width="60%" align="left" style="border:1px solid #c2c2c2;" border="0">
                         <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
-                        <div>  {foreach from = $ErrorMsg  key=k item = datafirst}
+                        
+                        <div>  
+                        
+                        
+                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeP || $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeC}
+                           {foreach from = $ErrorMsg  key=k item = datafirst}
                                 <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                         <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
                                         {else if $k == 3} Fourth row errors {else if $k == 4} Fifth row errors {else if $k == 5} Sixth row errors {else if $k == 6} Seventh row errors
@@ -667,6 +687,7 @@
 
 
                               {/foreach}
+                            {/if}
                             <tr><td colspan="7"><b><span style='font-size:15px;'>{$typeName}</span></b></td></tr>
 
                             <tr><td colspan="7"></td></tr>
@@ -691,7 +712,7 @@
                                <td align="center">
                                      {($smarty.section.foo.index+1)}
                               </td>
-							   {if $flg != 0}
+				{if $flg != 0}
                                     {$new_index = $smarty.section.foo.index-15}
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
@@ -705,10 +726,20 @@
                                      <span {if ($txtUnitNameval_P[$new_index] =='') && ($edit_project == '')}style = "display:none;" {/if} id = "add_{($smarty.section.foo.index+1)}" class="insertProject" rel="{($smarty.section.foo.index+1)}"><a href='#' >Add</a></span>
                               </td>-->
                               <td>
+                                  {if $typeName == 'Commercial'}
+                                    <select name="txtUnitName[]" id="txtUnitName_{($smarty.section.foo.index+1)}">
+                                        <option value="">Select Name</option>
+                                        <option value="shops" {if $txtUnitNameval_P[$new_index] == 'shops'}selected{/if}>Shops</option>
+                                        <option value="office" {if $txtUnitNameval_P[$new_index] == 'office'}selected{/if}>Office</option>
+                                        <option value="serviced appt" {if $txtUnitNameval_P[$new_index] == 'serviced appt'}selected{/if}>Serviced Appt.</option>
+                                    </select>
+                                  {else}
+                                      <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
+                                  {/if}
                                     <input type='hidden' value={$projectId} name='projectId' tempName="projectId"   />
                                     <input type='hidden' value='{$typeName}' name='unitType[]' tempName="unitType"   />
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
-                                    <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
+                                   <!-- <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">-->
                               </td>
                               <td align="left" >
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeLenval_P[$new_index]} == '') OR !is_numeric({$txtSizeLenval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">

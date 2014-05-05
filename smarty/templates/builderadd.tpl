@@ -1,4 +1,5 @@
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/photo.js"></script>
 <script>
 	function showhide_row(numrow)
 	{
@@ -31,6 +32,19 @@
 
 	 return true;
   }
+
+
+  function getPhotos(){
+			
+		var template = '<img src="{$imgSrc}" width = 150 height = 100 />';
+
+		$("a#view").html( template );
+		$("a#view").fancybox();
+	
+	}
+
+	
+
   $(document).ready(function(){
       $("#txtBuilderName").change(function(){
         var builderid = $(this).val();
@@ -94,6 +108,14 @@
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" enctype="multipart/form-data">
 			      <div>
+			      				<tr>
+					<td  align = "center" colspan = "2">
+						
+					  
+					   <font color = "red" style="font-size:17px;">{$ErrorMsg2}</font><br>
+					 
+					</td>
+				</tr>
                                   <tr style="">
                                     <td width="20%" align="right" ><font color = "red"></font>Check if builder exist already : </td>
                                     <td width="30%" align="left" colspan="2">
@@ -123,7 +145,7 @@
 				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Builder Description :</td>
 				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" cols="45">{$txtBuilderDescription}</textarea>
 				   <input type="hidden" name="txtOldBuilderDescription" value="{$txtBuilderDescription}" />
-				  {if $dept=='ADMINISTRATOR' && isset($contentFlag)}
+				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>
                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 				  {/if}
@@ -163,6 +185,7 @@
 
 				</tr>
 				<input type = 'hidden' name = 'imgedit' value = '{$imgedit}'>
+				<input type = 'hidden' name = 'imgSrc' value = '{$imgSrc}'>
 					{if $img != ''}
 				
 				<tr>
@@ -171,12 +194,7 @@
 					
 					
 					<div id='content'>
-								<a id="view" href="{$imgDisplayPath}{$img}" title="Builder Logo">View Image</a>  
-								<script type="text/javascript">
-								$(document).ready(function() {
-								$("a#view").fancybox();
-								});
-								</script>
+								<a id="view" href="" onclick="getPhotos(); return false;" title="Builder Logo">View Image</a>  
 					</div>
 				  
 				</tr>

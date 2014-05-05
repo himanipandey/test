@@ -406,7 +406,7 @@ $ArrModuleOld	=	array(
 
 	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
             "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
-            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES");
+            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT");
 	$smarty->assign("departmentArray", $departmentArray);
 
 	/******add service tax for invoice**********/
@@ -746,9 +746,10 @@ $arrOtherCities =
    
 $arrOfferTypes = array(
     'NoPreEmi'=>'No Pre-EMI',
-    'PartEmi'=>'Part Now Part Later',
-    'NoCharges'=>'No Additional Charges (PLC/Amenities)',
+    'PartEmi'=>'Possession Linked Plan',
+    'NoCharges'=>'No Additional Charges',
     'PriceDiscount'=>'Price Discount',
-    'Other'=>'Other'
+    'Other'=>'Offer'
   );
+
 ?>

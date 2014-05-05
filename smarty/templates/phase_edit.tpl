@@ -244,6 +244,15 @@
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td width="20%" align="right" valign="top"><b>Sold Out Date  :</b> </td>
+                                                <td width="30%" align="left">
+                                                    <input name="sold_out_date" value="{$sold_out_date}" type="text" class="formstyle2" id="sold_out_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="sold_out_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                </td>
+                                                <td width="50%" align="left">
+                                                    <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
+                                                </td>
+                                            </tr>
                                         <input type = "hidden" name = "pre_launch_date" value="{$pre_launch_date}">
                                     
 
@@ -427,10 +436,11 @@
                                                                                                                                     </table>
 
 <script type="text/javascript">                                                                                                                                    {if isset($phaseId) and !in_array($phaseId, array('-1', '0'))}
-                                                                                                                              
+                                                                                                                             
         var cals_dict = {
             "launch_date_trigger": "launch_date",
-            "completion_date_trigger": "completion_date"
+            "completion_date_trigger": "completion_date",
+            "sold_out_date_trigger": "sold_out_date",
         };
 
         $.each(cals_dict, function(k, v) {
@@ -455,7 +465,7 @@
                 if(title=='Update Completion Date'){
                     jQuery(this).attr('href','javascript:void(0)');
                     window.open('add_project_construction.php?projectId='+projectId+"&phaseId="+phaseId,'AddProjectConstruction',
-                    'height=400,width=900,scrollbars=yes,toolbar=no,left=150,right=150,resizable=1,top=50');
+                    'height=400,width=1000,scrollbars=yes,toolbar=no,left=150,right=150,resizable=1,top=50');
                 }
             });
     });

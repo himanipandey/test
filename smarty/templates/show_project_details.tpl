@@ -54,7 +54,7 @@
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
                                                 }
                                                 if( eventArray[i][1] == 'allCommentHistory.php' ) {
-                                                    window.open(url,'All Comment List','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
+                                                    window.open(url,'All Comment List','height=600,width=800,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
                                                 }
                                                 else 
                                                     $(location).attr('href',url);
@@ -123,13 +123,20 @@ function towerSelect(towerId)
 	}
 
 	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, 
-            preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder)
-	{	
-		
+            preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder,projectMoveValidation)
+	{
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
 		var flgChk = 0;	
+                /*******code for check user have access to move project or not******/
+                if(dir != 'backward' && projectMoveValidation <=0 && projectMoveValidation != -999 
+                    && ((phase == 'DataCollection' && (stg == 'UpdationCycle' || stg == 'SecondaryPriceCycle')) || phase == 'DcCallCenter')){
+                    alert("This project is not assigned to you!");
+                    return false;
+                    
+                }
+                /*******end code for check user have access to move project or not******/
 		if(dir != 'backward' && val == 'Y' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')))
 		{
 			if(phaseId != '')
@@ -526,20 +533,20 @@ function broker_call_edit(callId, brokerId)
 	{if $projectDetails[0].PROJECT_STAGE=='NewProject'}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                  <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$arrAllCompletionDateChk}',
-                '{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}','{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}');">Move To Next Stage	</button>
+                '{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}','{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Move To Next Stage	</button>
             {/if}
 	{else}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                 <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}',
                 'updation','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}',
-            '{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}');">Move To Next Stage	</button>
+            '{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Move To Next Stage	</button>
             {/if}
 	{/if}
 
 	{if $projectDetails[0].PROJECT_PHASE!="DataCollection" && $projectDetails[0].PROJECT_PHASE!="Complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}',
 '{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}',
-'{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}');">Revert	</button>
+'{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Revert	</button>
 
 	{/if}
 {/if}<br>
@@ -1164,6 +1171,14 @@ function broker_call_edit(callId, brokerId)
                                                     <td>
                                                         {$completionDate}</td>
 						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b>Completion Effective Date:</b>
+                                                    </td>
+                                                    <td>
+                                                       {if $completionDate!='0000-00-00'}{$completionEffDate|date_format:"%b %Y"}{/if}
+                                                    </td>
+						</tr>
 						
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
@@ -1244,7 +1259,7 @@ function broker_call_edit(callId, brokerId)
                                                         {if $offer_desc}
                                                             {$count=1}
 															{foreach from=$offer_desc item=data}
-																 {$count++}. {$data->offer_desc}<br/>
+																 {$count++}.[{$data->offer}] - {$data->offer_desc}<br/>
 															{/foreach}
                                                             
                                                         {else}
@@ -1875,14 +1890,14 @@ function broker_call_edit(callId, brokerId)
 								
 									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 										
-											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
+											<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
                                                                                             {$parts = explode('.', $ImageDataListingArr[data].PLAN_IMAGE)}
                                                                                             {$last = array_pop($parts)}
                                                                                             {$str1 = implode('.', $parts)}
                                                                                             {$str1 = $str1|cat:'-thumb'}
                                                                                             {$str2 = $str1|cat:'.'}
                                                                                             {$finalStrWithThumb = $str2|cat:$last}
-                                                                                            <img src="{$imgDisplayPath}{$finalStrWithThumb}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+                                                                                            <img src="{$ImageDataListingArr[data].thumb_path}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].alt_text}" />
 												</a>
 												<br>
 											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
@@ -1890,11 +1905,15 @@ function broker_call_edit(callId, brokerId)
 										<b>Image Title </b>:{$ImageDataListingArr[data].TITLE}<br><br>
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 											<b>Tagged Date </b>:{$ImageDataListingArr[data].tagged_month|strtotime|date_format:"%B %Y"}<br><br>
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{else}Other{/if}<br><br>
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
 										{/if}
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
 											<b>Display Order </b>:{$ImageDataListingArr[data].display_order}<br><br>
 										{/if}
+										{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
+										{/if}
+
 									</div>
 								</td>
 								{$cnt = $cnt+1} 		
@@ -1935,7 +1954,7 @@ function broker_call_edit(callId, brokerId)
 								<td class = "tdcls_{$cnt}" >
 									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 										
-											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}
+											<a class="pt_reqflrplan" href="{$ImageDataListingArrFloor[data].IMAGE_URL}
 														" target="_blank">
                                                                                             {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
                                                                                             {$lastFloor = array_pop($partsFloor)}
@@ -1943,7 +1962,7 @@ function broker_call_edit(callId, brokerId)
                                                                                             {$strFloor1 = $strFloor1|cat:'-thumb'}
                                                                                             {$strFloor2 = $strFloor1|cat:'.'}
                                                                                             {$finalStrWithThumbFloor = $strFloor2|cat:$last}
-												<img src="{$imgDisplayPath}{$finalStrWithThumbFloor}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
+												<img src="{$ImageDataListingArrFloor[data].thumb_path}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].alt_text}" />
 											</a>
 											<br>
 										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>

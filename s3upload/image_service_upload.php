@@ -8,7 +8,10 @@ class ImageServiceUpload{
         "option" => "property",
         "builder" => "builder",
         "locality" => "locality",
-        "bank" => "bank"
+        "bank" => "bank",
+        "city" => "city",
+        "suburb" => "suburb",
+        "landmark" => "landmark"
     );
 
     static $image_types = array(
@@ -28,13 +31,80 @@ class ImageServiceUpload{
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
         "locality" => array(
-            "locality_image" => "main",
-            "other" => "other",
             "mall" => "mall",
             "map"  => "map",
             "road" => "road",
             "school" => "school",
-            "hospital" => "hospital"
+            "hospital" => "hospital",
+            "hotel" => "hotel",
+            "bank" => "bank",
+            "station" => "station",
+            "gurdwara" => "gurdwara",
+            "mosque" => "mosque",
+            "bus stand" => "bus stand",
+            "park" => "park",
+            "hall" => "hall",
+            "office" => "office",
+            "buildings" => "buildings",
+            "other" => "other",
+            
+        ),
+       "city" => array(
+            "mall" => "mall",
+            "map"  => "map",
+            "road" => "road",
+            "school" => "school",
+            "hospital" => "hospital",
+            "hotel" => "hotel",
+            "bank" => "bank",
+            "station" => "station",
+            "gurdwara" => "gurdwara",
+            "mosque" => "mosque",
+            "bus stand" => "bus stand",
+            "park" => "park",
+            "hall" => "hall",
+            "office" => "office",
+            "buildings" => "buildings",
+             "other" => "other",
+            
+        ),
+         "suburb" => array(
+            "mall" => "mall",
+            "map"  => "map",
+            "road" => "road",
+            "school" => "school",
+            "hospital" => "hospital",
+            "hotel" => "hotel",
+            "bank" => "bank",
+            "station" => "station",
+            "gurdwara" => "gurdwara",
+            "mosque" => "mosque",
+            "bus stand" => "bus stand",
+            "park" => "park",
+            "hall" => "hall",
+            "office" => "office",
+            "buildings" => "buildings",
+             "other" => "other",
+            
+        ),
+         "landmark" => array(
+            "school" => "school",
+            "hospital"  => "hospital",
+            "bank" => "bank",
+            "bus_stand" => "bus_stand",
+            "park" => "park",
+            "atm" => "atm",
+            "restaurant" => "restaurant",
+            "gas_station" => "gas_station",
+            "subway_station" => "subway_station",
+            "bus_station" => "bus_station",
+            "train_station" => "train_station",
+            "airport" => "airport",
+            "shopping_mall" => "shopping_mall",
+            "grocery_or_supermarket" => "grocery_or_supermarket",
+            "office_complex" => "office_complex",
+            "other" => "other",
+            
         ),
         "bank" => array("logo" => "logo"));
 
@@ -47,12 +117,18 @@ class ImageServiceUpload{
         $this->method = trim($method);
         $this->extra_params = $extra_params;
         $this->errors = array();
+        if(isset($image))
         $this->validate();
     }
 
     function upload(){
-        $params = array('image'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
+        if(!isset($this->image))
+            $params = array('image'=>$this->image,'objectType'=>static::$object_types[$this->object],
             'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
+        else
+             $params = array('image'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
+            'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
+
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
         if($this->method == "DELETE")
@@ -66,6 +142,7 @@ class ImageServiceUpload{
         $this->status = $response["status"];
         $this->verify_status();
         $this->raise_errors_if_any();
+       
     }
 
     static function join_urls() {
@@ -99,6 +176,7 @@ class ImageServiceUpload{
     }
 
     static function create($post){
+        //var_dump($post);var_dump(static::$image_upload_url);//die("heool");
         return static::curl_request($post, 'POST', static::$image_upload_url);
     }
 
@@ -109,6 +187,7 @@ class ImageServiceUpload{
 
     static function update($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
+        print("<pre>");var_dump($post);var_dump($url);//die("heool");//
         return static::curl_request($post, 'POST', $url);
     }
 

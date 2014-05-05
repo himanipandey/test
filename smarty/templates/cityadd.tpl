@@ -41,7 +41,6 @@
 				  <td width="20%" align="right" >*City URL : </td>
 				  <td width="30%" align="left" ><input type=text disabled name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;"></td>				   
 					<input type = "hidden" name = "txtCityUrlOld" value = "{$txtCityUrlOld}">
-				 
 				  	<td width="50%" align="left" >
 				  		<font color = "red">
 
@@ -65,8 +64,8 @@
 				  <td width="30%" align="left" >				  				  				 						
 				  
 				  <select name="DisplayOrder"  id="DisplayOrder" class="field" style="width:150px;">						 						 	
-					 <option value="">Select </option>   							
-					{section name=foo start=1 loop=51 step=1}
+					 <option value="999">Select </option>   							
+					{section name=foo start=1 loop=50 step=1}
 						<option {if $DisplayOrder == {$smarty.section.foo.index}} value="{$DisplayOrder}" selected = 'selected' {else} value="{$smarty.section.foo.index}"{/if} >{$smarty.section.foo.index}</option>  							
 					 {/section}  							 	
  					</select>
@@ -90,7 +89,7 @@
 				  <td width="20%" align="right" valign = top >*Description  : </td>
 				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea>
 				  <input type="hidden" name="oldDesc" value="{$desc}" />
-				  {if $dept=='ADMINISTRATOR' && isset($contentFlag)}
+				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>
                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 				  {/if}

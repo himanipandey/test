@@ -35,6 +35,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
     $pre_launch_date = $_REQUEST['pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
+    $sold_out_date = $_REQUEST['sold_out_date']; 
     $bookingStatus = 1; //available
 
     // Flats Config
@@ -70,6 +71,8 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
             $completion_date = '';
         if($pre_launch_date == '0000-00-00')
             $pre_launch_date = '';
+        if($sold_out_date == '0000-00-00')
+            $sold_out_date = '';
         if( $launch_date != '' && $completion_date !='' ) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
             if( $retdt <= 180 ) {
@@ -82,6 +85,13 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
           }
+        if($sold_out_date != ''){
+			$retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
+            if( $retdt <= 0 || $launch_date=='') {
+                $error_msg = "Sold out date to be always greater than Launch date";
+            } 			 
+			 
+		 }
           
         if( $pre_launch_date != '' && $completion_date !='') {
                 $retdt  = ((strtotime($completion_date) - strtotime($pre_launch_date)) / (60*60*24));
@@ -104,7 +114,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
           if($error_msg == ''){
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
-                global $projectId, $phasename, $launch_date, $completion_date, $remark, $towers, $bookingStatus, $phase;
+                global $projectId, $phasename, $launch_date, $completion_date, $remark, $towers, $bookingStatus, $phase, $sold_out_date;
     //          Creating a new phase
                 $phase = new ResiProjectPhase();
                 $phase->project_id = $projectId;
@@ -115,7 +125,9 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 $phase->status = 'Active';
                 $phase->booking_status_id = $bookingStatus;
                 $phase->updated_by = $_SESSION["adminId"];
+                $phase->sold_out_date = $sold_out_date;
                  $phase->submitted_date = date('Y-m-d');
+                 
                 $phase->virtual_save();
 
                  /***********end code related to completion date add/edit**************/
@@ -132,12 +144,12 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                     and version = 'Cms' ";
             $resFetchPhaseId = mysql_query($qryFetchPhaseId) or die(mysql_error());
             $dataFetchPhaseId = mysql_fetch_assoc($resFetchPhaseId);
-
+			$effectiveDt = date('Y')."-".date('m')."-01";
             $qryCompletionDate = "insert into resi_proj_expected_completion 
                 set
                   project_id = $projectId,
                   expected_completion_date = '".$completion_date."',
-                  submitted_date = now(),
+                  submitted_date = '".$effectiveDt."',
                   phase_id = ".$dataFetchPhaseId['phase_id'];
              $successCompletionDate =  mysql_query($qryCompletionDate) or die(mysql_error());
              if($successCompletionDate) {

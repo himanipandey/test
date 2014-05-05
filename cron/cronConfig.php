@@ -5,6 +5,8 @@ require_once $docroot.'dbConfig.php';
 require_once 'cronFunctions.php';
 require_once $docroot.'includes/send_mail_amazon.php';
 
+$past_date = date("Y-m-d",strtotime('-1 days'));
+$future_date = date("Y-m-d",strtotime('+1 days'));
 $latLongList = '0,1,2,3,4,5,6,7,8,9';
 $currentDate = date("Y-m-d");
 $dailyEmail = array(
@@ -61,6 +63,21 @@ $dailyEmail = array(
             'subject'=>'Lat Long Beyond Limits',
             'recipients'=>array('ankur.dhawan@proptiger.com'), 
             'attachmentname'=>'Latitude_longitude_beyond_limit',
+            'sendifnodata'=>0
+        ),
+         array(
+            'sql'=>"UPDATE `project_offers` SET STATUS = 'Inactive' WHERE STATUS = 'Active' AND OFFER_END_DATE='".$past_date ."';",
+            'subject'=>'Expired Project Offers',
+            'recipients'=>array('ankur.dhawan@proptiger.com'), 
+            'attachmentname'=>'expired_project_offers',
+            'sendifnodata'=>0
+        ),
+        array(
+            'sql'=>"SELECT id as OFFER_ID,project_id as PROJECT_ID,OFFER,OFFER_DESC,created_at as START_DATE,OFFER_END_DATE,STATUS FROM `project_offers` WHERE STATUS = 'Active' AND OFFER_END_DATE='".$future_date."';",
+            'subject'=>'Project Offers Reaching Expiry Date',
+            'recipients'=>array('ankur.dhawan@proptiger.com'), 
+            'attachmentname'=>'expired_project_offers',
+            'message'=>"Please extend the offers validity otherwise they will be deactivated.",
             'sendifnodata'=>0
         )
 );

@@ -45,6 +45,15 @@ else if($_POST['task']=='createAlias'){
 	}
 }
 
+else if($_POST['task']=='createLandmarkAlias'){
+	//die("here");
+	if( !empty($_POST['label']) && !empty($_POST['cityId'])  ){
+		//die("he");
+		$label = $_POST['label'];
+		$cityid = $_POST['cityId'];
+		createLandmarkAliases($label, $cityid);
+	}
+}
 
 else{
 if(!empty($_POST['aliasname']))

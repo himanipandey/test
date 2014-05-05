@@ -29,8 +29,10 @@
             $Offset = ($PageNum - 1) * $RowsPerPage;
     }
      $builderDataArr = array();
-
-    if($_REQUEST['builders']!=''){
+    if($_REQUEST['builderUrl']!=''){
+        $qryFlg = " a.URL = '".$_REQUEST['builderUrl']."' and b.table_name = 'resi_builder' ";
+    }
+    elseif($_REQUEST['builders']!=''){
             $qryFlg = " a.BUILDER_NAME LIKE '".$_REQUEST['builders']."%' and b.table_name = 'resi_builder' ";
     }else{
             $qryFlg = " b.table_name = 'resi_builder' ";
@@ -91,6 +93,7 @@
     $smarty->assign("Sorting", $Sorting);
     $smarty->assign("NumRows",$NumRows);
     $smarty->assign("builders",$_REQUEST['builders']);
+    $smarty->assign("builderUrl",$_REQUEST['builderUrl']);
     $smarty->assign("builderDataArr", $builderDataArr);
     $smarty->assign("callerMessage", $_SESSION['callerMessage'][0]);
     unset($_SESSION['callerMessage']);
