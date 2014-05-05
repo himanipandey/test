@@ -5,7 +5,7 @@
  */
 function checkAvailablityDate($projectId, $date){
     $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active', "version" => 'Cms'), "order" => "phase_name asc"));
-    $rows = [];
+    $rows = array();
 
     foreach ($phases as $p) {
         $sql = "select pa.* from project_availabilities pa 
@@ -26,7 +26,7 @@ function checkAvailablityDate($projectId, $date){
 
 function checkListingPricesDate($projectId, $date){
     $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id" => $projectId, "status" => 'Active', "version" => 'Cms'), "order" => "phase_name asc"));
-    $rows = [];
+    $rows = array();
     foreach ($phases as $p) {
     $sql = "select lp.* from listing_prices lp 
         inner join listings l on (l.id = lp.listing_id and lp.status='Active' and lp.version='Cms' and l.status='Active')
