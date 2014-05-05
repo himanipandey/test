@@ -100,6 +100,7 @@ else {
             $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
             $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
             $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+            $data[$k]['alt_text'] = $v->altText;
         }
         
     }
@@ -109,7 +110,7 @@ else {
 }
 $localityArr = array();
  $localityType = ImageServiceUpload::$image_types;
- $localityArr = $localityType[$objectType];
+ $localityArr = $localityType[$objectType]; 
 //echo "<pre>";print_r($localityArr);die;
 if ( is_array( $data ) && count( $data ) ) {
     $json['result'] = TRUE;

@@ -379,7 +379,7 @@ $(document).ready(function(){
 				  <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=1 style = "border:1px solid;">
 					<form method="post" enctype="multipart/form-data">
 					<tr>
-					<td  align = "center" colspan = "2">
+					<td  align = "left" colspan = "2">
 						{if count($ErrorMsg)>0}
 					   {foreach from=$ErrorMsg item=data}
 					   <font color = "red" style="font-size:17px;">{$data}</font><br>
@@ -407,10 +407,10 @@ $(document).ready(function(){
 												<td class = "tdcls_{$cnt}" >
 													<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 														
-															<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}
+															<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}
 															
 															" target="_blank">
-																<img src="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+																<img src="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" height="70px" width="70px" title="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" alt="{$ImageDataListingArr[data].alt_text}" />
 															</a>
 															<br>
 														Image Type:{$ImageDataListingArr[data].PLAN_IMAGE}<input type = "text" readonly name = "PType[{$cnt}]" id="PType{$cnt}"

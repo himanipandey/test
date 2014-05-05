@@ -226,9 +226,13 @@ if ($_POST['btnSave'] == "Save")
                                 "update" => "update",
                             );
 
-                        $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);
-                        if(!empty($serviceResponse["service"]->response_body->error->msg))
+                        $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);//echo "here";
+                       
+                        
+                        if(empty($response["serviceResponse"]["service"]->response_body->error->msg))
                         {
+
+                            
                            /* $s3upload = new ImageUpload($imgdestpath, array("s3" =>$s3,
                                 "image_path" => str_replace($newImagePath, "", $imgdestpath), "object" => "builder",
                                 "image_type" => "builder_image","object_id" => $builderid, "service_image_id" => $_REQUEST["serviceImageId"],
@@ -238,12 +242,11 @@ if ($_POST['btnSave'] == "Save")
                             $response = $s3upload->update();
                             $image_id = $response["service"]->data();
                             $image_id = $image_id->id;*/
-                            $image_id = $response['serviceResponse']["service"]->data();
-                            $image_id = $image_id->id;
-
+                            //$image_id = $response['serviceResponse']["service"]->data();
+                            //$image_id = $image_id->id;
+                             $image_id = $response["serviceResponse"]["service"]->response_body->data->id;
                            
-                        
-                                        
+                         
                             $imgurl = $newfold."/".$name; 
                             $imgPath = explode("images_new/",$imgurl);
                             $ImgDbFinalPath = "/".$imgPath[1];
@@ -317,7 +320,8 @@ if ($_POST['btnSave'] == "Save")
                         }	
                         else 
                         {
-                           $ErrorMsg['img'] = "Problem in image upload: ".$serviceResponse["service"]->response_body->error->msg;
+                           $ErrorMsg2 = "Problem in image upload: ".($response["serviceResponse"]["service"]->response_body->error->msg);
+                            
                         }
                 }
                 else 
@@ -473,6 +477,7 @@ if ($_POST['btnSave'] == "Save")
             $BuilderDataArr[]	=	$data;		
      }
      $smarty->assign("BuilderDataArr", $BuilderDataArr);
+     $smarty->assign("ErrorMsg2", $ErrorMsg2);
      
      function builderContactProjectMapping($builderId) {
          $qry = "select * from project_builder_contact_mappings 

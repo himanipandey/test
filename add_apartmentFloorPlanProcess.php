@@ -6,7 +6,7 @@
 	$villApartment = array();
 	$plot = array();
 	$commercial = array();
-	$uploadedArr = array();
+	$uploadedArr = array(); // array of titles ALREADY uploaded in image service 
 	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex");
 	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor");
 	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
@@ -20,14 +20,14 @@
     $projectDetail = array($projectDetail->to_custom_array());
 	$builderDetail			= ResiBuilder::find($projectDetail[0]['BUILDER_ID']);
     $builderDetail = $builderDetail->to_custom_array();
-	$ProjectOptionDetail	=	ProjectOptionDetail($projectId);
+	$ProjectOptionDetail	=	getAllProjectOptionsExceptPlot($projectId);
 
 
 
 	foreach ($ProjectOptionDetail as $k => $v) {
 		$objectType = "property";
 		$image_type = "floor_plan";
-	    $objectId = $v['OPTIONS_ID'];
+	    $objectId = $v['OPTION_ID'];
 	    
 	    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
 	    //echo $url;
@@ -39,21 +39,21 @@
 				array_push($arr, $v1->title);
 		}
 		$uploadedArr[$k] = implode("-", $arr);
-		if($v['OPTION_TYPE']=='Apartment'){
+		if($v['UNIT_TYPE']=='Apartment'){
 			$floorPlanOptionsArr[$k] = $apartmentArr;
 			$villApartment[$k] = "yes";
 			
 		}
-		else if($v['OPTION_TYPE']=='Villa'){
+		else if($v['UNIT_TYPE']=='Villa'){
 			$floorPlanOptionsArr[$k] = $villaArray;
 			$villApartment[$k] = "yes";
 		}
-		else if($v['OPTION_TYPE']=='Plot'){
+		else if($v['UNIT_TYPE']=='Plot'){
 			unset($ProjectOptionDetail[$k]);
 			$plot[$k] = "yes";
 		}
 			
-		else if($v['OPTION_TYPE']=='commercial')
+		else if($v['UNIT_TYPE']=='commercial')
 			$commercial[$k] = "yes";
 
 	}
@@ -86,6 +86,7 @@
 	$optionId				=	'';
 	$insertlist				=	'';
 	$ErrorMsg1				=   '';
+	//print("<pre>");var_dump($_REQUEST); die();
 	if(($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST['Next'] == "Add More"))
 	{
 		/*************Add new project type if projectid is blank*********************************/
@@ -185,6 +186,8 @@
 			                $img['type'] = $_FILES["imgurl"]["type"][$key];
 			                $img['name'] = $_FILES["imgurl"]["name"][$key];
 			                $img['tmp_name'] = $_FILES["imgurl"]["tmp_name"][$key];	
+			                
+			                $altText = $BuilderName." ".strtolower($ProjectName)." "."Floor Plan"." ".$floor_name;
 									/*************Resize images code***************************/
 								if ($handle = opendir($createFolder))
 								{
@@ -208,6 +211,7 @@
 							                        "count" => "floor_plan".$key,
 							                        "image" => $file,
 							                        "title" => $floor_name,
+							                        "altText" => $altText,
 							                        
 							                       
 							                );
@@ -311,7 +315,7 @@
 									} 
 								}
 								if($image_id>0){
-									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8','1', $image_id),";
+									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8', '0' , $image_id),";
 									 $image_id=0;
 								}
 

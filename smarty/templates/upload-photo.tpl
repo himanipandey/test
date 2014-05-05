@@ -104,8 +104,8 @@
                                  <tr>
                                     <td>
                                         <label class="lbl">Image Display Name</label>
-                                        <div class="valueField">
-                                                <label id="img-name"></label>
+                                        <div >
+                                                <span class="lbl" id="img-name"/>
                                                  
                                         </div>
                                     </td>

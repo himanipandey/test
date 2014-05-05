@@ -60,7 +60,7 @@
 	       //var_dump($data['tower_id']);
 	        $data['PROJECT_ID'] = $v->objectId;
 	        $data['STATUS'] = $v->active;
-	       
+	       $data['alt_text'] = $v->altText;
 	        array_push($ImageDataListingArr, $data);
     	
     }
@@ -136,7 +136,7 @@
 							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k],$_REQUEST['currentPlanId'][$k]);
 
 							if($ext_vlinks){
-								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist."; 
+								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist.";
 							}
 					  	}
 					  	if($_REQUEST['txtdisplay_order'][$k] != 5)
@@ -182,8 +182,13 @@
 		$arrTaggedDate = array();
 		$arrTowerId = array();
 		$arrDisplayOrder = array();
+		//print("<pre>");
+		//print_r($_REQUEST);//die();
+
+
 		foreach($_REQUEST['chk_name'] as $k=>$v)
-		{
+		{ 
+
 			if($v != '')
 			{ 
 				if($v == 'delete_img'){
@@ -312,7 +317,9 @@
 									
 					
 					
-				
+			
+		$image_id=0; 
+		
 			
 					/*if(count($arrValue) == 0)
 					{
@@ -345,9 +352,8 @@
 
 						foreach($arrValue as $k=>$val)
 						{
-							//die("here1");
-						//echo $k.$val;
-
+							//print("<pre>");
+		//print_r($arrValue);
 							
 							$img_path		=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" . $val;
 							$createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
@@ -377,6 +383,8 @@
 			                $img['type'] = $_FILES["img"]["type"][$k];
 			                $img['name'] = $_FILES["img"]["name"][$k];
 			                $img['tmp_name'] = $_FILES["img"]["tmp_name"][$k];	
+			                $altText = $BuilderName." ".strtolower($ProjectName)." ".$arrTitle[$k];
+			               
 							if ($handle = opendir($createFolder))
 							{
 									rewinddir($handle);							
@@ -389,7 +397,7 @@
 											{											
 												
 
-
+												
 												$params = array(
 							                        "image_type" => "location_plan",
 							                        "folder" => $extra_path,
@@ -399,7 +407,7 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                        
+							                        "altText" => $altText,
 							                        "update" => "update",
 							                        
 							                    );
@@ -464,7 +472,7 @@
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												$image_id=0;
 												break 1;
 											}
 
@@ -494,7 +502,7 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                   
+							                   		 "altText" => $altText,
 							                        "update" => "update",
 							                       
 							                    );
@@ -560,7 +568,7 @@
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												$image_id=0;
 												break 1;
 											}
 
@@ -591,7 +599,7 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                       
+							                        "altText" => $altText,
 							                        "update" => "update",
 							                        
 							                    );
@@ -654,7 +662,7 @@
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												$image_id=0;
 												break 1;
 											}
 
@@ -685,7 +693,7 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                       
+							                        "altText" => $altText,
 							                        "update" => "update",
 							                        
 							                    );
@@ -748,7 +756,7 @@
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												$image_id=0;
 												break 1;
 											}
                                                
@@ -767,7 +775,8 @@
 												$image->load($path);
 												$imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 												$image->save($imgdestpath);
-
+												if($arrTitle[$key]==null || empty($arrTitle[$key]))
+                                            		$altText = $BuilderName." ".strtolower($ProjectName)." Cluster Plan";
 
 												$params = array(
 							                        "image_type" => "cluster_plan",
@@ -778,7 +787,7 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                       
+							                        "altText" => $altText,
 							                        "update" => "update",
 							                        "jsonDump" => array(
 							                        	"tower_id" => $arrTowerId[$k],
@@ -843,7 +852,7 @@
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												$image_id=0;
 												break 1;
 											}
 
@@ -879,7 +888,8 @@
 							                        "update" => "update",
 							                        "jsonDump" => array(
 							                        	"tower_id" => $arrTowerId[$k],
-							                        )
+							                        ),
+							                         "altText" => $altText,
 							                    );
 
 
@@ -951,7 +961,7 @@
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												$image_id=0;
 												break 1;
 											}
 
@@ -982,7 +992,7 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                     
+							                     	 "altText" => $altText,
 							                        "update" => "update",
 							                        
 							                    );
@@ -1042,7 +1052,7 @@
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												$image_id=0;
 												break 1;
 											}
 
@@ -1230,7 +1240,7 @@
 							                        "title" => $arrTitle[$k],
 							                        "active" => "1",
 							                        "service_image_id" => $service_image_id,
-							                       
+							                        "altText" => $altText,
 							                        "update" => "update",
 							                       
 							                    );
@@ -1244,7 +1254,7 @@
 							                    $serviceResponse = $returnArr['serviceResponse'];
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
 							                    $image_id = $serviceResponse["service"]->response_body->data->id;
-												//echo " no error".($key+1)." ".$image_id;
+												//echo " he no error :".$image_id;
 
 							                    /************Resize and large to small*************/
 											$image->resize(485,320);
@@ -1311,7 +1321,7 @@
 												$strErr = " Error in uploading Image No".($key+1)." ";
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
 												$image_id=0;
-												//die();//echo " error".($key+1)." ".$image_id;
+												//echo " he error :".$image_id;
 												break 1;
 											}
 
@@ -1335,7 +1345,7 @@
 											$add_tower = "TAGGED_MONTH = '".$arrTaggedDate[$k]."', TOWER_ID = NULL, ";
 											
 										$dbpath = explode("/images_new",$img_path);
-										//echo $image_id;
+										//echo "id beforsql:".$image_id;
 										if($image_id>0){
 											$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
 														SET 
@@ -1373,7 +1383,8 @@
 							}
 
 						}
-						}
+					//} //remove it
+						} 
 					
 					}
 					

@@ -799,9 +799,9 @@ function allProjectFloorImages($projectId) {
 
 
 
-function getAllProjectOptions($projectId){
+function getAllProjectOptionsExceptPlot($projectId){
     $qryOpt = "SELECT OPTIONS_ID as OPTION_ID, OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
-        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId. " AND OPTION_CATEGORY = 'Actual' AND OPTION_TYPE != 'Plot'";
     $resOpt = mysql_query($qryOpt);
     $OptionsArr = array();
     while ($dataOpt = mysql_fetch_assoc($resOpt)) {
@@ -2212,7 +2212,34 @@ function getLocalityAveragePrice($locId)
 	return $average_price ;
 }
 function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $currentPlanId =''){
-	if($currentPlanId == '')
+	
+    $url = ImageServiceUpload::$image_upload_url."?objectType=project&objectId=".$projectId;
+
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+//print_r($imgPath);
+    $orderArr = array();
+    $cnt=0; 
+    print("<pre>"); print_r($imgPath); die();
+    foreach($imgPath->data as $k=>$v){
+//echo $v->priority;
+        if($service_image_id==$v->id){
+
+        }
+        else if($v->imageType->type=="main" && $v->priority!=5){
+           // if (!in_array($v->priority, $orderArr)){
+             //   array_push($orderArr, $v->priority)
+           // }
+
+            if($v->priority==$display_order)
+                $cnt=1;
+        }
+
+    }
+
+    return $cnt;
+   
+   /*if($currentPlanId == '')
             $currentPlanId = '';
         else
             $currentPlanId = "and PROJECT_PLAN_ID != ".$currentPlanId;
@@ -2230,7 +2257,7 @@ function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=
 		$vcount = mysql_fetch_object($qrySelect);
 		
 				
-	return ($vcount->cnt)? $vcount->cnt : 0; 
+	return ($vcount->cnt)? $vcount->cnt : 0; */
 }
 function updateD_Availablitiy($projectId){
 	

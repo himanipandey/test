@@ -181,13 +181,13 @@
 				  
 				  <td>
 						  <input type='hidden' value='{$projectId}' name='projectId' />
-						{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_NAME']}
-						<input type="hidden" name = "option_id[]" value = "{$ProjectOptionDetail[$smarty.section.foo.index]['OPTIONS_ID']}">		  
+						{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_NAME']}
+						<input type="hidden" name = "option_id[]" value = "{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_ID']}">		  
 				  
 				  </td>
 				 
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}</td>
-				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_TYPE']}</td>
+				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_TYPE']}</td>
 				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
 				  <td><select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
 				  	<Option value="0">Select Floor Plan Options</Option>
