@@ -377,7 +377,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     // add to database
                                     $qryUpdate = "update locality_image set 
                                         IMAGE_CATEGORY = '".$imgCategory."',
-                                        IMAGE_DESCRIPTION = ".$imgDescription.",
+                                        IMAGE_DESCRIPTION = '".$imgDescription."',
                                         IMAGE_DISPLAY_NAME = '".$imgDisplayName."',
                                         SERVICE_IMAGE_ID = '".$image_id."',
                                         IMAGE_NAME = '".$imgName."'    
