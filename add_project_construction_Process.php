@@ -78,9 +78,10 @@
 		 $smarty->assign("hist_update_arr", explode("-",$_GET['updated_ids']));
 		$smarty->assign("hist_update", $_GET['hist']);
 	}
-    
-	if(isset($_POST['btnSave']))
-	{
+	
+	if(isset($_POST['btnSave']) && ($_REQUEST['updateOrInsertRow'] == 1 || $_REQUEST['updateOrInsertRow'] == ''))
+	{		
+
 		$remark	= $_REQUEST['remark'];
                 $smarty->assign("remark", $remark);
 		$month_expected_completion = $_REQUEST['month_expected_completion'];
@@ -161,8 +162,7 @@
                     $exist_eff_date = ResiProjExpectedCompletion::find("all",array("conditions" =>array(" project_id = {$projectId} and SUBMITTED_DATE  like '{$submitted_date_string}%' and phase_id = {$phaseId}"),'select'=>'SUBMITTED_DATE','limit'=>1,'order'=>'SUBMITTED_DATE desc'));
                     
                     if($exist_eff_date){
-                       if($_REQUEST['updateOrInsertRow'] == 1){
-						  $qry = "UPDATE ".RESI_PROJ_EXPECTED_COMPLETION."
+                        $qry = "UPDATE ".RESI_PROJ_EXPECTED_COMPLETION."
                                 SET	
                                     EXPECTED_COMPLETION_DATE = '".$expectedCompletionDate."',
                                     REMARK = '".$remark."',
@@ -173,8 +173,7 @@
                                     phase_id = '".$phaseId."'
                                 AND
                                 SUBMITTED_DATE  like '{$submitted_date_string}%'";
-                          $res = mysql_query($qry) OR die(mysql_error()." completion date update");
-                       }
+                          $res = mysql_query($qry) OR die(mysql_error()." completion date update");                     
 					}
 					else{
 						  $qry = "insert into ".RESI_PROJ_EXPECTED_COMPLETION."
