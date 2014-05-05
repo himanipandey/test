@@ -18,10 +18,10 @@ error_reporting(1);
 	$limit = $_GET['maxRows'];
 	$returnArr = array();
 	if($city_id){
-		$query = "select id, concat(name, ' ', vicinity) as name from landmarks where name like '%$q%' and city_id={$city_id} order by name LIMIT $limit";
+		$query = "select id, name as shortname, concat(name, ' ', vicinity) as name from landmarks where name like '%$q%' and city_id={$city_id} order by name LIMIT $limit";
 	}
 	else	
-		$query = "select id, concat(name, ' ', vicinity) as name from landmarks where name like '%$q%' order by name LIMIT $limit";
+		$query = "select id, name as shortname, concat(name, ' ', vicinity) as name from landmarks where name like '%$q%' order by name LIMIT $limit";
 	//echo $query;
 	$sql_res=mysql_query($query);
 	while($row=mysql_fetch_array($sql_res))
@@ -32,6 +32,7 @@ error_reporting(1);
 		$str = $row['name'];
 		//$str = (strlen($str) > 50) ? substr($str,0,10).'...' : $str;
 		$data['name'] = $str;
+		$data['shortName'] = $row['shortname'];
 		array_push($returnArr, $data);
 
 	}

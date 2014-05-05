@@ -48,7 +48,7 @@ $(document).ready(function(){
             response( $.map( data, function( item ) {
               return {
                 label: item.name,
-                value: item.name,
+                value: item.shortName,
                 table: item.table,
                 id: item.id,
 
@@ -61,7 +61,7 @@ $(document).ready(function(){
       select: function( event, ui ) {
         selectedItem = ui.item;
         $("#landmarkId").val(selectedItem.id);
-        $("#landmarkName").val(selectedItem.label);
+        $("#landmarkName").val(selectedItem.value);
         window.areaResponse['landmark'] = selectedItem.id;
         areaTypeChanged( 'landmark' );
         //alert(selectedItem.label);
@@ -225,9 +225,9 @@ function updateDisplayLocation() {
             elementId = "drp-dwn-city-" + window.areaResponse['city'];
             var cityName = $('#'+elementId).html();
             if(imgType!="")
-                $('#img-name').html(imgType+"-"+value+", "+cityName).val(imgType+"-"+value+", "+cityName); 
+                $('#img-name').html(imgType+"-"+value).val(imgType+"-"+value); 
             else if(imgType=="")
-                $('#img-name').html(value+", "+cityName).val(value+", "+cityName);
+                $('#img-name').html(value).val(value);
             else 
                 $('#img-name').html("").val("");
      
@@ -256,7 +256,7 @@ function updateDisplayLocation() {
         elementId = "drp-dwn-city-" + window.areaResponse['city'];
     }
     if ( window.areaResponse['landmark'] != 0 ) {
-       $('#area-txt-name').html( areaType + " : " + "hello"  );
+       $('#area-txt-name').html( areaType + " : " + ""  );
     }
     areaName = $('#'+elementId).html();
     $('#area-txt-name').html( areaType + " : " + areaName );
@@ -265,9 +265,9 @@ function updateDisplayLocation() {
     var cityid = "drp-dwn-city-" + window.areaResponse['city'];
     var cityName = $('#'+cityid).html();
     if(imgType!="" && areaType != "City")
-            $('#img-name').html(imgType+"-"+areaName+","+cityName).val(imgType+"-"+areaName+","+cityName);
+            $('#img-name').html(imgType+"-"+areaName).val(imgType+"-"+areaName);
     else if(imgType=="" && areaType != "City")
-            $('#img-name').html(areaName+", "+cityName).val(areaName+", "+cityName);
+            $('#img-name').html(areaName).val(areaName);
     else if(imgType=="" && areaType == "City")
          $('#img-name').html(areaName).val(areaName);
     else  if(imgType!="" && areaType == "City")
