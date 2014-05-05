@@ -79,8 +79,9 @@
 		$smarty->assign("hist_update", $_GET['hist']);
 	}
 	
-	if(isset($_POST['btnSave']) && $_REQUEST['updateOrInsertRow'] == 1)
-	{
+	if(isset($_POST['btnSave']) && ($_REQUEST['updateOrInsertRow'] == 1 || $_REQUEST['updateOrInsertRow'] == ''))
+	{		
+
 		$remark	= $_REQUEST['remark'];
                 $smarty->assign("remark", $remark);
 		$month_expected_completion = $_REQUEST['month_expected_completion'];

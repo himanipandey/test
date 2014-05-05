@@ -263,6 +263,7 @@
                                                        <span id = "err_date_effective" style = "display:none;">Please select month and year for effective date!</span></font>
                                                        </td>
                                               </tr>
+                                              {if $compHistAuth==1}
                                               <tr>
                                                      <td width="20%" align="right" valign="top"><b>Update Histroy :</b></td>
                                                      <td width="80%" align="left">
@@ -287,6 +288,7 @@
                                                             &nbsp;						 
                                                       </td>
                                               </tr>	
+                                              {/if}
                                                <tr id = "history_showHide" style = "display:none;">
                                                      <td width="20%" align="right" valign="top">&nbsp;</td>
                                                      <td width="30%" align="left" colspan=2>
