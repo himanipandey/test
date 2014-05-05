@@ -5,22 +5,23 @@ class CampaignDids extends ActiveRecord\Model{
     
     static $validates_uniqueness_of = array (
         array (
-            array ("campaign_did","campaign_name")
+            array ("campaign_did")
         )
-    );
-   
-    static function insertUpdate($attributes){
-        $campaign = CampaignDids::first(array(
-            'campaign_name'=>$attributes['campaign_name'],
-            'campaign_did'=>$attributes['campaign_did'],
-            'created_at'=>$attributes['created_at'],
-            'updated_by'=>$attributes['updated_by']
-        ));       
-        if(empty($campaign)){
-            $res = CampaignDids::create($attributes);
-        }else{
-            $res = $campaign->update_attributes($attributes);
-        }
-        return $res;
-    }
+    ); 
+    static function allCampaign(){
+	  $all_campaign = CampaignDids::all();
+	  $arrCampaign = array();
+	  foreach($all_campaign as $key=>$val){
+		$arrCampaign[] = $val->campaign_name; 
+	  }		
+	  return $arrCampaign;
+	}  
+	static function getCampaignName($campDid){
+	  $campaignName = CampaignDids::find('all',array('conditions'=>array('campaign_did'=>$campDid),'select'=>'campaign_name'));		
+	  return $campaignName[0]->campaign_name;
+	}
+	static function getCampaignDid($campName){
+	  $campdid = CampaignDids::find('all',array('conditions'=>array('campaign_name'=>$campName),'select'=>'campaign_did'));		
+	  return $campdid[0]->campaign_did;
+	}
 }

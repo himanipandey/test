@@ -645,7 +645,7 @@ $smarty->assign("brokerIdList", $brokerIdList);
 
 $smarty->assign("maxEffectiveDt", $maxEffectiveDtAll);
 
-$smarty->assign("arrCampaign", $arrCampaign);
+$smarty->assign("arrCampaign", CampaignDids::allCampaign());
 $smarty->assign("noPhasePhaseId", $noPhasePhaseId);
 
 //code for distinct unit for a project

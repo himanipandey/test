@@ -31,15 +31,13 @@
                   <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 					  <form method="post">
 			            <div>
-                                  {if $ErrorMsg["dataInsertionError"] != ''}
-                                  <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["dataInsertionError"]}</font></td></tr>
-                                  {/if}
-                                  {if $ErrorMsg["success"] != ''}
-                                  <tr><td colspan = "2" align ="center"><font color = "green">{$ErrorMsg["success"]}</font></td></tr>
-                                  {/if}
-                                  {if $ErrorMsg["wrongPId"] != ''}
-                                  <tr><td colspan = "2" align ="center"><font color = "red">{$ErrorMsg["wrongPId"]}</font></td></tr>
-                                  {/if}
+                                   {if $errorCampaign != ''}
+									  <tr bgcolor = '#F7F7F7'>
+										<td align ="left" valign ="top" colspan="3"  style = "padding-left:310px;">
+										  {$errorCampaign}
+										</td>
+									  </tr>
+								  {/if}
 				            <tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Campaign Name : </td>
                                     <td width="30%" align="left"><input type=text name="campName" id="campName" value="{$campName}" style="width:357px;"></td>
@@ -59,13 +57,52 @@
 							  <td align="left" style="padding-left:152px;" >
 							  <input type="hidden" name="campId" value="{$campId}" />
 											  <input type="hidden" name="campId" value="{$campId}" />
-							  <input type="submit" name="btnSave" id="btnSave" value="Save" onclick="return validate_dids();">
+							  {if $edit == 'edit'}
+							    <input type="submit" name="btnSave" id="btnSave" value="Update" onclick="return validate_dids();">	
+							  {else}		  
+							    <input type="submit" name="btnSave" id="btnSave" value="Save" onclick="return validate_dids();">
+							  {/if}							  
 							  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit">
 							  </td>
 							</tr>				             
 				       </div>
 				    </form>
-                  </TABLE>               
+                  </TABLE>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
+					<TBODY>
+						 <TR class = "headingrowcolor">
+								<TD class=whiteTxt width=1% align="center">SL</TD>
+								 <TD class=whiteTxt width=20% align="center">Campaign</TD>                          
+								<TD class=whiteTxt width=23% align="center">DID</TD>
+								<TD class=whiteTxt width=10% align="center">ACTION</TD>
+						  </TR>
+						  {if $all_camps}
+							  {$count = 0}
+								{foreach from=$all_camps item=data}
+								{$count = $count+1}
+								{if $count%2 == 0}
+
+									  {$color = "bgcolor = '#F7F7F7'"}
+								{else}                       			
+									  {$color = "bgcolor = '#FCFCFC'"}
+								{/if}
+								 <TR {$color} style="text-align:center">
+									<TD>{$count}</TD>
+									<TD>{$data->campaign_name}</TD>
+									<TD>{$data->campaign_did}</TD>
+									<TD><a id="edit_offer" href="campagindids.php?&edit=edit&v={$data->id}" title="Edit" >Edit</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a class="delete_offer" id="{$data->id}" href="javascript:void(0)" title="Delete" >Delete</a></TD>
+								</TR>
+							{/foreach}
+						 {else}
+						   <tr>
+							<td colspan=4>No Record Found.</td>
+						   </tr>
+						 {/if}
+					</TBODY>
+				</TABLE>               
                 
                 {if $accessDIDs == ''}
                 {else}
@@ -78,20 +115,25 @@
       </TR>
     </TBODY></TABLE>
 <script type="text/javascript">
- function chkConfirm(){
-	return confirm("Are you sure! you want to delete this record.");
- }
- function validate_dids(){
-    campName = $('#campName').val();
-    campDid = $('#campDid').val();
-  if(campName.trim() == ''){
-    alert("Campaign Name must not be blank.");
-    return false;
-  }else if(campDid.trim() == ''){
-    alert("Campaign DID must not be blank.");
-    return false;
+  $(document).ready(function(){
+	$('.delete_offer').click(function(){
+		camp_id = $(this).attr('id');
+		var r=confirm("Are you sure to delete it?");
+		if(r==true)
+			window.location = "campagindids.php?edit=delete&v=" + camp_id;
+		
+	 }); 
+  })
+  function validate_dids(){
+     campName = $('#campName').val();
+     campDid = $('#campDid').val();
+     if(campName.trim() == ''){
+       alert("Campaign Name must not be blank.");
+       return false;
+     }else if(campDid.trim() == ''){
+       alert("Campaign DID must not be blank.");
+       return false;
+     }
+     return true;   
   }
-  return true;
-   
- }
 </script>
