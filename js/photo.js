@@ -265,9 +265,9 @@ function updateDisplayLocation() {
     var cityid = "drp-dwn-city-" + window.areaResponse['city'];
     var cityName = $('#'+cityid).html();
     if(imgType!="" && areaType != "City")
-            $('#img-name').html(imgType+"-"+areaName).val(imgType+"-"+areaName);
+            $('#img-name').html(imgType+"-"+areaName+", "+cityName).val(imgType+"-"+areaName+", "+cityName);
     else if(imgType=="" && areaType != "City")
-            $('#img-name').html(areaName).val(areaName);
+            $('#img-name').html(areaName+", "+cityName).val(areaName+", "+cityName);
     else if(imgType=="" && areaType == "City")
          $('#img-name').html(areaName).val(areaName);
     else  if(imgType!="" && areaType == "City")
