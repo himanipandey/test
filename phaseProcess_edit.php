@@ -25,26 +25,35 @@ $smarty->assign("bookingStatuses", $bookingStatuses);
 
 /* * *******code for delete phase********* */
 if (isset($_REQUEST['delete'])) {
-    $phase = ResiProjectPhase::virtual_find($phaseId);
-    $phase->status = 'Inactive';
-    $resDelete = $phase->virtual_save();
-    if ($resDelete) {
-        Listings::update_all(array('conditions' => array('phase_id' => $phaseId, 'listing_category' => 'Primary'), 'set' => array('status' => 'Inactive')));
-        
-        $costDetailLatest = costructionDetail($projectId);
-        $qry = "UPDATE resi_project 
-            set 
-               PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
-           where PROJECT_ID = $projectId and version = 'Cms'";
-        mysql_query($qry) OR DIE(mysql_error());
-        
-        updateD_Availablitiy($projectId); // update D_availability 
-                
-        if ($preview == 'true')
-            header("Location:show_project_details.php?projectId=" . $projectId);
-        else
-            header("Location:ProjectList.php?projectId=" . $projectId);
-    }
+		
+	$phase_prices = ListingPrices::find("all",array("joins"=>"inner join listings on listings.id = listing_prices.listing_id and listings.phase_id =$phaseId","conditions"=>array("version"=>"Cms")));
+	
+	if(!count($phase_prices)){
+	
+		$phase = ResiProjectPhase::virtual_find($phaseId);
+		$phase->status = 'Inactive';
+		$resDelete = $phase->virtual_save();
+		if ($resDelete) {
+			Listings::update_all(array('conditions' => array('phase_id' => $phaseId, 'listing_category' => 'Primary'), 'set' => array('status' => 'Inactive')));
+			
+			$costDetailLatest = costructionDetail($projectId);
+			$qry = "UPDATE resi_project 
+				set 
+				   PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
+			   where PROJECT_ID = $projectId and version = 'Cms'";
+			mysql_query($qry) OR DIE(mysql_error());
+			
+			updateD_Availablitiy($projectId); // update D_availability 
+					
+			if ($preview == 'true')
+				header("Location:show_project_details.php?projectId=" . $projectId);
+			else
+				header("Location:ProjectList.php?projectId=" . $projectId);
+		}
+	}else{
+		 $error_msg = 'Phase Prices must be delete before the phase deletion!';
+		 $smarty->assign("error_msg",$error_msg);
+	}
 }
 /********end code for delete phase***** */
 /************/
