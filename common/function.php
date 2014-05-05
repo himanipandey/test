@@ -124,10 +124,10 @@ function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDispl
         $columnName = 'LOCALITY_ID';
     }
     $imageName = mysql_escape_string( $imageName );
-    if($imgDescription)
+    if(!empty($imgDescription))
         $insertQuery = "INSERT INTO `locality_image` 
             ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION, SERVICE_IMAGE_ID ) 
-           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', $imgDescription, $serviceImgId )";
+           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', '$imgDescription', $serviceImgId )";
     else $insertQuery = "INSERT INTO `locality_image` 
             ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, SERVICE_IMAGE_ID ) 
            VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', $serviceImgId )";
