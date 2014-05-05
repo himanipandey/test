@@ -8,7 +8,7 @@ require_once "$_SERVER[DOCUMENT_ROOT]/smartyConfig.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/appWideConfig.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/dbConfig.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/modelsConfig.php";
-require_once "$_SERVER[DOCUMENT_ROOT]/s3upload/s3_config.php";
+require_once "$_SERVER[DOCUMENT_ROOT]/imageService/image_upload.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/includes/db_query.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/includes/configs/configs.php";
 require_once "$_SERVER[DOCUMENT_ROOT]/common/function.php";
@@ -20,7 +20,13 @@ $json = array(
  $objectType = '';
  $objectId = '';
  $obj = '';
-if(!empty($_REQUEST['locality'])) {
+
+if(!empty($_REQUEST['landmark'])) {
+    $objectId = $_REQUEST['landmark'];
+    $objectType = 'landmark';
+    $obj = 'LANDMARK_ID';
+} 
+else if(!empty($_REQUEST['locality'])) {
     $objectId = $_REQUEST['locality'];
     $objectType = 'locality';
     $obj = 'LOCALITY_ID';
@@ -35,6 +41,11 @@ else if(!empty($_REQUEST['city'])) {
     $objectType = 'city';
     $obj = 'CITY_ID';
 }
+else if(!empty($_REQUEST['bank'])) {
+    $objectId = $_REQUEST['bank'];
+    $objectType = 'bank';
+    $obj = 'BANK_ID';
+}
 if ( !empty( $_REQUEST['upPh'] ) ) {
     $upPh = $_REQUEST['upPh'];
     $upPh = json_decode( $upPh, TRUE );
@@ -45,13 +56,12 @@ if ( !empty( $_REQUEST['upPh'] ) ) {
         unset($__newData["IMAGE_NAME"]);
         unset($__newData["SERVICE_IMAGE_ID"]);
         $res &= updateThisPhotoProperty( $__newData );
-
+//die("here");
         if($__newData["IMAGE_ID"]){
             $dest = 'locality/'.$image_name;
             $source = $newImagePath.$dest;
             $locality_image = LocalityImage::find($__newData["IMAGE_ID"]);
-            $s3upload = new ImageUpload($source, array("s3" => $s3,
-                "image_path" => $dest, "object" => "locality","object_id" => $locality_image->locality_id,
+            $s3upload = new ImageUpload($source, array( "image_path" => $dest, "object" => "locality","object_id" => $locality_image->locality_id,
                 "image_type" => strtolower($__newData["IMAGE_CATEGORY"]), "service_image_id" => $service_image_id));
             $response = $s3upload->update();
             $image_id = $response["service"]->data();
@@ -75,9 +85,9 @@ else {
         $data['suburb'] = $_REQUEST['suburb'];
     }
     if ( !empty( $_REQUEST['getPh'] ) ) {
-         $data = array();
-        
-       $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+        $data = array();
+        //$service_image_id = $_REQUEST['service_image_id'];
+        $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
         $content = file_get_contents($url);
         $imgPath = json_decode($content);
         

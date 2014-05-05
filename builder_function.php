@@ -685,6 +685,7 @@ function ProjectType($projectId) {
     global $arrProjectType_P;
     global $arrProjectType;
     global $arrProjectType_VA;
+    global $arrProjectType_COMM;
 
     $qry = "SELECT * FROM  " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' AND OPTION_CATEGORY = 'Actual'";
     $res = mysql_query($qry);
@@ -718,7 +719,18 @@ function ProjectType($projectId) {
             $arrProjectType_P['LENGTH_OF_PLOT'][] = $data['LENGTH_OF_PLOT'];
             $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
             $arrProjectType_P['STATUS'][] = $data['STATUS'];
-        } else {
+        }
+        else if ($data['OPTION_TYPE'] == 'Commercial') {
+            $arrProjectType_P['OPTIONS_ID'][] = $data['OPTIONS_ID'];
+            $arrProjectType_P['OPTION_NAME'][] = $data['OPTION_NAME'];
+            $arrProjectType_P['OPTION_TYPE'][] = $data['OPTION_TYPE'];
+            $arrProjectType_P['SIZE'][] = $data['SIZE'];
+            $arrProjectType_P['CREATED_AT'][] = $data['CREATED_AT'];
+            $arrProjectType_P['LENGTH_OF_PLOT'][] = $data['LENGTH_OF_PLOT'];
+            $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
+            $arrProjectType_P['STATUS'][] = $data['STATUS'];
+        }
+        else {
             $arrProjectType_VA['OPTIONS_ID'][] = $data['OPTIONS_ID'];
             $arrProjectType_VA['OPTION_NAME'][] = $data['OPTION_NAME'];
             $arrProjectType_VA['OPTION_TYPE'][] = $data['OPTION_TYPE'];
@@ -785,6 +797,21 @@ function allProjectFloorImages($projectId) {
    return $ImageDataListingArr;
 }
 
+
+
+function getAllProjectOptions($projectId){
+    $qryOpt = "SELECT OPTIONS_ID as OPTION_ID, OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
+        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+    $resOpt = mysql_query($qryOpt);
+    $OptionsArr = array();
+    while ($dataOpt = mysql_fetch_assoc($resOpt)) {
+            
+            
+            $OptionsArr[] = $dataOpt;
+    }
+    return $OptionsArr;
+
+}
 /* * *******search a tower exists or not in given array************** */
 
 function searchTower($towerArray, $newTower) {
@@ -1179,6 +1206,7 @@ function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
 			URL					= '" . d_($txtCityUrl) . "',
 			DISPLAY_ORDER		= '" . d_($DisplayOrder) . "',
 			DESCRIPTION			= '" . d_($desc) . "',
+                        created_at = now(),    
 			updated_by			= '" .$_SESSION['adminId']."'";
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertCity()');
     $lastId = mysql_insert_id();
@@ -1194,7 +1222,7 @@ function DeleteCity($ID) {
 
 function ViewCityDetails($cityID) {
     $Sql = "SELECT * FROM " . CITY . " WHERE CITY_ID ='" . $cityID . "'";
-    $ExecSql = mysql_query($Sql);
+    $ExecSql = mysql_query($Sql) or die (mysql_error());
 
     if (mysql_num_rows($ExecSql) == 1) {
 
@@ -2073,7 +2101,7 @@ function fetch_builderDetail($builderId) {
 }
 function ViewLocalityDetails($localityID) {
     $Sql = "SELECT l.locality_id, l.suburb_id, l.status,l.description,l.url,l.label,s.city_id,
-            l.max_latitude,l.min_latitude,l.max_longitude,l.min_longitude
+            l.max_latitude,l.min_latitude,l.max_longitude,l.min_longitude,l.latitude,l.longitude
             FROM " . LOCALITY . " l inner join suburb s on l.suburb_id = s.suburb_id 
                 WHERE LOCALITY_ID ='" . $localityID . "'";
     $ExecSql = mysql_query($Sql);
@@ -2091,6 +2119,8 @@ function ViewLocalityDetails($localityID) {
         $ResDetails['MIN_LATITUDE'] = $Res['min_latitude'];
         $ResDetails['MAX_LONGITUDE'] = $Res['max_longitude'];
         $ResDetails['MIN_LONGITUDE'] = $Res['min_longitude'];
+        $ResDetails['LATITUDE'] = $Res['latitude'];
+        $ResDetails['LONGITUDE'] = $Res['longitude'];
         return $ResDetails;
     } else {
         return 0;
@@ -2187,7 +2217,7 @@ function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=
         else
             $currentPlanId = "and PROJECT_PLAN_ID != ".$currentPlanId;
 	$condition = '';
-	if($plan_id)
+	if($service_image_id)
 		$condition = " AND SERVICE_IMAGE_ID != '$service_image_id'";
 	$display_order = mysql_real_escape_string($display_order);
 	$Sql = "SELECT count(*) as cnt FROM " . PROJECT_PLAN_IMAGES . " WHERE 

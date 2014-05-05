@@ -58,16 +58,6 @@
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
         {/if}
-        {if $cityAuth == true}
-            <tr>
-                    <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-                      <td align="left" height="22"><A class="leftnav pt_click" href="javascript:void(0);" title = "Add Quick City"><font color = "#f15a22">Add Quick City</font></A></td>
-            </tr>
-
-            <tr>
-                    <td class="thinline" align="left" colSpan="2"></td>
-            </tr>
-        {/if}
 
         {if $labelAuth == true}
             <tr>
@@ -371,17 +361,6 @@
 </table>
 
 <script type="text/javascript">
-jQuery(document).ready(function(){
-	jQuery(".pt_click").live('click',function(){
-
-		var title =  jQuery(this).attr('title');
-		if(title=='Add Quick City'){
-			jQuery(this).attr('href','javascript:void(0)');
-			window.open('AddQuickCity.php','CityManagement','height=300,width=600,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
-		}
-	});
-});
-
 jQuery(document).ready(function(){
 	jQuery(".label_click").live('click',function(){
 		var title =  jQuery(this).attr('title');

@@ -54,7 +54,7 @@
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
                                                 }
                                                 if( eventArray[i][1] == 'allCommentHistory.php' ) {
-                                                    window.open(url,'All Comment List','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
+                                                    window.open(url,'All Comment List','height=600,width=800,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
                                                 }
                                                 else 
                                                     $(location).attr('href',url);
@@ -1170,6 +1170,14 @@ function broker_call_edit(callId, brokerId)
                                                     </td>
                                                     <td>
                                                         {$completionDate}</td>
+						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b>Completion Effective Date:</b>
+                                                    </td>
+                                                    <td>
+                                                       {if $completionDate!='0000-00-00'}{$completionEffDate|date_format:"%b %Y"}{/if}
+                                                    </td>
 						</tr>
 						
 						<tr height="25px;">

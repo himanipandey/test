@@ -3,7 +3,8 @@
  * Date: 7/23/13
  * Time: 7:10 PM
  */
-window.areaResponse = { suburb:0,locality:0,city:0 };
+window.areaResponse = { suburb:0,locality:0,city:0, landmark:0 };
+var selectedItem;
 
 $(document).ready(function(){
     initVar();
@@ -11,23 +12,98 @@ $(document).ready(function(){
     var response = getSubLocData();
     updateDropDown( response );
     updateDisplayLocation();
+
+
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {
+    _renderMenu: function( ul, items ) {
+      var that = this,
+        currentCategory = "";
+      $.each( items, function( index, item ) {
+        if ( item.table != currentCategory ) {
+          ul.append( "<li class='ui-autocomplete-category'><strong>" + item.table + "</strong></li>" );
+          currentCategory = item.table;
+        }
+        that._renderItemData( ul, item );
+      });
+    }
+    });
+
+    $( "#search" ).catcomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "/findSpecificAliases.php",
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full",
+            maxRows: 10,
+            name_startsWith: request.term,
+            cityId: window.areaResponse['city']
+          },
+          success: function( data ) {
+            
+            response( $.map( data, function( item ) {
+              return {
+                label: item.name,
+                value: item.name,
+                table: item.table,
+                id: item.id,
+
+              }
+            }));
+          }
+        });
+      },
+      minLength: 3,
+      select: function( event, ui ) {
+        selectedItem = ui.item;
+        $("#landmarkId").val(selectedItem.id);
+        $("#landmarkName").val(selectedItem.label);
+        window.areaResponse['landmark'] = selectedItem.id;
+        areaTypeChanged( 'landmark' );
+        //alert(selectedItem.label);
+        //log( ui.item ?
+         // "Selected: " + ui.item.label :
+          //"Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+
+
+    
+
+
 });
 
 function initVar() {
     window.areaResponse['city'] = $('#city-list').val();
     window.areaResponse['suburb'] = $('#area-type-sub').val();
     window.areaResponse['locality'] = $('#area-type-loc').val();
+    window.areaResponse['landmark'] = $('#landmarkId').val();
+    
 }
 
 function getData() {
     var data = "";
-    if ( window.areaResponse['city'] ) {
+    if ($("#search").val().trim()!='' && $("#landmarkId").val() > 0) {
+         data = "&landmark="+window.areaResponse['landmark'];
+         //alert(data);
+    }
+    else if ( window.areaResponse['city'] ) {
         data = "city="+window.areaResponse['city'];
         if ( window.areaResponse['suburb'] ) {
             data += "&suburb="+window.areaResponse['suburb'];
         }
         if ( window.areaResponse['locality'] ) {
             data += "&locality="+window.areaResponse['locality'];
+        }
+        if ( window.areaResponse['landmark'] ) {
+            data += "&landmark="+window.areaResponse['landmark'];
         }
     }
     return data;
@@ -55,6 +131,7 @@ function getSubLocData() {
 }
 
 function areaTypeChanged( areaType ) {
+    
     initVar();
     if ( areaType == 'city' ) {
         window.areaResponse['suburb'] = 0;
@@ -102,7 +179,39 @@ function updateDisplayLocation() {
     var areaType  = "",
         elementId = "",
         areaName  = "";
-    if ( window.areaResponse['locality'] != 0 ) {
+    var imgType = $("#imgCat :selected").text();
+    if(imgType.indexOf('Select') >= 0)
+        imgType = "";
+        console.log(window.areaResponse);
+
+    if ( $('#search').val()!='') {
+        areaType = "landmark";
+        value = $('#landmarkName').val();
+        $('#area-txt-name').html( areaType + " : " + value );
+        //fill display name for landmarks
+        if ( window.areaResponse['city'] != 0 ) {
+            elementId = "drp-dwn-city-" + window.areaResponse['city'];
+            var cityName = $('#'+elementId).html();
+            if(imgType!="")
+                $('#img-name').html(imgType+"-"+value+", "+cityName).val(imgType+"-"+value+", "+cityName); 
+            else if(imgType=="")
+                $('#img-name').html(value+", "+cityName).val(value+", "+cityName);
+            else 
+                $('#img-name').html("").val("");
+     
+        }
+        else{
+            if(imgType!="")
+             $('#img-name').html(imgType+"-"+value).val(imgType+"-"+value);
+            else if(imgType=="")
+             $('#img-name').html(value).val(value);
+            else 
+                 $('#img-name').html("").val("");
+        }
+        $("#imgName").val($('#img-name').val()); 
+        return;
+    }  
+    else if ( window.areaResponse['locality'] != 0 ) {
         areaType = "Locality";
         elementId = "drp-dwn-locality-" + window.areaResponse['locality'];
     }
@@ -114,8 +223,26 @@ function updateDisplayLocation() {
         areaType = "City";
         elementId = "drp-dwn-city-" + window.areaResponse['city'];
     }
+    if ( window.areaResponse['landmark'] != 0 ) {
+       $('#area-txt-name').html( areaType + " : " + "hello"  );
+    }
     areaName = $('#'+elementId).html();
     $('#area-txt-name').html( areaType + " : " + areaName );
+
+//fill display name
+    var cityid = "drp-dwn-city-" + window.areaResponse['city'];
+    var cityName = $('#'+cityid).html();
+    if(imgType!="" && areaType != "City")
+            $('#img-name').html(imgType+"-"+areaName+","+cityName).val(imgType+"-"+areaName+","+cityName);
+    else if(imgType=="" && areaType != "City")
+            $('#img-name').html(areaName+", "+cityName).val(areaName+", "+cityName);
+    else if(imgType=="" && areaType == "City")
+         $('#img-name').html(areaName).val(areaName);
+    else  if(imgType!="" && areaType == "City")
+        $('#img-name').html(imgType+"-"+areaName).val(imgType+"-"+areaName);
+    else 
+         $('#img-name').html("").val("");
+    $("#imgName").val($('#img-name').val()); 
 }
 
 function verifyPhotoFormData() {
@@ -156,7 +283,7 @@ function getPhotos() {
     toggleSaveBtn( 'hide' );
     $("#submitBUtton").show();
     $('.image-block').html('');
-    var dataResult = getPhotosFromDB();
+    var dataResult = getPhotosFromImageService();
     if ( dataResult['data'] != null && dataResult['data'].length > 0 ) {
         for( var __imgNo = 0; __imgNo < dataResult['data'].length; __imgNo++ ) {
             showThisPhoto( dataResult['data'][ __imgNo ]);
@@ -169,6 +296,7 @@ function getPhotos() {
 }
 
 function showThisPhoto( imgData ) {
+    //console.log(imgData);
     imgData['IMAGE_DISPLAY_NAME'] = imgData['IMAGE_DISPLAY_NAME'] == null ? "" : imgData['IMAGE_DISPLAY_NAME'];
     imgData['IMAGE_CATEGORY'] = imgData['IMAGE_CATEGORY'] == null ? "" : imgData['IMAGE_CATEGORY'];
     imgData['IMAGE_DESCRIPTION'] = imgData['IMAGE_DESCRIPTION'] == null ? "" : imgData['IMAGE_DESCRIPTION'];
@@ -176,6 +304,8 @@ function showThisPhoto( imgData ) {
     imgData['CITY_ID'] = imgData['CITY_ID'] == null ? "" : imgData['CITY_ID'];
     imgData['LOCALITY_ID'] = imgData['LOCALITY_ID'] == null ? "" : imgData['LOCALITY_ID'];
     imgData['SUBURB_ID'] = imgData['SUBURB_ID'] == null ? "" : imgData['SUBURB_ID'];
+    imgData['LANDMARK_ID'] = imgData['LANDMARK_ID'] == null ? "" : imgData['LANDMARK_ID'];
+
     imgData['SERVICE_IMAGE_PATH'] = imgData['SERVICE_IMAGE_PATH'] == null ? "" : imgData['SERVICE_IMAGE_PATH'];
     
     
@@ -190,6 +320,10 @@ function showThisPhoto( imgData ) {
     else if(imgData['SUBURB_ID'] != ''){
         imgData['OBJECT_ID'] = imgData['SUBURB_ID'];
         imgData['OBJECT_TYPE'] = 'suburb';
+    }
+    else if(imgData['LANDMARK_ID'] != ''){
+        imgData['OBJECT_ID'] = imgData['LANDMARK_ID'];
+        imgData['OBJECT_TYPE'] = 'landmark';
     }
     imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
     imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
@@ -221,6 +355,7 @@ function showThisPhoto( imgData ) {
                             '<input type="hidden" name="locality_id" value="'+imgData['LOCALITY_ID']+'">'+
                             '<input type="hidden" name="suburb_id" value="'+imgData['SUBURB_ID']+'">'+
                             '<input type="hidden" name="city_id" value="'+imgData['CITY_ID']+'">'+
+                            '<input type="hidden" name="landmark_id" value="'+imgData['LANDMARK_ID']+'">'+
                         '</div>'+
                         '<div class="clearfix" style="clear:both;"></div>'+
                     '</div>';
@@ -236,10 +371,11 @@ function toggleSaveBtn( sh ) {
     }
 }
 
-function getPhotosFromDB() {
+function getPhotosFromImageService() {
     initVar();
     var data = getData(),
         res = null;
+    
     $.ajax({
         async: false,
         type : 'GET',
@@ -298,3 +434,6 @@ function saveDetails() {
     //  reloading the photos and their corresponding data
     getPhotos();
 }
+
+//landmark related code
+

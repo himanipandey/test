@@ -51,11 +51,11 @@ $Sorting .= "<a href=\"$Self?page=1&sort=all\">View All</a>";
  **/
  $projecttower = array();
 if ($_GET['sort'] == "1") {
-    $QueryMember = "SELECT A.BANK_ID,A.BANK_NAME,A.BANK_LOGO,A.BANK_DETAIL FROM ".BANK_LIST." AS A WHERE BANK_NAME BETWEEN '0' AND '9' ORDER BY A.BANK_ID DESC";
+    $QueryMember = "SELECT A.BANK_ID,A.BANK_NAME,A.BANK_LOGO,A.BANK_DETAIL,A.SERVICE_IMAGE_ID FROM ".BANK_LIST." AS A WHERE BANK_NAME BETWEEN '0' AND '9' ORDER BY A.BANK_ID DESC";
 } else if ($_GET['sort'] == "all") {
-    $QueryMember = "SELECT A.BANK_ID,A.BANK_NAME,A.BANK_LOGO,A.BANK_DETAIL FROM ".BANK_LIST." AS A WHERE 1 ORDER BY A.BANK_NAME DESC";
+    $QueryMember = "SELECT A.BANK_ID,A.BANK_NAME,A.BANK_LOGO,A.BANK_DETAIL,A.SERVICE_IMAGE_ID FROM ".BANK_LIST." AS A WHERE 1 ORDER BY A.BANK_NAME DESC";
 } else {
-    $QueryMember = "SELECT A.BANK_ID,A.BANK_NAME,A.BANK_LOGO,A.BANK_DETAIL FROM ".BANK_LIST." AS A WHERE  left(BANK_NAME,1)='".$_GET['sort']."' ORDER BY A.BANK_ID DESC";
+    $QueryMember = "SELECT A.BANK_ID,A.BANK_NAME,A.BANK_LOGO,A.BANK_DETAIL,A.SERVICE_IMAGE_ID FROM ".BANK_LIST." AS A WHERE  left(BANK_NAME,1)='".$_GET['sort']."' ORDER BY A.BANK_ID DESC";
 }
 
 $QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
@@ -75,7 +75,34 @@ while ($dataArr2 = mysql_fetch_array($QueryExecute_1))
 			
 		 }
 		
-		$smarty->assign("projecttower", $projecttower);
+//Read image from image service
+$objectType = "bank";
+$img_path = array();
+foreach ($projecttower as $k => $v) {
+    $objectId = $v['BANK_ID'];
+    $service_image_id = $v['SERVICE_IMAGE_ID'];
+    $url = readFromImageService($objectType, $objectId);
+    //$url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+    $data = array();
+    foreach($imgPath->data as $k=>$v){
+        $data[$k]['IMAGE_ID'] = $v->id;
+        $data[$k][$obj] = $v->objectId;
+        $data[$k]['priority'] = $v->priority;
+        $data[$k]['IMAGE_CATEGORY'] = $v->imageType->type;
+        $data[$k]['IMAGE_DISPLAY_NAME'] = $v->title;
+        $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
+        $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
+        $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+    }
+    array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
+    //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
+
+}
+
+$smarty->assign("projecttower", $projecttower);
+$smarty->assign("image_path", $img_path);
 $MaxPage = (ceil($NumRows/$RowsPerPage))?ceil($NumRows/$RowsPerPage):'1' ;
 $Num = $_GET['num'];
 $Sort = $_GET['sort'];
