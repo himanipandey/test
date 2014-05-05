@@ -150,6 +150,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                             "folder" => "locality/",
                             "image" => $imgName,
                             "count" => $__imgCnt,
+                            "altText" => $imgDisplayName,
                             
                         );
                         //  add images to image service
@@ -347,8 +348,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                 $img['type'] = $IMG['type'][ $__imgCnt ];
                                 $img['name'] = $IMG['name'][ $__imgCnt ];
                                 $img['tmp_name'] = $IMG['tmp_name'][ $__imgCnt ];
-                                
-
+                                 
                                 $params = array(
                                      "folder" => "locality/",
                                      "image" => $imgName,
@@ -358,7 +358,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     "description" => $imgDescription,
                                     "service_image_id" => $ImgID,
                                     "update" => "update",
-                                    "image_type" => $imgCategory
+                                    "image_type" => $imgCategory,
+                                    "altText" => $imgDisplayName,
                                     
                                 );
                                 //  add images to image service
@@ -376,7 +377,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     // add to database
                                     $qryUpdate = "update locality_image set 
                                         IMAGE_CATEGORY = '".$imgCategory."',
-                                        IMAGE_DESCRIPTION = '".$imgDescription."',
+                                        IMAGE_DESCRIPTION = ".$imgDescription.",
                                         IMAGE_DISPLAY_NAME = '".$imgDisplayName."',
                                         SERVICE_IMAGE_ID = '".$image_id."',
                                         IMAGE_NAME = '".$imgName."'    
@@ -425,7 +426,8 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                             "description" => $imgDescription,
                             "service_image_id" => $ImgID,
                             "update" => "update",
-                            "image_type" => $imgCategory
+                            "image_type" => $imgCategory,
+                            "altText" => $imgDisplayName,
                            
                         );
 

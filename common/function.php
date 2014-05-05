@@ -124,9 +124,13 @@ function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDispl
         $columnName = 'LOCALITY_ID';
     }
     $imageName = mysql_escape_string( $imageName );
-    $insertQuery = "INSERT INTO `locality_image` 
+    if($imgDescription)
+        $insertQuery = "INSERT INTO `locality_image` 
             ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION, SERVICE_IMAGE_ID ) 
-           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', '$imgDescription', $serviceImgId )";
+           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', $imgDescription, $serviceImgId )";
+    else $insertQuery = "INSERT INTO `locality_image` 
+            ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, SERVICE_IMAGE_ID ) 
+           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', $serviceImgId )";
 //echo $insertQuery;
     dbExecute( $insertQuery );
     mysql_insert_id();
