@@ -127,7 +127,7 @@ function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDispl
     $insertQuery = "INSERT INTO `locality_image` 
             ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION, SERVICE_IMAGE_ID ) 
            VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', '$imgDescription', $serviceImgId )";
-echo $insertQuery;
+//echo $insertQuery;
     dbExecute( $insertQuery );
     mysql_insert_id();
     return mysql_insert_id();
@@ -184,7 +184,7 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
          if(!isset($params['priority']) || empty($params['priority']))
                     unset($service_extra_paramsArr["priority"]);
         if(!isset($params['description']) || empty($params['description']))
-                    unset($service_extra_paramsArr["description"]);
+                  $service_extra_paramsArr["description"] = null;  //unset($service_extra_paramsArr["description"]);
         if(!isset($params['title']) || empty($params['title']))
                     unset($service_extra_paramsArr["title"]);
         if(!isset($params['altText']) || empty($params['altText']))
