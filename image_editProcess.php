@@ -326,7 +326,7 @@
 						$ErrorMsg["blankerror"] = "Please select atleast one image.";	
 					}*/
 					if(is_array($ErrorMsg)) {
-						break;
+						//break;
 					} 
 						
 					else

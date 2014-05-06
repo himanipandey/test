@@ -2220,7 +2220,6 @@ function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=
 //print_r($imgPath);
     $orderArr = array();
     $cnt=0; 
-    print("<pre>"); print_r($imgPath); die();
     foreach($imgPath->data as $k=>$v){
 //echo $v->priority;
         if($service_image_id==$v->id){
