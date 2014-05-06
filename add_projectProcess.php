@@ -644,7 +644,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->created_at = date('Y-m-d H:i:s');
                $phase->updated_at = date('Y-m-d H:i:s');
                $phase->updated_by = $_SESSION['adminId'];
-               $phase->submitted_date = ($eff_date_to_prom !='' && $eff_date_to_prom != '0000-00-00')?date('Y-m-d H:i:s'):'0000-00-00';
+               $phase->submitted_date = date('Y-m-d H:i:s');
                $phase->virtual_save();
            }else{
                    $qryUpdatePhase = "update resi_project_phase 

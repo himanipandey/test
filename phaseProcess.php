@@ -126,7 +126,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 $phase->booking_status_id = $bookingStatus;
                 $phase->updated_by = $_SESSION["adminId"];
                 $phase->sold_out_date = $sold_out_date;
-                $phase->submitted_date = ($completion_date !='' && $completion_date != '0000-00-00')?date('Y-m-d H:i:s'):'0000-00-00';
+                $phase->submitted_date = date('Y-m-d H:i:s');
                  
                 $phase->virtual_save();
 
