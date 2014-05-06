@@ -21,7 +21,7 @@
         if(isset($_REQUEST['phaseId'])) {
             $phaseId = $_REQUEST['phaseId'];
             $qryHistory = "select * from ".RESI_PROJ_EXPECTED_COMPLETION." 
-             where project_id = $projectId and phase_id = $phaseId order by submitted_date";
+             where project_id = $projectId and phase_id = $phaseId and expected_completion_date !='0000-00-00 00:00:00' order by submitted_date";
             $resHistory = mysql_query($qryHistory);
             $arrHistory = array();
             $EffectiveDateList = '';
@@ -144,7 +144,7 @@
                  }                
                 $submitted_date_string = $year_effective_date."-".$month_effective_date."-01";
                 if(strtotime($expectedCompletionDate) > strtotime($current_element['EXPECTED_COMPLETION_DATE']) && strtotime($submitted_date_string) < strtotime($current_element['SUBMITTED_DATE'])){
-				  	$errorMsg['CompletionDateGreater'] = "Completion date($expectedCompletionDate) to be always less the latest completion date.";
+				  	$errorMsg['CompletionDateGreater'] = "Completion date($expectedCompletionDate) to be always less the latest completion date(".$current_element['EXPECTED_COMPLETION_DATE'].").";
 				}
 			    if(count($errorMsg)>0){
                     $smarty->assign('errorMsg',$errorMsg);

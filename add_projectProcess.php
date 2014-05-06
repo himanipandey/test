@@ -644,7 +644,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->created_at = date('Y-m-d H:i:s');
                $phase->updated_at = date('Y-m-d H:i:s');
                $phase->updated_by = $_SESSION['adminId'];
-               $phase->submitted_date = date('Y-m-d H:i:s');
+               $phase->submitted_date = ($eff_date_to_prom !='' && $eff_date_to_prom != '0000-00-00')?date('Y-m-d H:i:s'):'0000-00-00';
                $phase->virtual_save();
            }else{
                    $qryUpdatePhase = "update resi_project_phase 
@@ -676,8 +676,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                  $qryPhaseSelect = "select phase_id from resi_project_phase where project_id = $returnProject->project_id";
                  $resPhaseSelect = mysql_query($qryPhaseSelect);
                  $phaseIdSelet = mysql_fetch_assoc($resPhaseSelect);
-                 if($eff_date_to_prom == '')
-                     $eff_date_to_prom = '0000-00-00';
+                 if($eff_date_to_prom != '' && $eff_date_to_prom != '0000-00-00 00:00:00'){
+                     //$eff_date_to_prom = '0000-00-00';
                  $effectiveDt = date('Y')."-".date('m')."-01";
                  $qryCompletionDate = "insert into resi_proj_expected_completion 
                     set
@@ -686,6 +686,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                       submitted_date = '".$effectiveDt."',
                       phase_id = ".$phaseIdSelet['phase_id'];
                  mysql_query($qryCompletionDate);
+                }
                  header("Location:project_img_add.php?projectId=".$returnProject->project_id);
                }
             }
