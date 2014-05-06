@@ -300,7 +300,8 @@
 							{
 								if(!preg_match("/-".$imgNamePart."\.[a-z]{3,4}$/", $_FILES['img']['name'][$k]) && $_FILES['img']['name'][$k] != '')
 								{
-									$ErrorMsg["ImgError"] .= "The word ".$imgNamePart." should be part of image name at end.";	
+
+									$ErrorMsg["ImgError"] .= "The word ".$imgNamePart." should be part of image name at end.";	//echo $ErrorMsg["ImgError"];//die("here");
 								}
 							}
 
@@ -315,7 +316,7 @@
 			}
 		}		//////////////////////////////////					
 									
-					
+			
 					
 			
 		$image_id=0; 
@@ -327,6 +328,7 @@
 					}*/
 					if(is_array($ErrorMsg)) {
 						//break;
+
 					} 
 						
 					else
@@ -1389,7 +1391,7 @@
 					}
 					
 
-
+//echo $ErrorMsg["ImgError"];
 		//print_r($ErrorMsg);		 
 		if(empty($ErrorMsg)){	
 		//die("here");	
