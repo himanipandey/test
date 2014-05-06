@@ -400,7 +400,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					############## Transaction Start##############
 					 ResiProject::transaction(function(){
 						
-						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed,$unitType;
+						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed,$unitType,$txtUnitName;
 												
 						if($unitType == 'Plot')
 							$bed = 0;
@@ -481,7 +481,12 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					
 						}catch(Exception $e)
 						{
-							$ErrorMsg1 = 'Couuld not delete!';
+							if(strstr($e, 'listing_prices_fk_1'))
+							  $ErrorMsg1 = "Couuld not delete! Prices exists for the config($txtUnitName).";
+							elseif(strstr($e, 'listings_fk_1'))
+							  $ErrorMsg1 = "Couuld not delete! Mapping exists for the config($txtUnitName).";
+							else
+							  $ErrorMsg1 = 'Couuld not delete!';							
 							return false;
 						}					
 								
