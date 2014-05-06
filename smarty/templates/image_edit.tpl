@@ -334,7 +334,7 @@ function appendToNo(no){
 function validateFloor(from, to){
 	var returnVal
 	
-	if(to>from) returnVal="true";
+	if(parseInt(to)>parseInt(from)) returnVal="true";
 	else returnVal="false";
 	
 	return returnVal;
