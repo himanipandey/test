@@ -410,7 +410,7 @@ $(document).ready(function(){
 															<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}
 															
 															" target="_blank">
-																<img src="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" height="70px" width="70px" title="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" alt="{$ImageDataListingArr[data].alt_text}" />
+																<img src="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}?width=130&height=100" height="70px" width="70px" title="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" alt="{$ImageDataListingArr[data].alt_text}" />
 															</a>
 															<br>
 														Image Type:{$ImageDataListingArr[data].PLAN_IMAGE}<input type = "text" readonly name = "PType[{$cnt}]" id="PType{$cnt}"
