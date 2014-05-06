@@ -108,6 +108,14 @@
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" enctype="multipart/form-data">
 			      <div>
+			      				<tr>
+					<td  align = "center" colspan = "2">
+						
+					  
+					   <font color = "red" style="font-size:17px;">{$ErrorMsg2}</font><br>
+					 
+					</td>
+				</tr>
                                   <tr style="">
                                     <td width="20%" align="right" ><font color = "red"></font>Check if builder exist already : </td>
                                     <td width="30%" align="left" colspan="2">

@@ -18,11 +18,14 @@ $(document).ready(function(){
     _renderMenu: function( ul, items ) {
       var that = this,
         currentCategory = "";
+         ul.css("fontsize", "2");
       $.each( items, function( index, item ) {
         if ( item.table != currentCategory ) {
-          ul.append( "<li class='ui-autocomplete-category'><strong>" + item.table + "</strong></li>" );
+          ul.append( "<li class='ui-autocomplete-category'><font size='3'><strong>" + item.table + "</strong></font></li>" );
+
           currentCategory = item.table;
         }
+         ul.css({ 'font-size': 12});
         that._renderItemData( ul, item );
       });
     }
@@ -45,7 +48,7 @@ $(document).ready(function(){
             response( $.map( data, function( item ) {
               return {
                 label: item.name,
-                value: item.name,
+                value: item.shortName,
                 table: item.table,
                 id: item.id,
 
@@ -58,7 +61,7 @@ $(document).ready(function(){
       select: function( event, ui ) {
         selectedItem = ui.item;
         $("#landmarkId").val(selectedItem.id);
-        $("#landmarkName").val(selectedItem.label);
+        $("#landmarkName").val(selectedItem.value);
         window.areaResponse['landmark'] = selectedItem.id;
         areaTypeChanged( 'landmark' );
         //alert(selectedItem.label);
@@ -90,6 +93,7 @@ function initVar() {
 
 function getData() {
     var data = "";
+
     if ($("#search").val().trim()!='' && $("#landmarkId").val() > 0) {
          data = "&landmark="+window.areaResponse['landmark'];
          //alert(data);
@@ -102,9 +106,9 @@ function getData() {
         if ( window.areaResponse['locality'] ) {
             data += "&locality="+window.areaResponse['locality'];
         }
-        if ( window.areaResponse['landmark'] ) {
-            data += "&landmark="+window.areaResponse['landmark'];
-        }
+        //if ( window.areaResponse['landmark'] ) {
+          //  data += "&landmark="+window.areaResponse['landmark'];
+       // }
     }
     return data;
 }
@@ -143,7 +147,24 @@ function areaTypeChanged( areaType ) {
 
 function updateDropDown( response ) {
     if ( response['result'] == true ) {
+        if ( typeof  response['landmark'] != 'undefined' ) {
+            updateImageCategory(response['landmark'] );
+        }
+        else if ( typeof  response['locality'] != 'undefined' ) {
+            updateImageCategory(response['locality'] );
+        }
+        else if ( typeof  response['suburb'] != 'undefined' ) {
+            updateImageCategory(response['suburb'] );
+        }
+        else if ( typeof  response['city'] != 'undefined' ) {
+            updateImageCategory(response['city'] );
+        }
+
         response = response['data'];
+        //console.log(response['data']);
+        if ( typeof  response['landmark'] != 'undefined' ) {
+            updateImageCategory(response['landmark'] );
+        }
         if ( typeof  response['suburb'] != 'undefined' ) {
             updateDropDownOption( 'area-type-sub', 'suburb', response['suburb'] );
         }
@@ -151,6 +172,17 @@ function updateDropDown( response ) {
             updateDropDownOption( 'area-type-loc', 'locality', response['locality'] );
         }
     }
+}
+
+function updateImageCategory(data){
+    $("#imgCat option").each(function() {
+            $(this).remove();
+    });
+
+    
+    $.each(data, function(k, v){
+        $('<option>').val(v).text(v).appendTo('#imgCat');
+    });
 }
 
 function updateDropDownOption( areaId, areaType, data ) {
@@ -182,7 +214,7 @@ function updateDisplayLocation() {
     var imgType = $("#imgCat :selected").text();
     if(imgType.indexOf('Select') >= 0)
         imgType = "";
-        console.log(window.areaResponse);
+        //console.log(window.areaResponse);
 
     if ( $('#search').val()!='') {
         areaType = "landmark";
@@ -193,9 +225,9 @@ function updateDisplayLocation() {
             elementId = "drp-dwn-city-" + window.areaResponse['city'];
             var cityName = $('#'+elementId).html();
             if(imgType!="")
-                $('#img-name').html(imgType+"-"+value+", "+cityName).val(imgType+"-"+value+", "+cityName); 
+                $('#img-name').html(imgType+"-"+value).val(imgType+"-"+value); 
             else if(imgType=="")
-                $('#img-name').html(value+", "+cityName).val(value+", "+cityName);
+                $('#img-name').html(value).val(value);
             else 
                 $('#img-name').html("").val("");
      
@@ -224,7 +256,7 @@ function updateDisplayLocation() {
         elementId = "drp-dwn-city-" + window.areaResponse['city'];
     }
     if ( window.areaResponse['landmark'] != 0 ) {
-       $('#area-txt-name').html( areaType + " : " + "hello"  );
+       $('#area-txt-name').html( areaType + " : " + ""  );
     }
     areaName = $('#'+elementId).html();
     $('#area-txt-name').html( areaType + " : " + areaName );
@@ -233,7 +265,7 @@ function updateDisplayLocation() {
     var cityid = "drp-dwn-city-" + window.areaResponse['city'];
     var cityName = $('#'+cityid).html();
     if(imgType!="" && areaType != "City")
-            $('#img-name').html(imgType+"-"+areaName+","+cityName).val(imgType+"-"+areaName+","+cityName);
+            $('#img-name').html(imgType+"-"+areaName+", "+cityName).val(imgType+"-"+areaName+", "+cityName);
     else if(imgType=="" && areaType != "City")
             $('#img-name').html(areaName+", "+cityName).val(areaName+", "+cityName);
     else if(imgType=="" && areaType == "City")
@@ -328,13 +360,13 @@ function showThisPhoto( imgData ) {
     imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
     imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
-                        '<div class="img-wrap" style="float:left;"> <img src="'+imgData['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 /> </div>'+
+                        '<div class="img-wrap" style="float:left;"> <img src="'+imgData['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 alt = "'+imgData['alt_text']+'"/> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
                             '<b>Category:</b>&nbsp;&nbsp;'+imgData['IMAGE_CATEGORY'];
        template +='<input type = "hidden" name="imgCate_'+imgData['IMAGE_ID']+'[]" value = "'+imgData['IMAGE_CATEGORY']+'">';
                    
      template +=            '</select><br /><br />'+
-                            '<b>Name:</b>&nbsp;&nbsp;<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
+                            '<b>Name:</b>&nbsp;&nbsp;<input type="text" name="imgName_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Name" readonly="readonly" value="'+imgData['IMAGE_DISPLAY_NAME']+'"><br />'+
                             '<b>Description:</b>&nbsp;&nbsp;<input type="text" name="imgDesc_'+imgData['IMAGE_ID']+'[]" placeholder="Enter Description" value="'+imgData['IMAGE_DESCRIPTION']+'"><br>'+
                             '<b>Priority:</b>&nbsp;&nbsp;<select name = "priority_'+imgData['IMAGE_ID']+'[]"><option value = "999">Select Priority</option>'+
                             '<option '+ ( imgData['priority'] == '1' ? 'selected' : '' ) +' value = "1">1</option>'+

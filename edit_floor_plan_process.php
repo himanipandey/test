@@ -27,7 +27,7 @@
 	//print'<pre>';
 	//print_r($ImageDataListings);
 		$ImageDataListingArr = array();
-		$optionsArr = getAllProjectOptions($projectId);
+		$optionsArr = getAllProjectOptionsExceptPlot($projectId);
 	
 		foreach ($optionsArr as $k1 => $v1) {
 			$objectType = "property";
@@ -77,8 +77,8 @@
 		        $data['IMAGE_DESCRIPTION'] = $v->description;
 		        $data['IMAGE_URL'] = $v->absolutePath;
 		        $data['NAME'] = $v->title;
-		        
 		        $data['STATUS'] = $v->active;
+		        $data['alt_text'] = $v->altText;
 		        //if(isset($v->createdAt))//if($v->created_at)
 		        //	$data['tagged_month'] = gmdate("Y-m-d", $v->createdAt);
 		        //else

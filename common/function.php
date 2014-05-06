@@ -124,10 +124,14 @@ function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDispl
         $columnName = 'LOCALITY_ID';
     }
     $imageName = mysql_escape_string( $imageName );
-    $insertQuery = "INSERT INTO `locality_image` 
+    if(!empty($imgDescription))
+        $insertQuery = "INSERT INTO `locality_image` 
             ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, IMAGE_DESCRIPTION, SERVICE_IMAGE_ID ) 
            VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', '$imgDescription', $serviceImgId )";
-
+    else $insertQuery = "INSERT INTO `locality_image` 
+            ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, SERVICE_IMAGE_ID ) 
+           VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', $serviceImgId )";
+//echo $insertQuery;
     dbExecute( $insertQuery );
     mysql_insert_id();
     return mysql_insert_id();
@@ -175,7 +179,7 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
                 //print_r($params);
 
         $service_extra_paramsArr = array( 
-            "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'], "jsonDump"=>json_encode($params['jsonDump']));
+            "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'],"altText"=>$params['altText'], "jsonDump"=>json_encode($params['jsonDump']));
 
         if(!isset($params['tagged_date']) || empty($params['tagged_date']))
                     unset($service_extra_paramsArr["takenAt"]);
@@ -184,9 +188,11 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
          if(!isset($params['priority']) || empty($params['priority']))
                     unset($service_extra_paramsArr["priority"]);
         if(!isset($params['description']) || empty($params['description']))
-                    unset($service_extra_paramsArr["description"]);
+                  $service_extra_paramsArr["description"] = null;  //unset($service_extra_paramsArr["description"]);
         if(!isset($params['title']) || empty($params['title']))
                     unset($service_extra_paramsArr["title"]);
+        if(!isset($params['altText']) || empty($params['altText']))
+                    unset($service_extra_paramsArr["altText"]);
 
                // print'<pre>';
                // print_r($service_extra_paramsArr);//die();

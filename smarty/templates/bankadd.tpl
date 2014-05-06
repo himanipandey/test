@@ -25,8 +25,10 @@
 
 	function getPhotos(){
 		var dataResult = getPhotosFromImageService();
-		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 />';
-		
+		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 alt="'+dataResult['data'][0]['alt_text']+'"/>';
+
+		$("#image_id").val(dataResult['data'][0]['SERVICE_IMAGE_ID']);
+
 		$("a#view").html( template );
 		$("a#view").fancybox();
 	
@@ -36,7 +38,7 @@
     //initVar();
     //var data = getData(),
       //  res = null;
-	     data = "bank="+{$bankid}+"&service_image_id="+{$service_image_id};
+	     data = "bank="+{$bankid};
 	    $.ajax({
 	        async: false,
 	        type : 'GET',
@@ -105,6 +107,7 @@
 
 					
 					{if count($errormsg)!= 0} <table height = "30px"><tr><td><font color ="red">{$errormsg[0]}</font></td></tr></table>{/if}
+					<table height = "30px"><tr><td><font color ="red">{$Error}</font></td></tr></table>
 					  <table cellSpacing=1 cellPadding="4" width="50%" align="center" style = "border:1px solid;" >
 					
 						<form name = "frm" method = "post" onsubmit = "return bank_validation();" enctype = "multipart/form-data">
@@ -138,6 +141,7 @@
 							<td align = "right" valign ="top"><font color="red">*</font><b>Bank Detail:</b></td>
 							<td align = "left">
 								<textarea name = "bank_detail" id = "bank_detail" rows="15" cols="30">{$bank_detail}</textarea>
+								<input type="hidden" id="image_id" name="image_id"></input>
 							</td>
 						</tr>
 							<tr  class = "headingrowcolor">
