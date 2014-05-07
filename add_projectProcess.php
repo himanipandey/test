@@ -418,11 +418,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $retdt < 0 ) {
                 $ErrorMsg['launchDateGreater'] = "Launch date should be less or equal to current date";
             }
-            if($projectId != ''){
+            /*if($projectId != ''){
                 if($preLaunchDt == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launchDt) || checkListingPricesDate($projectId, $launchDt) )) {
                     $ErrorMsg['launchDateAvailabilities'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
                 }
-            }
+            }*/
             /*if(checkListingPricesDate($projectId, $launchDt)){
                 $ErrorMsg['launchDatePrices'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
             }*/
