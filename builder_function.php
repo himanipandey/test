@@ -2387,5 +2387,10 @@ function fetch_project_BSP($projectId){
 	}
 	return $bspArr;
 }
+
+function updateBuilderIdForRevenueAssurance($oldBuilderId, $newBuilderId) {
+    $sql = "UPDATE proptiger.BUILDER_AGREEMENT SET BUILDER_ID = '".$newBuilderId."' WHERE BUILDER_ID = '".$oldBuilderId."'";
+    mysql_query($sql);
+}
 ?>
 
