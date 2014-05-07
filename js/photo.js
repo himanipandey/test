@@ -41,7 +41,8 @@ $(document).ready(function(){
             style: "full",
             maxRows: 10,
             name_startsWith: request.term,
-            cityId: window.areaResponse['city']
+            cityId: window.areaResponse['city'],
+            placeType: $("#imgCat :selected").text(),
           },
           success: function( data ) {
             
