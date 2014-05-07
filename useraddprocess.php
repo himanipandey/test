@@ -6,6 +6,7 @@
 
 $userid = $_REQUEST['userid'];
 $smarty->assign("userid", $userid);
+$smarty->assign("arrOtherCities", $arrOtherCities);
 
 /****active city list********/
 $qry = "select city_id,label from city where status = 'Active' order by label";
@@ -122,6 +123,8 @@ if ($_POST['btnSave'] == "Save") {
 		$DataInsert = mysql_query($sql) or die(mysql_error());
                 $lastId = mysql_insert_id();
                 //code for insert data in proptiger admin city
+                echo "<pre>";
+                print_r($_REQUEST['city']);//die("here");
                 if($_REQUEST['city'][0] == '')
                         unset($_REQUEST['city'][0]);
                 if(count($_REQUEST['city'])>0) {
@@ -129,12 +132,30 @@ if ($_POST['btnSave'] == "Save") {
                     $cityQry = "insert into proptiger_admin_city (admin_id,city_id) values ";
                     $comma = ',';
                     $cityData = '';
+                    $flg = 0;
+                    $arrCtList = array();
                     foreach($_REQUEST['city'] as $k=>$val){
-                        if($k == count($_REQUEST['city']))
-                            $comma = ' ';
-                        $cityData .=  "($lastId,$val)$comma";
+                        if($val != 'other') {
+                            $arrCtList[] = $val;
+                            if($k == count($_REQUEST['city']))
+                                $comma = ' ';
+                            $cityData .=  "($lastId,$val)$comma";
+                        }
+                        else{
+                            $flg = 1;
+                        }
                     }
-                      $finalStr = $cityQry.$cityData;
+                    if($flg == 1) {
+                        $cnt = 1;
+                        foreach($arrOtherCities as $k=>$v){
+                                if($cnt == count($arrOtherCities))
+                                    $comma = ' ';
+                               if(!in_array($k,$arrCtList))
+                                $cityData .=  "($lastId,$k) $comma ";
+                               $cnt++;
+                           }
+                    }
+                     echo $finalStr = $cityQry.$cityData;
                     $resCity = mysql_query($finalStr) or die(mysql_error());
                 }
                 if($DataInsert)
@@ -181,7 +202,7 @@ if ($_POST['btnSave'] == "Save") {
             }
                        
             if(count($_REQUEST['city'])>0 && $department == 'SURVEY') {
-                  //delete image if deselect
+                  //delete data if deselect
                     foreach($arrCityList as $k=>$v) {
                         if(!in_array($k,$_REQUEST['city'])) {
                             $qryDel = "delete from proptiger_admin_city where admin_id = $userid and city_id = $k";
@@ -191,17 +212,37 @@ if ($_POST['btnSave'] == "Save") {
                     //end delete image if deselect
                     $cityQry = "insert into proptiger_admin_city (admin_id,city_id) values ";
                     $cityData = '';
+                    $arrCtList = array();
+                    $flg = 0;
                     foreach($_REQUEST['city'] as $k=>$val){
-                        if(!array_key_exists($val,$arrCityList))
-                            $cityData .=  "($userid,$val) , ";
+                        if($val != 'other') {
+                            $arrCtList[] = $val;
+                            if(!array_key_exists($val,$arrCityList))
+                                $cityData .=  "($userid,$val) , ";
+                       }else{
+                           $flg = 1;
+                       }
+                    }
+                    if($flg == 1) {
+                        foreach($arrOtherCities as $k=>$v){
+                               if(!in_array($k,$arrCtList))
+                                $cityData .=  "($userid,$k) , ";
+                           }
                     }
                     $expComma = explode(" , ",$cityData);
                     array_pop($expComma);
                     if(count($expComma)>0) {
                         $finalStr = implode(",",$expComma);
                         $finalStr = $cityQry.$finalStr;
-                        $resCity = mysql_query($finalStr) or die(mysql_error()." here");
+                        $resCity = mysql_query($finalStr) or die(mysql_error());
                     }
+                    
+                    /**************/
+                    /***entry for other cities******/
+                    
+                }else{
+                    $qryDel = "delete from proptiger_admin_city where admin_id = $userid";
+                    $resDel = mysql_query($qryDel) or die(mysql_error());
                 }
             if($DataUpdate)
                     header("Location:userList.php");
@@ -234,10 +275,14 @@ else if ($_GET['userid']!='') {
          $qryCityAdmin = "select city_id from proptiger_admin_city where admin_id = $userid";
          $resCityAdmin = mysql_query($qryCityAdmin) or die(mysql_error());
          $arrExistingCity = array();
+         $otherCityChk = 0;
          while($dataExisting = mysql_fetch_assoc($resCityAdmin)) {
+             if(array_key_exists($dataExisting['city_id'],$arrOtherCities))
+                     $otherCityChk = 1;
              $arrExistingCity[] = $dataExisting['city_id']; 
          }
          $smarty->assign("arrExistingCity", $arrExistingCity);
+         $smarty->assign("otherCityChk", $otherCityChk);
 }
 
 
