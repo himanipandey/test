@@ -22,7 +22,25 @@ if($projectStageId == 2) // if new project
 	
 	
 if($projectStageId == 3) //updation cycle
-	$projectPhaseId = 1; //data collection
+	$projectPhaseId = 1; //data collection+
+	
+//fetching final record of the collection/callcenter stage
+$sql_final_record = mysql_fetch_object(mysql_query("select trp._t_transaction_id as final_id from _t_resi_project trp where 
+   trp.project_id = '$projectID'   
+AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = '$projectPhaseId') AND trp.version = 'Cms' ORDER BY trp._t_transaction_id Desc limit 1"));
+$final_id = $sql_final_record->final_id;
+
+//determine initial record of the collection/callcenter stage
+$sql_initial_record = mysql_query("select trp._t_transaction_id as initial_id, trp.PROJECT_PHASE_ID as ppid, trp.PROJECT_STAGE_ID as psid from _t_resi_project trp where 
+   trp.project_id = '$projectID'   
+AND trp._t_transaction_id < ".$final_id." and trp.version = 'Cms' ORDER BY trp._t_transaction_id Desc");
+$inital_id = '';
+while($row = mysql_fetch_object($sql_initial_record)){	
+	if($row->ppid != $projectPhaseId || $row->psid != $projectStageId)
+	 break;	
+	$initial_id = $row->initial_id;
+}
+	
 
 //fetch stage name
 $sql_stage_name = mysql_fetch_object(mysql_query("SELECT name from master_project_phases where id='".$projectPhaseId."'"));
@@ -35,7 +53,7 @@ FROM _t_resi_project trp
 LEFT JOIN project_status_master ps on trp.project_status_id = ps.id
 LEFT JOIN resi_project_phase  rpp on trp.project_id = rpp.project_id  and rpp.version = 'Cms'
 LEFT JOIN master_booking_statuses mbs ON rpp.booking_status_id = mbs.id
-WHERE trp.PROJECT_ID='$projectID'  AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = '$projectPhaseId') AND rpp.PHASE_TYPE = 'Logical'  AND trp.version = 'Cms' ORDER BY trp._t_transaction_id DESC LIMIT 2") or die(mysql_error());
+WHERE trp.PROJECT_ID='$projectID'  AND (trp.PROJECT_STAGE_ID = '$projectStageId' && trp.PROJECT_PHASE_ID = '$projectPhaseId') AND rpp.PHASE_TYPE = 'Logical'  AND trp.version = 'Cms' AND trp._t_transaction_id in ($final_id,$initial_id) ORDER BY trp._t_transaction_id DESC") or die(mysql_error());
 //print mysql_num_rows($sql_resi_callcenter_result); die;
 if($sql_resi_callcenter_result){
 
@@ -67,44 +85,41 @@ $html = "";
 $html = "<table width='600px'><tbody>
 		<tr  height='30px;' class='headingrowcolor'>
 			<th nowrap='nowrap' align='center' class='whiteTxt' width=30%>&nbsp;</th>
-			<th nowrap='nowrap' align='center' class='whiteTxt' width=35%>$sql_stage_name->name Stage Values-1</th>
-			<th nowrap='nowrap' align='center' class='whiteTxt' width=35%>$sql_stage_name->name Values-2</th>			
+			<th nowrap='nowrap' align='center' class='whiteTxt' width=35%>$sql_stage_name->name Initial Value</th>
+			<th nowrap='nowrap' align='center' class='whiteTxt' width=35%>$sql_stage_name->name Stage Latest Value</th>						
 		</tr>
 		<tr>
 			<td a width=30%><b>PRE LAUNCH DATE</b></td>
-			<td align='center' width=35%>$call_PrelaunchDate[0]</td>
 			<td align='center' width=35%>$call_PrelaunchDate[1]</td>
+			<td align='center' width=35%>$call_PrelaunchDate[0]</td>			
 		</tr>
 		<tr>
 			<td  width=30%><b>LAUNCH DATE</b></td>
-			<td align='center' width=35%>$call_LaunchDate[0]</td>
 			<td align='center' width=35%>$call_LaunchDate[1]</td>
+			<td align='center' width=35%>$call_LaunchDate[0]</td>			
 		</tr>
 		<tr>
 			<td  width=30%><b>COMPLETION DATE</b></td>
-			<td align='center' width=35%>$call_CompletionDate[0]</td>
 			<td align='center' width=35%>$call_CompletionDate[1]</td>
+			<td align='center' width=35%>$call_CompletionDate[0]</td>			
 		</tr>
 		<tr>
 			<td width=30%><b>EXPECTED SUPPLY DATE</b></td>
-			<td align='center' width=35%>$call_SupplyDate[0]</td>
 			<td align='center' width=35%>$call_SupplyDate[1]</td>
+			<td align='center' width=35%>$call_SupplyDate[0]</td>			
 		</tr>
 		<tr>
 			<td  width=30%><b>PROJECT STATUS</b></td>
-			<td align='center' width=35%>$call_ProjectStatus[0]</td>
 			<td align='center' width=35%>$call_ProjectStatus[1]</td>
+			<td align='center' width=35%>$call_ProjectStatus[0]</td>			
 		</tr>
 		<tr>
 			<td  width=30%><b>BOOKING STATUS</b></td>
-			<td align='center' width=35%>$call_BookingStatus[0]</td>
 			<td align='center' width=35%>$call_BookingStatus[1]</td>
+			<td align='center' width=35%>$call_BookingStatus[0]</td>			
 		</tr>
 		</tbody></table>";
 
 	print $html;
 	
 ?>
-
-
-y
