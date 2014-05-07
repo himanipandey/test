@@ -207,7 +207,7 @@ class ResiProject extends Objects
     }
     
    public static function replace_builder_id($oldBuilder_id, $newBuilder_id){
-        $responce =  self::update_all(array('conditions' => array('builder_id' => $oldBuilder_id, "version" => "Cms"), 'set' => "builder_id = $newBuilder_id"));
+        $responce =  self::update_all(array('conditions' => array('builder_id' => $oldBuilder_id), 'set' => "builder_id = $newBuilder_id"));
         return $responce;
     }
 }
