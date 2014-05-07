@@ -33,6 +33,9 @@ $smarty->assign("preview", $preview);
 $bookingStatuses = ResiProject::find_by_sql("select * from master_booking_statuses");
 $smarty->assign("bookingStatuses", $bookingStatuses);
 
+
+
+
 if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	if ( $_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save" ) {
 	    $txtProjectName = trim($_POST['txtProjectName']);
@@ -399,6 +402,15 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $retdt < 0 ) {
                 $ErrorMsg['preLaunchDate'] = "Pre Launch date should be less or equal to current date";
             }
+            if($projectId != ''){
+                if(projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $preLaunchDt) || checkListingPricesDate($projectId, $preLaunchDt))) { 
+                    $ErrorMsg['preLaunchDateAvailabilities'] = "Inventory or Prices with effective date before {$preLaunchDt} are present. So can not change the Pre Launch Date.";
+                }
+            }
+            /*if(checkListingPricesDate($projectId, $preLaunchDt)){
+                $ErrorMsg['preLaunchDatePrices'] = "Inventory or Prices with effective date before {$preLaunchDt} are present. So can not change the Pre Launch Date.";
+            }*/
+
        }   
 
     if( $launchDt != '') {
@@ -406,6 +418,14 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $retdt < 0 ) {
                 $ErrorMsg['launchDateGreater'] = "Launch date should be less or equal to current date";
             }
+            if($projectId != ''){
+                if($preLaunchDt == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launchDt) || checkListingPricesDate($projectId, $launchDt) )) {
+                    $ErrorMsg['launchDateAvailabilities'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
+                }
+            }
+            /*if(checkListingPricesDate($projectId, $launchDt)){
+                $ErrorMsg['launchDatePrices'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
+            }*/
       }      
        if( $Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4 ) {
            $yearExp = explode("-",$eff_date_to_prom);
@@ -432,6 +452,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $ErrorMsg["txtStatus"] = "Completion date cannot be greater current month for this status";
            }
        }
+
+       
      //  echo $ErrorMsg['launchDate'];
   //echo $Status ."==". OCCUPIED_ID_3 ." or ". READY_FOR_POSSESSION_ID_4."==>$launchDt";die;
        if($township == '')
@@ -654,15 +676,17 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                  $qryPhaseSelect = "select phase_id from resi_project_phase where project_id = $returnProject->project_id";
                  $resPhaseSelect = mysql_query($qryPhaseSelect);
                  $phaseIdSelet = mysql_fetch_assoc($resPhaseSelect);
-                 if($eff_date_to_prom == '')
-                     $eff_date_to_prom = '0000-00-00';
+                 if($eff_date_to_prom != '' && $eff_date_to_prom != '0000-00-00 00:00:00'){
+                     //$eff_date_to_prom = '0000-00-00';
+                 $effectiveDt = date('Y')."-".date('m')."-01";
                  $qryCompletionDate = "insert into resi_proj_expected_completion 
                     set
                       project_id = $returnProject->project_id,
                       expected_completion_date = '".$eff_date_to_prom."',
-                      submitted_date = now(),
+                      submitted_date = '".$effectiveDt."',
                       phase_id = ".$phaseIdSelet['phase_id'];
                  mysql_query($qryCompletionDate);
+                }
                  header("Location:project_img_add.php?projectId=".$returnProject->project_id);
                }
             }
@@ -672,7 +696,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $qryStg = "select * from master_project_stages where id = '".$ProjectDetail->project_stage_id."'";
                 $resStg = mysql_query($qryStg) or die(mysql_error());
                 $stageId = mysql_fetch_assoc($resStg);
-                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name']);
+                $projectUpdationCycleId = Resiproject::virtual_find($projectId);
+                CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name'],$projectUpdationCycleId->updation_cycle_id);
                 //if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
                  //  insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
                // }
@@ -803,5 +828,5 @@ if( $projectId != '' ) {
     $projectOldComments = CommentsHistory::getOldCommentHistoryByProjectId($projectId);
     $smarty->assign("projectOldComments", $projectOldComments);
     /******end code for project comment in seperate table*****/
-}
+}    
 ?>

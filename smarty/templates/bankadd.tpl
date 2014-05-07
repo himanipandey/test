@@ -22,6 +22,42 @@
 		}
 		return true;
 	}
+
+	function getPhotos(){
+		var dataResult = getPhotosFromImageService();
+		var template = '<img src="'+dataResult['data'][0]['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 alt="'+dataResult['data'][0]['alt_text']+'"/>';
+
+		$("#image_id").val(dataResult['data'][0]['SERVICE_IMAGE_ID']);
+
+		$("a#view").html( template );
+		$("a#view").fancybox();
+	
+	}
+
+	function getPhotosFromImageService() {
+    //initVar();
+    //var data = getData(),
+      //  res = null;
+	     data = "bank="+{$bankid};
+	    $.ajax({
+	        async: false,
+	        type : 'GET',
+	        url  : '/ajax/photo.php',
+	        data : data+"&getPh=1",
+	        success: function( json ) {
+	            var __json = JSON.parse( json );
+	            if ( __json['result'] == true ) {
+	                res = __json;
+	            }
+	            else {
+	                res = null;
+	            }
+	        }
+	    });
+	    return res;
+	}
+
+
 	
 </script>
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -71,6 +107,7 @@
 
 					
 					{if count($errormsg)!= 0} <table height = "30px"><tr><td><font color ="red">{$errormsg[0]}</font></td></tr></table>{/if}
+					<table height = "30px"><tr><td><font color ="red">{$Error}</font></td></tr></table>
 					  <table cellSpacing=1 cellPadding="4" width="50%" align="center" style = "border:1px solid;" >
 					
 						<form name = "frm" method = "post" onsubmit = "return bank_validation();" enctype = "multipart/form-data">
@@ -84,12 +121,9 @@
 								<td width="20%" align="right" valign = top><b>Current Logo : </b></td>
 								<td width="20%" align="left" >
 								<div id='current-logo'>
-											<a id="view" href="{$imgDisplayPath}bank_list/{$img}" title="Bank Logo">View Image</a>  
-											<script type="text/javascript">
-											$(document).ready(function() {
-											$("a#view").fancybox();
-											});
-											</script>
+											<a id="view" href="" onclick="getPhotos(); return false;" title="Bank Logo">View Image</a>  
+											
+
 											
 											&nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick="delete_logo()" title="Delete Logo"/>
 											<input type = "hidden" name = "bankLogo" id="bankLogo" value = "">
@@ -101,12 +135,13 @@
 						{/if}
 						<tr bgcolor = '#F7F7F7'>
 							<td align = "right"><b>Bank Logo:</b></td>
-							<td align = "left"><input type = "file" name = "logo"></td>
+							<td align = "left"><input type = "file" name = "logo" autocomplete="off" ></td>
 						</tr>
 						<tr bgcolor = '#F7F7F7'>
 							<td align = "right" valign ="top"><font color="red">*</font><b>Bank Detail:</b></td>
 							<td align = "left">
 								<textarea name = "bank_detail" id = "bank_detail" rows="15" cols="30">{$bank_detail}</textarea>
+								<input type="hidden" id="image_id" name="image_id"></input>
 							</td>
 						</tr>
 							<tr  class = "headingrowcolor">

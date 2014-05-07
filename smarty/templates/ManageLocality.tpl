@@ -32,7 +32,7 @@ function selectCity(value){
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
                       <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Locality List</TD>
-                      <!--<TD align=right colSpan=3><a href="localityadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Locality</b></a></TD>-->
+                      <TD align=right colSpan=3>{if $cityId != ''}<a href="localityadd.php?c={$cityId}" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Locality</b></a>{/if}</TD>
                     </TR>
 		  </TBODY></TABLE>
 		</TD>
@@ -46,7 +46,11 @@ function selectCity(value){
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="77%" height="25" align="left">
-                             {$Sorting} 
+                             {$Sorting}  <br> <br>
+                             <form id="frm_build" method="post" action ="localityList.php?page=1&sort=all">
+                                 <b>Locality URL :</b> <input name="localityUrl" id="localityUrl" value="{$localityUrl}" class="button">
+                                 <input type="submit" name="search" id="search" value="Search" class="button">
+                             </form> <br>
                             </td>
 							<td width="35%" height="25" align="right" valign="top">
                              <form name="frmcity" id="frmcity" method="post">
@@ -92,7 +96,7 @@ function selectCity(value){
                         <TD align=left class=td-border>{if $localityDataArr[data].STATUS!=''}{$localityDataArr[data].STATUS}{else}-{/if}</TD>
                        
                         <TD  class="td-border" align=left>
-                            <a href="localityadd.php?localityid={$localityDataArr[data].LOCALITY_ID}&c={$cityId}" title="Edit">Edit </a>
+                            <a href="localityadd.php?localityid={$localityDataArr[data].LOCALITY_ID}&c={$localityDataArr[data].city_id}" title="Edit">Edit </a>
                          </TD>
                       </TR>
                        {/section}

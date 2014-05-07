@@ -63,7 +63,8 @@ function chkConfirm()
                           <tr>
                             <td width="77%" height="25" align="center" style="padding-top:30px;padding-bottom:10px;">
                                 <form name="frm_build" id="frm_build" method="post" action ="BuilderList.php?page=1&sort=all">
-                                        <label class="fwb">Enter Builder Name : </label><input name="builders" id="builders" value="{$builders}" class="button"> &nbsp;&nbsp;&nbsp;
+                                        <label class="fwb">Builder Name : </label><input name="builders" id="builders" value="{$builders}" class="button"> &nbsp;&nbsp;&nbsp;
+                                        <label class="fwb">Builder URL : </label><input name="builderUrl" id="builderUrl" value="{$builderUrl}" class="button">
                                         <input type="submit" name="search" id="search" value="Search" class="button">
                                 </form>
                             </td>

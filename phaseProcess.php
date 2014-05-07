@@ -126,7 +126,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 $phase->booking_status_id = $bookingStatus;
                 $phase->updated_by = $_SESSION["adminId"];
                 $phase->sold_out_date = $sold_out_date;
-                 $phase->submitted_date = date('Y-m-d');
+                $phase->submitted_date = date('Y-m-d');
                  
                 $phase->virtual_save();
 
@@ -139,17 +139,18 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 			updateD_Availablitiy($projectId); // update D_availability  
 			
             /***********code related to completion date add/edit**************/
+          if($completion_date != '' && $completion_date != '0000-00-00'){  
             $qryFetchPhaseId = "select phase_id from resi_project_phase 
                 where project_id = $projectId and phase_name = '".$phasename."' 
                     and version = 'Cms' ";
             $resFetchPhaseId = mysql_query($qryFetchPhaseId) or die(mysql_error());
             $dataFetchPhaseId = mysql_fetch_assoc($resFetchPhaseId);
-
+			$effectiveDt = date('Y')."-".date('m')."-01";
             $qryCompletionDate = "insert into resi_proj_expected_completion 
                 set
                   project_id = $projectId,
                   expected_completion_date = '".$completion_date."',
-                  submitted_date = now(),
+                  submitted_date = '".$effectiveDt."',
                   phase_id = ".$dataFetchPhaseId['phase_id'];
              $successCompletionDate =  mysql_query($qryCompletionDate) or die(mysql_error());
              if($successCompletionDate) {
@@ -160,6 +161,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                    where PROJECT_ID = $projectId and version = 'Cms'";
                 $success = mysql_query($qry) OR DIE(mysql_error());
              }
+          }
     /***********end code related to completion date add/edit**************/
                 if(isset($_POST['options'])){
                     $arr = $_POST['options'];

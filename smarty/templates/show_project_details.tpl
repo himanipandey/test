@@ -54,7 +54,7 @@
                                                     var url = eventArray[i][1]+ "?projectId="+projectId+str+"&preview=true";    
                                                 }
                                                 if( eventArray[i][1] == 'allCommentHistory.php' ) {
-                                                    window.open(url,'All Comment List','height=600,width=750,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
+                                                    window.open(url,'All Comment List','height=600,width=800,left=300,top=100,resizable=yes,scrollbars=yes, status=yes');
                                                 }
                                                 else 
                                                     $(location).attr('href',url);
@@ -1171,6 +1171,14 @@ function broker_call_edit(callId, brokerId)
                                                     <td>
                                                         {$completionDate}</td>
 						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                        <b>Completion Effective Date:</b>
+                                                    </td>
+                                                    <td>
+                                                       {if $completionDate!='0000-00-00'}{$completionEffDate|date_format:"%b %Y"}{/if}
+                                                    </td>
+						</tr>
 						
 						<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
@@ -1882,14 +1890,14 @@ function broker_call_edit(callId, brokerId)
 								
 									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 										
-											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
+											<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
                                                                                             {$parts = explode('.', $ImageDataListingArr[data].PLAN_IMAGE)}
                                                                                             {$last = array_pop($parts)}
                                                                                             {$str1 = implode('.', $parts)}
                                                                                             {$str1 = $str1|cat:'-thumb'}
                                                                                             {$str2 = $str1|cat:'.'}
                                                                                             {$finalStrWithThumb = $str2|cat:$last}
-                                                                                            <img src="{$imgDisplayPath}{$finalStrWithThumb}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].PLAN_IMAGE}" />
+                                                                                            <img src="{$ImageDataListingArr[data].thumb_path}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].alt_text}" />
 												</a>
 												<br>
 											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
@@ -1897,11 +1905,15 @@ function broker_call_edit(callId, brokerId)
 										<b>Image Title </b>:{$ImageDataListingArr[data].TITLE}<br><br>
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
 											<b>Tagged Date </b>:{$ImageDataListingArr[data].tagged_month|strtotime|date_format:"%B %Y"}<br><br>
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id}{$ImageDataListingArr[data].TOWER_NAME}{else}Other{/if}<br><br>
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
 										{/if}
 										{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
 											<b>Display Order </b>:{$ImageDataListingArr[data].display_order}<br><br>
 										{/if}
+										{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
+											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
+										{/if}
+
 									</div>
 								</td>
 								{$cnt = $cnt+1} 		
@@ -1942,7 +1954,7 @@ function broker_call_edit(callId, brokerId)
 								<td class = "tdcls_{$cnt}" >
 									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 										
-											<a class="pt_reqflrplan" href="{$imgDisplayPath}{$ImageDataListingArrFloor[data].IMAGE_URL}
+											<a class="pt_reqflrplan" href="{$ImageDataListingArrFloor[data].IMAGE_URL}
 														" target="_blank">
                                                                                             {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
                                                                                             {$lastFloor = array_pop($partsFloor)}
@@ -1950,7 +1962,7 @@ function broker_call_edit(callId, brokerId)
                                                                                             {$strFloor1 = $strFloor1|cat:'-thumb'}
                                                                                             {$strFloor2 = $strFloor1|cat:'.'}
                                                                                             {$finalStrWithThumbFloor = $strFloor2|cat:$last}
-												<img src="{$imgDisplayPath}{$finalStrWithThumbFloor}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].IMAGE_URL}" />
+												<img src="{$ImageDataListingArrFloor[data].thumb_path}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].alt_text}" />
 											</a>
 											<br>
 										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
