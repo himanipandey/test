@@ -184,9 +184,9 @@ if (isset($_POST['btnSave'])) {
             if( $retdt > 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
-            if($pre_launch_date == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launch_date) || checkListingPricesDate($projectId, $launch_date))) {
+           /* if($pre_launch_date == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launch_date) || checkListingPricesDate($projectId, $launch_date))) {
                 $error_msg  .= " Inventory or Prices with effective date before {$launch_date} are present. So can not change the Launch Date.";
-            }
+            }*/
           }
          if($sold_out_date != ''){
 	    $retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));

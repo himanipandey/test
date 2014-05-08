@@ -402,11 +402,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $retdt < 0 ) {
                 $ErrorMsg['preLaunchDate'] = "Pre Launch date should be less or equal to current date";
             }
-            if($projectId != ''){
+           /* if($projectId != ''){
                 if(projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $preLaunchDt) || checkListingPricesDate($projectId, $preLaunchDt))) { 
                     $ErrorMsg['preLaunchDateAvailabilities'] = "Inventory or Prices with effective date before {$preLaunchDt} are present. So can not change the Pre Launch Date.";
                 }
-            }
+            }*/
             /*if(checkListingPricesDate($projectId, $preLaunchDt)){
                 $ErrorMsg['preLaunchDatePrices'] = "Inventory or Prices with effective date before {$preLaunchDt} are present. So can not change the Pre Launch Date.";
             }*/
@@ -418,11 +418,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $retdt < 0 ) {
                 $ErrorMsg['launchDateGreater'] = "Launch date should be less or equal to current date";
             }
-            if($projectId != ''){
+            /*if($projectId != ''){
                 if($preLaunchDt == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launchDt) || checkListingPricesDate($projectId, $launchDt) )) {
                     $ErrorMsg['launchDateAvailabilities'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
                 }
-            }
+            }*/
             /*if(checkListingPricesDate($projectId, $launchDt)){
                 $ErrorMsg['launchDatePrices'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
             }*/
@@ -676,8 +676,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                  $qryPhaseSelect = "select phase_id from resi_project_phase where project_id = $returnProject->project_id";
                  $resPhaseSelect = mysql_query($qryPhaseSelect);
                  $phaseIdSelet = mysql_fetch_assoc($resPhaseSelect);
-                 if($eff_date_to_prom == '')
-                     $eff_date_to_prom = '0000-00-00';
+                 if($eff_date_to_prom != '' && $eff_date_to_prom != '0000-00-00 00:00:00'){
+                     //$eff_date_to_prom = '0000-00-00';
                  $effectiveDt = date('Y')."-".date('m')."-01";
                  $qryCompletionDate = "insert into resi_proj_expected_completion 
                     set
@@ -686,6 +686,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                       submitted_date = '".$effectiveDt."',
                       phase_id = ".$phaseIdSelet['phase_id'];
                  mysql_query($qryCompletionDate);
+                }
                  header("Location:project_img_add.php?projectId=".$returnProject->project_id);
                }
             }
