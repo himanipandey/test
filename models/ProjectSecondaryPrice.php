@@ -13,6 +13,7 @@ class ProjectSecondaryPrice extends ActiveRecord\Model
     );
     
     static function insertUpdate($attributes){
+	  try{	
         $price = ProjectSecondaryPrice::first(array(
             'project_id'=>$attributes['project_id'],
             'broker_id'=>$attributes['broker_id'],
@@ -25,6 +26,9 @@ class ProjectSecondaryPrice extends ActiveRecord\Model
         }else{
             $res = $price->update_attributes($attributes);
         }
+      }catch(Exception $e){
+		 
+	  }
         return $res;
     }
     
