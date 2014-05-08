@@ -41,6 +41,8 @@ while($row = mysql_fetch_object($sql_initial_record)){
 	$initial_id = $row->initial_id;
 }
 	
+if(!$initial_id)
+  $initial_id = $final_id;
 
 //fetch stage name
 $sql_stage_name = mysql_fetch_object(mysql_query("SELECT name from master_project_phases where id='".$projectPhaseId."'"));
