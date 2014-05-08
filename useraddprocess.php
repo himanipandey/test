@@ -123,8 +123,8 @@ if ($_POST['btnSave'] == "Save") {
 		$DataInsert = mysql_query($sql) or die(mysql_error());
                 $lastId = mysql_insert_id();
                 //code for insert data in proptiger admin city
-                echo "<pre>";
-                print_r($_REQUEST['city']);//die("here");
+                //echo "<pre>";
+               // print_r($_REQUEST['city']);//die("here");
                 if($_REQUEST['city'][0] == '')
                         unset($_REQUEST['city'][0]);
                 if(count($_REQUEST['city'])>0) {
