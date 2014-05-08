@@ -21,7 +21,7 @@
         if(isset($_REQUEST['phaseId'])) {
             $phaseId = $_REQUEST['phaseId'];
             $qryHistory = "select * from ".RESI_PROJ_EXPECTED_COMPLETION." 
-             where project_id = $projectId and phase_id = $phaseId order by submitted_date";
+             where project_id = $projectId and phase_id = $phaseId and expected_completion_date !='0000-00-00 00:00:00' and submitted_date !='0000-00-00 00:00:00' order by submitted_date";
             $resHistory = mysql_query($qryHistory);
             $arrHistory = array();
             $EffectiveDateList = '';
@@ -43,11 +43,16 @@
             $smarty->assign("pre_launch_date", $fetch_projectDetail[0]['PRE_LAUNCH_DATE']);
             $smarty->assign("oldCompletionDate", $oldCompletionDate);
             $expCompletionDate = explode("-",$current_phase[0]['COMPLETION_DATE']);
-            $smarty->assign("month_expected_completion", $expCompletionDate[1]);
-            $smarty->assign("year_expected_completion", $expCompletionDate[0]);
             $sumittedDate = explode("-",$current_phase[0]['submitted_date']);
-            $smarty->assign("month_effective_date", $sumittedDate[1]);
-            $smarty->assign("year_effective_date", $sumittedDate[0]);         
+            
+            if($expCompletionDate[1] && $expCompletionDate[1] != '00' && $expCompletionDate[2] && $expCompletionDate[2] != '00' && $sumittedDate[1] && $sumittedDate[1] != '00' && $sumittedDate[0] && $sumittedDate[0] !='00'){           
+              $smarty->assign("month_expected_completion", $expCompletionDate[1]);
+              $smarty->assign("year_expected_completion", $expCompletionDate[0]);
+              $smarty->assign("month_effective_date", $sumittedDate[1]);
+              $smarty->assign("year_effective_date", $sumittedDate[0]);
+            }
+                      
+                     
             $qrySelect = ResiProjectPhase::virtual_find($phaseId);
             $phaseName = $qrySelect->phase_name;
             $smarty->assign("phaseName", $phaseName);
@@ -144,7 +149,7 @@
                  }                
                 $submitted_date_string = $year_effective_date."-".$month_effective_date."-01";
                 if(strtotime($expectedCompletionDate) > strtotime($current_element['EXPECTED_COMPLETION_DATE']) && strtotime($submitted_date_string) < strtotime($current_element['SUBMITTED_DATE'])){
-				  	$errorMsg['CompletionDateGreater'] = "Completion date($expectedCompletionDate) to be always less the latest completion date.";
+				  	$errorMsg['CompletionDateGreater'] = "Completion date($expectedCompletionDate) to be always less the latest completion date(".$current_element['EXPECTED_COMPLETION_DATE'].").";
 				}
 			    if(count($errorMsg)>0){
                     $smarty->assign('errorMsg',$errorMsg);
