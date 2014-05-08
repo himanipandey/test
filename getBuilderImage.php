@@ -34,7 +34,6 @@ if($_POST['part'] == 'replace-builder') {
         BuilderAlias::insetUpdateBuilderAlias($builderAlias);
         $exeQry = ResiBuilder::updatestatusofbuilder($oldBuilder);
         if($exeQry) {
-            updateBuilderIdForRevenueAssurance($oldBuilder, $newBuilder);
             echo 1;
         }
     }
