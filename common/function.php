@@ -290,6 +290,9 @@ function writeToImageService($imageParams){
   // loop through $data and create curl handles
   // then add them to the multi-handle
 
+
+print'<pre>';
+             print_r($postArr);
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
     $method = $d['method'];
@@ -316,9 +319,11 @@ function writeToImageService($imageParams){
  
   // get content and remove handles
   foreach($curly as $id => $c) {
-    $result[$id] = curl_multi_getcontent($c);
-    $pos = mb_strpos($result[$id], "{");
-    echo $result[$id];
+    $response = curl_multi_getcontent($c);
+    $pos = mb_strpos($response, "{");
+    //echo $pos;
+    $result[$id] = json_decode(substr($response, $pos));
+    //var_dump($result[$id]);
     //$header_size = curl_getinfo_read($c, CURLINFO_HEADER_SIZE);
     //echo "headx:".$header_size;
     //$header_size = curl_multi_info_read($c, CURLINFO_HEADER_SIZE);
