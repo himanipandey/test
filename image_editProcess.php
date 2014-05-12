@@ -4,6 +4,7 @@
 	include("ftp.new.php");
 	$ErrorMsg='';
 	$image_id=0;
+	
 	$watermark_path = "images/pt_shadow1.png";
 	 $projectId = $_GET['projectId'];
 	$projectDetail	= ProjectDetail($projectId);
