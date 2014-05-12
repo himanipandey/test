@@ -537,14 +537,15 @@ function checkProjAvail($projectId = null, $priority = null, $mode = null, $mode
 
 
 
-function getNearPlacesArrfromCity($cityId, $order, $placeType=0)
+function getNearPlacesArrfromCity($status, $cityId, $order, $placeType=0)
 {
     global $orderBy;
-    $orderBy = $order; 
+    $orderBy = $order;
+    $where = " np.status = '".$status."'";
     if($placeType==0)
-         $where = " np.city_id = $cityId";
+         $where .= " and np.city_id = $cityId";
     else
-        $where = "np.city_id = $cityId and  np.place_type_id = $placeType"; //.$queryLessThenMax;
+        $where .= "np.city_id = $cityId and  np.place_type_id = $placeType"; //.$queryLessThenMax;
     $orderby = " ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
     $qry = "SELECT np.name, np.id, np.city_id, np.latitude, np.longitude, np.vicinity, np.status, npt.display_name, np.priority, np.place_type_id, np.phone_number, np.website
             FROM " . landmarks. " np 
@@ -562,7 +563,7 @@ function getNearPlacesArrfromCity($cityId, $order, $placeType=0)
 
 }
 
-function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
+function getNearPlacesArr($status, $cityId, $localityId ,$type, $order, $placeType=0)
 {
     global $orderBy;
     $orderBy = $order;
@@ -641,8 +642,9 @@ function getNearPlacesArr($cityId, $localityId ,$type, $order, $placeType=0)
 
             //print_r($NearPlacesArr);
             //die("here");
+            $where = " and np.status = '".$status."'";
             if($placeType!=0)
-                $where = " and np.place_type_id = $placeType";
+                $where .= " and np.place_type_id = $placeType";
             else $where = "";
                 
 
