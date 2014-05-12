@@ -229,8 +229,17 @@
 											}
 											else {
 												$strErr = " Error in uploading Image No".($key+1)." ";
-												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
-
+												//$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
+												$strErr1 = $serviceResponse["service"]->response_body->error->msg;
+												//echo $strErr1;
+												$pos = strpos($strErr1, "property id-");
+												if($pos>=0){
+													$dupOptId = substr($strErr1, $pos+12, 7);
+													$dupProjId = getProjectFromOption($dupOptId);
+													$insert_string = ", Project Id-".$dupProjId." ";
+													$strErr1 = substr_replace($strErr1, $insert_string, $pos+19, 0);
+												}
+												$ErrorMsg["ImgError"] .= $strErr.$strErr1."<br>";
 												break 1;
 											}
 
