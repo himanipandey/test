@@ -481,7 +481,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					
 						}catch(Exception $e)
 						{
-							$ErrorMsg1 = 'Couuld not delete!';
+							$ErrorMsg1 = 'Could not delete!';
 							return false;
 						}					
 								
