@@ -152,12 +152,12 @@
                                                 {$val}
                                                 <input type = "hidden" name = "unitType[]" value ="{$val}">
                                             </td>
-                                            <td valign ="top" style ="padding-left: 10px;" align = "left">
-                                                <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$val]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{else}{$arrMinPrice[$val]}{/if}">
+                                             <td valign ="top" style ="padding-left: 10px;" align = "left">
+                                              <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrMinPrice[$k] != ''}{$arrMinPrice[$k]}{else}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{/if}">
                                             </td>
                                             <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                                <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
-                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{else}{$arrMaxPrice[$val]}{/if}">
+                                               <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
+                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrMaxPrice[$k] != ''}{$arrMaxPrice[$k]}{else}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{/if}">
                                             </td>
                                             <td style ="padding-left: 10px;" align = "left">
                                                 <div id = "mean_{$cnt}">
