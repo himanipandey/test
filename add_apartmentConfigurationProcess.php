@@ -442,14 +442,14 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 								  $all_log_lst_ids = implode(",",$all_log_lst_ids);
 															 
 								  $all_log_supplies = mysql_query("select * from project_supplies where listing_id in (".$all_log_lst_ids.")");
-															  
-								  if($all_log_supplies){
+
+								  if(mysql_num_rows($all_log_supplies)){
 									  $log_supplies = array();
 									  while($val = mysql_fetch_object($all_log_supplies)){
 										$log_supplies[] = $val->id;
 									  }
 									  $log_supplies = implode(",",$log_supplies);
-									 
+																		 
 									 ProjectAvailability::delete_all(array('conditions'=>array("project_supply_id in (".$log_supplies.")")));
 									 ProjectSupply::delete_all(array('conditions'=>array("id in (".$log_supplies.")"))); 
 									  
@@ -481,7 +481,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					
 						}catch(Exception $e)
 						{
-							$ErrorMsg1 = 'Couuld not delete!';
+							$ErrorMsg1 = $e;//'Couuld not delete!';
 							return false;
 						}					
 								
