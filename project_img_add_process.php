@@ -4,6 +4,8 @@
 	ini_set("memory_limit","256M");
 	include("ftp.new.php");
 	$ErrorMsg='';
+
+
 	//$projectplansid = $_REQUEST['projectplansid'];
 	$watermark_path = "images/pt_shadow1.png";
 	$projectId = $_REQUEST['projectId'];
