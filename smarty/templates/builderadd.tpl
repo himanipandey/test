@@ -1,6 +1,14 @@
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/photo.js"></script>
-<script>
+<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+        //mode : "textareas",
+        mode : "specific_textareas",
+        editor_selector : "myTextEditor",
+        theme : "advanced"
+    });
+
 	function showhide_row(numrow)
 	{
 		for(i=1;i<=10;i++)
@@ -143,7 +151,7 @@
 				</tr>
 				<tr>
 				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Builder Description :</td>
-				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" cols="45">{$txtBuilderDescription}</textarea>
+				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" class ="myTextEditor" cols="45">{$txtBuilderDescription}</textarea>
 				   <input type="hidden" name="txtOldBuilderDescription" value="{$txtBuilderDescription}" />
 				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>

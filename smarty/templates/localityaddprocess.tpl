@@ -7,7 +7,15 @@
 <script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
 <script type="text/javascript" src="js/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-
+<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+        //mode : "textareas",
+        mode : "specific_textareas",
+        editor_selector : "myTextEditor",
+        theme : "advanced"
+    });
+</script>
 </TD>
   </TR>
   <TR>
@@ -65,7 +73,7 @@
 				</tr>									
 				<tr>
                                     <td width="20%" align="right" valign = top ><b>Description  :</b> </td>
-				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' cols = "35" rows = "10" style="width:250px;">{$desc}</textarea>
+				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' class ="myTextEditor" cols = "35" rows = "10" style="width:250px;">{$desc}</textarea>
 				   <input type="hidden" name="oldDesc" value="{$desc}" />
 				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>
