@@ -115,7 +115,6 @@
                                 {if $txtdepartment == 'SURVEY'}
                                     {$stye = ""}
                                 {else}
-                                     
                                      {$stye = 'style = "display:none;"'}
                                 {/if}
 				<tr id = 'showhide' {$stye}>
