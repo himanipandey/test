@@ -86,6 +86,9 @@
 	$optionId				=	'';
 	$insertlist				=	'';
 	$ErrorMsg1				=   '';
+
+	$postArr = array(); // array to store image data to send with http request
+	$fileEndName = array();
 	//print("<pre>");var_dump($_REQUEST); die();
 	if(($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST['Next'] == "Add More"))
 	{
@@ -186,7 +189,10 @@
 			                $img['type'] = $_FILES["imgurl"]["type"][$key];
 			                $img['name'] = $_FILES["imgurl"]["name"][$key];
 			                $img['tmp_name'] = $_FILES["imgurl"]["tmp_name"][$key];	
-			                
+			                $unitImageArr['img'] = $img;
+			        		$unitImageArr['objectId'] = $option_id;
+			        		$unitImageArr['objectType'] = "option";
+			        		$unitImageArr['newImagePath'] = $newImagePath;
 			                $altText = $BuilderName." ".strtolower($ProjectName)." "."Floor Plan"." ".$floor_name;
 									/*************Resize images code***************************/
 								if ($handle = opendir($createFolder))
@@ -198,12 +204,7 @@
 										/************Working for floor plan***********************/
 										if(strstr($file,$_FILES["imgurl"]["name"][$key]))
 										{
-											$image = new SimpleImage();
-											$path=$createFolder."/".$file;
-											$image->load($path);
-											$local_path = $BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
-                                            $absolute_path = $newImagePath.$local_path;
-											$image->save($newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file));
+											
 
 											$params = array(
 							                        "image_type" => "floor_plan",
@@ -216,11 +217,14 @@
 							                       
 							                );
 
+											$unitImageArr['params'] = $params;
+						                     $fileEndName[$key] = "floor-plan";
+						                     $postArr[$key] = $unitImageArr;
 
 							                    //  add images to image service
 
 							                    
-						                    $returnArr = writeToImageService(  $img, "option", $option_id, $params, $newImagePath);
+						                    /*$returnArr = writeToImageService(  $img, "option", $option_id, $params, $newImagePath);
 						                    //print_r($returnArr);
 						                    $serviceResponse = $returnArr['serviceResponse'];
 							                if(empty($serviceResponse["service"]->response_body->error->msg)){
@@ -232,7 +236,7 @@
 												$ErrorMsg["ImgError"] .= $strErr.$serviceResponse["service"]->response_body->error->msg."<br>";
 
 												break 1;
-											}
+											}*/
 
                                             /*$s3upload = new ImageUpload($absolute_path,array("s3" => $s3,
                                                 "image_path" => $local_path, "object" => "option",
@@ -244,68 +248,7 @@
                                             $image_id = $image_id->id;*/
 											/*$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" .str_replace('floor-plan','floor-plan-bkp',$file);
 											$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
-												/**********Working for watermark*******************/
-												$image_path = $path;
-												// Where to save watermarked image
-												$imgdestpath = $path;
-												// Watermark image
-												$img = new Zubrag_watermark($image_path);
-												$img->ApplyWatermark($watermark_path);
-												$img->SaveAsFile($imgdestpath);
-                                                /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
-                                                $s3upload->upload();*/
-												$img->Free();  				 						
-
-												/************Resize and rect img*************/
-												$image->resize(485,320);
-												$newrect	=	str_replace('floor-plan','floor-plan-rect-img',$file);
-												$image->save($createFolder."/".$newrect);
-
-												/*$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newrect;
-												$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newrect;
-
-												/**********Working for watermark*******************/
-											// Image path
-												$image_path =$createFolder."/".$newrect;
-
-												// Where to save watermarked image
-												$imgdestpath = $createFolder."/".$newrect;
-
-												// Watermark image
-												$img = new Zubrag_watermark($image_path);
-												$img->ApplyWatermark($watermark_path);
-												$img->SaveAsFile($imgdestpath);
-                                                /*$s3upload =new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
-                                                $s3upload->upload();*/
-												$img->Free();
-
-												/************Resize and large to small*************/
-												$image->resize(95,65);
-												$newimg	=	str_replace('floor-plan','floor-plan-sm-rect-img',$file);
-                                                /*$s3upload =new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
-                                                $s3upload->upload();*/
-                                                $imgdestpath = $createFolder."/".$newimg;
-												$image->save($imgdestpath);
-                                                /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
-                                                $s3upload->upload();
-												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-												$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-
-												/************Resize and large to small*************/
-												$image->resize(80,36);
-												$newimg	=	str_replace('floor-plan','floor-plan-small',$file);
-                                                $imgdestpath = $createFolder."/".$newimg;
-												$image->save($imgdestpath);
-                                                /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
-                                                $s3upload->upload();
-												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-												$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
-
-												/************Resize and large to thumb*************/
-												$image->resize(77,70);
-												$newimg	=	str_replace('floor-plan','floor-plan-thumb',$file);
-                                                $imgdestpath = $createFolder."/".$newimg;
-                                                $image->save($imgdestpath);
+												
                                                 /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
                                                 $s3upload->upload();
 												$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
@@ -314,10 +257,10 @@
 										}
 									} 
 								}
-								if($image_id>0){
+								/*if($image_id>0){
 									 $insertlist.=	 "('$option_id', '$floor_name','$imgurl8', '0' , $image_id),";
 									 $image_id=0;
-								}
+								}*/
 
 							}
 							}
@@ -337,22 +280,129 @@
 					}
 				}
 			}
+
+
+		$serviceResponse = writeToImageService($postArr);
+		//print("<pre>");var_dump($serviceResponse);die();
+		//$serviceResponse = json_decode($serviceResponse);
+		//print'<pre>';   print_r($serviceResponse);//die();				                  	
+        foreach ($serviceResponse as $k => $v) {
+        	
+	        if(empty($v->error->msg)){
+	            $image_id = $v->data->id;
+
+	            $file = $_FILES["imgurl"]["tmp_name"][$key];
+	            
+	            $img_path = $createFolder."/".$file;
+	            //echo $tmp_path; echo $img_path.$image_id;// die();
+	            $image = new SimpleImage();
+				$path=$createFolder."/".$file;
+				$image->load($path);
+				$local_path = $BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file);
+                $absolute_path = $newImagePath.$local_path;
+				$image->save($newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('floor-plan','floor-plan-bkp',$file));
+
+
+/**********Working for watermark*******************/
+					$image_path = $path;
+					// Where to save watermarked image
+					$imgdestpath = $path;
+					// Watermark image
+					$img = new Zubrag_watermark($image_path);
+					$img->ApplyWatermark($watermark_path);
+					$img->SaveAsFile($imgdestpath);
+                    /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                    $s3upload->upload();*/
+					$img->Free();  				 						
+
+					/************Resize and rect img*************/
+					$image->resize(485,320);
+					$newrect	=	str_replace('floor-plan','floor-plan-rect-img',$file);
+					$image->save($createFolder."/".$newrect);
+
+					/*$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newrect;
+					$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newrect;
+
+					/**********Working for watermark*******************/
+				// Image path
+					$image_path =$createFolder."/".$newrect;
+
+					// Where to save watermarked image
+					$imgdestpath = $createFolder."/".$newrect;
+
+					// Watermark image
+					$img = new Zubrag_watermark($image_path);
+					$img->ApplyWatermark($watermark_path);
+					$img->SaveAsFile($imgdestpath);
+                    /*$s3upload =new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                    $s3upload->upload();*/
+					$img->Free();
+
+					/************Resize and large to small*************/
+					$image->resize(95,65);
+					$newimg	=	str_replace('floor-plan','floor-plan-sm-rect-img',$file);
+                    /*$s3upload =new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                    $s3upload->upload();*/
+                    $imgdestpath = $createFolder."/".$newimg;
+					$image->save($imgdestpath);
+                    /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                    $s3upload->upload();
+					$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+					$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+
+					/************Resize and large to small*************/
+					$image->resize(80,36);
+					$newimg	=	str_replace('floor-plan','floor-plan-small',$file);
+                    $imgdestpath = $createFolder."/".$newimg;
+					$image->save($imgdestpath);
+                    /*$s3upload = new S3Upload($s3, $bucket, $imgdestpath, str_replace($newImagePath,"",$imgdestpath));
+                    $s3upload->upload();
+					$source[]=$newImagePath.$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+					$dest[]="public_html/images_new/".$BuilderName."/".strtolower($ProjectName)."/".$newimg;
+
+					/************Resize and large to thumb*************/
+					$image->resize(77,70);
+					$newimg	=	str_replace('floor-plan','floor-plan-thumb',$file);
+                    $imgdestpath = $createFolder."/".$newimg;
+                    $image->save($imgdestpath);
+                    $option_id = $postArr[$k]['objectId'];
+                    $floor_name = $postArr[$k]['params']['title'];
+                    $imgurl8 = "/".strtolower($BuilderName)."/".strtolower($ProjectName)."/".$_FILES["imgurl"]["name"][$k];
+                    if($image_id>0){
+                    	$qry	 =  "INSERT INTO ".RESI_FLOOR_PLANS." (OPTION_ID,NAME,IMAGE_URL,DISPLAY_ORDER,SERVICE_IMAGE_ID) VALUES ('$option_id', '$floor_name','$imgurl8', '0' , $image_id)";
+
+                    	$res	 =	mysql_query($qry) or die(mysql_error());
+						
+					}
+					$image_id=0;
+
+			}
+			else {
+				$strErr = " Error in uploading Image No ".($k+1)." ";
+				$ErrorMsg["ImgError"] .= $strErr.$v->error->msg."<br>";
+				
+			}
+		}
+
+
+
+
+
+
+
+
+
+
 		}
 		
 		if($flgins == 0)
 		{
 			 $ErrorMsg1	.=	'Please select atleast one floor plan Image';
 		}
-		if($ErrorMsg1 == '' AND $insertlist != '' )
+		if($ErrorMsg1 == '' AND empty($ErrorMsg))
 		{
 			
-			$qry	 =  "INSERT INTO ".RESI_FLOOR_PLANS." (OPTION_ID,NAME,IMAGE_URL,DISPLAY_ORDER,SERVICE_IMAGE_ID) VALUES ";
-			$str	 = $qry.$insertlist;
-			$fullQry =  substr($str,0,-1);
-			$res	 =	mysql_query($fullQry) or die(mysql_error());
-			$lastid  =  mysql_insert_id();	
-			if($res && empty($ErrorMsg))
-			{				
+							
 				if($_POST['Next'] == 'Add More')
 				{
 					if($_GET['edit'] != '')
@@ -368,7 +418,7 @@
 					header("Location:ProjectList.php?projectId=".$projectId);
 				else
 					header("Location:project_other_price.php?projectId=".$projectId);
-			}
+			
 		}
 		
 	}

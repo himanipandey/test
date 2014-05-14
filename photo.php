@@ -1,6 +1,8 @@
 <?php
     //error_reporting(E_ALL);
     ini_set('display_errors','1');
+    //set_time_limit(0);
+    //ini_set("memory_limit","256M");
     include("smartyConfig.php");
     include("appWideConfig.php");
     include("dbConfig.php");
@@ -85,6 +87,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         }
 
         $IMG = $_FILES['img'];
+        
         $uploadStatus = array();
         
         if ( $errMsg == "" ) {
@@ -153,22 +156,34 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                             "altText" => $imgDisplayName,
                             
                         );
+                        $postArr = array();
+                        $unitImageArr = array();
+                        $unitImageArr['img'] = $img;
+                        $unitImageArr['objectId'] = $areaId;
+                        $unitImageArr['objectType'] = $areaType;
+                        $unitImageArr['newImagePath'] = $newImagePath;
+                        $unitImageArr['params'] = $params;  
+                        $postArr[] = $unitImageArr; 
+                        $response   = writeToImageService( $postArr);
+                        /**/
+                        foreach ($response as $k => $v) {
+                            if(!empty($v->error->msg))
+                            {
+                                $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $v->error->msg;
+                            }
+                            else{
+                                   echo "here";     // add to database
+                                $addedImgIdArr[] = addImageToDB( $params['column_name'], $areaId, $imgName,
+                                    $params['image_type'], $params['title'], $params['description'],$v->data->id,$params['priority'] );
+                          
+                                $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
+                            }
+                        }
+
                         //  add images to image service
                 
                         
-                        $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
-                          //die("here");
-                        $serviceResponse = $returnArr['serviceResponse'];
-                        if(!empty($serviceResponse["service"]->response_body->error->msg)){
-                            $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $serviceResponse["service"]->response_body->error->msg;
-                        }
-                        else{
-                            // add to database
-                            $addedImgIdArr[] = addImageToDB( $params['column_name'], $areaId, $imgName,
-                                $params['image_type'], $params['title'], $params['description'],$returnArr['serviceResponse']['service']->response_body->data->id,$params['priority'] );
-                      
-                            $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
-                        }
+                        
                     }
                 }
                 else {
@@ -209,8 +224,10 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
     else if($_REQUEST['updateDelete']) {   //code for image update or delete
          
          $thumb = new SimpleImage();
-        //hiecho "<pre>"; print_r($_REQUEST);die;
-        foreach($_REQUEST['img_id'] as $ImgID) {
+         $postArr = array();
+           
+        //echo "<pre>"; print_r($_REQUEST);die;
+        foreach($_REQUEST['img_id'] as $k => $ImgID) {
             $imgCat = "imgCate_".$ImgID;
             $imgCategory = $_REQUEST[$imgCat][0];
             $imgNm = "imgName_".$ImgID;
@@ -362,12 +379,23 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     "altText" => $imgDisplayName,
                                     
                                 );
+
+                              
+                                $unitImageArr = array();
+                                $unitImageArr['img'] = $img;
+                                $unitImageArr['objectId'] = $areaId;
+                                $unitImageArr['objectType'] = $areaType;
+                                $unitImageArr['newImagePath'] = $newImagePath;
+                                $unitImageArr['params'] = $params;  
+                                $postArr[$k] = $unitImageArr; 
+                                //$response   = writeToImageService( $postArr);
+
                                 //  add images to image service
                         
                                 //$imgName = $areaType."_".$areaId."_".$__imgCnt."_".time().".".strtolower( $extension ); 
-                                $returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
+                                //$returnArr = writeToImageService(  $img, $areaType, $areaId, $params, $newImagePath);
                                   //die("here");
-                                $serviceResponse = $returnArr['serviceResponse'];
+                               /* $serviceResponse = $returnArr['serviceResponse'];
                                 if(!empty($serviceResponse["service"]->response_body->error->msg)){
                                     $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $serviceResponse["service"]->response_body->error->msg;
                                 }
@@ -385,32 +413,14 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                                     $resImg = mysql_query($qryUpdate) or die(mysql_error());
                                     //echo $qryUpdate;die();
                                     $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "uploaded";
-                                }
+                                }*/
                             }
                             }
                             else {
                                 $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = "Error#".$IMG['error'][ $__imgCnt ];
                             }
                         }
-                        $str = "";
-                        foreach( $uploadStatus as $__imgName => $__statusMsg ) {
-                            if ( $str ) {
-                                $str .= "; ".$__imgName." : ".$__statusMsg;
-                            }
-                            else {
-                                $str = $__imgName." : ".$__statusMsg;
-                            }
-                        }
-                        $message = array(
-                            'type' => 'success-msg',
-                            'content' => $str
-                        );
-                        if ( count( $addedImgIdArr ) ) {
-                            $imgData = getPhotoById( $addedImgIdArr );
-                            if ( count( $imgData ) ) {
-                                $smarty->assign( 'uploadedImage', $imgData );
-                            }
-                        }
+                        
                     }else{
                         /* $arrPost = array();
                          $arrPost['priority'] = $imagePriority;
@@ -430,33 +440,15 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                             "altText" => $imgDisplayName,
                            
                         );
-
-                         $returnArr = writeToImageService(  "", $areaType, $areaId, $params, $newImagePath);
-
-                        /* $url = ImageServiceUpload::$image_upload_url."/".$imgSevice;
-                         $ch = curl_init();
-                         $method = 'POST';
-                        curl_setopt($ch, CURLOPT_URL,$url);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-                        curl_setopt($ch, CURLOPT_HEADER, 1);
-                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$method);
-                        if($method == "POST" || $method == "PUT")
-                            curl_setopt($ch, CURLOPT_POSTFIELDS, $arrPost);
-                        $response= curl_exec($ch);
-                        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-                        $response_header = substr($response, 0, $header_size);
-                        $response_body = json_decode(substr($response, $header_size));
-                        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                        curl_close ($ch);*/
-
-                        $qryUpdate = "update locality_image set 
-                            IMAGE_CATEGORY = '".$imgCategory."',
-                            IMAGE_DESCRIPTION = '".$imgDescription."',
-                            IMAGE_DISPLAY_NAME = '".$imgDisplayName."'   
-                         WHERE SERVICE_IMAGE_ID = $ImgID";
-                         $resImg = mysql_query($qryUpdate) or die(mysql_error());
-                         $uploadStatus[$imgName] = "updated";
+                           
+                        $unitImageArr = array();
+                        $unitImageArr['img'] = "";
+                        $unitImageArr['objectId'] = $areaId;
+                        $unitImageArr['objectType'] = $areaType;
+                        $unitImageArr['newImagePath'] = $newImagePath;
+                        $unitImageArr['params'] = $params;  
+                        $postArr[$k] = $unitImageArr; 
+                        
                     }
                 }
                 else {
@@ -466,16 +458,99 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                     );
                 }
                 $smarty->assign( 'message', $message );
-          }elseif($_REQUEST[$imgUpDel][0] == 'del') {    //if wants to delete image
-                
-                $response = deleteFromImageService($areaType, $areaId, $imgSevice);
+            }
+            elseif($_REQUEST[$imgUpDel][0] == 'del') {    //if wants to delete image
+                $params = array(
+                        "service_image_id" => $imgSevice,
+                        "delete" => "yes",
+                    );
+                $unitImageArr = array();
+           
+                $unitImageArr['objectId'] = $areaId;
+                $unitImageArr['objectType'] = $areaType;
+               
+                $unitImageArr['params'] = $params;  
+                $postArr[$k] = $unitImageArr; 
+            //$response   = writeToImageService( $postArr);
 
-                 $qryUpdate = "delete from locality_image WHERE SERVICE_IMAGE_ID = $imgSevice";
-                 $resImg = mysql_query($qryUpdate) or die(mysql_error());
+                //$response = deleteFromImageService($areaType, $areaId, $imgSevice);
+
+                 //$qryUpdate = "delete from locality_image WHERE SERVICE_IMAGE_ID = $imgSevice";
+                 //$resImg = mysql_query($qryUpdate) or die(mysql_error());
                  
             }
         }
+    
+
+    $serviceResponse   = writeToImageService($postArr);
+    //print'<pre>';   print_r($serviceResponse);//die();    
+    foreach ($serviceResponse as $k => $v) {
+        $image_id = $v->data->id;
+            $imgCategory = $postArr[$k]['params']['image_type'];
+            $imgDescription = $postArr[$k]['params']['description'];
+            $imgDisplayName = $postArr[$k]['params']['title'];
+            
+            $ImgID = $postArr[$k]['params']['service_image_id'];
+        if(empty($v->error->msg))
+        {
+            
+            if($postArr[$k]['params']['delete']=="yes"){
+                $qryUpdate = "delete from locality_image WHERE SERVICE_IMAGE_ID = $ImgID";
+                $resImg = mysql_query($qryUpdate) or die(mysql_error());
+                $uploadStatus[$imgDisplayName] = "deleted";
+            }
+            else if(empty($postArr[$k]['img'])){
+                 $qryUpdate = "update locality_image set 
+                            IMAGE_CATEGORY = '".$imgCategory."',
+                            IMAGE_DESCRIPTION = '".$imgDescription."',
+                            IMAGE_DISPLAY_NAME = '".$imgDisplayName."'   
+                         WHERE SERVICE_IMAGE_ID = $ImgID";
+                         $resImg = mysql_query($qryUpdate) or die(mysql_error());
+                         $uploadStatus[$imgDisplayName] = "updated";
+            }
+            else if ($image_id>0){
+                $imgName = $postArr[$k]['params']['image'];
+                $qryUpdate = "update locality_image set 
+                    IMAGE_CATEGORY = '".$imgCategory."',
+                    IMAGE_DESCRIPTION = '".$imgDescription."',
+                    IMAGE_DISPLAY_NAME = '".$imgDisplayName."',
+                    SERVICE_IMAGE_ID = '".$image_id."',
+                    IMAGE_NAME = '".$imgName."'    
+                 WHERE SERVICE_IMAGE_ID = $ImgID";
+                $resImg = mysql_query($qryUpdate) or die(mysql_error());
+                //echo $qryUpdate;die();
+                $uploadStatus[ $imgName] = "uploaded";
+
+           }
+           
+        }
+        else {
+                    $uploadStatus[ $imgDisplayName] = $v->error->msg;
+                
+                }
+
+
     }
+
+    $str = "";
+    foreach( $uploadStatus as $__imgName => $__statusMsg ) {
+        if ( $str ) {
+            $str .= "; ".$__imgName." : ".$__statusMsg;
+        }
+        else {
+            $str = $__imgName." : ".$__statusMsg;
+        }
+    }
+    $message = array(
+        'type' => 'success-msg',
+        'content' => $str
+    );
+    $smarty->assign( 'message', $message );
+
+
+}
+
+
 
     $response = getListing();   //  get City List
 

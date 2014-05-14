@@ -207,7 +207,12 @@ function writeToImageService($imageParams){
 
                // print'<pre>';
                // print_r($service_extra_paramsArr);//die();
-        if($IMG==""){
+
+        if($params['delete']=="yes"){
+             $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id']));
+                $postArr[$k] = $s3upload->delete();
+        }        
+        else if($IMG==""){
                     //print'<pre>';
                     //print_r($params);//die();
                     //die("here");
@@ -283,7 +288,7 @@ function writeToImageService($imageParams){
     $curly = array();
   // data to be returned
     
- echo "curl-start:".microtime(true)."<br>"; 
+ //echo "curl-start:".microtime(true)."<br>"; 
   // multi handle
   $mh = curl_multi_init();
  
@@ -291,8 +296,8 @@ function writeToImageService($imageParams){
   // then add them to the multi-handle
 
 
-print'<pre>';
-             print_r($postArr);
+//print'<pre>';
+            // print_r($postArr);
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
     $method = $d['method'];
@@ -335,8 +340,8 @@ print'<pre>';
  
     // all done
     curl_multi_close($mh);
-    echo "curl-end:".microtime(true)."<br>"; 
-    echo "loop-end:".microtime(true)."<br>"; 
+    //echo "curl-end:".microtime(true)."<br>"; 
+    //echo "loop-end:".microtime(true)."<br>"; 
     //print("<pre>");   var_dump($result);die("here");
     return $result;
 }

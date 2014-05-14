@@ -30,24 +30,35 @@
             );
             $dest		=	$newImagePath."bank_list/".$logo_name;
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
-        	$response 	= writeToImageService(  $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
+			$postArr = array();
+			$unitImageArr = array();
+			$unitImageArr['img'] = $_FILES['logo'];
+    		$unitImageArr['objectId'] = $bankid;
+    		$unitImageArr['objectType'] = "bank";
+    		$unitImageArr['newImagePath'] = $newImagePath;
+			$unitImageArr['params'] = $params;  
+			$postArr[] = $unitImageArr;   		
+        	$response 	= writeToImageService($postArr);
 			/**/
-			if(empty($response['serviceResponse']["service"]->response_body->error->msg))
-			{
-				/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
-				  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
-				   "image_type" => "logo", "object_id" => $bankid));
-				// Image id updation (next three lines could be written in single line but broken
-				// in three lines due to limitation of php 5.3)
-				$response = $s3upload->upload();*/
-				$image_id = $response['serviceResponse']["service"]->response_body->data->id;
-				//$image_id = $image_id->id;
-			}
-			else {
+			foreach ($response as $k => $v) {
+        	
+		        if(empty($v->error->msg)){
 				
-				$Error = $response['serviceResponse']["service"]->response_body->error->msg;
+					/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
+					  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
+					   "image_type" => "logo", "object_id" => $bankid));
+					// Image id updation (next three lines could be written in single line but broken
+					// in three lines due to limitation of php 5.3)
+					$response = $s3upload->upload();*/
+					$image_id = $v->data->id;
+					//$image_id = $image_id->id;
+				}
+				else {
+					
+					$Error = $v->error->msg;
+				}
 			}
-		 }
+		}
         
         if($logo_name !='' && $image_id){
 			$banks->bank_logo = $logo_name;
@@ -101,55 +112,63 @@
 
             $dest		=	$newImagePath."bank_list/".$logo_name;
 			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
-        	$response 	= writeToImageService(  $_FILES['logo'], "bank", $bankid, $params, $newImagePath);
+
+			$postArr = array();
+			$unitImageArr = array();
+			$unitImageArr['img'] = $_FILES['logo'];
+    		$unitImageArr['objectId'] = $bankid;
+    		$unitImageArr['objectType'] = "bank";
+    		$unitImageArr['newImagePath'] = $newImagePath;
+			$unitImageArr['params'] = $params;  
+			$postArr[] = $unitImageArr; 
+        	$response 	= writeToImageService( $postArr);
 			/**/
-			if(empty($response['serviceResponse']["service"]->response_body->error->msg))
-			{
-				/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
-				  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
-				   "image_type" => "logo", "object_id" => $bankid));
-				// Image id updation (next three lines could be written in single line but broken
-				// in three lines due to limitation of php 5.3)
-				$response = $s3upload->upload();*/
-				$image_id = $response['serviceResponse']["service"]->response_body->data->id;
-			
-			}
-			else {
-				$Error = $response['serviceResponse']["service"]->response_body->error->msg;
-			
+			foreach ($response as $k => $v) {
+				if(empty($v->error->msg))
+				{
+					/*$s3upload = new ImageUpload($dest, array("s3" =>$s3,
+					  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
+					   "image_type" => "logo", "object_id" => $bankid));
+					// Image id updation (next three lines could be written in single line but broken
+					// in three lines due to limitation of php 5.3)
+					$response = $s3upload->upload();*/
+					$image_id = $v->data->id;
+				
+				}
+				else {
+					$Error = $v->error->msg;
+				
+				}
 			}
 
-        	/*
-			$dest		=	$newImagePath."/bank_list/".$logo_name;
-			
-			$move		=	move_uploaded_file($_FILES['logo']['tmp_name'],$dest);
-			
-			if($move)
-			{
-				$s3upload = new ImageUpload($dest, array("s3" =>$s3,
-				  "image_path" => str_replace($newImagePath, "", $destpath), "object" => "bank",
-				   "image_type" => "logo", "object_id" => $bankid,"service_image_id" => $service_image_id));
-				// Image id updation (next three lines could be written in single line but broken
-				// in three lines due to limitation of php 5.3)
-				$response = $s3upload->update();
-				$image_id = $response["service"]->data();
-				$image_id = $image_id->id;
-			}*/
+        	
 		 }
 		 
 		$banks->bank_name = $bankname;
 		$banks->bank_detail = $bank_detail;
 		
-	     if($logo_name !='' && $image_id){
+	    if($logo_name !='' && $image_id){
 			$banks->bank_logo = $logo_name;
             $banks->service_image_id = $image_id;
-         }elseif(isset($_POST['bankLogo']) && $_POST['bankLogo'] == 'del-logo'){
+        }elseif(isset($_POST['bankLogo']) && $_POST['bankLogo'] == 'del-logo'){
          	$service_image_id = $_REQUEST['image_id'];
-         	$deleteVal = deleteFromImageService("bank", $bankid, $service_image_id);
+         	$params = array(
+	                        "service_image_id" => $service_image_id,
+	                        "delete" => "yes",
+	                        
+	            );
+         	$postArr = array();
+         	$unitImageArr = array();
+			$unitImageArr['img'] = "";
+    		$unitImageArr['objectId'] = $bankid;
+    		$unitImageArr['objectType'] = "bank";
+			$unitImageArr['params'] = $params;  
+			$postArr[] = $unitImageArr; 
+        	$response 	= writeToImageService( $postArr);
 			$banks->bank_logo = '';
             $banks->service_image_id = 0;
-		 }
-       
+		}
+       	
         
         $banks->save();
         if(empty($Error))

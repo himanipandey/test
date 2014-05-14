@@ -186,7 +186,7 @@
 				</tr>
 				<input type = 'hidden' name = 'imgedit' value = '{$imgedit}'>
 				<input type = 'hidden' name = 'imgSrc' value = '{$imgSrc}'>
-					{if $img != ''}
+					
 				
 				<tr>
 					<td width="20%" align="right" valign = top>Current Image : </td>
@@ -198,7 +198,7 @@
 					</div>
 				  
 				</tr>
-				{/if}
+				
 				<tr {if $builderid == ''} style="display:none" {/if}>
 				  <td width="20%" align="right" ><font color = "red">*</font>Builder Image : </td>
 				  <td width="30%" align="left">

@@ -160,7 +160,7 @@ class ImageServiceUpload{
     }
 
     static function curl_request($post, $method, $url){
-        echo "curl-start:".microtime(true)."<br>";
+        //echo "curl-start:".microtime(true)."<br>";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -175,9 +175,9 @@ class ImageServiceUpload{
         $response_body = json_decode(substr($response, $header_size));
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close ($ch);
-        print("<pre>"); print_r($post); echo $url;//echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
+        //print("<pre>"); print_r($post); echo $url;//echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
         //die();
-        echo "curl-end:".microtime(true)."<br>";
+        //echo "curl-end:".microtime(true)."<br>";
         return array("header" => $response_header, "body" => $response_body, "status" => $status);
     }
 
