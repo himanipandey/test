@@ -150,7 +150,19 @@ if (isset($_POST['Next']))
 				$count++;
 			}				
 		}
-	   
+		//print_r($_REQUEST['txtTowerId']); die();
+	   if($_REQUEST['PType'] == 'Cluster Plan'){
+			$count = 1;
+			while($count <= $_REQUEST['img']){
+				
+				if($_REQUEST['txtTowerId'][$count] == "Select" || $_REQUEST['txtTowerId'][$count] < 0){
+					$ErrorMsg["ptype"] = "Please select a Tower for every Cluster Plan.";
+					
+				}
+				$count++;
+			}				
+		}
+
 	    //checking uniqness display order of elevation images
 	    if($_REQUEST['PType'] == 'Project Image'){
 			$count = 1;
