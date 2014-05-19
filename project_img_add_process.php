@@ -292,7 +292,7 @@ if (isset($_POST['Next']))
                 //unlink($img_path); die();
                 //die();
                 $altText = $BuilderName." ".strtolower($ProjectName)." ".$arrTitle[$key];
-						if ($handle = opendir($tmpDir))
+						if ($handle = opendir($createFolder))
 						{
 								rewinddir($handle);
 								while (false !== ($file = readdir($handle)))

@@ -164,9 +164,10 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         $unitImageArr['newImagePath'] = $newImagePath;
                         $unitImageArr['params'] = $params;  
                         $postArr[] = $unitImageArr; 
+
                         $response   = writeToImageService( $postArr);
                         /**/
-                        print_r($response);
+                        print_r($response);  print_r($postArr); die("here0");
                         foreach ($response as $k => $v) {
                             if(!empty($v->error->msg))
                             {
@@ -484,7 +485,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
     
 
     $serviceResponse   = writeToImageService($postArr);
-    //print'<pre>';   print_r($serviceResponse);//die();    
+    print'<pre>';   print_r($postArr);//die();    
     foreach ($serviceResponse as $k => $v) {
         $image_id = $v->data->id;
             $imgCategory = $postArr[$k]['params']['image_type'];

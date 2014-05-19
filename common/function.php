@@ -131,7 +131,7 @@ function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDispl
     else $insertQuery = "INSERT INTO `locality_image` 
             ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, SERVICE_IMAGE_ID ) 
            VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', $serviceImgId )";
-//echo $insertQuery;
+echo $insertQuery;
     dbExecute( $insertQuery );
     mysql_insert_id();
     return mysql_insert_id();
@@ -296,8 +296,8 @@ function writeToImageService($imageParams){
   // then add them to the multi-handle
 
 
-//print'<pre>';
-            // print_r($postArr);
+print'<pre>';
+             print_r($postArr);
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
     $method = $d['method'];
@@ -324,7 +324,7 @@ function writeToImageService($imageParams){
  
   // get content and remove handles
   foreach($curly as $id => $c) {
-    $response = curl_multi_getcontent($c);
+    $response = curl_multi_getcontent($c);var_dump($response);
     $pos = mb_strpos($response, "{");
     //echo $pos;
     $result[$id] = json_decode(substr($response, $pos));
