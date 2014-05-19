@@ -3,6 +3,7 @@
 include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
+include("modelsConfig.php");
 include("includes/configs/configs.php");
 include("builder_function.php");
 require_once("common/function.php");
@@ -47,6 +48,9 @@ if($_POST['part'] == 'replace-builder') {
         BuilderAlias::insetUpdateBuilderAlias($builderAlias);
         $exeQry = ResiBuilder::updatestatusofbuilder($oldBuilder);
         if($exeQry) {
+			$oldUrl = ResiBuilder::getbuilderurl($oldBuilder);
+			$newUrl = ResiBuilder::getbuilderurl($newBuilder);
+			$action = insertUpdateInRedirectTbl($newUrl[0]->url, $oldUrl[0]->url);
             echo 1;
         }
     }

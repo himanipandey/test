@@ -1,5 +1,5 @@
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/photo.js"></script>
+<!-- script type="text/javascript" src="js/photo.js"></script -->
 <script>
 	function showhide_row(numrow)
 	{

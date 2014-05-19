@@ -29,4 +29,8 @@ class ResiBuilder extends Objects
         $responce =  self::update_all(array('conditions' => array('builder_id' => $builderId), 'set' => "builder_status = 1"));
         return $responce;
     }
+    static function getbuilderurl($builderId) {
+        $responce =  ResiBuilder::find('all',array('conditions'=>array("builder_id = ?",$builderId),"select" => "url")); 
+        return $responce;
+    }
 }
