@@ -438,7 +438,7 @@ function deleteRow(tableID) {
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">News Article:</td>
+                      <td width="20%" align="right" valign="top">Holding Period:</td>
                       <td width="30%" align="left" >
                       <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
                       </td>
