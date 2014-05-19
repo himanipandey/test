@@ -440,13 +440,15 @@ $(document).ready(function(){
 														{/if}
 														{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
 														<div class="taggedDate1">
-															Tower:&nbsp;&nbsp;
+															Tower:<font color = "red">*</font>&nbsp;&nbsp;
 															<select name= "txtTowerId[{$cnt}]" onchange='tower_change({$cnt})' id="tower{$cnt}">
 																<option value="" >--Select Tower--</option>
 																{section name=towerdata loop=$towerDetail}
 																	<option value="{$towerDetail[towerdata].TOWER_ID}" {if $ImageDataListingArr[data].tower_id == $towerDetail[towerdata].TOWER_ID} selected {/if} >{$towerDetail[towerdata].TOWER_NAME}</option>
 																{/section}
+																{if count($towerDetail)<1}
 																	<option value="0" {if $ImageDataListingArr[data].tower_id == "0"} selected {/if}>Other</option>
+																{/if}
 															</select>
 															<br><br>
 															Floor No. From:<font color = "red"></font>&nbsp;&nbsp;<input name="floor_from{$cnt}" type="text" class="formstyle2" id="floor_from{$cnt}" size="10"  onchange="floor_change_from({$cnt})" />	

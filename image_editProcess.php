@@ -1444,6 +1444,7 @@
 
 	            $file = $_FILES['img']['name'][$k];
 	            //$tmp_path = $tmpDir.$file;
+	            $createFolder	=	$newImagePath.$BuilderName."/".strtolower($ProjectName);
 	            $img_path = $createFolder."/".$file;
 	            //echo $tmp_path; echo $img_path.$image_id;// die();
 	            //rename($tmp_path, $img_path);
@@ -1547,16 +1548,29 @@
 					
 					$res	=	mysql_query($qry);
 				}
+
 				if($image_id>0){
-					$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
-								SET 
-									PLAN_IMAGE = '".$dbpath[1]."',
-									TITLE	   = '".$arrTitle[$k]."',
-									".$add_tower."
-									DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',
-									SERVICE_IMAGE_ID   = ".$image_id."
-								WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$_REQUEST['service_image_id'][$k]."'";
-					$res	=	mysql_query($qry); //echo $qry;//die($qry);
+					if($image_id==$_REQUEST['service_image_id'][$k]){
+						$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
+									SET 
+										TITLE	   = '".$arrTitle[$k]."',
+										".$add_tower."
+										DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',
+										SERVICE_IMAGE_ID   = ".$image_id."
+									WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$_REQUEST['service_image_id'][$k]."'";
+						$res	=	mysql_query($qry); 
+					}
+					else{
+						$qry	=	"UPDATE ".PROJECT_PLAN_IMAGES." 
+									SET 
+										PLAN_IMAGE = '".$dbpath[1]."',
+										TITLE	   = '".$arrTitle[$k]."',
+										".$add_tower."
+										DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',
+										SERVICE_IMAGE_ID   = ".$image_id."
+									WHERE PROJECT_ID = '".$projectId."'  AND PLAN_TYPE = '".$_REQUEST['PType'][$k]."' AND SERVICE_IMAGE_ID = '".$_REQUEST['service_image_id'][$k]."'";
+						$res	=	mysql_query($qry); //echo $qry;//die($qry);
+					}
 				}
 				$image_id=0;
 

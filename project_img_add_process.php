@@ -25,6 +25,7 @@
     $towerDetail        =   array();
     $tower_div = "<select name= 'txtTowerId[]' id='tower_dropdown' onchange='tower_change(this)'>";
     $tower_div .="<option value='Select'>--Select Tower--</option>";
+
     foreach($towerDetail_object as $s){
         $s = $s->to_array();
         foreach($s as $key=>$value){
@@ -34,6 +35,7 @@
         }
         $tower_div .="<option value='".$s['TOWER_ID']."' >".$s['TOWER_NAME']."</option>";
     }
+    if(count($towerDetail_object)<1)
     $tower_div .= "<option value='0'>Other</option>";
     $tower_div .= "</select>";
     $smarty->assign("towerDetailDiv", $tower_div);
@@ -78,8 +80,8 @@ if (isset($_POST['Next']))
 	$arrTaggedDate = array();
 	$arrTowerId = array();
 	$arrDisplayOrder = array();
-	//print("<pre>");
-	//print_r($_FILES['txtlocationplan']);
+	print("<pre>");
+	print_r($_FILES['txtlocationplan']);
 	 //echo "start:".microtime(true)."<br>";
 	  	foreach($_FILES['txtlocationplan']['name'] as $k=>$v)
 		{
