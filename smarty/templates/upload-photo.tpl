@@ -74,6 +74,19 @@
                                     </td>
                                 </tr>
                                 
+                                
+                                <tr>
+                                    <td width="200px">
+                                        <label class="lbl"> Search a Landmark </label>
+                                    <div class="ui-widget">
+                                        <input type="hidden" name="upImg" value="1">
+                                        <input type="hidden" name="landmarkId"  id = "landmarkId">
+                                        <input type="hidden" name="landmarkName"  id = "landmarkName">
+                                        <input id="search" onchange="areaTypeChanged('landmark')"></td></div>
+                                        <input type="hidden" id="imgName" name="imgDisplayName">
+                                    
+                                    
+                                </tr>
                                 <tr>
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
@@ -87,19 +100,6 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td width="200px">
-                                        <label class="lbl"> Search a Landmark </label>
-                                    <div class="ui-widget">
-                                        <input type="hidden" name="upImg" value="1">
-                                        <input type="hidden" name="landmarkId"  id = "landmarkId">
-                                        <input type="hidden" name="landmarkName"  id = "landmarkName">
-                                        <input id="search" onchange="areaTypeChanged('landmark')"></td></div>
-                                        <input type="hidden" id="imgName" name="imgDisplayName">
-                                    
-                                    
-                                </tr>
-
                                 
                                  <tr>
                                     <td>
