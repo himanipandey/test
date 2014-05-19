@@ -299,8 +299,8 @@ function validateThisImg( img ) {
     for( var i = 0; i < img.files.length; i++ ) {
         var f = img.files[i];
         if ( /^image/.test(f.type ) ) {
-            if (f.size > 5242880 ) {
-                alert('images size must be less than 5MB');
+            if (f.size > 6291456 ) {
+                alert('images size must be less than 6MB');
                 return false;
             }
         }
