@@ -49,9 +49,10 @@ class ImageUpload{
 
     function upload(){
         $this->validate();
-        //$s3_object = $this->upload_s3();
-        $service_object = $this->upload_service();
-        return array("service" => $service_object);
+       
+        //$service_object = $this->upload_service();
+        //return array("service" => $service_object);
+        return $this->upload_service();
     }
 
     function update(){
@@ -59,28 +60,35 @@ class ImageUpload{
         $options = $this->options;
         //$s3_object = $this->upload_s3();
         //print'<pre>';print_r($options); 
-        if($options["service_image_id"])
+       /*if($options["service_image_id"])
             $service_object = $this->update_service();
         else{
             $service_object = $this->upload_service();
 
         }
-        return array("service" => $service_object);
+        return array("service" => $service_object);*/
+        if($options["service_image_id"])
+            return  $this->update_service();
+        else{
+            return  $this->upload_service();
+
+        }
+        
     }
 
     function updateWithoutImage(){
         $options = $this->options;
         $service_object = array();
         if($options["service_image_id"])
-            $service_object = $this->update_service_without_image();
-        return array("service" => $service_object);
+            return $this->update_service_without_image();
+        //return array("service" => $service_object);
     }
     function delete(){
         $options = $this->options;
         $service_object = array();
         if($options["service_image_id"])
-            $service_object = $this->delete_service();
-        return array("service" => $service_object);
+             return $this->delete_service();
+        //return array("service" => $service_object);
     }
 
 
@@ -148,7 +156,12 @@ class ImageUpload{
         if(array_key_exists("service_image_id", $options)) $image_id = $options["service_image_id"];
 
         $service_object = new ImageServiceUpload($this->image, $object, $object_id, $image_type,  $extra_params, $request_type, $image_id);
-        $service_object->upload();
-        return $service_object;
+        $returnArr = array();
+        $returnArr = $service_object->upload();
+
+          
+         //print'<pre>'; print_r($returnArr); die();
+        return $returnArr;
+        //return $service_object;
     }
 }
