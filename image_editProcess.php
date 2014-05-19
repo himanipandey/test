@@ -150,6 +150,15 @@
 				}
 				if($_REQUEST['PType'][$k] == "Construction Status" && trim($_REQUEST['img_date'.$k]) =='')
 						$ErrorMsg["tagged_date"] = "Please select Tagged Date."; 
+					
+				if($_REQUEST['PType'][$k] == 'Cluster Plan'){
+
+					if($_REQUEST['txtTowerId'][$k] == "" || $_REQUEST['txtTowerId'][$k] < 0){
+						$ErrorMsg["cluster"] = "Please select a Tower for every Cluster Plan.";
+						
+					}
+				}
+
 
 			}
 
@@ -160,7 +169,9 @@
 	{
 	  $ErrorMsg["projectId"] = "Please select Project name.";
 	}
+
 	
+
 
 	$source=array();
 	$dest=array();

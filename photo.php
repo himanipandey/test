@@ -166,6 +166,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
                         $postArr[] = $unitImageArr; 
                         $response   = writeToImageService( $postArr);
                         /**/
+                        print_r($response);
                         foreach ($response as $k => $v) {
                             if(!empty($v->error->msg))
                             {
