@@ -230,7 +230,7 @@ function deleteRow(tableID) {
                     <tbody id='fundrais' style="display:none" align="left">
                     
                     <tr>
-                      <td width="10%" align="right" >*Private Equity Name : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="40%" height="25" align="left" valign="top">
                                     <select id="companyTypeEdit" name="companyEdit" >
                                        <option value=''>select place type</option>
@@ -243,13 +243,13 @@ function deleteRow(tableID) {
                     </tr>
 
                     <tr>
-                      <td width="10%" align="right" >Value : </td>
+                      <td width="10%" align="right" >Value (Rs): </td>
                       <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">News Article :</td>
+                      <td width="20%" align="right" valign="top">News Article:</td>
                       <td width="30%" align="left" >
                       <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
                       </td>
@@ -257,7 +257,7 @@ function deleteRow(tableID) {
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">Date of Transaction 1:</td>
+                      <td width="20%" align="right" valign="top"><font color = "red">*</font>Date of Transaction1:</td>
                       <td width="30%" align="left" >
                       <input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td>
                       </td>
@@ -267,7 +267,7 @@ function deleteRow(tableID) {
 
                     <tbody id='investment' style="display:none" align="left">
                         <tr>
-                      <td width="10%" align="right" >*Private Equity Name : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="companyTypeEdit" name="companyEdit" >
                                        <option value=''>select place type</option>
@@ -279,7 +279,7 @@ function deleteRow(tableID) {
                         <td width="40%" align="left" id="errmsgplacetype"></td>
                     </tr>
                     <tr>
-                      <td width="10%" align="right" >*Builder : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="companyTypeEdit" name="companyEdit" >
                                        <option value=''>select place type</option>
@@ -291,7 +291,7 @@ function deleteRow(tableID) {
                         <td width="40%" align="left" id="errmsgplacetype"></td>
                     </tr>
                     <tr>
-                      <td width="10%" align="right" >No of Project : </td>
+                      <td width="10%" align="right" >No of Project: </td>
                       <td width="20%" height="25" align="left" valign="top">
                     <select name="img" onchange="refreshProject(this.value);">
               
@@ -312,7 +312,7 @@ function deleteRow(tableID) {
                       <td colspan="3" >
                       <table id="projects" width = "100%">
                       <tr>
-                      <td width="15%" align="right" >Project : </td>
+                      <td width="15%" align="right" >Project: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="project_0" name="project[]" >
                                        <option value=''>select place type</option>
@@ -327,13 +327,13 @@ function deleteRow(tableID) {
                   </td>
                   </tr>
                     <tr>
-                      <td width="10%" align="right" >Value : </td>
+                      <td width="10%" align="right" >Value of Investment (Rs): </td>
                       <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">News Article :</td>
+                      <td width="20%" align="right" valign="top">News Article:</td>
                       <td width="30%" align="left" >
                       <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
                       </td>
@@ -341,7 +341,7 @@ function deleteRow(tableID) {
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">Date of Transaction 2:</td>
+                      <td width="20%" align="right" valign="top"><font color = "red">*</font>Date of Transaction:</td>
                       <td width="30%" align="left" >
                       <input name="img_date2" type="text" class="formstyle2" id="img_date2" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger2" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td>
                       </td>
@@ -351,7 +351,7 @@ function deleteRow(tableID) {
 
                        <tbody id='exit' style="display:none" align="left">
                         <tr>
-                      <td width="10%" align="right" >*Private Equity Name : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="companyTypeEdit" name="companyEdit" >
                                         {foreach from=$peList key=k item=v}
@@ -361,15 +361,68 @@ function deleteRow(tableID) {
                                 </td>
                         <td width="40%" align="left" id="errmsgplacetype"></td>
                     </tr>
-
                     <tr>
-                      <td width="10%" align="right" >Value : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
+                        <td width="20%" height="25" align="left" valign="top">
+                                    <select id="companyTypeEdit" name="companyEdit" >
+                                       <option value=''>select place type</option>
+                                       {foreach from=$builderList key=k item=v}
+                                              <option value="{$k}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                    </tr>
+                    <tr>
+                      <td width="10%" align="right" >No of Project: </td>
+                      <td width="20%" height="25" align="left" valign="top">
+                    <select name="img" onchange="refreshProject(this.value);">
+              
+                     <option {if $img == 1} value="1" selected="selected"{else} value="1" {/if}>1</option>
+                     <option {if $img == 2} value="2" selected="selected"{else} value="2" {/if}>2</option> 
+                     <option {if $img == 3} value="3" selected="selected"{else} value="3" {/if}>3</option> 
+                     <option {if $img == 4} value="4" selected="selected"{else} value="4" {/if}>4</option> 
+                      <option {if $img == 5} value="5" selected="selected"{else} value="5" {/if}>5</option> 
+                     <option {if $img == 6} value="6" selected="selected"{else} value="6" {/if}>6</option> 
+                     <option {if $img == 7} value="7" selected="selected"{else} value="7" {/if}>7</option> 
+                      <option {if $img == 8} value="8" selected="selected"{else} value="8" {/if}>8</option> 
+                     <option {if $img == 9} value="9" selected="selected"{else} value="9" {/if}>9</option> 
+                     <option {if $img == 10} value="10" selected="selected"{else} value="10" {/if}>10</option>
+                    </select></td>
+                    </tr>
+                  
+                    <tr>
+                      <td colspan="3" >
+                      <table id="projects" width = "100%">
+                      <tr>
+                      <td width="15%" align="right" >Project: </td>
+                        <td width="20%" height="25" align="left" valign="top">
+                                    <select id="project_0" name="project[]" >
+                                       <option value=''>select place type</option>
+                                       {foreach from=$comptype key=k item=v}
+                                              <option value="{$v}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                    </tr>
+                    </table>
+                  </td>
+                  </tr>
+                    <tr>
+                      <td width="10%" align="right" >Value of Exit (Rs): </td>
                       <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">News Article :</td>
+                      <td width="10%" align="right" >Value of Investment (Rs): </td>
+                      <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td><input type="hidden", id="placeTypeHidden"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" valign="top">News Article:</td>
                       <td width="30%" align="left" >
                       <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
                       </td>
@@ -377,9 +430,17 @@ function deleteRow(tableID) {
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">Date of Transaction 3:</td>
+                      <td width="20%" align="right" valign="top"><font color = "red">*</font>Date of Transaction:</td>
                       <td width="30%" align="left" >
                       <input name="img_date3" type="text" class="formstyle2" id="img_date3" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger3" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td>
+                      </td>
+                      <td><input type="hidden", id="lmkid">  </td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" valign="top">News Article:</td>
+                      <td width="30%" align="left" >
+                      <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
                       </td>
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
