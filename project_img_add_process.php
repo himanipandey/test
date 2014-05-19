@@ -80,8 +80,8 @@ if (isset($_POST['Next']))
 	$arrTaggedDate = array();
 	$arrTowerId = array();
 	$arrDisplayOrder = array();
-	print("<pre>");
-	print_r($_FILES['txtlocationplan']);
+	//print("<pre>");
+	//print_r($_FILES['txtlocationplan']);
 	 //echo "start:".microtime(true)."<br>";
 	  	foreach($_FILES['txtlocationplan']['name'] as $k=>$v)
 		{
@@ -253,8 +253,8 @@ if (isset($_POST['Next']))
 				}
 				$tmp_path = $tmpDir.$val;
 				//echo $sorce;
-				//$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $img_path);
-				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $tmp_path);
+				$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $img_path);
+				//$txtlocationplan 	= move_uploaded_file($_FILES["txtlocationplan"]["tmp_name"][$key], $tmp_path);
 				
 				/*$files = glob($tmpDir.'*'); // get all file names
 				foreach($files as $file){ // iterate files
@@ -314,7 +314,7 @@ if (isset($_POST['Next']))
 
 											$params = array(
 						                        "image_type" => "location_plan",
-						                        "folder" => "tmp/",//$extra_path,
+						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "location_plan".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -424,7 +424,7 @@ if (isset($_POST['Next']))
 
 											$params = array(
 						                        "image_type" => "layout_plan",
-						                        "folder" =>  "tmp/",//$extra_path,
+						                       "folder" => $extra_path, //"tmp/",
 						                        "count" => "layout_plan".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -526,7 +526,7 @@ if (isset($_POST['Next']))
 
 											$params = array(
 						                        "image_type" => "site_plan",
-						                        "folder" => "tmp/",//$extra_path,
+						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "site_plan".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -632,7 +632,7 @@ if (isset($_POST['Next']))
                                             
 											$params = array(
 						                        "image_type" => "master_plan",
-						                        "folder" => "tmp/",//$extra_path,
+						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "master_plan".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -738,7 +738,7 @@ if (isset($_POST['Next']))
                                             	$altText = $BuilderName." ".strtolower($ProjectName)." Cluster Plan";
 											$params = array(
 						                        "image_type" => "cluster_plan",
-						                        "folder" => "tmp/",//$extra_path,
+						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "cluster_plan".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -843,7 +843,7 @@ if (isset($_POST['Next']))
                                         
 										$params = array(
 						                        "image_type" => "construction_status",
-						                        "folder" => "tmp/",//$extra_path,
+						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "construction_status".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -962,7 +962,7 @@ if (isset($_POST['Next']))
                                         
 										$params = array(
 						                        "image_type" => "payment_plan",
-						                        "folder" => "tmp/",//$extra_path,
+						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "payment_plan".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -1329,7 +1329,7 @@ if (isset($_POST['Next']))
                                            
 											$params = array(
 						                        "image_type" => "project_image",
-						                        "folder" => "tmp/",//$extra_path,
+						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "project_image".$key,
 						                        "image" => $file,
 						                        "priority" => $arrDisplayOrder[$key],
@@ -1560,8 +1560,8 @@ if (isset($_POST['Next']))
 	            $tmp_path = $tmpDir.$file;
 	            $img_path = $createFolder."/".$file;
 	            //echo $tmp_path; echo $img_path.$image_id;// die();
-	            rename($tmp_path, $img_path);
-	            unlink($tmp_path);
+	            //rename($tmp_path, $img_path);
+	            //unlink($tmp_path);
 	            $f = $fileEndName[$k];
 	            $image = new SimpleImage();
 				$path	=	$createFolder."/".$file;
