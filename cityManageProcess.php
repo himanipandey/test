@@ -50,7 +50,10 @@
      * *******************
      **/
      $cityDataArr = array();
-    if ($_GET['sort'] == "1") {
+    if($_REQUEST['cityUrl']!=''){
+        $QueryMember = "Select * FROM ".CITY." WHERE URL = '".$_REQUEST['cityUrl']."' ORDER BY CITY_ID DESC";
+    }
+    else if ($_GET['sort'] == "1") {
         $QueryMember = "Select * FROM ".CITY." WHERE LABEL BETWEEN '0' AND '9'  ORDER BY CITY_ID DESC";
     } else if ($_GET['sort'] == "all") {
         $QueryMember = "Select * FROM ".CITY." WHERE 1  ORDER BY CITY_ID DESC";
@@ -100,6 +103,7 @@
 
     $smarty->assign("Pagginnation", $Pagginnation);
     $smarty->assign("Sorting", $Sorting);
+    $smarty->assign("cityUrl", $_REQUEST['cityUrl']);
    $statusArray = array("0"=>"Inactive","1"=>"Active"); 
    $smarty->assign("statusArray", $statusArray);
 

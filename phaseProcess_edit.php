@@ -177,22 +177,24 @@ if (isset($_POST['btnSave'])) {
             if( $retdt <= 0 ) {
                 $error_msg = "Launch date to be always greater than Pre Launch date";
             }
+            
         } 
-        if( $launch_date != '') {
+        if( $launch_date != '' && $_REQUEST['phaseName'] == 'No Phase') {
             $retdt  = ((strtotime($launch_date) - strtotime(date('Y-m-d'))) / (60*60*24));
             if( $retdt > 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
+           /* if($pre_launch_date == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launch_date) || checkListingPricesDate($projectId, $launch_date))) {
+                $error_msg  .= " Inventory or Prices with effective date before {$launch_date} are present. So can not change the Launch Date.";
+            }*/
           }
          if($sold_out_date != ''){
-			$retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
+	    $retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
             if( $retdt <= 0 || $launch_date=='') {
                 $error_msg = "Sold out date to be always greater than Launch date";
-            } 			 
-			 
-		 }
+            } 			 		 
+        }
          
-     
             // Flats Config
             $flats_config = array();
             foreach ($_REQUEST as $key => $value) {
@@ -219,11 +221,11 @@ if (isset($_POST['btnSave'])) {
                 }
             }
             
-         if ($_POST['plotvilla'] != '') { 
+         if ($_POST['plotvilla'] != '' && !isset($_POST['options'])) { 
 			 if($_POST['supply'] < $_POST['launched'])
 						$error_msg = "Supply Unit must be greater than Launched Unit.";
             if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
-                    $error_msg = "Launched Unit must be greater than Availability.";
+                   $error_msg = "Launched Unit must be greater than Availability.";
 		 }
 		 				
          if( $error_msg == '' ){
@@ -289,7 +291,6 @@ if (isset($_POST['btnSave'])) {
                     join project_supplies ps on (l.id = ps.listing_id and ps.version = 'Cms')
                     where rpo.option_type =  'plot' and l.phase_id = $phaseId order by l.id desc";
                     $resPlotCase = mysql_query($qryPlotCase);
-                    echo mysql_num_rows($resPlotCase);
                     $dataPlotcase = mysql_fetch_assoc($resPlotCase);
                     if(($_POST['launched'] == '' || $_POST['launched'] == 0) && mysql_num_rows($resPlotCase)>0) {
                         $_POST['launched'] = $dataPlotcase['launched'];
@@ -339,6 +340,4 @@ if (isset($_POST['btnSave'])) {
     else
         header("Location:ProjectList.php?projectId=" . $projectId);
 }
-
-/* * *********************************** */
 ?>

@@ -8,6 +8,8 @@
  
  <SCRIPT language=Javascript>
      
+
+
       function isNumberKey(evt)
       {
          var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -19,7 +21,51 @@
          return true;
       }
       
-      
+    function onSelectOption(c){
+      	$("#floor_name_"+c+" option").each(function() {
+		    $(this).remove();
+		});
+      	value = $("#options_"+c+" option:selected").text().trim();
+      	
+      	$('<option>').val("0").text("Select Floor Plan Name").appendTo('#floor_name_'+c);
+      	if(value == "Floor Plan" || value == "Simplex"){
+      		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
+      	}
+      	else if(value == "Basement Floor" || value == "Stilt Floor" || value == "First Floor" || value == "Second Floor"|| value == "Third Floor" || value == "Terrace Floor" )
+      		$('<option>').val(value+" Plan").text(value+" Plan").appendTo('#floor_name_'+c);
+      	else if(value== "Duplex"){
+      		{foreach from=$duplex item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	else if(value== "Triplex"){
+      		{foreach from=$triplex item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	else if(value== "Penthouse"){
+      		{foreach from=$penthouse item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+      	else if(value== "Ground Floor"){
+      		{foreach from=$ground_floor item=data}
+				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
+			{/foreach}
+      	}
+
+      	$("#floor_name_"+c+" option").each(function() {
+      		var str = $("#uploaded_"+c).val();
+      		//alert(str);
+      		if (str.indexOf($(this).text()) >= 0)
+		    	$(this).attr("disabled", true);
+		});
+      	
+      	//$('<option>').val(imgName1).text(imgName1).appendTo('#floor_name_'+c);
+      	//$('<option>').val(imgName2).text(imgName2).appendTo('#floor_name_'+c);
+    }
+
+
    /* function showHideDiv(divid,ctrl)
     {
       //alert(divid);
@@ -105,6 +151,7 @@
 				  <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
 				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Unit Type</td>
+				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Floor Plan Options</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt><font color="red">*</font>Floor Plan Name</td>
 			
 				   <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color="red">*</font>Image <span style = "font-size:10px">(image name must content floor-plan)</span></td>
@@ -134,14 +181,33 @@
 				  
 				  <td>
 						  <input type='hidden' value='{$projectId}' name='projectId' />
-						{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_NAME']}
-						<input type="hidden" name = "option_id[]" value = "{$ProjectOptionDetail[$smarty.section.foo.index]['OPTIONS_ID']}">		  
+						{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_NAME']}
+						<input type="hidden" name = "option_id[]" value = "{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_ID']}">		  
 				  
 				  </td>
 				 
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}</td>
-				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['OPTION_TYPE']}</td>
-				  <td><input type = "text" name = "floor_name[]"</td>
+				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_TYPE']}</td>
+				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
+				  <td><select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
+				  	<Option value="0">Select Floor Plan Options</Option>
+				  	
+					   {foreach from=$floorPlanOptionsArr[$smarty.section.foo.index] item=data}
+					   		<Option >{$data}</Option>
+					   {/foreach}
+				  </select></td>
+				  
+				  	<td><select name = "floor_name[]" id = "floor_name_{($smarty.section.foo.index+1)}" width="60px">
+				  		<Option value="0">Select Floor Plan Name</Option>
+				  	</select></td>
+				  	<input type = "hidden" id = "uploaded_{($smarty.section.foo.index+1)}" value="{$uploadedStr[$smarty.section.foo.index]}">
+				  {else}
+				  <td></td>
+				  	<td><input type = "text" name = "floor_name[]"   {if $plot[$smarty.section.foo.index] == 'yes'} 
+				  		{elseif $commercial[$smarty.section.foo.index] == 'yes'} {/if}>
+				  	</td>
+				  {/if}
+				  
 					
 				  <td><input type = "file" name = "imgurl[]"></td> 
 

@@ -4,13 +4,8 @@ $google_api_conf = <<<JSON
 		"default":
 		{
 			"radius":"",
-			"numberofresults":20,
+			"numberofresults":60,
 			"language":"en",
-			"opennow":"false",
-			"minprice":0,
-			"maxprice":4,
-			"name":"",
-			"keyword":"",
 			"details_request":0,
 			"rankby":"distance"
 		},
@@ -20,7 +15,14 @@ $google_api_conf = <<<JSON
 			{
 			
 			}
-		}			
+		},	
+		"project_id":
+		{
+			"1":
+			{
+			
+			}
+		}		
 	}	
 JSON;
 ?>

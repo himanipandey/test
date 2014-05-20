@@ -80,7 +80,7 @@ function chkConfirm()
                           <TD align="left" class="td-border" valign = "top">
                         		                        	
                         	
-                        	<img src = {$imgDisplayPath}/bank_list/{$projecttower[data].BANK_LOGO} width ="100px" height = "100px;">
+                        	<img src = "{$image_path[data]}"  width ="100px" height = "100px;" alt = "{$image_alt[data]}">
                         	
                          </TD>
                         <TD align="left" class="td-border"  valign = "top">{nl2br($projecttower[data].BANK_DETAIL)}</TD>

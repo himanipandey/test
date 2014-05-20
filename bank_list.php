@@ -4,6 +4,8 @@
 	include("dbConfig.php");
 	include("includes/configs/configs.php");
 	include("builder_function.php");
+	//require_once("common/function.php");
+	include("imageService/image_upload.php");
 	AdminAuthentication();
 	    
 	include('bank_list_proc.php');
