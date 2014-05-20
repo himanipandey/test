@@ -155,7 +155,7 @@
 				   {if $txtBuilderDescription != ''}
                                       <input type="hidden" name="txtOldBuilderDescription" value="yes" />
                                    {else} 
-                                       <input type="hidden" name="txtOldBuilderDescription" value="0" />
+                                       <input type="hidden" name="txtOldBuilderDescription" value="" />
                                    {/if}
 				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>

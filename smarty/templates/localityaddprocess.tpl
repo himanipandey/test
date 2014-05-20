@@ -77,7 +77,7 @@
 				   {if $desc != ''}
                                       <input type="hidden" name="oldDesc" value="yes" />
                                   {else}
-                                      <input type="hidden" name="oldDesc" value="no" />
+                                      <input type="hidden" name="oldDesc" value="" />
                                   {/if}
 				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>
