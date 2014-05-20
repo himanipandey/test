@@ -112,7 +112,12 @@ function selectDeal(id){
 }
 
 function refreshProject(no){
-  var table = document.getElementById("projects");
+  var val = $("#deal option:selected").val();
+  if (val==2)
+    var tableId = "invest_proj";
+  else if(val==3)
+    var tableId = "exit_proj";
+  var table = document.getElementById(tableId);
   //var old_no = parseInt($("#projects").rows.length);
   var old_no = parseInt(table.rows.length);
   var new_no = parseInt(no);
@@ -120,20 +125,57 @@ function refreshProject(no){
   console.log(new_no);
   if(new_no > old_no){
     for(old_no; old_no < new_no; old_no++){
-      addRow("projects");
+      addRow(tableId);
     }
   }
   else if(new_no < old_no){
     for(old_no; old_no>new_no; old_no--){
-      deleteRow("projects");
+      deleteRow(tableId);
     }
   }
-  
+}
 
+function builderChanged(id){
+  var val = $("#deal option:selected").val();
+  if (val==2){
+    var nodropdwn = "invest_proj_no";
+    var projId = "invest_proj_";
+    var sel = $("#"+projId+"0");
+  }
+  else if(val==3){
+    var nodropdwn = "exit_proj_no";
+    var projId = "exit_proj_";
+    var sel = $("#"+projId+"0");
+  }
+  var builderId = $("#"+id+" option:selected").val();
+   $.ajax({
+              type: "POST",
+              url: '/savePrivateEquity.php',
+              data: { builder_id:builderId},
+              success:function(msg){
+                var d = jQuery.parseJSON(msg);
+                  console.log(d);//d = parseJSON(msg);     
+                  $("#"+nodropdwn+" option:selected").text("1");
+                  refreshProject(1);
+                  sel.empty();
+                  $.map(d, function (v) {
+                     $('<option>').val(v.id).text(v.name).appendTo(sel);
+                  });
+                  //for (var i=0; i<msg.length; i++) {
+                    //sel.append('<option value="' + d[i].id + '">' + d[i].name + '</option>');
+                  //}
+              },
+          });
 }
 
 function addRow(tableID) {
- 
+            var val = $("#deal option:selected").val();
+  if (val==2){
+    var fieldId = "invest_proj";
+  }
+  else if(val==3){
+    var  fieldId = "exit_proj";
+  }
             var table = document.getElementById(tableID);
  
             var rowCount = table.rows.length;
@@ -147,10 +189,10 @@ function addRow(tableID) {
             var cell2 = row.insertCell(1);
             var element2 = document.createElement("select");
            
-            element2.id="project_"+rowCount;
-            element2.name ="project[]";
+            element2.id=fieldId+"_"+rowCount;
+            element2.name =fieldId+"[]";
 
-            var $options = $("#project_0 > option").clone();
+            var $options = $("#"+fieldId+"_0 > option").clone();
             $options.appendTo(element2);
             
             cell2.appendChild(element2);
@@ -161,18 +203,10 @@ function deleteRow(tableID) {
             try {
             var table = document.getElementById(tableID);
             var rowCount = table.rows.length;
- 
-            for(var i=0; i<rowCount; i++) {
-                var row = table.rows[i];
-                var chkbox = row.cells[0].childNodes[0];
-                if(null != chkbox && true == chkbox.checked) {
-                    table.deleteRow(i);
-                    rowCount--;
-                    i--;
-                }
+             table.deleteRow(rowCount-1);
+               
  
  
-            }
             }catch(e) {
                 alert(e);
             }
@@ -281,7 +315,7 @@ function deleteRow(tableID) {
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="companyTypeEdit" name="companyEdit" >
+                                    <select id="investBuilderEdit" name="investBuilderEdit" onchange = "builderChanged(this.id)">
                                        <option value=''>select place type</option>
                                        {foreach from=$builderList key=k item=v}
                                               <option value="{$k}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
@@ -293,32 +327,30 @@ function deleteRow(tableID) {
                     <tr>
                       <td width="10%" align="right" >No of Project: </td>
                       <td width="20%" height="25" align="left" valign="top">
-                    <select name="img" onchange="refreshProject(this.value);">
+                    <select name="invest_proj_no" id="invest_proj_no" onchange="refreshProject(this.value);">
               
-                     <option {if $img == 1} value="1" selected="selected"{else} value="1" {/if}>1</option>
-                     <option {if $img == 2} value="2" selected="selected"{else} value="2" {/if}>2</option> 
-                     <option {if $img == 3} value="3" selected="selected"{else} value="3" {/if}>3</option> 
-                     <option {if $img == 4} value="4" selected="selected"{else} value="4" {/if}>4</option> 
-                      <option {if $img == 5} value="5" selected="selected"{else} value="5" {/if}>5</option> 
-                     <option {if $img == 6} value="6" selected="selected"{else} value="6" {/if}>6</option> 
-                     <option {if $img == 7} value="7" selected="selected"{else} value="7" {/if}>7</option> 
-                      <option {if $img == 8} value="8" selected="selected"{else} value="8" {/if}>8</option> 
-                     <option {if $img == 9} value="9" selected="selected"{else} value="9" {/if}>9</option> 
-                     <option {if $img == 10} value="10" selected="selected"{else} value="10" {/if}>10</option>
+                     <option  value="1" {if $v=="ert"} selected="selected"{else} value="1" {/if}>1</option>
+                     <option  value="2" {if $v=="ert"} selected="selected"{else} value="2" {/if}>2</option> 
+                     <option  value="3" {if $v=="ert"} selected="selected"{else} value="3" {/if}>3</option> 
+                     <option value="4" {if $v=="ert"} selected="selected"{else} value="4" {/if}>4</option> 
+                      <option  value="5" {if $v=="ert"} selected="selected"{else} value="5" {/if}>5</option> 
+                     <option  value="6" {if $v=="ert"} selected="selected"{else} value="6" {/if}>6</option> 
+                     <option value="7" {if $v=="ert"} selected="selected"{else} value="7" {/if}>7</option> 
+                      <option  value="8" {if $v=="ert"} selected="selected"{else} value="8" {/if}>8</option> 
+                     <option  value="9" {if $v=="ert"} selected="selected"{else} value="9" {/if}>9</option> 
+                     <option  value="10" {if $v=="ert"} selected="selected"{else} value="10" {/if}>10</option>
                     </select></td>
                     </tr>
                   
                     <tr>
                       <td colspan="3" >
-                      <table id="projects" width = "100%">
+                      <table id="invest_proj" width = "100%">
                       <tr>
                       <td width="15%" align="right" >Project: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="project_0" name="project[]" >
+                                    <select id="invest_proj_0" name="invest_proj[]" >
                                        <option value=''>select place type</option>
-                                       {foreach from=$comptype key=k item=v}
-                                              <option value="{$v}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
-                                       {/foreach}
+                                       
                                     </select>
                                 </td>
                         <td width="40%" align="left" id="errmsgplacetype"></td>
@@ -364,7 +396,7 @@ function deleteRow(tableID) {
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="companyTypeEdit" name="companyEdit" >
+                                    <select id="exitBuilderEdit" name="exitBuilderEdit" onchange = "builderChanged(this.id)">
                                        <option value=''>select place type</option>
                                        {foreach from=$builderList key=k item=v}
                                               <option value="{$k}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
@@ -376,7 +408,7 @@ function deleteRow(tableID) {
                     <tr>
                       <td width="10%" align="right" >No of Project: </td>
                       <td width="20%" height="25" align="left" valign="top">
-                    <select name="img" onchange="refreshProject(this.value);">
+                    <select name="exit_proj_no" id="exit_proj_no" onchange="refreshProject(this.value);">
               
                      <option {if $img == 1} value="1" selected="selected"{else} value="1" {/if}>1</option>
                      <option {if $img == 2} value="2" selected="selected"{else} value="2" {/if}>2</option> 
@@ -393,15 +425,13 @@ function deleteRow(tableID) {
                   
                     <tr>
                       <td colspan="3" >
-                      <table id="projects" width = "100%">
+                      <table id="exit_proj" width = "100%">
                       <tr>
                       <td width="15%" align="right" >Project: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="project_0" name="project[]" >
+                                    <select id="exitProjEdit" name="exitProjEdit" >
                                        <option value=''>select place type</option>
-                                       {foreach from=$comptype key=k item=v}
-                                              <option value="{$v}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
-                                       {/foreach}
+                                       
                                     </select>
                                 </td>
                         <td width="40%" align="left" id="errmsgplacetype"></td>
