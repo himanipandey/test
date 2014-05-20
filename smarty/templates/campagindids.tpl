@@ -33,7 +33,7 @@
 			            <div>
                                    {if $errorCampaign != ''}
 									  <tr bgcolor = '#F7F7F7'>
-										<td align ="left" valign ="top" colspan="3"  style = "padding-left:310px;">
+										<td align ="left" valign ="top" colspan="3"  style = "padding-left:310px;color:#db0306">
 										  {$errorCampaign}
 										</td>
 									  </tr>
