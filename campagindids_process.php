@@ -19,9 +19,18 @@
                         'updated_by'=>$_SESSION['adminId'],                        
                     );	
 	}
+	
+	$campaign = CampaignDids::find_by_campaign_did($campaign_did);
+	
+	if($_POST['btnSave'] == 'Save' && $campaign){
+	  $errorCampaign = "DID already exist!";		
+    }	
+    if($_POST['btnSave'] == 'Update' && $campaign){
+	  if($campaign->id != $_GET['v'])	
+	    $errorCampaign = "DID already exist!";
+    }	
   
-    if($_POST['btnSave'] == 'Save'){
-		        
+    if($_POST['btnSave'] == 'Save' && empty($errorCampaign)){			        
         CampaignDids::transaction(function(){
 			global $attributes,$errorCampaign;
 			$res = CampaignDids::create($attributes);	
@@ -36,10 +45,12 @@
 		      $errorCampaign = "<font color = 'red'>Problem in saving Campaign DID please try again!</font>";
 		});
 		
-	}elseif($_POST['btnSave'] == 'Update'){
+	}elseif($_POST['btnSave'] == 'Update'  && empty($errorCampaign)){
+	  unset($attributes['created_at']);
 	  $campaign = CampaignDids::find($_GET['v']);
       if(!empty($campaign)){
 		$res = $campaign->update_attributes($attributes);
+		//print "<pre>".print_r($res,1)."</pre>"; die;
 		header("Location:campagindids.php");
 	  }else
 	    $errorCampaign = "<font color = 'red'>Problem in Updating Campaign DID please try again!</font>"; 
