@@ -74,7 +74,11 @@
 				<tr>
                                     <td width="20%" align="right" valign = top ><b>Description  :</b> </td>
 				  <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' class ="myTextEditor" cols = "35" rows = "10" style="width:250px;">{$desc}</textarea>
-				   <input type="hidden" name="oldDesc" value="{$desc}" />
+				   {if $desc != ''}
+                                      <input type="hidden" name="oldDesc" value="yes" />
+                                  {else}
+                                      <input type="hidden" name="oldDesc" value="no" />
+                                  {/if}
 				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>
                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
