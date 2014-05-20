@@ -11,6 +11,7 @@ class CampaignDids extends ActiveRecord\Model{
     static function allCampaign(){
 	  $all_campaign = CampaignDids::all();
 	  $arrCampaign = array();
+	  $arrCampaign[] = "Select Campaign";
 	  foreach($all_campaign as $key=>$val){
 		$arrCampaign[] = $val->campaign_name; 
 	  }		
