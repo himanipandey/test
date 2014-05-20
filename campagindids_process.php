@@ -9,8 +9,8 @@
 
     $errorCampaign = '';
     if(isset($_POST)){	  
-		$campaign_name = $_POST['campName'];
-		$campaign_did = $_POST['campDid'];
+		$campaign_name = trim($_POST['campName']);
+		$campaign_did = trim($_POST['campDid']);
 		
 		$attributes= array(
                         'campaign_name'=>$campaign_name, 
