@@ -1,6 +1,6 @@
 <link href="css/css.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="js/jquery.js"></script>
-<table align="center" style = "border:1px solid;" width = "650px" height ="80px">
+<table align="center" style = "border:1px solid;" width = "800px" height ="80px">
     <tr bgcolor ="#c2c2c2" height="30px">
         <td colspan="7" align = "center"><b>Project Old Comments of {ucwords($ProjectDetail[0]['PROJECT_NAME'])}</b></td>
     </tr>
@@ -15,7 +15,7 @@
         
         <td colspan="7" align = "center">
            <form method="post">
-               <b> Comment Type:</b> 
+               <b> Type:</b> 
                 <select name = "commentType">
                     <option value="">Select Type</option>
                     <option value="Project" {if $commentType == 'Project'} selected {/if}>Project</option>
@@ -28,13 +28,22 @@
                     <option value="all" {if $commentType == 'all'} selected {/if}>All</option>
                 </select>
                
-                <b> Comment Cycle:</b> 
+                <b> Cycle Monthwise:</b> 
                 <select name = "commentCycle">
                     <option value="">Select Cycle</option>
                     {foreach from = $allCycle item = item key = key}
                         <option value="{$key}" {if $commentCycle == $key} selected {/if}>{$item}</option>
                     {/foreach}
                     <option value="all" {if $commentCycle == 'all'} selected {/if}>All</option>
+                </select>
+                
+                <b> Actual Cycle:</b> 
+                <select name = "commentCycleActual">
+                    <option value="">Select Cycle</option>
+                    {foreach from = $allCycleActual item = item key = key}
+                        <option value="{$key}" {if $commentCycleActual == $key} selected {/if}>{$item}</option>
+                    {/foreach}
+                    <option value="all" {if $commentCycleActual == 'all'} selected {/if}>All</option>
                 </select>
                 
                <input type="hidden" name = "projectId" value="{$ProjectDetail[0]['PROJECT_ID']}">
@@ -64,8 +73,9 @@
                 {$bgcolor = '#FCFCFC'}
             {/if}
             <tr bgcolor = "{$bgcolor}">
-                <td valign ="top" style ="padding-left: 10px; font-size: 14px;" align = "left"><b>{$commentTypeMap[$val->comment_type]}:</b></td>
-                <td valign ="top" style ="padding-left: 10px; font-size: 14px;" align = "left">{$val->comment_text} <b>By {$val->fname} on {($val->date_time)|date_format:'%b-%y'} </b></td>
+                <td valign ="top" style ="padding-left: 10px; font-size: 14px;" align = "left"><b>{$commentTypeMap[$val->comment_type]} 
+                         :</b></td>
+                <td valign ="top" style ="padding-left: 10px; font-size: 14px;" align = "left">{if $val->comment_type == 'Audit2'} [{$val->status}] {/if}&nbsp;{$val->comment_text} <b>By {$val->fname} on {($val->date_time)|date_format:'%b-%y'} </b></td>
            </tr>
         {/foreach}
         <input type = "hidden" name = "projectId" value ="{$projectId}">

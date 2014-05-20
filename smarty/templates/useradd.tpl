@@ -115,7 +115,6 @@
                                 {if $txtdepartment == 'SURVEY'}
                                     {$stye = ""}
                                 {else}
-                                     
                                      {$stye = 'style = "display:none;"'}
                                 {/if}
 				<tr id = 'showhide' {$stye}>
@@ -126,6 +125,7 @@
                                           {foreach from = $arrCity key = key item = item}
                                             <option {if in_array($key,$arrExistingCity)} selected {/if} value="{$key}">{$item}</option>
                                           {/foreach}
+                                          <option value="other" {if $otherCityChk == 1}selected{/if}>Other Cities</option>
                                       </select>
                                   </td>
 				  <td width="50%" align="left"></td>

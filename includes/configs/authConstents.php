@@ -22,6 +22,9 @@
     $imageAuth = isUserPermitted('image', 'add');
     $smarty->assign("imageAuth", $imageAuth);
     
+    $compHistAuth = isUserPermitted('comp-history-mgmt', 'manage');
+    $smarty->assign("compHistAuth", $compHistAuth);
+    
     $labelAuth = isUserPermitted('label', 'add');
     $smarty->assign("labelAuth", $labelAuth);
     

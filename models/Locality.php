@@ -8,7 +8,7 @@ class Locality extends ActiveRecord\Model
         $locality = Locality::find('all',array('conditions'=>array("suburb_id = $suburbId AND status = 'active'"),'order' => 'label asc'));
         $arrLocality = array();
         foreach ($locality  as $value) {
-           $arrLocality[$value->locality_id] = $value->label;
+           $arrLocality[$valuelocality_id] = $value->label;
         }
         return $arrLocality;
     }
@@ -18,6 +18,16 @@ class Locality extends ActiveRecord\Model
     }
     static function getLocalityByCity($ctid) {
         $conditions = array("a.city_id = ? and a.status = ? and locality.status = ?", $ctid, 'Active', 'Active');
+        $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
+        $join .= 'INNER JOIN city c ON(a.city_id = c.city_id)';
+
+        $getLocality = Locality::find('all',array('joins' => $join, 
+               "conditions" => $conditions, "select" => "locality.locality_id,locality.label, c.label as cityname"));
+        return $getLocality;
+    }
+    
+    static function getAllLocalityByCity($ctid) {
+        $conditions = array("a.city_id = ?", $ctid);
         $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
         $join .= 'INNER JOIN city c ON(a.city_id = c.city_id)';
 

@@ -4,12 +4,20 @@
 class CommentsHistory extends ActiveRecord\Model
 {
     static $table_name = 'comments_history';
-    static function insertUpdateComments( $projectId, $arrCommentTypeValue, $updationCycleId ) {
+    static function insertUpdateComments( $projectId, $arrCommentTypeValue, $updationCycleId, $projectUpdationCycleId = null ) {
         $updationCycleId = $updationCycleId."_".date("M-y");     
         foreach( $arrCommentTypeValue as $key=>$value ) {
-
-            $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? AND status=?",
-                $projectId, $key, $updationCycleId,"New");
+			
+			if($projectUpdationCycleId){
+            $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? 
+                           AND status=? AND UPDATION_CYCLE_ID = ?",
+                $projectId, $key, $updationCycleId,"New",$projectUpdationCycleId);
+             }else{
+				 
+				$conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? 
+                           AND status=? AND UPDATION_CYCLE_ID is null",
+                $projectId, $key, $updationCycleId,"New"); 
+		    }
 
             $getComments = CommentsHistory::find('all', array("conditions" => $conditions));   
 
@@ -19,6 +27,7 @@ class CommentsHistory extends ActiveRecord\Model
                 $comment->updation_cycle = $updationCycleId;
                 $comment->project_id = $projectId;
                 $comment->comment_type = $key;
+                $comment->updation_cycle_id = $projectUpdationCycleId;
             }
             else {
                 $comment = CommentsHistory::find($getComments[0]->comment_id);               
@@ -116,18 +125,25 @@ class CommentsHistory extends ActiveRecord\Model
         return $arrProjectOldComment;
     }
     
-    function getAllCommentsByProjectId($projectId, $commentType, $updationCycleId) {
+    function getAllCommentsByProjectId($projectId, $commentType, $updationCycleId, $actualUpdationCycle) {
               //echo $projectId."==". $commentType."==". $updationCycleId;die;
-        if( $updationCycleId != '' && $commentType != '') {                
-             $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? ", $projectId, $commentType, $updationCycleId);
+        if($actualUpdationCycle != '') {
+            if($actualUpdationCycle != 'not_null')
+                $conditions = array("project_id = $projectId  AND updation_cycle_id = ".$actualUpdationCycle);
+            else
+                $conditions = array("project_id = $projectId  AND updation_cycle_id is not null");
         }
-        else if( $updationCycleId != '' && $commentType == '' )
-            $conditions = array("project_id = ? AND updation_cycle = ? ", $projectId, $updationCycleId);
-        else if( $updationCycleId == '' && $commentType != '' )
-             $conditions = array("project_id = ? AND comment_type = ? ", $projectId, $commentType);
-        else
-             $conditions = array("project_id = ? ", $projectId);
-        
+        else{
+            if( $updationCycleId != '' && $commentType != '') {                
+                 $conditions = array("project_id = ? AND comment_type = ? AND updation_cycle = ? ", $projectId, $commentType, $updationCycleId);
+            }
+            else if( $updationCycleId != '' && $commentType == '' )
+                $conditions = array("project_id = ? AND updation_cycle = ? ", $projectId, $updationCycleId);
+            else if( $updationCycleId == '' && $commentType != '' )
+                 $conditions = array("project_id = ? AND comment_type = ? ", $projectId, $commentType);
+            else
+                 $conditions = array("project_id = ? ", $projectId);
+        }
         $join = 'LEFT JOIN proptiger_admin a ON(comments_history.user_id = a.adminid)';
 
         $getAllComments = CommentsHistory::find('all',array('joins' => $join, 
@@ -141,14 +157,23 @@ class CommentsHistory extends ActiveRecord\Model
     }
     
     function getAllCycleByProjectId($projectId) {
-        $getAllCycle = CommentsHistory::find('all',array('conditions'=>array('project_id = ?',$projectId)));
+        $join = 'LEFT JOIN updation_cycle uc ON(comments_history.updation_cycle_id = uc.updation_cycle_id)';
+        $getAllCycle = CommentsHistory::find('all',array('joins' => $join,
+            'conditions'=>array('project_id = ?',$projectId), "select" => "uc.cycle_type,uc.label, comments_history.*"));
         $arrAllCycleByProjectId = array();
         foreach($getAllCycle as $value) {
-            if( !array_key_exists($value->updation_cycle,$arrAllCycleByProjectId) ) {
+            if( !array_key_exists($value->updation_cycle,$arrAllCycleByProjectId['updationCycleMonth']) ) {
                $str = str_replace("_", " ", $value->updation_cycle);
-               $arrAllCycleByProjectId[$value->updation_cycle] =  $str;
+               $arrAllCycleByProjectId['updationCycleMonth'][$value->updation_cycle] =  $str;
             }
+            if( !array_key_exists($value->updation_cycle_id,$arrAllCycleByProjectId['updationCycleActual']) ) {
+               //if(!in_array($exp,$arrAllCycleByProjectId['updationCycleActual']))
+                if($value->updation_cycle_id != '')
+                 $arrAllCycleByProjectId['updationCycleActual'][$value->updation_cycle_id] =  ucfirst($value->cycle_type)." ".$value->label;
+            }
+            
         }
         return $arrAllCycleByProjectId;
     }
+    
 }
