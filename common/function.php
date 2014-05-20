@@ -131,7 +131,7 @@ function addImageToDB( $columnName, $areaId, $imageName, $imgCategory, $imgDispl
     else $insertQuery = "INSERT INTO `locality_image` 
             ( `$columnName`, `IMAGE_NAME`, IMAGE_CATEGORY, IMAGE_DISPLAY_NAME, SERVICE_IMAGE_ID ) 
            VALUES ( '$areaId', '$imageName', '$imgCategory', '$imgDisplayName', $serviceImgId )";
-echo $insertQuery;
+//echo $insertQuery;
     dbExecute( $insertQuery );
     mysql_insert_id();
     return mysql_insert_id();
@@ -297,8 +297,8 @@ function writeToImageService($imageParams){
 
 
 //print'<pre>';
-  //           print_r($postArr);
-if(count($postArr)>1){
+ //          print_r($postArr);
+//if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
     $method = $d['method'];
@@ -307,7 +307,7 @@ if(count($postArr)>1){
  
     //$url = (is_array($d) && !empty($url) ? $url : "");
     curl_setopt($curly[$id], CURLOPT_URL,            $url);
-    curl_setopt($ch, CURLOPT_VERBOSE, 1);
+    curl_setopt($curly[$id], CURLOPT_VERBOSE, 1);
     curl_setopt($curly[$id], CURLOPT_HEADER,         1);
     curl_setopt($curly[$id], CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($curly[$id], CURLOPT_CUSTOMREQUEST, $method);
@@ -322,11 +322,11 @@ if(count($postArr)>1){
     curl_multi_exec($mh, $running);
     
   } while($running > 0);
- //echo "here234";
+ 
  
   // get content and remove handles
   foreach($curly as $id => $c) {
-    $response = curl_multi_getcontent($c);//var_dump($response);die("inside curl");
+    $response = curl_multi_getcontent($c);
     $pos = mb_strpos($response, "{");
     //echo $pos;
     $result[$id] = json_decode(substr($response, $pos));
@@ -346,7 +346,8 @@ if(count($postArr)>1){
     //echo "loop-end:".microtime(true)."<br>"; 
     //print("<pre>");   var_dump($result);die("here");
 
-}
+//}
+/*
 else if(count($postArr)==1){
     foreach ($postArr as $id => $d) {
         $url = $d['url'];
@@ -370,7 +371,7 @@ else if(count($postArr)==1){
 
     }
 
-}
+}*/
     return $result;
 }
 

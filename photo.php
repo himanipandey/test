@@ -1,8 +1,8 @@
 <?php
     //error_reporting(E_ALL);
     ini_set('display_errors','1');
-    //set_time_limit(0);
-    //ini_set("memory_limit","256M");
+    set_time_limit(0);
+    ini_set("memory_limit","256M");
     include("smartyConfig.php");
     include("appWideConfig.php");
     include("dbConfig.php");
@@ -485,7 +485,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
     
 
     $serviceResponse   = writeToImageService($postArr);
-    print'<pre>';   print_r($postArr);//die();    
+    //print'<pre>';   print_r($postArr);//die();    
     foreach ($serviceResponse as $k => $v) {
         $image_id = $v->data->id;
             $imgCategory = $postArr[$k]['params']['image_type'];

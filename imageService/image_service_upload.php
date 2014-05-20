@@ -138,10 +138,10 @@ class ImageServiceUpload{
             $response = static::update($this->image_id, $params);
         else
             $response = static::create($params);
-        $this->response_header = $response["header"];
-        $this->response_body = $response["body"];
-        $this->status = $response["status"];
-        $this->verify_status();
+        //$this->response_header = $response["header"];
+        //$this->response_body = $response["body"];
+        //$this->status = $response["status"];
+        //$this->verify_status();
         return $response;
         //$this->raise_errors_if_any();
        
