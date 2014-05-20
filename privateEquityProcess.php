@@ -1,25 +1,17 @@
 <?php
 
-
 $peList = Company::getCompanyByType("Private Equity"); 
 $smarty->assign("peList", $peList);
 $builderList = ResiBuilder::ProjectSearchBuilderEntityArr();
 $smarty->assign("builderList", $builderList);
 
-
-
-//101392
-$projectData = array();
+//$peDeals = array();
 $arrSearchFields = array();
+$peDeals = PEDeals::getAllPEDeals();
+$smarty->assign("pedeals", $peDeals);
 
-    $arrSearchFields['builder_id'] = 101392;
-$getSearchResult = (array)ResiProject::getAllSearchResult($arrSearchFields);
-foreach ($getSearchResult as $k => $v) {
-	$tmpArr = array();
-	$tmpArr['id'] = $v->project_id;
-	$tmpArr['name'] = $v->project_name.$v->project_address;
-	array_push($projectData, $tmpArr);
-}
-echo json_encode($projectData);
+print("<pre>");
+print_r($peDeals);
+//echo json_encode($projectData);
 
 ?>

@@ -19,41 +19,157 @@ jQuery(document).ready(function(){
 	  //cleanFields();
 	  
 	    $('#search-bottom').hide('slow');
-	   $('#create_Landmark').show('slow'); 
+	   $('#create_deals').show('slow'); 
 	});
 
 	$("#exit_button").click(function(){
 	  //cleanFields();
-	   $('#create_Landmark').hide('slow'); 
+	   $('#create_deals').hide('slow'); 
 	 
 	    $('#search-bottom').show('slow');
 	});
-/*
+
 	$("#lmkSave").click(function(){
+    var error = 0;
+    var mode='';
+    var dealId = "";
+    var data = {};
 		var compType = $('#companyTypeEdit').children(":selected").val();
-		var name = $('#name').val();        
-		var des = $('#des').val();
-		var address = $('#address').val();
-		var pincode = $('#pincode').val();
-		var person = $('#person').val();
-		var phone = $('#phone').val();
-		var fax = $('#fax').val();
-		var email = $('#email').val();
-		var web = $('#web').val();
-		var pan = $('#pan').val();
-		var status = $('#status').val();
+    var val = $("#deal option:selected").val();
+  if (val==1){
+    var fundCompId = $("#fundCompany").val();
+    var fundValue = $("#fundValue").val();
+    var fundArticle = $("#fundArticle").val();
+    var fundDate = $("#img_date1").val();
+    if(dealId>0) mode = 'update';
+    else mode='create';
+    data['pe_id'] =  fundCompId;
+    data['type'] = "Fund Raising";
+    data['value'] = fundValue;
+    data['article'] = fundArticle;
+    data['date'] = fundDate;
+    data['mode'] = mode;
+
+    if(fundDate==''){
+      $('#errmsgfunddate').html('<font color="red">Please select a Transaction Date.</font>');
+      $("#img_date1").focus();
+      error = 1;
+    }
+
+    if(fundCompId==''){
+      $('#errmsgfundname').html('<font color="red">Please select a Private Equity.</font>');
+      $("#fundCompany").focus();
+      error = 1;
+    }
+
+
+
+    
+
+  }
+  else if (val==2){
+    
+    var investCompId = $("#investCompany").val();
+    var investValue = $("#investValue").val();
+    var investArticle = $("#investArticle").val();
+    var investDate = $("#img_date2").val();
+    var investBuilderId = $("#investBuilderEdit").val();
+    var investProjArr = [];
+    $('select[name="invest_proj[]"] ').each(function() {
+      investProjArr.push($("#"+this.id+" option:selected").val());
+    });
+    if(dealId>0) mode = 'update';
+    else mode='create';
+    var extra = {};
+    data['pe_id'] =  investCompId;
+    data['type'] = "Investment";
+    data['builderId'] = investBuilderId;
+    data['value'] = investValue;
+    data['article'] = investArticle;
+    data['date'] = investDate;
+    extra['projects'] = investProjArr;
+    data['extra'] = JSON.stringify(extra);
+    data['mode'] = mode;
+
+    if(investDate==''){
+      $('#errmsginvestdate').html('<font color="red">Please select a Transaction Date.</font>');
+      $("#img_date2").focus();
+      error = 1;
+    }
+
+    if(investBuilderId==''){
+      $('#errmsginvestbuilder').html('<font color="red">Please select a Builder.</font>');
+      //$("#img_date1").focus();
+      error = 1;
+    }
+
+
+    if(investCompId==''){
+      $('#errmsginvestname').html('<font color="red">Please select a Private Equity.</font>');
+      $("#investCompany").focus();
+      error = 1;
+    }
+  }
+  else if(val==3){
+
+    var exitCompId = $("#exitCompany").val();
+    var exitValue2 = $("#exitValue2").val();
+    var exitValue1 = $("#exitValue1").val();
+    var exitArticle = $("#exitArticle").val();
+    var exitDate = $("#img_date3").val();
+    var exitPeriod = $("#exitPeriod").val();
+    var exitBuilderId = $("#exitBuilderEdit").val();
+    var exitProjArr = [];
+    $('select[name="exit_proj[]"] ').each(function() {
+      exitProjArr.push($("#"+this.id+" option:selected").val());
+      console.log($("#"+this.id+" option:selected").val())
+    });
+    if(dealId>0) mode = 'update';
+    else mode='create';
+    var extra = {};
+    data['pe_id'] =  exitCompId;
+    data['type'] = "Exit";
+    data['builderId'] = exitBuilderId;
+    data['value'] = exitValue2;
+    data['article'] = exitArticle;
+    data['date'] = exitDate;
+    extra['projects'] = exitProjArr;
+    extra['period'] = exitPeriod;
+    extra['investmentValue'] = exitValue1;
+    extra['exitValue'] = exitValue2;
+    data['extra'] = JSON.stringify(extra);
+    data['mode'] = mode;
+
+    if(exitDate==''){
+      $('#errmsgexitdate').html('<font color="red">Please select a Transaction Date</font>');
+      $("#img_date3").focus();
+      error = 1;
+    }
+
+    if(exitBuilderId==''){
+      $('#errmsgexitbuilder').html('<font color="red">Please select a Builder.</font>');
+      //$("#img_date1").focus();
+      error = 1;
+    }
+
+    if(exitCompId==''){
+      $('#errmsgexitname').html('<font color="red">Please select a Private Equity</font>');
+      $("#exitCompany").focus();
+      error = 1;
+    }
+
+  }
 		
-		 var error = 0;
-	    var mode='';
-	    if(compid) mode = 'update';
-	    else mode='create';
+	data['task'] = "save";	
+		 
+	    
 
 	    if (error==0){
       
 	      	$.ajax({
 	            type: "POST",
-	            url: '/saveCompany.php',
-	            data: { id:compid, type: compType, name : name, des : des, address : address, pincode : pincode, person : person, phone:phone, fax:fax, email:email web:web, pan:pan, status:status, task : 'createComp' , mode:mode},
+	            url: '/savePrivateEquity.php',
+	            data: data,
 	            success:function(msg){
 	              //alert(msg);
 	               if(msg == 1){
@@ -64,7 +180,7 @@ jQuery(document).ready(function(){
 	               else if(msg == 2){
 	                //$("#onclick-create").text("Landmark Already Added.");
 	                   alert("Already Saved");
-	                   location.reload(true); 
+	                   //location.reload(true); 
 	               }
 	               else if(msg == 3){
 	                //$("#onclick-create").text("Error in Adding Landmark.");
@@ -81,7 +197,7 @@ jQuery(document).ready(function(){
 	    }
 
 
-	});*/
+	});
 
 }); //document.ready ends
 
@@ -89,23 +205,23 @@ function selectDeal(id){
   var val = $("#"+id+" option:selected").val();
  
   if(val=="1"){
-    console.log("1");
-    $("#investment").hide(''); 
-    $("#exit").hide(''); 
+    
+    $("#investment").hide('slow'); 
+    $("#exit").hide('slow'); 
     $("#saveDiv").show('slow'); 
     $("#fundrais").show('slow'); 
   }
   else if(val=="2"){
-    console.log("2");
-    $("#fundrais").hide(''); 
-    $("#exit").hide(''); 
+  
+    $("#fundrais").hide('slow'); 
+    $("#exit").hide('slow'); 
     $("#saveDiv").show('slow'); 
     $("#investment").show('slow'); 
   }
   else if(val=="3"){
-    console.log("3");
-    $("#investment").hide(''); 
-    $("#fundrais").hide(''); 
+   
+    $("#investment").hide('slow'); 
+    $("#fundrais").hide('slow'); 
     $("#saveDiv").show('slow'); 
     $("#exit").show('slow'); 
   }
@@ -121,8 +237,7 @@ function refreshProject(no){
   //var old_no = parseInt($("#projects").rows.length);
   var old_no = parseInt(table.rows.length);
   var new_no = parseInt(no);
-  console.log(old_no);
-  console.log(new_no);
+ 
   if(new_no > old_no){
     for(old_no; old_no < new_no; old_no++){
       addRow(tableId);
@@ -151,11 +266,11 @@ function builderChanged(id){
    $.ajax({
               type: "POST",
               url: '/savePrivateEquity.php',
-              data: { builder_id:builderId},
+              data: { builder_id:builderId, task:"getProject"},
               success:function(msg){
                 var d = jQuery.parseJSON(msg);
-                  console.log(d);//d = parseJSON(msg);     
-                  $("#"+nodropdwn+" option:selected").text("1");
+                  
+                  $("#"+nodropdwn).val("1");
                   refreshProject(1);
                   sel.empty();
                   $.map(d, function (v) {
@@ -172,9 +287,11 @@ function addRow(tableID) {
             var val = $("#deal option:selected").val();
   if (val==2){
     var fieldId = "invest_proj";
+    var projClass = "investProj";
   }
   else if(val==3){
     var  fieldId = "exit_proj";
+    var projClass = "exitProj";
   }
             var table = document.getElementById(tableID);
  
@@ -190,6 +307,7 @@ function addRow(tableID) {
             var element2 = document.createElement("select");
            
             element2.id=fieldId+"_"+rowCount;
+            element2.class=projClass;
             element2.name =fieldId+"[]";
 
             var $options = $("#"+fieldId+"_0 > option").clone();
@@ -211,6 +329,41 @@ function deleteRow(tableID) {
                 alert(e);
             }
   }
+
+
+function deletePEDeal(id){
+  alert("Are you sure you want to delete this Deal.");
+  var dealId = id;
+  var task = "delete";
+  $.ajax({
+              type: "POST",
+              url: '/savePrivateEquity.php',
+              data: { id:dealId, task:task },
+              success:function(msg){
+                //alert(msg);
+                 if(msg == 1){
+                  alert("Deleted");
+                  location.reload(true);
+                  //$("#onclick-create").text("Landmark Successfully Created.");
+                 }
+                 else if(msg == 2){
+                  //$("#onclick-create").text("Landmark Already Added.");
+                     alert("Already Saved");
+                     //location.reload(true); 
+                 }
+                 else if(msg == 3){
+                  //$("#onclick-create").text("Error in Adding Landmark.");
+                     alert("error");
+                 }
+                 else if(msg == 4){
+                  //$("#onclick-create").text("No Landmark Selected.");
+                     alert("no data");
+                 }
+                 else alert(msg);
+              },
+          });
+    
+}
 
 </script>
 </TD>
@@ -241,7 +394,14 @@ function deleteRow(tableID) {
                 </TR>
                 <TR>
                 <TD vAlign=top align=left class="backgorund-rt" height=450><BR>
-                  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" align="left" border=0 >
+                  
+                
+
+                  <div align="left" style="margin-bottom:5px;">
+                  <button type="button" id="create_button" align="left">Create a New Deal</button>
+                </div>
+                  <div id='create_deals' style="display:none" align="left">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" align="left" border=0 >
                     <tr>  
                       <td width="20%" height="25" align="left" valign="top">
                           <select id="deal" name="deal" onchange="selectDeal(this.id)">
@@ -254,10 +414,6 @@ function deleteRow(tableID) {
                     </tr>
                       
                   </table>
-                
-
-                 
-                  <div id='pe' align="left">
                   <TABLE cellSpacing=2 cellPadding=4 width="93%" align="left" border=0 >
                   <form method="post" enctype="multipart/form-data" id="formlmk" name="formlmk">
                     <input type="hidden" name="old_sub_name" value="">
@@ -266,35 +422,35 @@ function deleteRow(tableID) {
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="40%" height="25" align="left" valign="top">
-                                    <select id="companyTypeEdit" name="companyEdit" >
+                                    <select id="fundCompany" name="fundCompany" >
                                        <option value=''>select place type</option>
                                        {foreach from=$peList key=k item=v}
                                               <option value="{$k}">{$v}</option>
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                        <td width="40%" align="left" id="errmsgfundname"></td>
                     </tr>
 
                     <tr>
                       <td width="10%" align="right" >Value (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="fundValue" id="fundValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" valign="top">News Article:</td>
                       <td width="30%" align="left" >
-                      <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
+                      <input type=text name="fundArticle" id="fundArticle"  style="width:250px;">
                       </td>
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top"><font color = "red">*</font>Date of Transaction1:</td>
+                      <td width="20%" align="right" valign="top"><font color = "red">*</font>Date of Transaction:</td>
                       <td width="30%" align="left" >
                       <input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td>
-                      </td>
+                      <td width="20%" align="left" id="errmsgfunddate"></td>
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
                   </tbody>
@@ -303,14 +459,14 @@ function deleteRow(tableID) {
                         <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="companyTypeEdit" name="companyEdit" >
+                                    <select id="investCompany" name="investCompany" >
                                        <option value=''>select place type</option>
                                         {foreach from=$peList key=k item=v}
                                               <option value="{$k}">{$v}</option>
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                        <td width="40%" align="left" id="errmsginvestname"></td>
                     </tr>
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
@@ -322,7 +478,7 @@ function deleteRow(tableID) {
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                        <td width="40%" align="left" id="errmsginvestbuilder"></td>
                     </tr>
                     <tr>
                       <td width="10%" align="right" >No of Project: </td>
@@ -360,14 +516,14 @@ function deleteRow(tableID) {
                   </tr>
                     <tr>
                       <td width="10%" align="right" >Value of Investment (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="investValue" id="investValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" valign="top">News Article:</td>
                       <td width="30%" align="left" >
-                      <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
+                      <input type=text name="investArticle" id="investArticle"  style="width:250px;">
                       </td>
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
@@ -376,8 +532,8 @@ function deleteRow(tableID) {
                       <td width="20%" align="right" valign="top"><font color = "red">*</font>Date of Transaction:</td>
                       <td width="30%" align="left" >
                       <input name="img_date2" type="text" class="formstyle2" id="img_date2" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger2" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td>
-                      </td>
-                      <td><input type="hidden", id="lmkid">  </td>
+                     <td width="20%" align="left" id="errmsginvestdate"></td>
+                      
                     </tr>
                       </tbody>
 
@@ -385,13 +541,14 @@ function deleteRow(tableID) {
                         <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="companyTypeEdit" name="companyEdit" >
+                                    <select id="exitCompany" name="exitCompany" >
+                                      <option value=''>select place type</option>
                                         {foreach from=$peList key=k item=v}
                                               <option value="{$k}">{$v}</option>
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                        <td width="40%" align="left" id="errmsgexitname"></td>
                     </tr>
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
@@ -403,7 +560,7 @@ function deleteRow(tableID) {
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                        <td width="40%" align="left" id="errmsgexitbuilder"></td>
                     </tr>
                     <tr>
                       <td width="10%" align="right" >No of Project: </td>
@@ -429,7 +586,7 @@ function deleteRow(tableID) {
                       <tr>
                       <td width="15%" align="right" >Project: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="exitProjEdit" name="exitProjEdit" >
+                                    <select id="exit_proj_0" name="exit_proj[]" >
                                        <option value=''>select place type</option>
                                        
                                     </select>
@@ -441,20 +598,20 @@ function deleteRow(tableID) {
                   </tr>
                     <tr>
                       <td width="10%" align="right" >Value of Exit (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="exitValue2" id="exitValue2"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
                       <td width="10%" align="right" >Value of Investment (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="exitValue1" id="exitValue1"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" valign="top">News Article:</td>
                       <td width="30%" align="left" >
-                      <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
+                      <input type=text name="exitArticle" id="exitArticle"  style="width:250px;">
                       </td>
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
@@ -463,14 +620,14 @@ function deleteRow(tableID) {
                       <td width="20%" align="right" valign="top"><font color = "red">*</font>Date of Transaction:</td>
                       <td width="30%" align="left" >
                       <input name="img_date3" type="text" class="formstyle2" id="img_date3" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger3" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td>
-                      </td>
+                      <td width="20%" align="left" id="errmsgexitdate"></td>
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" valign="top">Holding Period:</td>
                       <td width="30%" align="left" >
-                      <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
+                      <input type=text name="exitPeriod" id="exitPeriod"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
                       </td>
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
@@ -497,21 +654,16 @@ function deleteRow(tableID) {
                         <form name="form1" method="post" action="">
                           <thead>
                                 <TR class = "headingrowcolor">
-                                  <th  width=1% align="center">Serial</th>
-                                  <th  width=5% align="center">Name</th>
-                                  <TH  width=8% align="center">Vicinity</TH>
-                                  <TH  width=4% align="center">Place Type</TH>
-                                  <TH  width=8% align="center">Location in Map</TH>
+                                  <th  width=2% align="center">S.N.</th>
+                                  <th  width=5% align="center">PE Name</th>
+                                  <TH  width=5% align="center">Deal Type</TH>
+                                  <TH  width=4% align="center">Value</TH>
+                                  <TH  width=7% align="center">Transaction Date</TH>
                                   
-                                  <TH  width=4% align="center">Priority
-                                 <!-- {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
-                                      <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
-                                  {else}
-                                      <span style="clear:both;margin-left:10px"><input type="image" name="desc" value="desc" src="images/arrow-down.png"></span>
-                                  {/if}-->
-                                  </TH> 
-                                 <TH width=6% align="center">Status</TH> 
-         <TH width=3% align="center">Save</TH>
+                                  <TH  width=4% align="center">Article Link</TH> 
+                                 <TH width=6% align="center">Builder</TH> 
+                                 <TH width=6% align="center">Extra Data</TH>
+                                <TH width=3% align="center">Delete</TH>
                                 </TR>
                               
                           </thead>
@@ -525,7 +677,7 @@ function deleteRow(tableID) {
                                 {else}
                                     {$type = DISPLAY_ORDER}
                                 {/if}-->
-                                {foreach from=$nearPlacesArr key=k item=v}
+                                {foreach from=$pedeals key=k item=v}
                                     {$i=$i+1}
                                     {if $i%2 == 0}
                                       {$color = "bgcolor = '#F7F7F7'"}
@@ -534,35 +686,14 @@ function deleteRow(tableID) {
                                     {/if}
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v.name}</TD>
-                                  <TD align=center class=td-border>{$v.vicinity}</TD>
-                                  <TD align=center class=td-border>{$v.display_name}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
-                  <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
-
-                                  </TD>
-                                  
-                                  <!--<TD align=center class=td-border>{$v.priority}</TD>-->
-                                   
-                                   <TD align=center class=td-border>
-                                    <select id="priority{$v.id}" value="" >
-          <option name=one value=1  {if $v.priority == 1} selected="selected"  {/if}>1</option>
-          <option name=two value=2  {if $v.priority == 2} selected="selected"  {/if}>2</option>
-          <option name=three value=3 {if $v.priority == 3} selected="selected"  {/if}>3</option>
-          <option name=four value=4 {if $v.priority == 4} selected="selected"  {/if}>4</option>
-          <option name=five value=5 {if $v.priority == 5} selected="selected"  {/if}>5</option>
-          </select>
-          </TD>
-        <TD align=center class=td-border>  
-  <select id="status{$v.id}" value=''>
-          <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
-          <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
-                  
-        </select>
-      
-
-      </TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Save</a> <button type="button" id="edit_button{$v.id}" onclick="return landmarkEdit('{$v.id}', '{$v.city_id}', '{$v.place_type_id}', '{$v.name}', '{$v.vicinity}', '{$v.latitude}', '{$v.longitude}', '{$v.phone_number}', '{$v.website}', '{$v.priority}', '{$v.status}')" align="left">Edit</button></TD>
+                                  <TD align=center class=td-border>{$v['name']}</TD>
+                                  <TD align=center class=td-border>{$v['type']}</TD>
+                                  <TD align=center class=td-border>{$v['value']}</TD>
+                                  <TD align=center class=td-border>{$v['transaction_date']}</TD>
+                                  <TD align=center class=td-border>{$v['article_link']}</TD>
+                                  <TD align=center class=td-border>{$v['builder_name']} </TD>
+                                  <TD align=center class=td-border>{$v['extra_values']}</TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return deletePEDeal('{$v['id']}');">Delete</a></TD>
                                 </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
