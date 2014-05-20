@@ -30,7 +30,7 @@ function submitButton(){
     var locality_id = $('#locality').val();
     var placeType = $('#placeType').val();
     var statusId = $('#statusId').val();
-  window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+locality_id+"&status="+statusId+"&near_place_type=placeType";
+  window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+locality_id+"&status="+statusId+"&placeType=placeType";
 }
 
 function isNumeric(val) {
@@ -445,6 +445,10 @@ function update_locality(ctid)
           }
       })
     }
+    
+ function localitySelect(localityId) {
+      $("#localityId").val(localityId);
+ }
 /*******************End Ajax Code*************/
 </script>
 </TD>
@@ -494,7 +498,7 @@ function update_locality(ctid)
                                 <td width = "10px">&nbsp;</td>
                                 <td width="20%" height="25" align="left" valign="top">
                                     <span id = "LocalityList">
-                                    <select id="locality" name="locality">
+                                    <select id="locality" name="locality" onchange = "localitySelect(this.value);">
                                        <option value=''>select locality</option>
                                        {foreach from=$localityArr key=k item=v}
                                            <option value="{$v->locality_id}" {if $localityId==$v->locality_id}
@@ -503,7 +507,8 @@ function update_locality(ctid)
                                     </select>
                                     </span>
                                 </td>
-
+                          <input type="hidden" name="localityId" id = "localityId" value="{$localityId}">
+                                
                                 <td width = "10px">&nbsp;</td>
                                 <td width="15%" height="25" align="left" valign="top">
                                     <select id="placeType" name="placeType">

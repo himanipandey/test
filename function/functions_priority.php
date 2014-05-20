@@ -541,9 +541,9 @@ function getNearPlacesArrfromCity($status, $cityId, $order, $placeType=0)
 {
     global $orderBy;
     $orderBy = $order;
-    $where = " np.status = '".$status."'";
+    $where = " np.status = '".$status."' and ";
     if($placeType==0)
-         $where .= " and np.city_id = $cityId";
+         $where .= " np.city_id = $cityId";
     else
         $where .= "np.city_id = $cityId and  np.place_type_id = $placeType"; //.$queryLessThenMax;
     $orderby = " ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
@@ -551,7 +551,6 @@ function getNearPlacesArrfromCity($status, $cityId, $order, $placeType=0)
             FROM " . landmarks. " np 
             inner join landmark_types npt on npt.id = np.place_type_id
             WHERE ".$where." ". $orderby;
-
     $res = mysql_query($qry) or die(mysql_error());
     //print_r($res)
     $arr = array();

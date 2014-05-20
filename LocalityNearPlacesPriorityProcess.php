@@ -33,7 +33,7 @@ $smarty->assign('status',$_REQUEST['status']);
 $smarty->assign('placeType',$_REQUEST['placeType']);
 //echo "<pre>";
 //print_r($_REQUEST);die;
-if(!empty($_REQUEST['near_place_type']))
+if(!empty($_REQUEST['placeType']))
 {
     $nearPlaceTypesId = $_REQUEST['placeType']; 
     $smarty->assign('nearPlaceTypesId',$nearPlaceTypesId);
@@ -42,13 +42,16 @@ if(!empty($_REQUEST['near_place_type']))
    // $projectArr = getProjectArr($suburbId,'suburb',$orderby);
 }
 //echo "<pre>";
-//print_r($_REQUEST);
+//print_r($_REQUEST);die;
 $NearPlacesArr = array();
 if(isset($_REQUEST['submit'])) {
-    if(!empty($_REQUEST['locality']) && !empty($cityId))
+    if($_REQUEST['locality'] == '')
+       $_REQUEST['localityId'] = '';
+    if(!empty($_REQUEST['localityId']) && !empty($cityId))
     {
-        $localityId = $_REQUEST['locality'];
+        $localityId = $_REQUEST['localityId'];
         $smarty->assign('localityId',$localityId);
+       // echo $nearPlaceTypesId;//die;
         if(!empty($nearPlaceTypesId))
         {
             $NearPlacesArr = getNearPlacesArr($_REQUEST['status'], $cityId, $localityId,'locality',$orderby, $nearPlaceTypesId);
@@ -79,9 +82,9 @@ if(isset($_REQUEST['submit'])) {
     }
 }
 else{
-    if(!empty($_REQUEST['locality']) && !empty($cityId))
+    if(!empty($_REQUEST['localityId']) && !empty($cityId))
     {
-        $localityId = $_REQUEST['locality'];
+        $localityId = $_REQUEST['localityId'];
         $smarty->assign('localityId',$localityId);
        /* if(!empty($nearPlaceTypesId))
         {
