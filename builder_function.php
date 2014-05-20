@@ -2443,5 +2443,6 @@ function fetch_project_BSP($projectId){
 	}
 	return $bspArr;
 }
+
 ?>
 
