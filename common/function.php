@@ -296,8 +296,9 @@ function writeToImageService($imageParams){
   // then add them to the multi-handle
 
 
-print'<pre>';
-             print_r($postArr);
+//print'<pre>';
+  //           print_r($postArr);
+if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
     $method = $d['method'];
@@ -319,12 +320,13 @@ print'<pre>';
   $running = null;
   do {
     curl_multi_exec($mh, $running);
+    
   } while($running > 0);
- 
+ //echo "here234";
  
   // get content and remove handles
   foreach($curly as $id => $c) {
-    $response = curl_multi_getcontent($c);var_dump($response);
+    $response = curl_multi_getcontent($c);//var_dump($response);die("inside curl");
     $pos = mb_strpos($response, "{");
     //echo $pos;
     $result[$id] = json_decode(substr($response, $pos));
@@ -343,6 +345,32 @@ print'<pre>';
     //echo "curl-end:".microtime(true)."<br>"; 
     //echo "loop-end:".microtime(true)."<br>"; 
     //print("<pre>");   var_dump($result);die("here");
+
+}
+else if(count($postArr)==1){
+    foreach ($postArr as $id => $d) {
+        $url = $d['url'];
+        $method = $d['method'];
+        $post = $d['params'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$method);
+        if($method == "POST" || $method == "PUT")
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        $response= curl_exec($ch);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $response_header = substr($response, 0, $header_size);
+        $response_body = json_decode(substr($response, $header_size));
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close ($ch);
+        $result[0] = $response_body;
+
+    }
+
+}
     return $result;
 }
 

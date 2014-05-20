@@ -167,14 +167,14 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
 
                         $response   = writeToImageService( $postArr);
                         /**/
-                        print_r($response);  print_r($postArr); die("here0");
+                        //print_r($response);  print_r($postArr); //die("here0");
                         foreach ($response as $k => $v) {
                             if(!empty($v->error->msg))
                             {
                                 $uploadStatus[ $IMG['name'][ $__imgCnt ] ] = $v->error->msg;
                             }
                             else{
-                                   echo "here";     // add to database
+                                   //echo "here";     // add to database
                                 $addedImgIdArr[] = addImageToDB( $params['column_name'], $areaId, $imgName,
                                     $params['image_type'], $params['title'], $params['description'],$v->data->id,$params['priority'] );
                           
