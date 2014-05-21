@@ -43,7 +43,7 @@ jQuery(document).ready(function(){
 		var email = $('#email').val().trim();
 		var web = $('#web').val();
 		var pan = $('#pan').val().trim();
-		var status = $('#status').val();
+		var status = $('#status').val(); 
 		var compid = $('#compid').val();
 		 var error = 0;
 	    var mode='';
@@ -234,7 +234,7 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, p
                       <td width="10%" align="right" ><font color = "red">*</font>Company Type: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="companyTypeEdit" name="companyEdit" >
-                                       <option value=''>select place type</option>
+                                       <option value=''>select Company Type</option>
                                        {foreach from=$comptype key=k item=v}
                                               <option value="{$v}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
                                        {/foreach}

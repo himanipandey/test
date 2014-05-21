@@ -77,7 +77,7 @@ if($_POST['task']=='createComp'){
             $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city, pincode, updated_by, created_at) values ('company', '{$comp_id}', '{$address}', '{$city}', '{$pin}', {$_SESSION['adminId']}, NOW())";
             $res1 = mysql_query($query1);
 
-            $query2 = "INSERT INTO broker_contacts (broker_id, name, type, contact_email, updated_by, created_at) values ('{$comp_id}', '{$person}', 'NAgent', '{$email}', {$_SESSION['adminId']}, NOW())";
+            $query2 = "INSERT INTO broker_contacts (broker_id, name, type, contact_email, updated_by, created_at, updated_at) values ('{$comp_id}', '{$person}', 'NAgent', '{$email}', {$_SESSION['adminId']}, NOW(), NOW())";
             $res2 = mysql_query($query2);
             if(mysql_affected_rows()>0){
                
