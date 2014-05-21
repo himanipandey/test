@@ -1447,7 +1447,7 @@
 		$serviceResponse = writeToImageService($postArr);
 		//print("<pre>");var_dump($serviceResponse);die();
 		//$serviceResponse = json_decode($serviceResponse);
-		print'<pre>';   print_r($serviceResponse);//die();				                  	
+		//print'<pre>';   print_r($serviceResponse);//die();				                  	
         foreach ($serviceResponse as $k => $v) {
         	
 	        if(empty($v->error->msg)){
