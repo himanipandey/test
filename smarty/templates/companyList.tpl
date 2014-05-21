@@ -32,17 +32,17 @@ jQuery(document).ready(function(){
 
 	$("#lmkSave").click(function(){
 		var compType = $('#companyTypeEdit').children(":selected").val();
-		var name = $('#name').val();        
-		var des = $('#des').val();
-		var address = $('#address').val();
+		var name = $('#name').val().trim();        
+		var des = $('#des').val().trim();
+		var address = $('#address').val().trim();
     var city = $('#city option:selected').val();
-		var pincode = $('#pincode').val();
-		var person = $('#person').val();
-		var phone = $('#phone').val();
-		var fax = $('#fax').val();
-		var email = $('#email').val();
-		var web = $('#web').val();
-		var pan = $('#pan').val();
+		var pincode = $('#pincode').val().trim();
+		var person = $('#person').val().trim();
+		var phone = $('#phone').val().trim();
+		var fax = $('#fax').val().trim();
+		var email = $('#email').val().trim();
+		var web = $('#web').val().trim();
+		var pan = $('#pan').val().trim();
 		var status = $('#status').val();
 		var compid = $('#compid').val();
 		 var error = 0;

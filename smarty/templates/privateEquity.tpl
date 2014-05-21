@@ -38,9 +38,9 @@ jQuery(document).ready(function(){
     var val = $("#deal option:selected").val();
   if (val==1){
     var fundCompId = $("#fundCompany").val();
-    var fundValue = $("#fundValue").val();
-    var fundArticle = $("#fundArticle").val();
-    var fundDate = $("#img_date1").val();
+    var fundValue = $("#fundValue").val().trim();
+    var fundArticle = $("#fundArticle").val().trim();
+    var fundDate = $("#img_date1").val().trim();
     if(dealId>0) mode = 'update';
     else mode='create';
     data['pe_id'] =  fundCompId;
@@ -70,8 +70,8 @@ jQuery(document).ready(function(){
   else if (val==2){
     
     var investCompId = $("#investCompany").val();
-    var investValue = $("#investValue").val();
-    var investArticle = $("#investArticle").val();
+    var investValue = $("#investValue").val().trim();
+    var investArticle = $("#investArticle").val().trim();
     var investDate = $("#img_date2").val();
     var investBuilderId = $("#investBuilderEdit").val();
     var investProjArr = [];
@@ -113,16 +113,16 @@ jQuery(document).ready(function(){
   else if(val==3){
 
     var exitCompId = $("#exitCompany").val();
-    var exitValue2 = $("#exitValue2").val();
-    var exitValue1 = $("#exitValue1").val();
-    var exitArticle = $("#exitArticle").val();
-    var exitDate = $("#img_date3").val();
-    var exitPeriod = $("#exitPeriod").val();
-    var exitBuilderId = $("#exitBuilderEdit").val();
+    var exitValue2 = $("#exitValue2").val().trim();
+    var exitValue1 = $("#exitValue1").val().trim();
+    var exitArticle = $("#exitArticle").val().trim();
+    var exitDate = $("#img_date3").val().trim();
+    var exitPeriod = $("#exitPeriod").val().trim();
+    var exitBuilderId = $("#exitBuilderEdit").val().trim();
     var exitProjArr = [];
     $('select[name="exit_proj[]"] ').each(function() {
       exitProjArr.push($("#"+this.id+" option:selected").val());
-      console.log($("#"+this.id+" option:selected").val())
+      //console.log($("#"+this.id+" option:selected").val())
     });
     if(dealId>0) mode = 'update';
     else mode='create';
@@ -215,24 +215,24 @@ function selectDeal(id){
  
   if(val=="1"){
     
-    $("#investment").hide('slow'); 
-    $("#exit").hide('slow'); 
-    $("#saveDiv").show('slow'); 
-    $("#fundrais").show('slow'); 
+    $("#investment").hide(); 
+    $("#exit").hide(); 
+    $("#saveDiv").show(); 
+    $("#fundrais").show(); 
   }
   else if(val=="2"){
   
-    $("#fundrais").hide('slow'); 
-    $("#exit").hide('slow'); 
-    $("#saveDiv").show('slow'); 
-    $("#investment").show('slow'); 
+    $("#fundrais").hide(); 
+    $("#exit").hide(); 
+    $("#saveDiv").show(); 
+    $("#investment").show(); 
   }
   else if(val=="3"){
    
-    $("#investment").hide('slow'); 
-    $("#fundrais").hide('slow'); 
-    $("#saveDiv").show('slow'); 
-    $("#exit").show('slow'); 
+    $("#investment").hide(); 
+    $("#fundrais").hide(); 
+    $("#saveDiv").show(); 
+    $("#exit").show(); 
   }
 }
 
@@ -395,7 +395,7 @@ function deletePEDeal(id){
             <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
                 <TR>
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
-                    <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
+                    <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
                       <TR>
                         <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Private Equity Deals</TD>
                       </TR>

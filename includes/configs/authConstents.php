@@ -7,12 +7,18 @@
     $bulkProjUpdateAuth = isUserPermitted('bulk-project-update', 'read');
     $smarty->assign("bulkProjUpdateAuth", $bulkProjUpdateAuth);
     
+    $companyAuth = isUserPermitted('company', 'manage');
+    $smarty->assign("companyAuth", $companyAuth);
+
     $cityAuth = isUserPermitted('city', 'manage');
     $smarty->assign("cityAuth", $cityAuth);
     
     $bankAuth = isUserPermitted('bank', 'manage');
     $smarty->assign("bankAuth", $bankAuth);
     
+    $peDealsAuth = isUserPermitted('private-equity-deals', 'manage');
+    $smarty->assign("peDealsAuth", $peDealsAuth);
+
     $dailyPerformanceReportAuth = isUserPermitted('daily-performance-report', 'read');
     $smarty->assign("dailyPerformanceReportAuth", $dailyPerformanceReportAuth);
     
