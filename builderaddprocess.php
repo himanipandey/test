@@ -396,7 +396,7 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
             $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
             $smarty->assign("legalEntity", $dataedit['ENTITY']);
-            $smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
+            $smarty->assign("txtBuilderDescription", stripslashes($dataedit['DESCRIPTION']));
             $smarty->assign("txtBuilderUrl", $dataedit['URL']);
             $smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
             $smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER'] ? $dataedit['DISPLAY_ORDER'] : 100);

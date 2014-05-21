@@ -153,7 +153,7 @@
                                            LABEL = '".$txtCityName."',
                                            STATUS = '".$status."',
                                            URL = '".$txtCityUrl."',
-                                           DESCRIPTION = '".$desc."',
+                                           DESCRIPTION = '" . d_($desc) . "',
                                            SUBURB_ID = '".$parent_subId."',
                                            LATITUDE = '".$txtLocalityLattitude."',
                                            LONGITUDE = '".$txtLocalityLongitude."',
@@ -217,7 +217,7 @@
                             else{
                                 //code for insert new locality
                                 $qry = "INSERT INTO ".LOCALITY." (LABEL,SUBURB_ID,status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
-                                      value('".$txtCityName."','".$parent_subId."','".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','".$desc."','".$_SESSION['adminId']."',now(),999)";
+                                      value('".$txtCityName."','".$parent_subId."','".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";
                                 $res = mysql_query($qry) or die(mysql_error());
                                 $locId = mysql_insert_id();
                                 $cityFind = City::find($cityId);  

@@ -104,7 +104,7 @@
                             LABEL = '".$txtCityName."',
                             STATUS = '".$status."',
                             URL	= '".$txtCityUrl."',
-                            DESCRIPTION	= '".$desc."',
+                            DESCRIPTION	= '" . d_($desc) . "',
                             updated_at	= now(),
                             parent_suburb_id = '".$parent_id."'
                             WHERE SUBURB_ID ='".$suburbid."'";
@@ -162,7 +162,7 @@
                         else {
                             //insert new suburb
                              $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,parent_suburb_id, created_at,updated_by,DESCRIPTION) 
-                                        value('".$txtCityName."','".$cityId."','".$_REQUEST['status']."','".$parent_id."', NOW(), '".$_SESSION['adminId']."','".$desc."')";
+                                        value('".$txtCityName."','".$cityId."','".$_REQUEST['status']."','".$parent_id."', NOW(), '".$_SESSION['adminId']."','" . d_($desc) . "')";
                                      $res = mysql_query($qry) or die(mysql_error()." insert");
                                      $suburbId = mysql_insert_id();
                                      $cityName = City::find($cityId);
