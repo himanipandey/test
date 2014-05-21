@@ -131,16 +131,18 @@ class ImageServiceUpload{
 
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
+
         if($this->method == "DELETE")
             $response = static::delete($this->image_id, $params);
         elseif($this->method == "PUT")
             $response = static::update($this->image_id, $params);
         else
             $response = static::create($params);
-        $this->response_header = $response["header"];
-        $this->response_body = $response["body"];
-        $this->status = $response["status"];
-        $this->verify_status();
+        //$this->response_header = $response["header"];
+        //$this->response_body = $response["body"];
+        //$this->status = $response["status"];
+        //$this->verify_status();
+        return $response;
         //$this->raise_errors_if_any();
        
     }
@@ -158,6 +160,7 @@ class ImageServiceUpload{
     }
 
     static function curl_request($post, $method, $url){
+        //echo "curl-start:".microtime(true)."<br>";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -172,27 +175,37 @@ class ImageServiceUpload{
         $response_body = json_decode(substr($response, $header_size));
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close ($ch);
-        //print("<pre>"); echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
+        //print("<pre>"); print_r($post); echo $url;//echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
         //die();
+        //echo "curl-end:".microtime(true)."<br>";
         return array("header" => $response_header, "body" => $response_body, "status" => $status);
     }
 
     static function create($post){
-
+        
         //print("<pre>");var_dump($post);var_dump(static::$image_upload_url);die("heool-create");
+        $returnArr = array();
+        $returnArr = array("params" => $post, "method" => 'POST', "url" => static::$image_upload_url);
+        //print("<pre>");var_dump($returnArr); die("create");
+        return $returnArr;
+        
+        //return static::curl_request($post, 'POST', static::$image_upload_url);
 
-        return static::curl_request($post, 'POST', static::$image_upload_url);
     }
 
     static function delete($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
-        return static::curl_request($post, 'DELETE', $url);
+        //return static::curl_request($post, 'DELETE', $url);
+        $returnArr = array("params" => $post, "method" => 'DELETE', "url"=> $url);
+        return $returnArr;
     }
 
     static function update($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
         //print("<pre>");var_dump($post);var_dump($url);die("heool-update");//
-        return static::curl_request($post, 'POST', $url);
+        //return static::curl_request($post, 'POST', $url);
+        $returnArr = array("params" => $post, "method" => 'POST', "url"=> $url);
+        return $returnArr;
     }
 
     function validate(){

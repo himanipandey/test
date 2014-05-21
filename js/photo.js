@@ -41,7 +41,8 @@ $(document).ready(function(){
             style: "full",
             maxRows: 10,
             name_startsWith: request.term,
-            cityId: window.areaResponse['city']
+            cityId: window.areaResponse['city'],
+            placeType: $("#imgCat :selected").text(),
           },
           success: function( data ) {
             
@@ -298,8 +299,8 @@ function validateThisImg( img ) {
     for( var i = 0; i < img.files.length; i++ ) {
         var f = img.files[i];
         if ( /^image/.test(f.type ) ) {
-            if (f.size > 1048576 ) {
-                alert('images size must be less that 1MB');
+            if (f.size > 6291456 ) {
+                alert('images size must be less than 6MB');
                 return false;
             }
         }

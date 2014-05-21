@@ -217,19 +217,28 @@ if ($_POST['btnSave'] == "Save")
                 {
                         
 
-                            $params = array(
-                                "image_type" => "builder_image",
-                                "folder" => $foldername."/",
-                                "image" => $name,
-                                "title" => strtolower($legalEntity),
-                                "service_image_id" => $_REQUEST['serviceImageId'],
-                                "update" => "update",
-                            );
+                    $params = array(
+                        "image_type" => "builder_image",
+                        "folder" => $foldername."/",
+                        "image" => $name,
+                        "title" => strtolower($legalEntity),
+                        "service_image_id" => $_REQUEST['serviceImageId'],
+                        "update" => "update",
+                    );
+                    $postArr = array();
+                    $unitImageArr = array();
+                    $unitImageArr['img'] = $_FILES['txtBuilderImg'];
+                    $unitImageArr['objectId'] = $builderid;
+                    $unitImageArr['objectType'] = "builder";
+                    $unitImageArr['newImagePath'] = $newImagePath;
+                    $unitImageArr['params'] = $params;  
+                    $postArr[] = $unitImageArr; 
+                    $response   = writeToImageService( $postArr);
 
-                        $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);//echo "here";
+                    foreach ($response as $k => $v) {
                        
                         
-                        if(empty($response["serviceResponse"]["service"]->response_body->error->msg))
+                        if(empty($v->error->msg))
                         {
 
                             
@@ -244,7 +253,7 @@ if ($_POST['btnSave'] == "Save")
                             $image_id = $image_id->id;*/
                             //$image_id = $response['serviceResponse']["service"]->data();
                             //$image_id = $image_id->id;
-                             $image_id = $response["serviceResponse"]["service"]->response_body->data->id;
+                             $image_id = $v->data->id;
                            
                          
                             $imgurl = $newfold."/".$name; 
@@ -320,9 +329,10 @@ if ($_POST['btnSave'] == "Save")
                         }	
                         else 
                         {
-                           $ErrorMsg2 = "Problem in image upload: ".($response["serviceResponse"]["service"]->response_body->error->msg);
+                           $ErrorMsg2 = "Problem in image upload: ".($v->error->msg);
                             
                         }
+                    }    
                 }
                 else 
                 {
@@ -444,7 +454,7 @@ if ($_POST['btnSave'] == "Save")
             //array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("imgSrc", $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("service_image_id", $data[0]['SERVICE_IMAGE_ID']);
-    //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
+    
 
 
 			
