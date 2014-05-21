@@ -33,4 +33,8 @@ class ResiBuilder extends Objects
         $responce =  ResiBuilder::find('all',array('conditions'=>array("builder_id = ?",$builderId),"select" => "url")); 
         return $responce;
     }
+    static function getbuildername($builderId) {
+        $responce =  ResiBuilder::find('all',array('conditions'=>array("builder_id = ?",$builderId),"select" => "builder_name")); 
+        return $responce;
+    }
 }

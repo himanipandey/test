@@ -110,7 +110,9 @@
                 success: function(flag){
                  if(flag == 1) {
                    $('#success').html("<font color=green>Old Builder id: <b>" + builderinfo[0] + "</b> Is Now Replaced By New Builder id: <b>" + builderinfo[1] + "</b> Successfully</font>");
-                 }
+                 }else{
+					$('#success').html(flag);
+				  }
                 }
              });
           }

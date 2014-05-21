@@ -26,6 +26,17 @@ class Locality extends ActiveRecord\Model
         return $getLocality;
     }
     
+    static function getLocalityCity($locId) {
+        $conditions = array("locality_id = ? and a.status = ? and locality.status = ?", $locId, 'Active', 'Active');
+        $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
+        $join .= 'INNER JOIN city c ON(a.city_id = c.city_id)';
+
+        $getLocalityCity = Locality::find('all',array('joins' => $join, 
+               "conditions" => $conditions, "select" => "locality.label locname, c.label as cityname"));
+               
+        return $getLocalityCity;
+    }
+    
     static function getAllLocalityByCity($ctid) {
         $conditions = array("a.city_id = ?", $ctid);
         $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
