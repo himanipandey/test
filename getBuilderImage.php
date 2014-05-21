@@ -7,6 +7,7 @@ include("modelsConfig.php");
 include("includes/configs/configs.php");
 include("builder_function.php");
 require_once("common/function.php");
+require_once("function/locality_functions.php");
 require_once("imageService/image_service_upload.php");
 
 if($_POST['part'] == 'builderImage') {
@@ -35,25 +36,59 @@ if($_POST['part'] == 'builderInfo') {
 }
 
 if($_POST['part'] == 'replace-builder') {
-    $echovar =  explode(",", $_POST['builderinfo']);
-    $oldBuilder = $echovar[0];    
-    $newBuilder = $echovar[1];
-    $resource = ResiProject::replace_builder_id($oldBuilder, $newBuilder);
-    if($resource){
-        $builderAlias['builder_id'] = $oldBuilder;
-        $builderAlias['alias_with'] = $newBuilder;
-        $builderAlias['updated_date'] = date('Y-m-d H:i:s');
-        $builderAlias['updated_by'] = $_SESSION['adminId'];
-        $builderAlias['table_name'] = 'builder_alias';
-        BuilderAlias::insetUpdateBuilderAlias($builderAlias);
-        $exeQry = ResiBuilder::updatestatusofbuilder($oldBuilder);
-        if($exeQry) {
-			$oldUrl = ResiBuilder::getbuilderurl($oldBuilder);
-			$newUrl = ResiBuilder::getbuilderurl($newBuilder);
-			$action = insertUpdateInRedirectTbl($newUrl[0]->url, $oldUrl[0]->url);
-            echo 1;
-        }
-    }
+	
+	$echovar =  explode(",", $_POST['builderinfo']);
+	$oldBuilder = $echovar[0];    
+	$newBuilder = $echovar[1];
+	ResiProject::transaction(function(){
+		try{	
+			global $oldBuilder,$newBuilder; 				
+			
+			#updating project urls with new builder
+			$projects = ResiProject::find("all",array("conditions"=>array("builder_id = ?",$oldBuilder)));  
+			$new_builder_name = ResiBuilder::getbuildername($newBuilder);
+			if($projects){
+			  foreach($projects as $key => $project){
+				$locCity = Locality::getLocalityCity($project->locality_id);	   
+				$txtProjectURL = createProjectURL($locCity[0]->locname, $locCity[0]->cityname, $new_builder_name[0]->builder_name, $project->project_name, $project->project_id);
+				$updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' where PROJECT_ID='".$project->project_id."' and version = 'Cms'";
+				$resUrl = mysql_query($updateQuery);				
+				#updating d_inventory_prices, d_inventory_prices & project_plan_images
+			     mysql_query("update d_inventory_prices set builder_id ='".$newBuilder."', builder_name = '".$new_builder_name."' where project_id = '".$project->project_id."'");			    
+			     mysql_query("update d_inventory_prices_tmp set builder_id ='".$newBuilder."', builder_name = '".$new_builder_name."' where project_id = '".$project->project_id."'"); 
+			     mysql_query("update project_plan_images set builder_id ='".$newBuilder."' where project_id = '".$project->project_id."'") or die(mysql_error());
+			     
+			  }
+			}	
+			
+			$resource = ResiProject::replace_builder_id($oldBuilder, $newBuilder);  		
+			   
+			if($resource){
+				
+				$builderAlias['builder_id'] = $oldBuilder;
+				$builderAlias['alias_with'] = $newBuilder;
+				$builderAlias['updated_date'] = date('Y-m-d H:i:s');
+				$builderAlias['updated_by'] = $_SESSION['adminId'];
+				$builderAlias['table_name'] = 'builder_alias';
+				BuilderAlias::insetUpdateBuilderAlias($builderAlias);
+				$exeQry = ResiBuilder::updatestatusofbuilder($oldBuilder);
+				if($exeQry) {
+					$oldUrl = ResiBuilder::getbuilderurl($oldBuilder);
+					$newUrl = ResiBuilder::getbuilderurl($newBuilder);
+					$action = insertUpdateInRedirectTbl($newUrl[0]->url, $oldUrl[0]->url);
+					echo 1;
+				}else{
+				   echo 2;	
+				}
+				
+			}
+		}catch(Exception $e){
+			echo 2;
+		}
+		
+	});
+    
 }
+
 ?>
 
