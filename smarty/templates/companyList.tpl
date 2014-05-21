@@ -41,7 +41,7 @@ jQuery(document).ready(function(){
 		var phone = $('#phone').val().trim();
 		var fax = $('#fax').val().trim();
 		var email = $('#email').val().trim();
-		var web = $('#web').val().trim();
+		var web = $('#web').val();
 		var pan = $('#pan').val().trim();
 		var status = $('#status').val();
 		var compid = $('#compid').val();
@@ -86,6 +86,12 @@ jQuery(document).ready(function(){
     else{
           $('#errmsgcomptype').html('');
     }
+
+
+
+
+
+
 
     var data = { id:compid, type:compType, name:name,des:des, address : address, city:city, pincode : pincode, person : person, phone:phone, fax:fax, email:email, web:web, pan:pan, status:status, task : "createComp", mode:mode}; 
 
