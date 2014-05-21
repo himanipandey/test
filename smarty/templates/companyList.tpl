@@ -11,24 +11,31 @@
 
 jQuery(document).ready(function(){ 
 	$("#create_button").click(function(){
-	  //cleanFields();
+	  cleanFields();
 	  
-	    $('#search-bottom').hide('slow');
-	   $('#create_Landmark').show('slow'); 
+	    $('#search_bottom').hide('slow');
+	   $('#create_company').show('slow'); 
 	});
 
 	$("#exit_button").click(function(){
-	  //cleanFields();
-	   $('#create_Landmark').hide('slow'); 
+	  cleanFields();
+	   $('#create_company').hide('slow'); 
 	 
-	    $('#search-bottom').show('slow');
+	    $('#search_bottom').show('slow');
 	});
+
+
+
+  
+
+
 
 	$("#lmkSave").click(function(){
 		var compType = $('#companyTypeEdit').children(":selected").val();
 		var name = $('#name').val();        
 		var des = $('#des').val();
 		var address = $('#address').val();
+    var city = $('#city option:selected').val();
 		var pincode = $('#pincode').val();
 		var person = $('#person').val();
 		var phone = $('#phone').val();
@@ -37,23 +44,62 @@ jQuery(document).ready(function(){
 		var web = $('#web').val();
 		var pan = $('#pan').val();
 		var status = $('#status').val();
-		
+		var compid = $('#compid').val();
 		 var error = 0;
 	    var mode='';
 	    if(compid) mode = 'update';
 	    else mode='create';
 
+
+    if(city <= 0 || city=='') {
+      $('#errmsgcity').html('<font color="red">Please select a City.</font>');
+      $("#city").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgcity').html('');
+    }
+
+    if(address==''){
+      $('#errmsgaddress').html('<font color="red">Please provide an Address for the company</font>');
+      $("#address").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgaddress').html('');
+    }
+
+    if(name==''){
+      $('#errmsgname').html('<font color="red">Please provide a Company Name.</font>');
+      $("#name").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgname').html('');
+    }
+
+    if(compType==''){
+      $('#errmsgcomptype').html('<font color="red">Please select a Company Type.</font>');
+      $("#companyTypeEdit").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgcomptype').html('');
+    }
+
+    var data = { id:compid, type:compType, name:name,des:des, address : address, city:city, pincode : pincode, person : person, phone:phone, fax:fax, email:email, web:web, pan:pan, status:status, task : "createComp", mode:mode}; 
+
 	    if (error==0){
       
 	      	$.ajax({
 	            type: "POST",
-	            url: '/saveCompany.php',
-	            data: { id:compid, type: compType, name : name, des : des, address : address, pincode : pincode, person : person, phone:phone, fax:fax, email:email web:web, pan:pan, status:status, task : 'createComp' , mode:mode},
+	            url: "/saveCompany.php",
+	            data: data,
 	            success:function(msg){
-	              //alert(msg);
+	           
 	               if(msg == 1){
 	                alert("Saved");
-	                location.reload(true);
+	               location.reload(true);
 	                //$("#onclick-create").text("Landmark Successfully Created.");
 	               }
 	               else if(msg == 2){
@@ -79,7 +125,63 @@ jQuery(document).ready(function(){
 	});
 
 
-});
+
+
+}); //end document.ready
+
+
+function cleanFields(){
+    $("#compid").val('');
+    $('#companyTypeEdit').val('');
+    $("#name").val('');
+    $("#des").val('');
+    $("#address").val('');
+    $("#city").val('');
+    $("#pincode").val('');
+    $("#person").val('');
+    $("#phone").val('');
+    $("#fax").val('');
+    $("#email").val('');
+    $("#web").val('');
+    $("#pan").val('');
+    $("#status").val('');
+   
+
+    $('#errmsgcity').html('');
+    $('#errmsgcomptype').html('');
+    $('#errmsgname').html('');
+    $('#errmsgaddress').html('');
+    
+
+}
+
+
+
+function editCompany(id,name,type,des, status, pan, email, address, city, pin, person, fax, phone){
+    cleanFields();
+    $("#compid").val(id);
+    $('#city').val(city);
+    $("#companyTypeEdit").val(type);
+    $("#name").val(name);
+    $("#des").val(des);
+    $("#address").val(address);
+    $("#pincode").val(pin);
+    $("#person").val(person);
+    $("#phone").val(phone);
+    //$("#web").val(lmkweb);
+    $("#fax").val(fax);
+    $("#status").val(status);
+    $("#email").val(email);
+   
+    $("#pan").val(pan);
+    //$('#search-top').hide('slow');
+    $('#search_bottom').hide('slow');
+    window.scrollTo(0, 0);
+
+    if($('#create_company').css('display') == 'none'){ 
+     $('#create_company').show('slow'); 
+    }
+}
 
 </script>
 </TD>
@@ -116,14 +218,14 @@ jQuery(document).ready(function(){
                   <div align="left" style="margin-bottom:5px;">
                   <button type="button" id="create_button" align="left">Create New Company</button>
                 </div>
-                  <div id='create_Landmark' style="display:none" align="left">
+                  <div id='create_company' style="display:none" align="left">
                   <TABLE cellSpacing=2 cellPadding=4 width="93%" align="left" border=0 >
                   <form method="post" enctype="multipart/form-data" id="formlmk" name="formlmk">
                     <input type="hidden" name="old_sub_name" value="">
                     <div>
                     
                     <tr>
-                      <td width="10%" align="right" >*Company Type: </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Company Type: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="companyTypeEdit" name="companyEdit" >
                                        <option value=''>select place type</option>
@@ -132,35 +234,40 @@ jQuery(document).ready(function(){
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left" id="errmsgplacetype"></td>
+                        <td width="40%" align="left" id="errmsgcomptype"></td>
                     </tr>
                     <tr>
-                      <td width="10%" align="right" >*Name : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Name : </td>
                       <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
-                      <td><input type="hidden", id="placeTypeHidden"></td>
+                      <td><input type="hidden", id="compid"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" valign="top">Description :</td>
                       <td width="30%" align="left" >
-                      <input type=text name="des" id="des"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
+                      <input type=text name="des" id="des"  style="width:250px;">
                       </td>
-                      <td><input type="hidden", id="lmkid">  </td>
+                      
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">*Address :</td>
+                      <td width="20%" align="right" valign="top"><font color = "red">*</font>Address :</td>
                       <td width="30%" align="left" >
                       <textarea name="address" rows="10" cols="35" id="address" style="width:250px;"></textarea></td>
-                      </td>
-                      <td><input type="hidden", id="lmkid">  </td>
+                      <td width="20%" align="left" id="errmsgaddress"></td>
+                   
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" valign="top">City :</td>
-                      <td width="30%" align="left" >
-                      <input type=text name="city" id="city"  style="width:250px;"><td width="20%" align="left" id="errmsgaddress"></td>
-                      </td>
+                      <td width="20%" align="right" valign="top"><font color = "red">*</font>City :</td>
+                      <td width="30%" align="left" ><select id="city" name="city" >
+                                       <option value=''>select city</option>
+                                       {foreach from=$cityArray key=k item=v}
+                                           <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
+                                       {/foreach}
+                                    </select></td>
+                      <td width="20%" align="left" id="errmsgcity"></td>
+                      
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
 
@@ -173,7 +280,7 @@ jQuery(document).ready(function(){
                       <td width="20%" align="right" valign="top">Contact Person :</td>
                       <td width="30%" align="left"><input type=text name="person" id="person" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
                       </td>
-                      <td><input type="hidden", id="lmkid">  </td>
+                
                     </tr>
 
                     <tr>
@@ -192,10 +299,10 @@ jQuery(document).ready(function(){
                       <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
                     </tr>
 
-                    <tr>
+                    <!--<tr>
                       <td width="20%" align="right" >Website : </td>
                       <td width="30%" align="left"><input type=text name="web" id="web" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
-                    </tr>
+                    </tr>-->
 
                     <tr>
                       <td width="20%" align="right" >Pancard No : </td>
@@ -203,7 +310,7 @@ jQuery(document).ready(function(){
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" >*Status : </td>
+                      <td width="20%" align="right" >Status : </td>
                       <td width="30%" align="left"><select id="status" name="status" >
                         <option name=one value='Active'> Active </option>
                         <option name=two value='Inactive' > Inactive </option>
@@ -226,40 +333,27 @@ jQuery(document).ready(function(){
 
 
 
-                    <div id="search-bottom">
+                    <div id="search_bottom">
                     <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
                         <form name="form1" method="post" action="">
                           <thead>
                                 <TR class = "headingrowcolor">
-                                  <th  width=1% align="center">Serial</th>
-                                  <th  width=5% align="center">Name</th>
-                                  <TH  width=8% align="center">Vicinity</TH>
-                                  <TH  width=4% align="center">Place Type</TH>
-                                  <TH  width=8% align="center">Location in Map</TH>
+                                  <th  width=2% align="center">No.</th>
+                                  <th  width=5% align="center">Type</th>
+                                  <TH  width=8% align="center">Name</TH>
+                                  <TH  width=8% align="center">Address</TH>
+                                  <TH  width=8% align="center">Contact Person</TH>
                                   
-                                  <TH  width=4% align="center">Priority
-                                 <!-- {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
-                                      <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
-                                  {else}
-                                      <span style="clear:both;margin-left:10px"><input type="image" name="desc" value="desc" src="images/arrow-down.png"></span>
-                                  {/if}-->
-                                  </TH> 
                                  <TH width=6% align="center">Status</TH> 
-         <TH width=3% align="center">Save</TH>
+                                <TH width=3% align="center">Edit</TH>
                                 </TR>
                               
                           </thead>
                           <tbody>
-                                <!--<TR><TD colspan=12 class=td-border>&nbsp;</TD></TR>-->
+                               
                                 {$i=0}
-                                <!--{if isset($suburbId)}
-                                    {$type = DISPLAY_ORDER_SUBURB}
-                                {else if isset($localityId)}
-                                    {$type = DISPLAY_ORDER_LOCALITY}
-                                {else}
-                                    {$type = DISPLAY_ORDER}
-                                {/if}-->
-                                {foreach from=$nearPlacesArr key=k item=v}
+                                
+                                {foreach from=$compArr key=k item=v}
                                     {$i=$i+1}
                                     {if $i%2 == 0}
                                       {$color = "bgcolor = '#F7F7F7'"}
@@ -268,35 +362,13 @@ jQuery(document).ready(function(){
                                     {/if}
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v.name}</TD>
-                                  <TD align=center class=td-border>{$v.vicinity}</TD>
-                                  <TD align=center class=td-border>{$v.display_name}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
-                  <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
-
-                                  </TD>
+                                  <TD align=center class=td-border>{$v['type']}</TD>
+                                  <TD align=center class=td-border>{$v['name']}</TD>
+                                  <TD align=center class=td-border>{$v['address']} City-{$v['city_name']} Pin-{$v['pin']}</TD>
+                                  <TD align=center class=td-border>{$v['person']} {$v['phone']}</TD>
+                                  <TD align=center class=td-border>{$v['status']}</TD>
                                   
-                                  <!--<TD align=center class=td-border>{$v.priority}</TD>-->
-                                   
-                                   <TD align=center class=td-border>
-                                    <select id="priority{$v.id}" value="" >
-          <option name=one value=1  {if $v.priority == 1} selected="selected"  {/if}>1</option>
-          <option name=two value=2  {if $v.priority == 2} selected="selected"  {/if}>2</option>
-          <option name=three value=3 {if $v.priority == 3} selected="selected"  {/if}>3</option>
-          <option name=four value=4 {if $v.priority == 4} selected="selected"  {/if}>4</option>
-          <option name=five value=5 {if $v.priority == 5} selected="selected"  {/if}>5</option>
-          </select>
-          </TD>
-        <TD align=center class=td-border>  
-  <select id="status{$v.id}" value=''>
-          <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
-          <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
-                  
-        </select>
-      
-
-      </TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Save</a> <button type="button" id="edit_button{$v.id}" onclick="return landmarkEdit('{$v.id}', '{$v.city_id}', '{$v.place_type_id}', '{$v.name}', '{$v.vicinity}', '{$v.latitude}', '{$v.longitude}', '{$v.phone_number}', '{$v.website}', '{$v.priority}', '{$v.status}')" align="left">Edit</button></TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}' );">Edit</a></TD>
                                 </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->

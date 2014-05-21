@@ -145,17 +145,26 @@ jQuery(document).ready(function(){
       $("#img_date3").focus();
       error = 1;
     }
+    else{
+          $('#errmsgexitdate').html('');
+    }
 
     if(exitBuilderId==''){
       $('#errmsgexitbuilder').html('<font color="red">Please select a Builder.</font>');
       //$("#img_date1").focus();
       error = 1;
     }
+    else{
+          $('#errmsgexitbuilder').html('');
+    }
 
     if(exitCompId==''){
       $('#errmsgexitname').html('<font color="red">Please select a Private Equity</font>');
       $("#exitCompany").focus();
       error = 1;
+    }
+    else{
+          $('#errmsgexitname').html('');
     }
 
   }
