@@ -50,7 +50,7 @@ if($_POST['part'] == 'replace-builder') {
 			if($projects){
 			  foreach($projects as $key => $project){
 				$locCity = Locality::getLocalityCity($project->locality_id);	   
-				$txtProjectURL = createProjectURL($locCity[0]->locname, $locCity[0]->cityname, $new_builder_name[0]->builder_name, $project->project_name, $project->project_id);
+				$txtProjectURL = createProjectURL($locCity[0]->cityname, $locCity[0]->locname,  $new_builder_name[0]->builder_name, $project->project_name, $project->project_id);
 				$updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' where PROJECT_ID='".$project->project_id."' and version = 'Cms'";
 				$resUrl = mysql_query($updateQuery);				
 				#updating d_inventory_prices, d_inventory_prices & project_plan_images
