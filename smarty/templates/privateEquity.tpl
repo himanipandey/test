@@ -233,13 +233,13 @@ jQuery(document).ready(function(){
 	            success:function(msg){
 	              //alert(msg);
 	               if(msg == 1){
-	                alert("Saved");
+	               
 	                location.reload(true);
 	                //$("#onclick-create").text("Landmark Successfully Created.");
 	               }
 	               else if(msg == 2){
 	                //$("#onclick-create").text("Landmark Already Added.");
-	                   alert("Already Saved");
+	                   //alert("Already Saved");
 	                   //location.reload(true); 
 	               }
 	               else if(msg == 3){
@@ -405,14 +405,14 @@ function deletePEDeal(id){
               success:function(msg){
                 //alert(msg);
                  if(msg == 1){
-                  alert("Deleted");
+                 
                   location.reload(true);
                   $(window).scrollTop(0);
                   //$("#onclick-create").text("Landmark Successfully Created.");
                  }
                  else if(msg == 2){
                   //$("#onclick-create").text("Landmark Already Added.");
-                     alert("Already Saved");
+                    
                      //location.reload(true); 
                  }
                  else if(msg == 3){

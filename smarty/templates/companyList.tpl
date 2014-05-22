@@ -132,14 +132,14 @@ jQuery(document).ready(function(){
 	            success:function(msg){
 	           
 	               if(msg == 1){
-	                alert("Saved");
+	               
 	               location.reload(true);
                  $(window).scrollTop(0);
 	                //$("#onclick-create").text("Landmark Successfully Created.");
 	               }
 	               else if(msg == 2){
 	                //$("#onclick-create").text("Landmark Already Added.");
-	                   alert("Already Saved");
+	                   
 	                   location.reload(true); 
 	               }
 	               else if(msg == 3){

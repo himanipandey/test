@@ -18,6 +18,7 @@ if($_POST['task']=='createComp'){
 
     $name   = $_POST['name'];
     $address   = $_POST['address'];
+    $address = preg_replace('!\s+!', ' ', $address);
     $city   = $_POST['city'];
     $pin   = $_POST['pincode'];
     $person   = $_POST['person'];
