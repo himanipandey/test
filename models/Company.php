@@ -15,7 +15,7 @@ class Company extends ActiveRecord\Model
         
         $returnArr = array();
         foreach ($companyDetail as $v) {
-            $sql = "SELECT address_line_1, city, pincode FROM addresses WHERE (table_name='company' and table_id={$v->id})";
+            $sql = "SELECT address_line_1, city_id, pincode FROM addresses WHERE (table_name='company' and table_id={$v->id})";
             $result = self::Connection()->query($sql);
             $address_row = $result->fetch(PDO::FETCH_NUM);
 

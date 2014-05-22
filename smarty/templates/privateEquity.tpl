@@ -55,11 +55,26 @@ jQuery(document).ready(function(){
       $("#img_date1").focus();
       error = 1;
     }
+    else{
+          $('#errmsgfunddate').html('');
+    }
+
+    if(fundValue!='' && !isNumeric(fundValue)){
+      $('#errmsgfundvalue').html('<font color="red">Please select a Numeric Value.</font>');
+      $("#fundValue").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgfundvalue').html('');
+    }
 
     if(fundCompId==''){
       $('#errmsgfundname').html('<font color="red">Please select a Private Equity.</font>');
       $("#fundCompany").focus();
       error = 1;
+    }
+    else{
+          $('#errmsgfundname').html('');
     }
 
 
@@ -96,11 +111,26 @@ jQuery(document).ready(function(){
       $("#img_date2").focus();
       error = 1;
     }
+    else{
+          $('#errmsginvestdate').html('');
+    }
+
+    if(investValue!='' && !isNumeric(investValue)){
+      $('#errmsginvestvalue').html('<font color="red">Please select a Numeric Value.</font>');
+      $("#investValue").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsginvestvalue').html('');
+    }
 
     if(investBuilderId==''){
       $('#errmsginvestbuilder').html('<font color="red">Please select a Builder.</font>');
-      //$("#img_date1").focus();
+      $("#investBuilderEdit").focus();
       error = 1;
+    }
+    else{
+          $('#errmsginvestbuilder').html('');
     }
 
 
@@ -108,6 +138,9 @@ jQuery(document).ready(function(){
       $('#errmsginvestname').html('<font color="red">Please select a Private Equity.</font>');
       $("#investCompany").focus();
       error = 1;
+    }
+    else{
+          $('#errmsginvestname').html('');
     }
   }
   else if(val==3){
@@ -149,9 +182,27 @@ jQuery(document).ready(function(){
           $('#errmsgexitdate').html('');
     }
 
+    if(exitValue1!='' && !isNumeric(exitValue1)){
+      $('#errmsgexitvalue1').html('<font color="red">Please select a Numeric Value.</font>');
+      $("#exitValue1").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgexitvalue1').html('');
+    }
+
+    if(exitValue2!='' && !isNumeric(exitValue2)){
+      $('#errmsgexitvalue2').html('<font color="red">Please select a Numeric Value.</font>');
+      $("#exitValue2").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgexitvalue2').html('');
+    }
+
     if(exitBuilderId==''){
       $('#errmsgexitbuilder').html('<font color="red">Please select a Builder.</font>');
-      //$("#img_date1").focus();
+      $("#exitBuilderEdit").focus();
       error = 1;
     }
     else{
@@ -353,6 +404,7 @@ function deletePEDeal(id){
                  if(msg == 1){
                   alert("Deleted");
                   location.reload(true);
+                  $(window).scrollTop(0);
                   //$("#onclick-create").text("Landmark Successfully Created.");
                  }
                  else if(msg == 2){
@@ -374,6 +426,22 @@ function deletePEDeal(id){
     
 }
 
+function isNumeric(val) {
+        var validChars = '0123456789.';
+        var validCharsforfirstdigit = '-01234567890';
+        if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
+                return false;
+        
+
+        for(var i = 1; i < val.length; i++) {
+            if(validChars.indexOf(val.charAt(i)) == -1)
+                return false;
+        }
+
+
+        return true;
+}
+
 </script>
 </TD>
   </TR>
@@ -390,8 +458,8 @@ function deletePEDeal(id){
         {include file="{$PROJECT_ADD_TEMPLATE_PATH}left.tpl"}
     </TD>
           <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
-          <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
-    {if $priorityMgmtPermissionAccess == 1}
+          <TD vAlign=top align=middle width="100%" bgColor=#eeeeee >
+    {if $peDealsAuth == 1}
             <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
                 <TR>
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
@@ -443,7 +511,7 @@ function deletePEDeal(id){
 
                     <tr>
                       <td width="10%" align="right" >Value (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="fundValue" id="fundValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="fundValue" id="fundValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsgfundvalue"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
@@ -525,7 +593,7 @@ function deletePEDeal(id){
                   </tr>
                     <tr>
                       <td width="10%" align="right" >Value of Investment (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="investValue" id="investValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="investValue" id="investValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsginvestvalue"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
@@ -607,13 +675,13 @@ function deletePEDeal(id){
                   </tr>
                     <tr>
                       <td width="10%" align="right" >Value of Exit (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="exitValue2" id="exitValue2"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="exitValue2" id="exitValue2"  style="width:250px;"></td><td width="40%" align="left" id="errmsgexitvalue2"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
                       <td width="10%" align="right" >Value of Investment (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="exitValue1" id="exitValue1"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="exitValue1" id="exitValue1"  style="width:250px;"></td><td width="40%" align="left" id="errmsgexitvalue1"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
@@ -647,10 +715,17 @@ function deletePEDeal(id){
                     <tr>
                       <td >&nbsp;</td>
                       <td align="left" style="padding-left:50px;" >
-                      <input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp; <input type="button" name="exit_button" id="exit_button" value="Exit" style="cursor:pointer">                 
+                      <input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp;                
                       </td>
                     </tr>
                     </tbody>
+                    <tr>
+                      <td >&nbsp;</td>
+                      <td align="left" style="padding-left:50px;" >
+                      <input type="button" name="exit_button" id="exit_button" value="Exit" style="cursor:pointer">              
+                      </td>
+                    </tr>
+                    
                   </form>
                   </TABLE> 
                   </div> 

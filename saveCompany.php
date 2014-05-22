@@ -38,7 +38,7 @@ if($_POST['task']=='createComp'){
         $res_sql = mysql_query($sql);
         if(mysql_affected_rows()>0){
 
-            $query1 = "UPDATE addresses SET address_line_1='{$address}', city='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='company' and table_id='{$id}' )";
+            $query1 = "UPDATE addresses SET address_line_1='{$address}', city_id='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='company' and table_id='{$id}' )";
             $res1 = mysql_query($query1);
 
             $query2 = "UPDATE broker_contacts SET name='{$person}', contact_email='{$email}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (broker_id='{$id}' and type='NAgent' )";
@@ -74,7 +74,7 @@ if($_POST['task']=='createComp'){
         $res = mysql_query($query) or mysql_error();
         if(mysql_affected_rows()>0){
             $comp_id = mysql_insert_id();
-            $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city, pincode, updated_by, created_at) values ('company', '{$comp_id}', '{$address}', '{$city}', '{$pin}', {$_SESSION['adminId']}, NOW())";
+            $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, pincode, updated_by, created_at) values ('company', '{$comp_id}', '{$address}', '{$city}', '{$pin}', {$_SESSION['adminId']}, NOW())";
             $res1 = mysql_query($query1);
 
             $query2 = "INSERT INTO broker_contacts (broker_id, name, type, contact_email, updated_by, created_at, updated_at) values ('{$comp_id}', '{$person}', 'NAgent', '{$email}', {$_SESSION['adminId']}, NOW(), NOW())";

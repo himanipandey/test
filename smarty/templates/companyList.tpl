@@ -106,6 +106,7 @@ jQuery(document).ready(function(){
 	               if(msg == 1){
 	                alert("Saved");
 	               location.reload(true);
+                 $(window).scrollTop(0);
 	                //$("#onclick-create").text("Landmark Successfully Created.");
 	               }
 	               else if(msg == 2){
@@ -206,7 +207,7 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, p
     </TD>
           <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
           <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
-    {if $priorityMgmtPermissionAccess == 1}
+    {if $companyAuth == 1}
             <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
                 <TR>
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>

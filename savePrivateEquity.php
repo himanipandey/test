@@ -32,6 +32,7 @@ if($_POST['task']=="save"){
 	$pe_id = $_POST['pe_id'];
 	$type = $_POST['type'];
 	$builder_id = $_POST['builderId'];
+	
 	$value = $_POST['value'];
 	$article = $_POST['article'];
 	$date = $_POST['date'];
@@ -39,7 +40,11 @@ if($_POST['task']=="save"){
 	$mode = $_POST['mode'];
 
 	if($mode=="create"){
-		$query = "INSERT INTO private_equity_deals (type, pe_id, builder_id, value, transaction_date, article_link, extra_values) values ('$type', '$pe_id', '$builder_id', '$value', '$date', '$article', '$extra')";
+		if(empty($builder_id)) 
+			$query = "INSERT INTO private_equity_deals (type, pe_id, value, transaction_date, article_link, extra_values) values ('$type', '$pe_id', '$value', '$date', '$article', '$extra')";
+		else
+			$query = "INSERT INTO private_equity_deals (type, pe_id, builder_id, value, transaction_date, article_link, extra_values) values ('$type', '$pe_id', $builder_id, '$value', '$date', '$article', '$extra')";
+		
 		$res = mysql_query($query);
         if(mysql_affected_rows()>0)
             echo "1";
@@ -51,8 +56,6 @@ if($_POST['task']=="save"){
 
 if($_POST['task']=="delete"){
 	$id = $_POST['id'];
-	
-
 	
 		$query = "DELETE FROM private_equity_deals WHERE id='{$id}'";
 		$res = mysql_query($query);
