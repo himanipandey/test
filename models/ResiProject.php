@@ -205,4 +205,9 @@ class ResiProject extends Objects
         $project->set_attr_updated_by($updated_by);
         $project->save();
     }
+    
+   public static function replace_builder_id($oldBuilder_id, $newBuilder_id){
+        $responce =  self::update_all(array('conditions' => array('builder_id' => $oldBuilder_id), 'set' => "builder_id = $newBuilder_id"));
+        return $responce;
+    }
 }

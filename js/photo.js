@@ -41,7 +41,8 @@ $(document).ready(function(){
             style: "full",
             maxRows: 10,
             name_startsWith: request.term,
-            cityId: window.areaResponse['city']
+            cityId: window.areaResponse['city'],
+            placeType: $("#imgCat :selected").text(),
           },
           success: function( data ) {
             
@@ -298,8 +299,8 @@ function validateThisImg( img ) {
     for( var i = 0; i < img.files.length; i++ ) {
         var f = img.files[i];
         if ( /^image/.test(f.type ) ) {
-            if (f.size > 1048576 ) {
-                alert('images size must be less that 1MB');
+            if (f.size > 6291456 ) {
+                alert('images size must be less than 6MB');
                 return false;
             }
         }
@@ -360,7 +361,7 @@ function showThisPhoto( imgData ) {
     imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
     imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
-                        '<div class="img-wrap" style="float:left;"> <img src="'+imgData['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 alt = "'+imgData['alt_text']+'"/> </div>'+
+                        '<div class="img-wrap" style="float:left;"> <img src="'+imgData['SERVICE_IMAGE_PATH']+'?width=130&height=100" width = 150 height = 100 alt = "'+imgData['alt_text']+'"/> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
                             '<b>Category:</b>&nbsp;&nbsp;'+imgData['IMAGE_CATEGORY'];
        template +='<input type = "hidden" name="imgCate_'+imgData['IMAGE_ID']+'[]" value = "'+imgData['IMAGE_CATEGORY']+'">';

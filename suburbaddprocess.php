@@ -104,7 +104,7 @@
                             LABEL = '".$txtCityName."',
                             STATUS = '".$status."',
                             URL	= '".$txtCityUrl."',
-                            DESCRIPTION	= '".$desc."',
+                            DESCRIPTION	= '" . d_($desc) . "',
                             updated_at	= now(),
                             parent_suburb_id = '".$parent_id."'
                             WHERE SUBURB_ID ='".$suburbid."'";
@@ -126,7 +126,7 @@
                                         if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
                                             if(strcasecmp($desc,$oldDesc) != 0)
                                                 $content_flag = 0;								
-                                        }elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+                                        }elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR' || $_SESSION['DEPARTMENT'] == 'CONTENT'){
                                             $content_flag = ($_POST["content_flag"])? 1 : 0;
                                         }
                                         if(is_numeric($content_flag)){
@@ -162,7 +162,7 @@
                         else {
                             //insert new suburb
                              $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,parent_suburb_id, created_at,updated_by,DESCRIPTION) 
-                                        value('".$txtCityName."','".$cityId."','".$_REQUEST['status']."','".$parent_id."', NOW(), '".$_SESSION['adminId']."','".$desc."')";
+                                        value('".$txtCityName."','".$cityId."','".$_REQUEST['status']."','".$parent_id."', NOW(), '".$_SESSION['adminId']."','" . d_($desc) . "')";
                                      $res = mysql_query($qry) or die(mysql_error()." insert");
                                      $suburbId = mysql_insert_id();
                                      $cityName = City::find($cityId);

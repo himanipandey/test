@@ -26,7 +26,7 @@ $callId= $callDetail->callid;
 
 $params = array();
 $params["apiKey"] = CLOUDAGENT_KEY;
-$params["did"] = $arrCampaignDids[$campaign];
+$params["did"] = CampaignDids::getCampaignDid($campaign);
 $params["phoneName"] = getAgentContact();
 $params["custNumber"] = $contactNo;
 $params["uui"] = $callId;

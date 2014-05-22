@@ -297,7 +297,7 @@ $(document).ready(function(){
 				  $(this).show();
 				  
 				 if($(this).children('#tower_dropdown').length == 0){
-					$(this).append('&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;');
+					$(this).append('&nbsp;&nbsp;<b>Tower:<font color = "red">*</font></b>&nbsp;&nbsp;');
 					$(this).append($('#select_tower').html());
 				 }
 				 if($(this).children('#floor_from').length == 0){
@@ -361,7 +361,7 @@ $(document).ready(function(){
 				  $(this).show();
 				  
 				 if($(this).children('#tower_dropdown').length == 0){
-					$(this).append('&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;');
+					$(this).append('&nbsp;&nbsp;<b>Tower:<font color = "red">*</font></b>&nbsp;&nbsp;');
 					$(this).append($('#select_tower').html());
 				 }
 				 if($(this).children('#floor_from').length == 0){

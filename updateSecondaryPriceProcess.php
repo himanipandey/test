@@ -83,7 +83,7 @@
 				if($res)
 					$errorPrice = "<font color = 'green'>Price has been inserted successfully!</font>";
 				else
-					$errorPrice = "<font color = 'red'>Problem in price insertion please try again!</font>";
+					$errorPrice = "<font color = 'red'>Effective Date must be valid and greater than or equal to 2013-08-01 !</font>";
 			});
 			
         }else{

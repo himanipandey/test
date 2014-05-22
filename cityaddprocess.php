@@ -108,7 +108,7 @@ if (isset($_POST['btnSave'])) {
                             URL					=	'".$txtCityUrl."',
                             DISPLAY_ORDER			=	'".$DisplayOrder."',
                             updated_at = now(),
-                            DESCRIPTION	= '".$desc."' WHERE CITY_ID='".$cityid."'";
+                            DESCRIPTION	= '" . d_($desc) . "' WHERE CITY_ID='".$cityid."'";
 		$rt = mysql_query($updateQry);
 		if($rt){
                     if($txtCityUrlOld != $txtCityUrl) { //update locality project and suburb url
@@ -159,7 +159,7 @@ if (isset($_POST['btnSave'])) {
 							if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
 								if(strcasecmp($desc,$oldDesc) != 0)
 									$content_flag = 0;								
-							}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+							}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR' || $_SESSION['DEPARTMENT'] == 'CONTENT'){
 							  $content_flag = ($_POST["content_flag"])? 1 : 0;
 							}
 							if(is_numeric($content_flag)){

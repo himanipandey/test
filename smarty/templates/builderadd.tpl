@@ -1,6 +1,14 @@
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/photo.js"></script>
-<script>
+<!--<script type="text/javascript" src="js/photo.js"></script>-->
+<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+        //mode : "textareas",
+        mode : "specific_textareas",
+        editor_selector : "myTextEditor",
+        theme : "advanced"
+    });
+
 	function showhide_row(numrow)
 	{
 		for(i=1;i<=10;i++)
@@ -60,7 +68,67 @@
             }
        });
       });
+      
+     $("#newbuilder").blur(function(){
+        var bldrid = $(this).val().trim();
+
+        if(bldrid == '' || bldrid == undefined) {
+            $("#err").html("<font color=red>Please enter new builder id</font>");
+            return false;
+        } else {
+            if (isNaN(bldrid)) {
+                $("#err").html("<font color=red>Please enter numeric builder id</font>");
+                return false;
+            }
+            else if(bldrid < 100000 || bldrid > 500000) {
+                $("#err").html("<font color=red>Please enter correct builder id</font>");
+                return false;
+            }else{
+                $("#err").html("");
+             }
+        } 
+        
+        $.ajax  ({
+            type: "POST",
+            url: "getBuilderImage.php",
+            data: 'part=builderInfo&newBuilder='+ bldrid,
+            dataType : "html",
+             success: function(responsedata)  {
+                 responsedata = responsedata.trim();
+                 if(responsedata == "" || responsedata == undefined){
+                      $("#err").html("<font color=red>Builder is not exist in database</font>");
+                      return false;
+                 }else {
+                    $("#err").html("<font color=green>New Builder: <b>"+ responsedata +"</b></font>");
+                    $("#replace").attr('rel',bldrid );
+                }
+            }
+       });
+       
+        $("#replace").bind('click', function(){
+          var builderinfo = [];
+          builderinfo[0] = $(this).attr('data');
+          builderinfo[1] = $(this).attr('rel');
+          
+          if((builderinfo[0]!="" && builderinfo[0]!= undefined) && (builderinfo[1] != "" && builderinfo[1]!= undefined)){
+              $.ajax({
+                 type: "POST",
+                 data: 'part=replace-builder&builderinfo='+ builderinfo,
+                 url: "getBuilderImage.php",
+                success: function(flag){
+                 if(flag == 1) {
+                   $('#success').html("<font color=green>Old Builder id: <b>" + builderinfo[0] + "</b> Is Now Replaced By New Builder id: <b>" + builderinfo[1] + "</b> Successfully</font>");
+                 }else{
+					$('#success').html(flag);
+				  }
+                }
+             });
+          }
+       });
+    });
   });
+  
+ 
 
 </script>
 
@@ -116,6 +184,16 @@
 					 
 					</td>
 				</tr>
+                                <tr>
+                                     <td >&nbsp;</td>
+                                    <td>
+                                        <fieldset>
+                                            <legend><b>Want To Replace This Builder With Another Builder</b></legend>
+                                            <div style="margin:30px;">Enter New Builder Id: <input type="text" name="newbuilder" id="newbuilder" value="" style="width:200px;"> &nbsp;&nbsp; <a id="replace" href="javascript:void(0)" data = "{$builderid}" style="cursor:pointer" rel="">Click to Replace</a>&nbsp;&nbsp;<span id="err"></span></div> <div style="float:left; clear:both;" id="success"></div>
+                                      </fieldset>
+                                      
+                                    </td>
+                                </tr>
                                   <tr style="">
                                     <td width="20%" align="right" ><font color = "red"></font>Check if builder exist already : </td>
                                     <td width="30%" align="left" colspan="2">
@@ -143,8 +221,12 @@
 				</tr>
 				<tr>
 				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Builder Description :</td>
-				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" cols="45">{$txtBuilderDescription}</textarea>
-				   <input type="hidden" name="txtOldBuilderDescription" value="{$txtBuilderDescription}" />
+				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" class ="myTextEditor" cols="45">{$txtBuilderDescription}</textarea>
+				   {if $txtBuilderDescription != ''}
+                                      <input type="hidden" name="txtOldBuilderDescription" value="yes" />
+                                   {else} 
+                                       <input type="hidden" name="txtOldBuilderDescription" value="" />
+                                   {/if}
 				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
                    <br/><br/>
                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
@@ -186,7 +268,7 @@
 				</tr>
 				<input type = 'hidden' name = 'imgedit' value = '{$imgedit}'>
 				<input type = 'hidden' name = 'imgSrc' value = '{$imgSrc}'>
-					{if $img != ''}
+					
 				
 				<tr>
 					<td width="20%" align="right" valign = top>Current Image : </td>
@@ -198,7 +280,7 @@
 					</div>
 				  
 				</tr>
-				{/if}
+				
 				<tr {if $builderid == ''} style="display:none" {/if}>
 				  <td width="20%" align="right" ><font color = "red">*</font>Builder Image : </td>
 				  <td width="30%" align="left">
@@ -469,7 +551,7 @@
 					
 					</td>
 				</tr>
-
+                                
 				<tr>
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:152px;" >
@@ -478,6 +560,7 @@
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit">
 				  </td>
 				</tr>
+                                
 			      </div>
 			    </form>
 			    </TABLE>

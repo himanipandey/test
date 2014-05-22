@@ -217,19 +217,28 @@ if ($_POST['btnSave'] == "Save")
                 {
                         
 
-                            $params = array(
-                                "image_type" => "builder_image",
-                                "folder" => $foldername."/",
-                                "image" => $name,
-                                "title" => strtolower($legalEntity),
-                                "service_image_id" => $_REQUEST['serviceImageId'],
-                                "update" => "update",
-                            );
+                    $params = array(
+                        "image_type" => "builder_image",
+                        "folder" => $foldername."/",
+                        "image" => $name,
+                        "title" => strtolower($legalEntity),
+                        "service_image_id" => $_REQUEST['serviceImageId'],
+                        "update" => "update",
+                    );
+                    $postArr = array();
+                    $unitImageArr = array();
+                    $unitImageArr['img'] = $_FILES['txtBuilderImg'];
+                    $unitImageArr['objectId'] = $builderid;
+                    $unitImageArr['objectType'] = "builder";
+                    $unitImageArr['newImagePath'] = $newImagePath;
+                    $unitImageArr['params'] = $params;  
+                    $postArr[] = $unitImageArr; 
+                    $response   = writeToImageService( $postArr);
 
-                        $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);//echo "here";
+                    foreach ($response as $k => $v) {
                        
                         
-                        if(empty($response["serviceResponse"]["service"]->response_body->error->msg))
+                        if(empty($v->error->msg))
                         {
 
                             
@@ -244,7 +253,7 @@ if ($_POST['btnSave'] == "Save")
                             $image_id = $image_id->id;*/
                             //$image_id = $response['serviceResponse']["service"]->data();
                             //$image_id = $image_id->id;
-                             $image_id = $response["serviceResponse"]["service"]->response_body->data->id;
+                             $image_id = $v->data->id;
                            
                          
                             $imgurl = $newfold."/".$name; 
@@ -320,9 +329,10 @@ if ($_POST['btnSave'] == "Save")
                         }	
                         else 
                         {
-                           $ErrorMsg2 = "Problem in image upload: ".($response["serviceResponse"]["service"]->response_body->error->msg);
+                           $ErrorMsg2 = "Problem in image upload: ".($v->error->msg);
                             
                         }
+                    }    
                 }
                 else 
                 {
@@ -345,7 +355,7 @@ if ($_POST['btnSave'] == "Save")
 								if(strcasecmp($txtBuilderDescription,$txtOldBuilderDescription) != 0)
 									$content_flag = 0;
 								
-							}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+							}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR' || $_SESSION['DEPARTMENT'] == 'CONTENT'){
 							  $content_flag = ($_POST["content_flag"])? 1 : 0;
 							}
 							if(is_numeric($content_flag)){
@@ -386,7 +396,7 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
             $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
             $smarty->assign("legalEntity", $dataedit['ENTITY']);
-            $smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
+            $smarty->assign("txtBuilderDescription", stripslashes($dataedit['DESCRIPTION']));
             $smarty->assign("txtBuilderUrl", $dataedit['URL']);
             $smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
             $smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER'] ? $dataedit['DISPLAY_ORDER'] : 100);
@@ -444,7 +454,7 @@ if ($_POST['btnSave'] == "Save")
             //array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("imgSrc", $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("service_image_id", $data[0]['SERVICE_IMAGE_ID']);
-    //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
+    
 
 
 			

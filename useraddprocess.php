@@ -49,7 +49,7 @@ if ($_POST['btnSave'] == "Save") {
 	$smarty->assign("joiningdate",$joiningdate);
 	$smarty->assign("resignationdate",$resignationdate);
         $smarty->assign("cloudAgentId",$cloudAgentId);
-        $smarty->assign("city",$city);
+        $smarty->assign("arrExistingCity",$city);
 	
 	if($txt_empcode == '') 	{
 		$ErrorMsg["EmpCodeErr"] = "Please enter employee code.";
@@ -155,7 +155,7 @@ if ($_POST['btnSave'] == "Save") {
                                $cnt++;
                            }
                     }
-                     echo $finalStr = $cityQry.$cityData;
+                    $finalStr = $cityQry.$cityData;
                     $resCity = mysql_query($finalStr) or die(mysql_error());
                 }
                 if($DataInsert)
