@@ -51,6 +51,34 @@ jQuery(document).ready(function(){
 	    else mode='create';
 
 
+    if(fax!='' && !isNumeric1(fax)){
+      $('#errmsgfax').html('<font color="red">Please select a Numeric Value.</font>');
+      $("#fax").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgfax').html('');
+    }
+
+    if(phone!='' && !isNumeric1(phone)){
+      $('#errmsgphone').html('<font color="red">Please select a Numeric Value.</font>');
+      $("#phone").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgphone').html('');
+    }
+
+
+    if(pincode!='' && !isNumeric(pincode)){
+      $('#errmsgpincode').html('<font color="red">Please select a Numeric Value.</font>');
+      $("#pincode").focus();
+      error = 1;
+    }
+    else{
+          $('#errmsgpincode').html('');
+    }
+
     if(city <= 0 || city=='') {
       $('#errmsgcity').html('<font color="red">Please select a City.</font>');
       $("#city").focus();
@@ -136,6 +164,38 @@ jQuery(document).ready(function(){
 
 }); //end document.ready
 
+
+function isNumeric(val) {
+        var validChars = '0123456789';
+        var validCharsforfirstdigit = '1234567890';
+        if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
+                return false;
+        
+
+        for(var i = 1; i < val.length; i++) {
+            if(validChars.indexOf(val.charAt(i)) == -1)
+                return false;
+        }
+
+
+        return true;
+}
+
+function isNumeric1(val) {
+        var validChars = '-+0123456789';
+        var validCharsforfirstdigit = '-+1234567890';
+        if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
+                return false;
+        
+
+        for(var i = 1; i < val.length; i++) {
+            if(validChars.indexOf(val.charAt(i)) == -1)
+                return false;
+        }
+
+
+        return true;
+}
 
 function cleanFields(){
     $("#compid").val('');
@@ -280,7 +340,7 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, p
 
                     <tr>
                       <td width="20%" align="right" >Pincode : </td>
-                      <td width="30%" align="left"><input type=text name="pincode" id="pincode"  style="width:250px;"></td> <td width="20%" align="left" id="errmsglat"></td>
+                      <td width="30%" align="left"><input type=text name="pincode" id="pincode"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgpincode"></td>
                     </tr>
 
                     <tr>
@@ -298,7 +358,7 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, p
                     <tr>
                       <td width="20%" align="right" valign="top">fax :</td>
                      <td width="30%" align="left"><input type=text name="fax" id="fax" style="width:250px;"></td> 
-                  
+                    <td width="20%" align="left" id="errmsgfax"></td>
                     </tr>
 
                     <tr>

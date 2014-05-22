@@ -51,8 +51,8 @@ class Company extends ActiveRecord\Model
 
             $arr['person'] = $agent_row[1];
 
-            $arr['fax'] = $fax[0].$fax[1];
-            $arr['phone'] = $phone[0].$phone[1];
+            $arr['fax'] = $fax[1];
+            $arr['phone'] = $phone[1];
             $arr['city_name'] = $city[0];
             //$arr['city'] = $v->city;
 

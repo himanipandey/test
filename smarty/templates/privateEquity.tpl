@@ -288,6 +288,7 @@ function selectDeal(id){
 }
 
 function refreshProject(no){
+  if(no==0) no=1;
   var val = $("#deal option:selected").val();
   if (val==2)
     var tableId = "invest_proj";
@@ -330,9 +331,10 @@ function builderChanged(id){
               success:function(msg){
                 var d = jQuery.parseJSON(msg);
                   
-                  $("#"+nodropdwn).val("1");
+                  $("#"+nodropdwn).val("0");
                   refreshProject(1);
                   sel.empty();
+                  $('<option>').val("0").text("Select Project").appendTo(sel);
                   $.map(d, function (v) {
                      $('<option>').val(v.id).text(v.name).appendTo(sel);
                   });
@@ -364,6 +366,7 @@ function addRow(tableID) {
             cell1.style.textAlign="right";
 
             var cell2 = row.insertCell(1);
+            //cell1.width = "20%";
             var element2 = document.createElement("select");
            
             element2.id=fieldId+"_"+rowCount;
@@ -427,8 +430,8 @@ function deletePEDeal(id){
 }
 
 function isNumeric(val) {
-        var validChars = '0123456789.';
-        var validCharsforfirstdigit = '-01234567890';
+        var validChars = '0123456789,';
+        var validCharsforfirstdigit = ',1234567890';
         if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
                 return false;
         
@@ -561,7 +564,7 @@ function isNumeric(val) {
                       <td width="10%" align="right" >No of Project: </td>
                       <td width="20%" height="25" align="left" valign="top">
                     <select name="invest_proj_no" id="invest_proj_no" onchange="refreshProject(this.value);">
-              
+                      <option  value="0" {if $v=="ert"} selected="selected"{else} value="0" {/if}>Select</option>
                      <option  value="1" {if $v=="ert"} selected="selected"{else} value="1" {/if}>1</option>
                      <option  value="2" {if $v=="ert"} selected="selected"{else} value="2" {/if}>2</option> 
                      <option  value="3" {if $v=="ert"} selected="selected"{else} value="3" {/if}>3</option> 
@@ -582,7 +585,7 @@ function isNumeric(val) {
                       <td width="15%" align="right" >Project: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="invest_proj_0" name="invest_proj[]" >
-                                       <option value=''>select place type</option>
+                                       <option value=''>select Project</option>
                                        
                                     </select>
                                 </td>
@@ -643,7 +646,7 @@ function isNumeric(val) {
                       <td width="10%" align="right" >No of Project: </td>
                       <td width="20%" height="25" align="left" valign="top">
                     <select name="exit_proj_no" id="exit_proj_no" onchange="refreshProject(this.value);">
-              
+                    <option  value="0" {if $v=="ert"} selected="selected"{else} value="0" {/if}>Select</option>
                      <option {if $img == 1} value="1" selected="selected"{else} value="1" {/if}>1</option>
                      <option {if $img == 2} value="2" selected="selected"{else} value="2" {/if}>2</option> 
                      <option {if $img == 3} value="3" selected="selected"{else} value="3" {/if}>3</option> 
@@ -664,7 +667,7 @@ function isNumeric(val) {
                       <td width="15%" align="right" >Project: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="exit_proj_0" name="exit_proj[]" >
-                                       <option value=''>select place type</option>
+                                       <option value=''>select Project</option>
                                        
                                     </select>
                                 </td>

@@ -22,10 +22,19 @@ class PEDeals extends ActiveRecord\Model
             $arr['name'] = $v->name;
             $arr['type'] = $v->type;
             $arr['value'] = $v->value;
-            $arr['transaction_date'] = $v->transaction_date;
+            $str = $v->transaction_date;
+            $str = substr($str, 0,10);
+            $arr['transaction_date'] = $str;
             $arr['article_link'] = $v->article_link;
             $arr['builder_name'] = $v->builder_name;
-            $arr['extra_values'] = $v->extra_values;
+            $str = $v->extra_values;
+            $str = str_replace('{', '', $str);
+            $str = str_replace('}', '', $str);
+            $str = str_replace('[', '', $str);
+            $str = str_replace(']', '', $str);
+            $str = str_replace('"', '', $str);
+            $str = str_replace(',', ', ', $str);
+            $arr['extra_values'] = $str;
             array_push($returnArr, $arr);
         }
         return $returnArr;
