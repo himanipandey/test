@@ -126,7 +126,7 @@
                                         if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
                                             if(strcasecmp($desc,$oldDesc) != 0)
                                                 $content_flag = 0;								
-                                        }elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
+                                        }elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR' || $_SESSION['DEPARTMENT'] == 'CONTENT'){
                                             $content_flag = ($_POST["content_flag"])? 1 : 0;
                                         }
                                         if(is_numeric($content_flag)){
