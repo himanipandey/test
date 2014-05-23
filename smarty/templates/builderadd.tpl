@@ -69,28 +69,28 @@
        });
       });
       
-     $("#buidler-detail-button").click(function(){
+     $("#buidler-detail-button").bind('click',function(){
 	    var bldrid = $('#newbuilder').val().trim();
         var oldBuilder = "{$builderid}";
 
         if(bldrid == '' || bldrid == undefined) {
-            $("#buidler-detail-button #err").html("<font color=red>Please enter new builder id</font>");
+            $("#err").html("<font color=red>Please enter new builder id</font>");
             return false;
         } 
         else {
 			if(bldrid == oldBuilder){
-		      $("#buidler-detail-button #err").html("<font color=red>New Builder ID can not be same.</font>");
+		      $("#err").html("<font color=red>New Builder ID can not be same.</font>");
               return false;
 		    }
             else if (isNaN(bldrid)) {
-              $("#buidler-detail-button #err").html("<font color=red>Please enter numeric builder id</font>");
+              $("#err").html("<font color=red>Please enter numeric builder id</font>");
               return false;
             }
             else if(bldrid < 100000 || bldrid > 500000) {
-              $("#buidler-detail-button #err").html("<font color=red>Please enter correct builder id</font>");
+              $("#err").html("<font color=red>Please enter correct builder id</font>");
               return false;
             }else{
-                $("#buidler-detail-button #err").html("");
+                $("#err").html("");
              }
         } 
         
@@ -124,27 +124,29 @@
 	      	$("#buttons-replace-cont").hide(); 
 	      	$('#buttons-err-cont').hide();
 	      	 $("#buttons-err-cont #errs").html("");
-			$("#buttons-detail-cont").show();	   
+			$("#buttons-detail-cont").show();	
+			$("#buttons-detail-cont #err").html("");   
 			$('#newbuilder').val("");
 			$('#newbuilder').attr("disabled",false);
 	   });
-       
+       count = 0;
         $("#buidler-replace-button").bind('click', function(){
+     	  $(this).attr("disabled",true);
 		  $("#buttons-replace-cont #loader").show();		 
           var builderinfo = [];
           builderinfo[0] = $(this).attr('data');
           builderinfo[1] = $(this).attr('rel');
           
-          if((builderinfo[0]!="" && builderinfo[0]!= undefined) && (builderinfo[1] != "" && builderinfo[1]!= undefined)){
+          if((builderinfo[0]!="" && builderinfo[0]!= undefined) && (builderinfo[1] != "" && builderinfo[1]!= undefined)){			  
              $.ajax({
-                 type: "POST",
-                 async : false,
+                 type: "POST",                
                  data: 'part=replace-builder&builderinfo='+ builderinfo,
                  url: "getBuilderImage.php",
                 success: function(flag){	
-					$("#buidler-replace-button #loader").hide();				
+					$('#buttons-err-cont').remove();
+					$("#buttons-replace-cont #loader").hide();				
                  if(flag == 1) {						 				
-                   window.location = "/BuilderList.php";                  
+                   window.location = "/BuilderList.php";                               
                  }else{								
 					$(this).attr("disabled","false");
 					$("#buttons-replace-cont").hide(); 
