@@ -503,7 +503,7 @@ function isNumeric(val) {
                       <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="40%" height="25" align="left" valign="top">
                                     <select id="fundCompany" name="fundCompany" >
-                                       <option value=''>select place type</option>
+                                       <option value=''>Select Private Equity</option>
                                        {foreach from=$peList key=k item=v}
                                               <option value="{$k}">{$v}</option>
                                        {/foreach}
@@ -540,7 +540,7 @@ function isNumeric(val) {
                       <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="investCompany" name="investCompany" >
-                                       <option value=''>select place type</option>
+                                       <option value=''>Select Private Equity</option>
                                         {foreach from=$peList key=k item=v}
                                               <option value="{$k}">{$v}</option>
                                        {/foreach}
@@ -552,7 +552,7 @@ function isNumeric(val) {
                       <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="investBuilderEdit" name="investBuilderEdit" onchange = "builderChanged(this.id)">
-                                       <option value=''>select place type</option>
+                                       <option value=''>Select Builder</option>
                                        {foreach from=$builderList key=k item=v}
                                               <option value="{$k}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
                                        {/foreach}
@@ -622,7 +622,7 @@ function isNumeric(val) {
                       <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="exitCompany" name="exitCompany" >
-                                      <option value=''>select place type</option>
+                                      <option value=''>Select Private Equity</option>
                                         {foreach from=$peList key=k item=v}
                                               <option value="{$k}">{$v}</option>
                                        {/foreach}
@@ -634,7 +634,7 @@ function isNumeric(val) {
                       <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="exitBuilderEdit" name="exitBuilderEdit" onchange = "builderChanged(this.id)">
-                                       <option value=''>select place type</option>
+                                       <option value=''>Select Builder</option>
                                        {foreach from=$builderList key=k item=v}
                                               <option value="{$k}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
                                        {/foreach}
@@ -667,7 +667,7 @@ function isNumeric(val) {
                       <td width="15%" align="right" >Project: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="exit_proj_0" name="exit_proj[]" >
-                                       <option value=''>select Project</option>
+                                       <option value=''>Select Project</option>
                                        
                                     </select>
                                 </td>
