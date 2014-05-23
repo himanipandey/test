@@ -20,6 +20,10 @@
         
     $smarty->assign("imagetype", $_REQUEST['imagetype']);
     
+    $sec_image_types = ImageServiceUpload::$sec_image_types;
+    $sec_image_types = $sec_image_types['project']['project_image'];
+    $smarty->assign("sec_image_types", $sec_image_types);
+    //print_r($sec_image_types);
     //tower dropdown
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
@@ -169,6 +173,8 @@ if (isset($_POST['Next']))
 	    if($_REQUEST['PType'] == 'Project Image'){
 			$count = 1;
 			$temp_arr = array();
+			if(!isset($_REQUEST['SType']) || empty($_REQUEST['SType']))
+				$ErrorMsg["stype"] = "Please enter Secondary Image Type."; 
 			while($count <= $_REQUEST['img']){
 				
 				if(trim($_REQUEST['txtdisplay_order'][$count]) == ''){
@@ -1328,7 +1334,7 @@ if (isset($_POST['Next']))
 											
                                            
 											$params = array(
-						                        "image_type" => "project_image",
+						                        "image_type" => $_REQUEST['SType'],
 						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "project_image".$key,
 						                        "image" => $file,

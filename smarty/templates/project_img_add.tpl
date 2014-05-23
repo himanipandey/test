@@ -282,6 +282,7 @@ $(document).ready(function(){
 		
 	}
 	 if($('select#PType').val() == 'Project Image'){
+	 	$("#secondImageTypeDiv").show();
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
@@ -308,7 +309,7 @@ $(document).ready(function(){
 			 }
 	
 	 $('select#PType').change(function(k, v){
-
+	 			$("#secondImageTypeDiv").hide();
 	 			$('input[name= "title[]"]').each(function(){
 						
 					 $(this).val($('select#PType').val());
@@ -346,6 +347,7 @@ $(document).ready(function(){
 			 }
 				         
 		if($('select#PType').val() == 'Project Image'){
+				$("#secondImageTypeDiv").show();
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
@@ -453,8 +455,18 @@ $(document).ready(function(){
                                                 {/if}
 					</select>	
                                         <input type="hidden" name = "linkShowHide" value="{$linkShowHide}">
-				  </td>
-				 
+				  
+				  <div style="display:none" id="secondImageTypeDiv">
+				  <b>Secondary Image Type :</b><font color = "red">*</font> 
+				  
+				   	<select name = "SType" id = "secondImageType">
+						<option value =''>Select Image Type</option>
+						{foreach  from=$sec_image_types key=k item=v}
+                          <option >{$k}</option>
+						{/foreach}
+				   </select>
+				 </div>
+				 	</td>
 				</tr>
 
 				 <tr>						
