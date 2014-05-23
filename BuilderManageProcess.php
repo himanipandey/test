@@ -96,5 +96,7 @@
     $smarty->assign("builderUrl",$_REQUEST['builderUrl']);
     $smarty->assign("builderDataArr", $builderDataArr);
     $smarty->assign("callerMessage", $_SESSION['callerMessage'][0]);
+    $smarty->assign("mig_msg", $_SESSION['migration_success_message']);
+    unset($_SESSION['migration_success_message']);
     unset($_SESSION['callerMessage']);
 ?>
