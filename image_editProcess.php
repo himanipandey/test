@@ -33,10 +33,10 @@
 	        
 	        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
 	        $str = ucfirst (implode(" ",$arr));
-	        if($str=='Main')
-	        	$data['PLAN_TYPE'] = "Project Image";
-	        else
-	        	$data['PLAN_TYPE'] = $str;
+	        if($str=='Elevation' || $str=='Amenities' || $str=='Main Other')
+	        	$data['PLAN_TYPE_MAIN'] = "Project Image";
+	        
+	        $data['PLAN_TYPE'] = $str;
 	         
 	        if ($data['PLAN_TYPE']=="Project Image" && $v->priority==0 )
 	        	$data['display_order'] = 5;
@@ -120,29 +120,38 @@
 	  $ErrorMsg["checkbox"] = "Please select edit or delete action.";
 	}
 	//checking for display orders unqueness
+//	print'<pre>';
+//print_r($_REQUEST);die();
 	foreach($_REQUEST['chk_name'] as $k=>$v)
 	{
 		if($v != '')
 		{
+			//$temp_arr = array(); 
+
 			if($v == 'edit_img'){
-				if( $_REQUEST['PType'][$k] == 'Project Image'){
+				$itype = $_REQUEST['PType'][$k];
+				if( $itype == 'Elevation' || $itype == 'Amenities' || $itype == 'Main Other'){
+					if(!array_key_exists($_REQUEST['PType'][$k], $temp_arr))
+						$temp_arr[$_REQUEST['PType'][$k]] = array();
 					if(trim($_REQUEST['txtdisplay_order'][$k]) == ''){
 						$ErrorMsg["display_order"] = "Please enter Display Order."; 
 					}
 					else{
-										
-					  	if(array_key_exists($_REQUEST['txtdisplay_order'][$k], $temp_arr)){
-						  $ErrorMsg["display_order"] = "Display order must be unique.";				  
+									
+					  	if(array_key_exists($_REQUEST['txtdisplay_order'][$k], $temp_arr[$_REQUEST['PType'][$k]])){
+						  $ErrorMsg["display_order"] = "Display order for an Image Type must be unique.";				  
 					  	}
 					  	else {//checking duplicacy
-							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k],$_REQUEST['currentPlanId'][$k]);
+							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k],$_REQUEST['PType'][$k]);
 
 							if($ext_vlinks){
-								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist.";
+								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist for Image Type: ".$_REQUEST['PType'][$k]." .";
+
 							}
 					  	}
 					  	if($_REQUEST['txtdisplay_order'][$k] != 5)
-						$temp_arr[$_REQUEST['txtdisplay_order'][$k]] = $_REQUEST['txtdisplay_order'][$k];
+						$temp_arr[$_REQUEST['PType'][$k]][$_REQUEST['txtdisplay_order'][$k]] = $_REQUEST['txtdisplay_order'][$k];
+					 	
 					}
 				}
 				if(trim($_REQUEST['title'][$k]) == ''){
@@ -164,7 +173,7 @@
 
 		}
 		
-	}
+	} 
 	if( $projectId == '') 
 	{
 	  $ErrorMsg["projectId"] = "Please select Project name.";
@@ -1280,10 +1289,12 @@
 												$image->load($path);
                                                 $imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('large','large-bkp',$file);
 												$image->save($imgdestpath);*/
-
+												if($_REQUEST['PType'][$k]=="Elevation") $image_type="elevation";	
+											if($_REQUEST['PType'][$k]=="Amenities") $image_type="amenities";
+											if($_REQUEST['PType'][$k]=="Main Other") $image_type="main_other";
 
 												$params = array(
-							                        "image_type" => "project_image",
+							                        "image_type" => $image_type,
 							                        "folder" => $extra_path,
 							                        "count" => "project_image".$k,
 							                        "image" => $file,
@@ -1493,7 +1504,7 @@
 	            $s3upload->upload();*/
 				$img->Free();
 				/*********update project table for samall image***********/
-				if($f=="large"){
+				if($_REQUEST['PType'][$k]=="Elevation"){
 					$pathProject	=	"/".$BuilderName."/".strtolower($ProjectName);
 
 					$qry	=	"UPDATE ".RESI_PROJECT." SET PROJECT_SMALL_IMAGE = '".$pathProject."/".str_replace('-large','-small',$file)."'

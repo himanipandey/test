@@ -35,9 +35,9 @@ class ImageServiceUpload{
             "price_list" => "priceList",
             "application_form" => "applicationForm",
             "project_image" => "main",
-            "Elevation"=> "Elevation",
-            "Amenities"=>"Amenities", 
-            "Main Others"=>"mainOthers"
+            "elevation"=> "elevation",
+            "amenities"=>"amenities", 
+            "main_other"=>"mainOther"
         ),
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),

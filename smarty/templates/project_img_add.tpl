@@ -281,8 +281,9 @@ $(document).ready(function(){
 				});
 		
 	}
-	 if($('select#PType').val() == 'Project Image'){
-	 	$("#secondImageTypeDiv").show();
+		var itype = $('select#PType').val();	         
+		if( itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other'){
+	 	//$("#secondImageTypeDiv").show();
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
@@ -345,9 +346,9 @@ $(document).ready(function(){
 				});
 					
 			 }
-				         
-		if($('select#PType').val() == 'Project Image'){
-				$("#secondImageTypeDiv").show();
+		var itype = $('select#PType').val();	         
+		if( itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other'){
+				//$("#secondImageTypeDiv").show();
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
@@ -439,7 +440,9 @@ $(document).ready(function(){
 					<select name = "PType" id = "PType">
 						<option value =''>Select Type</option>
                                                 {if $linkShowHide == 0}
-                                                    <option value ='Project Image' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Project Image'} selected {/if}>Project Image</option>
+                                                    <option value ='Elevation' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Elevation'} selected {/if}>Elevation</option>
+                                                    <option value ='Amenities' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Amenities'} selected {/if}>Amenities</option>
+                                                    <option value ='Main Other' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Main Other'} selected {/if}>Main Other</option>
                                                     <option value ='Location Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Location Plan'} selected {/if}>Location Plan</option>
                                                     <option value ='Layout Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Layout Plan'} selected {/if}>Layout Plan</option>
                                                     <option value ='Site Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Site Plan'} selected {/if}>Site Plan</option>

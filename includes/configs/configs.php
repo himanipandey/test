@@ -628,7 +628,7 @@ $smarty->assign("arrProjEditPermission", $ARR_PROJ_EDIT_PERMISSION[$dept]);
 
 $arrImg = array("image/gif","image/png","image/jpg","image/jpeg");
 
-$arrType = array("Location Plan"=>"loc-plan","Layout Plan"=>"layout-plan","Site Plan"=>"site-plan","Master Plan"=>"master-plan","Project Image"=>"large","Cluster Plan"=>"cluster-plan","Construction Status"=>"const-status","Payment Plan"=>"payment-plan","Specification"=>"specification","Price List"=>"price-list","Application Form"=>"app-form");
+$arrType = array("Location Plan"=>"loc-plan","Layout Plan"=>"layout-plan","Site Plan"=>"site-plan","Master Plan"=>"master-plan","Elevation"=>"large", "Amenities"=>"large", "Main Other"=>"large", "Cluster Plan"=>"cluster-plan","Construction Status"=>"const-status","Payment Plan"=>"payment-plan","Specification"=>"specification","Price List"=>"price-list","Application Form"=>"app-form");
 
 /**************Authentication*************/
 $accessModule = array();

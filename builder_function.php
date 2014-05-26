@@ -2211,21 +2211,22 @@ function getLocalityAveragePrice($locId)
 	
 	return $average_price ;
 }
-function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $currentPlanId =''){
+function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $image_type){
 	
     $url = ImageServiceUpload::$image_upload_url."?objectType=project&objectId=".$projectId;
 
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
-//print_r($imgPath);
+//print("<pre>");print_r($imgPath);
     $orderArr = array();
     $cnt=0; 
     foreach($imgPath->data as $k=>$v){
-//echo $v->priority;
+        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
+        $str = ucfirst (implode(" ",$arr));
         if($service_image_id==$v->id){
 
         }
-        else if($v->imageType->type=="main" && $v->priority!=5){
+        else if($str==$image_type && $v->priority!=5){
            // if (!in_array($v->priority, $orderArr)){
              //   array_push($orderArr, $v->priority)
            // }
