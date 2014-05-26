@@ -116,7 +116,7 @@
 
     function deletePhase()
     {
-            return confirm("Are you sure! you want to delete phase.");
+            return confirm("All dependent data will be deleted. Proceed / cancel?");
     }
 
         function toggle_supply_and_option() {

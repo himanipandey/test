@@ -25,35 +25,87 @@ $smarty->assign("bookingStatuses", $bookingStatuses);
 
 /* * *******code for delete phase********* */
 if (isset($_REQUEST['delete'])) {
-		
-	$phase_prices = ListingPrices::find("all",array("joins"=>"inner join listings on listings.id = listing_prices.listing_id and listings.phase_id =$phaseId","conditions"=>array("version"=>"Cms")));
-	
-	if(!count($phase_prices)){
-	
-		$phase = ResiProjectPhase::virtual_find($phaseId);
-		$phase->status = 'Inactive';
-		$resDelete = $phase->virtual_save();
-		if ($resDelete) {
-			Listings::update_all(array('conditions' => array('phase_id' => $phaseId, 'listing_category' => 'Primary'), 'set' => array('status' => 'Inactive')));
+	$del_flag = 1;
+	ResiProjectPhase::transaction(function(){
+		global $del_flag, $phaseId, $projectId;
+		try{
+			$all_lst_ids = array();
+			$all_price_ids = array();
+			$all_supply_ids = array();
+			$all_avail_ids = array();
+			$all_sec_price_ids = array();
+			$all_comp_ids = array();
 			
-			$costDetailLatest = costructionDetail($projectId);
-			$qry = "UPDATE resi_project 
-				set 
-				   PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
-			   where PROJECT_ID = $projectId and version = 'Cms'";
-			mysql_query($qry) OR DIE(mysql_error());
-			
-			updateD_Availablitiy($projectId); // update D_availability 
+			#listing
+			$all_lst = Listings::find("all",array("conditions"=>array("phase_id = ?",$phaseId)));
+			foreach($all_lst as $key=>$lst){
+			  $all_lst_ids[] = $lst->id; 
+		    }
+		    $all_lst_ids = implode(",",$all_lst_ids);
+		  	print 	"all listing => ". $all_lst_ids."<br/>";	
+			#prices
+			$all_prices = ListingPrices::find("all", array("conditions"=>array("listing_id in ($all_lst_ids) and version = 'Cms'")));
+			foreach($all_prices as $key=>$lstp){
+			  $all_price_ids[] = $lstp->id; 
+		    }
+		    $all_price_ids = implode(",",$all_price_ids);
+						
+			#supplies
+			$all_supplies = ProjectSupply::find("all", array("conditions"=>array("listing_id in ($all_lst_ids) and version = 'Cms'")));
+			foreach($all_supplies as $key=>$sup){
+			  $all_supply_ids[] = $sup->id;
+			}
+			$all_supply_ids = implode(",",$all_supply_ids);
+						
+			#inventories
+			$all_avails = ProjectAvailability::find("all",array("conditions"=>array("project_supply_id in ($all_supply_ids)")));
+			foreach($all_avails as $key=>$avails){
+			  $all_avail_ids[] = $avails->id;	
+			}
+			$all_avail_ids = implode(",",$all_avail_ids);
+						
+			#secondry_price
+			$all_sec_prices = ProjectSecondaryPrice::find("all",array("conditions"=>array("phase_id=?",$phaseId)));
+			foreach($all_sec_prices as $key=>$secp){
+			  $all_sec_price_ids[] = $secp->id;
+			}
+			$all_sec_price_ids = implode(",",$all_sec_price_ids);
 					
-			if ($preview == 'true')
-				header("Location:show_project_details.php?projectId=" . $projectId);
-			else
-				header("Location:ProjectList.php?projectId=" . $projectId);
-		}
+			#completion_history
+			$all_comp = ResiProjExpectedCompletion::find("all",array("conditions"=>array("phase_id=?",$phaseId)));
+			foreach($all_comp as $key=>$comps){
+				$all_comp_ids[] = $comps->expected_completion_id;
+			}
+			$all_comp_ids = implode(",",$all_comp_ids);
+			
+			/*			
+			#dependent data deletion
+			ProjectAvailability::delete_all(array('conditions'=>array("id in ($all_avail_ids)")));
+			ProjectSupply::delete_all(array('conditions'=>array("id in ($all_supply_ids)")));
+			ListingPrices::delete_all(array('conditions'=>array("id in ($all_price_ids)")));
+			Listings::delete_all(array('conditions'=>array("id in ($all_lst_ids)")));
+			ProjectSecondaryPrice::delete_all(array('conditions'=>array("id in ($all_sec_price_ids)")));
+			ResiProjExpectedCompletion::delete_all(array('conditions'=>array("expected_completion_id in ($all_comp_ids)")));	
+			mysql_query("DELETE FROM `phase_tower_mappings` WHERE phase_id='$phaseId'");
+			mysql_query("DELETE FROM `d_inventory_prices` WHERE phase_id='$phaseId'");
+			mysql_query("DELETE FROM `d_inventory_prices_tmp` WHERE phase_id='$phaseId'");	
+			
+			#Hard phase deletion and values updation
+			ResiProjectPhase::delete_all(array('conditions'=>array("phase_id = ? and version = ?",$phaseId,'Cms')));	*/							
+			
+		}catch(Exeception $e){
+		  $del_flag = 0;			  
+		}		
+	});	
+	if($del_flag){
+	  if ($preview == 'true')
+		header("Location:show_project_details.php?projectId=" . $projectId);
+	  else
+		header("Location:ProjectList.php?projectId=" . $projectId);	
 	}else{
-		 $error_msg = 'Phase Prices must be delete before the phase deletion!';
-		 $smarty->assign("error_msg",$error_msg);
-	}
+	  $error_msg = "Error in deletion of Phase depenedent data. Phase deletion failed!";			
+	  $smarty->assign("error_msg",$error_msg);	
+	}	
 }
 /********end code for delete phase***** */
 /************/
