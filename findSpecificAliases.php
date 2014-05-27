@@ -22,7 +22,7 @@ error_reporting(1);
 
 
 	if($placeType){
-		$query1 = "select id, name from landlmark_types where name like '%$placeType%'";
+		$query1 = "select id, name from landmark_types where name like '%$placeType%'";
 		$sql_res1=mysql_query($query1);
 		while($row=mysql_fetch_array($sql_res1))
 		{
