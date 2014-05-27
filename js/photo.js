@@ -47,6 +47,7 @@ $(document).ready(function(){
           success: function( data ) {
             if(data[0].error){
                 alert("Please Select Image Type first.");
+                $( "#search" ).val("");
                 response();
             }
             else{
@@ -222,14 +223,18 @@ function updateDisplayLocation() {
         elementId = "",
         areaName  = "";
     var imgType = $("#imgCat :selected").text();
-    if(imgType.indexOf('Select') >= 0)
+    if(imgType.indexOf('Select') >= 0){
         imgType = "";
+        $('#search').val("");
+        window.areaResponse['landmark'] = 0;
+        $("#landmarkId").val("");
+        $("#landmarkName").val("");
+        $('#img-name').html("").val("");
+    }
+        
         //console.log(window.areaResponse);
 
-    $('#search').val("");
-    window.areaResponse['landmark'] = 0;
-    $("#landmarkId").val("");
-        $("#landmarkName").val("");
+    
 
     if ( $('#search').val()!='') {
         areaType = "Landmark";
