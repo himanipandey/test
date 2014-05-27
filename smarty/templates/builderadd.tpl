@@ -1,6 +1,14 @@
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/photo.js"></script>
-<script>
+<!--<script type="text/javascript" src="js/photo.js"></script>-->
+<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+        //mode : "textareas",
+        mode : "specific_textareas",
+        editor_selector : "myTextEditor",
+        theme : "advanced"
+    });
+
 	function showhide_row(numrow)
 	{
 		for(i=1;i<=10;i++)
@@ -60,7 +68,100 @@
             }
        });
       });
+      
+     $("#buidler-detail-button").bind('click',function(){
+	    var bldrid = $('#newbuilder').val().trim();
+        var oldBuilder = "{$builderid}";
+
+        if(bldrid == '' || bldrid == undefined) {
+            $("#err").html("<font color=red>Please enter new builder id</font>");
+            return false;
+        } 
+        else {
+			if(bldrid == oldBuilder){
+		      $("#err").html("<font color=red>New Builder ID can not be same.</font>");
+              return false;
+		    }
+            else if (isNaN(bldrid)) {
+              $("#err").html("<font color=red>Please enter numeric builder id</font>");
+              return false;
+            }
+            else if(bldrid < 100000 || bldrid > 500000) {
+              $("#err").html("<font color=red>Please enter correct builder id</font>");
+              return false;
+            }else{
+                $("#err").html("");
+             }
+        } 
+        
+        $.ajax  ({
+            type: "POST",
+            url: "getBuilderImage.php",
+            data: 'part=builderInfo&newBuilder='+ bldrid,
+            dataType : "html",
+             success: function(responsedata)  {
+                 responsedata = responsedata.trim();
+                 if(responsedata == "" || responsedata == undefined){
+                      $("#buttons-detail-cont #err").html("<font color=red>Builder is not exist in database!</font>");
+                      return false;
+                 }else if(responsedata == "Inactive"){
+                      $("#buttons-detail-cont #err").html("<font color=red>Builder is Inactive!</font>");
+                      return false;
+                 }else {
+					$("#buttons-replace-cont").show(); 
+					$("#buttons-detail-cont").hide();
+					$('#buttons-err-cont').hide();
+                    $("#buttons-replace-cont #err").html("<font color=green>New Builder: <b>"+ responsedata +"</b></font>");
+                    $("#buttons-replace-cont #buidler-replace-button").attr('rel',bldrid );
+                    $('#newbuilder').attr("disabled",true);
+                }
+            }
+       });
+       
+       $('#buttons-replace-cont #builder-cancel-button,#buttons-err-cont #builder-cancel-button').live('click',function(){
+		    $("#buttons-replace-cont #err").html("");
+            $("#buttons-replace-cont #buidler-replace-button").attr('rel','');
+	      	$("#buttons-replace-cont").hide(); 
+	      	$('#buttons-err-cont').hide();
+	      	 $("#buttons-err-cont #errs").html("");
+			$("#buttons-detail-cont").show();	
+			$("#buttons-detail-cont #err").html("");   
+			$('#newbuilder').val("");
+			$('#newbuilder').attr("disabled",false);
+	   });
+       count = 0;
+        $("#buidler-replace-button").bind('click', function(){
+     	  $(this).attr("disabled",true);
+		  $("#buttons-replace-cont #loader").show();		 
+          var builderinfo = [];
+          builderinfo[0] = $(this).attr('data');
+          builderinfo[1] = $(this).attr('rel');
+          
+          if((builderinfo[0]!="" && builderinfo[0]!= undefined) && (builderinfo[1] != "" && builderinfo[1]!= undefined)){			  
+             $.ajax({
+                 type: "POST",                
+                 data: 'part=replace-builder&builderinfo='+ builderinfo,
+                 url: "getBuilderImage.php",
+                success: function(flag){	
+					$('#buttons-err-cont').remove();
+					$("#buttons-replace-cont #loader").hide();				
+                 if(flag == 1) {						 				
+                   window.location = "/BuilderList.php";                               
+                 }else{								
+					$(this).attr("disabled","false");
+					$("#buttons-replace-cont").hide(); 
+					$("#buttons-detail-cont").hide();
+					$('#buttons-err-cont').show();	    
+					$('#buttons-err-cont #errs').html("<font color=red>Builder migration failed!</font>");
+				  }
+                }
+             });
+          }
+       });
+    });
   });
+  
+ 
 
 </script>
 
@@ -116,6 +217,34 @@
 					 
 					</td>
 				</tr>
+                                <tr>
+                                     <td >&nbsp;</td>
+                                    <td>
+                                        <fieldset>
+                                            <legend><b>Want To Replace This Builder With Another Builder</b></legend>
+                                            <div style="margin:30px;">Enter New Builder Id: <input type="text" name="newbuilder" id="newbuilder" value="" style="width:200px;"> &nbsp;&nbsp; 
+                                            <span id="buttons-detail-cont">
+                                              <input type="button" id="buidler-detail-button" value="Get Builder Details"/>
+                                              <span id="err"></span>
+                                            </span>
+                                            <span id="buttons-err-cont" style="display:none">												
+                                              <span id="errs"></span>
+                                              <input type="button" value="Try Again!" id="builder-cancel-button" />
+                                            </span> 
+                                            <br/>
+                                            <span id="buttons-replace-cont" style="display:none">												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                              <img src="/images/ajax-loader.gif" style="position:absolute;display:none" id="loader" />
+                                              <input type="button" id="buidler-replace-button" value="Replace Builder" data = "{$builderid}" rel=""/>
+                                              with  
+                                              <span id="err"></span>
+                                              OR
+                                              <input type="button" value="Cancel" id="builder-cancel-button" />
+                                            </span>   
+                                           
+                                      </fieldset>
+                                      
+                                    </td>
+                                </tr>
                                   <tr style="">
                                     <td width="20%" align="right" ><font color = "red"></font>Check if builder exist already : </td>
                                     <td width="30%" align="left" colspan="2">
@@ -143,9 +272,13 @@
 				</tr>
 				<tr>
 				  <td width="20%" align="right" valign="top"><font color = "red">*</font>Builder Description :</td>
-				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" cols="45">{$txtBuilderDescription}</textarea>
-				   <input type="hidden" name="txtOldBuilderDescription" value="{$txtBuilderDescription}" />
-				  {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
+				  <td width="30%" align="left" ><textarea name="txtBuilderDescription" rows="10" class ="myTextEditor" cols="45">{$txtBuilderDescription}</textarea>
+				   {if $txtBuilderDescription != ''}
+                                      <input type="hidden" name="txtOldBuilderDescription" value="yes" />
+                                   {else} 
+                                       <input type="hidden" name="txtOldBuilderDescription" value="" />
+                                   {/if}
+				  {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
                    <br/><br/>
                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 				  {/if}
@@ -186,7 +319,7 @@
 				</tr>
 				<input type = 'hidden' name = 'imgedit' value = '{$imgedit}'>
 				<input type = 'hidden' name = 'imgSrc' value = '{$imgSrc}'>
-					{if $img != ''}
+					
 				
 				<tr>
 					<td width="20%" align="right" valign = top>Current Image : </td>
@@ -198,7 +331,7 @@
 					</div>
 				  
 				</tr>
-				{/if}
+				
 				<tr {if $builderid == ''} style="display:none" {/if}>
 				  <td width="20%" align="right" ><font color = "red">*</font>Builder Image : </td>
 				  <td width="30%" align="left">
@@ -469,7 +602,7 @@
 					
 					</td>
 				</tr>
-
+                                
 				<tr>
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:152px;" >
@@ -478,6 +611,7 @@
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit">
 				  </td>
 				</tr>
+                                
 			      </div>
 			    </form>
 			    </TABLE>

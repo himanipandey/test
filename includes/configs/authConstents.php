@@ -100,6 +100,9 @@
     $callCenterAuth = isUserPermitted('callcenter', 'access');
     $smarty->assign("callCenterAuth", $callCenterAuth);
     
+    $campaigndidsAuth = isUserPermitted('campaigndids', 'manage');
+    $smarty->assign("campaigndidsAuth", $campaigndidsAuth);
+    
     $myProjectsCallCenterAuth = isUserPermitted('myprojects_callcenter', 'access');
     $smarty->assign("myProjectsCallCenterAuth", $myProjectsCallCenterAuth);
     

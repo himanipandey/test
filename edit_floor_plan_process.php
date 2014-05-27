@@ -3,6 +3,7 @@
 		ini_set("memory_limit","256M");
 		include("ftp.new.php");
 		$ErrorMsg='';
+		$postArr = array();
 		$floorPlanOptionsArr = array();
 	$villApartment = array();
 	$plot = array();
@@ -178,24 +179,48 @@
 						else
 						{
                                                    /********delete image from db if checked but not browes new image*********/
+
                                $service_image_id = $_REQUEST['service_image_id'][$k];
+                               $params = array(
+			                        "service_image_id" => $service_image_id,
+			                        "delete" => "yes",
+			                    );
+								$unitImageArr = array();
+								$unitImageArr['params'] = $params;
+								$unitImageArr['img'] = "";
+				        		$unitImageArr['objectId'] = $_REQUEST['option_id'][$k];
+				        		$unitImageArr['objectType'] = "option";
+			                    $postArr[$k] = $unitImageArr;
                                //echo $service_image_id; 
-                                                    $qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
-                                                                        WHERE 
-                                                                                SERVICE_IMAGE_ID	= '".$service_image_id."'
-                                                                                AND OPTION_ID	= '".$_REQUEST['option_id'][$k]."'";
-                                                    $res	=	mysql_query($qry);
+                                $qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
+                                                    WHERE 
+                                                            SERVICE_IMAGE_ID	= '".$service_image_id."'
+                                                            AND OPTION_ID	= '".$_REQUEST['option_id'][$k]."'";
+                                $res	=	mysql_query($qry);
 							/********delete image from db if checked but not browes new image*********/
                             //$service_image_id = $_REQUEST['service_image_id'][$k];
 
                    
-                    		$deleteVal = deleteFromImageService("option", $arrOptionId[$k], $service_image_id);
+                    		//$deleteVal = deleteFromImageService("option", $arrOptionId[$k], $service_image_id);
                             //$s3upload = new ImageUpload(NULL, array("service_image_id" => $service_image_id));
                             //$s3upload->delete();
                             //header("Location:edit_floor_plan.php?projectId=$projectId&edit=edit");
 						}
 					}
 				}
+				$serviceResponse = writeToImageService($postArr);
+				//print("<pre>");var_dump($serviceResponse);die();
+				//$serviceResponse = json_decode($serviceResponse);
+				//print'<pre>';   print_r($serviceResponse);//die();				                  	
+		        foreach ($serviceResponse as $k => $v) {
+		        	$qry	=	"DELETE FROM ".RESI_FLOOR_PLANS." 
+                                                    WHERE 
+                                                            SERVICE_IMAGE_ID	= '".$_REQUEST['service_image_id'][$k]."'
+                                                            AND OPTION_ID	= '".$_REQUEST['option_id'][$k]."'";
+                                $res	=	mysql_query($qry);
+		        }
+        	
+
 				if($preview == 'true')
 									header("Location:show_project_details.php?projectId=".$projectId);
 								else

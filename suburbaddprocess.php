@@ -104,7 +104,7 @@
                             LABEL = '".$txtCityName."',
                             STATUS = '".$status."',
                             URL	= '".$txtCityUrl."',
-                            DESCRIPTION	= '".$desc."',
+                            DESCRIPTION	= '" . d_($desc) . "',
                             updated_at	= now(),
                             parent_suburb_id = '".$parent_id."'
                             WHERE SUBURB_ID ='".$suburbid."'";
@@ -122,25 +122,19 @@
                                 ## - desccripion content flag handeling
                                 $cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $suburbid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'suburb' )));					   
                                  if($cont_flag){
-                                        $content_flag = '';
-                                        if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
-                                            if(strcasecmp($desc,$oldDesc) != 0)
-                                                $content_flag = 0;								
-                                        }elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
-                                            $content_flag = ($_POST["content_flag"])? 1 : 0;
-                                        }
+                                        $content_flag = ($_POST["content_flag"])? 1 : 0;                                       
                                         if(is_numeric($content_flag)){
                                             $cont_flag = TableAttributes::find($cont_flag[0]->id);
                                             $cont_flag->updated_by = $_SESSION['adminId'];
                                             $cont_flag->attribute_value = $content_flag;
                                             $cont_flag->save();		
                                         }
-                                }elseif($_SESSION['DEPARTMENT'] == 'DATAENTRY' && strcasecmp($desc,$oldDesc)!= 0){
+                                }else{
                                         $cont_flag = new TableAttributes();
                                         $cont_flag->table_name = 'suburb';
                                         $cont_flag->table_id = $suburbid;
                                         $cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
-                                        $cont_flag->attribute_value = 0;
+                                        $cont_flag->attribute_value =  ($_POST["content_flag"])? 1 : 0;
                                         $cont_flag->updated_by = $_SESSION['adminId'];
                                         $cont_flag->save();				
                                 }
@@ -162,7 +156,7 @@
                         else {
                             //insert new suburb
                              $qry = "INSERT INTO ".SUBURB." (LABEL,CITY_ID,status,parent_suburb_id, created_at,updated_by,DESCRIPTION) 
-                                        value('".$txtCityName."','".$cityId."','".$_REQUEST['status']."','".$parent_id."', NOW(), '".$_SESSION['adminId']."','".$desc."')";
+                                        value('".$txtCityName."','".$cityId."','".$_REQUEST['status']."','".$parent_id."', NOW(), '".$_SESSION['adminId']."','" . d_($desc) . "')";
                                      $res = mysql_query($qry) or die(mysql_error()." insert");
                                      $suburbId = mysql_insert_id();
                                      $cityName = City::find($cityId);

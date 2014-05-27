@@ -74,7 +74,7 @@
                                     </td>
                                 </tr>
                                 
-
+                                
                                 <tr>
                                     <td width="200px">
                                         <label class="lbl"> Search a Landmark </label>
@@ -87,7 +87,6 @@
                                     
                                     
                                 </tr>
-
                                 <tr>
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
@@ -101,6 +100,7 @@
                                         </select>
                                     </td>
                                 </tr>
+                                
                                  <tr>
                                     <td>
                                         <label class="lbl">Image Display Name</label>

@@ -8,23 +8,28 @@ class ProjectSecondaryPrice extends ActiveRecord\Model
     
     static $validates_uniqueness_of = array (
         array (
-            array ("project_id", "broker_id", "unit_type", "effective_date")
+            array ("project_id","phase_id", "broker_id", "unit_type", "effective_date")
         )
     );
     
     static function insertUpdate($attributes){
+	  try{	
         $price = ProjectSecondaryPrice::first(array(
             'project_id'=>$attributes['project_id'],
+            'phase_id'=>$attributes['phase_id'],
             'broker_id'=>$attributes['broker_id'],
             'unit_type'=>$attributes['unit_type'],
             'effective_date'=>$attributes['effective_date']
         ));
-        
+      
         if(empty($price)){
             $res = ProjectSecondaryPrice::create ($attributes);
         }else{
             $res = $price->update_attributes($attributes);
         }
+      }catch(Exception $e){
+		 
+	  }
         return $res;
     }
     

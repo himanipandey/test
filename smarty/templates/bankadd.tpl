@@ -116,7 +116,7 @@
 							<td align = "right"><font color="red">*</font><b>Bank Name:</b></td>
 							<td align = "left"><input type = "text" name = "bankname" id = "bankname" value = "{$bankname}"></td>
 						</tr>
-						{if $img != ''}
+						
 							<tr bgcolor = '#F7F7F7'>
 								<td width="20%" align="right" valign = top><b>Current Logo : </b></td>
 								<td width="20%" align="left" >
@@ -132,7 +132,7 @@
 								</td>
 								
 						 	</tr>
-						{/if}
+						
 						<tr bgcolor = '#F7F7F7'>
 							<td align = "right"><b>Bank Logo:</b></td>
 							<td align = "left"><input type = "file" name = "logo" autocomplete="off" ></td>
