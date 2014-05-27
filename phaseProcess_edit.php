@@ -37,67 +37,89 @@ if (isset($_REQUEST['delete'])) {
 			$all_comp_ids = array();
 			
 			#listing
-			$all_lst = Listings::find("all",array("conditions"=>array("phase_id = ?",$phaseId)));
-			foreach($all_lst as $key=>$lst){
-			  $all_lst_ids[] = $lst->id; 
-		    }
-		    $all_lst_ids = implode(",",$all_lst_ids);
-		  	print 	"all listing => ". $all_lst_ids."<br/>";	
-			#prices
-			$all_prices = ListingPrices::find("all", array("conditions"=>array("listing_id in ($all_lst_ids) and version = 'Cms'")));
-			foreach($all_prices as $key=>$lstp){
-			  $all_price_ids[] = $lstp->id; 
-		    }
-		    $all_price_ids = implode(",",$all_price_ids);
+				$all_lst = Listings::find("all",array("conditions"=>array("phase_id = ?",$phaseId)));
+				foreach($all_lst as $key=>$lst){
+				  $all_lst_ids[] = $lst->id; 
+				}
+				$all_lst_ids = implode(",",$all_lst_ids);				
 						
-			#supplies
-			$all_supplies = ProjectSupply::find("all", array("conditions"=>array("listing_id in ($all_lst_ids) and version = 'Cms'")));
-			foreach($all_supplies as $key=>$sup){
-			  $all_supply_ids[] = $sup->id;
-			}
-			$all_supply_ids = implode(",",$all_supply_ids);
-						
-			#inventories
-			$all_avails = ProjectAvailability::find("all",array("conditions"=>array("project_supply_id in ($all_supply_ids)")));
-			foreach($all_avails as $key=>$avails){
-			  $all_avail_ids[] = $avails->id;	
-			}
-			$all_avail_ids = implode(",",$all_avail_ids);
-						
-			#secondry_price
-			$all_sec_prices = ProjectSecondaryPrice::find("all",array("conditions"=>array("phase_id=?",$phaseId)));
-			foreach($all_sec_prices as $key=>$secp){
-			  $all_sec_price_ids[] = $secp->id;
-			}
-			$all_sec_price_ids = implode(",",$all_sec_price_ids);
-					
-			#completion_history
-			$all_comp = ResiProjExpectedCompletion::find("all",array("conditions"=>array("phase_id=?",$phaseId)));
-			foreach($all_comp as $key=>$comps){
-				$all_comp_ids[] = $comps->expected_completion_id;
-			}
-			$all_comp_ids = implode(",",$all_comp_ids);
-			
-			/*			
+				#prices
+				if($all_lst_ids){
+				  $all_prices = ListingPrices::find("all", array("conditions"=>array("listing_id in ($all_lst_ids)")));
+				  foreach($all_prices as $key=>$lstp){
+				    $all_price_ids[] = $lstp->id; 
+				  }
+				  $all_price_ids = implode(",",$all_price_ids);				 
+			    }
+							
+				#supplies
+				$all_supplies = mysql_query("SELECT * FROM `project_supplies` WHERE listing_id in ($all_lst_ids)");
+				if($all_supplies){
+				  while($sup = mysql_fetch_object($all_supplies)){
+					$all_supply_ids[] = $sup->id;
+				  }
+				  $all_supply_ids = implode(",",$all_supply_ids);				 
+				}
+							
+				#inventories
+				if($all_supply_ids){
+				  $all_avails = ProjectAvailability::find("all",array("conditions"=>array("project_supply_id in ($all_supply_ids)")));
+				  foreach($all_avails as $key=>$avails){
+					$all_avail_ids[] = $avails->id;	
+				  }
+				  $all_avail_ids = implode(",",$all_avail_ids);				 
+				}
+							
+				#secondry_price
+				$all_sec_prices = ProjectSecondaryPrice::find("all",array("conditions"=>array("phase_id=?",$phaseId)));
+				foreach($all_sec_prices as $key=>$secp){
+				  $all_sec_price_ids[] = $secp->id;
+				}
+				$all_sec_price_ids = implode(",",$all_sec_price_ids);
+										
+				#completion_history
+				$all_comp = ResiProjExpectedCompletion::find("all",array("conditions"=>array("phase_id=?",$phaseId)));
+				foreach($all_comp as $key=>$comps){
+					$all_comp_ids[] = $comps->expected_completion_id;
+				}
+				$all_comp_ids = implode(",",$all_comp_ids);
+							
 			#dependent data deletion
-			ProjectAvailability::delete_all(array('conditions'=>array("id in ($all_avail_ids)")));
-			ProjectSupply::delete_all(array('conditions'=>array("id in ($all_supply_ids)")));
-			ListingPrices::delete_all(array('conditions'=>array("id in ($all_price_ids)")));
-			Listings::delete_all(array('conditions'=>array("id in ($all_lst_ids)")));
-			ProjectSecondaryPrice::delete_all(array('conditions'=>array("id in ($all_sec_price_ids)")));
-			ResiProjExpectedCompletion::delete_all(array('conditions'=>array("expected_completion_id in ($all_comp_ids)")));	
-			mysql_query("DELETE FROM `phase_tower_mappings` WHERE phase_id='$phaseId'");
-			mysql_query("DELETE FROM `d_inventory_prices` WHERE phase_id='$phaseId'");
-			mysql_query("DELETE FROM `d_inventory_prices_tmp` WHERE phase_id='$phaseId'");	
-			
-			#Hard phase deletion and values updation
-			ResiProjectPhase::delete_all(array('conditions'=>array("phase_id = ? and version = ?",$phaseId,'Cms')));	*/							
-			
+				if($all_avail_ids)
+				  ProjectAvailability::delete_all(array('conditions'=>array("id in ($all_avail_ids)")));
+				if($all_supply_ids)
+				  ProjectSupply::delete_all(array('conditions'=>array("id in ($all_supply_ids)")));
+				if($all_price_ids)
+				  ListingPrices::delete_all(array('conditions'=>array("id in ($all_price_ids)")));
+				
+				if($all_sec_price_ids)
+				  ProjectSecondaryPrice::delete_all(array('conditions'=>array("id in ($all_sec_price_ids)")));
+				if($all_comp_ids)
+				  ResiProjExpectedCompletion::delete_all(array('conditions'=>array("expected_completion_id in ($all_comp_ids)")));	
+				  
+				if($all_lst_ids)
+				  Listings::delete_all(array('conditions'=>array("id in ($all_lst_ids)")));
+				  
+				mysql_query("DELETE FROM `phase_tower_mappings` WHERE phase_id='$phaseId'");
+				mysql_query("DELETE FROM `d_inventory_prices` WHERE phase_id='$phaseId'");
+				mysql_query("DELETE FROM `d_inventory_prices_tmp` WHERE phase_id='$phaseId'");	
+												
 		}catch(Exeception $e){
 		  $del_flag = 0;			  
 		}		
 	});	
 	if($del_flag){
+		#dependent values updation
+		ResiProjectPhase::delete_all(array('conditions'=>array("phase_id = ?",$phaseId)));		
+		$costDetailLatest = costructionDetail($projectId);
+		$qry = "UPDATE resi_project 
+					set 
+					   PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
+				   where PROJECT_ID = $projectId and version = 'Cms'";
+		mysql_query($qry) OR DIE(mysql_error());
+			
+		updateD_Availablitiy($projectId); // update D_availability 	
+				
 	  if ($preview == 'true')
 		header("Location:show_project_details.php?projectId=" . $projectId);
 	  else
