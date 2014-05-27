@@ -45,16 +45,21 @@ $(document).ready(function(){
             placeType: $("#imgCat :selected").text(),
           },
           success: function( data ) {
-            
-            response( $.map( data, function( item ) {
-              return {
-                label: item.name,
-                value: item.shortName,
-                table: item.table,
-                id: item.id,
+            if(data[0].error){
+                alert("Please Select Image Type first.");
+                response();
+            }
+            else{
+                response( $.map( data, function( item ) {
+                  return {
+                    label: item.name,
+                    value: item.shortName,
+                    table: item.table,
+                    id: item.id,
 
-              }
-            }));
+                  }
+                }));
+            }
           }
         });
       },
@@ -63,8 +68,10 @@ $(document).ready(function(){
         selectedItem = ui.item;
         $("#landmarkId").val(selectedItem.id);
         $("#landmarkName").val(selectedItem.value);
-        window.areaResponse['landmark'] = selectedItem.id;
-        areaTypeChanged( 'landmark' );
+        if(selectedItem.id){
+            window.areaResponse['landmark'] = selectedItem.id;
+            areaTypeChanged( 'landmark' );
+        }
 
         //alert(selectedItem.label);
         //log( ui.item ?
@@ -219,6 +226,11 @@ function updateDisplayLocation() {
         imgType = "";
         //console.log(window.areaResponse);
 
+    $('#search').val("");
+    window.areaResponse['landmark'] = 0;
+    $("#landmarkId").val("");
+        $("#landmarkName").val("");
+
     if ( $('#search').val()!='') {
         areaType = "Landmark";
         value = $('#landmarkName').val();
@@ -295,7 +307,7 @@ function verifyPhotoFormData() {
 
 function validateThisImg( img ) {
     if (! window.areaResponse['landmark'] > 0 ) {
-        alert('please select a Landmark from AutoComplete.');
+        alert('please select a Landmark from Search Landmark Field.');
         return false;
     }
     if ( img.files.length == 0 ) {
@@ -324,7 +336,7 @@ function validateThisImg( img ) {
 
 function getPhotos() {
     if (! window.areaResponse['landmark'] > 0 ) {
-        alert('please select a Landmark from AutoComplete.');
+        alert('please select a Landmark from Search Landmark Field.');
         return false;
     }
     toggleSaveBtn( 'hide' );
