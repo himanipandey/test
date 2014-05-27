@@ -82,7 +82,7 @@
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
+                                        <select name="imgCategory" id="imgCat" onchange="updateImageCat()">
                                             <option value="other">Select Category</option>
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
@@ -99,7 +99,7 @@
                                         <input type="hidden" name="upImg" value="1">
                                         <input type="hidden" name="landmarkId"  id = "landmarkId">
                                         <input type="hidden" name="landmarkName"  id = "landmarkName">
-                                        <input id="search"  onchange="areaTypeChanged('landmark')" ></td></div>
+                                        <input id="search"  ></td></div>
                                         <input type="hidden" id="imgName" name="imgDisplayName">
                                     
                                     

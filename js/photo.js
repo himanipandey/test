@@ -71,7 +71,8 @@ $(document).ready(function(){
         $("#landmarkName").val(selectedItem.value);
         if(selectedItem.id){
             window.areaResponse['landmark'] = selectedItem.id;
-            areaTypeChanged( 'landmark' );
+           // areaTypeChanged( 'landmark' );
+           updateDisplayLocation();
         }
 
         //alert(selectedItem.label);
@@ -217,6 +218,24 @@ function updateDropDownOption( areaId, areaType, data ) {
     }
 }
 
+function updateImageCat(){
+    initVar();
+    var areaType  = "",
+        elementId = "",
+        areaName  = "";
+    var imgType = $("#imgCat :selected").text();
+    if(imgType.indexOf('Select') >= 0){
+        imgType = "";
+        
+    }
+
+    $('#search').val("");
+        window.areaResponse['landmark'] = 0;
+        $("#landmarkId").val("");
+        $("#landmarkName").val("");
+        $('#img-name').html("").val("");   
+}
+
 function updateDisplayLocation() {
     initVar();
     var areaType  = "",
@@ -225,13 +244,10 @@ function updateDisplayLocation() {
     var imgType = $("#imgCat :selected").text();
     if(imgType.indexOf('Select') >= 0){
         imgType = "";
-        $('#search').val("");
-        window.areaResponse['landmark'] = 0;
-        $("#landmarkId").val("");
-        $("#landmarkName").val("");
-        $('#img-name').html("").val("");
-    }
         
+    }
+     
+         
         //console.log(window.areaResponse);
 
     
@@ -267,6 +283,7 @@ function updateDisplayLocation() {
         $('#area-txt-name').html( "Landmark : "); 
 
     }
+     $('#area-txt-name').html( "Landmark : "); 
     /*else if ( window.areaResponse['locality'] != 0 ) {
         areaType = "Locality";
         elementId = "drp-dwn-locality-" + window.areaResponse['locality'];
