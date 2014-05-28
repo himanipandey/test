@@ -641,7 +641,7 @@ $smarty->assign("accessModule", $accessModule);
 
 /******array for force migrate access*****/
 $forceMigrateModule = array();
-$arrForce      = array(53,506);
+$arrForce      = array(566,506);
 if(in_array($_SESSION['adminId'],$arrForce))
 {
 	$forceMigrateModule['urlEdit'] = $_SESSION['adminId'];
