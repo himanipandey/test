@@ -296,8 +296,8 @@ function writeToImageService($imageParams){
   // then add them to the multi-handle
 
 
-print'<pre>';
-        print_r($postArr);
+//print'<pre>';
+  //      print_r($postArr);
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];

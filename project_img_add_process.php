@@ -183,7 +183,7 @@ if (isset($_POST['Next']))
 				  if(array_key_exists($_REQUEST['txtdisplay_order'][$count], $temp_arr)){
 					  $ErrorMsg["ptype"] = "Display order must be unique."; break;				  
 				  }else {//checking duplicacy
-						$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$count], $_REQUEST['PType']);
+						$ext_vlinks = checkDuplicateDisplayOrder($projectId, $_REQUEST['txtdisplay_order'][$count], $_REQUEST['PType']);
 						if($ext_vlinks){
 							 $ErrorMsg["ptype"] = "Display order '".$_REQUEST['txtdisplay_order'][$count]."' already exist."; break;
 						}

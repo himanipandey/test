@@ -38,7 +38,7 @@
 	        
 	        $data['PLAN_TYPE'] = $str;
 	         
-	        if ($data['PLAN_TYPE']=="Project Image" && $v->priority==0 )
+	        if ($data['PLAN_TYPE_MAIN']=="Project Image" && ($v->priority==0 || $v->priority==null) )
 	        	$data['display_order'] = 5;
 	        else
 	        	$data['display_order'] = $v->priority;
@@ -46,7 +46,7 @@
 	        $data['IMAGE_DESCRIPTION'] = $v->description;
 	        $data['SERVICE_IMAGE_ID'] = $v->id;
 	        $data['SERVICE_IMAGE_PATH'] = $v->absolutePath;
-	       
+	      
 	        if(isset($v->takenAt)){
 	        	$t = $v->takenAt/1000;
 				$data['tagged_month'] =  date("Y-m-d", $t);
@@ -142,7 +142,7 @@
 						  $ErrorMsg["display_order"] = "Display order for an Image Type must be unique.";				  
 					  	}
 					  	else {//checking duplicacy
-							$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$k],$_REQUEST['service_image_id'][$k],$_REQUEST['PType'][$k]);
+							$ext_vlinks = checkDuplicateDisplayOrder($projectId, $_REQUEST['txtdisplay_order'][$k],$_REQUEST['PType'][$k], $_REQUEST['service_image_id'][$k]);
 
 							if($ext_vlinks){
 								 $ErrorMsg["display_order"] = "Display order '".$_REQUEST['txtdisplay_order'][$k]."' already exist for Image Type: ".$_REQUEST['PType'][$k]." .";
