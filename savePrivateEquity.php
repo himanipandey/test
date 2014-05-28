@@ -21,7 +21,7 @@ if($_POST['task']=="getProject"){
 		foreach ($getSearchResult as $k => $v) {
 			$tmpArr = array();
 			$tmpArr['id'] = $v->project_id;
-			$tmpArr['name'] = $v->project_name.$v->project_address;
+			$tmpArr['name'] = $v->project_name.", ".$v->project_address;
 			array_push($projectData, $tmpArr);
 		}
 		echo json_encode($projectData);
