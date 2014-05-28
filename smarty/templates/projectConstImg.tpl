@@ -75,20 +75,18 @@
                                         </div>
                                         <div style="float: left; width: 20px; height: 31px;">
                                         </div>
-                                        <!--<div style="float: left; height: 31px;">
+                                        <div style="float: left; height: 31px;">
                                             <form method="post" onsubmit="return verifyAdminSelected();">
                                                 <select name="executive" id="executive" STYLE="width: 150px">
                                                     
-                                                        <option value =''>Select Exec</option>
-                                                          {foreach from = $executiveList key = key item = item}
-                                                            <option {if $selectedExecutive == $item['adminid']} selected="selected" {/if} value ='{$item['adminid']}'>{$item['username']}</option>
-                                                          {/foreach}  
-                                                                                                             
-                                                        
+                                                    <option value =''>Select Exec</option>
+                                                      {foreach from = $executiveList key = key item = item}
+                                                        <option {if $selectedExecutive == $item['adminid']} selected="selected" {/if} value ='{$item['adminid']}'>{$item['username']}</option>
+                                                      {/foreach}   
                                                 </select>
                                                 <input class="cityId" STYLE="width: 50px; vertical-align: top;" type="submit" name="submit" value="Get"></input>
                                             </form>
-                                        </div>-->
+                                        </div>
                                         <div style="float: left; width: 20px; height: 31px;">
                                         </div>
                                         <div style="float: left; height: 31px;">
