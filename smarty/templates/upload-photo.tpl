@@ -85,7 +85,7 @@
                                         <select name="imgCategory" id="imgCat" onchange="updateImageCat()">
                                             <option value="other">Select Category</option>
                                             {foreach from = $localityType key = key item = item}
-                                                <option value="{$item}">{$key}</option>
+                                                <option value="{$item}">{$item}</option>
                                             {/foreach}
                                             
                                         </select>
