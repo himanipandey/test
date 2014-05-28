@@ -115,17 +115,17 @@
                                 {if $txtdepartment == 'SURVEY'}
                                     {$stye = ""}
                                 {else}
-                                     
                                      {$stye = 'style = "display:none;"'}
                                 {/if}
 				<tr id = 'showhide' {$stye}>
 				  <td width="20%" align="right" valign = "top">Mapped City : </td>
-				  <td width="30%" align="left" >
+                                  <td width="30%" align="left" >
                                       <select name="city[]" multiple="" style="width:220px;">
                                           <option value="">Select City</option>
                                           {foreach from = $arrCity key = key item = item}
                                             <option {if in_array($key,$arrExistingCity)} selected {/if} value="{$key}">{$item}</option>
                                           {/foreach}
+                                          <option value="other" {if $otherCityChk == 1}selected{/if}>All Other Cities</option>
                                       </select>
                                   </td>
 				  <td width="50%" align="left"></td>

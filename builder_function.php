@@ -1232,7 +1232,7 @@ function ViewCityDetails($cityID) {
         $ResDetails['STATUS'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DISPLAY_ORDER'] = $Res['DISPLAY_ORDER'];
-        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
+        $ResDetails['DESCRIPTION'] = stripslashes($Res['DESCRIPTION']);
         return $ResDetails;
     } else {
         return 0;
@@ -1264,7 +1264,7 @@ function ViewSuburbDetails($suburbID) {
         $ResDetails['META_DESCRIPTION'] = $Res['META_DESCRIPTION'];
         $ResDetails['ACTIVE'] = $Res['STATUS'];
         $ResDetails['URL'] = $Res['URL'];
-        $ResDetails['DESCRIPTION'] = $Res['DESCRIPTION'];
+        $ResDetails['DESCRIPTION'] = stripslashes($Res['DESCRIPTION']);
         $ResDetails['parent_suburb_id'] = $Res['parent_suburb_id'];
         return $ResDetails;
     } else {
@@ -2114,7 +2114,7 @@ function ViewLocalityDetails($localityID) {
         $ResDetails['LABEL'] = $Res['label'];
         $ResDetails['status'] = $Res['status'];
         $ResDetails['URL'] = $Res['url'];
-        $ResDetails['DESCRIPTION'] = $Res['description'];
+        $ResDetails['DESCRIPTION'] = stripslashes($Res['description']);
         $ResDetails['MAX_LATITUDE'] = $Res['max_latitude'];
         $ResDetails['MIN_LATITUDE'] = $Res['min_latitude'];
         $ResDetails['MAX_LONGITUDE'] = $Res['max_longitude'];
@@ -2220,7 +2220,6 @@ function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=
 //print_r($imgPath);
     $orderArr = array();
     $cnt=0; 
-    print("<pre>"); print_r($imgPath); die();
     foreach($imgPath->data as $k=>$v){
 //echo $v->priority;
         if($service_image_id==$v->id){
@@ -2444,5 +2443,6 @@ function fetch_project_BSP($projectId){
 	}
 	return $bspArr;
 }
+
 ?>
 

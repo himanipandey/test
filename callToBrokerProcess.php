@@ -1,5 +1,5 @@
 <?php 
-    $smarty->assign("arrCampaign", $arrCampaign);
+    $smarty->assign('arrCampaign', CampaignDids::allCampaign());
     $error = '';
     if( isset($_REQUEST['callId']) ) {
         $callId  = $_REQUEST['callId'];

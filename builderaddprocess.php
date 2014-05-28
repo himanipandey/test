@@ -217,19 +217,28 @@ if ($_POST['btnSave'] == "Save")
                 {
                         
 
-                            $params = array(
-                                "image_type" => "builder_image",
-                                "folder" => $foldername."/",
-                                "image" => $name,
-                                "title" => strtolower($legalEntity),
-                                "service_image_id" => $_REQUEST['serviceImageId'],
-                                "update" => "update",
-                            );
+                    $params = array(
+                        "image_type" => "builder_image",
+                        "folder" => $foldername."/",
+                        "image" => $name,
+                        "title" => strtolower($legalEntity),
+                        "service_image_id" => $_REQUEST['serviceImageId'],
+                        "update" => "update",
+                    );
+                    $postArr = array();
+                    $unitImageArr = array();
+                    $unitImageArr['img'] = $_FILES['txtBuilderImg'];
+                    $unitImageArr['objectId'] = $builderid;
+                    $unitImageArr['objectType'] = "builder";
+                    $unitImageArr['newImagePath'] = $newImagePath;
+                    $unitImageArr['params'] = $params;  
+                    $postArr[] = $unitImageArr; 
+                    $response   = writeToImageService( $postArr);
 
-                        $response   = writeToImageService(  $_FILES['txtBuilderImg'], "builder", $builderid, $params, $newImagePath);//echo "here";
+                    foreach ($response as $k => $v) {
                        
                         
-                        if(empty($response["serviceResponse"]["service"]->response_body->error->msg))
+                        if(empty($v->error->msg))
                         {
 
                             
@@ -244,7 +253,7 @@ if ($_POST['btnSave'] == "Save")
                             $image_id = $image_id->id;*/
                             //$image_id = $response['serviceResponse']["service"]->data();
                             //$image_id = $image_id->id;
-                             $image_id = $response["serviceResponse"]["service"]->response_body->data->id;
+                             $image_id = $v->data->id;
                            
                          
                             $imgurl = $newfold."/".$name; 
@@ -320,9 +329,10 @@ if ($_POST['btnSave'] == "Save")
                         }	
                         else 
                         {
-                           $ErrorMsg2 = "Problem in image upload: ".($response["serviceResponse"]["service"]->response_body->error->msg);
+                           $ErrorMsg2 = "Problem in image upload: ".($v->error->msg);
                             
                         }
+                    }    
                 }
                 else 
                 {
@@ -340,26 +350,19 @@ if ($_POST['btnSave'] == "Save")
                         ## - desccripion content flag handeling
 						$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $builderid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => RESI_BUILDER )));					   
 					   if($cont_flag){
-							$content_flag = '';
-							if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
-								if(strcasecmp($txtBuilderDescription,$txtOldBuilderDescription) != 0)
-									$content_flag = 0;
-								
-							}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR'){
-							  $content_flag = ($_POST["content_flag"])? 1 : 0;
-							}
+							$content_flag = ($_POST["content_flag"])? 1 : 0;
 							if(is_numeric($content_flag)){
 								$cont_flag = TableAttributes::find($cont_flag[0]->id);
 								$cont_flag->updated_by = $_SESSION['adminId'];
 								$cont_flag->attribute_value = $content_flag;
 								$cont_flag->save();		
 							}
-						}elseif($_SESSION['DEPARTMENT'] == 'DATAENTRY' && strcasecmp($txtBuilderDescription,$txtOldBuilderDescription) != 0){
+						}else{
 							$cont_flag = new TableAttributes();
 							$cont_flag->table_name = RESI_BUILDER;
 							$cont_flag->table_id = $builderid;
 							$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
-							$cont_flag->attribute_value = 0;
+							$cont_flag->attribute_value = ($_POST["content_flag"])? 1 : 0;
 							$cont_flag->updated_by = $_SESSION['adminId'];
 							$cont_flag->save();				
 						}
@@ -386,7 +389,7 @@ if ($_POST['btnSave'] == "Save")
             $smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
             $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
             $smarty->assign("legalEntity", $dataedit['ENTITY']);
-            $smarty->assign("txtBuilderDescription", $dataedit['DESCRIPTION']);
+            $smarty->assign("txtBuilderDescription", stripslashes($dataedit['DESCRIPTION']));
             $smarty->assign("txtBuilderUrl", $dataedit['URL']);
             $smarty->assign("txtBuilderUrlOld", $dataedit['URL']);
             $smarty->assign("DisplayOrder", $dataedit['DISPLAY_ORDER'] ? $dataedit['DISPLAY_ORDER'] : 100);
@@ -444,7 +447,7 @@ if ($_POST['btnSave'] == "Save")
             //array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("imgSrc", $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("service_image_id", $data[0]['SERVICE_IMAGE_ID']);
-    //$img_path = $data[0]['SERVICE_IMAGE_PATH'];
+    
 
 
 			

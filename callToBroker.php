@@ -5,6 +5,7 @@
     include("dbConfig.php");
     include("includes/configs/configs.php");
     include("builder_function.php");
+    include("modelsConfig.php");
     AdminAuthentication();
     $dept = $_SESSION['DEPARTMENT'];
 

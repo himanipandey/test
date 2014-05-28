@@ -43,7 +43,7 @@
                     {foreach from = $allCycleActual item = item key = key}
                         <option value="{$key}" {if $commentCycleActual == $key} selected {/if}>{$item}</option>
                     {/foreach}
-                    <!--<option value="all" {if $commentCycleActual == 'all'} selected {/if}>All</option>-->
+                    <option value="all" {if $commentCycleActual == 'all'} selected {/if}>All</option>
                 </select>
                 
                <input type="hidden" name = "projectId" value="{$ProjectDetail[0]['PROJECT_ID']}">

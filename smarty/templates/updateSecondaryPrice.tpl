@@ -84,19 +84,19 @@
                               <b>Month:</b>&nbsp;
                               
                               <select name ="month" id = "month">
-                                  <option value="">Select Month</option>
-                                  <option value="01" {if $month == 01} selected{/if}>Jan</option>
-                                  <option value="02" {if $month == 02} selected{/if}>Feb</option>
-                                  <option value="03" {if $month == 03} selected{/if}>March</option>
-                                  <option value="04" {if $month == 04} selected{/if}>April</option>
-                                  <option value="05" {if $month == 05} selected{/if}>May</option>
-                                  <option value="06" {if $month == 06} selected{/if}>June</option>
-                                  <option value="07" {if $month == 07} selected{/if}>July</option>
-                                  <option value="08" {if $month == 08} selected{/if}>Aug</option>
-                                  <option value="09" {if $month == 09} selected{/if}>Sept</option>
-                                  <option value="10" {if $month == 10} selected{/if}>Oct</option>
-                                  <option value="11" {if $month == 11} selected{/if}>Nov</option>
-                                  <option value="12" {if $month == 12} selected{/if}>Dec</option>
+                                  <option value="">{$month}Select Month</option>
+                                  <option value="01" {if $month == "01"} selected{/if}>Jan</option>
+                                  <option value="02" {if $month == "02"} selected{/if}>Feb</option>
+                                  <option value="03" {if $month == "03"} selected{/if}>March</option>
+                                  <option value="04" {if $month == "04"} selected{/if}>April</option>
+                                  <option value="05" {if $month == "05"} selected{/if}>May</option>
+                                  <option value="06" {if $month == "06"} selected{/if}>June</option>
+                                  <option value="07" {if $month == "07"} selected{/if}>July</option>
+                                  <option value="08" {if $month == "08"} selected{/if}>Aug</option>
+                                  <option value="09" {if $month == "09"} selected{/if}>Sept</option>
+                                  <option value="10" {if $month == "10"} selected{/if}>Oct</option>
+                                  <option value="11" {if $month == "11"} selected{/if}>Nov</option>
+                                  <option value="12" {if $month == "12"} selected{/if}>Dec</option>
                               </select>
                             </td>
                         </tr>
@@ -152,12 +152,12 @@
                                                 {$val}
                                                 <input type = "hidden" name = "unitType[]" value ="{$val}">
                                             </td>
-                                            <td valign ="top" style ="padding-left: 10px;" align = "left">
-                                                <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$val]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{else}{$arrMinPrice[$val]}{/if}">
+                                             <td valign ="top" style ="padding-left: 10px;" align = "left">
+                                              <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrMinPrice[$k] != ''}{$arrMinPrice[$k]}{else}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{/if}">
                                             </td>
                                             <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                                <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
-                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{else}{$arrMaxPrice[$val]}{/if}">
+                                               <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
+                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrMaxPrice[$k] != ''}{$arrMaxPrice[$k]}{else}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{/if}">
                                             </td>
                                             <td style ="padding-left: 10px;" align = "left">
                                                 <div id = "mean_{$cnt}">

@@ -22,6 +22,9 @@
     $imageAuth = isUserPermitted('image', 'add');
     $smarty->assign("imageAuth", $imageAuth);
     
+    $compHistAuth = isUserPermitted('comp-history-mgmt', 'manage');
+    $smarty->assign("compHistAuth", $compHistAuth);
+    
     $labelAuth = isUserPermitted('label', 'add');
     $smarty->assign("labelAuth", $labelAuth);
     
@@ -96,6 +99,9 @@
     /*************datacollection callcenter and survey auth***************/
     $callCenterAuth = isUserPermitted('callcenter', 'access');
     $smarty->assign("callCenterAuth", $callCenterAuth);
+    
+    $campaigndidsAuth = isUserPermitted('campaigndids', 'manage');
+    $smarty->assign("campaigndidsAuth", $campaigndidsAuth);
     
     $myProjectsCallCenterAuth = isUserPermitted('myprojects_callcenter', 'access');
     $smarty->assign("myProjectsCallCenterAuth", $myProjectsCallCenterAuth);

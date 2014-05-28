@@ -128,7 +128,10 @@ class CommentsHistory extends ActiveRecord\Model
     function getAllCommentsByProjectId($projectId, $commentType, $updationCycleId, $actualUpdationCycle) {
               //echo $projectId."==". $commentType."==". $updationCycleId;die;
         if($actualUpdationCycle != '') {
-            $conditions = array("project_id = $projectId  AND updation_cycle_id = ".$actualUpdationCycle);
+            if($actualUpdationCycle != 'not_null')
+                $conditions = array("project_id = $projectId  AND updation_cycle_id = ".$actualUpdationCycle);
+            else
+                $conditions = array("project_id = $projectId  AND updation_cycle_id is not null");
         }
         else{
             if( $updationCycleId != '' && $commentType != '') {                

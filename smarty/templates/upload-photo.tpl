@@ -36,6 +36,7 @@
                                     </tr>
                                 {/if}
                                 <form method="post" onsubmit="return verifyPhotoFormData();" enctype="multipart/form-data">
+
                                 <tr>
                                     <td>
                                         <label class="lbl"> Select a City </label>
@@ -51,6 +52,7 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tbody style="display:none"> 
                                 <tr>
                                     <td>
                                         <label class="lbl"> Select a Suburb </label>
@@ -74,25 +76,13 @@
                                     </td>
                                 </tr>
                                 
-
-                                <tr>
-                                    <td width="200px">
-                                        <label class="lbl"> Search a Landmark </label>
-                                    <div class="ui-widget">
-                                        <input type="hidden" name="upImg" value="1">
-                                        <input type="hidden" name="landmarkId"  id = "landmarkId">
-                                        <input type="hidden" name="landmarkName"  id = "landmarkName">
-                                        <input id="search" onchange="areaTypeChanged('landmark')"></td></div>
-                                        <input type="hidden" id="imgName" name="imgDisplayName">
-                                    
-                                    
-                                </tr>
+                                </tbody> 
 
                                 <tr>
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
+                                        <select name="imgCategory" id="imgCat" onchange="updateImageCat()">
                                             <option value="other">Select Category</option>
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
@@ -101,6 +91,21 @@
                                         </select>
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <td width="200px">
+                                        <label class="lbl"> Search a Landmark </label>
+                                    <div class="ui-widget">
+                                        <input type="hidden" name="upImg" value="1">
+                                        <input type="hidden" name="landmarkId"  id = "landmarkId">
+                                        <input type="hidden" name="landmarkName"  id = "landmarkName">
+                                        <input id="search"  ></td></div>
+                                        <input type="hidden" id="imgName" name="imgDisplayName">
+                                    
+                                    
+                                </tr>
+                                
+                                
                                  <tr>
                                     <td>
                                         <label class="lbl">Image Display Name</label>

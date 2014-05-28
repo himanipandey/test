@@ -334,7 +334,7 @@ function appendToNo(no){
 function validateFloor(from, to){
 	var returnVal
 	
-	if(to>from) returnVal="true";
+	if(parseInt(to)>parseInt(from)) returnVal="true";
 	else returnVal="false";
 	
 	return returnVal;
@@ -410,7 +410,7 @@ $(document).ready(function(){
 															<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}
 															
 															" target="_blank">
-																<img src="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" height="70px" width="70px" title="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" alt="{$ImageDataListingArr[data].alt_text}" />
+																<img src="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}?width=130&height=100" height="70px" width="70px" title="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" alt="{$ImageDataListingArr[data].alt_text}" />
 															</a>
 															<br>
 														Image Type:{$ImageDataListingArr[data].PLAN_IMAGE}<input type = "text" readonly name = "PType[{$cnt}]" id="PType{$cnt}"
@@ -440,13 +440,15 @@ $(document).ready(function(){
 														{/if}
 														{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
 														<div class="taggedDate1">
-															Tower:&nbsp;&nbsp;
+															Tower:<font color = "red">*</font>&nbsp;&nbsp;
 															<select name= "txtTowerId[{$cnt}]" onchange='tower_change({$cnt})' id="tower{$cnt}">
 																<option value="" >--Select Tower--</option>
 																{section name=towerdata loop=$towerDetail}
 																	<option value="{$towerDetail[towerdata].TOWER_ID}" {if $ImageDataListingArr[data].tower_id == $towerDetail[towerdata].TOWER_ID} selected {/if} >{$towerDetail[towerdata].TOWER_NAME}</option>
 																{/section}
+																{if count($towerDetail)<1}
 																	<option value="0" {if $ImageDataListingArr[data].tower_id == "0"} selected {/if}>Other</option>
+																{/if}
 															</select>
 															<br><br>
 															Floor No. From:<font color = "red"></font>&nbsp;&nbsp;<input name="floor_from{$cnt}" type="text" class="formstyle2" id="floor_from{$cnt}" size="10"  onchange="floor_change_from({$cnt})" />	
