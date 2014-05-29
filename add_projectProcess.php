@@ -633,6 +633,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->launch_date = $eff_date_to;
                $phase->status = 'Active';
                $phase->booking_status_id = 1;
+               $phase->construction_status = $Status;
                $phase->created_at = date('Y-m-d H:i:s');
                $phase->updated_at = date('Y-m-d H:i:s');
                $phase->updated_by = $_SESSION['adminId'];

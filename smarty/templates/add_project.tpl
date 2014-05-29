@@ -471,6 +471,7 @@
 								  </td>
 							   </tr> 
 							  {/if}
+							  {if $projectId == ''} 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Status :</b> </td>
 								  <td width="30%" align="left" valign = "top">
@@ -487,6 +488,9 @@
 									  <font color="red">{if $ErrorMsg["txtStatus"] != ''} {$ErrorMsg["txtStatus"]} {/if}<span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
+							  {else}
+							    <input type="hidden" name="Status" value="{$Status}"/>
+							  {/if}
 							   {if $projectId != ''}                                                        
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>

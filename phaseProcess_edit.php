@@ -22,6 +22,8 @@ $smarty->assign("preview", $preview);
 $smarty->assign("projectId", $projectId);
 $bookingStatuses = ResiProject::find_by_sql("select * from master_booking_statuses");
 $smarty->assign("bookingStatuses", $bookingStatuses);
+$projectStatus = ResiProject::projectStatusMaster();
+$smarty->assign("projectStatus",$projectStatus);
 
 /* * *******code for delete phase********* */
 if (isset($_REQUEST['delete'])) {
@@ -38,6 +40,7 @@ if (isset($_REQUEST['delete'])) {
            where PROJECT_ID = $projectId and version = 'Cms'";
         mysql_query($qry) OR DIE(mysql_error());
         
+        projectStatusUpdate($projectId);    
         updateD_Availablitiy($projectId); // update D_availability 
                 
         if ($preview == 'true')
@@ -107,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD']) {
     // Assign vars for smarty
     $smarty->assign("phaseObject", $current_phase[0]);
     $smarty->assign("bookingStatus", $current_phase[0]['BOOKING_STATUS_ID']);
+    $smarty->assign("construction_status", $current_phase[0]['construction_status']);
     $smarty->assign("phasename", $current_phase[0]['PHASE_NAME']);
     $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
     $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
@@ -135,6 +139,7 @@ if (isset($_POST['btnSave'])) {
     $phasename = $_REQUEST['phaseName'];
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
+    $construction_status = $_REQUEST['construction_status'];    
    $pre_launch_date = $_REQUEST['pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
@@ -145,6 +150,7 @@ if (isset($_POST['btnSave'])) {
     $smarty->assign("phasename", $phasename);
     $smarty->assign("launch_date", $launch_date);
     $smarty->assign("completion_date", $completion_date);
+    $smarty->assign("construction_status", $construction_status);
     $smarty->assign("remark", $remark);
     $smarty->assign("pre_launch_date",$pre_launch_date);
      $smarty->assign("sold_out_date",$sold_out_date);
@@ -164,7 +170,9 @@ if (isset($_POST['btnSave'])) {
             $pre_launch_date = '';
         if($sold_out_date == '0000-00-00')
             $sold_out_date = '';
-        
+        if($construction_status == ""){
+		  	 $error_msg = 'Construction Status is required!';
+		}
         if( $launch_date != '' && $completion_date !='' ) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
             if( $retdt <= 180 ) {
@@ -232,7 +240,7 @@ if (isset($_POST['btnSave'])) {
             // Update
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
-                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date;
+                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date, $construction_status;
                 if($phaseId != '0'){
                     //          Updating existing phase
                     $phase = ResiProjectPhase::virtual_find($phaseId);
@@ -241,6 +249,7 @@ if (isset($_POST['btnSave'])) {
                     $phase->launch_date = $launch_date;
                     $phase->remarks = $remark;
                     $phase->sold_out_date = $sold_out_date;
+                    $phase->construction_status = $construction_status;
                     $phase->save();
                     if($phasename == 'No Phase') {
                         $qryUpdateProjectLaunchDate = "update resi_project 
@@ -269,6 +278,7 @@ if (isset($_POST['btnSave'])) {
                     }
                 }
             });
+             projectStatusUpdate($projectId); //update project status
              updateD_Availablitiy($projectId); // update D_availability  
             #########################################
             // Phase Quantity

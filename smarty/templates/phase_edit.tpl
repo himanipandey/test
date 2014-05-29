@@ -226,7 +226,20 @@
                                                     <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
                                                 </td>
                                             </tr>
-                                             
+                                             <tr>
+                                                <td width="20%" align="right"><font color ="red">*</font><b>Construction Status :</b> </td>
+                                                <td width="30%" align="left">                                                   
+                                                    <select name="construction_status" id="construction_status" class="fieldState">
+														<option value="">Select</option>
+														{foreach from = $projectStatus key = key item = value}
+															<option value="{$key}" {if $key == $construction_status} selected {/if}>{$value} </option>
+														{/foreach}
+													 </select>
+                                                </td>
+                                                <td width="50%" align="left">
+                                                    <font color="red"><span id="err_construction_status" style = "display:none;">Select Construction Status</span></font>
+                                                </td>
+                                            </tr> 
                                             <tr>
                                                 <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
                                                 <td width="30%" align="left">
