@@ -35,4 +35,11 @@ elseif($_POST['submit'] === 'Assign') {   //assigning projects
     $_SESSION['project-status']['assignmentError'] = $errorMsg;
    // header("Location: process-assign.php");
 }
+elseif($_POST['submit'] === 'Delete') {   //assigning projects
+    $projectIds = implode(",",$_POST['assign']);
+    $qryDel = "delete from process_assignment_system where project_id in($projectIds)";
+    $resDel = mysql_query($qryDel) or die(mysql_error());
+    header("Location:project_const_img.php");
+   // header("Location: process-assign.php");
+}
 ?>

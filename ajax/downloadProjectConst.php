@@ -35,13 +35,19 @@ $arrOtherCities =
   );
 
 $dept = $_SESSION['DEPARTMENT'];
-
+$pasAnd = "";
+$pasField = "";
+//echo "<pre>";print_r($_REQUEST);
 if(!isset($_POST['dwnld_projectId']))
 	$_POST['dwnld_projectId'] = '';
 
 if(!isset($_POST['dwnld_mode']))
 	$_POST['dwnld_mode'] = '';
 
+if($_POST['dwnld_assignRemark'] != '' OR $_POST['dwnld_assignStatus'] != ''){
+    $pasAnd = " join process_assignment_system pas on RP.project_id = pas.project_id";
+    $pasField = ' ,pas.EXECUTIVE_REMARK, pas.STATUS as ASSIGN_STATUS ';
+}
 if(!isset($_POST['dwnld_search']))
 	$_POST['dwnld_search'] = '';
 
@@ -82,11 +88,11 @@ $transfer = $_POST['dwnld_transfer'];
 $search = $_POST['dwnld_search'];
 $city =	$_POST['dwnld_city'];
 if($city == 'othercities'){
-	$group_city_ids = array();
-	foreach($arrOtherCities as $key => $value){
-		$group_city_ids[] = $key;
-	}
-	$city= implode(",",$group_city_ids);
+    $group_city_ids = array();
+    foreach($arrOtherCities as $key => $value){
+            $group_city_ids[] = $key;
+    }
+    $city= implode(",",$group_city_ids);
 }
 
 $locality = $_POST['dwnld_locality'];
@@ -98,12 +104,13 @@ $updation_cycle = $_POST['dwnld_updationCycle'];
 $Status = $_POST['dwnld_Status'];
 $Active = $_POST['dwnld_Active'];
 $selectdata = $_POST['dwnld_selectdata'];
+//echo "<pre>";print_r($_REQUEST);
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
     $QueryMember1 = "SELECT RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,ct.LABEL AS CITY_NAME, psm.project_status as 
                     PROJECT_STATUS,
-                L.LABEL LOCALITY
+                L.LABEL LOCALITY $pasField
                  FROM
                     resi_project RP
                  
@@ -116,7 +123,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                  INNER JOIN 
                      resi_builder RB on RP.BUILDER_ID = RB.BUILDER_ID
                  INNER JOIN
-                    project_status_master psm on RP.PROJECT_STATUS_ID = psm.id";
+                    project_status_master psm on RP.PROJECT_STATUS_ID = psm.id $pasAnd";
 
     $and = " WHERE RP.version='Cms' and ";
 
@@ -149,6 +156,16 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
             $QueryMember .= $and." RP.LOCALITY_ID = '".$_POST['dwnld_locality']."'";
             $and  = ' AND ';
         }
+        if($_POST['dwnld_assignRemark'] != '')
+        {
+            $QueryMember .= $and." pas.EXECUTIVE_REMARK = '".$_POST['dwnld_assignRemark']."'";
+            $and  = ' AND ';
+        }
+        if($_POST['dwnld_assignStatus'] != '')
+        {
+            $QueryMember .= $and." pas.STATUS = '".$_POST['dwnld_assignStatus']."'";
+            $and  = ' AND ';
+        }
         if($_POST['dwnld_city'] != '')
         {
             $QueryMember .= $and." sub.CITY_ID in (".$city.")";
@@ -166,7 +183,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
     }
 }
 $arrPropId = array();
-$QueryMember1 = $QueryMember1 . $QueryMember;
+$QueryMember1 = $QueryMember1 . $QueryMember;//die;
 
 $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
 $NumRows = mysql_num_rows($QueryExecute);
@@ -182,6 +199,8 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>CITY</td>
 <td>LOCALITY</td>
 <td>PROJECT STATUS</td>
+<td>ASSIGNMENT REMARK</td>
+<td>ASSIGNMENT STATUS</td>
 </tr>
 ";
 $cnt = 1;
@@ -198,6 +217,13 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	$proj_status = $ob1['PROJECT_STATUS'];
 		
 	$updation_label = $ob1['UPDATION_LABEL'];
+      //  if(isset($ob1['EXECUTIVE_REMARK']))
+            $executive_remark = $ob1['EXECUTIVE_REMARK'];
+        //if(isset($ob1['EXECUTIVE_REMARK']))
+            $status = $ob1['ASSIGN_STATUS'];
+        //else
+          //  $status = '';
+        
 	$contents .= "
 	<tr bgcolor='#f2f2f2'>
 	<td>".$cnt."</td>
@@ -207,6 +233,8 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         <td>".$cityname."</td>
         <td>".$localityname."</td>    
 	<td>".$proj_status."</td>
+        <td>".$executive_remark."</td>    
+	<td>".$status."</td>       
 
 	</tr>
 ";

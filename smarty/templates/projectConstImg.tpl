@@ -138,7 +138,8 @@
                                                     <tfoot>
                                                         <tr>
                                                             <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
-                                                                <input type="submit" name="submit" value="fresh assignement"fresh assigne></input>&nbsp;&nbsp;
+                                                                <input type="submit" name="submit" value="fresh assignement"fresh assigne>&nbsp;&nbsp;
+                                                                <input type="submit" name="submit" value="Delete" onclick = "return deletehk();">
                                                                 <button class="btn first"><i class="icon-step-backward"></i></button>
                                                                 <button class="btn prev"><i class="icon-arrow-left"></i></button>
                                                                 <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
@@ -216,7 +217,12 @@
 </TR>
 
 <script>
+function deletehk(){
+ return confirm("Are you sure! you want to delete this record.");
+}     
 function verifyChecked(){
+
+    
     var all = document.getElementsByName('assign[]')
     var flag = false;
     for(i=0; i<all.length; i++){

@@ -111,6 +111,8 @@ $(function() {
 <input type='hidden' name='dwnld_city' id='dwnld_city' value="{$_POST['city']}">
 <input type='hidden' name='dwnld_locality' id='dwnld_locality' value="{$_POST['locality']}">
 <input type='hidden' name='dwnld_mode' id='dwnld_mode' value="{$_POST['mode']}">
+<input type='text' name='dwnld_assignRemark' id='dwnld_assignRemark' value="{$_POST['assignRemark']}">
+<input type='hidden' name='dwnld_assignStatus' id='dwnld_assignStatus' value="{$_POST['assignStatus']}">
 <input type='hidden' name='dwnld_builder' id='dwnld_builder' value="{$_POST['builder']}">
 <input type='hidden' name='dwnld_Active' id='dwnld_Active' value="{implode(",",$_POST['Active'])}">
 <input type='hidden' name='dwnld_Status' id='dwnld_Status' value="{implode("','",$_POST['Status'])}">
@@ -225,6 +227,33 @@ $(function() {
                                       </td>
                                      </tr>
                                      
+                                     <tr>
+                                      <td align="right" style = "padding-left:20px;" height='35'><b>Assignment Status:</b></td>
+                                      <td align="left" style = "padding-left:20px;">
+                                          <select name="assignStatus" id="assignStatus" class="fieldState">
+                                              <option value="">Select</option>
+                                              <option value="complete" {if $assignStatus == 'complete'}selected{/if}>Complete</option>
+                                              <option value="incomplete" {if $assignStatus == 'incomplete'}selected{/if}>Incomplete</option>
+                                              <option value="notAttempted" {if $assignStatus == 'notAttempted'}selected{/if}>Not Attempted</option>
+                                              
+                                         </select>
+                                      </td>
+                                     </tr>
+                                     
+                                     <tr>
+                                      <td align="right" style = "padding-left:20px;" height='35'><b>Assignment Remark:</b></td>
+                                      <td align="left" style = "padding-left:20px;">
+                                          <select name="assignRemark" id="assignRemark" class="fieldState">
+                                              <option value="">Select</option>
+                                              <option value="done" {if $assignRemark == 'done'}selected{/if}>Done</option>
+                                              <option value="Latest Image not Available" {if $assignRemark == 'Latest Image not Available'}selected{/if}>Latest Image not Available</option>
+                                              <option value="Image not found" {if $assignRemark == 'Image not found'}selected{/if}>Image not found</option>
+                                              <option value="Website not Open" {if $assignRemark == 'Website not Open'}selected{/if}>Website not Open</option>
+                                              <option value="Project Now Ready to Move" {if $assignRemark == 'Project Now Ready to Move'}selected{/if}>Project Now Ready to Move</option>
+                                         </select>
+                                      </td>
+                                     </tr>
+                                     
                                      <tr bgcolor='#fcfcfc'>
                                            <td align="right" style = "padding-left:20px;" height='35'><b>Project Name:</b></td>
                                            <td align="left" style = "padding-left:20px;" height='35'>
@@ -302,16 +331,13 @@ $(function() {
                                     <span id = "showHidePhs">
                                         <select name="updateConst" id="updateConst" class="updateConst" style = "margin:5px;width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;">									
                                             <option value="">Select Cycle</option>
-                                            {foreach from=$UpdationArr key=k item=v}
-                                             {if $v->cycle_type == 'construction'}
-                                                {if $v->updation_cycle_id != $skipUpdationCycle_Id}
-                                                    <option value = "{ucfirst($v->cycle_type)}Cycle|{$v->updation_cycle_id}"
-                                                    {if $updatePhasePost == "{ucfirst($v->cycle_type)}Cycle|{$v->updation_cycle_id}"} selected {/if}> 
-                                                        {ucfirst($v->cycle_type)}Cycle - {$v->label}
+                                                {if $UpdationArr->updation_cycle_id != $skipUpdationCycle_Id}
+                                                    <option value = "{ucfirst($UpdationArr->cycle_type)}Cycle|{$UpdationArr->updation_cycle_id}"
+                                                    {if $updatePhasePost == "{ucfirst($UpdationArr->cycle_type)}Cycle|{$UpdationArr->updation_cycle_id}"} selected {/if}> 
+                                                        {ucfirst($UpdationArr->cycle_type)}Cycle - {$UpdationArr->label}
                                                     </option>
                                                 {/if}
-                                              {/if}
-                                            {/foreach}	
+                                            	
                                         </select>
                                     </span>
                                    

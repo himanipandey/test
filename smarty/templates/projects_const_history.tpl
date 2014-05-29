@@ -81,6 +81,9 @@
                                                             <th style="font-size: 12px" nowrap>Project Id</th>
                                                             <th style="font-size: 12px" nowrap>Project Name</th>
                                                             <th style="font-size: 12px" nowrap>Remark</th>
+                                                            <th style="font-size: 12px" nowrap>Source</th>
+                                                            <th style="font-size: 12px" nowrap>Assigned To</th>
+                                                            <th style="font-size: 12px" nowrap>Worked At</th>
                                                         </tr>
                                                     </thead>
                                                     <tfoot>
@@ -109,7 +112,10 @@
                                                             <td>{$item->label}</td>
                                                             <td>{$item->project_id}</td>
                                                             <td>{$item->project_name}</td>
-                                                            <td>{$item->executive_remark}</td>                                                                
+                                                            <td>{$item->executive_remark}</td>
+                                                            <td>{$item->source}</td>
+                                                            <td>{$item->fname}</td>
+                                                            <td>{$item->updation_time}</td> 
                                                         </tr>                                                        
                                                      {/foreach}
                                                     </tbody>

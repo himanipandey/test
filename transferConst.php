@@ -61,7 +61,11 @@
     $builderList = ResiBuilder::BuilderEntityArr();
     $projectStatus = ResiProject::projectStatusMaster();
     $UpdationArr = UpdationCycle::updationCycleTable();
-    
+    $arrCycle = array();
+    foreach($UpdationArr as $val) {
+        if($val->cycle_type == 'construction')
+            $arrCycle[$val->updation_cycle_id] = $val;
+    }
     $updateRemark= $_REQUEST['updateRemark'];
     $transfer = $_REQUEST['transfer'];
     $search = $_REQUEST['search'];
@@ -76,7 +80,7 @@
     $smarty->assign("projectStatus",$projectStatus);
     $smarty->assign("citylist", $citylist);
     $smarty->assign("builderList", $builderList);	
-    $smarty->assign("UpdationArr", $UpdationArr);	
+    $smarty->assign("UpdationArr", $arrCycle[max(array_keys($arrCycle))]);	
     $smarty->assign("search", $search);
     $smarty->assign("Status", $_REQUEST['Status']);
     $smarty->assign("city", $city);
@@ -84,13 +88,16 @@
     $smarty->assign("project_name", $project_name);
     $smarty->assign("projectId", $_POST['projectId']);
     $smarty->assign("selectdata", $selectdata);
-    $smarty->assign("Active", $_REQUEST['Active']);	
-
+    $smarty->assign("Active", $_REQUEST['Active']);
+    $smarty->assign("assignStatus", $_REQUEST['assignStatus']);
+    $smarty->assign("assignRemark", $_REQUEST['assignRemark']);
+    
     $QueryMember2 = "Select COUNT(p.PROJECT_ID) CNT
                 FROM ".RESI_PROJECT." p 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
                 left join city on suburb.city_id = city.city_id";
+    $pasAnd = '';
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
     {
 	$project_name= $_REQUEST['project_name'];
@@ -99,21 +106,21 @@
         
         if($city != '')
         { 
-			$getLocality = Array();
+            $getLocality = Array();
             if($city == 'othercities'){
-				foreach($arrOtherCities as $key => $value){
-					$cityLocality = Locality::getLocalityByCity($key);
-					if(!empty($cityLocality))
-						$getLocality = array_merge($getLocality,$cityLocality);
-				}
-			}else
-				$getLocality = Locality::getLocalityByCity($city);
-			$smarty->assign("getLocality", $getLocality);
+                foreach($arrOtherCities as $key => $value){
+                    $cityLocality = Locality::getLocalityByCity($key);
+                    if(!empty($cityLocality))
+                        $getLocality = array_merge($getLocality,$cityLocality);
+                }
+            }else
+               $getLocality = Locality::getLocalityByCity($city);
+            $smarty->assign("getLocality", $getLocality);
         }       
-        
-         
+   
         $and = " WHERE ";
-
+        
+        //echo "<pre>";print_r($_REQUEST);
         if($_POST['projectId'] == '')
         {				
              if($_REQUEST['city'] != '')
@@ -151,6 +158,20 @@
                  $QueryMember .= $and." locality.LOCALITY_ID = '".$_REQUEST['locality']."'";
                  $and  = ' AND ';
              }
+             if($_REQUEST['assignStatus'] != '')
+             {
+                 $QueryMember .= $and." pas.STATUS = '".$_REQUEST['assignStatus']."'";
+                 $pasAnd = " join process_assignment_system pas on p.project_id = pas.project_id";
+                 $and  = ' AND ';
+             }
+             if($_REQUEST['assignRemark'] != '')
+             {
+                 $QueryMember .= $and." pas.EXECUTIVE_REMARK = '".$_REQUEST['assignRemark']."'";
+                 if(trim($pasAnd) == ''){
+                    $pasAnd = " join process_assignment_system pas on p.project_id = pas.project_id";
+                 }
+                 $and  = ' AND ';
+             }
              if($_REQUEST['builder'] != '')
              {
                  $QueryMember .= $and." BUILDER_ID = '".$_REQUEST['builder']."'";
@@ -163,7 +184,8 @@
                 $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms'";
 
         }
-        $QueryMember2	=  $QueryMember2. $QueryMember."  ORDER BY PROJECT_ID";
+        
+        $QueryMember2	=  $QueryMember2.$pasAnd. $QueryMember."  ORDER BY p.PROJECT_ID";
     }
    // echo "<pre>";print_r($_REQUEST);die;
    $constCycle = explode("|",$_REQUEST['updateConst']);
@@ -188,6 +210,7 @@
     } //code for entry in process_assignment_system table end
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
     {
+        //echo $QueryMember2;
         $QueryExecute = mysql_query($QueryMember2) or die(mysql_error());
         $NumRows = mysql_num_rows($QueryExecute);
 

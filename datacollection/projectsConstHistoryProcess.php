@@ -17,8 +17,9 @@
        }
 //echo "<pre>";print_r($_REQUEST);
        if($errorMsg == '') {
-           $qry = 'select pas.*,uc.*,rp.project_name from process_assignment_system pas 
+           $qry = 'select pas.*,uc.*,rp.project_name,pa.fname from process_assignment_system pas 
                join updation_cycle uc ON( pas.updation_cycle_id = uc.updation_cycle_id )
+               join proptiger_admin pa on pas.assigned_to = pa.adminid
                join resi_project rp ON( pas.project_id = rp.project_id )';
             if($projectId != '' && $updationCycleId != '')
                 $searchResult = $qry." where pas.project_id = $projectId and pas.updation_cycle_id = $updationCycleId";

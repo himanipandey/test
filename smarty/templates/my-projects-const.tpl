@@ -84,16 +84,21 @@
                                                             <td>{$item['CITY']}</td>
                                                             <td>{$item['ASSIGNMENT_DATE']}</td>
                                                             <td>
-                                                                <select name="status">
+                                                                <select name="status" onchange="updateRemark(this.value,{$key});">
                                                                     <option value='notAttempted'>Not Attempted</option>
+                                                                    <option value='complete'>Complete</option>
                                                                     <option value='incomplete'>Incomplete</option>
                                                                 </select>
                                                             </td>
                                                             <td>
                                                                 <select name="remark">
-                                                                    <option value="">Please Pick One</option>
-                                                                    <option value='done'>Done</option>
-                                                                    <option value='incomplete'>Image not found</option>
+                                                                       <option value="" style = "display:none;">Please Pick One</option>
+                                                                       <option value='Latest Image not Available' class="remarkShow_{$key}">Latest Image not Available</option>
+                                                                       <option value='Image not found' class="remarkShow_{$key}">Image not found</option>
+                                                                       <option value='Website not Open' class="remarkShow_{$key}">Website not Open</option>
+                                                                       <option value='Project Now Ready to Move' class="remarkShow_{$key}">Project Now Ready to Move</option>
+                                                                       <option value='done' class="remarkHide_{$key}" style = "display:none;">Done</option>
+                                                                    </span>
                                                                 </select>
                                                             </td>
                                                             <td>
@@ -136,5 +141,16 @@ function verifyValues(formId){
         return false;
     }
     return true;
+}
+
+function updateRemark(val,id) {
+   if(val == 'complete'){
+      $(".remarkHide_"+id).show();
+      $(".remarkShow_"+id).hide();
+   }
+   if(val == 'incomplete' || val == 'notAttempted'){
+      $(".remarkHide_"+id).hide();
+      $(".remarkShow_"+id).show();
+   }
 }
 </script>
