@@ -111,7 +111,7 @@ $(function() {
 <input type='hidden' name='dwnld_city' id='dwnld_city' value="{$_POST['city']}">
 <input type='hidden' name='dwnld_locality' id='dwnld_locality' value="{$_POST['locality']}">
 <input type='hidden' name='dwnld_mode' id='dwnld_mode' value="{$_POST['mode']}">
-<input type='text' name='dwnld_assignRemark' id='dwnld_assignRemark' value="{$_POST['assignRemark']}">
+<input type='hidden' name='dwnld_assignRemark' id='dwnld_assignRemark' value="{$_POST['assignRemark']}">
 <input type='hidden' name='dwnld_assignStatus' id='dwnld_assignStatus' value="{$_POST['assignStatus']}">
 <input type='hidden' name='dwnld_builder' id='dwnld_builder' value="{$_POST['builder']}">
 <input type='hidden' name='dwnld_Active' id='dwnld_Active' value="{implode(",",$_POST['Active'])}">

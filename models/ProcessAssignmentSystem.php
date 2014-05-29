@@ -4,10 +4,10 @@
 class ProcessAssignmentSystem extends ActiveRecord\Model
 {
     static $table_name = 'process_assignment_system';
-    static function insertProcessAssignmentSystem( $projectId, $updationCycleId, $assignType ) {			
+    static function insertProcessAssignmentSystem( $projectId, $updationCycleId, $assignType ) {
+        
             $conditions = array("project_id = $projectId");
             $getAssignedProject = ProcessAssignmentSystem::find('all',array('order' => 'id desc',"conditions" => $conditions)); 
-          //echo trim($projectId)."<==>".trim($getAssignedProject[0]->project_id)."<==>".trim($updationCycleId)."<==>".trim($getAssignedProject[0]->updation_cycle_id);die;
             if(trim($projectId) == trim($getAssignedProject[0]->project_id) && trim($updationCycleId) == trim($getAssignedProject[0]->updation_cycle_id)){
                 //die("here");
             }else{

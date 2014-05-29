@@ -158,6 +158,7 @@
                  $QueryMember .= $and." locality.LOCALITY_ID = '".$_REQUEST['locality']."'";
                  $and  = ' AND ';
              }
+             
              if($_REQUEST['assignStatus'] != '')
              {
                  $QueryMember .= $and." pas.STATUS = '".$_REQUEST['assignStatus']."'";
@@ -190,11 +191,11 @@
    // echo "<pre>";print_r($_REQUEST);die;
    $constCycle = explode("|",$_REQUEST['updateConst']);
     if($constCycle[0] == 'ConstructionCycle') { //code for entry in process_assignment_system table start
-        $QueryMember1 = "Select p.PROJECT_ID
+       $QueryMember1 = "Select p.PROJECT_ID
                 FROM ".RESI_PROJECT." p 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id";
+                left join city on suburb.city_id = city.city_id$pasAnd";
         $QueryMember1 = $QueryMember1.$QueryMember;
         $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
         if(mysql_num_rows($QueryExecute)>0)
