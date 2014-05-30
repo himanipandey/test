@@ -104,26 +104,19 @@ $selectdata = $_POST['dwnld_selectdata'];
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
-    $QueryMember1 = "SELECT RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,ct.LABEL AS CITY_NAME, psm.project_status as 
+    $QueryMember1 = "SELECT p.PROJECT_ID,rb.BUILDER_NAME,p.PROJECT_NAME,city.LABEL AS CITY_NAME, psm.project_status as 
                     PROJECT_STATUS,
-                L.LABEL LOCALITY  ,pas.EXECUTIVE_REMARK, pas.STATUS as ASSIGN_STATUS,uc.LABEL as ASSIGNMENT_CYCLE 
-                 FROM
-                    resi_project RP
-                 
-                 LEFT JOIN
-                     locality L ON RP.LOCALITY_ID = L.LOCALITY_ID
-                 INNER JOIN
-                     suburb sub ON L.SUBURB_ID = sub.SUBURB_ID
-                 LEFT JOIN
-                     city ct ON sub.CITY_ID = ct.CITY_ID    
-                 INNER JOIN 
-                     resi_builder RB on RP.BUILDER_ID = RB.BUILDER_ID
-                 INNER JOIN
-                    project_status_master psm on RP.PROJECT_STATUS_ID = psm.id 
-                 join process_assignment_system pas on RP.project_id = pas.project_id
-                 left join updation_cycle uc on pas.updation_cycle_id = uc.updation_cycle_id";
+                locality.LABEL LOCALITY, pas.EXECUTIVE_REMARK, pas.STATUS as ASSIGN_STATUS,uc.LABEL as ASSIGNMENT_CYCLE
+                FROM ".RESI_PROJECT." p 
+                left join locality on p.locality_id = locality.locality_id
+                left join suburb on locality.suburb_id = suburb.suburb_id
+                left join city on suburb.city_id = city.city_id
+                left join project_status_master psm on p.project_status_id = psm.id
+                left join resi_builder rb on p.builder_id = rb.builder_id
+                left join process_assignment_system pas on p.project_id = pas.project_id
+                left join updation_cycle uc on pas.updation_cycle_id = uc.updation_cycle_id";
 
-    $and = " WHERE RP.version='Cms' and ";
+    $and = " WHERE p.version='Cms' and ";
 
     if($_POST['dwnld_projectId'] == '')
     {
@@ -131,7 +124,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 
         if($_POST['dwnld_project_name'] != '')
         {
-            $QueryMember .= $and." RP.PROJECT_NAME LIKE '%".$_POST['dwnld_project_name']."%'";
+            $QueryMember .= $and." p.PROJECT_NAME LIKE '%".$_POST['dwnld_project_name']."%'";
             $and  = ' AND ';
         }
        
@@ -139,19 +132,19 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         {
             $ActiveValue = explode(",",$ActiveValue);
             $ActiveValue = implode("','",$ActiveValue);
-            $QueryMember .=  $and." RP.STATUS IN('".$ActiveValue."')";
+            $QueryMember .=  $and." p.STATUS IN('".$ActiveValue."')";
             $and  = ' AND ';
         }
 
         if($StatusValue != '')
         {
-            $QueryMember .=  $and." RP.PROJECT_STATUS_ID IN(".$StatusValue.")";
+            $QueryMember .=  $and." p.PROJECT_STATUS_ID IN(".$StatusValue.")";
             $and  = ' AND ';
         }
 
         if($_POST['dwnld_locality'] != '')
         {
-            $QueryMember .= $and." RP.LOCALITY_ID = '".$_POST['dwnld_locality']."'";
+            $QueryMember .= $and." p.LOCALITY_ID = '".$_POST['dwnld_locality']."'";
             $and  = ' AND ';
         }
         if($_POST['dwnld_assignRemark'] != '')
@@ -171,18 +164,18 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         }
         if($_POST['dwnld_city'] != '')
         {
-            $QueryMember .= $and." sub.CITY_ID in (".$city.")";
+            $QueryMember .= $and." suburb.CITY_ID in (".$city.")";
             $and  = ' AND ';
         }
         if($_POST['dwnld_builder'] != '')
         {
-            $QueryMember .= $and." RP.BUILDER_ID = '".$_POST['dwnld_builder']."'";
+            $QueryMember .= $and." p.BUILDER_ID = '".$_POST['dwnld_builder']."'";
             $and  = ' AND ';
         }
     }
     else
     {
-        $QueryMember .= $and. " RP.PROJECT_ID IN (".$_POST['dwnld_projectId'].")";
+        $QueryMember .= $and. " p.PROJECT_ID IN (".$_POST['dwnld_projectId'].")";
     }
 }
 $arrPropId = array();
