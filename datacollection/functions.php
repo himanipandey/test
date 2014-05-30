@@ -607,10 +607,10 @@ function getAssignedProjectsConst($adminId=NULL){
     $data =  dbQuery($sql);
     $arrNewData = array();
     foreach($data as $val) {
-       $qry = "select * from process_assignment_system where project_id = ".$val['PROJECT_ID']." order by id desc limit 1";
+        $qry = "select * from process_assignment_system where project_id = ".$val['PROJECT_ID']." order by id desc limit 1";
         $res = mysql_query($qry) or die(mysql_error());
         $result = mysql_fetch_assoc($res);
-        if($result['assigned_to'] == $adminId)
+        if($result['ASSIGNED_TO'] == $adminId)
             $arrNewData[] = $val;
     }
     return $arrNewData;
