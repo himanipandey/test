@@ -604,7 +604,16 @@ function getAssignedProjectsConst($adminId=NULL){
         inner join city c on s.CITY_ID = c.CITY_ID 
         where pa.ASSIGNED_TO = ".$adminId." and pa.STATUS = 'notAttempted' and rp.version = 'Cms' 
             and rp.status in ('ActiveInCms','Active') and pa.updation_cycle_id = ".$dataUpId['updation_cycle_id'];
-    return dbQuery($sql);
+    $data =  dbQuery($sql);
+    $arrNewData = array();
+    foreach($data as $val) {
+       $qry = "select * from process_assignment_system where project_id = ".$val['PROJECT_ID']." order by id desc limit 1";
+        $res = mysql_query($qry) or die(mysql_error());
+        $result = mysql_fetch_assoc($res);
+        if($result['assigned_to'] == $adminId)
+            $arrNewData[] = $val;
+    }
+    return $arrNewData;
 }
 
 function saveStatusUpdateByExecutiveConst($projectID, $status, $remark, $source, $id){
