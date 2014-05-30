@@ -107,12 +107,14 @@ $(function() {
   localitySelect({$locality});
 });
 </script>
+
 <form name='frmdownload' method='post' action='ajax/downloadProjectConst.php'>
 <input type='hidden' name='dwnld_city' id='dwnld_city' value="{$_POST['city']}">
 <input type='hidden' name='dwnld_locality' id='dwnld_locality' value="{$_POST['locality']}">
 <input type='hidden' name='dwnld_mode' id='dwnld_mode' value="{$_POST['mode']}">
 <input type='hidden' name='dwnld_assignRemark' id='dwnld_assignRemark' value="{$_POST['assignRemark']}">
 <input type='hidden' name='dwnld_assignStatus' id='dwnld_assignStatus' value="{$_POST['assignStatus']}">
+<input type='hidden' name='dwnld_assignCycle' id='dwnld_assignCycle' value="{$_POST['assignCycle']}">
 <input type='hidden' name='dwnld_builder' id='dwnld_builder' value="{$_POST['builder']}">
 <input type='hidden' name='dwnld_Active' id='dwnld_Active' value="{implode(",",$_POST['Active'])}">
 <input type='hidden' name='dwnld_Status' id='dwnld_Status' value="{implode("','",$_POST['Status'])}">
@@ -254,6 +256,19 @@ $(function() {
                                       </td>
                                      </tr>
                                      
+                                     <tr>
+                                      <td align="right" style = "padding-left:20px;" height='35'><b>Assignment Cycle:</b></td>
+                                      <td align="left" style = "padding-left:20px;">
+                                          <select name="assignCycle" id="assignCycle" class="fieldState">
+                                              <option value="">Select</option>
+                                              {foreach from = $UpdationArr key = key item = item}
+                                                 <option value="{$item->updation_cycle_id}" {if $assignCycle == $item->updation_cycle_id}selected{/if}>{$item->label}</option>
+                                              {/foreach}
+                                              
+                                         </select>
+                                      </td>
+                                     </tr>
+                                     
                                      <tr bgcolor='#fcfcfc'>
                                            <td align="right" style = "padding-left:20px;" height='35'><b>Project Name:</b></td>
                                            <td align="left" style = "padding-left:20px;" height='35'>
@@ -331,10 +346,10 @@ $(function() {
                                     <span id = "showHidePhs">
                                         <select name="updateConst" id="updateConst" class="updateConst" style = "margin:5px;width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;">									
                                             <option value="">Select Cycle</option>
-                                                {if $UpdationArr->updation_cycle_id != $skipUpdationCycle_Id}
-                                                    <option value = "{ucfirst($UpdationArr->cycle_type)}Cycle|{$UpdationArr->updation_cycle_id}"
-                                                    {if $updatePhasePost == "{ucfirst($UpdationArr->cycle_type)}Cycle|{$UpdationArr->updation_cycle_id}"} selected {/if}> 
-                                                        {ucfirst($UpdationArr->cycle_type)}Cycle - {$UpdationArr->label}
+                                                {if $UpdationCycleCurrent->updation_cycle_id != $skipUpdationCycle_Id}
+                                                    <option value = "{ucfirst($UpdationCycleCurrent->cycle_type)}Cycle|{$UpdationCycleCurrent->updation_cycle_id}"
+                                                    {if $updatePhasePost == "{ucfirst($UpdationCycleCurrent->cycle_type)}Cycle|{$UpdationCycleCurrent->updation_cycle_id}"} selected {/if}> 
+                                                        {ucfirst($UpdationCycleCurrent->cycle_type)}Cycle - {$UpdationCycleCurrent->label}
                                                     </option>
                                                 {/if}
                                             	

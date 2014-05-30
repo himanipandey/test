@@ -44,10 +44,6 @@ if(!isset($_POST['dwnld_projectId']))
 if(!isset($_POST['dwnld_mode']))
 	$_POST['dwnld_mode'] = '';
 
-if($_POST['dwnld_assignRemark'] != '' OR $_POST['dwnld_assignStatus'] != ''){
-    $pasAnd = " join process_assignment_system pas on RP.project_id = pas.project_id";
-    $pasField = ' ,pas.EXECUTIVE_REMARK, pas.STATUS as ASSIGN_STATUS ';
-}
 if(!isset($_POST['dwnld_search']))
 	$_POST['dwnld_search'] = '';
 
@@ -110,7 +106,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 
     $QueryMember1 = "SELECT RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,ct.LABEL AS CITY_NAME, psm.project_status as 
                     PROJECT_STATUS,
-                L.LABEL LOCALITY $pasField
+                L.LABEL LOCALITY  ,pas.EXECUTIVE_REMARK, pas.STATUS as ASSIGN_STATUS,uc.LABEL as ASSIGNMENT_CYCLE 
                  FROM
                     resi_project RP
                  
@@ -123,7 +119,9 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                  INNER JOIN 
                      resi_builder RB on RP.BUILDER_ID = RB.BUILDER_ID
                  INNER JOIN
-                    project_status_master psm on RP.PROJECT_STATUS_ID = psm.id $pasAnd";
+                    project_status_master psm on RP.PROJECT_STATUS_ID = psm.id 
+                 join process_assignment_system pas on RP.project_id = pas.project_id
+                 left join updation_cycle uc on pas.updation_cycle_id = uc.updation_cycle_id";
 
     $and = " WHERE RP.version='Cms' and ";
 
@@ -166,6 +164,11 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
             $QueryMember .= $and." pas.STATUS = '".$_POST['dwnld_assignStatus']."'";
             $and  = ' AND ';
         }
+        if($_POST['dwnld_assignCycle'] != '')
+        {
+            $QueryMember .= $and." uc.updation_cycle_id = '".$_POST['dwnld_assignCycle']."'";
+            $and  = ' AND ';
+        }
         if($_POST['dwnld_city'] != '')
         {
             $QueryMember .= $and." sub.CITY_ID in (".$city.")";
@@ -201,6 +204,7 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>PROJECT STATUS</td>
 <td>ASSIGNMENT REMARK</td>
 <td>ASSIGNMENT STATUS</td>
+<td>ASSIGNMENT CYCLE</td>
 </tr>
 ";
 $cnt = 1;
@@ -221,6 +225,8 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
             $executive_remark = $ob1['EXECUTIVE_REMARK'];
         //if(isset($ob1['EXECUTIVE_REMARK']))
             $status = $ob1['ASSIGN_STATUS'];
+            $statusCycle = $ob1['ASSIGNMENT_CYCLE'];
+            
         //else
           //  $status = '';
         
@@ -235,7 +241,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	<td>".$proj_status."</td>
         <td>".$executive_remark."</td>    
 	<td>".$status."</td>       
-
+        <td>".$statusCycle."</td>
 	</tr>
 ";
 	$cnt++;
