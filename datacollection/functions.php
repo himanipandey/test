@@ -560,15 +560,20 @@ function assignToDEntryExecutives($projectIds, $executive){
     foreach($projectIds as $pId) {
         $conditions = array("project_id = $pId");
         $getAssignedProject = ProcessAssignmentSystem::find('all', array("conditions" => $conditions,'order' => 'updation_cycle_id,id desc','limit'=>1)); 
+        
+        $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
+        $resUpId = mysql_query($currentUpId) or die(mysql_error());
+        $dataUpId = mysql_fetch_array($resUpId);
+        
         if($getAssignedProject[0]->assigned_to == 0){
          $qryUp = "update process_assignment_system set 
                 assigned_to = $executive, assigned_by = '".$_SESSION['adminId']."',
-                updation_time = now() where project_id = $pId and updation_cycle_id = ".$getAssignedProject[0]->updation_cycle_id;
+                updation_time = now() where project_id = $pId and updation_cycle_id = ".$dataUpId['updation_cycle_id'];
            $resUp = mysql_query($qryUp) or die(mysql_error());
         }
         else {
             $assignProject = new ProcessAssignmentSystem();
-            $assignProject->updation_cycle_id = $getAssignedProject[0]->updation_cycle_id;
+            $assignProject->updation_cycle_id = $dataUpId['updation_cycle_id'];
             $assignProject->project_id = $pId;
             $assignProject->assigned_to = $executive;
             $assignProject->assigned_by = $_SESSION['adminId'];
