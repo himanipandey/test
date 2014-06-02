@@ -131,10 +131,8 @@ class ResiProject extends Objects
                     on resi_project.project_stage_id = stages.id
                  left join locality
                     on resi_project.locality_id = locality.locality_id
-                 left join suburb 
-                    on locality.suburb_id = suburb.suburb_id
                  left join city
-                    on suburb.city_id = city.city_id WHERE ".
+                    on locality.city_id = city.city_id WHERE ".
 						$conditions." $ands resi_project.version = 'Cms'".$offer_condition;
 						
        $projectSearch = ResiProject::find_by_sql($query);  

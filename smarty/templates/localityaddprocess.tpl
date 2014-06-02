@@ -102,7 +102,7 @@
 
         <tr>
           <td  height="25" align="right" style="padding-left:5px;">
-              <b>*Parent Suburb:</b>
+              <b>Suburb:</b>
                             </td>
                            <td height="50%" align="left">
                             <div id="mainsubcity">

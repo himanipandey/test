@@ -351,7 +351,8 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['LAUNCHED'] = $dataEditedLaunched['launched'];
         }
     }
-}
+} 
+
 //echo "<pre>";
 //print_r($supplyAllArray);
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
@@ -484,7 +485,7 @@ $suburbSelect = Suburb::SuburbArr($projectDetails[0]['CITY_ID']);
 
 $locality = Locality::getLocalityById($projectDetails[0]['LOCALITY_ID']);
 $smarty->assign('locality',$locality[0]->label);
-$suburb = Suburb::getSuburbById($locality[0]->suburb_id);
+$suburb = Suburb::getSuburbById($locality[0]->suburb1_id);
 $smarty->assign('suburb',$suburb[0]->label);
 $city = City::getCityById($suburb[0]->city_id);
 $smarty->assign('city',$city[0]->label);
@@ -509,6 +510,7 @@ $smarty->assign("project_booking_status_id", $project_booking_status[0]->booking
 $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
+
 
 /******code for project comment fetch from commeny history table*****/
 $cycleId = $projectDetails[0]['PROJECT_STAGE'];

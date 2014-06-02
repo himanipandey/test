@@ -124,10 +124,9 @@
                     if($localityid != ''){
                         $locURL = " and LOCALITY_ID!=".$localityid;    
                     }
-                    $qryLocality = "SELECT l.* FROM ".LOCALITY." l inner join suburb s
-                         on l.suburb_id = s.suburb_id
+                    $qryLocality = "SELECT l.* FROM ".LOCALITY." l 
                         WHERE l.LABEL = '".$txtCityName."' 
-                        and s.city_id=".$cityId.$locURL;         
+                        and l.city_id=".$cityId.$locURL;         
                     $res = mysql_query($qryLocality) or die(mysql_error());
                     if(mysql_num_rows($res)>0){
                         $ErrorMsg["txtCityName"] = "This Locality Already exists";
@@ -138,8 +137,7 @@
                    {
                        if($localityid != '') { //code for update a locality
                         $qryCity = "SELECT C.LABEL as cityname FROM locality L 
-                            inner join suburb s on L.suburb_id = s.suburb_id
-                            inner join city C on (C.city_id = s.city_id) 
+                            inner join city C on (C.city_id = L.city_id) 
                             where L.locality_id = $localityid";
                         $resCity = mysql_query($qryCity) or die(mysql_error());
                         $dataCity = mysql_fetch_assoc($resCity);
@@ -216,16 +214,16 @@
                             }
                             else{
                                 //code for insert new locality
-                                $qry = "INSERT INTO ".LOCALITY." (LABEL,SUBURB_ID,status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
-                                      value('".$txtCityName."','".$parent_subId."','".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";
-                                $res = mysql_query($qry) or die(mysql_error());
+                                $qry = "INSERT INTO ".LOCALITY." (LABEL, SUBURB_ID, CITY_ID, status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
+                                      value('".$txtCityName."','".$parent_subId."','".$cityId."', '".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";echo $qry;//die("here");
+                                $res = mysql_query($qry) or die(mysql_error()); 
                                 $locId = mysql_insert_id();
                                 $cityFind = City::find($cityId);  
                                 $url = createLocalityURL($txtCityName, $cityFind->label, $locId, 'locality');
                                 $qry = "UPDATE ".LOCALITY." SET URL = '$url',updated_by = '".$_SESSION['adminId']."',updated_at = now()
                                   WHERE LOCALITY_ID=".$locId;
                                 $res = mysql_query($qry) or die(mysql_error());
-                                
+                               
                                 $seoData['meta_title'] = $txtMetaTitle;
                                 $seoData['meta_keywords'] = $txtMetaKeywords;
                                 $seoData['meta_description'] = $txtMetaDescription;

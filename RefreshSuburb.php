@@ -13,19 +13,18 @@
             if($loc_id == '')  {
                 if($city_id != '') {
         
-                        $getSub = Suburb::find('all',array('conditions'=>
-                                  array('city_id = ? and status = ?',$city_id, 'active'),'order' => 'label asc'));
+                       
                        ?>
                        <option value=''>Select</option>
                        <?php
-                           foreach ($getSub  as $value) { 
+                          
 								 $getLocality = Locality::find('all',array('conditions'=>
-                    array('suburb_id = ? and status = ?',$value->suburb_id, 'active'),'order' => 'label asc')); 
+                    array('city_id = ? and status = ?',$city_id, 'active'),'order' => 'label asc')); 
 								foreach ($getLocality as $value){
 								?>
                               <option value="<?php echo $value->locality_id;?>"><?php echo $value->label; ?> </option>;
                    <?php  		}
-							}
+							
                 }
                 else 
                     echo "<option value=''>Select</option>"; 
@@ -49,8 +48,7 @@
                     if($_REQUEST['flg'] == 'locality')  {
                        $sql = "SELECT A.LOCALITY_ID, c.CITY_ID, A.LABEL 
                             FROM ".LOCALITY." AS A
-                            inner join suburb s on A.suburb_id = s.suburb_id
-                            inner join city c on s.city_id = c.city_id
+                            inner join city c on A.city_id = c.city_id
                            WHERE 
                            c.CITY_ID = " . $city_id ." ORDER BY A.LABEL ASC";
                        $data = mysql_query($sql);

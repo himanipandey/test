@@ -17,9 +17,9 @@ class Locality extends ActiveRecord\Model
         return $localityDetail;
     }
     static function getLocalityByCity($ctid) {
-        $conditions = array("a.city_id = ? and a.status = ? and locality.status = ?", $ctid, 'Active', 'Active');
-        $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
-        $join .= 'INNER JOIN city c ON(a.city_id = c.city_id)';
+        $conditions = array("locality.city_id = ? and locality.status = ?", $ctid, 'Active');
+        //$join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
+        $join = 'INNER JOIN city c ON(c.city_id = locality.city_id)';
 
         $getLocality = Locality::find('all',array('joins' => $join, 
                "conditions" => $conditions, "select" => "locality.locality_id,locality.label, c.label as cityname"));
@@ -27,9 +27,9 @@ class Locality extends ActiveRecord\Model
     }
     
     static function getLocalityCity($locId) {
-        $conditions = array("locality_id = ? and a.status = ? and locality.status = ?", $locId, 'Active', 'Active');
-        $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
-        $join .= 'INNER JOIN city c ON(a.city_id = c.city_id)';
+        $conditions = array("locality_id = ? and locality.status = ?", $locId, 'Active');
+        //$join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
+        $join = 'INNER JOIN city c ON(locality.city_id = c.city_id)';
 
         $getLocalityCity = Locality::find('all',array('joins' => $join, 
                "conditions" => $conditions, "select" => "locality.label locname, c.label as cityname"));
@@ -39,8 +39,8 @@ class Locality extends ActiveRecord\Model
     
     static function getAllLocalityByCity($ctid) {
         $conditions = array("a.city_id = ?", $ctid);
-        $join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
-        $join .= 'INNER JOIN city c ON(a.city_id = c.city_id)';
+        //$join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
+        $join = 'INNER JOIN city c ON(locality.city_id = c.city_id)';
 
         $getLocality = Locality::find('all',array('joins' => $join, 
                "conditions" => $conditions, "select" => "locality.locality_id,locality.label, c.label as cityname"));

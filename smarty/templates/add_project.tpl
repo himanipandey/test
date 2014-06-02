@@ -13,14 +13,14 @@
 	   var id = 0;
 	   $(document).ready(function()   {
 	   $(".cityId").change(function()   {
-		   $(".suburbId").html('');
+		  // $(".suburbId").html('');
 			id=$(this).val();
 			var dataString = 'part=refreshLoc&id='+ id;
 
 	   $.ajax   ({
 		   type: "POST",
 		   url: "RefreshSuburb.php",
-		   data: dataString,
+		   data: dataString,	
 		   cache: false,
 		   success: function(html)   {
 				$(".localityId").html(html);
@@ -32,7 +32,7 @@
 	});
 
 	   $(document).ready(function()   {
-			 $(".localityId").change(function()  {
+			/* $(".localityId").change(function()  {
 
 				var loc_id = $(this).val();
 				var cid = $(".cityId").val();				
@@ -44,10 +44,10 @@
 			data: dataString,
 			cache: false,
 			success: function(html)  {
-				$(".suburbId").html(html);
+				//$(".suburbId").html(html);
 			}
 	   });
-	  });
+	  });*/
           
           $(".builderId").change(function(){
             var builderid = $(this).val();
@@ -204,8 +204,8 @@
                                                                         <font color="red">{if $ErrorMsg["txtLocality"] != ''} {$ErrorMsg["txtLocality"]} {/if}<span id = "err_locality_id" style = "display:none;">Please select locality!</span></font>
                                                                </td>
 							   </tr>	
-							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Suburbs :</b> </td>
+							  <!-- <tr>
+								  <td width="20%" align="right"><font color ="red"></font><b>Suburbs :</b> </td>
 								  <td width="30%" align="left">
 									                                <select name="suburbId" class="suburbId" style="width:230px;" readonly>
                                                                             <option value="">Select Suburb</option>
@@ -219,7 +219,7 @@
 								  </td>
 								  <td width="50%" align="left">						  <font color="red">{if $ErrorMsg["txtSuburbs"] != ''} {$ErrorMsg["txtSuburbs"]} {/if}<span id = "err_suburb_id" style = "display:none;">Please select Suburb!</span></font>
 								  </td>
-							   </tr>						   
+							   </tr>-->						   
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
                                                                 <td width="30%" align="left">
