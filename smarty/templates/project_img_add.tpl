@@ -281,18 +281,18 @@ $(document).ready(function(){
 				});
 		
 	}
-		var itype = $('select#PType').val();	         
-		if( itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other'){
-	 	//$("#secondImageTypeDiv").show();
-				$('.taggedDate').each(function(){
-				  $(this).show();
-				  if($(this).children('#tower_dropdown').length == 0){
-					$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
-					$(this).append($('#select_display_order').html());
-				  }
-						
-				});
-			 }
+	var itype = $('select#PType').val();	         
+	if( itype== 'Amenities' ){
+ 	$("#amenitiesTypeDiv").show();
+			$('.taggedDate').each(function(){
+			  $(this).show();
+			  if($(this).children('#tower_dropdown').length == 0){
+				$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
+				$(this).append($('#select_display_order').html());
+			  }
+					
+			});
+	}
 	if($('select#PType').val() == 'Cluster Plan'){
 				
 				$('.taggedDate').each(function(){
@@ -310,7 +310,7 @@ $(document).ready(function(){
 			 }
 	
 	 $('select#PType').change(function(k, v){
-	 			$("#secondImageTypeDiv").hide();
+	 			$("#amenitiesTypeDiv").hide();
 	 			$('input[name= "title[]"]').each(function(){
 						
 					 $(this).val($('select#PType').val());
@@ -347,8 +347,8 @@ $(document).ready(function(){
 					
 			 }
 		var itype = $('select#PType').val();	         
-		if( itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other'){
-				//$("#secondImageTypeDiv").show();
+		if( itype== 'Amenities'){
+				$("#amenitiesTypeDiv").show();
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
@@ -376,6 +376,27 @@ $(document).ready(function(){
 
 		});
 
+	
+
+	$('select#amenitiesType').change(function(k, v){
+		if($('select#amenitiesType').val() != ''){
+			$('input[name= "title[]"]').each(function(){
+						
+					 $(this).val($('select#PType').val()+" - "+ $('select#amenitiesType').val());
+					// $(this).attr("readonly", true);
+					 if($('select#PType').val() != "Cluster Plan"){	
+					 	console.log("here");$(this).attr("readonly", true);
+					}	
+					else
+						$(this).attr("readonly", false);
+			});
+		}
+		else{
+			$('input[name= "title[]"]').each(function(){
+				$(this).val($('select#PType').val());
+			});
+		}
+	});
 
 		
 });
@@ -459,13 +480,13 @@ $(document).ready(function(){
 					</select>	
                                         <input type="hidden" name = "linkShowHide" value="{$linkShowHide}">
 				  
-				  <div style="display:none" id="secondImageTypeDiv">
-				  <b>Secondary Image Type :</b><font color = "red">*</font> 
+				  <div style="display:none" id="amenitiesTypeDiv">
+				  <b>Amenities Type :</b><font color = "red">*</font> 
 				  
-				   	<select name = "SType" id = "secondImageType">
-						<option value =''>Select Image Type</option>
-						{foreach  from=$sec_image_types key=k item=v}
-                          <option >{$k}</option>
+				   	<select name = "SType" id = "amenitiesType">
+						<option value =''>Select Amenities Type</option>
+						{foreach  from=$amenities key=k item=v}
+                          <option >{$v}</option>
 						{/foreach}
 				   </select>
 				 </div>

@@ -24,6 +24,12 @@
     $sec_image_types = $sec_image_types['project']['project_image'];
     $smarty->assign("sec_image_types", $sec_image_types);
     //print_r($sec_image_types);
+
+
+    $Amenities = AmenitiesMaster::arrAmenitiesMaster();
+    $smarty->assign("amenities", $Amenities);
+
+
     //tower dropdown
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
@@ -191,6 +197,13 @@ if (isset($_POST['Next']))
 				  if($_REQUEST['txtdisplay_order'][$count] != 5)
 					$temp_arr[$_REQUEST['txtdisplay_order'][$count]] = $_REQUEST['txtdisplay_order'][$count];
 				}
+
+				if($_REQUEST['PType'] == 'Amenities'){
+					if($_REQUEST['SType'] == ''){
+						$ErrorMsg["stype"] = "Please enter am Amenities Type."; 
+					}
+				}
+
 				$count++;
 			}
 		}
