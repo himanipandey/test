@@ -34,6 +34,20 @@
     $smarty->assign("parent_id", $parent_id);
     $smarty->assign("parent_name", $parent_name);
 
+    $attachedSuburbArr = array();
+    $QueryMember = "SELECT lsm.suburb_id as id, s.LABEL as label FROM locality_suburb_mappings lsm 
+                    inner join suburb s on s.suburb_id=lsm.suburb_id 
+            WHERE lsm.locality_id='".$localityid ."' and  s.STATUS = 'Active' ORDER BY s.LABEL ASC";
+    $QueryExecute   = mysql_query($QueryMember) or die(mysql_error());
+    while ($dataArr = mysql_fetch_array($QueryExecute))
+    {
+       array_push($attachedSuburbArr, $dataArr);
+    }
+    
+   $attachedSuburbJson = json_encode($attachedSuburbArr);
+   $smarty->assign("attachedSuburbJson", $attachedSuburbJson);
+
+//print_r($attachedSuburbArr);
     if(isset($_POST['btnExit'])){
             header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
     }
@@ -152,7 +166,6 @@
                                            STATUS = '".$status."',
                                            URL = '".$txtCityUrl."',
                                            DESCRIPTION = '" . d_($desc) . "',
-                                           SUBURB_ID = '".$parent_subId."',
                                            LATITUDE = '".$txtLocalityLattitude."',
                                            LONGITUDE = '".$txtLocalityLongitude."',
                                            updated_at = now()
@@ -214,8 +227,8 @@
                             }
                             else{
                                 //code for insert new locality
-                                $qry = "INSERT INTO ".LOCALITY." (LABEL, SUBURB_ID, CITY_ID, status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
-                                      value('".$txtCityName."','".$parent_subId."','".$cityId."', '".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";echo $qry;//die("here");
+                                $qry = "INSERT INTO ".LOCALITY." (LABEL, CITY_ID, status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
+                                      value('".$txtCityName."','".$cityId."', '".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";//echo $qry;//die("here");
                                 $res = mysql_query($qry) or die(mysql_error()); 
                                 $locId = mysql_insert_id();
                                 $cityFind = City::find($cityId);  
@@ -251,7 +264,6 @@
             $txtMetaDescription	  =	$getSeoData[0]->meta_description;
             $status		  =	trim($localityDetailsArray['status']);
             $desc		  =	trim($localityDetailsArray['DESCRIPTION']);
-            $parent_sub_id = trim($localityDetailsArray['SUBURB_ID']);
             //print_r($localityDetailsArray);
             $maxLatitude	  =	trim($localityDetailsArray['MAX_LATITUDE']);
             if($maxLatitude == '')
@@ -281,15 +293,24 @@
             $smarty->assign("parent_sub_id", $parent_sub_id);
             $smarty->assign("txtLocalityLattitude", $localityDetailsArray['LATITUDE']);
             $smarty->assign("txtLocalityLongitude", $localityDetailsArray['LONGITUDE']);
-                
+           
+
+          
+
+            $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $localityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'locality')));   
+            $smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
+            $smarty->assign("dept", $_SESSION['DEPARTMENT']);
+    }
+
+
            $getLandmarkAliasesArr = getLandmarkAliases('locality', $localityid);
            $landmarkJson = json_encode($getLandmarkAliasesArr);
            $smarty->assign("landmarkAliases", $getLandmarkAliasesArr);
-           $smarty->assign("landmarkJson", $landmarkJson);
+           $smarty->assign("landmarkJson", $landmarkJson);echo $landmarkJson;
             // get suburb to display hierarchy
-            $qry = "select s.SUBURB_ID, s.LABEL, s.parent_suburb_id from locality l 
-                    inner join suburb s on l.SUBURB_ID = s.SUBURB_ID
-                    WHERE l.LOCALITY_ID=$localityid";
+            $qry = "select lsm.SUBURB_ID, s.LABEL, s.parent_suburb_id FROM locality_suburb_mappings lsm inner join suburb s on s.suburb_id=lsm.suburb_id 
+            WHERE lsm.locality_id='".$localityid ."' and  s.STATUS = 'Active' ORDER BY s.LABEL ASC";
+                   
             $res = mysql_query($qry) or die(mysql_error());
             $suburb = Array();
             while ($data = mysql_fetch_array($res))
@@ -299,10 +320,5 @@
             $smarty->assign("sub_id", $suburb[0]['SUBURB_ID']);
             $smarty->assign("sub_label", $suburb[0]['LABEL']);
             $smarty->assign("sub_pid", $suburb[0]['parent_suburb_id']);
-
-            $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $localityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'locality')));   
-            $smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
-            $smarty->assign("dept", $_SESSION['DEPARTMENT']);
-    }
  
 ?>

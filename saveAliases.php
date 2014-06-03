@@ -55,6 +55,27 @@ else if($_POST['task']=='createLandmarkAlias'){
 	}
 }
 
+else if($_POST['task']=='attachSuburb'){
+	//echo "here".$_POST['localityId'];
+	if(!empty($_POST['localityId']) && !empty($_POST['suburbId']) ){
+		//die("he");
+		$suburbId = $_POST['suburbId'];
+		$localityId = $_POST['localityId'];
+		//echo $suburbId;
+		attachSuburbs($suburbId, $localityId);
+	}
+}
+else if($_POST['task']=='dettachSuburb'){
+	//echo "here".$_POST['localityId'];
+	if(!empty($_POST['localityId']) && !empty($_POST['suburbId']) ){
+		//die("he");
+		$suburbId = $_POST['suburbId'];
+		$localityId = $_POST['localityId'];
+		//echo $suburbId;
+		dettachSuburbs($suburbId, $localityId);
+	}
+}
+
 else{
 if(!empty($_POST['aliasname']))
 {

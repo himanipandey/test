@@ -548,4 +548,49 @@ function child_suburb($p_id, $arr1, $arr2){
     return $returnArr;
  }
 
+
+ function attachSuburbs($suburbId, $localityId)
+{
+
+  $sql = "SELECT * FROM ".locality_suburb_mappings. " where suburb_id = '$suburbId' and locality_id = '$localityId' ";//echo $sql;
+  $result=mysql_query($sql);
+    
+    if(mysql_num_rows($result) >0 )
+  {
+    echo "2";
+  }
+  else
+  { 
+  $query = "INSERT INTO ".locality_suburb_mappings." (suburb_id, locality_id, created_at, updated_by) VALUES ('$suburbId', '$localityId', NOW(), ".$_SESSION['adminId'].")";
+  //echo $query;
+  $res = mysql_query($query) or die(mysql_error());
+  if(mysql_affected_rows()>0){
+        echo "1";
+    }
+    else{
+        echo "3";
+    }
+  }
+
+}
+
+
+
+
+function dettachSuburbs($suburbId, $localityId)
+{
+
+  $sql = "delete FROM ".locality_suburb_mappings. " where suburb_id = '$suburbId' and locality_id = '$localityId' ";//echo $sql;
+  $result=mysql_query($sql);
+    
+  if(mysql_affected_rows()>0){
+          echo "1";
+    }
+  else{
+          echo "3";
+  }
+  
+
+}
+
 ?> 
