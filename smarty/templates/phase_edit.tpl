@@ -359,11 +359,8 @@
                                                                                                                         {/if}
                                                                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
                                                                                                                            {if count($bedrooms_hash['Plot'])>0}
-                                                                                                                               {$showHide = ""}
-                                                                                                                           {else}
-                                                                                                                               {$showHide = "style = 'display:none;'"}
-                                                                                                                           {/if}
-                                                                                                                               <tr {$showHide} class="supply_select">
+                                                                                                                           
+                                                                                                                               <tr class="supply_select">
                                                                                                                                 <td width="20%" align="right" valign="top"><b>Supply of Plot  :</b> </td>
                                                                                                                                 <td width="30%" align="left" nowrap>
 																																	<font color="red">
@@ -382,6 +379,7 @@
                                                                                                                                 </td>
                                                                                                                             </tr>
                                                                                                                             <input type='hidden' name='plotvilla' id='plotvilla' value='Plot'>
+                                                                                                                            {/if}
                                                                                                                         {/if}  
                                                                                                                         {if count($phase_quantity) == 0 || count($bedrooms_hash['Apartment'])>0}
 																															<tr {if $phaseObject['PHASE_TYPE'] == 'Logical'} style="display: none;" {/if}>
