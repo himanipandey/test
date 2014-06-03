@@ -2430,8 +2430,7 @@ function update_remark_status($cid,$type="Audit2",$status="Read"){
 function fetch_project_BSP($projectId){
 	$bspArr = array();
 	$sqlResult = mysql_query("select city.max_price_per_unit, city.min_price_per_unit from city 
-			  left join suburb on city.city_id = suburb.city_id
-			  left join locality on suburb.suburb_id = locality.suburb_id
+			  left join locality on locality.city_id = city.city_id
 			  left join resi_project on locality.locality_id = resi_project.locality_id
 			   where resi_project.project_id = '$projectId'");
 	if($sqlResult){

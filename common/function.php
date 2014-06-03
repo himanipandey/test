@@ -34,8 +34,7 @@ function getListing( $dataArr = array() ) {
         else {
             $localityQuery = "SELECT A.LOCALITY_ID AS id, A.LABEL AS name, C.LABEL AS city
                               FROM locality AS A
-                              LEFT JOIN suburb AS S ON A.SUBURB_ID=S.SUBURB_ID
-                              LEFT JOIN city AS C ON S.CITY_ID=C.CITY_ID
+                              LEFT JOIN city AS C ON A.CITY_ID=C.CITY_ID
                               WHERE A.status='Active' AND C.CITY_ID=$cityId
                               ORDER BY city";
         }

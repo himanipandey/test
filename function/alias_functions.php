@@ -76,7 +76,7 @@ function getAllAliases()
 		left join (locality l inner join (suburb s1 inner join city c2 on s1.CITY_ID=c2.CITY_ID) on pa.place_table_id = l.LOCALITY_ID and pa.place_table_name = 'LOCALITY'
 		left join (suburb s inner join city c1 on s.CITY_ID=c1.CITY_ID) on pa.place_table_id = s.SUBURB_ID and pa.place_table_name = 'SUBURB'
 		"; */
-		 $query = "SELECT c.LABEL as c_label, s.LABEL as s_label, s.SUBURB_ID as s_id, s.parent_suburb_id as s_pid, s.CITY_ID as s_cid, c1.LABEL as s_clabel, l.LABEL as l_label, c2.LABEL as l_clabel, pa.alias_name FROM place_alias_mapping pa left join city c on pa.place_table_id = c.CITY_ID and pa.place_table_name = 'CITY' left join (locality l inner join (suburb s1 inner join city c2 on s1.CITY_ID=c2.CITY_ID) on l.SUBURB_ID=s1.SUBURB_ID) on pa.place_table_id = l.LOCALITY_ID and pa.place_table_name = 'LOCALITY' left join (suburb s inner join city c1 on s.CITY_ID=c1.CITY_ID) on pa.place_table_id = s.SUBURB_ID and pa.place_table_name = 'SUBURB'";
+		 $query = "SELECT c.LABEL as c_label, s.LABEL as s_label, s.SUBURB_ID as s_id, s.parent_suburb_id as s_pid, s.CITY_ID as s_cid, c1.LABEL as s_clabel, l.LABEL as l_label, c2.LABEL as l_clabel, pa.alias_name FROM place_alias_mapping pa left join city c on pa.place_table_id = c.CITY_ID and pa.place_table_name = 'CITY' left join ( locality l inner join city c2  on l.CITY_ID=c2.CITY_ID ) on pa.place_table_id = l.LOCALITY_ID and pa.place_table_name = 'LOCALITY' left join (suburb s inner join city c1 on s.CITY_ID=c1.CITY_ID) on pa.place_table_id = s.SUBURB_ID and pa.place_table_name = 'SUBURB'";
 	$res = mysql_query($query); //or die(mysql_error());
 	
 	$arr = array(); //echo 'yes';
@@ -317,10 +317,8 @@ function getHierArr($cid, $subarr1){
     //get all localities in the city
     $locArr = Array();
     $qry = "SELECT a.LOCALITY_ID as id, a.LABEL as label, a.SUBURB_ID as parent_id FROM " . locality . " a
-              inner join suburb b
-                on a.SUBURB_ID = b.SUBURB_ID
               inner join city c
-                on b.CITY_ID = c.CITY_ID
+                on a.CITY_ID = c.CITY_ID
              WHERE 
                 c.CITY_ID = '" . $cid . "' 
             ORDER BY a.LABEL ASC";
