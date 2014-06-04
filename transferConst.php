@@ -94,7 +94,7 @@
     $smarty->assign("assignRemark", $_REQUEST['assignRemark']);
     $smarty->assign("assignCycle", $_REQUEST['assignCycle']);
     
-    $QueryMember2 = "Select COUNT(p.PROJECT_ID) CNT
+    $QueryMember2 = "Select COUNT(distinct(p.PROJECT_ID)) CNT
                 FROM ".RESI_PROJECT." p 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
