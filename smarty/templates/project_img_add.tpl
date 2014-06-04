@@ -254,6 +254,34 @@ function validateFloor(from, to){
 
 }
 
+
+function amenities_change(e){
+ ///*	
+    var indx = $('.amenitiesType').index($(e));
+	var amenity_val = e.value;
+	//var index = $(e).attr('name').match(/\[(.*?)\]/)[1];
+	//console.log(e.name);
+	
+		
+		
+		
+		$('input[name= "title[]"]').each(function(index, elm){
+			if(indx == index+1){
+				if(amenity_val!==''){
+					$(this).val($('select#PType').val()+" - "+ amenity_val);
+				}
+				else{
+					$(this).val($('select#PType').val());
+				}
+
+			}
+				
+		});
+//*/
+	
+}
+
+
 $(document).ready(function(){
 	
 	 $('.taggedDate').hide();
@@ -282,14 +310,18 @@ $(document).ready(function(){
 		
 	}
 	var itype = $('select#PType').val();	         
-	if( itype== 'Amenities' ){
- 	$("#amenitiesTypeDiv").show();
+	if(itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other' ){
+ 	
 			$('.taggedDate').each(function(){
 			  $(this).show();
 			  if($(this).children('#tower_dropdown').length == 0){
 				$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
 				$(this).append($('#select_display_order').html());
+				if(itype=='Amenities')
+			  	$(this).append($('#amenitiesTypeDiv').html());
 			  }
+			  
+
 					
 			});
 	}
@@ -347,13 +379,15 @@ $(document).ready(function(){
 					
 			 }
 		var itype = $('select#PType').val();	         
-		if( itype== 'Amenities'){
-				$("#amenitiesTypeDiv").show();
+		if( itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other'){
+				
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
 					$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
 					$(this).append($('#select_display_order').html());
+					if(itype=='Amenities')
+			  			$(this).append($('#amenitiesTypeDiv').html());
 				  }
 						
 				});
@@ -377,26 +411,6 @@ $(document).ready(function(){
 		});
 
 	
-
-	$('select#amenitiesType').change(function(k, v){
-		if($('select#amenitiesType').val() != ''){
-			$('input[name= "title[]"]').each(function(){
-						
-					 $(this).val($('select#PType').val()+" - "+ $('select#amenitiesType').val());
-					// $(this).attr("readonly", true);
-					 if($('select#PType').val() != "Cluster Plan"){	
-					 	console.log("here");$(this).attr("readonly", true);
-					}	
-					else
-						$(this).attr("readonly", false);
-			});
-		}
-		else{
-			$('input[name= "title[]"]').each(function(){
-				$(this).val($('select#PType').val());
-			});
-		}
-	});
 
 		
 });
@@ -480,16 +494,7 @@ $(document).ready(function(){
 					</select>	
                                         <input type="hidden" name = "linkShowHide" value="{$linkShowHide}">
 				  
-				  <div style="display:none" id="amenitiesTypeDiv">
-				  <b>Amenities Type :</b><font color = "red">*</font> 
-				  
-				   	<select name = "SType" id = "amenitiesType">
-						<option value =''>Select Amenities Type</option>
-						{foreach  from=$amenities key=k item=v}
-                          <option >{$v}</option>
-						{/foreach}
-				   </select>
-				 </div>
+				 
 				 	</td>
 				</tr>
 
@@ -548,6 +553,18 @@ $(document).ready(function(){
 				   <!-- this is for adding dynamically display dropdown-->
 				  <div id="select_display_order" style="display:none">{$display_order_div}</div>
 				  <!-- this is for adding dynamically floor dropdown-->
+
+				   <div style="display:none" id="amenitiesTypeDiv">
+				 &nbsp;&nbsp;&nbsp;&nbsp; <b>Amenities Type :</b><font color = "red">*</font> 
+				  
+				   	<select name = "SType[]" class = "amenitiesType" onchange="amenities_change(this)">
+						<option value =''>Select Amenities Type</option>
+						{foreach  from=$amenities key=k item=v}
+                          <option >{$v}</option>
+						{/foreach}
+				   </select>
+				 </div>
+
 				  <div id="select_floor" style="display:none">
 				  	&nbsp;&nbsp;<b>Floor No. From:<font color = "red"></font></b>&nbsp;&nbsp;
 						<input name="floor_from[]" type="text" class="formstyle2" id="floor_from" size="10"  onchange="floor_change_from(this)" />	

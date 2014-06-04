@@ -199,8 +199,8 @@ if (isset($_POST['Next']))
 				}
 
 				if($_REQUEST['PType'] == 'Amenities'){
-					if($_REQUEST['SType'] == ''){
-						$ErrorMsg["stype"] = "Please enter am Amenities Type."; 
+					if($_REQUEST['SType'][$count] == ''){
+						$ErrorMsg["stype"] = "Please enter an Amenities Type."; 
 					}
 				}
 
