@@ -134,7 +134,6 @@ foreach($projectsfromDB as $k=>$v) {
         $arrReDefine[$k]['BUILDER_NAME'] = $v['BUILDER_NAME'];
         $arrReDefine[$k]['CITY'] = $v['CITY'];
         $arrReDefine[$k]['LOCALITY'] = $v['LOCALITY'];
-        $arrReDefine[$k]['LAST_WORKED_AT'] = $v['LAST_WORKED_AT'];
         $assignedVal = explode("|",$v['ASSIGNED_AT']);
         $arrReDefine[$k]['assigned_curr'] = $assignedVal[0];
         $arrReDefine[$k]['assigned_last'] = $assignedVal[1];
@@ -206,7 +205,6 @@ function download_xls_file($projectList){
             $callCenterArr[$cntCall]['CITY'] = $projectList[$pkey]["CITY"];
             $callCenterArr[$cntCall]['LOCALITY'] = $projectList[$pkey]["LOCALITY"];
 
-            $callCenterArr[$cntCall]['LAST_WORKED_AT'] = $projectList[$pkey]["LAST_WORKED_AT"];
             $callCenterArr[$cntCall]["ASSIGNED_TO"] = $projectList[$pkey]["userName_curr"];
             $callCenterArr[$cntCall]["ASSIGNED_AT"] = $projectList[$pkey]["assigned_curr"];
             $callCenterArr[$cntCall]["STATUS"] = $projectList[$pkey]["status_curr"];

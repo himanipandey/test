@@ -11,10 +11,10 @@ class ProcessAssignmentSystem extends ActiveRecord\Model
             if(trim($projectId) == trim($getAssignedProject[0]->project_id) && trim($updationCycleId) == trim($getAssignedProject[0]->updation_cycle_id)){
                 //die("here");
             }else{
-                if( count($getAssignedProject) == 0 ) {
+                //if( count($getAssignedProject) == 0 ) {
                     $assignProject = new ProcessAssignmentSystem();                
                     $assignProject->project_id = $projectId;
-                }
+               /* }
                 else {
                     $assignProject = new ProcessAssignmentSystem();
                     $assignProject->project_id = $projectId;
@@ -22,7 +22,7 @@ class ProcessAssignmentSystem extends ActiveRecord\Model
                     $assignProject->status = '';
                     $assignProject->executive_remark = '';
                     $assignProject->source = '';
-                }
+                }*/
                 date_default_timezone_set("Asia/Kolkata");
                 $assignProject->assignment_type = $assignType;
                 $assignProject->updation_cycle_id = $updationCycleId;

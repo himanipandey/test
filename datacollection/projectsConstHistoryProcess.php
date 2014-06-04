@@ -26,7 +26,7 @@
             elseif($projectId != '' && $updationCycleId == '')
                  $searchResult = $qry." where pas.project_id = $projectId";
             elseif($projectId == '' && $updationCycleId != '')
-                 $searchResult = $qry." where pas.updation_cycle_id = $updationCycleId";
+                 $searchResult = $qry." where pas.updation_cycle_id = $updationCycleId and rp.version = 'Cms'";
             $smarty->assign("searchResult",$searchResult);
             //echo $searchResult;die;
            $res = ProcessAssignmentSystem::find_by_sql($searchResult);
