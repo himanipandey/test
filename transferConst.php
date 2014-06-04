@@ -192,7 +192,7 @@
 
         }
         
-       echo $QueryMember2	=  $QueryMember2.$pasAnd. $QueryMember."  ORDER BY p.PROJECT_ID";
+        $QueryMember2	=  $QueryMember2.$pasAnd. $QueryMember."  ORDER BY p.PROJECT_ID";
     }
    // echo "<pre>";print_r($_REQUEST);die;
    $constCycle = explode("|",$_REQUEST['updateConst']);

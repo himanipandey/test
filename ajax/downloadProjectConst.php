@@ -107,7 +107,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
     $QueryMember1 = "SELECT p.PROJECT_ID,rb.BUILDER_NAME,p.PROJECT_NAME,city.LABEL AS CITY_NAME, psm.project_status as 
                     PROJECT_STATUS,
                 locality.LABEL LOCALITY, pas.EXECUTIVE_REMARK, pas.STATUS as ASSIGN_STATUS,uc.LABEL as ASSIGNMENT_CYCLE
-                FROM ".RESI_PROJECT." p 
+                FROM resi_project p 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
                 left join city on suburb.city_id = city.city_id
