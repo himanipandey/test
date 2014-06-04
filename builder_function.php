@@ -2290,8 +2290,7 @@ function updateD_Availablitiy($projectId){
 	while($row_map = mysql_fetch_object($sql_config_mapping_info)){
 	  $config_mapped_array[$row_map->option_type."-".$row_map->bedrooms] = 	NULL;
 	}
-
-		
+	
 	if(!empty($config_mapped_array) && $sql_max_effective_month){
 	  $max_effective_month = mysql_fetch_object($sql_max_effective_month)->max_effective_month;
 	  if($max_effective_month){		
@@ -2321,11 +2320,12 @@ function updateD_Availablitiy($projectId){
 	  foreach($config_mapped_array as $key=>$val){
 		 if(is_null($val)){
 			$total_av = null;
+			break;
 		 }else
 			$total_av += $val;
 	  }	
 	}
-
+	
 	//update availability
 	if(!is_null($total_av)){		
 		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
@@ -2402,6 +2402,7 @@ function updatePhaseBookingStatus($projectId){
 			  foreach($config_mapped_array as $key=>$val){
 				 if(is_null($val)){
 					$total_av = null;
+					break;
 				 }else
 					$total_av += $val;
 			  }	
