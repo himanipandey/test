@@ -50,7 +50,7 @@
                                     <td colspan="0">
                                         <div style="height: 31px; float: left">
                                             <form method="post">
-                                                Project Id<INPUT type="text" name = "projectId" value="{$projectId}">
+                                                Project Id<INPUT type="text" name = "projectId" value="{$projectId}" placeholder="Comma Seperated PIDs">
                                                 Updation Cycle
                                                 <select name = "updationCycleId">
                                                     <option value="">Select Updation Cycle</OPTION>

@@ -12,7 +12,7 @@
        $smarty->assign("projectId",$projectId);
        $smarty->assign("updationCycleId",$updationCycleId);
        $errorMsg = '';
-       if($projectId == '' && $updationCycleId == ''){
+       if(trim($projectId) == '' && $updationCycleId == ''){
            $errorMsg = 'Please select atleast one field';    
        }
 //echo "<pre>";print_r($_REQUEST);
@@ -22,9 +22,9 @@
                join proptiger_admin pa on pas.assigned_to = pa.adminid
                join resi_project rp ON( pas.project_id = rp.project_id )';
             if($projectId != '' && $updationCycleId != '')
-                $searchResult = $qry." where pas.project_id = $projectId and pas.updation_cycle_id = $updationCycleId";
+                $searchResult = $qry." where pas.project_id in( $projectId) and pas.updation_cycle_id = $updationCycleId";
             elseif($projectId != '' && $updationCycleId == '')
-                 $searchResult = $qry." where pas.project_id = $projectId";
+                 $searchResult = $qry." where pas.project_id  in( $projectId)";
             elseif($projectId == '' && $updationCycleId != '')
                  $searchResult = $qry." where pas.updation_cycle_id = $updationCycleId and rp.version = 'Cms'";
             $smarty->assign("searchResult",$searchResult);

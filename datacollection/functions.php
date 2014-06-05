@@ -511,7 +511,7 @@ function getProjectConstListForManagers($cityId, $suburbId = '', $localityId = '
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME,
          c.LABEL CITY, l.LABEL LOCALITY,
          pa.UPDATION_TIME as LAST_WORKED_AT,
-         GROUP_CONCAT(case when pa.CREATION_TIME is null then '' else pa.CREATION_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
+         GROUP_CONCAT(case when pa.ASSIGN_TIME is null then '' else pa.ASSIGN_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
          GROUP_CONCAT(case when pa.STATUS is null then '' else pa.STATUS end order by pa.ID desc separator '|') STATUS,
          GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
          GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,
@@ -568,20 +568,20 @@ function assignToDEntryExecutives($projectIds, $executive){
         if($getAssignedProject[0]->assigned_to == 0){
          $qryUp = "update process_assignment_system set 
                 assigned_to = $executive, assigned_by = '".$_SESSION['adminId']."',
-                updation_time = now() where project_id = $pId and updation_cycle_id = ".$dataUpId['updation_cycle_id'];
+                updation_time = now(),assign_time = now(),status = 'notAttempted' where project_id = $pId and updation_cycle_id = ".$dataUpId['updation_cycle_id'];
            $resUp = mysql_query($qryUp) or die(mysql_error());
         }
         else {
+            date_default_timezone_set("Asia/Kolkata");        
             $assignProject = new ProcessAssignmentSystem();
             $assignProject->updation_cycle_id = $dataUpId['updation_cycle_id'];
             $assignProject->project_id = $pId;
             $assignProject->assigned_to = $executive;
             $assignProject->assigned_by = $_SESSION['adminId'];
-           // $assignProject->status = $getAssignedProject[0]->status;
-            //$assignProject->executive_remark = $getAssignedProject[0]->executive_remark;
+            $assignProject->status = 'notAttempted';
+            $assignProject->assign_time =  date('Y-m-d H:i:s');
             //$assignProject->source = $getAssignedProject[0]->source;
-            $assignProject->assignment_type = $getAssignedProject[0]->assignment_type;
-            date_default_timezone_set("Asia/Kolkata");                
+            $assignProject->assignment_type = $getAssignedProject[0]->assignment_type;       
             $assignProject->creation_time = date('Y-m-d H:i:s');
             $assignProject->save();
         }
@@ -595,7 +595,7 @@ function getAssignedProjectsConst($adminId=NULL){
     $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
     $resUpId = mysql_query($currentUpId) or die(mysql_error());
     $dataUpId = mysql_fetch_array($resUpId);
-    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, c.LABEL CITY, pa.CREATION_TIME 
+    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, c.LABEL CITY, pa.ASSIGN_TIME 
         ASSIGNMENT_DATE, pa.STATUS, pa.EXECUTIVE_REMARK REMARK,pa.id from process_assignment_system pa 
         inner join resi_project rp on rp.PROJECT_ID = pa.PROJECT_ID
         inner join resi_builder rb on rp.builder_id = rb.builder_id
@@ -637,7 +637,7 @@ function getAssignedProjectsFromConstPIDs($pids){
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME,
          c.LABEL CITY, l.LABEL LOCALITY,
          pa.UPDATION_TIME as LAST_WORKED_AT,
-         GROUP_CONCAT(case when pa.CREATION_TIME is null then '' else pa.CREATION_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
+         GROUP_CONCAT(case when pa.ASSIGN_TIME is null then '' else pa.ASSIGN_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
          GROUP_CONCAT(case when pa.STATUS is null then '' else pa.STATUS end order by pa.ID desc separator '|') STATUS,
          GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
          GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,
@@ -668,7 +668,7 @@ function getAssignedProjectsForConst($adminId=NULL){
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME,
          c.LABEL CITY, l.LABEL LOCALITY,
          pa.UPDATION_TIME as LAST_WORKED_AT,
-         GROUP_CONCAT(case when pa.CREATION_TIME is null then '' else pa.CREATION_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
+         GROUP_CONCAT(case when pa.ASSIGN_TIME is null then '' else pa.ASSIGN_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
          GROUP_CONCAT(case when pa.STATUS is null then '' else pa.STATUS end order by pa.ID desc separator '|') STATUS,
          GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
          GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,

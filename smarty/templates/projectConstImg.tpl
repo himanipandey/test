@@ -168,7 +168,7 @@
                                                                 <td>{if $item['userName_curr'] != ''}
                                                                     {$item['userName_curr']}{else} NA{/if}
                                                                 </td>
-                                                                 <td>{if $item['assigned_curr'] != ''}
+                                                                 <td>{if $item['assigned_curr'] != '' && $item['assigned_curr'] != '0000-00-00 00:00:00'}
                                                                     {$item['assigned_curr']}{else} NA{/if}
                                                                 </td>
                                                                  <td>{if $item['status_curr'] != ''}
