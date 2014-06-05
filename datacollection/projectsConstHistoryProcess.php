@@ -22,13 +22,13 @@
                join proptiger_admin pa on pas.assigned_to = pa.adminid
                join resi_project rp ON( pas.project_id = rp.project_id )';
             if($projectId != '' && $updationCycleId != '')
-                $searchResult = $qry." where pas.project_id in( $projectId) and pas.updation_cycle_id = $updationCycleId";
+                $searchResult = $qry." where pas.project_id in( $projectId) and rp.version = 'Cms' and pas.updation_cycle_id = $updationCycleId";
             elseif($projectId != '' && $updationCycleId == '')
-                 $searchResult = $qry." where pas.project_id  in( $projectId)";
+                 $searchResult = $qry." where pas.project_id  in( $projectId)  and rp.version = 'Cms'";
             elseif($projectId == '' && $updationCycleId != '')
                  $searchResult = $qry." where pas.updation_cycle_id = $updationCycleId and rp.version = 'Cms'";
             $smarty->assign("searchResult",$searchResult);
-            //echo $searchResult;die;
+           // echo $searchResult;die;
            $res = ProcessAssignmentSystem::find_by_sql($searchResult);
          $smarty->assign("searchResult",$res);
        }
