@@ -268,10 +268,10 @@ function amenities_change(e){
 		$('input[name= "title[]"]').each(function(index, elm){
 			if(indx == index+1){
 				if(amenity_val!==''){
-					$(this).val($('select#PType').val()+" - "+ amenity_val);
+					$(this).val(amenity_val);
 				}
 				else{
-					$(this).val($('select#PType').val());
+					$(this).val();
 				}
 
 			}
@@ -286,10 +286,19 @@ $(document).ready(function(){
 	
 	 $('.taggedDate').hide();
 	  $('.taggedMonth').hide();
-	  $('input[name= "title[]"]').each(function(){
-						
+	  $('input[name= "title[]"]').each(function(index, elm){
+					if($('select#PType').val() != "Amenities")	
 					 $(this).val($('select#PType').val());
-					 
+					else{
+							$(this).val('');
+					}
+					
+					 if($('select#PType').val() != "Cluster Plan"){	
+					 	$(this).attr("readonly", true);
+					}
+					else{
+						$(this).attr("readonly", false);
+					}
 
 				});
 	if($('select#PType').val() == 'Construction Status'){
@@ -343,12 +352,15 @@ $(document).ready(function(){
 	
 	 $('select#PType').change(function(k, v){
 	 			$("#amenitiesTypeDiv").hide();
-	 			$('input[name= "title[]"]').each(function(){
-						
+	 			$('input[name= "title[]"]').each(function(index, elm){
+					if($('select#PType').val() != "Amenities")	
 					 $(this).val($('select#PType').val());
+					else{
+							$(this).val('');
+					}
 					// $(this).attr("readonly", true);
 					 if($('select#PType').val() != "Cluster Plan"){	
-					 	console.log("here");$(this).attr("readonly", true);
+					 	$(this).attr("readonly", true);
 					}	
 					else
 						$(this).attr("readonly", false);
@@ -573,7 +585,7 @@ $(document).ready(function(){
 					</div>
 				  
 				 <!-- <input type=file name='txtlocationplan'  style="width:400px;">-->
-				 <div id="img1" style="margin-bottom:10px;"><input name="txtlocationplan[]" type="file" id='txtlocationplan1' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
+				 <div id="img1" style="margin-bottom:10px;"><input name="txtlocationplan[]" type="file" id='txtlocationplan1' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]" readonly="1">
 				   <div class="taggedMonth" style="display:block;float:left">
 					   &nbsp;&nbsp;<b>Tagged Date:<font color = "red">*</font></b>&nbsp;&nbsp;
 						<input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" size="10"  onchange="tagged_date_change(this)"/>  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
