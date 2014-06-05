@@ -99,8 +99,8 @@
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
                 left join city on suburb.city_id = city.city_id
-                join process_assignment_system pas on p.project_id = pas.project_id
-                join updation_cycle uc on pas.updation_cycle_id = uc.updation_cycle_id";
+                left join process_assignment_system pas on p.project_id = pas.project_id
+                left join updation_cycle uc on pas.updation_cycle_id = uc.updation_cycle_id";
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
     {
 	$project_name= $_REQUEST['project_name'];
