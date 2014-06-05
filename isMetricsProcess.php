@@ -1,8 +1,7 @@
 <?php
 
     $cityList = "1,2,5,6,8,11,12,16,18,20,21";
-    $joinLocSub = 'INNER JOIN suburb a ON locality.suburb_id = a.suburb_id
-                   INNER JOIN city c on a.city_id = c.city_id';
+    $joinLocSub = 'INNER JOIN city c on locality.city_id = c.city_id';
     $locIds = Locality::find('all',array('joins' => $joinLocSub,'conditions' => "c.city_id in ($cityList)",
         "select" => "locality.locality_id"));
     $arrIds = array();

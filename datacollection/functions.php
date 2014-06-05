@@ -8,8 +8,7 @@ function getAssignedProjects($adminId=NULL){
             or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
         inner join resi_builder rb on rp.builder_id = rb.builder_id
         inner join locality l on rp.locality_id = l.locality_id
-        inner join suburb s on l.suburb_id = s.suburb_id
-        inner join city c on s.CITY_ID = c.CITY_ID 
+        inner join city c on l.CITY_ID = c.CITY_ID 
         where pa.ASSIGNED_TO = ".$adminId." and pa.STATUS = 'notAttempted' and rp.version = 'Cms' and rp.status in ('ActiveInCms','Active');";
     return dbQuery($sql);
 }
@@ -96,9 +95,10 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
          GROUP_CONCAT(pa.STATUS order by pa.ID asc separator '|') STATUS, 
          GROUP_CONCAT(pa.EXECUTIVE_REMARK order by pa.ID asc separator '|') REMARK, 
          if(uc.LABEL is null, 'No Label', uc.LABEL) LABEL from resi_project rp 
-         inner join locality l on rp.locality_id = l.LOCALITY_ID 
-         inner join suburb sub on l.suburb_id = sub.suburb_id
-         inner join city c on sub.city_id = c.city_id
+         inner join locality l on rp.locality_id = l.LOCALITY_ID
+         inner join locality_suburb_mappings lsm on l.locality_id = lsm.locality_id
+         inner join suburb sub on sub.suburb_id=lsm.suburb_id 
+         inner join city c on l.city_id = c.city_id
          inner join resi_builder rb on rp.builder_id = rb.builder_id
          inner join project_status_master ps on rp.project_status_id = ps.id
          inner join project_stage_history psh on rp.MOVEMENT_HISTORY_ID = psh.HISTORY_ID 
@@ -173,8 +173,9 @@ function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
          GROUP_CONCAT(pa.EXECUTIVE_REMARK order by pa.ID asc separator '|') REMARK, 
          if(uc.LABEL is null, 'No Label', uc.LABEL) LABEL from resi_project rp 
          inner join locality l on rp.locality_id = l.LOCALITY_ID 
-         inner join suburb sub on l.suburb_id = sub.suburb_id
-         inner join city c on sub.city_id = c.city_id
+         inner join locality_suburb_mappings lsm on l.locality_id = lsm.locality_id
+         inner join suburb sub on sub.suburb_id=lsm.suburb_id
+         inner join city c on l.city_id = c.city_id
          inner join resi_builder rb on rp.builder_id = rb.builder_id
          inner join project_status_master ps on rp.project_status_id = ps.id
          inner join project_stage_history psh 
@@ -305,8 +306,7 @@ function getSurveyTeamLeads(){
 function getSurveyTeamLeadsForLocalities($localityId){
     $sql = "select l.LOCALITY_ID, pa.ADMINID from proptiger_admin_city pac 
         inner join proptiger_admin pa on pa.ADMINId = pac.ADMIN_ID 
-        inner join suburb s on pac.city_id = s.city_id
-        inner join locality l on s.suburb_id = l.suburb_id
+        inner join locality l on pac.city_id = l.city_id
         where pa.DEPARTMENT = 'SURVEY' and ROLE = 'teamLeader' and l.locality_id = $localityId;";
     $queryRes = dbQuery($sql);
     $result = array();
@@ -413,8 +413,7 @@ function surveyexecutiveList(){
                inner join resi_project rp
                on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and (pa.updation_cycle_id = rp.updation_cycle_id or rp.updation_cycle_id is null))
                inner join locality l on rp.locality_id = l.locality_id
-               inner join suburb s on l.suburb_id = s.suburb_id
-               inner join proptiger_admin_city pac on (s.city_id = pac.city_id and pa.assigned_to = pac.admin_id)
+               inner join proptiger_admin_city pac on (l.city_id = pac.city_id and pa.assigned_to = pac.admin_id)
                inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
                

@@ -43,8 +43,7 @@ $citywiseDone = array();
                     join project_stage_history psh on pa.movement_history_id = psh.history_id
                     where pa.status = 'done' and psh.project_id in(
                         select project_id from resi_project rp join locality l on (rp.locality_id = l.locality_id)
-                        join suburb s on l.suburb_id = s.suburb_id
-                        where s.city_id = $kCityId
+                        where l.city_id = $kCityId
                    )";
         $resExec = mysql_query($qryExec) or die(mysql_query());
         $dataExec = mysql_fetch_assoc($resExec);
@@ -57,12 +56,11 @@ $citywiseDone = array();
 $smarty->assign('citywiseDone',$citywiseDone);
 
 /*******query for project not done************/
- $qryNotDone = "select rp.project_id,pa1.fname,pa1.role,pa1.adminid,pa.updation_time,s.city_id from 
+ $qryNotDone = "select rp.project_id,pa1.fname,pa1.role,pa1.adminid,pa.updation_time,l.city_id from 
                 resi_project rp join project_assignment pa on 
                      rp.movement_history_id = pa.movement_history_id
                     join locality l on rp.locality_id = l.locality_id
-                join suburb s on l.suburb_id = s.suburb_id
-                join city c on s.city_id = c.city_id     
+                join city c on l.city_id = c.city_id     
                 join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
                 inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id

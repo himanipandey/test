@@ -69,8 +69,7 @@
                     LEFT JOIN proptiger_admin B ON A.ADMIN_ID=B.ADMINID
                     LEFT JOIN resi_project C ON A.PROJECT_ID=C.PROJECT_ID
                     inner join locality lo on C.LOCALITY_ID = lo.LOCALITY_ID
-                    inner join ".SUBURB." sub on lo.SUBURB_ID = sub.SUBURB_ID
-                    inner join city D ON D.CITY_ID=sub.CITY_ID 
+                    inner join city D ON D.CITY_ID=lo.CITY_ID 
                     inner join master_project_phases ph ON A.project_phase_id=ph.id
                     inner join master_project_stages st ON A.project_stage_id=st.id
                     inner join project_status_master psm on C.project_status_id = psm.id

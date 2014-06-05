@@ -112,8 +112,6 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                     updation_cycle UC ON RP.UPDATION_CYCLE_ID=UC.UPDATION_CYCLE_ID
                  LEFT JOIN
                      locality L ON RP.LOCALITY_ID = L.LOCALITY_ID
-                 INNER JOIN
-                     suburb sub ON L.SUBURB_ID = sub.SUBURB_ID
                  LEFT JOIN
                      city ct ON sub.CITY_ID = ct.CITY_ID    
                  LEFT JOIN

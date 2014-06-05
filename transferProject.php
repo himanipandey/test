@@ -147,8 +147,7 @@
                 left join  master_project_phases ph on p.project_phase_id = ph.id 
                 left join  master_project_stages st on p.project_stage_id = st.id 
                 left join locality on p.locality_id = locality.locality_id
-                left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id";
+                left join city on locality.city_id = city.city_id";
 
         $QueryMember2 = "Select COUNT(p.PROJECT_ID) CNT,p.PROJECT_PHASE_ID,p.PROJECT_STAGE_ID,
                 ph.name as PROJECT_PHASE, st.name as PROJECT_STAGE 
@@ -156,8 +155,7 @@
                 left join  master_project_phases ph on p.project_phase_id = ph.id 
                 left join  master_project_stages st on p.project_stage_id = st.id 
                 left join locality on p.locality_id = locality.locality_id
-                left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id";
+                left join city on locality.city_id = city.city_id";
 
         $and = " WHERE ";
 

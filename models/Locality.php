@@ -5,7 +5,12 @@ class Locality extends ActiveRecord\Model
 {
     static $table_name = 'locality';
     static function localityList($suburbId) {
-        $locality = Locality::find('all',array('conditions'=>array("suburb_id = $suburbId AND status = 'active'"),'order' => 'label asc'));
+        $select = "select * from locality ";
+        $join = " inner join locality_suburb_mappings lsm on lsm.locality_id=locality.LOCALITY_ID ";
+        $where = " where lsm.suburb_id = '".$suburbId."' ";
+        $query = $select.$join.$where;
+        //$locality = Locality::find('all',array('conditions'=>array("suburb_id = $suburbId AND status = 'active'"),'order' => 'label asc'));
+        $locality = Locality::find_by_sql($query);
         $arrLocality = array();
         foreach ($locality  as $value) {
            $arrLocality[$valuelocality_id] = $value->label;
