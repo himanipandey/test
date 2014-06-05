@@ -230,7 +230,6 @@
                                                                 <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
                                                                 <td width="30%" align="left">
                                                                        <textarea name="txtProjectDesc" rows="10" cols="45"  class ="myTextEditor" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
-                                                                       <input type="hidden" name="txtProjectOldDesc" value="{$txtProjectDescription}" />
                                                                       {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
                                                                        <br/><br/>
                                                                        <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
