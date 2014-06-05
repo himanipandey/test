@@ -141,6 +141,18 @@
                     }
                 }
                 
+                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == UNDER_CONSTRUCTION_ID_1 || $qrySelect->construction_status == UNDER_CONSTRUCTION_ID_1) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
+                    }
+                }
+                
                 if( $pre_launch_date != '' && $expectedCompletionDate !='') {
                     $retdt  = ((strtotime($expectedCompletionDate) - strtotime($pre_launch_date)) / (60*60*24));
                     if( $retdt <= 0 ) {
