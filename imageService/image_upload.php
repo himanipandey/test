@@ -6,7 +6,7 @@ class ImageUpload{
 
     static $required_options = array("object_id", "object", "image_type", "image_path");
     //static $required_options = array("object_id", "object", "s3");
-    static $max_file_size = 6;
+    static $max_file_size = 15;
     static $supported_formats = array("jpg", "png", "gif", "bmp","jpeg","PNG","JPG","JPEG","GIF","BMP");
     //static $s3_bucket = "proptiger-testing";
 

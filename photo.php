@@ -563,7 +563,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
     }
     $smarty->assign( 'photoCSS', 1 );
     $localityType = ImageServiceUpload::$image_types;
-    $smarty->assign( 'localityType', $localityType['locality'] );
+    $smarty->assign( 'localityType', $localityType['landmark'] );
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."upload-photo.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");

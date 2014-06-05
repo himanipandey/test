@@ -173,25 +173,19 @@
                                         ## - desccripion content flag handeling
                                         $cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $localityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'locality' )));					   
                                         if($cont_flag){
-                                                $content_flag = '';
-                                                if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
-                                                        if(strcasecmp($desc,$oldDesc) != 0)
-                                                                $content_flag = 0;								
-                                                }elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR' || $_SESSION['DEPARTMENT'] == 'CONTENT'){
-                                                  $content_flag = ($_POST["content_flag"])? 1 : 0;
-                                                }
+                                                $content_flag = ($_POST["content_flag"])? 1 : 0;                                              
                                                 if(is_numeric($content_flag)){
                                                         $cont_flag = TableAttributes::find($cont_flag[0]->id);
                                                         $cont_flag->updated_by = $_SESSION['adminId'];
                                                         $cont_flag->attribute_value = $content_flag;
                                                         $cont_flag->save();		
                                                 }
-                                        }elseif($_SESSION['DEPARTMENT'] == 'DATAENTRY' && strcasecmp($desc,$oldDesc)!= 0){
+                                        }else{
                                                 $cont_flag = new TableAttributes();
                                                 $cont_flag->table_name = 'locality';
                                                 $cont_flag->table_id = $localityid;
                                                 $cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
-                                                $cont_flag->attribute_value = 0;
+                                                $cont_flag->attribute_value = ($_POST["content_flag"])? 1 : 0;
                                                 $cont_flag->updated_by = $_SESSION['adminId'];
                                                 $cont_flag->save();				
                                         }

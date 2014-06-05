@@ -53,10 +53,17 @@ function chkConfirm()
                    {if $callerMessage != ''}
                         <tr>
                           <td align = "center">
-                        <font color="green">{$callerMessage}</font>
+								<font color="green">{$callerMessage}</font>
                           </td>
                         </tr>
                     {/if}  
+                     {if $mig_msg != ''}
+                        <tr>
+                          <td align = "center">
+								<font color="green">{$mig_msg}</font>
+                          </td>
+                        </tr>
+                    {/if} 
                     <tr>
                       <td>
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">

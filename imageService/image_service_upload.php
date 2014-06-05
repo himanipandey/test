@@ -2,7 +2,9 @@
 
 class ImageServiceUpload{
 
-    static $image_upload_url = "http://dev-api.proptiger-ws.com:8080/data/v1/entity/image";
+
+    static $image_upload_url = IMAGE_SERVICE_URL;
+
     static $valid_request_methods = array("POST", "PUT", "DELETE");
     static $object_types = array("project" => "project",
         "option" => "property",
@@ -102,8 +104,6 @@ class ImageServiceUpload{
             "school" => "school",
             "hospital"  => "hospital",
             "bank" => "bank",
-            "bus_stand" => "bus_stand",
-            "park" => "park",
             "atm" => "atm",
             "restaurant" => "restaurant",
             "gas_station" => "gas_station",
@@ -111,10 +111,13 @@ class ImageServiceUpload{
             "bus_station" => "bus_station",
             "train_station" => "train_station",
             "airport" => "airport",
+            "play_school" => "play_school",
+            "higher_education" => "higher_education",
+            "park" => "park",
             "shopping_mall" => "shopping_mall",
             "grocery_or_supermarket" => "grocery_or_supermarket",
             "office_complex" => "office_complex",
-            "other" => "other",
+           
             
         ),
         "bank" => array("logo" => "logo"));

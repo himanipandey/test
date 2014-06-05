@@ -33,7 +33,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 	define("SEND_EMAIL", TRUE);
 	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
 	define("RESALE_GROUP_EMAIL", "projects@proptiger.com");
-
+    define("IMAGE_SERVICE_URL","http://www.proptiger.com/data/v1/entity/image");
 }
 else{
 	$myDocRoot = dirname(__FILE__);
@@ -80,7 +80,8 @@ else{
     define("CLOUDAGENT_CALL_URL", "http://cloudagent.in/CAServices/PhoneManualDial.php?");
     define("CLOUDAGENT_USER", "proptiger");
     define("CLOUDAGENT_KEY", "KK6553cb21f45e304ffb6c8c92a279fde5");
-    
+
+	define("IMAGE_SERVICE_URL","http://nightly.proptiger-ws.com:8080/data/v1/entity/image");
     define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
 }
