@@ -105,7 +105,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                     $error_msg = "Completion date to be always greater than Pre Launch date";
                 }
          }
-         $fetch_projectDetail = projectDetailById($projectId);
+       /*  $fetch_projectDetail = projectDetailById($projectId);
          if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
             $yearExp = explode("-",$completion_date);
             if( $yearExp[0] == date("Y") ) {
@@ -116,7 +116,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
             else if (intval($yearExp[0]) > intval(date("Y")) ) {
                 $error_msg = "Completion date cannot be greater current month";
             }
-        }
+        }*/
         
         ////phase level check regarding status
 		 $project_status = fetch_project_status($projectId,$construction_status);                    
@@ -126,6 +126,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 		  $projectDetail[0]['PRE_LAUNCH_DATE'] = '';
 	    if( $construction_status == UNDER_CONSTRUCTION_ID_1 ) { 
            $yearExp = explode("-",$launch_date);
+           $yearExp2 = explode("-",$completion_date);
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
                  $error_msg = "Launch date should not be greater than current month in case of Construction Status is Under construction.";
@@ -133,14 +134,51 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
            } 
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
               $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  Under construction.";
+           }elseif( $yearExp2[0] == date("Y") ) {
+               if( intval($yearExp2[1]) > intval(date("m"))) {
+                 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
+               }    
+           } 
+           else if (intval($yearExp2[0]) > intval(date("Y")) ) {
+              $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
            }
-        }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
+        }elseif($construction_status == OCCUPIED_ID_3 || $construction_status == READY_FOR_POSSESSION_ID_4 ){
+			$yearExp = explode("-",$completion_date);
+            if( $yearExp[0] == date("Y") ) {
+                if( intval($yearExp[1]) > intval(date("m"))) {
+                  $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
+                }    
+            } 
+            else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
+            }			
+		}elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
            $error_msg = "Launch date should blank in case of Construction Status is Pre Launched.";
         }elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != '') {
 		  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 
 		}
 		elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['PRE_LAUNCH_DATE'] == '') {
 		   $error_msg = "Project Status can not be Pre Launched in case of Pre Launched Date is blank.";	 
+		}elseif($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4 ){
+			$yearExp = explode("-",$projectDetail[0]['PROMISED_COMPLETION_DATE']);
+            if( $yearExp[0] == date("Y") ) {
+                if( intval($yearExp[1]) > intval(date("m"))) {
+                  $error_msg = "Completion date cannot be greater than the current month in case of Completed Project";
+                }    
+            } 
+            else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                $error_msg = "Completion date cannot be greater than the current month in case of Completed Project";
+            }			
+		}elseif($project_status == UNDER_CONSTRUCTION_ID_1){
+			$yearExp = explode("-",$projectDetail[0]['PROMISED_COMPLETION_DATE']);
+            if( $yearExp[0] == date("Y") ) {
+                if( intval($yearExp[1]) < intval(date("m"))) {
+                  $error_msg = "Completion date cannot be less than the current month in case of Under construction Project";
+                }    
+            } 
+            else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                $error_msg = "Completion date cannot be less than the current month in case of Under construction Project";
+            }			
 		}
 		 //////////////////////////////////////
         
