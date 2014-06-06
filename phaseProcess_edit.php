@@ -247,21 +247,27 @@ if (isset($_POST['btnSave'])) {
 	    if( $construction_status == UNDER_CONSTRUCTION_ID_1 ) { 
            $yearExp = explode("-",$launch_date);
            $yearExp2 = explode("-",$completion_date);
-           if( $yearExp[0] == date("Y") ) {
-               if( intval($yearExp[1]) > intval(date("m"))) {
-                 $error_msg = "Launch date should not be greater than current month in case of Construction Status is Under construction.";
-               }    
-           } 
-           else if (intval($yearExp[0]) > intval(date("Y")) ) {
-              $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  Under construction.";
-           }elseif( $yearExp2[0] == date("Y") ) {
-               if( intval($yearExp2[1]) > intval(date("m"))) {
-                 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
-               }    
-           } 
-           else if (intval($yearExp2[0]) > intval(date("Y")) ) {
-              $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
-           }
+           if($launch_date != ''){
+			   if( $yearExp[0] == date("Y") ) {
+				   if( intval($yearExp[1]) > intval(date("m"))) {
+					 $error_msg = "Launch date should not be greater than current month in case of Construction Status is Under construction.";
+				   }    
+			   } 
+			   else if (intval($yearExp[0]) > intval(date("Y")) ) {
+				  $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  Under construction.";
+			   }
+		   }
+		  
+           if($completion_date != ''){			   	
+			   if( $yearExp2[0] == date("Y") ) {				   
+				   if( intval($yearExp2[1]) < intval(date("m"))) {
+					 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
+				   }    
+			   } 
+			   else if (intval($yearExp2[0]) < intval(date("Y")) ) {
+				  $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
+			   }
+		   }	
         }elseif($construction_status == OCCUPIED_ID_3 || $construction_status == READY_FOR_POSSESSION_ID_4 ){
 			$yearExp = explode("-",$completion_date);
             if( $yearExp[0] == date("Y") ) {

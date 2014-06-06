@@ -127,14 +127,15 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 		  
 		$comp_eff_date = costructionDetail($projectId);
 		$project_completion_date = '';
-		if($completion_date > $comp_eff_date['COMPLETION_DATE'] && $comp_eff_date['PHASE_TYPE'] != 'Logical')
+		if($completion_date > $comp_eff_date['COMPLETION_DATE'])
 		  $project_completion_date = $completion_date;
-		if($completion_date < $comp_eff_date['COMPLETION_DATE'] && $comp_eff_date['PHASE_TYPE'] != 'Logical')
+		if($completion_date < $comp_eff_date['COMPLETION_DATE'])
 		  $project_completion_date = $comp_eff_date['COMPLETION_DATE'];
 		if($project_completion_date == '0000-00-00')
 		  $project_completion_date = '';
 				  
-	    if( $construction_status == UNDER_CONSTRUCTION_ID_1) { 
+			  
+	    if($construction_status == UNDER_CONSTRUCTION_ID_1) { 
            $yearExp = explode("-",$launch_date);
            $yearExp2 = explode("-",$completion_date);
            if($launch_date != ''){
@@ -147,13 +148,14 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 				  $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  Under construction.";
 			   }
 		   }
-           if($completion_date != ''){
-			   if( $yearExp2[0] == date("Y") ) {
-				   if( intval($yearExp2[1]) > intval(date("m"))) {
+		  
+           if($completion_date != ''){			   	
+			   if( $yearExp2[0] == date("Y") ) {				   
+				   if( intval($yearExp2[1]) < intval(date("m"))) {
 					 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
 				   }    
 			   } 
-			   else if (intval($yearExp2[0]) > intval(date("Y")) ) {
+			   else if (intval($yearExp2[0]) < intval(date("Y")) ) {
 				  $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
 			   }
 		   }		
@@ -197,8 +199,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 					$error_msg = "Completion date cannot be less than the current month in case of Under construction Project";
 				}			
 			}
-		 }
-				
+		 }		
 		 //////////////////////////////////////
         
           if($error_msg == ''){
