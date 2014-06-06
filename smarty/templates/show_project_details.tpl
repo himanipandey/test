@@ -183,6 +183,12 @@ function towerSelect(towerId)
 		{
 			flgChk = 1;
 		}
+				isVerifedSupplyMovFlag = "{$isSupplyLaunchVerified}";
+				if(dir != 'backward' && phase == 'Audit1' && isVerifedSupplyMovFlag == 1) {
+                    alert("Supply is not verified!");
+                    return false;
+                }
+                
                 if(dir != 'backward' && phase == 'Audit1' && availabilityOrderChk == 'false') {
                     alert("Supply order should be in descending order!\nCurrent order is "+availOrder+" for bedroom "+bedRoomOrder);
                     return false;
