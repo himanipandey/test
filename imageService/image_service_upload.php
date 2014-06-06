@@ -117,6 +117,9 @@ class ImageServiceUpload{
             "shopping_mall" => "shopping_mall",
             "grocery_or_supermarket" => "grocery_or_supermarket",
             "office_complex" => "office_complex",
+            "road" => "road",
+            "hotel" => "hotel",
+            "commercial_complex" => "commercialComplex"
            
             
         ),
