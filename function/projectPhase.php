@@ -86,7 +86,7 @@ function projectStatusUpdate($projectId){
   }
 	
 }
-function fetch_project_status($projectId,$construction_status = ''){
+function fetch_project_status($projectId,$construction_status = '',$phaseId = ''){
   $no_of_phases = 0;
   $condition = '';
   $project_status = 0;
@@ -97,17 +97,17 @@ function fetch_project_status($projectId,$construction_status = ''){
 	$no_of_phases = mysql_fetch_object($phase_created)->cnt;
 			
   if($no_of_phases > 0){
-	$status_sql = mysql_query("SELECT construction_status FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());	
+	$status_sql = mysql_query("SELECT phase_id,construction_status FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());	
 	$all_status = array();
 	while($row = mysql_fetch_object($status_sql)){
 	  	//updation will goes here
-	  	$all_status[] = $row->construction_status;
+	  	$all_status[$row->phase_id] = $row->construction_status;
 	}
 	
 	if($construction_status){
-		$all_status[] = $construction_status;
+		$all_status[$phaseId] = $construction_status;
 	}
-		
+			
 	if(in_array(1,$all_status)) //under construction	  
 		$project_status = 1;
 	else if(in_array(7,$all_status)) //Launch

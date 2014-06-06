@@ -236,6 +236,11 @@ if (isset($_POST['btnSave'])) {
                    $error_msg = "Launched Unit must be greater than Availability.";
 		 }
 		 ////phase level check regarding status
+		 $project_status = fetch_project_status($projectId,$construction_status,$phaseId);                    
+        if($projectDetail[0]['LAUNCH_DATE'] == '0000-00-00')
+		  $projectDetail[0]['LAUNCH_DATE'] = '';
+		if($projectDetail[0]['PRE_LAUNCH_DATE'] == '0000-00-00')
+		  $projectDetail[0]['PRE_LAUNCH_DATE'] = '';
 	    if( $construction_status == UNDER_CONSTRUCTION_ID_1 ) { 
            $yearExp = explode("-",$launch_date);
            if( $yearExp[0] == date("Y") ) {
@@ -246,23 +251,17 @@ if (isset($_POST['btnSave'])) {
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
               $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  Under construction.";
            }
-        }
-        if( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
+        }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
            $error_msg = "Launch date should blank in case of Construction Status is Pre Launched.";
-        }
-        $project_status = fetch_project_status($projectId,$construction_status);                    
-        if($projectDetail[0]['LAUNCH_DATE'] == '0000-00-00')
-		  $projectDetail[0]['LAUNCH_DATE'] = '';
-		if($projectDetail[0]['PRE_LAUNCH_DATE'] == '0000-00-00')
-		  $projectDetail[0]['PRE_LAUNCH_DATE'] = '';		  
-                    
-        if( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != '') {
+        }elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != '') {
 		  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 
 		}
-		if( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['PRE_LAUNCH_DATE'] == '') {
+		elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['PRE_LAUNCH_DATE'] == '') {
 		   $error_msg = "Project Status can not be Pre Launched in case of Pre Launched Date is blank.";	 
 		}
 		 //////////////////////////////////////
+		 
+		// print " ->>>> ".$error_msg; die;
 		 				
          if( $error_msg == '' ){
             // Update
