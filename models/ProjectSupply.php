@@ -75,7 +75,7 @@ class ProjectSupply extends Objects {
             ':', launched)) as AGG from " . self::table_name() . " 
                s join listings l on (l.id = s.listing_id  
                and l.listing_category = 'Primary' and l.status = 'Active') join resi_project_options o on 
-               (o.options_id = l.option_id) where version = 'Cms' and project_id = '$projectId' and phase_id";
+               (o.options_id = l.option_id) where version = 'PreCms' and project_id = '$projectId' and phase_id";
         if ($phaseId == '0')
             $query .= ' is NULL ';
         else

@@ -183,8 +183,8 @@ function towerSelect(towerId)
 		{
 			flgChk = 1;
 		}
-				isVerifedSupplyMovFlag = "{$isSupplyLaunchVerified}";
-				if(dir != 'backward' && phase == 'Audit1' && isVerifedSupplyMovFlag == 1) {
+				isVerifedSupplyMovFlag = "{$isSupplyLaunchVerified}";				
+				if(dir != 'backward' && phase == 'Audit1' && !isVerifedSupplyMovFlag) {
                     alert("Supply is not verified!");
                     return false;
                 }
