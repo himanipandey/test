@@ -486,6 +486,10 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 								
 					});					
 					############## Transaction End ##############
+					if($ErrorMsg1 == ''){					  
+					  updateD_Availablitiy($projectId); // update D_availability 		
+					}				  
+					
                 }
             }  
 
