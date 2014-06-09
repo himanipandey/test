@@ -160,6 +160,8 @@ if (isset($_REQUEST['delete'])) {
 				mysql_query("DELETE FROM `phase_tower_mappings` WHERE phase_id='$phaseId'");
 				mysql_query("DELETE FROM `d_inventory_prices` WHERE phase_id='$phaseId'");
 				mysql_query("DELETE FROM `d_inventory_prices_tmp` WHERE phase_id='$phaseId'");	
+				
+				ResiProjectPhase::delete_all(array('conditions'=>array("phase_id = ?",$phaseId)));	
 												
 		}catch(Exeception $e){
 		  $del_flag = 0;			  
@@ -168,8 +170,7 @@ if (isset($_REQUEST['delete'])) {
 	    $del_flag = 0;
 	});	
 	if($del_flag){
-		#dependent values updation
-		ResiProjectPhase::delete_all(array('conditions'=>array("phase_id = ?",$phaseId)));		
+		#dependent values updation			
 		$costDetailLatest = costructionDetail($projectId);
 		$qry = "UPDATE resi_project 
 					set 

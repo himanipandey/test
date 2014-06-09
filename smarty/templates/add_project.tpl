@@ -143,11 +143,13 @@
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 					 <form method="post" enctype="multipart/form-data" action = ''>
 							<div>
+							 {if $projectId}	
 							  <tr>
 								  <td colspan=2>
 								    {if count($ErrorMsg['CompletionDateGreater'])>0} <font color="red">{$ErrorMsg['CompletionDateGreater']}</font>{/if}
 								  </td>
 							  </tr>
+							 {/if}
 							   <tr>
                                                                 <td width="30%" align="right"><font color ="red">*</font><b>Project Name :</b> </td>
 								  <td width="30%" align="left">
