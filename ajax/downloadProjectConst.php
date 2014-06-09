@@ -104,7 +104,7 @@ $selectdata = $_POST['dwnld_selectdata'];
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
-    $QueryMember1 = "SELECT p.PROJECT_ID,rb.BUILDER_NAME,p.PROJECT_NAME,city.LABEL AS CITY_NAME, psm.project_status as 
+    $QueryMember1 = "SELECT p.PROJECT_ID,pas.source,pas.creation_time,pa1.fname,rb.BUILDER_NAME,p.PROJECT_NAME,city.LABEL AS CITY_NAME, psm.project_status as 
                     PROJECT_STATUS,
                 locality.LABEL LOCALITY, pas.EXECUTIVE_REMARK, pas.STATUS as ASSIGN_STATUS,uc.LABEL as ASSIGNMENT_CYCLE
                 FROM resi_project p 
@@ -114,6 +114,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                 left join project_status_master psm on p.project_status_id = psm.id
                 left join resi_builder rb on p.builder_id = rb.builder_id
                 left join process_assignment_system pas on p.project_id = pas.project_id
+                left join proptiger_admin  pa1 on pas.assigned_to = pa1.adminid
                 left join updation_cycle uc on pas.updation_cycle_id = uc.updation_cycle_id";
 
     $and = " WHERE p.version='Cms' and ";
@@ -179,7 +180,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
     }
 }
 $arrPropId = array();
-$QueryMember1 = $QueryMember1 . $QueryMember;//die;
+$QueryMember1 = $QueryMember1 . $QueryMember."  and p.status in ('Active' , 'ActiveInCms')";//die;
 
 $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
 $NumRows = mysql_num_rows($QueryExecute);
@@ -198,6 +199,9 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 <td>ASSIGNMENT REMARK</td>
 <td>ASSIGNMENT STATUS</td>
 <td>ASSIGNMENT CYCLE</td>
+<td>SOURCE</td>
+<td>ASSIGN TO</td>
+<td>ASSIGNED ON</td>
 </tr>
 ";
 $cnt = 1;
@@ -222,7 +226,14 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
             
         //else
           //  $status = '';
-        
+        if($ob1['source'] == '')
+            $ob1['source'] = 'NA';
+        if($ob1['fname'] == '')
+            $ob1['fname'] = 'NA';
+        if($executive_remark == '')
+            $executive_remark = 'NA';
+        if($status == '')
+            $status = 'NA';
 	$contents .= "
 	<tr bgcolor='#f2f2f2'>
 	<td>".$cnt."</td>
@@ -235,6 +246,9 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         <td>".$executive_remark."</td>    
 	<td>".$status."</td>       
         <td>".$statusCycle."</td>
+        <td>".$ob1['source']."</td>    
+	<td>".$ob1['fname']."</td>
+        <td>".$ob1['creation_time']."</td> 
 	</tr>
 ";
 	$cnt++;

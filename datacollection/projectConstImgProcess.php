@@ -27,6 +27,7 @@ elseif(isset($_POST['projectIds']) && !empty($_POST['projectIds'])){
     $_SESSION['project-status']['projectIds'] = $_REQUEST['projectIds'];
 }
 
+$currentCycle = currrentCycle();
 if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-status']['city'])){
     if(isset($_SESSION['project-status']['locality']) && !empty($_SESSION['project-status']['locality'])){ 
         $projectsfromDB = getProjectConstListForManagers($_SESSION['project-status']['city'], $_SESSION['project-status']['suburb'], $_SESSION['project-status']['locality']);
@@ -53,107 +54,111 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
     //$projectList = prepareDisplayData($projectsfromDB);
 }
 $arrReDefine = array();
+//echo "<pre>";print_r($projectsfromDB);
 foreach($projectsfromDB as $k=>$v) {
     
     $userNameVal = explode("|",$v['username']);
-    
-    if(!isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
-        
-        $assignedIdVal = explode("|",$v['assigned_to']);
-       if($assignedIdVal[0] == $_SESSION['project-status']['executive']){
+    $expUpdationCycle = explode("|",$v['updation_cycle_id']);
+    if($expUpdationCycle[0] == $currentCycle) {
+        if(!isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
+
+            $assignedIdVal = explode("|",$v['assigned_to']);
+           if($assignedIdVal[0] == $_SESSION['project-status']['executive']){
+                $arrReDefine[$k]['PROJECT_ID'] = $v['PROJECT_ID'];
+                $arrReDefine[$k]['PROJECT_NAME'] = $v['PROJECT_NAME'];
+                $arrReDefine[$k]['BUILDER_NAME'] = $v['BUILDER_NAME'];
+                $arrReDefine[$k]['CITY'] = $v['CITY'];
+                $arrReDefine[$k]['LOCALITY'] = $v['LOCALITY'];
+                $arrReDefine[$k]['LAST_WORKED_AT'] = $v['LAST_WORKED_AT'];
+                $assignedVal = explode("|",$v['ASSIGNED_AT']);
+
+                if(count($assignedVal) == 1) {
+                    $arrReDefine[$k]['assigned_curr'] = $assignedVal[0];
+                $arrReDefine[$k]['assigned_last'] = '';
+                }
+                else{
+                    $arrReDefine[$k]['assigned_curr'] = $assignedVal[0];
+                    $arrReDefine[$k]['assigned_last'] = $assignedVal[1];
+                }
+
+                if(count($userNameVal) == 1){
+                    $arrReDefine[$k]['userName_curr'] = $userNameVal[0];
+                    $arrReDefine[$k]['userName_last'] = '';
+                }  else {
+                    $arrReDefine[$k]['userName_curr'] = $userNameVal[0];
+                    $arrReDefine[$k]['userName_last'] = $userNameVal[1];
+                }
+                $statusVal = explode("|",$v['STATUS']);
+                if(count($statusVal) == 1){
+                    $arrReDefine[$k]['status_curr'] = $statusVal[0];
+                    $arrReDefine[$k]['status_last'] = '';
+                }
+                else{
+                    $arrReDefine[$k]['status_curr'] = $statusVal[0];
+                    $arrReDefine[$k]['status_last'] = $statusVal[1];
+                }
+
+
+                if(count($assignedIdVal) == 1){
+                    $arrReDefine[$k]['assignedId_curr'] = $assignedIdVal[0];
+                    $arrReDefine[$k]['assignedId_last'] = '';
+                }
+                else{
+                    $arrReDefine[$k]['assignedId_curr'] = $assignedIdVal[0];
+                    $arrReDefine[$k]['assignedId_last'] = $assignedIdVal[1];
+                }
+
+
+                $remarkVal = explode("|",$v['REMARK']);
+
+                if(count($remarkVal) == 1) {
+                    $arrReDefine[$k]['remark_curr'] = $remarkVal[0];
+                    $arrReDefine[$k]['remark_last'] = '';
+                }
+                else{
+                    $arrReDefine[$k]['remark_curr'] = $remarkVal[0];
+                    $arrReDefine[$k]['remark_last'] = $remarkVal[1];
+                }
+
+
+                $sourceVal = explode("|",$v['source']);
+                if(count($sourceVal) == 1) {
+                     $arrReDefine[$k]['source_curr'] = $sourceVal[0];
+                     $arrReDefine[$k]['source_last'] = '';
+                }
+                else{
+                     $arrReDefine[$k]['source_curr'] = $sourceVal[0];
+                     $arrReDefine[$k]['source_last'] = $sourceVal[1];
+                }
+           }
+        }else {
             $arrReDefine[$k]['PROJECT_ID'] = $v['PROJECT_ID'];
             $arrReDefine[$k]['PROJECT_NAME'] = $v['PROJECT_NAME'];
             $arrReDefine[$k]['BUILDER_NAME'] = $v['BUILDER_NAME'];
             $arrReDefine[$k]['CITY'] = $v['CITY'];
             $arrReDefine[$k]['LOCALITY'] = $v['LOCALITY'];
-            $arrReDefine[$k]['LAST_WORKED_AT'] = $v['LAST_WORKED_AT'];
             $assignedVal = explode("|",$v['ASSIGNED_AT']);
+            $arrReDefine[$k]['assigned_curr'] = $assignedVal[0];
+            $arrReDefine[$k]['assigned_last'] = $assignedVal[1];
 
-            if(count($assignedVal) == 1) {
-                $arrReDefine[$k]['assigned_curr'] = $assignedVal[0];
-            $arrReDefine[$k]['assigned_last'] = '';
-            }
-            else{
-                $arrReDefine[$k]['assigned_curr'] = $assignedVal[0];
-                $arrReDefine[$k]['assigned_last'] = $assignedVal[1];
-            }
-
-            if(count($userNameVal) == 1){
-                $arrReDefine[$k]['userName_curr'] = $userNameVal[0];
-                $arrReDefine[$k]['userName_last'] = '';
-            }  else {
-                $arrReDefine[$k]['userName_curr'] = $userNameVal[0];
-                $arrReDefine[$k]['userName_last'] = $userNameVal[1];
-            }
+             $arrReDefine[$k]['userName_curr'] = $userNameVal[0];
+            $arrReDefine[$k]['userName_last'] = $userNameVal[1];
             $statusVal = explode("|",$v['STATUS']);
-            if(count($statusVal) == 1){
-                $arrReDefine[$k]['status_curr'] = $statusVal[0];
-                $arrReDefine[$k]['status_last'] = '';
-            }
-            else{
-                $arrReDefine[$k]['status_curr'] = $statusVal[0];
-                $arrReDefine[$k]['status_last'] = $statusVal[1];
-            }
+            $arrReDefine[$k]['status_curr'] = $statusVal[0];
+            $arrReDefine[$k]['status_last'] = $statusVal[1];
 
-
-            if(count($assignedIdVal) == 1){
-                $arrReDefine[$k]['assignedId_curr'] = $assignedIdVal[0];
-                $arrReDefine[$k]['assignedId_last'] = '';
-            }
-            else{
-                $arrReDefine[$k]['assignedId_curr'] = $assignedIdVal[0];
-                $arrReDefine[$k]['assignedId_last'] = $assignedIdVal[1];
-            }
-
-
+            $assignedIdVal = explode("|",$v['assigned_to']);
+            $arrReDefine[$k]['assignedId_curr'] = $assignedIdVal[0];
+            $arrReDefine[$k]['assignedId_last'] = $assignedIdVal[1];
             $remarkVal = explode("|",$v['REMARK']);
-
-            if(count($remarkVal) == 1) {
-                $arrReDefine[$k]['remark_curr'] = $remarkVal[0];
-                $arrReDefine[$k]['remark_last'] = '';
-            }
-            else{
-                $arrReDefine[$k]['remark_curr'] = $remarkVal[0];
-                $arrReDefine[$k]['remark_last'] = $remarkVal[1];
-            }
-
+            $arrReDefine[$k]['remark_curr'] = $remarkVal[0];
+            $arrReDefine[$k]['remark_last'] = $remarkVal[1];
 
             $sourceVal = explode("|",$v['source']);
-            if(count($sourceVal) == 1) {
-                 $arrReDefine[$k]['source_curr'] = $sourceVal[0];
-                 $arrReDefine[$k]['source_last'] = '';
-            }
-            else{
-                 $arrReDefine[$k]['source_curr'] = $sourceVal[0];
-                 $arrReDefine[$k]['source_last'] = $sourceVal[1];
-            }
-       }
-    }else 
-        $arrReDefine[$k]['PROJECT_ID'] = $v['PROJECT_ID'];
-        $arrReDefine[$k]['PROJECT_NAME'] = $v['PROJECT_NAME'];
-        $arrReDefine[$k]['BUILDER_NAME'] = $v['BUILDER_NAME'];
-        $arrReDefine[$k]['CITY'] = $v['CITY'];
-        $arrReDefine[$k]['LOCALITY'] = $v['LOCALITY'];
-        $assignedVal = explode("|",$v['ASSIGNED_AT']);
-        $arrReDefine[$k]['assigned_curr'] = $assignedVal[0];
-        $arrReDefine[$k]['assigned_last'] = $assignedVal[1];
-
-         $arrReDefine[$k]['userName_curr'] = $userNameVal[0];
-        $arrReDefine[$k]['userName_last'] = $userNameVal[1];
-        $statusVal = explode("|",$v['STATUS']);
-        $arrReDefine[$k]['status_curr'] = $statusVal[0];
-        $arrReDefine[$k]['status_last'] = $statusVal[1];
-
-        $assignedIdVal = explode("|",$v['assigned_to']);
-        $arrReDefine[$k]['assignedId_curr'] = $assignedIdVal[0];
-        $arrReDefine[$k]['assignedId_last'] = $assignedIdVal[1];
-        $remarkVal = explode("|",$v['REMARK']);
-        $arrReDefine[$k]['remark_curr'] = $remarkVal[0];
-        $arrReDefine[$k]['remark_last'] = $remarkVal[1];
-
-        $sourceVal = explode("|",$v['source']);
-        $arrReDefine[$k]['source_curr'] = $sourceVal[0];
-        $arrReDefine[$k]['source_last'] = $sourceVal[1];
+            $arrReDefine[$k]['source_curr'] = $sourceVal[0];
+            $arrReDefine[$k]['source_last'] = $sourceVal[1];
+        }
+    }
 }
 $smarty->assign('projectsfromDB',$arrReDefine);
 $projectList = array();
@@ -191,34 +196,35 @@ if(isset($projectList) && $_REQUEST['download'] == 'true'){
     download_xls_file($projectList);
 }
 function download_xls_file($projectList){
-   // echo "<pre>";print_r($_REQUEST);die;
+   // echo "<pre>";print_r($projectList);die;
 
     $filename = "/tmp/data_collection_".time().".xls";
-    $callCenterArr = array();
-    $cntCall = 0;
-    foreach ($projectList as $pkey => $project){
+    $arrReDefine = array();
+    $k = 0;
+    foreach ($projectList as $k11 => $v){
         //code for field data download
         
-            $callCenterArr[$cntCall]['PROJECT_ID'] = $projectList[$pkey]["PROJECT_ID"];
-            $callCenterArr[$cntCall]['PROJECT_NAME'] = $projectList[$pkey]["PROJECT_NAME"];
-            $callCenterArr[$cntCall]['BUILDER_NAME'] = $projectList[$pkey]["BUILDER_NAME"];
-            $callCenterArr[$cntCall]['CITY'] = $projectList[$pkey]["CITY"];
-            $callCenterArr[$cntCall]['LOCALITY'] = $projectList[$pkey]["LOCALITY"];
-
-            $callCenterArr[$cntCall]["ASSIGNED_TO"] = $projectList[$pkey]["userName_curr"];
-            $callCenterArr[$cntCall]["ASSIGNED_AT"] = $projectList[$pkey]["assigned_curr"];
-            $callCenterArr[$cntCall]["STATUS"] = $projectList[$pkey]["status_curr"];
-            $callCenterArr[$cntCall]["REMARK"] = $projectList[$pkey]["remark_curr"];
             
-            $callCenterArr[$cntCall]["SOURCE"] = $projectList[$pkey]["source_curr"];
-            $callCenterArr[$cntCall]["ASSIGNED_AT"] = $projectList[$pkey]["assigned_last"];
-            $callCenterArr[$cntCall]["STATUS LAST"] = $projectList[$pkey]["status_last"];
-            $callCenterArr[$cntCall]["REMARK LAST"] = $projectList[$pkey]["remark_last"];
-            $callCenterArr[$cntCall]["SOURCE"] = $projectList[$pkey]["source"];
+        $arrReDefine[$k]['PROJECT_ID'] = $v['PROJECT_ID'];
+        $arrReDefine[$k]['PROJECT_NAME'] = $v['PROJECT_NAME'];
+        $arrReDefine[$k]['BUILDER_NAME'] = $v['BUILDER_NAME'];
+        $arrReDefine[$k]['CITY'] = $v['CITY'];
+        $arrReDefine[$k]['LOCALITY'] = $v['LOCALITY'];
 
-            $cntCall++;
+        $arrReDefine[$k]['ASSIGNED TO'] = $v['userName_curr'];
+        $arrReDefine[$k]['ASSIGNED ON'] = $v['assigned_curr'];
+        $arrReDefine[$k]['STATUS'] = $v['status_curr'];
+        $arrReDefine[$k]['REMARK'] = $v['remark_curr'];
+        $arrReDefine[$k]['SOURCE'] = $v['source_curr'];
+        
+        $arrReDefine[$k]['LAST ASSIGNMENT'] = $v['userName_last'];
+        $arrReDefine[$k]['LAST ASSIGNED ON'] = $v['assigned_last'];
+        $arrReDefine[$k]['LAST STATUS'] = $v['status_last'];
+        $arrReDefine[$k]['LAST REMARK'] = $v['remark_last'];
+        $arrReDefine[$k]['LAST SOURCE'] = $v['source_last'];  
+        $k++;
     };
-    excel_file_download($callCenterArr, $filename);
+    excel_file_download($arrReDefine, $filename);
 }
 
 function extractPIDs($pidString){

@@ -143,13 +143,6 @@
                  $QueryMember .= $and." PROJECT_NAME LIKE '%".$_REQUEST['project_name']."%'";
                  $and  = ' AND ';
              }
-             
-             if($ActiveValue != '')
-             {
-                 $QueryMember .=  $and." p.STATUS IN('".$ActiveValue."')";
-                 $and  = ' AND ';
-             }
-
              if($StatusValue != '')
              {
                  $QueryMember .=  $and." PROJECT_STATUS_ID IN(".$StatusValue.")";
@@ -184,11 +177,12 @@
                  $QueryMember .= $and." BUILDER_ID = '".$_REQUEST['builder']."'";
                  $and  = ' AND ';
              }
-                 $QueryMember .= $and ." p.version = 'Cms'";
+                 $QueryMember .= $and ." p.version = 'Cms' and p.status in('Active','ActiveInCms')";
         }
         else
         {
-                $QueryMember .= $and. " p.PROJECT_ID IN (".$_REQUEST['projectId'].") AND p.version = 'Cms'";
+                $QueryMember .= $and. " p.PROJECT_ID IN (".$_REQUEST['projectId'].") AND p.version = 'Cms'
+                    and p.status in('Active','ActiveInCms')";
 
         }
         

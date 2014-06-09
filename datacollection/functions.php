@@ -516,7 +516,8 @@ function getProjectConstListForManagers($cityId, $suburbId = '', $localityId = '
          GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
          GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,
          GROUP_CONCAT(case when pa.executive_remark is null then '' else pa.executive_remark end order by pa.ID desc separator '|') REMARK,
-         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source
+         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source,
+         GROUP_CONCAT(case when pa.updation_cycle_id is null then '' else pa.updation_cycle_id end order by pa.ID desc separator '|') updation_cycle_id
          from resi_project rp 
          inner join locality l on rp.locality_id = l.LOCALITY_ID 
          inner join suburb sub on l.suburb_id = sub.suburb_id
@@ -535,7 +536,7 @@ function getProjectConstListForManagers($cityId, $suburbId = '', $localityId = '
         $sql = $sql . " and l.LOCALITY_ID=$localityId ";
     }
     $sql = $sql . " group by pa.project_id order by rp.PROJECT_ID;";
-    //echo $sql;
+   //echo $sql;
     return  $res = dbQuery($sql); 
 }
 
@@ -642,7 +643,8 @@ function getAssignedProjectsFromConstPIDs($pids){
          GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
          GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,
          GROUP_CONCAT(case when pa.executive_remark is null then '' else pa.executive_remark end order by pa.ID desc separator '|') REMARK,
-         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source
+         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source,
+         GROUP_CONCAT(case when pa.updation_cycle_id is null then '' else pa.updation_cycle_id end order by pa.ID desc separator '|') updation_cycle_id
          from resi_project rp 
          inner join locality l on rp.locality_id = l.LOCALITY_ID 
          inner join suburb sub on l.suburb_id = sub.suburb_id
@@ -673,7 +675,8 @@ function getAssignedProjectsForConst($adminId=NULL){
          GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
          GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,
          GROUP_CONCAT(case when pa.executive_remark is null then '' else pa.executive_remark end order by pa.ID desc separator '|') REMARK,
-         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source
+         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source,
+         GROUP_CONCAT(case when pa.updation_cycle_id is null then '' else pa.updation_cycle_id end order by pa.ID desc separator '|') updation_cycle_id
          from resi_project rp 
          inner join locality l on rp.locality_id = l.LOCALITY_ID 
          inner join suburb sub on l.suburb_id = sub.suburb_id
@@ -688,6 +691,13 @@ function getAssignedProjectsForConst($adminId=NULL){
   $sql = $sql . " group by pa.project_id order by rp.PROJECT_ID;";
      $res = dbQuery($sql);
     return $res;
+}
+function currrentCycle(){
+    $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
+    $resUpId = mysql_query($currentUpId) or die(mysql_error());
+    $dataUpId = mysql_fetch_array($resUpId);
+    return $dataUpId['updation_cycle_id'];
+    
 }
 /******functions for project construction image end*********/
 ?>

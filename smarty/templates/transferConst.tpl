@@ -206,7 +206,7 @@ $(function() {
                                       </td>
                                  </tr>
                                   
-                                   <tr bgcolor='#fcfcfc'>
+                                  <!-- <tr bgcolor='#fcfcfc'>
                                       <td align="right" style = "padding-left:20px;" height='35' valign ="top"><b>Active:</b></td>
                                       <td align="left" style = "padding-left:20px;">
                                         <select name="Active[]" id="Active" class="field" multiple>
@@ -216,7 +216,7 @@ $(function() {
                                             <option {if in_array('ActiveInCms',$Active)} selected{/if}  value="ActiveInCms">Active In Cms</option>
                                         </select>
                                       </td>
-                                     </tr>
+                                     </tr>-->
                                      <tr>
                                       <td align="right" style = "padding-left:20px;" height='35'><b>Project Status:</b></td>
                                       <td align="left" style = "padding-left:20px;">
