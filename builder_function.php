@@ -935,9 +935,12 @@ function towerDetail($towerId) {
 
 /* * ***********FUNCTION FOR FETCH LATEST CONSTRUCTION STATUS************** */
 
-function costructionDetail($projectId) {
+function costructionDetail($projectId,$phaseId='',$include=true) {
+   $conditions = '';
+   if(!$include && $phaseId!='')
+     $conditions = " and phase_id != '$phaseId' ";
    $qryPhase = "select * from resi_project_phase
-   where project_id = $projectId and phase_type != 'Logical' and status = 'Active' and version = 'Cms' order by phase_id desc";
+   where project_id = $projectId and phase_type != 'Logical' and status = 'Active' and version = 'Cms' ".$conditions." order by phase_id desc";
    $resPhase = mysql_query($qryPhase);
    $dataPhase = mysql_fetch_assoc($resPhase);
    if(mysql_num_rows($resPhase)>0) {
@@ -946,7 +949,7 @@ function costructionDetail($projectId) {
              phase_type != 'Logical'
            and 
              project_id = $projectId
-           and status = 'Active' and version = 'Cms'
+           and status = 'Active' and version = 'Cms'  ".$conditions." 
           ORDER BY completion_date desc LIMIT 1";
    }
    else{

@@ -86,7 +86,7 @@ function projectStatusUpdate($projectId){
   }
 	
 }
-function fetch_project_status($projectId,$construction_status = '',$phaseId = ''){
+function fetch_project_status($projectId,$construction_status = '',$phaseId = '',$include = true){
   $no_of_phases = 0;
   $condition = '';
   $project_status = 0;
@@ -101,6 +101,8 @@ function fetch_project_status($projectId,$construction_status = '',$phaseId = ''
 	$all_status = array();
 	while($row = mysql_fetch_object($status_sql)){
 	  	//updation will goes here
+	  	if(!$include && $row->phase_id == $phaseId) //does not include given phase_id
+			continue;
 	  	$all_status[$row->phase_id] = $row->construction_status;
 	}
 	
