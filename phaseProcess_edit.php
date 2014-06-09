@@ -64,7 +64,7 @@ if (isset($_REQUEST['delete'])) {
 		}
 		elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail['PRE_LAUNCH_DATE'] == '') {
 		  $error_msg = "Project Status would be Pre Launched after deletion but Pre Launched Date is blank!";	 
-		}elseif($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4 ){
+		}elseif(($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) && $comp_eff_date['COMPLETION_DATE'] != ''){
 		  $yearExp = explode("-",$comp_eff_date['COMPLETION_DATE']);
 		  if( $yearExp[0] == date("Y") ) {
 			if( intval($yearExp[1]) > intval(date("m"))) {
@@ -74,7 +74,7 @@ if (isset($_REQUEST['delete'])) {
 		  else if (intval($yearExp[0]) > intval(date("Y")) ) {
 			$error_msg = "Project Status would be Completed after deletion but Completion date cannot be greater than the current month in case of Completed Project";
 		  }			
-		}elseif($project_status == UNDER_CONSTRUCTION_ID_1){
+		}elseif($project_status == UNDER_CONSTRUCTION_ID_1 && $comp_eff_date['COMPLETION_DATE'] != ''){
 		  $yearExp = explode("-",$comp_eff_date['COMPLETION_DATE']);
 		  if( $yearExp[0] == date("Y") ) {
 			if( intval($yearExp[1]) < intval(date("m"))) {
@@ -413,7 +413,7 @@ if (isset($_POST['btnSave'])) {
 			}
 			elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['PRE_LAUNCH_DATE'] == '') {
 			   $error_msg = "Project Status can not be Pre Launched in case of Pre Launched Date is blank.";	 
-			}elseif($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4 ){
+			}elseif(($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) && $projectDetail[0]['PROMISED_COMPLETION_DATE'] != ''){
 				$yearExp = explode("-",$projectDetail[0]['PROMISED_COMPLETION_DATE']);
 				if( $yearExp[0] == date("Y") ) {
 					if( intval($yearExp[1]) > intval(date("m"))) {
@@ -423,7 +423,7 @@ if (isset($_POST['btnSave'])) {
 				else if (intval($yearExp[0]) > intval(date("Y")) ) {
 					$error_msg = "Completion date cannot be greater than the current month in case of Completed Project";
 				}			
-			}elseif($project_status == UNDER_CONSTRUCTION_ID_1){
+			}elseif($project_status == UNDER_CONSTRUCTION_ID_1 && $projectDetail[0]['PROMISED_COMPLETION_DATE'] != ''){
 				$yearExp = explode("-",$projectDetail[0]['PROMISED_COMPLETION_DATE']);
 				if( $yearExp[0] == date("Y") ) {
 					if( intval($yearExp[1]) < intval(date("m"))) {

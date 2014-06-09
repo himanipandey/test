@@ -178,7 +178,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 			}
 			elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['PRE_LAUNCH_DATE'] == '') {
 			   $error_msg = "Project Status can not be Pre Launched in case of Pre Launched Date is blank.";	 
-			}elseif($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4){
+			}elseif(($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) && $project_completion_date != ''){
 				$yearExp = explode("-",$project_completion_date);
 				if( $yearExp[0] == date("Y") ) {
 					if( intval($yearExp[1]) > intval(date("m"))) {
