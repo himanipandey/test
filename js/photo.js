@@ -42,7 +42,7 @@ $(document).ready(function(){
             maxRows: 10,
             name_startsWith: request.term,
             cityId: window.areaResponse['city'],
-            placeType: $("#imgCat :selected").text(),
+            placeType: $("#imgCat :selected").val(),
           },
           success: function( data ) {
             if(data[0].error){
