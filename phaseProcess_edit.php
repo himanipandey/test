@@ -61,8 +61,7 @@ if (isset($_REQUEST['delete'])) {
 		$project_status = fetch_project_status($projectId,'',$phaseId,false); 
 		if( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail['LAUNCH_DATE'] != '') {
 		  $error_msg = "Project Status would be Pre Launched after deletion but Launch date should be blank/zero in case of Pre Launched Project.";	 
-		}
-		elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail['PRE_LAUNCH_DATE'] == '') {
+		}elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail['PRE_LAUNCH_DATE'] == '') {
 		  $error_msg = "Project Status would be Pre Launched after deletion but Pre Launched Date is blank!";	 
 		}elseif(($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) && $comp_eff_date['COMPLETION_DATE'] != ''){
 		  $yearExp = explode("-",$comp_eff_date['COMPLETION_DATE']);
@@ -165,7 +164,8 @@ if (isset($_REQUEST['delete'])) {
 		}catch(Exeception $e){
 		  $del_flag = 0;			  
 		}
-	  }		
+	  }else
+	    $del_flag = 0;
 	});	
 	if($del_flag){
 		#dependent values updation
@@ -185,7 +185,8 @@ if (isset($_REQUEST['delete'])) {
 	  else
 		header("Location:ProjectList.php?projectId=" . $projectId);	
 	}else{
-	  $error_msg = "Error in deletion of Phase depenedent data. Phase deletion failed!";			
+	  if($error_msg == '')	
+	    $error_msg = "Error in deletion of Phase depenedent data. Phase deletion failed!";			
 	  $smarty->assign("error_msg",$error_msg);	
 	}	
 }
