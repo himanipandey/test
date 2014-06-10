@@ -2375,7 +2375,7 @@ function updatePhaseBookingStatus($projectId){
 			while($row_map = mysql_fetch_object($sql_config_mapping_info)){
 			  $config_mapped_array[$row_map->option_type."-".$row_map->bedrooms] = 	NULL;
 			}
-
+			
 			if(!empty($config_mapped_array) && $sql_max_effective_month){
 			  $max_effective_month = mysql_fetch_object($sql_max_effective_month)->max_effective_month;
 			  if($max_effective_month){		
@@ -2386,6 +2386,7 @@ function updatePhaseBookingStatus($projectId){
 					inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
 					where lst.status = 'Active' and rpo.project_id = '$projectId'
 					and rpo.option_category = 'Logical'
+					 and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID'
 					".$condition."  
 					and effective_month = '$max_effective_month'
 					group by option_type,bedrooms,effective_month"); 
@@ -2398,7 +2399,7 @@ function updatePhaseBookingStatus($projectId){
 					
 			  }	  
 			}
-
+			
 			$total_av = NULL;
 
 			if(!empty($config_mapped_array)){	
@@ -2425,7 +2426,6 @@ function updatePhaseBookingStatus($projectId){
 		}
 		
 	}
-	
 }
 function fetch_project_booking_status($projectId){
 		
