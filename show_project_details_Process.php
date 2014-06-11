@@ -53,11 +53,11 @@ $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
 foreach($optionsDetails as $key => $value) {
-	
-	$listing_price = ListingPrices::find('all',array('conditions'=>
+    
+    $listing_price = ListingPrices::find('all',array('conditions'=>
     array('listing_id = ?', $value->id),"limit" => 1, "order" => "effective_date desc",'select' => 
                     'effective_date'));
-              	
+                
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
@@ -351,7 +351,8 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['LAUNCHED'] = $dataEditedLaunched['launched'];
         }
     }
-}
+} 
+
 //echo "<pre>";
 //print_r($supplyAllArray);
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
@@ -451,8 +452,8 @@ $bankList = ProjectBanks::find('all',array('joins' => $joinbank,'conditions'=>
 $smarty->assign("bankList", $bankList);
 
 if($projectDetails[0]['STATUS'] == 'Inactive'){
-	$project_alias_detail = project_aliases_detail($projectId);
-	$smarty->assign("project_alias_detail", $project_alias_detail);
+    $project_alias_detail = project_aliases_detail($projectId);
+    $smarty->assign("project_alias_detail", $project_alias_detail);
 }
 
 if ($projectDetails[0]['PROJECT_STAGE'] == 'NewProject') {
@@ -509,6 +510,7 @@ $smarty->assign("project_booking_status_id", $project_booking_status[0]->booking
 $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
+
 
 /******code for project comment fetch from commeny history table*****/
 $cycleId = $projectDetails[0]['PROJECT_STAGE'];
@@ -588,7 +590,7 @@ if ($_POST['forwardFlag'] == 'yes') {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
             //updating new remark
             if($currentPhase=='Audit1' && $_POST['newRemarkId'])
-				update_remark_status($_POST['newRemarkId']);
+                update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");
@@ -628,7 +630,7 @@ if ($_POST['forwardFlag'] == 'update') {
             
             //updating new remark
             if($currentPhase=='Audit1' && isset($_POST['newRemarkId']))
-				update_remark_status($_POST['newRemarkId']);
+                update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");
