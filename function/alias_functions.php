@@ -316,15 +316,17 @@ function getHierArr($cid, $subarr1){
 
     //get all localities in the city
     $locArr = Array();
-    $qry = "SELECT a.LOCALITY_ID as id, a.LABEL as label, a.SUBURB_ID as parent_id FROM " . locality . " a
+    $qry = "SELECT a.LOCALITY_ID as id, a.LABEL as label, group_concat(lsm.suburb_id) as parent_id FROM " . locality . " a
               inner join city c
                 on a.CITY_ID = c.CITY_ID
+            inner join locality_suburb_mappings lsm on lsm.locality_id = a.locality_id
              WHERE 
                 c.CITY_ID = '" . $cid . "' 
-            ORDER BY a.LABEL ASC";
+            group by a.LOCALITY_ID ORDER BY a.LABEL ASC";
     $res = mysql_query($qry);
     while ($dataArr = mysql_fetch_array($res))
     {
+
            array_push($locArr, $dataArr);
     }
 
@@ -534,12 +536,17 @@ function child_suburb($p_id, $arr1, $arr2){
     foreach ($arr2 as $k1 => $v1) {       
         
     //if($p_id==10237){echo $v1['parent_id']." ";}
-        if ($v1['parent_id']==$p_id) {
+      $loc_parent_arr = explode(",", $v1['parent_id']);
+      foreach ($loc_parent_arr as $k2 => $v2) {
+        # code...
+      
+        if ($v2==$p_id) {
             //echo $v1['label'];
             
             $v1['type'] = 'locality';
             array_push($returnArr, $v1);
         }
+      }
         
     }
     //print_r($returnArr);
