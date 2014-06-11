@@ -693,7 +693,7 @@ function getAssignedProjectsForConst($adminId=NULL){
     return $res;
 }
 function currrentCycle(){
-    $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
+    $currentUpId = "select updation_cycle_id from updation_cycle where cycle_type = 'construction' order by updation_cycle_id desc limit 1";
     $resUpId = mysql_query($currentUpId) or die(mysql_error());
     $dataUpId = mysql_fetch_array($resUpId);
     return $dataUpId['updation_cycle_id'];
