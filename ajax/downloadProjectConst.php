@@ -106,7 +106,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 
     $QueryMember1 = "SELECT p.PROJECT_ID,pas.source,pas.creation_time,pa1.fname,rb.BUILDER_NAME,p.PROJECT_NAME,city.LABEL AS CITY_NAME, psm.project_status as 
                     PROJECT_STATUS,
-                locality.LABEL LOCALITY, pas.EXECUTIVE_REMARK, pas.STATUS as ASSIGN_STATUS,uc.LABEL as ASSIGNMENT_CYCLE
+                locality.LABEL LOCALITY, pas.EXECUTIVE_REMARK, pas.assign_time, pas.STATUS as ASSIGN_STATUS,uc.LABEL as ASSIGNMENT_CYCLE
                 FROM resi_project p 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
@@ -180,7 +180,8 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
     }
 }
 $arrPropId = array();
-$QueryMember1 = $QueryMember1 . $QueryMember."  and p.status in ('Active' , 'ActiveInCms')";//die;
+$QueryMember1 = $QueryMember1 . $QueryMember."  and p.status in ('Active' , 'ActiveInCms')
+        order by pas.id desc";//die;
 
 $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
 $NumRows = mysql_num_rows($QueryExecute);
@@ -205,8 +206,15 @@ $contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' 
 </tr>
 ";
 $cnt = 1;
+$arrNewPDetail = array();
 while($ob1 = mysql_fetch_assoc($QueryExecute))
 {
+    if(!array_key_exists($ob1['PROJECT_ID'],$arrNewPDetail))
+        $arrNewPDetail[$ob1['PROJECT_ID']] = $ob1;
+}
+//echo "<pre>";
+//print_r($arrNewPDetail);die;
+foreach($arrNewPDetail as $k=>$ob1){
 	$builder = $ob1['BUILDER_NAME'];
 
 	$projid = $ob1['PROJECT_ID'];
@@ -234,6 +242,8 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
             $executive_remark = 'NA';
         if($status == '')
             $status = 'NA';
+        if($ob1['assign_time'] == '0000-00-00 00:00:00')
+            $ob1['assign_time'] = 'NA';
 	$contents .= "
 	<tr bgcolor='#f2f2f2'>
 	<td>".$cnt."</td>
@@ -248,7 +258,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         <td>".$statusCycle."</td>
         <td>".$ob1['source']."</td>    
 	<td>".$ob1['fname']."</td>
-        <td>".$ob1['creation_time']."</td> 
+        <td>".$ob1['assign_time']."</td> 
 	</tr>
 ";
 	$cnt++;

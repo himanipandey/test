@@ -7,7 +7,7 @@ $errorMsg = array();
     $arrExecTeamList = ProptigerAdmin::getAllExecByDepartment($department);
     $smarty->assign("arrExecTeamList", $arrExecTeamList);
 //echo "<pre>";
-//print_r($_REQUEST);die;
+//print_r($_REQUEST);//die;
 //building data for the display when user is coming from project-status page
 if(in_array($_POST['submit'], array('fresh assignement'))){
     $projectIds = $_POST['assign'];
@@ -25,7 +25,6 @@ if(in_array($_POST['submit'], array('fresh assignement'))){
     }
 }
 elseif($_POST['submit'] === 'Assign') {   //assigning projects
-    
     if($_POST['assignmenttype'] === 'fresh assignement'){
         $projectIds = $_POST['projects'];
         $executive = $_POST['executive'];

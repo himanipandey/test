@@ -560,12 +560,11 @@ function getDataEntryExecutive(){
 function assignToDEntryExecutives($projectIds, $executive){
     foreach($projectIds as $pId) {
         $conditions = array("project_id = $pId");
-        $getAssignedProject = ProcessAssignmentSystem::find('all', array("conditions" => $conditions,'order' => 'updation_cycle_id,id desc','limit'=>1)); 
+        $getAssignedProject = ProcessAssignmentSystem::find('all', array("conditions" => $conditions,'order' => 'updation_cycle_id desc,id desc','limit'=>1)); 
         
         $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
         $resUpId = mysql_query($currentUpId) or die(mysql_error());
         $dataUpId = mysql_fetch_array($resUpId);
-        
         if($getAssignedProject[0]->assigned_to == 0){
          $qryUp = "update process_assignment_system set 
                 assigned_to = $executive, assigned_by = '".$_SESSION['adminId']."',
