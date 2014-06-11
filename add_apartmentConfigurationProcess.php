@@ -485,10 +485,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						}					
 								
 					});					
-					############## Transaction End ##############
-					if($ErrorMsg1 == ''){					  
-					  updateD_Availablitiy($projectId); // update D_availability 		
-					}				  
+					############## Transaction End ##############							  
 					
                 }
             }  
@@ -506,6 +503,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     
     if(empty($ErrorMsg) && empty($ErrorMsg2) && $ErrorMsg1 == '')
     {
+		updateD_Availablitiy($projectId); // update D_availability 
+		
         if($flg_edit == 1)
         {
             if($preview == 'true')
