@@ -24,6 +24,19 @@
             <tr>
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
+
+            
+        {/if}
+
+        {if $companyAuth == true}
+            <tr>
+                    <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                      <td align="left" height="22"><A class="leftnav" href="companyList.php"><font color = "#f15a22">Company Management</font></A></td>
+            </tr>
+
+            <tr>
+                    <td class="thinline" align="left" colSpan="2"></td>
+            </tr>
         {/if}
 
         {if $cityAuth == true}
@@ -85,7 +98,22 @@
             <tr>
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
+
+            
+
         {/if}	
+        
+
+        {if $peDealsAuth == true}
+            <tr>
+                    <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                      <td align="left" height="22"><A class="leftnav" href="privateEquity.php"><font color = "#f15a22">Private Equity Deals</font></A></td>
+            </tr>
+
+            <tr>
+                    <td class="thinline" align="left" colSpan="2"></td>
+            </tr>
+        {/if}
         
         {if $imageAuth == true}
             <tr>
