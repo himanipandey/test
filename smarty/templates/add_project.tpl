@@ -143,6 +143,13 @@
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 					 <form method="post" enctype="multipart/form-data" action = ''>
 							<div>
+							 {if $projectId}	
+							  <tr>
+								  <td colspan=2>
+								    {if count($ErrorMsg['CompletionDateGreater'])>0} <font color="red">{$ErrorMsg['CompletionDateGreater']}</font>{/if}
+								  </td>
+							  </tr>
+							 {/if}
 							   <tr>
                                                                 <td width="30%" align="right"><font color ="red">*</font><b>Project Name :</b> </td>
 								  <td width="30%" align="left">
@@ -471,6 +478,7 @@
 								  </td>
 							   </tr> 
 							  {/if}
+							  {if $projectId == ''} 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Status :</b> </td>
 								  <td width="30%" align="left" valign = "top">
@@ -487,6 +495,9 @@
 									  <font color="red">{if $ErrorMsg["txtStatus"] != ''} {$ErrorMsg["txtStatus"]} {/if}<span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
+							  {else}
+							    <input type="hidden" name="Status" value="{$Status}"/>
+							  {/if}
 							   {if $projectId != ''}                                                        
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>

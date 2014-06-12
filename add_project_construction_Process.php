@@ -128,6 +128,32 @@
                         $errorMsg['CompletionDateGreater'] = 'Completion date to be always 6 month greater than launch date';
                     }
                 }
+                 
+                #phase level validations #############                 
+                if($qrySelect->construction_status == OCCUPIED_ID_3 || $qrySelect->construction_status == READY_FOR_POSSESSION_ID_4 ) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) > intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month  in case of Construction Status is completed.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month  in case of Construction Status is completed.";
+                    }
+                }
+                if($qrySelect->construction_status == UNDER_CONSTRUCTION_ID_1) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month in case of Construction Status is Under Construction.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month  in case of Construction Status is Under Construction.";
+                    }
+                }
+                
+                ######################################
                
                 if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
                     $yearExp = explode("-",$expectedCompletionDate);
@@ -138,6 +164,18 @@
                     } 
                     else if (intval($yearExp[0]) > intval(date("Y")) ) {
                         $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+                    }
+                }
+                
+                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == UNDER_CONSTRUCTION_ID_1) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
                     }
                 }
                 

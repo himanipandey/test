@@ -71,6 +71,9 @@
 
         return date_flag && name_flag && flat_bed && villa_bed;
     }
+    function refrech_date(id){
+	  $('#'+id).val("");
+	}
 </script>
 
     <tr>
@@ -122,11 +125,26 @@
 									  <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name. It must be numeric.</span></font>
 								  </td>
 							   </tr>
+							   <tr>
+                                  <td width="20%" align="right"><font color ="red">*</font><b>Construction Status :</b> </td>
+                                  <td width="30%" align="left">                                                   
+                                    <select name="construction_status" id="construction_status" class="fieldState">
+								    	<option value="">Select</option>
+										{foreach from = $projectStatus key = key item = value}
+											<option value="{$key}" {if $key == $construction_status} selected {/if}>{$value} </option>
+										{/foreach}
+									 </select>
+                                   </td>
+                                   <td width="50%" align="left">
+                                      <font color="red"><span id="err_construction_status" style = "display:none;">Select Construction Status</span></font>
+                                   </td>
+                                </tr> 
 
                                 <tr>
                                     <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
                                     <td width="30%" align="left">
                                         <input name="launch_date" value="{$launch_date}" type="text" class="formstyle2" id="launch_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="launch_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                        &nbsp;&nbsp;<img width="15" height="15" id="ref-launch-date" onclick="refrech_date('launch_date')" title="Refresh Launch Date"  src="../images/refresh.png">
                                     </td>
                                     <td width="50%" align="left">
                                         <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span><span id = "err_launch_date2" style = "display:none;">Launched date should be less than the Completion Date.</span></font>
@@ -147,6 +165,7 @@
                                     <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
                                     <td width="30%" align="left">
                                         <input name="completion_date" value="{$completion_date}" type="text" class="formstyle2" id="completion_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="completion_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+                                        &nbsp;&nbsp;<img width="15" height="15" id="ref-comp-date" onclick="refrech_date('completion_date')" title="Refresh Completion Date" src="../images/refresh.png">
                                     </td>
                                     <td width="50%" align="left">
                                         <font color="red"><span id = "err_completion_date" style = "display:none;">Enter Actual Launch Date</span></font>
@@ -157,6 +176,7 @@
                                                 <td width="20%" align="right" valign="top"><b>Sold Out Date  :</b> </td>
                                                 <td width="30%" align="left">
                                                     <input name="sold_out_date" value="{$sold_out_date}" type="text" class="formstyle2" id="sold_out_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="sold_out_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                    &nbsp;&nbsp;<img width="15" height="15" id="ref-sold-date" onclick="refrech_date('sold_out_date')" title="Refresh Sold Date" src="../images/refresh.png">
                                                 </td>
                                                 <td width="50%" align="left">
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
