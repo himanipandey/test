@@ -291,6 +291,60 @@
     </td></tr>
     {/if}
     
+    <!--process assignment for construction image update-->
+    {if $processAssignmentForConstImg == 1}
+    <tr>
+        <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+        <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Construction Image Assignment</font></a></td>
+    </tr>
+    <tr><td colspan='2' style="padding-left:10px;">
+        <table width='100%'>
+            <tr>
+                <td class="thinline" align="left" colspan="2"></td>
+            </tr>
+            {if $processAssignmentLead == 1 && $processAssignmentForConstImg == 1}
+            
+            <tr>
+                <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><A class="leftnav const_label_click" href="javascript:void(0);" title = "Add New Construction Label"><font color = "#f15a22">Construction Label Manage</font></A></td>
+            </tr>
+            <tr>
+                <td class="thinline" align="left" colSpan="2"></td>
+            </tr>
+            
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="transferConst.php"><font color = "#f15a22">Bulk update construction</font></a></td>
+            </tr>
+            <tr>
+                <td class="thinline" align="left" colSpan="2"></td>
+            </tr>
+            
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="project_const_img.php"><font color = "#f15a22">Projects for assignment</font></a></td>
+            </tr>
+            <tr>
+                <td class="thinline" align="left" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="project_const_history.php"><font color = "#f15a22">Projects assignment history</font></a></td>
+            </tr>
+            <tr>
+                <td class="thinline" align="left" colspan="2"></td>
+            </tr>
+            {else if $processAssignmentExec == 1 && $processAssignmentForConstImg == 1}
+                <tr>
+                    <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                    <td align="left" height="22"><a class="leftnav" href="my_projects_const_img.php"><font color = "#f15a22">My Projects</font></a></td>
+                </tr>
+            {/if}            
+        </table>
+    </td></tr>
+    {/if}
+    <!--end for process assignment cunstruction image-->
+    
      {if $executivePerformanceAuth == 1}
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
@@ -374,6 +428,12 @@ jQuery(document).ready(function(){
 		var title =  jQuery(this).attr('title');
 		jQuery(this).attr('href','javascript:void(0)');
 		window.open('AddQuickLabel.php','LabelManagement','height=300,width=800,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
+	});
+        
+        jQuery(".const_label_click").live('click',function(){
+		var title =  jQuery(this).attr('title');
+		jQuery(this).attr('href','javascript:void(0)');
+		window.open('addConstructionLabel.php','ConstructionLabelManagement','height=300,width=800,scrollbars=yes,toolbar=no,left=150,resizable=1,top=150');
 	});
 });
 </script>

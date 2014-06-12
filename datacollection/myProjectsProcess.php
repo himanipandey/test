@@ -16,7 +16,7 @@ require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
 
 if($_POST['submit'] === 'Save'){
     $status = $_POST['status'];
-    $remark = ($_POST['status']==='incomplete')? $_POST['remark'] : NULL;
+    $remark = $_POST['status'];
     saveStatusUpdateByExecutive($_POST['projectid'], $status, $remark);
 }
 
