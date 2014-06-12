@@ -37,9 +37,9 @@
 	        	$data['PLAN_TYPE_MAIN'] = "Project Image";
 	        
 	        if($str=='Main')
-	        	$data['PLAN_TYPE'] = $str;
+	        	$data['PLAN_TYPE'] = "Elevation";
 	        else
-	       	 $data['PLAN_TYPE'] = "Elevation";
+	       	 $data['PLAN_TYPE'] = $str;
 	         
 	        if ($data['PLAN_TYPE_MAIN']=="Project Image" && ($v->priority==0 || $v->priority==null) )
 	        	$data['display_order'] = 5;
