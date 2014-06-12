@@ -7,12 +7,18 @@
     $bulkProjUpdateAuth = isUserPermitted('bulk-project-update', 'read');
     $smarty->assign("bulkProjUpdateAuth", $bulkProjUpdateAuth);
     
+    $companyAuth = isUserPermitted('company', 'manage');
+    $smarty->assign("companyAuth", $companyAuth);
+
     $cityAuth = isUserPermitted('city', 'manage');
     $smarty->assign("cityAuth", $cityAuth);
     
     $bankAuth = isUserPermitted('bank', 'manage');
     $smarty->assign("bankAuth", $bankAuth);
     
+    $peDealsAuth = isUserPermitted('private-equity-deals', 'manage');
+    $smarty->assign("peDealsAuth", $peDealsAuth);
+
     $dailyPerformanceReportAuth = isUserPermitted('daily-performance-report', 'read');
     $smarty->assign("dailyPerformanceReportAuth", $dailyPerformanceReportAuth);
     
@@ -106,7 +112,6 @@
     $myProjectsCallCenterAuth = isUserPermitted('myprojects_callcenter', 'access');
     $smarty->assign("myProjectsCallCenterAuth", $myProjectsCallCenterAuth);
     
-    
     $surveyAuth = isUserPermitted('survey', 'access');
     $smarty->assign("surveyAuth", $surveyAuth);
     
@@ -118,5 +123,24 @@
     
     $executivePerformanceAuth = isUserPermitted('executive-performance', 'access');
     $smarty->assign("executivePerformanceAuth", $executivePerformanceAuth);
+    
+    /****project image construction update*******/
+    $processAssignmentForConstImg = isUserPermitted('construction-image-assignment', 'access');
+    $processAssignmentImg = 0; 
+    if($processAssignmentForConstImg == 1)
+        $processAssignmentImg = 1;
+    $smarty->assign("processAssignmentForConstImg",$processAssignmentImg);
+    
+    $constructionLead = isUserPermitted('construction-img-lead', 'access');
+    $processAssignmentLead = 0; 
+    if($constructionLead == 1)
+        $processAssignmentLead = 1;
+    $smarty->assign("processAssignmentLead",$processAssignmentLead);
+    
+    $constructionExec = isUserPermitted('construction_image_assign_exec', 'access');
+    $processAssignmentExec = 0; 
+    if($constructionExec == 1)
+        $processAssignmentExec = 1;
+    $smarty->assign("processAssignmentExec",$processAssignmentExec);
     
 ?>

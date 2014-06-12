@@ -505,4 +505,198 @@ function getCallCenterExecutive($executives = array()){
     }
     return $result = dbQuery($sql);
 }
+/******functions for project construction image start*********/
+function getProjectConstListForManagers($cityId, $suburbId = '', $localityId = ''){
+   
+    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME,
+         c.LABEL CITY, l.LABEL LOCALITY,
+         pa.UPDATION_TIME as LAST_WORKED_AT,
+         GROUP_CONCAT(case when pa.ASSIGN_TIME is null then '' else pa.ASSIGN_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
+         GROUP_CONCAT(case when pa.STATUS is null then '' else pa.STATUS end order by pa.ID desc separator '|') STATUS,
+         GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
+         GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,
+         GROUP_CONCAT(case when pa.executive_remark is null then '' else pa.executive_remark end order by pa.ID desc separator '|') REMARK,
+         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source,
+         GROUP_CONCAT(case when pa.updation_cycle_id is null then '' else pa.updation_cycle_id end order by pa.ID desc separator '|') updation_cycle_id
+         from resi_project rp 
+         inner join locality l on rp.locality_id = l.LOCALITY_ID 
+         inner join suburb sub on l.suburb_id = sub.suburb_id
+         inner join city c on sub.city_id = c.city_id
+         inner join resi_builder rb on rp.builder_id = rb.builder_id
+         inner join process_assignment_system pa ON rp.PROJECT_ID = pa.PROJECT_ID
+        left join proptiger_admin pa1 on pa.assigned_to 
+         = pa1.adminid 
+         where rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'";
+    if($cityId != '')
+      $sql = $sql." and c.CITY_ID=$cityId";
+    if($suburbId!=''){
+        $sql = $sql . " and sub.SUBURB_ID=$suburbId ";
+    }
+    if($localityId!=''){
+        $sql = $sql . " and l.LOCALITY_ID=$localityId ";
+    }
+    $sql = $sql . " group by pa.project_id order by rp.PROJECT_ID;";
+   //echo $sql;
+    return  $res = dbQuery($sql); 
+}
+
+function getDataEntryExecutive(){
+    $department = "'DATAENTRY'";
+    
+     $sql = "select adminid,fname,username from proptiger_admin pa 
+                where 
+                 pa.department = $department and status = 'Y'";
+        $resSql = mysql_query($sql) or die(mysql_error());
+        $arrAllExec = array();
+        while($data = mysql_fetch_array($resSql)) {
+            $arrAllExec[$data['adminid']]['fname'] = $data['fname'];
+            $arrAllExec[$data['adminid']]['adminid'] = $data['adminid'];
+            $arrAllExec[$data['adminid']]['username'] = $data['username'];
+            
+        }
+    return $result = dbQuery($sql);
+}
+
+function assignToDEntryExecutives($projectIds, $executive){
+    foreach($projectIds as $pId) {
+        $conditions = array("project_id = $pId");
+        $getAssignedProject = ProcessAssignmentSystem::find('all', array("conditions" => $conditions,'order' => 'updation_cycle_id desc,id desc','limit'=>1)); 
+        
+        $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
+        $resUpId = mysql_query($currentUpId) or die(mysql_error());
+        $dataUpId = mysql_fetch_array($resUpId);
+        if($getAssignedProject[0]->assigned_to == 0){
+         $qryUp = "update process_assignment_system set 
+                assigned_to = $executive, assigned_by = '".$_SESSION['adminId']."',
+                updation_time = now(),assign_time = now(),status = 'notAttempted' where project_id = $pId and updation_cycle_id = ".$dataUpId['updation_cycle_id'];
+           $resUp = mysql_query($qryUp) or die(mysql_error());
+        }
+        else {
+            date_default_timezone_set("Asia/Kolkata");        
+            $assignProject = new ProcessAssignmentSystem();
+            $assignProject->updation_cycle_id = $dataUpId['updation_cycle_id'];
+            $assignProject->project_id = $pId;
+            $assignProject->assigned_to = $executive;
+            $assignProject->assigned_by = $_SESSION['adminId'];
+            $assignProject->status = 'notAttempted';
+            $assignProject->assign_time =  date('Y-m-d H:i:s');
+            //$assignProject->source = $getAssignedProject[0]->source;
+            $assignProject->assignment_type = $getAssignedProject[0]->assignment_type;       
+            $assignProject->creation_time = date('Y-m-d H:i:s');
+            $assignProject->save();
+        }
+    }
+    return true;
+    
+}
+
+function getAssignedProjectsConst($adminId=NULL){
+    if(is_null($adminId))$adminId = $_SESSION['adminId'];
+    $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
+    $resUpId = mysql_query($currentUpId) or die(mysql_error());
+    $dataUpId = mysql_fetch_array($resUpId);
+    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, c.LABEL CITY, pa.ASSIGN_TIME 
+        ASSIGNMENT_DATE, pa.STATUS, pa.EXECUTIVE_REMARK REMARK,pa.id from process_assignment_system pa 
+        inner join resi_project rp on rp.PROJECT_ID = pa.PROJECT_ID
+        inner join resi_builder rb on rp.builder_id = rb.builder_id
+        inner join locality l on rp.locality_id = l.locality_id
+        inner join suburb s on l.suburb_id = s.suburb_id
+        inner join city c on s.CITY_ID = c.CITY_ID 
+        where pa.ASSIGNED_TO = ".$adminId." and pa.STATUS = 'notAttempted' and rp.version = 'Cms' 
+            and rp.status in ('ActiveInCms','Active') and pa.updation_cycle_id = ".$dataUpId['updation_cycle_id'];
+    $data =  dbQuery($sql);
+    $arrNewData = array();
+    foreach($data as $val) {
+        $qry = "select * from process_assignment_system where project_id = ".$val['PROJECT_ID']." order by id desc limit 1";
+        $res = mysql_query($qry) or die(mysql_error());
+        $result = mysql_fetch_assoc($res);
+        if($result['ASSIGNED_TO'] == $adminId)
+            $arrNewData[] = $val;
+    }
+    return $arrNewData;
+}
+
+function saveStatusUpdateByExecutiveConst($projectID, $status, $remark, $source, $id){
+    $currentUpId = "select updation_cycle_id from process_assignment_system where id = $id";
+    $resUpId = mysql_query($currentUpId) or die(mysql_error());
+    $dataUpId = mysql_fetch_array($resUpId);
+    
+    $sql = "update process_assignment_system set STATUS = '$status', EXECUTIVE_REMARK = '$remark',
+                 source = '".$source."', updation_time = now() 
+            where id = $id;";
+    $result = dbExecute($sql);
+    return;
+}
+
+function getAssignedProjectsFromConstPIDs($pids){
+    if(count($pids) == 1)
+        $pIdStr = $pids[0];
+    else
+        $pIdStr = implode(",",$pids);
+    $res = array();
+    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME,
+         c.LABEL CITY, l.LABEL LOCALITY,
+         pa.UPDATION_TIME as LAST_WORKED_AT,
+         GROUP_CONCAT(case when pa.ASSIGN_TIME is null then '' else pa.ASSIGN_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
+         GROUP_CONCAT(case when pa.STATUS is null then '' else pa.STATUS end order by pa.ID desc separator '|') STATUS,
+         GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
+         GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,
+         GROUP_CONCAT(case when pa.executive_remark is null then '' else pa.executive_remark end order by pa.ID desc separator '|') REMARK,
+         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source,
+         GROUP_CONCAT(case when pa.updation_cycle_id is null then '' else pa.updation_cycle_id end order by pa.ID desc separator '|') updation_cycle_id
+         from resi_project rp 
+         inner join locality l on rp.locality_id = l.LOCALITY_ID 
+         inner join suburb sub on l.suburb_id = sub.suburb_id
+         inner join city c on sub.city_id = c.city_id
+         inner join resi_builder rb on rp.builder_id = rb.builder_id
+         inner join process_assignment_system pa ON rp.PROJECT_ID = pa.PROJECT_ID
+        left join proptiger_admin pa1 on pa.assigned_to 
+         = pa1.adminid 
+         where rp.status in ('ActiveInCms','Active') and rp.version = 'Cms' and pa.project_id in($pIdStr)";
+    
+   $sql = $sql . " group by pa.project_id order by pa.ID;";
+     $res = dbQuery($sql);
+    return $res;
+}
+
+function getAssignedProjectsForConst($adminId=NULL){
+    if(is_null($adminId))$adminId = $_SESSION['adminId'];
+   
+    $res = array();
+    $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
+    $resUpId = mysql_query($currentUpId) or die(mysql_error());
+    $dataUpId = mysql_fetch_array($resUpId);
+    $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME,
+         c.LABEL CITY, l.LABEL LOCALITY,
+         pa.UPDATION_TIME as LAST_WORKED_AT,
+         GROUP_CONCAT(case when pa.ASSIGN_TIME is null then '' else pa.ASSIGN_TIME end order by pa.ID desc separator '|') ASSIGNED_AT,
+         GROUP_CONCAT(case when pa.STATUS is null then '' else pa.STATUS end order by pa.ID desc separator '|') STATUS,
+         GROUP_CONCAT(case when pa.assigned_to is null then '' else pa.assigned_to end order by pa.ID desc separator '|') assigned_to,
+         GROUP_CONCAT(case when pa1.username is null then '' else pa1.username end order by pa.ID desc separator '|') username,
+         GROUP_CONCAT(case when pa.executive_remark is null then '' else pa.executive_remark end order by pa.ID desc separator '|') REMARK,
+         GROUP_CONCAT(case when pa.source is null then '' else pa.source end order by pa.ID desc separator '|') source,
+         GROUP_CONCAT(case when pa.updation_cycle_id is null then '' else pa.updation_cycle_id end order by pa.ID desc separator '|') updation_cycle_id
+         from resi_project rp 
+         inner join locality l on rp.locality_id = l.LOCALITY_ID 
+         inner join suburb sub on l.suburb_id = sub.suburb_id
+         inner join city c on sub.city_id = c.city_id
+         inner join resi_builder rb on rp.builder_id = rb.builder_id
+         inner join process_assignment_system pa ON rp.PROJECT_ID = pa.PROJECT_ID
+        left join proptiger_admin pa1 on pa.assigned_to 
+         = pa1.adminid  
+         where rp.status in ('ActiveInCms','Active') and rp.version = 'Cms' and 
+         pa.updation_cycle_id = ".$dataUpId['updation_cycle_id']." and pa.assigned_to = $adminId";
+    
+  $sql = $sql . " group by pa.project_id order by rp.PROJECT_ID;";
+     $res = dbQuery($sql);
+    return $res;
+}
+function currrentCycle(){
+    $currentUpId = "select updation_cycle_id from updation_cycle where cycle_type = 'construction' order by updation_cycle_id desc limit 1";
+    $resUpId = mysql_query($currentUpId) or die(mysql_error());
+    $dataUpId = mysql_fetch_array($resUpId);
+    return $dataUpId['updation_cycle_id'];
+    
+}
+/******functions for project construction image end*********/
 ?>
