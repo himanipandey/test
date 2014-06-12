@@ -33,10 +33,13 @@
 	        
 	        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
 	        $str = ucfirst (implode(" ",$arr));
-	        if($str=='Elevation' || $str=='Amenities' || $str=='Main Other')
+	        if($str=='Main' || $str=='Amenities' || $str=='Main Other')
 	        	$data['PLAN_TYPE_MAIN'] = "Project Image";
 	        
-	        $data['PLAN_TYPE'] = $str;
+	        if($str=='Main')
+	        	$data['PLAN_TYPE'] = $str;
+	        else
+	       	 $data['PLAN_TYPE'] = "Elevation";
 	         
 	        if ($data['PLAN_TYPE_MAIN']=="Project Image" && ($v->priority==0 || $v->priority==null) )
 	        	$data['display_order'] = 5;

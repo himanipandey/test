@@ -37,7 +37,7 @@ class ImageServiceUpload{
             "price_list" => "priceList",
             "application_form" => "applicationForm",
             "project_image" => "main",
-            "elevation"=> "elevation",
+            "elevation"=> "main",
             "amenities"=>"amenities", 
             "main_other"=>"mainOther"
         ),
