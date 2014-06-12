@@ -456,7 +456,7 @@ $(document).ready(function(){
 																<input name="floor_to[{$cnt}]" type="text" class="formstyle2" id="floor_to{$cnt}" size="10"  onchange="floor_change_to({$cnt})" />
 														</div>
 														{/if}
-														{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
+														{if $ImageDataListingArr[data].PLAN_TYPE_MAIN == 'Project Image'}
 															Display Order:&nbsp;&nbsp;
 															<select name= "txtdisplay_order[{$cnt}]" >
 																{foreach from=$display_order_div key=keyss item=datass}
