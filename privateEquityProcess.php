@@ -1,6 +1,6 @@
 <?php
 
-$peList = Company::getCompanyByType("PrivateEquity"); print_r($peList);
+$peList = Company::getCompanyByType("PrivateEquity");
 $smarty->assign("peList", $peList);
 $builderList = ResiBuilder::ProjectSearchBuilderEntityArr();
 $smarty->assign("builderList", $builderList);
