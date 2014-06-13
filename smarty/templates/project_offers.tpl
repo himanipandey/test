@@ -82,34 +82,33 @@ function archieved_offers(project_id)
 							  <table>
 								<tr>
 								  <td>
-								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months" onclick="populate_offer_desc()" {if is_numeric($offer_period)}checked{/if} />
-								    <input type="text" size="2"  maxlength="2" id="no_emi_Months" name="no_emi_Months" onkeyup="populate_offer_desc()" style="width:50px" onkeypress='return isNumberKey(event)' value="{if is_numeric($offer_period)}{$offer_period}{/if}"/>
+								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months"  {if is_numeric($offer_period)}checked{/if} />
+								    <input type="text" size="2"  maxlength="2" id="no_emi_Months" name="no_emi_Months" onkeyup="$('#btnSave').attr('disabled',true)" style="width:50px" onkeypress='return isNumberKey(event)' value="{if is_numeric($offer_period)}{$offer_period}{/if}"/>
 								    Months 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if} onclick="populate_offer_desc()"/> Till Possession
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if} /> Till Possession
 								  </td>
 								</tr>
 								<tr>
 								<td>
-								    <b>&nbsp;&nbsp;To Be Paid Now : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="percent" name="no_emi_price" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if} /> 
-								    <input type="text" size="3"  maxlength="3" id="no_emi_price_emiPer" name="no_emi_price_emiPer" onkeyup="populate_offer_desc()" style="width:50px" onkeypress='return isNumberKey(event)' value="{if $offer_price_type=='Percent'}{$offer_price}{/if}"/>
+								    <b>&nbsp;&nbsp;To Be Paid Now : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="percent" name="no_emi_price"  {if $offer_price_type=='Percent'}checked{/if} /> 
+								    <input type="text" size="3"  maxlength="3" id="no_emi_price_emiPer" name="no_emi_price_emiPer" onkeyup="$('#btnSave').attr('disabled',true)" style="width:50px" onkeypress='return isNumberKey(event)' value="{if $offer_price_type=='Percent'}{$offer_price}{/if}"/>
 								    Percent 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} onclick="populate_offer_desc()"/>
-								    <input type="text" id="no_emi_price_emiDeci" name="no_emi_price_emiDeci" style="width:50px" onKeyUp="populate_offer_desc()" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
-								     <select id="no_emi_price_emiUnit" name="no_emi_price_emiUnit"  onclick="populate_offer_desc()">
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} />
+								    <input type="text" id="no_emi_price_emiDeci" name="no_emi_price_emiDeci" style="width:50px" onKeyUp="$('#btnSave').attr('disabled',true)" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
+								     <select id="no_emi_price_emiUnit" name="no_emi_price_emiUnit"  >
 									  <option value="Lakhs"  {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
 									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
-									  <option value="Thousands" {if $priceDeciUnit=='Thousands'}selected{/if} >Thousands</option>
-								    </select>
+									 </select>
 								  </td>
 								</tr>
 								<tr>
 								  <td>
-								    <b>Special BSP : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_emi_special_bsp"  value="special_bsp" onclick="populate_offer_desc()" {if is_numeric($bsp)}checked{/if} />
-								    <input type="text"  id="no_emi_bsp" size="10"  maxlength="10" name="no_emi_bsp" onkeyup="populate_offer_desc()" style="width:50px" onkeypress='return isNumberKey(event)' value="{if is_numeric($bsp)}{$bsp}{/if}"/>
+								    <b>Special BSP : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_emi_special_bsp"  value="special_bsp"  {if is_numeric($bsp)}checked{/if} />
+								    <input type="text"  id="no_emi_bsp" size="10"  maxlength="10" name="no_emi_bsp" onkeyup="$('#btnSave').attr('disabled',true)" style="width:50px" onkeypress='return isNumberKey(event)' value="{if is_numeric($bsp)}{$bsp}{/if}"/>
 								  </td>
 								  <td>&nbsp;</td>
 								</tr>
@@ -137,13 +136,13 @@ function archieved_offers(project_id)
 						      <table>
 							    <tr>
 								  <td>
-									  <input type="checkbox" {if in_array("PLC",$discount_on)}checked{/if} name="nac_discount_on[]"  title="PLC" id="nac_plc" value="PLC" onclick="populate_offer_desc()"/>PLC <br/>
-									  <input type="checkbox"  {if in_array("Parking",$discount_on)}checked{/if}  title="Parking" name="nac_discount_on[]" id="nac_parking" value="Parking" onclick="populate_offer_desc()"/>Parking <br/>
-									  <input type="checkbox"  {if in_array("ClubMembership",$discount_on)}checked{/if} title="Club Membership" name="nac_discount_on[]" id="nac_clubMembership" value="ClubMembership" onclick="populate_offer_desc()"/>Club Membership <br/>
-									  <input type="checkbox"  {if in_array("GymMembership",$discount_on)}checked{/if}  title="Gym Membership" name="nac_discount_on[]" id="nac_gymMembership" value="GymMembership" onclick="populate_offer_desc()" />Gym Membership <br/>
-									  <input type="checkbox"  {if in_array("Other",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_other" value="Other" onclick="populate_offer_desc()"/>Other <br/>
+									  <input type="checkbox" {if in_array("PLC",$discount_on)}checked{/if} name="nac_discount_on[]"  title="PLC" id="nac_plc" value="PLC" onclick="$('#btnSave').attr('disabled',true)"/>PLC <br/>
+									  <input type="checkbox"  {if in_array("Parking",$discount_on)}checked{/if}  title="Parking" name="nac_discount_on[]" id="nac_parking" value="Parking" onclick="$('#btnSave').attr('disabled',true)"/>Parking <br/>
+									  <input type="checkbox"  {if in_array("ClubMembership",$discount_on)}checked{/if} title="Club Membership" name="nac_discount_on[]" id="nac_clubMembership" value="ClubMembership" onclick="$('#btnSave').attr('disabled',true)"/>Club Membership <br/>
+									  <input type="checkbox"  {if in_array("GymMembership",$discount_on)}checked{/if}  title="Gym Membership" name="nac_discount_on[]" id="nac_gymMembership" value="GymMembership"  onclick="$('#btnSave').attr('disabled',true)" />Gym Membership <br/>
+									  <input type="checkbox"  {if in_array("Other",$discount_on)}checked{/if}  name="nac_discount_on[]" id="nac_other" value="Other" onclick="$('#btnSave').attr('disabled',true)" />Other <br/>
 									  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<input type="text" name="nac_other_txt" id="nac_other_txt" style="width:300px;{if $other_text} display:block{else}display:none{/if}" onkeyup="populate_offer_desc()" value="{$other_text}" />
+										<input type="text" name="nac_other_txt" id="nac_other_txt" style="width:300px;{if $other_text} display:block{else}display:none{/if}" onkeyup="$('#btnSave').attr('disabled',true)" value="{$other_text}" />
 								  </td>
 								</tr>
 							  </table>
@@ -152,25 +151,24 @@ function archieved_offers(project_id)
 						      <table>
 							    <tr>
 							      <td>
-									  <b><font color="red">*</font>PriceDiscount Amount: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pd_price" value="percent" onclick="populate_offer_desc()" {if $offer_price_type=='Percent'}checked{/if} />
-									  <input type="text" size="3"  maxlength="3" name="pd_price_emiPer" id="pd_price_emiPer" onkeyup="populate_offer_desc()" style="width:50px" onkeypress='return isNumberKey(event)' value="{if $offer_price_type=='Percent'}{$offer_price}{/if}"/> 
+									  <b><font color="red">*</font>PriceDiscount Amount: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pd_price" value="percent"  {if $offer_price_type=='Percent'}checked{/if} />
+									  <input type="text" size="3"  maxlength="3" name="pd_price_emiPer" id="pd_price_emiPer" onkeyup="$('#btnSave').attr('disabled',true)" style="width:50px" onkeypress='return isNumberKey(event)' value="{if $offer_price_type=='Percent'}{$offer_price}{/if}"/> 
 								   Percent 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;<input type="radio" name="pd_price" value="deci" onclick="populate_offer_desc()" {if $offer_price_type=='Absolute'}checked{/if} />
-								    <input type="text" name="pd_price_emiDeci" id="pd_price_emiDeci" style="width:50px" onkeyup="populate_offer_desc()" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
-								     <select id="pd_price_emiUnit" name="pd_price_emiUnit" onchange="populate_offer_desc()">
-									  <option value="Hundreds" {if $priceDeciUnit=='Hundreds'}selected{/if} >Hundreds</option>
+								    &nbsp;&nbsp;<input type="radio" name="pd_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} />
+								    <input type="text" name="pd_price_emiDeci" id="pd_price_emiDeci" style="width:50px" onkeyup="$('#btnSave').attr('disabled',true)" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
+								     <select id="pd_price_emiUnit" name="pd_price_emiUnit" onchange="$('#btnSave').attr('disabled',true)">
+									  <option value="" >Select</option>	 
 									  <option value="Lakhs" {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
-									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
-									  <option value="Thousands" {if $priceDeciUnit=='Thousands'}selected{/if} >Thousands</option>
+									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>						
 								    </select>
 							      </td>
 							    </tr>
 							    <tr>
 							      <td>
 									  <b>PriceDiscount On: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									  <select id="pd_on" name="pd_on" onchange="populate_offer_desc()">
+									  <select id="pd_on" name="pd_on" onchange="$('#btnSave').attr('disabled',true)">
 										<option value="">--Select--</option>  
 									    <option value="BSP" {if ("BSP"==$discount_on[0])}selected{/if} >BSP</option>
 									    <option value="PLC" {if ("PLC"==$discount_on[0])}selected{/if}>PLC</option>
@@ -182,7 +180,7 @@ function archieved_offers(project_id)
 									  </select>
 									   <br/>
 									  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									  <input type="text" name="pd_other_txt" id="pd_other_txt"  style="width:300px;{if $other_text} display:block{else}display:none{/if}" value="{$other_text}" onkeyup="populate_offer_desc()"/>
+									  <input type="text" name="pd_other_txt" id="pd_other_txt"  style="width:300px;{if $other_text} display:block{else}display:none{/if}" value="{$other_text}" onkeyup="$('#btnSave').attr('disabled',true)"/>
 							      </td>
 							    </tr>							   
 						      </table>
@@ -192,7 +190,7 @@ function archieved_offers(project_id)
 						 <tr>
 						   <td width="20%" align="right" ><font color = "red">*</font>Offer Validity Date : </td>
 						   <td>
-							  <input onchange="populate_offer_desc()" value="{$offer_date}" name="offer_date" type="text" class="formstyle2" id="offer_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="offer_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+							  <input onchange="$('#btnSave').attr('disabled',true)" value="{$offer_date}" name="offer_date" type="text" class="formstyle2" id="offer_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="offer_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
 						   </td>
 						   <td>&nbsp;</td>
 					    </tr>
@@ -200,6 +198,7 @@ function archieved_offers(project_id)
                           <td width="20%" align="right" ><font color = "red">*</font>Description : </td>
                             <td width="30%" align="left">
 								<textarea name="offerDesc" id="offerDesc" rows="5" cols="50">{$offer_desc}</textarea>
+								<img src="../refresh.png" style="cursor:pointer;position:relative;top:-25px;left:20px" onclick="populate_offer_desc();$('#btnSave').attr('disabled',false)"/>
 							</td>
                             <td>&nbsp;</td>
 						</tr>
@@ -460,12 +459,9 @@ function archieved_offers(project_id)
 		  $('#pd_other_txt').hide();
 	  })
 	 	 
-	  $('#offerDesc').focusin(function(){
-		populate_offer_desc();
-	  });
-	  
+	 	  
 	  $('#pd_date').click(function(){
-		$(this).val("");populate_offer_desc();  
+		$(this).val("");
 	  });
 	  
 	  //delete offer
