@@ -91,7 +91,7 @@ class ProjectSupply extends Objects {
             pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type,ls.id as listing_id
             from 
              " . self::table_name() . " ps 
-             inner join " . ProjectAvailability::table_name() . " pa on (ps.id=pa.project_supply_id and ps.version = 'Cms')
+             inner join " . ProjectAvailability::table_name() . " pa on (ps.id=pa.project_supply_id and ps.version = 'PreCms')
              inner join listings ls on ps.listing_id = ls.id
              inner join resi_project_options rpo on rpo.options_id = ls.option_id    
              inner join 
@@ -100,7 +100,7 @@ class ProjectSupply extends Objects {
                     on ps.id=pa.project_supply_id
                     inner join listings ls on (ps.listing_id = ls.id and ls.listing_category = 'Primary' and ls.status = 'Active')  
                     left join " . ResiProjectPhase::table_name() . " rpp on ls.phase_id = rpp.PHASE_ID 
-                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'Cms' and rpp.status = 'Active' group by ps.id
+                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'PreCms' and rpp.status = 'Active' group by ps.id
                  ) t 
                 on ps.id=t.id and pa.effective_month=t.mon 
              left join " . ResiProjectPhase::table_name() . "  rpp on (ls.phase_id = rpp.PHASE_ID and rpp.version = 'Cms')
@@ -110,11 +110,11 @@ class ProjectSupply extends Objects {
                 ps.launched, pa.availability, pa.comment, pa.effective_month, 
                 rpo.option_type as project_type,ls.id as listing_id 
             from 
-                project_supplies ps left join project_availabilities pa on (ps.id=pa.project_supply_id and ps.version = 'Cms')
+                project_supplies ps left join project_availabilities pa on (ps.id=pa.project_supply_id and ps.version = 'PreCms')
             inner join listings ls on (ps.listing_id = ls.id  and ls.listing_category = 'Primary' and ls.status = 'Active')          
             left join resi_project_phase rpp on (ls.phase_id = rpp.PHASE_ID)
             inner join resi_project_options rpo on rpo.options_id = ls.option_id
-          where pa.id is null and ps.version = 'Cms' and rpp.project_id = $projectId and rpp.version = 'Cms' and rpp.status = 'Active'";
+          where pa.id is null and ps.version = 'PreCms' and rpp.project_id = $projectId and rpp.version = 'Cms' and rpp.status = 'Active'";
         $data = self::find_by_sql($query);
         foreach ($data as $value) {
             $entry = array();

@@ -343,7 +343,7 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['BOOKING_STATUS_ID'] = $vLast['BOOKING_STATUS_ID'];
             
             $qryEditedLaunched = "select supply,launched from project_supplies
-                where listing_id = ".$vLast['LISTING_ID']." and version = 'Website'";
+                where listing_id = ".$vLast['LISTING_ID']." and version = 'Cms'";
             $resEditedLaunched = mysql_query($qryEditedLaunched) or die(mysql_error());
             $dataEditedLaunched = mysql_fetch_assoc($resEditedLaunched);
             $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_FLATS'] = $dataEditedLaunched['supply'];
