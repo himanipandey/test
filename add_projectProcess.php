@@ -1,7 +1,7 @@
 <?php        
 $BuilderDataArr	= ResiBuilder::ProjectSearchBuilderEntityArr();
 $CityDataArr = City::CityArr();
-$ProjectTypeArr	= ResiProjectType::ProjectTypeArr();
+
 $BankListArr = BankList::arrBank();
 $projectStatus = ResiProject::projectStatusMaster();
 $allTownships = Townships::getAllTownships();
@@ -11,7 +11,7 @@ $getPowerBackupTypes = PowerBackupTypes::getPowerBackupTypes();
 include_once('./function/locality_functions.php');
 $smarty->assign("BuilderDataArr",$BuilderDataArr);
 $smarty->assign("CityDataArr",$CityDataArr);
-$smarty->assign("ProjectTypeArr",$ProjectTypeArr);
+
 $smarty->assign("BankListArr",$BankListArr);
 $smarty->assign("projectStatus",$projectStatus);
 $smarty->assign("allTownships",$allTownships);

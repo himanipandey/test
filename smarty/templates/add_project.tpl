@@ -398,14 +398,28 @@
 									  <font color="red">{if $ErrorMsg["txtSource"] != ''} {$ErrorMsg["txtSource"]} {/if}<span id = "err_project_source" style = "display:none;">Please enter project source of information!</span></font>
 								  </td>
 							   </tr>
-								
+							   <tr>
+                                                                <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
+                                                                    <select name="residential" id="residential" class="residential" onchange = "projectTypeUpdate(this.value);">
+                                                                            <option value="residential" {if $residential == 'residential'} selected = selected {/if}>Residential </option>
+                                                                            <option value="nonResidential" {if $residential == 'nonResidential'} selected = selected {/if}>Non Residential </option>
+                                                                    </select>
+
+                                                                </td>
+                                                                <td width="50%" align="left"><font color="red"></font></td>
+							   </tr>	
 							    <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project type :</b> </td>
 								  <td width="30%" align="left">
 									<select name = "project_type">
 										<option value =''>Project Type</option>
-										{foreach from=$ProjectTypeArr key=k item=v}
-										<option value = "{$k}" {if $k == $project_type} selected {/if} >{ucwords($v|lower)|replace:'_':' '}</option>
+										{foreach from=$arrResidentialType key=k item=v}
+                                                                                    
+                                                                                    <option {if $k == $project_type} selected {/if} {if $residential == 'nonResidential'}style = "display:none;"{/if} class="residentialCls" value = "{$k}" >{ucwords($v|lower)|replace:'_':' '}</option>
+										{/foreach}
+                                                                                
+                                                                                {foreach from=$arrCommercialType key=kComm item=vComm}
+                                                                                    <option {if $kComm == $project_type} selected {/if} {if $residential != 'nonResidential'}style = "display:none;"{/if} class="nonResidentialCls" value = "{$kComm}">{ucwords($vComm|lower)|replace:'_':' '}</option>
 										{/foreach}
 									</select>
 								  </td>
@@ -706,21 +720,6 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-                                                           
-                                                         
-							   <tr>
-                                                                <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
-
-                                                                    <select name="residential" id="residential" class="residential">
-                                                                            <option value="">Select </option>
-                                                                            <option value="residential" {if $residential == 'residential'} selected = selected {/if}>Residential </option>
-                                                                            <option value="nonResidential" {if $residential == 'nonresidential'} selected = selected {/if}>Non Residential </option>
-                                                                    </select>
-
-                                                                </td>
-                                                                <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-
 							   <tr>
                                                                 <td width="20%" align="right" valign ="top"><b>Township:</b> </td><td width="30%" align="left">
                                                                     <select name = "township">
@@ -804,4 +803,15 @@
             showsTime	  :	true
         });
     });
+    function projectTypeUpdate(projectTypeChange) {
+       if(projectTypeChange == 'nonResidential') {
+          $(".nonResidentialCls").show();
+          $(".residentialCls").hide();
+       }
+       else {
+          $(".nonResidentialCls").hide();
+          $(".residentialCls").show();
+       }
+       
+    }
 </script>
