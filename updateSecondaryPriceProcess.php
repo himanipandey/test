@@ -13,12 +13,11 @@
          $year = $_REQUEST['year'];
          $month = $_REQUEST['month'];
          $phaseId = $_REQUEST['phaseSelect'];
-         $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId, $phaseId, $effectiveDt);
-      
-       
-    }   // die;
+         $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId, $phaseId, $effectiveDt);       
+         $smarty->assign("arrBrokerPriceByProject", $arrBrokerPriceByProject);        
+    }  
     if(isset($_REQUEST['submit'])){ //code start for update price
-    
+       
 		$minPrice = $_REQUEST['minPrice'];
         $maxPrice = $_REQUEST['maxPrice'];
         $brokerId  = $_REQUEST['brokerId'];
@@ -78,10 +77,10 @@
 			ProjectSecondaryPrice::transaction(function(){
 				global $attributes,$errorPrice;
 				foreach($attributes as $key=>$attribute){
-					$res = ProjectSecondaryPrice::insertUpdate($attribute);
-				}
+					$res = ProjectSecondaryPrice::insertUpdate($attribute,$_REQUEST['delete']);
+				}				
 				if($res)
-					$errorPrice = "<font color = 'green'>Price has been inserted successfully!</font>";
+					$errorPrice = "<font color = 'green'>Prices has been updated successfully!</font>";
 				else
 					$errorPrice = "<font color = 'red'>Effective Date must be valid and greater than or equal to 2013-08-01 !</font>";
 			});
@@ -96,10 +95,13 @@
                 else
                     $errorPrice = "<font color = 'red'>Min/Max price cant blank!</font>";
         }
-        $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId, $phaseId, $oldEffectiveDate);
-        $smarty->assign("arrMinPrice",  $arrMinPrice);
-        $smarty->assign("arrMaxPrice", $arrMaxPrice);
-        $smarty->assign("arrMeanPrice", $arrMeanPrice);
+        $arrBrokerPriceByProject = getBrokerLatestPriceByProject($projectId, $brokerId, $phaseId, $oldEffectiveDate);          
+        $smarty->assign("arrBrokerPriceByProject", $arrBrokerPriceByProject);
+        if(!isset($_REQUEST['delete'])){
+		  $smarty->assign("arrMinPrice",  $arrMinPrice);
+          $smarty->assign("arrMaxPrice", $arrMaxPrice);
+          $smarty->assign("arrMeanPrice", $arrMeanPrice);
+        }
         $smarty->assign("errorPrice", $errorPrice);
     }
     $smarty->assign("brokerId", $brokerId);
@@ -131,7 +133,7 @@
      $projectDetails = array();
      $projectDetails = projectDetailById($projectId);
      $smarty->assign("projectDetails", $projectDetails);
-     $smarty->assign("arrBrokerPriceByProject", $arrBrokerPriceByProject);
+    
 
      $currentYear= date('Y');
      $startYear  = $currentYear-2;

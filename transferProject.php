@@ -121,13 +121,12 @@
 
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '' OR $updateRemark !='')
     {
-		$project_name= $_REQUEST['project_name'];
-
+	$project_name= $_REQUEST['project_name'];
         $smarty->assign("locality", $locality);
         $smarty->assign("phase", $phase);
         $smarty->assign("updationCycle", $updationCycle);
         $smarty->assign("stage", $stage);
-
+        
         if($city != '')
         { 
 			$getLocality = Array();
@@ -271,6 +270,9 @@
         $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
     }
     
+    $assignPhase = $_REQUEST['updatePhase'];
+    $expPhase = explode("|",$assignPhase);
+    
     if($updateRemark != '' && trim($_POST['bulkRemark']) != '')
     {
 	  	$arrPropId = array();
@@ -295,8 +297,7 @@
           CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name'],$ProjectDetail->updation_cycle_id); 
 		} 
        
-	}
-	
+    }
     if($transfer != '')
     {
         $arrPropId = array();
@@ -393,7 +394,6 @@
         }
         exec("/usr/bin/php ".strval(dirname(__FILE__))."/cron/migrateProjects.php  > /dev/null 2>/dev/null &");
     }
-
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
     {
         $QueryExecute = mysql_query($QueryMember2) or die(mysql_error());

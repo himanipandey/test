@@ -427,7 +427,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $ErrorMsg['launchDatePrices'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
             }*/
       }      
-       if( $Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4 ) {
+       if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && $projectId == '' && $eff_date_to_prom != '') {
            $yearExp = explode("-",$eff_date_to_prom);
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
@@ -436,6 +436,28 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            } 
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
                $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+           }
+       }
+       if( $Status == UNDER_CONSTRUCTION_ID_1 && $projectId == '' && $eff_date_to_prom != '') {
+           $yearExp = explode("-",$eff_date_to_prom);
+           if( $yearExp[0] == date("Y") ) {
+               if( intval($yearExp[1]) < intval(date("m"))) {
+                 $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be less than current month in case of Under Construction Project.";
+               }    
+           } 
+           else if (intval($yearExp[0]) < intval(date("Y")) ) {
+               $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be less than current month in case of Under Construction Project.";
+           }
+       }
+       if( $Status == UNDER_CONSTRUCTION_ID_1 && $projectId != '' && $completionDate != '') {
+           $yearExp = explode("-",$completionDate);
+           if( $yearExp[0] == date("Y") ) {
+               if( intval($yearExp[1]) < intval(date("m"))) {
+                 $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be less than current month in case of Under Construction Project.";
+               }    
+           } 
+           else if (intval($yearExp[0]) < intval(date("Y")) ) {
+               $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be less than current month in case of Under Construction Project.";
            }
        }
        
@@ -633,6 +655,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->launch_date = $eff_date_to;
                $phase->status = 'Active';
                $phase->booking_status_id = 1;
+               $phase->construction_status = $Status;
                $phase->created_at = date('Y-m-d H:i:s');
                $phase->updated_at = date('Y-m-d H:i:s');
                $phase->updated_by = $_SESSION['adminId'];
