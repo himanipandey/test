@@ -96,7 +96,7 @@ DInventoryPriceTmp::setPeriodLaunchedUnits();
 DInventoryPriceTmp::setInventoryOverhang();
 DInventoryPriceTmp::populateDemand();
 
-if (true || runTests()) {
+if (runTests()) {
     DInventoryPriceTmp::connection()->query("rename table d_inventory_prices to d_inventory_prices_old, d_inventory_prices_tmp to d_inventory_prices, d_inventory_prices_old to d_inventory_prices_tmp;");
     $logger->info("Migration successful.");
 } else {
