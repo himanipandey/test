@@ -123,12 +123,12 @@ class DInventoryPriceTmp extends Model {
     }
 
     public static function setLaunchDateMonthSales() {
-        $sql = "update d_inventory_prices_tmp dipt inner join resi_project rp on dipt.project_id = rp.project_id and rp.version = 'Website' inner join resi_project_phase rpp on dipt.phase_id = rpp.phase_id and rpp.version = 'Website' set dipt.units_sold = dipt.ltd_launched_unit - dipt.inventory where (date_format(rp.pre_launch_date, '%Y-%m-01') = dipt.effective_month or (rp.pre_launch_date = 0 and date_format(rpp.launch_date, '%Y-%m-01') = dipt.effective_month) or (rp.pre_launch_date = 0 and rpp.launch_date = 0 and date_format(rp.launch_date, '%Y-%m-01') = dipt.effective_month)) and dipt.inventory is not null";
+        $sql = "update " . self::table_name() . " dipt inner join resi_project rp on dipt.project_id = rp.project_id and rp.version = 'Website' inner join resi_project_phase rpp on dipt.phase_id = rpp.phase_id and rpp.version = 'Website' set dipt.units_sold = dipt.ltd_launched_unit - dipt.inventory where (date_format(rp.pre_launch_date, '%Y-%m-01') = dipt.effective_month or (rp.pre_launch_date = 0 and date_format(rpp.launch_date, '%Y-%m-01') = dipt.effective_month) or (rp.pre_launch_date = 0 and rpp.launch_date = 0 and date_format(rp.launch_date, '%Y-%m-01') = dipt.effective_month)) and dipt.inventory is not null";
         self::connection()->query($sql);
     }
 
     public static function setSupply() {
-        $sql = "update d_inventory_prices_tmp a inner join listings d on a.phase_id = d.phase_id and d.status = 'Active' inner join resi_project_options e on d.option_id = e.options_id and (e.bedrooms = a.bedrooms or (a.bedrooms = 0 and e.bedrooms is null)) and a.unit_type = e.option_type and e.option_category = 'Logical' inner join project_supplies f on d.id = f.listing_id and f.version = 'Website' set a.ltd_supply = f.supply, a.ltd_launched_unit = f.launched";
+        $sql = "update " . self::table_name() . " a inner join listings d on a.phase_id = d.phase_id and d.status = 'Active' inner join resi_project_options e on d.option_id = e.options_id and (e.bedrooms = a.bedrooms or (a.bedrooms = 0 and e.bedrooms is null)) and a.unit_type = e.option_type and e.option_category = 'Logical' inner join project_supplies f on d.id = f.listing_id and f.version = 'Website' set a.ltd_supply = f.supply, a.ltd_launched_unit = f.launched";
         self::connection()->query($sql);
         self::update_all(array('set' => 'supply = ltd_supply, launched_unit = ltd_launched_unit', 'conditions' => 'launch_date = effective_month'));
     }
@@ -138,7 +138,7 @@ class DInventoryPriceTmp extends Model {
     }
 
     public static function updateProjectDominantType() {
-        $sql = "update d_inventory_prices_tmp a inner join (select project_id, substring_index(group_concat(unit_type order by supply desc), ',', 1) unit_type from (select project_id, unit_type, sum(supply) supply from d_inventory_prices group by project_id, unit_type having supply > 0) t group by project_id) b  on a.project_id = b.project_id and a.unit_type = b.unit_type set a.is_dominant_project_unit_type = 'True'";
+        $sql = "update " . self::table_name() . " a inner join (select project_id, substring_index(group_concat(unit_type order by supply desc), ',', 1) unit_type from (select project_id, unit_type, sum(supply) supply from " . self::table_name() . " group by project_id, unit_type having supply > 0) t group by project_id) b  on a.project_id = b.project_id and a.unit_type = b.unit_type set a.is_dominant_project_unit_type = 'True'";
         self::connection()->query($sql);
     }
 
@@ -147,46 +147,46 @@ class DInventoryPriceTmp extends Model {
     }
 
     public static function setPeriodPrices() {
-        $quarterPrimaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_price_per_unit_area) average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt.average_price_per_unit_area_quarter = t.average_price_per_unit_area";
-        self::connection($quarterPrimaryPricesSql);
-        $yearPrimaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_price_per_unit_area) average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt.average_price_per_unit_area_year = t.average_price_per_unit_area";
-        self::connection($yearPrimaryPricesSql);
-        $financialYearPrimaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_price_per_unit_area) average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt.average_price_per_unit_area_financial_year = t.average_price_per_unit_area";
-        self::connection($financialYearPrimaryPricesSql);
+        $quarterPrimaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_price_per_unit_area) average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt.average_price_per_unit_area_quarter = t.average_price_per_unit_area";
+        self::connection()->query($quarterPrimaryPricesSql);
+        $yearPrimaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_price_per_unit_area) average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt.average_price_per_unit_area_year = t.average_price_per_unit_area";
+        self::connection()->query($yearPrimaryPricesSql);
+        $financialYearPrimaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_price_per_unit_area) average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt.average_price_per_unit_area_financial_year = t.average_price_per_unit_area";
+        self::connection()->query($financialYearPrimaryPricesSql);
 
-        $quarterSecondaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_secondary_price_per_unit_area) average_secondary_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt.average_secondary_price_per_unit_area_quarter = t.average_secondary_price_per_unit_area";
-        self::connection($quarterSecondaryPricesSql);
-        $yearSecondaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_secondary_price_per_unit_area) average_secondary_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt.average_secondary_price_per_unit_area_year = t.average_secondary_price_per_unit_area";
-        self::connection($yearSecondaryPricesSql);
-        $financialYearSecondaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_secondary_price_per_unit_area) average_secondary_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt.average_secondary_price_per_unit_area_financial_year = t.average_secondary_price_per_unit_area";
-        self::connection($financialYearSecondaryPricesSql);
+        $quarterSecondaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_secondary_price_per_unit_area) average_secondary_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt.average_secondary_price_per_unit_area_quarter = t.average_secondary_price_per_unit_area";
+        self::connection()->query($quarterSecondaryPricesSql);
+        $yearSecondaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_secondary_price_per_unit_area) average_secondary_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt.average_secondary_price_per_unit_area_year = t.average_secondary_price_per_unit_area";
+        self::connection()->query($yearSecondaryPricesSql);
+        $financialYearSecondaryPricesSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, avg(average_secondary_price_per_unit_area) average_secondary_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt.average_secondary_price_per_unit_area_financial_year = t.average_secondary_price_per_unit_area";
+        self::connection()->query($financialYearSecondaryPricesSql);
     }
 
     public static function setPeriodInventory() {
-        $quarterInventorySql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(inventory order by effective_month desc), ',', 1) inventory, average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt.inventory_quarter = t.inventory";
-        self::connection($quarterInventorySql);
+        $quarterInventorySql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(inventory order by effective_month desc), ',', 1) inventory, average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt.inventory_quarter = t.inventory";
+        self::connection()->query($quarterInventorySql);
 
-        $yearInventorySql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(inventory order by effective_month desc), ',', 1) inventory, average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt.inventory_year = t.inventory";
-        self::connection($yearInventorySql);
+        $yearInventorySql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(inventory order by effective_month desc), ',', 1) inventory, average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt.inventory_year = t.inventory";
+        self::connection()->query($yearInventorySql);
 
-        $financialYearInventorySql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(inventory order by effective_month desc), ',', 1) inventory, average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt.inventory_financial_year = t.inventory";
-        self::connection($financialYearInventorySql);
+        $financialYearInventorySql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(inventory order by effective_month desc), ',', 1) inventory, average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt.inventory_financial_year = t.inventory";
+        self::connection()->query($financialYearInventorySql);
     }
 
     public static function setPeriodLaunchedUnits() {
-        $quarterLaunchedUnitSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(ltd_launched_unit order by effective_month desc), ',', 1) ltd_launched_unit, average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt.ltd_launched_unit_quarter = t.ltd_launched_unit";
-        self::connection($quarterLaunchedUnitSql);
+        $quarterLaunchedUnitSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(ltd_launched_unit order by effective_month desc), ',', 1) ltd_launched_unit, average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt.ltd_launched_unit_quarter = t.ltd_launched_unit";
+        self::connection()->query($quarterLaunchedUnitSql);
 
-        $yearLaunchedUnitSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(ltd_launched_unit order by effective_month desc), ',', 1) ltd_launched_unit, average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt.ltd_launched_unit_year = t.ltd_launched_unit";
-        self::connection($yearLaunchedUnitSql);
+        $yearLaunchedUnitSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(ltd_launched_unit order by effective_month desc), ',', 1) ltd_launched_unit, average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt.ltd_launched_unit_year = t.ltd_launched_unit";
+        self::connection()->query($yearLaunchedUnitSql);
 
-        $financialYearLaunchedUnitSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(ltd_launched_unit order by effective_month desc), ',', 1) ltd_launched_unit, average_price_per_unit_area from " . self::table_name() . " where effective_month between " . MIN_B2B_DATE . " and " . MAX_B2B_DATE . " group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt.ltd_launched_unit_financial_year = t.ltd_launched_unit";
-        self::connection($financialYearLaunchedUnitSql);
+        $financialYearLaunchedUnitSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat(ltd_launched_unit order by effective_month desc), ',', 1) ltd_launched_unit, average_price_per_unit_area from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt.ltd_launched_unit_financial_year = t.ltd_launched_unit";
+        self::connection()->query($financialYearLaunchedUnitSql);
     }
 
     public static function setInventoryOverhang() {
-        $sql = "update d_inventory_prices dip inner join (select a.id, a.inventory/avg(b.units_sold) inventory_overhang from d_inventory_prices a inner join d_inventory_prices b on a.phase_id = b.phase_id and a.unit_type = b.unit_type and a.bedrooms = b.bedrooms and (12*year(a.effective_month) + month(a.effective_month))-(12*year(b.effective_month)+month(b.effective_month)) between 0 and 1 and b.units_sold is not null group by a.id) t on dip.id = t.id set dip.inventory_overhang = t.inventory_overhang;";
-        self::connection($sql);
+        $sql = "update " . self::table_name() . " dip inner join (select a.id, a.inventory/avg(b.units_sold) inventory_overhang from " . self::table_name() . " a inner join " . self::table_name() . " b on a.phase_id = b.phase_id and a.unit_type = b.unit_type and a.bedrooms = b.bedrooms and (12*year(a.effective_month) + month(a.effective_month))-(12*year(b.effective_month)+month(b.effective_month)) between 0 and 1 and b.units_sold is not null group by a.id) t on dip.id = t.id set dip.inventory_overhang = t.inventory_overhang;";
+        self::connection()->query($sql);
     }
 
 }
