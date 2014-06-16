@@ -208,8 +208,8 @@ class ProjectSupply extends Objects {
 				inner join listings lst on ps.listing_id = lst.id
 				inner join resi_project_phase rpp on lst.phase_id = rpp.phase_id and rpp.version = 'Cms'
 				where rpp.project_id = '$projectId'
-				group by lst.id
-				having count(distinct pa.availability) > 1";
+				group by lst.id,pa.effective_month
+				having count(distinct pa.availability) > 1 or MOD(count(pa.id),2) <> 0";
         $result2 = self::find_by_sql($sql2);
 
         if (count($result1) > 0 || count($result2) > 0)
