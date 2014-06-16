@@ -82,24 +82,24 @@ function archieved_offers(project_id)
 							  <table>
 								<tr>
 								  <td>
-								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months"  {if is_numeric($offer_period)}checked{/if} />
+								    <b><font color = "red">*</font>No EMI Period : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period"  value="months"  {if is_numeric($offer_period)}checked{/if}  onClick="$('#btnSave').attr('disabled',true)"/>
 								    <input type="text" size="2"  maxlength="2" id="no_emi_Months" name="no_emi_Months" onkeyup="$('#btnSave').attr('disabled',true)" style="width:50px" onkeypress='return isNumberKey(event)' value="{if is_numeric($offer_period)}{$offer_period}{/if}"/>
 								    Months 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if} /> Till Possession
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_period" value="pos" {if !is_numeric($offer_period) && isset($offer_period)}checked{/if} onClick="$('#btnSave').attr('disabled',true)"/> Till Possession
 								  </td>
 								</tr>
 								<tr>
 								<td>
-								    <b>&nbsp;&nbsp;To Be Paid Now : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="percent" name="no_emi_price"  {if $offer_price_type=='Percent'}checked{/if} /> 
+								    <b>&nbsp;&nbsp;To Be Paid Now : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="percent" name="no_emi_price"  {if $offer_price_type=='Percent'}checked{/if} onClick="$('#btnSave').attr('disabled',true)"/> 
 								    <input type="text" size="3"  maxlength="3" id="no_emi_price_emiPer" name="no_emi_price_emiPer" onkeyup="$('#btnSave').attr('disabled',true)" style="width:50px" onkeypress='return isNumberKey(event)' value="{if $offer_price_type=='Percent'}{$offer_price}{/if}"/>
 								    Percent 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} />
+								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="no_emi_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} onClick="$('#btnSave').attr('disabled',true)"/>
 								    <input type="text" id="no_emi_price_emiDeci" name="no_emi_price_emiDeci" style="width:50px" onKeyUp="$('#btnSave').attr('disabled',true)" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
-								     <select id="no_emi_price_emiUnit" name="no_emi_price_emiUnit"  >
+								     <select id="no_emi_price_emiUnit" name="no_emi_price_emiUnit" onChange = "$('#btnSave').attr('disabled',true)" >
 									  <option value="Lakhs"  {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
 									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>
 									 </select>
@@ -151,15 +151,15 @@ function archieved_offers(project_id)
 						      <table>
 							    <tr>
 							      <td>
-									  <b><font color="red">*</font>PriceDiscount Amount: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pd_price" value="percent"  {if $offer_price_type=='Percent'}checked{/if} />
+									  <b><font color="red">*</font>PriceDiscount Amount: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pd_price" value="percent"  {if $offer_price_type=='Percent'}checked{/if} onClick="$('#btnSave').attr('disabled',true)"/>
 									  <input type="text" size="3"  maxlength="3" name="pd_price_emiPer" id="pd_price_emiPer" onkeyup="$('#btnSave').attr('disabled',true)" style="width:50px" onkeypress='return isNumberKey(event)' value="{if $offer_price_type=='Percent'}{$offer_price}{/if}"/> 
 								   Percent 
 								  </td>
 								  <td>
-								    &nbsp;&nbsp;<input type="radio" name="pd_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} />
+								    &nbsp;&nbsp;<input type="radio" name="pd_price" value="deci"  {if $offer_price_type=='Absolute'}checked{/if} onClick="$('#btnSave').attr('disabled',true)"/>
 								    <input type="text" name="pd_price_emiDeci" id="pd_price_emiDeci" style="width:50px" onkeyup="$('#btnSave').attr('disabled',true)" value="{if $priceDeciUnit}{$offer_price}{/if}"/>
 								     <select id="pd_price_emiUnit" name="pd_price_emiUnit" onchange="$('#btnSave').attr('disabled',true)">
-									  <option value="" >Select</option>	 
+									  <option value="" {if $priceDeciUnit=='none'}selected{/if} >-none-</option>	 
 									  <option value="Lakhs" {if $priceDeciUnit=='Lakhs'}selected{/if} >Lakhs</option>
 									  <option value="Crores" {if $priceDeciUnit=='Crores'}selected{/if} >Crores</option>						
 								    </select>
@@ -197,8 +197,18 @@ function archieved_offers(project_id)
 						<tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Description : </td>
                             <td width="30%" align="left">
-								<textarea name="offerDesc" id="offerDesc" rows="5" cols="50">{$offer_desc}</textarea>
-								<img src="../refresh.png" style="cursor:pointer;position:relative;top:-25px;left:20px" onclick="populate_offer_desc();$('#btnSave').attr('disabled',false)"/>
+								<table>
+									<tr>
+										<td>
+											<textarea name="offerDesc" id="offerDesc" rows="5" cols="50">{$offer_desc}</textarea>
+										</td>
+										<td>
+											<input type="button" value="Generate Offer Description" onclick="populate_offer_desc();$('#btnSave').attr('disabled',false)"/>							
+											
+										</td>
+									</tr>
+								</table>
+								
 							</td>
                             <td>&nbsp;</td>
 						</tr>
@@ -505,8 +515,12 @@ function archieved_offers(project_id)
 		 //fetching Emi Price Value
 		  if($("input[name='no_emi_price']:checked").val() == 'percent')
 			noEmiPrice = $('#no_emi_price_emiPer').val() + "%";
-		  else if($("input[name='no_emi_price']:checked").val() == 'deci')
-			noEmiPrice = $('#no_emi_price_emiDeci').val() +" "+$('#no_emi_price_emiUnit').val();
+		  else if($("input[name='no_emi_price']:checked").val() == 'deci'){
+			if($('#no_emi_price_emiUnit').val())  
+			  noEmiPrice = $('#no_emi_price_emiDeci').val() +" "+$('#no_emi_price_emiUnit').val();
+			else
+			  noEmiPrice = $('#no_emi_price_emiDeci').val();
+		  }
 				
 		  if($("input[name='no_emi_period']:checked").val() && $("input[name='no_emi_price']:checked").val()){
 			offer_desc = "Pay "+noEmiPrice+" now and avail No Pre-EMI till "+noEmiPeriod;
@@ -561,8 +575,12 @@ function archieved_offers(project_id)
 			  //fetching Emi Price ValueofferType
 			  if($("input[name='plp_price_"+i+"']:checked").val() == 'percent')
 				plpPrice = $('#plp_Per_'+i).val() + "%";
-			  else if($("input[name='plp_price_"+i+"']:checked").val() == 'deci')
-				plpPrice = $('#plp_Deci_'+i).val() +" "+$('#plp_Unit_'+i).val();
+			  else if($("input[name='plp_price_"+i+"']:checked").val() == 'deci'){
+				if($('#plp_Unit_'+i).val())  
+				  plpPrice = $('#plp_Deci_'+i).val() +" "+$('#plp_Unit_'+i).val();
+				else
+				  plpPrice = $('#plp_Deci_'+i).val();
+			  }
 					
 			  if($("input[name='plp_period_"+i+"']:checked").val() && $("input[name='plp_price_"+i+"']:checked").val() && i!=$('#plp_noi').val()){
 				offer_desc = offer_desc+", "+plpPrice+" "+plpPeriod;
@@ -598,8 +616,12 @@ function archieved_offers(project_id)
 			//fetching Amounts
 			if($("input[name='pd_price']:checked").val() == 'percent')
 			   amount = $('#pd_price_emiPer').val() + "%";
-			else if($("input[name='pd_price']:checked").val() == 'deci')
-			   amount = $('#pd_price_emiDeci').val() +" "+$('#pd_price_emiUnit').val();
+			else if($("input[name='pd_price']:checked").val() == 'deci'){
+			  if($('#pd_price_emiUnit').val())
+			    amount = $('#pd_price_emiDeci').val() +" "+$('#pd_price_emiUnit').val();
+			  else
+			    amount = $('#pd_price_emiDeci').val();
+			}
 			//fetching Discount on 
 			if($('#pd_on').val()=='Other')
 				discount_on = $('#pd_other_txt').val();

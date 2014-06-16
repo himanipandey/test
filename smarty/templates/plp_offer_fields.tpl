@@ -26,7 +26,7 @@
 								  <td>
 								    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="plp_price_{$k}" value="deci" onclick="$('#btnSave').attr('disabled',true)" {if $plp_arr['offer_price_type'][$k]=='Absolute'}checked{/if} />
 								    <input type="text" name="plp_Deci_{$k}" id="plp_Deci_{$k}" style="width:50px" onkeyup="$('#btnSave').attr('disabled',true)" value="{if $plp_arr['priceDeciUnit'][$k]}{$plp_arr['offer_price'][$k]}{/if}"/>
-								     <select id="plp_Unit_{$k}" name="plp_Unit_{$k}" onchange="$('#btnSave').attr('disabled',true)">
+								     <select id="plp_Unit_{$k}" name="plp_Unit_{$k}" onchange="$('#btnSave').attr('disabled',true)">					  
 									  <option value="Lakhs" {if $plp_arr['priceDeciUnit'][$k]=='Lakhs'}selected{/if} >Lakhs</option>
 									  <option value="Crores" {if $plp_arr['priceDeciUnit'][$k]=='Crores'}selected{/if} >Crores</option>
 									 </select>
