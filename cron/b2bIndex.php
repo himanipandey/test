@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', '1');
-ini_set('memory_limit', '3G');
+ini_set('memory_limit', '4G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
