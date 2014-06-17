@@ -143,5 +143,9 @@ class ProjectLivability extends ActiveRecord\Model {
     static function ensureMinLivability(){
         self::update_all(array('set'=>"livability=(livability*".(1-self::$min_livability)."+".self::$min_livability.")"));
     }
-
+    
+    static function populateLivabilityInProjects(){
+    	$sql = "update resi_project rp inner join project_livability pl on rp.project_id = pl.project_id set rp.livability_score = pl.livability";
+    	self::connection()->query($sql);
+    }
 }
