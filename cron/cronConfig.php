@@ -94,7 +94,7 @@ $weeklyEmail = array(
                 'sendifnodata'=>0
         ),
      array(
-            'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME from resi_project rp 
+            'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME,rp.promised_completion_date as COMPLETION_DATE from resi_project rp 
              where 
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and project_status_id in(8,1,7) and promised_completion_date < '$currentDate'
                     and promised_completion_date != '0000-00-00' and promised_completion_date is not null;",
