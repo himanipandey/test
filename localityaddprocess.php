@@ -97,24 +97,7 @@
                    if( trim($txtMetaDescription) == '')  {
                      $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
                    }
-                   if($txtLocalityLattitude == ''){
-                     $ErrorMsg["txtLattitude"] = "Lattitude can not blank";
-                   }
-                   if($txtLocalityLongitude == ''){
-                     $ErrorMsg["txtLongitude"] = "Longitude can not blank";
-                   }
-                   if(!empty($txtLocalityLattitude) && ($txtLocalityLattitude <-90 || $txtLocalityLattitude>90)){
-                     $ErrorMsg["txtLattitude"] = "Lattitude range should be between -90 to 90.";
-                   }
-                   if(!empty($txtLocalityLattitude) && !is_numeric($txtLocalityLattitude)){
-                     $ErrorMsg["txtLattitude"] = "Lattitude value should be numeric.";
-                   }
-                   if(!empty($txtLocalityLongitude) && ($txtLocalityLongitude <-180 || $txtLocalityLongitude>180)){
-                     $ErrorMsg["txtLongitude"] = "Longitude range should be between -180 to 180.";
-                   }
-                   if(!empty($txtLocalityLongitude) && !is_numeric($txtLocalityLongitude)){
-                     $ErrorMsg["txtLongitude"] = "Lattitude value should be numeric.";
-                   }
+                  
                    if($_REQUEST['parentId'] == ''){
                      $ErrorMsg["txtMetaParent"] = "Please add atleast one suburb and than select it.";
                    }
@@ -145,18 +128,13 @@
                         $dataCity = mysql_fetch_assoc($resCity);
                         mysql_free_result($resCity);
                         $txtCityUrl = createLocalityURL($txtCityName, $dataCity['cityname'], $localityid, 'locality');
-                        if($txtLocalityLattitude == '')
-                             $txtLocalityLattitude = null;
-                         if($txtLocalityLongitude == '')
-                             $txtLocalityLongitude = null;
+                       
                              $updateQry = "UPDATE ".LOCALITY." SET 
                                            LABEL = '".$txtCityName."',
                                            STATUS = '".$status."',
                                            URL = '".$txtCityUrl."',
                                            DESCRIPTION = '" . d_($desc) . "',
                                            SUBURB_ID = '".$parent_subId."',
-                                           LATITUDE = '".$txtLocalityLattitude."',
-                                           LONGITUDE = '".$txtLocalityLongitude."',
                                            updated_at = now()
                                       WHERE
                                          LOCALITY_ID='".$localityid."'";
@@ -211,7 +189,7 @@
                             else{
                                 //code for insert new locality
                                 $qry = "INSERT INTO ".LOCALITY." (LABEL,SUBURB_ID,status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
-                                      value('".$txtCityName."','".$parent_subId."','".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";
+                                      value('".$txtCityName."','".$parent_subId."','".$status."','null','null','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";
                                 $res = mysql_query($qry) or die(mysql_error());
                                 $locId = mysql_insert_id();
                                 $cityFind = City::find($cityId);  
@@ -275,8 +253,6 @@
             $smarty->assign("maxLongitude", $maxLongitude);	
             $smarty->assign("minLongitude", $minLongitude);
             $smarty->assign("parent_sub_id", $parent_sub_id);
-            $smarty->assign("txtLocalityLattitude", $localityDetailsArray['LATITUDE']);
-            $smarty->assign("txtLocalityLongitude", $localityDetailsArray['LONGITUDE']);
                 
            $getLandmarkAliasesArr = getLandmarkAliases('locality', $localityid);
            $landmarkJson = json_encode($getLandmarkAliasesArr);
