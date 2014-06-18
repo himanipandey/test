@@ -2282,7 +2282,7 @@ function updateD_Availablitiy($projectId){
 								inner join resi_project_options rpo on lst.option_id = rpo.options_id
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
-								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
+								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
 								where lst.status = 'Active' and rpo.project_id = '$projectId' 
 								and rpo.option_category = 'Actual'
 								".$condition."  
@@ -2304,7 +2304,7 @@ function updateD_Availablitiy($projectId){
 			inner join resi_project_options rpo on lst.option_id = rpo.options_id
 			left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 			left join project_availabilities pa on ps.id = pa.project_supply_id
-			inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
+			inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
 			where lst.status = 'Active' and rpo.project_id = '$projectId'
 			and rpo.option_category = 'Logical'
 			".$condition."  
@@ -2366,7 +2366,7 @@ function updatePhaseBookingStatus($projectId){
 								inner join resi_project_options rpo on lst.option_id = rpo.options_id
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
-								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
+								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
 								where lst.status = 'Active' and rpo.project_id = '$projectId' 
 								and rpo.option_category = 'Actual'
 								".$condition."  and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID'
@@ -2386,7 +2386,7 @@ function updatePhaseBookingStatus($projectId){
 					inner join resi_project_options rpo on lst.option_id = rpo.options_id
 					left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 					left join project_availabilities pa on ps.id = pa.project_supply_id
-					inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
+					inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
 					where lst.status = 'Active' and rpo.project_id = '$projectId'
 					and rpo.option_category = 'Logical'
 					 and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID'
