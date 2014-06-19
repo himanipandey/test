@@ -485,9 +485,9 @@ $suburbSelect = Suburb::SuburbArr($projectDetails[0]['CITY_ID']);
 
 $locality = Locality::getLocalityById($projectDetails[0]['LOCALITY_ID']);
 $smarty->assign('locality',$locality[0]->label);
-$suburb = Suburb::getSuburbById($locality[0]->suburb1_id);
-$smarty->assign('suburb',$suburb[0]->label);
-$city = City::getCityById($suburb[0]->city_id);
+$suburb = Suburb::getSuburbByLocality($locality[0]->locality_id);
+$smarty->assign('suburb',$suburb[0]['LABEL']);
+$city = City::getCityById($suburb[0]['CITY_ID']);
 $smarty->assign('city',$city[0]->label);
 $builderDetail = fetch_builderDetail($projectDetails[0]['BUILDER_ID']);
 $smarty->assign("builderDetail", $builderDetail);
