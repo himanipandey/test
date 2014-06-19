@@ -86,14 +86,14 @@ DInventoryPriceTmp::setUnitdelivered();
 DInventoryPriceTmp::updateProjectDominantType();
 DInventoryPriceTmp::deleteEntriesBeforeLaunch();
 DInventoryPriceTmp::deleteInvalidPriceEntries();
+DInventoryPriceTmp::removeZeroSizes();
 DInventoryPriceTmp::updateFirstPromoisedCompletionDate();
 DInventoryPriceTmp::updateSecondaryPriceForAllProjects();
 DInventoryPriceTmp::setLaunchDateMonthSales();
 DInventoryPriceTmp::updateConstructionStatus();
-DInventoryPriceTmp::setPeriodPrices();
-DInventoryPriceTmp::setPeriodInventory();
-DInventoryPriceTmp::setPeriodLaunchedUnits();
 DInventoryPriceTmp::setInventoryOverhang();
+DInventoryPriceTmp::setRateOfSale();
+DInventoryPriceTmp::setPeriodAttributes();
 DInventoryPriceTmp::populateDemand();
 
 if (runTests()) {
