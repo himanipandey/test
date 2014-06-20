@@ -21,7 +21,7 @@ class DInventoryPriceTmp extends Model {
     }
 
     public static function deleteInvalidPriceEntries() {
-        self::update_all(array('set' => 'average_price_per_unit_area = null, average_total_price = null', 'conditions' => 'inventory = 0'));
+        self::update_all(array('set' => 'average_price_per_unit_area = null, average_total_price = null, average_price_per_unit_area_quarter = null, average_price_per_unit_area_year = null, average_price_per_unit_area_financial_year = null', 'conditions' => 'inventory = 0'));
     }
 
     public static function populateDemand() {
@@ -164,17 +164,17 @@ class DInventoryPriceTmp extends Model {
     }
     
     public static function setPeriodAttributeForField($field){
-        $quarterSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat($field order by effective_month desc), ',', 1) quarter_value from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt." . $field . "_quarter = t.quarter_value";
+        $quarterSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month desc), ',', 1) id, substring_index(group_concat($field order by effective_month desc), ',', 1) quarter_value from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, quarter) t on dipt.id = t.id set dipt." . $field . "_quarter = t.quarter_value";
         self::connection()->query($quarterSql);
 
-        $yearSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat($field order by effective_month desc), ',', 1) year_value from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt." . $field . "_year = t.year_value";
+        $yearSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month desc), ',', 1) id, substring_index(group_concat($field order by effective_month desc), ',', 1) year_value from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, year) t on dipt.id = t.id set dipt." . $field . "_year = t.year_value";
         self::connection()->query($yearSql);
 
-        $financialYearSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month), ',', 1) id, substring_index(group_concat($field order by effective_month desc), ',', 1) financial_year_value from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt." . $field . "_financial_year = t.financial_year_value";
+        $financialYearSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month desc), ',', 1) id, substring_index(group_concat($field order by effective_month desc), ',', 1) financial_year_value from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt." . $field . "_financial_year = t.financial_year_value";
         self::connection()->query($financialYearSql);
     }
     
     public static function removeZeroSizes(){
-        self::update_all(array('set' => 'average_size = null', 'conditions' => 'average_size = 0'));
+        self::update_all(array('set' => 'average_size = null, average_total_price = null', 'conditions' => 'average_size = 0'));
     }
 }

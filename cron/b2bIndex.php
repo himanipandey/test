@@ -62,10 +62,7 @@ while ($completedPhaseConfigCount < $allPhaseConfigCount) {
     $aAllInventory = ProjectAvailability::getInventoryForIndexing($aPhaseId);
     $aAllPrice = ListingPrices::getPriceForIndexing($aPhaseId);
     $logger->info("Price and inventory data retrieved");
-
-    removeInvalidPhaseData($aAllInventory);
-    removeInvalidPhaseData($aAllPrice);
-
+    
     fillIntermediateMonths($aAllInventory);
     fillIntermediateMonths($aAllPrice);
 
@@ -81,19 +78,21 @@ if ($bulkInsert) {
     fclose($handle);
 }
 
+DInventoryPriceTmp::deleteEntriesBeforeLaunch();
 DInventoryPriceTmp::setSupply();
 DInventoryPriceTmp::setUnitdelivered();
 DInventoryPriceTmp::updateProjectDominantType();
-DInventoryPriceTmp::deleteEntriesBeforeLaunch();
+DInventoryPriceTmp::setLaunchDateMonthSales();
+DInventoryPriceTmp::setInventoryOverhang();
+DInventoryPriceTmp::setRateOfSale();
+DInventoryPriceTmp::updateSecondaryPriceForAllProjects();
+
+DInventoryPriceTmp::setPeriodAttributes();
+
 DInventoryPriceTmp::deleteInvalidPriceEntries();
 DInventoryPriceTmp::removeZeroSizes();
 DInventoryPriceTmp::updateFirstPromoisedCompletionDate();
-DInventoryPriceTmp::updateSecondaryPriceForAllProjects();
-DInventoryPriceTmp::setLaunchDateMonthSales();
 DInventoryPriceTmp::updateConstructionStatus();
-DInventoryPriceTmp::setInventoryOverhang();
-DInventoryPriceTmp::setRateOfSale();
-DInventoryPriceTmp::setPeriodAttributes();
 DInventoryPriceTmp::populateDemand();
 
 if (runTests()) {
@@ -108,8 +107,6 @@ function createDocuments($aConfigKey, $aAllInventory, $aAllPrice) {
     global $handle;
     global $bulkInsert;
     global $aAllIndexedPhases;
-
-    $aKey = array_unique(array_merge(array_keys($aAllInventory), array_keys($aAllPrice)));
 
     $i = 0;
 
