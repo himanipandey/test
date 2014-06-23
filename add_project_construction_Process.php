@@ -156,13 +156,13 @@
                 ######################################
                 $comp_eff_date = costructionDetail($projectId);
 				$project_completion_date = '';
-				if($expectedCompletionDate > $comp_eff_date['COMPLETION_DATE'])
+				if($expectedCompletionDate >= $comp_eff_date['COMPLETION_DATE'])
 				  $project_completion_date = $expectedCompletionDate;
 				if($expectedCompletionDate < $comp_eff_date['COMPLETION_DATE'])
 				  $project_completion_date = $comp_eff_date['COMPLETION_DATE'];
 				if($project_completion_date == '0000-00-00')
 				  $project_completion_date = '';
-				
+								
                 if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
                     $yearExp = explode("-",$project_completion_date);
                     if( $yearExp[0] == date("Y") ) {
