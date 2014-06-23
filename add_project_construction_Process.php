@@ -156,7 +156,7 @@
                 ######################################
                 $comp_eff_date = costructionDetail($projectId);
 				$project_completion_date = '';
-				if($expectedCompletionDate > $comp_eff_date['COMPLETION_DATE'])
+				if($expectedCompletionDate >= $comp_eff_date['COMPLETION_DATE'])
 				  $project_completion_date = $expectedCompletionDate;
 				if($expectedCompletionDate < $comp_eff_date['COMPLETION_DATE'])
 				  $project_completion_date = $comp_eff_date['COMPLETION_DATE'];
