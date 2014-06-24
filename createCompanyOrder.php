@@ -1,0 +1,15 @@
+<?php
+error_reporting(1);
+ini_set('display_errors','1');
+include("smartyConfig.php");
+include("appWideConfig.php");
+include("dbConfig.php");
+include("modelsConfig.php");
+include("includes/configs/configs.php");
+include_once("./function/locality_functions.php");
+AdminAuthentication();
+include('createCompanyOrderProcess.php');
+$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
+$smarty->display(PROJECT_ADD_TEMPLATE_PATH."createCompanyOrder.tpl");
+$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");	
+?>
