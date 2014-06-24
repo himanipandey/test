@@ -145,7 +145,7 @@ class ProjectLivability extends ActiveRecord\Model {
     }
     
     static function populateLivabilityInProjects(){
-    	$sql = "update resi_project rp inner join project_livability pl on rp.project_id = pl.project_id set rp.livability_score = pl.livability";
+    	$sql = "update resi_project rp inner join project_livability pl on rp.project_id = pl.project_id set rp.livability_score = ROUND(pl.livability*5,1)";
     	self::connection()->query($sql);
     }
 }
