@@ -175,9 +175,10 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 
 function writeToImageService($imageParams){
 
-         // print'<pre>';
-                //print_r($params);
-    $postArr = array();
+         print'<pre>';
+                print_r($imageParams);
+   //echo $imageParams['image_type'];
+    $postArr = array();;
     $result = array();
     foreach ($imageParams as $k => $v) {
         # code...
@@ -296,8 +297,8 @@ function writeToImageService($imageParams){
   // then add them to the multi-handle
 
 
-//print'<pre>';
-  //    print_r($postArr); //die();
+print'<pre>';
+      print_r($postArr); //die();
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];

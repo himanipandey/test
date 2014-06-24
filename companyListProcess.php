@@ -1,14 +1,20 @@
 <?php
 
+$compid= $_REQUEST['compid'];
+
 $typeArr = Company::getCompanyType(); 
 $smarty->assign("comptype", $typeArr);
 
 $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 
+if($compid){
+	$compArr = Company::getAllCompany($compid);
+}
+else{
+	$compArr = Company::getAllCompany();
+}
 
-
-$compArr = Company::getAllCompany();
 $smarty->assign("compArr", $compArr);
 //print("<pre>");
 //print_r($compArr);
