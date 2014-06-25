@@ -79,7 +79,7 @@ if ($bulkInsert) {
 }
 
 DInventoryPriceTmp::deleteEntriesBeforeLaunch();
-DInventoryPriceTmp::setSupply();
+DInventoryPriceTmp::updateSupplyAndLaunched();
 DInventoryPriceTmp::setUnitdelivered();
 DInventoryPriceTmp::updateProjectDominantType();
 DInventoryPriceTmp::setLaunchDateMonthSales();

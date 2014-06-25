@@ -127,17 +127,16 @@ class DInventoryPriceTmp extends Model {
         self::connection()->query($sql);
     }
 
-    public static function setSupply() {
+    public static function updateSupplyAndLaunched() {
         $sql = "update " . self::table_name() . " a inner join listings d on a.phase_id = d.phase_id and d.status = 'Active' inner join resi_project_options e on d.option_id = e.options_id and (e.bedrooms = a.bedrooms or (a.bedrooms = 0 and e.bedrooms is null)) and a.unit_type = e.option_type and e.option_category = 'Logical' inner join project_supplies f on d.id = f.listing_id and f.version = 'Website' set a.ltd_supply = f.supply, a.ltd_launched_unit = f.launched";
         self::connection()->query($sql);
         self::update_all(array('set' => 'supply = ltd_supply, launched_unit = ltd_launched_unit', 'conditions' => 'launch_date = effective_month'));
-        
-        self::update_all(array('set' => 'launched_unit = 0', 'conditions' => 'launch_date is not null and effective_month != launch_date'));
+        self::update_all(array('set' => 'launched_unit = 0, supply = 0', 'conditions' => 'effective_month != launch_date or launch_date is null'));
     }
 
     public static function setUnitdelivered() {
+        self::update_all(array('set' => 'units_delivered = 0'));
         self::update_all(array('set' => 'units_delivered = ltd_launched_unit', 'conditions' => 'completion_date = effective_month'));
-        self::update_all(array('set' => 'units_delivered = 0', 'conditions' => 'completion_date is not null and effective_month != completion_date'));
     }
 
     public static function updateProjectDominantType() {
@@ -155,7 +154,7 @@ class DInventoryPriceTmp extends Model {
     }
     
     public static function setRateOfSale() {
-        $sql = "update " . self::table_name() . " dip inner join (select a.id, avg(b.rate_of_sale) rate_of_sale from " . self::table_name() . " a inner join " . self::table_name() . " b on a.phase_id = b.phase_id and a.unit_type = b.unit_type and a.bedrooms = b.bedrooms and (12*year(a.effective_month) + month(a.effective_month))-(12*year(b.effective_month)+month(b.effective_month)) between 0 and 2 and b.units_sold is not null group by a.id) t on dip.id = t.id set dip.rate_of_sale = t.rate_of_sale;";
+        $sql = "update " . self::table_name() . " dip inner join (select a.id, avg(b.units_sold) rate_of_sale from " . self::table_name() . " a inner join " . self::table_name() . " b on a.phase_id = b.phase_id and a.unit_type = b.unit_type and a.bedrooms = b.bedrooms and (12*year(a.effective_month) + month(a.effective_month))-(12*year(b.effective_month)+month(b.effective_month)) between 0 and 2 and b.units_sold is not null group by a.id) t on dip.id = t.id set dip.rate_of_sale = t.rate_of_sale;";
         self::connection()->query($sql);
     }
 
