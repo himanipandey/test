@@ -74,12 +74,12 @@ if($_REQUEST['edit'] == 'edit')
         $smarty->assign("txtDisplayCarpetArea",$arrProjectType['DISPLAY_CARPET_AREA']);
         $smarty->assign("TYPE_ID_P", $arrProjectType_P['OPTIONS_ID']);
         $smarty->assign("unitType_P", $arrProjectType_P['UNIT_TYPE']);
-        $smarty->assign("txtUnitNameval_P", $arrProjectType_P['OPTION_NAME']);
+        $smarty->assign("txtUnitName_P", $arrProjectType_P['OPTION_NAME']);
         $smarty->assign("txtSizeval_P", $arrProjectType_P['SIZE']);
         $smarty->assign("txtPricePerUnitAreaval_P", $arrProjectType_P['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPlotArea_P", $arrProjectType_P['SIZE']);
-        $smarty->assign("txtSizeLenval_P", $arrProjectType_P['LENGTH_OF_PLOT']);
-        $smarty->assign("txtSizeBreval_P", $arrProjectType_P['BREADTH_OF_PLOT']);
+        $smarty->assign("txtSizeLen_P", $arrProjectType_P['LENGTH_OF_PLOT']);
+        $smarty->assign("txtSizeBre_P", $arrProjectType_P['BREADTH_OF_PLOT']);
         $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);
 
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
@@ -117,7 +117,9 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     $txtVillaPlotArea = '0';
     $txtVillaFloors = '0';
     $txtVillaTerraceArea = '0';
-    $option_txt_array = array();    
+    $option_txt_array = array(); 
+    //echo "<pre>";print_r($_REQUEST);die;
+    $plotIncrease = 1;
     foreach($_REQUEST['txtUnitName'] AS $key=>$val)
     {
             if($val != '')
@@ -141,16 +143,18 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $bed =	$_REQUEST['bed'][$key];
                 $Balconys = $_REQUEST['Balconys'][$key];
 
-                $txtPlotArea                =	$_REQUEST['txtPlotArea'][$key];
-                $txtSizeLen                 =	$_REQUEST['txtSizeLen'][$key];
-                $txtSizeBre                 =	$_REQUEST['txtSizeBre'][$key];
+                $txtPlotArea = $_REQUEST['txtPlotArea'][$key];
+                $txtSizeLen[$key] = $_REQUEST['txtSizeLen'][$key];
+                $txtSizeBre[$key] = $_REQUEST['txtSizeBre'][$key];
+                $txtUnitName_P[$key] = $_REQUEST['txtUnitName'][$key];
 
                 $studyrooms= $_REQUEST['studyrooms'][$key];
-                $servantrooms	= $_REQUEST['servantrooms'][$key];
+                $servantrooms = $_REQUEST['servantrooms'][$key];
                 $poojarooms = $_REQUEST['poojarooms'][$key];
                 $bathrooms = $_REQUEST['bathrooms'][$key];
                 $unitType = $_REQUEST['unitType'][$key];
                 $status	= $_REQUEST['propstatus'][$key];
+                
                 if($unitType != 'Plot' && $unitType != 'Shop' && $unitType != 'Office' && $unitType != 'Other')
                     $pid[] = trim($txtUnitName);
            
@@ -180,8 +184,11 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("txtVillaTerraceArea", $txtVillaTerraceArea);
                 $smarty->assign("txtVillaGardenArea", $txtVillaGardenArea);
                 $smarty->assign("txtPlotArea", $txtPlotArea);
-                $smarty->assign("txtSizeLen", $txtSizeLen);
-                $smarty->assign("txtSizeBre", $txtSizeBre);
+                $smarty->assign("txtSizeLen_P", $txtSizeLen);
+                $smarty->assign("txtUnitName_P", $txtUnitName_P);
+                
+               // echo "<pre>";print_r($txtSizeLen);
+                $smarty->assign("txtSizeBre_P", $txtSizeBre);
                 $smarty->assign("bedval", $bedval);
                 $smarty->assign("bathroomsval",$bathroomsval);
                 $smarty->assign("balconysval",$Balconysval);
@@ -204,8 +211,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("txtVillaTerraceArea_VA", $txtVillaTerraceArea);
                 $smarty->assign("txtVillaGardenArea_VA", $txtVillaGardenArea);
                 $smarty->assign("txtPlotArea", $txtPlotArea);
-                $smarty->assign("txtSizeLen", $txtSizeLen);
-                $smarty->assign("txtSizeBre", $txtSizeBre);
+              //  $smarty->assign("txtSizeLen", $txtSizeLen);
+                //$smarty->assign("txtSizeBre", $txtSizeBre);
 
                 $smarty->assign("bedval_VA", $bedval);
                 $smarty->assign("bathroomsval_VA",$bathroomsval);
@@ -216,6 +223,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("statusval_VA",$statusval);
                 $smarty->assign("txtDisplayCarpetArea",$txtDisplayCarpetArea);
                 //array_push($ErrorMsg2, $key);
+               // echo $_REQUEST['unitType'][$key]."<br>";
                 if ($_REQUEST['unitType'][$key]!='Plot' && $_REQUEST['unitType'][$key]!='Commercial'
                         && $_REQUEST['unitType'][$key]!='Office' && $_REQUEST['unitType'][$key]!='Shop'
                         && $_REQUEST['unitType'][$key]!='Shop Office' && $_REQUEST['unitType'][$key]!='Other') {
@@ -223,16 +231,49 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     {
                         $ErrorMsg[$key] .= "<br>Please enter unit size";
                     }
+                    if(trim($txtSize) <= 0)
+                    {
+                        $ErrorMsg[$key] .= "<br>Size should be greater than zero";
+                    }
+                }
+                else{ 
+                   if(trim($txtSizeBre[$key]) == '' OR (!is_numeric(trim($txtSizeBre[$key]))))
+                    {
+                       if(!array_key_exists($key,$ErrorMsg))
+                        $ErrorMsg[$key] .= "<br>Please enter unit size breadth of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
+                    }
+                    else if(trim($txtSizeBre[$key]) <= 0)
+                    { 
+                        if(!array_key_exists($key,$ErrorMsg))
+                        $ErrorMsg[$key] .= "<br>Size breadth should be greater than zero of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
+                    }
+                    
+                    if(trim($txtSizeLen[$key]) == '' OR (!is_numeric(trim($txtSizeLen[$key]))))
+                    {
+                        
+                        $ErrorMsg[$key] .= "<br>Please enter unit size length of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease;
+                    }
+                    else if(trim($txtSizeLen[$key]) <= 0)
+                    {
+                        
+                        $ErrorMsg[$key] .= "<br>Size length should be greater than zero of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
+                    }
+                    $txtSize = 0;
+                    $txtSize = $txtPlotArea;
+                    $plotIncrease++;
+                }
+                if($unitType != 'Plot' && $unitType != 'Shop' && $unitType != 'Office' && $unitType != 'Other' && $unitType != 'Shop Office'){
                     if($bed == '')
                     {
                         $ErrorMsg[$key]	.= "<br>Please select bedroom";
                     }
+
                 }
+              /*  }
                 else
                 {
                     $txtSize = $txtPlotArea;
-                }
-                
+                }*/
                 $currentPropertyObject = null;
                 $sizeChanging = true;
                 if ($_REQUEST['typeid_edit'][$key]) {
@@ -263,7 +304,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         $ErrorMsg[$key]	.=	"<br>Unit Size can't greater then 10000 sqft for 6 BHK";
                     }
                 }
- 
+                //echo "<pre>";print_r(array_unique($ErrorMsg));
             if(empty($ErrorMsg))
             {
                 if($_REQUEST['delete'][$key] == '')
@@ -290,7 +331,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                        $unitType = $txtUnitName;
                    elseif($_REQUEST['unitType'][$key]=='Other')
                        $unitType = 'Other';
-                   
                     $option->option_type = $unitType;
                     $option->option_name = $txtUnitName;
                     $option->size = $txtSize;
@@ -312,8 +352,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->study_room = (int)$studyrooms;
                     $option->servant_room = (int)$servantrooms;
                     $option->pooja_room = (int)$poojarooms;
-                    $option->length_of_plot = (int)$txtSizeLen;
-                    $option->breadth_of_plot = (int)$txtSizeBre;
+                    $option->length_of_plot = (int)$txtSizeLen[$key];
+                    $option->breadth_of_plot = (int)$txtSizeBre[$key];
                     $option->updated_by = $_SESSION["adminId"];
                     $option->display_carpet_area = $txtCarpetAreaInfo;					
 		    $optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;
