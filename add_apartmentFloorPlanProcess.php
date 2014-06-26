@@ -7,11 +7,11 @@
 	$plot = array();
 	$commercial = array();
 	$uploadedArr = array(); // array of titles ALREADY uploaded in image service 
-	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex");
-	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor");
-	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
-	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan");
-	$triplex = array("Ground Floor Plan", "First Floor Plan", "Second Floor Plan");
+	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan");
+	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan", "Terrace Floor Plan", "Duplex Floor Plan");
+	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan", "Penthouse Floor Plan", "Terrace Floor Plan");
+	$triplex = array("Lower Level Floor", "Medium Level Floor", "Upper Level Floor", "Terrace Floor Plan");
 	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan");
 
 	$watermark_path = 'images/pt_shadow1.png';
