@@ -81,7 +81,7 @@ else{
     define("CLOUDAGENT_USER", "proptiger");
     define("CLOUDAGENT_KEY", "KK6553cb21f45e304ffb6c8c92a279fde5");
 
-	define("IMAGE_SERVICE_URL","http://dev-api.proptiger-ws.com:8080/data/v1/entity/image");
+	define("IMAGE_SERVICE_URL","http://qa.proptiger-ws.com:8080/data/v1/entity/image");
     define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
 }
