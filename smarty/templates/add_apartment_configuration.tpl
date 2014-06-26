@@ -730,14 +730,15 @@
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
                            
-                                <td> 
-                                   {if ($ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV) && array_key_exists(15,$txtSizeBre_P)}
+                                <td>
+                                   {if ($ProjectDetail[0]['PROJECT_TYPE_ID'] == $typePA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV) && array_key_exists(15,$txtSizeBre_P)}
                                         {$keyValueForName = $var-1}
                                         {$keyValueForSize = $var-1}
                                    {else}
                                         {$keyValueForName = $smarty.section.foo.index}
                                         {$keyValueForSize = $new_index}
                                    {/if}
+                                    {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typePA  && !array_key_exists(15,$txtSizeBre_P)}{$keyValueForName = $new_index}{/if}
                                   {if $typeName == 'Commercial' || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOFFICE 
                                       || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP_OFFICE}
                                     <select name="txtUnitName[]" id="txtUnitName_{($smarty.section.foo.index+1)}">
