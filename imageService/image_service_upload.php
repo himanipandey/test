@@ -1,7 +1,13 @@
 <?php
 
+require_once dirname(__FILE__).'/../log4php/Logger.php';
 class ImageServiceUpload{
 
+    //logging of image params
+
+    
+    //$logger->info(" NEAR PLACES SCRIPT STARTED ");
+    
 
     static $image_upload_url = IMAGE_SERVICE_URL;
 
@@ -136,6 +142,8 @@ class ImageServiceUpload{
         $this->errors = array();
         if(isset($image))
         $this->validate();
+        Logger::configure( dirname(__FILE__) . '/../log4php.xml');
+        $this->logger = Logger::getLogger("main");
     }
 
     function upload(){
@@ -149,12 +157,35 @@ class ImageServiceUpload{
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
 
-        if($this->method == "DELETE")
+//$this->logger->info(" Image Service Parameters Log");
+
+        
+
+
+        if($this->method == "DELETE"){
             $response = static::delete($this->image_id, $params);
-        elseif($this->method == "PUT")
+            $this->logger->info("Method: DELETE");
+        }
+        elseif($this->method == "PUT"){
             $response = static::update($this->image_id, $params);
-        else
+            $this->logger->info("Method: PUT");
+        }
+        else{
             $response = static::create($params);
+            $this->logger->info("Method: POST");
+        }
+
+        $url = self::$image_upload_url;
+        $this->logger->info("Url: {$url}");
+        $this->logger->info("Parameters:");
+        foreach ($params as $k => $v) {
+            $this->logger->info("{$k} => {$v}");
+        }
+        
+        $this->logger->info("");
+        $this->logger->info("");
+        $this->logger->info("");
+
         //$this->response_header = $response["header"];
         //$this->response_body = $response["body"];
         //$this->status = $response["status"];
@@ -201,6 +232,7 @@ class ImageServiceUpload{
     static function create($post){
         
         //print("<pre>");var_dump($post);var_dump(static::$image_upload_url);die("heool-create");
+        
         $returnArr = array();
         $returnArr = array("params" => $post, "method" => 'POST', "url" => static::$image_upload_url);
         //print("<pre>");var_dump($returnArr); die("create");
