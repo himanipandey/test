@@ -1,34 +1,400 @@
 <?php
 
+  $error_flag='';
 
+  //validate companyID if exist
+  $compId = mysql_real_escape_string($_REQUEST['c']);
+  if($compId){	  
+    $comp_details = Company::getCompanyById($compId);	  
+    if($comp_details){
+	  $smarty->assign('txtCompName',$comp_details[0]->name);
+	  $smarty->assign('txtCompId',$compId);
+	}
+  }
+  
+  if($_POST['btnSave'] == 'Save'){
+	$order_id = '';  
+	$txtCompId = trim($_POST['txtCompId']);
+	$txtCompName = trim($_POST['txtCompName']);
+	$txtSalesPerson = trim($_POST['txtSalesPerson']);
+	$txtOrderDate = trim($_POST['txtOrderDate']);
+	$orderType = trim($_POST['orderType']);
+	$txtOrderDur = trim($_POST['txtOrderDur']);
+	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+	$txtOrderAmt = trim($_POST['txtOrderAmt']);
+	$txtExpiryOrderDate = trim($_POST['txtExpiryOrderDate']);
+	$txtPaymentMethod = $_POST['txtPaymentMethod'];
+	$txtPaymentInstNo = $_POST['txtPaymentInstNo'];
+	$txtPaymentAmt = $_POST['txtPaymentAmt'];
+	$txtPaymentDate = $_POST['txtPaymentDate'];
+	$gAccess = trim($_POST['gAccess']);
+	$cities = $_POST['cities'];
+	$locs_cities = trim($_POST['locs_cities']);
+	$dash_access = $_POST['dash_access'];
+	$demand_access = $_POST['demand_access'];
+	$supply_access = $_POST['supply_access'];
+	$catch_access = $_POST['catch_access'];
+	$builder_access = $_POST['builder_access'];
+	$noLicen = trim($_POST['noLicen']);
+	$txtSubsUserEmail = $_POST['txtSubsUserEmail'];
+	$txtSubsUserCont = $_POST['txtSubsUserCont'];
+	$txtSubsUserGroup = $_POST['txtSubsUserGroup'];
+	$pmtNo = trim($_POST['pmtNo']);
+	$userNo = trim($_POST['userNo']);
+	$all_locs = trim($_POST['all_locs']);	
+	$all_locs = ($all_locs)?explode(",",$all_locs):'';	
+	
+	CompanyOrder::transaction(function(){
+	  	
+	  global $order_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs;
+	
+	  try{
+		  #company Orders
+		  $company_order = new CompanyOrder();
+		  $company_order->company_id = $txtCompId;
+		  $company_order->sales_persion_id = $txtSalesPerson;
+		  $company_order->order_type = $orderType;
+		  $company_order->order_date = $txtOrderDate;
+		  if($orderType == 'trial'){
+			 $company_order->order_expiry_date = $txtExpiryTrialOrderDate; 
+			 $company_order->trial_duration =  $txtOrderDur;
+			 $company_order->order_amount =  '';
+		  }
+		  if($orderType == 'paid'){
+			 $company_order->order_expiry_date = $txtExpiryOrderDate;
+			 $company_order->order_amount =  $txtOrderAmt;
+			 $company_order->trial_duration =  ''; 
+			 //insert payment details
+		  }		  
+		  $company_order->updated_by = $_SESSION['adminId'];
+		  $company_order->updated_at = date('Y-m-d H:i:s');
+		  $company_order->created_at = date('Y-m-d H:i:s');
+		  $company_order->save();
+		  
+		  $order_id = $company_order->id;
+		  
+		  #Company Orders Payment
+		  if($orderType == 'paid'){
+			 $cnt = 0;
+			 while($cnt < $pmtNo){
+			   $company_order_payments = new CompanyOrderPayment();
+			   $company_order_payments->company_order_id = $company_order->id;
+			   $company_order_payments->payment_method = $txtPaymentMethod[$cnt];
+			   $company_order_payments->payment_instrument_no = $txtPaymentInstNo[$cnt];
+			   $company_order_payments->payment_amount = $txtPaymentAmt[$cnt];
+			   $company_order_payments->payment_date = $txtPaymentDate[$cnt];
+			   $company_order_payments->updated_by = $_SESSION['adminId'];
+			   $company_order_payments->updated_at = date('Y-m-d H:i:s');
+			   $company_order_payments->created_at = date('Y-m-d H:i:s');
+			   $company_order_payments->save();
+			   $cnt++;	 
+			 } 
+		  }
+		  
+		  #Company Subcription
+		  $res = mysql_query("INSERT INTO `proptiger`.`company_subscriptions` (`id`, `company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`) VALUES (NULL, '".$txtCompId."', '".$_SESSION['adminId']."', '".$company_order->order_expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());
+		  
+		  $subs_id = mysql_insert_id();
+		  		  
+		  #subcription sections
+		  if($dash_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$dash_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());;
+		  if($builder_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$builder_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());;
+		  if($catch_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$catch_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());;
+		  
+		  #subscription column
+		  if($demand_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_columns` (`id`, `subscription_id`, `column_group`, `created_by`, `created_at`) VALUES (NULL,'".$subs_id."', '".$demand_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."');") or die(mysql_error());;
+		  if($supply_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_columns` (`id`, `subscription_id`, `column_group`, `created_by`, `created_at`) VALUES (NULL,'".$subs_id."', '".$supply_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."');") or die(mysql_error());;
+		  
+		   #- permission
+		   $perm_data = array();
+		   if(!empty($all_locs)){
+			 $perm_data = $all_locs;
+			 $objectType = 4;
+		   }else{
+			 $perm_data = $cities;
+			 $objectType = 6; 			   
+		   }		   
+		   if(!empty($perm_data)){				  
+			 foreach($perm_data as $k=>$v){  
+			   $find_perm_sql = mysql_query("SELECT id FROM  `proptiger`.`permissions` WHERE `object_type_id`='".$objectType."' AND  `object_id`='".$v."' AND `access_level`='Read'") or die(mysql_error());
+			   if(mysql_num_rows($find_perm_sql)){
+			     $perm_id = mysql_fetch_object($find_perm_sql);
+			     $perm_id = $perm_id->id;			     
+			   }else{
+			     mysql_query("INSERT INTO `proptiger`.`permissions` (`id`, `object_type_id`, `object_id`, `access_level`) VALUES (NULL, '".$objectType."', '".$v."', 'Read')") or die(mysql_error());
+			     $perm_id = mysql_insert_id();
+			   }
+			   #- Subcription Permission
+			   mysql_query("INSERT INTO `proptiger`.`subscription_permissions` (`id`, `subscription_id`, `permission_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$perm_id."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."');") or die(mysql_error());;
+			}
+		  }	
+		   
+		  
+		  #- User Subscription Mapping
+		  $cnt = 0;
+		  while($cnt < $userNo){
+			//need to fetch id on basis of email id from forum_user 
+			$email = $txtSubsUserEmail[$cnt];			
+			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'") or die(mysql_error());;			
+			if($sql_user){
+			  $userId = mysql_fetch_object($sql_user);	
+			  mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());;
+			}
+			$cnt++;	 
+		  } 		  
+		  		  
+	  }catch(Exception $e){	
+		  $error_flag = "Some error occurs in Company Order Saving! Try Again";	  
+		  return false;	  
+	  }
 
-print "<pre>".print_r($_REQUEST,1)."</pre>";
+		  
+	});
+	  
+	if($error_flag == ''){
+	 /*
+	  //sending email on placing an order
+	  $to = "kuldeep.patel_c@proptiger.com";
+	 // $cc = implode(',', $email['recipients']);
+	  $email['subject'] = "New Order Created!";
+	  $from = 'no-reply@proptiger.com';
+	  $emailContent = "New order[order ID : ".$company_order->id."] has been created!";
+	  $emailSubject = $email['subject'].' - '.date("d-m-Y");
+	  sendRawEmailFromAmazon($to, $from, $cc, $emailSubject, $emailContent, '', '', '');
+	  * */
+		
+	  header("Location:companyOrdersList.php?compId=".$txtCompId); 
+	}
+	  
+  }
+  
+  if($_POST['btnEditSave'] == 'Update'){
+	 
+	$orderId = $_POST['orderId'];
+	$subsId = $_POST['subsId'];  
+	  
+	$txtCompId = trim($_POST['txtCompId']);
+	$txtCompName = trim($_POST['txtCompName']);
+	$txtSalesPerson = trim($_POST['txtSalesPerson']);
+	$txtOrderDate = trim($_POST['txtOrderDate']);
+	$orderType = trim($_POST['orderType']);
+	$txtOrderDur = trim($_POST['txtOrderDur']);
+	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+	$txtOrderAmt = trim($_POST['txtOrderAmt']);
+	$txtExpiryOrderDate = trim($_POST['txtExpiryOrderDate']);
+	
+	$txtPaymentId = $_POST['txtPaymentId'];
+	$txtPaymentMethod = $_POST['txtPaymentMethod'];
+	$txtPaymentInstNo = $_POST['txtPaymentInstNo'];
+	$txtPaymentAmt = $_POST['txtPaymentAmt'];
+	$txtPaymentDate = $_POST['txtPaymentDate'];
+	
+	$gAccess = trim($_POST['gAccess']);
+	$cities = $_POST['cities'];
+	$locs_cities = trim($_POST['locs_cities']);
+	$dash_access = $_POST['dash_access'];
+	$demand_access = $_POST['demand_access'];
+	$supply_access = $_POST['supply_access'];
+	$catch_access = $_POST['catch_access'];
+	$builder_access = $_POST['builder_access'];
+	$noLicen = trim($_POST['noLicen']);
+	$txtSubsUserEmail = $_POST['txtSubsUserEmail'];
+	$txtSubsUserCont = $_POST['txtSubsUserCont'];
+	$txtSubsUserGroup = $_POST['txtSubsUserGroup'];
+	$pmtNo = trim($_POST['pmtNo']);
+	$userNo = trim($_POST['userNo']);
+	$all_locs = trim($_POST['all_locs']);	
+	$all_locs = ($all_locs)?explode(",",$all_locs):'';	
+	
+	CompanyOrder::transaction(function(){
+	  	
+	  global $orderId,$subsId,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs;
+	
+	  try{
+		  #company Orders
+		  $company_order = CompanyOrder::find($orderId);
+		  $company_order->company_id = $txtCompId;
+		  $company_order->sales_persion_id = $txtSalesPerson;
+		  $company_order->order_type = $orderType;
+		  $company_order->order_date = $txtOrderDate;
+		  if($orderType == 'trial'){
+			 $company_order->order_expiry_date = $txtExpiryTrialOrderDate; 
+			 $company_order->trial_duration =  $txtOrderDur;
+			 $company_order->order_amount =  '';
+		  }
+		  if($orderType == 'paid'){
+			 $company_order->order_expiry_date = $txtExpiryOrderDate;
+			 $company_order->order_amount =  $txtOrderAmt;
+			 $company_order->trial_duration =  ''; 
+			 //insert payment details
+		  }		  
+		  $company_order->updated_by = $_SESSION['adminId'];
+		  $company_order->updated_at = date('Y-m-d H:i:s');
+		  $company_order->created_at = date('Y-m-d H:i:s');
+		  $company_order->save();
+		  
+		  #Company Orders Payment
+		  if($orderType == 'paid'){
+			 $cnt = 0;
+			 while($cnt < $pmtNo){
+			   if($txtPaymentId)
+			     CompanyOrderPayment::delete_all(array('conditions'=>array("id not in (".implode($txtPaymentId).")")));	 
+			   $company_order_payments = CompanyOrderPayment::find($txtPaymentId[$cnt]);
+			   if(!$company_order_payments)
+			   $company_order_payments = new CompanyOrderPayment();
+			   $company_order_payments->company_order_id = $company_order->id;
+			   $company_order_payments->payment_method = $txtPaymentMethod[$cnt];
+			   $company_order_payments->payment_instrument_no = $txtPaymentInstNo[$cnt];
+			   $company_order_payments->payment_amount = $txtPaymentAmt[$cnt];
+			   $company_order_payments->payment_date = $txtPaymentDate[$cnt];
+			   $company_order_payments->updated_by = $_SESSION['adminId'];
+			   $company_order_payments->updated_at = date('Y-m-d H:i:s');
+			   $company_order_payments->created_at = date('Y-m-d H:i:s');
+			   $company_order_payments->save();
+			   $cnt++;	 
+			 } 
+		  }
+		  
+		  $subs_id = $subsId;
+		  	    
+		  
+		  #subcription sections
+		  mysql_query("DELETE FROM `proptiger`.`subscription_sections` WHERE `subscription_id`='".$subs_id."'") or die(mysql_error());
+		  if($dash_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$dash_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());;
+		  if($builder_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$builder_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());;
+		  if($catch_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$catch_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());;
+		  
+		  #subscription column
+		   mysql_query("DELETE FROM `proptiger`.`subscription_columns` WHERE `subscription_id`='".$subs_id."'") or die(mysql_error());
+		  if($demand_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_columns` (`id`, `subscription_id`, `column_group`, `created_by`, `created_at`) VALUES (NULL,'".$subs_id."', '".$demand_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."');") or die(mysql_error());;
+		  if($supply_access)
+		    mysql_query("INSERT INTO `proptiger`.`subscription_columns` (`id`, `subscription_id`, `column_group`, `created_by`, `created_at`) VALUES (NULL,'".$subs_id."', '".$supply_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."');") or die(mysql_error());  
+		   
+		    
+		  
+		   #- permission
+		   mysql_query("DELETE FROM `proptiger`.`subscription_permissions` WHERE subscription_id='".$subs_id."'") or die(mysql_error());
+		   $perm_data = array();
+		   if(!empty($all_locs)){
+			 $perm_data = $all_locs;
+			 $objectType = 4;
+		   }else{
+			 $perm_data = $cities;
+			 $objectType = 6; 			   
+		   }		   
+		   if(!empty($perm_data)){				  
+			 foreach($perm_data as $k=>$v){  
+			   $find_perm_sql = mysql_query("SELECT id FROM  `proptiger`.`permissions` WHERE `object_type_id`='".$objectType."' AND  `object_id`='".$v."' AND `access_level`='Read'") or die(mysql_error());
+			   if(mysql_num_rows($find_perm_sql)){
+			     $perm_id = mysql_fetch_object($find_perm_sql);
+			     $perm_id = $perm_id->id;			     
+			   }else{
+			     mysql_query("INSERT INTO `proptiger`.`permissions` (`id`, `object_type_id`, `object_id`, `access_level`) VALUES (NULL, '".$objectType."', '".$v."', 'Read')") or die(mysql_error());
+			     $perm_id = mysql_insert_id();
+			   }		   
+			   
+			   #- Subcription Permission
+			   mysql_query("INSERT INTO `proptiger`.`subscription_permissions` (`id`, `subscription_id`, `permission_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$perm_id."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."');") or die(mysql_error());;
+			}
+		  }	
+		   
+		  
+		  #- User Subscription Mapping
+		  mysql_query("DELETE FROM `proptiger`.`user_subscription_mappings` WHERE subscription_id='".$subs_id."'") or die(mysql_error());
+		  $cnt = 0;
+		  while($cnt < $userNo){
+			//need to fetch id on basis of email id from forum_user 
+			$email = $txtSubsUserEmail[$cnt];			
+			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'") or die(mysql_error());;			
+			if($sql_user){
+			  $userId = mysql_fetch_object($sql_user);	
+			  mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error());;
+			}
+			$cnt++;	 
+		  } 		  
+		  		  
+	  }catch(Exception $e){	
+		  $error_flag = "Some error occurs in Company Order Saving! Try Again";	 	  
+		  return false;	  
+	  }
 
+		  
+	});	 
+	
+	if($error_flag == '')
+	   header("Location:companyOrdersList.php?compId=".$txtCompId); 
+	  
+	  
+  }
 
+  if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o']) && $_REQUEST['page'] == 'edit'){
+	 $page = mysql_real_escape_string($_REQUEST['page']);
+	 $orderId = mysql_real_escape_string($_REQUEST['o']);
+	 
+	 $order_details = CompanyOrder::getOrderDetails($orderId);
+	 
+	 //basic
+	 $smarty->assign('txtCompId',$order_details['client_id']);
+	 $smarty->assign('txtCompName',$order_details['company_name']);
+	 $smarty->assign('txtSalesPerson',$order_details['sales_person_id']);
+	 $smarty->assign('txtOrderDate',$order_details['order_date']);
+	 $smarty->assign('orderType',strtolower($order_details['order_type']));
+	 $smarty->assign('txtOrderDur',$order_details['order_duration']);
+	 $smarty->assign('txtExpiryTrialOrderDate',$order_details['order_expiry_date']);
+	 $smarty->assign('txtExpiryOrderDate',$order_details['order_expiry_date']);
+	 $smarty->assign('txtOrderAmt',$order_details['order_amount']);
+	
+	 //payment
+	 $smarty->assign('txtPaymentDetails',$order_details['payment_details']);	 
+	 $smarty->assign('pmtNo',$order_details['pmtNo']);
+	 
+	 //section access and data access
+	 $smarty->assign('section_access',$order_details['sections']);
+	 $smarty->assign('data_access',$order_details['data_access']);
+	 
+	 $smarty->assign('gAccess',$order_details['gAccess']);
+	 $smarty->assign('gAccess_ids',($order_details['gAccess']=='gAccess_locs')?json_encode($order_details['gAccess_ids']):$order_details['gAccess_ids']);
 
+	 $smarty->assign('txtSubsUser',$order_details['user_emails']);
+	 $smarty->assign('userNo',$order_details['userNo']);
+	
+     $smarty->assign("subsId",$order_details['subscription_id']);
+	 $smarty->assign("page",$page);
+	 $smarty->assign("orderId",$orderId);
+  }
+  
+  if($_POST['btnExit'] == 'Exit'){
+	header("Location:companyOrdersList.php");  
+  }
 
-
-
-
-
-
-
-/////////// Initial Values
-$orderDur = array("1week"=>"1 week","2weeks"=>"2 weeks","3weeks"=>"3 weeks","4weeks"=>"1 weeks");
-$smarty->assign("orderDur",$orderDur);
-$paymentMhd = array("BankAccountTrnasfer"=>"Bank Account Trnasfer","BankDraft" => "Bank Draft","Other" => "Other");
-$smarty->assign("paymentMhd",$paymentMhd);
-$paymentNoDetails = 1; //by defualt
-$smarty->assign('paymentNoDetails',$paymentNoDetails);
-$cityArray = City::CityArr();
-$smarty->assign("cityArray", $cityArray);
-#$locsArray = Locality::localityList();
-#$smarty->assign("locsArray", $locsArray);
-$subsUsrDetails = 1; //by defualt
-$smarty->assign('subsUsrDetails',$subsUsrDetails);
-#populate sales persons
-$sales_pers = fetch_sales_persons();
-$smarty->assign('sales_pers',$sales_pers);
+  /////////// Initial Values
+  $orderDur = array("1week"=>"1 week","2weeks"=>"2 weeks","3weeks"=>"3 weeks","4weeks"=>"4 weeks");
+  $smarty->assign("orderDur",$orderDur);
+  $paymentMhd = array("BankAccountTrnasfer"=>"Bank Account Trnasfer","BankDraft" => "Bank Draft","Other" => "Other");
+  $smarty->assign("paymentMhd",$paymentMhd);
+  $paymentNoDetails = 1; //by defualt
+  $smarty->assign('paymentNoDetails',$paymentNoDetails);
+  $cityArray = City::CityArr();
+  $smarty->assign("cityArray", $cityArray);
+  #$locsArray = Locality::localityList();
+  #$smarty->assign("locsArray", $locsArray);
+  $subsUsrDetails = 1; //by defualt
+  $smarty->assign('subsUsrDetails',$subsUsrDetails);
+  #populate sales persons
+  $sales_pers = fetch_sales_persons();
+  $smarty->assign('sales_pers',$sales_pers);
+  #$trial_expiry_date = date("Y-m-d",strtotime("+ 1week"));
+  #$smarty->assign('txtExpiryTrialOrderDate',$trial_expiry_date);
+  $smarty->assign('error_flag',$error_flag);
 
  
 ?>

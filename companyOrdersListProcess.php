@@ -1,28 +1,12 @@
 <?php
 
-$typeArr = Company::getCompanyType(); 
-$smarty->assign("comptype", $typeArr);
+$compId = mysql_real_escape_string($_GET['compId']);
 
-$cityArray = City::CityArr();
-$smarty->assign("cityArray", $cityArray);
+$compOrderArr = CompanyOrder::getAllOrders($compId);
 
-
-
-$compArr = Company::getAllCompany();
-$smarty->assign("compArr", $compArr);
-//print("<pre>");
-//print_r($compArr);
-//$co = 
-/*
-$builderList = ResiBuilder::ProjectSearchBuilderEntityArr();
-$smarty->assign("builderList", $builderList);
+#$orderArr = CompanyOrder::getAllOrders(42);
+#print "<pre>".print_r($orderArr,1)."</pre>";
 
 
-
-$arrSearchFields = array();
-if( $_REQUEST['builder'] != '' ) 
-      $arrSearchFields['builder_id'] = $_REQUEST['builder'];
-$getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
-
-*/
+$smarty->assign("compOrderArr", $compOrderArr);
 ?>

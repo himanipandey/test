@@ -7,9 +7,11 @@ include("dbConfig.php");
 include("modelsConfig.php");
 include("includes/configs/configs.php");
 include_once("./function/locality_functions.php");
+require_once('includes/send_mail_amazon.php');
 AdminAuthentication();
 include('createCompanyOrderProcess.php');
 $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 $smarty->display(PROJECT_ADD_TEMPLATE_PATH."createCompanyOrder.tpl");
+include("forumUser_suggest_auto.php");
 $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");	
 ?>

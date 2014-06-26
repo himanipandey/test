@@ -610,7 +610,8 @@ function deleteRow(tableID) {
                                   <TD align=center class=td-border>{$v['person']}, Contact No.-{$v['phone']}</TD>
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}' );">Edit</a> &nbsp;&nbsp;&nbsp; <a href="javascript:void(0);" >View Orders</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}' );">Edit</a> &nbsp;&nbsp;&nbsp; <a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a>
+                                  &nbsp;&nbsp;&nbsp; <a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
                                 </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
