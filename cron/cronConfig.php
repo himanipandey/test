@@ -114,9 +114,9 @@ $weeklyEmail = array(
                 join city c on s.city_id = c.city_id
              where 
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and c.city_id in($cityList) having distance >10 ;",
-               'subject'=>'Weekly cron for PIDs greater than 10km from locality center',
+               'subject'=>'PIDs greater than 10km from locality center',
                'recipients'=>array('ankur.dhawan@proptiger.com'), 
-               'attachmentname'=>'weekly_cron_for_PIDs_greater_than_10km_from_locality_center',
+               'attachmentname'=>'PIDs_greater_than_10km_from_locality_center',
                'sendifnodata'=>0
         )
 );
