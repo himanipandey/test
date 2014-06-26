@@ -107,6 +107,7 @@ if($_REQUEST['edit'] == 'edit')
  }
 if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 {
+    //echo "<pre>";print_r($_REQUEST);die;
 /*************Add new project type if projectid is blank*********************************/
     $flgins = 0;
     $projectId	= $_REQUEST['projectId'];
@@ -143,7 +144,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $bed =	$_REQUEST['bed'][$key];
                 $Balconys = $_REQUEST['Balconys'][$key];
 
-                $txtPlotArea = $_REQUEST['txtPlotArea'][$key];
+                $txtPlotArea[$key] = $_REQUEST['txtPlotArea'][$key];
                 $txtSizeLen[$key] = $_REQUEST['txtSizeLen'][$key];
                 $txtSizeBre[$key] = $_REQUEST['txtSizeBre'][$key];
                 $txtUnitName_P[$key] = $_REQUEST['txtUnitName'][$key];
@@ -183,7 +184,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("txtVillaFloors", $txtVillaFloors);
                 $smarty->assign("txtVillaTerraceArea", $txtVillaTerraceArea);
                 $smarty->assign("txtVillaGardenArea", $txtVillaGardenArea);
-                $smarty->assign("txtPlotArea", $txtPlotArea);
+                $smarty->assign("txtPlotArea_P", $txtPlotArea);
                 $smarty->assign("txtSizeLen_P", $txtSizeLen);
                 $smarty->assign("txtUnitName_P", $txtUnitName_P);
                 
@@ -210,7 +211,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("txtVillaFloors_VA", $txtVillaFloors);
                 $smarty->assign("txtVillaTerraceArea_VA", $txtVillaTerraceArea);
                 $smarty->assign("txtVillaGardenArea_VA", $txtVillaGardenArea);
-                $smarty->assign("txtPlotArea", $txtPlotArea);
+               // $smarty->assign("txtPlotArea", $txtPlotArea);
               //  $smarty->assign("txtSizeLen", $txtSizeLen);
                 //$smarty->assign("txtSizeBre", $txtSizeBre);
 
@@ -258,8 +259,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         
                         $ErrorMsg[$key] .= "<br>Size length should be greater than zero of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
                     }
-                    $txtSize = 0;
-                    $txtSize = $txtPlotArea;
+                   // $txtSize = 0;
+                    $txtSize = $txtPlotArea[$key];
                     $plotIncrease++;
                 }
                 if($unitType != 'Plot' && $unitType != 'Shop' && $unitType != 'Office' && $unitType != 'Other' && $unitType != 'Shop Office'){
@@ -317,8 +318,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     }
                     else
                     {
-                        if($txtPlotArea != 0)
-                           $txtPlotArea = $txtSize;
+                        if($txtPlotArea[$key] != 0)
+                           $txtPlotArea[$key] = $txtSize[$key];
                         $option_id = $_REQUEST['typeid_edit'][$key];
                         $option = ResiProjectOptions::find($option_id);
                         $action = "update";
@@ -391,13 +392,21 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 else
                 {
 					$list_option_id = $_REQUEST['typeid_edit'][$key]; 
-															
-					############## Transaction Start##############
+					
+                                        if($_REQUEST['unitType'][$key]=='Office')
+                                            $unitType = 'Office';
+                                        elseif($_REQUEST['unitType'][$key]=='Shop')
+                                            $unitType = 'Shop';
+                                        elseif($_REQUEST['unitType'][$key]=='Shop Office')
+                                            $unitType = $txtUnitName;
+                                        elseif($_REQUEST['unitType'][$key]=='Other')
+                                            $unitType = 'Other';
+                                         ############## Transaction Start##############
 					 ResiProject::transaction(function(){
 						
 						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed,$unitType;
-												
-						if($unitType == 'Plot')
+						
+						if($unitType == 'Plot' || $unitType == 'Office' || $unitType == 'Shop')
 							$bed = 0;
 																		
 						$flag = 0;
@@ -518,7 +527,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
             
         }
     }elseif(!empty($ErrorMsg1)){
-	   header("Location:add_apartmentConfiguration.php?projectId=".$projectId."&edit=edit&error1=1");	
+	   //header("Location:add_apartmentConfiguration.php?projectId=".$projectId."&edit=edit&error1=1");	
 	}
 
 }
