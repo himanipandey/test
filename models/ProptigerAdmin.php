@@ -14,4 +14,11 @@ class ProptigerAdmin extends ActiveRecord\Model
         "resale_call_center" => "RESALE-CALLCENTER"
     );
     static $TEAM_LEADER = "teamLeader";
+    
+    function getAllExecByDepartment($department) {
+        $conditions = array("department = ? ", $department);
+        $getAllExec = ProptigerAdmin::find('all',
+                array("conditions" => $conditions));
+        return $getAllExec;
+    }
 }

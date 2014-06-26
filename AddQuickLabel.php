@@ -21,7 +21,8 @@
 	
 	$labelDataArr	=	array();
  	
- 	$qry	=	"SELECT TIME_STAMP,LABEL,CYCLE_TYPE FROM updation_cycle ORDER BY TIME_STAMP ASC";
+ 	$qry	=	"SELECT TIME_STAMP,LABEL,CYCLE_TYPE FROM updation_cycle where 
+                   cycle_type != 'construction' ORDER BY TIME_STAMP ASC";
  	$res = mysql_query($qry,$db);
  	
  	while($data	=	mysql_fetch_array($res))

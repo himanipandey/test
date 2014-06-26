@@ -3,8 +3,14 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
-
-<script language="javascript">
+<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+        //mode : "textareas",
+        mode : "specific_textareas",
+        editor_selector : "myTextEditor",
+        theme : "advanced"
+    });
 	function chkConfirm()
 	{
 		return confirm("Are you sure! you want to delete this record.");
@@ -248,8 +254,7 @@
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
                                                                 <td width="30%" align="left">
-                                                                       <textarea name="txtProjectDesc" rows="10" cols="45" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
-                                                                       <input type="hidden" name="txtProjectOldDesc" value="{$txtProjectDescription}" />
+                                                                       <textarea name="txtProjectDesc" rows="10" cols="45"  class ="myTextEditor" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
                                                                       {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
                                                                        <br/><br/>
                                                                        <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?

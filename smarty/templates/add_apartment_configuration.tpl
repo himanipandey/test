@@ -690,6 +690,7 @@
                         <div> 
                             {if ($ProjectDetail[0]['PROJECT_TYPE_ID']!=$typePA && $ProjectDetail[0]['PROJECT_TYPE_ID']!=$typePV)}
                                 {foreach from = $ErrorMsg  key=k item = datafirst}
+
                                 <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                         <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
                                         {else if $k == 3} Fourth row errors {else if $k == 4} Fifth row errors {else if $k == 5} Sixth row errors {else if $k == 6} Seventh row errors

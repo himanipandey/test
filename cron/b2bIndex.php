@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', '1');
-ini_set('memory_limit', '3G');
+ini_set('memory_limit', '4G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -17,7 +17,7 @@ require_once ($currentDir . '/../dbConfig.php');
 
 define("INVALID_DATE", "0000-00-01");
 define('MIN_B2B_DATE', '2013-04-01');
-define('MAX_B2B_DATE', '2014-02-01');
+define('MAX_B2B_DATE', '2014-04-01');
 define('B2B_DEMAND_START_DATE', '2014-01-01');
 define('CSV_FIELD_DELIMITER', '~#~');
 define('CSV_LINE_DELIMITER', "\r\n");
@@ -37,7 +37,7 @@ $logger->info("\n\n\nDeleted All rows");
 
 $aProjectPhaseCount = ResiProjectPhase::getWebsitePhaseCountForProjects();
 
-$globalCondition = "rp.version = 'Website' and (uc.LABEL != 'Skip Updation') and rp.STATUS in ('Active', 'ActiveInCms') and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched')";
+$globalCondition = "rp.version = 'Website' and (rp.UPDATION_CYCLE_ID != 15 or rp.UPDATION_CYCLE_ID is null) and rp.STATUS in ('Active', 'ActiveInCms') and RESIDENTIAL_FLAG = 'Residential' and psm.project_status not in ('Cancelled', 'OnHold', 'NotLaunched')";
 
 $aAllProjects = ResiProject::find_by_sql("select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_ID, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, s.SUBURB_ID, s.LABEL as SUBURB_NAME, c.CITY_ID, c.LABEL as CITY_NAME, psm.display_name as construction_status  from resi_project rp inner join project_status_master psm on rp.PROJECT_STATUS_ID = psm.id inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join city c on s.CITY_ID = c.CITY_ID left join updation_cycle uc on rp.UPDATION_CYCLE_ID = uc.UPDATION_CYCLE_ID where $globalCondition");
 

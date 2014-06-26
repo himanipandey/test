@@ -5,21 +5,17 @@ if( $myProjectsAuth == false )
    $accessMyProjects = "No Access";
 $smarty->assign("accessDataCollection",$accessDataCollection);
 
-$callingFieldFlag = '';
-if($_SESSION['DEPARTMENT'] === 'CALLCENTER')
-    $callingFieldFlag = 'callcenter';
-else
-    $callingFieldFlag = 'survey';
-$smarty->assign("callingFieldFlag",$callingFieldFlag);
-
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
+
 if($_POST['submit'] === 'Save'){
     $status = $_POST['status'];
     $remark = $_POST['remark'];
-    saveStatusUpdateByExecutive($_POST['projectid'], $status, $remark);
+    $source = $_POST['source'];
+    $id = $_POST['id'];
+    saveStatusUpdateByExecutiveConst($_POST['projectid'], $status, $remark, $source,$id);
 }
 
-$assignedProjects = getAssignedProjects($_SESSION['adminId']);
-$smarty->assign("assignedProjects", $assignedProjects);
+$assignedProjectsConst = getAssignedProjectsConst($_SESSION['adminId']);
+$smarty->assign("assignedProjectsConst", $assignedProjectsConst);
 $smarty->assign("projectPageURL", '/show_project_details.php?projectId=');
 ?>
