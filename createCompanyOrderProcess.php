@@ -109,7 +109,7 @@
 		  #subcription sections
 		  if($dash_access)
 		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$dash_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
-		  if($builder_access)
+		  if($builder_access && $orderType == 'paid')
 		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$builder_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
 		  if($catch_access)
 		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$catch_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
@@ -295,7 +295,7 @@
 		  mysql_query("DELETE FROM `proptiger`.`subscription_sections` WHERE `subscription_id`='".$subs_id."'") ;
 		  if($dash_access)
 		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$dash_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
-		  if($builder_access)
+		  if($builder_access && $orderType == 'paid')
 		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$builder_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
 		  if($catch_access)
 		    mysql_query("INSERT INTO `proptiger`.`subscription_sections` (`id`, `subscription_id`, `section`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$catch_access."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");

@@ -251,7 +251,9 @@
                     <span id="locs_cities_locs"> 
                       <select><option>-Select Locality-</option></select>                                          
                     </span>
-                    <img src = "images/plus.png" width ="20px" id = "add_loc" style="position:relative;top:5px" onclick="add_locality();" />
+                    {if $page!='view'}
+                      <img src = "images/plus.png" width ="20px" id = "add_loc" style="position:relative;top:5px" onclick="add_locality();" />
+                    {/if}
                     <div id="sel_locs"></div>
 				  </td>
 				  <td width="50%" align="left" ></td>
@@ -394,6 +396,12 @@ jQuery(document).ready(function(){
 	  order_type = "{$orderType}";
 	  total_pmt_detail = "{$pmtNo}";
 	  total_subs_user = "{$userNo}";
+	  subs_user = [];
+	  for(i=1;i<=total_subs_user;i++)
+	    subs_user.push(i);
+	  pmt_detail=[];
+	  for(i=1;i<=total_pmt_detail;i++)
+	    pmt_detail.push(i);
 	}
 	
 	if(order_type == 'paid'){	
