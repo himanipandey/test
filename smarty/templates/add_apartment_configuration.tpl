@@ -193,7 +193,7 @@
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bedrooms</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
-                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
+                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
                           <!-- <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
@@ -426,7 +426,7 @@
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bedrooms</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                               <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
-                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
+                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
                               <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
@@ -729,7 +729,6 @@
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
-                           
                                 <td>
                                    {if ($ProjectDetail[0]['PROJECT_TYPE_ID'] == $typePA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV) && array_key_exists(15,$txtSizeBre_P)}
                                         {$keyValueForName = $var-1}
@@ -753,7 +752,10 @@
                                         {/if}
                                     </select>
                                   {else}
-                                      <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitName_P[$keyValueForName]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
+                                      <select name="txtUnitName[]" id="txtUnitName_{($smarty.section.foo.index+1)}">
+                                          <option value="">Select Name</option>
+                                          <option value="Plots" {if $txtUnitName_P[$keyValueForName] != ''}selected{/if}>Plots</option>
+                                       </select>    
                                   {/if}
                                     <input type='hidden' value={$projectId} name='projectId' tempName="projectId" />
                                     <input type='hidden' value='{$typeName}' name='unitType[]' tempName="unitType" />
@@ -767,7 +769,7 @@
                               </td>
                               
                               <td>
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$keyValueForSize]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
                               </td>
                              
                             </tr>

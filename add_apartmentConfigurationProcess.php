@@ -228,11 +228,11 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 if ($_REQUEST['unitType'][$key]!='Plot' && $_REQUEST['unitType'][$key]!='Commercial'
                         && $_REQUEST['unitType'][$key]!='Office' && $_REQUEST['unitType'][$key]!='Shop'
                         && $_REQUEST['unitType'][$key]!='Shop Office' && $_REQUEST['unitType'][$key]!='Other') {
-                    if(trim($txtSize) == '' OR (!is_numeric(trim($txtSize))))
+                   /* if(trim($txtSize) == '' OR (!is_numeric(trim($txtSize))))
                     {
                         $ErrorMsg[$key] .= "<br>Please enter unit size";
-                    }
-                    if(trim($txtSize) <= 0)
+                    }*/
+                    if(trim($txtSize) <= 0 && trim($txtSize) != '')
                     {
                         $ErrorMsg[$key] .= "<br>Size should be greater than zero";
                     }
@@ -259,6 +259,13 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         
                         $ErrorMsg[$key] .= "<br>Size length should be greater than zero of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
                     }
+                    
+                    else if(trim($txtPlotArea[$key]) <= 0 && trim($txtPlotArea[$key]) != '')
+                    {
+                        
+                        $ErrorMsg[$key] .= "<br>Plot area should be greater than zero of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
+                    }
+                    
                    // $txtSize = 0;
                     $txtSize = $txtPlotArea[$key];
                     $plotIncrease++;
@@ -308,7 +315,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 //echo "<pre>";print_r(array_unique($ErrorMsg));
             if(empty($ErrorMsg))
             {
-                if($_REQUEST['delete'][$key] == '')
+                
+                if($_REQUEST['delete'][$key] == '' && !isset($_REQUEST['delete'][$key]))
                 {
                     if($_REQUEST['typeid_edit'][$key] == '')
                     {
@@ -334,6 +342,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                        $unitType = 'Other';
                     $option->option_type = $unitType;
                     $option->option_name = $txtUnitName;
+                    if($txtSize == '' || $txtSize == 0)$txtSize = null;
                     $option->size = $txtSize;
 //                    $option->carpet_area_info = $txtCarpetAreaInfo;
 //                    $option->price_per_unit_area = $txtPricePerUnitArea;
@@ -357,7 +366,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->breadth_of_plot = (int)$txtSizeBre[$key];
                     $option->updated_by = $_SESSION["adminId"];
                     $option->display_carpet_area = $txtCarpetAreaInfo;					
-		    $optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;
+		   /* $optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;
                     foreach ($option_txt_array as $key1 => $value1) {
                         if($key!=$key1 && $optionTxt==$value1){
                            $ErrorMsg1 = 'Duplicate Option!';//die();
@@ -368,10 +377,10 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                            
                             array_push($ErrorMsg2, $tmparr);
                         }
-                    }
+                    }*/
 
                     if(empty($ErrorMsg2)){
-					  $option_txt_array[] = $optionTxt;
+					 // $option_txt_array[] = $optionTxt;
 					  $result = $option->save();
                       if ($action == 'insert') {
                         $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
@@ -483,7 +492,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $list_option_id,$projectId)));
 					
 						}catch(Exception $e)
-						{
+						{ 
 							$ErrorMsg1 = 'Could not delete!';
 							return false;
 						}					
