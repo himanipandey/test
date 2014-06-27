@@ -35,7 +35,7 @@ class CompanyOrder extends ActiveRecord\Model
 	static function getOrderDetails($orderId){
 		$order_details = self::find('all',array('joins'=>'inner join company on company_orders.company_id = company.id and company.status = "Active" left join broker_contacts on company_orders.company_id = broker_contacts.broker_id
 		left join company_order_payments on company_orders.id = company_order_payments.company_order_id
-		left join proptiger.company_subscriptions on  company_orders.company_id = proptiger.company_subscriptions.company_id
+		left join proptiger.company_subscriptions on  company_orders.subscription_id = proptiger.company_subscriptions.id
 		left join proptiger.subscription_sections  on proptiger.company_subscriptions.id = proptiger.subscription_sections.subscription_id
 		left join proptiger.subscription_columns   on proptiger.company_subscriptions.id = proptiger.subscription_columns.subscription_id
 		left join proptiger.subscription_permissions   on proptiger.company_subscriptions.id = proptiger.subscription_permissions.subscription_id
@@ -88,6 +88,9 @@ class CompanyOrder extends ActiveRecord\Model
 			$order_all_details['gAccess'] = ($order->object_type_id==6)?'gAccess_cities':'gAccess_locs'; 
 			if($order->object_type_id == 4){
 			  $object_details = Locality::find("all",array("conditions"=>array('locality_id=? and status=?',$order->object_id,'Active'),"select"=>"label"));
+			  $order_all_details['gAccess_ids'][$order->object_id] = $object_details[0]->label;  
+			}elseif($order->object_type_id == 7){
+			  $object_details = Suburb::getSuburbById($order->object_id);
 			  $order_all_details['gAccess_ids'][$order->object_id] = $object_details[0]->label;  
 			}else{
 			  $order_all_details['gAccess_ids'][] = $order->object_id;  

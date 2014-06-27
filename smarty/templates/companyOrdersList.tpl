@@ -69,8 +69,8 @@
                                   <TD align=center class=td-border>{$v['company_id']}</TD>
                                   <TD align=center class=td-border>{$v['name']}</TD>
                                   <TD align=center class=td-border>{$v['contact_person']}</TD>
-                                  <TD align=center class=td-border>{$v['order_amount']}</TD>  
-                                  <TD align=center class=td-border>{$v['order_type']}</TD>                                  
+                                  <TD align=center class=td-border>{$v['order_type']}</TD> 
+                                  <TD align=center class=td-border>{$v['order_amount']}</TD>                                                                    
                                   <TD align=center class=td-border>{$v['order_date']}</TD>
                                   <TD align=center class=td-border>{$v['order_expiry_date']}</TD>
                                 </TR>

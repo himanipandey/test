@@ -43,6 +43,7 @@
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 			    <form method="post" enctype="multipart/form-data" id="frmcity" name="frmcity">
 			      <div>
+				{$error_flag}	  
 				<tr>
 				  <td width="20%" align="right" ><font color="red">*</font>Company: </td>
 				  <td width="30%" align="left">
@@ -72,7 +73,11 @@
 				
 				<tr>
 				  <td width="20%" align="right" ><font color="red">*</font>Order Date : </td>
-				  <td width="30%" align="left"> <input value="{$txtOrderDate}" name="txtOrderDate" type="text" class="formstyle2" id="txtOrderDate" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="txtOrderDate_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> {if $ErrorMsg["txtOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				  <td width="30%" align="left"> <input value="{$txtOrderDate}" name="txtOrderDate" type="text" class="formstyle2" id="txtOrderDate" readonly="1" size="10" />  
+				  {if $page!='view'}
+				  <img src="../images/cal_1.jpg" id="txtOrderDate_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+				  {/if}
+				  </td> {if $ErrorMsg["txtOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
 				
 				<tr>
@@ -127,12 +132,16 @@
 					
 				<tr class="paid_order">
 				  <td width="20%" align="right" ><font color="red">*</font>Order Amount : </td>
-				  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} type=text name="txtOrderAmt" id="txtOrderAmt" value="{$txtOrderAmt}" style="width:250px;"></td> {if $ErrorMsg["txtOrderAmt"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtOrderAmt"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				  <td width="30%" align="left"><input onkeypress='return isNumberKey2(event)' {if $page=='view'}disabled=true{/if} type=text name="txtOrderAmt" id="txtOrderAmt" value="{$txtOrderAmt}" style="width:250px;"></td> {if $ErrorMsg["txtOrderAmt"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtOrderAmt"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
 				
 				<tr class="paid_order">
 				  <td width="20%" align="right" ><font color="red">*</font>Expiry Date : </td>
-				  <td width="30%" align="left"> <input value="{$txtExpiryOrderDate}" name="txtExpiryOrderDate" type="text" class="formstyle2" id="txtExpiryOrderDate" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="txtExpiryOrderDate_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> {if $ErrorMsg["txtExpiryOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtExpiryOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				  <td width="30%" align="left"> <input value="{$txtExpiryOrderDate}" name="txtExpiryOrderDate" type="text" class="formstyle2" id="txtExpiryOrderDate" readonly="1" size="10" />  
+				  {if $page!='view'}
+				  <img src="../images/cal_1.jpg" id="txtExpiryOrderDate_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+				  {/if}
+				  </td> {if $ErrorMsg["txtExpiryOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtExpiryOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
 				
 				<tr class="paid_order">
@@ -187,12 +196,16 @@
 							
 							<tr class="paid_order paid_order_pmt_{$k}">
 							  <td width="20%" align="right" ><font color="red">*</font>Payment Amount : </td>
-							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} type=text name="txtPaymentAmt[]" id="txtPaymentAmt{$k}"  value="{$txtPaymentDetails[$k-1]['payment_amount']}" style="width:140px;"></td> {if $ErrorMsg["txtPaymentAmt"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtPaymentAmt"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+							  <td width="30%" align="left"><input onkeypress='return isNumberKey2(event)' {if $page=='view'}disabled=true{/if} type=text name="txtPaymentAmt[]" id="txtPaymentAmt{$k}"  value="{$txtPaymentDetails[$k-1]['payment_amount']}" style="width:140px;"></td> {if $ErrorMsg["txtPaymentAmt"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtPaymentAmt"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 							</tr>
 							
 							<tr class="paid_order paid_order_pmt_{$k}">
 							  <td width="20%" align="right" ><font color="red">*</font>Payment Date : </td>
-							  <td width="30%" align="left"> <input value="{$txtPaymentDetails[$k-1]['payment_date']}" name="txtPaymentDate[]" type="text" class="formstyle2" id="txtPaymentDate{$k}" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="txtPaymentDate_trigger{$k}" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> {if $ErrorMsg["txtPaymentDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtPaymentDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+							  <td width="30%" align="left"> <input value="{$txtPaymentDetails[$k-1]['payment_date']}" name="txtPaymentDate[]" type="text" class="formstyle2" id="txtPaymentDate{$k}" readonly="1" size="10" /> 
+							  {if $page!='view'}
+							   <img src="../images/cal_1.jpg" id="txtPaymentDate_trigger{$k}" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+							  {/if} 
+							   </td> {if $ErrorMsg["txtPaymentDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtPaymentDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 							</tr>	
 							{if $txtPaymentDetails[$k-1]['payment_id']}
 							  <input type="hidden" name="txtPaymentId[]" value="{$txtPaymentDetails[$k-1]['payment_id']}"/>
@@ -333,16 +346,18 @@
 				
 				<tr>
 				  <td >&nbsp;</td>
-				  <td align="left" style="padding-left:50px;" >
-				  <input type="hidden" name="pmtNo" id="pmtNo" value="{$pmtNo}" />
-				  <input type="hidden" name="userNo" id="userNo" value="1" />
+				  <td align="left" style="padding-left:50px;" >				  
 				  <input type="hidden" name="all_locs" id="all_locs" value="" />
 				  {if $page=='edit'}
+				    <input type="hidden" name="pmtNo" id="pmtNo" value="{$pmtNo}" />
+				    <input type="hidden" name="userNo" id="userNo" value="{$userNo}" />
 				    <input type="hidden" name="orderId" id="orderId" value="{$orderId}" />
 				    <input type="hidden" name="subsId" id="subsId" value="{$subsId}" />
 				    <input type="submit" name="btnEditSave" id="btnEditSave" value="Update" style="cursor:pointer" onclick="return validate_order();">
 				  {/if}
 				  {if $page!='view' && $page!='edit'}
+				    <input type="hidden" name="pmtNo" id="pmtNo" value="1" />
+				    <input type="hidden" name="userNo" id="userNo" value="1" />
 				    <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer" onclick="return validate_order();">
 				  {/if}
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
@@ -508,7 +523,7 @@ jQuery(document).ready(function(){
 	  }	  
 	 //payment details validations
 	 if(orderType == 'paid'){	
-	   if($('#txtOrderAmt').val().trim() == ''){
+	   if($('#txtOrderAmt').val().trim() == '' || $('#txtOrderAmt').val().trim() == 0){
 		 alert("Order Amount is required.");
 		 return false;   
 	   }	
@@ -519,11 +534,11 @@ jQuery(document).ready(function(){
 	   if($('#txtExpiryOrderDate').val() != ''){
 		date = $('#txtExpiryOrderDate').val();		
 		d1 = new Date(date).toDateString();		
-		d2 = new Date().toDateString();
+		d2 = new Date(orderDate).toDateString();
 		d1 = new Date(d1);
 		d2 = new Date(d2);
 		if(d1<d2){
-		  alert("Order Expiry Date must be Current or Future date.");		 
+		  alert("Order Expiry Date must greater than the Order Date.");		 
 		  return false;
 		}
 	  }	
@@ -643,7 +658,7 @@ jQuery(document).ready(function(){
   function update_locality(ctid)
   {
 	 $("#locs_cities_locs").val('');
-     var url="Refreshlocality.php?ctid="+ctid;
+     var url="Refreshlocality.php?ctid="+ctid+"&suburb=include";
      $.ajax({
 	   'url':url,
 	   success:function(data){
@@ -662,7 +677,20 @@ jQuery(document).ready(function(){
   function isNumberKey(evt)
   {
  	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	
+	 if (charCode > 31 && (charCode < 48 || charCode > 57) || (charCode == 13))
+		return false;
 
+	 return true;
+  }
+  
+  function isNumberKey2(evt)
+  {
+ 	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	
+	 if(charCode == 46)
+	   return true;
+	 
 	 if (charCode > 31 && (charCode < 48 || charCode > 57) || (charCode == 13))
 		return false;
 
