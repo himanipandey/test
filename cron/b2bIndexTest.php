@@ -6,7 +6,7 @@
  */
 
 function runTests(){
-    return verifySupply() && verifyLaunched() && verifyPhases() && verifyNonZeroColumns() && verifyNegativeUnitsSold() && verifyPlotBedrooms();
+    return verifySupply() && verifyLaunched() && verifyPhases() && verifyNonZeroColumns() && verifyNegativeUnitsSold();# && verifyPlotBedrooms();
 }
 
 // verifying if supply and launched unit in new table is correct
