@@ -9,6 +9,7 @@
 
 <script language="javascript">
 
+
 jQuery(document).ready(function(){ 
 	$("#create_button").click(function(){
 	  cleanFields();
@@ -26,10 +27,6 @@ jQuery(document).ready(function(){
 
 
 
-  
-
-
-
 	$("#lmkSave").click(function(){
 		var compType = $('#companyTypeEdit').children(":selected").val();
 		var name = $('#name').val().trim();        
@@ -38,6 +35,8 @@ jQuery(document).ready(function(){
     var city = $('#city option:selected').val();
 		var pincode = $('#pincode').val().trim();
     var compphone = $('#compphone').val().trim();
+    var img = $('#uploadedImage').val();
+    //var img = $(':file').val();
     var ipArr = [];
     $('input[name="ips[]"]').each(function() {
       ipArr.push($(this).val());
@@ -52,8 +51,14 @@ jQuery(document).ready(function(){
 		var compid = $('#compid').val();
 		 var error = 0;
 	    var mode='';
-	    if(compid) mode = 'update';
-	    else mode='create';
+	    if(compid) {
+        mode = 'update';
+        imgId = $('#imgid').val();
+      }
+	    else {
+        mode='create';
+        imgId = '';
+      } 
 
 
     if(fax!='' && !isNumeric1(fax)){
@@ -143,13 +148,18 @@ jQuery(document).ready(function(){
           $('#errmsgcomptype').html('');
     }
 
+   /* if($("#imgUploadStatus").val()=="0"){
+      error = 1;
+      $('#errmsglogo').html('<font color="red">Please upload a Company Logo.</font>');
+    }
+  */
 
 
 
 
 
 
-    var data = { id:compid, type:compType, name:name,des:des, address : address, city:city, pincode : pincode, compphone : compphone, ipArr : ipArr, person : person, phone:phone, fax:fax, email:email, web:web, pan:pan, status:status, task : "createComp", mode:mode}; 
+    var data = { id:compid, type:compType, name:name,des:des, address : address, city:city, pincode : pincode, compphone : compphone, image:img, imageId:imgId, ipArr : ipArr, person : person, phone:phone, fax:fax, email:email, web:web, pan:pan, status:status, task : "createComp", mode:mode}; 
 
 	    if (error==0){
       
@@ -157,6 +167,7 @@ jQuery(document).ready(function(){
 	            type: "POST",
 	            url: "/saveCompany.php",
 	            data: data,
+              
 	            success:function(msg){
 	           
 	               if(msg == 1){
@@ -257,6 +268,10 @@ function cleanFields(){
     $('input[name="ips[]"]').each(function() {
       $(this).val('');
     });
+    $("#imgid").val('');
+    $("#imgUploadStatus").val("0");
+    $("#uploadedImage").val("");
+
 
 
     $('#errmsgcity').html('');
@@ -270,11 +285,14 @@ function cleanFields(){
     $('.errmsgip').each(function() {
       $(this).html('');
     });
+    $('#imgPlaceholder').html('');
+    $('#errmsglogo').html('');
+
 }
 
 
 
-function editCompany(id,name,type,des, status, pan, email, address, city, pin, ipsstr, compphone, person, fax, phone){
+function editCompany(id,name,type,des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, fax, phone){
     cleanFields();
     $("#compid").val(id);
     $('#city').val(city);
@@ -285,6 +303,12 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, i
     $("#pincode").val(pin);
     $("#compphone").val(compphone);
    // var ipstring = ipstring.substring(0, ipstring.length -1);
+
+    var str = '<img src = "'+imgpath+'?width=130&height=100"  alt = "'+imgalttext+'">';
+
+    $('#imgPlaceholder').html(str);
+    $("#imgid").val(imgid);
+
     var ipsarr = ipsstr.split("-");
     
 
@@ -383,6 +407,45 @@ function deleteRow(tableID) {
                 alert(e);
             }
 }
+
+
+jQuery(function(){
+                iframeUpload.init();
+            });
+
+
+ 
+var iframeUpload = {
+    init: function() {
+        jQuery('#uploadForm').append('<iframe name="uploadiframe" onload="iframeUpload.complete();"></iframe>');
+        jQuery('form.uploadForm').attr('target','uploadiframe');
+        //jQuery(document).on('submit', 'form.uploadForm', iframeUpload.started);
+    },
+    started: function() {
+        jQuery('#response').removeClass().addClass('loading').html('Loading, please wait.').show();
+        jQuery('#uploadForm').hide();
+    },
+    complete: function(){
+        jQuery('#uploadForm').show();
+        var response = jQuery("iframe").contents().text();
+        if(response){
+            response = jQuery.parseJSON(response);
+            if(response.status == 1){
+              $("#errmsglogo").html('<font color="green">Image Successfully Uploaded.</font>');
+              $("#imgUploadStatus").val("1");
+              $("#uploadedImage").val(response.image);
+
+            }
+            else{
+              $("#errmsglogo").html('<font color="red">Image Upload Failed.</font>');
+              $("#imgUploadStatus").val("0");
+            }
+            
+        }
+        
+    }
+};
+
 
 
 </script>
@@ -484,6 +547,24 @@ function deleteRow(tableID) {
                     </tr>
 
                     <tr>
+                      <td width="20%" align="right" >Company Logo : </td>
+                      <td width="30%" align="left" id="imgPlaceholder"></td> <td width="20%" align="left" id=""><input type="hidden" name='imgid' id="imgid"></td>
+                    </tr>
+
+                  </form>
+                  <form action="saveCompanyLogo.php" target="uploadiframe" name="uploadForm" id="uploadForm" method="POST" enctype = "multipart/form-data">
+                    <tr>
+                      <td width="20%" align="right" >Change Logo : </td>
+                      <td width="30%" align="left"><input type="file" name='companyImg' id="companyImg" ><input type="hidden" name='imgUploadStatus' id="imgUploadStatus" value="0"><input type="hidden" name='uploadedImage' id="uploadedImage" value=""><input type="submit" id="upload" value="Upload" name="submit"></td> <td width="20%" align="left" id="errmsglogo"></td>
+                    </tr>
+                    
+
+                  </form>
+                  
+                  <form>
+
+                
+                    <tr>
                       <td width="10%" align="right" >Company IPs: </td>
                       <td width="20%" height="25" align="left" valign="top">
                     <select name="ip_no" id="ip_no" onchange="refreshIPs(this.value);">
@@ -567,6 +648,7 @@ function deleteRow(tableID) {
                     </tr>
                     </div>
                   </form>
+                  
                   </table> 
                   </div> 
 
@@ -581,6 +663,7 @@ function deleteRow(tableID) {
                                   <th  width=2% align="center">No.</th>
                                   <th  width=5% align="center">Type</th>
                                   <TH  width=8% align="center">Name</TH>
+                                  <TH  width=8% align="center">Logo</TH>
                                   <TH  width=8% align="center">Address</TH>
                                   <TH  width=8% align="center">Company IPs</TH>
                                   <TH  width=8% align="center">Contact Person</TH>
@@ -605,12 +688,13 @@ function deleteRow(tableID) {
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v['type']}</TD>
                                   <TD align=center class=td-border>{$v['name']}</TD>
+                                  <TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>
                                   <TD align=center class=td-border>{$v['address']}, City-{$v['city_name']}, Pin-{$v['pin']}, Ph.N.-{$v['compphone']}</TD>
                                   <TD align=center class=td-border>{foreach from=$v['ips'] key=k1 item=v1} {$v1}, {/foreach}</TD>
                                   <TD align=center class=td-border>{$v['person']}, Contact No.-{$v['phone']}</TD>
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}' );">Edit</a> &nbsp;&nbsp;&nbsp; <a href="javascript:void(0);" >View Orders</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}' );">Edit</a> &nbsp;&nbsp;&nbsp; <a href="javascript:void(0);" >View Orders</a> </TD>
                                 </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
