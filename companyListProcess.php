@@ -24,9 +24,9 @@ foreach ($compArr as $k => $v) {
 
 	$objectId = $v['id'];
 	$objectType = "company";
-    $url = readFromImageService($objectType, $objectId);
+    //$url = readFromImageService($objectType, $objectId);
     //print ""
-    //$url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
     $data = array();

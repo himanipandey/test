@@ -82,13 +82,16 @@ if($_POST['task']=='createComp'){
            
     
     if($mode=='update' && $id!==null){
-
-        $imageId = $_POST['imageId'];
-
-        $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
-        
-        $res_sql = mysql_query($sql) or die(mysql_error());
-        if(mysql_affected_rows()>0){
+		
+		$imageId = $_POST['imageId'];
+		
+		$sql_comp = mysql_query("select * from company where id='{$id}'") or die (mysql_error());
+            
+        if(mysql_num_rows($sql_comp)>0){
+			
+			$sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
+			
+			$res_sql = mysql_query($sql) or die(mysql_error());
 
             $query1 = "UPDATE addresses SET address_line_1='{$address}', city_id='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='company' and table_id='{$id}' )";
             $res1 = mysql_query($query1) or die(mysql_error());
@@ -126,17 +129,15 @@ if($_POST['task']=='createComp'){
                 $res5 = mysql_query($query5) or die(mysql_error());
 
                 
-                if(isset($_POST['image']) && $image!=""){ 
-                    $unitImageArr['objectId'] = $id;
+                if(isset($_POST['image']) && $image!=""){ 					
+					$unitImageArr['objectId'] = $id;
                     $unitImageArr['params']['service_image_id'] = $imageId;
+                    $unitImageArr['params']['update'] = "update";
                     $postArr[] = $unitImageArr;         
                     $response   = writeToImageService($postArr);
-                    //print_r($response);
-                    foreach ($response as $k => $v) {
-            
-                        if(empty($v->error->msg)){
-                        
-                            
+                    //print_r($response); die;
+                    foreach ($response as $k => $v) {            
+                        if(empty($v->error->msg)){                           
                             $image_id = $v->data->id;
                             //echo $image_id;//$image_id = $image_id->id;
                         }

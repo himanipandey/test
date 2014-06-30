@@ -188,7 +188,7 @@ jQuery(document).ready(function(){
 	                //$("#onclick-create").text("No Landmark Selected.");
 	                   alert("no data");
 	               }
-	               //else
+	               else alert(msg);
 	            },
 	        });
 
