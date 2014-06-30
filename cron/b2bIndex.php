@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', '1');
-ini_set('memory_limit', '4G');
+ini_set('memory_limit', '5G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -63,6 +63,9 @@ while ($completedPhaseConfigCount < $allPhaseConfigCount) {
     $aAllPrice = ListingPrices::getPriceForIndexing($aPhaseId);
     $logger->info("Price and inventory data retrieved");
     
+    removeInvalidPhaseData($aAllInventory);
+    removeInvalidPhaseData($aAllPrice);
+
     fillIntermediateMonths($aAllInventory);
     fillIntermediateMonths($aAllPrice);
 
