@@ -2,7 +2,9 @@
 
 class ImageServiceUpload{
 
+
     static $image_upload_url = IMAGE_SERVICE_URL;
+
     static $valid_request_methods = array("POST", "PUT", "DELETE");
     static $object_types = array("project" => "project",
         "option" => "property",
@@ -13,7 +15,15 @@ class ImageServiceUpload{
         "suburb" => "suburb",
         "landmark" => "landmark"
     );
-
+    static $sec_image_types = array(
+        "project" => array(
+            "project_image" => array(
+                "Elevation"=> "Elevation",
+                "Amenities"=>"Amenities", 
+                "Main Others"=>"mainOthers"
+            ),
+        ),
+    );
     static $image_types = array(
         "project" => array(
             "location_plan" => "locationPlan",
@@ -26,7 +36,10 @@ class ImageServiceUpload{
             "specification" => "specification",
             "price_list" => "priceList",
             "application_form" => "applicationForm",
-            "project_image" => "main"
+            "project_image" => "main",
+            "elevation"=> "main",
+            "amenities"=>"amenities", 
+            "main_other"=>"mainOther"
         ),
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
@@ -104,6 +117,9 @@ class ImageServiceUpload{
             "shopping_mall" => "shopping_mall",
             "grocery_or_supermarket" => "grocery_or_supermarket",
             "office_complex" => "office_complex",
+            "road" => "road",
+            "hotel" => "hotel",
+            "commercialcomplex" => "commercialComplex"
            
             
         ),

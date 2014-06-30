@@ -514,7 +514,7 @@ function update_locality(ctid)
                                     <select id="placeType" name="placeType">
                                        <option value=''>select place type</option>
                                        {foreach from=$nearPlaceTypesArray key=k item=v}
-                                              <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->display_name}</option>
+                                              <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
                                        {/foreach}
                                     </select>
                                 </td>
@@ -684,7 +684,7 @@ function update_locality(ctid)
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v.name}</TD>
                                   <TD align=center class=td-border>{$v.vicinity}</TD>
-                                  <TD align=center class=td-border>{$v.display_name}</TD>
+                                  <TD align=center class=td-border>{$v.placeType}</TD>
                                   <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
                   <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
 

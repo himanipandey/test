@@ -132,6 +132,7 @@
                            <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
                                  <table align="center" style = "border:1px solid;">
                                      <tr class ="headingrowcolor" height="30px">
+										  <th style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Delete</b></th>
                                           <th style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Project Type</b></th>
                                           <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Min Price (per sqft)</b></th>
                                           <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Max Price (per sqft)</b></th>
@@ -148,6 +149,9 @@
                                          {/if}
                                           <form method = "post" action = "">
                                          <tr bgcolor = "{$bgcolor}" height="30px">
+											 <td style = "padding-left:10px;" valign ="top" align = "left">
+                                                <input type = "checkbox" name = "delete[]" value ="{$arrBrokerPriceByProject[$val]['ID']}" />
+                                            </td>
                                             <td style = "padding-left:10px;" valign ="top" align = "left">
                                                 {$val}
                                                 <input type = "hidden" name = "unitType[]" value ="{$val}">
@@ -175,7 +179,7 @@
                                         </tr>
                                      {/foreach}
                                      <tr class="headingrowcolor" height="30px;">
-                                         <td class="whiteTxt" colspan = "4" align ="center">
+                                         <td class="whiteTxt" colspan = "5" align ="center">
                                              <input type = "hidden" name = "projectId" id = "projectId" value = "{$projectId}">
                                              <input type = "hidden" name = "effectiveDt" id = "effectiveDt" value = "{$effectiveDt}">
                                              <input type = "hidden" name = "brokerId" id = "brokerId" value = "{$brokerId}">
@@ -194,9 +198,7 @@
                     {else}
                             <tr>
                                 <td style = "padding-left:70px"align = "left" colspan="2">
-                                    <font color = "red">
-                                      Sorry No Records Found!
-                                    </font>
+                                   {if $errorPrice}<font color = 'green'>Prices has been deleted successfully!</font>{else}<font color = "red">Sorry No Records Found! </font>{/if}
                                 </td>
                             </tr>
                     {/if}
