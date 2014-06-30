@@ -108,7 +108,7 @@ if($_POST['task']=='createComp'){
             $query2 = "UPDATE broker_contacts SET name='{$person}', contact_email='{$email}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (broker_id='{$id}' and type='NAgent' )";
             
             $res2 = mysql_query($query2) or die(mysql_error());
-            if(mysql_affected_rows()>0){
+            //if(mysql_affected_rows()>0){
 
                 $query2 = "SELECT id from broker_contacts WHERE (broker_id='{$id}' and type='NAgent' )";
                 //echo $query2;
@@ -148,7 +148,7 @@ if($_POST['task']=='createComp'){
                         }
                     }
                 }
-            }
+            //}
 
             echo "1";
         }
@@ -171,6 +171,9 @@ if($_POST['task']=='createComp'){
                 $res = mysql_query($query) or die(mysql_error());
             }
             
+             $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$comp_id}', '+91', '{$compphone}', 'cc_phone', {$_SESSION['adminId']}, NOW())";
+              
+             $res3 = mysql_query($query3) or die(mysql_error());
 
 
             $query2 = "INSERT INTO broker_contacts (broker_id, name, type, contact_email, updated_by, created_at, updated_at) values ('{$comp_id}', '{$person}', 'NAgent', '{$email}', {$_SESSION['adminId']}, NOW(), NOW())";
@@ -178,9 +181,7 @@ if($_POST['task']=='createComp'){
             if(mysql_affected_rows()>0){
                
                 $broker_contacts_id = mysql_insert_id();
-                $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$comp_id}', '+91', '{$compphone}', 'cc_phone', {$_SESSION['adminId']}, NOW())";
-              
-                $res3 = mysql_query($query3) or die(mysql_error());
+               
 
                 $query4 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('broker_contacts', '{$broker_contacts_id}', '+91', '{$fax}', 'fax', {$_SESSION['adminId']}, NOW())";
                
