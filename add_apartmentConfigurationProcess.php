@@ -268,7 +268,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     
                    // $txtSize = 0;
                     $txtSize = $txtPlotArea[$key];
-                    $plotIncrease++;
+                   
                 }
                 if($unitType != 'Plot' && $unitType != 'Shop' && $unitType != 'Office' && $unitType != 'Other' && $unitType != 'Shop Office'){
                     if($bed == '')
@@ -505,6 +505,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
             }  
 
         }
+         $plotIncrease++;
     }
 
     //if(($flgins == 0) && (count($_REQUEST['bed']) == 15))

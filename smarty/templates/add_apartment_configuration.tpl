@@ -687,7 +687,7 @@
                       <br />
                       <TABLE cellSpacing=2 cellPadding=4 width="60%" align="left" style="border:1px solid #c2c2c2;" border="0">
                         <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
-                        <div> 
+                        <div>
                             {if ($ProjectDetail[0]['PROJECT_TYPE_ID']!=$typePA && $ProjectDetail[0]['PROJECT_TYPE_ID']!=$typePV)}
                                 {foreach from = $ErrorMsg  key=k item = datafirst}
 
@@ -762,10 +762,10 @@
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
                               </td>
                               <td align="left" >
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLen_P[$keyValueForSize]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeLen_P[$new_index]} == '') OR !is_numeric({$txtSizeLen_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLen_P[$keyValueForSize]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
                               </td>
                               <td align="left" >
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBre_P[$keyValueForSize]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeBre_P[$new_index]} == '') OR !is_numeric({$txtSizeBre_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBre_P[$keyValueForSize]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
                               </td>
                               
                               <td>
