@@ -131,7 +131,7 @@ if($_POST['task']=='createComp'){
                     $unitImageArr['params']['service_image_id'] = $imageId;
                     $postArr[] = $unitImageArr;         
                     $response   = writeToImageService($postArr);
-                    print_r($response);
+                    //print_r($response);
                     foreach ($response as $k => $v) {
             
                         if(empty($v->error->msg)){
@@ -193,7 +193,7 @@ if($_POST['task']=='createComp'){
                     $unitImageArr['objectId'] = $comp_id;
                     $postArr[] = $unitImageArr;         
                     $response   = writeToImageService($postArr);
-                    print_r($response);
+                    //print_r($response);
                     foreach ($response as $k => $v) {
             
                         if(empty($v->error->msg)){

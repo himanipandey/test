@@ -169,8 +169,7 @@ jQuery(document).ready(function(){
 	            data: data,
               
 	            success:function(msg){
-	           
-	               if(msg == 1){
+				   if(msg == 1){
 	               
 	               location.reload(true);
                  $(window).scrollTop(0);
@@ -189,7 +188,7 @@ jQuery(document).ready(function(){
 	                //$("#onclick-create").text("No Landmark Selected.");
 	                   alert("no data");
 	               }
-	               else alert(msg);
+	               //else
 	            },
 	        });
 
