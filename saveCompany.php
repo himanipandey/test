@@ -54,10 +54,10 @@ if($_POST['task']=='createComp'){
          
         finfo_close($finfo);
         //var_dump($fileinfo);
-        $type = explode(";", $fileinfo);
+        $imgtype = explode(";", $fileinfo);
         $imgParams = array();
         $imgParams['name']= $image;
-        $imgParams['type'] = $type[0];
+        $imgParams['type'] = $imgtype[0];
 
      $params = array(
                         "image_type" => "logo",
