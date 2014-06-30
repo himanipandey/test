@@ -2214,27 +2214,30 @@ function getLocalityAveragePrice($locId)
 	
 	return $average_price ;
 }
-function checkDuplicateDisplayOrder($projectId,$display_order,$service_image_id=0, $currentPlanId =''){
+function checkDuplicateDisplayOrder($projectId, $display_order, $image_type, $service_image_id=0 ){
 	
     $url = ImageServiceUpload::$image_upload_url."?objectType=project&objectId=".$projectId;
 
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
-//print_r($imgPath);
+//print("<pre>");print_r($imgPath);die();
     $orderArr = array();
     $cnt=0; 
+    //echo "submit:".$image_type.$display_order.$service_image_id."<br>";
     foreach($imgPath->data as $k=>$v){
-//echo $v->priority;
+        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
+        $str = ucfirst (implode(" ",$arr));
+//echo $v->id.$str.$v->priority."<br>";
         if($service_image_id==$v->id){
 
         }
-        else if($v->imageType->type=="main" && $v->priority!=5){
+        else if($str==$image_type && $v->priority!="5"){
            // if (!in_array($v->priority, $orderArr)){
              //   array_push($orderArr, $v->priority)
            // }
 
             if($v->priority==$display_order)
-                $cnt=1;
+                {$cnt=1; echo "yes";}
         }
 
     }
@@ -2279,7 +2282,7 @@ function updateD_Availablitiy($projectId){
 								inner join resi_project_options rpo on lst.option_id = rpo.options_id
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
-								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
+								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
 								where lst.status = 'Active' and rpo.project_id = '$projectId' 
 								and rpo.option_category = 'Actual'
 								".$condition."  
@@ -2301,7 +2304,7 @@ function updateD_Availablitiy($projectId){
 			inner join resi_project_options rpo on lst.option_id = rpo.options_id
 			left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 			left join project_availabilities pa on ps.id = pa.project_supply_id
-			inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
+			inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
 			where lst.status = 'Active' and rpo.project_id = '$projectId'
 			and rpo.option_category = 'Logical'
 			".$condition."  
@@ -2363,7 +2366,7 @@ function updatePhaseBookingStatus($projectId){
 								inner join resi_project_options rpo on lst.option_id = rpo.options_id
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
-								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
+								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
 								where lst.status = 'Active' and rpo.project_id = '$projectId' 
 								and rpo.option_category = 'Actual'
 								".$condition."  and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID'
@@ -2383,7 +2386,7 @@ function updatePhaseBookingStatus($projectId){
 					inner join resi_project_options rpo on lst.option_id = rpo.options_id
 					left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 					left join project_availabilities pa on ps.id = pa.project_supply_id
-					inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id 
+					inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
 					where lst.status = 'Active' and rpo.project_id = '$projectId'
 					and rpo.option_category = 'Logical'
 					 and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID'

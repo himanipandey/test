@@ -13,10 +13,9 @@ else
 $smarty->assign("callingFieldFlag",$callingFieldFlag);
 
 require_once "$_SERVER[DOCUMENT_ROOT]/datacollection/functions.php";
-
 if($_POST['submit'] === 'Save'){
     $status = $_POST['status'];
-    $remark = $_POST['status'];
+    $remark = $_POST['remark'];
     saveStatusUpdateByExecutive($_POST['projectid'], $status, $remark);
 }
 

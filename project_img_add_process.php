@@ -20,6 +20,16 @@
         
     $smarty->assign("imagetype", $_REQUEST['imagetype']);
     
+    $sec_image_types = ImageServiceUpload::$sec_image_types;
+    $sec_image_types = $sec_image_types['project']['project_image'];
+    $smarty->assign("sec_image_types", $sec_image_types);
+    //print_r($sec_image_types);
+
+
+    $Amenities = AmenitiesMaster::arrAmenitiesMaster();
+    $smarty->assign("amenities", $Amenities);
+
+
     //tower dropdown
     $towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));
     $towerDetail        =   array();
@@ -166,9 +176,10 @@ if (isset($_POST['Next']))
 		}
 
 	    //checking uniqness display order of elevation images
-	    if($_REQUEST['PType'] == 'Project Image'){
+	    if($_REQUEST['PType'] == 'Elevation' || $_REQUEST['PType'] == 'Amenities' || $_REQUEST['PType'] == 'Main Other'){
 			$count = 1;
 			$temp_arr = array();
+			
 			while($count <= $_REQUEST['img']){
 				
 				if(trim($_REQUEST['txtdisplay_order'][$count]) == ''){
@@ -178,7 +189,7 @@ if (isset($_POST['Next']))
 				  if(array_key_exists($_REQUEST['txtdisplay_order'][$count], $temp_arr)){
 					  $ErrorMsg["ptype"] = "Display order must be unique."; break;				  
 				  }else {//checking duplicacy
-						$ext_vlinks = checkDuplicateDisplayOrder($projectId,$_REQUEST['txtdisplay_order'][$count]);
+						$ext_vlinks = checkDuplicateDisplayOrder($projectId, $_REQUEST['txtdisplay_order'][$count], $_REQUEST['PType']);
 						if($ext_vlinks){
 							 $ErrorMsg["ptype"] = "Display order '".$_REQUEST['txtdisplay_order'][$count]."' already exist."; break;
 						}
@@ -186,6 +197,13 @@ if (isset($_POST['Next']))
 				  if($_REQUEST['txtdisplay_order'][$count] != 5)
 					$temp_arr[$_REQUEST['txtdisplay_order'][$count]] = $_REQUEST['txtdisplay_order'][$count];
 				}
+
+				if($_REQUEST['PType'] == 'Amenities'){
+					if($_REQUEST['SType'][$count] == ''){
+						$ErrorMsg["stype"] = "Please enter an Amenities Type."; 
+					}
+				}
+
 				$count++;
 			}
 		}
@@ -1324,11 +1342,12 @@ if (isset($_POST['Next']))
 										if(strstr($file,$val))
 										{
 										
-											
-											
-                                           
+											if($_REQUEST['PType']=="Elevation") $image_type="elevation";	
+											if($_REQUEST['PType']=="Amenities") $image_type="amenities";
+											if($_REQUEST['PType']=="Main Other") $image_type="main_other";
+                                           		
 											$params = array(
-						                        "image_type" => "project_image",
+						                        "image_type" => $image_type,
 						                        "folder" => $extra_path, //"tmp/",
 						                        "count" => "project_image".$key,
 						                        "image" => $file,
@@ -1595,7 +1614,7 @@ if (isset($_POST['Next']))
 	            $s3upload->upload();*/
 				$img->Free();
 				/*********update project table for samall image***********/
-				if($f=="large"){
+				if($_REQUEST['PType']=="Elevation"){
 					$pathProject	=	"/".$BuilderName."/".strtolower($ProjectName);
 
 					$qry	=	"UPDATE ".RESI_PROJECT." SET PROJECT_SMALL_IMAGE = '".$pathProject."/".str_replace('-large','-small',$file)."'
@@ -1645,13 +1664,14 @@ if (isset($_POST['Next']))
 				
 				$imgDbPath = explode("/images_new",$img_path);
 
+				
 				if($image_id>0)
 				{
 					$qryinsert = "INSERT INTO ".PROJECT_PLAN_IMAGES."
 									SET PLAN_IMAGE		=	'".$imgDbPath[1]."',
 										PROJECT_ID		=	'".$projectId."',
 										PLAN_TYPE		=	'".$_REQUEST['PType']."',
-										    BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
+										BUILDER_ID		=	'".$builderDetail['BUILDER_ID']."',
 										SERVICE_IMAGE_ID        =    ".$image_id.",
 										TITLE			=	'".$arrTitle[$k]."', 
 										DISPLAY_ORDER = '".$arrDisplayOrder[$k]."',

@@ -8,29 +8,24 @@ Date: 19/12/2013
 $docroot = dirname(__FILE__) . "/../";
 require_once $docroot.'modelsConfig.php';
 
-
 ResiProject::delete_website_version();
 ResiProject::partially_migrate_projects();
 //Locality::updateLocalityCoordinates();
 
 $missingProjects = ResiProject::get_recent_projects_without_website_version(86400*2);
 
-
 foreach ($missingProjects as $project) {
-    ProjectMigration::connection()->transaction();
-        $result = array();
-        $result[] = ResiProject::copy_cms_to_website($project->project_id, $project->updated_by);
-        $allPhases = ResiProject::get_all_phases($project->project_id);
-        foreach ($allPhases as $phase) {
-            $result[] = ResiProjectPhase::copy_cms_to_website($phase->phase_id, $phase->updated_by);
-        }
-        $result[] = ProjectAvailability::copyProjectInventoryToWebsite($project->project_id, $project->updated_by);
-        $result[] = ListingPrices::copyProjectPriceToWebsite($project->project_id, $project->updated_by);
-        $projectUpdationDate = ResiProject::get_project_updation_date($project->project_id);
-        ResiProject::set_table_attribute($project->project_id, 'D_PROJECT_UPDATION_DATE', $projectUpdationDate, $project->updated_by);
-        if(!($result === array_filter($result))){
-            ProjectMigration::connection()->rollback();
-        }
-    ProjectMigration::connection()->commit();
+    $projectMigration = new ProjectMigration();
+    
+    
+    $projectMigration->project_id = $project->project_id;
+    $projectMigration->migration_type = 'NewProject';
+    $projectMigration->version_from = 'Cms';
+    $projectMigration->version_to = 'Website';
+    $projectMigration->status = 'Waiting';
+    $projectMigration->created_at = 'NOW()';
+    $projectMigration->created_by = SYSTEM_USER_ID;
+
+    $projectMigration->save();
 }
 ?>
