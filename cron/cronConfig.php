@@ -104,7 +104,7 @@ $weeklyEmail = array(
                'sendifnodata'=>0
         ),
     array(
-            'sql'=>"SELECT rp.project_id,rp.project_name,rp.project_status,max(img.created_at) created_at
+            'sql'=>"SELECT rp.project_id,rp.project_name,rp.project_status,max(img.taken_at) created_at
 					FROM proptiger.Image img
 					INNER JOIN proptiger.ImageType imgt ON img.ImageType_id = imgt.id and imgt.id = 3
 					INNER JOIN proptiger.ObjectType ot ON imgt.ObjectType_id = ot.id and ot.id = 1
@@ -113,7 +113,7 @@ $weeklyEmail = array(
 					INNER JOIN proptiger.portfolio_listings plst ON rpt.type_id = plst.type_id
 					WHERE  rp.project_status = 'Under Construction'    				  
 				    GROUP BY rp.project_id
-				    HAVING created_at NOT BETWEEN (CURRENT_DATE  - INTERVAL 2 MONTH )  AND 	CURRENT_DATE;",
+				    HAVING ((created_at NOT BETWEEN (CURRENT_DATE  - INTERVAL 90 DAY)  AND 	CURRENT_DATE) AND created_at < CURRENT_DATE);",
                'subject'=>'Protfolio Projects which dont have Construction Updates since last 3 months',
                'recipients'=>array('ankur.dhawan@proptiger.com','karanvir.singh@proptiger.com','prashant.pracheta@proptiger.com'), 
                'attachmentname'=>'protfolio_projects_which_dont_have_Construction_Updates_since_last_3_months',
@@ -130,9 +130,9 @@ $weeklyEmail = array(
 				AND rp.project_status not in ('Cancelled','On Hold','Not Launched')
 				AND (rp.availability is null OR rp.availability > 0)
 				GROUP BY rp.project_id 
-				HAVING effective_date NOT BETWEEN (STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d')  - INTERVAL 2 MONTH )
+				HAVING ((effective_date NOT BETWEEN (STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d')  - INTERVAL 90 DAY)
 				AND 
-				( STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d'));",
+				( STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d'))) AND effective_date < CURRENT_DATE);",
                'subject'=>'Primary Protfolio Projects which have Month of Price is older than 3 months',
                'recipients'=>array('ankur.dhawan@proptiger.com','karanvir.singh@proptiger.com','prashant.pracheta@proptiger.com'), 
                'attachmentname'=>'Primary_Protfolio_Projects_which_have_Month_of_Price_is_older_than_3_months',
@@ -149,9 +149,9 @@ $weeklyEmail = array(
 				AND rp.project_status not in ('Cancelled','On Hold','Not Launched')
 				AND rp.availability = 0
 				GROUP BY rp.project_id 
-				HAVING effective_date NOT BETWEEN (STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d')  - INTERVAL 2 MONTH )
+				HAVING ((effective_date NOT BETWEEN (STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d')  - INTERVAL 90 DAY)
 				AND 
-				( STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d'));",
+				( STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d'))) AND effective_date < CURRENT_DATE);",
                'subject'=>'Resale Protfolio Projects which have Month of Price is older than 3 months',
                'recipients'=>array('ankur.dhawan@proptiger.com','karanvir.singh@proptiger.com','prashant.pracheta@proptiger.com'), 
                'attachmentname'=>'Resale_Protfolio_Projects_which_have_Month_of_Price_is_older_than_3_months',
