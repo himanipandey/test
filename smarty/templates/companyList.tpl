@@ -16,6 +16,9 @@ jQuery(document).ready(function(){
 	  
 	    $('#search_bottom').hide('slow');
 	   $('#create_company').show('slow'); 
+	    $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
+	    $(this).attr('disabled',false);		    
+	  });	
 	});
 
 	$("#exit_button").click(function(){
