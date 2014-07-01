@@ -738,7 +738,8 @@
                                         {$keyValueForSize = $new_index}
                                    {/if}
                                     {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typePA  && !array_key_exists(15,$txtSizeBre_P)}{$keyValueForName = $new_index}{/if}
-                                  {if $typeName == 'Commercial' || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOFFICE 
+                                  {if $typeName == 'Commercial' || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOFFICE
+                                       || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOTHER 
                                       || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP_OFFICE}
                                     <select name="txtUnitName[]" id="txtUnitName_{($smarty.section.foo.index+1)}">
                                         <option value="">Select Name</option>
@@ -746,6 +747,8 @@
                                             <option value="Shop" {if $txtUnitName_P[$new_index] == 'Shop'}selected{/if}>Shop</option>
                                         {else if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOFFICE}
                                             <option value="Office" {if $txtUnitName_P[$new_index] == 'Office'}selected{/if}>Office</option>
+                                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOTHER}
+                                            <option value="Other" {if $txtUnitName_P[$new_index] == 'Other'}selected{/if}>Other</option>    
                                         {else if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP_OFFICE || $typeName == 'Commercial'}
                                             <option value="Shop" {if $txtUnitName_P[$new_index] == 'Shop'}selected{/if}>Shop</option>
                                             <option value="Office" {if $txtUnitName_P[$new_index] == 'Office'}selected{/if}>Office</option>    
