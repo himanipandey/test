@@ -119,7 +119,7 @@ class ImageServiceUpload{
             "office_complex" => "office_complex",
             "road" => "road",
             "hotel" => "hotel",
-            "commercial_complex" => "commercialComplex"
+            "commercialcomplex" => "commercialComplex"
            
             
         ),
