@@ -2,6 +2,9 @@
 
   $error_flag='';
 
+  $cityArray = City::CityArr();
+  $smarty->assign("cityArray", $cityArray);
+
   //validate companyID if exist
   $compId = mysql_real_escape_string($_REQUEST['c']);
   if($compId){	  
@@ -46,7 +49,7 @@
 	
 	CompanyOrder::transaction(function(){
 	  	
-	  global $order_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag;
+	  global $order_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
 	
 	  try{
 		  
@@ -165,11 +168,11 @@
 			  $compArr = Company::getAllCompany($txtCompId);
 			  $pwd = time();
 			  //create user in forum table			
-			  mysql_query("INSERT INTO `proptiger`.`FORUM_USER` (`USER_ID`, `USERNAME`, `EMAIL`, `CONTACT`, `PROVIDERID`, `PROVIDER`, `FB_IMAGE_URL`, `IMAGE`, `PASSWORD`, `CITY`, `COUNTRY_ID`, `UNIQUE_USER_ID`, `CREATED_DATE`, `STATUS`, `IS_SUBSCRIBED`, `UNSUBSCRIBED_AT`) VALUES (NULL, '', '".$email."','".$phone."', '0', '', '', ' ', '".md5($pwd)."', '".$compArr[0]['city']."', '1', '', '".date('Y-m-d H:i:s')."', '1', 0, '".date('Y-m-d H:i:s')."');") or die(mysql_error());
+			  mysql_query("INSERT INTO `proptiger`.`FORUM_USER` (`USER_ID`, `USERNAME`, `EMAIL`, `CONTACT`, `PROVIDERID`, `PROVIDER`, `FB_IMAGE_URL`, `IMAGE`, `PASSWORD`, `CITY`, `COUNTRY_ID`, `UNIQUE_USER_ID`, `CREATED_DATE`, `STATUS`, `IS_SUBSCRIBED`, `UNSUBSCRIBED_AT`) VALUES (NULL, '', '".$email."','".$phone."', '0', '', '', ' ', '".md5($pwd)."', '".$cityArray[$compArr[0]['city']]."', '1', '', '".date('Y-m-d H:i:s')."', '1', 0, '".date('Y-m-d H:i:s')."');") or die(mysql_error());
 			  $userId = mysql_insert_id();
 			   $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
 			   //sending email to newly created user
-			  $email = "manish.goyal@proptiger.com";
+			  //$email = "kuldeep.patel_c@proptiger.com";
 			  $subject= "Your User Account has been created!";
 			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
 			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
@@ -249,7 +252,7 @@
 	
 	CompanyOrder::transaction(function(){
 	  	
-	  global $orderId,$subs_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag;
+	  global $orderId,$subs_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
 	
 	  try{
 		  $expiry_date='';
@@ -375,14 +378,14 @@
 			  $userId = mysql_fetch_object($sql_user);	
 			  $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
 			}else{
-			  $compArr = Company::getAllCompany($txtCompId);
+			  $compArr = Company::getAllCompany($txtCompId);		
 			  $pwd = time();
 			  //create user in forum table			
-			  mysql_query("INSERT INTO `proptiger`.`FORUM_USER` (`USER_ID`, `USERNAME`, `EMAIL`, `CONTACT`, `PROVIDERID`, `PROVIDER`, `FB_IMAGE_URL`, `IMAGE`, `PASSWORD`, `CITY`, `COUNTRY_ID`, `UNIQUE_USER_ID`, `CREATED_DATE`, `STATUS`, `IS_SUBSCRIBED`, `UNSUBSCRIBED_AT`) VALUES (NULL, '', '".$email."','".$phone."', '0', '', '', ' ', '".md5($pwd)."', '".$compArr[0]['city']."', '1', '', '".date('Y-m-d H:i:s')."', '1', 0, '".date('Y-m-d H:i:s')."');") or die(mysql_error());
+			  mysql_query("INSERT INTO `proptiger`.`FORUM_USER` (`USER_ID`, `USERNAME`, `EMAIL`, `CONTACT`, `PROVIDERID`, `PROVIDER`, `FB_IMAGE_URL`, `IMAGE`, `PASSWORD`, `CITY`, `COUNTRY_ID`, `UNIQUE_USER_ID`, `CREATED_DATE`, `STATUS`, `IS_SUBSCRIBED`, `UNSUBSCRIBED_AT`) VALUES (NULL, '', '".$email."','".$phone."', '0', '', '', ' ', '".md5($pwd)."', '".$cityArray[$compArr[0]['city']]."', '1', '', '".date('Y-m-d H:i:s')."', '1', 0, '".date('Y-m-d H:i:s')."');") or die(mysql_error());
 			  $userId = mysql_insert_id();
 			   $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
 			   //sending email to newly created user
-			  $email = "manish.goyal@proptiger.com";
+			  //$email = "kuldeep.patel_c@proptiger.com";
 			  $subject= "Your User Account has been created!";
 			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
 			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
@@ -404,8 +407,8 @@
 	  }
 		  
 	});	 
-	//if($error_flag == '')
-	  // header("Location:companyOrdersList.php?compId=".$txtCompId); 	  
+	if($error_flag == '')
+	   header("Location:companyOrdersList.php?compId=".$txtCompId); 	  
 	  
   }
 
