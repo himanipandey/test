@@ -25,7 +25,6 @@
 	$flg_edit=0;
 	$flg_delete=0;
 
-
 	$smarty->assign("projectId", $projectId);
     $ErrorMsg = array();
     $ErrorMsg2 = array();
@@ -182,18 +181,18 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $status						=	$_REQUEST['propstatus'][$key];
                 $pid[]						=	trim($txtUnitName);
                 
-                $txtUnitNameval[]			=	trim($txtUnitName);
-                $txtSizeval[]				=	trim($txtSize);
-                $txtPricePerUnitAreaval[]	=	trim($txtPricePerUnitArea);
-                $txtPricePerUnitAreaDpval[]	=	trim($txtPricePerUnitAreaDp);
+                $txtUnitNameval[$key]			=	trim($txtUnitName);
+                $txtSizeval[$key]				=	trim($txtSize);
+                $txtPricePerUnitAreaval[$key]	=	trim($txtPricePerUnitArea);
+                $txtPricePerUnitAreaDpval[$key]	=	trim($txtPricePerUnitAreaDp);
 
-                $bedval[]					=	$bed;
-                $bathroomsval[]				=	$bathrooms;
-                $Balconysval[]				=	$Balconys;
-                $studyroomsval[]			=	$studyrooms;
-                $servantroomsval[]			=	$servantrooms;
-                $poojaroomsval[]			=	$poojarooms;
-                $statusval[]				=	$status;
+                $bedval[$key]					=	$bed;
+                $bathroomsval[$key]				=	$bathrooms;
+                $Balconysval[$key]				=	$Balconys;
+                $studyroomsval[$key]			=	$studyrooms;
+                $servantroomsval[$key]			=	$servantrooms;
+                $poojaroomsval[$key]			=	$poojarooms;
+                $statusval[$key]				=	$status;
                 
                 $smarty->assign("pid", $pid);
 
@@ -442,14 +441,14 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 								  $all_log_lst_ids = implode(",",$all_log_lst_ids);
 															 
 								  $all_log_supplies = mysql_query("select * from project_supplies where listing_id in (".$all_log_lst_ids.")");
-															  
-								  if($all_log_supplies){
+
+								  if(mysql_num_rows($all_log_supplies)){
 									  $log_supplies = array();
 									  while($val = mysql_fetch_object($all_log_supplies)){
 										$log_supplies[] = $val->id;
 									  }
 									  $log_supplies = implode(",",$log_supplies);
-									 
+																		 
 									 ProjectAvailability::delete_all(array('conditions'=>array("project_supply_id in (".$log_supplies.")")));
 									 ProjectSupply::delete_all(array('conditions'=>array("id in (".$log_supplies.")"))); 
 									  
@@ -481,6 +480,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 					
 						}catch(Exception $e)
 						{
+
 							if(strstr($e, 'listing_prices_fk_1'))
 							  $ErrorMsg1 = "Couuld not delete! Prices exists for the config($txtUnitName).";
 							elseif(strstr($e, 'listings_fk_1'))
@@ -491,7 +491,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						}					
 								
 					});					
-					############## Transaction End ##############
+					############## Transaction End ##############							  
+					
                 }
             }  
 
@@ -508,6 +509,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     
     if(empty($ErrorMsg) && empty($ErrorMsg2) && $ErrorMsg1 == '')
     {
+		updateD_Availablitiy($projectId); // update D_availability 
+		
         if($flg_edit == 1)
         {
             if($preview == 'true')
@@ -524,7 +527,9 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                header("Location:add_apartmentFloorPlan.php?projectId=".$projectId);
             
         }
-    }
+    }elseif(!empty($ErrorMsg1)){
+	   header("Location:add_apartmentConfiguration.php?projectId=".$projectId."&edit=edit&error1=1");	
+	}
 
 }
     else if($_POST['btnExit'] == "Exit")
@@ -609,6 +614,10 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     //}
 
 //print "<pre>--".print_r($ErrorMsg,1); die;
+   
+	if($_REQUEST['error1'] == 1 && empty($ErrorMsg) && empty($ErrorMsg2)){
+      $ErrorMsg1 = "Could not delete!";
+    }
     
     $smarty->assign("ErrorMsg", $ErrorMsg);
     $smarty->assign("ErrorMsg1", $ErrorMsg1);

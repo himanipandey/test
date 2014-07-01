@@ -173,10 +173,21 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 
 /*********************Write Image to image service*************************************************************/
 
-function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImagePath){
+function writeToImageService($imageParams){
 
          // print'<pre>';
                 //print_r($params);
+    $postArr = array();
+    $result = array();
+    foreach ($imageParams as $k => $v) {
+        # code...
+          //print'<pre>';
+          //print_r($v); die();
+        $params = $v['params'];
+        $IMG = $v['img'];
+        $objectId = $v['objectId'];
+        $objectType = $v['objectType'];
+        $newImagePath = $v['newImagePath'];
 
         $service_extra_paramsArr = array( 
             "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'],"altText"=>$params['altText'], "jsonDump"=>json_encode($params['jsonDump']));
@@ -196,17 +207,22 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
 
                // print'<pre>';
                // print_r($service_extra_paramsArr);//die();
-    if($IMG==""){
-                //print'<pre>';
-                //print_r($params);//die();
-                //die("here");
-        $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId,
-                     "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));
 
-        $returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
-    }
-         
-    else{
+        if($params['delete']=="yes"){
+             $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id']));
+                $postArr[$k] = $s3upload->delete();
+        }        
+        else if($IMG==""){
+                    //print'<pre>';
+                    //print_r($params);//die();
+                    //die("here");
+            $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId,
+                         "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));
+            $postArr[$k] = $s3upload->updateWithoutImage();
+            //$returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
+        }
+             
+        else{
             $returnValue = array();
             $extension = explode( "/", $IMG['type'] );
             $extension = $extension[ count( $extension ) - 1 ];
@@ -252,17 +268,111 @@ function writeToImageService( $IMG="", $objectType, $objectId, $params, $newImag
                     "service_extra_params" => $service_extra_paramsArr));
                
                 if(isset($params['update']))
-                    $returnValue['serviceResponse'] =  $s3upload->update();
+                    $postArr[$k] = $s3upload->update();
+                    //$returnValue['serviceResponse'] =  $s3upload->update();
                 else{
-                    
-                    $returnValue['serviceResponse'] =  $s3upload->upload();
+                    $postArr[$k] = $s3upload->upload();
+                    //$returnValue['serviceResponse'] =  $s3upload->upload();
                 }
                 
                 
                 
             }
         }
-    return $returnValue;
+
+    }
+
+     
+            // print'<pre>';   print_r($postArr);die();
+  // array of curl handles
+    $curly = array();
+  // data to be returned
+    
+ //echo "curl-start:".microtime(true)."<br>"; 
+  // multi handle
+  $mh = curl_multi_init();
+ 
+  // loop through $data and create curl handles
+  // then add them to the multi-handle
+
+
+//print'<pre>';
+  //    print_r($postArr); //die();
+//if(count($postArr)>1){
+  foreach ($postArr as $id => $d) {
+    $url = $d['url'];
+    $method = $d['method'];
+    $post = $d['params'];
+    $curly[$id] = curl_init();
+ 
+    //$url = (is_array($d) && !empty($url) ? $url : "");
+    curl_setopt($curly[$id], CURLOPT_URL,            $url);
+    curl_setopt($curly[$id], CURLOPT_VERBOSE, 1);
+    curl_setopt($curly[$id], CURLOPT_HEADER,         1);
+    curl_setopt($curly[$id], CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curly[$id], CURLOPT_CUSTOMREQUEST, $method);
+    curl_setopt($curly[$id], CURLOPT_POSTFIELDS, $post);
+    // post?
+     curl_multi_add_handle($mh, $curly[$id]);
+  }
+ 
+  // execute the handles
+  $running = null;
+  do {
+    curl_multi_exec($mh, $running);
+    
+  } while($running > 0);
+ 
+ 
+  // get content and remove handles
+  foreach($curly as $id => $c) {
+    $response = curl_multi_getcontent($c);
+    $pos = mb_strpos($response, "{");
+    //echo $pos;
+    $result[$id] = json_decode(substr($response, $pos));
+    //var_dump($result[$id]);
+    //$header_size = curl_getinfo_read($c, CURLINFO_HEADER_SIZE);
+    //echo "headx:".$header_size;
+    //$header_size = curl_multi_info_read($c, CURLINFO_HEADER_SIZE);
+        //$response_header = substr($result[$id], 0, $header_size);
+        //$response_body = json_decode(substr($result[$id], $header_size));
+    //$result[$id] = $response_body;     
+    curl_multi_remove_handle($mh, $c);
+  }
+ 
+    // all done
+    curl_multi_close($mh);
+    //echo "curl-end:".microtime(true)."<br>"; 
+    //echo "loop-end:".microtime(true)."<br>"; 
+    //print("<pre>");   var_dump($result);die("here");
+
+//}
+/*
+else if(count($postArr)==1){
+    foreach ($postArr as $id => $d) {
+        $url = $d['url'];
+        $method = $d['method'];
+        $post = $d['params'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$method);
+        if($method == "POST" || $method == "PUT")
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        $response= curl_exec($ch);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $response_header = substr($response, 0, $header_size);
+        $response_body = json_decode(substr($response, $header_size));
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close ($ch);
+        $result[0] = $response_body;
+
+    }
+
+}*/
+    return $result;
 }
 
 
@@ -286,5 +396,14 @@ function readFromImageService($objectType, $objectId){
 
 function getDBDistanceQueryString($lon1Col, $lat1Col, $lon2Col, $lat2Col){
     return "((ACOS(SIN($lat1Col * PI() / 180) * SIN($lat2Col * PI() / 180) + COS($lat1Col * PI() / 180) * COS($lat2Col * PI() / 180) * COS(($lon1Col - $lon2Col) * PI() / 180)) * 180 / PI()) * 60 * 1.1515 * 1609.34)";
+
+}
+
+
+function getProjectFromOption($optionId){
+    $qry = "SELECT PROJECT_ID FROM resi_project_options WHERE OPTIONS_ID={$optionId}";
+    $res = mysql_query($qry);
+    $Result = mysql_fetch_assoc($res);
+    return $Result['PROJECT_ID'];
 
 }

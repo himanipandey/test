@@ -2,7 +2,9 @@
 
 class ImageServiceUpload{
 
-    static $image_upload_url = "http://nightly.proptiger-ws.com:8080/data/v1/entity/image";
+
+    static $image_upload_url = IMAGE_SERVICE_URL;
+
     static $valid_request_methods = array("POST", "PUT", "DELETE");
     static $object_types = array("project" => "project",
         "option" => "property",
@@ -13,7 +15,15 @@ class ImageServiceUpload{
         "suburb" => "suburb",
         "landmark" => "landmark"
     );
-
+    static $sec_image_types = array(
+        "project" => array(
+            "project_image" => array(
+                "Elevation"=> "Elevation",
+                "Amenities"=>"Amenities", 
+                "Main Others"=>"mainOthers"
+            ),
+        ),
+    );
     static $image_types = array(
         "project" => array(
             "location_plan" => "locationPlan",
@@ -26,7 +36,10 @@ class ImageServiceUpload{
             "specification" => "specification",
             "price_list" => "priceList",
             "application_form" => "applicationForm",
-            "project_image" => "main"
+            "project_image" => "main",
+            "elevation"=> "main",
+            "amenities"=>"amenities", 
+            "main_other"=>"mainOther"
         ),
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
@@ -91,8 +104,6 @@ class ImageServiceUpload{
             "school" => "school",
             "hospital"  => "hospital",
             "bank" => "bank",
-            "bus_stand" => "bus_stand",
-            "park" => "park",
             "atm" => "atm",
             "restaurant" => "restaurant",
             "gas_station" => "gas_station",
@@ -100,10 +111,16 @@ class ImageServiceUpload{
             "bus_station" => "bus_station",
             "train_station" => "train_station",
             "airport" => "airport",
+            "play_school" => "play_school",
+            "higher_education" => "higher_education",
+            "park" => "park",
             "shopping_mall" => "shopping_mall",
             "grocery_or_supermarket" => "grocery_or_supermarket",
             "office_complex" => "office_complex",
-            "other" => "other",
+            "road" => "road",
+            "hotel" => "hotel",
+            "commercialcomplex" => "commercialComplex"
+           
             
         ),
         "bank" => array("logo" => "logo"));
@@ -131,16 +148,18 @@ class ImageServiceUpload{
 
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
+
         if($this->method == "DELETE")
             $response = static::delete($this->image_id, $params);
         elseif($this->method == "PUT")
             $response = static::update($this->image_id, $params);
         else
             $response = static::create($params);
-        $this->response_header = $response["header"];
-        $this->response_body = $response["body"];
-        $this->status = $response["status"];
-        $this->verify_status();
+        //$this->response_header = $response["header"];
+        //$this->response_body = $response["body"];
+        //$this->status = $response["status"];
+        //$this->verify_status();
+        return $response;
         //$this->raise_errors_if_any();
        
     }
@@ -158,6 +177,7 @@ class ImageServiceUpload{
     }
 
     static function curl_request($post, $method, $url){
+        //echo "curl-start:".microtime(true)."<br>";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -172,27 +192,37 @@ class ImageServiceUpload{
         $response_body = json_decode(substr($response, $header_size));
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close ($ch);
-        //print("<pre>"); echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
+        //print("<pre>"); print_r($post); echo $url;//echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
         //die();
+        //echo "curl-end:".microtime(true)."<br>";
         return array("header" => $response_header, "body" => $response_body, "status" => $status);
     }
 
     static function create($post){
-
+        
         //print("<pre>");var_dump($post);var_dump(static::$image_upload_url);die("heool-create");
+        $returnArr = array();
+        $returnArr = array("params" => $post, "method" => 'POST', "url" => static::$image_upload_url);
+        //print("<pre>");var_dump($returnArr); die("create");
+        return $returnArr;
+        
+        //return static::curl_request($post, 'POST', static::$image_upload_url);
 
-        return static::curl_request($post, 'POST', static::$image_upload_url);
     }
 
     static function delete($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
-        return static::curl_request($post, 'DELETE', $url);
+        //return static::curl_request($post, 'DELETE', $url);
+        $returnArr = array("params" => $post, "method" => 'DELETE', "url"=> $url);
+        return $returnArr;
     }
 
     static function update($id, $post){
         $url = static::join_urls(static::$image_upload_url, $id);
         //print("<pre>");var_dump($post);var_dump($url);die("heool-update");//
-        return static::curl_request($post, 'POST', $url);
+        //return static::curl_request($post, 'POST', $url);
+        $returnArr = array("params" => $post, "method" => 'POST', "url"=> $url);
+        return $returnArr;
     }
 
     function validate(){

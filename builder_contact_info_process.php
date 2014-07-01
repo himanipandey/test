@@ -12,7 +12,7 @@
     $smarty->assign("builderName", $builderName);
     $smarty->assign("builderId", $builderId);
     $smarty -> assign("agentId", $agentId);
-    $smarty->assign("arrCampaign", $arrCampaign);
+    $smarty->assign('arrCampaign', CampaignDids::allCampaign());
     
     
 ?>

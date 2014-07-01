@@ -84,19 +84,19 @@
                               <b>Month:</b>&nbsp;
                               
                               <select name ="month" id = "month">
-                                  <option value="">Select Month</option>
-                                  <option value="01" {if $month == 01} selected{/if}>Jan</option>
-                                  <option value="02" {if $month == 02} selected{/if}>Feb</option>
-                                  <option value="03" {if $month == 03} selected{/if}>March</option>
-                                  <option value="04" {if $month == 04} selected{/if}>April</option>
-                                  <option value="05" {if $month == 05} selected{/if}>May</option>
-                                  <option value="06" {if $month == 06} selected{/if}>June</option>
-                                  <option value="07" {if $month == 07} selected{/if}>July</option>
-                                  <option value="08" {if $month == 08} selected{/if}>Aug</option>
-                                  <option value="09" {if $month == 09} selected{/if}>Sept</option>
-                                  <option value="10" {if $month == 10} selected{/if}>Oct</option>
-                                  <option value="11" {if $month == 11} selected{/if}>Nov</option>
-                                  <option value="12" {if $month == 12} selected{/if}>Dec</option>
+                                  <option value="">{$month}Select Month</option>
+                                  <option value="01" {if $month == "01"} selected{/if}>Jan</option>
+                                  <option value="02" {if $month == "02"} selected{/if}>Feb</option>
+                                  <option value="03" {if $month == "03"} selected{/if}>March</option>
+                                  <option value="04" {if $month == "04"} selected{/if}>April</option>
+                                  <option value="05" {if $month == "05"} selected{/if}>May</option>
+                                  <option value="06" {if $month == "06"} selected{/if}>June</option>
+                                  <option value="07" {if $month == "07"} selected{/if}>July</option>
+                                  <option value="08" {if $month == "08"} selected{/if}>Aug</option>
+                                  <option value="09" {if $month == "09"} selected{/if}>Sept</option>
+                                  <option value="10" {if $month == "10"} selected{/if}>Oct</option>
+                                  <option value="11" {if $month == "11"} selected{/if}>Nov</option>
+                                  <option value="12" {if $month == "12"} selected{/if}>Dec</option>
                               </select>
                             </td>
                         </tr>
@@ -132,6 +132,7 @@
                            <td align ="left" valign ="top" colspan="2"  style = "padding-left:20px;">
                                  <table align="center" style = "border:1px solid;">
                                      <tr class ="headingrowcolor" height="30px">
+										  <th style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Delete</b></th>
                                           <th style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Project Type</b></th>
                                           <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Min Price (per sqft)</b></th>
                                           <th nowrap style ="padding-left: 10px;" class ="whiteTxt" align = "left"><b>Max Price (per sqft)</b></th>
@@ -148,16 +149,19 @@
                                          {/if}
                                           <form method = "post" action = "">
                                          <tr bgcolor = "{$bgcolor}" height="30px">
+											 <td style = "padding-left:10px;" valign ="top" align = "left">
+                                                <input type = "checkbox" name = "delete[]" value ="{$arrBrokerPriceByProject[$val]['ID']}" />
+                                            </td>
                                             <td style = "padding-left:10px;" valign ="top" align = "left">
                                                 {$val}
                                                 <input type = "hidden" name = "unitType[]" value ="{$val}">
                                             </td>
-                                            <td valign ="top" style ="padding-left: 10px;" align = "left">
-                                                <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrBrokerPriceByProject[$val]['MIN_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{else}{$arrMinPrice[$val]}{/if}">
+                                             <td valign ="top" style ="padding-left: 10px;" align = "left">
+                                              <input onkeypress="return isNumberKey(event);" type = "text" id = "minPrice_{$cnt}" name = "minPrice[]" value="{if $arrMinPrice[$k] != ''}{$arrMinPrice[$k]}{else}{trim($arrBrokerPriceByProject[$val]['MIN_PRICE'])}{/if}">
                                             </td>
                                             <td  valign ="top" style ="padding-left: 10px;" align = "left">
-                                                <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
-                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrBrokerPriceByProject[$val]['MAX_PRICE'] != ''}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{else}{$arrMaxPrice[$val]}{/if}">
+                                               <input onkeypress="return isNumberKey(event);" onkeyup = "meanCalculate(this.value,{$cnt});" 
+                                                     maxlength = '10' type = "text" id = "maxPrice_{$cnt}" name = "maxPrice[]" value="{if $arrMaxPrice[$k] != ''}{$arrMaxPrice[$k]}{else}{trim($arrBrokerPriceByProject[$val]['MAX_PRICE'])}{/if}">
                                             </td>
                                             <td style ="padding-left: 10px;" align = "left">
                                                 <div id = "mean_{$cnt}">
@@ -175,7 +179,7 @@
                                         </tr>
                                      {/foreach}
                                      <tr class="headingrowcolor" height="30px;">
-                                         <td class="whiteTxt" colspan = "4" align ="center">
+                                         <td class="whiteTxt" colspan = "5" align ="center">
                                              <input type = "hidden" name = "projectId" id = "projectId" value = "{$projectId}">
                                              <input type = "hidden" name = "effectiveDt" id = "effectiveDt" value = "{$effectiveDt}">
                                              <input type = "hidden" name = "brokerId" id = "brokerId" value = "{$brokerId}">
@@ -194,9 +198,7 @@
                     {else}
                             <tr>
                                 <td style = "padding-left:70px"align = "left" colspan="2">
-                                    <font color = "red">
-                                      Sorry No Records Found!
-                                    </font>
+                                   {if $errorPrice}<font color = 'green'>Prices has been deleted successfully!</font>{else}<font color = "red">Sorry No Records Found! </font>{/if}
                                 </td>
                             </tr>
                     {/if}

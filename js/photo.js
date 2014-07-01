@@ -41,19 +41,26 @@ $(document).ready(function(){
             style: "full",
             maxRows: 10,
             name_startsWith: request.term,
-            cityId: window.areaResponse['city']
+            cityId: window.areaResponse['city'],
+            placeType: $("#imgCat :selected").val(),
           },
           success: function( data ) {
-            
-            response( $.map( data, function( item ) {
-              return {
-                label: item.name,
-                value: item.shortName,
-                table: item.table,
-                id: item.id,
+            if(data[0].error){
+                alert("Please Select Image Type first.");
+                $( "#search" ).val("");
+                response();
+            }
+            else{
+                response( $.map( data, function( item ) {
+                  return {
+                    label: item.name,
+                    value: item.shortName,
+                    table: item.table,
+                    id: item.id,
 
-              }
-            }));
+                  }
+                }));
+            }
           }
         });
       },
@@ -62,8 +69,12 @@ $(document).ready(function(){
         selectedItem = ui.item;
         $("#landmarkId").val(selectedItem.id);
         $("#landmarkName").val(selectedItem.value);
-        window.areaResponse['landmark'] = selectedItem.id;
-        areaTypeChanged( 'landmark' );
+        if(selectedItem.id){
+            window.areaResponse['landmark'] = selectedItem.id;
+           // areaTypeChanged( 'landmark' );
+           updateDisplayLocation();
+        }
+
         //alert(selectedItem.label);
         //log( ui.item ?
          // "Selected: " + ui.item.label :
@@ -175,14 +186,15 @@ function updateDropDown( response ) {
 }
 
 function updateImageCategory(data){
-    $("#imgCat option").each(function() {
+    /*$("#imgCat option").each(function() {
             $(this).remove();
     });
 
-    
+    $('<option>').val("other").text("Select Category").appendTo('#imgCat');
     $.each(data, function(k, v){
+
         $('<option>').val(v).text(v).appendTo('#imgCat');
-    });
+    });*/
 }
 
 function updateDropDownOption( areaId, areaType, data ) {
@@ -206,18 +218,42 @@ function updateDropDownOption( areaId, areaType, data ) {
     }
 }
 
+function updateImageCat(){
+    initVar();
+    var areaType  = "",
+        elementId = "",
+        areaName  = "";
+    var imgType = $("#imgCat :selected").text();
+    if(imgType.indexOf('Select') >= 0){
+        imgType = "";
+        
+    }
+
+    $('#search').val("");
+        window.areaResponse['landmark'] = 0;
+        $("#landmarkId").val("");
+        $("#landmarkName").val("");
+        $('#img-name').html("").val("");   
+}
+
 function updateDisplayLocation() {
     initVar();
     var areaType  = "",
         elementId = "",
         areaName  = "";
     var imgType = $("#imgCat :selected").text();
-    if(imgType.indexOf('Select') >= 0)
+    if(imgType.indexOf('Select') >= 0){
         imgType = "";
+        
+    }
+     
+         
         //console.log(window.areaResponse);
 
+    
+
     if ( $('#search').val()!='') {
-        areaType = "landmark";
+        areaType = "Landmark";
         value = $('#landmarkName').val();
         $('#area-txt-name').html( areaType + " : " + value );
         //fill display name for landmarks
@@ -242,8 +278,13 @@ function updateDisplayLocation() {
         }
         $("#imgName").val($('#img-name').val()); 
         return;
-    }  
-    else if ( window.areaResponse['locality'] != 0 ) {
+    } 
+    else{
+        $('#area-txt-name').html( "Landmark : "); 
+
+    }
+     $('#area-txt-name').html( "Landmark : "); 
+    /*else if ( window.areaResponse['locality'] != 0 ) {
         areaType = "Locality";
         elementId = "drp-dwn-locality-" + window.areaResponse['locality'];
     }
@@ -252,7 +293,7 @@ function updateDisplayLocation() {
         elementId = "drp-dwn-suburb-" + window.areaResponse['suburb'];
     }
     else {
-        areaType = "City";
+        areaType = "Landmark";
         elementId = "drp-dwn-city-" + window.areaResponse['city'];
     }
     if ( window.areaResponse['landmark'] != 0 ) {
@@ -274,7 +315,7 @@ function updateDisplayLocation() {
         $('#img-name').html(imgType+"-"+areaName).val(imgType+"-"+areaName);
     else 
          $('#img-name').html("").val("");
-    $("#imgName").val($('#img-name').val()); 
+    $("#imgName").val($('#img-name').val()); */
 }
 
 function verifyPhotoFormData() {
@@ -287,6 +328,10 @@ function verifyPhotoFormData() {
 }
 
 function validateThisImg( img ) {
+    if (! window.areaResponse['landmark'] > 0 ) {
+        alert('please select a Landmark from Search Landmark Field.');
+        return false;
+    }
     if ( img.files.length == 0 ) {
         alert('please select at-least 1 image');
         return false;
@@ -298,8 +343,8 @@ function validateThisImg( img ) {
     for( var i = 0; i < img.files.length; i++ ) {
         var f = img.files[i];
         if ( /^image/.test(f.type ) ) {
-            if (f.size > 1048576 ) {
-                alert('images size must be less that 1MB');
+            if (f.size > 15728640 ) {
+                alert('images size must be less than 15MB');
                 return false;
             }
         }
@@ -312,6 +357,10 @@ function validateThisImg( img ) {
 }
 
 function getPhotos() {
+    if (! window.areaResponse['landmark'] > 0 ) {
+        alert('please select a Landmark from Search Landmark Field.');
+        return false;
+    }
     toggleSaveBtn( 'hide' );
     $("#submitBUtton").show();
     $('.image-block').html('');
@@ -360,7 +409,7 @@ function showThisPhoto( imgData ) {
     imgData['priority'] = imgData['priority'] == null ? "" : imgData['priority'];
     imgData['SERVICE_IMAGE_ID'] = imgData['SERVICE_IMAGE_ID'] == null ? "" : imgData['SERVICE_IMAGE_ID'];
     var template = '<div style="padding:5px; border:solid 1px #ccc; display:inline-block;">'+
-                        '<div class="img-wrap" style="float:left;"> <img src="'+imgData['SERVICE_IMAGE_PATH']+'" width = 150 height = 100 alt = "'+imgData['alt_text']+'"/> </div>'+
+                        '<div class="img-wrap" style="float:left;"> <img src="'+imgData['SERVICE_IMAGE_PATH']+'?width=130&height=100" width = 150 height = 100 alt = "'+imgData['alt_text']+'"/> </div>'+
                         '<div class="img-dtls" style="float:right; margin:0px 0px 0px 10px;">'+
                             '<b>Category:</b>&nbsp;&nbsp;'+imgData['IMAGE_CATEGORY'];
        template +='<input type = "hidden" name="imgCate_'+imgData['IMAGE_ID']+'[]" value = "'+imgData['IMAGE_CATEGORY']+'">';

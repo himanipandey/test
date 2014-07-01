@@ -183,7 +183,9 @@ class ResiProject extends Objects
             a.DISPLAY_ORDER = b.DISPLAY_ORDER,
             a.DISPLAY_ORDER_LOCALITY = b.DISPLAY_ORDER_LOCALITY,
             a.DISPLAY_ORDER_SUBURB = b.DISPLAY_ORDER_SUBURB,
-            a.YOUTUBE_VIDEO = b.YOUTUBE_VIDEO";
+            a.YOUTUBE_VIDEO = b.YOUTUBE_VIDEO,
+            a.SAFETY_SCORE = b.SAFETY_SCORE,
+            a.LIVABILITY_SCORE = b.LIVABILITY_SCORE";
         $conn->query($sql);
     }
     
@@ -204,5 +206,10 @@ class ResiProject extends Objects
         $project->$attribute_name = $attribute_value;
         $project->set_attr_updated_by($updated_by);
         $project->save();
+    }
+    
+   public static function replace_builder_id($oldBuilder_id, $newBuilder_id){
+        $responce =  self::update_all(array('conditions' => array('builder_id' => $oldBuilder_id,'version' => 'Cms'), 'set' => "builder_id = $newBuilder_id"));
+        return $responce;
     }
 }

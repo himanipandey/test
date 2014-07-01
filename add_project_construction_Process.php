@@ -21,7 +21,7 @@
         if(isset($_REQUEST['phaseId'])) {
             $phaseId = $_REQUEST['phaseId'];
             $qryHistory = "select * from ".RESI_PROJ_EXPECTED_COMPLETION." 
-             where project_id = $projectId and phase_id = $phaseId order by submitted_date";
+             where project_id = $projectId and phase_id = $phaseId and expected_completion_date !='0000-00-00 00:00:00' and submitted_date !='0000-00-00 00:00:00' order by submitted_date";
             $resHistory = mysql_query($qryHistory);
             $arrHistory = array();
             $EffectiveDateList = '';
@@ -43,11 +43,16 @@
             $smarty->assign("pre_launch_date", $fetch_projectDetail[0]['PRE_LAUNCH_DATE']);
             $smarty->assign("oldCompletionDate", $oldCompletionDate);
             $expCompletionDate = explode("-",$current_phase[0]['COMPLETION_DATE']);
-            $smarty->assign("month_expected_completion", $expCompletionDate[1]);
-            $smarty->assign("year_expected_completion", $expCompletionDate[0]);
             $sumittedDate = explode("-",$current_phase[0]['submitted_date']);
-            $smarty->assign("month_effective_date", $sumittedDate[1]);
-            $smarty->assign("year_effective_date", $sumittedDate[0]);         
+            
+            if($expCompletionDate[1] && $expCompletionDate[1] != '00' && $expCompletionDate[2] && $expCompletionDate[2] != '00' && $sumittedDate[1] && $sumittedDate[1] != '00' && $sumittedDate[0] && $sumittedDate[0] !='00'){           
+              $smarty->assign("month_expected_completion", $expCompletionDate[1]);
+              $smarty->assign("year_expected_completion", $expCompletionDate[0]);
+              $smarty->assign("month_effective_date", $sumittedDate[1]);
+              $smarty->assign("year_effective_date", $sumittedDate[0]);
+            }
+                      
+                     
             $qrySelect = ResiProjectPhase::virtual_find($phaseId);
             $phaseName = $qrySelect->phase_name;
             $smarty->assign("phaseName", $phaseName);
@@ -123,9 +128,43 @@
                         $errorMsg['CompletionDateGreater'] = 'Completion date to be always 6 month greater than launch date';
                     }
                 }
-               
-                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
+                 
+                #phase level validations #############                 
+                if($qrySelect->construction_status == OCCUPIED_ID_3 || $qrySelect->construction_status == READY_FOR_POSSESSION_ID_4 ) {
                     $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) > intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month  in case of Construction Status is completed.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month  in case of Construction Status is completed.";
+                    }
+                }
+                if($qrySelect->construction_status == UNDER_CONSTRUCTION_ID_1) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month in case of Construction Status is Under Construction.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month  in case of Construction Status is Under Construction.";
+                    }
+                }
+                
+                ######################################
+                $comp_eff_date = costructionDetail($projectId);
+				$project_completion_date = '';
+				if($expectedCompletionDate >= $comp_eff_date['COMPLETION_DATE'])
+				  $project_completion_date = $expectedCompletionDate;
+				if($expectedCompletionDate < $comp_eff_date['COMPLETION_DATE'])
+				  $project_completion_date = $comp_eff_date['COMPLETION_DATE'];
+				if($project_completion_date == '0000-00-00')
+				  $project_completion_date = '';
+								
+                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
+                    $yearExp = explode("-",$project_completion_date);
                     if( $yearExp[0] == date("Y") ) {
                         if( intval($yearExp[1]) > intval(date("m"))) {
                           $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
@@ -133,6 +172,18 @@
                     } 
                     else if (intval($yearExp[0]) > intval(date("Y")) ) {
                         $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+                    }
+                }
+                
+                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == UNDER_CONSTRUCTION_ID_1) {
+                    $yearExp = explode("-",$project_completion_date);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
                     }
                 }
                 
@@ -144,7 +195,7 @@
                  }                
                 $submitted_date_string = $year_effective_date."-".$month_effective_date."-01";
                 if(strtotime($expectedCompletionDate) > strtotime($current_element['EXPECTED_COMPLETION_DATE']) && strtotime($submitted_date_string) < strtotime($current_element['SUBMITTED_DATE'])){
-				  	$errorMsg['CompletionDateGreater'] = "Completion date($expectedCompletionDate) to be always less the latest completion date.";
+				  	$errorMsg['CompletionDateGreater'] = "Completion date($expectedCompletionDate) to be always less the latest completion date(".$current_element['EXPECTED_COMPLETION_DATE'].").";
 				}
 			    if(count($errorMsg)>0){
                     $smarty->assign('errorMsg',$errorMsg);

@@ -3,8 +3,14 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
-
-<script language="javascript">
+<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+        //mode : "textareas",
+        mode : "specific_textareas",
+        editor_selector : "myTextEditor",
+        theme : "advanced"
+    });
 	function chkConfirm()
 	{
 		return confirm("Are you sure! you want to delete this record.");
@@ -143,6 +149,13 @@
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 					 <form method="post" enctype="multipart/form-data" action = ''>
 							<div>
+							 {if $projectId}	
+							  <tr>
+								  <td colspan=2>
+								    {if count($ErrorMsg['CompletionDateGreater'])>0} <font color="red">{$ErrorMsg['CompletionDateGreater']}</font>{/if}
+								  </td>
+							  </tr>
+							 {/if}
 							   <tr>
                                                                 <td width="30%" align="right"><font color ="red">*</font><b>Project Name :</b> </td>
 								  <td width="30%" align="left">
@@ -223,9 +236,8 @@
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
                                                                 <td width="30%" align="left">
-                                                                       <textarea name="txtProjectDesc" rows="10" cols="45" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
-                                                                       <input type="hidden" name="txtProjectOldDesc" value="{$txtProjectDescription}" />
-                                                                      {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
+                                                                       <textarea name="txtProjectDesc" rows="10" cols="45"  class ="myTextEditor" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
+                                                                      {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
                                                                        <br/><br/>
                                                                        <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 																	  {/if}
@@ -471,6 +483,7 @@
 								  </td>
 							   </tr> 
 							  {/if}
+							  {if $projectId == ''} 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Status :</b> </td>
 								  <td width="30%" align="left" valign = "top">
@@ -487,6 +500,9 @@
 									  <font color="red">{if $ErrorMsg["txtStatus"] != ''} {$ErrorMsg["txtStatus"]} {/if}<span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
+							  {else}
+							    <input type="hidden" name="Status" value="{$Status}"/>
+							  {/if}
 							   {if $projectId != ''}                                                        
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>

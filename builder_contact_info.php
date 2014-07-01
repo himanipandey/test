@@ -6,10 +6,10 @@
 	include("dbConfig.php");
 	include("includes/configs/configs.php");
 	include("builder_function.php");
+	include("modelsConfig.php");
 	AdminAuthentication();
 
-	include('builder_contact_info_process.php');
-        $smarty->assign('arrCampaign', $arrCampaign);
-        $smarty->display(PROJECT_ADD_TEMPLATE_PATH."builder_contact_info.tpl");
+	include('builder_contact_info_process.php');	
+    $smarty->display(PROJECT_ADD_TEMPLATE_PATH."builder_contact_info.tpl");
 ?>
 

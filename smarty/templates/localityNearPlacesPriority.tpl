@@ -25,11 +25,12 @@ function selectLocality(value){
     var cityid = $('#citydd').val();
   window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+value;
 }
-function selectNearPlaceTypes(value){ 
+function submitButton(){ 
     var cityid = $('#citydd').val();
-    var locality_id = $('#loc').val();
-    var suburb_id = $('#sub').val();
-  window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+locality_id+"&near_place_type="+value;
+    var locality_id = $('#locality').val();
+    var placeType = $('#placeType').val();
+    var statusId = $('#statusId').val();
+  window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+locality_id+"&status="+statusId+"&placeType=placeType";
 }
 
 function isNumeric(val) {
@@ -325,7 +326,7 @@ $("#exit_button").click(function(){
 function openProjectPriorityAdd()
 {
     var cityid      = $('#citydd').val();
-    var localityid  = $('#loc').val();
+    var localityid  = $('#locality').val();
     var suburbid    = $('#sub').val();
     var url = '/setProjectPriority.php?cityId='+cityid+'&localityid='+localityid+'&suburbid='+suburbid;
     $.fancybox({
@@ -341,7 +342,7 @@ function openProjectPriorityAdd()
 function nearPlacePriorityEdit(id,type)
 {
     var cityid      = $('#citydd').val();
-    var localityid  = $('#loc').val();
+    var localityid  = $('#locality').val();
     var suburbid    = $('#sub').val();
     var priority    = $('#priority'+id).val();
     var status      =  $('#status'+id).val();
@@ -380,7 +381,7 @@ function nearPlacePriorityEdit(id,type)
 function projectPriorityDelete(id,type)
 {
     var cityid      = $('#citydd').val();
-    var localityid  = $('#loc').val();
+    var localityid  = $('#locality').val();
     var suburbid    = $('#sub').val();
     var r = confirm("Are you sure you want to reset");
     if (r == true)
@@ -430,6 +431,25 @@ function show_loc_inst(){
     d.write("<!DOCTYPE html><html><body><h1>Instructions</h1><p>1. Select the city and optinally locality and suburb to see the current projects in that area.</p><p>2. You can set at the max 15 projects for a given area.</p><p>3. Click Add Project to add a project.In that popup box, type in either project name, or project id to insert that project. </p><p>3.1. Type in the priority in the priority field.Lower numeric value is higher priority.</p><p>3.2. Check the checkbox to auto shift the projects, if desired.If this is selected, then projects at and below specified priority are shifted down 1 priority level. If this is not selected, then multiple projects could be at the same priority(which is fine, if that is what you want.)</p><p>4. Projects after first 15 would be  automatically reset to default priority.</p></body></html>");
     d.close();
 }
+
+/*************Ajax code************/
+function update_locality(ctid)
+{
+    $("#localitySelectText").val('');
+      $.ajax({
+          type: "POST",
+          url: 'Refreshlocality.php?ctid='+ctid,
+          data: { ctid:ctid},
+          success:function(msg){
+                  document.getElementById("LocalityList").innerHTML=msg;
+          }
+      })
+    }
+    
+ function localitySelect(localityId) {
+      $("#localityId").val(localityId);
+ }
+/*******************End Ajax Code*************/
 </script>
 </TD>
   </TR>
@@ -465,37 +485,52 @@ function show_loc_inst(){
                       <td>
                         <div id="search-top">
                         <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">
+                            <form method = "post">
                           <tr>
                                 <td width="20%" height="25" align="left" valign="top">
-                                    <select id="citydd" name="citydd" onchange="selectCity(this.value)">
+                                    <select id="citydd" name="citydd" onchange = "update_locality(this.value);">
                                        <option value=''>select city</option>
                                        {foreach from=$cityArray key=k item=v}
                                            <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
                                        {/foreach}
                                     </select>
                                 </td>
-                                
+                                <td width = "10px">&nbsp;</td>
                                 <td width="20%" height="25" align="left" valign="top">
-                                    <select id="loc" name="loc" onchange="selectLocality(this.value)">
+                                    <span id = "LocalityList">
+                                    <select id="locality" name="locality" onchange = "localitySelect(this.value);">
                                        <option value=''>select locality</option>
                                        {foreach from=$localityArr key=k item=v}
                                            <option value="{$v->locality_id}" {if $localityId==$v->locality_id}
                                               selected="selected" {/if}>{$v->label}</option>
                                        {/foreach}
                                     </select>
+                                    </span>
                                 </td>
-
+                          <input type="hidden" name="localityId" id = "localityId" value="{$localityId}">
                                 
-                                <td width="20%" height="25" align="left" valign="top">
-                                    <select id="placeType" name="loc" onchange="selectNearPlaceTypes(this.value)">
+                                <td width = "10px">&nbsp;</td>
+                                <td width="15%" height="25" align="left" valign="top">
+                                    <select id="placeType" name="placeType">
                                        <option value=''>select place type</option>
                                        {foreach from=$nearPlaceTypesArray key=k item=v}
-                                              <option value="{$v->id}" {if $nearPlaceTypesId==$v->id}  selected="selected" {/if}>{$v->display_name}</option>
+                                              <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
                                        {/foreach}
                                     </select>
                                 </td>
-                                
+                                <td width = "10px">&nbsp;</td>
+                                <td width="15%" height="25" align="left" valign="top">
+                                    <select name="status">
+                                       <option value='Active' {if $status == 'Active'}selected{/if}>Active</option>
+                                       <option value='Inactive' {if $status == 'Inactive'}selected{/if}>Inactive</option>
+                                    </select>
+                                </td>
+                                <td width = "10px">&nbsp;</td>
+                                <td width="20%" height="25" align="left" valign="top">
+                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
+                                </td>
                           </tr>
+                            </form>
                         </table>
                       </div>
                       </td>
@@ -649,7 +684,7 @@ function show_loc_inst(){
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v.name}</TD>
                                   <TD align=center class=td-border>{$v.vicinity}</TD>
-                                  <TD align=center class=td-border>{$v.display_name}</TD>
+                                  <TD align=center class=td-border>{$v.placeType}</TD>
                                   <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
                   <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
 

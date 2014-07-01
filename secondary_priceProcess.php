@@ -45,7 +45,7 @@
      $smarty->assign("arrProjectByBroker", $arrProjectByBroker);
      $smarty->assign("maxEffectiveDt", $maxEffectiveDtAll );
      $smarty->assign("projectDetails", $projectDetails);
-     $smarty->assign("arrCampaign", $arrCampaign);
+     $smarty->assign("arrCampaign", CampaignDids::allCampaign());
      $smarty->assign("projectId", $projectId);
      $builderName = ResiBuilder::getBuilderById($projectDetails->builder_id);
      $smarty->assign("builderName", $builderName[0]->builder_name);

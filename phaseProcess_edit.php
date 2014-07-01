@@ -22,32 +22,9 @@ $smarty->assign("preview", $preview);
 $smarty->assign("projectId", $projectId);
 $bookingStatuses = ResiProject::find_by_sql("select * from master_booking_statuses");
 $smarty->assign("bookingStatuses", $bookingStatuses);
+$projectStatus = ResiProject::projectStatusMaster();
+$smarty->assign("projectStatus",$projectStatus);
 
-/* * *******code for delete phase********* */
-if (isset($_REQUEST['delete'])) {
-    $phase = ResiProjectPhase::virtual_find($phaseId);
-    $phase->status = 'Inactive';
-    $resDelete = $phase->virtual_save();
-    if ($resDelete) {
-        Listings::update_all(array('conditions' => array('phase_id' => $phaseId, 'listing_category' => 'Primary'), 'set' => array('status' => 'Inactive')));
-        
-        $costDetailLatest = costructionDetail($projectId);
-        $qry = "UPDATE resi_project 
-            set 
-               PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
-           where PROJECT_ID = $projectId and version = 'Cms'";
-        mysql_query($qry) OR DIE(mysql_error());
-        
-        updateD_Availablitiy($projectId); // update D_availability 
-                
-        if ($preview == 'true')
-            header("Location:show_project_details.php?projectId=" . $projectId);
-        else
-            header("Location:ProjectList.php?projectId=" . $projectId);
-    }
-}
-/********end code for delete phase***** */
-/************/
 $qrySelect = ResiProjectPhase::virtual_find($phaseId);
 $phaseName = $qrySelect->phase_name;
 $smarty->assign("phaseName", $phaseName);
@@ -62,6 +39,160 @@ $phases = ResiProjectPhase::find("all", array("conditions" => array("project_id"
 foreach($phases as $p){
     array_push($phaseDetail, $p->to_custom_array());
 }
+
+/* * *******code for delete phase********* */
+if (isset($_REQUEST['delete'])) {
+	$del_flag = 1;
+	ResiProjectPhase::transaction(function(){
+		global $del_flag, $phaseId, $projectId, $error_msg, $projectDetail;
+		//print "<pre>".print_r($projectDetail,1)."</pre>";
+		#validate phase deletion
+		if($projectDetail['LAUNCH_DATE'] == '0000-00-00')
+		  $projectDetail['LAUNCH_DATE'] = '';
+		if($projectDetail['PRE_LAUNCH_DATE'] == '0000-00-00')
+		  $projectDetail['PRE_LAUNCH_DATE'] = '';
+		if($projectDetail['PROMISED_COMPLETION_DATE'] == '0000-00-00')
+		  $projectDetail['PROMISED_COMPLETION_DATE'] = '';		
+		$comp_eff_date = costructionDetail($projectId,$phaseId,false);	
+				
+		if($comp_eff_date['COMPLETION_DATE'] == '0000-00-00')
+		  $comp_eff_date['COMPLETION_DATE'] = '';
+		  
+		$project_status = fetch_project_status($projectId,'',$phaseId,false); 
+		if( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail['LAUNCH_DATE'] != '') {
+		  $error_msg = "Project Status would be Pre Launched after deletion but Launch date should be blank/zero in case of Pre Launched Project.";	 
+		}elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail['PRE_LAUNCH_DATE'] == '') {
+		  $error_msg = "Project Status would be Pre Launched after deletion but Pre Launched Date is blank!";	 
+		}elseif(($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) && $comp_eff_date['COMPLETION_DATE'] != ''){
+		  $yearExp = explode("-",$comp_eff_date['COMPLETION_DATE']);
+		  if( $yearExp[0] == date("Y") ) {
+			if( intval($yearExp[1]) > intval(date("m"))) {
+			  $error_msg = "Project Status would be Completed after deletion but Completion date cannot be greater than the current month in case of Completed Project";
+			}    
+		  } 
+		  else if (intval($yearExp[0]) > intval(date("Y")) ) {
+			$error_msg = "Project Status would be Completed after deletion but Completion date cannot be greater than the current month in case of Completed Project";
+		  }			
+		}elseif($project_status == UNDER_CONSTRUCTION_ID_1 && $comp_eff_date['COMPLETION_DATE'] != ''){
+		  $yearExp = explode("-",$comp_eff_date['COMPLETION_DATE']);
+		  if( $yearExp[0] == date("Y") ) {
+			if( intval($yearExp[1]) < intval(date("m"))) {
+			  $error_msg = "Project Status would be Completed after deletion but  Completion date cannot be less than the current month in case of Under construction Project";
+			}    
+		  } 
+		  else if (intval($yearExp[0]) < intval(date("Y")) ) {
+			$error_msg = " Project Status would be Completed after deletion but Completion date cannot be less than the current month in case of Under construction Project";
+		  }			
+		}
+		if($error_msg == ''){
+		  try{
+			$all_lst_ids = array();
+			$all_price_ids = array();
+			$all_supply_ids = array();
+			$all_avail_ids = array();
+			$all_sec_price_ids = array();
+			$all_comp_ids = array();
+			
+			#listing
+				$all_lst = Listings::find("all",array("conditions"=>array("phase_id = ?",$phaseId)));
+				foreach($all_lst as $key=>$lst){
+				  $all_lst_ids[] = $lst->id; 
+				}
+				$all_lst_ids = implode(",",$all_lst_ids);				
+						
+				#prices
+				if($all_lst_ids){
+				  $all_prices = ListingPrices::find("all", array("conditions"=>array("listing_id in ($all_lst_ids)")));
+				  foreach($all_prices as $key=>$lstp){
+				    $all_price_ids[] = $lstp->id; 
+				  }
+				  $all_price_ids = implode(",",$all_price_ids);				 
+			    }
+							
+				#supplies
+				$all_supplies = mysql_query("SELECT * FROM `project_supplies` WHERE listing_id in ($all_lst_ids)");
+				if($all_supplies){
+				  while($sup = mysql_fetch_object($all_supplies)){
+					$all_supply_ids[] = $sup->id;
+				  }
+				  $all_supply_ids = implode(",",$all_supply_ids);				 
+				}
+							
+				#inventories
+				if($all_supply_ids){
+				  $all_avails = ProjectAvailability::find("all",array("conditions"=>array("project_supply_id in ($all_supply_ids)")));
+				  foreach($all_avails as $key=>$avails){
+					$all_avail_ids[] = $avails->id;	
+				  }
+				  $all_avail_ids = implode(",",$all_avail_ids);				 
+				}
+							
+				#secondry_price
+				$all_sec_prices = ProjectSecondaryPrice::find("all",array("conditions"=>array("phase_id=?",$phaseId)));
+				foreach($all_sec_prices as $key=>$secp){
+				  $all_sec_price_ids[] = $secp->id;
+				}
+				$all_sec_price_ids = implode(",",$all_sec_price_ids);
+										
+				#completion_history
+				$all_comp = ResiProjExpectedCompletion::find("all",array("conditions"=>array("phase_id=?",$phaseId)));
+				foreach($all_comp as $key=>$comps){
+					$all_comp_ids[] = $comps->expected_completion_id;
+				}
+				$all_comp_ids = implode(",",$all_comp_ids);
+							
+			#dependent data deletion
+				if($all_avail_ids)
+				  ProjectAvailability::delete_all(array('conditions'=>array("id in ($all_avail_ids)")));
+				if($all_supply_ids)
+				  ProjectSupply::delete_all(array('conditions'=>array("id in ($all_supply_ids)")));
+				if($all_price_ids)
+				  ListingPrices::delete_all(array('conditions'=>array("id in ($all_price_ids)")));
+				
+				if($all_sec_price_ids)
+				  ProjectSecondaryPrice::delete_all(array('conditions'=>array("id in ($all_sec_price_ids)")));
+				if($all_comp_ids)
+				  ResiProjExpectedCompletion::delete_all(array('conditions'=>array("expected_completion_id in ($all_comp_ids)")));	
+				  
+				if($all_lst_ids)
+				  Listings::delete_all(array('conditions'=>array("id in ($all_lst_ids)")));
+				  
+				mysql_query("DELETE FROM `phase_tower_mappings` WHERE phase_id='$phaseId'");
+				mysql_query("DELETE FROM `d_inventory_prices` WHERE phase_id='$phaseId'");
+				mysql_query("DELETE FROM `d_inventory_prices_tmp` WHERE phase_id='$phaseId'");	
+				
+				ResiProjectPhase::delete_all(array('conditions'=>array("phase_id = ?",$phaseId)));	
+												
+		}catch(Exeception $e){
+		  $del_flag = 0;			  
+		}
+	  }else
+	    $del_flag = 0;
+	});	
+	if($del_flag){
+		#dependent values updation			
+		$costDetailLatest = costructionDetail($projectId);
+		$qry = "UPDATE resi_project 
+					set 
+					   PROMISED_COMPLETION_DATE = '".$costDetailLatest['COMPLETION_DATE']."' 
+				   where PROJECT_ID = $projectId and version = 'Cms'";
+		mysql_query($qry) OR DIE(mysql_error());
+		
+		projectStatusUpdate($projectId); //update project status	
+		updateD_Availablitiy($projectId); // update D_availability 	
+				
+	  if ($preview == 'true')
+		header("Location:show_project_details.php?projectId=" . $projectId);
+	  else
+		header("Location:ProjectList.php?projectId=" . $projectId);	
+	}else{
+	  if($error_msg == '')	
+	    $error_msg = "Error in deletion of Phase depenedent data. Phase deletion failed!";			
+	  $smarty->assign("error_msg",$error_msg);	
+	}	
+}
+/********end code for delete phase***** */
+/************/
 
 // Project Options and Bedroom Details
 $optionsDetails = ProjectOptionDetail($projectId);
@@ -107,6 +238,7 @@ if ($_SERVER['REQUEST_METHOD']) {
     // Assign vars for smarty
     $smarty->assign("phaseObject", $current_phase[0]);
     $smarty->assign("bookingStatus", $current_phase[0]['BOOKING_STATUS_ID']);
+    $smarty->assign("construction_status", $current_phase[0]['construction_status']);
     $smarty->assign("phasename", $current_phase[0]['PHASE_NAME']);
     $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
     $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
@@ -135,6 +267,7 @@ if (isset($_POST['btnSave'])) {
     $phasename = $_REQUEST['phaseName'];
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
+    $construction_status = $_REQUEST['construction_status'];    
    $pre_launch_date = $_REQUEST['pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
@@ -145,6 +278,7 @@ if (isset($_POST['btnSave'])) {
     $smarty->assign("phasename", $phasename);
     $smarty->assign("launch_date", $launch_date);
     $smarty->assign("completion_date", $completion_date);
+    $smarty->assign("construction_status", $construction_status);
     $smarty->assign("remark", $remark);
     $smarty->assign("pre_launch_date",$pre_launch_date);
      $smarty->assign("sold_out_date",$sold_out_date);
@@ -164,7 +298,9 @@ if (isset($_POST['btnSave'])) {
             $pre_launch_date = '';
         if($sold_out_date == '0000-00-00')
             $sold_out_date = '';
-        
+        if($construction_status == ""){
+		  	 $error_msg = 'Construction Status is required!';
+		}
         if( $launch_date != '' && $completion_date !='' ) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
             if( $retdt <= 180 ) {
@@ -184,9 +320,9 @@ if (isset($_POST['btnSave'])) {
             if( $retdt > 0 ) {
                     $error_msg = "Launch date should be less or equal to current date";
                 }
-            if($pre_launch_date == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launch_date) || checkListingPricesDate($projectId, $launch_date))) {
+           /* if($pre_launch_date == '' && projectStageName($projectId)=="UpdationCycle" && (checkAvailablityDate($projectId, $launch_date) || checkListingPricesDate($projectId, $launch_date))) {
                 $error_msg  .= " Inventory or Prices with effective date before {$launch_date} are present. So can not change the Launch Date.";
-            }
+            }*/
           }
          if($sold_out_date != ''){
 	    $retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
@@ -227,12 +363,87 @@ if (isset($_POST['btnSave'])) {
             if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
                    $error_msg = "Launched Unit must be greater than Availability.";
 		 }
+		 
+		 ////phase level check regarding status
+		 $project_status = fetch_project_status($projectId,$construction_status,$phaseId);                    
+        if($projectDetail[0]['LAUNCH_DATE'] == '0000-00-00')
+		  $projectDetail[0]['LAUNCH_DATE'] = '';
+		if($projectDetail[0]['PRE_LAUNCH_DATE'] == '0000-00-00')
+		  $projectDetail[0]['PRE_LAUNCH_DATE'] = '';
+		if($projectDetail[0]['PROMISED_COMPLETION_DATE'] == '0000-00-00')
+		  $projectDetail[0]['PROMISED_COMPLETION_DATE'] = '';
+	    if( $construction_status == UNDER_CONSTRUCTION_ID_1 ) { 
+           $yearExp = explode("-",$launch_date);
+           $yearExp2 = explode("-",$completion_date);
+           if($launch_date != ''){
+			   if( $yearExp[0] == date("Y") ) {
+				   if( intval($yearExp[1]) > intval(date("m"))) {
+					 $error_msg = "Launch date should not be greater than current month in case of Construction Status is Under construction.";
+				   }    
+			   } 
+			   else if (intval($yearExp[0]) > intval(date("Y")) ) {
+				  $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  Under construction.";
+			   }
+		   }
+		  
+           if($completion_date != ''){			   	
+			   if( $yearExp2[0] == date("Y") ) {				   
+				   if( intval($yearExp2[1]) < intval(date("m"))) {
+					 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
+				   }    
+			   } 
+			   else if (intval($yearExp2[0]) < intval(date("Y")) ) {
+				  $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
+			   }
+		   }	
+        }elseif($construction_status == OCCUPIED_ID_3 || $construction_status == READY_FOR_POSSESSION_ID_4 ){
+			$yearExp = explode("-",$completion_date);
+            if( $yearExp[0] == date("Y") ) {
+                if( intval($yearExp[1]) > intval(date("m"))) {
+                  $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
+                }    
+            } 
+            else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
+            }			
+		}elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
+           $error_msg = "Launch date should blank in case of Construction Status is Pre Launched.";
+        }
+        if($error_msg == ''){
+			if( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != '') {
+			  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 
+			}
+			elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['PRE_LAUNCH_DATE'] == '') {
+			   $error_msg = "Project Status can not be Pre Launched in case of Pre Launched Date is blank.";	 
+			}elseif(($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) && $projectDetail[0]['PROMISED_COMPLETION_DATE'] != ''){
+				$yearExp = explode("-",$projectDetail[0]['PROMISED_COMPLETION_DATE']);
+				if( $yearExp[0] == date("Y") ) {
+					if( intval($yearExp[1]) > intval(date("m"))) {
+					  $error_msg = "Completion date cannot be greater than the current month in case of Completed Project";
+					}    
+				} 
+				else if (intval($yearExp[0]) > intval(date("Y")) ) {
+					$error_msg = "Completion date cannot be greater than the current month in case of Completed Project";
+				}			
+			}elseif($project_status == UNDER_CONSTRUCTION_ID_1 && $projectDetail[0]['PROMISED_COMPLETION_DATE'] != ''){
+				$yearExp = explode("-",$projectDetail[0]['PROMISED_COMPLETION_DATE']);
+				if( $yearExp[0] == date("Y") ) {
+					if( intval($yearExp[1]) < intval(date("m"))) {
+					  $error_msg = "Completion date cannot be less than the current month in case of Under construction Project";
+					}    
+				} 
+				else if (intval($yearExp[0]) < intval(date("Y")) ) {
+					$error_msg = "Completion date cannot be less than the current month in case of Under construction Project";
+				}			
+			}
+		  }
+		 //////////////////////////////////////	
 		 				
          if( $error_msg == '' ){
             // Update
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
-                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date;
+                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date, $construction_status;
                 if($phaseId != '0'){
                     //          Updating existing phase
                     $phase = ResiProjectPhase::virtual_find($phaseId);
@@ -241,6 +452,7 @@ if (isset($_POST['btnSave'])) {
                     $phase->launch_date = $launch_date;
                     $phase->remarks = $remark;
                     $phase->sold_out_date = $sold_out_date;
+                    $phase->construction_status = $construction_status;
                     $phase->save();
                     if($phasename == 'No Phase') {
                         $qryUpdateProjectLaunchDate = "update resi_project 
@@ -269,6 +481,7 @@ if (isset($_POST['btnSave'])) {
                     }
                 }
             });
+             projectStatusUpdate($projectId); //update project status
              updateD_Availablitiy($projectId); // update D_availability  
             #########################################
             // Phase Quantity

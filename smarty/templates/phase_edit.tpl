@@ -116,7 +116,7 @@
 
     function deletePhase()
     {
-            return confirm("Are you sure! you want to delete phase.");
+            return confirm("All dependent data will be deleted. Proceed / cancel?");
     }
 
         function toggle_supply_and_option() {
@@ -159,6 +159,10 @@
                 return false;
             });
         }
+        
+        function refrech_date(id){
+			$('#'+id).val("");
+		}
 
 </script>
 <input type = "hidden" name = "projectId" id = "projectId" value="{$projectId}">
@@ -226,7 +230,20 @@
                                                     <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
                                                 </td>
                                             </tr>
-                                             
+                                             <tr>
+                                                <td width="20%" align="right"><font color ="red">*</font><b>Construction Status :</b> </td>
+                                                <td width="30%" align="left">                                                   
+                                                    <select name="construction_status" id="construction_status" class="fieldState">
+														<option value="">Select</option>
+														{foreach from = $projectStatus key = key item = value}
+															<option value="{$key}" {if $key == $construction_status} selected {/if}>{$value} </option>
+														{/foreach}
+													 </select>
+                                                </td>
+                                                <td width="50%" align="left">
+                                                    <font color="red"><span id="err_construction_status" style = "display:none;">Select Construction Status</span></font>
+                                                </td>
+                                            </tr> 
                                             <tr>
                                                 <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
                                                 <td width="30%" align="left">
@@ -239,6 +256,7 @@
                                                 <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
                                                 <td width="30%" align="left">
                                                     <input name="launch_date" value="{$launch_date}" type="text" class="formstyle2" id="launch_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="launch_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                     &nbsp;&nbsp;<img width="15" height="15" id="ref-launch-date" onclick="refrech_date('launch_date')" title="Refresh Launch Date"  src="../images/refresh.png">
                                                 </td>
                                                 <td width="50%" align="left">
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
@@ -248,6 +266,7 @@
                                                 <td width="20%" align="right" valign="top"><b>Sold Out Date  :</b> </td>
                                                 <td width="30%" align="left">
                                                     <input name="sold_out_date" value="{$sold_out_date}" type="text" class="formstyle2" id="sold_out_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="sold_out_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                     &nbsp;&nbsp;<img width="15" height="15" id="ref-sold-date" onclick="refrech_date('sold_out_date')" title="Refresh Sold Date" src="../images/refresh.png">
                                                 </td>
                                                 <td width="50%" align="left">
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
@@ -358,12 +377,9 @@
                                                                                                                             </tr>
                                                                                                                         {/if}
                                                                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
-                                                                                                                           {if count($phase_quantity) == 0 || ($PlotQuantity[0]['supply'] != '' || $PlotQuantity[0]['supply'] != 0) || ($PlotQuantity[0]['launched'] != '' || $PlotQuantity[0]['launched'] != 0)}
-                                                                                                                               {$showHide = ""}
-                                                                                                                           {else}
-                                                                                                                               {$showHide = "style = 'display:none;'"}
-                                                                                                                           {/if}
-                                                                                                                               <tr {$showHide} class="supply_select">
+                                                                                                                           {if count($bedrooms_hash['Plot'])>0}
+                                                                                                                           
+                                                                                                                               <tr class="supply_select">
                                                                                                                                 <td width="20%" align="right" valign="top"><b>Supply of Plot  :</b> </td>
                                                                                                                                 <td width="30%" align="left" nowrap>
 																																	<font color="red">
@@ -382,6 +398,7 @@
                                                                                                                                 </td>
                                                                                                                             </tr>
                                                                                                                             <input type='hidden' name='plotvilla' id='plotvilla' value='Plot'>
+                                                                                                                            {/if}
                                                                                                                         {/if}  
                                                                                                                         {if count($phase_quantity) == 0 || count($bedrooms_hash['Apartment'])>0}
 																															<tr {if $phaseObject['PHASE_TYPE'] == 'Logical'} style="display: none;" {/if}>

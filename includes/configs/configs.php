@@ -628,57 +628,7 @@ $smarty->assign("arrProjEditPermission", $ARR_PROJ_EDIT_PERMISSION[$dept]);
 
 $arrImg = array("image/gif","image/png","image/jpg","image/jpeg");
 
-$arrType = array("Location Plan"=>"loc-plan","Layout Plan"=>"layout-plan","Site Plan"=>"site-plan","Master Plan"=>"master-plan","Project Image"=>"large","Cluster Plan"=>"cluster-plan","Construction Status"=>"const-status","Payment Plan"=>"payment-plan","Specification"=>"specification","Price List"=>"price-list","Application Form"=>"app-form");
-
-$arrCampaign = 
-  array(
-	"Select Campaign", 
-	"Delhi1", 
-	"Delhi2",
-	"Delhi3", 
-	"Pune1", 
-	"Pune_2", 
-	"Mumbai_1", 
-  	"Mumbai_2",
-	"Mumbai_3",
-	"Kolkata",
-	"Chennai",
-	"Bangalore_1",
-	"Bangalore_2",
-	"Bangalore_3",
-  	"Pune_New",
-    "Delhi_Resale1",
-    "Delhi_Resale2",
-    "Chennai_Campaign2",
-    "Kolkata_Campaign2",
-    "Hyderabad_campaign_1",
-    "Hyderabad_campaign_2"
-	);
-
-$arrCampaignDids = 
-  array(
-	"Select Campaign"=>'', 
-	"Delhi1"=>'911130908628', 
-	"Delhi2"=>'911166576875',
-	"Delhi3"=>'911130803513', 
-	"Pune1"=>'912066895988', 
-	"Pune_2"=>'912067265891', 
-	"Mumbai_1"=>'912233578221', 
-  	"Mumbai_2"=>'912267304976',
-	"Mumbai_3"=>'912233578202',
-	"Kolkata"=>'913330566061',
-	"Chennai"=>'914433012964',
-	"Bangalore_1"=>'918049653283',
-	"Bangalore_2"=>'918049653284',
-	"Bangalore_3"=>'918030860742',
-  	"Pune_New"=>'912030570453',
-    "Delhi_Resale1"=>'911166576776',
-    "Delhi_Resale2"=>'911130803985',
-    "Chennai_Campaign2"=>'914466949358',
-    "Kolkata_Campaign2"=>'913330871689',
-    "Hyderabad_campaign_1"=>'914066588416',
-    "Hyderabad_campaign_2"=>'914030952097'
-	);
+$arrType = array("Location Plan"=>"loc-plan","Layout Plan"=>"layout-plan","Site Plan"=>"site-plan","Master Plan"=>"master-plan","Elevation"=>"large", "Amenities"=>"large", "Main Other"=>"large", "Cluster Plan"=>"cluster-plan","Construction Status"=>"const-status","Payment Plan"=>"payment-plan","Specification"=>"specification","Price List"=>"price-list","Application Form"=>"app-form");
 
 /**************Authentication*************/
 $accessModule = array();
@@ -691,7 +641,7 @@ $smarty->assign("accessModule", $accessModule);
 
 /******array for force migrate access*****/
 $forceMigrateModule = array();
-$arrForce      = array(53,506);
+$arrForce      = array(558,506);
 if(in_array($_SESSION['adminId'],$arrForce))
 {
 	$forceMigrateModule['urlEdit'] = $_SESSION['adminId'];

@@ -246,7 +246,7 @@ function appendToNo(no){
 function validateFloor(from, to){
 	var returnVal
 	
-	if(to>from) returnVal="true";
+	if(parseInt(to)>parseInt(from)){ returnVal="true";}
 	else returnVal="false";
 	
 	return returnVal;
@@ -254,14 +254,51 @@ function validateFloor(from, to){
 
 }
 
+
+function amenities_change(e){
+ ///*	
+    var indx = $('.amenitiesType').index($(e));
+	var amenity_val = e.value;
+	//var index = $(e).attr('name').match(/\[(.*?)\]/)[1];
+	//console.log(e.name);
+	
+		
+		
+		
+		$('input[name= "title[]"]').each(function(index, elm){
+			if(indx == index+1){
+				if(amenity_val!==''){
+					$(this).val(amenity_val);
+				}
+				else{
+					$(this).val();
+				}
+
+			}
+				
+		});
+//*/
+	
+}
+
+
 $(document).ready(function(){
 	
 	 $('.taggedDate').hide();
 	  $('.taggedMonth').hide();
-	  $('input[name= "title[]"]').each(function(){
-						
+	  $('input[name= "title[]"]').each(function(index, elm){
+					if($('select#PType').val() != "Amenities")	
 					 $(this).val($('select#PType').val());
-					 
+					else{
+							$(this).val('');
+					}
+					
+					 if($('select#PType').val() != "Cluster Plan"){	
+					 	$(this).attr("readonly", true);
+					}
+					else{
+						$(this).attr("readonly", false);
+					}
 
 				});
 	if($('select#PType').val() == 'Construction Status'){
@@ -281,23 +318,29 @@ $(document).ready(function(){
 				});
 		
 	}
-	 if($('select#PType').val() == 'Project Image'){
-				$('.taggedDate').each(function(){
-				  $(this).show();
-				  if($(this).children('#tower_dropdown').length == 0){
-					$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
-					$(this).append($('#select_display_order').html());
-				  }
-						
-				});
-			 }
+	var itype = $('select#PType').val();	         
+	if(itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other' ){
+ 	
+			$('.taggedDate').each(function(){
+			  $(this).show();
+			  if($(this).children('#tower_dropdown').length == 0){
+				$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
+				$(this).append($('#select_display_order').html());
+				if(itype=='Amenities')
+			  	$(this).append($('#amenitiesTypeDiv').html());
+			  }
+			  
+
+					
+			});
+	}
 	if($('select#PType').val() == 'Cluster Plan'){
 				
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  
 				 if($(this).children('#tower_dropdown').length == 0){
-					$(this).append('&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;');
+					$(this).append('&nbsp;&nbsp;<b>Tower:<font color = "red">*</font></b>&nbsp;&nbsp;');
 					$(this).append($('#select_tower').html());
 				 }
 				 if($(this).children('#floor_from').length == 0){
@@ -308,13 +351,16 @@ $(document).ready(function(){
 			 }
 	
 	 $('select#PType').change(function(k, v){
-
-	 			$('input[name= "title[]"]').each(function(){
-						
+	 			$("#amenitiesTypeDiv").hide();
+	 			$('input[name= "title[]"]').each(function(index, elm){
+					if($('select#PType').val() != "Amenities")	
 					 $(this).val($('select#PType').val());
+					else{
+							$(this).val('');
+					}
 					// $(this).attr("readonly", true);
 					 if($('select#PType').val() != "Cluster Plan"){	
-					 	console.log("here");$(this).attr("readonly", true);
+					 	$(this).attr("readonly", true);
 					}	
 					else
 						$(this).attr("readonly", false);
@@ -344,13 +390,16 @@ $(document).ready(function(){
 				});
 					
 			 }
-				         
-		if($('select#PType').val() == 'Project Image'){
+		var itype = $('select#PType').val();	         
+		if( itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other'){
+				
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
 					$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
 					$(this).append($('#select_display_order').html());
+					if(itype=='Amenities')
+			  			$(this).append($('#amenitiesTypeDiv').html());
 				  }
 						
 				});
@@ -361,7 +410,7 @@ $(document).ready(function(){
 				  $(this).show();
 				  
 				 if($(this).children('#tower_dropdown').length == 0){
-					$(this).append('&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;');
+					$(this).append('&nbsp;&nbsp;<b>Tower:<font color = "red">*</font></b>&nbsp;&nbsp;');
 					$(this).append($('#select_tower').html());
 				 }
 				 if($(this).children('#floor_from').length == 0){
@@ -373,6 +422,7 @@ $(document).ready(function(){
 
 		});
 
+	
 
 		
 });
@@ -437,7 +487,9 @@ $(document).ready(function(){
 					<select name = "PType" id = "PType">
 						<option value =''>Select Type</option>
                                                 {if $linkShowHide == 0}
-                                                    <option value ='Project Image' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Project Image'} selected {/if}>Project Image</option>
+                                                    <option value ='Elevation' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Elevation'} selected {/if}>Elevation</option>
+                                                    <option value ='Amenities' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Amenities'} selected {/if}>Amenities</option>
+                                                    <option value ='Main Other' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Main Other'} selected {/if}>Main Other</option>
                                                     <option value ='Location Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Location Plan'} selected {/if}>Location Plan</option>
                                                     <option value ='Layout Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Layout Plan'} selected {/if}>Layout Plan</option>
                                                     <option value ='Site Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Site Plan'} selected {/if}>Site Plan</option>
@@ -453,8 +505,9 @@ $(document).ready(function(){
                                                 {/if}
 					</select>	
                                         <input type="hidden" name = "linkShowHide" value="{$linkShowHide}">
-				  </td>
+				  
 				 
+				 	</td>
 				</tr>
 
 				 <tr>						
@@ -512,6 +565,18 @@ $(document).ready(function(){
 				   <!-- this is for adding dynamically display dropdown-->
 				  <div id="select_display_order" style="display:none">{$display_order_div}</div>
 				  <!-- this is for adding dynamically floor dropdown-->
+
+				   <div style="display:none" id="amenitiesTypeDiv">
+				 &nbsp;&nbsp;&nbsp;&nbsp; <b>Amenities Type :</b><font color = "red">*</font> 
+				  
+				   	<select name = "SType[]" class = "amenitiesType" onchange="amenities_change(this)">
+						<option value =''>Select Amenities Type</option>
+						{foreach  from=$amenities key=k item=v}
+                          <option >{$v}</option>
+						{/foreach}
+				   </select>
+				 </div>
+
 				  <div id="select_floor" style="display:none">
 				  	&nbsp;&nbsp;<b>Floor No. From:<font color = "red"></font></b>&nbsp;&nbsp;
 						<input name="floor_from[]" type="text" class="formstyle2" id="floor_from" size="10"  onchange="floor_change_from(this)" />	
@@ -520,7 +585,7 @@ $(document).ready(function(){
 					</div>
 				  
 				 <!-- <input type=file name='txtlocationplan'  style="width:400px;">-->
-				 <div id="img1" style="margin-bottom:10px;"><input name="txtlocationplan[]" type="file" id='txtlocationplan1' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]">
+				 <div id="img1" style="margin-bottom:10px;"><input name="txtlocationplan[]" type="file" id='txtlocationplan1' class="imgup"/>&nbsp;&nbsp;<b>Title:<font color = "red">*</font></b>&nbsp;&nbsp;<input type = "text" name = "title[]" readonly="1">
 				   <div class="taggedMonth" style="display:block;float:left">
 					   &nbsp;&nbsp;<b>Tagged Date:<font color = "red">*</font></b>&nbsp;&nbsp;
 						<input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" size="10"  onchange="tagged_date_change(this)"/>  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
