@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', '1');
-ini_set('memory_limit', '5G');
+ini_set('memory_limit', '7G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -14,7 +14,7 @@ require_once ($currentDir . '/../dbConfig.php');
 
 define("INVALID_DATE", "0000-00-01");
 define('MIN_B2B_DATE', '2013-04-01');
-define('MAX_B2B_DATE', '2014-04-01');
+define('MAX_B2B_DATE', '2014-06-01');
 define('B2B_DEMAND_START_DATE', '2014-01-01');
 define('CSV_FIELD_DELIMITER', '~#~');
 define('CSV_LINE_DELIMITER', "\r\n");
@@ -104,6 +104,12 @@ if (runTests()) {
 } else {
     $logger->error("Test Cases Failed.");
 }
+
+#echo "\n";
+#echo memory_get_usage()."\n";
+#echo memory_get_usage(true)."\n";
+#echo memory_get_peak_usage()."\n";
+#echo memory_get_peak_usage(true)."\n";
 
 function createDocuments($aConfigKey, $aAllInventory, $aAllPrice) {
     global $logger;
