@@ -291,7 +291,7 @@ function cleanFields(){
 
 
 
-function editCompany(id,name,type,des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, fax, phone){
+function editCompany(id,name,type,des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, fax, phone, action='edit'){
     cleanFields();
     $("#compid").val(id);
     $('#city').val(city);
@@ -333,6 +333,17 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, c
 
     if($('#create_company').css('display') == 'none'){ 
      $('#create_company').show('slow'); 
+    }
+
+    if(action == 'read'){
+	  $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
+		if($(this).attr('id') != 'exit_button')		   
+	      $(this).attr('disabled',true);		    
+	  });
+	}else{
+	  $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
+	    $(this).attr('disabled',false);		    
+	  });		
     }
 }
 
@@ -686,7 +697,7 @@ var iframeUpload = {
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v['type']}</TD>
-                                  <TD align=center class=td-border>{$v['name']}</TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}', 'read');">{$v['name']}</a></TD>
                                   <TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>
                                   <TD align=center class=td-border>{$v['address']}, City-{$v['city_name']}, Pin-{$v['pin']}, Ph.N.-{$v['compphone']}</TD>
                                   <TD align=center class=td-border>{foreach from=$v['ips'] key=k1 item=v1} {$v1}, {/foreach}</TD>
@@ -694,8 +705,7 @@ var iframeUpload = {
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}' );">Edit</a> &nbsp;&nbsp;&nbsp; <a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a>
-                                  &nbsp;&nbsp;&nbsp; <a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
 
                                 </TR>
                                 {/foreach}

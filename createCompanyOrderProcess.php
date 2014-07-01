@@ -155,11 +155,31 @@
 		  $cnt = 0;
 		  while($cnt < $userNo){
 			//need to fetch id on basis of email id from forum_user 
-			$email = $txtSubsUserEmail[$cnt];			
-			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'") ;			
-			if($sql_user){
+			$email = trim(mysql_real_escape_string($txtSubsUserEmail[$cnt]));
+			$phone = trim(mysql_real_escape_string($txtSubsUserCont[$cnt]));			
+			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'");
+			if(mysql_num_rows($sql_user)){
 			  $userId = mysql_fetch_object($sql_user);	
-			  mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") ;
+			  $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
+			}else{
+			  $compArr = Company::getAllCompany($txtCompId);
+			  $pwd = time();
+			  //create user in forum table			
+			  mysql_query("INSERT INTO `proptiger`.`FORUM_USER` (`USER_ID`, `USERNAME`, `EMAIL`, `CONTACT`, `PROVIDERID`, `PROVIDER`, `FB_IMAGE_URL`, `IMAGE`, `PASSWORD`, `CITY`, `COUNTRY_ID`, `UNIQUE_USER_ID`, `CREATED_DATE`, `STATUS`, `IS_SUBSCRIBED`, `UNSUBSCRIBED_AT`) VALUES (NULL, '', '".$email."','".$phone."', '0', '', '', ' ', '".md5($pwd)."', '".$compArr[0]['city']."', '1', '', '".date('Y-m-d H:i:s')."', '1', 0, '".date('Y-m-d H:i:s')."');") or die(mysql_error());
+			  $userId = mysql_insert_id();
+			   $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
+			   //sending email to newly created user
+			  $email = "manish.goyal@proptiger.com";
+			  $subject= "Your User Account has been created!";
+			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
+			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
+			  $to = $email;
+			  $sender = "no-reply@proptiger.com";
+			  $headers  = 'MIME-Version: 1.0' . "\r\n";
+			  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			  $headers .= 'To: '.$email."\r\n";
+			  $headers .= 'From: '.$sender."\r\n";
+			  sendMailFromAmazon($to, $subject, $email_message, $sender,null,null,false);
 			}
 			$cnt++;	 
 		  } 		  
@@ -173,17 +193,17 @@
 	});
 	  
 	if($error_flag == ''){
-	 /*
 	  //sending email on placing an order
-	  $to = "kuldeep.patel_c@proptiger.com";
-	 // $cc = implode(',', $email['recipients']);
-	  $email['subject'] = "New Order Created!";
-	  $from = 'no-reply@proptiger.com';
-	  $emailContent = "New order[order ID : ".$company_order->id."] has been created!";
-	  $emailSubject = $email['subject'].' - '.date("d-m-Y");
-	  sendRawEmailFromAmazon($to, $from, $cc, $emailSubject, $emailContent, '', '', '');
-	  * */
-		
+	  $email = "kuldeep.patel_c@proptiger.com";
+	  $subject= "New Order[".$order_id."] Placed!";
+	  $email_message = "New order[order ID : ".$order_id."] has been created!";
+	  $to = $email;
+	  $sender = "no-reply@proptiger.com";
+	  $headers  = 'MIME-Version: 1.0' . "\r\n";
+	  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+	  $headers .= 'To: '.$email."\r\n";
+	  $headers .= 'From: '.$sender."\r\n";
+      sendMailFromAmazon($to, $subject, $email_message, $sender,null,null,false);		
 	  header("Location:companyOrdersList.php?compId=".$txtCompId); 
 	}
 	  
@@ -348,11 +368,31 @@
 		  $cnt = 0;
 		  while($cnt < $userNo){
 			//need to fetch id on basis of email id from forum_user 
-			$email = $txtSubsUserEmail[$cnt];			
-			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'");			
-			if($sql_user){
+			$email = trim(mysql_real_escape_string($txtSubsUserEmail[$cnt]));
+			$phone = trim(mysql_real_escape_string($txtSubsUserCont[$cnt]));			
+			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'");
+			if(mysql_num_rows($sql_user)){
 			  $userId = mysql_fetch_object($sql_user);	
 			  $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
+			}else{
+			  $compArr = Company::getAllCompany($txtCompId);
+			  $pwd = time();
+			  //create user in forum table			
+			  mysql_query("INSERT INTO `proptiger`.`FORUM_USER` (`USER_ID`, `USERNAME`, `EMAIL`, `CONTACT`, `PROVIDERID`, `PROVIDER`, `FB_IMAGE_URL`, `IMAGE`, `PASSWORD`, `CITY`, `COUNTRY_ID`, `UNIQUE_USER_ID`, `CREATED_DATE`, `STATUS`, `IS_SUBSCRIBED`, `UNSUBSCRIBED_AT`) VALUES (NULL, '', '".$email."','".$phone."', '0', '', '', ' ', '".md5($pwd)."', '".$compArr[0]['city']."', '1', '', '".date('Y-m-d H:i:s')."', '1', 0, '".date('Y-m-d H:i:s')."');") or die(mysql_error());
+			  $userId = mysql_insert_id();
+			   $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
+			   //sending email to newly created user
+			  $email = "manish.goyal@proptiger.com";
+			  $subject= "Your User Account has been created!";
+			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
+			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
+			  $to = $email;
+			  $sender = "no-reply@proptiger.com";
+			  $headers  = 'MIME-Version: 1.0' . "\r\n";
+			  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			  $headers .= 'To: '.$email."\r\n";
+			  $headers .= 'From: '.$sender."\r\n";
+			  sendMailFromAmazon($to, $subject, $email_message, $sender,null,null,false);
 			}
 			$cnt++;	 
 		  }		  
@@ -364,8 +404,8 @@
 	  }
 		  
 	});	 
-	if($error_flag == '')
-	   header("Location:companyOrdersList.php?compId=".$txtCompId); 	  
+	//if($error_flag == '')
+	  // header("Location:companyOrdersList.php?compId=".$txtCompId); 	  
 	  
   }
 

@@ -183,7 +183,7 @@
 							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} type=text name="txtPaymentInstNo[]" id="txtPaymentInstNo{$k}" value="{$txtPaymentDetails[$k-1]['payment_instrument_no']}" style="width:140px;"></td>
 							   <td width="50%" align="left" >
 							    {if $ErrorMsg["txtPaymentInstNo"] != ''}<font color = "red">{$ErrorMsg["txtPaymentInstNo"]}</font>{/if}
-							    {if $page!='view'}
+							    {if $page!='view' && $k!=1}
 							    <span style="float:right">
 								  <a href = "javascript:void(0);">
 									<img src = "images/minus.jpg" width ="20px" id = "paid_order_pmt_{$k}" onClick="removePmt(this.id,{$k})">
@@ -249,7 +249,7 @@
                       {/foreach}
                     </select>
                     <span id="locs_cities_locs"> 
-                      <select><option>-Select Locality-</option></select>                                          
+                      <select><option value="">-Select Locality-</option></select>                                          
                     </span>
                     {if $page!='view'}
                       <img src = "images/plus.png" width ="20px" id = "add_loc" style="position:relative;top:5px" onclick="add_locality();" />
@@ -432,14 +432,23 @@ jQuery(document).ready(function(){
 	  }else{
 		$('#gAccess_cities').hide();
 		$('#gAccess_locs').show();
-		//creating saved localities boxes	 
+		//creating saved localities boxes
 		gAccess_objects = '{$gAccess_ids}';
 		gAccess_objects = JSON.parse(gAccess_objects);
 		$.each(gAccess_objects,function(k,v){
-		  $('#sel_locs').append('<div style="background:#ccc;float:left;padding:2px;margin:1px;" id="locID-'+k+'">'+v+'&nbsp;&nbsp;<img src="images/stop.gif" style="position:relative;top:2px" id="'+k+'" onclick="remove_locality(this.id)"></div>');	
 		  selected_locs.push(k);
 		  $('input[name="all_locs"]').val(selected_locs.join(","));
 		});
+		//updating added locality html	
+	    var url="Refreshlocality.php";
+	    $.ajax({
+	      'url':url,
+	      'data':"locArr="+selected_locs+"&&compOrder=1",
+	      'type':'post',
+	      success:function(data){
+		    $("#sel_locs").html(data);  
+	      }	 
+	    });
 	  }
    }	  
 	
@@ -618,9 +627,11 @@ jQuery(document).ready(function(){
 	dur = dur.split("week"); 
 	days = parseInt(dur[0]) * 7;
 	orderDate = $('#txtOrderDate').val();
-	d1 = new Date(orderDate);
-    d1.setDate(d1.getDate()+days);
-    $('#txtExpiryTrialOrderDate').val((d1.getFullYear())+"-"+('0'+parseInt(d1.getMonth()+1)).substr(-2,2)+"-"+('0'+d1.getDate()).substr(-2,2));	  
+	if(orderDate){
+	  d1 = new Date(orderDate);
+	  d1.setDate(d1.getDate()+days);
+	  $('#txtExpiryTrialOrderDate').val((d1.getFullYear())+"-"+('0'+parseInt(d1.getMonth()+1)).substr(-2,2)+"-"+('0'+d1.getDate()).substr(-2,2));
+	}	  
   }
 
   function addPmt(){
@@ -650,10 +661,19 @@ jQuery(document).ready(function(){
   }
 	
   function add_locality(){	 
-	 if($('#locality').val() != '' && selected_locs.indexOf($('#locality').val()) == -1){
-	   $('#sel_locs').append('<div style="background:#ccc;float:left;padding:2px;margin:1px;" id="locID-'+$('#locality').val()+'">'+$('#locality>option:selected').text()+'&nbsp;&nbsp;<img src="images/stop.gif" style="position:relative;top:2px" id="'+$('#locality').val()+'" onclick="remove_locality(this.id)"></div>');	
+	 if($('#locality').val() != undefined && $('#locality').val() != '' && selected_locs.indexOf($('#locality').val()) == -1){		   
 	   selected_locs.push($('#locality>option:selected').val());
-	   $('input[name="all_locs"]').val(selected_locs.join(",")); 	   
+	   $('input[name="all_locs"]').val(selected_locs.join(",")); 
+	   //updating added locality html	
+	   var url="Refreshlocality.php";
+	   $.ajax({
+	     'url':url,
+	     'data':"locArr="+selected_locs+"&&compOrder=1",
+	     'type':'post',
+	     success:function(data){
+		   $("#sel_locs").html(data);  
+	     }	 
+	   });   
 	 }
   }
   //////////.removeData() - to empty an array
@@ -661,6 +681,16 @@ jQuery(document).ready(function(){
 	 $("#locID-"+id).remove();
 	 selected_locs.splice(selected_locs.indexOf(id),1);
 	 $('input[name="all_locs"]').val(selected_locs.join(","));
+	 //updating added locality html	
+	   var url="Refreshlocality.php";
+	   $.ajax({
+	     'url':url,
+	     'data':"locArr="+selected_locs+"&&compOrder=1",
+	     'type':'post',
+	     success:function(data){
+		   $("#sel_locs").html(data);  
+	     }	 
+	   });
   }
 
   function update_locality(ctid)
