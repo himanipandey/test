@@ -107,7 +107,7 @@ function archieved_offers(project_id)
 								</tr>
 								<tr>
 								  <td>
-								    <b>Special BSP : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_emi_special_bsp"  value="special_bsp"  {if is_numeric($bsp)}checked{/if} />
+								    <b>Special BSP : </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" onclick="$('#btnSave').attr('disabled',true)" name="no_emi_special_bsp"  value="special_bsp"  {if is_numeric($bsp)}checked{/if} />
 								    <input type="text"  id="no_emi_bsp" size="10"  maxlength="10" name="no_emi_bsp" onkeyup="$('#btnSave').attr('disabled',true)" style="width:50px" onkeypress='return isNumberKey(event)' value="{if is_numeric($bsp)}{$bsp}{/if}"/>
 								  </td>
 								  <td>&nbsp;</td>
