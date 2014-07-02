@@ -13,10 +13,24 @@ class Locality extends ActiveRecord\Model
         $locality = Locality::find_by_sql($query);
         $arrLocality = array();
         foreach ($locality  as $value) {
-           $arrLocality[$valuelocality_id] = $value->label;
+           $arrLocality[$value->locality_id] = $value->label;
         }
         return $arrLocality;
     }
+
+    static function localityListByCity($cityId) {
+        $select = "select * from locality l ";
+        $where = " where l.city_id = '".$cityId."' ";
+        $query = $select.$where;
+        //$locality = Locality::find('all',array('conditions'=>array("suburb_id = $suburbId AND status = 'active'"),'order' => 'label asc'));
+        $locality = Locality::find_by_sql($query);
+        $arrLocality = array();
+        foreach ($locality  as $value) {
+           $arrLocality[$value->locality_id] = $value->label;
+        }
+        return $arrLocality;
+    }
+
     static function getLocalityById($localityId) {
         $localityDetail = Locality::find('all',array('conditions'=>array("locality_id = $localityId")));
         return $localityDetail;

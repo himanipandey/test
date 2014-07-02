@@ -146,6 +146,7 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
         $sql = $sql . " and l.LOCALITY_ID=$localityId ";
     }
     $sql = $sql . " group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
+    echo $sql;
     return  $res = dbQuery($sql); 
 }
 

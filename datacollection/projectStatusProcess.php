@@ -46,6 +46,8 @@ if(isset($_SESSION['project-status']['city']) && !empty($_SESSION['project-statu
     $suburbDataArr = Suburb::SuburbArr($_SESSION['project-status']['city']);
     if(isset($_POST['suburbId']) && $_POST['suburbId'] != '')
         $localityDataArr = Locality::localityList($_SESSION['project-status']['suburb']);
+    else
+        $localityDataArr = Locality::localityListByCity($_SESSION['project-status']['city']);
     
 }elseif(isset($_SESSION['project-status']['executive']) && !empty($_SESSION['project-status']['executive'])){
     $projectsAssignedToExec = getAssignedProjects($_SESSION['project-status']['executive']);
