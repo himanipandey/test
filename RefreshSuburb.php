@@ -3,7 +3,7 @@
 	include("smartyConfig.php");
 	include("appWideConfig.php");
 	include("dbConfig.php");
-        include("modelsConfig.php");
+  include("modelsConfig.php");
 	include("includes/configs/configs.php");
         
         if($_REQUEST['part']=='refreshLoc') {
@@ -109,9 +109,28 @@
                         {
                          echo "<option value=".$val["SUBURB_ID"].">".$val["LABEL"] . "</option>";
                         }
+
+                        echo "break";
+
+                        $localityArr = Array();
+                        $locsql = "SELECT A.LOCALITY_ID, A.CITY_ID, A.LABEL FROM ".locality." AS A WHERE A.CITY_ID in (" . $city_id . ") ORDER BY A.LABEL ASC";
+                        $locdata = mysql_query($locsql);
+
+                        while ($locdataArr = mysql_fetch_array($locdata))
+                         {
+                                array_push($localityArr, $locdataArr);
+                         }
+                        echo "<option value=''>Select Locality</option>";
+                        foreach($localityArr as $val)
+                        {
+                         echo "<option value=".$val["LOCALITY_ID"].">".$val["LABEL"] . "</option>";
+                        }
+
                     }
                    else
                         echo "herer<option value=''>Select Suburb</option>"; 
+                        echo "break";
+                        echo "herer<option value=''>Select Locality</option>";
             }
         if($suburb_id != '')	
         {

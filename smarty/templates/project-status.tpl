@@ -50,7 +50,7 @@
                                     <td colspan="0">
                                         <div style="height: 31px; float: left">
                                             <form method="post" onsubmit="return verifyDataGetForm();">
-                                                <select name="cityId" id = "cityId" class="cityId" onchange="updateSuburbDropdown(this.value, 'suburbId');" STYLE="width: 150px">
+                                                <select name="cityId" id = "cityId" class="cityId" onchange="updateSuburbDropdown(this.value, 'suburbId', 'localityId');" STYLE="width: 150px">
                                                         <option value =''>Select City</option>
                                                         <option value ='-1' {if $selectedCity == -1} selected="selected" {/if}>All City</option>
                                                         {foreach from = $CityDataArr key=key item = item}
@@ -333,9 +333,9 @@ function verifyProjectIds(){
     alert("Please Enter ProjectIds!");
     return false;
 }
-function updateSuburbDropdown(cityId, suburbSelectboxId)
+function updateSuburbDropdown(cityId, suburbSelectboxId, localitySelectboxId)
 {
-        dataString = 'id='+cityId
+    dataString = 'id='+cityId;
 	$.ajax
 	({
 		type: "POST",
@@ -344,9 +344,13 @@ function updateSuburbDropdown(cityId, suburbSelectboxId)
 		cache: false,
 		success: function(html)
 		{
-                    $("."+suburbSelectboxId).html('<option value="">All</option>'+html);
+            var sub_loc_html = html.split("break");
+            $("."+suburbSelectboxId).html('<option value="">All</option>'+sub_loc_html[0]);
+            $("."+localitySelectboxId).html('<option value="">All</option>'+sub_loc_html[1]);
 		}
 	});
+
+
 }
 function updateLocalityDropdown(suburbId, localitySelectboxId)
 {
