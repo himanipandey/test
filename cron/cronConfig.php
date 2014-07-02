@@ -174,14 +174,16 @@ $weeklyEmail = array(
                'sendifnodata'=>0
         ),
      array(
-            'sql'=>"rp.PROJECT_NAME, rb.BUILDER_NAME FROM
-             resi_project rp
-             join resi_builder rb on rp.builder_id = rb.builder_id
-             join locality l on rp.locality_id = l.locality_id
-             join suburb s on l.suburb_id = s.suburb_id
-             join city c on s.city_id = c.city_id
-            where ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList))
-                AND rp.status in('Active','ActiveInCms');",
+            'sql'=>"SELECT PROJECT_ID, c.LABEL CITY, l.LABEL Locality, rp.LOCALITY_ID,rp.LATITUDE, rp.LONGITUDE,
+                    rp.PROJECT_NAME, rb.BUILDER_NAME FROM
+                    resi_project rp
+                    join resi_builder rb on rp.builder_id = rb.builder_id
+                    join locality l on rp.locality_id = l.locality_id
+                    join suburb s on l.suburb_id = s.suburb_id
+                    join city c on s.city_id = c.city_id
+            where
+                    ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList))
+                AND rp.status in('Active','ActiveInCms') and rp.version = 'Cms';",
                'subject'=>'Missing Latitude and Longitude List',
                'recipients'=>array('ankur.dhawan@proptiger.com'), 
                'attachmentname'=>'Missing_latitude_longitude_list',
