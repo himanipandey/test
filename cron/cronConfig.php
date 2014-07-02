@@ -156,6 +156,20 @@ $weeklyEmail = array(
                'recipients'=>array('ankur.dhawan@proptiger.com','karanvir.singh@proptiger.com','prashant.pracheta@proptiger.com'), 
                'attachmentname'=>'Resale_Protfolio_Projects_which_have_Month_of_Price_is_older_than_3_months',
                'sendifnodata'=>0
-        )          
+        ),
+     array(
+            'sql'=>"rp.PROJECT_NAME, rb.BUILDER_NAME FROM
+             resi_project rp
+             join resi_builder rb on rp.builder_id = rb.builder_id
+             join locality l on rp.locality_id = l.locality_id
+             join suburb s on l.suburb_id = s.suburb_id
+             join city c on s.city_id = c.city_id
+            where ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList))
+                AND rp.status in('Active','ActiveInCms');",
+               'subject'=>'Missing Latitude and Longitude List',
+               'recipients'=>array('ankur.dhawan@proptiger.com'), 
+               'attachmentname'=>'Missing_latitude_longitude_list',
+               'sendifnodata'=>0
+        )
 );
 ?>
