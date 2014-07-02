@@ -9,6 +9,7 @@ $past_date = date("Y-m-d",strtotime('-1 days'));
 $future_date = date("Y-m-d",strtotime('+1 days'));
 $latLongList = '0,1,2,3,4,5,6,7,8,9';
 $currentDate = date("Y-m-d");
+$cityList = "20,11,6,8,88,2,5,12,1,21,18,16";
 $dailyEmail = array(
 	array(
 		'sql'=>"SELECT 
@@ -102,6 +103,21 @@ $weeklyEmail = array(
                'recipients'=>array('ankur.dhawan@proptiger.com'), 
                'attachmentname'=>'projects_whose_status_is_pre_launch_under_construction_launch_projects_but_expected_completion_date_is_in_past',
                'sendifnodata'=>0
-        )   
+        ),
+     array(
+            'sql'=>"select rp.project_id,rp.project_name,l.label as LOCALITY_NAME, c.label as CITY_NAME,((ACOS(SIN(rp.latitude * PI() / 180) * SIN(l.latitude * PI() / 180) + COS(rp.latitude * PI() / 180) 
+                * COS(l.latitude * PI() / 180) * COS((rp.longitude - l.longitude) * PI() / 180)) * 180 
+                 / PI()) * 60 * 1.1515)*1.609344 AS `distance`               
+ 
+                from resi_project rp join locality l on rp.locality_id = l.locality_id 
+                join suburb s on l.suburb_id = s.suburb_id
+                join city c on s.city_id = c.city_id
+             where 
+                rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and c.city_id in($cityList) having distance >10 ;",
+               'subject'=>'PIDs greater than 10km from locality center',
+               'recipients'=>array('ankur.dhawan@proptiger.com'), 
+               'attachmentname'=>'PIDs_greater_than_10km_from_locality_center',
+               'sendifnodata'=>0
+        )
 );
 ?>
