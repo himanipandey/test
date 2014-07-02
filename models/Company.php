@@ -10,8 +10,14 @@ class Company extends ActiveRecord\Model
         return $companyDetail;
     }
 
-    static function getAllCompany() {
-        $companyDetail = Company::find('all');
+    static function getAllCompany($compid=0) {
+        if($compid>0){
+            $companyDetail = Company::find('all', array('conditions'=>array("id = $compid")));
+        }
+        else{
+            $companyDetail = Company::find('all');
+        }
+        
         
         $returnArr = array();
         foreach ($companyDetail as $v) {
@@ -23,6 +29,14 @@ class Company extends ActiveRecord\Model
             $result = self::Connection()->query($sql);
             $city = $result->fetch(PDO::FETCH_NUM);
 
+            $sql = "SELECT ip FROM company_ips WHERE  company_id='{$v->id}'";
+            $result = self::Connection()->query($sql);
+            $ips = array();
+            while($data = $result->fetch(PDO::FETCH_NUM)){
+                array_push($ips, $data[0]);
+            };
+            
+
             $sql = "SELECT id, name, contact_email FROM broker_contacts WHERE (broker_id={$v->id} and type='NAgent')";
             $result = self::Connection()->query($sql);
             $agent_row = $result->fetch(PDO::FETCH_NUM);
@@ -31,7 +45,11 @@ class Company extends ActiveRecord\Model
             $result = self::Connection()->query($sql);
             $fax= $result->fetch(PDO::FETCH_NUM);
 
-            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='broker_contacts' and table_id='{$agent_row[0]}' and type='cc_phone')";
+            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='company' and table_id='{$v->id}' and type='cc_phone')";
+            $result = self::Connection()->query($sql);
+            $compphone = $result->fetch(PDO::FETCH_NUM);
+     
+            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='broker_contacts' and table_id='{$agent_row[0]}' and type='phone1')";
             $result = self::Connection()->query($sql);
             $phone = $result->fetch(PDO::FETCH_NUM);
 
@@ -48,7 +66,9 @@ class Company extends ActiveRecord\Model
             $arr['address'] = $address_row[0];
             $arr['city'] = $address_row[1];
             $arr['pin'] = $address_row[2];
-
+            $arr['ips'] = $ips;
+            $arr['ipsstr'] = implode("-", $ips);
+            $arr['compphone'] = $compphone[1];
             $arr['person'] = $agent_row[1];
 
             $arr['fax'] = $fax[1];

@@ -418,7 +418,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						if($unitType == 'Plot' || $unitType == 'Office' || $unitType == 'Shop')
 							$bed = 0;
 																		
-						$flag = 0;
+						       $flag = 0;
 						try{						
 										
 						$actual_listing = Listings::find_by_sql("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and phase_type = 'Actual' 
@@ -492,8 +492,13 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $list_option_id,$projectId)));
 					
 						}catch(Exception $e)
-						{ 
-							$ErrorMsg1 = 'Could not delete!';
+						{
+							if(strstr($e, 'listing_prices_fk_1'))
+							  $ErrorMsg1 = "Couuld not delete! Prices exists for the config($txtUnitName).";
+							elseif(strstr($e, 'listings_fk_1'))
+							  $ErrorMsg1 = "Couuld not delete! Mapping exists for the config($txtUnitName).";
+							else
+							  $ErrorMsg1 = 'Couuld not delete!';							
 							return false;
 						}					
 								
