@@ -215,32 +215,10 @@
 					{/for}	
 					 
 				  </td>				  
-				</tr>
+				</tr>				
 				
-				<tr>
+				<tr id="gAccess_locs">
 				  <td width="20%" align="right" ><font color="red">*</font>Geographic Access : </td>
-				  <td width="30%" align="left"> 
-				    <input {if $page=='view'}disabled=true{/if} type="radio" name="gAccess"  value="gAccess_cities" {if $gAccess=='gAccess_cities' || $gAccess==''}checked=true{/if}/>Cities
-				    &nbsp;&nbsp;&nbsp;&nbsp;
-				    <input {if $page=='view'}disabled=true{/if} type="radio" name="gAccess" value="gAccess_locs" {if $gAccess=='gAccess_locs'}checked=true{/if}/>Localities
-				  </td>
-				  <td width="50%" align="left" ></td>
-				</tr>
-				
-				<tr id="gAccess_cities">
-				  <td width="20%" align="right" >&nbsp;</td>
-				  <td width="30%" align="left"> 
-				    <select {if $page=='view'}disabled=true{/if} style="height:150px;width:150px;" id="cities" name="cities[]" multiple>             
-                      {foreach from=$cityArray key=k item=v}
-                        <option value="{$k}" {if in_array($k,$gAccess_ids) && $gAccess=='gAccess_cities'}  selected="selected"  style="background:#aaa"{/if}>{$v}</option>
-                      {/foreach}
-                    </select>
-				  </td>
-				  <td width="50%" align="left" ></td>
-				</tr>
-				
-				<tr id="gAccess_locs" style="display:none">
-				  <td width="20%" align="right" >&nbsp;</td>
 				  <td width="50%" align="left" style="border:1px solid#ccc"> 
 				    <table>
 					  <tr>
@@ -436,32 +414,28 @@ jQuery(document).ready(function(){
 		  $(".subs_user_"+n).hide(); 
 	
 	if('{$page}' == 'view' || '{$page}' == 'edit'){	  
-	  if("{$gAccess}" == 'gAccess_cities'){
-		$('#gAccess_cities').show();
-		$('#gAccess_locs').hide();	
-		$('input[name="all_locs"]').val("");	
-	  }else{
-		$('#gAccess_cities').hide();
-		$('#gAccess_locs').show();
-		//creating saved localities boxes
+	 	//creating saved localities boxes
 		gAccess_objects = '{$gAccess_ids}';
 		gAccess_objects = JSON.parse(gAccess_objects);
 		$.each(gAccess_objects,function(k,v){
-		  selected_locs.push(k);
-		  $('input[name="all_locs"]').val(selected_locs.join(","));
+		  selected_locs.push(k);		 
 		});
 		//updating added locality html	
 	    var url="Refreshlocality.php";
-	    $.ajax({
-	      'url':url,
-	      'data':"locArr="+selected_locs+"&&compOrder=1",
-	      'type':'post',
-	      success:function(data){
-		    $("#sel_locs").html(data);  
-	      }	 
-	    });
-	  }
-   }	  
+	     $.ajax({
+	       'url':url,
+	       'data':"locArr="+selected_locs+"&&compOrder=1",
+	       'type':'post',
+	       success:function(data){
+		     $("#sel_locs").html(data);  
+		       selected_locs = [];
+		       $.each($("#sel_locs div"),function(){
+		      selected_locs.push($(this).attr('name'));
+		    });
+		    $('input[name="all_locs"]').val(selected_locs.join(",")); 		  
+	       }	 
+	     }); 
+    }	  
 	
 	$("input[name='orderType']").click(function(){
 	  if($(this).val() == 'paid'){
@@ -673,10 +647,9 @@ jQuery(document).ready(function(){
 	
   function add_locality(){		 
 	 if($('#locality').val() != undefined && $('#locality').val() != '' && selected_locs.indexOf($('#locality').val()) == -1){		   
-	   $.each($('#locality>option:selected'),function(){
-		    selected_locs.push($(this).val());		
-	   });
-	   $('input[name="all_locs"]').val(selected_locs.join(",")); 
+	   $.each($('#locality>option:selected'),function(){		   
+		  selected_locs.push($(this).val());	 		 		  
+	   });	   
 	   //updating added locality html	
 	   var url="Refreshlocality.php";
 	   $.ajax({
@@ -685,6 +658,11 @@ jQuery(document).ready(function(){
 	     'type':'post',
 	     success:function(data){
 		   $("#sel_locs").html(data);  
+		    selected_locs = [];
+		    $.each($("#sel_locs div"),function(){
+		     selected_locs.push($(this).attr('name'));
+		    });
+		    $('input[name="all_locs"]').val(selected_locs.join(",")); 		  
 	     }	 
 	   });   
 	 }

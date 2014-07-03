@@ -125,19 +125,14 @@
 		  
 		   #- permission
 		   $perm_data = array();
-		   $locSub = 0;
-		   if(!empty($all_locs)){
-			 $perm_data = $all_locs;	
-			 $locSub = 1;
-		   }else{
-			 $perm_data = $cities;
-			 $objectType = 6; 			   
-		   }		   
+		   $perm_data = $all_locs;		   		   
 		   if(!empty($perm_data)){				  
 			 foreach($perm_data as $k=>$v){  //51049 
-			   if($locSub && $v < 50000){
+			   if($v<1000){
+				 $objectType = 6; 
+			   }elseif($v < 50000 && $v>1000){
 			     $objectType = 7;			     
-			   }elseif($locSub && $v > 50000){
+			   }elseif($v > 50000){
 			     $objectType = 4;			     
 			   }	  			     
 			   $find_perm_sql = mysql_query("SELECT id FROM  `proptiger`.`permissions` WHERE `object_type_id`='".$objectType."' AND  `object_id`='".$v."' AND `access_level`='Read'");
@@ -335,21 +330,16 @@
 		   #- permission
 		   mysql_query("DELETE FROM `proptiger`.`subscription_permissions` WHERE subscription_id='".$subs_id."'");
 		   $perm_data = array();
-		   $locSub = 0;
-		   if(!empty($all_locs)){
-			 $perm_data = $all_locs;	
-			 $locSub = 1;
-		   }else{
-			 $perm_data = $cities;
-			 $objectType = 6; 			   
-		   }		   
+		   $perm_data = $all_locs;
 		   if(!empty($perm_data)){				  
 			 foreach($perm_data as $k=>$v){  //51049 
-			   if($locSub && $v < 50000){
+			   if($v<1000){
+				 $objectType = 6; 
+			   }elseif($v < 50000 && $v>1000){
 			     $objectType = 7;			     
-			   }elseif($locSub && $v > 50000){
+			   }elseif($v > 50000){
 			     $objectType = 4;			     
-			   }		    
+			   }	 	    
 			    
 			   $find_perm_sql = mysql_query("SELECT id FROM  `proptiger`.`permissions` WHERE `object_type_id`='".$objectType."' AND  `object_id`='".$v."' AND `access_level`='Read'") ;
 			   if(mysql_num_rows($find_perm_sql)){
@@ -438,7 +428,7 @@
 	 $smarty->assign('data_access',$order_details['data_access']);
 	 
 	 $smarty->assign('gAccess',$order_details['gAccess']);
-	 $smarty->assign('gAccess_ids',($order_details['gAccess']=='gAccess_locs')?json_encode($order_details['gAccess_ids']):$order_details['gAccess_ids']);
+	 $smarty->assign('gAccess_ids',json_encode($order_details['gAccess_ids']));
 
 	 $smarty->assign('txtSubsUser',$order_details['user_emails']);
 	 $smarty->assign('userNo',$order_details['userNo']);
