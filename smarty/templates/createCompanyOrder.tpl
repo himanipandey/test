@@ -242,18 +242,29 @@
 				<tr id="gAccess_locs" style="display:none">
 				  <td width="20%" align="right" >&nbsp;</td>
 				  <td width="50%" align="left" style="border:1px solid#ccc"> 
-				    <select id="locs_cities" name="locs_cities" onchange="update_locality(this.value);" {if $page=='view'}disabled=true{/if}>
-					  <option value="">-Select City-</option>                      
-                      {foreach from=$cityArray key=k item=v}
-                        <option value="{$k}">{$v}</option>
-                      {/foreach}
-                    </select>
-                    <span id="locs_cities_locs"> 
-                      <select><option value="">-Select Locality-</option></select>                                          
-                    </span>
-                    {if $page!='view'}
-                      <img src = "images/plus.png" width ="20px" id = "add_loc" style="position:relative;top:5px" onclick="add_locality();" />
-                    {/if}
+				    <table>
+					  <tr>
+						  <td>
+							  <select id="locs_cities" name="locs_cities" onchange="update_locality(this.value);" {if $page=='view'}disabled=true{/if}>
+								<option value="">-Select City-</option>                      
+								{foreach from=$cityArray key=k item=v}
+								  <option value="{$k}">{$v}</option>
+								{/foreach}
+							  </select>
+                         </td>
+						 <td>
+						    <span id="locs_cities_locs"> 
+							  <select><option value="">-Select Locality-</option></select>                                          
+							</span>
+							
+						 </td>
+						 <td>
+						   {if $page!='view'}
+							  <img src = "images/plus.png" width ="20px" id = "add_loc" style="position:relative;top:5px" onclick="add_locality();" />
+							{/if}
+						 </td>
+					  </tr>
+					</table>                 
                     <div id="sel_locs"></div>
 				  </td>
 				  <td width="50%" align="left" ></td>
@@ -660,9 +671,11 @@ jQuery(document).ready(function(){
 	 $('#userNo').val(subs_user.length);
   }
 	
-  function add_locality(){	 
+  function add_locality(){		 
 	 if($('#locality').val() != undefined && $('#locality').val() != '' && selected_locs.indexOf($('#locality').val()) == -1){		   
-	   selected_locs.push($('#locality>option:selected').val());
+	   $.each($('#locality>option:selected'),function(){
+		    selected_locs.push($(this).val());		
+	   });
 	   $('input[name="all_locs"]').val(selected_locs.join(",")); 
 	   //updating added locality html	
 	   var url="Refreshlocality.php";
