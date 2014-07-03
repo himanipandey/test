@@ -93,7 +93,8 @@ class CompanyOrder extends ActiveRecord\Model
 			  $object_details = Suburb::getSuburbById($order->object_id);
 			  $order_all_details['gAccess_ids'][$order->object_id] = $object_details[0]->label;  
 			}else{
-			  $order_all_details['gAccess_ids'][] = $order->object_id;  
+			  $object_details = City::getCityById($order->object_id);	
+			  $order_all_details['gAccess_ids'][$order->object_id] = $object_details[0]->label;  
 			}
 		  }
 		  if($order->email && !in_array($order->email,$order_all_details['user_emails'])){
