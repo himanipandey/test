@@ -29,11 +29,9 @@ else if($_REQUEST['type'] == 'locality')
 {
     $qry = 'select a.LABEL, a.PRIORITY, a.LOCALITY_ID 
             FROM '.LOCALITY.' a 
-            inner join suburb b
-               on a.suburb_id = b.suburb_id
             inner join city c
-               on b.city_id = c.city_id
-          where b.CITY_ID="'.$_REQUEST["cityId"].'" 
+               on a.city_id = c.city_id
+          where a.CITY_ID="'.$_REQUEST["cityId"].'" 
            AND (a.LABEL like "'. mysql_real_escape_string($_REQUEST['term']) .'%"  
            OR a.LOCALITY_ID like "'. mysql_real_escape_string($_REQUEST['term']) .'%")  
           order by a.LABEL ASC limit 0,10';
@@ -53,8 +51,7 @@ else if($_REQUEST['type'] == 'project')
 {
     if($_GET['mode'] == 'city'){
         $locList = "select l.locality_id from locality l 
-            inner join suburb s on l.suburb_id = s.suburb_id
-            inner join city c on s.city_id = c.city_id 
+            inner join city c on l.city_id = c.city_id 
             where c.city_id = ".$_REQUEST['id'];
         $LocId = mysql_query($locList);
         $listLoc = '';
@@ -71,9 +68,8 @@ else if($_REQUEST['type'] == 'project')
         }
         $where = "LOCALITY_ID in ($listLoc) AND ";
     }else if($_GET['mode'] == 'suburb'){
-        $locList = "select l.locality_id from locality l 
-            inner join suburb s on l.suburb_id = s.suburb_id
-            where s.suburb_id = ".$_REQUEST['id'];
+        $locList = "select lsm.locality_id from locality_suburb_mappings lsm 
+            where lsm.suburb_id = ".$_REQUEST['id'];
         $LocId = mysql_query($locList);
         $listLoc = '';
         $comma = ',';

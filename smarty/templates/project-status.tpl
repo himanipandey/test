@@ -335,7 +335,7 @@ function verifyProjectIds(){
 }
 function updateSuburbDropdown(cityId, suburbSelectboxId, localitySelectboxId)
 {
-    dataString = 'id='+cityId;
+    dataString = 'id='+cityId+'&part=projectstatus';
 	$.ajax
 	({
 		type: "POST",
@@ -355,7 +355,7 @@ function updateSuburbDropdown(cityId, suburbSelectboxId, localitySelectboxId)
 function updateLocalityDropdown(suburbId, localitySelectboxId)
 {
         var cityId = $("#cityId").val();
-        dataString = 'id='+cityId+"&suburb_id="+suburbId;
+        dataString = 'id='+cityId+"&suburb_id="+suburbId+'&part=projectstatus';
 	$.ajax
 	({
 		type: "POST",

@@ -19,8 +19,8 @@ class Locality extends ActiveRecord\Model
     }
 
     static function localityListByCity($cityId) {
-        $select = "select * from locality l ";
-        $where = " where l.city_id = '".$cityId."' ";
+        $select = "select * from locality ";
+        $where = " where locality.CITY_ID = '".$cityId."' ";
         $query = $select.$where;
         //$locality = Locality::find('all',array('conditions'=>array("suburb_id = $suburbId AND status = 'active'"),'order' => 'label asc'));
         $locality = Locality::find_by_sql($query);

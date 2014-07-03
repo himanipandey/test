@@ -31,8 +31,9 @@ $NearPlaceTypesArr = NearPlaceTypes::getNearPlaceTypesEnabled();
 $smarty->assign("nearPlaceTypesArray", $NearPlaceTypesArr);
 $smarty->assign('status',$_REQUEST['status']);
 $smarty->assign('placeType',$_REQUEST['placeType']);
+$smarty->assign('localityId',$_REQUEST['localityId']);
 //echo "<pre>";
-//print_r($_REQUEST);die;
+//print_r($_REQUEST);//die;
 if(!empty($_REQUEST['placeType']))
 {
     $nearPlaceTypesId = $_REQUEST['placeType']; 
@@ -42,11 +43,11 @@ if(!empty($_REQUEST['placeType']))
    // $projectArr = getProjectArr($suburbId,'suburb',$orderby);
 }
 //echo "<pre>";
-//print_r($_REQUEST);die;
+//print_r($_REQUEST);
 $NearPlacesArr = array();
 if(isset($_REQUEST['submit'])) {
-    if($_REQUEST['locality'] == '')
-       $_REQUEST['localityId'] = '';
+    //if($_REQUEST['locality'] == '')
+       //$_REQUEST['localityId'] = '';
     if(!empty($_REQUEST['localityId']) && !empty($cityId))
     {
         $localityId = $_REQUEST['localityId'];
@@ -54,18 +55,20 @@ if(isset($_REQUEST['submit'])) {
        // echo $nearPlaceTypesId;//die;
         if(!empty($nearPlaceTypesId))
         {
+            //die("here0");
             $NearPlacesArr = getNearPlacesArr($_REQUEST['status'], $cityId, $localityId,'locality',$orderby, $nearPlaceTypesId);
             
         }
         else
         {
-            //print_r("here");
+            //die("here");
         $NearPlacesArr = getNearPlacesArr($_REQUEST['status'], $cityId, $localityId,'locality',$orderby);
         //print_r($NearPlacesArr);
         }
     }
     else if(!empty($cityId))
     {
+        //die("here2");
         if(!empty($nearPlaceTypesId))
         {
             $NearPlacesArr = getNearPlacesArrfromcity($_REQUEST['status'], $cityId, $orderby, $nearPlaceTypesId);
@@ -84,6 +87,7 @@ if(isset($_REQUEST['submit'])) {
 else{
     if(!empty($_REQUEST['localityId']) && !empty($cityId))
     {
+        //die("here3");
         $localityId = $_REQUEST['localityId'];
         $smarty->assign('localityId',$localityId);
        /* if(!empty($nearPlaceTypesId))

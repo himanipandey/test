@@ -81,7 +81,7 @@
             header('Content-Type: application/json');
             echo json_encode($json);            
             
-        }else {
+        }else if ($_REQUEST['part']=='projectstatus') {
             $city_id = $_REQUEST["id"];
             $suburb_id = $_REQUEST["suburb_id"];
             if($suburb_id == '')  {
@@ -135,14 +135,13 @@
         if($suburb_id != '')	
         {
            $localityArr = Array();
-                   $sql = "SELECT A.LOCALITY_ID, s.SUBURB_ID, s.CITY_ID, A.LABEL 
+                   $sql = "SELECT A.LOCALITY_ID, lsm.suburb_id, A.CITY_ID, A.LABEL 
                        FROM ".LOCALITY." AS A
-                       inner join suburb s on A.suburb_id = s.suburb_id
-                       inner join city c on s.city_id = c.city_id
+                       inner join locality_suburb_mappings lsm on A.locality_id = lsm.locality_id
                        WHERE
-                        c.CITY_ID = " . $city_id;
+                        A.CITY_ID = " . $city_id;
                    if ($suburb_id != null) {
-                   $sql .= " AND A.SUBURB_ID = " . $suburb_id;
+                   $sql .= " AND lsm.suburb_id = " . $suburb_id;
                    }
 
                    $data = mysql_query($sql);
@@ -156,6 +155,62 @@
                         echo "<option value=".$val["LOCALITY_ID"].">".$val["LABEL"] . "</option>";
                     }
         }	
+       }
+       else {
+            $city_id = $_REQUEST["id"];
+            $suburb_id = $_REQUEST["suburb_id"];
+            if($suburb_id == '')  {
+                   if($city_id != '')
+                   {
+                        $suburbArr = Array();
+                        
+                        if($city_id == 'othercities'){
+                                $group_city_ids = array();
+                                foreach($arrOtherCities as $key => $value){
+                                        $group_city_ids[] = $key;
+                                }
+                                $city_id = implode(",",$group_city_ids);
+                        }
+                        $sql = "SELECT A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".SUBURB." AS A WHERE A.CITY_ID in (" . $city_id . ") ORDER BY A.LABEL ASC";
+
+                        $data = mysql_query($sql);
+
+                        while ($dataArr = mysql_fetch_array($data))
+                         {
+                                array_push($suburbArr, $dataArr);
+                         }
+                        echo "<option value=''>Select Suburb</option>";
+                        foreach($suburbArr as $val)
+                        {
+                         echo "<option value=".$val["SUBURB_ID"].">".$val["LABEL"] . "</option>";
+                        }
+                    }
+                   else
+                        echo "herer<option value=''>Select Suburb</option>"; 
+            }
+        if($suburb_id != '')  
+        {
+           $localityArr = Array();
+                   $sql = "SELECT A.LOCALITY_ID, lsm.suburb_id, A.CITY_ID, A.LABEL 
+                       FROM ".LOCALITY." AS A
+                       inner join locality_suburb_mappings lsm on A.locality_id = lsm.locality_id
+                       WHERE
+                        A.CITY_ID = " . $city_id;
+                   if ($suburb_id != null) {
+                   $sql .= " AND lsm.suburb_id = " . $suburb_id;
+                   }
+
+                   $data = mysql_query($sql);
+                   while ($dataArr = mysql_fetch_array($data))
+                    {
+                       array_push($localityArr, $dataArr);
+                    } 
+                    echo  "<option value=''>Select Locality</option>";    
+                    foreach($localityArr as $val)
+                    {
+                        echo "<option value=".$val["LOCALITY_ID"].">".$val["LABEL"] . "</option>";
+                    }
+        } 
  }
 
 ?>
