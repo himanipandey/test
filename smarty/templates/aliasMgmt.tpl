@@ -144,7 +144,7 @@ jQuery(document).ready(function(){
       //alert("hello");
       source: function( request, response ) {
         $.ajax({
-          url: "http://nightly-build.proptiger-ws.com/app/v1/typeahead?query="+$("#searchPlace").val()+"&typeAheadType=(locality or city or suburb)&rows=10",
+          url: "{$url}"+"?query="+$("#searchPlace").val()+"&typeAheadType=(locality or city or suburb)&rows=10",
           dataType: "json",
           data: {
             featureClass: "P",
