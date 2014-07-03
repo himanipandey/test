@@ -492,13 +492,14 @@ $smarty->assign('city',$city[0]->label);
 $builderDetail = fetch_builderDetail($projectDetails[0]['BUILDER_ID']);
 $smarty->assign("builderDetail", $builderDetail);
 /* * ***code for promised completion date******* */
-$completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
-$smarty->assign("completionDate", $completionDate);
+#$completionDate = $projectDetails[0]['PROMISED_COMPLETION_DATE'];
+#$smarty->assign("completionDate", $completionDate);
 /* * ***code for promised completion date******* */
 $projectd = $projectDetails[0]['PROJECT_ID'];
 /* * ***code for completion effective date******* */
 $comp_eff_date = costructionDetail($projectId);
 $smarty->assign("completionEffDate", $comp_eff_date['submitted_date']);
+$smarty->assign("completionDate", $comp_eff_date['COMPLETION_DATE']);
 /* * ***code for completion effective date******* */
 
 /********** booking status for project ***********/

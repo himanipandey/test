@@ -111,24 +111,7 @@
                    if( trim($txtMetaDescription) == '')  {
                      $ErrorMsg["txtMetaDescription"] = "Please enter meta description.";
                    }
-                   if($txtLocalityLattitude == ''){
-                     $ErrorMsg["txtLattitude"] = "Lattitude can not blank";
-                   }
-                   if($txtLocalityLongitude == ''){
-                     $ErrorMsg["txtLongitude"] = "Longitude can not blank";
-                   }
-                   if(!empty($txtLocalityLattitude) && ($txtLocalityLattitude <-90 || $txtLocalityLattitude>90)){
-                     $ErrorMsg["txtLattitude"] = "Lattitude range should be between -90 to 90.";
-                   }
-                   if(!empty($txtLocalityLattitude) && !is_numeric($txtLocalityLattitude)){
-                     $ErrorMsg["txtLattitude"] = "Lattitude value should be numeric.";
-                   }
-                   if(!empty($txtLocalityLongitude) && ($txtLocalityLongitude <-180 || $txtLocalityLongitude>180)){
-                     $ErrorMsg["txtLongitude"] = "Longitude range should be between -180 to 180.";
-                   }
-                   if(!empty($txtLocalityLongitude) && !is_numeric($txtLocalityLongitude)){
-                     $ErrorMsg["txtLongitude"] = "Lattitude value should be numeric.";
-                   }
+                  
                    if($_REQUEST['parentId'] == ''){
                      $ErrorMsg["txtMetaParent"] = "Please add atleast one suburb and than select it.";
                    }
@@ -157,17 +140,12 @@
                         $dataCity = mysql_fetch_assoc($resCity);
                         mysql_free_result($resCity);
                         $txtCityUrl = createLocalityURL($txtCityName, $dataCity['cityname'], $localityid, 'locality');
-                        if($txtLocalityLattitude == '')
-                             $txtLocalityLattitude = null;
-                         if($txtLocalityLongitude == '')
-                             $txtLocalityLongitude = null;
+                       
                              $updateQry = "UPDATE ".LOCALITY." SET 
                                            LABEL = '".$txtCityName."',
                                            STATUS = '".$status."',
                                            URL = '".$txtCityUrl."',
                                            DESCRIPTION = '" . d_($desc) . "',
-                                           LATITUDE = '".$txtLocalityLattitude."',
-                                           LONGITUDE = '".$txtLocalityLongitude."',
                                            updated_at = now()
                                       WHERE
                                          LOCALITY_ID='".$localityid."'";
@@ -184,25 +162,19 @@
                                         ## - desccripion content flag handeling
                                         $cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $localityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'locality' )));					   
                                         if($cont_flag){
-                                                $content_flag = '';
-                                                if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
-                                                        if(strcasecmp($desc,$oldDesc) != 0)
-                                                                $content_flag = 0;								
-                                                }elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR' || $_SESSION['DEPARTMENT'] == 'CONTENT'){
-                                                  $content_flag = ($_POST["content_flag"])? 1 : 0;
-                                                }
+                                                $content_flag = ($_POST["content_flag"])? 1 : 0;                                              
                                                 if(is_numeric($content_flag)){
                                                         $cont_flag = TableAttributes::find($cont_flag[0]->id);
                                                         $cont_flag->updated_by = $_SESSION['adminId'];
                                                         $cont_flag->attribute_value = $content_flag;
                                                         $cont_flag->save();		
                                                 }
-                                        }elseif($_SESSION['DEPARTMENT'] == 'DATAENTRY' && strcasecmp($desc,$oldDesc)!= 0){
+                                        }else{
                                                 $cont_flag = new TableAttributes();
                                                 $cont_flag->table_name = 'locality';
                                                 $cont_flag->table_id = $localityid;
                                                 $cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
-                                                $cont_flag->attribute_value = 0;
+                                                $cont_flag->attribute_value = ($_POST["content_flag"])? 1 : 0;
                                                 $cont_flag->updated_by = $_SESSION['adminId'];
                                                 $cont_flag->save();				
                                         }
@@ -227,9 +199,11 @@
                             }
                             else{
                                 //code for insert new locality
-                                $qry = "INSERT INTO ".LOCALITY." (LABEL, CITY_ID, status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
-                                      value('".$txtCityName."','".$cityId."', '".$status."','".$txtLocalityLattitude."','".$txtLocalityLongitude."','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";//echo $qry;//die("here");
-                                $res = mysql_query($qry) or die(mysql_error()); 
+
+                                $qry = "INSERT INTO ".LOCALITY." (LABEL,CITY_ID,status,LATITUDE,LONGITUDE,DESCRIPTION,updated_by,created_at,PRIORITY)
+                                      value('".$txtCityName."','".$cityId."','".$status."','null','null','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";
+                                $res = mysql_query($qry) or die(mysql_error());
+
                                 $locId = mysql_insert_id();
                                 $cityFind = City::find($cityId);  
                                 $url = createLocalityURL($txtCityName, $cityFind->label, $locId, 'locality');
@@ -291,17 +265,6 @@
             $smarty->assign("maxLongitude", $maxLongitude);	
             $smarty->assign("minLongitude", $minLongitude);
             $smarty->assign("parent_sub_id", $parent_sub_id);
-            $smarty->assign("txtLocalityLattitude", $localityDetailsArray['LATITUDE']);
-            $smarty->assign("txtLocalityLongitude", $localityDetailsArray['LONGITUDE']);
-           
-
-          
-
-            $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $localityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'locality')));   
-            $smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
-            $smarty->assign("dept", $_SESSION['DEPARTMENT']);
-    }
-
 
            $getLandmarkAliasesArr = getLandmarkAliases('locality', $localityid);
            $landmarkJson = json_encode($getLandmarkAliasesArr);

@@ -128,9 +128,43 @@
                         $errorMsg['CompletionDateGreater'] = 'Completion date to be always 6 month greater than launch date';
                     }
                 }
-               
-                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
+                 
+                #phase level validations #############                 
+                if($qrySelect->construction_status == OCCUPIED_ID_3 || $qrySelect->construction_status == READY_FOR_POSSESSION_ID_4 ) {
                     $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) > intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month  in case of Construction Status is completed.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) > intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month  in case of Construction Status is completed.";
+                    }
+                }
+                if($qrySelect->construction_status == UNDER_CONSTRUCTION_ID_1) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month in case of Construction Status is Under Construction.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month  in case of Construction Status is Under Construction.";
+                    }
+                }
+                
+                ######################################
+                $comp_eff_date = costructionDetail($projectId);
+				$project_completion_date = '';
+				if($expectedCompletionDate >= $comp_eff_date['COMPLETION_DATE'])
+				  $project_completion_date = $expectedCompletionDate;
+				if($expectedCompletionDate < $comp_eff_date['COMPLETION_DATE'])
+				  $project_completion_date = $comp_eff_date['COMPLETION_DATE'];
+				if($project_completion_date == '0000-00-00')
+				  $project_completion_date = '';
+								
+                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
+                    $yearExp = explode("-",$project_completion_date);
                     if( $yearExp[0] == date("Y") ) {
                         if( intval($yearExp[1]) > intval(date("m"))) {
                           $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
@@ -138,6 +172,18 @@
                     } 
                     else if (intval($yearExp[0]) > intval(date("Y")) ) {
                         $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+                    }
+                }
+                
+                if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == UNDER_CONSTRUCTION_ID_1) {
+                    $yearExp = explode("-",$project_completion_date);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
                     }
                 }
                 

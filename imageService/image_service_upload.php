@@ -2,7 +2,9 @@
 
 class ImageServiceUpload{
 
-    static $image_upload_url = "http://nightly.proptiger-ws.com:8080/data/v1/entity/image";
+
+    static $image_upload_url = IMAGE_SERVICE_URL;
+
     static $valid_request_methods = array("POST", "PUT", "DELETE");
     static $object_types = array("project" => "project",
         "option" => "property",
@@ -11,9 +13,18 @@ class ImageServiceUpload{
         "bank" => "bank",
         "city" => "city",
         "suburb" => "suburb",
-        "landmark" => "landmark"
+        "landmark" => "landmark",
+        "company" => "company"
     );
-
+    static $sec_image_types = array(
+        "project" => array(
+            "project_image" => array(
+                "Elevation"=> "Elevation",
+                "Amenities"=>"Amenities", 
+                "Main Others"=>"mainOthers"
+            ),
+        ),
+    );
     static $image_types = array(
         "project" => array(
             "location_plan" => "locationPlan",
@@ -26,7 +37,10 @@ class ImageServiceUpload{
             "specification" => "specification",
             "price_list" => "priceList",
             "application_form" => "applicationForm",
-            "project_image" => "main"
+            "project_image" => "main",
+            "elevation"=> "main",
+            "amenities"=>"amenities", 
+            "main_other"=>"mainOther"
         ),
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
@@ -91,8 +105,6 @@ class ImageServiceUpload{
             "school" => "school",
             "hospital"  => "hospital",
             "bank" => "bank",
-            "bus_stand" => "bus_stand",
-            "park" => "park",
             "atm" => "atm",
             "restaurant" => "restaurant",
             "gas_station" => "gas_station",
@@ -100,13 +112,19 @@ class ImageServiceUpload{
             "bus_station" => "bus_station",
             "train_station" => "train_station",
             "airport" => "airport",
+            "play_school" => "play_school",
+            "higher_education" => "higher_education",
+            "park" => "park",
             "shopping_mall" => "shopping_mall",
             "grocery_or_supermarket" => "grocery_or_supermarket",
             "office_complex" => "office_complex",
-            "other" => "other",
-            
+            "road" => "road",
+            "hotel" => "hotel",
+            "commercialcomplex" => "commercialComplex"
         ),
-        "bank" => array("logo" => "logo"));
+        "bank" => array("logo" => "logo"),
+        "company" => array("logo" => "logo")
+        );
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;
@@ -131,7 +149,7 @@ class ImageServiceUpload{
 
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
-
+//echo "here";
         if($this->method == "DELETE")
             $response = static::delete($this->image_id, $params);
         elseif($this->method == "PUT")

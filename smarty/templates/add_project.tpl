@@ -3,8 +3,14 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
-
-<script language="javascript">
+<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+        //mode : "textareas",
+        mode : "specific_textareas",
+        editor_selector : "myTextEditor",
+        theme : "advanced"
+    });
 	function chkConfirm()
 	{
 		return confirm("Are you sure! you want to delete this record.");
@@ -49,6 +55,7 @@
 	   });
 	  });*/
           
+
           $(".builderId").change(function(){
             var builderid = $(this).val();
             $.ajax  ({
@@ -64,7 +71,23 @@
 	   });
           });
 	});
-	
+	/**************option type refresh**********/
+           $(document).ready(function()   {
+          $(".residential").change(function()  {
+                var selectedType = $("#residential").val();		
+                var dataString = 'optType='+selectedType;
+                $.ajax  ({
+                             type: "POST",
+                             url: "refreshOptions.php",
+                             data: dataString,
+                             cache: false,
+                             success: function(projTypeResponse)  {
+                                 $(".optionType").html(projTypeResponse);
+                             }
+                });
+	  });
+           });
+          /****************************/
   function isNumberKey(evt)
   {
  	 var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -108,6 +131,7 @@
 				});
 		  }
 	})
+       
 </script>
   <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -143,6 +167,13 @@
 				<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
 					 <form method="post" enctype="multipart/form-data" action = ''>
 							<div>
+							 {if $projectId}	
+							  <tr>
+								  <td colspan=2>
+								    {if count($ErrorMsg['CompletionDateGreater'])>0} <font color="red">{$ErrorMsg['CompletionDateGreater']}</font>{/if}
+								  </td>
+							  </tr>
+							 {/if}
 							   <tr>
                                                                 <td width="30%" align="right"><font color ="red">*</font><b>Project Name :</b> </td>
 								  <td width="30%" align="left">
@@ -207,10 +238,10 @@
 							  <!-- <tr>
 								  <td width="20%" align="right"><font color ="red"></font><b>Suburbs :</b> </td>
 								  <td width="30%" align="left">
-									                                <select name="suburbId" class="suburbId" style="width:230px;" readonly>
+									 <select name="suburbId" class="suburbId" style="width:230px;" readonly>
                                                                             <option value="">Select Suburb</option>
                                                                             {foreach from=$suburbSelect key=k item=v}
-																				{if $suburbId == $k}
+                                                                                {if $suburbId == $k}
                                                                                     <option  selected  value = "{$k}">{$v}</option>
                                                                                  {/if}
                                                                             {/foreach}
@@ -223,9 +254,8 @@
                                                            <tr>
                                                                 <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
                                                                 <td width="30%" align="left">
-                                                                       <textarea name="txtProjectDesc" rows="10" cols="45" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
-                                                                       <input type="hidden" name="txtProjectOldDesc" value="{$txtProjectDescription}" />
-                                                                      {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
+                                                                       <textarea name="txtProjectDesc" rows="10" cols="45"  class ="myTextEditor" id = "txtProjectDesc">{$txtProjectDescription}</textarea>
+                                                                      {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
                                                                        <br/><br/>
                                                                        <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 																	  {/if}
@@ -391,16 +421,30 @@
 									  <font color="red">{if $ErrorMsg["txtSource"] != ''} {$ErrorMsg["txtSource"]} {/if}<span id = "err_project_source" style = "display:none;">Please enter project source of information!</span></font>
 								  </td>
 							   </tr>
-								
+							   <tr>
+                                                                <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
+                                                                    <select name="residential" id="residential" class="residential">
+                                                                            <option value="Residential" {if $residential == 'Residential'} selected {/if}>Residential </option>
+                                                                            <option value="NonResidential" {if $residential == 'NonResidential'} selected = selected {/if}>Non Residential </option>
+                                                                    </select>
+
+                                                                </td>
+                                                                <td width="50%" align="left"><font color="red"></font></td>
+							   </tr>	
 							    <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project type :</b> </td>
 								  <td width="30%" align="left">
-									<select name = "project_type">
-										<option value =''>Project Type</option>
-										{foreach from=$ProjectTypeArr key=k item=v}
-										<option value = "{$k}" {if $k == $project_type} selected {/if} >{ucwords($v|lower)|replace:'_':' '}</option>
-										{/foreach}
-									</select>
+                                                                      <select name = "project_type" id = "optionType" class = 'optionType'>
+									  <option value =''>Project Type</option>
+                                                                            {foreach from=$arrResidentialType key=k item=v}
+
+                                                                                <option {if $k == $project_type} selected {/if} {if $residential == 'NonResidential'}style = "display:none;"{/if}  value = "{$k}" >{ucwords($v|lower)|replace:'_':' '}</option>
+                                                                            {/foreach}
+
+                                                                            {foreach from=$arrCommercialType key=kComm item=vComm}
+                                                                                <option {if $kComm == $project_type} selected {/if} {if $residential != 'NonResidential'}style = "display:none;"{/if}  value = "{$kComm}">{ucwords($vComm|lower)|replace:'_':' '}</option>
+                                                                            {/foreach}
+                                                                    </select>
 								  </td>
 								  <td width="50%" align="left">
 									  <font color="red">{if $ErrorMsg["txtProject_type"] != ''} {$ErrorMsg["txtProject_type"]} {/if}<span id = "err_project_type" style ="display:none;">Please select project type!</span></font>	
@@ -471,6 +515,7 @@
 								  </td>
 							   </tr> 
 							  {/if}
+							  {if $projectId == ''} 
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project Status :</b> </td>
 								  <td width="30%" align="left" valign = "top">
@@ -487,6 +532,9 @@
 									  <font color="red">{if $ErrorMsg["txtStatus"] != ''} {$ErrorMsg["txtStatus"]} {/if}<span id = "err_project_status" style = "display:none;">Please select project status!</span></font>
 								  </td>
 							   </tr>
+							  {else}
+							    <input type="hidden" name="Status" value="{$Status}"/>
+							  {/if}
 							   {if $projectId != ''}                                                        
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project URL :</b> </td>
@@ -695,21 +743,6 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-                                                           
-                                                         
-							   <tr>
-                                                                <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
-
-                                                                    <select name="residential" id="residential" class="residential">
-                                                                            <option value="">Select </option>
-                                                                            <option value="residential" {if $residential == 'residential'} selected = selected {/if}>Residential </option>
-                                                                            <option value="nonResidential" {if $residential == 'nonresidential'} selected = selected {/if}>Non Residential </option>
-                                                                    </select>
-
-                                                                </td>
-                                                                <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-
 							   <tr>
                                                                 <td width="20%" align="right" valign ="top"><b>Township:</b> </td><td width="30%" align="left">
                                                                     <select name = "township">
@@ -793,4 +826,5 @@
             showsTime	  :	true
         });
     });
+    
 </script>

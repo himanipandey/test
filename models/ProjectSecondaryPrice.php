@@ -12,7 +12,7 @@ class ProjectSecondaryPrice extends ActiveRecord\Model
         )
     );
     
-    static function insertUpdate($attributes){
+    static function insertUpdate($attributes,$delete_ids = Array()){
 	  try{	
         $price = ProjectSecondaryPrice::first(array(
             'project_id'=>$attributes['project_id'],
@@ -24,12 +24,17 @@ class ProjectSecondaryPrice extends ActiveRecord\Model
       
         if(empty($price)){
             $res = ProjectSecondaryPrice::create ($attributes);
-        }else{
-            $res = $price->update_attributes($attributes);
+        }else{					
+			if(in_array($price->id,$delete_ids)){
+			  $res = $price->delete_all(array("conditions"=>array("id=?",$price->id)));
+			  $res = 'Deleted';
+			}else
+              $res = $price->update_attributes($attributes);
         }
       }catch(Exception $e){
 		 
 	  }
+	  ##print $res;
         return $res;
     }
     

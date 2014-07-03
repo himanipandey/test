@@ -125,6 +125,19 @@ else if($_REQUEST['type'] == 'project')
             );
         }
     }
+ }else if($_REQUEST['type'] == 'forumUser')
+{
+	$rs = mysql_query("SELECT `EMAIL` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL` LIKE '".mysql_real_escape_string($_REQUEST['term'])."%' AND STATUS='1' ORDER BY `EMAIL` LIMIT 0,10");
+    if ($rs && mysql_num_rows($rs) )
+    {
+        while( $row = mysql_fetch_array($rs, MYSQL_ASSOC) )
+        {
+            $data[] = array(
+                'label' =>  $row['EMAIL'],
+                'value' => $row['EMAIL']
+            );
+        }
+    }
  }
 echo json_encode($data);
 flush();

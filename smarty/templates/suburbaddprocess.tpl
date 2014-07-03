@@ -80,7 +80,7 @@
                                   {else}
                                       <input type="hidden" name="oldDesc" value="" />
                                   {/if}
-				    {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
+				    {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
                      <br/><br/>
                      <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
 				    {/if}

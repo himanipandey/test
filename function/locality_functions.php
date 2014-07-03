@@ -89,4 +89,15 @@ function getTypeById( $id ) {
     return 0;
 }
 
+function fetch_sales_persons(){
+  $all_sales = array();
+  $sql_sales = mysql_query("select adminid,fname,username from proptiger_admin where department = 'Sales' and status = 'Y'");
+  if($sql_sales){
+	while($row_sales = mysql_fetch_object($sql_sales)){
+	  $all_sales[$row_sales->adminid] = $row_sales->fname." (".$row_sales->username.")";
+	}  
+  }	
+  return $all_sales;
+}
+
 ?>

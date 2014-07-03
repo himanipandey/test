@@ -2,6 +2,7 @@
 <script type="text/javascript"> 
 jQuery(document).ready(function(){
     $('#brokerName').autocomplete({source:"suggest_auto.php?type=broker", minLength:1});
+    $("input[name=txtSubsUserEmail[]]").autocomplete({source:"suggest_auto.php?type=broker", minLength:1});
 });
 </script>
 <link rel="stylesheet" href="/css/smoothness/jquery-ui-1.8.2.custom.css" />

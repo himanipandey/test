@@ -79,26 +79,14 @@
                                   {else}
                                       <input type="hidden" name="oldDesc" value="" />
                                   {/if}
-          {if ($dept=='ADMINISTRATOR' && isset($contentFlag)) || ($dept=='CONTENT' && isset($contentFlag))}
+
+          {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
                    <br/><br/>
                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
           {/if}
           </td>
         </tr>
-                                <tr>
-                                    <td width="20%" align="right"><b>*Locality Latitude :</b> </td>
-                                    <td width="30%" align="left"><input type="text" name="txtLocalityLattitude" id="txtLocalityLattitude" value="{$txtLocalityLattitude}" style="width:250px;" /></td>
-                                    <td width="50%" align="left">
-                                      {if $ErrorMsg['txtLattitude']}<font color="red">{$ErrorMsg['txtLattitude']}</span></font>{/if}
-                                    </td>
-                             </tr>
-                             <tr>
-                                    <td width="20%" align="right"><b>*Locality Longitude :</b> </td>
-                                    <td width="30%" align="left"><input type="text" name="txtLocalityLongitude" id="txtLocalityLongitude" value="{$txtLocalityLongitude}" style="width:250px;" /></td>
-                                    <td width="50%" align="left">
-                                            {if $ErrorMsg['txtLongitude']}<font color="red">{$ErrorMsg['txtLongitude']}</span></font>{/if}
-                                    </td>
-                             </tr>
+                                
         {if isset($localityid)}
         <tr>
                                     <td width="20%" align="right"><b>Suburbs Attached:</b> </td>
@@ -109,6 +97,7 @@
           </td>
          
         </tr>
+
 
 
         <tr>

@@ -42,12 +42,12 @@ function createAliases($pl_tb_name, $pl_tb_id, $al_name)
   $result1=mysql_query($sql1);
   $result2=mysql_query($sql2);
   $result3=mysql_query($sql3);  
-
+//print_r(mysql_fetch_array($result1)); 
     
-  if (mysql_fetch_array($result1) !== false || mysql_fetch_array($result2) !== false || mysql_fetch_array($result3) !== false) {
+  if (is_array(mysql_fetch_array($result1)) === true || is_array(mysql_fetch_array($result2)) === true || is_array(mysql_fetch_array($result3)) === true) {
     echo "5";
   }
-  else if(mysql_fetch_array($result) !== false)
+  else if(is_array(mysql_fetch_array($result)) === true)
   {
     echo "2";
   }

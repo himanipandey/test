@@ -55,6 +55,8 @@
         var flat_bed = true;
         var villa_bed = true;
         var plot_supply = true;
+        var office_supply = true;
+        var shop_supply = true;
 
         {*var phasename = $('#phaseName').val();
         if (!phasename) {
@@ -98,25 +100,51 @@
             }
         });
 
-		if($('#supply').is(':visible')){
-			 var intRegex = /^\d+$/;
-			 var err = $('span.err_plotsupply');
-			  if (!intRegex.test($('#supply').val())) {
+        if($('#supply').is(':visible')){
+                 var intRegex = /^\d+$/;
+                 var err = $('span.err_plotsupply');
+                  if (!intRegex.test($('#supply').val())) {
                     $(err).show();
                     plot_supply = false;
                 }
                 else {
                     $(err).hide();
                 }
-			
-		}
-		
-	    return name_flag && flat_bed && villa_bed && plot_supply;
+
+        }
+        
+        if($('#supply_office').is(':visible')){
+                 var intRegex = /^\d+$/;
+                 var err = $('span.err_officesupply');
+                  if (!intRegex.test($('#supply_office').val())) {
+                    $(err).show();
+                    office_supply = false;
+                }
+                else {
+                    $(err).hide();
+                }
+
+        }
+        
+        if($('#supply_shop').is(':visible')){
+                 var intRegex = /^\d+$/;
+                 var err = $('span.err_shopsupply');
+                  if (!intRegex.test($('#supply_shop').val())) { 
+                    $(err).show();
+                    shop_supply = false;
+                }
+                else {
+                    $(err).hide();
+                }
+
+        }
+       // alert(name_flag+"<==>"+flat_bed+"<==>"+villa_bed+"<==>"+plot_supply+"<==>"+office_supply+"----"+shop_supply);
+        return name_flag && flat_bed && villa_bed && plot_supply && office_supply && shop_supply;
     }
 
     function deletePhase()
     {
-            return confirm("Are you sure! you want to delete phase.");
+            return confirm("All dependent data will be deleted. Proceed / cancel?");
     }
 
         function toggle_supply_and_option() {
@@ -159,6 +187,10 @@
                 return false;
             });
         }
+        
+        function refrech_date(id){
+			$('#'+id).val("");
+		}
 
 </script>
 <input type = "hidden" name = "projectId" id = "projectId" value="{$projectId}">
@@ -226,7 +258,20 @@
                                                     <font color="red"><span id="err_phase_name" style = "display:none;">Enter Phase Name</span></font>
                                                 </td>
                                             </tr>
-                                             
+                                             <tr>
+                                                <td width="20%" align="right"><font color ="red">*</font><b>Construction Status :</b> </td>
+                                                <td width="30%" align="left">                                                   
+                                                    <select name="construction_status" id="construction_status" class="fieldState">
+														<option value="">Select</option>
+														{foreach from = $projectStatus key = key item = value}
+															<option value="{$key}" {if $key == $construction_status} selected {/if}>{$value} </option>
+														{/foreach}
+													 </select>
+                                                </td>
+                                                <td width="50%" align="left">
+                                                    <font color="red"><span id="err_construction_status" style = "display:none;">Select Construction Status</span></font>
+                                                </td>
+                                            </tr> 
                                             <tr>
                                                 <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
                                                 <td width="30%" align="left">
@@ -239,6 +284,7 @@
                                                 <td width="20%" align="right" valign="top"><b>Launch Date  :</b> </td>
                                                 <td width="30%" align="left">
                                                     <input name="launch_date" value="{$launch_date}" type="text" class="formstyle2" id="launch_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="launch_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                     &nbsp;&nbsp;<img width="15" height="15" id="ref-launch-date" onclick="refrech_date('launch_date')" title="Refresh Launch Date"  src="../images/refresh.png">
                                                 </td>
                                                 <td width="50%" align="left">
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
@@ -248,6 +294,7 @@
                                                 <td width="20%" align="right" valign="top"><b>Sold Out Date  :</b> </td>
                                                 <td width="30%" align="left">
                                                     <input name="sold_out_date" value="{$sold_out_date}" type="text" class="formstyle2" id="sold_out_date" readonly="1" size="10" />  <img src="../images/cal_1.jpg" id="sold_out_date_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                     &nbsp;&nbsp;<img width="15" height="15" id="ref-sold-date" onclick="refrech_date('sold_out_date')" title="Refresh Sold Date" src="../images/refresh.png">
                                                 </td>
                                                 <td width="50%" align="left">
                                                     <font color="red"><span id = "err_launch_date" style = "display:none;">Enter Launch Date</span></font>
@@ -259,7 +306,7 @@
                                         <tr>
                                             <td width="20%" align="right" valign="top"><b><b><b>Phase Launched :</b> </td>
                                                         <td width="30%" align="left">
-                                                            <input name = "isLaunchUnitPhase" id="isLaunchUnitPhase" type = "checkbox" value = "1" {if $isLaunchUnitPhase == 1} checked {/if}>
+                                                            <input name = "isLaunchUnitPhase" id="isLaunchUnitPhase" type = "checkbox" value = "1" {if $isLaunchUnitPhase >= 1} checked {/if}>
                                                         </td>
                                                         <td width="50%" align="left"></td>
                                                         </tr>
@@ -279,7 +326,7 @@
                                                                             <br><br><strong>Select all options:</strong> <input type="checkbox" class="select_all_options">
                                                                         </td>
                                                                         </tr>
-                                                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']==1 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
+                                                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $APARTMENTS || $ProjectDetail[0]['PROJECT_TYPE_ID']== $VILLA_APARTMENTS || $ProjectDetail[0]['PROJECT_TYPE_ID']== $PLOT_APARTMENTS}
                                                                             <tr class="supply_select">
                                                                                 {if count($phase_quantity) == 0 || count($bedrooms_hash['Apartment'])>0}
                                                                                 <td width="20%" align="right" valign="top"><b><b><b>Supply of Flats :{count($bedrooms_hash['Apartment'])}</b> </td>{/if}
@@ -291,7 +338,7 @@
                                                                                                             <br/></font>
                                                                                                             <label for="flat_bed_{$num}">{$num} Bedroom(s)</label>
                                                                                                             <input id="flat_bed_{$num}" name="flat_bed_{$num}[supply]" style="width: 50px;" value="{$FlatsQuantity[$num]['supply']}" />
-                                                                                                            <label>Launched</label>
+                                                                                                                <label>Launched</label>
                                                                                                             <input id="flat_bed_{$num}" {if !$isLaunchUnitPhase}readonly="true"{/if} name="flat_bed_{$num}[launched]" class="launched" style="width: 50px;" value="{$FlatsQuantity[$num]['launched']}" />
                                                                                                             <select multiple="multiple" style="width: 150px; height: 110px;" disabled>
                                                                                                                 {foreach $OptionsDetails as $option}
@@ -359,17 +406,14 @@
                                                                                                                         {/if}
                                                                                                                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']==4 || $ProjectDetail[0]['PROJECT_TYPE_ID']==5 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
                                                                                                                            {if count($bedrooms_hash['Plot'])>0}
-                                                                                                                               {$showHide = ""}
-                                                                                                                           {else}
-                                                                                                                               {$showHide = "style = 'display:none;'"}
-                                                                                                                           {/if}
-                                                                                                                               <tr {$showHide} class="supply_select">
-                                                                                                                                <td width="20%" align="right" valign="top"><b>Supply of Plot  :</b> </td>
+                                                                                                                           
+                                                                                                                               <tr class="supply_select">
+                                                                                                                                <td width="20%" align="right" valign="top"><b>Supply of Plot :</b> </td>
                                                                                                                                 <td width="30%" align="left" nowrap>
-																																	<font color="red">
-																																		<span class = "err_plotsupply" style = "display:none;">Integer expected<br/></span>
-																																		<span id = "err_supply" style = "display:none;">Enter the supply for Plot<br/></span></font>
-                                                                                                      <input type='text' name='supply' id='supply' value="{$PlotQuantity[0]['supply']}">
+                                                                                                                                    <font color="red">
+                                                                                                                                    <span class = "err_plotsupply" style = "display:none;">Integer expected<br/></span>
+                                                                                                                                    <span id = "err_supply" style = "display:none;">Enter the supply for Plot<br/></span></font>
+                                                                                                                                    <input type='text' name='supply' id='supply' value="{$PlotQuantity[0]['supply']}">
                                                                                                                                     <label>Launched</label>
                                                                                                                                     <input id="supply" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched" class="launched" style="width: 50px;" value="{$PlotQuantity[0]['launched']}" />
                                                                                                                                 </td>
@@ -381,8 +425,157 @@
                                                                                                                                      {/if}
                                                                                                                                 </td>
                                                                                                                             </tr>
+                                                                                                                            
                                                                                                                             <input type='hidden' name='plotvilla' id='plotvilla' value='Plot'>
+                                                                                                                            {/if}
                                                                                                                         {/if}  
+                                                                                                                        
+                                                                                                                        <!--code for shop office others-->
+                                                                                                                        
+                                                                                                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$SHOP}
+                                                                                                                           {if count($bedrooms_hash['Shop'])>0}
+                                                                                                                               {$showHide = ""}
+                                                                                                                           {else}
+                                                                                                                               {$showHide = "style = 'display:none;'"}
+                                                                                                                           {/if}
+                                                                                                                               <tr {$showHide} class="supply_select">
+                                                                                                                                <td width="20%" align="right" valign="top"><b>Supply of Shop  :</b> </td>
+                                                                                                                                <td width="30%" align="left" nowrap>
+                                                                                                                                    <font color="red">
+                                                                                                                                    <span class = "err_shopsupply" style = "display:none;">Integer expected<br/></span>
+                                                                                                                                    <span id = "err_supply" style = "display:none;">Enter the supply for Shop<br/></span></font>
+                                                                                                                                    <input type='text' name='supply_shop' id='supply_shop' value="{$ShopQuantity[0]['supply']}">
+                                                                                                                                    <label>Launched</label>
+                                                                                                                                    <input id="supply_shop" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched_shop" class="launched" style="width: 50px;" value="{$ShopQuantity[0]['launched']}" />
+                                                                                                                                </td>
+                                                                                                                                <td width="50%" align="left">
+																																	
+                                                                                                                                    
+                                                                                                                                    {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $SHOP && $phaseObject['PHASE_TYPE'] != 'Logical'}
+                                                                                                                                     <button class="reset_option_and_supply supply_button">Change to options</button>
+                                                                                                                                     {/if}
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            
+                                                                                                                            <input type='hidden' name='Shop' id='Shop' value='Shop'>
+                                                                                                                        {/if}
+                                                                                                                        <!--end code for shop office and other-->
+                                                                                                                        
+                                                                                                                        <!--code for shop office others-->
+                                                                                                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$OFFICE}
+                                                                                                                           {if count($bedrooms_hash['Office'])>0}
+                                                                                                                               {$showHide = ""}
+                                                                                                                           {else}
+                                                                                                                               {$showHide = "style = 'display:none;'"}
+                                                                                                                           {/if}
+                                                                                                                               <tr {$showHide} class="supply_select">
+                                                                                                                                <td width="20%" align="right" valign="top"><b>Supply of Office  :</b> </td>
+                                                                                                                                <td width="30%" align="left" nowrap>
+                                                                                                                                    <font color="red">
+                                                                                                                                    <span class = "err_officesupply" style = "display:none;">Integer expected<br/></span>
+                                                                                                                                    <span id = "err_supply" style = "display:none;">Enter the supply for Office<br/></span></font>
+                                                                                                                                    <input type='text' name='supply_office' id='supply_office' value="{$OfficeQuantity[0]['supply']}">
+                                                                                                                                    <label>Launched</label>
+                                                                                                                                    <input id="supply_office" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched_office" class="launched" style="width: 50px;" value="{$OfficeQuantity[0]['launched']}" />
+                                                                                                                                </td>
+                                                                                                                                <td width="50%" align="left">
+																																	
+                                                                                                                                    
+                                                                                                                                    {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $OFFICE && $phaseObject['PHASE_TYPE'] != 'Logical'}
+                                                                                                                                     <button class="reset_option_and_supply supply_button">Change to options</button>
+                                                                                                                                     {/if}
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            
+                                                                                                                            <input type='hidden' name='Office' id='Office' value='Office'>
+                                                                                                                        {/if}
+                                                                                                                        <!--end code for shop office and other-->
+                                                                                                                        
+                                                                                                                        <!--code for shop office others-->
+                                                                                                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$SHOP_OFFICE}
+                                                                                                                           {if count($bedrooms_hash['Shop'])>0}
+                                                                                                                               {$showHide = ""}
+                                                                                                                           {else}
+                                                                                                                               {$showHide = "style = 'display:none;'"}
+                                                                                                                           {/if}
+                                                                                                                               <tr {$showHide} class="supply_select">
+                                                                                                                                <td width="20%" align="right" valign="top"><b>Supply of Shop  :</b> </td>
+                                                                                                                                <td width="30%" align="left" nowrap>
+                                                                                                                                    <font color="red">
+                                                                                                                                    <span class = "err_shopsupply" style = "display:none;">Integer expected<br/></span>
+                                                                                                                                    <span id = "err_supply" style = "display:none;">Enter the supply for Shop<br/></span></font>
+                                                                                                                                    <input type='text' name='supply_shop' id='supply_shop' value="{$ShopQuantity[0]['supply']}">
+                                                                                                                                    <label>Launched</label>
+                                                                                                                                    <input id="supply_shop" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched_shop" class="launched" style="width: 50px;" value="{$ShopQuantity[0]['launched']}" />
+                                                                                                                                </td>
+                                                                                                                                <td width="50%" align="left">
+																																	
+                                                                                                                                    
+                                                                                                                                    {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $SHOP_OFFICE && $phaseObject['PHASE_TYPE'] != 'Logical'}
+                                                                                                                                     <button class="reset_option_and_supply supply_button">Change to options </button>
+                                                                                                                                     {/if}
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            
+                                                                                                                            <input type='hidden' name='Shop' id='Office' value='Shop'>
+                                                                                                                            
+                                                                                                                            {if count($bedrooms_hash['Office'])>0}
+                                                                                                                               {$showHide = ""}
+                                                                                                                           {else}
+                                                                                                                               {$showHide = "style = 'display:none;'"}
+                                                                                                                           {/if}
+                                                                                                                               <tr {$showHide} class="supply_select">
+                                                                                                                                <td width="20%" align="right" valign="top"><b>Supply of Office  :</b> </td>
+                                                                                                                                <td width="30%" align="left" nowrap>
+                                                                                                                                    <font color="red">
+                                                                                                                                    <span class = "err_officesupply" style = "display:none;">Integer expected<br/></span>
+                                                                                                                                    <span id = "err_supply" style = "display:none;">Enter the supply for Office<br/></span></font>
+                                                                                                                                    <input type='text' name='supply_office' id='supply_office' value="{$OfficeQuantity[0]['supply']}">
+                                                                                                                                    <label>Launched</label>
+                                                                                                                                    <input id="supply_office" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched_office" class="launched" style="width: 50px;" value="{$OfficeQuantity[0]['launched']}" />
+                                                                                                                                </td>
+                                                                                                                                <td width="50%" align="left">
+																																	
+                                                                                                                                    
+                                                                                                                                    {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $SHOP_OFFICE && $phaseObject['PHASE_TYPE'] != 'Logical'}
+                                                                                                                                     <button class="reset_option_and_supply supply_button">Change to options</button>
+                                                                                                                                     {/if}
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            
+                                                                                                                            <input type='hidden' name='Office' id='Office' value='Office'>
+                                                                                                                        {/if}
+                                                                                                                        <!--end code for shop office and other-->
+                                                                                                                        
+                                                                                                                        <!--code for shop office others-->
+                                                                                                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$OTHER}
+                                                                                                                           {if count($bedrooms_hash['Other'])>0}
+                                                                                                                               {$showHide = ""}
+                                                                                                                           {else}
+                                                                                                                               {$showHide = "style = 'display:none;'"}
+                                                                                                                           {/if}
+                                                                                                                               <tr {$showHide} class="supply_select">
+                                                                                                                                <td width="20%" align="right" valign="top"><b>Supply of Other  :</b> </td>
+                                                                                                                                <td width="30%" align="left" nowrap>
+                                                                                                                                <font color="red">
+                                                                                                                                        <span class = "err_plotsupply" style = "display:none;">Integer expected<br/></span>
+                                                                                                                                        <span id = "err_supply" style = "display:none;">Enter the supply for Other<br/></span></font>
+                                                                                                                                    <input type='text' name='supply' id='supply' value="{$OtherQuantity[0]['supply']}">
+                                                                                                                                    <label>Launched</label>
+                                                                                                                                    <input id="supply" {if !$isLaunchUnitPhase}readonly="true"{/if} name="launched" class="launched" style="width: 50px;" value="{$OtherQuantity[0]['launched']}" />
+                                                                                                                                </td>
+                                                                                                                                <td width="50%" align="left">
+																																	
+                                                                                                                                    
+                                                                                                                                    {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $OTHER && $phaseObject['PHASE_TYPE'] != 'Logical'}
+                                                                                                                                     <button class="reset_option_and_supply supply_button">Change to options</button>
+                                                                                                                                     {/if}
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            
+                                                                                                                            <input type='hidden' name='Other' id='Other' value='Other'>
+                                                                                                                        {/if}
+                                                                                                                        <!--end code for shop office and other-->
                                                                                                                         {if count($phase_quantity) == 0 || count($bedrooms_hash['Apartment'])>0}
 																															<tr {if $phaseObject['PHASE_TYPE'] == 'Logical'} style="display: none;" {/if}>
 																																<td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>

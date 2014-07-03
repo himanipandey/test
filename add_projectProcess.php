@@ -1,7 +1,7 @@
 <?php        
 $BuilderDataArr	= ResiBuilder::ProjectSearchBuilderEntityArr();
 $CityDataArr = City::CityArr();
-$ProjectTypeArr	= ResiProjectType::ProjectTypeArr();
+
 $BankListArr = BankList::arrBank();
 $projectStatus = ResiProject::projectStatusMaster();
 $allTownships = Townships::getAllTownships();
@@ -11,7 +11,7 @@ $getPowerBackupTypes = PowerBackupTypes::getPowerBackupTypes();
 include_once('./function/locality_functions.php');
 $smarty->assign("BuilderDataArr",$BuilderDataArr);
 $smarty->assign("CityDataArr",$CityDataArr);
-$smarty->assign("ProjectTypeArr",$ProjectTypeArr);
+
 $smarty->assign("BankListArr",$BankListArr);
 $smarty->assign("projectStatus",$projectStatus);
 $smarty->assign("allTownships",$allTownships);
@@ -82,7 +82,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $architect = trim($_POST['architect']);
             $power_backup_capacity = trim($_POST['power_backup_capacity']);
             $eff_date_to_prom =	trim($_POST['eff_date_to_prom']);
-            $residential = (trim($_POST['residential']))?$_POST['residential']:'residential'; //setting up defualt value if empty
+           
+            $residential = (trim($_POST['residential']))?$_POST['residential']:'Residential'; //setting up defualt value if empty
             $township =	trim($_POST['township']);
             $projName =	trim($_POST['txtProjectName']);
             $no_of_plot = trim($_POST['no_of_plot']);
@@ -426,7 +427,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $ErrorMsg['launchDatePrices'] = "Inventory or Prices with effective date before {$launchDt} are present. So can not change the Launch Date.";
             }*/
       }      
-       if( $Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4 ) {
+       if( ($Status == OCCUPIED_ID_3 || $Status == READY_FOR_POSSESSION_ID_4) && $projectId == '' && $eff_date_to_prom != '') {
            $yearExp = explode("-",$eff_date_to_prom);
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
@@ -435,6 +436,28 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            } 
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
                $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+           }
+       }
+       if( $Status == UNDER_CONSTRUCTION_ID_1 && $projectId == '' && $eff_date_to_prom != '') {
+           $yearExp = explode("-",$eff_date_to_prom);
+           if( $yearExp[0] == date("Y") ) {
+               if( intval($yearExp[1]) < intval(date("m"))) {
+                 $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be less than current month in case of Under Construction Project.";
+               }    
+           } 
+           else if (intval($yearExp[0]) < intval(date("Y")) ) {
+               $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be less than current month in case of Under Construction Project.";
+           }
+       }
+       if( $Status == UNDER_CONSTRUCTION_ID_1 && $projectId != '' && $completionDate != '') {
+           $yearExp = explode("-",$completionDate);
+           if( $yearExp[0] == date("Y") ) {
+               if( intval($yearExp[1]) < intval(date("m"))) {
+                 $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be less than current month in case of Under Construction Project.";
+               }    
+           } 
+           else if (intval($yearExp[0]) < intval(date("Y")) ) {
+               $ErrorMsg['CompletionDateGreater'] = "Completion date cannot be less than current month in case of Under Construction Project.";
            }
        }
        
@@ -603,30 +626,22 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 			$cont_flag = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project' )));
            
            if($cont_flag){
-			  	$content_flag = '';
-				if($_SESSION['DEPARTMENT'] == 'DATAENTRY'){
-					if(strcasecmp($txtProjectDescription,$txtProjectOldDescription) != 0)
-						$content_flag = 0;
-				  	
-				}elseif($_SESSION['DEPARTMENT'] == 'ADMINISTRATOR' || $_SESSION['DEPARTMENT'] == 'CONTENT'){
-				  $content_flag = ($_POST["content_flag"])? 1 : 0;
-				}
+			   	$content_flag = ($_POST["content_flag"])? 1 : 0;			  
 				if(is_numeric($content_flag)){
 					$cont_flag = TableAttributes::find($cont_flag[0]->id);
 					$cont_flag->updated_by = $_SESSION['adminId'];
 					$cont_flag->attribute_value = $content_flag;
 					$cont_flag->save();		
 		        }
-			}else{
-			 if( $_SESSION['DEPARTMENT'] == 'DATAENTRY' && (empty($txtProjectOldDescription) || strcasecmp($txtProjectDescription,$txtProjectOldDescription) != 0)){ //add mode by dataEntry
+			}else{				
+			 //add mode by dataEntry
 				$cont_flag = new TableAttributes();
 				$cont_flag->table_name = 'resi_project';
 				$cont_flag->table_id = $returnProject->project_id;
 				$cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
-				$cont_flag->attribute_value = 0;
+				$cont_flag->attribute_value = ($_POST["content_flag"])? 1 : 0;
 				$cont_flag->updated_by = $_SESSION['adminId'];
-				$cont_flag->save();
-			 }				
+				$cont_flag->save();			 
 			}
            
            //echo $eff_date_to." heer";die;
@@ -640,6 +655,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->launch_date = $eff_date_to;
                $phase->status = 'Active';
                $phase->booking_status_id = 1;
+               $phase->construction_status = $Status;
                $phase->created_at = date('Y-m-d H:i:s');
                $phase->updated_at = date('Y-m-d H:i:s');
                $phase->updated_by = $_SESSION['adminId'];
@@ -771,7 +787,7 @@ elseif ($projectId!='') {
     $smarty->assign("power_backup_capacity", stripslashes($ProjectDetail->power_backup_capacity));
     $smarty->assign("powerBackup", stripslashes($ProjectDetail->power_backup_type_id));
     $smarty->assign("architect", stripslashes($ProjectDetail->architect_name));
-    $smarty->assign("residential", strtolower(stripslashes($ProjectDetail->residential_flag)));
+    $smarty->assign("residential", stripslashes($ProjectDetail->residential_flag));
     $smarty->assign("township", stripslashes($ProjectDetail->township_id ));
     $smarty->assign("pre_launch_date", stripslashes($ProjectDetail->pre_launch_date));
     $smarty->assign("exp_launch_date", stripslashes($ProjectDetail->expected_supply_date));
