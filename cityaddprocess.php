@@ -112,6 +112,7 @@ if (isset($_POST['btnSave'])) {
 		$rt = mysql_query($updateQry);
 		if($rt){
                     if($txtCityUrlOld != $txtCityUrl) { //update locality project and suburb url
+                        
                         $localityList = Locality::getAllLocalityByCity($cityid);
                         $projList = array();
                         foreach($localityList as $localityList) {
@@ -143,7 +144,7 @@ if (isset($_POST['btnSave'])) {
                             $rt = mysql_query($updateSub) or die(mysql_error()." sub url update");
                         }
                        
-                    }
+                    } 
                     $seoData['meta_title'] = $txtMetaTitle;
                     $seoData['meta_keywords'] = $txtMetaKeywords;
                     $seoData['meta_description'] = $txtMetaDescription;

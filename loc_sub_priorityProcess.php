@@ -10,7 +10,7 @@ if(isset($_POST['asc_x'])) $orderby = 'ASC';
 else if(isset($_POST['desc_x'])) $orderby = 'DESC';
 
 $arraySubLoc = getSubLocData($cityId, $orderby);
-print_r($arraySubLoc);
+
 //echo "<pre>";print_r($arraySubLoc);echo "</pre>";
 $smarty->assign("arraySubLoc", $arraySubLoc);
 //echo "<pre>";print_r($arraySubLoc);echo "</pre>";

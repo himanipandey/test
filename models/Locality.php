@@ -57,7 +57,7 @@ class Locality extends ActiveRecord\Model
     }
     
     static function getAllLocalityByCity($ctid) {
-        $conditions = array("a.city_id = ?", $ctid);
+        $conditions = array("c.city_id = ?", $ctid);
         //$join = 'INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)';
         $join = 'INNER JOIN city c ON(locality.city_id = c.city_id)';
 

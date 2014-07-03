@@ -113,7 +113,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                  LEFT JOIN
                      locality L ON RP.LOCALITY_ID = L.LOCALITY_ID
                  LEFT JOIN
-                     city ct ON sub.CITY_ID = ct.CITY_ID    
+                     city ct ON L.CITY_ID = ct.CITY_ID    
                  LEFT JOIN
                      project_stage_history PSH ON RP.MOVEMENT_HISTORY_ID = PSH.HISTORY_ID
                  LEFT JOIN 
@@ -185,7 +185,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         }
         if($_POST['dwnld_city'] != '')
         {
-            $QueryMember .= $and." sub.CITY_ID in (".$city.")";
+            $QueryMember .= $and." L.CITY_ID in (".$city.")";
             $and  = ' AND ';
         }
         if($_POST['dwnld_builder'] != '')
