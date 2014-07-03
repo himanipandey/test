@@ -2,7 +2,6 @@
 ob_start();
 session_start();
 
-require_once("modelsConfig.php");
 /*****************config for project tower facing***************/
 $arr_proj_facing = array("EAST","WEST","SOUTH","NORTH","NORTH EAST","NORTH WEST","SOUTH NORTH","WEST NORTH");
 $smarty->assign("arr_proj_facing", $arr_proj_facing);
@@ -720,14 +719,15 @@ $arrOfferTypes = array(
 
 
 /********config for project type of residential/nonresidential******************/
-$ProjectTypeArr	= ResiProjectType::ProjectTypeArr();
+$qryType = "select project_type_id,type_name from resi_project_type order by type_name asc";
+$resType = mysql_query($qryType) or die(mysql_error()); 
 $arrResidentialType = array();
 $arrCommercialType = array();
-foreach($ProjectTypeArr as $k=>$v){
-    if($k<=7)
-        $arrResidentialType[$k] = $v;
+while($ProjectType = mysql_fetch_assoc($resType)){
+    if($ProjectType['project_type_id']<=7)
+        $arrResidentialType[$ProjectType['project_type_id']] = $ProjectType['type_name'];
     else
-        $arrCommercialType[$k] = $v;
+        $arrCommercialType[$ProjectType['project_type_id']] = $ProjectType['type_name'];
 }
 $smarty->assign("arrResidentialType",$arrResidentialType);
 $smarty->assign("arrCommercialType",$arrCommercialType);
