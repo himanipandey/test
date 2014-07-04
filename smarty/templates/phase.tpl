@@ -151,16 +151,20 @@
                                     </td>
                                 </tr>
                                 
-                                
                                 <tr>
-                                    <td width="20%" align="right" valign="top"><b>Pre Launch Date  :</b> </td>
-                                    <td width="30%" align="left">{$pre_launch_date}
-                                        <input type = "hidden" name = "pre_launch_date" value="{$pre_launch_date}">
-                                    </td>
-                                    <td width="50%" align="left">&nbsp;
-                                    </td>
-                                </tr>
-
+									<td width="20%" align="right" valign="top"><b>Pre - Launch Date :</b> </td> 									   <td width="30%" align="left">
+									   <input name="phase_pre_launch_date" value="{$phase_pre_launch_date}" type="text" class="formstyle2" id="pre_f_date_c_to" size="10" readonly="1"/>  <img src="images/cal_1.jpg" id="pre_f_trigger_c_to" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background='red';" onMouseOut="this.style.background=''" />
+									   &nbsp;&nbsp;<img width="15" height="15" id="ref-prelaunch-date" onclick="refrech_date('pre_f_date_c_to')" title="Refresh Launch Date"  src="../images/refresh.png">
+									</td>
+									<td width="50%" align="left"><font color="red">{if count($ErrorMsg["phase_pre_launch_date"])>0}{$ErrorMsg["phase_pre_launch_date"]}{/if}
+										{if count($ErrorMsg["phase_preLaunchDateAvailabilities"])>0}
+											{$ErrorMsg["phase_preLaunchDateAvailabilities"]}
+										{/if}
+										{if count($ErrorMsg["phase_preLaunchDatePrices"])>0}
+											{$ErrorMsg["phase_preLaunchDatePrices"]}
+										{/if}
+									  </font></td>
+								</tr>
                                 <tr>
                                     <td width="20%" align="right" valign="top"><b>Completion Date  :</b> </td>
                                     <td width="30%" align="left">
@@ -252,6 +256,7 @@
     var cals_dict = {
         "launch_date_trigger" : "launch_date",
         "completion_date_trigger" : "completion_date",
+        "pre_f_trigger_c_to" : "pre_f_date_c_to",
         "sold_out_date_trigger": "sold_out_date",
     };
 
