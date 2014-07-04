@@ -28,7 +28,7 @@ class Suburb extends ActiveRecord\Model
         }
         return $arrSuburb;
     }
-}
+
     static function getSuburbCity($suburbId) {
         $suburbDetail = Suburb::find('all',array('joins'=>'INNER JOIN city ON suburb.city_id = city.city_id','select'=>'suburb.label as suburb_name, city.label as cityname','conditions'=>array("suburb.suburb_id = $suburbId")));
         return $suburbDetail;
