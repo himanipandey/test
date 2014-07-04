@@ -240,6 +240,7 @@ if ($_SERVER['REQUEST_METHOD']) {
     $smarty->assign("bookingStatus", $current_phase[0]['BOOKING_STATUS_ID']);
     $smarty->assign("construction_status", $current_phase[0]['construction_status']);
     $smarty->assign("phasename", $current_phase[0]['PHASE_NAME']);
+    $smarty->assign("phase_pre_launch_date", $current_phase[0]['phase_pre_launch_date']);
     $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
     $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
     $projectDetail = projectDetailById($projectId);
@@ -271,8 +272,9 @@ if (isset($_POST['btnSave'])) {
     $phasename = $_REQUEST['phaseName'];
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
-    $construction_status = $_REQUEST['construction_status'];    
-    $pre_launch_date = $_REQUEST['pre_launch_date'];
+    $construction_status = $_REQUEST['construction_status'];
+    $pre_launch_date = $_REQUEST['pre_launch_date'];    
+    $phase_pre_launch_date = $_REQUEST['phase_pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $isLaunchedUnitPhase = $_REQUEST['isLaunchUnitPhase'];
@@ -300,6 +302,8 @@ if (isset($_POST['btnSave'])) {
             $completion_date = '';
         if($pre_launch_date == '0000-00-00')
             $pre_launch_date = '';
+        if($phase_pre_launch_date == '0000-00-00')
+            $phase_pre_launch_date = '';
         if($sold_out_date == '0000-00-00')
             $sold_out_date = '';
         if($construction_status == ""){
@@ -309,13 +313,19 @@ if (isset($_POST['btnSave'])) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
             if( $retdt <= 180 ) {
                 $error_msg = 'Launch date should be atleast 6 month less than completion date';
-            }
-            
+            }            
         }
-        if( $pre_launch_date != '' && $launch_date !=''  && $phasename == 'No Phase' ) {
+        if( $pre_launch_date != '' && $launch_date !=''  && $phasename == 'No Phase' ) { // TO BE DONE to COMPARE PROJECT PRELAUNCH DATE at RUN TIME
             $retdt  = ((strtotime($launch_date) - strtotime($pre_launch_date)) / (60*60*24));
             if( $retdt <= 0 ) {
-                $error_msg = "Launch date to be always greater than Pre Launch date";
+                $error_msg = "Launch date to be always greater than Pre Launch date for Project";
+            }
+            
+        } 
+        if( $phase_pre_launch_date != '' && $launch_date !='') {
+            $retdt  = ((strtotime($launch_date) - strtotime($phase_pre_launch_date)) / (60*60*24));
+            if( $retdt <= 0 ) {
+                $error_msg = "Launch date to be always greater than Pre Launch date for Phase";
             }
             
         } 
@@ -465,12 +475,13 @@ if (isset($_POST['btnSave'])) {
             // Update
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
-                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date, $construction_status;
+                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date, $construction_status,$phase_pre_launch_date;
                 if($phaseId != '0'){
                     //          Updating existing phase
                     $phase = ResiProjectPhase::virtual_find($phaseId);
                     $phase->project_id = $projectId;
                     $phase->phase_name = $phasename;
+                    $phase->pre_launch_date = $phase_pre_launch_date;
                     $phase->launch_date = $launch_date;
                     $phase->remarks = $remark;
                     $phase->sold_out_date = $sold_out_date;
