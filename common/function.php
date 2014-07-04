@@ -297,7 +297,7 @@ function writeToImageService($imageParams){
 
 
 //print'<pre>';
-  //    print_r($postArr); //die();
+  //  print_r($postArr); die();
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];

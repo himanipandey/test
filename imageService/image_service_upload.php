@@ -165,18 +165,27 @@ class ImageServiceUpload{
         if($this->method == "DELETE"){
             $response = static::delete($this->image_id, $params);
             $this->logger->info("Method: DELETE");
+            $url = static::join_urls(self::$image_upload_url, $this->image_id);
+            $this->logger->info("Url: {$url}");
         }
         elseif($this->method == "PUT"){
             $response = static::update($this->image_id, $params);
             $this->logger->info("Method: PUT");
+            if($params['image']=='')
+                $this->logger->info("Update with no Image.");
+            else
+                $this->logger->info("Update with Image.");
+            $url = static::join_urls(self::$image_upload_url, $this->image_id);
+            $this->logger->info("Url: {$url}");
         }
         else{
             $response = static::create($params);
             $this->logger->info("Method: POST");
+            $url = self::$image_upload_url;
+            $this->logger->info("Url: {$url}");
         }
 
-        $url = self::$image_upload_url;
-        $this->logger->info("Url: {$url}");
+        
         $this->logger->info("Parameters:");
         foreach ($params as $k => $v) {
             $this->logger->info("{$k} => {$v}");
