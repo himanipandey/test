@@ -108,8 +108,7 @@ $weeklyEmail = array(
                  / PI()) * 60 * 1.1515)*1.609344 AS `distance`               
  
                 from resi_project rp join locality l on rp.locality_id = l.locality_id 
-                join suburb s on l.suburb_id = s.suburb_id
-                join city c on s.city_id = c.city_id
+                join city c on l.city_id = c.city_id
              where 
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and c.city_id in($cityList) having distance >10 ;",
                'subject'=>'PIDs greater than 10km from locality center',
@@ -177,8 +176,7 @@ $weeklyEmail = array(
                     resi_project rp
                     join resi_builder rb on rp.builder_id = rb.builder_id
                     join locality l on rp.locality_id = l.locality_id
-                    join suburb s on l.suburb_id = s.suburb_id
-                    join city c on s.city_id = c.city_id
+                    join city c on l.city_id = c.city_id
             where
                     ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList))
                 AND rp.status in('Active','ActiveInCms') and rp.version = 'Cms';",
