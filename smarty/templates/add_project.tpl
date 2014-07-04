@@ -261,7 +261,7 @@
 																	  {/if}
                                                                 </td>
                                                                 <td width="50%" align="left">
-                                                                        <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
+                                                                        <font color="red">{if $ErrorMsg["txtDesc"] != ''} {$ErrorMsg["txtDesc"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
                                                                </td>
 							   </tr>
 							   {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
