@@ -9,6 +9,12 @@
     
     $companyAuth = isUserPermitted('company', 'manage');
     $smarty->assign("companyAuth", $companyAuth);
+    
+    $companyOrderAdminAuth = isUserPermitted('comp-orders-mgmt', 'admin');
+    $smarty->assign("companyOrderAdminAuth", $companyOrderAdminAuth);
+    
+    $companyOrderViewAuth = isUserPermitted('comp-orders-mgmt', 'view');
+    $smarty->assign("companyOrderViewAuth", $companyOrderViewAuth);
 
     $cityAuth = isUserPermitted('city', 'manage');
     $smarty->assign("cityAuth", $cityAuth);

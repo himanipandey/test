@@ -33,7 +33,7 @@ function putResultsInFile($data, $filePath){
 function firstDayOf($period, $date = null)
 {
     $period = strtolower($period);
-    $validPeriods = array('year', 'quarter', 'month', 'week', 'half_year');
+    $validPeriods = array('financial_year', 'year', 'quarter', 'month', 'week', 'half_year');
 
     if(is_string($date)){
         $date;
@@ -46,6 +46,9 @@ function firstDayOf($period, $date = null)
     $newDate = ($date === null) ? new DateTime() : clone $date;
  
     switch ($period) {
+        case 'financial_year':
+            $newDate->modify('first day of april ' . $newDate->format('Y'));
+            break;
         case 'year':
             $newDate->modify('first day of january ' . $newDate->format('Y'));
             break;

@@ -10,7 +10,7 @@ if (isset($_GET['error'])) {
             break;
     }
 }
-
+//echo "<pre>";print_r($_REQUEST);die("inner");
 $projectId = $_REQUEST['projectId'];
 $project = ResiProject::virtual_find($projectId);
 if(isset($_REQUEST['phaseId']))
@@ -253,6 +253,7 @@ if ($_SERVER['REQUEST_METHOD']) {
     $phase_quantity = ProjectSupply::projectTypeGroupedQuantityForPhase($projectId, $phaseId);
     $phase_quantity_hash = array();
     foreach($phase_quantity as $quantity) $phase_quantity_hash[$quantity->unit_type] = $quantity->agg;
+    //echo "<pre>";print_r($phase_quantity);
     $isLaunchUnitPhase = ProjectSupply::isLaunchUnitPhase($phaseId);
     $isInventoryCreated = ProjectSupply::isInventoryAdded($phaseId);
     $smarty->assign("isInventoryCreated", $isInventoryCreated);
@@ -260,6 +261,9 @@ if ($_SERVER['REQUEST_METHOD']) {
     $smarty->assign("FlatsQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Apartment']));
     $smarty->assign("VillasQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Villa']));
     $smarty->assign("PlotQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Plot']));
+    $smarty->assign("ShopQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Shop']));
+    $smarty->assign("OfficeQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Office']));
+    $smarty->assign("OtherQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Other']));
     $smarty->assign("phase_quantity", $phase_quantity);
 }
 /* * ********************************** */
@@ -268,7 +272,7 @@ if (isset($_POST['btnSave'])) {
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
     $construction_status = $_REQUEST['construction_status'];    
-   $pre_launch_date = $_REQUEST['pre_launch_date'];
+    $pre_launch_date = $_REQUEST['pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $isLaunchedUnitPhase = $_REQUEST['isLaunchUnitPhase'];
@@ -343,7 +347,6 @@ if (isset($_POST['btnSave'])) {
                         $error_msg = "Launched Unit must be greater than Availability.";
                 }
             }
-
             // Villas Config
             $villas_config = array();
             foreach ($_REQUEST as $key => $value) {
@@ -436,9 +439,28 @@ if (isset($_POST['btnSave'])) {
 					$error_msg = "Completion date cannot be less than the current month in case of Under construction Project";
 				}			
 			}
-		  }
-		 //////////////////////////////////////	
-		 				
+		  }		 				
+	}
+        if ($_POST['Shop'] != '' && !isset($_POST['options'])) { 
+			 if($_POST['supply_shop'] < $_POST['launched_shop'])
+						$error_msg = "Supply Unit must be greater than Launched Unit.";
+            if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'Shop', 0, $_POST['supply_shop'], $isLaunchedUnitPhase ? $_POST['launched_shop'] : $_POST['supply_shop']))
+                   $error_msg = "Launched Unit must be greater than Availability.";
+	}
+        if ($_POST['Office'] != '' && !isset($_POST['options'])) { 
+           // echo "<pre>";print_r($_POST);//die;
+			 if($_POST['supply_office'] < $_POST['launched_office'])
+						$error_msg = "Supply Unit must be greater than Launched Unit.";
+            if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'Office', 0, $_POST['supply_office'], $isLaunchedUnitPhase ? $_POST['launched_office'] : $_POST['supply_office']))
+                   $error_msg = "Launched Unit must be greater than Availability.";
+	}
+        if ($_POST['Other'] != '' && !isset($_POST['options'])) { 
+			 if($_POST['supply'] < $_POST['launched'])
+						$error_msg = "Supply Unit must be greater than Launched Unit.";
+            if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'Other', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
+                   $error_msg = "Launched Unit must be greater than Availability.";
+	}
+		//echo "<pre>";print_r($error_msg); 	
          if( $error_msg == '' ){
             // Update
             ############## Transaction ##############
@@ -460,9 +482,11 @@ if (isset($_POST['btnSave'])) {
                             where project_id = $projectId and version = 'Cms'";
                         mysql_query($qryUpdateProjectLaunchDate);
                     }
-                    if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
-                        $phase->add_towers($towers);
-                    }
+                    if ($_POST['project_type_id'] == APARTMENTS || $_POST['project_type_id'] == VILLA_APARTMENTS || $_POST['project_type_id'] == PLOT_APARTMENTS
+                           || $_POST['project_type_id'] == COMMERCIAL || $_POST['project_type_id'] == SHOP || $_POST['project_type_id'] == OFFICE
+                           || $_POST['project_type_id'] == SHOP_OFFICE || $_POST['project_type_id'] == OTHER) {
+                    $phase->add_towers($towers);
+                }
                     if(isset($_POST['options'])){
                         $arr = $_POST['options'];
                         $arr = array_diff($arr, array(-1));
@@ -495,7 +519,7 @@ if (isset($_POST['btnSave'])) {
                     ProjectSupply::addEditSupply($projectId, $phaseId, 'villa', $key, $value['supply'], $isLaunchedUnitPhase ? $value['launched'] : $value['supply']);
                 }
             }
-
+//echo "<pre>";print_r($_REQUEST);die;
            if ($_POST['plotvilla'] != '') {
                 $supply = $_POST['supply'];
                 if($supply == ''){
@@ -510,12 +534,64 @@ if (isset($_POST['btnSave'])) {
                          $supply = $dataPlotcase['supply'];
                     }
                 }
-                //ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $supply, $_POST['launched']);
-                //print "<pre>".print_r($_POST,1)."</pre>"; die;
                 if($supply != null && isset($_POST['supply']) && isset($_POST['launched']))
 					ProjectSupply::addEditSupply($projectId, $phaseId, 'plot', 0, $supply, $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']);
             }
 
+            if ($_POST['Shop'] != '') {
+                $supply = $_POST['supply_shop'];
+                if($supply == ''){
+                  $qryShopCase = "select ps.supply,ps.launched,l.status from resi_project_options rpo 
+                    join listings l on(rpo.options_id = l.option_id and l.listing_category = 'Primary')
+                    join project_supplies ps on (l.id = ps.listing_id and ps.version = 'Cms')
+                    where rpo.option_type =  'Shop' and l.phase_id = $phaseId order by l.id desc";
+                    $resShopCase = mysql_query($qryShopCase);
+                    $dataShopcase = mysql_fetch_assoc($resShopCase);
+                    if(($_POST['launched_shop'] == '' || $_POST['launched_shop'] == 0) && mysql_num_rows($resShopCase)>0) {
+                        $_POST['launched_shop'] = $dataShopcase['launched'];
+                         $supply = $dataShopcase['supply'];
+                    }
+                }
+                if($supply != null && isset($_POST['supply_shop']) && isset($_POST['launched_shop']))
+		   ProjectSupply::addEditSupply($projectId, $phaseId, 'Shop', 0, $supply, $isLaunchedUnitPhase ? $_POST['launched_shop'] : $_POST['supply_shop']);
+            }
+            
+            if ($_POST['Office'] != '') {
+                $supply = $_POST['supply_office'];
+                if($supply == ''){
+                  $qryOfficeCase = "select ps.supply,ps.launched,l.status from resi_project_options rpo 
+                    join listings l on(rpo.options_id = l.option_id and l.listing_category = 'Primary')
+                    join project_supplies ps on (l.id = ps.listing_id and ps.version = 'Cms')
+                    where rpo.option_type =  'Office' and l.phase_id = $phaseId order by l.id desc";
+                    $resOfficeCase = mysql_query($qryOfficeCase);
+                    $dataOfficecase = mysql_fetch_assoc($resOfficeCase);
+                    if(($_POST['launched_office'] == '' || $_POST['launched_office'] == 0) && mysql_num_rows($resOfficeCase)>0) {
+                        $_POST['launched_office'] = $dataPlotcase['launched'];
+                         $supply = $dataPlotcase['supply'];
+                    }
+                }
+                if($supply != null && isset($_POST['supply_office']) && isset($_POST['launched_office']))
+					ProjectSupply::addEditSupply($projectId, $phaseId, 'Office', 0, $supply, $isLaunchedUnitPhase ? $_POST['launched_office'] : $_POST['supply_office']);
+            }
+            
+            if ($_POST['Other'] != '') {
+                $supply = $_POST['supply'];
+                if($supply == ''){
+                  $qryOtherCase = "select ps.supply,ps.launched,l.status from resi_project_options rpo 
+                    join listings l on(rpo.options_id = l.option_id and l.listing_category = 'Primary')
+                    join project_supplies ps on (l.id = ps.listing_id and ps.version = 'Cms')
+                    where rpo.option_type =  'Other' and l.phase_id = $phaseId order by l.id desc";
+                    $resOtherCase = mysql_query($qryOtherCase);
+                    $dataOthercase = mysql_fetch_assoc($resOtherCase);
+                    if(($_POST['launched'] == '' || $_POST['launched'] == 0) && mysql_num_rows($resOtherCase)>0) {
+                        $_POST['launched'] = $dataPlotcase['launched'];
+                         $supply = $dataPlotcase['supply'];
+                    }
+                }
+                if($supply != null && isset($_POST['supply']) && isset($_POST['launched']))
+					ProjectSupply::addEditSupply($projectId, $phaseId, 'Other', 0, $supply, $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']);
+            }
+            
             $towerDetail = fetch_towerDetails_for_phase($projectId, $phaseId);
             $smarty->assign("TowerDetails", $towerDetail);
 
@@ -525,6 +601,9 @@ if (isset($_POST['btnSave'])) {
             $smarty->assign("FlatsQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Apartment']));
             $smarty->assign("VillasQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Villa']));
             $smarty->assign("PlotQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Plot']));
+            $smarty->assign("ShopQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Shop']));
+            $smarty->assign("OfficeQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Office']));
+            $smarty->assign("OtherQuantity", explodeBedroomSupplyLaunched($phase_quantity_hash['Other']));
 
             var_dump($phase_quantity_hash);
 
@@ -546,7 +625,6 @@ if (isset($_POST['btnSave'])) {
             $smarty->assign("launch_date",$launch_date);
             $smarty->assign("completion_date",$completion_date);
         }
-    }
 } else if ($_POST['btnExit'] == "Exit") {
     if ($preview == 'true')
         header("Location:show_project_details.php?projectId=" . $projectId);

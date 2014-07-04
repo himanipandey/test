@@ -1,7 +1,7 @@
 <?php        
 $BuilderDataArr	= ResiBuilder::ProjectSearchBuilderEntityArr();
 $CityDataArr = City::CityArr();
-$ProjectTypeArr	= ResiProjectType::ProjectTypeArr();
+
 $BankListArr = BankList::arrBank();
 $projectStatus = ResiProject::projectStatusMaster();
 $allTownships = Townships::getAllTownships();
@@ -11,7 +11,7 @@ $getPowerBackupTypes = PowerBackupTypes::getPowerBackupTypes();
 include_once('./function/locality_functions.php');
 $smarty->assign("BuilderDataArr",$BuilderDataArr);
 $smarty->assign("CityDataArr",$CityDataArr);
-$smarty->assign("ProjectTypeArr",$ProjectTypeArr);
+
 $smarty->assign("BankListArr",$BankListArr);
 $smarty->assign("projectStatus",$projectStatus);
 $smarty->assign("allTownships",$allTownships);
@@ -82,7 +82,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $architect = trim($_POST['architect']);
             $power_backup_capacity = trim($_POST['power_backup_capacity']);
             $eff_date_to_prom =	trim($_POST['eff_date_to_prom']);
-            $residential = (trim($_POST['residential']))?$_POST['residential']:'residential'; //setting up defualt value if empty
+           
+            $residential = (trim($_POST['residential']))?$_POST['residential']:'Residential'; //setting up defualt value if empty
             $township =	trim($_POST['township']);
             $projName =	trim($_POST['txtProjectName']);
             $no_of_plot = trim($_POST['no_of_plot']);
@@ -787,7 +788,7 @@ elseif ($projectId!='') {
     $smarty->assign("power_backup_capacity", stripslashes($ProjectDetail->power_backup_capacity));
     $smarty->assign("powerBackup", stripslashes($ProjectDetail->power_backup_type_id));
     $smarty->assign("architect", stripslashes($ProjectDetail->architect_name));
-    $smarty->assign("residential", strtolower(stripslashes($ProjectDetail->residential_flag)));
+    $smarty->assign("residential", stripslashes($ProjectDetail->residential_flag));
     $smarty->assign("township", stripslashes($ProjectDetail->township_id ));
     $smarty->assign("pre_launch_date", stripslashes($ProjectDetail->pre_launch_date));
     $smarty->assign("exp_launch_date", stripslashes($ProjectDetail->expected_supply_date));
