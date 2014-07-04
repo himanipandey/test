@@ -240,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD']) {
     $smarty->assign("bookingStatus", $current_phase[0]['BOOKING_STATUS_ID']);
     $smarty->assign("construction_status", $current_phase[0]['construction_status']);
     $smarty->assign("phasename", $current_phase[0]['PHASE_NAME']);
-    $smarty->assign("phase_pre_launch_date", $current_phase[0]['phase_pre_launch_date']);
+    $smarty->assign("phase_pre_launch_date", $current_phase[0]['PRE_LAUNCH_DATE']);
     $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
     $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
     $projectDetail = projectDetailById($projectId);
@@ -516,6 +516,7 @@ if (isset($_POST['btnSave'])) {
                     }
                 }
             });
+             projectPreLaunchDateUpdate($projectId); //updating preLaunch date
              projectStatusUpdate($projectId); //update project status
              updateD_Availablitiy($projectId); // update D_availability  
             #########################################
