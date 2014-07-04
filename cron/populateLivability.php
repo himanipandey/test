@@ -44,6 +44,7 @@ ProjectLivability::populateOtherAmenity();
 
 ProjectLivability::populateOverAllLivability();
 ProjectLivability::ensureMinLivability();
+ProjectLivability::populateLivabilityInProjects();
 
 
 LocalityLivability::populateDistanceIndex(1);
@@ -57,3 +58,4 @@ LocalityLivability::populateDistanceIndex(17);
 LocalityLivability::populateDistanceIndex(1000);
 LocalityLivability::populateCompletionPercentage();
 LocalityLivability::populateOverAllLivability();
+LocalityLivability::populateLivabilityInLocalities();

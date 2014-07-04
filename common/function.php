@@ -175,9 +175,10 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 
 function writeToImageService($imageParams){
 
-         // print'<pre>';
-                //print_r($params);
-    $postArr = array();
+         //print'<pre>';
+           //     print_r($imageParams);
+   //echo $imageParams['image_type'];
+    $postArr = array();;
     $result = array();
     foreach ($imageParams as $k => $v) {
         # code...
@@ -249,6 +250,7 @@ function writeToImageService($imageParams){
                     $imgName = $params['image']; 
                     $dest = $params['folder'].$imgName;
                     $source = $newImagePath.$dest;
+                    //echo "here".$imgName.$dest.$source;
                 }
                 else{
                     $imgName = $objectType."_".$objectId."_".$params['count']."_".time().".".strtolower( $extension );
@@ -262,6 +264,7 @@ function writeToImageService($imageParams){
 
                 //print'<pre>';
                 //print_r($params); //die();
+                //echo "here";
                 
                 $s3upload = new ImageUpload($source, array( "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
                     "image_type" => strtolower($params['image_type']), "service_image_id"=>$params['service_image_id'],

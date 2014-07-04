@@ -687,7 +687,7 @@ function ProjectType($projectId) {
     global $arrProjectType_VA;
     global $arrProjectType_COMM;
 
-    $qry = "SELECT * FROM  " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' AND OPTION_CATEGORY = 'Actual'";
+   $qry = "SELECT * FROM  " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = '" . $projectId . "' AND OPTION_CATEGORY = 'Actual'";
     $res = mysql_query($qry);
 
     while ($data = mysql_fetch_assoc($res)) {
@@ -720,7 +720,7 @@ function ProjectType($projectId) {
             $arrProjectType_P['BREADTH_OF_PLOT'][] = $data['BREADTH_OF_PLOT'];
             $arrProjectType_P['STATUS'][] = $data['STATUS'];
         }
-        else if ($data['OPTION_TYPE'] == 'Commercial') {
+        else if ($data['OPTION_TYPE'] == 'Commercial' || $data['OPTION_TYPE'] == 'Shop' || $data['OPTION_TYPE'] == 'Office' || $data['OPTION_TYPE'] == 'Other') {
             $arrProjectType_P['OPTIONS_ID'][] = $data['OPTIONS_ID'];
             $arrProjectType_P['OPTION_NAME'][] = $data['OPTION_NAME'];
             $arrProjectType_P['OPTION_TYPE'][] = $data['OPTION_TYPE'];

@@ -44,17 +44,18 @@
 				var cid = $(".cityId").val();				
 				var dataString = 'part=refreshLoc&loc_id='+ loc_id +"&id = "+cid;
 
-	   $.ajax  ({
-			type: "POST",
-			url: "RefreshSuburb.php",
-			data: dataString,
-			cache: false,
-			success: function(html)  {
-				$(".suburbId").html(html);
-			}
-	   });
+                        $.ajax  ({
+                                type: "POST",
+                                url: "RefreshSuburb.php",
+                                data: dataString,
+                                cache: false,
+                                success: function(html)  {
+                                
+                                    $(".suburbId").html(html);
+                                }
+                        });
 	  });
-          
+
           $(".builderId").change(function(){
             var builderid = $(this).val();
             $.ajax  ({
@@ -70,7 +71,23 @@
 	   });
           });
 	});
-	
+	/**************option type refresh**********/
+           $(document).ready(function()   {
+          $(".residential").change(function()  {
+                var selectedType = $("#residential").val();		
+                var dataString = 'optType='+selectedType;
+                $.ajax  ({
+                             type: "POST",
+                             url: "refreshOptions.php",
+                             data: dataString,
+                             cache: false,
+                             success: function(projTypeResponse)  {
+                                 $(".optionType").html(projTypeResponse);
+                             }
+                });
+	  });
+           });
+          /****************************/
   function isNumberKey(evt)
   {
  	 var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -114,6 +131,7 @@
 				});
 		  }
 	})
+       
 </script>
   <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -220,10 +238,10 @@
 							   <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Suburbs :</b> </td>
 								  <td width="30%" align="left">
-									                                <select name="suburbId" class="suburbId" style="width:230px;" readonly>
+									 <select name="suburbId" class="suburbId" style="width:230px;" readonly>
                                                                             <option value="">Select Suburb</option>
                                                                             {foreach from=$suburbSelect key=k item=v}
-																				{if $suburbId == $k}
+                                                                                {if $suburbId == $k}
                                                                                     <option  selected  value = "{$k}">{$v}</option>
                                                                                  {/if}
                                                                             {/foreach}
@@ -403,16 +421,30 @@
 									  <font color="red">{if $ErrorMsg["txtSource"] != ''} {$ErrorMsg["txtSource"]} {/if}<span id = "err_project_source" style = "display:none;">Please enter project source of information!</span></font>
 								  </td>
 							   </tr>
-								
+							   <tr>
+                                                                <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
+                                                                    <select name="residential" id="residential" class="residential">
+                                                                            <option value="Residential" {if $residential == 'Residential'} selected {/if}>Residential </option>
+                                                                            <option value="NonResidential" {if $residential == 'NonResidential'} selected = selected {/if}>Non Residential </option>
+                                                                    </select>
+
+                                                                </td>
+                                                                <td width="50%" align="left"><font color="red"></font></td>
+							   </tr>	
 							    <tr>
 								  <td width="20%" align="right"><font color ="red">*</font><b>Project type :</b> </td>
 								  <td width="30%" align="left">
-									<select name = "project_type">
-										<option value =''>Project Type</option>
-										{foreach from=$ProjectTypeArr key=k item=v}
-										<option value = "{$k}" {if $k == $project_type} selected {/if} >{ucwords($v|lower)|replace:'_':' '}</option>
-										{/foreach}
-									</select>
+                                                                      <select name = "project_type" id = "optionType" class = 'optionType'>
+									  <option value =''>Project Type</option>
+                                                                            {foreach from=$arrResidentialType key=k item=v}
+
+                                                                                <option {if $k == $project_type} selected {/if} {if $residential == 'NonResidential'}style = "display:none;"{/if}  value = "{$k}" >{ucwords($v|lower)|replace:'_':' '}</option>
+                                                                            {/foreach}
+
+                                                                            {foreach from=$arrCommercialType key=kComm item=vComm}
+                                                                                <option {if $kComm == $project_type} selected {/if} {if $residential != 'NonResidential'}style = "display:none;"{/if}  value = "{$kComm}">{ucwords($vComm|lower)|replace:'_':' '}</option>
+                                                                            {/foreach}
+                                                                    </select>
 								  </td>
 								  <td width="50%" align="left">
 									  <font color="red">{if $ErrorMsg["txtProject_type"] != ''} {$ErrorMsg["txtProject_type"]} {/if}<span id = "err_project_type" style ="display:none;">Please select project type!</span></font>	
@@ -711,21 +743,6 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-                                                           
-                                                         
-							   <tr>
-                                                                <td width="20%" align="right" valign ="top"><b> Residential:</b> </td><td width="30%" align="left">
-
-                                                                    <select name="residential" id="residential" class="residential">
-                                                                            <option value="">Select </option>
-                                                                            <option value="residential" {if $residential == 'residential'} selected = selected {/if}>Residential </option>
-                                                                            <option value="nonResidential" {if $residential == 'nonresidential'} selected = selected {/if}>Non Residential </option>
-                                                                    </select>
-
-                                                                </td>
-                                                                <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
-
 							   <tr>
                                                                 <td width="20%" align="right" valign ="top"><b>Township:</b> </td><td width="30%" align="left">
                                                                     <select name = "township">
@@ -809,4 +826,5 @@
             showsTime	  :	true
         });
     });
+    
 </script>

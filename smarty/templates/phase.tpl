@@ -183,8 +183,8 @@
                                                 </td>
                                             </tr>
 
-								{if $ProjectDetail[0]['PROJECT_TYPE_ID']==0}
-								<tr>
+                                    {if $ProjectDetail[0]['PROJECT_TYPE_ID']==0}
+                                    <tr>
                                     <td width="20%" align="right" valign="top"><b>Project Type  :</b> </td>
                                     <td width="30%" align="left" nowrap>
                                         <span style='color:#ff0000;'>Project type is not defined for this Project/Property.</span>
@@ -207,7 +207,9 @@
                                      </td>
                                      <td width="50%" align="left"></td>
                                  </tr>
-								  {if $ProjectDetail[0]['PROJECT_TYPE_ID']==1 || $ProjectDetail[0]['PROJECT_TYPE_ID']==3 || $ProjectDetail[0]['PROJECT_TYPE_ID']==6}
+								  {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $APARTMENTS || $ProjectDetail[0]['PROJECT_TYPE_ID']== VILLA_APARTMENTS || $ProjectDetail[0]['PROJECT_TYPE_ID']== $PLOT_APARTMENTS
+                                                                    || $ProjectDetail[0]['PROJECT_TYPE_ID']== $COMMERCIAL || $ProjectDetail[0]['PROJECT_TYPE_ID']== $SHOP
+                                                                    || $ProjectDetail[0]['PROJECT_TYPE_ID']== $OFFICE || $ProjectDetail[0]['PROJECT_TYPE_ID']== $SHOP_OFFICE || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $OTHER}
 										 <tr>
 										  <td width="20%" align="right" valign="top"><b><b><b>Select Towers :</b> </td>
 										  <td width="30%" align="left">

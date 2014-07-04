@@ -19,7 +19,8 @@ class ImageServiceUpload{
         "bank" => "bank",
         "city" => "city",
         "suburb" => "suburb",
-        "landmark" => "landmark"
+        "landmark" => "landmark",
+        "company" => "company"
     );
     static $sec_image_types = array(
         "project" => array(
@@ -125,11 +126,11 @@ class ImageServiceUpload{
             "office_complex" => "office_complex",
             "road" => "road",
             "hotel" => "hotel",
-            "commercial_complex" => "commercialComplex"
-           
-            
+            "commercialcomplex" => "commercialComplex"
         ),
-        "bank" => array("logo" => "logo"));
+        "bank" => array("logo" => "logo"),
+        "company" => array("logo" => "logo")
+        );
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;
@@ -157,12 +158,14 @@ class ImageServiceUpload{
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
 
-//$this->logger->info(" Image Service Parameters Log");
+
+
 
         
 
 
         if($this->method == "DELETE"){
+
             $response = static::delete($this->image_id, $params);
             $this->logger->info("Method: DELETE");
             $url = static::join_urls(self::$image_upload_url, $this->image_id);

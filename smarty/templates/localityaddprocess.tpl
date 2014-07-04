@@ -85,20 +85,7 @@
 				  {/if}
 				  </td>
 				</tr>
-                                <tr>
-                                    <td width="20%" align="right"><b>*Locality Latitude :</b> </td>
-                                    <td width="30%" align="left"><input type="text" name="txtLocalityLattitude" id="txtLocalityLattitude" value="{$txtLocalityLattitude}" style="width:250px;" /></td>
-                                    <td width="50%" align="left">
-                                      {if $ErrorMsg['txtLattitude']}<font color="red">{$ErrorMsg['txtLattitude']}</span></font>{/if}
-                                    </td>
-                             </tr>
-                             <tr>
-                                    <td width="20%" align="right"><b>*Locality Longitude :</b> </td>
-                                    <td width="30%" align="left"><input type="text" name="txtLocalityLongitude" id="txtLocalityLongitude" value="{$txtLocalityLongitude}" style="width:250px;" /></td>
-                                    <td width="50%" align="left">
-                                            {if $ErrorMsg['txtLongitude']}<font color="red">{$ErrorMsg['txtLongitude']}</span></font>{/if}
-                                    </td>
-                             </tr>
+                               
 
         <tr>
           <td  height="25" align="right" style="padding-left:5px;">
