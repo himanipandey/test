@@ -75,4 +75,9 @@ class LocalityLivability extends ActiveRecord\Model {
         $sql = "update locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, max($columnName) max from locality_livability ll inner join locality l on ll.locality_id = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set ll.$columnName = ll.$columnName/t.max";
         self::connection()->query($sql);
     }
+    
+    static function populateLivabilityInLocalities(){
+    	$sql = "update locality l inner join locality_livability ll on l.locality_id = ll.locality_id set l.livability_score = ROUND(ll.livability*5,1)";
+    	self::connection()->query($sql);
+    }
 }

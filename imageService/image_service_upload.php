@@ -120,8 +120,7 @@ class ImageServiceUpload{
             "office_complex" => "office_complex",
             "road" => "road",
             "hotel" => "hotel",
-            "commercialcomplex" => "commercialComplex", 
-                       
+            "commercialcomplex" => "commercialComplex"
         ),
         "bank" => array("logo" => "logo"),
         "company" => array("logo" => "logo")

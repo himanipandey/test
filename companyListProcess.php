@@ -24,17 +24,17 @@ foreach ($compArr as $k => $v) {
 
 	$objectId = $v['id'];
 	$objectType = "company";
-    //$image_id = $v['SERVICE_IMAGE_ID'];
     //$url = readFromImageService($objectType, $objectId);
+    //print ""
     $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
     $data = array();
     foreach($imgPath->data as $k1=>$v1){
         
-        $v['service_image_path'] = $v1->absolutePath;
-        $v['alt_text'] = $v1->altText;
-        $v['image_id'] = $v1->id;
+        $compArr[$k]['service_image_path'] = $v1->absolutePath;
+        $compArr[$k]['alt_text'] = $v1->altText;
+        $compArr[$k]['image_id'] = $v1->id;
     }
 
 }

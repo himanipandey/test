@@ -45,10 +45,10 @@ class Company extends ActiveRecord\Model
             $result = self::Connection()->query($sql);
             $fax= $result->fetch(PDO::FETCH_NUM);
 
-            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='broker_contacts' and table_id='{$agent_row[0]}' and type='cc_phone')";
+            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='company' and table_id='{$v->id}' and type='cc_phone')";
             $result = self::Connection()->query($sql);
             $compphone = $result->fetch(PDO::FETCH_NUM);
-
+     
             $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='broker_contacts' and table_id='{$agent_row[0]}' and type='phone1')";
             $result = self::Connection()->query($sql);
             $phone = $result->fetch(PDO::FETCH_NUM);

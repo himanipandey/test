@@ -82,13 +82,16 @@ if($_POST['task']=='createComp'){
            
     
     if($mode=='update' && $id!==null){
-
-        $imageId = $_POST['imageId'];
-
-        $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
-        
-        $res_sql = mysql_query($sql) or die(mysql_error());
-        if(mysql_affected_rows()>0){
+		
+		$imageId = $_POST['imageId'];
+		
+		$sql_comp = mysql_query("select * from company where id='{$id}'") or die (mysql_error());
+            
+        if(mysql_num_rows($sql_comp)>0){
+			
+			$sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
+			
+			$res_sql = mysql_query($sql) or die(mysql_error());
 
             $query1 = "UPDATE addresses SET address_line_1='{$address}', city_id='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='company' and table_id='{$id}' )";
             $res1 = mysql_query($query1) or die(mysql_error());
@@ -105,7 +108,7 @@ if($_POST['task']=='createComp'){
             $query2 = "UPDATE broker_contacts SET name='{$person}', contact_email='{$email}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (broker_id='{$id}' and type='NAgent' )";
             
             $res2 = mysql_query($query2) or die(mysql_error());
-            if(mysql_affected_rows()>0){
+            //if(mysql_affected_rows()>0){
 
                 $query2 = "SELECT id from broker_contacts WHERE (broker_id='{$id}' and type='NAgent' )";
                 //echo $query2;
@@ -126,18 +129,18 @@ if($_POST['task']=='createComp'){
                 $res5 = mysql_query($query5) or die(mysql_error());
 
                 
-                if(isset($_POST['image']) && $image!=""){ 
-                    $unitImageArr['objectId'] = $id;
+                if(isset($_POST['image']) && $image!=""){ 					
+					$unitImageArr['objectId'] = $id;
                     $unitImageArr['params']['service_image_id'] = $imageId;
                     $unitImageArr['params']['update'] = "update";
                     $postArr[] = $unitImageArr;         
                     $response   = writeToImageService($postArr);
+
                     //print_r($response);
                     foreach ($response as $k => $v) {
             
                         if(empty($v->error->msg)){
-                        
-                            
+
                             $image_id = $v->data->id;
                             //echo $image_id;//$image_id = $image_id->id;
                         }
@@ -148,7 +151,7 @@ if($_POST['task']=='createComp'){
                         }
                     }
                 }
-            }
+            //}
 
             echo "1";
         }
@@ -171,6 +174,9 @@ if($_POST['task']=='createComp'){
                 $res = mysql_query($query) or die(mysql_error());
             }
             
+             $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$comp_id}', '+91', '{$compphone}', 'cc_phone', {$_SESSION['adminId']}, NOW())";
+              
+             $res3 = mysql_query($query3) or die(mysql_error());
 
 
             $query2 = "INSERT INTO broker_contacts (broker_id, name, type, contact_email, updated_by, created_at, updated_at) values ('{$comp_id}', '{$person}', 'NAgent', '{$email}', {$_SESSION['adminId']}, NOW(), NOW())";
@@ -178,9 +184,7 @@ if($_POST['task']=='createComp'){
             if(mysql_affected_rows()>0){
                
                 $broker_contacts_id = mysql_insert_id();
-                $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$comp_id}', '+91', '{$compphone}', 'cc_phone', {$_SESSION['adminId']}, NOW())";
-              
-                $res3 = mysql_query($query3) or die(mysql_error());
+               
 
                 $query4 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('broker_contacts', '{$broker_contacts_id}', '+91', '{$fax}', 'fax', {$_SESSION['adminId']}, NOW())";
                

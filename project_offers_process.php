@@ -15,7 +15,8 @@
 		'Lakhs' => '100000',
 		'Crores' => '10000000',
 		'Thousands' => '1000',
-		'Hundreds' => '100'
+		'Hundreds' => '100',
+		'' => '1'
     );
     
     if(isset($_POST['btnSave'])){
@@ -229,19 +230,23 @@
 		$offer_price = $project_offers_details[0]->offer_price;$priceDeciUnit='';
 		if($project_offers_details[0]->offer_price_type == 'Absolute'){
 			if($offer_price >=10000000){
-				$priceDeciUnit = 'Crores';
-				$offer_price = $offer_price/10000000;
+			  $priceDeciUnit = 'Crores';
+			  $offer_price = $offer_price/10000000;
 			}elseif($offer_price < 10000000 && $offer_price > 99999){
-				$priceDeciUnit = 'Lakhs';
-				$offer_price = $offer_price/100000;
-			}elseif($offer_price < 100000 && $offer_price > 999){
+			  $priceDeciUnit = 'Lakhs';
+			  $offer_price = $offer_price/100000;
+			}else{
+			  $priceDeciUnit = 'none';	
+			}
+			/*
+			elseif($offer_price < 100000 && $offer_price > 999){
 				$priceDeciUnit = 'Thousands';	
 				$offer_price = $offer_price/1000;
 			}
 			else{
 				$priceDeciUnit = 'Hundreds';	
 				$offer_price = $offer_price/100;
-			}		
+			}		*/
 		}
 	//		print "<pre>".print_r($plp_arr,1)."</pre>";				
 		$smarty->assign("plp_arr",$plp_arr);

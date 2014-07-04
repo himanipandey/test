@@ -223,13 +223,15 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
                 $phase->virtual_save();
 
                  /***********end code related to completion date add/edit**************/
-                if ($_POST['project_type_id'] == '1' || $_POST['project_type_id'] == '3' || $_POST['project_type_id'] == '6') {
+                if ($_POST['project_type_id'] == APARTMENTS || $_POST['project_type_id'] == VILLA_APARTMENTS || $_POST['project_type_id'] == PLOT_APARTMENTS
+                           || $_POST['project_type_id'] == COMMERCIAL || $_POST['project_type_id'] == SHOP || $_POST['project_type_id'] == OFFICE
+                           || $_POST['project_type_id'] == SHOP_OFFICE || $_POST['project_type_id'] == OTHER) {
                     $phase->add_towers($towers);
                 }
             });
-			projectStatusUpdate($projectId); //update project status
-			updateD_Availablitiy($projectId); // update D_availability  
-			
+            projectStatusUpdate($projectId); //update project status
+            updateD_Availablitiy($projectId); // update D_availability  
+
             /***********code related to completion date add/edit**************/
           if($completion_date != '' && $completion_date != '0000-00-00'){  
             $qryFetchPhaseId = "select phase_id from resi_project_phase 
