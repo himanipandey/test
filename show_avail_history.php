@@ -23,8 +23,8 @@ $result = mysql_query($sql);
 if($result){
 	$output = array();
 	$dateArr = array();
-	while($row = mysql_fetch_object($result)){
-		
+	
+	while($row = mysql_fetch_object($result)){		
 		if($row->version == 'PreCms'){
 			$output['PreCms'][$row->effective_month] = $row->availability;
 			$dateArr[] = $row->effective_month;
@@ -35,6 +35,8 @@ if($result){
 			
 	}	
 }
+
+//print "<pre>".print_r($output,1)."</pre>";
 ?>
 <br/>
 &nbsp;&nbsp;<h2>Inventory History For Listing : <?php print $lid ?></h2>
@@ -48,6 +50,7 @@ if($result){
 									<TH class=whiteTxt width=5% align="center"><?php print $val ?></TH>
 								<?php endforeach ?>
 						  </TR>
+						  
 						  <?php if($output){
 							 $count = 0;
 						     foreach($output as $ver=>$avails){
@@ -59,9 +62,9 @@ if($result){
 								}
 								print '<TR '.$color.'>';
 								print '<TD>'.$count .'</TD>';
-								print '<TD>'.$ver.'</TD>';
-								foreach($avails as $date=>$avail){
-									print '<TD>'.$avail.'</TD>';									
+								print '<TD>'.$ver.'</TD>';								
+								foreach($dateArr as $key=>$val){									
+									print '<TD>'.$avails[$val].'</TD>';							
 								}
 								print '</TR>';
 							 }
