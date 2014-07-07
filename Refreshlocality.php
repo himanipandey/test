@@ -15,10 +15,10 @@
 				if(!empty($cityLocality))
 					$getLocality = array_merge($getLocality,$cityLocality);
 			}
-		}else if($_REQUEST["suburb"] == 'include'){	
+		}/*else if($_REQUEST["suburb"] == 'include'){	
 			$getLocality = Locality::getLocalityByCity($ctid);			
 			$getSuburb = Suburb::SuburbArr($ctid);					
-		}
+		}*/
 		else
 			$getLocality = Locality::getLocalityByCity($ctid);							  
 						
@@ -26,10 +26,10 @@
         if($_REQUEST["suburb"] == 'include'){
 			echo  "<select style='min-height:200px' name = 'locality' id = 'locality' onchange = 'localitySelect(this.value);'  multiple>";
 			echo  "<option value=".$ctid.">ALL Localities</option>"; 
-			foreach($getSuburb as $key=>$value)
+			/*foreach($getSuburb as $key=>$value)
 			{
 				echo "<option value=".$key.">". "suburb-" . $value . "</option>";
-			}
+			}*/
 		}else{
 			echo  "<select name = 'locality' id = 'locality' onchange = 'localitySelect(this.value);'>";
 			echo  "<option value=''>Select locality</option>"; 
