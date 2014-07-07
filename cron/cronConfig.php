@@ -112,7 +112,7 @@ $weeklyEmail = array(
                 from resi_project rp join locality l on rp.locality_id = l.locality_id 
                 join suburb s on l.suburb_id = s.suburb_id
                 join city c on s.city_id = c.city_id
-             where 
+             where ( rp.LATITUDE  not in ($latLongList) OR rp.LONGITUDE not in ($latLongList)) and
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and c.city_id in($cityList) having distance >10 ;",
                'subject'=>'PIDs greater than 10km from locality center',
                'recipients'=>array('ankur.dhawan@proptiger.com'), 
