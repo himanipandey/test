@@ -163,7 +163,7 @@ if($_POST['task']=='createComp'){
         
         $query = "INSERT INTO company(type, status, name, description, primary_email, pan, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', NOW(), {$_SESSION['adminId']})";
         
-        $res = mysql_query($query) or mysql_error();
+        $res = mysql_query($query) or die(mysql_error());
         if(mysql_affected_rows()>0){
             $comp_id = mysql_insert_id();
             $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, pincode, updated_by, created_at) values ('company', '{$comp_id}', '{$address}', '{$city}', '{$pin}', {$_SESSION['adminId']}, NOW())";
