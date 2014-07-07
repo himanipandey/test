@@ -112,7 +112,7 @@ $weeklyEmail = array(
                 from resi_project rp join locality l on rp.locality_id = l.locality_id 
                 join suburb s on l.suburb_id = s.suburb_id
                 join city c on s.city_id = c.city_id
-             where 
+             where ( rp.LATITUDE  not in ($latLongList) OR rp.LONGITUDE not in ($latLongList)) and
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and c.city_id in($cityList) having distance >10 ;",
                'subject'=>'PIDs greater than 10km from locality center',
                'recipients'=>array('ankur.dhawan@proptiger.com'), 
@@ -127,7 +127,7 @@ $weeklyEmail = array(
 					INNER JOIN proptiger.RESI_PROJECT rp ON img.object_id = rp.project_id
 					INNER JOIN proptiger.RESI_PROJECT_TYPES rpt ON rp.project_id = rpt.project_id
 					INNER JOIN proptiger.portfolio_listings plst ON rpt.type_id = plst.type_id
-					WHERE  rp.project_status = 'Under Construction'    				  
+					WHERE  rp.project_status = 'Under Construction'  AND rp.active = 1  				  
 				    GROUP BY rp.project_id
 				    HAVING ((created_at NOT BETWEEN (CURRENT_DATE  - INTERVAL 90 DAY)  AND 	CURRENT_DATE) AND created_at < CURRENT_DATE);",
                'subject'=>'Protfolio Projects which dont have Construction Updates since last 3 months',
@@ -143,8 +143,8 @@ $weeklyEmail = array(
 				INNER JOIN proptiger.RESI_PROJECT_TYPES rpt ON rp.project_id = rpt.project_id
 				INNER JOIN proptiger.portfolio_listings plst ON rpt.type_id = plst.type_id
 				WHERE lstp.version = 'Website' AND rpp.status = 'Active' 
-				AND rp.project_status not in ('Cancelled','On Hold','Not Launched')
-				AND (rp.availability is null OR rp.availability > 0)
+				AND rp.project_status not in ('Cancelled','On Hold','Not Launched') 
+				AND (rp.availability is null OR rp.availability > 0)  AND rp.active = 1
 				GROUP BY rp.project_id 
 				HAVING ((effective_date NOT BETWEEN (STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d')  - INTERVAL 90 DAY)
 				AND 
@@ -163,7 +163,7 @@ $weeklyEmail = array(
 				INNER JOIN proptiger.portfolio_listings plst ON rpt.type_id = plst.type_id
 				WHERE lstp.version = 'Website' AND rpp.status = 'Active' 
 				AND rp.project_status not in ('Cancelled','On Hold','Not Launched')
-				AND rp.availability = 0
+				AND rp.availability = 0  AND rp.active = 1
 				GROUP BY rp.project_id 
 				HAVING ((effective_date NOT BETWEEN (STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d')  - INTERVAL 90 DAY)
 				AND 
