@@ -223,7 +223,9 @@ class ProjectSupply extends Objects {
         $supply = intval($supply);
         if ($phaseId == '0')
             $phaseId = NULL;
-        $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType')"));
+       
+        $supply_new = mysql_query("SELECT `project_supplies`.* FROM `project_supplies` join listings l on (l.id = project_supplies.listing_id and l.phase_id = '$phaseId') join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType') WHERE `project_supplies`.`version`='PreCms'");
+       
         if ($supply_new) {
             $supplyId = $supply_new[0]->id;
             $supplyId = $supply_new[0]->id;
