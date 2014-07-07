@@ -519,8 +519,8 @@ function getProjectConstListForManagers($cityId, $suburbId = '', $localityId = '
          GROUP_CONCAT(case when pa.updation_cycle_id is null then '' else pa.updation_cycle_id end order by pa.ID desc separator '|') updation_cycle_id
          from resi_project rp 
          inner join locality l on rp.locality_id = l.LOCALITY_ID 
-         inner join suburb sub on l.suburb_id = sub.suburb_id
-         inner join city c on sub.city_id = c.city_id
+         inner join locality_suburb_mappings lsm on l.locality_id = lsm.locality_id
+         inner join city c on l.city_id = c.city_id
          inner join resi_builder rb on rp.builder_id = rb.builder_id
          inner join process_assignment_system pa ON rp.PROJECT_ID = pa.PROJECT_ID
         left join proptiger_admin pa1 on pa.assigned_to 
@@ -529,7 +529,7 @@ function getProjectConstListForManagers($cityId, $suburbId = '', $localityId = '
     if($cityId != '')
       $sql = $sql." and c.CITY_ID=$cityId";
     if($suburbId!=''){
-        $sql = $sql . " and sub.SUBURB_ID=$suburbId ";
+        $sql = $sql . " and lsm.SUBURB_ID=$suburbId ";
     }
     if($localityId!=''){
         $sql = $sql . " and l.LOCALITY_ID=$localityId ";

@@ -97,8 +97,7 @@
     $QueryMember2 = "Select COUNT(distinct(p.PROJECT_ID)) CNT
                 FROM ".RESI_PROJECT." p 
                 left join locality on p.locality_id = locality.locality_id
-                left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id
+                left join city on locality.city_id = city.city_id
                 left join process_assignment_system pas on p.project_id = pas.project_id
                 left join updation_cycle uc on pas.updation_cycle_id = uc.updation_cycle_id";
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '')
@@ -194,8 +193,7 @@
        $QueryMember1 = "Select p.PROJECT_ID
                 FROM ".RESI_PROJECT." p 
                 left join locality on p.locality_id = locality.locality_id
-                left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id
+                left join city on locality.city_id = city.city_id
                 left join process_assignment_system pas on p.project_id = pas.project_id
                 left join updation_cycle uc on pas.updation_cycle_id = uc.updation_cycle_id";
         $QueryMember1 = $QueryMember1.$QueryMember;
