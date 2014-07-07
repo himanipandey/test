@@ -592,17 +592,19 @@ function assignToDEntryExecutives($projectIds, $executive){
 function getAssignedProjectsConst($adminId=NULL){
     if(is_null($adminId))$adminId = $_SESSION['adminId'];
     $currentUpId = "select updation_cycle_id from process_assignment_system order by updation_cycle_id desc limit 1";
+    //echo $currentUpId."               ";
     $resUpId = mysql_query($currentUpId) or die(mysql_error());
     $dataUpId = mysql_fetch_array($resUpId);
+    if($dataUpId=='') $dataUpId['updation_cycle_id']=0;
     $sql = "select rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, c.LABEL CITY, pa.ASSIGN_TIME 
         ASSIGNMENT_DATE, pa.STATUS, pa.EXECUTIVE_REMARK REMARK,pa.id from process_assignment_system pa 
         inner join resi_project rp on rp.PROJECT_ID = pa.PROJECT_ID
         inner join resi_builder rb on rp.builder_id = rb.builder_id
         inner join locality l on rp.locality_id = l.locality_id
-        inner join suburb s on l.suburb_id = s.suburb_id
-        inner join city c on s.CITY_ID = c.CITY_ID 
+        inner join city c on l.CITY_ID = c.CITY_ID 
         where pa.ASSIGNED_TO = ".$adminId." and pa.STATUS = 'notAttempted' and rp.version = 'Cms' 
             and rp.status in ('ActiveInCms','Active') and pa.updation_cycle_id = ".$dataUpId['updation_cycle_id'];
+            //echo $sql;
     $data =  dbQuery($sql);
     $arrNewData = array();
     foreach($data as $val) {
