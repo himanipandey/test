@@ -6,14 +6,20 @@
 
     $projectId = trim($_REQUEST['projectId']);
     $projectIdArr = array();
+    $notVerifiedPids = array();
     foreach (explode(',', $projectId) as $pid) {
-        $projectIdArr[] = filter_var($pid, FILTER_SANITIZE_NUMBER_INT);
+		//checking ig project is verified or not
+        $is_verified = ProjectSupply::isSupplyLaunchVerified($pid);
+        if($is_verified)
+          $projectIdArr[] = filter_var($pid, FILTER_SANITIZE_NUMBER_INT);
+        else
+          $notVerifiedPids[]= $pid;
     }
     $projectId = implode(',', $projectIdArr);
     
     $smarty->assign("projectId", $projectId);
     $msg = '';
-    if(isset($_REQUEST['submit']))
+    if(isset($_REQUEST['submit']) && $projectId != '')
     {
         $tmpFile = '/tmp/project_ids.txt';
         $handle = fopen($tmpFile, "w");
@@ -30,5 +36,8 @@
         $msg = "Successfully migrated following ProjectIds:<br>$projectId";
 
     }
+    
+    if(count($notVerifiedPids))
+      $smarty->assign("Errmsg", implode(",",$notVerifiedPids)." - These projects are not verified so Not Migrated!");
     $smarty->assign("msg", $msg);
 ?>

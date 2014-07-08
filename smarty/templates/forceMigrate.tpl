@@ -37,8 +37,17 @@
                {if $msg != ''}
                 <tr>
                     <td align = "center" nowrap valign ="top">
-                        <span font color = "green">
+                        <span style="color:green">
                         {$msg}
+                        </span>
+                    </td>
+                </tr>
+               {/if}
+               {if $Errmsg != ''}
+                <tr>
+                    <td align = "center" nowrap valign ="top">
+                        <span style="color:red">
+                        {$Errmsg}
                         </span>
                     </td>
                 </tr>
