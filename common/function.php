@@ -298,8 +298,8 @@ function writeToImageService($imageParams){
   // loop through $data and create curl handles
   // then add them to the multi-handle
 
-
-//print'<pre>';
+//die();
+////print'<pre>';
   //  print_r($postArr); die();
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {

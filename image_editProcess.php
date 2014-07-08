@@ -267,7 +267,7 @@
 							$taggedDate = $arrTaggedDate[$k];
 						else
 							$taggedDate = null;
-
+						$altText = $BuilderName." ".strtolower($ProjectName)." ".$arrTitle[$k];
 					if($_FILES['img']['name'][$k] == ''){
 						$params = array(
 	                        "image" => $file,
@@ -276,6 +276,7 @@
 	                        "service_image_id" => $service_image_id,
 	                        "tagged_date" => $taggedDate,
 	                        "update" => "update",
+	                        "altText" => $altText,
 	                        "jsonDump" => $jsonDump
 	                    );
 						$unitImageArr = array();
@@ -832,7 +833,7 @@
 												$image->load($path);
 												$imgdestpath = $newImagePath.$BuilderName."/".strtolower($ProjectName)."/". str_replace('cluster-plan','cluster-plan-bkp',$file);
 												$image->save($imgdestpath);*/
-												if($arrTitle[$key]==null || empty($arrTitle[$key]))
+												if($arrTitle[$k]==null || empty($arrTitle[$k]))
                                             		$altText = $BuilderName." ".strtolower($ProjectName)." Cluster Plan";
 
 												$params = array(
