@@ -43,6 +43,8 @@ $(document).ready(function(){
             name_startsWith: request.term,
             cityId: window.areaResponse['city'],
             placeType: $("#imgCat :selected").val(),
+            task: "upload_photo_page",
+
           },
           success: function( data ) {
             if(data[0].error){
