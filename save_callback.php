@@ -14,8 +14,10 @@
     $duration = "'$data[Duration]'";
     $dialStatus = "'$data[DialStatus]'";
 
-    $audio_file = file_get_contents($url);
-    file_put_contents('tmpfile.mp3', $audio_file, LOCK_EX);
+    //$audio_file = file_get_contents($url);
+    //$audio_file = file_get_contents($audio);
+    //file_put_contents('tmpfile.mp3', $audio_file, LOCK_EX);
+    file_put_contents('tmpfile.mp3', $audio, LOCK_EX);
 // save to proptiger image service
 
     $media_extra_attributes = array('startTime'=>$st, 'endTime'=>$et, 'callDuration'=>$duration, 'dialStatus'=>$dialStatus);
