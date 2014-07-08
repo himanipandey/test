@@ -13,7 +13,7 @@ error_reporting(1);
 
 
 $cityId = $_GET['cityid'];
-if(isset($_GET['subid'])){
+/*if(isset($_GET['subid']) && $_GET['subid'] !==''){
   $subid = $_GET['subid'];
   $label = $_GET['label'];
   $parentid = $_GET['pid'];
@@ -25,12 +25,12 @@ if(isset($_GET['subid'])){
   $json = json_encode($arr[0]);
   $loc_counter = $arr[1];
 }
-else{
+else{*/
  $arr = getHierArr($cityId);
  $json = json_encode($arr[0]);
 
   $loc_counter = $arr[1];
-}
+//}
 $node_max = $arr[2]+1;
 
 //echo $loc_counter;

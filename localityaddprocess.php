@@ -269,7 +269,7 @@
            $getLandmarkAliasesArr = getLandmarkAliases('locality', $localityid);
            $landmarkJson = json_encode($getLandmarkAliasesArr);
            $smarty->assign("landmarkAliases", $getLandmarkAliasesArr);
-           $smarty->assign("landmarkJson", $landmarkJson);echo $landmarkJson;
+           $smarty->assign("landmarkJson", $landmarkJson);
             // get suburb to display hierarchy
             $qry = "select lsm.SUBURB_ID, s.LABEL, s.parent_suburb_id FROM locality_suburb_mappings lsm inner join suburb s on s.suburb_id=lsm.suburb_id 
             WHERE lsm.locality_id='".$localityid ."' and  s.STATUS = 'Active' ORDER BY s.LABEL ASC";
