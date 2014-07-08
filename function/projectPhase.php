@@ -141,9 +141,15 @@ function projectPreLaunchDateUpdate($projectId){
 	$no_of_phases = mysql_fetch_object($phase_created)->cnt;
 	
   if($no_of_phases > 0){
-	$preDate_sql = mysql_fetch_object(mysql_query("SELECT PRE_LAUNCH_DATE FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.PRE_LAUNCH_DATE<>'0000-00-00' AND `resi_project_phase`.status = 'Active' ORDER BY PRE_LAUNCH_DATE ASC LIMIT 1")) or die(mysql_error());	
+	$pre_launch_date = '0000-00-00';
+	$preDate_sql = mysql_query("SELECT PRE_LAUNCH_DATE FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.PRE_LAUNCH_DATE<>'0000-00-00' AND `resi_project_phase`.status = 'Active' ORDER BY PRE_LAUNCH_DATE ASC LIMIT 1") or die(mysql_error());	
 	
-	mysql_query("update resi_project set PRE_LAUNCH_DATE = '$preDate_sql->PRE_LAUNCH_DATE' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
+	if($preDate_sql){
+	  $preDate_sql = mysql_fetch_object($preDate_sql);
+	  $pre_launch_date = $preDate_sql->PRE_LAUNCH_DATE;
+	}
+	  
+	mysql_query("update resi_project set PRE_LAUNCH_DATE = '$pre_launch_date' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
 	    
   }else{
      mysql_query("update resi_project set PRE_LAUNCH_DATE = (select PRE_LAUNCH_DATE from resi_project_phase where phase_type = 'Logical' and project_id = '$projectId'and version = 'Cms') where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());
