@@ -46,6 +46,7 @@ else if(!empty($_REQUEST['bank'])) {
     $objectType = 'bank';
     $obj = 'BANK_ID';
 }
+// this upload photo is not being used..All photo upload from uploadFromImageService function in common/functions.php
 if ( !empty( $_REQUEST['upPh'] ) ) {
     $upPh = $_REQUEST['upPh'];
     $upPh = json_decode( $upPh, TRUE );
