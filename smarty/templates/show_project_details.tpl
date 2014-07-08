@@ -2740,7 +2740,7 @@ function broker_call_edit(callId, brokerId)
                                                                                 {$totalLaunchedFlat = 0}
                                                                                 {$totalEditedLaunchedFlat = 0}
 										{$totalSumflatAvail = 0}
-										{foreach from = $supplyAllArray key=key item = item}
+                                                                               {foreach from = $supplyAllArray key=key item = item}
 											{$totalNoOfFlatsPPhase = 0}
                                                                                         {$totalEditedNoOfFlatsPPhase = 0}
                                                                                         {$totalLaunchedFlatsPPhase = 0}

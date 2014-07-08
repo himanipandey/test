@@ -213,6 +213,7 @@ if ($_POST['btnSave'] == "Save")
                 $name	=	$_FILES["txtBuilderImg"]["name"];
                $dest       =   $newImagePath.$foldername."/".$name;
                 $move       =   move_uploaded_file($_FILES['txtBuilderImg']['tmp_name'],$dest);
+                $altText = $txtBuilderName;
                 if (($_FILES["txtBuilderImg"]["type"]) && $move)
                 {
                         
@@ -224,6 +225,7 @@ if ($_POST['btnSave'] == "Save")
                         "title" => strtolower($legalEntity),
                         "service_image_id" => $_REQUEST['serviceImageId'],
                         "update" => "update",
+                        "altText" => $altText,
                     );
                     $postArr = array();
                     $unitImageArr = array();

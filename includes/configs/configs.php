@@ -2,14 +2,13 @@
 ob_start();
 session_start();
 
-
 /*****************config for project tower facing***************/
-$arr_proj_facing	=	array("EAST","WEST","SOUTH","NORTH","NORTH EAST","NORTH WEST","SOUTH NORTH","WEST NORTH");
+$arr_proj_facing = array("EAST","WEST","SOUTH","NORTH","NORTH EAST","NORTH WEST","SOUTH NORTH","WEST NORTH");
 $smarty->assign("arr_proj_facing", $arr_proj_facing);
 
 /*****************end config for project tower facing***************/
 	/***************Array for banner location*****************/
-	$BANNER_LOCATION_ARRAY	=	array(0=>"Left_Panel",1=>"Box_Panel",2=>"Header",3=>"Proj_Left_Panel",4=>"Homepage_Banner",5=>"Homepage_Flash",6=>"Homepage_Box",7=>"Footer_Panel");
+	$BANNER_LOCATION_ARRAY	= array(0=>"Left_Panel",1=>"Box_Panel",2=>"Header",3=>"Proj_Left_Panel",4=>"Homepage_Banner",5=>"Homepage_Flash",6=>"Homepage_Box",7=>"Footer_Panel");
 	$smarty->assign("BANNER_LOCATION_ARRAY", $BANNER_LOCATION_ARRAY);
 
 	/*************No of days for order date selection******************/
@@ -608,6 +607,22 @@ define('PLOTS','4');
 define('PLOT_VILLAS','5');
 define('PLOT_APARTMENTS','6');
 define('COMMERCIAL','7');
+define('SHOP','8');
+define('OFFICE','9');
+define('SHOP_OFFICE','10');
+define('OTHER','11');
+$smarty->assign("APARTMENTS",APARTMENTS);
+$smarty->assign("VILLA",VILLA);
+$smarty->assign("VILLA_APARTMENTS",VILLA_APARTMENTS);
+$smarty->assign("PLOTS",PLOTS);
+$smarty->assign("PLOT_VILLAS",PLOT_VILLAS);
+$smarty->assign("PLOT_APARTMENTS",PLOT_APARTMENTS);
+$smarty->assign("COMMERCIAL",COMMERCIAL);
+$smarty->assign("SHOP",SHOP);
+$smarty->assign("OFFICE",OFFICE);
+$smarty->assign("SHOP_OFFICE",SHOP_OFFICE);
+$smarty->assign("OTHER",OTHER);
+
 
 
 $ARR_PROJ_EDIT_PERMISSION = array(
@@ -628,7 +643,7 @@ $smarty->assign("arrProjEditPermission", $ARR_PROJ_EDIT_PERMISSION[$dept]);
 
 $arrImg = array("image/gif","image/png","image/jpg","image/jpeg");
 
-$arrType = array("Location Plan"=>"loc-plan","Layout Plan"=>"layout-plan","Site Plan"=>"site-plan","Master Plan"=>"master-plan","Project Image"=>"large","Cluster Plan"=>"cluster-plan","Construction Status"=>"const-status","Payment Plan"=>"payment-plan","Specification"=>"specification","Price List"=>"price-list","Application Form"=>"app-form");
+$arrType = array("Location Plan"=>"loc-plan","Layout Plan"=>"layout-plan","Site Plan"=>"site-plan","Master Plan"=>"master-plan","Elevation"=>"large", "Amenities"=>"large", "Main Other"=>"large", "Cluster Plan"=>"cluster-plan","Construction Status"=>"const-status","Payment Plan"=>"payment-plan","Specification"=>"specification","Price List"=>"price-list","Application Form"=>"app-form");
 
 /**************Authentication*************/
 $accessModule = array();
@@ -702,4 +717,21 @@ $arrOfferTypes = array(
     'Other'=>'Offer'
   );
 
+
+/********config for project type of residential/nonresidential******************/
+$qryType = "select project_type_id,type_name from resi_project_type order by type_name asc";
+$resType = mysql_query($qryType) or die(mysql_error()); 
+$arrResidentialType = array();
+$arrCommercialType = array();
+while($ProjectType = mysql_fetch_assoc($resType)){
+    if($ProjectType['project_type_id']<=7)
+        $arrResidentialType[$ProjectType['project_type_id']] = $ProjectType['type_name'];
+    else
+        $arrCommercialType[$ProjectType['project_type_id']] = $ProjectType['type_name'];
+}
+$smarty->assign("arrResidentialType",$arrResidentialType);
+$smarty->assign("arrCommercialType",$arrCommercialType);
+$arrAllType = array("Shop","Office",'Other','Commercial');
+$smarty->assign("arrAllType",$arrAllType);
+/********config for project type of residential/nonresidential******************/
 ?>

@@ -166,7 +166,6 @@
                       <TABLE cellSpacing=2 cellPadding=4 width="100%" align=center  style="border:1px solid #c2c2c2;">
 
                       <div>
-
                          {foreach from = $ErrorMsg  key=k item = datafirst}
                             <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                     <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
@@ -194,7 +193,7 @@
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bedrooms</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
-                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
+                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
                           <!-- <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
@@ -403,7 +402,6 @@
 						  <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
 
                       <div>
-
                               {foreach from = $ErrorMsg  key=k item = datafirst}
                                 <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                         <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
@@ -428,7 +426,7 @@
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bedrooms</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
                               <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
-                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size</td>
+                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
                               <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
@@ -477,8 +475,13 @@
                               <td align="center">
                                     
                                   <input type = "hidden" name = "bed_{($smarty.section.foo.index+1)}_old" id = "bed_{($smarty.section.foo.index+1)}_old" value ="{$bedval_VA[$new_index]}">
-                                  
-                                    <select id="bed_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bed_{($smarty.section.foo.index+1)}',{$edit_project}), show_add({$smarty.section.foo.index}); fillUnitName({$smarty.section.foo.index});" tempName="bed" name = 'bed[]' style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$bedval_VA[$new_index]} == '') OR !is_numeric({$bedval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
+                                    <select id="bed_{($smarty.section.foo.index+1)}"  onchange = "onChangeAction('bed_{($smarty.section.foo.index+1)}',{$edit_project}),
+                                        show_add({$smarty.section.foo.index}); fillUnitName({$smarty.section.foo.index});" 
+                                        tempName="bed" name = 'bed[]' style="width:100px;border:1px solid 
+                                        {if ({count($pid)} != 0)}
+                                           {if ({count($pid)} >= {$var}) && (({$bedval_VA[$new_index]} == '') OR 
+                                             !is_numeric({$bedval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} 
+                                         {else}#c3c3c3 {/if};">
                                         <option value = "0">Select</option>
                                         <option {if $bedval_VA[$new_index] == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>1</option>
                                         <option {if $bedval_VA[$new_index] == '2'} value = "2" selected = 'selected' {else} value = "2" {/if}>2</option>
@@ -645,15 +648,11 @@
                           <option {if $statusval_VA[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
                       </select> -->
                     </td>
-
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid #FF0000"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
-
-
-
                             </tr>
                             {/section}
 
@@ -662,47 +661,60 @@
                     </TABLE>
                     {/if}
 
-                    {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeP || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV || $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeC}
-                        {$typeName = 'Plot'}
+                    {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeP || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV || $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeC
+                      || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOFFICE 
+                      || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP_OFFICE || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOTHER}
+                        {$typeName = ''}
+
                         {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeC}
                             {$typeName = 'Commercial'}
+                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeSHOP}
+                               {$typeName = 'Shop'}
+                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeOFFICE}
+                               {$typeName = 'Office'}
+                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeSHOP_OFFICE}
+                               {$typeName = 'Shop Office'}
+                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typePV}
+                               {$typeName = 'Plot'}
+                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typePA}
+                               {$typeName = 'Plot'} 
+                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeP}
+                               {$typeName = 'Plot'}
+                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeOTHER}
+                               {$typeName = 'Other'}       
                         {/if}
+                        
                       <br />
                       <TABLE cellSpacing=2 cellPadding=4 width="60%" align="left" style="border:1px solid #c2c2c2;" border="0">
                         <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
-                        
-                        <div>  
-                        
-                        
-                        {if $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeP || $ProjectDetail[0]['PROJECT_TYPE_ID']== $typeC}
-                           {foreach from = $ErrorMsg  key=k item = datafirst}
+                        <div>
+                            {if ($ProjectDetail[0]['PROJECT_TYPE_ID']!=$typePA && $ProjectDetail[0]['PROJECT_TYPE_ID']!=$typePV)}
+                                {foreach from = $ErrorMsg  key=k item = datafirst}
+
                                 <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                         <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
                                         {else if $k == 3} Fourth row errors {else if $k == 4} Fifth row errors {else if $k == 5} Sixth row errors {else if $k == 6} Seventh row errors
                                         {else if $k == 7} Eighth row errors {else if $k == 8} Ninth row errors {else if $k == 9} Tenth row errors {/if}</font></th>
 
-                                </tr>
-
-                            <tr id="row_{$k}" ><td colspan="15"><font color="red">{$datafirst}</font></td></tr>
-
-
-                              {/foreach}
-                            {/if}
+                                    </tr>
+                                <tr id="row_{$k}" ><td colspan="15"><font color="red">{$datafirst}</font></td></tr>
+                                  {/foreach}
+                           
+                           {/if}
+                           
                             <tr><td colspan="7"><b><span style='font-size:15px;'>{$typeName}</span></b></td></tr>
 
                             <tr><td colspan="7"></td></tr>
 
                             <tr class = "headingrowcolor" >
-                                 <td  nowrap="nowrap" width="1%" align="center" class="whiteTxt">Delete</td>
+                                <td  nowrap="nowrap" width="1%" align="center" class="whiteTxt">Delete</td>
                                 <td nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                                 <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                                 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size(Length)</td>
                                 <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size(Breadth)</td>
                                 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td> -->
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Area</td>
-                                <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Property Status</td> -->
                             </tr>
-
                             {section name=foo start= {$looprange} loop={$looprange+15} step=1}
                                 {$var	=$var+1}
                                 
@@ -717,53 +729,52 @@
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
-                              <!--<td align="center">
-                                {if $flg != 0}
-                                    {$new_index = $smarty.section.foo.index-15}
-                                {else}
-                                    {$new_index = $smarty.section.foo.index}
-                                {/if}
-                                     <span {if ($txtUnitNameval_P[$new_index] =='') && ($edit_project == '')}style = "display:none;" {/if} id = "add_{($smarty.section.foo.index+1)}" class="insertProject" rel="{($smarty.section.foo.index+1)}"><a href='#' >Add</a></span>
-                              </td>-->
-                              <td>
-                                  {if $typeName == 'Commercial'}
+                                <td>
+                                   {if ($ProjectDetail[0]['PROJECT_TYPE_ID'] == $typePA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV) && array_key_exists(15,$txtSizeBre_P)}
+                                        {$keyValueForName = $var-1}
+                                        {$keyValueForSize = $var-1}
+                                   {else}
+                                        {$keyValueForName = $smarty.section.foo.index}
+                                        {$keyValueForSize = $new_index}
+                                   {/if}
+                                    {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typePA  && !array_key_exists(15,$txtSizeBre_P)}{$keyValueForName = $new_index}{/if}
+                                  {if $typeName == 'Commercial' || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOFFICE
+                                       || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOTHER 
+                                      || $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP_OFFICE}
                                     <select name="txtUnitName[]" id="txtUnitName_{($smarty.section.foo.index+1)}">
                                         <option value="">Select Name</option>
-                                        <option value="shops" {if $txtUnitNameval_P[$new_index] == 'shops'}selected{/if}>Shops</option>
-                                        <option value="office" {if $txtUnitNameval_P[$new_index] == 'office'}selected{/if}>Office</option>
-                                        <option value="serviced appt" {if $txtUnitNameval_P[$new_index] == 'serviced appt'}selected{/if}>Serviced Appt.</option>
+                                        {if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP}
+                                            <option value="Shop" {if $txtUnitName_P[$new_index] == 'Shop'}selected{/if}>Shop</option>
+                                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOFFICE}
+                                            <option value="Office" {if $txtUnitName_P[$new_index] == 'Office'}selected{/if}>Office</option>
+                                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeOTHER}
+                                            <option value="Other" {if $txtUnitName_P[$new_index] == 'Other'}selected{/if}>Other</option>    
+                                        {else if $ProjectDetail[0]['PROJECT_TYPE_ID'] == $typeSHOP_OFFICE || $typeName == 'Commercial'}
+                                            <option value="Shop" {if $txtUnitName_P[$new_index] == 'Shop'}selected{/if}>Shop</option>
+                                            <option value="Office" {if $txtUnitName_P[$new_index] == 'Office'}selected{/if}>Office</option>    
+                                        {/if}
                                     </select>
                                   {else}
-                                      <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
+                                      <select name="txtUnitName[]" id="txtUnitName_{($smarty.section.foo.index+1)}">
+                                          <option value="">Select Name</option>
+                                          <option value="Plots" {if $txtUnitName_P[$keyValueForName] != ''}selected{/if}>Plots</option>
+                                       </select>    
                                   {/if}
-                                    <input type='hidden' value={$projectId} name='projectId' tempName="projectId"   />
-                                    <input type='hidden' value='{$typeName}' name='unitType[]' tempName="unitType"   />
+                                    <input type='hidden' value={$projectId} name='projectId' tempName="projectId" />
+                                    <input type='hidden' value='{$typeName}' name='unitType[]' tempName="unitType" />
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
-                                   <!-- <input type=text tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">-->
                               </td>
                               <td align="left" >
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeLenval_P[$new_index]} == '') OR !is_numeric({$txtSizeLenval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLen_P[$keyValueForSize]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
                               </td>
                               <td align="left" >
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeBreval_P[$new_index]} == '') OR !is_numeric({$txtSizeBreval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBre_P[$keyValueForSize]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
                               </td>
-                              <!--
+                              
                               <td>
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitArea[] id="txtPricePerUnitArea{($smarty.section.foo.index+1)}"  tempName="txtPricePerUnitArea_P" value="{$txtPricePerUnitAreaval_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtPricePerUnitAreaval_P[$new_index]} == '') OR !is_numeric({$txtPricePerUnitAreaval_P[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" readonly="">
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$keyValueForSize]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
                               </td>
-                              -->
-                              <td>
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
-                              </td>
-                              <!--
-                              <td>
-                                <select tempName="propstatus"  name = propstatus[] style="border:1px solid #c3c3c3;">
-                                    <option value = "Available">Select</option>
-                                    <option {if $statusval_P[$new_index] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
-                                    <option {if $statusval_P[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
-                                </select>
-                              </td>
-                              -->
+                             
                             </tr>
                         {/section}
 

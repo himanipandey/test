@@ -28,10 +28,11 @@
       	value = $("#options_"+c+" option:selected").text().trim();
       	
       	$('<option>').val("0").text("Select Floor Plan Name").appendTo('#floor_name_'+c);
-      	if(value == "Floor Plan" || value == "Simplex"){
+      	/*if(value == "Floor Plan" || value == "Simplex"){
       		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
-      	else if(value == "Basement Floor" || value == "Stilt Floor" || value == "First Floor" || value == "Second Floor"|| value == "Third Floor" || value == "Terrace Floor" )
+      	else*/ 
+        if(value == "Basement Floor" || value == "Stilt Floor" || value == "First Floor" || value == "Second Floor"|| value == "Third Floor" || value == "Terrace Floor" )
       		$('<option>').val(value+" Plan").text(value+" Plan").appendTo('#floor_name_'+c);
       	else if(value== "Duplex"){
       		{foreach from=$duplex item=data}
@@ -52,6 +53,9 @@
       		{foreach from=$ground_floor item=data}
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
 			{/foreach}
+      	}
+        else if(value == "Floor Plan" || value == "Floor Plan"){
+      		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
 
       	$("#floor_name_"+c+" option").each(function() {

@@ -1,8 +1,16 @@
 <?php
 
+require_once dirname(__FILE__).'/../log4php/Logger.php';
 class ImageServiceUpload{
 
+    //logging of image params
+
+    
+    //$logger->info(" NEAR PLACES SCRIPT STARTED ");
+    
+
     static $image_upload_url = IMAGE_SERVICE_URL;
+
     static $valid_request_methods = array("POST", "PUT", "DELETE");
     static $object_types = array("project" => "project",
         "option" => "property",
@@ -11,9 +19,18 @@ class ImageServiceUpload{
         "bank" => "bank",
         "city" => "city",
         "suburb" => "suburb",
-        "landmark" => "landmark"
+        "landmark" => "landmark",
+        "company" => "company"
     );
-
+    static $sec_image_types = array(
+        "project" => array(
+            "project_image" => array(
+                "Elevation"=> "Elevation",
+                "Amenities"=>"Amenities", 
+                "Main Others"=>"mainOthers"
+            ),
+        ),
+    );
     static $image_types = array(
         "project" => array(
             "location_plan" => "locationPlan",
@@ -26,7 +43,10 @@ class ImageServiceUpload{
             "specification" => "specification",
             "price_list" => "priceList",
             "application_form" => "applicationForm",
-            "project_image" => "main"
+            "project_image" => "main",
+            "elevation"=> "main",
+            "amenities"=>"amenities", 
+            "main_other"=>"mainOther"
         ),
         "option" => array("floor_plan" => "floorPlan"),
         "builder" => array("builder_image" => "logo"),
@@ -104,10 +124,13 @@ class ImageServiceUpload{
             "shopping_mall" => "shopping_mall",
             "grocery_or_supermarket" => "grocery_or_supermarket",
             "office_complex" => "office_complex",
-           
-            
+            "road" => "road",
+            "hotel" => "hotel",
+            "commercialcomplex" => "commercialComplex"
         ),
-        "bank" => array("logo" => "logo"));
+        "bank" => array("logo" => "logo"),
+        "company" => array("logo" => "logo")
+        );
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;
@@ -120,6 +143,8 @@ class ImageServiceUpload{
         $this->errors = array();
         if(isset($image))
         $this->validate();
+        Logger::configure( dirname(__FILE__) . '/../log4php.xml');
+        $this->logger = Logger::getLogger("main");
     }
 
     function upload(){
@@ -133,12 +158,46 @@ class ImageServiceUpload{
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
 
-        if($this->method == "DELETE")
+
+
+
+        
+
+
+        if($this->method == "DELETE"){
+
             $response = static::delete($this->image_id, $params);
-        elseif($this->method == "PUT")
+            $this->logger->info("Method: DELETE");
+            $url = static::join_urls(self::$image_upload_url, $this->image_id);
+            $this->logger->info("Url: {$url}");
+        }
+        elseif($this->method == "PUT"){
             $response = static::update($this->image_id, $params);
-        else
+            $this->logger->info("Method: PUT");
+            if($params['image']=='')
+                $this->logger->info("Update with no Image.");
+            else
+                $this->logger->info("Update with Image.");
+            $url = static::join_urls(self::$image_upload_url, $this->image_id);
+            $this->logger->info("Url: {$url}");
+        }
+        else{
             $response = static::create($params);
+            $this->logger->info("Method: POST");
+            $url = self::$image_upload_url;
+            $this->logger->info("Url: {$url}");
+        }
+
+        
+        $this->logger->info("Parameters:");
+        foreach ($params as $k => $v) {
+            $this->logger->info("{$k} => {$v}");
+        }
+        
+        $this->logger->info("");
+        $this->logger->info("");
+        $this->logger->info("");
+
         //$this->response_header = $response["header"];
         //$this->response_body = $response["body"];
         //$this->status = $response["status"];
@@ -185,6 +244,7 @@ class ImageServiceUpload{
     static function create($post){
         
         //print("<pre>");var_dump($post);var_dump(static::$image_upload_url);die("heool-create");
+        
         $returnArr = array();
         $returnArr = array("params" => $post, "method" => 'POST', "url" => static::$image_upload_url);
         //print("<pre>");var_dump($returnArr); die("create");
