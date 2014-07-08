@@ -50,7 +50,7 @@ if ($_POST['btnSave'] == "Save")
 	$debt				=	trim($_POST['debt']);
     $imgSrc               =   trim($_POST['imgSrc']);
     $alt_text               =   trim($_POST['alt_text']);
-    $service_image_id      =   trim($_POST['service_image_id']);
+    $service_image_id      =   trim($_POST['serviceImageId']);
 
 	
 	$smarty->assign("txtBuilderName", $txtBuilderName);
