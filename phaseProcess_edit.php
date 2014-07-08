@@ -178,6 +178,7 @@ if (isset($_REQUEST['delete'])) {
 				   where PROJECT_ID = $projectId and version = 'Cms'";
 		mysql_query($qry) OR DIE(mysql_error());
 		
+		projectPreLaunchDateUpdate($projectId); //updating preLaunch date
 		projectStatusUpdate($projectId); //update project status	
 		updateD_Availablitiy($projectId); // update D_availability 	
 				
@@ -240,6 +241,7 @@ if ($_SERVER['REQUEST_METHOD']) {
     $smarty->assign("bookingStatus", $current_phase[0]['BOOKING_STATUS_ID']);
     $smarty->assign("construction_status", $current_phase[0]['construction_status']);
     $smarty->assign("phasename", $current_phase[0]['PHASE_NAME']);
+    $smarty->assign("phase_pre_launch_date", $current_phase[0]['PRE_LAUNCH_DATE']);
     $smarty->assign("launch_date", $current_phase[0]['LAUNCH_DATE']);
     $smarty->assign("completion_date", $current_phase[0]['COMPLETION_DATE']);
     $projectDetail = projectDetailById($projectId);
@@ -271,8 +273,9 @@ if (isset($_POST['btnSave'])) {
     $phasename = $_REQUEST['phaseName'];
     $launch_date = $_REQUEST['launch_date'];
     $completion_date = $_REQUEST['completion_date'];
-    $construction_status = $_REQUEST['construction_status'];    
-    $pre_launch_date = $_REQUEST['pre_launch_date'];
+    $construction_status = $_REQUEST['construction_status'];
+    $pre_launch_date = $_REQUEST['pre_launch_date'];    
+    $phase_pre_launch_date = $_REQUEST['phase_pre_launch_date'];
     $towers = $_REQUEST['towers'];  // Array
     $remark = $_REQUEST['remark'];
     $isLaunchedUnitPhase = $_REQUEST['isLaunchUnitPhase'];
@@ -300,6 +303,8 @@ if (isset($_POST['btnSave'])) {
             $completion_date = '';
         if($pre_launch_date == '0000-00-00')
             $pre_launch_date = '';
+        if($phase_pre_launch_date == '0000-00-00')
+            $phase_pre_launch_date = '';
         if($sold_out_date == '0000-00-00')
             $sold_out_date = '';
         if($construction_status == ""){
@@ -309,16 +314,32 @@ if (isset($_POST['btnSave'])) {
             $retdt  = ((strtotime($completion_date)-strtotime($launch_date))/(60*60*24));
             if( $retdt <= 180 ) {
                 $error_msg = 'Launch date should be atleast 6 month less than completion date';
-            }
-            
+            }            
         }
-        if( $pre_launch_date != '' && $launch_date !=''  && $phasename == 'No Phase' ) {
-            $retdt  = ((strtotime($launch_date) - strtotime($pre_launch_date)) / (60*60*24));
+        //project preLaunch Validation
+        $project_pre_launch_date = $pre_launch_date;
+        if($phase_pre_launch_date < $pre_launch_date)
+          $project_pre_launch_date = $phase_pre_launch_date;        
+        if($project_pre_launch_date != '' && $launch_date !='') {
+            $retdt  = ((strtotime($launch_date) - strtotime($project_pre_launch_date)) / (60*60*24));
             if( $retdt <= 0 ) {
-                $error_msg = "Launch date to be always greater than Pre Launch date";
+                $error_msg = "Launch date to be always greater than Pre Launch date for Project";
+            }            
+        }
+        ///////////////////////////// 
+        if( $project_pre_launch_date != '' && $completion_date !='') {
+                $retdt  = ((strtotime($completion_date) - strtotime($project_pre_launch_date)) / (60*60*24));
+                if( $retdt <= 0 ) {
+                    $error_msg = "Completion date to be always greater than Pre Launch date";
+                }
+         }
+        if( $phase_pre_launch_date != '' && $launch_date !='') {
+            $retdt  = ((strtotime($launch_date) - strtotime($phase_pre_launch_date)) / (60*60*24));
+            if( $retdt <= 0 ) {
+                $error_msg = "Launch date to be always greater than Pre Launch date for Phase";
             }
             
-        } 
+        }        
         if( $launch_date != '' && $_REQUEST['phaseName'] == 'No Phase') {
             $retdt  = ((strtotime($launch_date) - strtotime(date('Y-m-d'))) / (60*60*24));
             if( $retdt > 0 ) {
@@ -409,14 +430,16 @@ if (isset($_POST['btnSave'])) {
             else if (intval($yearExp[0]) > intval(date("Y")) ) {
                 $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
             }			
-		}elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
+		}elseif( $construction_status == PRE_LAUNCHED_ID_8 && $phase_pre_launch_date == '') { 
+           $error_msg = "Phase Status can not be Pre Launched in case of Pre Launched Date is blank.";
+        }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
            $error_msg = "Launch date should blank in case of Construction Status is Pre Launched.";
         }
         if($error_msg == ''){
 			if( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != '') {
 			  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 
 			}
-			elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['PRE_LAUNCH_DATE'] == '') {
+			elseif( $project_status == PRE_LAUNCHED_ID_8 && $project_pre_launch_date == '') {
 			   $error_msg = "Project Status can not be Pre Launched in case of Pre Launched Date is blank.";	 
 			}elseif(($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) && $projectDetail[0]['PROMISED_COMPLETION_DATE'] != ''){
 				$yearExp = explode("-",$projectDetail[0]['PROMISED_COMPLETION_DATE']);
@@ -465,12 +488,13 @@ if (isset($_POST['btnSave'])) {
             // Update
             ############## Transaction ##############
             ResiProjectPhase::transaction(function(){
-                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date, $construction_status;
+                global $projectId, $phaseId, $phasename, $launch_date, $remark, $towers, $sold_out_date, $construction_status,$phase_pre_launch_date;
                 if($phaseId != '0'){
                     //          Updating existing phase
                     $phase = ResiProjectPhase::virtual_find($phaseId);
                     $phase->project_id = $projectId;
                     $phase->phase_name = $phasename;
+                    $phase->pre_launch_date = $phase_pre_launch_date;
                     $phase->launch_date = $launch_date;
                     $phase->remarks = $remark;
                     $phase->sold_out_date = $sold_out_date;
@@ -505,6 +529,7 @@ if (isset($_POST['btnSave'])) {
                     }
                 }
             });
+             projectPreLaunchDateUpdate($projectId); //updating preLaunch date
              projectStatusUpdate($projectId); //update project status
              updateD_Availablitiy($projectId); // update D_availability  
             #########################################

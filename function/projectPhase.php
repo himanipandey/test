@@ -131,5 +131,24 @@ function fetch_project_status($projectId,$construction_status = '',$phaseId = ''
 	
 	return $project_status;
 }
+function projectPreLaunchDateUpdate($projectId){
+  $no_of_phases = 0;
+  $condition = '';
+	
+  $phase_created = mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());
+	
+  if($phase_created)
+	$no_of_phases = mysql_fetch_object($phase_created)->cnt;
+	
+  if($no_of_phases > 0){
+	$preDate_sql = mysql_fetch_object(mysql_query("SELECT PRE_LAUNCH_DATE FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active' ORDER BY PRE_LAUNCH_DATE ASC LIMIT 1")) or die(mysql_error());	
+	
+	mysql_query("update resi_project set PRE_LAUNCH_DATE = '$preDate_sql->PRE_LAUNCH_DATE' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
+	    
+  }else{
+     mysql_query("update resi_project set PRE_LAUNCH_DATE = (select PRE_LAUNCH_DATE from resi_project_phase where phase_type = 'Logical' and project_id = '$projectId'and version = 'Cms') where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());
+  }
+	
+}
 /* * *********************************** */
 ?>

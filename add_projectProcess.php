@@ -653,6 +653,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                $phase->phase_name = 'No Phase';
                $phase->phase_type = 'Logical';
                $phase->completion_date = $eff_date_to_prom;
+               $phase->pre_launch_date = $pre_launch_date;
                $phase->launch_date = $eff_date_to;
                $phase->status = 'Active';
                $phase->booking_status_id = 1;
