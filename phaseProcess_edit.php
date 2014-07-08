@@ -318,7 +318,7 @@ if (isset($_POST['btnSave'])) {
         }
         //project preLaunch Validation
         $project_pre_launch_date = $pre_launch_date;
-        if($phase_pre_launch_date < $pre_launch_date)
+        if($phase_pre_launch_date < $pre_launch_date && $phase_pre_launch_date != '')
           $project_pre_launch_date = $phase_pre_launch_date;        
         if($project_pre_launch_date != '' && $launch_date !='') {
             $retdt  = ((strtotime($launch_date) - strtotime($project_pre_launch_date)) / (60*60*24));
