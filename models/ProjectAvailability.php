@@ -69,19 +69,19 @@ class ProjectAvailability extends Model {
 		    $cms_listing_ids[] = $value->listing_id;
 		  }
 		  $cms_listing_ids = implode(",",$cms_listing_ids);
-		  $website_supplies = ProjectSupply::find_by_sql("select * from ". ProjectSupply::table_name() ." where listing_id in ($cms_listing_ids) and version='Webiste'");
+		  $website_supplies = ProjectSupply::find_by_sql("select * from ". ProjectSupply::table_name() ." where listing_id in ($cms_listing_ids) and version='Website'");
 		   if($website_supplies){
 			  foreach($website_supplies as $key=>$value){
 				$web_listing_ids[] = $value->listing_id;
 			  }			 
 		   }
 		   $cms_listing_ids = explode(",",$cms_listing_ids);
-		   $final_arr = array_diff($cms_listing_ids,$web_listing_ids);		  
+		   $final_arr = array_diff($cms_listing_ids,$web_listing_ids);	  
 		  if($final_arr){
 			 //need to create project_supplies for website those are not exists
 			 foreach($cms_supplies as $key=>$value){
 			    if(in_array($value->listing_id,$final_arr)){
-					$attributes = array('listing_id'=>$value->listing_id, 'supply'=>$value->supply, 'launched'=>$value->launched, 'updated_by'=>$_SESSION['adminId'], 'updated_at'=>date('Y-m-d H:i:s'), 'created_at' => date('Y-m-d H:i:s'));
+					$attributes = array('listing_id'=>$value->listing_id, 'supply'=>$value->supply, 'launched'=>$value->launched, 'updated_by'=>$value->updated_by, 'updated_at'=>$value->updated_at, 'created_at' => $value->created_at);
 					$attributes['version'] = 'Website';
 					$web_supply_new = ProjectSupply::create($attributes);
 					$web_supply_new->save();								
