@@ -38,7 +38,7 @@ if($_POST['task']=='createComp'){
     $pan   = $_POST['pan'];
     $status   = $_POST['status'];
     $mode =  $_POST['mode'];
-    $altText = "company".$name;
+    $altText = $name;
 
     if(isset($_POST['image']) && $image!=""){
         //print_r($_FILES[]);
