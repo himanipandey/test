@@ -1,6 +1,7 @@
 <?php 
 
     include_once("dbConfig.php");
+    include("appWideConfig.php");
     include_once ("send_mail_amazon.php");
     $test = $_REQUEST['data'];
     error_log("JSON_CALLBACK ==== ".$test);
@@ -13,18 +14,18 @@
     $callId  = $data['UUI'];
     $duration = "'$data[Duration]'";
     $dialStatus = "'$data[DialStatus]'";
-
+ 
     //$audio_file = file_get_contents($url);
-    //$audio_file = file_get_contents($audio);
+    $audio_file = file_get_contents($audio);
     //file_put_contents('tmpfile.mp3', $audio_file, LOCK_EX);
-    file_put_contents('tmpfile.mp3', $audio, LOCK_EX);
+    file_put_contents('tmpfile.mp3', $audio_file, LOCK_EX);
 // save to proptiger image service
 
     $media_extra_attributes = array('startTime'=>$st, 'endTime'=>$et, 'callDuration'=>$duration, 'dialStatus'=>$dialStatus);
     $jsonMediaExtraAttributes= json_encode($media_extra_attributes);
     $post = array('file'=>'@tmpfile.mp3','objectType'=>'call',
             'objectId' => $callId, 'documentType' => 'recording', 'mediaExtraAttributes'=>$jsonMediaExtraAttributes);
-    $url = "http://nightly.proptiger-ws.com:8080/data/v1/entity/media/document";
+    $url = AUDIO_SERVICE_URL;
     $method = "POST";
 
     $ch = curl_init();
