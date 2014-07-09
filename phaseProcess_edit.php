@@ -401,9 +401,9 @@ if (isset($_POST['btnSave'])) {
 		if($projectDetail[0]['PROMISED_COMPLETION_DATE'] == '0000-00-00')
 		  $projectDetail[0]['PROMISED_COMPLETION_DATE'] = '';
 		
-		if($project_pre_launch_date != '' && $launch_date !='') {
-            $retdt  = ((strtotime($launch_date) - strtotime($project_pre_launch_date)) / (60*60*24));
-            if( $retdt <= 0 ) {
+		if($project_pre_launch_date != '' && $projectDetail[0]['LAUNCH_DATE'] !='') {
+            $retdt  = ((strtotime($projectDetail[0]['LAUNCH_DATE']) - strtotime($project_pre_launch_date)) / (60*60*24));
+            if( $retdt <= 0 ) {				
                 $error_msg = "Launch date to be always greater than Pre Launch date for Project";
             }            
         }
