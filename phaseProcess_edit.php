@@ -49,11 +49,15 @@ if (isset($_REQUEST['delete'])) {
 		#validate phase deletion
 		if($projectDetail['LAUNCH_DATE'] == '0000-00-00')
 		  $projectDetail['LAUNCH_DATE'] = '';
-		if($projectDetail['PRE_LAUNCH_DATE'] == '0000-00-00')
-		  $projectDetail['PRE_LAUNCH_DATE'] = '';
+		
 		if($projectDetail['PROMISED_COMPLETION_DATE'] == '0000-00-00')
 		  $projectDetail['PROMISED_COMPLETION_DATE'] = '';		
-		$comp_eff_date = costructionDetail($projectId,$phaseId,false);	
+		$comp_eff_date = costructionDetail($projectId,$phaseId,false);
+		
+		$pre_launch_date = fetch_project_preLaunchDate($projectId,true,$phaseId);	
+		
+		if($pre_launch_date == '0000-00-00')
+		  $pre_launch_date = '';
 				
 		if($comp_eff_date['COMPLETION_DATE'] == '0000-00-00')
 		  $comp_eff_date['COMPLETION_DATE'] = '';
@@ -61,7 +65,7 @@ if (isset($_REQUEST['delete'])) {
 		$project_status = fetch_project_status($projectId,'',$phaseId,false); 
 		if( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail['LAUNCH_DATE'] != '') {
 		  $error_msg = "Project Status would be Pre Launched after deletion but Launch date should be blank/zero in case of Pre Launched Project.";	 
-		}elseif( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail['PRE_LAUNCH_DATE'] == '') {
+		}elseif( $project_status == PRE_LAUNCHED_ID_8 && $pre_launch_date == '') {
 		  $error_msg = "Project Status would be Pre Launched after deletion but Pre Launched Date is blank!";	 
 		}elseif(($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) && $comp_eff_date['COMPLETION_DATE'] != ''){
 		  $yearExp = explode("-",$comp_eff_date['COMPLETION_DATE']);
@@ -316,30 +320,30 @@ if (isset($_POST['btnSave'])) {
                 $error_msg = 'Launch date should be atleast 6 month less than completion date';
             }            
         }
-        //project preLaunch Validation
+        //project preLaunch Validation        
+        //$pre_launch_date = fetch_project_preLaunchDate($projectId,true);
+         $phase_created = mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());
+	
+		if($phase_created)
+		  $pre_launch_date = fetch_project_preLaunchDate($projectId,true);
+        
         $project_pre_launch_date = $pre_launch_date;
-        if($phase_pre_launch_date < $pre_launch_date && $phase_pre_launch_date != '')
+        if(($phase_pre_launch_date < $pre_launch_date && $phase_pre_launch_date != '' && $pre_launch_date != '') || $pre_launch_date == '')
           $project_pre_launch_date = $phase_pre_launch_date;        
-        if($project_pre_launch_date != '' && $launch_date !='') {
-            $retdt  = ((strtotime($launch_date) - strtotime($project_pre_launch_date)) / (60*60*24));
-            if( $retdt <= 0 ) {
-                $error_msg = "Launch date to be always greater than Pre Launch date for Project";
-            }            
-        }
-        ///////////////////////////// 
-        if( $project_pre_launch_date != '' && $completion_date !='') {
-                $retdt  = ((strtotime($completion_date) - strtotime($project_pre_launch_date)) / (60*60*24));
-                if( $retdt <= 0 ) {
-                    $error_msg = "Completion date to be always greater than Pre Launch date";
-                }
-         }
+        
+        /////////////////////////////         
         if( $phase_pre_launch_date != '' && $launch_date !='') {
             $retdt  = ((strtotime($launch_date) - strtotime($phase_pre_launch_date)) / (60*60*24));
             if( $retdt <= 0 ) {
                 $error_msg = "Launch date to be always greater than Pre Launch date for Phase";
-            }
-            
-        }        
+            }            
+        } 
+        if( $phase_pre_launch_date != '' && $completion_date !='') {
+           $retdt  = ((strtotime($completion_date) - strtotime($phase_pre_launch_date)) / (60*60*24));
+           if( $retdt <= 0 ) {
+              $error_msg = "Completion date to be always greater than Pre Launch date for Phase";
+           }
+        }       
         if( $launch_date != '' && $_REQUEST['phaseName'] == 'No Phase') {
             $retdt  = ((strtotime($launch_date) - strtotime(date('Y-m-d'))) / (60*60*24));
             if( $retdt > 0 ) {
@@ -350,7 +354,7 @@ if (isset($_POST['btnSave'])) {
             }*/
           }
          if($sold_out_date != ''){
-	    $retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
+	        $retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
             if( $retdt <= 0 || $launch_date=='') {
                 $error_msg = "Sold out date to be always greater than Launch date";
             } 			 		 
@@ -396,6 +400,20 @@ if (isset($_POST['btnSave'])) {
 		  $projectDetail[0]['PRE_LAUNCH_DATE'] = '';
 		if($projectDetail[0]['PROMISED_COMPLETION_DATE'] == '0000-00-00')
 		  $projectDetail[0]['PROMISED_COMPLETION_DATE'] = '';
+		
+		if($project_pre_launch_date != '' && $launch_date !='') {
+            $retdt  = ((strtotime($launch_date) - strtotime($project_pre_launch_date)) / (60*60*24));
+            if( $retdt <= 0 ) {
+                $error_msg = "Launch date to be always greater than Pre Launch date for Project";
+            }            
+        }
+        if($project_pre_launch_date != '' && $projectDetail[0]['PROMISED_COMPLETION_DATE'] !='') {
+                $retdt  = ((strtotime($projectDetail[0]['PROMISED_COMPLETION_DATE']) - strtotime($project_pre_launch_date)) / (60*60*24));
+                if( $retdt <= 0 ) {
+                    $error_msg = "Completion date to be always greater than Pre Launch date";
+                }
+         }  
+		  
 	    if( $construction_status == UNDER_CONSTRUCTION_ID_1 ) { 
            $yearExp = explode("-",$launch_date);
            $yearExp2 = explode("-",$completion_date);

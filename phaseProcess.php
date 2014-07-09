@@ -104,29 +104,31 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 		 }
         
         //project preLaunch Validation
+        $pre_launch_date = fetch_project_preLaunchDate($projectId,true);
+      
+        if($pre_launch_date == '0000-00-00')
+            $pre_launch_date = '';
         $project_pre_launch_date = $pre_launch_date;
-        if($phase_pre_launch_date < $pre_launch_date)
+               
+        $project_pre_launch_date = $pre_launch_date;
+        
+        if(($phase_pre_launch_date < $pre_launch_date && $pre_launch_date != '' && $phase_pre_launch_date != '') || $pre_launch_date == '')
           $project_pre_launch_date = $phase_pre_launch_date;        
-        if($project_pre_launch_date != '' && $launch_date !='') {
-            $retdt  = ((strtotime($launch_date) - strtotime($project_pre_launch_date)) / (60*60*24));
-            if( $retdt <= 0 ) {
-                $error_msg = "Launch date to be always greater than Pre Launch date for Project";
-            }            
-        }
-        ///////////////////////////// 
-        if( $phase_pre_launch_date != '' && $launch_date !='') {
+       
+       if( $phase_pre_launch_date != '' && $launch_date !='') {
             $retdt  = ((strtotime($launch_date) - strtotime($phase_pre_launch_date)) / (60*60*24));
             if( $retdt <= 0 ) {
                 $error_msg = "Launch date to be always greater than Pre Launch date for Phase";
             }
             
         }   
-        if( $project_pre_launch_date != '' && $completion_date !='') {
-                $retdt  = ((strtotime($completion_date) - strtotime($project_pre_launch_date)) / (60*60*24));
-                if( $retdt <= 0 ) {
-                    $error_msg = "Completion date to be always greater than Pre Launch date";
-                }
-         }
+        if( $phase_pre_launch_date != '' && $completion_date !='') {
+           $retdt  = ((strtotime($completion_date) - strtotime($phase_pre_launch_date)) / (60*60*24));
+           if( $retdt <= 0 ) {
+              $error_msg = "Completion date to be always greater than Pre Launch date for Phase";
+           }
+        }
+                
      /*    $fetch_projectDetail = projectDetailById($projectId);
          if( $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == OCCUPIED_ID_3 || $fetch_projectDetail[0]['PROJECT_STATUS_ID'] == READY_FOR_POSSESSION_ID_4 ) {
             $yearExp = explode("-",$completion_date);
@@ -155,8 +157,21 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 		  $project_completion_date = $comp_eff_date['COMPLETION_DATE'];
 		if($project_completion_date == '0000-00-00')
 		  $project_completion_date = '';
-				  
-			  
+		  
+		 if($project_pre_launch_date != '' && $projectDetail[0]['LAUNCH_DATE'] !='') {
+            $retdt  = ((strtotime($projectDetail[0]['LAUNCH_DATE']) - strtotime($project_pre_launch_date)) / (60*60*24));
+            if( $retdt <= 0 ) {
+                $error_msg = "Launch date to be always greater than Pre Launch date for Project";
+            }            
+        }
+            
+		if($project_pre_launch_date != '' && $project_completion_date !='') {
+           $retdt  = ((strtotime($project_completion_date) - strtotime($project_pre_launch_date)) / (60*60*24));
+           if( $retdt <= 0 ) {
+              $error_msg = "Completion date to be always greater than Pre Launch date for Project.";
+           }
+        }
+		  
 	    if($construction_status == UNDER_CONSTRUCTION_ID_1) { 
            $yearExp = explode("-",$launch_date);
            $yearExp2 = explode("-",$completion_date);
