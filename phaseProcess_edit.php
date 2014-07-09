@@ -468,7 +468,7 @@ if (isset($_POST['btnSave'])) {
            $error_msg = "Launch date should blank in case of Construction Status is Pre Launched.";
         }
        if($error_msg == ''){
-			if( ($project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != '') || ($project_status == PRE_LAUNCHED_ID_8 && $launch_date != '' && $phasename == 'No Phase')) {
+			if( ($project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != ''  && $phasename != 'No Phase') || ($project_status == PRE_LAUNCHED_ID_8 && $launch_date != '' && $phasename == 'No Phase')) {
 			  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 
 			}
 			elseif( $project_status == PRE_LAUNCHED_ID_8 && $project_pre_launch_date == '') {
