@@ -237,7 +237,7 @@ function setConfigLevelValues(&$entry) {
     $entry['builder_id'] = $configDetails->builder_id;
     $entry['builder_name'] = $configDetails->builder_name;
     $entry['builder_headquarter_city'] = $configDetails->builder_headquarter_city;
-    $entry['construction_status'] = $configDetails->construction_status;
+    $entry['construction_status'] = computeConstructionStatus($configDetails,$entry['effective_month']);
     $entry['unit_type'] = $configDetails->unit_type;
     $entry['bedrooms'] = intval($configDetails->bedrooms);
     $entry['average_size'] = $configDetails->average_size;
@@ -248,4 +248,22 @@ function setConfigLevelValues(&$entry) {
     $entry['half_year'] = firstDayOf('half_year', $entry['effective_month']);
     $entry['year'] = firstDayOf('year', $entry['effective_month']);
     $entry['financial_year'] = firstDayOf('financial_year', $entry['effective_month']);
+}
+
+// Refer to MIDL-495 for logic
+function computeConstructionStatus($configDetails, $effectiveMonth) {
+	$completionDate   = $configDetails->completion_date;
+	$launchDate       = $configDetails->launch_date;
+	
+	$status = 'Pre Launch';
+
+	if (($launch_date != null) && $effectiveMonth >= $launchDate) {
+		$status = 'Under Construction';
+	}
+
+	if (($completion_date != null) && $effectiveMonth >= $completionDate) {
+		$status = 'Completed';
+	}
+
+	return $status;
 }
