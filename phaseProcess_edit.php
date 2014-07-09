@@ -324,11 +324,12 @@ if (isset($_POST['btnSave'])) {
         //$pre_launch_date = fetch_project_preLaunchDate($projectId,true);
          $phase_created = mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());
 	
-		if($phase_created)
+		if($phase_created && $phasename != 'No Phase')
 		  $pre_launch_date = fetch_project_preLaunchDate($projectId,true);
-        
+		        
         $project_pre_launch_date = $pre_launch_date;
-        if(($phase_pre_launch_date < $pre_launch_date && $phase_pre_launch_date != '' && $pre_launch_date != '') || $pre_launch_date == '')
+          
+        if(($phase_pre_launch_date < $pre_launch_date && $phase_pre_launch_date != '' && $pre_launch_date != '' && $phasename != 'No Phase') || ($pre_launch_date == '' && $phasename != 'No Phase'))
           $project_pre_launch_date = $phase_pre_launch_date;        
         
         /////////////////////////////         
@@ -393,15 +394,28 @@ if (isset($_POST['btnSave'])) {
 		 }
 		 
 		 ////phase level check regarding status
-		 $project_status = fetch_project_status($projectId,$construction_status,$phaseId);                    
+		 if($phase_created && $phasename == 'No Phase')
+		   $project_status = fetch_project_status($projectId,'',$phaseId);
+		 else
+		   $project_status = fetch_project_status($projectId,$construction_status,$phaseId); 
+			                    
         if($projectDetail[0]['LAUNCH_DATE'] == '0000-00-00')
 		  $projectDetail[0]['LAUNCH_DATE'] = '';
 		if($projectDetail[0]['PRE_LAUNCH_DATE'] == '0000-00-00')
 		  $projectDetail[0]['PRE_LAUNCH_DATE'] = '';
 		if($projectDetail[0]['PROMISED_COMPLETION_DATE'] == '0000-00-00')
 		  $projectDetail[0]['PROMISED_COMPLETION_DATE'] = '';
+		  
+			  
+		if($project_pre_launch_date != '' && $launch_date !='' && $phasename == 'No Phase') {			  
+            $retdt  = ((strtotime($launch_date) - strtotime($project_pre_launch_date)) / (60*60*24));           
+            if( $retdt <= 0 ) {				
+				
+                $error_msg = "Launch date to be always greater than Pre Launch date for Project";
+            }            
+        } 
 		
-		if($project_pre_launch_date != '' && $projectDetail[0]['LAUNCH_DATE'] !='') {
+		if($project_pre_launch_date != '' && $projectDetail[0]['LAUNCH_DATE'] !='' && $phasename != 'No Phase') {
             $retdt  = ((strtotime($projectDetail[0]['LAUNCH_DATE']) - strtotime($project_pre_launch_date)) / (60*60*24));
             if( $retdt <= 0 ) {				
                 $error_msg = "Launch date to be always greater than Pre Launch date for Project";
@@ -453,8 +467,8 @@ if (isset($_POST['btnSave'])) {
         }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
            $error_msg = "Launch date should blank in case of Construction Status is Pre Launched.";
         }
-        if($error_msg == ''){
-			if( $project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != '') {
+       if($error_msg == ''){
+			if( ($project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != '') || ($project_status == PRE_LAUNCHED_ID_8 && $launch_date != '' && $phasename == 'No Phase')) {
 			  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 
 			}
 			elseif( $project_status == PRE_LAUNCHED_ID_8 && $project_pre_launch_date == '') {

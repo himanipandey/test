@@ -108,7 +108,7 @@ function fetch_project_status($projectId,$construction_status = '',$phaseId = ''
 	
 	if($construction_status){
 		$all_status[$phaseId] = $construction_status;
-	}
+	}	
 			
 	if(in_array(1,$all_status)) //under construction	  
 		$project_status = 1;
