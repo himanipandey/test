@@ -129,7 +129,14 @@
                     }
                 }
                  
-                #phase level validations #############                 
+                #phase level validations #############   
+                $phase_pre_launch_date = $phaseDetail[0]['PRE_LAUNCH_DATE'];
+                if( $phase_pre_launch_date != '' && $expectedCompletionDate !='') {
+				   $retdt  = ((strtotime($expectedCompletionDate) - strtotime($phase_pre_launch_date)) / (60*60*24));
+				   if( $retdt <= 0 ) {
+					  $error_msg = "Completion date to be always greater than Pre Launch date for Phase";
+				   }
+				}              
                 if($qrySelect->construction_status == OCCUPIED_ID_3 || $qrySelect->construction_status == READY_FOR_POSSESSION_ID_4 ) {
                     $yearExp = explode("-",$expectedCompletionDate);
                     if( $yearExp[0] == date("Y") ) {

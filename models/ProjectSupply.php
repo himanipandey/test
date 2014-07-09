@@ -17,15 +17,18 @@ class ProjectSupply extends Objects {
     function addEditSupply($projectId, $phaseId, $projectType, $noOfBedroom, $supply, $launchedUnit) {
         if ($phaseId == '0')
             $phaseId = NULL;
-        $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType')"));
-        if ($supply_new) {
-            $supply_new = $supply_new[0];
-            $attributes['updated_by'] = $_SESSION['adminId'];
-            if ($supply_new->supply != $supply || $supply_new->launched != $launchedUnit)
-                $supply_new->is_verified = 'false';
+       # $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType')"));
+        
+        $supply_new = mysql_query("SELECT `project_supplies`.* FROM `project_supplies` join listings l on (l.id = project_supplies.listing_id and l.phase_id = '$phaseId') join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType') WHERE `project_supplies`.`version`='PreCms'");
+
+        if(mysql_num_rows($supply_new)) {
+			$supply_new = mysql_fetch_object($supply_new);
+            #$supply_new = $supply_new[0];
+            $attributes['updated_by'] = $_SESSION['adminId'];           
             $attributes['supply'] = $supply;
             $attributes['launched'] = $launchedUnit;
-            $supply_new->update_attributes($attributes);
+            mysql_query("update `project_supplies` set updated_by = '".$attributes['updated_by']."', supply = '".$attributes['supply']."', launched='".$attributes['launched']."' where id ='".$supply_new->id."'");
+            #$supply_new->update_attributes($attributes);
         }
         else {
             $options = ResiProjectOptions::find("all", array("conditions" => array('project_id' => $projectId, 'option_category' => 'Logical', 'bedrooms' => $noOfBedroom, 'option_type' => $projectType)));
@@ -58,10 +61,10 @@ class ProjectSupply extends Objects {
             }
 
             $attributes = array('listing_id' => $listings[0]->id, 'supply' => $supply, 'launched' => $launchedUnit, 'updated_by' => $_SESSION['adminId'], 'updated_at' => date('Y-m-d H:i:s'), 'created_at' => date('Y-m-d H:i:s'));
-            $attributes['version'] = 'Cms';
+            $attributes['version'] = 'PreCms';
             $supply_new = self::create($attributes);
             $supply_new->save();
-            $attributes['version'] = 'Website';
+            $attributes['version'] = 'Cms';
             $supply_new = self::create($attributes);
             $supply_new->save();
         }
@@ -72,7 +75,7 @@ class ProjectSupply extends Objects {
             ':', launched)) as AGG from " . self::table_name() . " 
                s join listings l on (l.id = s.listing_id  
                and l.listing_category = 'Primary' and l.status = 'Active') join resi_project_options o on 
-               (o.options_id = l.option_id) where version = 'Cms' and project_id = '$projectId' and phase_id";
+               (o.options_id = l.option_id) where version = 'PreCms' and project_id = '$projectId' and phase_id";
         if ($phaseId == '0')
             $query .= ' is NULL ';
         else
@@ -88,7 +91,7 @@ class ProjectSupply extends Objects {
             pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type,ls.id as listing_id
             from 
              " . self::table_name() . " ps 
-             inner join " . ProjectAvailability::table_name() . " pa on (ps.id=pa.project_supply_id and ps.version = 'Cms')
+             inner join " . ProjectAvailability::table_name() . " pa on (ps.id=pa.project_supply_id and ps.version = 'PreCms')
              inner join listings ls on ps.listing_id = ls.id
              inner join resi_project_options rpo on rpo.options_id = ls.option_id    
              inner join 
@@ -97,7 +100,7 @@ class ProjectSupply extends Objects {
                     on ps.id=pa.project_supply_id
                     inner join listings ls on (ps.listing_id = ls.id and ls.listing_category = 'Primary' and ls.status = 'Active')  
                     left join " . ResiProjectPhase::table_name() . " rpp on ls.phase_id = rpp.PHASE_ID 
-                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'Cms' and rpp.status = 'Active' group by ps.id
+                    where rpp.project_id = $projectId and rpp.version = 'Cms' and ps.version = 'PreCms' and rpp.status = 'Active' group by ps.id
                  ) t 
                 on ps.id=t.id and pa.effective_month=t.mon 
              left join " . ResiProjectPhase::table_name() . "  rpp on (ls.phase_id = rpp.PHASE_ID and rpp.version = 'Cms')
@@ -107,11 +110,11 @@ class ProjectSupply extends Objects {
                 ps.launched, pa.availability, pa.comment, pa.effective_month, 
                 rpo.option_type as project_type,ls.id as listing_id 
             from 
-                project_supplies ps left join project_availabilities pa on (ps.id=pa.project_supply_id and ps.version = 'Cms')
+                project_supplies ps left join project_availabilities pa on (ps.id=pa.project_supply_id and ps.version = 'PreCms')
             inner join listings ls on (ps.listing_id = ls.id  and ls.listing_category = 'Primary' and ls.status = 'Active')          
             left join resi_project_phase rpp on (ls.phase_id = rpp.PHASE_ID)
             inner join resi_project_options rpo on rpo.options_id = ls.option_id
-          where pa.id is null and ps.version = 'Cms' and rpp.project_id = $projectId and rpp.version = 'Cms' and rpp.status = 'Active'";
+          where pa.id is null and ps.version = 'PreCms' and rpp.project_id = $projectId and rpp.version = 'Cms' and rpp.status = 'Active'";
         $data = self::find_by_sql($query);
         foreach ($data as $value) {
             $entry = array();
@@ -193,38 +196,26 @@ class ProjectSupply extends Objects {
 
     function isSupplyLaunchVerified($projectId) {
 
-        $sql = "select l.id from project_supplies ps inner join listings l
+        $sql1 = "select l.id from project_supplies ps inner join listings l
                 on ps.listing_id = l.id
                 inner join resi_project_options rpo on l.option_id = rpo.options_id
                 where 
-                rpo.project_id = '$projectId' and l.status = 'Active' group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
-        $result = self::find_by_sql($sql);
+                rpo.project_id = '$projectId' and l.status = 'Active' and ps.version in ('PreCms','Cms') group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
+        $result1 = self::find_by_sql($sql1);
+        
+         $sql2 = "select lst.id,ps.version,pa.* from project_availabilities pa
+				inner join project_supplies ps on pa.project_supply_id = ps.id and ps.version in ('PreCms','Cms')
+				inner join listings lst on ps.listing_id = lst.id
+				inner join resi_project_phase rpp on lst.phase_id = rpp.phase_id and rpp.version = 'Cms'
+				where rpp.project_id = '$projectId'
+				group by lst.id,pa.effective_month
+				having count(distinct pa.availability) > 1 or MOD(count(pa.id),2) <> 0";
+        $result2 = self::find_by_sql($sql2);
 
-        if (count($result) > 0)
+        if (count($result1) > 0 || count($result2) > 0)
             return FALSE;
         else
             return TRUE;
-    }
-
-    function isVerifiedFlagCheck($projectId) {
-        $sql = "select rpp.phase_id,ps.* from project_supplies ps
- 				inner join listings lst on lst.id = ps.listing_id
- 				inner join resi_project_phase rpp on rpp.phase_id = lst.phase_id
-				where rpp.project_id = $projectId 
-				and lst.status = 'Active' and rpp.status = 'Active'
-				and ps.version = 'Cms'
-				and is_verified = 'false'";
-        $result = self::find_by_sql($sql);
-
-        foreach ($result as $key => $value) {
-            $sql_web_diff = "select supply, launched from project_supplies where listing_id = '$value->listing_id' and (supply != '$value->supply' or launched != '$value->launched') and version='Website'";
-            $result_diff = self::find_by_sql($sql_web_diff);
-            if (count($result_diff) > 0) {
-                return 1;
-            }
-        }
-
-        return 0;
     }
 
     function checkAvailability($projectId, $phaseId, $projectType, $noOfBedroom, $supply, $launchedUnit) {
@@ -232,10 +223,9 @@ class ProjectSupply extends Objects {
         $supply = intval($supply);
         if ($phaseId == '0')
             $phaseId = NULL;
-        $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType')"));
+        $supply_new = mysql_fetch_object(mysql_query("SELECT `project_supplies`.* FROM `project_supplies` join listings l on (l.id = project_supplies.listing_id and l.phase_id = '$phaseId') join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType') WHERE `project_supplies`.`version`='PreCms'"));
         if ($supply_new) {
-            $supplyId = $supply_new[0]->id;
-            $supplyId = $supply_new[0]->id;
+            $supplyId = $supply_new->id;
             $availability = ProjectAvailability::getAvailability($supplyId);
             if ($availability > $launchedUnit && $availability > 0 && $supply >= 0 && $launchedUnit >= 0) {
                 return false;

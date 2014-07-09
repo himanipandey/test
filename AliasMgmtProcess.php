@@ -49,6 +49,7 @@ $AliasesArr = getAllAliases();
 //print_r($AliasesArr);
 //die("here");
 $smarty->assign('aliasesArr',$AliasesArr);
+$smarty->assign('url', TYPEAHEAD_API_URL);
  
 
 ?>

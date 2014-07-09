@@ -53,11 +53,11 @@ $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
 foreach($optionsDetails as $key => $value) {
-	
-	$listing_price = ListingPrices::find('all',array('conditions'=>
+    
+    $listing_price = ListingPrices::find('all',array('conditions'=>
     array('listing_id = ?', $value->id),"limit" => 1, "order" => "effective_date desc",'select' => 
                     'effective_date'));
-              	
+                
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
@@ -323,7 +323,6 @@ foreach ($res as $data) {
 }
 $supplyAllArray = array();
 $isSupplyLaunchVerified = ProjectSupply::isSupplyLaunchVerified($projectId);
-$isVerifiedFlagCheck = ProjectSupply::isVerifiedFlagCheck($projectId);
 foreach($supplyAll as $k=>$v) {
     foreach($v as $kMiddle=>$vMiddle) {
         foreach($vMiddle as $kLast=>$vLast) {
@@ -336,29 +335,32 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_BEDROOMS'] = $vLast['NO_OF_BEDROOMS'];
             $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_NO_OF_FLATS'] = $vLast['NO_OF_FLATS']; 
             $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_LAUNCHED'] = $vLast['LAUNCHED'];
-            $supplyAllArray[$k][$kMiddle][$kLast]['AVAILABLE_NO_FLATS'] = $vLast['AVAILABLE_NO_FLATS'];
+            
             $supplyAllArray[$k][$kMiddle][$kLast]['EDIT_REASON'] = $vLast['EDIT_REASON'];
             $supplyAllArray[$k][$kMiddle][$kLast]['SUBMITTED_DATE'] = $vLast['SUBMITTED_DATE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_TYPE'] = $vLast['PROJECT_TYPE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LISTING_ID'] = $vLast['LISTING_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['BOOKING_STATUS_ID'] = $vLast['BOOKING_STATUS_ID'];
-            
-            $qryEditedLaunched = "select supply,launched from project_supplies
-                where listing_id = ".$vLast['LISTING_ID']." and version = 'Website'";
+          
+            $qryEditedLaunched = "select ps.supply,ps.launched,pa.availability from project_supplies ps
+									inner join project_availabilities pa on ps.id = pa.project_supply_id
+									where listing_id = '".$vLast['LISTING_ID']."' and version = 'Cms' order by effective_month desc limit 1";
+                
             $resEditedLaunched = mysql_query($qryEditedLaunched) or die(mysql_error());
             $dataEditedLaunched = mysql_fetch_assoc($resEditedLaunched);
             $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_FLATS'] = $dataEditedLaunched['supply'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LAUNCHED'] = $dataEditedLaunched['launched'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['AVAILABLE_NO_FLATS'] = $dataEditedLaunched['availability'];
         }
     }
-}
+} 
+
 //echo "<pre>";
 //print_r($supplyAllArray);
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
 $smarty->assign("isSupplyLaunchVerified", $isSupplyLaunchVerified);
-$smarty->assign("isVerifiedFlagCheck", $isVerifiedFlagCheck);
 
 // Project Phases
 $phaseDetail = fetch_phaseDetails($projectId);
@@ -451,8 +453,8 @@ $bankList = ProjectBanks::find('all',array('joins' => $joinbank,'conditions'=>
 $smarty->assign("bankList", $bankList);
 
 if($projectDetails[0]['STATUS'] == 'Inactive'){
-	$project_alias_detail = project_aliases_detail($projectId);
-	$smarty->assign("project_alias_detail", $project_alias_detail);
+    $project_alias_detail = project_aliases_detail($projectId);
+    $smarty->assign("project_alias_detail", $project_alias_detail);
 }
 
 if ($projectDetails[0]['PROJECT_STAGE'] == 'NewProject') {
@@ -510,6 +512,7 @@ $smarty->assign("project_booking_status_id", $project_booking_status[0]->booking
 $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
+
 
 /******code for project comment fetch from commeny history table*****/
 $cycleId = $projectDetails[0]['PROJECT_STAGE'];
@@ -589,7 +592,7 @@ if ($_POST['forwardFlag'] == 'yes') {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
             //updating new remark
             if($currentPhase=='Audit1' && $_POST['newRemarkId'])
-				update_remark_status($_POST['newRemarkId']);
+                update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");
@@ -629,7 +632,7 @@ if ($_POST['forwardFlag'] == 'update') {
             
             //updating new remark
             if($currentPhase=='Audit1' && isset($_POST['newRemarkId']))
-				update_remark_status($_POST['newRemarkId']);
+                update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");

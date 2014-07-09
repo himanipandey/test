@@ -44,7 +44,7 @@
 
   function getPhotos(){
 			
-		var template = '<img src="{$imgSrc}" width = 150 height = 100 />';
+		var template = '<img src="{$imgSrc}" width = 150 height = 100 alt="{$alt_text}"/>';
 
 		$("a#view").html( template );
 		$("a#view").fancybox();
@@ -337,6 +337,7 @@
 				  <td width="30%" align="left">
                       <input type=file name='txtBuilderImg'  style="width:400px;">
                       <input type="hidden" name="serviceImageId" value="{$service_image_id}">
+                      <input type="hidden" name="alt_text" value="{$alt_text}">
                   </td>
 				    <td width="50%" align="left" nowrap>
 				    	{if $ErrorMsg["ImgError"] != ''}

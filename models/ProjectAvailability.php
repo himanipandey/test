@@ -59,6 +59,37 @@ class ProjectAvailability extends Model {
     public static function copyProjectInventoryToWebsite($projectId, $updatedBy){
         $result = array();
        
+        #created those supplies which are not created for Website after comaprison
+        $cms_supplies = ResiProjectPhase::find('all',array('joins'=>'inner join listings on listings.phase_id = resi_project_phase.phase_id inner join project_supplies on listings.id = project_supplies.listing_id and project_supplies.version="Cms"', 'conditions'=>array('PROJECT_ID'=>$projectId,'version'=>'Cms'), 'select'=>'project_supplies.*'));
+        
+        if($cms_supplies){
+		  $cms_listing_ids = array();
+		   $web_listing_ids = array();
+		  foreach($cms_supplies as $key=>$value){
+		    $cms_listing_ids[] = $value->listing_id;
+		  }
+		  $cms_listing_ids = implode(",",$cms_listing_ids);
+		  $website_supplies = ProjectSupply::find_by_sql("select * from ". ProjectSupply::table_name() ." where listing_id in ($cms_listing_ids) and version='Website'");
+		   if($website_supplies){
+			  foreach($website_supplies as $key=>$value){
+				$web_listing_ids[] = $value->listing_id;
+			  }			 
+		   }
+		   $cms_listing_ids = explode(",",$cms_listing_ids);
+		   $final_arr = array_diff($cms_listing_ids,$web_listing_ids);	  
+		  if($final_arr){
+			 //need to create project_supplies for website those are not exists
+			 foreach($cms_supplies as $key=>$value){
+			    if(in_array($value->listing_id,$final_arr)){
+					$attributes = array('listing_id'=>$value->listing_id, 'supply'=>$value->supply, 'launched'=>$value->launched, 'updated_by'=>$value->updated_by, 'updated_at'=>$value->updated_at, 'created_at' => $value->created_at);
+					$attributes['version'] = 'Website';
+					$web_supply_new = ProjectSupply::create($attributes);
+					$web_supply_new->save();								
+				}
+			 } 
+		  }  
+		}
+       
         $supply_ids = ResiProjectPhase::find('all', array('joins'=>'inner join listings l on resi_project_phase.PHASE_ID = l.phase_id inner join project_supplies ps1 on l.id = ps1.listing_id and ps1.version = "Cms" inner join project_supplies ps2 on ps1.listing_id = ps2.listing_id and ps2.version = "Website"', 'conditions'=>array('PROJECT_ID'=>$projectId), 'select'=>'ps1.id cms_supply_id,ps1.is_verified cms_verfied_flag,ps1.supply,ps1.launched, ps2.id website_supply_id'));
          
         
@@ -66,13 +97,10 @@ class ProjectAvailability extends Model {
         foreach ($supply_ids as $supply_id) {
             $all_supply_ids[] = $supply_id->cms_supply_id;
             $all_supply_ids[] = $supply_id->website_supply_id;
-             //copy the supply and lanuched unit in website if flag=>true 
-            if($supply_id->cms_verfied_flag == 'true'){
-			   	$website_supply = ProjectSupply::find($supply_id->website_supply_id);
-				$website_supply->supply = $supply_id->supply;
-				$website_supply->launched = $supply_id->launched;
-				$website_supply->save();	
-			}
+           	$website_supply = ProjectSupply::find($supply_id->website_supply_id);
+			$website_supply->supply = $supply_id->supply;
+			$website_supply->launched = $supply_id->launched;
+			$website_supply->save();				
         }
         
          //removing orphan prices and inventory
