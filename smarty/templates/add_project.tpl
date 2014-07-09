@@ -261,7 +261,7 @@
 																	  {/if}
                                                                 </td>
                                                                 <td width="50%" align="left">
-                                                                        <font color="red">{if $ErrorMsg["txtComments"] != ''} {$ErrorMsg["txtComments"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
+                                                                        <font color="red">{if $ErrorMsg["txtDesc"] != ''} {$ErrorMsg["txtDesc"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
                                                                </td>
 							   </tr>
 							   {if $userDepartment == 'DATAENTRY' || $userDepartment == 'NEWPROJECTAUDIT' || $userDepartment == 'ADMINISTRATOR'}
@@ -550,7 +550,7 @@
 							   </tr>
                                                            {/if}
 
-							  
+							  {if $projectId == ''}
                                <tr>
                                    <td width="20%" align="right" valign="top"><b>Pre - Launch Date :</b> </td>
                                    <td width="30%" align="left">
@@ -564,7 +564,26 @@
                                     	{$ErrorMsg["preLaunchDatePrices"]}
                                     {/if}
                                    </font></td>
-                               </tr>
+                                </tr>
+														<script type="text/javascript">
+                                                                var cals_dict = {
+                                                                    "pre_f_trigger_c_to" : "pre_f_date_c_to"
+                                                                };
+                                                                $.each(cals_dict, function(k, v) {
+                                                                    Calendar.setup({
+                                                                        inputField     :    v,                                 // id of the input field
+                                                                        //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
+                                                                        ifFormat       :    "%Y-%m-%d",                        // format of the input field
+                                                                        button         :    k,                                 // trigger for the calendar (button ID)
+                                                                        align          :    "Tl",                              // alignment (defaults to "Bl")
+                                                                        singleClick    :    true,
+                                                                        showsTime	  :	true
+                                                                    });
+                                                                });
+                                                           </script>
+                               {else}
+                                  <input type = "hidden" name = "pre_launch_date" value="{$pre_launch_date}"/>                               
+                               {/if}
 							   <tr>
 							   <td width="20%" align="right" valign="top"><b>Launch Date :</b> </td>
 							   <td width="30%" align="left">
@@ -810,8 +829,7 @@
 
 <script type="text/javascript">
     var cals_dict = {
-        "f_trigger_c_to" : "f_date_c_to",
-        "pre_f_trigger_c_to" : "pre_f_date_c_to",
+        "f_trigger_c_to" : "f_date_c_to",        
         "exp_f_trigger_c_to" : "exp_f_date_c_to"
     };
 

@@ -183,6 +183,12 @@ function towerSelect(towerId)
 		{
 			flgChk = 1;
 		}
+				isVerifedSupplyMovFlag = "{$isSupplyLaunchVerified}";				
+				if(dir != 'backward' && phase == 'Audit1' && !isVerifedSupplyMovFlag) {
+                    alert("Supply is not verified!");
+                    return false;
+                }
+                
                 if(dir != 'backward' && phase == 'Audit1' && availabilityOrderChk == 'false') {
                     alert("Supply order should be in descending order!\nCurrent order is "+availOrder+" for bedroom "+bedRoomOrder);
                     return false;
@@ -2673,7 +2679,7 @@ function broker_call_edit(callId, brokerId)
 							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>
 							  	{if $supplyEditPermissionAccess == 1} 
 									{if !$isSupplyLaunchVerified}
-										<button class="clickbutton" {if $isVerifiedFlagCheck}style="background-color: red"{/if} onclick="$(this).trigger('event17');">Verify Supply Change</button>
+										<button class="clickbutton" style="background-color: red" onclick="$(this).trigger('event17');">Verify Supply Change</button>
 									{/if}
 								{/if}	
 									<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>

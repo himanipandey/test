@@ -323,7 +323,6 @@ foreach ($res as $data) {
 }
 $supplyAllArray = array();
 $isSupplyLaunchVerified = ProjectSupply::isSupplyLaunchVerified($projectId);
-$isVerifiedFlagCheck = ProjectSupply::isVerifiedFlagCheck($projectId);
 foreach($supplyAll as $k=>$v) {
     foreach($v as $kMiddle=>$vMiddle) {
         foreach($vMiddle as $kLast=>$vLast) {
@@ -336,19 +335,22 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_BEDROOMS'] = $vLast['NO_OF_BEDROOMS'];
             $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_NO_OF_FLATS'] = $vLast['NO_OF_FLATS']; 
             $supplyAllArray[$k][$kMiddle][$kLast]['EDITED_LAUNCHED'] = $vLast['LAUNCHED'];
-            $supplyAllArray[$k][$kMiddle][$kLast]['AVAILABLE_NO_FLATS'] = $vLast['AVAILABLE_NO_FLATS'];
+            
             $supplyAllArray[$k][$kMiddle][$kLast]['EDIT_REASON'] = $vLast['EDIT_REASON'];
             $supplyAllArray[$k][$kMiddle][$kLast]['SUBMITTED_DATE'] = $vLast['SUBMITTED_DATE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_TYPE'] = $vLast['PROJECT_TYPE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LISTING_ID'] = $vLast['LISTING_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['BOOKING_STATUS_ID'] = $vLast['BOOKING_STATUS_ID'];
-            
-            $qryEditedLaunched = "select supply,launched from project_supplies
-                where listing_id = ".$vLast['LISTING_ID']." and version = 'Website'";
+          
+            $qryEditedLaunched = "select ps.supply,ps.launched,pa.availability from project_supplies ps
+									inner join project_availabilities pa on ps.id = pa.project_supply_id
+									where listing_id = '".$vLast['LISTING_ID']."' and version = 'Cms' order by effective_month desc limit 1";
+                
             $resEditedLaunched = mysql_query($qryEditedLaunched) or die(mysql_error());
             $dataEditedLaunched = mysql_fetch_assoc($resEditedLaunched);
             $supplyAllArray[$k][$kMiddle][$kLast]['NO_OF_FLATS'] = $dataEditedLaunched['supply'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LAUNCHED'] = $dataEditedLaunched['launched'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['AVAILABLE_NO_FLATS'] = $dataEditedLaunched['availability'];
         }
     }
 } 
@@ -359,7 +361,6 @@ $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
 $smarty->assign("isSupplyLaunchVerified", $isSupplyLaunchVerified);
-$smarty->assign("isVerifiedFlagCheck", $isVerifiedFlagCheck);
 
 // Project Phases
 $phaseDetail = fetch_phaseDetails($projectId);
