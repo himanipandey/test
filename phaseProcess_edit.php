@@ -354,10 +354,16 @@ if (isset($_POST['btnSave'])) {
                 $error_msg  .= " Inventory or Prices with effective date before {$launch_date} are present. So can not change the Launch Date.";
             }*/
           }
-         if($sold_out_date != ''){
+         if($sold_out_date != '' && $construction_status != PRE_LAUNCHED_ID_8){
 	        $retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
             if( $retdt <= 0 || $launch_date=='') {
                 $error_msg = "Sold out date to be always greater than Launch date";
+            } 			 		 
+        }
+        if($sold_out_date != '' && $construction_status == PRE_LAUNCHED_ID_8){
+	        $retdt  = ((strtotime($sold_out_date) - strtotime($phase_pre_launch_date)) / (60*60*24));
+            if( $retdt <= 0 || $phase_pre_launch_date=='') {
+                $error_msg = "Sold out date to be always greater than PreLaunch date";
             } 			 		 
         }
          
