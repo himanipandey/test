@@ -461,6 +461,75 @@ var iframeUpload = {
 
 
 
+
+$("#addContact").click(function(){
+    var val = $("#deal option:selected").val();
+    var tableId = "contact_table";
+    var  fieldId = "person";
+    var fieldClass = "persons";
+    addContactTable(tableId);
+  
+            
+}
+
+function addContactTable(tableId){
+    var table = document.getElementById(tableID); 
+ 
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+            var cell1 = row.insertCell(0);
+            var element1 = document.createElement("table");
+            element1.style.width="100%";
+            element1.id="contact_table_"+rowCount;
+            cell1.appendChild(element1);
+            addContactRow(element1.id, "Name", "person", "persons", "errmsgname")
+
+}
+
+function addContactRow(tabeleId, label, inputClass, msgClass){
+    var table = document.getElementById(tableID); 
+ 
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+ 
+            var cell1 = row.insertCell(0);
+            cell1.innerHTML = label;
+            cell1.width = "15%";
+            cell1.style.textAlign="right";
+
+            var cell2 = row.insertCell(1);
+            //cell1.width = "20%";
+            var element2 = document.createElement("input");
+            element2.type = "text";
+            element2.style.width="250px";
+            element2.id=inputClass+"_"+rowCount;
+            element2.class=inputClass;
+            element2.name =inputClass+"[]";
+            
+            cell2.appendChild(element2);
+
+            var cell3 = row.insertCell(2);
+            cell3.innerHTML = "";
+            cell3.width = "40%";
+            cell3.style.textAlign="left";
+            cell3.id=msgClass+"_"+rowCount;
+            cell3.class = msgClass;
+            
+}
+
+function deleteRow(tableID) {
+            try {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+             table.deleteRow(rowCount-1);
+               
+ 
+ 
+            }catch(e) {
+                alert(e);
+            }
+}
+
 </script>
 </TD>
   </TR>
@@ -529,6 +598,12 @@ var iframeUpload = {
                     </tr>
 
                     <tr>
+                      <td colspan="3" align="left" valign="bottom"><hr><b>Address Details (Headquarter)</b> </td>
+                    </tr>
+
+                   
+
+                    <tr>
                       <td width="20%" align="right" valign="top"><font color = "red">*</font>Address :</td>
                       <td width="30%" align="left" >
                       <textarea name="address" rows="10" cols="35" id="address" style="width:250px;"></textarea></td>
@@ -554,9 +629,30 @@ var iframeUpload = {
                       <td width="30%" align="left"><input type=text name="pincode" id="pincode"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgpincode"></td>
                     </tr>
 
+
                     <tr>
-                      <td width="20%" align="right" >Company Phone No. : </td>
+                      <td width="20%" align="right" >Office Phone No. : </td>
                       <td width="30%" align="left"><input type=text name="compphone" id="compphone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompphone"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" valign="top">Office Fax :</td>
+                     <td width="30%" align="left"><input type=text name="compfax" id="compfax" style="width:250px;"></td> 
+                    <td width="20%" align="left" id="errmsgcompfax"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >Office Email : </td>
+                      <td width="30%" align="left"><input type=text name="compemail" id="compemail" style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompweb"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >Website : </td>
+                      <td width="30%" align="left"><input type=text name="web" id="web" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                    </tr>
+
+                    <tr>
+                      <td colspan="3"><hr></td>
                     </tr>
 
                     <tr>
@@ -608,35 +704,99 @@ var iframeUpload = {
                       </table>
                       </td>
                     </tr>
+
+                    <tr height="15">
+                      <td colspan="3" align="left" ><hr><b>Contact Person Details</b></td>
+                    </tr>
+
                     <tr>
-                      <td width="20%" align="right" valign="top">Contact Person :</td>
-                      <td width="30%" align="left"><input type=text name="person" id="person" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                      <td colspan="3" >
+                        <table id="contact_table" width = "100%">
+                          <tr>
+                          <td colspan="3" >
+                          <table id="contact_table_0" width = "100%">
+                            <tr>
+                              <td width="20%" align="right" valign="top">Name :</td>
+                              <td width="30%" align="left"><input type=text name="person" id="person_0" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                              </td>
+                        
+                            </tr>
+
+                            <tr>
+                              <td width="20%" align="right" >Contact Email : </td>
+                              <td width="30%" align="left"><input type=text name="email" id="email_0" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                            </tr>
+
+                            <tr>
+                              <td width="20%" align="right" >Contact Phone No. : </td>
+                              <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgphone"></td>
+                            </tr>
+
+                            <tr>
+                              <td width="20%" align="right" valign="top">fax :</td>
+                             <td width="30%" align="left"><input type=text name="fax" id="fax" style="width:250px;"></td> 
+                            <td width="20%" align="left" id="errmsgfax"></td>
+                            </tr>
+
+                            <tr>
+                              <td >&nbsp;</td>
+                              <td align="left" style="padding-left:50px;" >
+                              <input type="button" name="lmkSave" id="lmkSave" value="Delete Contact Person" style="cursor:pointer">                 
+                              </td>
+                            </tr>
+
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                    </td>
+                    </tr>
+
+                    <tr>
+                     
+                      <td align="left" style="padding-left:50px;" colspan="3" >
+                      <input type="button" name="addContact" id="addContact" value="Add Contact Person" style="cursor:pointer">                
                       </td>
-                
                     </tr>
 
-                    <tr>
-                      <td width="20%" align="right" >Contact Email : </td>
-                      <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" >Contact Phone No. : </td>
-                      <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgphone"></td>
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" valign="top">fax :</td>
-                     <td width="30%" align="left"><input type=text name="fax" id="fax" style="width:250px;"></td> 
-                    <td width="20%" align="left" id="errmsgfax"></td>
-                    </tr>
-
-                    
+                    <tr height="15">
+                      <td colspan="3" align="left" ><hr><b>Customer Care Details</b></td>
+                    </tr> 
 
                     <!--<tr>
                       <td width="20%" align="right" >Website : </td>
                       <td width="30%" align="left"><input type=text name="web" id="web" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
                     </tr>-->
+
+                    
+                    <tr>
+                      <td width="20%" align="right" >Cust Care Phone : </td>
+                      <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgphone"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >Cust Care Mobile : </td>
+                      <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgphone"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" valign="top">Cust Care Fax :</td>
+                     <td width="30%" align="left"><input type=text name="fax" id="fax" style="width:250px;"></td> 
+                    <td width="20%" align="left" id="errmsgfax"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >Cust Care Email : </td>
+                      <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                    </tr>
+
+                   <tr height="15">
+                      <td colspan="3" align="left" ><hr><b>Office Locations</b></td>
+                    </tr> 
+
+                    <tr height="15">
+                      <td colspan="3" align="left" ><hr><b>Coverage</b></td>
+                    </tr> 
 
                     <tr>
                       <td width="20%" align="right" >Pancard No : </td>
