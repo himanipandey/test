@@ -131,7 +131,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                   INNER JOIN
                     resi_project_phase rpp on RP.PROJECT_ID = rpp.PROJECT_ID ";
 
-    $and = " WHERE RP.version='Cms' and ";
+    $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and ";
 
     if($_POST['dwnld_projectId'] == '')
     {
@@ -222,6 +222,7 @@ $arrPropId = array();
 $QueryMember1 = $QueryMember1 . $QueryMember." Group By rpp.PROJECT_ID";
 
 $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
+
 $NumRows = mysql_num_rows($QueryExecute);
 
 $contents = "";
