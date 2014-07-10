@@ -111,7 +111,7 @@ $smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
 $smarty->assign("PhaseOptionHash",$PhaseOptionHash);
 
 //code for completion date validation for phase label
-$qryAllPhase = "select * from resi_project_phase 
+/*$qryAllPhase = "select * from resi_project_phase 
     where project_id = $projectId and status = 'Active' and version = 'Cms'";
 $resAllPhase = mysql_query($qryAllPhase);
 $allCompletionDateChk = 0;
@@ -121,7 +121,7 @@ while($data = mysql_fetch_assoc($resAllPhase)) {
         $arrAllCompletionDateChk = 1;
     }
 }
-$smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk);
+$smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk);*/
 //end code for completion date validation for phase label
 $arrOnlyPreviousMonthData = array();
 foreach($PreviousMonthsData as $k=>$v) { 
@@ -501,6 +501,11 @@ $projectd = $projectDetails[0]['PROJECT_ID'];
 $comp_eff_date = costructionDetail($projectId);
 $smarty->assign("completionEffDate", $comp_eff_date['submitted_date']);
 $smarty->assign("completionDate", $comp_eff_date['COMPLETION_DATE']);
+$arrAllCompletionDateChk = 0;
+if(trim($comp_eff_date['COMPLETION_DATE']) == '' || trim($comp_eff_date['COMPLETION_DATE']) == '0000-00-00') {
+        $arrAllCompletionDateChk = 1;
+}
+$smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk);
 /* * ***code for completion effective date******* */
 
 /********** booking status for project ***********/
