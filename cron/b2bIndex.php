@@ -252,18 +252,19 @@ function setConfigLevelValues(&$entry) {
 
 // Refer to MIDL-495 for logic
 function computeConstructionStatus($configDetails, $effectiveMonth) {
+	
 	$completionDate   = $configDetails->completion_date;
 	$launchDate       = $configDetails->launch_date;
 	
 	$status = 'Pre Launch';
 
-	if (($launch_date != null) && $effectiveMonth >= $launchDate) {
+	if (!empty($launchDate) && $effectiveMonth >= $launchDate) {
 		$status = 'Under Construction';
 	}
 
-	if (($completion_date != null) && $effectiveMonth >= $completionDate) {
+	if (!empty($completionDate) && $effectiveMonth >= $completionDate) {
 		$status = 'Completed';
 	}
-
+	
 	return $status;
 }
