@@ -52,7 +52,7 @@
 			  if($v<1000){
 				//City
 				$city = City::getCityById($v);
-				$city_arr[$city[0]->label]["ALL"]= $v;
+				$city_arr[$city[0]->label]["    "]["ALL"]= $v;
 								 
 			  }	
 			  if($v < 50000 && $v>1000){
@@ -63,24 +63,33 @@
 			  }elseif($v > 50000){
 				//locs
 				$city = Locality::getLocalityCity($v);
-				$city_arr[$city[0]->cityname][$city[0]->locname]= $v;
+				$city_arr[$city[0]->cityname][$city[0]->suburbname][$city[0]->locname]= $v;
 							
 			  }	
-			}
+			}			
 			print '<TABLE>';
-			foreach($city_arr as $city=>$data){
+			foreach($city_arr as $city=>$subdata){
 			  print '<TR>';
-			  print '<TD><b>'.$city.'</b></TD>';
-			  print '<TD>';	
+			  print '<TD style="background-color:#def"><b>'.$city.'</b></TD>';
+			  print '<TD>';
+			  print '<TABLE>';			  
 			  $exclude = 0;
 			  ksort($data);
-			  foreach($data as $label=>$id){				 
-				 if(!$exclude)   
-				   print '<div name="'.$id.'" style="background:#ccc;float:left;padding:2px;margin:1px;" id="locID-'.$id.'">'.$label.'&nbsp;&nbsp;<img src="images/stop.gif" style="position:relative;top:2px" id="'.$id.'" onclick="remove_locality(this.id)"></div>'; 
-				 if($label == 'ALL')
-				   $exclude = 1; 				 
+			  foreach($subdata as $sublabel=>$data){
+				 print '<TR>';
+			     print '<TD style="background-color:#dee"><b>'.$sublabel.'</b></TD>';
+			     print '<TD>';
+				  foreach($data as $label=>$id){				 
+					 if(!$exclude)   
+					   print '<div name="'.$id.'" style="background:#ccc;float:left;padding:2px;margin:1px;" id="locID-'.$id.'">'.$label.'&nbsp;&nbsp;<img src="images/stop.gif" style="position:relative;top:2px" id="'.$id.'" onclick="remove_locality(this.id)"></div>'; 
+					 if($label == 'ALL')
+					   $exclude = 1; 				 
+				  }
+				  print '</TD>';		  
+				  print '</TR>';
 			  }
-			  print '</TD>';
+			  print '</TABLE>';
+			  print '</TD>';		  
 			  print '</TR>';
 			   
 			}
