@@ -171,7 +171,8 @@
 			  $subject= "Your User Account has been created!";
 			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
 			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
-			  $to = $email;
+			  //$to = $email;
+                          $to = 'ankur.dhawan@proptiger.com,kapil.pathak@proptiger.com';
 			  $sender = "no-reply@proptiger.com";
 			  $headers  = 'MIME-Version: 1.0' . "\r\n";
 			  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
@@ -195,13 +196,14 @@
 	  $email = "kuldeep.patel_c@proptiger.com";
 	  $subject= "New Order[".$order_id."] Placed!";
 	  $email_message = "New order[order ID : ".$order_id."] has been created!";
-	  $to = $email;
+	  //$to = $email;
+          $to = 'ankur.dhawan@proptiger.com, kapil.pathak@proptiger.com';
 	  $sender = "no-reply@proptiger.com";
 	  $headers  = 'MIME-Version: 1.0' . "\r\n";
 	  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 	  $headers .= 'To: '.$email."\r\n";
 	  $headers .= 'From: '.$sender."\r\n";
-      sendMailFromAmazon($to, $subject, $email_message, $sender,null,null,false);		
+          sendMailFromAmazon($to, $subject, $email_message, $sender,null,null,false);		
 	  header("Location:companyOrdersList.php?compId=".$txtCompId); 
 	}
 	  
@@ -379,7 +381,8 @@
 			  $subject= "Your User Account has been created!";
 			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
 			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
-			  $to = $email;
+			  //$to = $email;
+                          $to = 'ankur.dhawan@proptiger.com,kapil.pathak@proptiger.com';
 			  $sender = "no-reply@proptiger.com";
 			  $headers  = 'MIME-Version: 1.0' . "\r\n";
 			  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
