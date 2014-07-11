@@ -172,7 +172,7 @@
 			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
 			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
 			  //$to = $email;
-                          $to = 'ankur.dhawan@proptiger.com,kapil.pathak@proptiger.com';
+                          $to = 'ankur.dhawan@proptiger.com,kapil.pathak@proptiger.com,manish.goyal@proptiger.com';
 			  $sender = "no-reply@proptiger.com";
 			  $headers  = 'MIME-Version: 1.0' . "\r\n";
 			  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
@@ -196,8 +196,7 @@
 	  $email = "kuldeep.patel_c@proptiger.com";
 	  $subject= "New Order[".$order_id."] Placed!";
 	  $email_message = "New order[order ID : ".$order_id."] has been created!";
-	  //$to = $email;
-          $to = 'ankur.dhawan@proptiger.com, kapil.pathak@proptiger.com';
+	  $to = $email;
 	  $sender = "no-reply@proptiger.com";
 	  $headers  = 'MIME-Version: 1.0' . "\r\n";
 	  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
@@ -382,7 +381,7 @@
 			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
 			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
 			  //$to = $email;
-                          $to = 'ankur.dhawan@proptiger.com,kapil.pathak@proptiger.com';
+                          $to = 'ankur.dhawan@proptiger.com,kapil.pathak@proptiger.com,manish.goyal@proptiger.com';
 			  $sender = "no-reply@proptiger.com";
 			  $headers  = 'MIME-Version: 1.0' . "\r\n";
 			  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
