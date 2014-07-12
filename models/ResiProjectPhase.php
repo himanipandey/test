@@ -9,6 +9,7 @@ class ResiProjectPhase extends Objects
     static $virtual_primary_key = 'phase_id';
         
     static $custom_launch_date_string = "if(rpp.PRE_LAUNCH_DATE != 0, rpp.PRE_LAUNCH_DATE, if(rpp.LAUNCH_DATE != 0, rpp.LAUNCH_DATE, if(rp.PRE_LAUNCH_DATE != 0, rp.PRE_LAUNCH_DATE, if(rp.LAUNCH_DATE!=0,rp.LAUNCH_DATE,NULL))))";
+    static $custom_original_launch_date_string = "if(rpp.LAUNCH_DATE != 0, rpp.LAUNCH_DATE, if(rp.LAUNCH_DATE != 0, rp.LAUNCH_DATE, NULL))";
 //    static $after_create = array('insert_audit_create');
 //    static $after_update = array('insert_audit_save');
 
