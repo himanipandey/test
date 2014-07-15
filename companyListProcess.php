@@ -16,6 +16,7 @@ else{
 }
 
 
+$smarty->assign('url', TYPEAHEAD_API_URL);
 
 
 

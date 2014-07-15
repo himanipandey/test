@@ -16,6 +16,22 @@ include("imageService/image_upload.php");
 AdminAuthentication();
 
 //echo "here";
+if($_POST['task']=='office_locations'){
+    $cityId = $_POST['cityId'];
+    //$locList = Locality::getLocalityByCity($cityId);
+    $query = "select locality_id, label from locality l where l.city_id='{$cityId}'";
+    $res = mysql_query($query) or die(mysql_error());
+    
+    $html =  "";
+    while ($data = mysql_fetch_assoc($res)) {
+        $html .= "<option value='".$data['locality_id']."' >".$data['label']."</option>";
+     }
+
+                                      
+    echo $html;
+}
+
+
 if($_POST['task']=='createComp'){
     $id = $_POST['id'];
     $type = $_POST['type'];

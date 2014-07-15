@@ -1,21 +1,27 @@
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
 <script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script> 
 <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="js/tablesorter_default_table.js"></script>
-
+{literal}
 <script language="javascript">
 
 
 jQuery(document).ready(function(){ 
+  console.log($("#typeaheadUrl").val()+"?query="+$("#searchPlace").val()+"&typeAheadType=locality&rows=10");
+  
 	$("#create_button").click(function(){
 	  cleanFields();
 	  
 	    $('#search_bottom').hide('slow');
 	   $('#create_company').show('slow'); 
+     //$('#offAddDiv').hide(); 
 	    $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
 	    $(this).attr('disabled',false);		    
 	  });	
@@ -84,7 +90,6 @@ jQuery(document).ready(function(){
 
     for (var i = 0; i < ipArr.length; i++) {
       if(ipArr[i]!='' && !ValidateIPaddress(ipArr[i])) {
-        console.log(ipArr[i]);
         $('#errmsgip_'+i).html('<font color="red">Please provide a valid IP.</font>');
         $("#ip_"+i).focus();
         error = 1;
@@ -394,7 +399,7 @@ function addRow(tableID) {
             element2.type = "text";
             element2.style.width="250px";
             element2.id=fieldId+"_"+rowCount;
-            element2.class=fieldClass;
+            element2.className=fieldClass;
             element2.name =fieldClass+"[]";
             
             cell2.appendChild(element2);
@@ -404,7 +409,7 @@ function addRow(tableID) {
             cell3.width = "40%";
             cell3.style.textAlign="left";
             cell3.id="errmsgip_"+rowCount;
-            cell3.class ="errmsgip";
+            cell3.className ="errmsgip";
  
 }
 
@@ -459,78 +464,341 @@ var iframeUpload = {
     }
 };
 
+window.contactTableNo = 0;
 
-
-
-$("#addContact").click(function(){
-    var val = $("#deal option:selected").val();
-    var tableId = "contact_table";
-    var  fieldId = "person";
-    var fieldClass = "persons";
-    addContactTable(tableId);
-  
-            
-}
+jQuery(document).ready(function(){ 
+    $("#addContact").click(function(){
+      
+      //console.log("hi");
+        var tableId = "contact_table";
+        var  fieldId = "person";
+        var fieldClass = "persons";
+        addContactTable(tableId);
+      
+                
+    });
+});
 
 function addContactTable(tableId){
-    var table = document.getElementById(tableID); 
- 
+    var table = document.getElementById(tableId); 
+ window.contactTableNo += 1;
+ no = window.contactTableNo;
+ var rowId = "rowId_"+no;
             var rowCount = table.rows.length;
             var row = table.insertRow(rowCount);
+            row.id = rowId;
             var cell1 = row.insertCell(0);
             var element1 = document.createElement("table");
             element1.style.width="100%";
-            element1.id="contact_table_"+rowCount;
+            element1.id="contact_table_"+no;
             cell1.appendChild(element1);
-            addContactRow(element1.id, "Name", "person", "persons", "errmsgname")
+            addContactRow(element1.id, "Name", "person", "errmsgname", no);
+            addContactRow(element1.id, "Contact Phone 1", "person", "errmsgname", no);
+            addContactRow(element1.id, "Contact Phone 2", "person", "errmsgname", no);
+            addContactRow(element1.id, "Contact Mobile", "person", "errmsgname", no);
+            addContactRow(element1.id, "Contact Fax", "person", "errmsgname", no);
+            addContactRow(element1.id, "Contact Email", "person", "errmsgname", no);
+            addDeleteButton(element1.id, "deleteContact", no);
+            //addBlankRow(element1.id);
 
 }
 
-function addContactRow(tabeleId, label, inputClass, msgClass){
-    var table = document.getElementById(tableID); 
+function addContactRow(tableId, label, inputClass, msgClass, no){
+    var table = document.getElementById(tableId); 
  
             var rowCount = table.rows.length;
             var row = table.insertRow(rowCount);
  
             var cell1 = row.insertCell(0);
             cell1.innerHTML = label;
-            cell1.width = "15%";
+            cell1.width = "20%";
             cell1.style.textAlign="right";
 
             var cell2 = row.insertCell(1);
-            //cell1.width = "20%";
+            cell2.width = "30%";
             var element2 = document.createElement("input");
             element2.type = "text";
             element2.style.width="250px";
-            element2.id=inputClass+"_"+rowCount;
-            element2.class=inputClass;
+            element2.id=inputClass+"_"+no;
+            element2.className=inputClass;
             element2.name =inputClass+"[]";
             
             cell2.appendChild(element2);
 
             var cell3 = row.insertCell(2);
             cell3.innerHTML = "";
-            cell3.width = "40%";
+            cell3.width = "50%";
             cell3.style.textAlign="left";
-            cell3.id=msgClass+"_"+rowCount;
-            cell3.class = msgClass;
+            cell3.id=msgClass+"_"+no;
+            cell3.className = msgClass;
             
 }
 
-function deleteRow(tableID) {
-            try {
-            var table = document.getElementById(tableID);
+function addDeleteButton(tableId, buttonClass, no){
+      var table = document.getElementById(tableId); 
+ 
             var rowCount = table.rows.length;
-             table.deleteRow(rowCount-1);
+            var row = table.insertRow(rowCount);
+ 
+            var cell1 = row.insertCell(0);
+            cell1.width = "20%";
+
+            var cell2 = row.insertCell(1);
+            cell2.width = "30%";
+
+            var cell3 = row.insertCell(2);
+            cell3.width = "50%";
+            var element = document.createElement("input");
+            element.type = "button";
+            element.id=buttonClass+"_"+no;
+            element.className=buttonClass;
+            element.name =buttonClass+"[]";
+            element.value = "Delete Contact Person";
+            //element.addEventListener("click", deleteContact(no));
+            element.addEventListener("click", function(){
+              deleteContactPerson(no);
+            });
+            //$(element).on("click", "button", deleteContact(no));
+            cell3.appendChild(element);
+
+
+}
+
+function addBlankRow(tableId){
+      var table = document.getElementById(tableId); 
+ 
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+ 
+            var cell1 = row.insertCell(0);
+            cell1.width = "20%";
+
+            var cell2 = row.insertCell(1);
+            cell2.width = "30%";
+}
+
+var deleteContactPerson = function(no){
+ 
+    try {
+  console.log(no);
+
+            var tableId = "contact_table";
+            var table = document.getElementById(tableId);
+            //table.deleteRow(no);
                
+            var rowId = "rowId_"+no;
+            var row = document.getElementById(rowId);
+    
+           table.deleteRow(row.rowIndex);
  
  
             }catch(e) {
                 alert(e);
             }
+};
+
+function getLocality(){
+   var cityId = $("#off_loc_city").val();
+   var data = {cityId:cityId, task:"office_locations"};
+   $.ajax({
+
+              type: "POST",
+              url: "/saveCompany.php",
+              data: data,
+              
+              success:function(msg){
+                $("#off_loc_locality").find('option:gt(0)').remove();
+                $("#off_loc_locality").append(msg);
+              }
+   });
 }
 
+
+window.offLocTabRowNo=0;
+
+function addOfficeLocation(){
+  var cityName = $("#off_loc_city :selected").text();  
+  var cityId = $("#off_loc_city :selected").val(); 
+  var locName = $("#off_loc_locality :selected").text(); 
+  var locId = $("#off_loc_locality :selected").val();
+  var address = $("#off_loc_address").val();
+  var tableId = "off_loc_table";
+  var data = {table_id:tableId, first:{checkbox:"checkbox", class:"class" }, second:{label:"label", text:cityName, }, third:{label:"label", text:locName,}, fourth:{label:"label", text:address,}, city_id:cityId, loc_id:locId};
+
+  if(cityId!='' && locId!='' && address!=''){
+
+    addOfficeLocRow(data);
+    $('#offAddDiv').hide(); 
+  }
+  else{
+    alert("Please provide City, Locality and Address.");
+  }
+
+
+}
+
+function addOfficeLocRow(data){
+  //console.log(data);
+    var table = document.getElementById(data.table_id); 
+ 
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+            row.className = "border";
+            row.id = "officeLocRowId_"+window.offLocTabRowNo;
+
+            var cell1 = row.insertCell(0);
+            cell1.width = "10%";
+            cell1.className = "border";
+            var element1 = document.createElement("input");
+            element1.type = "checkbox";
+            cell1.style.textAlign = "center";
+            //element2.style.width="25px";
+            //element2.id=inputclassName+"_"+no;
+            element1.className ="off_loc_cb";
+            element1.id= "off_loc_cb_"+window.offLocTabRowNo;
+            cell1.appendChild(element1);
+
+            var cell2 = row.insertCell(1);
+            cell2.className = "border";
+            var element2 = document.createElement("label");
+            element2.innerHTML = data.second.text;;
+            cell2.width = "15%";
+            cell2.style.textAlign="center";
+            cell2.appendChild(element2);
+
+            var cell3 = row.insertCell(2);
+            cell3.className = "border";
+            var element3 = document.createElement("label");
+            element3.innerHTML = data.third.text;;
+            cell3.width = "25%";
+            cell3.style.textAlign="center";
+            cell3.appendChild(element3);
+
+            var cell4 = row.insertCell(3);
+            cell4.className = "border";
+            var element4 = document.createElement("label");
+            element4.innerHTML = data.fourth.text;
+            element4.id = "off_loc_address_id_"+window.offLocTabRowNo;
+            cell4.width = "30%";
+            cell4.style.textAlign="center";
+            cell4.appendChild(element4);
+
+
+            var element5 = document.createElement("input");
+            element5.type = "hidden";
+            element5.value = data.city_id;
+            element5.id = "off_loc_city_id_"+window.offLocTabRowNo;
+            cell4.appendChild(element5);
+
+            var element6 = document.createElement("input");
+            element6.type = "hidden";
+            element6.value = data.loc_id;
+            element6.id = "off_loc_loc_id_"+window.offLocTabRowNo;
+            cell4.appendChild(element6);
+
+
+            window.offLocTabRowNo +=1;
+}
+
+function openOfficeAddDiv(){
+  if($('#offAddDiv').css('display') == 'none'){ 
+     $('#offAddDiv').show(); 
+  }
+}
+
+function openCoverageDiv(){
+  if($('#coverageDiv').css('display') == 'none'){ 
+     $('#coverageDiv').show(); 
+  }
+}
+
+function deleteOfficeRow(){
+var selected=false;
+    $(".off_loc_cb").each(function(key, value){
+      //alert("here0");
+      if($(this).is(':checked')){
+          selected=true;
+          cbId = $(this).attr('id');
+          var res = cbId.split("_");
+          var no = res[res.length-1]; 
+           try {
+                var table = document.getElementById("off_loc_table");
+                var rowId = "officeLocRowId_"+no;
+                var row = document.getElementById(rowId);
+        
+               table.deleteRow(row.rowIndex);
+     
+     
+            }catch(e) {
+                alert(e);
+            }
+      }
+    });
+
+    alert("Please select at least one row.")
+}
+
+$.widget( "custom.catcomplete", $.ui.autocomplete, {
+   
+  _renderItem: function( ul, item ) {
+    var res = item.id.split("-");
+        var tableName = res[1];
+    return $( "<li>" )
+      .append( $( "<a>" ).text( item.label + "........." +tableName ) )
+      .appendTo( ul );
+  },
+  
+
+  });
+
+
+
+$( "#searchLocality" ).catcomplete({
+     // q = $("#searchPlace").val();
+      //alert("hello");
+      source: function( request, response ) {
+        $.ajax({
+          url: $("#typeaheadUrl").val()+"?query="+$("#searchPlace").val()+"&typeAheadType=locality&rows=10",
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full",
+           
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            //alert(data);
+            response( $.map( data.data, function( item ) {              
+                return {
+                label: item.displayText,
+                value: item.label,
+                id:item.id,
+                }
+              
+            }));
+          }
+        });
+      },
+      
+      select: function( event, ui ) {
+        selectedItem = ui.item;
+        //alert(selectedItem.label);
+        //log( ui.item ?
+         // "Selected: " + ui.item.label :
+          //"Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      },
+
+    });
+
+
 </script>
+{/literal}
 </TD>
   </TR>
   <TR>
@@ -705,46 +973,62 @@ function deleteRow(tableID) {
                       </td>
                     </tr>
 
-                    <tr height="15">
+
+<!--  contact persons starts --------------------------------------------------------------------     -->
+                    <tr >
                       <td colspan="3" align="left" ><hr><b>Contact Person Details</b></td>
                     </tr>
 
                     <tr>
-                      <td colspan="3" >
+                      <td colspan="3" align="left">
                         <table id="contact_table" width = "100%">
-                          <tr>
-                          <td colspan="3" >
-                          <table id="contact_table_0" width = "100%">
+                          <tr id="rowId_0">
+                          <td colspan="3" align="left">
+                          <table id="contact_table_0" width = "100%" >
                             <tr>
-                              <td width="20%" align="right" valign="top">Name :</td>
-                              <td width="30%" align="left"><input type=text name="person" id="person_0" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                              <td width="20%" align="right" valign="top">Name : </td>
+                              <td width="30%" align="left"><input type=text name="person" id="person_0" style="width:250px;"></td> <td width="50%" align="left" id="errmsgweb"></td>
                               </td>
                         
                             </tr>
 
                             <tr>
-                              <td width="20%" align="right" >Contact Email : </td>
-                              <td width="30%" align="left"><input type=text name="email" id="email_0" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                              <td width="20%" align="right" >Contact Phone 1 : </td>
+                              <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
                             </tr>
 
                             <tr>
-                              <td width="20%" align="right" >Contact Phone No. : </td>
-                              <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgphone"></td>
+                              <td width="20%" align="right" >Contact Phone 2 : </td>
+                              <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
                             </tr>
 
                             <tr>
-                              <td width="20%" align="right" valign="top">fax :</td>
+                              <td width="20%" align="right" >Contact Mobile : </td>
+                              <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
+                            </tr>
+
+
+                            <tr>
+                              <td width="20%" align="right" valign="top">Contact Fax : </td>
                              <td width="30%" align="left"><input type=text name="fax" id="fax" style="width:250px;"></td> 
-                            <td width="20%" align="left" id="errmsgfax"></td>
+                            <td width="50%" align="left" id="errmsgfax"></td>
                             </tr>
 
                             <tr>
-                              <td >&nbsp;</td>
-                              <td align="left" style="padding-left:50px;" >
-                              <input type="button" name="lmkSave" id="lmkSave" value="Delete Contact Person" style="cursor:pointer">                 
+                              <td width="20%" align="right" >Contact Email : </td>
+                              <td width="30%" align="left"><input type=text name="email" id="email_0" style="width:250px;"></td> <td width="50%" align="left" id="errmsgweb"></td>
+                            </tr>
+
+                           
+                            
+                            <tr width="25px">
+                              <td width="20%"></td>
+                              <td width="30%"></td>
+                              <td align="left" style="padding-left:50px;" width="50%">
+                              <input type="button" name="deleteContact" id="deleteContact_0" value="Delete Contact Person" style="cursor:pointer" onclick="deleteContactPerson('0');">          
                               </td>
                             </tr>
-
+                            
                           </table>
                         </td>
                       </tr>
@@ -759,6 +1043,8 @@ function deleteRow(tableID) {
                       </td>
                     </tr>
 
+
+<!--  customer care starts --------------------------------------------------------------------     -->
                     <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Customer Care Details</b></td>
                     </tr> 
@@ -790,13 +1076,125 @@ function deleteRow(tableID) {
                       <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
                     </tr>
 
+<!----- office locations--------------------------------------------------------------------     -->
                    <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Office Locations</b></td>
                     </tr> 
+                    <tr id="offAddDiv" style="display:none">
+                      
+                      <td colspan="3">
+                        <table width="100%">
+                        <tr>
+                          <td width="18%" align="right" valign="top"><font color = "red"></font>City :</td>
+                          <td width="30%" align="left" ><select id="off_loc_city" name="" onchange="getLocality();"><option value=''>Select City</option>
+                                           {foreach from=$cityArray key=k item=v}
+                                               <option value="{$k}">{$v}</option>
+                                           {/foreach}
+                                           
+                                        </select></td>
+                          <td width="20%" align="left" id=""></td>
+                          
+                          <td><input type="hidden", id="lmkid">  </td>
+                        </tr>
 
+                        <tr>
+                          <td width="18%" align="right" valign="top"><font color = "red"></font>Locality :</td>
+                          <td width="30%" align="left" ><select id="off_loc_locality" name="" >
+                              <option value=''>Select Locality</option>
+                                        </select></td>
+                          <td width="20%" align="left" id=""></td>
+                          
+                          <td><input type="hidden", id="lmkid">  </td>
+                        </tr>
+
+                        <tr>
+                          <td width="18%" align="right" >Enter Address : </td>
+                          <td width="30%" align="left"><input type=text name="" id="off_loc_address" style="width:350px;"></td>
+                          <td><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="addOfficeLocation();"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                        </tr>
+                        </table>
+                      </td>
+                     
+                    </tr>
+
+                    <hr>
+                    <tr>
+                      <td colspan="3" >
+                      <table id="off_loc_table" width = "100%" class="border">
+                      <tr class="border">
+                        <th width="10%" align="center" class="border">checkbox</th>
+                        <th width="15%" height="25" align="center" valign="top" class="border">City</th>
+                        <th width="25%" align="center" class="border">Locality</th>
+                        <th width="30%" align="center" class="border">Address</th>
+                      </tr>
+                      
+                      </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="20%" align="right" ><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="openOfficeAddDiv();"></td>
+                      <td width="20%" align="left" ><input type="button" align="left" id="addOffLoc" value="Delete" style="cursor:pointer" onclick="deleteOfficeRow();"></td>
+                    </tr>
+
+
+<!--  coverage --------------------------------------------------------------------     --> 
                     <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Coverage</b></td>
                     </tr> 
+
+                    <tr id="coverageDiv" style="display:none">
+                      
+                      <td colspan="3">
+                        <table width="100%">
+                        <tr>
+                          <td width="18%" align="right" valign="top"><font color = "red"></font>Locality :</td>
+                          <td width="30%" align="left" ><input id="searchLocality"></td>
+                          <td width="20%" align="left" id=""></td>
+                          
+                          <td><input type="hidden", id="lmkid"><input type="hidden", id="typeaheadUrl" value='{$url}'>  </td>
+                        </tr>
+
+                        <tr>
+                          <td width="18%" align="right" valign="top"><font color = "red"></font>City :</td>
+                          <td width="30%" align="left" ><select id="off_loc_locality" name="" >
+                              <option value=''>Select Locality</option>
+                                        </select></td>
+                          <td width="20%" align="left" id=""></td>
+                          
+                          <td><input type="hidden", id="lmkid">  </td>
+                        </tr>
+
+                        <tr>
+                          <td width="18%" align="right" >Enter Address : </td>
+                          <td width="30%" align="left"><input type=text name="" id="off_loc_address" style="width:350px;"></td>
+                          <td><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="addOfficeLocation();"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                        </tr>
+                        </table>
+                      </td>
+                     
+                    </tr>
+
+                    <hr>
+                    <tr>
+                      <td colspan="3" >
+                      <table id="off_loc_table" width = "100%" class="border">
+                      <tr class="border">
+                        <th width="10%" align="center" class="border">checkbox</th>
+                        <th width="15%" height="25" align="center" valign="top" class="border">City</th>
+                        <th width="25%" align="center" class="border">Locality</th>
+                        <th width="30%" align="center" class="border">Address</th>
+                      </tr>
+                      
+                      </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="20%" align="right" ><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="openCoverageDiv();"></td>
+                      <td width="20%" align="left" ><input type="button" align="left" id="addOffLoc" value="Delete" style="cursor:pointer" onclick="deleteCoverageRow();"></td>
+                    </tr>
+
+
+<!--  coverage ends --------------------------------------------------------------------     -->                    
 
                     <tr>
                       <td width="20%" align="right" >Pancard No : </td>
@@ -905,3 +1303,15 @@ function deleteRow(tableID) {
     </TBODY></TABLE>
   </TD>
 </TR>
+
+<style type="text/css" >
+
+  .border {
+    border-collapse: true;
+  }
+  .border {
+    border: 1px solid #eee;
+  }
+
+
+</style>
