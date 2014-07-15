@@ -9,7 +9,7 @@ $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 
 if($compid){
-	$compArr = Company::getAllCompany($compid);
+	$compArr = Company::getAllCompany($arr=array('id'=>$compid));
 }
 else{
 	$compArr = Company::getAllCompany();

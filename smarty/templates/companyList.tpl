@@ -14,7 +14,7 @@
 
 
 jQuery(document).ready(function(){ 
-  console.log($("#typeaheadUrl").val()+"?query="+$("#searchPlace").val()+"&typeAheadType=locality&rows=10");
+ 
   
 	$("#create_button").click(function(){
 	  cleanFields();
@@ -613,7 +613,7 @@ function getLocality(){
    });
 }
 
-
+/*******************   office location       ***********************************/
 window.offLocTabRowNo=0;
 
 function addOfficeLocation(){
@@ -751,14 +751,12 @@ $.widget( "custom.catcomplete", $.ui.autocomplete, {
 
   });
 
+jQuery(document).ready(function(){
 
-
-$( "#searchLocality" ).catcomplete({
-     // q = $("#searchPlace").val();
-      //alert("hello");
+    $( "#searchLocality" ).catcomplete({
       source: function( request, response ) {
         $.ajax({
-          url: $("#typeaheadUrl").val()+"?query="+$("#searchPlace").val()+"&typeAheadType=locality&rows=10",
+          url: $("#typeaheadUrl").val()+"?query="+$("#searchLocality").val()+"&typeAheadType=locality&rows=10",
           dataType: "json",
           data: {
             featureClass: "P",
@@ -767,7 +765,6 @@ $( "#searchLocality" ).catcomplete({
             name_startsWith: request.term
           },
           success: function( data ) {
-            //alert(data);
             response( $.map( data.data, function( item ) {              
                 return {
                 label: item.displayText,
@@ -782,10 +779,7 @@ $( "#searchLocality" ).catcomplete({
       
       select: function( event, ui ) {
         selectedItem = ui.item;
-        //alert(selectedItem.label);
-        //log( ui.item ?
-         // "Selected: " + ui.item.label :
-          //"Nothing selected, input was " + this.value);
+        
       },
       open: function() {
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -797,6 +791,132 @@ $( "#searchLocality" ).catcomplete({
     });
 
 
+    $( "#searchProjects" ).catcomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: $("#typeaheadUrl").val()+"?query="+$("#searchProjects").val()+"&typeAheadType=project&rows=10",
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full",
+           
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            response( $.map( data.data, function( item ) {              
+                return {
+                label: item.displayText,
+                value: item.label,
+                id:item.id,
+                }
+              
+            }));
+          }
+        });
+      },
+      
+      select: function( event, ui ) {
+        selectedItem = ui.item;
+        
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      },
+
+    });
+});
+
+
+
+/*******************   coverage       ***********************************/
+window.coverageTabRowNo=0;
+
+function addCoverage(){
+  var cityName = $("#off_loc_city :selected").text();  
+  var cityId = $("#off_loc_city :selected").val(); 
+  var locName = $("#off_loc_locality :selected").text(); 
+  var locId = $("#off_loc_locality :selected").val();
+  var address = $("#off_loc_address").val();
+  var tableId = "off_loc_table";
+  var data = {table_id:tableId, first:{checkbox:"checkbox", class:"class" }, second:{label:"label", text:cityName, }, third:{label:"label", text:locName,}, fourth:{label:"label", text:address,}, city_id:cityId, loc_id:locId};
+
+  if(cityId!='' && locId!='' && address!=''){
+
+    addOfficeLocRow(data);
+    $('#offAddDiv').hide(); 
+  }
+  else{
+    alert("Please provide City, Locality and Address.");
+  }
+
+
+}
+
+function addOfficeLocRow(data){
+  //console.log(data);
+    var table = document.getElementById(data.table_id); 
+ 
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+            row.className = "border";
+            row.id = "officeLocRowId_"+window.offLocTabRowNo;
+
+            var cell1 = row.insertCell(0);
+            cell1.width = "10%";
+            cell1.className = "border";
+            var element1 = document.createElement("input");
+            element1.type = "checkbox";
+            cell1.style.textAlign = "center";
+            //element2.style.width="25px";
+            //element2.id=inputclassName+"_"+no;
+            element1.className ="off_loc_cb";
+            element1.id= "off_loc_cb_"+window.offLocTabRowNo;
+            cell1.appendChild(element1);
+
+            var cell2 = row.insertCell(1);
+            cell2.className = "border";
+            var element2 = document.createElement("label");
+            element2.innerHTML = data.second.text;;
+            cell2.width = "15%";
+            cell2.style.textAlign="center";
+            cell2.appendChild(element2);
+
+            var cell3 = row.insertCell(2);
+            cell3.className = "border";
+            var element3 = document.createElement("label");
+            element3.innerHTML = data.third.text;;
+            cell3.width = "25%";
+            cell3.style.textAlign="center";
+            cell3.appendChild(element3);
+
+            var cell4 = row.insertCell(3);
+            cell4.className = "border";
+            var element4 = document.createElement("label");
+            element4.innerHTML = data.fourth.text;
+            element4.id = "off_loc_address_id_"+window.offLocTabRowNo;
+            cell4.width = "30%";
+            cell4.style.textAlign="center";
+            cell4.appendChild(element4);
+
+
+            var element5 = document.createElement("input");
+            element5.type = "hidden";
+            element5.value = data.city_id;
+            element5.id = "off_loc_city_id_"+window.offLocTabRowNo;
+            cell4.appendChild(element5);
+
+            var element6 = document.createElement("input");
+            element6.type = "hidden";
+            element6.value = data.loc_id;
+            element6.id = "off_loc_loc_id_"+window.offLocTabRowNo;
+            cell4.appendChild(element6);
+
+
+            window.offLocTabRowNo +=1;
+}
 </script>
 {/literal}
 </TD>
@@ -1148,27 +1268,28 @@ $( "#searchLocality" ).catcomplete({
                         <table width="100%">
                         <tr>
                           <td width="18%" align="right" valign="top"><font color = "red"></font>Locality :</td>
-                          <td width="30%" align="left" ><input id="searchLocality"></td>
+                          <td width="30%" align="left" ><input id="searchLocality" class="ui-corner-top"></td>
                           <td width="20%" align="left" id=""></td>
                           
                           <td><input type="hidden", id="lmkid"><input type="hidden", id="typeaheadUrl" value='{$url}'>  </td>
                         </tr>
 
                         <tr>
-                          <td width="18%" align="right" valign="top"><font color = "red"></font>City :</td>
-                          <td width="30%" align="left" ><select id="off_loc_locality" name="" >
-                              <option value=''>Select Locality</option>
-                                        </select></td>
+                          <td width="18%" align="right" valign="top"><font color = "red"></font>Projects :</td>
+                          <td width="50%" align="left" ><input type="radio" name="projectsRadio" value="male">All Projects</input>&nbsp; &nbsp; &nbsp; &nbsp; <input type="radio" name="projectsRadio" value="female">Some Projects</input> &nbsp; &nbsp; &nbsp; &nbsp;<input type="radio" name="projectsRadio" value="female">Some Builders</input></td>
                           <td width="20%" align="left" id=""></td>
                           
-                          <td><input type="hidden", id="lmkid">  </td>
+                         
                         </tr>
 
                         <tr>
-                          <td width="18%" align="right" >Enter Address : </td>
-                          <td width="30%" align="left"><input type=text name="" id="off_loc_address" style="width:350px;"></td>
-                          <td><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="addOfficeLocation();"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                          <td width="18%" align="right" valign="top"><font color = "red"></font>Add Projects :</td>
+                          <td width="30%" align="left" ><input id="searchProjects" class="ui-corner-top"></td>
+                          
+                          <td><input type="button" align="left" id="addCoverageProjects" value="Add" style="cursor:pointer" onclick="addCoverage();">  </td>
                         </tr>
+
+                        
                         </table>
                       </td>
                      

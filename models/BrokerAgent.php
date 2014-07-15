@@ -1,65 +1,24 @@
 <?php
 
 // Model integration for Company list
-class Company extends ActiveRecord\Model
+class BrokerAgent extends ActiveRecord\Model
 {
-    static $table_name = 'company';
+    static $table_name = 'agents';
     //$result = array();
-    static function getCompanyById($compId) {
-        $companyDetail = Company::find('all',array('conditions'=>array("id = $compId")));
-        return $companyDetail;
+    static function getBrokerAgentsById($agentId) {
+        $agentsDetail = BrokerAgent::find('all',array('conditions'=>array("id = $agentId")));
+        return $agentsDetail;
     }
 
-    static function getAllCompany($arr=null) {
-        $compid = $arr['id'];
-        $type = $arr['type'];
-
-        if($compid!='' && $type!=''){
-            $companyDetail = Company::find('all', array('conditions'=>array("id = $compid", "type = '$type'")));
-        }
-        else if($compid>0){
-            $companyDetail = Company::find('all', array('conditions'=>array("id = $compid")));
-        }
-        else if($type!=''){
-            $companyDetail = Company::find('all', array('conditions'=>array("type = '$type'")));
+    static function getAllBrokerAgents($agentId=0) {
+        if($agentId>0){
+            $agentsDetail = BrokerAgent::find('all', array('conditions'=>array("id = $agentId")));
         }
         else{
-            $companyDetail = Company::find('all');
+            $agentsDetail = BrokerAgent::find('all');
         }
         
-        $returnArr = Company::getCompanyOtherDetails($companyDetail);
-        //$returnArr = array();
-        
-        
-        return $returnArr;
-    }
-
-    static function getCompanyType() {
-        $sql = "SHOW COLUMNS FROM company LIKE 'type'";
-        //$result = 
-        $result = self::Connection()->query($sql);
-        $row = $result->fetch(PDO::FETCH_NUM);
-
-        if ($row) { // If the query's successful
-            
-            
-            preg_match_all("/'([\w ]*)'/", $row[1], $values);
-            
-        } 
-   
-        return $values[1];
-    }
-
-     static function getCompanyByType($type) {
-        $companyDetail = Company::find('all',array('conditions'=>array("type = '{$type}'")));
-        $list = array();
-        foreach ($companyDetail as $v) {
-            $list[$v->id] = $v->name;
-        }
-        return $list;
-    }
-   
-    static function getCompanyOtherDetails($companyDetail){
+        /*
         $returnArr = array();
         foreach ($companyDetail as $v) {
             $sql = "SELECT address_line_1, city_id, pincode FROM addresses WHERE (table_name='company' and table_id={$v->id})";
@@ -120,10 +79,14 @@ class Company extends ActiveRecord\Model
 
             array_push($returnArr, $arr);
 
-        }
 
-        return $returnArr;
+        }
+        */
+        return $agentsDetail;
     }
+
+    
+    
     
     
 }

@@ -734,4 +734,14 @@ $smarty->assign("arrCommercialType",$arrCommercialType);
 $arrAllType = array("Shop","Office",'Other','Commercial');
 $smarty->assign("arrAllType",$arrAllType);
 /********config for project type of residential/nonresidential******************/
+
+
+/***************Config for Brokers and Agents************************/
+
+$sellerQualification = array(
+		"B.B.A.", "B.C.A.", "B.Com.", "B.Tech.", "B.Sc.", "B.Engg.", "M.A.", "M.B.A.", "M.C.A.", "M.Com.", "M.Tech.", "M.Sc.", 
+	);
+
+
+/********************************************************************/
 ?>
