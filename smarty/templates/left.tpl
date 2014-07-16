@@ -407,7 +407,7 @@
             </tr>
             <tr>
                 <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-                <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Report3</font></a></td>
+                <td align="left" height="22"><a class="leftnav" href="report3.php"><font color = "#f15a22">Report3</font></a></td>
             </tr>
         </table>
     </td></tr>
