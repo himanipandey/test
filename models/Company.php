@@ -102,7 +102,7 @@ class Company extends ActiveRecord\Model
     }
 
      static function getCompanyByType($type) {
-        $companyDetail = Company::find('all',array('conditions'=>array("type = '{$type}'")));
+        $companyDetail = Company::find('all',array('conditions'=>array("type = '{$type}' and status = 'Active'")));
         $list = array();
         foreach ($companyDetail as $v) {
             $list[$v->id] = $v->name;
