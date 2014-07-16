@@ -738,10 +738,6 @@ $smarty->assign("arrAllType",$arrAllType);
 
 /***************Config for Brokers and Agents************************/
 
-$sellerQualification = array(
-		"B.B.A.", "B.C.A.", "B.Com.", "B.Tech.", "B.Sc.", "B.Engg.", "M.A.", "M.B.A.", "M.C.A.", "M.Com.", "M.Tech.", "M.Sc.", 
-	);
-
 
 /********************************************************************/
 ?>

@@ -1,5 +1,5 @@
 <?php
-
+//echo "here";
 error_reporting(1);
 ini_set('display_errors','1');
 set_time_limit(0);
@@ -51,6 +51,9 @@ if($_POST['task']=='createAgent'){
    // $web   = $_POST['web'];
     //$fax   = $_POST['fax'];
     $email   = $_POST['email'];
+    $role = $_POST['agent_role'];
+    $qualification = $_POST['qualification'];
+    $active_since = $_POST['active_since'];
     //$pan   = $_POST['pan'];
     $status   = $_POST['status'];
     $mode =  $_POST['mode'];
@@ -97,54 +100,39 @@ if($_POST['task']=='createAgent'){
 
            
 */    
+
+    //echo "hello";
     if($mode=='update' && $agentId!==null){
 		
-		$imageId = $_POST['imageId'];
+		//$imageId = $_POST['imageId'];
 		
-		$sql_comp = mysql_query("select * from company where id='{$id}'") or die (mysql_error());
+		$sql_comp = mysql_query("select * from agents where id='{$agentId}'") or die (mysql_error());
+
+       // (status, broker_id, academic_qualification_id, name, seller_type, active_since, email, created_at, updated_by) values ('{$status}', '{$brokerId}', '{$qualification}', '{$name}','{$role}', '{$active_since}', '{$email}', NOW(), '{$_SESSION['adminId']}')"
             
         if(mysql_num_rows($sql_comp)>0){
 			
-			$sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
+			$sql = "UPDATE agents set seller_type='{$role}', broker_id='{$brokerId}', academic_qualification_id='{$qualification}', status='{$status}', name='{$name}', active_since='{$active_since}', email='{$email}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$agentId}'";
 			
 			$res_sql = mysql_query($sql) or die(mysql_error());
 
-            $query1 = "UPDATE addresses SET address_line_1='{$address}', city_id='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='company' and table_id='{$id}' )";
+            $query1 = "UPDATE addresses SET address_line_1='{$address}', city_id='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='agents' and table_id='{$agentId}' )";
             $res1 = mysql_query($query1) or die(mysql_error());
 
-            $query_find_ips = "delete from company_ips where company_id={$id}";//echo $query_find_ips;
-            $res = mysql_query($query_find_ips) or die(mysql_error());
-            //$old_no = mysql_num_rows($res);
-            foreach ($ipArr as $k => $v) {
-                $query = "INSERT INTO company_ips (company_id, ip, created_by, created_at) values ('{$id}', '{$v}', {$_SESSION['adminId']}, NOW())";
-                $res = mysql_query($query) or die(mysql_error());
-            }
+           
 
-
-            $query2 = "UPDATE broker_contacts SET name='{$person}', contact_email='{$email}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (broker_id='{$id}' and type='NAgent' )";
-            
-            $res2 = mysql_query($query2) or die(mysql_error());
-            //if(mysql_affected_rows()>0){
-
-                $query2 = "SELECT id from broker_contacts WHERE (broker_id='{$id}' and type='NAgent' )";
-                //echo $query2;
-                $res2 = mysql_query($query2) or die(mysql_error());
-                $dataArr = mysql_fetch_assoc($res2);
-                $broker_contacts_id = $dataArr['id'];
-                //var_dump($dataArr);
-                $query3 = "UPDATE contact_numbers SET contact_no='{$compphone}', updated_by={$_SESSION['adminId']}, updated_at=NOW() WHERE (table_name='company' and table_id='{$id}' and type='cc_phone')";
+                
+                $query3 = "UPDATE contact_numbers SET contact_no='{$phone}', updated_by={$_SESSION['adminId']}, updated_at=NOW() WHERE (table_name='agents' and table_id='{$agentId}' and type='mobile')";
             
                 $res3 = mysql_query($query3) or die(mysql_error());
 
-                $query4 = "UPDATE contact_numbers SET contact_no='{$fax}', updated_by={$_SESSION['adminId']}, updated_at=NOW() WHERE (table_name='broker_contacts' and table_id='{$broker_contacts_id}' and type='fax')";
-                 
-                $res4 = mysql_query($query4) or die(mysql_error());
+            
 
-                $query5 = "UPDATE contact_numbers SET contact_no='{$phone}', updated_by={$_SESSION['adminId']}, updated_at=NOW() WHERE (table_name='broker_contacts' and table_id='{$broker_contacts_id}' and type='phone1')";
+                $query5 = "UPDATE contact_numbers SET contact_no='{$compphone}', updated_by={$_SESSION['adminId']}, updated_at=NOW() WHERE (table_name='agents' and table_id='{$agentId}' and type='phone1')";
                  
                 $res5 = mysql_query($query5) or die(mysql_error());
 
-                
+                /*
                 if(isset($_POST['image']) && $image!=""){ 					
 					$unitImageArr['objectId'] = $id;
                     $unitImageArr['params']['service_image_id'] = $imageId;
@@ -164,6 +152,7 @@ if($_POST['task']=='createAgent'){
                         }
                     }
                 }
+                */
             //}
 
             echo "1";
@@ -174,39 +163,24 @@ if($_POST['task']=='createAgent'){
     }
     if ($mode=='create'){
         
-        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', NOW(), {$_SESSION['adminId']})";
-        
-        $res = mysql_query($query) or mysql_error();
+        $query = "INSERT INTO agents(status, broker_id, academic_qualification_id, name, seller_type, active_since, email, created_at, updated_by) values ('{$status}', '{$brokerId}', '{$qualification}', '{$name}','{$role}', '{$active_since}', '{$email}', NOW(), '{$_SESSION['adminId']}')";
+      
+        $res = mysql_query($query) or die(mysql_error());
         if(mysql_affected_rows()>0){
-            $comp_id = mysql_insert_id();
-            $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, pincode, updated_by, created_at) values ('company', '{$comp_id}', '{$address}', '{$city}', '{$pin}', {$_SESSION['adminId']}, NOW())";
+            $agent_id = mysql_insert_id();
+            $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, pincode, updated_by, created_at) values ('agents', '{$agent_id}', '{$address}', '{$city}', '{$pin}', {$_SESSION['adminId']}, NOW())";
             $res1 = mysql_query($query1) or die(mysql_error());
 
-            foreach ($ipArr as $k => $v) {
-                $query = "INSERT INTO company_ips (company_id, ip, created_by, created_at) values ('{$comp_id}', '{$v}', {$_SESSION['adminId']}, NOW())";
-                $res = mysql_query($query) or die(mysql_error());
-            }
-            
-             $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$comp_id}', '+91', '{$compphone}', 'cc_phone', {$_SESSION['adminId']}, NOW())";
-              
-             $res3 = mysql_query($query3) or die(mysql_error());
-
-
-            $query2 = "INSERT INTO broker_contacts (broker_id, name, type, contact_email, updated_by, created_at, updated_at) values ('{$comp_id}', '{$person}', 'NAgent', '{$email}', {$_SESSION['adminId']}, NOW(), NOW())";
+            $query2 = "insert into agents(chkAddr) value('on') where id='{$agent_id}'";
             $res2 = mysql_query($query2) or die(mysql_error());
-            if(mysql_affected_rows()>0){
+
+
+            $query4 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('agents', '{$agent_id}', '+91', '{$phone}', 'mobile', {$_SESSION['adminId']}, NOW()), ('agents', '{$agent_id}', '+91', '{$compphone}', 'phone1', {$_SESSION['adminId']}, NOW())";
+           
+            $res4 = mysql_query($query4) or die(mysql_error());
+
                
-                $broker_contacts_id = mysql_insert_id();
-               
-
-                $query4 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('broker_contacts', '{$broker_contacts_id}', '+91', '{$fax}', 'fax', {$_SESSION['adminId']}, NOW())";
-               
-                $res4 = mysql_query($query4) or die(mysql_error());
-
-                $query5 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('broker_contacts', '{$broker_contacts_id}', '+91', '{$phone}', 'phone1', {$_SESSION['adminId']}, NOW())";
-
-                $res5 = mysql_query($query5) or die(mysql_error());
-
+               /* 
                 if(isset($_POST['image']) && $image!=""){
                     $unitImageArr['objectId'] = $comp_id;
                     $postArr[] = $unitImageArr;         
@@ -227,7 +201,8 @@ if($_POST['task']=='createAgent'){
                         }
                     }
                 }
-            }
+                */
+            
 
             echo "1";
         }

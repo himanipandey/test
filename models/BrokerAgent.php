@@ -18,62 +18,60 @@ class BrokerAgent extends ActiveRecord\Model
             $agentsDetail = BrokerAgent::find('all');
         }
         
-        /*
+        
         $returnArr = array();
-        foreach ($companyDetail as $v) {
-            $sql = "SELECT address_line_1, city_id, pincode FROM addresses WHERE (table_name='company' and table_id={$v->id})";
+        foreach ($agentsDetail as $v) {
+            $sql = "SELECT address_line_1, city_id, pincode FROM addresses WHERE (table_name='agents' and table_id={$v->id})";
             $result = self::Connection()->query($sql);
             $address_row = $result->fetch(PDO::FETCH_NUM);
 
             $sql = "SELECT LABEL FROM city WHERE  CITY_ID='{$address_row[1]}'";
             $result = self::Connection()->query($sql);
             $city = $result->fetch(PDO::FETCH_NUM);
-
-            $sql = "SELECT ip FROM company_ips WHERE  company_id='{$v->id}'";
+                   
+            $sql = "SELECT name FROM company WHERE  id='{$v->broker_id}'";
             $result = self::Connection()->query($sql);
-            $ips = array();
-            while($data = $result->fetch(PDO::FETCH_NUM)){
-                array_push($ips, $data[0]);
-            };
-            
+            $broker_name = $result->fetch(PDO::FETCH_NUM);
 
-            $sql = "SELECT id, name, contact_email FROM broker_contacts WHERE (broker_id={$v->id} and type='NAgent')";
+            $sql = "SELECT qualification FROM academic_qualifications WHERE id='{$v->academic_qualification_id}'";
             $result = self::Connection()->query($sql);
-            $agent_row = $result->fetch(PDO::FETCH_NUM);
+            $qualification = $result->fetch(PDO::FETCH_NUM);
 
-            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='broker_contacts' and table_id='{$agent_row[0]}' and type='fax')";
+            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='agents' and table_id='{$v->id}' and type='phone1')";
             $result = self::Connection()->query($sql);
-            $fax= $result->fetch(PDO::FETCH_NUM);
+            $phone= $result->fetch(PDO::FETCH_NUM);
 
-            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='company' and table_id='{$v->id}' and type='cc_phone')";
+            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='agents' and table_id='{$v->id}' and type='mobile')";
             $result = self::Connection()->query($sql);
-            $compphone = $result->fetch(PDO::FETCH_NUM);
+            $mobile = $result->fetch(PDO::FETCH_NUM);
      
-            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='broker_contacts' and table_id='{$agent_row[0]}' and type='phone1')";
-            $result = self::Connection()->query($sql);
-            $phone = $result->fetch(PDO::FETCH_NUM);
-
+          
             $arr = array();
             $arr['id'] = $v->id;
+            $arr['brokerId'] = $v->broker_id;
+            $arr['brokerName'] = $broker_name[0];
             $arr['name'] = $v->name;
-            $arr['type'] = $v->type;
-            $arr['des'] = $v->description;
-            $arr['type'] = $v->type;
+            $arr['role'] = $v->seller_type;
+            //$arr['des'] = $v->description;
+            //$arr['type'] = $v->type;
             $arr['status'] = $v->status;
-            $arr['pan'] = $v->pan;
-            $arr['email'] = $v->primary_email;
+            //$arr['pan'] = $v->pan;
+            $arr['email'] = $v->email;
 
             $arr['address'] = $address_row[0];
             $arr['city'] = $address_row[1];
             $arr['pin'] = $address_row[2];
-            $arr['ips'] = $ips;
-            $arr['ipsstr'] = implode("-", $ips);
-            $arr['compphone'] = $compphone[1];
-            $arr['person'] = $agent_row[1];
+            //$arr['ips'] = $ips;
+            //$arr['ipsstr'] = implode("-", $ips);
+            $arr['mobile'] = $mobile[1];
+            //$arr['person'] = $agent_row[1];
 
-            $arr['fax'] = $fax[1];
+            //$arr['fax'] = $fax[1];
             $arr['phone'] = $phone[1];
             $arr['city_name'] = $city[0];
+            $arr['active_since'] = $v->active_since;
+            $arr['qualification'] = $qualification[0];
+            $arr['qualification_id'] = $v->academic_qualification_id;
             //$arr['city'] = $v->city;
 
 
@@ -81,8 +79,8 @@ class BrokerAgent extends ActiveRecord\Model
 
 
         }
-        */
-        return $agentsDetail;
+        
+        return $returnArr;
     }
 
     

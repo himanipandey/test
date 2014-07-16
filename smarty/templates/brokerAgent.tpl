@@ -58,6 +58,9 @@ jQuery(document).ready(function(){
 		//var web = $('#web').val();
 		//var pan = $('#pan').val().trim();
 		var status = $('#status').val(); 
+    var agentRole = $('#role option:selected').val();
+    var qualification = $('#qualification option:selected').val();
+    var activeSince = $('#img_date1').val();
 		var agentId = $('#agentId').val();
 		 var error = 0;
 	    var mode='';
@@ -150,13 +153,13 @@ jQuery(document).ready(function(){
 
 
 
-    var data = { id:agentId, brokerId:broker, name:name, address : address, city:city, pincode : pincode, compphone : compphone, phone:phone, email:email, status:status, task : "createAgent", mode:mode}; 
+    var data = { id:agentId, brokerId:broker, name:name, address : address, city:city, pincode : pincode, compphone : compphone, phone:phone, email:email, status:status, agent_role:agentRole, active_since:activeSince, qualification:qualification, task : "createAgent", mode:mode}; 
 
 	    if (error==0){
       
 	      	$.ajax({
 	            type: "POST",
-	            url: "/saveCompany.php",
+	            url: "/saveBrokerAgent.php",
 	            data: data,
               
 	            success:function(msg){
@@ -262,11 +265,85 @@ function isNumeric1(val) {
 }
 
 
+function editAgent(brokerId,id,name,role,status, email, address, city, pin, mobile, phone, active_since,qualification, action){
 
+console.log(qualification);
+    cleanFields();
+    $("#broker").val(brokerId);
+    $("#agentId").val(id);
+    $('#city').val(city);
+    $("#role").val(role);
+    $("#name").val(name);
+    //$("#des").val(des);
+    $("#address").val(address);
+    $("#pincode").val(pin);
+    $("#compphone").val(phone);
 
+    //$("#person").val(person);
+    $("#phone").val(mobile);
+    //$("#web").val(lmkweb);
+    //$("#fax").val(fax);
+    $("#status").val(status);
+    $("#email").val(email);
+    $("#qualification").val(qualification);
+    $("#img_date1").val(active_since);
+    //$("#pan").val(pan);
+    //$('#search-top').hide('slow');
+    $('#search_bottom').hide('slow');
+    window.scrollTo(0, 0);
 
+    if($('#create_agent').css('display') == 'none'){ 
+     $('#create_agent').show('slow'); 
+    }
 
+    if(action == 'read'){
+    $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
+    if($(this).attr('id') != 'exit_button')      
+        $(this).attr('disabled',true);        
+    });
+  }else{
+    $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
+      $(this).attr('disabled',false);       
+    });   
+    }
+}
 
+function cleanFields(){
+    $("#broker").val('');
+    $("#agentId").val('');
+    $('#role').val('');
+    $("#name").val('');
+    //$("#des").val('');
+    $("#address").val('');
+    $("#city").val('');
+    $("#pincode").val('');
+    $("#compphone").val('');
+    //$("#person").val('');
+    $("#phone").val('');
+    //$("#fax").val('');
+    $("#email").val('');
+    //$("#web").val('');
+    //$("#pan").val('');
+    $("#status").val('');
+    $("#qualification").val('');
+    $("#img_date1").val('');
+
+    $('#errmsgbroker').html('');
+    $('#errmsgcity').html('');
+    //$('#err').html('');
+    $('#errmsgname').html('');
+    $('#errmsgaddress').html('');
+    $('#errmsgphone').html('');
+    $('#errmsgpincode').html('');
+    //$('#errmsgfax').html('');
+    $('#errmsgcompphone').html('');
+    //$('.errmsgip').each(function() {
+      //$(this).html('');
+    //});
+    //$('#imgPlaceholder').html('');
+    //$('#errmsglogo').html('');
+
+}
 
 
 </script>
@@ -335,8 +412,8 @@ function isNumeric1(val) {
 
                     <tr>
                       <td width="20%" align="right" >Agent Role : </td>
-                      <td width="30%" align="left"><select id="status" name="status" >
-                        <option name=one value='Active'>Broker Agent</option>
+                      <td width="30%" align="left"><select id="role" name="role" >
+                        <option name=one value='Broker Agent'>Broker Agent</option>
                         <option name=two value='Inactive' ></option>
                                 
                         </select>
@@ -423,7 +500,7 @@ function isNumeric1(val) {
                       <td width="30%" align="left"><select id="qualification" name="qualification" >
                                        <option value=''>Select Qualification</option>
                                        {foreach from=$sellerQualification key=k item=v}
-                                           <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
+                                           <option value="{$k}">{$v}</option>
                                        {/foreach}
                                     </select>
                       </td> 
@@ -450,12 +527,13 @@ function isNumeric1(val) {
                           <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=2% align="center">No.</th>
-                                  <th  width=5% align="center">Type</th>
-                                  <TH  width=8% align="center">Name</TH>
-                                  <TH  width=8% align="center">Logo</TH>
+                                  <th  width=5% align="center">Broker Name</th>
+                                  <TH  width=8% align="center">Agent Name</TH>
+                                  <TH  width=8% align="center">Agent Role</TH>
                                   <TH  width=8% align="center">Address</TH>
-                                  <TH  width=8% align="center">Company IPs</TH>
-                                  <TH  width=8% align="center">Contact Person</TH>
+                                  <TH  width=8% align="center">Contacts</TH>
+                                  <TH  width=8% align="center">Operational Since</TH>
+                                  <TH  width=8% align="center">Acad Qualification</TH>
                                   
                                  <TH width=6% align="center">Status</TH> 
                                 <TH width=3% align="center">Edit</TH>
@@ -466,7 +544,7 @@ function isNumeric1(val) {
                                
                                 {$i=0}
                                 
-                                {foreach from=$compArr key=k item=v}
+                                {foreach from=$agentArr key=k item=v}
                                     {$i=$i+1}
                                     {if $i%2 == 0}
                                       {$color = "bgcolor = '#F7F7F7'"}
@@ -475,16 +553,20 @@ function isNumeric1(val) {
                                     {/if}
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v['type']}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}', 'read');">{$v['name']}</a></TD>
-                                  <TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>
-                                  <TD align=center class=td-border>{$v['address']}, City-{$v['city_name']}, Pin-{$v['pin']}, Ph.N.-{$v['compphone']}</TD>
-                                  <TD align=center class=td-border>{foreach from=$v['ips'] key=k1 item=v1} {$v1}, {/foreach}</TD>
-                                  <TD align=center class=td-border>{$v['person']}, Contact No.-{$v['phone']}</TD>
+                                  <TD align=center class=td-border>{$v['brokerName']}</TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editAgent('{$v['brokerId']}', '{$v['id']}', '{$v['name']}', '{$v['role']}', '{$v['status']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['mobile']}', '{$v['phone']}', '{$v['active_since']}', '{$v['qualification_id']}', 'read');">{$v['name']}</a></TD>
+                                  <!--<TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>-->
+                                  <TD align=center class=td-border>{$v['role']}</TD>
+                                  <TD align=center class=td-border>{$v['address']}, City-{$v['city_name']}, Pin-{$v['pin']}</TD>
+                                  
+                                 
+                                  <TD align=center class=td-border>Ph.N.-{$v['phone']}, Mobile-{$v['mobile']}, Email-{$v['email']}</TD>
+                                  <TD align=center class=td-border>{$v['active_since']}</TD>
+                                  <TD align=center class=td-border>{$v['qualification']}</TD>
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editAgent('{$v['brokerId']}', '{$v['id']}', '{$v['name']}', '{$v['role']}', '{$v['status']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['mobile']}', '{$v['phone']}', '{$v['active_since']}', '{$v['qualification_id']}', 'edit');">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
 
                                 </TR>
                                 {/foreach}

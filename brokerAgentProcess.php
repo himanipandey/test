@@ -23,8 +23,16 @@ if($agentId){
 else{
 	$agentArr = BrokerAgent::getAllBrokerAgents();
 }
-
+//print("<pre>");print_r($agentArr);
 $smarty->assign("agentArr", $agentArr);
+
+$sellerQualification = array();
+$query = "select * from academic_qualifications";
+$res = mysql_query($query);
+while($data=mysql_fetch_assoc($res)){
+
+	$sellerQualification[$data['id']] = $data['qualification'];
+}
 
 $smarty->assign("sellerQualification", $sellerQualification);
 
