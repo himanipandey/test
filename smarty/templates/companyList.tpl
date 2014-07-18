@@ -9,6 +9,9 @@
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="js/tablesorter_default_table.js"></script>
+<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script>
 {literal}
 <script language="javascript">
 
@@ -778,7 +781,7 @@ jQuery(document).ready(function(){
       },
       
       select: function( event, ui ) {
-        selectedItem = ui.item;
+        window.selectedLocality = ui.item;
         
       },
       open: function() {
@@ -794,12 +797,13 @@ jQuery(document).ready(function(){
     $( "#searchProjects" ).catcomplete({
       source: function( request, response ) {
         $.ajax({
-          url: $("#typeaheadUrl").val()+"?query="+$("#searchProjects").val()+"&typeAheadType=project&rows=10",
+          url: "/saveCompany.php",
           dataType: "json",
           data: {
             featureClass: "P",
             style: "full",
-           
+            query: $("#searchProjects").val(),
+            locality: window.selectedLocality,
             name_startsWith: request.term
           },
           success: function( data ) {
@@ -978,9 +982,23 @@ function addOfficeLocRow(data){
                     </tr>
 
                     <tr>
+                      <td width="10%" align="right" ><font color = "red">*</font>Company Type : </td>
+                      <td width="30%" align="left"><select id="compLegalType" name="compLegalType" >
+                        <option name=one value=''>Select Company Type</option>
+                        <option name=one value='proprietorship'>Proprietorship</option>
+                        <option name=two value='private-limited' >Private Limited</option>
+                        <option name=two value='limited' >Limited</option>
+                        <option name=two value='individual' >Individual</option>
+                                
+                        </select>
+                      </td> 
+                      <td width="40%" align="left" id="errmsgcomplegaltype"></td>
+                     </tr> 
+
+                    <tr>
                       <td width="20%" align="right" valign="top">Description :</td>
                       <td width="30%" align="left" >
-                      <input type=text name="des" id="des"  style="width:250px;">
+                      <textarea name="des" rows="5" cols="35" id="des" style="width:250px;"></textarea>
                       </td>
                       
                     </tr>
@@ -994,7 +1012,7 @@ function addOfficeLocRow(data){
                     <tr>
                       <td width="20%" align="right" valign="top"><font color = "red">*</font>Address :</td>
                       <td width="30%" align="left" >
-                      <textarea name="address" rows="10" cols="35" id="address" style="width:250px;"></textarea></td>
+                      <textarea name="address" rows="8" cols="35" id="address" style="width:250px;"></textarea></td>
                       <td width="20%" align="left" id="errmsgaddress"></td>
                    
                     </tr>
@@ -1316,6 +1334,9 @@ function addOfficeLocRow(data){
 
 
 <!--  coverage ends --------------------------------------------------------------------     -->                    
+                    <tr height="15">
+                      <td colspan="3" align="left" ><hr></td>
+                    </tr> 
 
                     <tr>
                       <td width="20%" align="right" >Pancard No : </td>
@@ -1330,6 +1351,95 @@ function addOfficeLocRow(data){
                                 
                         </select>
                       </td> 
+                    </tr>
+
+<!--  broker extra details --------------------------------------------------------------------     -->
+
+                    <tr height="15">
+                      <td colspan="3" align="left" ><hr></td>
+                    </tr> 
+
+                    <tr>
+                      <td width="20%" align="right" valign="top">Properties Broker Deals In : </td>
+                      <td width="30%" align="left">
+                        {foreach $resiProjectType key=k item=v}
+                          <input type='checkbox' name='resiProjectType[]' value='{$k}' {if $k%2==0} text-align="right" {else} text-align="left"{/if}>{$v} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {if $k%2==0}<br>{/if} 
+                        {/foreach}
+                      </td>
+                      <tr></td>
+                    </tr>
+                    
+                    <tr>
+                      <td width="10%" align="right" ><font color = "red">*</font>Transaction Types : </td>
+                      <td width="30%" align="left">
+                        {foreach $transactionType key=k item=v}
+                        <input type='checkbox' name='Transaction[]' value='0'>{$v} &nbsp;&nbsp;
+                        {/foreach}
+                      </td> 
+                      <td width="40%" align="left" id="errmsgcomplegaltype"></td>
+                     </tr> 
+
+                     <tr>
+                      <td width="10%" align="right"  valign="center">Rating : </td>
+                      <td width="30%" align="left">
+                          <!--<input type="radio" name="rating" value="auto">Auto &nbsp; &nbsp; {$rating}<br>-->
+                          <input type="radio" name="rating" value="forced">Forced &nbsp; &nbsp;
+                          <select id="frating" name="frating" style="width:70px;" valign="center">
+                        <option name=one value='0.0'>0</option>
+                        <option name=two value='0.5' >0.5</option>
+                        <option name=one value='1.0'>1.0</option>
+                        <option name=two value='1.5' >1.5</option>
+                        <option name=one value='2.0'>2.0</option>
+                        <option name=two value='2.5' >2.5</option>
+                        <option name=one value='3.0'>3.0</option>
+                        <option name=two value='3.5' >3.5</option>
+                        <option name=one value='4.0'>4.0</option>
+                        <option name=two value='4.5' >4.5</option>
+                        <option name=one value='5.0'>5.0</option>
+                        <option name=two value='5.5' >5.5</option>
+                        <option name=one value='6.0'>6.0</option>
+                        <option name=two value='6.5' >6.5</option>
+                        <option name=one value='7.0'>7.0</option>
+                        <option name=two value='7.5' >7.5</option>
+                        <option name=one value='8.0'>8.0</option>
+                        <option name=two value='8.5' >8.5</option>
+                        <option name=one value='9.0'>9.0</option>
+                        <option name=two value='9.5' >9.5</option>
+                        <option name=one value='10.0'>10.0</option>
+                                
+                        </select>
+                    <tr>
+                      <td width="20%" align="right" >Years in Operation : </td>
+                      <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >Service Tax No : </td>
+                      <td width="30%" align="left"><input type=text name="stn" id="stn" style="width:250px;"></td> <td width="20%" align="left" id="errmsgstn"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" >Size of Office (sqft) : </td>
+                      <td width="30%" align="left"><input type=text name="officeSize" id="officeSize" style="width:250px;"></td> <td width="20%" align="left" id="errmsgofficesize"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="20%" align="right" ># Employees : </td>
+                      <td width="30%" align="left"><input type=text name="employeeNo" id="employeeNo" style="width:250px;"></td> <td width="20%" align="left" id="errmsgemployeeNo"></td>
+                    </tr>
+
+                    <tr>
+                      <td width="10%" align="right" ><font color = "red">*</font>PT Relationship Manager: </td>
+                        <td width="20%" height="25" align="left" valign="top">
+                                    <select id="ptManager" name="ptManager" >
+                                       <option value=''>select Manager</option>
+                                       {foreach from=$ptRelManager key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsgptmanager"></td>
                     </tr>
 
                     <tr>
@@ -1387,7 +1497,7 @@ function addOfficeLocRow(data){
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >View Inventory</a> </TD>
 
                                 </TR>
                                 {/foreach}
@@ -1436,3 +1546,28 @@ function addOfficeLocRow(data){
 
 
 </style>
+
+<script type="text/javascript">             
+                                                                                                                         
+        var cals_dict = {}
+        
+        for(i=1;i<=1;i++){
+            cals_dict["img_date_trigger"+i] = "img_date"+i;
+     
+        };
+
+        $.each(cals_dict, function(k, v) {
+            if ($('#' + k).length > 0) {
+                Calendar.setup({
+                    inputField: v, // id of the input field
+                    //    ifFormat       :    "%Y/%m/%d %l:%M %P",         // format of the input field
+                    ifFormat: "%Y-%m-%d", // format of the input field
+                    button: k, // trigger for the calendar (button ID)
+                    align: "Tl", // alignment (defaults to "Bl")
+                    singleClick: true,
+                    showsTime: true
+                });
+            }
+        });
+   
+ </script>

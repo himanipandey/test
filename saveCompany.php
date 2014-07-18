@@ -31,6 +31,28 @@ if($_POST['task']=='office_locations'){
     echo $html;
 }
 
+if($_POST['task']=='find_projects'){
+    $locality = $_POST['locality'];
+    $arr = explode("-", $locality);
+    $locId = $arr[2];
+    //$locList = Locality::getLocalityByCity($cityId);
+    $query = "select l.locality_id, l.label, c.label, c.city_id from locality l inner join city c on l.city_id=c.city_id where l.locality_id='{$locId}'";
+    $res = mysql_query($query) or die(mysql_error());
+    
+    $query = "select rp.project_id, rp.project_name from resi_project where rp.locality_id='{$locId}'";
+    $res = mysql_query($query) or die(mysql_error());
+
+    $query = "select rp.builder_id, rp.project_name from resi_project where rp.locality_id='{$locId}'";
+    $res = mysql_query($query) or die(mysql_error());
+
+    $html =  "";
+    while ($data = mysql_fetch_assoc($res)) {
+        $html .= "<option value='".$data['locality_id']."' >".$data['label']."</option>";
+     }
+
+                                      
+    echo $html;
+}
 
 if($_POST['task']=='createComp'){
     $id = $_POST['id'];

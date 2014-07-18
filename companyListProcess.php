@@ -15,6 +15,20 @@ else{
 	$compArr = Company::getAllCompany();
 }
 
+$resiProjectType = BrokerPropertyType::PropertyTypeArr();
+$smarty->assign('resiProjectType', $resiProjectType);
+
+$transactionType = TransactionType::TransactionTypeArr();
+$smarty->assign('transactionType', $transactionType);
+
+
+$sql = "select ADMINID, FNAME, LNAME from proptiger.PROPTIGER_ADMIN where DEPARTMENT='SALES'";
+$res = mysql_query($sql);
+$ptRelManager = array();
+while($data = mysql_fetch_assoc($res)){
+    $ptRelManager[$data['ADMINID']] = $data['FNAME']." ".$data['LNAME'];
+}
+$smarty->assign('ptRelManager', $ptRelManager);
 
 $smarty->assign('url', TYPEAHEAD_API_URL);
 
