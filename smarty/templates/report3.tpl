@@ -33,7 +33,7 @@
                                     <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                                         <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                                                 <TR>
-                                                    <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Projects in Phase DCCallCenter</TD>
+                                                    <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Report-3</TD>
                                                     <!--<TD align=right colSpan=3><a href="localityadd.php" style=" font-size:15px; color:#1B70CA; text-decoration:none; "><b>Add Locality</b></a></TD>-->
                                                 </TR>
                                             </TBODY>
@@ -59,20 +59,15 @@
                                                 <table class="tablesorter">
                                                     <thead>
                                                         <tr>
-                                                            <th style="font-size: 12px">UserName</td>
-                                                            <th style="font-size: 12px">Total ATTEMPTS</th>
-                                                            <th style="font-size: 12px">Total Calls Made</th>
-                                                            <th style="font-size: 12px">Done</th>
-                                                            <th style="font-size: 12px">Reverted</th>
-                                                            <th style="font-size: 12px">Calls/Done</th>
-                                                            <th style="font-size: 12px">Not Contactable</th>
-                                                            <th style="font-size: 12px">Not Contactable %</th>
-                                                            <th style="font-size: 12px">InComplete</th>
-                                                            <th style="font-size: 12px">Call Accuracy</th>
-                                                            <th style="font-size: 12px">Total Connected Calls</th>
-                                                            <th style="font-size: 12px">Total Calls Connected Time</th>
-                                                            <th style="font-size: 12px">Average Talk Time</th>
-
+                                                            <th style="font-size: 12px">Owner</td>
+                                                            <th style="font-size: 12px">Total Assigned projects</th>
+                                                            <th style="font-size: 12px">Total Done projects</th>
+                                                            <th style="font-size: 12px">Reverted</th>                                            
+                                                            <th style="font-size: 12px">Reversal %</th>
+                                                            <th style="font-size: 12px">Done ProjectsPer Day</th>
+                                                            <th style="font-size: 12px">Done Projects Per Week</th>
+                                                            <th style="font-size: 12px">Done Projects Per Month</th>                           
+                                                            <th style="font-size: 12px">Done Projects Per Quarter</th>
                                                         </tr>
                                                     </thead>
                                                     <tfoot>
@@ -94,22 +89,31 @@
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-                                                        {foreach from = $displayData key=key item = item}
-                                                        <tr>
-                                                            <td>{$item['USERNAME']}</td>
-                                                            <td>{$item['TOTAL-ATTEMPTS']}</td>
-                                                            <td>{$item['TOTAL-CALLS']}</td>
-                                                            <td>{$item['DONE']}</td>
-                                                            <td>{$item['REVERTED']}</td>
-                                                            <td>{$item['CALL-DONE-RATIO']}</td>
-                                                            <td>{$item['NOT-CONTACTABLE']}</td>
-                                                            <td>{$item['NOT-CONTACTABLE-%']}</td>
-                                                            <td>{$item['INCOMPLETE']}</td>
-                                                            <td>{$item['ACCURACY']}</td>
-                                                            <td>{$item['TOTAL-CONNECTED-CALLS']}</td>
-                                                            <td>{$item['TOTAL-CALL-TIME']}</td>
-                                                            <td>{$item['AVERAGE-CALL-TIME']}<td>
-                                                        </tr>
+                                                        {foreach from = $displayData['excs_work'] key=leadId item = excs}
+                                                          <tr style="background:#ccc">
+                                                            <td>{$displayData['leads_work'][$leadId]['username']}</td>
+                                                            <td>{$displayData['leads_work'][$leadId]['ass']}</td>
+                                                            <td>{$displayData['leads_work'][$leadId]['done']}</td>
+                                                            <td>{$displayData['leads_work'][$leadId]['revert_count']}</td>
+                                                            <td>{$displayData['leads_work'][$leadId]['reversal']}</td>
+                                                            <td>{$displayData['leads_work'][$leadId]['proj_per_day']}</td>
+                                                            <td>{$displayData['leads_work'][$leadId]['proj_per_week']}</td>
+                                                            <td>{$displayData['leads_work'][$leadId]['proj_per_month']}</td>
+                                                            <td>{$displayData['leads_work'][$leadId]['proj_per_qtr']}</td>                                                           
+                                                          </tr>                                                 
+                                                          {foreach from = $excs key=excId item = excDt}
+															<tr>
+                                                              <td>{$excDt['username']}</td>
+                                                              <td>{$excDt['ass']}</td>
+                                                              <td>{$excDt['done']}</td>
+                                                              <td>{$excDt['revert_count']}</td>
+                                                              <td>{$excDt['reversal']}</td>
+                                                              <td>{$excDt['proj_per_day']}</td>
+                                                              <td>{$excDt['proj_per_week']}</td>
+                                                              <td>{$excDt['proj_per_month']}</td>
+                                                              <td>{$excDt['proj_per_qtr']}</td>                                                           
+                                                            </tr>
+														  {/foreach}                                                        
                                                         {/foreach}
                                                     </tbody>
                                                 </table>
