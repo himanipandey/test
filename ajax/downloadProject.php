@@ -73,6 +73,14 @@ if($_POST['dwnld_Status'] != '')
 	$StatusValue  = $_POST['dwnld_Status'];
 else
 	$StatusValue = '';
+	
+if(!isset($_REQUEST['dwnld_exp_supply_date_from']))
+  $_REQUEST['dwnld_exp_supply_date_from'] = '';
+$exp_supply_date_from = $_REQUEST['dwnld_exp_supply_date_from'];
+
+if(!isset($_REQUEST['dwnld_exp_supply_date_to']))
+  $_REQUEST['dwnld_exp_supply_date_to'] = '';
+$exp_supply_date_to = $_REQUEST['dwnld_exp_supply_date_to'];	
 
 if($StatusValue!="") $StatusValue = "'".$StatusValue."'";
 
@@ -99,6 +107,8 @@ $updation_cycle = $_POST['dwnld_updationCycle'];
 $Status = $_POST['dwnld_Status'];
 $Active = $_POST['dwnld_Active'];
 $selectdata = $_POST['dwnld_selectdata'];
+
+//print "<pre>".print_r($_POST,1)."</pre>"; die;
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
@@ -210,6 +220,21 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         if($updation_cycle != '')
         {
             $QueryMember .= $and." RP.UPDATION_CYCLE_ID = '".$updation_cycle."'";
+            $and  = ' AND ';
+        }
+        if($exp_supply_date_to != '' && $exp_supply_date_from != '')
+        {
+            $QueryMember .= $and." EXPECTED_SUPPLY_DATE BETWEEN '".$exp_supply_date_from."' AND '".$exp_supply_date_to."'";
+            $and  = ' AND ';
+        }
+        if($exp_supply_date_to != '' && $exp_supply_date_from == '')
+        {
+            $QueryMember .= $and." EXPECTED_SUPPLY_DATE <= '".$exp_supply_date_to."'";
+            $and  = ' AND ';
+        }
+        if($exp_supply_date_to == '' && $exp_supply_date_from != '')
+        {
+            $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
             $and  = ' AND ';
         }
     }

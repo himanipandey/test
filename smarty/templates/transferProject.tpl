@@ -222,6 +222,8 @@ $(function() {
 <input type='hidden' name='dwnld_Availability' id='dwnld_Availability' value="{implode(",",$_POST['Availability'])}">
 <input type='hidden' name='dwnld_Active' id='dwnld_Active' value="{implode(",",$_POST['Active'])}">
 <input type='hidden' name='dwnld_Status' id='dwnld_Status' value="{implode("','",$_POST['Status'])}">
+<input type='hidden' name='dwnld_exp_supply_date_from' id='dwnld_exp_supply_date_from' value="{$_POST['exp_supply_date_from']}">
+<input type='hidden' name='dwnld_exp_supply_date_to' id='dwnld_exp_supply_date_to' value="{$_POST['exp_supply_date_to']}">
 <input type='hidden' name='dwnld_project_name' id='dwnld_project_name' value="{$_POST['project_name']}">
 <input type='hidden' name='dwnld_projectId' id='dwnld_projectId' value="{$_POST['projectId']}">
 <input type='hidden' name='dwnld_search' id='dwnld_search' value="{$_POST['search']}">
