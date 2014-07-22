@@ -70,7 +70,7 @@
             //bedroom bathroom validations
             if($("#bed_"+c).val() != undefined){
 				if(($("#bed_"+c).val() != 0  && $("#bathrooms_"+c).val() == 0) || ($("#bed_"+c).val() == 0  && $("#bathrooms_"+c).val() != 0)) {
-					alert("Config#"+c+" must be select both Bedroom & Bathroom not Either one!");
+					alert("Selecting both Bedroom & Bathroom is mandatory in Config#"+c);
 					return false;
 				}
 				if($("#bed_"+c).val() != 0  && $("#bathrooms_"+c).val() != 0 && $("#txtUnitName_"+c).val().trim() == ''){					
