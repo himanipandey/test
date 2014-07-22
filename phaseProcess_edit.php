@@ -292,6 +292,7 @@ if (isset($_POST['btnSave'])) {
     $smarty->assign("construction_status", $construction_status);
     $smarty->assign("remark", $remark);
     $smarty->assign("pre_launch_date",$pre_launch_date);
+    $smarty->assign("phase_pre_launch_date",$phase_pre_launch_date);
      $smarty->assign("sold_out_date",$sold_out_date);
 
     $PhaseExists = searchPhase($phaseDetail, $phasename);
