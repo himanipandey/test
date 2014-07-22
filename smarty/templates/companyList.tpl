@@ -85,9 +85,10 @@ jQuery(document).ready(function(){
     //var coverage_build =[];
 
     var coverage_data = [];
+    var contact_person_data = [];
 
 /************************* new field added for broker ****************************/
-  
+  //loop through all values of office location table rows
   for(var i=0; i<window.offLocTabRowNo; i++){
     var row =  document.getElementById("officeLocRowId_"+i);
     if(row){
@@ -101,11 +102,22 @@ jQuery(document).ready(function(){
     }
   }
 
-
-   for(var i=0; i<window.coverageTabRowNo; i++){
+ //loop through all values of coverage table rows
+  for(var i=0; i<window.coverageTabRowNo; i++){
     var row =  document.getElementById("coverageRowId_"+i);
     if(row){
-      var rowData = {c_id:$("#coverage_city_id_"+i).val(), loc_id:$("#coverage_loc_id_"+i).val(), p_id:$("#coverage_proj_id_"+i).val(), type:$("#coverage_type_"+i).val() };
+      
+      var rowData = {c_id:$("#coverage_city_id_"+i).val(), loc_id:$("#coverage_loc_id_"+i).val(), p_id:$("#coverage_proj_id_"+i).val(), type:$("#coverage_type_"+i).val() }; 
+      contact_person_data.push(rowData);
+
+    }
+  }
+
+ //loop through all values of contact persons rows
+  for(var i=0; i<window.contactTableNo; i++){
+    var row =  document.getElementById("RowId_"+i);
+    if(row){
+      var rowData = {person:$("#person_"+i).val(), phone1:$("#phone1_"+i).val(), phone2:$("#phone2_"+i).val(), mobile:$("#mobile_"+i).val(), fax:$("#fax_"+i).val(), email:$("#email_"+i).val(),};
         
       coverage_data.push(rowData);
 
@@ -113,10 +125,9 @@ jQuery(document).ready(function(){
   }
 
 
-
   console.log(off_loc_data);
   console.log(coverage_data);
-  //console.log(off_loc_locality);
+  console.log(contact_person_data);
     
 
 
@@ -521,7 +532,6 @@ window.contactTableNo = 0;
 jQuery(document).ready(function(){ 
     $("#addContact").click(function(){
       
-      //console.log("hi");
         var tableId = "contact_table";
         var  fieldId = "person";
         var fieldClass = "persons";
@@ -545,11 +555,11 @@ function addContactTable(tableId){
             element1.id="contact_table_"+no;
             cell1.appendChild(element1);
             addContactRow(element1.id, "Name", "person", "errmsgname", no);
-            addContactRow(element1.id, "Contact Phone 1", "person", "errmsgname", no);
-            addContactRow(element1.id, "Contact Phone 2", "person", "errmsgname", no);
-            addContactRow(element1.id, "Contact Mobile", "person", "errmsgname", no);
-            addContactRow(element1.id, "Contact Fax", "person", "errmsgname", no);
-            addContactRow(element1.id, "Contact Email", "person", "errmsgname", no);
+            addContactRow(element1.id, "Contact Phone 1", "phone1", "errmsgname", no);
+            addContactRow(element1.id, "Contact Phone 2", "phone2", "errmsgname", no);
+            addContactRow(element1.id, "Contact Mobile", "mobile", "errmsgname", no);
+            addContactRow(element1.id, "Contact Fax", "fax", "errmsgname", no);
+            addContactRow(element1.id, "Contact Email", "email", "errmsgname", no);
             addDeleteButton(element1.id, "deleteContact", no);
             //addBlankRow(element1.id);
 
