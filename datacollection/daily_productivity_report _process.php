@@ -38,7 +38,8 @@ function prepareDisplayData($dateFrom, $dateTo){
 		$new['USERNAME'] = $row->username;
 		$new['COMPLETE'] = $row->complete;
 		$new['INCOMPLETE'] = $row->incomplete;		
-		$new['TOTAL'] = $row->total_count;
+		#$new['TOTAL'] = $row->total_count;
+		$new['TOTAL'] = ($row->complete + $row->incomplete);
 		$result[] = $new;	
 	  }
 	}
