@@ -31,36 +31,83 @@ if($_POST['task']=='office_locations'){
     echo $html;
 }
 
-if($_POST['task']=='find_projects'){
+if($_POST['task']='find_project_builder'){
+    //echo "hello";
     $locality = $_POST['locality'];
-    $arr = explode("-", $locality);
-    $locId = $arr[2];
+    //$arr = explode("-", $locality);
+    $locId = $locality;//$arr[2];
+    $q = $_POST['query'];
+    $option = $_POST['option'];
+    if($option =='all' || $option=='' || $option==='undefined')
+        $option = "project";
+    $data = array();
     //$locList = Locality::getLocalityByCity($cityId);
-    $query = "select l.locality_id, l.label, c.label, c.city_id from locality l inner join city c on l.city_id=c.city_id where l.locality_id='{$locId}'";
-    $res = mysql_query($query) or die(mysql_error());
+    if($locId){
+        $query = "select l.locality_id, l.label as locLabel, c.label as cLabel, c.city_id from locality l inner join city c on l.city_id=c.city_id where l.locality_id='{$locId}'";
+        //echo $query;
+        $res = mysql_query($query) or die(mysql_error());
+        $locdata = mysql_fetch_assoc($res);
+        
     
-    $query = "select rp.project_id, rp.project_name from resi_project where rp.locality_id='{$locId}'";
-    $res = mysql_query($query) or die(mysql_error());
+        if($option=='project'){
+            $query = "select rp.project_id, rp.project_name from resi_project rp where (rp.locality_id='{$locId}' and rp.project_name like '%$q%' and rp.version='Cms') ORDER BY
+  CASE
+    WHEN rp.project_name LIKE 'q%' THEN 1
+    WHEN rp.project_name LIKE '%q' THEN 3
+    ELSE 2
+  END";
+            $result = mysql_query($query) or die(mysql_error());
+            //echo $query;
+            while($res=mysql_fetch_assoc($result)){
+                $response = array();
+                
+                $response['locId'] = $locdata['locality_id'];
+                $response['locName'] = $locdata['locLabel'];
+                $response['cId'] = $locdata['city_id'];
+                $response['cName'] = $locdata['cLabel'];
+                $response['pId'] = $res['project_id'];
+                $response['pName'] = $res['project_name'];
+                $response['ptype'] = 'project';
+                array_push($data, $response);
+                //print_r($res);
+                
+            }
 
-    $query = "select rp.builder_id, rp.project_name from resi_project where rp.locality_id='{$locId}'";
-    $res = mysql_query($query) or die(mysql_error());
-
-    $html =  "";
-    while ($data = mysql_fetch_assoc($res)) {
-        $html .= "<option value='".$data['locality_id']."' >".$data['label']."</option>";
-     }
-
-                                      
-    echo $html;
+        }
+        else if($option=='builder'){
+            $query = "select rp.builder_id, rb.builder_name from resi_project rp 
+            inner join resi_builder rb on rb.builder_id=rp.builder_id 
+            where (rp.locality_id='{$locId}' and rb.builder_name like '%$q%') group by rp.builder_id";
+            $result = mysql_query($query) or die(mysql_error());
+            while($res=mysql_fetch_assoc($result)){
+                $response = array();
+                $response['locId'] = $locdata['locality_id'];
+                $response['locName'] = $locdata['locLabel'];
+                $response['cId'] = $locdata['city_id'];
+                $response['cName'] = $locdata['cLabel'];
+                $response['pId'] = $res['builder_id'];
+                $response['pName'] = $res['builder_name'];
+                $response['ptype'] = 'builder';
+                array_push($data, $response);
+            }
+        }
+    }
+    else{
+        array_push($data, "Please Select a locality first");
+    }
+   
+    $data =  '{"data": '.  json_encode($data) . '}';
+    echo $data;                               
+    //echo $data['locality_id'];
 }
 
 if($_POST['task']=='createComp'){
     $id = $_POST['id'];
     $type = $_POST['type'];
-   $des   = $_POST['des'];
+   $des   = mysql_real_escape_string($_POST['des']);
 
     $name   = $_POST['name'];
-    $address   = $_POST['address'];
+    $address   = mysql_real_escape_string($_POST['address']);
     $address = preg_replace('!\s+!', ' ', $address);
     $city   = $_POST['city'];
     $pin   = $_POST['pincode'];

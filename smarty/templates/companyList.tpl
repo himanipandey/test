@@ -40,7 +40,7 @@ jQuery(document).ready(function(){
 
 
 	$("#lmkSave").click(function(){
-		var compType = $('#companyTypeEdit').children(":selected").val();
+/*		var compType = $('#companyTypeEdit').children(":selected").val();
 		var name = $('#name').val().trim();        
 		var des = $('#des').val().trim();
 		var address = $('#address').val().trim();
@@ -61,17 +61,66 @@ jQuery(document).ready(function(){
 		var pan = $('#pan').val().trim();
 		var status = $('#status').val(); 
 		var compid = $('#compid').val();
-		 var error = 0;
-	    var mode='';
-	    if(compid) {
-        mode = 'update';
-        imgId = $('#imgid').val();
-      }
-	    else {
-        mode='create';
-        imgId = '';
-      } 
 
+/*****************************************initializers****************************/
+/*		var error = 0;
+	  var mode='';
+    if(compid) {
+      mode = 'update';
+      imgId = $('#imgid').val();
+    }
+    else {
+      mode='create';
+      imgId = '';
+    } 
+*/
+   //var off_loc_address = [];
+    //var off_loc_city = [];
+    //var off_loc_locality = []; 
+    var off_loc_data = [];
+
+    //var coverage_city =[];
+    //var coverage_loc =[];
+    //var coverage_proj =[];
+    //var coverage_build =[];
+
+    var coverage_data = [];
+
+/************************* new field added for broker ****************************/
+  
+  for(var i=0; i<window.offLocTabRowNo; i++){
+    var row =  document.getElementById("officeLocRowId_"+i);
+    if(row){
+      var rowData = {address:$("#off_loc_address_id_"+i).text(), c_id:$("#off_loc_city_id_"+i).val(), loc_id:$("#off_loc_loc_id_"+i).val()};
+
+      off_loc_data.push(rowData);
+        //off_loc_address.push($("#off_loc_address_id_"+i).text());
+        //off_loc_city.push($("#off_loc_city_id_"+i).val());
+        //off_loc_locality.push($("#off_loc_loc_id_"+i).val());
+
+    }
+  }
+
+
+   for(var i=0; i<window.coverageTabRowNo; i++){
+    var row =  document.getElementById("coverageRowId_"+i);
+    if(row){
+      var rowData = {c_id:$("#coverage_city_id_"+i).val(), loc_id:$("#coverage_loc_id_"+i).val(), p_id:$("#coverage_proj_id_"+i).val(), type:$("#coverage_type_"+i).val() };
+        
+      coverage_data.push(rowData);
+
+    }
+  }
+
+
+
+  console.log(off_loc_data);
+  console.log(coverage_data);
+  //console.log(off_loc_locality);
+    
+
+
+/******************************validation****************************************/    
 
     if(fax!='' && !isNumeric1(fax)){
       $('#errmsgfax').html('<font color="red">Please provide a Numeric Value.</font>');
@@ -583,7 +632,7 @@ function addBlankRow(tableId){
 var deleteContactPerson = function(no){
  
     try {
-  console.log(no);
+  //console.log(no);
 
             var tableId = "contact_table";
             var table = document.getElementById(tableId);
@@ -681,7 +730,9 @@ function addOfficeLocRow(data){
             cell4.className = "border";
             var element4 = document.createElement("label");
             element4.innerHTML = data.fourth.text;
+            element4.className = " off_loc_address_class";
             element4.id = "off_loc_address_id_"+window.offLocTabRowNo;
+            
             cell4.width = "30%";
             cell4.style.textAlign="center";
             cell4.appendChild(element4);
@@ -690,13 +741,17 @@ function addOfficeLocRow(data){
             var element5 = document.createElement("input");
             element5.type = "hidden";
             element5.value = data.city_id;
+            element5.className = " off_loc_city_class";
             element5.id = "off_loc_city_id_"+window.offLocTabRowNo;
+            
             cell4.appendChild(element5);
 
             var element6 = document.createElement("input");
             element6.type = "hidden";
             element6.value = data.loc_id;
+            element6.className = " off_loc_locality_class";
             element6.id = "off_loc_loc_id_"+window.offLocTabRowNo;
+            
             cell4.appendChild(element6);
 
 
@@ -737,17 +792,17 @@ var selected=false;
             }
       }
     });
-
+    if(!selected)
     alert("Please select at least one row.")
 }
 
 $.widget( "custom.catcomplete", $.ui.autocomplete, {
    
   _renderItem: function( ul, item ) {
-    var res = item.id.split("-");
-        var tableName = res[1];
+    //var res = item..split("-");
+        //var tableName = res[1];
     return $( "<li>" )
-      .append( $( "<a>" ).text( item.label + "........." +tableName ) )
+      .append( $( "<a>" ).text( item.label ) )
       .appendTo( ul );
   },
   
@@ -768,11 +823,14 @@ jQuery(document).ready(function(){
             name_startsWith: request.term
           },
           success: function( data ) {
-            response( $.map( data.data, function( item ) {              
+            response( $.map( data.data, function( item ) {  
+              var str = item.id.split("-");
+              var id = str[2];
                 return {
                 label: item.displayText,
-                value: item.label,
-                id:item.id,
+                locId:id,
+                cName:item.city,
+                locName:item.locality
                 }
               
             }));
@@ -794,24 +852,47 @@ jQuery(document).ready(function(){
     });
 
 
-    $( "#searchProjects" ).catcomplete({
+  $.widget( "custom.catcomplete1", $.ui.autocomplete, {
+   
+  _renderItem: function( ul, item ) {
+    //var res = item.id.split("-");
+        //var tableName = res[1];
+    return $( "<li>" )
+      .append( $( "<a>" ).text( item.cName+"-"+item.locName+"-"+item.pName) )
+      .appendTo( ul );
+  },
+  
+
+  });
+
+    $( "#searchProjects" ).catcomplete1({
       source: function( request, response ) {
         $.ajax({
           url: "/saveCompany.php",
           dataType: "json",
+          type: "POST",
           data: {
             featureClass: "P",
             style: "full",
             query: $("#searchProjects").val(),
-            locality: window.selectedLocality,
+            locality: window.selectedLocality.locId,
+            task:"find_project_builder",
+            option:$("input[name=projectsRadio]:checked").val(),
             name_startsWith: request.term
           },
           success: function( data ) {
-            response( $.map( data.data, function( item ) {              
+            response( $.map( eval(data).data, function( item ) {     
+            //console.log("item:"+item.locName);         
                 return {
-                label: item.displayText,
-                value: item.label,
-                id:item.id,
+                locId: item.locId,
+                locName:item.locName,
+                cId:item.cId,
+                cName:item.cName,
+                pId:item.pId,
+                pName:item.pName,
+                type:item.ptype,
+                label:item.pName,
+                value:item.pName
                 }
               
             }));
@@ -820,8 +901,8 @@ jQuery(document).ready(function(){
       },
       
       select: function( event, ui ) {
-        selectedItem = ui.item;
-        
+        window.selectedProjects = ui.item;
+        //console.log(window.selectedProjects);
       },
       open: function() {
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -839,34 +920,66 @@ jQuery(document).ready(function(){
 window.coverageTabRowNo=0;
 
 function addCoverage(){
-  var cityName = $("#off_loc_city :selected").text();  
-  var cityId = $("#off_loc_city :selected").val(); 
-  var locName = $("#off_loc_locality :selected").text(); 
-  var locId = $("#off_loc_locality :selected").val();
-  var address = $("#off_loc_address").val();
-  var tableId = "off_loc_table";
-  var data = {table_id:tableId, first:{checkbox:"checkbox", class:"class" }, second:{label:"label", text:cityName, }, third:{label:"label", text:locName,}, fourth:{label:"label", text:address,}, city_id:cityId, loc_id:locId};
-
-  if(cityId!='' && locId!='' && address!=''){
-
-    addOfficeLocRow(data);
-    $('#offAddDiv').hide(); 
+  if($("input[name=projectsRadio]:checked").val()=="all"){
+    var cityName = window.selectedLocality.cName; 
+    var cityId = "";//window.selectedLocality.cId;
+    var locName = window.selectedLocality.locName; 
+    var locId = window.selectedLocality.locId;
+    var projName = "All";
+    var projId = "";
+    var bName = "";
+    var type = "all";
   }
   else{
-    alert("Please provide City, Locality and Address.");
+    var cityName = window.selectedProjects.cName; 
+    var cityId = window.selectedProjects.cId;
+    var locName = window.selectedProjects.locName; 
+    var locId = window.selectedProjects.locId;
+    if(window.selectedProjects.type=="project"){
+      var projName = window.selectedProjects.pName;
+      var projId = window.selectedProjects.pId;
+      var bName = "";
+      var type = "project";
+    }
+    else if(window.selectedProjects.type=="builder"){
+      var bName = window.selectedProjects.pName;
+      var projId = window.selectedProjects.pId;  //same var to strore pid and bid
+      var type = "builder";
+      var projName = "All Projects of";//window.selectedProjects.pName;
+      var projId = "";//window.selectedProjects.pId;
+    }
+    else{
+      var projName = '';
+      var projId = '';
+      var bName = "";
+      var type = "";
+    }
+  }
+
+    var tableId = "coverage_table";
+    var data = {table_id:tableId, first:{checkbox:"checkbox", class:"class" }, second:{label:"label", text:cityName, }, third:{label:"label", text:locName,}, fourth:{label:"label", text:projName,}, fifth:{label:"label", text:bName,}, city_id:cityId, loc_id:locId, p_id:projId, type:type};
+  
+
+  if( locName!='' && projName!=''){
+
+    addCoverageRow(data);
+    $('#coverageDiv').hide(); 
+  }
+  else{
+    alert("Please provide City, Locality, Projects and Builders.");
   }
 
 
 }
 
-function addOfficeLocRow(data){
+function addCoverageRow(data){
   //console.log(data);
     var table = document.getElementById(data.table_id); 
  
             var rowCount = table.rows.length;
             var row = table.insertRow(rowCount);
             row.className = "border";
-            row.id = "officeLocRowId_"+window.offLocTabRowNo;
+            row.id = "coverageRowId_"+window.coverageTabRowNo;
 
             var cell1 = row.insertCell(0);
             cell1.width = "10%";
@@ -876,8 +989,8 @@ function addOfficeLocRow(data){
             cell1.style.textAlign = "center";
             //element2.style.width="25px";
             //element2.id=inputclassName+"_"+no;
-            element1.className ="off_loc_cb";
-            element1.id= "off_loc_cb_"+window.offLocTabRowNo;
+            element1.className ="coverage_cb";
+            element1.id= "coverage_cb_"+window.coverageTabRowNo;
             cell1.appendChild(element1);
 
             var cell2 = row.insertCell(1);
@@ -892,7 +1005,7 @@ function addOfficeLocRow(data){
             cell3.className = "border";
             var element3 = document.createElement("label");
             element3.innerHTML = data.third.text;;
-            cell3.width = "25%";
+            cell3.width = "20%";
             cell3.style.textAlign="center";
             cell3.appendChild(element3);
 
@@ -900,27 +1013,93 @@ function addOfficeLocRow(data){
             cell4.className = "border";
             var element4 = document.createElement("label");
             element4.innerHTML = data.fourth.text;
-            element4.id = "off_loc_address_id_"+window.offLocTabRowNo;
-            cell4.width = "30%";
+            element4.id = "coverage_project_id_"+window.coverageTabRowNo;
+            cell4.width = "20%";
             cell4.style.textAlign="center";
             cell4.appendChild(element4);
+
+            var cell5 = row.insertCell(4);
+            cell5.className = "border";
+            var element7 = document.createElement("label");
+            element7.innerHTML = data.fifth.text;
+            element7.id = "coverage_project_id_"+window.coverageTabRowNo;
+            cell5.width = "20%";
+            cell5.style.textAlign="center";
+            cell5.appendChild(element7);
 
 
             var element5 = document.createElement("input");
             element5.type = "hidden";
             element5.value = data.city_id;
-            element5.id = "off_loc_city_id_"+window.offLocTabRowNo;
+            element5.id = "coverage_city_id_"+window.coverageTabRowNo;
             cell4.appendChild(element5);
 
             var element6 = document.createElement("input");
             element6.type = "hidden";
             element6.value = data.loc_id;
-            element6.id = "off_loc_loc_id_"+window.offLocTabRowNo;
+            element6.id = "coverage_loc_id_"+window.coverageTabRowNo;
             cell4.appendChild(element6);
 
+            var element8 = document.createElement("input");
+            element8.type = "hidden";
+            element8.value = data.p_id;
+            element8.id = "coverage_proj_id_"+window.coverageTabRowNo;
+            cell4.appendChild(element8);
 
-            window.offLocTabRowNo +=1;
+            var element9 = document.createElement("input");
+            element9.type = "hidden";
+            element9.value = data.type;
+            element9.id = "coverage_type_"+window.coverageTabRowNo;
+            cell4.appendChild(element9);
+
+            window.coverageTabRowNo +=1;
 }
+
+
+function deleteCoverageRow(){
+var selected=false;
+    $(".coverage_cb").each(function(key, value){
+      //alert("here0");
+      if($(this).is(':checked')){
+          selected=true;
+          cbId = $(this).attr('id');
+          var res = cbId.split("_");
+          var no = res[res.length-1]; 
+           try {
+                var table = document.getElementById("coverage_table");
+                var rowId = "coverageRowId_"+no;
+                var row = document.getElementById(rowId);
+        
+               table.deleteRow(row.rowIndex);
+     
+     
+            }catch(e) {
+                alert(e);
+            }
+      }
+    });
+    if(!selected)
+    alert("Please select at least one row.")
+}
+
+function compnayTypeChanged(){
+  if($('#companyTypeEdit').children(":selected").val()=="Broker"){
+    $("#broker_extra_field").show();
+  }
+  else
+    $("#broker_extra_field").hide();
+}
+
+function coverageRadioChanged(){
+  if($("input[name=projectsRadio]:checked").val()=="all"){
+    $("#searchProjects").prop("readonly", true);
+
+  }
+  else{
+    $("#searchProjects").prop("readonly", false);
+  }
+}
+
 </script>
 {/literal}
 </TD>
@@ -966,7 +1145,7 @@ function addOfficeLocRow(data){
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Company Type: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="companyTypeEdit" name="companyEdit" >
+                                    <select id="companyTypeEdit" name="companyEdit" onchange="compnayTypeChanged();">
                                        <option value=''>select Company Type</option>
                                        {foreach from=$comptype key=k item=v}
                                               <option value="{$v}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
@@ -1275,7 +1454,7 @@ function addOfficeLocRow(data){
                     </tr>
 
 
-<!--  coverage --------------------------------------------------------------------     --> 
+<!--  coverage ----------------------------------------------------------------------> 
                     <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Coverage</b></td>
                     </tr> 
@@ -1294,7 +1473,7 @@ function addOfficeLocRow(data){
 
                         <tr>
                           <td width="18%" align="right" valign="top"><font color = "red"></font>Projects :</td>
-                          <td width="50%" align="left" ><input type="radio" name="projectsRadio" value="male">All Projects</input>&nbsp; &nbsp; &nbsp; &nbsp; <input type="radio" name="projectsRadio" value="female">Some Projects</input> &nbsp; &nbsp; &nbsp; &nbsp;<input type="radio" name="projectsRadio" value="female">Some Builders</input></td>
+                          <td width="50%" align="left" ><input type="radio" name="projectsRadio" value="all" id="projectsRadio" onchange="coverageRadioChanged();">All Projects</input>&nbsp; &nbsp; &nbsp; &nbsp; <input type="radio" name="projectsRadio" value="project" id="projectsRadio" onchange="coverageRadioChanged();">Some Projects</input> &nbsp; &nbsp; &nbsp; &nbsp;<input type="radio" name="projectsRadio" value="builder" id="projectsRadio" onchange="coverageRadioChanged();">Some Builders</input></td>
                           <td width="20%" align="left" id=""></td>
                           
                          
@@ -1316,12 +1495,13 @@ function addOfficeLocRow(data){
                     <hr>
                     <tr>
                       <td colspan="3" >
-                      <table id="off_loc_table" width = "100%" class="border">
+                      <table id="coverage_table" width = "100%" class="border">
                       <tr class="border">
                         <th width="10%" align="center" class="border">checkbox</th>
                         <th width="15%" height="25" align="center" valign="top" class="border">City</th>
                         <th width="25%" align="center" class="border">Locality</th>
-                        <th width="30%" align="center" class="border">Address</th>
+                        <th width="30%" align="center" class="border">Projects</th>
+                        <th width="30%" align="center" class="border">Builders</th>
                       </tr>
                       
                       </table>
@@ -1359,87 +1539,94 @@ function addOfficeLocRow(data){
                       <td colspan="3" align="left" ><hr></td>
                     </tr> 
 
-                    <tr>
-                      <td width="20%" align="right" valign="top">Properties Broker Deals In : </td>
-                      <td width="30%" align="left">
-                        {foreach $resiProjectType key=k item=v}
-                          <input type='checkbox' name='resiProjectType[]' value='{$k}' {if $k%2==0} text-align="right" {else} text-align="left"{/if}>{$v} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        {if $k%2==0}<br>{/if} 
-                        {/foreach}
+                    <tr id="broker_extra_field" style="display:none">
+                      <td colspan="3">
+                        <table width="100%">
+                        
+                        <tr>
+                          <td width="20%" align="right" valign="top">Properties Broker Deals In : </td>
+                          <td width="30%" align="left">
+                            {foreach $resiProjectType key=k item=v}
+                              <input type='checkbox' name='resiProjectType[]' value='{$k}' {if $k%2==0} text-align="right" {else} text-align="left"{/if}>{$v} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {if $k%2==0}<br>{/if} 
+                            {/foreach}
+                          </td>
+                          <tr></td>
+                        </tr>
+                        
+                        <tr>
+                          <td width="10%" align="right" ><font color = "red">*</font>Transaction Types : </td>
+                          <td width="30%" align="left">
+                            {foreach $transactionType key=k item=v}
+                            <input type='checkbox' name='Transaction[]' value='0'>{$v} &nbsp;&nbsp;
+                            {/foreach}
+                          </td> 
+                          <td width="40%" align="left" id="errmsgcomplegaltype"></td>
+                         </tr> 
+
+                         <tr>
+                          <td width="10%" align="right"  valign="center">Rating : </td>
+                          <td width="30%" align="left">
+                              <!--<input type="radio" name="rating" value="auto">Auto &nbsp; &nbsp; {$rating}<br>-->
+                              <input type="radio" name="rating" value="forced">Forced &nbsp; &nbsp;
+                              <select id="frating" name="frating" style="width:70px;" valign="center">
+                            <option name=one value='0.0'>0</option>
+                            <option name=two value='0.5' >0.5</option>
+                            <option name=one value='1.0'>1.0</option>
+                            <option name=two value='1.5' >1.5</option>
+                            <option name=one value='2.0'>2.0</option>
+                            <option name=two value='2.5' >2.5</option>
+                            <option name=one value='3.0'>3.0</option>
+                            <option name=two value='3.5' >3.5</option>
+                            <option name=one value='4.0'>4.0</option>
+                            <option name=two value='4.5' >4.5</option>
+                            <option name=one value='5.0'>5.0</option>
+                            <option name=two value='5.5' >5.5</option>
+                            <option name=one value='6.0'>6.0</option>
+                            <option name=two value='6.5' >6.5</option>
+                            <option name=one value='7.0'>7.0</option>
+                            <option name=two value='7.5' >7.5</option>
+                            <option name=one value='8.0'>8.0</option>
+                            <option name=two value='8.5' >8.5</option>
+                            <option name=one value='9.0'>9.0</option>
+                            <option name=two value='9.5' >9.5</option>
+                            <option name=one value='10.0'>10.0</option>
+                                    
+                            </select>
+                        <tr>
+                          <td width="20%" align="right" ><font color = "red">*</font>Years in Operation : </td>
+                          <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
+                        </tr>
+
+                        <tr>
+                          <td width="20%" align="right" ><font color = "red">*</font>Service Tax No : </td>
+                          <td width="30%" align="left"><input type=text name="stn" id="stn" style="width:250px;"></td> <td width="20%" align="left" id="errmsgstn"></td>
+                        </tr>
+
+                        <tr>
+                          <td width="20%" align="right" ><font color = "red">*</font>Size of Office (sqft) : </td>
+                          <td width="30%" align="left"><input type=text name="officeSize" id="officeSize" style="width:250px;"></td> <td width="20%" align="left" id="errmsgofficesize"></td>
+                        </tr>
+
+                        <tr>
+                          <td width="20%" align="right" ><font color = "red">*</font># Employees : </td>
+                          <td width="30%" align="left"><input type=text name="employeeNo" id="employeeNo" style="width:250px;"></td> <td width="20%" align="left" id="errmsgemployeeNo"></td>
+                        </tr>
+
+                        <tr>
+                          <td width="10%" align="right" ><font color = "red">*</font>PT Relationship Manager: </td>
+                            <td width="20%" height="25" align="left" valign="top">
+                                        <select id="ptManager" name="ptManager" >
+                                           <option value=''>select Manager</option>
+                                           {foreach from=$ptRelManager key=k item=v}
+                                                  <option value="{$k}">{$v}</option>
+                                           {/foreach}
+                                        </select>
+                                    </td>
+                            <td width="40%" align="left" id="errmsgptmanager"></td>
+                        </tr>
+                      </table>
                       </td>
-                      <tr></td>
-                    </tr>
-                    
-                    <tr>
-                      <td width="10%" align="right" ><font color = "red">*</font>Transaction Types : </td>
-                      <td width="30%" align="left">
-                        {foreach $transactionType key=k item=v}
-                        <input type='checkbox' name='Transaction[]' value='0'>{$v} &nbsp;&nbsp;
-                        {/foreach}
-                      </td> 
-                      <td width="40%" align="left" id="errmsgcomplegaltype"></td>
-                     </tr> 
-
-                     <tr>
-                      <td width="10%" align="right"  valign="center">Rating : </td>
-                      <td width="30%" align="left">
-                          <!--<input type="radio" name="rating" value="auto">Auto &nbsp; &nbsp; {$rating}<br>-->
-                          <input type="radio" name="rating" value="forced">Forced &nbsp; &nbsp;
-                          <select id="frating" name="frating" style="width:70px;" valign="center">
-                        <option name=one value='0.0'>0</option>
-                        <option name=two value='0.5' >0.5</option>
-                        <option name=one value='1.0'>1.0</option>
-                        <option name=two value='1.5' >1.5</option>
-                        <option name=one value='2.0'>2.0</option>
-                        <option name=two value='2.5' >2.5</option>
-                        <option name=one value='3.0'>3.0</option>
-                        <option name=two value='3.5' >3.5</option>
-                        <option name=one value='4.0'>4.0</option>
-                        <option name=two value='4.5' >4.5</option>
-                        <option name=one value='5.0'>5.0</option>
-                        <option name=two value='5.5' >5.5</option>
-                        <option name=one value='6.0'>6.0</option>
-                        <option name=two value='6.5' >6.5</option>
-                        <option name=one value='7.0'>7.0</option>
-                        <option name=two value='7.5' >7.5</option>
-                        <option name=one value='8.0'>8.0</option>
-                        <option name=two value='8.5' >8.5</option>
-                        <option name=one value='9.0'>9.0</option>
-                        <option name=two value='9.5' >9.5</option>
-                        <option name=one value='10.0'>10.0</option>
-                                
-                        </select>
-                    <tr>
-                      <td width="20%" align="right" >Years in Operation : </td>
-                      <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" >Service Tax No : </td>
-                      <td width="30%" align="left"><input type=text name="stn" id="stn" style="width:250px;"></td> <td width="20%" align="left" id="errmsgstn"></td>
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" >Size of Office (sqft) : </td>
-                      <td width="30%" align="left"><input type=text name="officeSize" id="officeSize" style="width:250px;"></td> <td width="20%" align="left" id="errmsgofficesize"></td>
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" ># Employees : </td>
-                      <td width="30%" align="left"><input type=text name="employeeNo" id="employeeNo" style="width:250px;"></td> <td width="20%" align="left" id="errmsgemployeeNo"></td>
-                    </tr>
-
-                    <tr>
-                      <td width="10%" align="right" ><font color = "red">*</font>PT Relationship Manager: </td>
-                        <td width="20%" height="25" align="left" valign="top">
-                                    <select id="ptManager" name="ptManager" >
-                                       <option value=''>select Manager</option>
-                                       {foreach from=$ptRelManager key=k item=v}
-                                              <option value="{$k}">{$v}</option>
-                                       {/foreach}
-                                    </select>
-                                </td>
-                        <td width="40%" align="left" id="errmsgptmanager"></td>
                     </tr>
 
                     <tr>
