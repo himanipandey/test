@@ -21,7 +21,6 @@ $smarty->assign('resiProjectType', $resiProjectType);
 $transactionType = TransactionType::TransactionTypeArr();
 $smarty->assign('transactionType', $transactionType);
 
-
 $sql = "select ADMINID, FNAME, LNAME from proptiger.PROPTIGER_ADMIN where DEPARTMENT='SALES'";
 $res = mysql_query($sql);
 $ptRelManager = array();
@@ -60,8 +59,8 @@ foreach ($compArr as $k => $v) {
 */
 $smarty->assign("compArr", $compArr);
 
-//print("<pre>");
-//print_r($compArr);
+print("<pre>");
+print_r($compArr);
 //$co = 
 /*
 $builderList = ResiBuilder::ProjectSearchBuilderEntityArr();

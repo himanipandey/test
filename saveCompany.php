@@ -31,9 +31,9 @@ if($_POST['task']=='office_locations'){
     echo $html;
 }
 
-if($_POST['task']='find_project_builder'){
+if($_POST['task']=='find_project_builder'){
     //echo "hello";
-    $locality = $_POST['locality'];
+  $locality = $_POST['locality'];
     //$arr = explode("-", $locality);
     $locId = $locality;//$arr[2];
     $q = $_POST['query'];
@@ -101,7 +101,7 @@ if($_POST['task']='find_project_builder'){
     //echo $data['locality_id'];
 }
 
-if($_POST['task']=='createComp'){
+if($_POST['task']=='createComp'){ 
     $id = $_POST['id'];
     $type = $_POST['type'];
    $des   = mysql_real_escape_string($_POST['des']);
@@ -112,19 +112,29 @@ if($_POST['task']=='createComp'){
     $city   = $_POST['city'];
     $pin   = $_POST['pincode'];
     $compphone   = $_POST['compphone'];
-    $image = $_POST['image'];
-//echo $image;
-    $ipArr = $_POST['ipArr'];
-    $person   = $_POST['person'];
-    $phone   = $_POST['phone'];
     $web   = $_POST['web'];
     $fax   = $_POST['fax'];
     $email   = $_POST['email'];
+    $image = $_POST['image'];
+//echo $image;
+    $ipArr = $_POST['ipArr'];
+    
     $pan   = $_POST['pan'];
     $status   = $_POST['status'];
     $mode =  $_POST['mode'];
-    $altText = "company".$name;
+    $altText = "company ".$name;
 
+    //off_loc_data,coverage_data,contact_person_data,cust_care_data,broker_extra_fields
+
+    $off_loc_data = $_POST['off_loc_data'];
+    $coverage_data = $_POST['coverage_data'];
+    $contact_person_data = $_POST['contact_person_data'];
+    $cust_care_data = $_POST['cust_care_data'];
+    $bef = $_POST['broker_extra_fields'];
+
+
+
+    //var_dump($bef); die();
     if(isset($_POST['image']) && $image!=""){
         //print_r($_FILES[]);
         //$file = $_FILES
@@ -174,7 +184,7 @@ if($_POST['task']=='createComp'){
             
         if(mysql_num_rows($sql_comp)>0){
 			
-			$sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
+			$sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', website='{$web}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
 			
 			$res_sql = mysql_query($sql) or die(mysql_error());
 
@@ -243,68 +253,154 @@ if($_POST['task']=='createComp'){
     }
     if ($mode=='create'){
         
-        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', NOW(), {$_SESSION['adminId']})";
+        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, website, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', '{$web}', NOW(), {$_SESSION['adminId']})";
         
         $res = mysql_query($query) or mysql_error();
         if(mysql_affected_rows()>0){
             $comp_id = mysql_insert_id();
-            $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, pincode, updated_by, created_at) values ('company', '{$comp_id}', '{$address}', '{$city}', '{$pin}', {$_SESSION['adminId']}, NOW())";
+
+/****************** save address details ************************************************/
+            $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, pincode, type, updated_by, created_at) values ('company', '{$comp_id}', '{$address}', '{$city}', '{$pin}', 'HQ', {$_SESSION['adminId']}, NOW())";
             $res1 = mysql_query($query1) or die(mysql_error());
+
+            if($off_loc_data){
+                $offLocStr = '';
+                foreach ($off_loc_data as $k => $v) {
+                    $offLocStr .= " ('company', '{$comp_id}', '{$v['address']}', '{$v['c_id']}', '{$v['loc_id']}', 'Other', {$_SESSION['adminId']}, NOW()), ";
+                }
+                $offLocStr = rtrim($offLocStr,', ');
+                $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, locality_id, type, updated_by, created_at) values".$offLocStr;
+                //echo $query1;
+                $res1 = mysql_query($query1) or die(mysql_error());
+            }
+
+            if($coverage_data){
+                $coverageStr = '';
+                foreach ($coverage_data as $k => $v) {
+                    if($v['type']=='all'){
+                        $query2 = "SELECT city_id from locality WHERE locality_id='{$v['loc_id']}' ";
+                    //echo $query2;
+                        $res2 = mysql_query($query2) or die(mysql_error());
+                        $dataArr = mysql_fetch_assoc($res2);
+                        $c_id = $dataArr['city_id'];
+                        $coverageStr .= " ('{$comp_id}',  '{$c_id}', '{$v['loc_id']}', '0', '0', {$_SESSION['adminId']}, NOW()), ";
+                    }
+                    else if($v['type']=='project')
+                        $coverageStr .= " ('{$comp_id}',  '{$v['c_id']}', '{$v['loc_id']}', '0', '{$v['p_id']}', {$_SESSION['adminId']}, NOW()), ";
+                    else if($v['type']=='builder')
+                        $coverageStr .= " ('{$comp_id}',  '{$v['c_id']}', '{$v['loc_id']}', '{$v['p_id']}', '0', {$_SESSION['adminId']}, NOW()), ";
+                    else 
+                        $coverageStr .= ''; 
+                }
+                $coverageStr = rtrim($coverageStr,', ');
+                $query1 = "INSERT INTO company_coverage (company_id, city_id, locality_id, builder_id, project_id, updated_by, created_at) values".$coverageStr;
+                //echo $query1;
+                $res1 = mysql_query($query1) or die(mysql_error());
+            }
+
+/****************** save company ip details ************************************************/
 
             foreach ($ipArr as $k => $v) {
                 $query = "INSERT INTO company_ips (company_id, ip, created_by, created_at) values ('{$comp_id}', '{$v}', {$_SESSION['adminId']}, NOW())";
                 $res = mysql_query($query) or die(mysql_error());
             }
-            
-             $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$comp_id}', '+91', '{$compphone}', 'cc_phone', {$_SESSION['adminId']}, NOW())";
-              
-             $res3 = mysql_query($query3) or die(mysql_error());
 
 
-            $query2 = "INSERT INTO broker_contacts (broker_id, name, type, contact_email, updated_by, created_at, updated_at) values ('{$comp_id}', '{$person}', 'NAgent', '{$email}', {$_SESSION['adminId']}, NOW(), NOW())";
-            $res2 = mysql_query($query2) or die(mysql_error());
-            if(mysql_affected_rows()>0){
-               
-                $broker_contacts_id = mysql_insert_id();
-               
+/****************** save company contact details ************************************************/
+            if($compphone){
+                 $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$comp_id}', '+91', '{$compphone}', 'phone1', {$_SESSION['adminId']}, NOW())";
+                  
+                 $res3 = mysql_query($query3) or die(mysql_error());
+            }
 
-                $query4 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('broker_contacts', '{$broker_contacts_id}', '+91', '{$fax}', 'fax', {$_SESSION['adminId']}, NOW())";
-               
-                $res4 = mysql_query($query4) or die(mysql_error());
+/****************** save company customer care details*******************************************/        if($cust_care_data){   
+                 $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$comp_id}', '+91', '{$cust_care_data['phone']}', 'cc_phone', {$_SESSION['adminId']}, NOW()), ('company', '{$comp_id}', '+91', '{$cust_care_data['mobile']}', 'cc_mobile', {$_SESSION['adminId']}, NOW()), ('company', '{$comp_id}', '+91', '{$cust_care_data['fax']}', 'cc_fax', {$_SESSION['adminId']}, NOW())";
+                  
+                 $res3 = mysql_query($query3) or die(mysql_error());
+                 $cc_num_id = mysql_insert_id();
+                 //var_dump($cc_num_id);
+                 $query = "update company set cc_contact_id='{$cc_num_id}' where id='{$comp_id}'";
+                 //echo $query;
+                 $res3 = mysql_query($query) or die(mysql_error());
+            }
+/****************** save contact persons details ************************************************/
+             foreach ($contact_person_data as $k => $v) {
+                
+             
+                $query2 = "INSERT INTO broker_contacts (broker_id, name, type, contact_email, updated_by, created_at, updated_at) values ('{$comp_id}', '{$v['person']}', 'NAgent', '{$v['email']}', {$_SESSION['adminId']}, NOW(), NOW())";
+                $res2 = mysql_query($query2) or die(mysql_error());
+                if(mysql_affected_rows()>0){
+                   
+                    $broker_contacts_id = mysql_insert_id();
+                   
 
-                $query5 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('broker_contacts', '{$broker_contacts_id}', '+91', '{$phone}', 'phone1', {$_SESSION['adminId']}, NOW())";
+                    $query4 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('broker_contacts', '{$broker_contacts_id}', '+91', '{$v['phone1']}', 'phone1', {$_SESSION['adminId']}, NOW()), ('broker_contacts', '{$broker_contacts_id}', '+91', '{$v['phone2']}', 'phone2', {$_SESSION['adminId']}, NOW()), ('broker_contacts', '{$broker_contacts_id}', '+91', '{$v['fax']}', 'fax', {$_SESSION['adminId']}, NOW()), ('broker_contacts', '{$broker_contacts_id}', '+91', '{$v['mobile']}', 'mobile', {$_SESSION['adminId']}, NOW())";
+                   
+                    $res4 = mysql_query($query4) or die(mysql_error());
+                    $contact_no_id = mysql_insert_id();
 
-                $res5 = mysql_query($query5) or die(mysql_error());
+                    $query = "update broker_contacts set contact_number_id='{$contact_no_id}' where id='{$broker_contacts_id}'";
+                 
+                     $res3 = mysql_query($query) or die(mysql_error());
 
-                if(isset($_POST['image']) && $image!=""){
-                    $unitImageArr['objectId'] = $comp_id;
-                    $postArr[] = $unitImageArr;         
-                    $response   = writeToImageService($postArr);
-                    //print_r($response);
-                    foreach ($response as $k => $v) {
-            
-                        if(empty($v->error->msg)){
-                        
-                            
-                            $image_id = $v->data->id;
-                            //echo $image_id;//$image_id = $image_id->id;
-                        }
-                        else {
-                            
-                            $Error = $v->error->msg;
-                            echo $Error;
-                        }
+                }
+            }
+/****************** save broker extra details ************************************************/
+            if($type=="Broker" && isset($bef)){
+                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', {$_SESSION['adminId']}, NOW())";
+                $res = mysql_query($query) or die(mysql_error());
+
+                $query = "update company set active_since='{$bef['since_op']}' where id='{$comp_id}'";
+                $res = mysql_query($query) or die(mysql_error());
+
+                if($bef['projectType']){
+                    $projTypeStr = '';
+                    foreach ($bef['projectType'] as $k => $v) {
+                        $projTypeStr .= " ('{$v}',  '{$comp_id}', {$_SESSION['adminId']}, NOW()), ";
                     }
+                    $projTypeStr = rtrim($projTypeStr,', ');
+                    $query = "insert into broker_property_type_mappings(broker_property_type_id, broker_id, updated_by, created_at) value".$projTypeStr;
+                    $res = mysql_query($query) or die(mysql_error());
+                }
+
+                if($bef['transactionType']){
+                    $transacStr = '';
+                    foreach ($bef['transactionType'] as $k => $v) {
+                        $transacStr .= " ('company',  '{$comp_id}', '{$v}', {$_SESSION['adminId']}, NOW()), ";
+                    }
+                    $transacStr = rtrim($transacStr,', ');
+                    $query = "insert into transaction_type_mappings(table_name, table_id, transaction_type_id, updated_by, created_at) value". $transacStr;
+                    $res = mysql_query($query) or die(mysql_error());
                 }
             }
 
-            echo "1";
-        }
-            
-        else
-            echo "3";
-    }
+/****************** save images to Image Service ************************************************/
+            if(isset($_POST['image']) && $image!=""){
+                $unitImageArr['objectId'] = $comp_id;
+                $postArr[] = $unitImageArr;         
+                $response   = writeToImageService($postArr);
+                //print_r($response);
+                foreach ($response as $k => $v) {
         
+                    if(empty($v->error->msg)){
+                    
+                        
+                        $image_id = $v->data->id;
+                        //echo $image_id;//$image_id = $image_id->id;
+                    }
+                    else {
+                        
+                        $Error = $v->error->msg;
+                        echo $Error;
+                    }
+                }
+            }
+            echo "1hello";
+        }
+        else
+            echo "3hello";
+    }
+       
 }
 
     

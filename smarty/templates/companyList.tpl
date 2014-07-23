@@ -40,30 +40,35 @@ jQuery(document).ready(function(){
 
 
 	$("#lmkSave").click(function(){
-/*		var compType = $('#companyTypeEdit').children(":selected").val();
+		var compType = $('#companyTypeEdit').children(":selected").val();
 		var name = $('#name').val().trim();        
 		var des = $('#des').val().trim();
+    
+    // Address(HQ) data
+    //var address_hq = {address = $('#address').val().trim()};
 		var address = $('#address').val().trim();
     var city = $('#city option:selected').val();
 		var pincode = $('#pincode').val().trim();
     var compphone = $('#compphone').val().trim();
+    var fax = $('#compfax').val().trim();
+    var email = $('#compemail').val().trim();
+    var web = $('#web').val();
+
     var img = $('#uploadedImage').val();
     //var img = $(':file').val();
     var ipArr = [];
     $('input[name="ips[]"]').each(function() {
       ipArr.push($(this).val());
     });
-		var person = $('#person').val().trim();
-		var phone = $('#phone').val().trim();
-		var fax = $('#fax').val().trim();
-		var email = $('#email').val().trim();
-		var web = $('#web').val();
+		//var person = $('#person').val().trim();
+		//var phone = $('#phone').val().trim();
+		
 		var pan = $('#pan').val().trim();
 		var status = $('#status').val(); 
 		var compid = $('#compid').val();
 
 /*****************************************initializers****************************/
-/*		var error = 0;
+		var error = 0;
 	  var mode='';
     if(compid) {
       mode = 'update';
@@ -73,31 +78,23 @@ jQuery(document).ready(function(){
       mode='create';
       imgId = '';
     } 
-*/
-   //var off_loc_address = [];
-    //var off_loc_city = [];
-    //var off_loc_locality = []; 
+
+   
     var off_loc_data = [];
 
-    //var coverage_city =[];
-    //var coverage_loc =[];
-    //var coverage_proj =[];
-    //var coverage_build =[];
-
-    var coverage_data = [];
+    
+    var coverage_data = [];    
     var contact_person_data = [];
 
 /************************* new field added for broker ****************************/
-  //loop through all values of office location table rows
+  //loop through all values of office location table rows to get data
   for(var i=0; i<window.offLocTabRowNo; i++){
     var row =  document.getElementById("officeLocRowId_"+i);
     if(row){
-      var rowData = {address:$("#off_loc_address_id_"+i).text(), c_id:$("#off_loc_city_id_"+i).val(), loc_id:$("#off_loc_loc_id_"+i).val()};
+      var rowData = {address:$("#off_loc_address_id_"+i).text().trim(), c_id:$("#off_loc_city_id_"+i).val(), loc_id:$("#off_loc_loc_id_"+i).val()};
 
       off_loc_data.push(rowData);
-        //off_loc_address.push($("#off_loc_address_id_"+i).text());
-        //off_loc_city.push($("#off_loc_city_id_"+i).val());
-        //off_loc_locality.push($("#off_loc_loc_id_"+i).val());
+        
 
     }
   }
@@ -108,28 +105,62 @@ jQuery(document).ready(function(){
     if(row){
       
       var rowData = {c_id:$("#coverage_city_id_"+i).val(), loc_id:$("#coverage_loc_id_"+i).val(), p_id:$("#coverage_proj_id_"+i).val(), type:$("#coverage_type_"+i).val() }; 
-      contact_person_data.push(rowData);
 
-    }
-  }
-
- //loop through all values of contact persons rows
-  for(var i=0; i<window.contactTableNo; i++){
-    var row =  document.getElementById("RowId_"+i);
-    if(row){
-      var rowData = {person:$("#person_"+i).val(), phone1:$("#phone1_"+i).val(), phone2:$("#phone2_"+i).val(), mobile:$("#mobile_"+i).val(), fax:$("#fax_"+i).val(), email:$("#email_"+i).val(),};
-        
       coverage_data.push(rowData);
 
     }
   }
 
+ //loop through all values of contact persons rows
+  for(var i=0; i<=window.contactTableNo; i++){
+    var row =  document.getElementById("rowId_"+i);
+    if(row){
+      
+      var rowData = {person:$("#person_"+i).val().trim(), phone1:$("#phone1_"+i).val().trim(), phone2:$("#phone2_"+i).val().trim(), mobile:$("#mobile_"+i).val().trim(), fax:$("#fax_"+i).val().trim(), email:$("#email_"+i).val().trim()};
+        
+      contact_person_data.push(rowData);
+    }
+  }
 
-  console.log(off_loc_data);
-  console.log(coverage_data);
-  console.log(contact_person_data);
+//get customer care data
+
+  var cust_care_data = {phone:$("#cc_phone").val().trim(), mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim(), email:$("#cc_email").val().trim()};
+
+// broker extra fields
+  
+
+
+  var projectType = [];
+  $(".resiProjectType").each(function(){
+    if($(this).is(':checked')){
+      projectType.push($(this).val());
+    }
+  })
+
+
+  var transactionType = [];
+  $(".Transaction").each(function(){
+    if($(this).is(':checked')){
+      transactionType.push($(this).val());
+    }
+  })
+  console.log(transactionType);
+  var legalType = $('#compLegalType').children(":selected").val();
+  var frating = $('#frating').children(":selected").val();
+  var since_op = $('#img_date1').val(); 
+  var stn = $('#stn').val();
+  var officeSize = $('#officeSize').val();
+  var employeeNo = $('#employeeNo').val();
+  var ptManager = $('#ptManager').children(":selected").val();
+
+
+   
+  var broker_extra_fields = {legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
+
+  //console.log(coverage_data);
+  //console.log(contact_person_data); 
     
-
+   var data = { id:compid, type:compType, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, fax:fax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
 
 /******************************validation****************************************/    
 
@@ -142,7 +173,7 @@ jQuery(document).ready(function(){
           $('#errmsgfax').html('');
     }
 
-    if(phone!='' && !isNumeric1(phone)){
+    /*if(phone!='' && !isNumeric1(phone)){
       $('#errmsgphone').html('<font color="red">Please provide a Numeric Value.</font>');
       $("#phone").focus();
       error = 1;
@@ -150,7 +181,7 @@ jQuery(document).ready(function(){
     else{
           $('#errmsgphone').html('');
     }
-
+  */
     for (var i = 0; i < ipArr.length; i++) {
       if(ipArr[i]!='' && !ValidateIPaddress(ipArr[i])) {
         $('#errmsgip_'+i).html('<font color="red">Please provide a valid IP.</font>');
@@ -230,7 +261,7 @@ jQuery(document).ready(function(){
 
 
 
-    var data = { id:compid, type:compType, name:name,des:des, address : address, city:city, pincode : pincode, compphone : compphone, image:img, imageId:imgId, ipArr : ipArr, person : person, phone:phone, fax:fax, email:email, web:web, pan:pan, status:status, task : "createComp", mode:mode}; 
+   
 
 	    if (error==0){
       
@@ -956,7 +987,6 @@ function addCoverage(){
       var projId = window.selectedProjects.pId;  //same var to strore pid and bid
       var type = "builder";
       var projName = "All Projects of";//window.selectedProjects.pName;
-      var projId = "";//window.selectedProjects.pId;
     }
     else{
       var projName = '';
@@ -1095,9 +1125,12 @@ var selected=false;
 function compnayTypeChanged(){
   if($('#companyTypeEdit').children(":selected").val()=="Broker"){
     $("#broker_extra_field").show();
+    $("#legalType").show();
   }
-  else
+  else{
     $("#broker_extra_field").hide();
+    $("#legalType").hide();
+  }
 }
 
 function coverageRadioChanged(){
@@ -1170,10 +1203,10 @@ function coverageRadioChanged(){
                       <td><input type="hidden", id="compid"></td>
                     </tr>
 
-                    <tr>
-                      <td width="10%" align="right" ><font color = "red">*</font>Company Type : </td>
+                    <tr id="legalType" style="display:none">
+                      <td width="10%" align="right" ><font color = "red">*</font>Company Legal Type : </td>
                       <td width="30%" align="left"><select id="compLegalType" name="compLegalType" >
-                        <option name=one value=''>Select Company Type</option>
+                        <option name=one value=''>Select Company Legal Type</option>
                         <option name=one value='proprietorship'>Proprietorship</option>
                         <option name=two value='private-limited' >Private Limited</option>
                         <option name=two value='limited' >Limited</option>
@@ -1321,23 +1354,23 @@ function coverageRadioChanged(){
 
                             <tr>
                               <td width="20%" align="right" >Contact Phone 1 : </td>
-                              <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
+                              <td width="30%" align="left"><input type=text name="phone" id="phone1_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
                             </tr>
 
                             <tr>
                               <td width="20%" align="right" >Contact Phone 2 : </td>
-                              <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
+                              <td width="30%" align="left"><input type=text name="phone" id="phone2_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
                             </tr>
 
                             <tr>
                               <td width="20%" align="right" >Contact Mobile : </td>
-                              <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
+                              <td width="30%" align="left"><input type=text name="phone" id="mobile_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
                             </tr>
 
 
                             <tr>
                               <td width="20%" align="right" valign="top">Contact Fax : </td>
-                             <td width="30%" align="left"><input type=text name="fax" id="fax" style="width:250px;"></td> 
+                             <td width="30%" align="left"><input type=text name="fax" id="fax_0" style="width:250px;"></td> 
                             <td width="50%" align="left" id="errmsgfax"></td>
                             </tr>
 
@@ -1384,26 +1417,26 @@ function coverageRadioChanged(){
                     
                     <tr>
                       <td width="20%" align="right" >Cust Care Phone : </td>
-                      <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgphone"></td>
+                      <td width="30%" align="left"><input type=text name="phone" id="cc_phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_phone"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" >Cust Care Mobile : </td>
-                      <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgphone"></td>
+                      <td width="30%" align="left"><input type=text name="phone" id="cc_mobile"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_mobile"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" valign="top">Cust Care Fax :</td>
-                     <td width="30%" align="left"><input type=text name="fax" id="fax" style="width:250px;"></td> 
-                    <td width="20%" align="left" id="errmsgfax"></td>
+                     <td width="30%" align="left"><input type=text name="fax" id="cc_fax" style="width:250px;"></td> 
+                    <td width="20%" align="left" id="errmsgcc_fax"></td>
                     </tr>
 
-                    <tr>
+                   <!--<tr>
                       <td width="20%" align="right" >Cust Care Email : </td>
-                      <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
-                    </tr>
+                      <td width="30%" align="left"><input type=text name="email" id="cc_email" style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_email"></td>
+                    </tr>-->
 
-<!----- office locations--------------------------------------------------------------------     -->
+<!--   office locations --------------------------------------------------------------     -->
                    <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Office Locations</b></td>
                     </tr> 
@@ -1557,7 +1590,7 @@ function coverageRadioChanged(){
                           <td width="20%" align="right" valign="top">Properties Broker Deals In : </td>
                           <td width="30%" align="left">
                             {foreach $resiProjectType key=k item=v}
-                              <input type='checkbox' name='resiProjectType[]' value='{$k}' {if $k%2==0} text-align="right" {else} text-align="left"{/if}>{$v} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <input type='checkbox' name='resiProjectType[]' class='resiProjectType' value='{$k}' {if $k%2==0} text-align="right" {else} text-align="left"{/if}>{$v} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             {if $k%2==0}<br>{/if} 
                             {/foreach}
                           </td>
@@ -1568,7 +1601,7 @@ function coverageRadioChanged(){
                           <td width="10%" align="right" ><font color = "red">*</font>Transaction Types : </td>
                           <td width="30%" align="left">
                             {foreach $transactionType key=k item=v}
-                            <input type='checkbox' name='Transaction[]' value='0'>{$v} &nbsp;&nbsp;
+                            <input type='checkbox' name='Transaction[]' class='Transaction' value='{$k}'>{$v} &nbsp;&nbsp;
                             {/foreach}
                           </td> 
                           <td width="40%" align="left" id="errmsgcomplegaltype"></td>
@@ -1604,7 +1637,7 @@ function coverageRadioChanged(){
                                     
                             </select>
                         <tr>
-                          <td width="20%" align="right" ><font color = "red">*</font>Years in Operation : </td>
+                          <td width="20%" align="right" ><font color = "red">*</font>Since Operation : </td>
                           <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
                         </tr>
 
