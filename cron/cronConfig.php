@@ -95,10 +95,21 @@ $weeklyEmail = array(
                 'sendifnodata'=>0
         ),
      array(
-            'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME,rp.promised_completion_date as COMPLETION_DATE from resi_project rp 
+            /*'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME,rp.promised_completion_date as COMPLETION_DATE from resi_project rp 
              where 
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and project_status_id in(8,1,7) and promised_completion_date < '$currentDate'
-                    and promised_completion_date != '0000-00-00' and promised_completion_date is not null;",
+                    and promised_completion_date != '0000-00-00' and promised_completion_date is not null;",*/
+               'sql'=>"SELECT rpp.PROJECT_ID,rp.PROJECT_NAME,rpp.PHASE_ID,rpp.PHASE_TYPE,rpp.PHASE_NAME,rpp.COMPLETION_DATE FROM resi_project_phase rpp
+						INNER JOIN resi_project rp on rpp.PROJECT_ID = rp.PROJECT_ID AND rp.version = 'Cms'
+						WHERE rpp.version = 'Cms' 
+						AND rpp.status = 'Active' 
+						AND rp.status in('Active','ActiveInCms') 
+						AND rpp.construction_status in(8,1,7) 
+						AND rpp.COMPLETION_DATE < '$currentDate'
+						AND rpp.COMPLETION_DATE != '0000-00-00' AND rpp.COMPLETION_DATE IS NOT NULL
+						AND 
+						IF(rpp.PROJECT_ID IN (SELECT project_id from resi_project_phase where phase_type = 'Actual' AND status = 'Active'),rpp.PHASE_TYPE = 'Actual',rpp.PHASE_TYPE = 'Logical')
+						ORDER BY rpp.PROJECT_ID ASC;",     
                'subject'=>'Projects whose status is Pre Launch,Under construction,Launch projects but Expected completion date is in past',
                'recipients'=>array('ankur.dhawan@proptiger.com','ravi.srivastava@proptiger.com'), 
                'attachmentname'=>'projects_whose_status_is_pre_launch_under_construction_launch_projects_but_expected_completion_date_is_in_past',
