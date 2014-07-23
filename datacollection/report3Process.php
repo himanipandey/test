@@ -99,7 +99,7 @@ function prepareDisplayData($all_users, $all_assigned_projects, $all_done_projec
       $grand_work['revert_count'] = $grand_work['revert_count'] + $v['revert_count'];       	
 	}
 	
-	$grand_work['reversal'] = round(($grand_work['revert_count']/$grand_work['done']),1)*100;
+	$grand_work['reversal'] = round(($grand_work['revert_count']/$grand_work['done'])*100,1);
 	  $grand_work['proj_per_day'] = round(($grand_work['done']/$days),2);
 	if($days < 7)
 	  $grand_work['proj_per_week'] = 'N/A';
