@@ -322,9 +322,9 @@ if (isset($_POST['btnSave'])) {
         }
         //project preLaunch Validation        
         //$pre_launch_date = fetch_project_preLaunchDate($projectId,true);
-         $phase_created = mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());
+         $phase_created = mysql_fetch_object(mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'")) or die(mysql_error());
 	
-		if($phase_created && $phasename != 'No Phase')
+		if($phase_created->cnt && $phasename != 'No Phase')
 		  $pre_launch_date = fetch_project_preLaunchDate($projectId,true);
 		        
         $project_pre_launch_date = $pre_launch_date;
@@ -392,12 +392,13 @@ if (isset($_POST['btnSave'])) {
             if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
                    $error_msg = "Launched Unit must be greater than Availability.";
 		 }
-		 
 		 ////phase level check regarding status
-		 if($phase_created && $phasename == 'No Phase')
-		   $project_status = fetch_project_status($projectId,'',$phaseId);
-		 else
+		 if($phase_created->cnt && $phasename == 'No Phase'){
+		   $project_status = fetch_project_status($projectId,'',$phaseId);		  
+		 }
+		 else{
 		   $project_status = fetch_project_status($projectId,$construction_status,$phaseId); 
+		 }
 			                    
         if($projectDetail[0]['LAUNCH_DATE'] == '0000-00-00')
 		  $projectDetail[0]['LAUNCH_DATE'] = '';
