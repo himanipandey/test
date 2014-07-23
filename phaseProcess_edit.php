@@ -429,29 +429,34 @@ if (isset($_POST['btnSave'])) {
                 }
          }  
 		  
-	    if( $construction_status == UNDER_CONSTRUCTION_ID_1 ) { 
+	    if( $construction_status == UNDER_CONSTRUCTION_ID_1 || $construction_status == LAUNCHED_ID_7) { 
+		   $construction_status_text = 	($construction_status == UNDER_CONSTRUCTION_ID_1)?"Under construction":"Launched";
            $yearExp = explode("-",$launch_date);
            $yearExp2 = explode("-",$completion_date);
            if($launch_date != ''){
 			   if( $yearExp[0] == date("Y") ) {
 				   if( intval($yearExp[1]) > intval(date("m"))) {
-					 $error_msg = "Launch date should not be greater than current month in case of Construction Status is Under construction.";
+					 $error_msg = "Launch date should not be greater than current month in case of Construction Status is $construction_status_text.";
 				   }    
 			   } 
 			   else if (intval($yearExp[0]) > intval(date("Y")) ) {
-				  $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  Under construction.";
+				  $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  $construction_status_text.";
 			   }
+		   }else{
+			   $error_msg = "Launch date is required in case of Construction Status is $construction_status_text."; 
 		   }
 		  
            if($completion_date != ''){			   	
 			   if( $yearExp2[0] == date("Y") ) {				   
 				   if( intval($yearExp2[1]) < intval(date("m"))) {
-					 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
+					 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is $construction_status_text.";
 				   }    
 			   } 
 			   else if (intval($yearExp2[0]) < intval(date("Y")) ) {
-				  $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
+				  $error_msg = "Completion date cannot be less than the current month in case of Construction Status is $construction_status_text.";
 			   }
+		   }else{
+			   $error_msg = "Completion date is required in case of Construction Status is $construction_status_text."; 
 		   }	
         }elseif($construction_status == OCCUPIED_ID_3 || $construction_status == READY_FOR_POSSESSION_ID_4 ){
 			$yearExp = explode("-",$completion_date);
@@ -462,7 +467,13 @@ if (isset($_POST['btnSave'])) {
             } 
             else if (intval($yearExp[0]) > intval(date("Y")) ) {
                 $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
-            }			
+            }
+            if($launch_date == ''){
+				$error_msg = "Launch date is required in case of Construction Status is Completed.";
+			}
+			if($completion_date == ''){
+				$error_msg = "Completion date is required in case of Construction Status is Completed.";
+			}			
 		}elseif( $construction_status == PRE_LAUNCHED_ID_8 && $phase_pre_launch_date == '') { 
            $error_msg = "Phase Status can not be Pre Launched in case of Pre Launched Date is blank.";
         }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
@@ -486,10 +497,7 @@ if (isset($_POST['btnSave'])) {
                $error_msg = "Pre-Launch date cannot be Future date in case of Construction Status is Pre Launched.";              
             }         
         }
-      /*  if($construction_status ==){
-		  			
-	    }*/
-          
+             
        if($error_msg == ''){
 			if( ($project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != ''  && $phasename != 'No Phase') || ($project_status == PRE_LAUNCHED_ID_8 && $launch_date != '' && $phasename == 'No Phase')) {
 			  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 
