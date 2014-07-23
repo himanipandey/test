@@ -115,6 +115,18 @@
                                                             </tr>
 														  {/foreach}                                                        
                                                         {/foreach}
+                                                        <tr><td style="background:#999" colspan=9></td></tr>
+                                                        <tr>
+                                                          <td><b>{$displayData['grand_work']['username']}</b></td>
+                                                          <td><b>{$displayData['grand_work']['ass']}</b></td>
+                                                          <td><b>{$displayData['grand_work']['done']}</b></td>
+                                                          <td><b>{$displayData['grand_work']['revert_count']}</b></td>
+                                                          <td><b>{$displayData['grand_work']['reversal']}</b></td>
+                                                          <td><b>{$displayData['grand_work']['proj_per_day']}</b></td>
+                                                          <td><b>{$displayData['grand_work']['proj_per_week']}</b></td>
+                                                          <td><b>{$displayData['grand_work']['proj_per_month']}</b></td>
+                                                          <td><b>{$displayData['grand_work']['proj_per_qtr']}</b></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </form>
