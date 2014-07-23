@@ -51,7 +51,7 @@ function prepareDisplayData($all_users, $all_assigned_projects, $all_done_projec
 	    $excs_work[$leadId][$exc['admin_id']]['done'] = $all_done_projects['done_proj_to_exec'][$leadId][$exc['admin_id']]['done'];	
 	    $excs_work[$leadId][$exc['admin_id']]['ass'] = $all_assigned_projects['ass_proj_to_exec'][$leadId][$exc['admin_id']]['ass'];
 	    $excs_work[$leadId][$exc['admin_id']]['revert_count'] = $all_revert_count_hash[$exc['admin_id']];
-	    $excs_work[$leadId][$exc['admin_id']]['reversal'] = round(($all_revert_count_hash[$exc['admin_id']]/$all_done_projects['done_proj_to_exec'][$leadId][$exc['admin_id']]['done']),1)*100;
+	    $excs_work[$leadId][$exc['admin_id']]['reversal'] = round(($all_revert_count_hash[$exc['admin_id']]/$all_done_projects['done_proj_to_exec'][$leadId][$exc['admin_id']]['done'])*100,1);
 	    $excs_work[$leadId][$exc['admin_id']]['proj_per_day'] = round(($excs_work[$leadId][$exc['admin_id']]['done']/$days),2);
 	    if($days < 7)
 	      $excs_work[$leadId][$exc['admin_id']]['proj_per_week'] = 'N/A';
@@ -74,7 +74,7 @@ function prepareDisplayData($all_users, $all_assigned_projects, $all_done_projec
 	  $leads_work[$leadId]['done'] = $done_projects;	
 	  $leads_work[$leadId]['ass'] = $ass_projects;
 	  $leads_work[$leadId]['revert_count'] = $revert_count;
-	  $leads_work[$leadId]['reversal'] = round(($revert_count/$done_projects),1)*100;
+	  $leads_work[$leadId]['reversal'] = round(($revert_count/$done_projects)*100,1);
 	  $leads_work[$leadId]['proj_per_day'] = round(($done_projects/$days),2);
 	  if($days < 7)
 	    $leads_work[$leadId]['proj_per_week'] = 'N/A';
