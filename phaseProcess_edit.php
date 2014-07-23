@@ -468,6 +468,28 @@ if (isset($_POST['btnSave'])) {
         }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
            $error_msg = "Launch date should blank in case of Construction Status is Pre Launched.";
         }
+        if( $construction_status == PRE_LAUNCHED_ID_8 && $completion_date == '') { 
+           $error_msg = "Completion date can not be blank in case of Construction Status is Pre Launched.";
+        }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $completion_date != '') { 
+           $yearExp = explode("-",$completion_date);
+            if( $yearExp[0] == date("Y") ) {
+                if( intval($yearExp[1]) < intval(date("m"))) {
+                  $error_msg = "Completion date cannot be Past date in case of Construction Status is Pre Launched.";
+                }    
+            } 
+            else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                $error_msg = "Completion date cannot be Past date in case of Construction Status is Pre Launched.";
+            }
+        }
+        if($construction_status == PRE_LAUNCHED_ID_8 && $phase_pre_launch_date != '') {
+            if(time() < strtotime($phase_pre_launch_date)) {                
+               $error_msg = "Pre-Launch date cannot be Future date in case of Construction Status is Pre Launched.";              
+            }         
+        }
+      /*  if($construction_status ==){
+		  			
+	    }*/
+          
        if($error_msg == ''){
 			if( ($project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != ''  && $phasename != 'No Phase') || ($project_status == PRE_LAUNCHED_ID_8 && $launch_date != '' && $phasename == 'No Phase')) {
 			  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 
