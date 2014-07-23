@@ -62,7 +62,7 @@ $dailyEmail = array(
             and ((rp.LONGITUDE not between l.MIN_LONGITUDE and l.MAX_LONGITUDE) or (rp.LATITUDE not between l.MIN_LATITUDE and l.MAX_LATITUDE))
              and (rp.LATITUDE not in($latLongList) or rp.LONGITUDE not in($latLongList));",
             'subject'=>'Lat Long Beyond Limits',
-            'recipients'=>array('ankur.dhawan@proptiger.com'), 
+            'recipients'=>array('ankur.dhawan@proptiger.com','Sandeep.jakhar@proptiger.com','Suneel.kumar@proptiger.com'), 
             'attachmentname'=>'Latitude_longitude_beyond_limit',
             'sendifnodata'=>0
         ),
@@ -76,7 +76,7 @@ $dailyEmail = array(
         array(
             'sql'=>"SELECT pof.id as OFFER_ID,pof.project_id as PROJECT_ID,pof.OFFER,pof.OFFER_DESC,pof.created_at as START_DATE,pof.OFFER_END_DATE,pof.STATUS FROM `project_offers` pof inner join resi_project rp on rp.project_id = pof.project_id and rp.version='Cms' and rp.status in('Active','ActiveInCms') WHERE pof.STATUS = 'Active' AND pof.OFFER_END_DATE='".$future_date."';",
             'subject'=>'Project Offers Reaching Expiry Date',
-            'recipients'=>array('ankur.dhawan@proptiger.com'), 
+            'recipients'=>array('ankur.dhawan@proptiger.com','Sandeep.jakhar@proptiger.com','Suneel.kumar@proptiger.com','ravi.srivastava@proptiger.com'), 
             'attachmentname'=>'expired_project_offers',
             'message'=>"Please extend the offers validity otherwise they will be deactivated.",
             'sendifnodata'=>0
@@ -95,12 +95,23 @@ $weeklyEmail = array(
                 'sendifnodata'=>0
         ),
      array(
-            'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME,rp.promised_completion_date as COMPLETION_DATE from resi_project rp 
+            /*'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME,rp.promised_completion_date as COMPLETION_DATE from resi_project rp 
              where 
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and project_status_id in(8,1,7) and promised_completion_date < '$currentDate'
-                    and promised_completion_date != '0000-00-00' and promised_completion_date is not null;",
+                    and promised_completion_date != '0000-00-00' and promised_completion_date is not null;",*/
+               'sql'=>"SELECT rpp.PROJECT_ID,rp.PROJECT_NAME,rpp.PHASE_ID,rpp.PHASE_TYPE,rpp.PHASE_NAME,rpp.COMPLETION_DATE FROM resi_project_phase rpp
+						INNER JOIN resi_project rp on rpp.PROJECT_ID = rp.PROJECT_ID AND rp.version = 'Cms'
+						WHERE rpp.version = 'Cms' 
+						AND rpp.status = 'Active' 
+						AND rp.status in('Active','ActiveInCms') 
+						AND rpp.construction_status in(8,1,7) 
+						AND rpp.COMPLETION_DATE < '$currentDate'
+						AND rpp.COMPLETION_DATE != '0000-00-00' AND rpp.COMPLETION_DATE IS NOT NULL
+						AND 
+						IF(rpp.PROJECT_ID IN (SELECT project_id from resi_project_phase where phase_type = 'Actual' AND status = 'Active'),rpp.PHASE_TYPE = 'Actual',rpp.PHASE_TYPE = 'Logical')
+						ORDER BY rpp.PROJECT_ID ASC;",     
                'subject'=>'Projects whose status is Pre Launch,Under construction,Launch projects but Expected completion date is in past',
-               'recipients'=>array('ankur.dhawan@proptiger.com'), 
+               'recipients'=>array('ankur.dhawan@proptiger.com','ravi.srivastava@proptiger.com'), 
                'attachmentname'=>'projects_whose_status_is_pre_launch_under_construction_launch_projects_but_expected_completion_date_is_in_past',
                'sendifnodata'=>0
         ),
@@ -115,7 +126,7 @@ $weeklyEmail = array(
              where ( rp.LATITUDE  not in ($latLongList) AND rp.LONGITUDE not in ($latLongList)) and
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and c.city_id in($cityList) having distance >10 ;",
                'subject'=>'PIDs greater than 10km from locality center',
-               'recipients'=>array('ankur.dhawan@proptiger.com'), 
+               'recipients'=>array('ankur.dhawan@proptiger.com','Sandeep.jakhar@proptiger.com','Suneel.kumar@proptiger.com'), 
                'attachmentname'=>'PIDs_greater_than_10km_from_locality_center',
                'sendifnodata'=>0
         ),
@@ -185,7 +196,7 @@ $weeklyEmail = array(
                     ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList))
                 AND rp.status in('Active','ActiveInCms') and rp.version = 'Cms';",
                'subject'=>'Missing Latitude and Longitude List',
-               'recipients'=>array('ankur.dhawan@proptiger.com'), 
+               'recipients'=>array('ankur.dhawan@proptiger.com','Ravi.srivastava@proptiger.com'), 
                'attachmentname'=>'Missing_latitude_longitude_list',
                'sendifnodata'=>0
         )
