@@ -324,13 +324,17 @@ if (isset($_POST['btnSave'])) {
         //$pre_launch_date = fetch_project_preLaunchDate($projectId,true);
          $phase_created = mysql_fetch_object(mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'")) or die(mysql_error());
 	
-		if($phase_created->cnt && $phasename != 'No Phase')
+		if($phase_created->cnt){
 		  $pre_launch_date = fetch_project_preLaunchDate($projectId,true);
-		        
+		}
+		else{		 
+		  $pre_launch_date = $phase_pre_launch_date;      
+		}
+				   
         $project_pre_launch_date = $pre_launch_date;
           
         if(($phase_pre_launch_date < $pre_launch_date && $phase_pre_launch_date != '' && $pre_launch_date != '' && $phasename != 'No Phase') || ($pre_launch_date == '' && $phasename != 'No Phase'))
-          $project_pre_launch_date = $phase_pre_launch_date;        
+          $project_pre_launch_date = $phase_pre_launch_date;     
         
         /////////////////////////////         
         if( $phase_pre_launch_date != '' && $launch_date !='') {
