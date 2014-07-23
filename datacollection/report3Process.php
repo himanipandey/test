@@ -41,6 +41,7 @@ function prepareDisplayData($all_users, $all_assigned_projects, $all_done_projec
     $result = array();
     $leads_work = array();
     $excs_work = array();
+    $grand_work = array();
     foreach($all_users['all_exec_under_leads'] as $leadId=>$excs) {	
 	  $done_projects = 0;
 	  $ass_projects = 0;	
@@ -91,8 +92,30 @@ function prepareDisplayData($all_users, $all_assigned_projects, $all_done_projec
 	$result['leads_work'] = $leads_work;
 	$result['excs_work'] = $excs_work;
 	
-	//print "<pre>".print_r($result,1)."</pre>";
+	$grand_work['username'] = 'Grand Total';
+	foreach($result['leads_work'] as $k => $v){
+      $grand_work['done'] = $grand_work['done'] + $v['done'];
+      $grand_work['ass'] = $grand_work['ass'] + $v['ass'];
+      $grand_work['revert_count'] = $grand_work['revert_count'] + $v['revert_count'];       	
+	}
 	
+	$grand_work['reversal'] = round(($grand_work['revert_count']/$grand_work['done']),1)*100;
+	  $grand_work['proj_per_day'] = round(($grand_work['done']/$days),2);
+	if($days < 7)
+	  $grand_work['proj_per_week'] = 'N/A';
+	else
+	  $grand_work['proj_per_week'] = round(($grand_work['done']/($days/7)),2);
+	if($days < 30)
+	  $grand_work['proj_per_month'] = 'N/A';
+	else
+	  $grand_work['proj_per_month'] = round(($grand_work['done']/($days/30)),2);
+	if($days < 90)
+	  $grand_work['proj_per_qtr'] = 'N/A';
+	else
+	  $grand_work['proj_per_qtr'] = round(($grand_work['done']/($days/90)),2);
+	  
+	$result['grand_work'] = $grand_work;  
+		
     return $result;
 }
 
