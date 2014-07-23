@@ -106,7 +106,7 @@
                                                               <td>{$excDt['username']}</td>
                                                               <td>{$excDt['ass']}</td>
                                                               <td>{$excDt['done']}</td>
-                                                              <td>{$excDt['revert_count']}</td>
+                                                              <td>{if $excDt['revert_count']}{$excDt['revert_count']}{else}0{/if}</td>
                                                               <td>{$excDt['reversal']}</td>
                                                               <td>{$excDt['proj_per_day']}</td>
                                                               <td>{$excDt['proj_per_week']}</td>
