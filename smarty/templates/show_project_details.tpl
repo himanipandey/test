@@ -568,7 +568,8 @@ function broker_call_edit(callId, brokerId)
                 {$projectDetails[0].AUDIT_COMMENTS}
         {/if}
     </textarea>
-{/if} 	-->							
+{/if} 	-->	
+    {if $errorValidation != ''}{$errorValidation}{/if}
 <div> 
 
   <TR>
