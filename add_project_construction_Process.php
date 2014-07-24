@@ -148,7 +148,7 @@
                         $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month  in case of Construction Status is completed.";
                     }
                 }
-                if($qrySelect->construction_status == UNDER_CONSTRUCTION_ID_1) {
+                if($qrySelect->construction_status == UNDER_CONSTRUCTION_ID_1 || $construction_status == LAUNCHED_ID_7 ||  $construction_status == PRE_LAUNCHED_ID_8 ) {
                     $yearExp = explode("-",$expectedCompletionDate);
                     if( $yearExp[0] == date("Y") ) {
                         if( intval($yearExp[1]) < intval(date("m"))) {
