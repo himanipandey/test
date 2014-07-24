@@ -561,9 +561,10 @@ $errorValidation = '';
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
+    $flgLogical = 0;
     if($currentPhase == 'DcCallCenter' || $currentPhase == 'DataCollection') { //code for if next stage is audit1
                //then check all phase should have logical entry 
-              $flgLogical = 0;
+              
               foreach($phaseIds as $k=>$valPhaseId){
                  $qryPhaseActual = "select * from resi_project_phase where phase_id = ".$valPhaseId." and phase_type = 'Logical'";
                  $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
@@ -658,7 +659,7 @@ if ($_POST['forwardFlag'] == 'update' && $errorValidation == '') {
     }
     header("Location:$returnURLPID");
 }
-echo $errorValidation;
+echo $errorValidation." test";
 $smarty->assign('errorValidation',$errorValidation);
 if ($_POST['forwardFlag'] == 'no') {
     $returnURLPID = $_POST['returnURLPID'];
