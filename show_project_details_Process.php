@@ -658,6 +658,7 @@ if ($_POST['forwardFlag'] == 'update' && $errorValidation == '') {
     }
     header("Location:$returnURLPID");
 }
+echo $errorValidation;
 $smarty->assign('errorValidation',$errorValidation);
 if ($_POST['forwardFlag'] == 'no') {
     $returnURLPID = $_POST['returnURLPID'];
