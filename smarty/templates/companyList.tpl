@@ -12,7 +12,7 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
-{literal}
+
 <script language="javascript">
 
 
@@ -45,12 +45,12 @@ jQuery(document).ready(function(){
 		var des = $('#des').val().trim();
     
     // Address(HQ) data
-    //var address_hq = {address = $('#address').val().trim()};
+    
 		var address = $('#address').val().trim();
     var city = $('#city option:selected').val();
 		var pincode = $('#pincode').val().trim();
     var compphone = $('#compphone').val().trim();
-    var fax = $('#compfax').val().trim();
+    var compfax = $('#compfax').val().trim();
     var email = $('#compemail').val().trim();
     var web = $('#web').val();
 
@@ -91,7 +91,7 @@ jQuery(document).ready(function(){
   for(var i=0; i<window.offLocTabRowNo; i++){
     var row =  document.getElementById("officeLocRowId_"+i);
     if(row){
-      var rowData = {address:$("#off_loc_address_id_"+i).text().trim(), c_id:$("#off_loc_city_id_"+i).val(), loc_id:$("#off_loc_loc_id_"+i).val()};
+      var rowData = { "address" :$("#off_loc_address_id_"+i).text().trim(), c_id:$("#off_loc_city_id_"+i).val(), loc_id:$("#off_loc_loc_id_"+i).val(), db_id:$("#off_loc_dbId_"+i).val()};
 
       off_loc_data.push(rowData);
         
@@ -104,7 +104,7 @@ jQuery(document).ready(function(){
     var row =  document.getElementById("coverageRowId_"+i);
     if(row){
       
-      var rowData = {c_id:$("#coverage_city_id_"+i).val(), loc_id:$("#coverage_loc_id_"+i).val(), p_id:$("#coverage_proj_id_"+i).val(), type:$("#coverage_type_"+i).val() }; 
+      var rowData = { c_id:$("#coverage_city_id_"+i).val(), loc_id:$("#coverage_loc_id_"+i).val(), p_id:$("#coverage_proj_id_"+i).val(), type:$("#coverage_type_"+i).val(), db_id:$("#coverage_db_id_"+i).val() }; 
 
       coverage_data.push(rowData);
 
@@ -115,16 +115,17 @@ jQuery(document).ready(function(){
   for(var i=0; i<=window.contactTableNo; i++){
     var row =  document.getElementById("rowId_"+i);
     if(row){
-      
-      var rowData = {person:$("#person_"+i).val().trim(), phone1:$("#phone1_"+i).val().trim(), phone2:$("#phone2_"+i).val().trim(), mobile:$("#mobile_"+i).val().trim(), fax:$("#fax_"+i).val().trim(), email:$("#email_"+i).val().trim()};
-        
-      contact_person_data.push(rowData);
+      if($("#person_"+i).val().trim() != ''){
+        var rowData = { person:$("#person_"+i).val().trim(), phone1:$("#phone1_"+i).val().trim(), phone2:$("#phone2_"+i).val().trim(), mobile:$("#mobile_"+i).val().trim(), fax:$("#fax_"+i).val().trim(), email:$("#email_"+i).val().trim()};
+          
+        contact_person_data.push(rowData);
+      }
     }
   }
 
 //get customer care data
 
-  var cust_care_data = {phone:$("#cc_phone").val().trim(), mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim(), email:$("#cc_email").val().trim()};
+  var cust_care_data = { phone:$("#cc_phone").val().trim(), phone_id:$("#cc_phone_id").val().trim(),  mobile:$("#cc_mobile").val().trim(), mobile_id:$("#cc_mobile_id").val().trim(), fax:$("#cc_fax").val().trim(), fax_id:$("#cc_fax_id").val().trim()};
 
 // broker extra fields
   
@@ -133,7 +134,9 @@ jQuery(document).ready(function(){
   var projectType = [];
   $(".resiProjectType").each(function(){
     if($(this).is(':checked')){
-      projectType.push($(this).val());
+      var v = $(this).val();
+      var a = { id: "pt_db_id_"+v, val:v};
+      projectType.push(v);
     }
   })
 
@@ -141,10 +144,14 @@ jQuery(document).ready(function(){
   var transactionType = [];
   $(".Transaction").each(function(){
     if($(this).is(':checked')){
-      transactionType.push($(this).val());
+      var v = $(this).val();
+      var a = { id: "tt_db_id_"+v, val:v};
+      transactionType.push(v);
     }
-  })
-  console.log(transactionType);
+  });
+
+  //console.log(transactionType);
+  var bd_id = $('#bd_id').val(); 
   var legalType = $('#compLegalType').children(":selected").val();
   var frating = $('#frating').children(":selected").val();
   var since_op = $('#img_date1').val(); 
@@ -155,22 +162,22 @@ jQuery(document).ready(function(){
 
 
    
-  var broker_extra_fields = {legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
+  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
 
   //console.log(coverage_data);
   //console.log(contact_person_data); 
     
-   var data = { id:compid, type:compType, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, fax:fax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+   var data = { id:compid, type:compType, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
 
 /******************************validation****************************************/    
 
-    if(fax!='' && !isNumeric1(fax)){
-      $('#errmsgfax').html('<font color="red">Please provide a Numeric Value.</font>');
-      $("#fax").focus();
+    if(compfax!='' && !isNumeric1(compfax)){
+      $('#errmsgcompfax').html('<font color="red">Please provide a Numeric Value.</font>');
+      $("#compfax").focus();
       error = 1;
     }
     else{
-          $('#errmsgfax').html('');
+          $('#errmsgcompfax').html('');
     }
 
     /*if(phone!='' && !isNumeric1(phone)){
@@ -265,7 +272,7 @@ jQuery(document).ready(function(){
 
 	    if (error==0){
       
-	      	$.ajax({
+	      	$.ajax({ 
 	            type: "POST",
 	            url: "/saveCompany.php",
 	            data: data,
@@ -393,7 +400,7 @@ function cleanFields(){
 
 
 
-function editCompany(id,name,type,des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, fax, phone, action){
+function editCompany(id,name,type,des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, compfax, phone, active_since, web, a, action){
     cleanFields();
     $("#compid").val(id);
     $('#city').val(city);
@@ -403,6 +410,9 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, c
     $("#address").val(address);
     $("#pincode").val(pin);
     $("#compphone").val(compphone);
+    $("#compfax").val(compfax);
+    $("#web").val(web);
+    $("#compemail").val(email);
    // var ipstring = ipstring.substring(0, ipstring.length -1);
 
     var str = '<img src = "'+imgpath+'?width=130&height=100"  alt = "'+imgalttext+'">';
@@ -421,14 +431,116 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, c
       $("#ip_"+i).val(ipsarr[i]);
     }
 
-    $("#person").val(person);
-    $("#phone").val(phone);
-    //$("#web").val(lmkweb);
-    $("#fax").val(fax);
+    //$("#person").val(person);
+    //$("#phone").val(phone);
+    
     $("#status").val(status);
-    $("#email").val(email);
+    
    
     $("#pan").val(pan);
+    $('#img_date1').val(active_since); 
+
+    //var data = a;
+    if(type=="Broker"){
+      $("#broker_extra_field").show();
+      $("#legalType").show();
+    }
+    else{
+      $("#broker_extra_field").hide();
+      $("#legalType").hide();
+    }
+    var a = eval('('+a+')');
+    //var data = $("#extra_data").val();
+    
+    //var data = eval('("data":'+ a+ ') ');
+    console.log(a.data);
+    var cP =  a.data.cont_person;
+    for(var i=0; i<cP.length; i++){
+      if(i>0)
+      addContactTable("contact_table");
+      $("#id_"+i).val(cP[i].id);
+      $("#person_"+i).val(cP[i].person);
+      $("#email_"+i).val(cP[i].email);
+      $("#phone1_"+i).val(cP[i].phone1);
+      $("#phone1_id_"+i).val(cP[i].phone1_id);
+      $("#phone2_"+i).val(cP[i].phone2);
+      $("#phone2_id_"+i).val(cP[i].phone2_id);
+      $("#mobile_"+i).val(cP[i].mobile);
+      $("#mobile_id_"+i).val(cP[i].mobile_id);
+      $("#fax_"+i).val(cP[i].fax);
+      $("#fax_id_"+i).val(cP[i].fax_id);
+    }
+
+    var offLoc = a.data.off_loc; 
+    var tableId = "off_loc_table";
+    for(var i=0; i<offLoc.length; i++){
+      var data = { table_id:tableId, dbId:offLoc[i].id, first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:offLoc[i].c_name, }, third:{ label:"label", text:offLoc[i].loc_name,}, fourth:{ label:"label", text:offLoc[i].address,}, city_id:offLoc[i].c_id, loc_id:offLoc[i].loc_id};
+        addOfficeLocRow(data);
+    }
+
+
+    var c = a.data.coverage; 
+    var tableId = "coverage_table"; var type=''; var p_name=''; var b_name='';
+    for(var i=0; i<c.length; i++){
+      if(c[i].b_id=='0' && c[i].p_id=='0'){
+        type='all';
+        p_name='All'; b_name='All';
+      }
+      else if(c[i].b_id=='0'){
+        type='project'; 
+        p_name=c[i].p_name; b_name='';
+      }
+      else if(c[i].p_id=='0'){
+        type='builder';
+        p_name='All Projects of'; b_name=c[i].b_name;
+      }
+      var data = { table_id:tableId, dbId:c[i].id, first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:c[i].c_name, }, third:{ label:"label", text:c[i].loc_name,}, fourth:{ label:"label", text:p_name,}, fifth:{ label:"label", text:b_name,}, city_id:c[i].c_id, loc_id:c[i].loc_id, p_id:c[i].p_id, type:type};
+        addCoverageRow(data);
+    }
+
+    var cc = a.data.cust_care;  
+      $("#cc_phone").val(cc.phone);
+      $("#cc_phone_id").val(cc.phone_id);
+      $("#cc_mobile").val(cc.mobile);
+      $("#cc_mobile_id").val(cc.mobile_id);
+      $("#cc_fax").val(cc.fax);
+      $("#cc_fax_id").val(cc.fax_id);
+
+
+    var pT = a.data.broker_prop_type;
+    $(".resiProjectType").each(function(){
+      for(var i=0; i<pT.length; i++){
+        if( $(this).val()==pT[i].broker_property_type_id ){
+          $(this).prop('checked', true);
+          $("#pt_db_id_"+$(this).val()).val(pT[i].id);
+        }
+      }
+    });
+
+
+    var tT = a.data.transac_type;
+    $(".Transaction").each(function(){
+      for(var i=0; i<tT.length; i++){
+         if( $(this).val()==tT[i].transaction_type_id ){
+          $(this).prop('checked', true);
+          $("#tt_db_id_"+$(this).val()).val(tT[i].id);
+        }
+      }
+    });
+
+  var bD = a.data.broker_details; 
+  $('#bd_id').val(bD.id);
+  $('#compLegalType').val(bD.legal_type);
+  $('#frating').val(bD.rating);
+  $('#stn').val(bD.service_tax_no);
+  $('#officeSize').val(bD.office_size);
+  $('#employeeNo').val(bD.employee_no);
+  $('#ptManager').val(bD.pt_manager_id);
+
+
+
+
+
     //$('#search-top').hide('slow');
     $('#search_bottom').hide('slow');
     window.scrollTo(0, 0);
@@ -592,6 +704,13 @@ function addContactTable(tableId){
             addContactRow(element1.id, "Contact Fax", "fax", "errmsgname", no);
             addContactRow(element1.id, "Contact Email", "email", "errmsgname", no);
             addDeleteButton(element1.id, "deleteContact", no);
+            addHiddenRow(element1.id, "person_id");
+            addHiddenRow(element1.id, "phone1_id");
+            addHiddenRow(element1.id, "phone2_id");
+            addHiddenRow(element1.id, "mobile_id");
+            addHiddenRow(element1.id, "fax_id");
+           
+
             //addBlankRow(element1.id);
 
 }
@@ -657,17 +776,18 @@ function addDeleteButton(tableId, buttonClass, no){
 
 }
 
-function addBlankRow(tableId){
+function addHiddenRow(tableId, inputClass){
       var table = document.getElementById(tableId); 
- 
             var rowCount = table.rows.length;
             var row = table.insertRow(rowCount);
- 
             var cell1 = row.insertCell(0);
             cell1.width = "20%";
-
-            var cell2 = row.insertCell(1);
-            cell2.width = "30%";
+            var element1 = document.createElement("input");
+            element1.type = "hidden";
+            //element2.style.width="250px";
+            element1.id=inputClass+"_"+no;
+            element1.className=inputClass;
+            cell1.appendChild(element1);
 }
 
 var deleteContactPerson = function(no){
@@ -692,7 +812,7 @@ var deleteContactPerson = function(no){
 
 function getLocality(){
    var cityId = $("#off_loc_city").val();
-   var data = {cityId:cityId, task:"office_locations"};
+   var data = { cityId:cityId, task:"office_locations"};
    $.ajax({
 
               type: "POST",
@@ -716,7 +836,7 @@ function addOfficeLocation(){
   var locId = $("#off_loc_locality :selected").val();
   var address = $("#off_loc_address").val();
   var tableId = "off_loc_table";
-  var data = {table_id:tableId, first:{checkbox:"checkbox", class:"class" }, second:{label:"label", text:cityName, }, third:{label:"label", text:locName,}, fourth:{label:"label", text:address,}, city_id:cityId, loc_id:locId};
+  var data = { table_id:tableId, dbId:"", first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:cityName, }, third:{ label:"label", text:locName,}, fourth:{ label:"label", text:address,}, city_id:cityId, loc_id:locId};
 
   if(cityId!='' && locId!='' && address!=''){
 
@@ -792,8 +912,14 @@ function addOfficeLocRow(data){
             element6.value = data.loc_id;
             element6.className = " off_loc_locality_class";
             element6.id = "off_loc_loc_id_"+window.offLocTabRowNo;
-            
             cell4.appendChild(element6);
+
+            var element7 = document.createElement("input");
+            element7.type = "hidden";
+            element7.value = data.dbId;
+            //element6.className = " off_loc__class";
+            element7.id = "off_loc_dbId_"+window.offLocTabRowNo;
+            cell4.appendChild(element7);
 
 
             window.offLocTabRowNo +=1;
@@ -968,7 +1094,7 @@ function addCoverage(){
     var locId = window.selectedLocality.locId;
     var projName = "All";
     var projId = "";
-    var bName = "";
+    var bName = "All";
     var type = "all";
   }
   else{
@@ -997,7 +1123,7 @@ function addCoverage(){
   }
 
     var tableId = "coverage_table";
-    var data = {table_id:tableId, first:{checkbox:"checkbox", class:"class" }, second:{label:"label", text:cityName, }, third:{label:"label", text:locName,}, fourth:{label:"label", text:projName,}, fifth:{label:"label", text:bName,}, city_id:cityId, loc_id:locId, p_id:projId, type:type};
+    var data = { table_id:tableId, dbId:'', first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:cityName, }, third:{ label:"label", text:locName,}, fourth:{ label:"label", text:projName,}, fifth:{ label:"label", text:bName,}, city_id:cityId, loc_id:locId, p_id:projId, type:type};
   
 
   if( locName!='' && projName!=''){
@@ -1092,6 +1218,12 @@ function addCoverageRow(data){
             element9.id = "coverage_type_"+window.coverageTabRowNo;
             cell4.appendChild(element9);
 
+            var element10 = document.createElement("input");
+            element10.type = "hidden";
+            element10.value = data.dbId;
+            element10.id = "coverage_db_id_"+window.coverageTabRowNo;
+            cell4.appendChild(element10);
+
             window.coverageTabRowNo +=1;
 }
 
@@ -1144,7 +1276,7 @@ function coverageRadioChanged(){
 }
 
 </script>
-{/literal}
+
 </TD>
   </TR>
   <TR>
@@ -1417,18 +1549,18 @@ function coverageRadioChanged(){
                     
                     <tr>
                       <td width="20%" align="right" >Cust Care Phone : </td>
-                      <td width="30%" align="left"><input type=text name="phone" id="cc_phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_phone"></td>
+                      <td width="30%" align="left"><input type=text name="phone" id="cc_phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_phone"><input type=hidden name="phone" id="cc_phone_id"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" >Cust Care Mobile : </td>
-                      <td width="30%" align="left"><input type=text name="phone" id="cc_mobile"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_mobile"></td>
+                      <td width="30%" align="left"><input type=text name="phone" id="cc_mobile"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_mobile"><input type=hidden name="phone" id="cc_mobile_id"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" valign="top">Cust Care Fax :</td>
                      <td width="30%" align="left"><input type=text name="fax" id="cc_fax" style="width:250px;"></td> 
-                    <td width="20%" align="left" id="errmsgcc_fax"></td>
+                    <td width="20%" align="left" id="errmsgcc_fax"><input type=hidden name="phone" id="cc_fax_id"></td>
                     </tr>
 
                    <!--<tr>
@@ -1590,7 +1722,7 @@ function coverageRadioChanged(){
                           <td width="20%" align="right" valign="top">Properties Broker Deals In : </td>
                           <td width="30%" align="left">
                             {foreach $resiProjectType key=k item=v}
-                              <input type='checkbox' name='resiProjectType[]' class='resiProjectType' value='{$k}' {if $k%2==0} text-align="right" {else} text-align="left"{/if}>{$v} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <input type='checkbox' name='resiProjectType[]' class='resiProjectType'  value='{$k}' {if $k%2==0} text-align="right" {else} text-align="left"{/if}>{$v}<input type='hidden' id="pt_db_id_{$k}"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             {if $k%2==0}<br>{/if} 
                             {/foreach}
                           </td>
@@ -1601,7 +1733,7 @@ function coverageRadioChanged(){
                           <td width="10%" align="right" ><font color = "red">*</font>Transaction Types : </td>
                           <td width="30%" align="left">
                             {foreach $transactionType key=k item=v}
-                            <input type='checkbox' name='Transaction[]' class='Transaction' value='{$k}'>{$v} &nbsp;&nbsp;
+                            <input type='checkbox' name='Transaction[]' class='Transaction' value='{$k}'>{$v}<input type='hidden' id="tt_db_id_{$k}"> &nbsp;&nbsp;
                             {/foreach}
                           </td> 
                           <td width="40%" align="left" id="errmsgcomplegaltype"></td>
@@ -1610,30 +1742,30 @@ function coverageRadioChanged(){
                          <tr>
                           <td width="10%" align="right"  valign="center">Rating : </td>
                           <td width="30%" align="left">
-                              <!--<input type="radio" name="rating" value="auto">Auto &nbsp; &nbsp; {$rating}<br>-->
-                              <input type="radio" name="rating" value="forced">Forced &nbsp; &nbsp;
+                              <!--<input type="radio" name="rating" value="auto">Auto &nbsp; &nbsp; {$rating}<br>
+                              <input type="radio" name="rating" value="forced">Forced &nbsp; &nbsp;-->
                               <select id="frating" name="frating" style="width:70px;" valign="center">
-                            <option name=one value='0.0'>0</option>
-                            <option name=two value='0.5' >0.5</option>
-                            <option name=one value='1.0'>1.0</option>
-                            <option name=two value='1.5' >1.5</option>
-                            <option name=one value='2.0'>2.0</option>
-                            <option name=two value='2.5' >2.5</option>
-                            <option name=one value='3.0'>3.0</option>
-                            <option name=two value='3.5' >3.5</option>
-                            <option name=one value='4.0'>4.0</option>
-                            <option name=two value='4.5' >4.5</option>
-                            <option name=one value='5.0'>5.0</option>
-                            <option name=two value='5.5' >5.5</option>
-                            <option name=one value='6.0'>6.0</option>
-                            <option name=two value='6.5' >6.5</option>
-                            <option name=one value='7.0'>7.0</option>
-                            <option name=two value='7.5' >7.5</option>
-                            <option name=one value='8.0'>8.0</option>
-                            <option name=two value='8.5' >8.5</option>
-                            <option name=one value='9.0'>9.0</option>
-                            <option name=two value='9.5' >9.5</option>
-                            <option name=one value='10.0'>10.0</option>
+                            <option name=one value='0.00'>0</option>
+                            <option name=two value='0.50' >0.5</option>
+                            <option name=one value='1.00'>1.0</option>
+                            <option name=two value='1.50' >1.5</option>
+                            <option name=one value='2.00'>2.0</option>
+                            <option name=two value='2.50' >2.5</option>
+                            <option name=one value='3.00'>3.0</option>
+                            <option name=two value='3.50' >3.5</option>
+                            <option name=one value='4.00'>4.0</option>
+                            <option name=two value='4.50' >4.5</option>
+                            <option name=one value='5.00'>5.0</option>
+                            <option name=two value='5.50' >5.5</option>
+                            <option name=one value='6.00'>6.0</option>
+                            <option name=two value='6.50' >6.5</option>
+                            <option name=one value='7.00'>7.0</option>
+                            <option name=two value='7.50' >7.5</option>
+                            <option name=one value='8.00'>8.0</option>
+                            <option name=two value='8.50' >8.5</option>
+                            <option name=one value='9.00'>9.0</option>
+                            <option name=two value='9.50' >9.5</option>
+                            <option name=one value='10.00'>10.0</option>
                                     
                             </select>
                         <tr>
@@ -1643,7 +1775,7 @@ function coverageRadioChanged(){
 
                         <tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Service Tax No : </td>
-                          <td width="30%" align="left"><input type=text name="stn" id="stn" style="width:250px;"></td> <td width="20%" align="left" id="errmsgstn"></td>
+                          <td width="30%" align="left"><input type=text name="stn" id="stn" style="width:250px;"></td> <td width="20%" align="left" id="errmsgstn"><input type=hidden id="bd_id"></td>
                         </tr>
 
                         <tr>
@@ -1697,9 +1829,7 @@ function coverageRadioChanged(){
                                   <TH  width=8% align="center">Name</TH>
                                   <TH  width=8% align="center">Logo</TH>
                                   <TH  width=8% align="center">Address</TH>
-                                  <TH  width=8% align="center">Company IPs</TH>
                                   <TH  width=8% align="center">Contact Person</TH>
-                                  
                                  <TH width=6% align="center">Status</TH> 
                                 <TH width=3% align="center">Edit</TH>
                                 </TR>
@@ -1721,13 +1851,13 @@ function coverageRadioChanged(){
                                   <TD align=center class=td-border>{$v['type']}</TD>
                                   <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}', 'read');">{$v['name']}</a></TD>
                                   <TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>
-                                  <TD align=center class=td-border>{$v['address']}, City-{$v['city_name']}, Pin-{$v['pin']}, Ph.N.-{$v['compphone']}</TD>
-                                  <TD align=center class=td-border>{foreach from=$v['ips'] key=k1 item=v1} {$v1}, {/foreach}</TD>
-                                  <TD align=center class=td-border>{$v['person']}, Contact No.-{$v['phone']}</TD>
+                                  <TD align=center class=td-border>{$v['address']} City-{$v['city_name']} Pin-{$v['pin']} Ph.N.-{$v['compphone']}</TD>
+                                  
+                                  <TD align=center class=td-border>{foreach from=$v['extra']['cont_person'] key=k1 item=v1} {$v1['person']} &nbsp;Contact No.-{$v['phone1']} <br> {/foreach} </TD>
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >View Inventory</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >View Inventory</a><input type="hidden" id="extra_data" value='{$v['extra_json']}'> </TD>
 
                                 </TR>
                                 {/foreach}

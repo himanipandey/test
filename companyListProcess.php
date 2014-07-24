@@ -59,8 +59,8 @@ foreach ($compArr as $k => $v) {
 */
 $smarty->assign("compArr", $compArr);
 
-print("<pre>");
-print_r($compArr);
+//print("<pre>");
+//print_r($compArr);
 //$co = 
 /*
 $builderList = ResiBuilder::ProjectSearchBuilderEntityArr();
