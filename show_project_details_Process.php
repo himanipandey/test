@@ -110,6 +110,9 @@ $smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
 //$smarty->assign("ProjectPhases",$ProjectPhases); //To Do
 $smarty->assign("PhaseOptionHash",$PhaseOptionHash);
 
+//config sizes flag
+$smarty->assign("configSizeFlag",configSizeCheckFlag($projectId));
+
 //code for completion date validation for phase label
 $qryAllPhase = "select * from resi_project_phase 
     where project_id = $projectId and status = 'Active' and version = 'Cms'";

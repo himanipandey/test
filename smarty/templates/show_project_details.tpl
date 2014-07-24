@@ -123,7 +123,7 @@ function towerSelect(towerId)
 	}
 
 	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, 
-            preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder,projectMoveValidation)
+            preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder,projectMoveValidation,configSizeFlag)
 	{
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
@@ -183,6 +183,10 @@ function towerSelect(towerId)
 		{
 			flgChk = 1;
 		}
+				if(dir != 'backward' && (phase == 'DcCallCenter' || phase == 'DataCollection') && configSizeFlag == 1 && (projectStatus == 'UnderConstruction' || projectStatus == ' Launch' || projectStatus == 'PreLaunch')) {
+                    alert("Config sizes are required!");
+                    return false;
+                }
 				isVerifedSupplyMovFlag = "{$isSupplyLaunchVerified}";				
 				if(dir != 'backward' && phase == 'Audit1' && !isVerifedSupplyMovFlag) {
                     alert("Supply is not verified!");
@@ -539,20 +543,20 @@ function broker_call_edit(callId, brokerId)
 	{if $projectDetails[0].PROJECT_STAGE=='NewProject'}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                  <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$arrAllCompletionDateChk}',
-                '{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}','{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Move To Next Stage	</button>
+                '{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}','{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}','{$configSizeFlag}');">Move To Next Stage	</button>
             {/if}
 	{else}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                 <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}',
                 'updation','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}',
-            '{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Move To Next Stage	</button>
+            '{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}','{$configSizeFlag}');">Move To Next Stage	</button>
             {/if}
 	{/if}
 
 	{if $projectDetails[0].PROJECT_PHASE!="DataCollection" && $projectDetails[0].PROJECT_PHASE!="Complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}',
 '{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}',
-'{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Revert	</button>
+'{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}','{$configSizeFlag}');">Revert	</button>
 
 	{/if}
 {/if}<br>
