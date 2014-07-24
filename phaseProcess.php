@@ -193,14 +193,10 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 		   }		
         }elseif($construction_status == OCCUPIED_ID_3 || $construction_status == READY_FOR_POSSESSION_ID_4 ){
 			$yearExp = explode("-",$completion_date);
-            if( $yearExp[0] == date("Y") ) {
-                if( intval($yearExp[1]) > intval(date("m"))) {
-                  $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
-                }    
+            if(strtotime($completion_date) > time()) {
+               $error_msg = "Completion date cannot be future date in case of Construction Status is Completed.";                
             } 
-            else if (intval($yearExp[0]) > intval(date("Y")) ) {
-                $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
-            }
+            
             if($launch_date == ''){
 				$error_msg = "Launch date is required in case of Construction Status is Completed.";
 			}
