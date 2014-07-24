@@ -185,14 +185,9 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
 		   }
 		  
            if($completion_date != ''){			   	
-			   if( $yearExp2[0] == date("Y") ) {				   
-				   if( intval($yearExp2[1]) < intval(date("m"))) {
-					 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is $construction_status_text.";
-				   }    
-			   } 
-			   else if (intval($yearExp2[0]) < intval(date("Y")) ) {
-				  $error_msg = "Completion date cannot be less than the current month in case of Construction Status is $construction_status_text.";
-			   }
+			   if(strtotime($completion_date) < time()) {				   				 
+				 $error_msg = "Completion date cannot be past date in case of Construction Status is $construction_status_text.";		
+			   } 			  
 		   }else{
 			   $error_msg = "Completion date is required in case of Construction Status is $construction_status_text."; 
 		   }		
@@ -221,14 +216,9 @@ if (isset($_POST['btnSave']) || isset($_POST['btnAddMore'])) {
            $error_msg = "Completion date can not be blank in case of Construction Status is Pre Launched.";
         }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $completion_date != '') { 
            $yearExp = explode("-",$completion_date);
-            if( $yearExp[0] == date("Y") ) {
-                if( intval($yearExp[1]) < intval(date("m"))) {
-                  $error_msg = "Completion date cannot be Past date in case of Construction Status is Pre Launched.";
-                }    
-            } 
-            else if (intval($yearExp[0]) < intval(date("Y")) ) {
-                $error_msg = "Completion date cannot be Past date in case of Construction Status is Pre Launched.";
-            }
+            if(strtotime($completion_date) < time()) {
+               $error_msg = "Completion date cannot be Past date in case of Construction Status is Pre Launched.";               
+            }            
         }
         if($construction_status == PRE_LAUNCHED_ID_8 && $phase_pre_launch_date != '') {
             if(time() < strtotime($phase_pre_launch_date)) {                
