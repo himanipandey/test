@@ -108,7 +108,7 @@ $weeklyEmail = array(
 						AND rpp.COMPLETION_DATE < '$currentDate'
 						AND rpp.COMPLETION_DATE != '0000-00-00' AND rpp.COMPLETION_DATE IS NOT NULL
 						AND 
-						IF(rpp.PROJECT_ID IN (SELECT project_id from resi_project_phase where phase_type = 'Actual' AND status = 'Active'),rpp.PHASE_TYPE = 'Actual',rpp.PHASE_TYPE = 'Logical')
+						IF(rpp.PROJECT_ID IN (SELECT project_id from resi_project_phase where phase_type = 'Actual' AND status = 'Active' AND version = 'Cms'),rpp.PHASE_TYPE = 'Actual',rpp.PHASE_TYPE = 'Logical')
 						ORDER BY rpp.PROJECT_ID ASC;",     
                'subject'=>'Projects whose status is Pre Launch,Under construction,Launch projects but Expected completion date is in past',
                'recipients'=>array('ankur.dhawan@proptiger.com','ravi.srivastava@proptiger.com'), 
