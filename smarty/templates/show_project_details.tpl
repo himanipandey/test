@@ -2722,7 +2722,7 @@ function broker_call_edit(callId, brokerId)
 								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 										<tr class="headingrowcolor" height="30px;">
 											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status<br> Construction Status</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
@@ -2792,13 +2792,6 @@ function broker_call_edit(callId, brokerId)
 																{else}
 																	--
 																{/if}
-                                                                                                                                
-                                                                                                                                {if $lastItem['CONSTRUCTION_STATUS'] != ''}
-																	{$lastItem['CONSTRUCTION_STATUS']}
-																{else}
-																	--
-																{/if}
-                                                                                                                                
 															</td>
 														{/if}
 													
