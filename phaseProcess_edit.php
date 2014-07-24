@@ -445,14 +445,9 @@ if (isset($_POST['btnSave'])) {
            $yearExp = explode("-",$launch_date);
            $yearExp2 = explode("-",$completion_date);
            if($launch_date != ''){
-			   if( $yearExp[0] == date("Y") ) {
-				   if( intval($yearExp[1]) > intval(date("m"))) {
-					 $error_msg = "Launch date should not be greater than current month in case of Construction Status is $construction_status_text.";
-				   }    
-			   } 
-			   else if (intval($yearExp[0]) > intval(date("Y")) ) {
-				  $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  $construction_status_text.";
-			   }
+			   if(strtotime($launch_date) > time()) {
+				  $error_msg = "Launch date should not be greater than current month in case of Construction Status is $construction_status_text.";    
+			   } 			  
 		   }else{
 			   $error_msg = "Launch date is required in case of Construction Status is $construction_status_text."; 
 		   }
