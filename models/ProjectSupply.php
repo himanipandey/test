@@ -89,7 +89,7 @@ class ProjectSupply extends Objects {
         $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, rpp.submitted_date, rpp.project_id,  rpp.BOOKING_STATUS_ID,
             ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply, ps.launched, 
             pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type,ls.id as listing_id
-             ,psm.display_name as construction_status
+             ,psm.display_name as CONSTRUCTION_STATUS
             from 
              " . self::table_name() . " ps 
              inner join " . ProjectAvailability::table_name() . " pa on (ps.id=pa.project_supply_id and ps.version = 'PreCms')
@@ -110,7 +110,7 @@ class ProjectSupply extends Objects {
             select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
                 rpp.COMPLETION_DATE, rpp.submitted_date, rpp.project_id,rpp.BOOKING_STATUS_ID, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
                 ps.launched, pa.availability, pa.comment, pa.effective_month, 
-                rpo.option_type as project_type,ls.id as listing_id , psm.display_name as construction_status
+                rpo.option_type as project_type,ls.id as listing_id , psm.display_name as CONSTRUCTION_STATUS
             from 
                 project_supplies ps left join project_availabilities pa on (ps.id=pa.project_supply_id and ps.version = 'PreCms')
             inner join listings ls on (ps.listing_id = ls.id  and ls.listing_category = 'Primary' and ls.status = 'Active')          
@@ -118,6 +118,7 @@ class ProjectSupply extends Objects {
             join project_status_master psm on rpp.construction_status = psm.id
             inner join resi_project_options rpo on rpo.options_id = ls.option_id
           where pa.id is null and ps.version = 'PreCms' and rpp.project_id = $projectId and rpp.version = 'Cms' and rpp.status = 'Active'";
+       // echo $query;
         $data = self::find_by_sql($query);
         foreach ($data as $value) {
             $entry = array();
@@ -136,6 +137,7 @@ class ProjectSupply extends Objects {
             $entry['PROJECT_TYPE'] = $value->project_type;
             $entry['BOOKING_STATUS_ID'] = $value->booking_status_id;
             $entry['LISTING_ID'] = $value->listing_id;
+            $entry['construction_status'] = $value->construction_status;
             $result[] = $entry;
         }
         return $result;

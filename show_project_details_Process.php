@@ -341,7 +341,7 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_TYPE'] = $vLast['PROJECT_TYPE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LISTING_ID'] = $vLast['LISTING_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['BOOKING_STATUS_ID'] = $vLast['BOOKING_STATUS_ID'];
-            $supplyAllArray[$k][$kMiddle][$kLast]['CONSTRUCTION_STATUS'] = $vLast['CONSTRUCTION_STATUS'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['construction_status'] = $vLast['construction_status'];
  
           
             $qryEditedLaunched = "select ps.supply,ps.launched,pa.availability from project_supplies ps
