@@ -184,7 +184,7 @@ function towerSelect(towerId)
 			flgChk = 1;
 		}
 		      //alert(configSizeFlag + phase);
-				if(dir != 'backward' && ((phase == 'DataCollection' && stg == 'UpdationCycle')) || (phase == 'DcCallCenter' && stg == 'NewProject')) && configSizeFlag == 1 && (projectStatus == 'UnderConstruction' || projectStatus == ' Launch' || projectStatus == 'PreLaunch')) {
+				if(dir != 'backward' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')) && configSizeFlag == 1 && (projectStatus == 'UnderConstruction' || projectStatus == ' Launch' || projectStatus == 'PreLaunch')) {
                     alert("Config sizes are required!");
                     return false;
                 }
