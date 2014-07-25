@@ -565,14 +565,16 @@ if ($_POST['forwardFlag'] == 'yes') {
     if($currentPhase == 'DcCallCenter' || $currentPhase == 'DataCollection') { //code for if next stage is audit1
                //then check all phase should have logical entry 
               
-              foreach($phaseIds as $k=>$valPhaseId){
-                 $qryPhaseActual = "select * from resi_project_phase where phase_id = ".$valPhaseId." and phase_type = 'Logical'";
-                 $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
-                 if(mysql_num_rows($resPhaseActual) == 0)
-                  $flgLogical = 1;
-              }
-              
+            foreach($phaseIds as $k=>$valPhaseId){
+               $qryPhaseActual = "select rpo.OPTION_CATEGORY from listings l
+                                      join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
+                                  where l.phase_id = ".$valPhaseId." and rpo.OPTION_CATEGORY = 'Actual'";
+               $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
+               if(mysql_num_rows($resPhaseActual) == 0)
+                $flgLogical = 1;
+            }    
     }
+    
     if($flgLogical == 0){
      foreach ($newPhase as $k => $v) {
             $qry = "select * from master_project_phases where name = '".$k."'";
