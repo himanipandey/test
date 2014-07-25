@@ -583,18 +583,22 @@ if ($_POST['forwardFlag'] == 'yes') {
         $phaseIdNext = mysql_fetch_assoc($resNext);
          /*****code for update project assignment status is 
         * done if project move in audit1 if assigned in survey ********/
+        
        if($v == 'Audit1') {
            //code for if next stage is audit1
            //then check all phase should have logical entry    
-            foreach($phaseIds as $k=>$valPhaseId){
-               $qryPhaseActual = "select rpo.OPTION_CATEGORY from listings l
-                                      join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
-                                  where l.phase_id = ".$valPhaseId." and rpo.OPTION_CATEGORY = 'Logical'";
-               $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
-               if(mysql_num_rows($resPhaseActual) == 0){
-                $flgLogical = 1;
-                //echo $flgLogical."ghdf";
-               }
+           if($currentPhase == 'DcCallCenter'){
+                foreach($phaseIds as $k=>$valPhaseId){
+                   $qryPhaseActual = "select rpo.OPTION_CATEGORY from listings l
+                                          join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
+                                      where l.phase_id = ".$valPhaseId." and rpo.OPTION_CATEGORY = 'Logical'";
+                   $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
+                   if(mysql_num_rows($resPhaseActual) == 0){
+                    $flgLogical = 1;
+                    //echo $flgLogical."ghdf";
+                   }
+                }
+            
             }
             
         $qryCurrentAssign = "select pa.id from project_assignment pa 
