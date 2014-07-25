@@ -2788,13 +2788,13 @@ function broker_call_edit(callId, brokerId)
 																{if $lastItem['BOOKING_STATUS_ID'] > 0}
 																	{if $lastItem['BOOKING_STATUS_ID'] == 1}Available{/if}
 																	{if $lastItem['BOOKING_STATUS_ID'] == 2}Sold out{/if}
-																	{if $lastItem['BOOKING_STATUS_ID'] == 3}On Hold{/if}
+																	{if $lastItem['BOOKING_STATUS_ID'] == 3}On Hold{/if}<br>
 																{else}
-																	--
+																	--<br>
 																{/if}
                                                                                                                                 
-                                                                                                                                {if $lastItem['CONSTRUCTION_STATUS'] != ''}
-																	{$lastItem['CONSTRUCTION_STATUS']}
+                                                                                                                                {if $lastItem['construction_status'] != ''}
+																	{$lastItem['construction_status']}
 																{else}
 																	--
 																{/if}
