@@ -46,19 +46,19 @@ if($_POST['task']=="save"){
 		$query = "INSERT INTO private_equity_deals (type, pe_id, pe_id_2, pe_id_3, builder_id, value, transaction_date, article_link, extra_values) values ('$type', '$pe_id', ".($pe_id_2!=''?$pe_id_2:"NULL").", ".($pe_id_3!=''?$pe_id_3:"NULL").", ".($builder_id!=''?$builder_id:"NULL").", '$value', '$date', '$article', '$extra')";
 		
 		$res = mysql_query($query);
-        if(mysql_affected_rows()>0)
-            echo "1";
+        if(mysql_error())
+            echo "3";
         else
-            echo "3".mysql_error();
+            echo "1";
 	}
 	elseif($mode=="update" && $deal_id != 0 && $deal_id != 'NaN'){
 		$query = "UPDATE private_equity_deals SET type = '$type', pe_id = '$pe_id', pe_id_2 = ".($pe_id_2!=''?$pe_id_2:"NULL").", pe_id_3 = ".($pe_id_3!=''?$pe_id_3:"NULL").", builder_id = ".($builder_id!=''?$builder_id:"NULL").", value = '$value', transaction_date = '$date', article_link = '$article', extra_values = '$extra'  WHERE id = '$deal_id'";
 		
 	    $res = mysql_query($query);
-        if(mysql_affected_rows()>0)
-            echo "1";
+        if(mysql_error())
+            echo "3";
         else
-            echo "3".mysql_error();
+            echo "1";
 	}
 }
 
