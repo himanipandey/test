@@ -419,5 +419,20 @@ function configSizeCheckFlag($projectId){
     return 0;
 }
 
-
+function checkCompanyExist($email,$id,$mode,$status){
+  if($status == 'Active'){		
+	  if($mode=='update' && $id!==null)	
+		$comp = mysql_query("select * from company where status = 'Active' and primary_email = '$email' and id!='$id'");   
+	  else
+		$comp = mysql_query("select * from company where status = 'Active' and primary_email = '$email'");   
+		  
+	  if($comp){
+		return false;
+	  }
+	  else{
+		return true;	
+	  }
+  }else
+	  return true;
+}
 
