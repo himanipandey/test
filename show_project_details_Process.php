@@ -344,6 +344,8 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_TYPE'] = $vLast['PROJECT_TYPE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LISTING_ID'] = $vLast['LISTING_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['BOOKING_STATUS_ID'] = $vLast['BOOKING_STATUS_ID'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['construction_status'] = $vLast['construction_status'];
+ 
           
             $qryEditedLaunched = "select ps.supply,ps.launched,pa.availability from project_supplies ps
 									inner join project_availabilities pa on ps.id = pa.project_supply_id
@@ -359,7 +361,7 @@ foreach($supplyAll as $k=>$v) {
 } 
 
 //echo "<pre>";
-//print_r($supplyAllArray);
+//print_r($supplyAllArray);die;
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
@@ -370,10 +372,12 @@ $phaseDetail = fetch_phaseDetails($projectId);
 $bedroomDetails = ProjectBedroomDetail($projectId);
 $smarty->assign("BedroomDetails", $bedroomDetails);
 $phases = Array();
+$phaseIds  =array();
 foreach ($phaseDetail as $k => $val) {
     $p = Array();
     $p['id'] = $val['PHASE_ID'];
     $p['name'] = $val['PHASE_NAME'];
+    $phaseIds[] = $val['PHASE_ID'];
     array_push($phases, $p);
 }
 $smarty->assign("phases", $phases);
@@ -561,9 +565,14 @@ $updatePhase = array(
 );
 if (!isset($_POST['forwardFlag']))
     $_POST['forwardFlag'] = '';
+
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
+    
+    $errorValidation = '';
+    $flgLogical = 0;
+    
      foreach ($newPhase as $k => $v) {
         $qry = "select * from master_project_phases where name = '".$k."'";
         $res = mysql_query($qry) or die(mysql_error());
@@ -582,27 +591,48 @@ if ($_POST['forwardFlag'] == 'yes') {
         $phaseIdNext = mysql_fetch_assoc($resNext);
          /*****code for update project assignment status is 
         * done if project move in audit1 if assigned in survey ********/
+        
        if($v == 'Audit1') {
+           //code for if next stage is audit1
+           //then check all phase should have logical entry    
+           if($currentPhase == 'DcCallCenter'){
+                foreach($phaseIds as $k=>$valPhaseId){
+                   $qryPhaseActual = "select rpo.OPTION_CATEGORY from listings l
+                                          join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
+                                      where l.phase_id = ".$valPhaseId." and rpo.OPTION_CATEGORY = 'Logical'";
+                   $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
+                   if(mysql_num_rows($resPhaseActual) == 0){
+                    $flgLogical = 1;
+                    //echo $flgLogical."ghdf";
+                   }
+                }
+            
+            }
+            
         $qryCurrentAssign = "select pa.id from project_assignment pa 
             join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
             join resi_project rp on  pa.movement_history_id = rp.movement_history_id
             where rp.project_id = $projectId and pa1.department = 'SURVEY' and rp.version = 'Cms' 
             order by pa.movement_history_id desc limit 1";
            $resAssigned = mysql_query($qryCurrentAssign) or die(mysql_error()." select query");
-           if(mysql_num_rows($resAssigned) >0 ) {
+           if(mysql_num_rows($resAssigned) >0  && $flgLogical == 0) {
                $dataFetch = mysql_fetch_assoc($resAssigned);
                $qryUp = "update project_assignment set status = 'done' 
                    where id = ".$dataFetch['id'];
                $resUp = mysql_query($qryUp) or die(mysql_error()." update query");
            }
        }
-        if ($phaseIdCurrent['id'] == $phaseId['id']) {
+        if ($phaseIdCurrent['id'] == $phaseId['id'] && $flgLogical == 0) {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
             //updating new remark
             if($currentPhase=='Audit1' && $_POST['newRemarkId'])
                 update_remark_status($_POST['newRemarkId']);
         }
     }
+    if($flgLogical == 1){
+        $errorValidation = "<font color = 'red'>Please enter supply for all phases</font>";
+        $smarty->assign("errorValidation",$errorValidation);
+    }else
     header("Location:$returnURLPID");
 }
 if ($_POST['forwardFlag'] == 'update') {
