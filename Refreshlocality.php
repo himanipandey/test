@@ -74,19 +74,21 @@
 			  print '<TD>';
 			  print '<TABLE>';			  
 			  $exclude = 0;
-			  ksort($data);
+			  ksort($subdata);
 			  foreach($subdata as $sublabel=>$data){
+				if(!$exclude){  
 				 print '<TR>';
 			     print '<TD style="background-color:#dee"><b>'.$sublabel.'</b></TD>';
 			     print '<TD>';
 				  foreach($data as $label=>$id){				 
-					 if(!$exclude)   
+					// if(!$exclude)   
 					   print '<div name="'.$id.'" style="background:#ccc;float:left;padding:2px;margin:1px;" id="locID-'.$id.'">'.$label.'&nbsp;&nbsp;<img src="images/stop.gif" style="position:relative;top:2px" id="'.$id.'" onclick="remove_locality(this.id)"></div>'; 
 					 if($label == 'ALL')
 					   $exclude = 1; 				 
 				  }
 				  print '</TD>';		  
 				  print '</TR>';
+				}
 			  }
 			  print '</TABLE>';
 			  print '</TD>';		  
