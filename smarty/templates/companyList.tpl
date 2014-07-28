@@ -13,6 +13,7 @@
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
+{literal}
 <script language="javascript">
 
 
@@ -68,7 +69,7 @@ jQuery(document).ready(function(){
 		var compid = $('#compid').val();
 
 /*****************************************initializers****************************/
-		var error = 0;
+		window.error = 0;
 	  var mode='';
     if(compid) {
       mode = 'update';
@@ -117,20 +118,27 @@ jQuery(document).ready(function(){
     if(row){
       if($("#person_"+i).val().trim() != ''){
         var rowData = { person:$("#person_"+i).val().trim(), phone1:$("#phone1_"+i).val().trim(), phone2:$("#phone2_"+i).val().trim(), mobile:$("#mobile_"+i).val().trim(), fax:$("#fax_"+i).val().trim(), email:$("#email_"+i).val().trim()};
-          
         contact_person_data.push(rowData);
+        valid_noncompul($("#phone1_"+i).val().trim(), "Please provide a numeric Phone No.", "errmsgphone1_"+i);
+        valid_noncompul($("#phone2_"+i).val().trim(), "Please provide a numeric Phone No.", "errmsgphone2_"+i);
+        valid_noncompul($("#mobile_"+i).val().trim(), "Please provide a numeric Mobile No.", "errmsgmobile_"+i);
+        valid_noncompul($("#fax_"+i).val().trim(), "Please provide a numeric fax No.", "errmsgemail_"+i);
       }
     }
   }
 
 //get customer care data
 
-  var cust_care_data = { phone:$("#cc_phone").val().trim(), phone_id:$("#cc_phone_id").val().trim(),  mobile:$("#cc_mobile").val().trim(), mobile_id:$("#cc_mobile_id").val().trim(), fax:$("#cc_fax").val().trim(), fax_id:$("#cc_fax_id").val().trim()};
+  var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };
+
+  valid_noncompul($("#cc_phone").val().trim(), "Please provide a numeric phone no.", "errmsgcc_phone");
+  valid_noncompul($("#cc_mobile").val().trim(), "Please provide a numeric mobile no.", "errmsgcc_mobile");
+  valid_noncompul($("#cc_fax").val().trim(), "Please provide a numeric fax no.", "errmsgcc_fax");
 
 // broker extra fields
   
 
-
+if(compType=='Broker'){
   var projectType = [];
   $(".resiProjectType").each(function(){
     if($(this).is(':checked')){
@@ -164,6 +172,15 @@ jQuery(document).ready(function(){
    
   var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
 
+
+  valid_compul(since_op, isNumeric1, "Please provide a valid date.", "errmsgdate");
+  valid_compul(stn, isNumeric1, "Please provide a numeric service tax no.", "errmsgstn");
+  valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
+  valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
+  valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
+  valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
+}
+
   //console.log(coverage_data);
   //console.log(contact_person_data); 
     
@@ -171,29 +188,45 @@ jQuery(document).ready(function(){
 
 /******************************validation****************************************/    
 
+  function valid_tt_type(arr){
+    if (arr.length==0) 
+      return false;
+
+    for(var i=0; i<arr.length; i++){
+      if(!isNumeric(arr[i]))
+        return false;
+    }
+
+    return true;
+
+  }
+  
+
+    if(email!='' && !validateEmail(email)){
+      $('#errmsgcompemail').html('<font color="red">Please provide a vaild email id.</font>');
+      $("#compemail").focus();
+      window.error = 1;
+    }
+    else{
+          $('#errmsgcompemail').html('');
+    }
+
     if(compfax!='' && !isNumeric1(compfax)){
       $('#errmsgcompfax').html('<font color="red">Please provide a Numeric Value.</font>');
       $("#compfax").focus();
-      error = 1;
+      window.error = 1;
     }
     else{
           $('#errmsgcompfax').html('');
     }
 
-    /*if(phone!='' && !isNumeric1(phone)){
-      $('#errmsgphone').html('<font color="red">Please provide a Numeric Value.</font>');
-      $("#phone").focus();
-      error = 1;
-    }
-    else{
-          $('#errmsgphone').html('');
-    }
-  */
+
+ 
     for (var i = 0; i < ipArr.length; i++) {
       if(ipArr[i]!='' && !ValidateIPaddress(ipArr[i])) {
         $('#errmsgip_'+i).html('<font color="red">Please provide a valid IP.</font>');
         $("#ip_"+i).focus();
-        error = 1;
+        window.error = 1;
       }
       else{
             $('#errmsgip_'+i).html('');
@@ -206,7 +239,7 @@ jQuery(document).ready(function(){
     if(compphone!='' && !isNumeric1(compphone)){
       $('#errmsgcompphone').html('<font color="red">Please provide a Numeric Value.</font>');
       $("#compphone").focus();
-      error = 1;
+      window.error = 1;
     }
     else{
           $('#errmsgcomphone').html('');
@@ -215,7 +248,7 @@ jQuery(document).ready(function(){
     if(pincode!='' && !isNumeric(pincode)){
       $('#errmsgpincode').html('<font color="red">Please provide a Numeric Value.</font>');
       $("#pincode").focus();
-      error = 1;
+      window.error = 1;
     }
     else{
           $('#errmsgpincode').html('');
@@ -224,7 +257,7 @@ jQuery(document).ready(function(){
     if(city <= 0 || city=='') {
       $('#errmsgcity').html('<font color="red">Please select a City.</font>');
       $("#city").focus();
-      error = 1;
+      window.error = 1;
     }
     else{
           $('#errmsgcity').html('');
@@ -233,16 +266,25 @@ jQuery(document).ready(function(){
     if(address==''){
       $('#errmsgaddress').html('<font color="red">Please provide an Address for the company</font>');
       $("#address").focus();
-      error = 1;
+      window.error = 1;
     }
     else{
           $('#errmsgaddress').html('');
     }
 
+    if(legalType=='' && compType=="Broker"){
+      $('#errmsgcomplegaltype').html('<font color="red">Please provide a Company legal type.</font>');
+      $("#compLegalType").focus();
+      window.error = 1;
+    }
+    else{
+          $('#errmsgcomplegaltype').html('');
+    }
+
     if(name==''){
       $('#errmsgname').html('<font color="red">Please provide a Company Name.</font>');
       $("#name").focus();
-      error = 1;
+      window.error = 1;
     }
     else{
           $('#errmsgname').html('');
@@ -251,14 +293,14 @@ jQuery(document).ready(function(){
     if(compType==''){
       $('#errmsgcomptype').html('<font color="red">Please select a Company Type.</font>');
       $("#companyTypeEdit").focus();
-      error = 1;
+      window.error = 1;
     }
     else{
           $('#errmsgcomptype').html('');
     }
 
    /* if($("#imgUploadStatus").val()=="0"){
-      error = 1;
+      window.error = 1;
       $('#errmsglogo').html('<font color="red">Please upload a Company Logo.</font>');
     }
   */
@@ -270,7 +312,7 @@ jQuery(document).ready(function(){
 
    
 
-	    if (error==0){
+	    if (window.error==0){
       
 	      	$.ajax({ 
 	            type: "POST",
@@ -345,7 +387,34 @@ function isNumeric1(val) {
         return true;
 }
 
+function valid_noncompul(v, msg, msgid ){
+  console.log(v +":"+msgid);
+  if(v!='' && !isNumeric1(v)){
+      $('#'+msgid).html('<font color="red">'+msg+'</font>');
+      //$("#phone").focus();
+      window.error = 1;
+    }
+    else{
+          $('#'+msgid).html('');
+    }
+}
 
+function valid_compul(v, fun, msg, msgid ){
+  var bool = fun(v);
+    if(v==''){
+      $('#'+msgid).html('<font color="red">'+msg+'</font>');
+      $("#address").focus();
+      window.error = 1;
+    }
+    else if(v!='' && !bool){
+      $('#'+msgid).html('<font color="red">'+msg+'</font>');
+      //$("#phone").focus();
+      window.error = 1;
+    }
+    else{
+          $('#'+msgid).html('')
+;    }
+}
 
 function ValidateIPaddress(ipaddress)   
 {  
@@ -356,6 +425,10 @@ function ValidateIPaddress(ipaddress)
   return (false)  
 } 
 
+function validateEmail(email) { 
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
 
 function cleanFields(){
     $("#compid").val('');
@@ -698,11 +771,11 @@ function addContactTable(tableId){
             element1.id="contact_table_"+no;
             cell1.appendChild(element1);
             addContactRow(element1.id, "Name", "person", "errmsgname", no);
-            addContactRow(element1.id, "Contact Phone 1", "phone1", "errmsgname", no);
-            addContactRow(element1.id, "Contact Phone 2", "phone2", "errmsgname", no);
-            addContactRow(element1.id, "Contact Mobile", "mobile", "errmsgname", no);
-            addContactRow(element1.id, "Contact Fax", "fax", "errmsgname", no);
-            addContactRow(element1.id, "Contact Email", "email", "errmsgname", no);
+            addContactRow(element1.id, "Contact Phone 1", "phone1", "errmsgphone1", no);
+            addContactRow(element1.id, "Contact Phone 2", "phone2", "errmsgphone2", no);
+            addContactRow(element1.id, "Contact Mobile", "mobile", "errmsgmobile", no);
+            addContactRow(element1.id, "Contact Fax", "fax", "errmsgfax", no);
+            addContactRow(element1.id, "Contact Email", "email", "errmsgemail", no);
             addDeleteButton(element1.id, "deleteContact", no);
             addHiddenRow(element1.id, "person_id");
             addHiddenRow(element1.id, "phone1_id");
@@ -1276,6 +1349,7 @@ function coverageRadioChanged(){
 }
 
 </script>
+{/literal}
 
 </TD>
   </TR>
@@ -1403,7 +1477,7 @@ function coverageRadioChanged(){
 
                     <tr>
                       <td width="20%" align="right" >Office Email : </td>
-                      <td width="30%" align="left"><input type=text name="compemail" id="compemail" style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompweb"></td>
+                      <td width="30%" align="left"><input type=text name="compemail" id="compemail" style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompemail"></td>
                     </tr>
 
                     <tr>
@@ -1479,36 +1553,36 @@ function coverageRadioChanged(){
                           <table id="contact_table_0" width = "100%" >
                             <tr>
                               <td width="20%" align="right" valign="top">Name : </td>
-                              <td width="30%" align="left"><input type=text name="person" id="person_0" style="width:250px;"></td> <td width="50%" align="left" id="errmsgweb"></td>
+                              <td width="30%" align="left"><input type=text name="person" id="person_0" style="width:250px;"></td> <td width="50%" align="left" id="errmsgname_0"></td>
                               </td>
                         
                             </tr>
 
                             <tr>
                               <td width="20%" align="right" >Contact Phone 1 : </td>
-                              <td width="30%" align="left"><input type=text name="phone" id="phone1_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
+                              <td width="30%" align="left"><input type=text name="phone" id="phone1_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone1_0"></td>
                             </tr>
 
                             <tr>
                               <td width="20%" align="right" >Contact Phone 2 : </td>
-                              <td width="30%" align="left"><input type=text name="phone" id="phone2_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
+                              <td width="30%" align="left"><input type=text name="phone" id="phone2_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone2_0"></td>
                             </tr>
 
                             <tr>
                               <td width="20%" align="right" >Contact Mobile : </td>
-                              <td width="30%" align="left"><input type=text name="phone" id="mobile_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
+                              <td width="30%" align="left"><input type=text name="phone" id="mobile_0"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgmobile_0"></td>
                             </tr>
 
 
                             <tr>
                               <td width="20%" align="right" valign="top">Contact Fax : </td>
                              <td width="30%" align="left"><input type=text name="fax" id="fax_0" style="width:250px;"></td> 
-                            <td width="50%" align="left" id="errmsgfax"></td>
+                            <td width="50%" align="left" id="errmsgfax_0"></td>
                             </tr>
 
                             <tr>
                               <td width="20%" align="right" >Contact Email : </td>
-                              <td width="30%" align="left"><input type=text name="email" id="email_0" style="width:250px;"></td> <td width="50%" align="left" id="errmsgweb"></td>
+                              <td width="30%" align="left"><input type=text name="email" id="email_0" style="width:250px;"></td> <td width="50%" align="left" id="errmsgemail_0"></td>
                             </tr>
 
                            
@@ -1736,7 +1810,7 @@ function coverageRadioChanged(){
                             <input type='checkbox' name='Transaction[]' class='Transaction' value='{$k}'>{$v}<input type='hidden' id="tt_db_id_{$k}"> &nbsp;&nbsp;
                             {/foreach}
                           </td> 
-                          <td width="40%" align="left" id="errmsgcomplegaltype"></td>
+                          <td width="40%" align="left" id="errmsgtttype"></td>
                          </tr> 
 
                          <tr>

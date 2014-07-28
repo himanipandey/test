@@ -86,7 +86,7 @@ else{
     define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
 
-    define("TYPEAHEAD_API_URL", "http://nightly-build.proptiger-ws.com:8080/app/v1/typeahead");
+    define("TYPEAHEAD_API_URL", "http://nightly.proptiger-ws.com:8080/app/v1/typeahead");
    
 
 }
