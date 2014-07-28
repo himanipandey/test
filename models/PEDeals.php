@@ -40,7 +40,7 @@ class PEDeals extends ActiveRecord\Model
             elseif($arr['type'] == 'Exit')
               $arr['deal_type_id'] = 3;
             $arr['value'] = $v->value;
-            $str = $v->transaction_date;
+            $str = date("Y-m-d",strtotime($v->transaction_date));
             $str = substr($str, 0,10);
             $arr['transaction_date'] = $str;
             $arr['article_link'] = $v->article_link;
