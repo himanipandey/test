@@ -425,8 +425,8 @@ function checkCompanyExist($email,$id,$mode,$status){
 		$comp = mysql_query("select * from company where status = 'Active' and primary_email = '$email' and id!='$id'");   
 	  else
 		$comp = mysql_query("select * from company where status = 'Active' and primary_email = '$email'");   
-		  
-	  if($comp){
+	 
+	  if(mysql_num_rows($comp)){
 		return false;
 	  }
 	  else{
