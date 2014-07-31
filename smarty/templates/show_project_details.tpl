@@ -123,7 +123,7 @@ function towerSelect(towerId)
 	}
 
 	function changePhase(pId, phase, dir, projectStatus, arrAllCompletionDateChk,launchDate, 
-            preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder,projectMoveValidation)
+            preLaunchDate,phaseId,stg,availabilityOrderChk,bedRoomOrder,availOrder,projectMoveValidation,configSizeFlag)
 	{
 		var flatChk      = $("#flatChk").val();
 		var flatAvailChk = $("#flatAvailChk").val();
@@ -183,6 +183,11 @@ function towerSelect(towerId)
 		{
 			flgChk = 1;
 		}
+		      //alert(configSizeFlag + phase);
+				if(dir != 'backward' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')) && configSizeFlag == 1 && (projectStatus == 'UnderConstruction' || projectStatus == ' Launch' || projectStatus == 'PreLaunch')) {
+                    alert("Config sizes are required!");
+                    return false;
+                }
 				isVerifedSupplyMovFlag = "{$isSupplyLaunchVerified}";				
 				if(dir != 'backward' && phase == 'Audit1' && !isVerifedSupplyMovFlag) {
                     alert("Supply is not verified!");
@@ -539,20 +544,20 @@ function broker_call_edit(callId, brokerId)
 	{if $projectDetails[0].PROJECT_STAGE=='NewProject'}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                  <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$arrAllCompletionDateChk}',
-                '{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}','{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Move To Next Stage	</button>
+                '{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}','{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}','{$configSizeFlag}');">Move To Next Stage	</button>
             {/if}
 	{else}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                 <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}',
                 'updation','{$projectStatus}','{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}',
-            '{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Move To Next Stage	</button>
+            '{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}','{$configSizeFlag}');">Move To Next Stage	</button>
             {/if}
 	{/if}
 
 	{if $projectDetails[0].PROJECT_PHASE!="DataCollection" && $projectDetails[0].PROJECT_PHASE!="Complete" && in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 	<button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','backward','{$projectStatus}',
 '{$arrAllCompletionDateChk}','{$launchDate}','{$prelaunchDate}','{$phaseId}','{$stageProject}',
-'{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}');">Revert	</button>
+'{$availabilityOrderChk}','{$bedRoomOrder}','{$availOrder}','{$projectMoveValidation}','{$configSizeFlag}');">Revert	</button>
 
 	{/if}
 {/if}<br>
@@ -568,7 +573,8 @@ function broker_call_edit(callId, brokerId)
                 {$projectDetails[0].AUDIT_COMMENTS}
         {/if}
     </textarea>
-{/if} 	-->							
+{/if} 	-->	
+    {if $errorValidation != ''}{$errorValidation}{/if}
 <div> 
 
   <TR>
@@ -2722,7 +2728,7 @@ function broker_call_edit(callId, brokerId)
 								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 										<tr class="headingrowcolor" height="30px;">
 											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status<br> Construction Status</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
@@ -2788,10 +2794,17 @@ function broker_call_edit(callId, brokerId)
 																{if $lastItem['BOOKING_STATUS_ID'] > 0}
 																	{if $lastItem['BOOKING_STATUS_ID'] == 1}Available{/if}
 																	{if $lastItem['BOOKING_STATUS_ID'] == 2}Sold out{/if}
-																	{if $lastItem['BOOKING_STATUS_ID'] == 3}On Hold{/if}
+																	{if $lastItem['BOOKING_STATUS_ID'] == 3}On Hold{/if}<br>
+																{else}
+																	--<br>
+																{/if}
+                                                                                                                                
+                                                                                                                                {if $lastItem['construction_status'] != ''}
+																	{$lastItem['construction_status']}
 																{else}
 																	--
 																{/if}
+                                                                                                                                
 															</td>
 														{/if}
 													

@@ -410,3 +410,29 @@ function getProjectFromOption($optionId){
     return $Result['PROJECT_ID'];
 
 }
+
+function configSizeCheckFlag($projectId){
+  $flagSql = mysql_fetch_object(mysql_query("select count(options_id) as cnt from resi_project_options where project_id = '$projectId' and (size is null or size=0) and option_category = 'Actual'"));
+  if($flagSql->cnt > 0)
+    return 1;
+  else 
+    return 0;
+}
+
+function checkCompanyExist($email,$id,$mode,$status){
+  if($status == 'Active'){		
+	  if($mode=='update' && $id!==null)	
+		$comp = mysql_query("select * from company where status = 'Active' and primary_email = '$email' and id!='$id'");   
+	  else
+		$comp = mysql_query("select * from company where status = 'Active' and primary_email = '$email'");   
+	 
+	  if(mysql_num_rows($comp)){
+		return false;
+	  }
+	  else{
+		return true;	
+	  }
+  }else
+	  return true;
+}
+

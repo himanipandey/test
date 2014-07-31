@@ -148,7 +148,7 @@
                         $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month  in case of Construction Status is completed.";
                     }
                 }
-                if($qrySelect->construction_status == UNDER_CONSTRUCTION_ID_1) {
+                if($qrySelect->construction_status == UNDER_CONSTRUCTION_ID_1 || $qrySelect->construction_status == LAUNCHED_ID_7 ||  $qrySelect->construction_status == PRE_LAUNCHED_ID_8 ) {
                     $yearExp = explode("-",$expectedCompletionDate);
                     if( $yearExp[0] == date("Y") ) {
                         if( intval($yearExp[1]) < intval(date("m"))) {
@@ -157,6 +157,28 @@
                     } 
                     else if (intval($yearExp[0]) < intval(date("Y")) ) {
                         $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month  in case of Construction Status is Under Construction.";
+                    }
+                }
+                if($qrySelect->construction_status == PRE_LAUNCHED_ID_8) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month in case of Construction Status is PreLaunch.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month  in case of Construction Status is Under PreLaunch.";
+                    }
+                }
+                if($qrySelect->construction_status == LAUNCHED_ID_7) {
+                    $yearExp = explode("-",$expectedCompletionDate);
+                    if( $yearExp[0] == date("Y") ) {
+                        if( intval($yearExp[1]) < intval(date("m"))) {
+                          $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month in case of Construction Status is Launch.";
+                        }    
+                    } 
+                    else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                        $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month  in case of Construction Status is Launch.";
                     }
                 }
                 

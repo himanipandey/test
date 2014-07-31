@@ -49,7 +49,7 @@
     $exp_supply_date_from = $_REQUEST['exp_supply_date_from'];
 
     if(!isset($_REQUEST['exp_supply_date_to']))
-    $_REQUEST['city'] = '';
+    $_REQUEST['exp_supply_date_to'] = '';
     $exp_supply_date_to = $_REQUEST['exp_supply_date_to'];
     
     $errorMsg = '';

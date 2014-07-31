@@ -95,7 +95,11 @@ jQuery(document).ready(function(){
        
     }
 
-    
+    if(email == '' || !validateEmail(email)){
+	  $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
+      $("#email").focus();
+      error = 1;	
+	}
 
     if(compphone!='' && !isNumeric1(compphone)){
       $('#errmsgcompphone').html('<font color="red">Please provide a Numeric Value.</font>');
@@ -190,6 +194,9 @@ jQuery(document).ready(function(){
 	               else if(msg == 4){
 	                //$("#onclick-create").text("No Landmark Selected.");
 	                   alert("no data");
+	               }
+	               else if(msg == 9){
+	                  alert("Company with Same Contact Email Already Exist!");
 	               }
 	               else alert(msg);
 	            },
@@ -420,7 +427,11 @@ function deleteRow(tableID) {
                 alert(e);
             }
 }
-
+function validateEmail(email) 
+  {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
 
 jQuery(function(){
                 iframeUpload.init();
@@ -617,7 +628,7 @@ var iframeUpload = {
 
                     <tr>
                       <td width="20%" align="right" >Contact Email : </td>
-                      <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                      <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="20%" align="left" id="errmsgemail"></td>
                     </tr>
 
                     <tr>

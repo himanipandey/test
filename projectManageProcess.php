@@ -224,21 +224,24 @@
 		}
 		else
                     $arrSearchFields['project_id'] = $_REQUEST['projectId'];
-                 
+               
 		if($exp_supply_date_to != '' && $exp_supply_date_from != ''){
 			if(date($exp_supply_date_to) < date($exp_supply_date_from))
-				$errorMsg = '<font color = red>To Date must be greater than From Date.</font>';		
+				$errorMsg = '<font color = red>Expected Supply To Date must be greater than Expected Supply From Date.</font>';		
 		}
-	    	else if( count($arrSearchFields) > 0 || !empty($_GET['offerId']) || !empty($_GET['withOffer'])) { 
-                    $getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
-                    $NumRows = count($getSearchResult);
-                    if(count($getSearchResult) == 0)
-                    {
-                        $errorMsg = '<font color = red>No result found!</font>';
-                    }
-                }else {
-                     $errorMsg = '<font color = red>Please select atleast one field</font>';
-                }
+	    	   if($errorMsg == '')
+			   {   
+				   if( count($arrSearchFields) > 0 || !empty($_GET['offerId']) || !empty($_GET['withOffer'])) { 
+						$getSearchResult = ResiProject::getAllSearchResult($arrSearchFields);
+						$NumRows = count($getSearchResult);
+						if(count($getSearchResult) == 0)
+						{
+							$errorMsg = '<font color = red>No result found!</font>';
+						}
+					}else {
+						 $errorMsg = '<font color = red>Please select atleast one field</font>';
+					}
+				}
                 $smarty->assign("errorMsg", $errorMsg);
                 
 	}
