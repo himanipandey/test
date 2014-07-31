@@ -238,7 +238,10 @@ function setConfigLevelValues(&$entry) {
     $entry['builder_name'] = $configDetails->builder_name;
     $entry['builder_headquarter_city'] = $configDetails->builder_headquarter_city;
     $entry['construction_status'] = computeConstructionStatus($configDetails,$entry['effective_month']);
-    $entry['unit_type'] = $configDetails->unit_type;
+    $entry['construction_status_quarter'] = computeConstructionStatus($configDetails,date_format(lastDayOf('quarter', $entry['effective_month']),'Y-m-d'));
+    $entry['construction_status_year'] = computeConstructionStatus($configDetails,date_format(lastDayOf('year', $entry['effective_month']),'Y-m-d'));
+    $entry['construction_status_financial_year'] = computeConstructionStatus($configDetails,date_format(lastDayOf('financial_year', $entry['effective_month']),'Y-m-d'));
+    $entry['unit_type'] = $configDetails->unit_type;   
     $entry['bedrooms'] = intval($configDetails->bedrooms);
     $entry['average_size'] = $configDetails->average_size;
     $entry['completion_date'] = $configDetails->completion_date;
@@ -257,13 +260,19 @@ function computeConstructionStatus($configDetails, $effectiveMonth) {
 	$launchDate       = $configDetails->original_launch_date;
 	$status = 'Pre Launch';
 
-	if (!empty($launchDate) && $effectiveMonth >= $launchDate) {
+
+	if (!empty($launchDate) && strcmp($effectiveMonth,$launchDate)>=0) {
+	
+		
 		$status = 'Under Construction';
+		
 	}
 
-	if (!empty($completionDate) && $effectiveMonth >= $completionDate) {
+	if (!empty($completionDate) && strcmp($effectiveMonth,$completionDate)>=0) {
+		
 		$status = 'Completed';
-	}
+		
 	
+	}
 	return $status;
 }
