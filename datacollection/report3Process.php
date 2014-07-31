@@ -15,7 +15,7 @@ if($_POST['submit']==='Get'){
 if(!empty($_SESSION[$_SERVER['PHP_SELF']]['dateFrom'])){
     $dateFrom = $_SESSION[$_SERVER['PHP_SELF']]['dateFrom'];
     $dateTo = $_SESSION[$_SERVER['PHP_SELF']]['dateTo'];  
-    $days = (strtotime($dateTo) - strtotime($dateFrom)) / (60 * 60 * 24);
+    $days = (strtotime($dateTo) - strtotime($dateFrom) + 86400) / (60 * 60 * 24);
     $all_users = getAllUsers();
     $all_assigned_projects = getAllAssignedProject($all_users, $dateFrom, $dateTo);
    //print "<pre>".print_r($all_assigned_projects,1)."</pre>";
