@@ -34,8 +34,8 @@ $smarty->assign('url', TYPEAHEAD_API_URL);
 
 
 
-/*
 
+/*
 //get company logo
 foreach ($compArr as $k => $v) {
 	# code...

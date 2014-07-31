@@ -511,7 +511,8 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, c
     
    
     $("#pan").val(pan);
-    $('#img_date1').val(active_since); 
+
+    $('#img_date1').val(active_since.substring(0,10)); 
 
     //var data = a;
     if(type=="Broker"){
@@ -1923,11 +1924,11 @@ function coverageRadioChanged(){
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v['type']}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['fax']}', '{$v['phone']}', 'read');">{$v['name']}</a></TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','read' );">{$v['name']}</a></TD>
                                   <TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>
                                   <TD align=center class=td-border>{$v['address']} City-{$v['city_name']} Pin-{$v['pin']} Ph.N.-{$v['compphone']}</TD>
                                   
-                                  <TD align=center class=td-border>{foreach from=$v['extra']['cont_person'] key=k1 item=v1} {$v1['person']} &nbsp;Contact No.-{$v['phone1']} <br> {/foreach} </TD>
+                                  <TD align=center class=td-border>{foreach from=$v['extra']['cont_person'] key=k1 item=v1} {$v1['person']} &nbsp;Contact No.-{$v1['phone1']} <br> {/foreach} </TD>
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
 

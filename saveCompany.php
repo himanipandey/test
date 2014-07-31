@@ -104,11 +104,15 @@ if($_POST['task']=='find_project_builder'){
 if($_POST['task']=='createComp'){ 
     $id = $_POST['id'];
     $type = $_POST['type'];
-   $des   = mysql_real_escape_string($_POST['des']);
-
-    $name   = $_POST['name'];
-    $address   = mysql_real_escape_string($_POST['address']);
-    $address = preg_replace('!\s+!', ' ', $address);
+    //$des   = mysql_real_escape_string($_POST['des']);
+    //$des = strip_tags(trim(preg_replace('/\s\s+/', ' ', $des))); 
+    $des = preg_replace('!\s+!', ' ', $_POST['des']);
+    $des   = mysql_real_escape_string($des);
+ 
+    $name   = $_POST['name'];    
+   
+    $address = preg_replace('!\s+!', ' ', $_POST['address']);
+    $address   = mysql_real_escape_string($address);
     $city   = $_POST['city'];
     $pin   = $_POST['pincode'];
     $compphone   = $_POST['compphone'];
