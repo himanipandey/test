@@ -468,11 +468,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            $yearExp = explode("-",$completionDate);
            if( $yearExp[0] == date("Y") ) {
                if( intval($yearExp[1]) > intval(date("m"))) {
-                 $ErrorMsg["txtStatus"] = "Completion date cannot be greater current month for this status";
+                 $ErrorMsg["CompletionDateGreater"] = "Completion date cannot be greater current month for this status";
                }    
            } 
            else if (intval($yearExp[0]) > intval(date("Y")) ) {
-               $ErrorMsg["txtStatus"] = "Completion date cannot be greater current month for this status";
+               $ErrorMsg["CompletionDateGreater"] = "Completion date cannot be greater current month for this status";
            }
        }
 
