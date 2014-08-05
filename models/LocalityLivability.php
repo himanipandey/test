@@ -77,7 +77,7 @@ class LocalityLivability extends ActiveRecord\Model {
     }
     
     static function populateLivabilityInLocalities(){
-    	$sql = "update locality l inner join locality_livability ll on l.locality_id = ll.locality_id set l.livability_score = ROUND(ll.livability*5,1)";
+    	$sql = "update locality l inner join locality_livability ll on l.locality_id = ll.locality_id set l.livability_score = ROUND(ll.livability*10,1)";
     	self::connection()->query($sql);
     }
 }
