@@ -393,8 +393,8 @@ if($_POST['task']=='createComp'){
 
             echo "1";
         }
-        else if (!mysql_error()) echo "2hello_up";
-        else  echo "3hello_up";
+        else if (!mysql_error()) echo "2";
+        else  echo "3";
 
     }
     if ($mode=='create'){
@@ -550,10 +550,10 @@ if($_POST['task']=='createComp'){
                     }
                 }
             }
-            echo "1hello";
+            echo "1";
         }
         else
-            echo "3hello";
+            echo "3";
     }
        
 }

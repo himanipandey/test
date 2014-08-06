@@ -1932,7 +1932,7 @@ function coverageRadioChanged(){
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >View Inventory</a><input type="hidden" id="extra_data" value='{$v['extra_json']}'> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a><input type="hidden" id="extra_data" value='{$v['extra_json']}'> </TD>
 
                                 </TR>
                                 {/foreach}
