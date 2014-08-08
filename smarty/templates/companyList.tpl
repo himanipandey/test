@@ -22,13 +22,14 @@ jQuery(document).ready(function(){
   
 	$("#create_button").click(function(){
 	  cleanFields();
-	  
+	   
 	    $('#search_bottom').hide('slow');
 	   $('#create_company').show('slow'); 
      //$('#offAddDiv').hide(); 
 	    $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
 	    $(this).attr('disabled',false);		    
 	  });	
+      $("#rating_auto").attr('disabled',true);
 	});
 
 	$("#exit_button").click(function(){
@@ -200,7 +201,16 @@ if(compType=='Broker'){
     return true;
 
   }
-  
+    
+
+    if(pan!='' && !validatePan(pan)){
+      $('#errmsgpan').html('<font color="red">Please provide all alpha Numeric Characters.</font>');
+      $("#pan").focus();
+      window.error = 1;
+    }
+    else{
+          $('#errmsgpan').html('');
+    }
 
     if(email!='' && !validateEmail(email)){
       $('#errmsgcompemail').html('<font color="red">Please provide a vaild email id.</font>');
@@ -348,8 +358,68 @@ if(compType=='Broker'){
 
 	});
 
+$.widget( "custom.catcomplete2", $.ui.autocomplete, {
+   
+  _renderItem: function( ul, item ) {
+    //var res = item..split("-");
+        //var tableName = res[1];
+    return $( "<li>" )
+      .append( $( "<a>" ).text( item.label ) )
+      .appendTo( ul );
+  },
+  
+
+  });
+  
+  $( "#name" ).autocomplete({
+     // q = $("#searchPlace").val();
+     // alert("hello");
+      source: function( request, response ) {
+        $.ajax({
+          url: "/saveCompany.php",
+          dataType: "json",
+          type: "post",
+          data: {
+            query: $( "#name" ).val().trim(),
+            task: "find_company_name",
+            featureClass: "P",
+            style: "full",
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            //alert(data);
+            response( $.map( data.data, function( item ) {  
+              console.log(item.name)            
+                return {
+                label: item.name,
+                value: item.name,
+                }
+              
+            }));
+          }
+        });
+      },
+      
+      select: function( event, ui ) {
+        selectedItem = ui.item;
+        //alert(selectedItem.label);
+        //log( ui.item ?
+         // "Selected: " + ui.item.label :
+          //"Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      },
+
+    });
 
 
+  //$("#lmkSave").click(function(){
+
+  //});
 
 }); //end document.ready
 
@@ -428,6 +498,11 @@ function ValidateIPaddress(ipaddress)
 function validateEmail(email) { 
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
+}
+
+function validatePan(pan) { 
+    var re = /^[a-zA-Z\d-]*$/;
+    return re.test(pan);
 }
 
 function cleanFields(){
@@ -1402,17 +1477,20 @@ function coverageRadioChanged(){
                                        {/foreach}
                                     </select>
                                 </td>
+                        <td width="40%" align="left" id="broker_switch"> <input type="button" name="broker_switch" id="broker_switch" value="Basic Information" style="cursor:pointer">  </td>
                         <td width="40%" align="left" id="errmsgcomptype"></td>
                     </tr>
-                    <tr>
+                    <tr class="broker_basic">
+                      
+                      <div class="ui-widget">
                       <td width="10%" align="right" ><font color = "red">*</font>Name : </td>
-                      <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
+                      <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="name"  style="width:250px;"></td> </div><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="compid"></td>
                     </tr>
 
-                    <tr id="legalType" style="display:none">
+                    <tr id="legalType" style="display:none" class="broker_basic">
                       <td width="10%" align="right" ><font color = "red">*</font>Company Legal Type : </td>
-                      <td width="30%" align="left"><select id="compLegalType" name="compLegalType" >
+                      <td width="30%" align="left"><select id="compLegalType" name="compLegalType" class="broker_basic">
                         <option name=one value=''>Select Company Legal Type</option>
                         <option name=one value='proprietorship'>Proprietorship</option>
                         <option name=two value='private-limited' >Private Limited</option>
@@ -1438,15 +1516,15 @@ function coverageRadioChanged(){
 
                    
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="20%" align="right" valign="top"><font color = "red">*</font>Address :</td>
                       <td width="30%" align="left" >
-                      <textarea name="address" rows="8" cols="35" id="address" style="width:250px;"></textarea></td>
+                      <textarea name="address" rows="8" cols="35" class="broker_basic" id="address" style="width:250px;"></textarea></td>
                       <td width="20%" align="left" id="errmsgaddress"></td>
                    
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="20%" align="right" valign="top"><font color = "red">*</font>City :</td>
                       <td width="30%" align="left" ><select id="city" name="city" >
                                        <option value=''>select city</option>
@@ -1454,36 +1532,36 @@ function coverageRadioChanged(){
                                            <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
                                        {/foreach}
                                     </select></td>
-                      <td width="20%" align="left" id="errmsgcity"></td>
+                      <td width="20%" align="left" class="broker_basic" id="errmsgcity"></td>
                       
                       <td><input type="hidden", id="lmkid">  </td>
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="20%" align="right" >Pincode : </td>
-                      <td width="30%" align="left"><input type=text name="pincode" id="pincode"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgpincode"></td>
+                      <td width="30%" align="left"><input type=text name="pincode" class="broker_basic" id="pincode"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgpincode"></td>
                     </tr>
 
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="20%" align="right" >Office Phone No. : </td>
-                      <td width="30%" align="left"><input type=text name="compphone" id="compphone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompphone"></td>
+                      <td width="30%" align="left"><input type=text name="compphone" class="broker_basic" id="compphone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompphone"></td>
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="20%" align="right" valign="top">Office Fax :</td>
-                     <td width="30%" align="left"><input type=text name="compfax" id="compfax" style="width:250px;"></td> 
+                     <td width="30%" align="left"><input type=text name="compfax" class="broker_basic" id="compfax" style="width:250px;"></td> 
                     <td width="20%" align="left" id="errmsgcompfax"></td>
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="20%" align="right" >Office Email : </td>
-                      <td width="30%" align="left"><input type=text name="compemail" id="compemail" style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompemail"></td>
+                      <td width="30%" align="left"><input type=text name="compemail" class="broker_basic" id="compemail" style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompemail"></td>
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="20%" align="right" >Website : </td>
-                      <td width="30%" align="left"><input type=text name="web" id="web" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                      <td width="30%" align="left"><input type=text name="web" class="broker_basic" id="web" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
                     </tr>
 
                     <tr>
@@ -1542,11 +1620,11 @@ function coverageRadioChanged(){
 
 
 <!--  contact persons starts --------------------------------------------------------------------     -->
-                    <tr >
+                    <tr class="broker_basic">
                       <td colspan="3" align="left" ><hr><b>Contact Person Details</b></td>
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td colspan="3" align="left">
                         <table id="contact_table" width = "100%">
                           <tr id="rowId_0">
@@ -1603,7 +1681,7 @@ function coverageRadioChanged(){
                     </td>
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                      
                       <td align="left" style="padding-left:50px;" colspan="3" >
                       <input type="button" name="addContact" id="addContact" value="Add Contact Person" style="cursor:pointer">                
@@ -1770,10 +1848,10 @@ function coverageRadioChanged(){
 
                     <tr>
                       <td width="20%" align="right" >Pancard No : </td>
-                      <td width="30%" align="left"><input type=text name="pan" id="pan" style="width:250px;"></td> <td width="20%" align="left" id="errmsgweb"></td>
+                      <td width="30%" align="left"><input type=text name="pan" id="pan" style="width:250px;"></td> <td width="20%" align="left" id="errmsgpan"></td>
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="20%" align="right" >Status : </td>
                       <td width="30%" align="left"><select id="status" name="status" >
                         <option name=one value='Active'> Active </option>
@@ -1789,36 +1867,49 @@ function coverageRadioChanged(){
                       <td colspan="3" align="left" ><hr></td>
                     </tr> 
 
-                    <tr id="broker_extra_field" style="display:none">
+                    <tr id="broker_extra_field" style="display:none" >
                       <td colspan="3">
                         <table width="100%">
                         
-                        <tr>
+                        <tr class="broker_basic">
                           <td width="20%" align="right" valign="top">Properties Broker Deals In : </td>
                           <td width="30%" align="left">
+                            <table width="100%">
+                              {$i=0}
                             {foreach $resiProjectType key=k item=v}
-                              <input type='checkbox' name='resiProjectType[]' class='resiProjectType'  value='{$k}' {if $k%2==0} text-align="right" {else} text-align="left"{/if}>{$v}<input type='hidden' id="pt_db_id_{$k}"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            {if $k%2==0}<br>{/if} 
+                            {$i=$i+1}
+                              {if $i%2!=0}<tr>{/if}
+                              <td >
+                              <input type='checkbox' name='resiProjectType[]' class='resiProjectType'  value='{$k}' >{$v}<input type='hidden' id="pt_db_id_{$k}"> </td>
+                               {if $i%2==0}</tr>{/if}
                             {/foreach}
+                          </table>
                           </td>
                           <tr></td>
                         </tr>
                         
-                        <tr>
-                          <td width="10%" align="right" ><font color = "red">*</font>Transaction Types : </td>
+                        <tr class="broker_basic">
+                          <td width="10%" align="right" valign="top"><font color = "red">*</font>Transaction Types : </td>
                           <td width="30%" align="left">
+                            <table width="100%">
+                              {$i=0}
                             {foreach $transactionType key=k item=v}
-                            <input type='checkbox' name='Transaction[]' class='Transaction' value='{$k}'>{$v}<input type='hidden' id="tt_db_id_{$k}"> &nbsp;&nbsp;
+                              {$i=$i+1}
+                              {if $i%2!=0}<tr>{/if}
+                              <td >
+                            <input type='checkbox' name='Transaction[]' class='Transaction' value='{$k}'>{$v}<input type='hidden' id="tt_db_id_{$k}"> </td>
+                            {if $i%2==0}</tr>{/if}
                             {/foreach}
+                          </table>
                           </td> 
                           <td width="40%" align="left" id="errmsgtttype"></td>
                          </tr> 
 
                          <tr>
-                          <td width="10%" align="right"  valign="center">Rating : </td>
+                          <td width="10%" align="right"  valign="top">Rating : </td>
                           <td width="30%" align="left">
-                              <!--<input type="radio" name="rating" value="auto">Auto &nbsp; &nbsp; {$rating}<br>
-                              <input type="radio" name="rating" value="forced">Forced &nbsp; &nbsp;-->
+                              <input type="radio" name="rating" id="rating_auto" disabled="disabled">Auto &nbsp; &nbsp; <br>
+                              <input type="radio" name="rating" value="forced" checked='checked' disabled="disabled">Forced &nbsp; &nbsp;
                               <select id="frating" name="frating" style="width:70px;" valign="center">
                             <option name=one value='0.00'>0</option>
                             <option name=two value='0.50' >0.5</option>
@@ -1844,7 +1935,7 @@ function coverageRadioChanged(){
                                     
                             </select>
                         <tr>
-                          <td width="20%" align="right" ><font color = "red">*</font>Since Operation : </td>
+                          <td width="20%" align="right" ><font color = "red">*</font>Operation Since : </td>
                           <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
                         </tr>
 

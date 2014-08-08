@@ -42,7 +42,6 @@ class Company extends ActiveRecord\Model
 
         if ($row) { // If the query's successful
             
-            
             preg_match_all("/'([\w ]*)'/", $row[1], $values);
             
         } 
@@ -55,6 +54,21 @@ class Company extends ActiveRecord\Model
         $list = array();
         foreach ($companyDetail as $v) {
             $list[$v->id] = $v->name;
+        }
+        return $list;
+    }
+
+    static function getCompanyNameByQuery($query) {
+        $companyDetail = Company::find('all',array('conditions'=>array("name like '%{$query}%'")));
+        //$companyDetail = Company::find('all',array('conditions'=>array("name = 'Broker'")));
+        $list = array();
+        $i = 0;
+        foreach ($companyDetail as $v) {
+            //array_push($list, $v->name);
+            $i++;
+            $tmp = array();
+            $tmp['name'] = $v->name;
+            array_push($list, $tmp);
         }
         return $list;
     }
@@ -286,4 +300,6 @@ class Company extends ActiveRecord\Model
         $city = $result->fetch(PDO::FETCH_ASSOC);
         return $city;
     }
+
+
 }

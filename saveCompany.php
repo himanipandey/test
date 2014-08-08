@@ -7,6 +7,7 @@ ini_set("memory_limit","256M");
 include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
+//include("modelsConfig.php");
 include("includes/configs/configs.php");
 include("builder_function.php");
 include("function/functions_priority.php");
@@ -29,6 +30,21 @@ if($_POST['task']=='office_locations'){
 
                                       
     echo $html;
+}
+
+if($_POST['task']=='find_company_name'){
+    $q = $_POST['query'];
+    $arr = array();
+    $query = "Select id, name from company where name like '%{$q}%'";
+    $res = mysql_query($query);
+    while($r = mysql_fetch_assoc($res)) {
+        $tmp = array();
+        $tmp['name'] = $r['name'];
+        array_push($arr, $tmp);
+    }
+
+    $data = '{"data": '.json_encode($arr).'}';
+    echo $data;
 }
 
 if($_POST['task']=='find_project_builder'){

@@ -31,8 +31,9 @@ $smarty->assign('ptRelManager', $ptRelManager);
 
 $smarty->assign('url', TYPEAHEAD_API_URL);
 
-
-
+$namearr = array();
+$namearr = Company::getCompanyNameByQuery('br');
+print_r($namearr);
 
 
 
