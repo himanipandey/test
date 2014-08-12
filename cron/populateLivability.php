@@ -42,8 +42,10 @@ ProjectLivability::populateUnitPerFloor();
 
 ProjectLivability::populateOtherAmenity();
 
+ProjectLivability::populateLocalityAndSocietyScores();
+ProjectLivability::ensureMinLocalityScore();
+ProjectLivability::ensureMinSocietyScore();
 ProjectLivability::populateOverAllLivability();
-ProjectLivability::ensureMinLivability();
 ProjectLivability::populateLivabilityInProjects();
 
 
@@ -58,4 +60,5 @@ LocalityLivability::populateDistanceIndex(17);
 LocalityLivability::populateDistanceIndex(1000);
 LocalityLivability::populateCompletionPercentage();
 LocalityLivability::populateOverAllLivability();
+LocalityLivability::ensureMinLivability();
 LocalityLivability::populateLivabilityInLocalities();
