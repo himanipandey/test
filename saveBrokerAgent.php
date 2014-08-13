@@ -1,5 +1,5 @@
 <?php
-//echo "here";
+//echo "here"; //die;
 error_reporting(1);
 ini_set('display_errors','1');
 set_time_limit(0);
@@ -15,7 +15,7 @@ include("imageService/image_upload.php");
 
 AdminAuthentication();
 
-//echo "here";
+///echo "here"; die;
 if($_POST['task']=='office_locations'){
     $cityId = $_POST['cityId'];
     //$locList = Locality::getLocalityByCity($cityId);
@@ -57,6 +57,8 @@ if($_POST['task']=='createAgent'){
     //$pan   = $_POST['pan'];
     $status   = $_POST['status'];
     $mode =  $_POST['mode'];
+
+
     //$altText = "company".$name;
 /*
     if(isset($_POST['image']) && $image!=""){
@@ -162,7 +164,27 @@ if($_POST['task']=='createAgent'){
 
     }
     if ($mode=='create'){
-        
+        //get user id if user already exist against agent email  or create a new user 
+
+        $query = "SELECT USER_ID FROM proptiger.FORUM_USER WHERE EMAIL='{$email}' and STATUS='1'";
+        $res = mysql_query($query);
+        $data = mysql_fetch_assoc($res);
+        //echo $query; die;
+        if(!$data['USER_ID']>0){
+           
+            $pass = randomPassword();
+            $post = '{"userName":"'.$name.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pass.'","confirmPassword":"'.$pass.'","countryId":"+91"}';
+            
+            $url = USER_API_URL;
+            //echo $post;
+            $response = curl_request($post, 'POST', $url);
+
+        }
+var_dump($response);
+
+       // if ($response['stat'])
+
+        die;
         $query = "INSERT INTO agents(status, broker_id, academic_qualification_id, name, seller_type, active_since, email, created_at, updated_by) values ('{$status}', '{$brokerId}', '{$qualification}', '{$name}','{$role}', '{$active_since}', '{$email}', NOW(), '{$_SESSION['adminId']}')";
       
         $res = mysql_query($query) or die(mysql_error());
@@ -213,6 +235,50 @@ if($_POST['task']=='createAgent'){
         
 }
 
+
+
     
+function curl_request($post, $method, $url){
+        //echo "curl-start:".microtime(true)."<br>";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                             
+    'Content-Type: application/json',                                                                                
+    'Content-Length: ' . strlen($post))                                                                       
+); 
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$method);
+        if($method == "POST" || $method == "PUT")
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        $response= curl_exec($ch);
+       
+        $responseArr = json_decode($response);
+        var_dump($response);
+        //$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        //$response_header = substr($response, 0, $header_size);
+        //$response_body = json_decode(substr($response, $header_size));
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close ($ch);
+        //print("<pre>"); print_r($pos); echo $url;//echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
+        //die();
+        //echo "curl-end:".microtime(true)."<br>";
+        return array("header" => $response_header, "body" => $response_body, "status" => $status);
+        //return $response;
+    }
+
+
+function randomPassword() {
+    $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+    $pass = array(); //remember to declare $pass as an array
+    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+    for ($i = 0; $i < 8; $i++) {
+        $n = rand(0, $alphaLength);
+        $pass[] = $alphabet[$n];
+    }
+    return implode($pass); //turn the array into a string
+}
+
 
 ?>
