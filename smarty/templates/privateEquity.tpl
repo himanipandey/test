@@ -9,6 +9,7 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="js/numberToWords.js"></script>
 
 <script language="javascript">
 
@@ -563,6 +564,19 @@ function isNumeric(val) {
         return true;
 }
 
+function onChangeValue(id){
+  if (id=="fundValue")     
+    fieldid = "fund_value_text";
+  else if (id=="investmentValue")
+    fieldid = "investment_value_text";
+  else if (id=="exitValue1")
+    fieldid = "exit_value1_text";
+  else if (id=="exitValue2")
+    fieldid = "exit_value2_text";
+  $("#"+fieldid).innerHTML = toWords($("#"+id).val());
+
+}
+
 </script>
 </TD>
   </TR>
@@ -656,7 +670,7 @@ function isNumeric(val) {
 
                     <tr>
                       <td width="10%" align="right" >Value (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="fundValue" id="fundValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsgfundvalue"></td>
+                      <td width="40%" align="left" ><input type=text name="fundValue" id="fundValue"  style="width:250px;" onchange="onChangeValue(this.id);"></td><td width="10%" align="left" id="fund_value_text"></td><td width="40%" align="left" id="errmsgfundvalue"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
@@ -762,7 +776,7 @@ function isNumeric(val) {
                   </tr>
                     <tr>
                       <td width="10%" align="right" >Value of Investment (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="investValue" id="investValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsginvestvalue"></td>
+                      <td width="40%" align="left" ><input type=text name="investValue" id="investValue"  style="width:250px;" onchange="onChangeValue(this.id);"></td><td width="10%" align="left" id="investment_value_text"></td><td width="40%" align="left" id="errmsginvestvalue"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
@@ -868,13 +882,14 @@ function isNumeric(val) {
                   </tr>
                     <tr>
                       <td width="10%" align="right" >Value of Exit (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="exitValue2" id="exitValue2"  style="width:250px;"></td><td width="40%" align="left" id="errmsgexitvalue2"></td>
+                      <td width="40%" align="left" ><input type=text name="exitValue2" id="exitValue2"  style="width:250px;" onchange="onChangeValue(this.id);"></td><td width="10%" align="left" id="exit_value1_text"></td><td width="40%" align="left" id="errmsgexitvalue2"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
                       <td width="10%" align="right" >Value of Investment (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="exitValue1" id="exitValue1"  style="width:250px;"></td><td width="40%" align="left" id="errmsgexitvalue1"></td>
+                      <td width="40%" align="left" ><input type=text name="exitValue1" id="exitValue1"  style="width:250px;" onchange="onChangeValue(this.id);"></td>
+                      <td width="10%" align="left" id="exit_value2_text"></td><td width="40%" align="left" id="errmsgexitvalue1"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
