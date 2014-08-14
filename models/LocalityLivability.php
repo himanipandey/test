@@ -32,6 +32,7 @@ class LocalityLivability extends ActiveRecord\Model {
         1000 => 'sum(exp(-(greatest(500, distance)*(0.03)/1000))/priority)'
     );
     static $min_max_livability = 0.95;
+    static $min_livability = 0.4;
 
     static function repopulateLocalityIds() {
         $sql = "insert into locality_livability (locality_id) select LOCALITY_ID from locality where STATUS = 'Active'";
@@ -76,6 +77,9 @@ class LocalityLivability extends ActiveRecord\Model {
         self::connection()->query($sql);
     }
     
+    static function ensureMinLivability() {
+	 self::update_all(array('set'=>"livability=(livability*".(1-self::$min_livability)."+".self::$min_livability.")"));
+    }
     static function populateLivabilityInLocalities(){
     	$sql = "update locality l inner join locality_livability ll on l.locality_id = ll.locality_id set l.livability_score = ROUND(ll.livability*10,1)";
     	self::connection()->query($sql);
