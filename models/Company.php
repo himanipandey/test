@@ -213,6 +213,7 @@ class Company extends ActiveRecord\Model
             $arr['id'] = $v->id;
             $arr['name'] = $v->name;
             $arr['type'] = $v->type;
+            $arr['broker_info_type'] = $v->company_info_type;
             $arr['des'] = $v->description;
             $arr['status'] = $v->status;
             $arr['pan'] = $v->pan;

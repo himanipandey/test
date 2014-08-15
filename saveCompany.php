@@ -120,6 +120,7 @@ if($_POST['task']=='find_project_builder'){
 if($_POST['task']=='createComp'){ 
     $id = $_POST['id'];
     $type = $_POST['type'];
+    $broker_info_type = $_POST['broker_info_type']; 
     //$des   = mysql_real_escape_string($_POST['des']);
     //$des = strip_tags(trim(preg_replace('/\s\s+/', ' ', $des))); 
     $des = preg_replace('!\s+!', ' ', $_POST['des']);
@@ -204,7 +205,7 @@ if($_POST['task']=='createComp'){
             
         if(mysql_num_rows($sql_comp)>0){
             
-            $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', website='{$web}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
+            $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', website='{$web}', company_info_type='{$broker_info_type}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
             
             $res_sql = mysql_query($sql) or die(mysql_error());
 
@@ -407,7 +408,7 @@ if($_POST['task']=='createComp'){
                 }
             //}
 
-            echo "1";
+            echo "1up";
         }
         else if (!mysql_error()) echo "2";
         else  echo "3";
@@ -415,7 +416,7 @@ if($_POST['task']=='createComp'){
     }
     if ($mode=='create'){
         
-        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, website, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', '{$web}', NOW(), {$_SESSION['adminId']})";
+        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, website, company_info_type, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', '{$web}', '{$broker_info_type}', NOW(), {$_SESSION['adminId']})";
         
         $res = mysql_query($query) or mysql_error();
         if(mysql_affected_rows()>0){
@@ -566,7 +567,7 @@ if($_POST['task']=='createComp'){
                     }
                 }
             }
-            echo "1";
+            echo "1up";
         }
         else
             echo "3";

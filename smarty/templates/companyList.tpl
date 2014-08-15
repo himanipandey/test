@@ -44,6 +44,12 @@ jQuery(document).ready(function(){
 
 	$("#lmkSave").click(function(){
 		var compType = $('#companyTypeEdit').children(":selected").val();
+    if(compType=="Broker" && $("#broker_switch").val()=="Advance Information"){
+      var broker_info_type="Basic";
+    }
+    else if(compType=="Broker" && $("#broker_switch").val()=="Basic Information"){
+      var broker_info_type="Advance";
+    }
 		var name = $('#name').val().trim();        
 		var des = $('#des').val().trim();
     
@@ -174,19 +180,20 @@ if(compType=='Broker'){
    
   var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
 
-
-  valid_compul(since_op, isNumeric1, "Please provide a valid date.", "errmsgdate");
-  valid_compul(stn, isNumeric1, "Please provide a numeric service tax no.", "errmsgstn");
-  valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
-  valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
-  valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
-  valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
+  if (broker_info_type=="Advance"){
+    valid_compul(since_op, isNumeric1, "Please provide a valid date.", "errmsgdate");
+    valid_compul(stn, isNumeric1, "Please provide a numeric service tax no.", "errmsgstn");
+    valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
+    valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
+    valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
+    valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
+  }
 }
 
   //console.log(coverage_data);
   //console.log(contact_person_data); 
     
-   var data = { id:compid, type:compType, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
 
 /******************************validation****************************************/    
 
@@ -245,7 +252,7 @@ if(compType=='Broker'){
        
     }
 
-    if(email == '' || !validateEmail(email)){
+    if(email != '' && !validateEmail(email)){
 	  $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
       $("#email").focus();
       error = 1;	
@@ -536,6 +543,18 @@ function cleanFields(){
     $("#imgUploadStatus").val("0");
     $("#uploadedImage").val("");
 
+    $('#create_company input text,#create_company select,#create_company textarea').each(function(key, value){
+      $(this).val('');       
+    }); 
+
+    $(".resiProjectType").each(function(){
+          $(this).prop('checked', false);
+    });
+
+
+    $(".Transaction").each(function(){
+          $(this).prop('checked', false);
+    });
 
 
     $('#errmsgcity').html('');
@@ -551,16 +570,36 @@ function cleanFields(){
     });
     $('#imgPlaceholder').html('');
     $('#errmsglogo').html('');
+    $('#errmsgcomplegaltype').html('');
+    $('#errmsgpan').html('');
+    $('#errmsgemail').html('');
+    $('#errmsgemployeeNo').html('');
+    $('#errmsgtttype').html('');
+    $('#errmsgptmanager').html('');
+    $('#errmsgofficesize').html('');
+    $('#errmsgstn').html('');
+    $('#errmsgdate').html('');
+    
 
 }
 
 
 
-function editCompany(id,name,type,des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, compfax, phone, active_since, web, a, action){
+function editCompany(id,name,type, broker_info_type, des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, compfax, phone, active_since, web, a, action){
     cleanFields();
     $("#compid").val(id);
     $('#city').val(city);
     $("#companyTypeEdit").val(type);
+    $("#broker_info_status").val(broker_info_type);
+    if (broker_info_type=="Basic"){
+      $("#broker_switch").show();
+      basic_info_bt_clicked();
+    }
+    else{
+      $("#broker_switch").prop("disabled", true);
+      $("#broker_switch").hide();
+      alert(broker_info_type);
+    }
     $("#name").val(name);
     $("#des").val(des);
     $("#address").val(address);
@@ -1449,14 +1488,15 @@ function basic_info_bt_clicked(){
   //$("#main_table tr.broker_basic").show();
   //$("#broker_switch").prop("value", "Advanced Information");
   var compid = $('#compid').val();
-  if (compid>0)
-    $("#broker_switch").prop("value","Advance Information");
-  var value = $("#broker_switch").prop("value");//alert(value);
+  var broker_info_status = $('#broker_info_status').val();
+  if (compid>0 && broker_info_status=="Basic")
+    var value = "Basic Information";//alert(value);
 
 
-  if(value=="Advance Information"){
+  if(value!="Basic Information"){
     $('#main_table tbody tr').show();
-    $("#broker_switch").prop("value","Basic Information");
+    if(!compid>0)
+      $("#broker_switch").prop("value","Basic Information");
   }
   else{
     $('#main_table tr').not('.broker_basic').hide();
@@ -1525,7 +1565,7 @@ function basic_info_bt_clicked(){
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left"> <input type="button" name="broker_switch" id="broker_switch" value="Basic Information" onclick="basic_info_bt_clicked();" style="cursor:pointer" >  </td>
+                        <td width="40%" align="left"> <input type="button" name="broker_switch" id="broker_switch" value="Basic Information" onclick="basic_info_bt_clicked();" style="cursor:pointer" > <input type="hidden", id="broker_info_status"> </td>
                         <td width="40%" align="left" id="errmsgcomptype"></td>
                     </tr>
                     <tr class="broker_basic">
@@ -2065,7 +2105,7 @@ function basic_info_bt_clicked(){
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v['type']}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','read' );">{$v['name']}</a></TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['broker_info_type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','read' );">{$v['name']}</a></TD>
                                   <TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>
                                   <TD align=center class=td-border>{$v['address']} City-{$v['city_name']} Pin-{$v['pin']} Ph.N.-{$v['compphone']}</TD>
                                   
@@ -2073,7 +2113,7 @@ function basic_info_bt_clicked(){
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a><input type="hidden" id="extra_data" value='{$v['extra_json']}'> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['broker_info_type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a><input type="hidden" id="extra_data" value='{$v['extra_json']}'> </TD>
 
                                 </TR>
                                 {/foreach}
