@@ -245,7 +245,11 @@ if(compType=='Broker'){
        
     }
 
-    
+    if(email == '' || !validateEmail(email)){
+	  $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
+      $("#email").focus();
+      error = 1;	
+	}
 
     if(compphone!='' && !isNumeric1(compphone)){
       $('#errmsgcompphone').html('<font color="red">Please provide a Numeric Value.</font>');
@@ -349,6 +353,9 @@ if(compType=='Broker'){
 	               else if(msg == 4){
 	                //$("#onclick-create").text("No Landmark Selected.");
 	                   alert("no data");
+	               }
+	               else if(msg == 9){
+	                  alert("Company with Same Contact Email Already Exist!");
 	               }
 	               else alert(msg);
 	            },
@@ -784,7 +791,11 @@ function deleteRow(tableID) {
                 alert(e);
             }
 }
-
+function validateEmail(email) 
+  {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
 
 jQuery(function(){
                 iframeUpload.init();
@@ -1738,8 +1749,10 @@ function basic_info_bt_clicked(){
 
                     
                     <tr>
+
                       <td width="20%" align="right" >Cust Care Phone : </td>
                       <td width="30%" align="left"><input type=text name="phone" id="cc_phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_phone"><input type=hidden name="phone" id="cc_phone_id"></td>
+
                     </tr>
 
                     <tr>

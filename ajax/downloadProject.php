@@ -73,6 +73,14 @@ if($_POST['dwnld_Status'] != '')
 	$StatusValue  = $_POST['dwnld_Status'];
 else
 	$StatusValue = '';
+	
+if(!isset($_REQUEST['dwnld_exp_supply_date_from']))
+  $_REQUEST['dwnld_exp_supply_date_from'] = '';
+$exp_supply_date_from = $_REQUEST['dwnld_exp_supply_date_from'];
+
+if(!isset($_REQUEST['dwnld_exp_supply_date_to']))
+  $_REQUEST['dwnld_exp_supply_date_to'] = '';
+$exp_supply_date_to = $_REQUEST['dwnld_exp_supply_date_to'];	
 
 if($StatusValue!="") $StatusValue = "'".$StatusValue."'";
 
@@ -99,6 +107,8 @@ $updation_cycle = $_POST['dwnld_updationCycle'];
 $Status = $_POST['dwnld_Status'];
 $Active = $_POST['dwnld_Active'];
 $selectdata = $_POST['dwnld_selectdata'];
+
+//print "<pre>".print_r($_POST,1)."</pre>"; die;
 if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 {
 
@@ -131,7 +141,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                   INNER JOIN
                     resi_project_phase rpp on RP.PROJECT_ID = rpp.PROJECT_ID ";
 
-    $and = " WHERE RP.version='Cms' and ";
+    $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and ";
 
     if($_POST['dwnld_projectId'] == '')
     {
@@ -212,6 +222,21 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
             $QueryMember .= $and." RP.UPDATION_CYCLE_ID = '".$updation_cycle."'";
             $and  = ' AND ';
         }
+        if($exp_supply_date_to != '' && $exp_supply_date_from != '')
+        {
+            $QueryMember .= $and." EXPECTED_SUPPLY_DATE BETWEEN '".$exp_supply_date_from."' AND '".$exp_supply_date_to."'";
+            $and  = ' AND ';
+        }
+        if($exp_supply_date_to != '' && $exp_supply_date_from == '')
+        {
+            $QueryMember .= $and." EXPECTED_SUPPLY_DATE <= '".$exp_supply_date_to."'";
+            $and  = ' AND ';
+        }
+        if($exp_supply_date_to == '' && $exp_supply_date_from != '')
+        {
+            $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
+            $and  = ' AND ';
+        }
     }
     else
     {
@@ -222,6 +247,7 @@ $arrPropId = array();
 $QueryMember1 = $QueryMember1 . $QueryMember." Group By rpp.PROJECT_ID";
 
 $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
+
 $NumRows = mysql_num_rows($QueryExecute);
 
 $contents = "";

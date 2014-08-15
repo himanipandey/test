@@ -368,7 +368,7 @@ function getRevertCountForExecs($startTime = '0', $endTime = NULL){
         where
         t1.PROJECT_PHASE_ID = ".phaseId_8." 
         and t2.PROJECT_PHASE_ID = ".phaseId_4." 
-        and t2.DATE_TIME between '" . $startTime . "' 
+        and DATE(t2.DATE_TIME) between '" . $startTime . "' 
         and '" . $endTime . "' group by t2.ADMIN_ID";
     return dbQuery($sql);
 }

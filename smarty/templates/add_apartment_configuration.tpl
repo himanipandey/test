@@ -36,7 +36,9 @@
 				var unitName=$("#txtUnitName_"+idValue).val(str+"(Carpet)");
 			else
 				var unitName=$("#txtUnitName_"+idValue).val(str);
-		}
+		}else
+			var unitName=$("#txtUnitName_"+idValue).val('');
+			
 	 }
 
 	 function show_add(id)
@@ -60,15 +62,27 @@
 /*******function for deletion confirmation***********/
     function chkConfirm() 
     {
-        var chk = 0;
-        for(var i=0;i<=30;i++) {      
+        var chk = 0;       
+        for(var i=0,c=1;i<=30;i++,c++) {      
             if($("#"+i).attr('checked')) {
                 chk = 1;
             }
-        }
+            //bedroom bathroom validations
+            if($("#bed_"+c).val() != undefined){
+				if(($("#bed_"+c).val() != 0  && $("#bathrooms_"+c).val() == 0) || ($("#bed_"+c).val() == 0  && $("#bathrooms_"+c).val() != 0)) {
+					alert("Selecting both Bedroom & Bathroom is mandatory in Config#"+c);
+					return false;
+				}
+				if($("#bed_"+c).val() != 0  && $("#bathrooms_"+c).val() != 0 && $("#txtUnitName_"+c).val().trim() == ''){					
+					alert("Unit Name is required in Config#"+c);
+					return false;
+			    }
+			}          
+        }      
 
         if(chk == 1)
-            return confirm("Are you sure! you want to delete records which are checked.");
+            return confirm("Are you sure! you want to delete records which are checked.");            
+       
     }
     
     function add_carpet(index){
@@ -100,8 +114,8 @@
       function onChangeActionBath(id,edit_project) {
            var oldBed = id+"_old";
             var valOld = $("#"+oldBed).val();
-            if (edit_project != '' && valOld != '0' && valOld != '') {
-                //$("#"+id).val(valOld); 
+            if (edit_project != '' && valOld != '0' && valOld != '' && $("#"+id).val() == 0) {
+                $("#"+id).val(valOld); 
                 return false;
           }
       };
@@ -191,7 +205,7 @@
                           <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                           <td nowrap="nowrap" width="2%" align="left" class=whiteTxt>Room Sizes</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bedrooms</td>
-                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
+                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bathrooms</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
@@ -424,7 +438,7 @@
                               <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                               <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Room Sizes</td>
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bedrooms</td>
-                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Bathrooms</td>
+                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Bathrooms</td>
                               <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
@@ -710,8 +724,8 @@
                                 <td  nowrap="nowrap" width="1%" align="center" class="whiteTxt">Delete</td>
                                 <td nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
                                 <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
-                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size(Length)</td>
-                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt><font color = red>*</font>Size(Breadth)</td>
+                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size(Length)</td>
+                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size(Breadth)</td>
                                 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td> -->
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Area</td>
                             </tr>

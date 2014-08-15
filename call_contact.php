@@ -46,7 +46,9 @@ $sql = "update CallDetails set ApiResponse = '" . $message . "' where CallId = "
 mysql_query($sql);
 
 if ($callId) 
-  echo "call_" . $callId . "_" . $agentId;
+  //echo "call_" . $callId . "_" . $agentId;
+  echo "call_" . $callId . "_" . $aID;
+
 else
   echo "Fail - $message";
 

@@ -53,11 +53,11 @@ $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
 foreach($optionsDetails as $key => $value) {
-	
-	$listing_price = ListingPrices::find('all',array('conditions'=>
+    
+    $listing_price = ListingPrices::find('all',array('conditions'=>
     array('listing_id = ?', $value->id),"limit" => 1, "order" => "effective_date desc",'select' => 
                     'effective_date'));
-              	
+                
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
@@ -110,8 +110,11 @@ $smarty->assign("PreviousMonthsAvailability",$PreviousMonthsAvailability);
 //$smarty->assign("ProjectPhases",$ProjectPhases); //To Do
 $smarty->assign("PhaseOptionHash",$PhaseOptionHash);
 
+//config sizes flag
+$smarty->assign("configSizeFlag",configSizeCheckFlag($projectId));
+
 //code for completion date validation for phase label
-$qryAllPhase = "select * from resi_project_phase 
+/*$qryAllPhase = "select * from resi_project_phase 
     where project_id = $projectId and status = 'Active' and version = 'Cms'";
 $resAllPhase = mysql_query($qryAllPhase);
 $allCompletionDateChk = 0;
@@ -121,7 +124,7 @@ while($data = mysql_fetch_assoc($resAllPhase)) {
         $arrAllCompletionDateChk = 1;
     }
 }
-$smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk);
+$smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk);*/
 //end code for completion date validation for phase label
 $arrOnlyPreviousMonthData = array();
 foreach($PreviousMonthsData as $k=>$v) { 
@@ -341,6 +344,8 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['PROJECT_TYPE'] = $vLast['PROJECT_TYPE'];
             $supplyAllArray[$k][$kMiddle][$kLast]['LISTING_ID'] = $vLast['LISTING_ID'];
             $supplyAllArray[$k][$kMiddle][$kLast]['BOOKING_STATUS_ID'] = $vLast['BOOKING_STATUS_ID'];
+            $supplyAllArray[$k][$kMiddle][$kLast]['construction_status'] = $vLast['construction_status'];
+ 
           
             $qryEditedLaunched = "select ps.supply,ps.launched,pa.availability from project_supplies ps
 									inner join project_availabilities pa on ps.id = pa.project_supply_id
@@ -353,9 +358,10 @@ foreach($supplyAll as $k=>$v) {
             $supplyAllArray[$k][$kMiddle][$kLast]['AVAILABLE_NO_FLATS'] = $dataEditedLaunched['availability'];
         }
     }
-}
+} 
+
 //echo "<pre>";
-//print_r($supplyAllArray);
+//print_r($supplyAllArray);die;
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
 $smarty->assign("supplyAllArray", $supplyAllArray);
@@ -366,10 +372,12 @@ $phaseDetail = fetch_phaseDetails($projectId);
 $bedroomDetails = ProjectBedroomDetail($projectId);
 $smarty->assign("BedroomDetails", $bedroomDetails);
 $phases = Array();
+$phaseIds  =array();
 foreach ($phaseDetail as $k => $val) {
     $p = Array();
     $p['id'] = $val['PHASE_ID'];
     $p['name'] = $val['PHASE_NAME'];
+    $phaseIds[] = $val['PHASE_ID'];
     array_push($phases, $p);
 }
 $smarty->assign("phases", $phases);
@@ -452,8 +460,8 @@ $bankList = ProjectBanks::find('all',array('joins' => $joinbank,'conditions'=>
 $smarty->assign("bankList", $bankList);
 
 if($projectDetails[0]['STATUS'] == 'Inactive'){
-	$project_alias_detail = project_aliases_detail($projectId);
-	$smarty->assign("project_alias_detail", $project_alias_detail);
+    $project_alias_detail = project_aliases_detail($projectId);
+    $smarty->assign("project_alias_detail", $project_alias_detail);
 }
 
 if ($projectDetails[0]['PROJECT_STAGE'] == 'NewProject') {
@@ -500,6 +508,11 @@ $projectd = $projectDetails[0]['PROJECT_ID'];
 $comp_eff_date = costructionDetail($projectId);
 $smarty->assign("completionEffDate", $comp_eff_date['submitted_date']);
 $smarty->assign("completionDate", $comp_eff_date['COMPLETION_DATE']);
+$arrAllCompletionDateChk = 0;
+if(trim($comp_eff_date['COMPLETION_DATE']) == '' || trim($comp_eff_date['COMPLETION_DATE']) == '0000-00-00') {
+        $arrAllCompletionDateChk = 1;
+}
+$smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk);
 /* * ***code for completion effective date******* */
 
 /********** booking status for project ***********/
@@ -511,6 +524,7 @@ $smarty->assign("project_booking_status_id", $project_booking_status[0]->booking
 $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
+
 
 /******code for project comment fetch from commeny history table*****/
 $cycleId = $projectDetails[0]['PROJECT_STAGE'];
@@ -551,9 +565,14 @@ $updatePhase = array(
 );
 if (!isset($_POST['forwardFlag']))
     $_POST['forwardFlag'] = '';
+
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
+    
+    $errorValidation = '';
+    $flgLogical = 0;
+    
      foreach ($newPhase as $k => $v) {
         $qry = "select * from master_project_phases where name = '".$k."'";
         $res = mysql_query($qry) or die(mysql_error());
@@ -572,27 +591,48 @@ if ($_POST['forwardFlag'] == 'yes') {
         $phaseIdNext = mysql_fetch_assoc($resNext);
          /*****code for update project assignment status is 
         * done if project move in audit1 if assigned in survey ********/
+        
        if($v == 'Audit1') {
+           //code for if next stage is audit1
+           //then check all phase should have logical entry    
+           if($currentPhase == 'DcCallCenter'){
+                foreach($phaseIds as $k=>$valPhaseId){
+                   $qryPhaseActual = "select rpo.OPTION_CATEGORY from listings l
+                                          join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
+                                      where l.phase_id = ".$valPhaseId." and rpo.OPTION_CATEGORY = 'Logical'";
+                   $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
+                   if(mysql_num_rows($resPhaseActual) == 0){
+                    $flgLogical = 1;
+                    //echo $flgLogical."ghdf";
+                   }
+                }
+            
+            }
+            
         $qryCurrentAssign = "select pa.id from project_assignment pa 
             join proptiger_admin pa1 on pa.assigned_to = pa1.adminid
             join resi_project rp on  pa.movement_history_id = rp.movement_history_id
             where rp.project_id = $projectId and pa1.department = 'SURVEY' and rp.version = 'Cms' 
             order by pa.movement_history_id desc limit 1";
            $resAssigned = mysql_query($qryCurrentAssign) or die(mysql_error()." select query");
-           if(mysql_num_rows($resAssigned) >0 ) {
+           if(mysql_num_rows($resAssigned) >0  && $flgLogical == 0) {
                $dataFetch = mysql_fetch_assoc($resAssigned);
                $qryUp = "update project_assignment set status = 'done' 
                    where id = ".$dataFetch['id'];
                $resUp = mysql_query($qryUp) or die(mysql_error()." update query");
            }
        }
-        if ($phaseIdCurrent['id'] == $phaseId['id']) {
+        if ($phaseIdCurrent['id'] == $phaseId['id'] && $flgLogical == 0) {
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
             //updating new remark
             if($currentPhase=='Audit1' && $_POST['newRemarkId'])
-				update_remark_status($_POST['newRemarkId']);
+                update_remark_status($_POST['newRemarkId']);
         }
     }
+    if($flgLogical == 1){
+        $errorValidation = "<font color = 'red'>Please enter supply for all phases</font>";
+        $smarty->assign("errorValidation",$errorValidation);
+    }else
     header("Location:$returnURLPID");
 }
 if ($_POST['forwardFlag'] == 'update') {
@@ -630,7 +670,7 @@ if ($_POST['forwardFlag'] == 'update') {
             
             //updating new remark
             if($currentPhase=='Audit1' && isset($_POST['newRemarkId']))
-				update_remark_status($_POST['newRemarkId']);
+                update_remark_status($_POST['newRemarkId']);
         }
     }
     header("Location:$returnURLPID");

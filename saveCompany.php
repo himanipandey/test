@@ -197,16 +197,16 @@ if($_POST['task']=='createComp'){
            
     
     if($mode=='update' && $id!==null){
-		
-		$imageId = $_POST['imageId'];
-		
-		$sql_comp = mysql_query("select * from company where id='{$id}'") or die (mysql_error());
+        
+        $imageId = $_POST['imageId'];
+        
+        $sql_comp = mysql_query("select * from company where id='{$id}'") or die (mysql_error());
             
         if(mysql_num_rows($sql_comp)>0){
-			
-			$sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', website='{$web}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
-			
-			$res_sql = mysql_query($sql) or die(mysql_error());
+            
+            $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', website='{$web}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
+            
+            $res_sql = mysql_query($sql) or die(mysql_error());
 
             $query1 = "UPDATE addresses SET address_line_1='{$address}', city_id='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='company' and table_id='{$id}' and type='HQ')";
             $res1 = mysql_query($query1) or die(mysql_error());
@@ -386,8 +386,8 @@ if($_POST['task']=='createComp'){
 /****************** save images to Image Service ************************************************/
 
                
-                if(isset($_POST['image']) && $image!=""){ 					
-					$unitImageArr['objectId'] = $id;
+                if(isset($_POST['image']) && $image!=""){                   
+                    $unitImageArr['objectId'] = $id;
                     $unitImageArr['params']['service_image_id'] = $imageId;
                     $unitImageArr['params']['update'] = "update";
                     $postArr[] = $unitImageArr;         

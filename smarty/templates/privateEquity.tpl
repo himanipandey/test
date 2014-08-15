@@ -9,6 +9,7 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="js/numberToWords.js"></script>
 
 <script language="javascript">
 
@@ -16,14 +17,14 @@ jQuery(document).ready(function(){
 //$("#pe").hide(''); 
 
 	$("#create_button").click(function(){
-	  //cleanFields();
-	  
-	    $('#search-bottom').hide('slow');
-	   $('#create_deals').show('slow'); 
+	   cleanFields();	   
+	   $('#search-bottom').hide('slow');
+	   $('#create_deals').show('slow'); 	
+	   $('#deal').show();  
 	});
 
 	$("#exit_button").click(function(){
-	  //cleanFields();
+	   cleanFields();
 	   $('#create_deals').hide('slow'); 
 	 
 	    $('#search-bottom').show('slow');
@@ -32,18 +33,23 @@ jQuery(document).ready(function(){
 	$("#lmkSave").click(function(){
     var error = 0;
     var mode='';
-    var dealId = "";
+    var dealId = parseInt($('#deal_id').val());
     var data = {};
 		var compType = $('#companyTypeEdit').children(":selected").val();
     var val = $("#deal option:selected").val();
+    data['deal_id'] = dealId;
   if (val==1){
     var fundCompId = $("#fundCompany").val();
+    var fundCompId2 = $("#fundCompany2").val();
+    var fundCompId3 = $("#fundCompany3").val();
     var fundValue = $("#fundValue").val().trim();
     var fundArticle = $("#fundArticle").val().trim();
     var fundDate = $("#img_date1").val().trim();
     if(dealId>0) mode = 'update';
     else mode='create';
     data['pe_id'] =  fundCompId;
+    data['pe_id_2'] =  fundCompId2;
+    data['pe_id_3'] =  fundCompId3;
     data['type'] = "Fund Raising";
     data['value'] = fundValue;
     data['article'] = fundArticle;
@@ -85,6 +91,8 @@ jQuery(document).ready(function(){
   else if (val==2){
     
     var investCompId = $("#investCompany").val();
+    var investCompId2 = $("#investCompany2").val();
+    var investCompId3 = $("#investCompany3").val();
     var investValue = $("#investValue").val().trim();
     var investArticle = $("#investArticle").val().trim();
     var investDate = $("#img_date2").val();
@@ -97,6 +105,8 @@ jQuery(document).ready(function(){
     else mode='create';
     var extra = {};
     data['pe_id'] =  investCompId;
+    data['pe_id_2'] =  investCompId2;
+    data['pe_id_3'] =  investCompId3
     data['type'] = "Investment";
     data['builderId'] = investBuilderId;
     data['value'] = investValue;
@@ -146,6 +156,8 @@ jQuery(document).ready(function(){
   else if(val==3){
 
     var exitCompId = $("#exitCompany").val();
+    var exitCompId2 = $("#exitCompany2").val();
+    var exitCompId3 = $("#exitCompany3").val();
     var exitValue2 = $("#exitValue2").val().trim();
     var exitValue1 = $("#exitValue1").val().trim();
     var exitArticle = $("#exitArticle").val().trim();
@@ -161,6 +173,8 @@ jQuery(document).ready(function(){
     else mode='create';
     var extra = {};
     data['pe_id'] =  exitCompId;
+    data['pe_id_2'] =  exitCompId2;
+    data['pe_id_3'] =  exitCompId3;
     data['type'] = "Exit";
     data['builderId'] = exitBuilderId;
     data['value'] = exitValue2;
@@ -261,6 +275,111 @@ jQuery(document).ready(function(){
 
 }); //document.ready ends
 
+function cleanFields(){
+	
+  $('#deal_id').val("");
+  $('#deal').val(0);
+  
+  $("#fundCompany").val("");
+  $("#fundCompany2").val("");
+  $("#fundCompany3").val("");
+  $("#fundValue").val("")
+  $("#fundArticle").val("");
+  $("#img_date1").val("");
+  $('#errmsgfunddate').html('');
+  $('#errmsgfundvalue').html('');
+  $('#errmsgfundname').html('');
+  $("#investCompany").val("");
+  $("#investCompany2").val("");
+  $("#investCompany3").val("");
+  $("#investValue").val("");
+  $("#investArticle").val("");
+  $("#img_date2").val("");
+  $("#investBuilderEdit").val("");
+  $('select[name="invest_proj[]"] ').val(0);
+  $('#errmsginvestdate').html('');
+  $('#errmsginvestvalue').html('');
+  $('#errmsginvestbuilder').html('');
+  $('#errmsginvestname').html('');
+  $("#exitCompany").val("");
+  $("#exitCompany2").val("");
+  $("#exitCompany3").val("");
+  $("#exitValue2").val("");
+  $("#exitValue1").val("");
+  $("#exitArticle").val("");
+  $("#img_date3").val("");
+  $("#exitPeriod").val("");
+  $("#exitBuilderEdit").val("");
+  $('select[name="exit_proj[]"] ').val(0);
+  $('#errmsgexitdate').html('');
+  $('#errmsgexitvalue1').html('');
+  $('#errmsgexitvalue2').html('');
+  $('#errmsgexitbuilder').html('');
+  $('#errmsgexitname').html('');
+  
+  $("#investment").hide(); 
+  $("#fundrais").hide(); 
+  $("#saveDiv").hide(); 
+  $("#exit").hide(); 
+   
+}
+function edit_deal(deal_type_id, deal_id, pe_id_1, pe_id_2, pe_id_3, value, article_link, transaction_date, builder_id, deal_projects, period,investmentValue){
+	cleanFields();
+	$('#search-bottom').hide('slow');
+	$('#create_deals').show('slow');
+	$('#deal').val(deal_type_id);
+	$('#deal_id').val(deal_id);
+	$('#deal').hide();
+	selectDeal("deal");
+	
+	if(deal_type_id == 1){
+	  $("#fundCompany").val(pe_id_1);
+	  $("#fundCompany2").val(pe_id_2);
+	  $("#fundCompany3").val(pe_id_3);
+	  $("#fundValue").val(value)
+	  $("#fundArticle").val(article_link);
+	  $("#img_date1").val(transaction_date);	
+	}
+	else if(deal_type_id == 2){
+	  $("#investCompany").val(pe_id_1);
+	  $("#investCompany2").val(pe_id_2);
+	  $("#investCompany3").val(pe_id_3);
+	  $("#investValue").val(value);
+	  $("#investArticle").val(article_link);
+	  $("#img_date2").val(transaction_date);
+	  $("#investBuilderEdit").val(builder_id);	  
+	  builderChanged("investBuilderEdit");	  
+	  deal_project = deal_projects.split(",");
+	  nop = parseInt(deal_project.length);	 	
+	  setTimeout("no_proj_Edit('invest_proj',nop,deal_project)",1000);  
+	}
+	else if(deal_type_id == 3){
+	  $("#exitCompany").val(pe_id_1);
+	  $("#exitCompany2").val(pe_id_2);
+	  $("#exitCompany3").val(pe_id_3);
+	  $("#exitValue2").val(value);
+	  $("#exitValue1").val(investmentValue);
+	  $("#exitArticle").val(article_link);
+	  $("#img_date3").val(transaction_date);
+	  $("#exitPeriod").val(period);
+	  $("#exitBuilderEdit").val(builder_id);
+	  builderChanged("exitBuilderEdit");	  
+	  deal_project = deal_projects.split(",");
+	  nop = parseInt(deal_project.length);	 	
+	  setTimeout("no_proj_Edit('exit_proj',nop,deal_project)",1000);
+	}
+	
+	
+}
+function no_proj_Edit(deal_type,nop,deal_projects){
+  refreshProject(nop);
+  $('select[name="'+deal_type+'_no"]').val(nop);
+  $.each(deal_projects,function(k,v){	      
+	 // alert(k + " - " + v);
+     $('#'+deal_type+'_'+k).val(v);
+  });
+}
+
 function selectDeal(id){
   var val = $("#"+id+" option:selected").val();
  
@@ -298,7 +417,7 @@ function refreshProject(no){
   //var old_no = parseInt($("#projects").rows.length);
   var old_no = parseInt(table.rows.length);
   var new_no = parseInt(no);
- 
+  
   if(new_no > old_no){
     for(old_no; old_no < new_no; old_no++){
       addRow(tableId);
@@ -328,7 +447,7 @@ function builderChanged(id){
               type: "POST",
               url: '/savePrivateEquity.php',
               data: { builder_id:builderId, task:"getProject"},
-              success:function(msg){
+              success:function(msg){		
                 var d = jQuery.parseJSON(msg);
                   
                   $("#"+nodropdwn).val("0");
@@ -445,6 +564,24 @@ function isNumeric(val) {
         return true;
 }
 
+function onChangeValue(id){
+
+  //alert("hi");
+  var fieldid = "";
+  if (id=="fundValue")     
+    fieldid = "fund_value_text";
+  else if (id=="investValue")
+    fieldid = "investment_value_text";
+  else if (id=="exitValue1")
+    fieldid = "exit_value1_text";
+  else if (id=="exitValue2")
+    fieldid = "exit_value2_text";
+  document.getElementById(fieldid).innerHTML = "Rs. "+inWords($("#"+id).val());
+  //$("#"+fieldid).innerHTML = toWords($("#"+id).val());
+  //alert(toWords($("#"+id).val()));
+
+}
+
 </script>
 </TD>
   </TR>
@@ -511,10 +648,34 @@ function isNumeric(val) {
                                 </td>
                         <td width="40%" align="left" id="errmsgfundname"></td>
                     </tr>
+                    <tr>
+                      <td width="10%" align="right" >Private Equity Name 2: </td>
+                        <td width="40%" height="25" align="left" valign="top">
+                                    <select id="fundCompany2" name="fundCompany2" >
+                                       <option value=''>Select Private Equity</option>
+                                       {foreach from=$peList key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsgfundname2"></td>
+                    </tr>
+                    <tr>
+                      <td width="10%" align="right" >Private Equity Name 3: </td>
+                        <td width="40%" height="25" align="left" valign="top">
+                                    <select id="fundCompany3" name="fundCompany3" >
+                                       <option value=''>Select Private Equity</option>
+                                       {foreach from=$peList key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsgfundname3"></td>
+                    </tr>
 
                     <tr>
                       <td width="10%" align="right" >Value (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="fundValue" id="fundValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsgfundvalue"></td>
+                      <td width="40%" align="left" ><input type=text name="fundValue" id="fundValue"  style="width:250px;" onchange="onChangeValue(this.id);"></td><td width="10%" align="left" id="fund_value_text"></td><td width="40%" align="left" id="errmsgfundvalue"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
@@ -536,7 +697,7 @@ function isNumeric(val) {
                   </tbody>
 
                     <tbody id='investment' style="display:none" align="left">
-                        <tr>
+                    <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="investCompany" name="investCompany" >
@@ -547,6 +708,30 @@ function isNumeric(val) {
                                     </select>
                                 </td>
                         <td width="40%" align="left" id="errmsginvestname"></td>
+                    </tr>
+                    <tr>
+                      <td width="10%" align="right" >Private Equity Name 2: </td>
+                        <td width="20%" height="25" align="left" valign="top">
+                                    <select id="investCompany2" name="investCompany2" >
+                                       <option value=''>Select Private Equity</option>
+                                        {foreach from=$peList key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsginvestname2"></td>
+                    </tr>
+                    <tr>
+                      <td width="10%" align="right" >Private Equity Name 3: </td>
+                        <td width="20%" height="25" align="left" valign="top">
+                                    <select id="investCompany3" name="investCompany3" >
+                                       <option value=''>Select Private Equity</option>
+                                        {foreach from=$peList key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsginvestname3"></td>
                     </tr>
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
@@ -596,7 +781,7 @@ function isNumeric(val) {
                   </tr>
                     <tr>
                       <td width="10%" align="right" >Value of Investment (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="investValue" id="investValue"  style="width:250px;"></td><td width="40%" align="left" id="errmsginvestvalue"></td>
+                      <td width="40%" align="left" ><input type=text name="investValue" id="investValue"  style="width:250px;" onchange="onChangeValue(this.id);"></td><td width="10%" align="left" id="investment_value_text"></td><td width="40%" align="left" id="errmsginvestvalue"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
@@ -618,7 +803,7 @@ function isNumeric(val) {
                       </tbody>
 
                        <tbody id='exit' style="display:none" align="left">
-                        <tr>
+                    <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Private Equity Name: </td>
                         <td width="20%" height="25" align="left" valign="top">
                                     <select id="exitCompany" name="exitCompany" >
@@ -629,6 +814,30 @@ function isNumeric(val) {
                                     </select>
                                 </td>
                         <td width="40%" align="left" id="errmsgexitname"></td>
+                    </tr>
+                    <tr>
+                      <td width="10%" align="right" >Private Equity Name 2: </td>
+                        <td width="20%" height="25" align="left" valign="top">
+                                    <select id="exitCompany2" name="exitCompany2" >
+                                      <option value=''>Select Private Equity</option>
+                                        {foreach from=$peList key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsgexitname2"></td>
+                    </tr>
+                    <tr>
+                      <td width="10%" align="right" >Private Equity Name 3: </td>
+                        <td width="20%" height="25" align="left" valign="top">
+                                    <select id="exitCompany3" name="exitCompany3" >
+                                      <option value=''>Select Private Equity</option>
+                                        {foreach from=$peList key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                </td>
+                        <td width="40%" align="left" id="errmsgexitname3"></td>
                     </tr>
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Builder: </td>
@@ -678,13 +887,14 @@ function isNumeric(val) {
                   </tr>
                     <tr>
                       <td width="10%" align="right" >Value of Exit (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="exitValue2" id="exitValue2"  style="width:250px;"></td><td width="40%" align="left" id="errmsgexitvalue2"></td>
+                      <td width="40%" align="left" ><input type=text name="exitValue2" id="exitValue2"  style="width:250px;" onchange="onChangeValue(this.id);"></td><td width="10%" align="left" id="exit_value2_text"></td><td width="40%" align="left" id="errmsgexitvalue2"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
                     <tr>
                       <td width="10%" align="right" >Value of Investment (Rs): </td>
-                      <td width="40%" align="left" ><input type=text name="exitValue1" id="exitValue1"  style="width:250px;"></td><td width="40%" align="left" id="errmsgexitvalue1"></td>
+                      <td width="40%" align="left" ><input type=text name="exitValue1" id="exitValue1"  style="width:250px;" onchange="onChangeValue(this.id);"></td>
+                      <td width="10%" align="left" id="exit_value1_text"></td><td width="40%" align="left" id="errmsgexitvalue1"></td>
                       <td><input type="hidden", id="placeTypeHidden"></td>
                     </tr>
 
@@ -718,6 +928,7 @@ function isNumeric(val) {
                     <tr>
                       <td >&nbsp;</td>
                       <td align="left" style="padding-left:50px;" >
+					  <input type="hidden" name="deal_id" id="deal_id" />
                       <input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp;                
                       </td>
                     </tr>
@@ -742,7 +953,7 @@ function isNumeric(val) {
                           <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=2% align="center">S.N.</th>
-                                  <th  width=5% align="center">PE Name</th>
+                                  <th  width=5% align="center">PE Names</th>
                                   <TH  width=5% align="center">Deal Type</TH>
                                   <TH  width=4% align="center">Value</TH>
                                   <TH  width=7% align="center">Transaction Date</TH>
@@ -750,7 +961,7 @@ function isNumeric(val) {
                                   <TH  width=4% align="center">Article Link</TH> 
                                  <TH width=6% align="center">Builder</TH> 
                                  <TH width=6% align="center">Extra Data</TH>
-                                <TH width=3% align="center">Delete</TH>
+                                <TH width=3% align="center">Action</TH>
                                 </TR>
                               
                           </thead>
@@ -773,14 +984,15 @@ function isNumeric(val) {
                                     {/if}
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v['name']}</TD>
+                                  <TD align=center class=td-border>{$v['name']}{if $v['name_2']}, {$v['name_2']}{/if}{if $v['name_3']}, {$v['name_3']}{/if}</TD>
                                   <TD align=center class=td-border>{$v['type']}</TD>
                                   <TD align=center class=td-border>{$v['value']}</TD>
                                   <TD align=center class=td-border>{$v['transaction_date']}</TD>
                                   <TD align=center class=td-border>{$v['article_link']}</TD>
                                   <TD align=center class=td-border>{$v['builder_name']} </TD>
                                   <TD align=center class=td-border>{$v['extra_values']}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return deletePEDeal('{$v['id']}');">Delete</a></TD>
+                                  <TD align=center class=td-border>
+									  <a href="javascript:void(0);" onclick="return edit_deal('{$v['deal_type_id']}','{$v['id']}','{$v['pe_id']}','{$v['pe_id_2']}','{$v['pe_id_3']}','{$v['value']}','{$v['article_link']}','{$v['transaction_date']}','{$v['builder_id']}', '{$v['deal_projects']}', '{$v['period']}', '{$v['investmentValue']}');">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:void(0);" onclick="return deletePEDeal('{$v['id']}');">Delete</a></TD>
                                 </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->

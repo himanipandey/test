@@ -32,8 +32,8 @@ class Locality extends ActiveRecord\Model
         $join .= 'INNER JOIN city c ON(a.city_id = c.city_id)';
 
         $getLocalityCity = Locality::find('all',array('joins' => $join, 
-               "conditions" => $conditions, "select" => "locality.label locname, c.label as cityname"));
-               
+               "conditions" => $conditions, "select" => "locality.label locname, c.label as cityname,a.label as suburbname"));
+         
         return $getLocalityCity;
     }
     

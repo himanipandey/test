@@ -374,6 +374,10 @@
                 <td align="left" height="22"><a class="leftnav" href="project_const_history.php"><font color = "#f15a22">Projects assignment history</font></a></td>
             </tr>
             <tr>
+                <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                <td align="left" height="22"><a class="leftnav" href="daily_productivity_report.php"><font color = "#f15a22">Daily Productivity Report</font></a></td>
+            </tr>
+            <tr>
                 <td class="thinline" align="left" colspan="2"></td>
             </tr>
             {else if $processAssignmentExec == 1 && $processAssignmentForConstImg == 1}
@@ -410,7 +414,7 @@
             </tr>
             <tr>
                 <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-                <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Report3</font></a></td>
+                <td align="left" height="22"><a class="leftnav" href="report3.php"><font color = "#f15a22">Report-3</font></a></td>
             </tr>
         </table>
     </td></tr>

@@ -49,6 +49,9 @@ if ($_POST['btnSave'] == "Save")
 	$revenue			=	trim($_POST['revenue']);
 	$debt				=	trim($_POST['debt']);
     $imgSrc               =   trim($_POST['imgSrc']);
+    $alt_text               =   trim($_POST['alt_text']);
+    $service_image_id      =   trim($_POST['serviceImageId']);
+
 	
 	$smarty->assign("txtBuilderName", $txtBuilderName);
         $smarty->assign("legalEntity", $legalEntity);
@@ -75,7 +78,9 @@ if ($_POST['btnSave'] == "Save")
 	$smarty->assign("website", $website);	
 	$smarty->assign("revenue", $revenue);
 	$smarty->assign("debt", $debt);
-    //$smarty->assign("imgSrc", $imgSrc);
+    $smarty->assign("imgSrc", $imgSrc);
+    $smarty->assign("alt_text", $alt_text);
+    $smarty->assign("service_image_id", $service_image_id);
 
 	if(!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)){
 		$ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
@@ -213,6 +218,7 @@ if ($_POST['btnSave'] == "Save")
                 $name	=	$_FILES["txtBuilderImg"]["name"];
                $dest       =   $newImagePath.$foldername."/".$name;
                 $move       =   move_uploaded_file($_FILES['txtBuilderImg']['tmp_name'],$dest);
+                $altText = $txtBuilderName;
                 if (($_FILES["txtBuilderImg"]["type"]) && $move)
                 {
                         
@@ -224,6 +230,7 @@ if ($_POST['btnSave'] == "Save")
                         "title" => strtolower($legalEntity),
                         "service_image_id" => $_REQUEST['serviceImageId'],
                         "update" => "update",
+                        "altText" => $altText,
                     );
                     $postArr = array();
                     $unitImageArr = array();
@@ -427,7 +434,7 @@ if ($_POST['btnSave'] == "Save")
 			
             $objectType = "builder";
             $objectId = $builderid;
-            $service_image_id = $dataedit['SERVICE_IMAGE_ID'];
+            //$service_image_id = $dataedit['SERVICE_IMAGE_ID'];
             $img_path = array();
             
             $url = readFromImageService($objectType, $objectId);
@@ -443,10 +450,12 @@ if ($_POST['btnSave'] == "Save")
                 $data[$k]['IMAGE_DESCRIPTION'] = $v->description;
                 $data[$k]['SERVICE_IMAGE_ID'] = $v->id;
                 $data[$k]['SERVICE_IMAGE_PATH'] = $v->absolutePath;
+                $data[$k]['alt_text'] = $v->altText;
             }
             //array_push($img_path, $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("imgSrc", $data[0]['SERVICE_IMAGE_PATH']);
             $smarty->assign("service_image_id", $data[0]['SERVICE_IMAGE_ID']);
+            $smarty->assign("alt_text", $data[0]['alt_text']);
     
 
 

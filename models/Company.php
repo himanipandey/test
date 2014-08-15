@@ -49,15 +49,6 @@ class Company extends ActiveRecord\Model
         return $values[1];
     }
 
-     static function getCompanyByType($type) {
-        $companyDetail = Company::find('all',array('conditions'=>array("type = '{$type}'")));
-        $list = array();
-        foreach ($companyDetail as $v) {
-            $list[$v->id] = $v->name;
-        }
-        return $list;
-    }
-
     static function getCompanyNameByQuery($query) {
         $companyDetail = Company::find('all',array('conditions'=>array("name like '%{$query}%'")));
         //$companyDetail = Company::find('all',array('conditions'=>array("name = 'Broker'")));
@@ -287,11 +278,22 @@ class Company extends ActiveRecord\Model
         return $city;
     }
 
+
     static function getBuilderLabel($b_id){
         $sql = "SELECT builder_name as b_name FROM resi_builder WHERE  BUILDER_ID='{$b_id}'";
         $result = self::Connection()->query($sql);
         $city = $result->fetch(PDO::FETCH_ASSOC);
         return $city;
+    }
+
+    static function getCompanyByType($type) {
+        $companyDetail = Company::find('all',array('conditions'=>array("type = '{$type}' and status = 'Active'")));
+        $list = array();
+        foreach ($companyDetail as $v) {
+            $list[$v->id] = $v->name;
+        }
+        return $list;
+
     }
 
     static function getProjectLabel($b_id){

@@ -237,27 +237,28 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         $ErrorMsg[$key] .= "<br>Size should be greater than zero";
                     }
                 }
-                else{ 
-                   if(trim($txtSizeBre[$key]) == '' OR (!is_numeric(trim($txtSizeBre[$key]))))
+                else{
+					 
+                  /* if(trim($txtSizeBre[$key]) == '' OR (!is_numeric(trim($txtSizeBre[$key]))))
                     {
                        if(!array_key_exists($key,$ErrorMsg))
                         $ErrorMsg[$key] .= "<br>Please enter unit size breadth of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
                     }
-                    else if(trim($txtSizeBre[$key]) <= 0)
+                    else*/ if(trim($txtSizeBre[$key]) <= 0 && trim($txtSizeBre[$key]) != '')
                     { 
                         if(!array_key_exists($key,$ErrorMsg))
-                        $ErrorMsg[$key] .= "<br>Size breadth should be greater than zero of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
+                        $ErrorMsg[$key] .= "<br>Size breadth should be greater than zero OR Blank of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
                     }
                     
-                    if(trim($txtSizeLen[$key]) == '' OR (!is_numeric(trim($txtSizeLen[$key]))))
+                   /* if(trim($txtSizeLen[$key]) == '' OR (!is_numeric(trim($txtSizeLen[$key]))))
                     {
                         
                         $ErrorMsg[$key] .= "<br>Please enter unit size length of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease;
                     }
-                    else if(trim($txtSizeLen[$key]) <= 0)
+                    else*/ if(trim($txtSizeLen[$key]) <= 0 && trim($txtSizeLen[$key]) != '')
                     {
                         
-                        $ErrorMsg[$key] .= "<br>Size length should be greater than zero of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
+                        $ErrorMsg[$key] .= "<br>Size length should be greater than zero OR Blank of ".$_REQUEST['unitType'][$key]." in row ".$plotIncrease ;
                     }
                     
                     else if(trim($txtPlotArea[$key]) <= 0 && trim($txtPlotArea[$key]) != '')
@@ -267,7 +268,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     }
                     
                    // $txtSize = 0;
-                    $txtSize = $txtPlotArea[$key];
+                    $txtSize = $txtPlotArea[$key];                  
                    
                 }
                 if($unitType != 'Plot' && $unitType != 'Shop' && $unitType != 'Office' && $unitType != 'Other' && $unitType != 'Shop Office'){
@@ -362,8 +363,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->study_room = (int)$studyrooms;
                     $option->servant_room = (int)$servantrooms;
                     $option->pooja_room = (int)$poojarooms;
-                    $option->length_of_plot = (int)$txtSizeLen[$key];
-                    $option->breadth_of_plot = (int)$txtSizeBre[$key];
+                    $option->length_of_plot = (is_numeric($txtSizeLen[$key]))?(int)$txtSizeLen[$key]:NULL;
+                    $option->breadth_of_plot = (is_numeric($txtSizeBre[$key]))?(int)$txtSizeBre[$key]:NULL;
                     $option->updated_by = $_SESSION["adminId"];
                     $option->display_carpet_area = $txtCarpetAreaInfo;					
 		   /* $optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;

@@ -273,6 +273,7 @@ if ($_SERVER['REQUEST_METHOD']) {
     $smarty->assign("phase_quantity", $phase_quantity);
 }
 /* * ********************************** */
+
 if (isset($_POST['btnSave'])) {
     $phasename = $_REQUEST['phaseName'];
     $launch_date = $_REQUEST['launch_date'];
@@ -292,6 +293,7 @@ if (isset($_POST['btnSave'])) {
     $smarty->assign("construction_status", $construction_status);
     $smarty->assign("remark", $remark);
     $smarty->assign("pre_launch_date",$pre_launch_date);
+    $smarty->assign("phase_pre_launch_date",$phase_pre_launch_date);
      $smarty->assign("sold_out_date",$sold_out_date);
 
     $PhaseExists = searchPhase($phaseDetail, $phasename);
@@ -322,15 +324,19 @@ if (isset($_POST['btnSave'])) {
         }
         //project preLaunch Validation        
         //$pre_launch_date = fetch_project_preLaunchDate($projectId,true);
-         $phase_created = mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'") or die(mysql_error());
+         $phase_created = mysql_fetch_object(mysql_query("SELECT COUNT(*) as cnt FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' AND `resi_project_phase`.`PROJECT_ID` = '$projectId' AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  AND `resi_project_phase`.status = 'Active'")) or die(mysql_error());
 	
-		if($phase_created && $phasename != 'No Phase')
+		if($phase_created->cnt){
 		  $pre_launch_date = fetch_project_preLaunchDate($projectId,true);
-		        
+		}
+		else{		 
+		  $pre_launch_date = $phase_pre_launch_date;      
+		}
+				   
         $project_pre_launch_date = $pre_launch_date;
           
         if(($phase_pre_launch_date < $pre_launch_date && $phase_pre_launch_date != '' && $pre_launch_date != '' && $phasename != 'No Phase') || ($pre_launch_date == '' && $phasename != 'No Phase'))
-          $project_pre_launch_date = $phase_pre_launch_date;        
+          $project_pre_launch_date = $phase_pre_launch_date;     
         
         /////////////////////////////         
         if( $phase_pre_launch_date != '' && $launch_date !='') {
@@ -354,10 +360,16 @@ if (isset($_POST['btnSave'])) {
                 $error_msg  .= " Inventory or Prices with effective date before {$launch_date} are present. So can not change the Launch Date.";
             }*/
           }
-         if($sold_out_date != ''){
+         if($sold_out_date != '' && $construction_status != PRE_LAUNCHED_ID_8){
 	        $retdt  = ((strtotime($sold_out_date) - strtotime($launch_date)) / (60*60*24));
             if( $retdt <= 0 || $launch_date=='') {
                 $error_msg = "Sold out date to be always greater than Launch date";
+            } 			 		 
+        }
+        if($sold_out_date != '' && $construction_status == PRE_LAUNCHED_ID_8){
+	        $retdt  = ((strtotime($sold_out_date) - strtotime($phase_pre_launch_date)) / (60*60*24));
+            if( $retdt <= 0 || $phase_pre_launch_date=='') {
+                $error_msg = "Sold out date to be always greater than PreLaunch date";
             } 			 		 
         }
          
@@ -392,12 +404,13 @@ if (isset($_POST['btnSave'])) {
             if(!ProjectSupply::checkAvailability($projectId, $phaseId, 'plot', 0, $_POST['supply'], $isLaunchedUnitPhase ? $_POST['launched'] : $_POST['supply']))
                    $error_msg = "Launched Unit must be greater than Availability.";
 		 }
-		 
 		 ////phase level check regarding status
-		 if($phase_created && $phasename == 'No Phase')
-		   $project_status = fetch_project_status($projectId,'',$phaseId);
-		 else
+		 if($phase_created->cnt && $phasename == 'No Phase'){
+		   $project_status = fetch_project_status($projectId,'',$phaseId);		  
+		 }
+		 else{
 		   $project_status = fetch_project_status($projectId,$construction_status,$phaseId); 
+		 }
 			                    
         if($projectDetail[0]['LAUNCH_DATE'] == '0000-00-00')
 		  $projectDetail[0]['LAUNCH_DATE'] = '';
@@ -428,45 +441,71 @@ if (isset($_POST['btnSave'])) {
                 }
          }  
 		  
-	    if( $construction_status == UNDER_CONSTRUCTION_ID_1 ) { 
+	    if( ($construction_status == UNDER_CONSTRUCTION_ID_1 || $construction_status == LAUNCHED_ID_7)  && !(($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 2) || ($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 1))) { 
+		   $construction_status_text = 	($construction_status == UNDER_CONSTRUCTION_ID_1)?"Under construction":"Launched";
            $yearExp = explode("-",$launch_date);
            $yearExp2 = explode("-",$completion_date);
            if($launch_date != ''){
-			   if( $yearExp[0] == date("Y") ) {
-				   if( intval($yearExp[1]) > intval(date("m"))) {
-					 $error_msg = "Launch date should not be greater than current month in case of Construction Status is Under construction.";
-				   }    
-			   } 
-			   else if (intval($yearExp[0]) > intval(date("Y")) ) {
-				  $error_msg = "Launch date should not be greater than current month in case of  Construction Status is  Under construction.";
-			   }
+			   if(strtotime($launch_date) > time()) {
+				  $error_msg = "Launch date cannot be Future date in case of Construction Status is $construction_status_text.";    
+			   } 			  
+		   }else{
+			   $error_msg = "Launch date is required in case of Construction Status is $construction_status_text."; 
 		   }
 		  
-           if($completion_date != ''){			   	
-			   if( $yearExp2[0] == date("Y") ) {				   
-				   if( intval($yearExp2[1]) < intval(date("m"))) {
-					 $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
-				   }    
-			   } 
-			   else if (intval($yearExp2[0]) < intval(date("Y")) ) {
-				  $error_msg = "Completion date cannot be less than the current month in case of Construction Status is Under construction.";
-			   }
+           if($completion_date != ''){	
+			   if( $yearExp2[0] == date("Y") ) {
+				 if( intval($yearExp2[1]) < intval(date("m"))) {
+					$error_msg = "Completion date cannot be past date in case of Construction Status is $construction_status_text.";	
+				  }    
+				} 
+				else if (intval($yearExp2[0]) < intval(date("Y")) ) {
+				  $error_msg = "Completion date cannot be past date in case of Construction Status is $construction_status_text.";
+				}		   				  			  
+		   }else{
+			   $error_msg = "Completion date is required in case of Construction Status is $construction_status_text."; 
 		   }	
-        }elseif($construction_status == OCCUPIED_ID_3 || $construction_status == READY_FOR_POSSESSION_ID_4 ){
+        }elseif(($construction_status == OCCUPIED_ID_3 || $construction_status == READY_FOR_POSSESSION_ID_4)  && !(($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 2) || ($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 1))){
 			$yearExp = explode("-",$completion_date);
-            if( $yearExp[0] == date("Y") ) {
-                if( intval($yearExp[1]) > intval(date("m"))) {
-                  $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
-                }    
-            } 
-            else if (intval($yearExp[0]) > intval(date("Y")) ) {
-                $error_msg = "Completion date cannot be greater current month in case of Construction Status is Completed.";
-            }			
-		}elseif( $construction_status == PRE_LAUNCHED_ID_8 && $phase_pre_launch_date == '') { 
+            if($completion_date != ''){	
+			   if( $yearExp2[0] == date("Y") ) {
+				 if( intval($yearExp2[1]) > intval(date("m"))) {
+					 $error_msg = "Completion date cannot be future date in case of Construction Status is Completed.";	
+				  }    
+				} 
+				else if (intval($yearExp2[0]) > intval(date("Y")) ) {
+				   $error_msg = "Completion date cannot be future date in case of Construction Status is Completed.";
+				}		   				  			  
+		    }else{
+			  $error_msg = "Completion date is required in case of Construction Status is Completed.";
+		    }
+            if($launch_date == ''){
+				$error_msg = "Launch date is required in case of Construction Status is Completed.";
+			}					
+		}elseif( $construction_status == PRE_LAUNCHED_ID_8 && $phase_pre_launch_date == '' && !(($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 2) || ($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 1))) { 
            $error_msg = "Phase Status can not be Pre Launched in case of Pre Launched Date is blank.";
         }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $launch_date != '') { 
            $error_msg = "Launch date should blank in case of Construction Status is Pre Launched.";
         }
+        if( $construction_status == PRE_LAUNCHED_ID_8 && $completion_date == ''  && !(($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 2) || ($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 1))) { 
+           $error_msg = "Completion date can not be blank in case of Construction Status is Pre Launched.";
+        }elseif( $construction_status == PRE_LAUNCHED_ID_8 && $completion_date != ''  && !(($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 2) || ($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 1))) { 
+           $yearExp = explode("-",$completion_date);
+            if( $yearExp[0] == date("Y") ) {
+                if( intval($yearExp[1]) < intval(date("m"))) {
+                  $error_msg = "Completion date cannot be Past date in case of Construction Status is Pre Launched.";
+                }    
+            } 
+            else if (intval($yearExp[0]) < intval(date("Y")) ) {
+                $error_msg = "Completion date cannot be Past date in case of Construction Status is Pre Launched.";
+            }
+        }
+        if($construction_status == PRE_LAUNCHED_ID_8 && $phase_pre_launch_date != ''  && !(($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 2) || ($projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $projectDetail[0]['PROJECT_PHASE_ID'] == 1))) {
+            if(time() < strtotime($phase_pre_launch_date)) {                
+               $error_msg = "Pre-Launch date cannot be Future date in case of Construction Status is Pre Launched.";              
+            }         
+        }
+             
        if($error_msg == ''){
 			if( ($project_status == PRE_LAUNCHED_ID_8 && $projectDetail[0]['LAUNCH_DATE'] != ''  && $phasename != 'No Phase') || ($project_status == PRE_LAUNCHED_ID_8 && $launch_date != '' && $phasename == 'No Phase')) {
 			  $error_msg = "Launch date should be blank/zero in case of Pre Launched Project.";	 

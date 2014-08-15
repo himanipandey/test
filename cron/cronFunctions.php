@@ -84,6 +84,59 @@ function firstDayOf($period, $date = null)
     return $newDate;
 }
 
+
+function lastDayOf($period, $date = null)
+{   
+	$period = strtolower($period);
+	$validPeriods = array('financial_year', 'year', 'quarter', 'month', 'week', 'half_year');
+
+	if(is_string($date)){
+		$date;
+		$date = new DateTime($date);
+	}
+
+	if ( ! in_array($period, $validPeriods))
+		throw new InvalidArgumentException('Period must be one of: ' . implode(', ', $validPeriods));
+
+	$newDate = ($date === null) ? new DateTime() : clone $date;
+
+	switch ($period) {
+		case 'financial_year':
+			$newDate->modify('last day of march ' . (($newDate->format('Y'))+1));
+			break;
+			
+		case 'year':
+			$newDate->modify('last day of december ' . $newDate->format('Y'));
+
+		case 'half_year':
+			$months_end = array('June','December');
+			$month = $newDate->format('n') ;
+			$month = ceil($month/6);
+			$m_end = $months_end[$month-1];
+			$newDate->modify('last day of '.$m_end . $newDate->format('Y'));
+			break;
+			
+		case 'quarter':
+			$months_end = array('March','June','September','December');
+			$month = $newDate->format('n') ;
+			$month = ceil($month/3);
+			$m_end = $months_end[$month-1];
+			$newDate->modify('last day of '.$m_end. $newDate->format('Y'));
+				
+			break;
+			
+		case 'month':
+			$newDate->modify('last day of this month');
+			break;
+			
+		case 'week':
+			$newDate->modify(($newDate->format('w') === '0') ? 'sunday last week' : 'sunday this week');
+			break;
+	}
+
+	return $newDate;
+}
+
 function getCSVRowFromArray($entry){
     return str_replace(
             CSV_FIELD_DELIMITER.CSV_LINE_DELIMITER,
