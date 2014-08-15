@@ -20,7 +20,7 @@ jQuery(document).ready(function(){
  
   
 	$("#create_button").click(function(){
-	  //cleanFields();
+	  cleanFields();
 	  
 	    $('#search_bottom').hide('slow');
 	   $('#create_agent').show('slow'); 
@@ -31,7 +31,7 @@ jQuery(document).ready(function(){
 	});
 
 	$("#exit_button").click(function(){
-	  //cleanFields();
+	  cleanFields();
 	   $('#create_agent').hide('slow'); 
 	 
 	    $('#search_bottom').show('slow');
@@ -62,6 +62,7 @@ jQuery(document).ready(function(){
     var qualification = $('#qualification option:selected').val();
     var activeSince = $('#img_date1').val();
 		var agentId = $('#agentId').val();
+    var userId = $('#userId').val();
 		 var error = 0;
 	    var mode='';
 	    if(agentId) {
@@ -73,16 +74,31 @@ jQuery(document).ready(function(){
         //imgId = '';
       } 
 
+    if(email==''){
+      $('#errmsgemail').html('<font color="red">Please provide an Email Id.</font>');
+      $("#email").focus();
+        error = 1;
+    }
+    else if(!validateEmail(email)){
+       $('#errmsgemail').html('<font color="red">Please provide a valid email.</font>');
+       $("#email").focus();
+          error = 1;
+    }
+    else{
+          $('#errmsgemail').html('');
+    }  
+      
+
     if(phone==''){
      	$('#errmsgphone').html('<font color="red">Please provide a Mobile No.</font>');
 	    $("#phone").focus();
 	      error = 1;
-	}
-	else if(!isNumeric1(phone)){
-		 $('#errmsgphone').html('<font color="red">Please provide a Numeric Value.</font>');
-		 $("#phone").focus();
-	      error = 1;
-	}
+  	}
+  	else if(!isNumeric1(phone)){
+  		 $('#errmsgphone').html('<font color="red">Please provide a 10 digit Numeric Value.</font>');
+  		 $("#phone").focus();
+  	      error = 1;
+  	}
     else{
           $('#errmsgphone').html('');
     }
@@ -153,7 +169,7 @@ jQuery(document).ready(function(){
 
 
 
-    var data = { id:agentId, brokerId:broker, name:name, address : address, city:city, pincode : pincode, compphone : compphone, phone:phone, email:email, status:status, agent_role:agentRole, active_since:activeSince, qualification:qualification, task : "createAgent", mode:mode}; 
+    var data = { id:agentId, userId:userId, brokerId:broker, name:name, address : address, city:city, pincode : pincode, compphone : compphone, phone:phone, email:email, status:status, agent_role:agentRole, active_since:activeSince, qualification:qualification, task : "createAgent", mode:mode}; 
 
 	    if (error==0){
       
@@ -253,7 +269,7 @@ function isNumeric1(val) {
         var validCharsforfirstdigit = '-+1234567890';
         if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
                 return false;
-        
+        if(val.length>10 || val.length<6) return false;
 
         for(var i = 1; i < val.length; i++) {
             if(validChars.indexOf(val.charAt(i)) == -1)
@@ -264,13 +280,20 @@ function isNumeric1(val) {
         return true;
 }
 
+{literal}
+function validateEmail(email) { 
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+{/literal}
 
-function editAgent(brokerId,id,name,role,status, email, address, city, pin, mobile, phone, active_since,qualification, action){
+function editAgent(brokerId,id, user_id, name,role,status, email, address, city, pin, mobile, phone, active_since,qualification, action){
 
-console.log(qualification);
+  console.log(qualification);
     cleanFields();
     $("#broker").val(brokerId);
     $("#agentId").val(id);
+    $("#userId").val(user_id);
     $('#city').val(city);
     $("#role").val(role);
     $("#name").val(name);
@@ -311,6 +334,7 @@ console.log(qualification);
 function cleanFields(){
     $("#broker").val('');
     $("#agentId").val('');
+    $("#userId").val('');
     $('#role').val('');
     $("#name").val('');
     //$("#des").val('');
@@ -374,7 +398,7 @@ function cleanFields(){
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                     <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                       <TR>
-                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Company Management</TD>
+                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Broker Agent Management</TD>
                       </TR>
                     </TBODY></TABLE>
                   </TD>
@@ -407,14 +431,14 @@ function cleanFields(){
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Agent Name : </td>
                       <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
-                      <td><input type="hidden", id="agentId"></td>
+                      <td><input type="hidden", id="agentId"><input type="hidden", id="userId"></td>
                     </tr>
 
                     <tr>
                       <td width="20%" align="right" >Agent Role : </td>
                       <td width="30%" align="left"><select id="role" name="role" >
-                        <option name=one value='Broker Agent'>Broker Agent</option>
-                        <option name=two value='Inactive' ></option>
+                        <option name=one value='Broker Agent' selected='selected'>Broker Agent</option>
+                        
                                 
                         </select>
                       </td> 
@@ -480,7 +504,7 @@ function cleanFields(){
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" >Email : </td>
+                      <td width="20%" align="right" ><font color = "red">*</font>Email : </td>
                       <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="50%" align="left" id="errmsgemail"></td>
                     </tr>
 
@@ -554,7 +578,7 @@ function cleanFields(){
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v['brokerName']}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editAgent('{$v['brokerId']}', '{$v['id']}', '{$v['name']}', '{$v['role']}', '{$v['status']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['mobile']}', '{$v['phone']}', '{$v['active_since']}', '{$v['qualification_id']}', 'read');">{$v['name']}</a></TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editAgent('{$v['brokerId']}', '{$v['id']}', '{$v['user_id']}', '{$v['name']}', '{$v['role']}', '{$v['status']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['mobile']}', '{$v['phone']}', '{$v['active_since']}', '{$v['qualification_id']}', 'read');">{$v['name']}</a></TD>
                                   <!--<TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>-->
                                   <TD align=center class=td-border>{$v['role']}</TD>
                                   <TD align=center class=td-border>{$v['address']}, City-{$v['city_name']}, Pin-{$v['pin']}</TD>
@@ -566,7 +590,7 @@ function cleanFields(){
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editAgent('{$v['brokerId']}', '{$v['id']}', '{$v['name']}', '{$v['role']}', '{$v['status']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['mobile']}', '{$v['phone']}', '{$v['active_since']}', '{$v['qualification_id']}', 'edit');">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editAgent('{$v['brokerId']}', '{$v['id']}', '{$v['user_id']}', '{$v['name']}', '{$v['role']}', '{$v['status']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['mobile']}', '{$v['phone']}', '{$v['active_since']}', '{$v['qualification_id']}', 'edit');">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
 
                                 </TR>
                                 {/foreach}

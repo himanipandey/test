@@ -30,6 +30,7 @@ jQuery(document).ready(function(){
 	    $(this).attr('disabled',false);		    
 	  });	
       $("#rating_auto").attr('disabled',true);
+      $("#broker_switch").hide();
 	});
 
 	$("#exit_button").click(function(){
@@ -123,7 +124,7 @@ jQuery(document).ready(function(){
         valid_noncompul($("#phone1_"+i).val().trim(), "Please provide a numeric Phone No.", "errmsgphone1_"+i);
         valid_noncompul($("#phone2_"+i).val().trim(), "Please provide a numeric Phone No.", "errmsgphone2_"+i);
         valid_noncompul($("#mobile_"+i).val().trim(), "Please provide a numeric Mobile No.", "errmsgmobile_"+i);
-        valid_noncompul($("#fax_"+i).val().trim(), "Please provide a numeric fax No.", "errmsgemail_"+i);
+        valid_noncompul($("#fax_"+i).val().trim(), "Please provide a numeric fax No.", "errmsgfax_"+i);
       }
     }
   }
@@ -697,6 +698,9 @@ function editCompany(id,name,type,des, status, pan, email, address, city, pin, c
     if($('#create_company').css('display') == 'none'){ 
      $('#create_company').show('slow'); 
     }
+
+    if (id>0)
+      $("#broker_switch").prop("value","Advance Information");
 
     if(action == 'read'){
 	  $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
@@ -1403,12 +1407,15 @@ var selected=false;
     alert("Please select at least one row.")
 }
 
-function compnayTypeChanged(){
+function companyTypeChanged(){
   if($('#companyTypeEdit').children(":selected").val()=="Broker"){
     $("#broker_extra_field").show();
     $("#legalType").show();
+    $("#broker_switch").show();
   }
   else{
+    $("#broker_switch").hide();
+    $('#main_table tbody tr').show();
     $("#broker_extra_field").hide();
     $("#legalType").hide();
   }
@@ -1422,6 +1429,36 @@ function coverageRadioChanged(){
   else{
     $("#searchProjects").prop("readonly", false);
   }
+}
+
+function basic_info_bt_clicked(){
+
+  
+  //$("#main_table tr").hide();
+  //$("#main_table tr.broker_basic").show();
+  //$("#broker_switch").prop("value", "Advanced Information");
+  var compid = $('#compid').val();
+  if (compid>0)
+    $("#broker_switch").prop("value","Advance Information");
+  var value = $("#broker_switch").prop("value");//alert(value);
+
+
+  if(value=="Advance Information"){
+    $('#main_table tbody tr').show();
+    $("#broker_switch").prop("value","Basic Information");
+  }
+  else{
+    $('#main_table tr').not('.broker_basic').hide();
+    $('#broker_extra_field').show();
+    $('#broker_table_extra tbody tr').show();
+    $('#broker_table_extra tbody tr').not('.broker_basic').hide();
+    $("#broker_switch").prop("value","Advance Information");
+  }
+  
+ //$('#main_table tr.broker_basic').show();
+  //$('#main_table tr#broker_extra_field').not('.broker_basic_extra').hide();
+ //$(".broker_basic").show()
+
 }
 
 </script>
@@ -1462,22 +1499,22 @@ function coverageRadioChanged(){
                   <button type="button" id="create_button" align="left">Create New Company</button>
                 </div>
                   <div id='create_company' style="display:none" align="left">
-                  <TABLE cellSpacing=2 cellPadding=4 width="93%" align="left" border=0 >
+                  <TABLE cellSpacing=2 cellPadding=4 width="93%" align="left" border=0 id="main_table">
                   <form method="post" enctype="multipart/form-data" id="formlmk" name="formlmk">
                     <input type="hidden" name="old_sub_name" value="">
                     <div>
                     
-                    <tr>
+                    <tr class="broker_basic">
                       <td width="10%" align="right" ><font color = "red">*</font>Company Type: </td>
                         <td width="20%" height="25" align="left" valign="top">
-                                    <select id="companyTypeEdit" name="companyEdit" onchange="compnayTypeChanged();">
+                                    <select id="companyTypeEdit" name="companyEdit" onchange="companyTypeChanged();">
                                        <option value=''>select Company Type</option>
                                        {foreach from=$comptype key=k item=v}
                                               <option value="{$v}" {if "" ==$v}  selected="selected" {/if}>{$v}</option>
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left" id="broker_switch"> <input type="button" name="broker_switch" id="broker_switch" value="Basic Information" style="cursor:pointer">  </td>
+                        <td width="40%" align="left"> <input type="button" name="broker_switch" id="broker_switch" value="Basic Information" onclick="basic_info_bt_clicked();" style="cursor:pointer" >  </td>
                         <td width="40%" align="left" id="errmsgcomptype"></td>
                     </tr>
                     <tr class="broker_basic">
@@ -1867,11 +1904,11 @@ function coverageRadioChanged(){
                       <td colspan="3" align="left" ><hr></td>
                     </tr> 
 
-                    <tr id="broker_extra_field" style="display:none" >
+                    <tr class="broker_basic" id="broker_extra_field" style="display:none" >
                       <td colspan="3">
-                        <table width="100%">
+                        <table width="100%" id="broker_table_extra">
                         
-                        <tr class="broker_basic">
+                        <tr class="broker_basic_extra">
                           <td width="20%" align="right" valign="top">Properties Broker Deals In : </td>
                           <td width="30%" align="left">
                             <table width="100%">
@@ -1888,7 +1925,7 @@ function coverageRadioChanged(){
                           <tr></td>
                         </tr>
                         
-                        <tr class="broker_basic">
+                        <tr class="broker_basic_extra">
                           <td width="10%" align="right" valign="top"><font color = "red">*</font>Transaction Types : </td>
                           <td width="30%" align="left">
                             <table width="100%">
@@ -1970,7 +2007,7 @@ function coverageRadioChanged(){
                       </td>
                     </tr>
 
-                    <tr>
+                    <tr class="broker_basic">
                       <td >&nbsp;</td>
                       <td align="left" style="padding-left:50px;" >
                       <input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp; <input type="button" name="exit_button" id="exit_button" value="Exit" style="cursor:pointer">                 

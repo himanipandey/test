@@ -6,7 +6,7 @@ ActiveRecord\Config::initialize(function($cfg)
 {
   $cfg->set_model_directory(".");
   $cfg->set_connections(array('development' =>
-    'mysql://root:root@localhost/cmsdev'));
+    'mysql://root:root@localhost/cms'));
 });
 ActiveRecord\DateTime::$DEFAULT_FORMAT = 'Y-m-d H-i-s';
 

@@ -3,7 +3,7 @@
 // Model integration for Company list
 class BrokerAgent extends ActiveRecord\Model
 {
-    static $table_name = 'agents';
+    static $table_name = 'company_users';
     //$result = array();
     static function getBrokerAgentsById($agentId) {
         $agentsDetail = BrokerAgent::find('all',array('conditions'=>array("id = $agentId")));
@@ -21,7 +21,7 @@ class BrokerAgent extends ActiveRecord\Model
         
         $returnArr = array();
         foreach ($agentsDetail as $v) {
-            $sql = "SELECT address_line_1, city_id, pincode FROM addresses WHERE (table_name='agents' and table_id={$v->id})";
+            $sql = "SELECT address_line_1, city_id, pincode FROM addresses WHERE (table_name='company_users' and table_id={$v->id})";
             $result = self::Connection()->query($sql);
             $address_row = $result->fetch(PDO::FETCH_NUM);
 
@@ -29,7 +29,7 @@ class BrokerAgent extends ActiveRecord\Model
             $result = self::Connection()->query($sql);
             $city = $result->fetch(PDO::FETCH_NUM);
                    
-            $sql = "SELECT name FROM company WHERE  id='{$v->broker_id}'";
+            $sql = "SELECT name FROM company WHERE  id='{$v->company_id}'";
             $result = self::Connection()->query($sql);
             $broker_name = $result->fetch(PDO::FETCH_NUM);
 
@@ -37,18 +37,18 @@ class BrokerAgent extends ActiveRecord\Model
             $result = self::Connection()->query($sql);
             $qualification = $result->fetch(PDO::FETCH_NUM);
 
-            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='agents' and table_id='{$v->id}' and type='phone1')";
+            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='company_users' and table_id='{$v->id}' and type='phone1')";
             $result = self::Connection()->query($sql);
             $phone= $result->fetch(PDO::FETCH_NUM);
 
-            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='agents' and table_id='{$v->id}' and type='mobile')";
+            $sql = "SELECT contry_code, contact_no FROM contact_numbers WHERE (table_name='company_users' and table_id='{$v->id}' and type='mobile')";
             $result = self::Connection()->query($sql);
             $mobile = $result->fetch(PDO::FETCH_NUM);
      
           
             $arr = array();
             $arr['id'] = $v->id;
-            $arr['brokerId'] = $v->broker_id;
+            $arr['brokerId'] = $v->company_id;
             $arr['brokerName'] = $broker_name[0];
             $arr['name'] = $v->name;
             $arr['role'] = $v->seller_type;
@@ -57,6 +57,7 @@ class BrokerAgent extends ActiveRecord\Model
             $arr['status'] = $v->status;
             //$arr['pan'] = $v->pan;
             $arr['email'] = $v->email;
+            $arr['user_id'] = $v->user_id;
 
             $arr['address'] = $address_row[0];
             $arr['city'] = $address_row[1];
