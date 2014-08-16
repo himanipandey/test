@@ -5,6 +5,8 @@ $agentId= $_REQUEST['agent_id'];
 
 $brokerArr = Company::getAllCompany($arr=array('type'=>"Broker")); 
 $smarty->assign("brokerArr", $brokerArr);
+//print("<pre>");
+//print_r($brokerArr);
 
 $adressArr = array();
 foreach ($brokerArr as $k => $v) {

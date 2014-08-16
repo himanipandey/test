@@ -523,6 +523,7 @@ function validatePan(pan) {
 function cleanFields(){
     $("#compid").val('');
     $('#companyTypeEdit').val('');
+    $("#broker_info_status").val('');
     $("#name").val('');
     $("#des").val('');
     $("#address").val('');
@@ -593,7 +594,12 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
     $("#broker_info_status").val(broker_info_type);
     if (broker_info_type=="Basic"){
       $("#broker_switch").show();
-      basic_info_bt_clicked();
+      $('#main_table tr').not('.broker_basic').hide();
+      $('#broker_extra_field').show();
+      $('#broker_table_extra tbody tr').show();
+      $('#broker_table_extra tbody tr').not('.broker_basic').hide();
+      $("#broker_switch").prop("value","Advance Information");
+      //basic_info_bt_clicked();
     }
     else{
       $("#broker_switch").prop("disabled", true);
@@ -1462,6 +1468,14 @@ function companyTypeChanged(){
     $("#broker_extra_field").show();
     $("#legalType").show();
     $("#broker_switch").show();
+    $("#broker_switch").val("Basic Information");
+    if (compid>0 && broker_info_status=="Basic"){
+      $('#main_table tr').not('.broker_basic').hide();
+      $('#broker_extra_field').show();
+      $('#broker_table_extra tbody tr').show();
+      $('#broker_table_extra tbody tr').not('.broker_basic').hide();
+      $("#broker_switch").prop("value","Advance Information");
+    }
   }
   else{
     $("#broker_switch").hide();
@@ -1487,24 +1501,32 @@ function basic_info_bt_clicked(){
   //$("#main_table tr").hide();
   //$("#main_table tr.broker_basic").show();
   //$("#broker_switch").prop("value", "Advanced Information");
+  var value = $("#broker_switch").val();
   var compid = $('#compid').val();
   var broker_info_status = $('#broker_info_status').val();
-  if (compid>0 && broker_info_status=="Basic")
-    var value = "Basic Information";//alert(value);
-
-
-  if(value!="Basic Information"){
-    $('#main_table tbody tr').show();
-    if(!compid>0)
-      $("#broker_switch").prop("value","Basic Information");
-  }
-  else{
+ /* if (compid>0 && broker_info_status=="Basic"){
     $('#main_table tr').not('.broker_basic').hide();
     $('#broker_extra_field').show();
     $('#broker_table_extra tbody tr').show();
     $('#broker_table_extra tbody tr').not('.broker_basic').hide();
     $("#broker_switch").prop("value","Advance Information");
   }
+   // var value = "Basic Information";//alert(value);
+  else
+  */ 
+
+    if(value!="Basic Information"){
+      $('#main_table tbody tr').show();
+      $("#broker_switch").prop("value","Basic Information");
+    }
+    else{
+      $('#main_table tr').not('.broker_basic').hide();
+      $('#broker_extra_field').show();
+      $('#broker_table_extra tbody tr').show();
+      $('#broker_table_extra tbody tr').not('.broker_basic').hide();
+      $("#broker_switch").prop("value","Advance Information");
+    }
+  
   
  //$('#main_table tr.broker_basic').show();
   //$('#main_table tr#broker_extra_field').not('.broker_basic_extra').hide();

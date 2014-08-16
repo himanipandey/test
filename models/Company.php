@@ -13,8 +13,11 @@ class Company extends ActiveRecord\Model
     static function getAllCompany($arr=null) {
         $compid = $arr['id'];
         $type = $arr['type'];
-
-        if($compid!='' && $type!=''){
+        
+        if($compid=='' && $type=="Broker"){
+            $companyDetail = Company::find('all', array('conditions'=>array("type = '$type'", "company_info_type = 'Advance'")));
+        }
+        else if($compid!='' && $type!=''){
             $companyDetail = Company::find('all', array('conditions'=>array("id = $compid", "type = '$type'")));
         }
         else if($compid>0){
