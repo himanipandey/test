@@ -9,16 +9,35 @@ $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 
 if($compid){
-	$compArr = Company::getAllCompany($compid);
+	$compArr = Company::getAllCompany($arr=array('id'=>$compid));
 }
 else{
 	$compArr = Company::getAllCompany();
 }
 
+$resiProjectType = BrokerPropertyType::PropertyTypeArr();
+$smarty->assign('resiProjectType', $resiProjectType);
 
-///*
+$transactionType = TransactionType::TransactionTypeArr();
+$smarty->assign('transactionType', $transactionType);
 
-//get logo
+$sql = "select ADMINID, FNAME, LNAME from proptiger.PROPTIGER_ADMIN where DEPARTMENT='SALES'";
+$res = mysql_query($sql);
+$ptRelManager = array();
+while($data = mysql_fetch_assoc($res)){
+    $ptRelManager[$data['ADMINID']] = $data['FNAME']." ".$data['LNAME'];
+}
+$smarty->assign('ptRelManager', $ptRelManager);
+
+$smarty->assign('url', TYPEAHEAD_API_URL);
+
+$namearr = array();
+$namearr = Company::getCompanyNameByQuery('br');
+//print_r($namearr);
+
+
+
+//get company logo
 foreach ($compArr as $k => $v) {
 	# code...
 
@@ -38,7 +57,7 @@ foreach ($compArr as $k => $v) {
     }
 
 }
-//*/
+
 $smarty->assign("compArr", $compArr);
 
 //print("<pre>");
