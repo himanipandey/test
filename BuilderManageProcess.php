@@ -39,7 +39,7 @@
     }
     $QueryMember = "Select a.*, b.META_TITLE, b.META_DESCRIPTION, b.META_KEYWORDS FROM ".RESI_BUILDER." a 
                     left join seo_data b on a.builder_id = b.table_id
-                    WHERE  ".$qryFlg." ORDER BY a.BUILDER_ID DESC";
+                    WHERE  ".$qryFlg." and a.builder_status = 0 ORDER BY a.BUILDER_ID DESC";
     $QueryExecute 	= mysql_query($QueryMember) or die(mysql_error());
     $NumRows 		= mysql_num_rows($QueryExecute);
     $PagingQuery = "LIMIT $Offset, $RowsPerPage";
