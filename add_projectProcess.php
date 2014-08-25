@@ -107,6 +107,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $numberOfTowers = $_POST["numberOfTowers"];
             $completionDate = $_POST["completionDate"];
             $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
+            $txtSkipUpdationRemark = $_POST["txtSkipUpdationRemark"];
                        
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
@@ -184,6 +185,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("numberOfTowers", $numberOfTowers);
             $smarty->assign("completionDate", $completionDate);
             $smarty->assign("redevelopmentProject", $redevelopmentProject);
+            $smarty->assign("txtSkipUpdationRemark", $txtSkipUpdationRemark);
+            
             
             /***********Folder name**********/
             if(!empty($builderId)){
@@ -526,6 +529,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             }
             if( $secondaryRemark != '' ) {
                 $arrCommentTypeValue['Secondary'] = $secondaryRemark;
+            }
+            if( $txtProjectRemark != '' ) {
+                $arrCommentTypeValue['SkipUpdationCycle'] = $txtSkipUpdationRemark;
             }
              /*end code for comment save in saperate comment table*/
             $arrInsertUpdateProject = array();

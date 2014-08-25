@@ -797,6 +797,27 @@
                                                                 </td>
 								<td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
+							   {if array_key_exists('SkipUpdationCycleRemark',$projectComments)}   
+                                                            <tr>
+                                                                <td width="20%" align="right" valign="top"><b>Skip Updation Cycle Old Remark :</b> </td>
+                                                                <td width="30%" align="left" colspan="2">{$projectComments['SkipUpdationCycleRemark']->comment_text}</td>
+                                                            </tr>
+                                                            {else if array_key_exists('SkipUpdationCycleRemark',$projectOldComments)}
+                                                              <tr>
+                                                                <td width="20%" align="right" valign="top"><b>Skip Updation Cycle Old Remark :</b> </td>
+                                                                <td width="30%" align="left" colspan="2">{$projectOldComments['SkipUpdationCycleRemark']->comment_text}</td>
+                                                             </tr>
+                                                            {/if}
+							   <tr>
+								  <td width="20%" align="right" valign="top"><b>Skip Updation Cycle Remark :</b> </td>
+								  <td width="30%" align="left">
+									 <textarea name="txtSkipUpdationRemark" rows="10" cols="45" id = "txtSkipUpdationRemark">{$txtSkipUpdationRemark}</textarea>
+								  </td>
+								  <td width="50%" align="left">
+									  &nbsp;
+								 </td>
+							   </tr>
+
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
 									<input type="checkbox" name="redevelopmentProject" {if $redevelopmentProject} checked {/if} />
