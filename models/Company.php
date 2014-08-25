@@ -276,7 +276,9 @@ class Company extends ActiveRecord\Model
     }
 
     static function getLocalityLabel($l_id){
-        $sql = "SELECT l.LABEL as loc_label, c.LABEL as c_label FROM locality as l INNER JOIN city c on l.city_id = c.city_id WHERE l.LOCALITY_ID='{$l_id}'";
+        $sql = "SELECT l.LABEL as loc_label, c.LABEL as c_label FROM locality as l 
+        INNER JOIN suburb s on s.suburb_id=l.suburb_id
+        inner join city c on s.city_id = c.city_id WHERE l.LOCALITY_ID='{$l_id}'";
         $result = self::Connection()->query($sql);
         $city = $result->fetch(PDO::FETCH_ASSOC);
         return $city;

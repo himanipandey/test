@@ -19,7 +19,9 @@ AdminAuthentication();
 if($_POST['task']=='office_locations'){
     $cityId = $_POST['cityId'];
     //$locList = Locality::getLocalityByCity($cityId);
-    $query = "select locality_id, label from locality l where l.city_id='{$cityId}'";
+    $query = "select l.locality_id, l.label from locality l 
+        inner join suburb s on s.suburb_id=l.suburb_id
+    where s.city_id='{$cityId}'";
     $res = mysql_query($query) or die(mysql_error());
     
     $html =  "";
@@ -143,7 +145,7 @@ if($_POST['task']=='createAgent'){
         if ($user_id=='') $user_id = "null";   
         if(mysql_num_rows($sql_comp)>0){
 			
-			$sql = "UPDATE company_users set seller_type='{$role}', broker_id={$brokerId}, academic_qualification_id={$qualification}, status='{$status}', name='{$name}', active_since='{$active_since}', email='{$email}', user_id='{$user_id}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$agentId}'";
+			$sql = "UPDATE company_users set seller_type='{$role}', company_id={$brokerId}, academic_qualification_id={$qualification}, status='{$status}', name='{$name}', active_since='{$active_since}', email='{$email}', user_id='{$user_id}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$agentId}'";
 			
 			$res_sql = mysql_query($sql) or die(mysql_error());
 
@@ -220,7 +222,7 @@ if($_POST['task']=='createAgent'){
 
         if ($qualification=='') $qualification = "null";
         if ($user_id=='') $user_id = "null";
-        $query = "INSERT INTO company_users(status, broker_id, academic_qualification_id, name, seller_type, active_since, email, user_id, created_at, updated_by) values ('{$status}', {$brokerId}, {$qualification}, '{$name}','{$role}', '{$active_since}', '{$email}', {$user_id}, NOW(), '{$_SESSION['adminId']}')";
+        $query = "INSERT INTO company_users(status, company_id, academic_qualification_id, name, seller_type, active_since, email, user_id, created_at, updated_by) values ('{$status}', {$brokerId}, {$qualification}, '{$name}','{$role}', '{$active_since}', '{$email}', {$user_id}, NOW(), '{$_SESSION['adminId']}')";
       
         $res = mysql_query($query) or die(mysql_error());
         if(mysql_affected_rows()>0){

@@ -20,7 +20,9 @@ AdminAuthentication();
 if($_POST['task']=='office_locations'){
     $cityId = $_POST['cityId'];
     //$locList = Locality::getLocalityByCity($cityId);
-    $query = "select locality_id, label from locality l where l.city_id='{$cityId}'";
+    $query = "select l.locality_id, l.label from locality l 
+    inner join suburb s on s.suburb_id=l.suburb_id 
+    where s.city_id='{$cityId}'";
     $res = mysql_query($query) or die(mysql_error());
     
     $html =  "";
@@ -59,7 +61,8 @@ if($_POST['task']=='find_project_builder'){
     $data = array();
     //$locList = Locality::getLocalityByCity($cityId);
     if($locId){
-        $query = "select l.locality_id, l.label as locLabel, c.label as cLabel, c.city_id from locality l inner join city c on l.city_id=c.city_id where l.locality_id='{$locId}'";
+        $query = "select l.locality_id, l.label as locLabel, c.label as cLabel, c.city_id from locality l inner join suburb s on s.suburb_id=l.suburb_id 
+            inner join city c on s.city_id=c.city_id where l.locality_id='{$locId}'";
         //echo $query;
         $res = mysql_query($query) or die(mysql_error());
         $locdata = mysql_fetch_assoc($res);
@@ -244,7 +247,9 @@ if($_POST['task']=='createComp'){
                 foreach ($coverage_data as $k => $v) {
                     
                     if($v['type']=='all'){
-                        $query2 = "SELECT city_id from locality WHERE locality_id='{$v['loc_id']}' ";
+                        $query2 = "SELECT  c.city_id from city c
+                        inner join suburb s on s.city_id=c.city_id
+                        inner join locality l on l.suburb_id=s.suburb_id WHERE l.locality_id='{$v['loc_id']}' ";
                     //echo $query2;
                         $res2 = mysql_query($query2) or die(mysql_error());
                         $dataArr = mysql_fetch_assoc($res2);
@@ -408,7 +413,7 @@ if($_POST['task']=='createComp'){
                 }
             //}
 
-            echo "1up";
+            echo "1";
         }
         else if (!mysql_error()) echo "2";
         else  echo "3";
@@ -441,7 +446,9 @@ if($_POST['task']=='createComp'){
                 $coverageStr = '';
                 foreach ($coverage_data as $k => $v) {
                     if($v['type']=='all'){
-                        $query2 = "SELECT city_id from locality WHERE locality_id='{$v['loc_id']}' ";
+                        $query2 = "SELECT  c.city_id from city c
+                        inner join suburb s on s.city_id=c.city_id
+                        inner join locality l on l.suburb_id=s.suburb_id WHERE l.locality_id='{$v['loc_id']}' ";
                     //echo $query2;
                         $res2 = mysql_query($query2) or die(mysql_error());
                         $dataArr = mysql_fetch_assoc($res2);
@@ -567,7 +574,7 @@ if($_POST['task']=='createComp'){
                     }
                 }
             }
-            echo "1up";
+            echo "1";
         }
         else
             echo "3";
