@@ -130,12 +130,22 @@
 					}
 				});
 		  }
-
-		 
+		  var value = $('select[name="skipUpdationCycle"]').val();
+		 if(value=="0"){
+			$("#skipUpdationCycleBlock").show();
+		}
+		else{
+			$("#skipUpdationCycleBlock").hide();
+		}
 	})
 
-	function skipUpdationCycleChanged(this){
-		if($(this))
+	function skipUpdationCycleChanged(value){
+		if(value=="0"){
+			$("#skipUpdationCycleBlock").show();
+		}
+		else{
+			$("#skipUpdationCycleBlock").hide();
+		}
 	}
        
 </script>
@@ -795,7 +805,7 @@
 							   </tr>
                                <tr>
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
-                                                                    <select name="skipUpdationCycle" onchange="skipUpdationCycleChanged(this)">
+                                                                    <select name="skipUpdationCycle" onchange="skipUpdationCycleChanged(this.value)">
                                                                         <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
                                                                         <option value="{$skipUpdationCycle_Id}" {if $skipUpdationCycle == {$skipUpdationCycle_Id}} selected {/if}>Yes</option>
                                                                     </select>
