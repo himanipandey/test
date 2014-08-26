@@ -261,6 +261,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";
 	    	}
 	    }
+
+        if($skipUpdationCycle == 0 && empty($txtSkipUpdationRemark)){
+            $ErrorMsg["txtSkipUpdationCycle"] = "Please enter Remarks for skipping update cycle!.";
+        }
+
             $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId, $projectId);
             
             if(count($projectChk) >0)
