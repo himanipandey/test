@@ -217,6 +217,9 @@ if (isset($phaseId) && $phaseId != -1) {
     $option_ids = array();
     foreach($phase_options_temp as $options) array_push($option_ids, $options->options_id);
     $bedrooms = ResiProjectOptions::optionwise_bedroom_details($option_ids, $phaseId);
+    echo $bedrooms;
+    //print("<pre>");
+    //print_r($bedrooms);
     $bedrooms_hash = array();
     foreach($bedrooms as $bed) $bedrooms_hash[$bed->unit_type] = explode(",", $bed->beds);
     $smarty->assign("option_ids", $option_ids);

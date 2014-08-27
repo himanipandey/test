@@ -26,6 +26,7 @@ class ResiProjectOptions extends ActiveRecord\Model
          GROUP BY UNIT_TYPE
          ORDER BY UNIT_TYPE, BEDROOMS";
         $beds_per_apartment = ResiProjectOptions::find_by_sql($query);
-        return $beds_per_apartment;
+        return $query;
+        //return $beds_per_apartment;
     }
 }
