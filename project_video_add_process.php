@@ -114,7 +114,11 @@ if($_REQUEST['edit'] == 'delete'){
 			while($count < $_REQUEST['img']){
 				$video_url =  trim(mysql_real_escape_string($_REQUEST['Url'][$count]));
 				$video_type =  mysql_real_escape_string($_REQUEST['PType']);
-				mysql_query("INSERT INTO " . VIDEO_LINKS . " (`video_id`, `table_id`, `table_name`, `category`, `video_url`, `updated_by`,  	`created_at`,`updated_at`) VALUES (NULL, '$projectId', 'resi_project', '".$video_type."', '".addslashes($video_url)."','".$_SESSION['adminId']."','".date('Y-m-d H:i:s')."','".date('Y-m-d H:i:s')."');") or die(mysql_error());
+				$Sql = "SELECT count(*) as cnt FROM " . VIDEO_LINKS . " WHERE table_name='resi_project' and table_id = '$projectId' AND video_url = '".addslashes($video_url)."' ";
+				$res = mysql_query($Sql) or die(mysql_error());
+				$data = mysql_fetch_assoc($res);
+				if(!$data['cnt'])
+					mysql_query("INSERT INTO " . VIDEO_LINKS . " (`video_id`, `table_id`, `table_name`, `category`, `video_url`, `updated_by`,  	`created_at`,`updated_at`) VALUES (NULL, '$projectId', 'resi_project', '".$video_type."', '".addslashes($video_url)."','".$_SESSION['adminId']."','".date('Y-m-d H:i:s')."','".date('Y-m-d H:i:s')."');") or die(mysql_error());
 				$count++;
 			}
 		}
