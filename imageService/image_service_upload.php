@@ -195,8 +195,7 @@ class ImageServiceUpload{
         }
         
         $this->logger->info("");
-        $this->logger->info("");
-        $this->logger->info("");
+        
 
         //$this->response_header = $response["header"];
         //$this->response_body = $response["body"];
