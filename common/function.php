@@ -297,7 +297,8 @@ function writeToImageService($imageParams){
  
   // loop through $data and create curl handles
   // then add them to the multi-handle
-
+Logger::configure( dirname(__FILE__) . '/../log4php.xml');
+$logger = Logger::getLogger("main");
 //die();
 ////print'<pre>';
   //  print_r($postArr); die();
@@ -333,6 +334,8 @@ function writeToImageService($imageParams){
     $pos = mb_strpos($response, "{");
     //echo $pos;
     $result[$id] = json_decode(substr($response, $pos));
+    $statusCode = $result[$id]->statusCode;
+    $logger->info("statusCode: ".$statusCode);
     //var_dump($result[$id]);
     //$header_size = curl_getinfo_read($c, CURLINFO_HEADER_SIZE);
     //echo "headx:".$header_size;
@@ -345,6 +348,9 @@ function writeToImageService($imageParams){
  
     // all done
     curl_multi_close($mh);
+    $logger->info("");
+    $logger->info("");
+    $logger->info("");
     //echo "curl-end:".microtime(true)."<br>"; 
     //echo "loop-end:".microtime(true)."<br>"; 
     //print("<pre>");   var_dump($result);die("here");
