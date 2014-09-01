@@ -107,6 +107,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $numberOfTowers = $_POST["numberOfTowers"];
             $completionDate = $_POST["completionDate"];
             $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
+            $txtSkipUpdationRemark = $_POST["txtSkipUpdationRemark"];
                        
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
@@ -184,6 +185,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("numberOfTowers", $numberOfTowers);
             $smarty->assign("completionDate", $completionDate);
             $smarty->assign("redevelopmentProject", $redevelopmentProject);
+            $smarty->assign("txtSkipUpdationRemark", $txtSkipUpdationRemark);
+            
             
             /***********Folder name**********/
             if(!empty($builderId)){
@@ -258,6 +261,11 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";
 	    	}
 	    }
+
+        if($skipUpdationCycle == 0 && empty($txtSkipUpdationRemark)){
+            $ErrorMsg["txtSkipUpdationCycle"] = "Please enter Remarks for skipping update cycle!.";
+        }
+
             $projectChk = ResiProject::projectAlreadyExist($txtProjectName, $builderId, $localityId, $projectId);
             
             if(count($projectChk) >0)
@@ -527,6 +535,9 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             if( $secondaryRemark != '' ) {
                 $arrCommentTypeValue['Secondary'] = $secondaryRemark;
             }
+            if( $txtSkipUpdationRemark != '' ) {
+                $arrCommentTypeValue['SkipUpdationCycle'] = $txtSkipUpdationRemark;
+            }
              /*end code for comment save in saperate comment table*/
             $arrInsertUpdateProject = array();
             $arrInsertUpdateProject['project_id'] =$projectId;
@@ -714,6 +725,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $resStg = mysql_query($qryStg) or die(mysql_error());
                 $stageId = mysql_fetch_assoc($resStg);
                 $projectUpdationCycleId = Resiproject::virtual_find($projectId);
+                //print("<pre>");
+                //print_r($arrCommentTypeValue); //die;
                 CommentsHistory::insertUpdateComments($projectId, $arrCommentTypeValue, $stageId['name'],$projectUpdationCycleId->updation_cycle_id);
                 //if( $txtProjectURL != $txtProjectURLOld && $txtProjectURLOld != '' ) {
                  //  insertUpdateInRedirectTbl($txtProjectURL,$txtProjectURLOld);
