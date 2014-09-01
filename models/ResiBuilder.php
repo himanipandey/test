@@ -13,7 +13,7 @@ class ResiBuilder extends Objects
         return $arrBuilder;
     } 
     static function ProjectSearchBuilderEntityArr() {
-        $getBuilder = ResiBuilder::find('all',array( "select" => "builder_id, entity",'order'=>'entity asc')); 
+        $getBuilder = ResiBuilder::find('all',array("conditions"=>array("builder_status = 0"),"select" => "builder_id, entity",'order'=>'entity asc')); 
         $arrBuilder = array();
         foreach($getBuilder as $value) {
             $arrBuilder[$value->builder_id] = $value->entity;
