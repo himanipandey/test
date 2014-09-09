@@ -158,7 +158,7 @@ class ProjectAvailability extends Model {
     }
     
     public static function getInventoryForIndexing($aPhaseId){
-        $condition = "where rpp.version = 'Website' and rpp.status = 'Active' and li.status = 'Active' and ps.version = 'Website' and pa.effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . "' and rpp.PHASE_ID in (".  implode(',', $aPhaseId).")";
+        $condition = "where rpp.version = 'Website' and rpp.status = 'Active' and li.status = 'Active' and ps.version = 'Website' and pa.effective_month between '" . getMonthShiftedDate(MIN_B2B_DATE, -1) . "' and '" . MAX_B2B_DATE . "' and rpp.PHASE_ID in (".  implode(',', $aPhaseId).")";
         $sql = "select concat_ws('/', rpp.PHASE_ID, rpo.OPTION_TYPE, rpo.BEDROOMS, pa.effective_month) as unique_key, concat_ws('/', rpp.PHASE_ID, rpo.OPTION_TYPE, rpo.BEDROOMS) as key_without_month, rpp.project_id, rpp.phase_type, pa.effective_month, ps.supply ltd_supply, ps.launched ltd_launched, pa.availability as inventory from resi_project_phase rpp inner join listings li on rpp.PHASE_ID = li.phase_id inner join resi_project_options rpo on rpo.OPTIONS_ID = li.option_id and rpo.OPTION_CATEGORY = 'Logical' inner join project_supplies ps on li.id = ps.listing_id inner join project_availabilities pa on ps.id = pa.project_supply_id $condition group by pa.id order by rpp.PHASE_ID, rpo.OPTION_TYPE, rpo.BEDROOMS, pa.effective_month";
         return self::find_by_sql($sql);
     }
