@@ -21,7 +21,7 @@ class DInventoryPriceTmp extends Model {
     }
 
     public static function deleteInvalidPriceEntries() {
-        $sql = "update " . self::table_name() . " a inner join " . self::table_name() . " b on a.phase_id = b.phase_id and a.unit_type = b.unit_type and a.bedrooms = b.bedrooms and a.effective_month = DATE_ADD(b.effective_month, INTERVAL 1 MONTH) set a.average_price_per_unit_area = null where a.inventory = 0 and (b.inventory = 0 or b.inventory is null)";
+        $sql = "update " . self::table_name() . " a inner join " . self::table_name() . " b on a.phase_id = b.phase_id and a.unit_type = b.unit_type and a.bedrooms = b.bedrooms and a.effective_month = DATE_ADD(b.effective_month, INTERVAL 1 MONTH) set a.average_price_per_unit_area = null, a.average_total_price = null, a.average_price_per_unit_area_quarter = null, a.average_price_per_unit_area_year = null, a.average_price_per_unit_area_financial_year = null where a.inventory = 0 and (b.inventory = 0 or b.inventory is null)";
         self::connection()->query($sql);
         #self::update_all(array('set' => 'average_price_per_unit_area = null, average_total_price = null, average_price_per_unit_area_quarter = null, average_price_per_unit_area_year = null, average_price_per_unit_area_financial_year = null', 'conditions' => 'inventory = 0'));
     }
