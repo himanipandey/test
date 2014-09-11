@@ -13,9 +13,9 @@ require_once ($currentDir . '/../cron/b2bIndexTest.php');
 require_once ($currentDir . '/../dbConfig.php');
 
 define("INVALID_DATE", "0000-00-01");
-define('MIN_B2B_DATE', '2013-04-01');
-define('MAX_B2B_DATE', '2014-06-01');
-define('B2B_DEMAND_START_DATE', '2014-01-01');
+define('MIN_B2B_DATE', B2BProperties::getB2BMinDate());
+define('MAX_B2B_DATE', B2BProperties::getB2BMaxDate());
+define('B2B_DEMAND_START_DATE', B2BProperties::getB2BDemandStartDate());
 define('CSV_FIELD_DELIMITER', '~#~');
 define('CSV_LINE_DELIMITER', "\r\n");
 
