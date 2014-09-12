@@ -49,7 +49,7 @@ $smarty->assign("otherPricing", $otherPricing);
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
 $optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id and p.version = 'Cms') 
     join resi_project_options o on (o.options_id = option_id)",'conditions' => 
-    array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active' and listings.status = 'Active'"), "select" => 
+    array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active' and listings.status = 'Active' and listings.listing_category='Primary'"), "select" => 
     "listings.*,p.phase_name,o.option_name,o.size,o.villa_plot_area,o.villa_no_floors"));
 $uptionDetailWithPrice = array();
 foreach($optionsDetails as $key => $value) {
@@ -599,7 +599,7 @@ if ($_POST['forwardFlag'] == 'yes') {
                 foreach($phaseIds as $k=>$valPhaseId){
                    $qryPhaseActual = "select rpo.OPTION_CATEGORY from listings l
                                           join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
-                                      where l.phase_id = ".$valPhaseId." and rpo.OPTION_CATEGORY = 'Logical'";
+                                      where l.phase_id = ".$valPhaseId." and l.listing_category='Primary' and rpo.OPTION_CATEGORY = 'Logical'";
                    $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
                    if(mysql_num_rows($resPhaseActual) == 0){
                     $flgLogical = 1;
@@ -831,7 +831,7 @@ function availebilitydescendingOrder($projectId) {
         FROM
             project_supplies
                 INNER JOIN
-            listings ON listings.id = project_supplies.listing_id AND listings.status = 'Active'
+            listings ON listings.id = project_supplies.listing_id AND listings.status = 'Active' AND listings.listing_category='Primary'
                 INNER JOIN
             resi_project_phase ON resi_project_phase.PHASE_ID = listings.phase_id AND resi_project_phase.version = 'Cms'
                 INNER JOIN

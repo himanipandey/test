@@ -98,7 +98,7 @@ if (isset($_REQUEST['delete'])) {
 			$all_comp_ids = array();
 			
 			#listing
-				$all_lst = Listings::find("all",array("conditions"=>array("phase_id = ?",$phaseId)));
+				$all_lst = Listings::find("all",array("conditions"=>array("phase_id = ?  and listing_category = ?",$phaseId, 'Primary')));
 				foreach($all_lst as $key=>$lst){
 				  $all_lst_ids[] = $lst->id; 
 				}
@@ -159,7 +159,7 @@ if (isset($_REQUEST['delete'])) {
 				  ResiProjExpectedCompletion::delete_all(array('conditions'=>array("expected_completion_id in ($all_comp_ids)")));	
 				  
 				if($all_lst_ids)
-				  Listings::delete_all(array('conditions'=>array("id in ($all_lst_ids)")));
+				  Listings::delete_all(array('conditions'=>array("id in ($all_lst_ids) and listing_category='Primary'")));
 				  
 				mysql_query("DELETE FROM `phase_tower_mappings` WHERE phase_id='$phaseId'");
 				mysql_query("DELETE FROM `d_inventory_prices` WHERE phase_id='$phaseId'");
