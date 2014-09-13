@@ -12,6 +12,7 @@ include("builder_function.php");
 include("function/functions_priority.php");
 include("common/function.php");
 include("imageService/image_upload.php");
+include_once("includes/send_mail_amazon.php");
 
 AdminAuthentication();
 
@@ -19,7 +20,9 @@ AdminAuthentication();
 if($_POST['task']=='office_locations'){
     $cityId = $_POST['cityId'];
     //$locList = Locality::getLocalityByCity($cityId);
-    $query = "select locality_id, label from locality l where l.city_id='{$cityId}'";
+    $query = "select l.locality_id, l.label from locality l 
+        inner join suburb s on s.suburb_id=l.suburb_id
+    where s.city_id='{$cityId}'";
     $res = mysql_query($query) or die(mysql_error());
     
     $html =  "";
@@ -106,7 +109,7 @@ if($_POST['task']=='createAgent'){
 
     //echo "hello";
     if($mode=='update' && $agentId!==null){
-		
+		 
 		//$imageId = $_POST['imageId'];
         $query = "Select EMAIL FROM proptiger.FORUM_USER WHERE USER_ID={$userId}";
         $res = mysql_query($query);
@@ -125,9 +128,23 @@ if($_POST['task']=='createAgent'){
                 $url = USER_API_URL;
                 //echo $post;
                 $response = curl_request($post, 'POST', $url);
-                if($response['statusCode']=="2XX")
+                if($response['statusCode']=="2XX"){
                     $user_id = $response['id'];
-                else die("error in user mapping : ".$response['error']);
+                    $to = 'mohit.dargan@proptiger.com';
+                    $subject= "New Broker User Account created!";
+                      $email_message = "Hi,<br/><br/> New account has been created at Proptiger.com.<br/>
+                      User = ".$email."<br/>"."Password = ".$pass."<br/><br/>Regards,<br/>Proptiger.com";
+                      //$to = $email;
+                
+                      $sender = "no-reply@proptiger.com";
+                      $cc = "karanvir.singh@proptiger.com";
+                      //$headers  = 'MIME-Version: 1.0' . "\r\n";
+                      //$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                      //$headers .= 'To: '.$email."\r\n";
+                      //$headers .= 'From: '.$sender."\r\n";
+                      sendMailFromAmazon($to, $subject, $email_message, $sender,$cc,null,false);
+                }
+                else  die("error in user mapping : ".$response['error']);
 
 
             }
@@ -143,7 +160,7 @@ if($_POST['task']=='createAgent'){
         if ($user_id=='') $user_id = "null";   
         if(mysql_num_rows($sql_comp)>0){
 			
-			$sql = "UPDATE company_users set seller_type='{$role}', broker_id={$brokerId}, academic_qualification_id={$qualification}, status='{$status}', name='{$name}', active_since='{$active_since}', email='{$email}', user_id='{$user_id}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$agentId}'";
+			$sql = "UPDATE company_users set seller_type='{$role}', company_id={$brokerId}, academic_qualification_id={$qualification}, status='{$status}', name='{$name}', active_since='{$active_since}', email='{$email}', user_id='{$user_id}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$agentId}'";
 			
 			$res_sql = mysql_query($sql) or die(mysql_error());
 
@@ -195,6 +212,13 @@ if($_POST['task']=='createAgent'){
     if ($mode=='create'){
         //get user id if user already exist against agent email  or create a new user 
 
+        $query = "SELECT count(*) as count FROM company c inner join company_users cu on cu.company_id=c.id
+                    where c.id={$brokerId} and cu.status='Active'";
+        $res = mysql_query($query) or die(mysql_error());
+        $data = mysql_fetch_assoc($res);
+        if($data['count'] > 0 ){
+            die("Broker Company Can not have more than one Users.");
+        }
 
         $query = "SELECT USER_ID FROM proptiger.FORUM_USER WHERE EMAIL='{$email}' and STATUS='1'";
         $res = mysql_query($query);
@@ -207,9 +231,25 @@ if($_POST['task']=='createAgent'){
             $url = USER_API_URL;
             //echo $post;
             $response = curl_request($post, 'POST', $url);
-            if($response['statusCode']=="2XX")
-                $user_id = $response['id'];
-            //else die("error in user mapping : ".$response['error']);
+            if($response['statusCode']=="2XX"){
+              $user_id = $response['id'];
+
+              $to = 'mohit.dargan@proptiger.com';
+              $subject= "New Broker User Account created!";
+              $email_message = "Hi,<br/><br/> New account has been created at Proptiger.com.<br/>
+              User = ".$email."<br/>"."Password = ".$pass."<br/><br/>Regards,<br/>Proptiger.com";
+              //$to = $email;
+                
+              $sender = "no-reply@proptiger.com";
+              $cc = "karanvir.singh@proptiger.com";
+              //$headers  = 'MIME-Version: 1.0' . "\r\n";
+              //$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+              //$headers .= 'To: '.$email."\r\n";
+              //$headers .= 'From: '.$sender."\r\n";
+              sendMailFromAmazon($to, $subject, $email_message, $sender,$cc,null,false);
+            }
+             
+            else die("error in user mapping : ".$response['error']);
 
 
         }
@@ -220,7 +260,7 @@ if($_POST['task']=='createAgent'){
 
         if ($qualification=='') $qualification = "null";
         if ($user_id=='') $user_id = "null";
-        $query = "INSERT INTO company_users(status, broker_id, academic_qualification_id, name, seller_type, active_since, email, user_id, created_at, updated_by) values ('{$status}', {$brokerId}, {$qualification}, '{$name}','{$role}', '{$active_since}', '{$email}', {$user_id}, NOW(), '{$_SESSION['adminId']}')";
+        $query = "INSERT INTO company_users(status, company_id, academic_qualification_id, name, seller_type, active_since, email, user_id, created_at, updated_by) values ('{$status}', {$brokerId}, {$qualification}, '{$name}','{$role}', '{$active_since}', '{$email}', {$user_id}, NOW(), '{$_SESSION['adminId']}')";
       
         $res = mysql_query($query) or die(mysql_error());
         if(mysql_affected_rows()>0){
