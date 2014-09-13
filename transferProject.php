@@ -326,10 +326,22 @@
                 $SetQry = '';
                 
                 if($arrUpdatePhase[0]=='NoStage'){
-                    foreach ($arrPropId as $pid) {
-                        ProjectMigration::enqueProjectForMigration ($pid, 'Genuine', $_SESSION['adminId']);
+                    
+                    $phaseId = ProjectPhase::getPhaseByName($arrExp[1]);
+                    $stageId = ProjectStage::getStageByName($arrExp[0]);
+                    $eligibleProjects  = "select project_id from resi_project where PROJECT_STAGE_ID='".$stageId[0]->id."' AND PROJECT_PHASE_ID='".$phaseId[0]->id."' AND PROJECT_ID IN (".$getProjectId.") AND version = 'Cms' for update";
+                    $eligibleProjects = mysql_query($eligibleProjects);
+                    $eligibleProjectIds = array();
+                    while ($row = mysql_fetch_array($eligibleProjects)) {
+                        $eligibleProjectIds[] = $row['project_id'];
+                    }
+                    if(count($eligibleProjectIds)>0){
+                        foreach ($eligibleProjectIds as $pid) {
+                            ProjectMigration::enqueProjectForMigration ($pid, 'Genuine', $_SESSION['adminId']);
+                        }
                     }
                 }
+                
                 if($arrUpdatePhase[0] != '') {
                     $getProjectStage = ProjectStage::getStageByName($arrUpdatePhase[0]);
                     $SetQry .= $SET . " PROJECT_STAGE_ID = '".$getProjectStage[0]->id."' ";

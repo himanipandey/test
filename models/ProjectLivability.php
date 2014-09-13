@@ -33,10 +33,13 @@ class ProjectLivability extends ActiveRecord\Model {
     );
     static $custom_project_livability_expression = array(
         'builder' => 'CASE rb.DISPLAY_ORDER WHEN 1 THEN 1 WHEN 2 THEN 1 WHEN 3 THEN 0.8 WHEN 4 THEN 0.8 WHEN 5 THEN 0.6 WHEN 6 THEN 0.6 WHEN 7 THEN 0.5 WHEN 8 THEN 0.5 WHEN 9 THEN 0.4 WHEN 10 THEN 0.4 WHEN 11 THEN 0.3 WHEN 12 THEN 0.3 WHEN 13 THEN 0.3 ELSE 0.1 END',
-        'overall' => '(0.175*pl.school+0.175*pl.hospital+0.050*pl.restaurant+0.25*pl.metro_station+0.25*pl.bus_stand+0.25*pl.suburban_railway_station+0.025*pl.city_railway_station+0.025*pl.airport+0.1*pl.park+0.1*pl.market)*0.315+0.075*pl.clubhouse+0.075*pl.power_backup+0.075*pl.children_play_area+0.05*pl.security+0.05*pl.other_amenity_count+if(pl.unit_per_floor=0,0.2*pl.unit_count,0.1*pl.unit_count+0.1*pl.unit_per_floor)+0.1*pl.builder+0.05*ll.completion_percentage'
+	'locality_score' => '(0.175*pl.school+0.175*pl.hospital+0.050*pl.restaurant+0.2*pl.metro_station+0.2*pl.bus_stand+0.2*pl.suburban_railway_station+0.025*pl.city_railway_station+0.025*pl.airport+0.075*pl.park+0.075*pl.market)',
+	'society_score' => '(0.075*pl.clubhouse+0.075*pl.power_backup+0.075*pl.children_play_area+0.05*pl.security+0.05*pl.other_amenity_count+if(pl.unit_per_floor=0,0.2*pl.unit_count,0.1*pl.unit_count+0.1*pl.unit_per_floor)+0.1*pl.builder+0.05*ll.completion_percentage)/0.685'
     );
     static $min_max_livability = 0.95;
     static $min_livability = 0.4;
+    static $locality_score_factor = 0.315;
+    static $society_score_factor = 0.685;
 
     static function repopulateProjectIds() {
         $sql = "insert into project_livability (project_id) select PROJECT_ID from resi_project where version = 'Website' and STATUS = 'Active'";
@@ -114,17 +117,21 @@ class ProjectLivability extends ActiveRecord\Model {
         self::normalizeColumnOnCity('builder');
     }
 
+    static function populateLocalityAndSocietyScores() {
+	$sql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join 		locality_livability ll on rp.LOCALITY_ID = ll.locality_id set pl.society_score = " . (self::$custom_project_livability_expression['society_score']) . ", pl.locality_score = " . (self::$custom_project_livability_expression['locality_score']);
+        self::connection()->query($sql);
+
+	$normalizeCitySql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, if(max(locality_score) > " . self::$min_max_livability . ", 1, " . self::$min_max_livability . "/max(locality_score)) factor1, if(max(society_score) > " . self::$min_max_livability . ", 1, " . self::$min_max_livability . "/max(society_score)) factor2 from project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set pl.locality_score = pl.locality_score*t.factor1, pl.society_score = pl.society_score*t.factor2";
+        self::connection()->query($normalizeCitySql);
+    }
     static function populateOverAllLivability() {
-        $sql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality_livability ll on rp.LOCALITY_ID = ll.locality_id set pl.livability = " . self::$custom_project_livability_expression['overall'];
+        $sql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality_livability ll on rp.LOCALITY_ID = ll.locality_id set pl.livability = pl.locality_score * ". self::$locality_score_factor . "+" . " pl.society_score * ". self:: $society_score_factor;
         self::connection()->query($sql);
 //        $maxVal = self::getMaxValueForCoulmn('livability');
 //        if ($maxVal < self::$min_max_livability) {
 //            $factor = self::$min_max_livability / $maxVal;
 //            self::update_all(array('set' => "livability = livability*$factor"));
 //        }
-
-        $normalizeCitySql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, if(max(livability) > " . self::$min_max_livability . ", 1, " . self::$min_max_livability . "/max(livability)) factor from project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set pl.livability = pl.livability*t.factor";
-        self::connection()->query($normalizeCitySql);
     }
 
     static function getMaxValueForCoulmn($columnName) {
@@ -139,13 +146,17 @@ class ProjectLivability extends ActiveRecord\Model {
         $sql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, max($columnName) max from project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set pl.$columnName = pl.$columnName/t.max";
         self::connection()->query($sql);
     }
+
+    static function ensureMinSocietyScore() {
+	self::update_all(array('set'=>"society_score=(society_score*".(1-self::$min_livability)."+".self::$min_livability.")"));
+    }
     
-    static function ensureMinLivability(){
-        self::update_all(array('set'=>"livability=(livability*".(1-self::$min_livability)."+".self::$min_livability.")"));
+    static function ensureMinLocalityScore(){
+        self::update_all(array('set'=>"locality_score=(locality_score*".(1-self::$min_livability)."+".self::$min_livability.")"));
     }
     
     static function populateLivabilityInProjects(){
-    	$sql = "update resi_project rp inner join project_livability pl on rp.project_id = pl.project_id set rp.livability_score = ROUND(pl.livability*10,1)";
+    	$sql = "update resi_project rp inner join project_livability pl on rp.project_id = pl.project_id set rp.livability_score = ROUND(pl.livability*10,1), rp.project_locality_score = ROUND(pl.locality_score*10,1), rp.project_society_score = ROUND(pl.society_score*10,1)";
     	self::connection()->query($sql);
     }
 }
