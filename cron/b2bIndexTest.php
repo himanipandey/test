@@ -11,7 +11,7 @@ function runTests(){
 
 // verifying if supply and launched unit in new table is correct
 function verifySupply(){
-    $count = DInventoryPriceTmp::find_by_sql("select count(*) as count from project_supplies a inner join listings b on a.listing_id = b.id inner join resi_project_options c on b.option_id = c.OPTIONS_ID and c.OPTION_CATEGORY = 'Logical' inner join resi_project_phase d on b.phase_id = d.PHASE_ID and d.version = 'Website' left join " . DInventoryPriceTmp::table_name() . " e on d.PHASE_ID = e.phase_id and c.BEDROOMS = e.bedrooms and c.OPTION_TYPE = e.unit_type where a.version = 'Website' and (a.supply != e.ltd_supply or a.launched != e.ltd_launched_unit);");
+    $count = DInventoryPriceTmp::find_by_sql("select count(*) as count from project_supplies a inner join listings b on (a.listing_id = b.id and b.listing_category='Primary') inner join resi_project_options c on b.option_id = c.OPTIONS_ID and c.OPTION_CATEGORY = 'Logical' inner join resi_project_phase d on b.phase_id = d.PHASE_ID and d.version = 'Website' left join " . DInventoryPriceTmp::table_name() . " e on d.PHASE_ID = e.phase_id and c.BEDROOMS = e.bedrooms and c.OPTION_TYPE = e.unit_type where a.version = 'Website' and (a.supply != e.ltd_supply or a.launched != e.ltd_launched_unit);");
     $result = $count[0]->count == 0;
     if(!$result){
         logError("Error in Supply Test");
@@ -21,7 +21,7 @@ function verifySupply(){
 
 // verifying if launched unit in new table is correct
 function verifyLaunched(){
-    $count = DInventoryPriceTmp::find_by_sql("select count(*) as count from project_supplies a inner join listings b on a.listing_id = b.id inner join resi_project_options c on b.option_id = c.OPTIONS_ID and c.OPTION_CATEGORY = 'Logical' inner join resi_project_phase d on b.phase_id = d.PHASE_ID and d.version = 'Website' left join " . DInventoryPriceTmp::table_name() . " e on d.PHASE_ID = e.phase_id and c.BEDROOMS = e.bedrooms and c.OPTION_TYPE = e.unit_type where a.version = 'Website' and a.launched != e.launched_unit and e.effective_month = e.launch_date;");
+    $count = DInventoryPriceTmp::find_by_sql("select count(*) as count from project_supplies a inner join listings b (on a.listing_id = b.id and b.listing_category='Primary') inner join resi_project_options c on b.option_id = c.OPTIONS_ID and c.OPTION_CATEGORY = 'Logical' inner join resi_project_phase d on b.phase_id = d.PHASE_ID and d.version = 'Website' left join " . DInventoryPriceTmp::table_name() . " e on d.PHASE_ID = e.phase_id and c.BEDROOMS = e.bedrooms and c.OPTION_TYPE = e.unit_type where a.version = 'Website' and a.launched != e.launched_unit and e.effective_month = e.launch_date;");
     $result =  $count[0]->count == 0;
     if(!$result){
         logError("Error in Launched Test");

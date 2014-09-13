@@ -148,7 +148,7 @@ $weeklyEmail = array(
         ),
     array(
             'sql'=>"SELECT rp.project_id,rp.project_name,rp.project_status,max(lstp.effective_date)  effective_date FROM listing_prices lstp
-				INNER JOIN listings lst ON lstp.listing_id = lst.id AND lst.status = 'Active'
+				INNER JOIN listings lst ON lstp.listing_id = lst.id AND lst.status = 'Active' AND lst.listing_category='Primary'
 				INNER JOIN resi_project_phase rpp ON rpp.phase_id = lst.phase_id AND rpp.version = 'Website'
 				INNER JOIN proptiger.RESI_PROJECT rp ON rpp.project_id = rp.project_id
 				INNER JOIN proptiger.RESI_PROJECT_TYPES rpt ON rp.project_id = rpt.project_id
@@ -167,7 +167,7 @@ $weeklyEmail = array(
         ),
      array(
             'sql'=>"SELECT rp.project_id,rp.project_name,rp.project_status,max(lstp.effective_date)  effective_date FROM listing_prices lstp
-				INNER JOIN listings lst ON lstp.listing_id = lst.id AND lst.status = 'Active'
+				INNER JOIN listings lst ON lstp.listing_id = lst.id AND lst.status = 'Active' AND lst.listing_category='Primary'
 				INNER JOIN resi_project_phase rpp ON rpp.phase_id = lst.phase_id AND rpp.version = 'Website'
 				INNER JOIN proptiger.RESI_PROJECT rp ON rpp.project_id = rp.project_id
 				INNER JOIN proptiger.RESI_PROJECT_TYPES rpt ON rp.project_id = rpt.project_id

@@ -652,7 +652,7 @@ $arrDetail = array();
 $arrninty = array();
 
 function ProjectAmenities($projectId, &$arrNotninty, &$arrDetail, &$arrninty) {
-    $qrySel = "SELECT * FROM " . RESI_PROJECT_AMENITIES . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qrySel = "SELECT * FROM " . RESI_PROJECT_AMENITIES . " WHERE PROJECT_ID = '" . $projectId . "' and VERIFIED=1";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     $cnt = 1;
@@ -668,7 +668,7 @@ function ProjectAmenities($projectId, &$arrNotninty, &$arrDetail, &$arrninty) {
 }
 
 function deleteAmenities($projectId) {
-    $qryDel = "DELETE FROM " . RESI_PROJECT_AMENITIES . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qryDel = "DELETE FROM " . RESI_PROJECT_AMENITIES . " WHERE PROJECT_ID = '" . $projectId . "' AND VERIFIED=1";
     $res_Del = mysql_query($qryDel);
     if ($res_Del)
         return 1;
@@ -1572,11 +1572,11 @@ function lastUpdatedAuditDetail($projectId) {
                             p.DEPARTMENT, MAX(lp._t_transaction_id) as tid
 							FROM _t_listing_prices lp
 							INNER JOIN listings lst
-								 on lp.listing_id = lst.id 
+								 on lp.listing_id = lst.id and lst.listing_category='Primary'
 							INNER JOIN resi_project_phase rpp
 								 on lst.phase_id = rpp.phase_id
 							JOIN proptiger_admin p ON lp.updated_by = p.ADMINID
-							WHERE rpp.PROJECT_ID = $projectId
+							WHERE (rpp.PROJECT_ID = $projectId and lst.listing_category='Primary')
 							GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
                            join
                        proptiger_admin c ON (c.ADMINID = a.updated_by)";
@@ -1605,7 +1605,7 @@ function lastUpdatedAuditDetail($projectId) {
 						INNER JOIN resi_project_phase rpp
 							 on lst.phase_id = rpp.phase_id
 						JOIN proptiger_admin p ON pal.updated_by = p.ADMINID
-						WHERE rpp.PROJECT_ID = $projectId
+						WHERE (rpp.PROJECT_ID = $projectId and lst.listing_category='Primary')
 						GROUP BY  p.DEPARTMENT) b ON (b.tid = a._t_transaction_id)
                            join
                        proptiger_admin c ON (c.ADMINID = a.updated_by)";
@@ -2283,12 +2283,12 @@ function updateD_Availablitiy($projectId){
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
 								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
-								where lst.status = 'Active' and rpo.project_id = '$projectId' 
+								where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId 
 								and rpo.option_category = 'Actual'
 								".$condition."  
 								group by option_type,bedrooms");
 	
-	$sql_max_effective_month =  mysql_query("SELECT max(project_availabilities.effective_month) as max_effective_month FROM `resi_project` INNER JOIN `resi_project_phase` ON `resi_project_phase`.`PROJECT_ID` = `resi_project`.`PROJECT_ID` AND (resi_project_phase.version ='Cms' and resi_project_phase.STATUS='Active') INNER JOIN `listings` ON `listings`.`phase_id` = `resi_project_phase`.`PHASE_ID` AND (listings.STATUS='Active') INNER JOIN `project_supplies` ON `project_supplies`.`listing_id` = `listings`.`id` AND `project_supplies`.`version` = 'Cms' left join project_availabilities on project_supplies.id=project_availabilities.project_supply_id WHERE `resi_project`.`version` = 'Cms' AND (resi_project.PROJECT_ID = '$projectId') ".$condition);
+	$sql_max_effective_month =  mysql_query("SELECT max(project_availabilities.effective_month) as max_effective_month FROM `resi_project` INNER JOIN `resi_project_phase` ON `resi_project_phase`.`PROJECT_ID` = `resi_project`.`PROJECT_ID` AND (resi_project_phase.version ='Cms' and resi_project_phase.STATUS='Active') INNER JOIN `listings` ON `listings`.`phase_id` = `resi_project_phase`.`PHASE_ID` AND (listings.STATUS='Active') AND (listings.listing_category='Primary') INNER JOIN `project_supplies` ON `project_supplies`.`listing_id` = `listings`.`id` AND `project_supplies`.`version` = 'Cms' left join project_availabilities on project_supplies.id=project_availabilities.project_supply_id WHERE `resi_project`.`version` = 'Cms' AND (resi_project.PROJECT_ID = '$projectId') ".$condition);
 	
 	
 	#print mysql_fetch_object($sql_max_effective_month)->max_effective_month." max effetive date";
@@ -2305,7 +2305,7 @@ function updateD_Availablitiy($projectId){
 			left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 			left join project_availabilities pa on ps.id = pa.project_supply_id
 			inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
-			where lst.status = 'Active' and rpo.project_id = '$projectId'
+			where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId'
 			and rpo.option_category = 'Logical'
 			".$condition."  
 			and effective_month = '$max_effective_month'
@@ -2367,11 +2367,11 @@ function updatePhaseBookingStatus($projectId){
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
 								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
-								where lst.status = 'Active' and rpo.project_id = '$projectId' 
+								where lst.status = 'Active' and rpo.project_id = '$projectId' and lst.listing_category='Primary'
 								and rpo.option_category = 'Actual'
 								".$condition."  and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID'
 								group by option_type,bedrooms");
-		  $sql_max_effective_month =  mysql_query("SELECT max(project_availabilities.effective_month) as max_effective_month FROM `resi_project` INNER JOIN `resi_project_phase` ON `resi_project_phase`.`PROJECT_ID` = `resi_project`.`PROJECT_ID` AND (resi_project_phase.version ='Cms' and resi_project_phase.STATUS='Active') INNER JOIN `listings` ON `listings`.`phase_id` = `resi_project_phase`.`PHASE_ID` AND (listings.STATUS='Active') INNER JOIN `project_supplies` ON `project_supplies`.`listing_id` = `listings`.`id` AND `project_supplies`.`version` = 'Cms' left join project_availabilities on project_supplies.id=project_availabilities.project_supply_id WHERE `resi_project`.`version` = 'Cms' AND (resi_project.PROJECT_ID = '$projectId')  and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID' ");
+		  $sql_max_effective_month =  mysql_query("SELECT max(project_availabilities.effective_month) as max_effective_month FROM `resi_project` INNER JOIN `resi_project_phase` ON `resi_project_phase`.`PROJECT_ID` = `resi_project`.`PROJECT_ID` AND (resi_project_phase.version ='Cms' and resi_project_phase.STATUS='Active') INNER JOIN `listings` ON `listings`.`phase_id` = `resi_project_phase`.`PHASE_ID` AND (listings.STATUS='Active') AND (listings.listing_category='Primary') INNER JOIN `project_supplies` ON `project_supplies`.`listing_id` = `listings`.`id` AND `project_supplies`.`version` = 'Cms' left join project_availabilities on project_supplies.id=project_availabilities.project_supply_id WHERE `resi_project`.`version` = 'Cms' AND (resi_project.PROJECT_ID = '$projectId')  and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID' ");
 		  
 		  #print mysql_fetch_object($sql_max_effective_month)->max_effective_month." max effetive date";
 			$config_mapped_array = array();
@@ -2387,7 +2387,7 @@ function updatePhaseBookingStatus($projectId){
 					left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 					left join project_availabilities pa on ps.id = pa.project_supply_id
 					inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
-					where lst.status = 'Active' and rpo.project_id = '$projectId'
+					where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId'
 					and rpo.option_category = 'Logical'
 					 and resi_project_phase.PHASE_ID = '$row_phase->PHASE_ID'
 					".$condition."  
