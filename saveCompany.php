@@ -208,6 +208,16 @@ if($_POST['task']=='createComp'){
             
         if(mysql_num_rows($sql_comp)>0){
             
+            if($status=='Inactive'){
+                $query = "select count(*) as count from company c inner join company_users cu on cu.company_id=c.id
+                    where c.id={$id} and c.type='Broker' and cu.status='Active'";
+                $res = mysql_query($query) or die(mysql_error());
+                $data = mysql_fetch_assoc($res);
+                if($data['count'] > 0 ){
+                    die("Can not make Broker Company Inactive as Active Agents are present.");
+                }
+            }
+
             $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', website='{$web}', company_info_type='{$broker_info_type}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
             
             $res_sql = mysql_query($sql) or die(mysql_error());

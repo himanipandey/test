@@ -15,7 +15,8 @@ class Company extends ActiveRecord\Model
         $type = $arr['type'];
         
         if($compid=='' && $type=="Broker"){
-            $companyDetail = Company::find('all', array('conditions'=>array("type = '$type'", "company_info_type = 'Advance'")));
+            $companyDetail = Company::find('all', array('conditions'=>array("type = '$type' and company_info_type = 'Advance' and status = 'Active'" )));
+
         }
         else if($compid!='' && $type!=''){
             $companyDetail = Company::find('all', array('conditions'=>array("id = $compid", "type = '$type'")));

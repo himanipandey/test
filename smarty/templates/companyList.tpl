@@ -490,7 +490,7 @@ function valid_compul(v, fun, msg, msgid ){
   var bool = fun(v);
     if(v==''){
       $('#'+msgid).html('<font color="red">'+msg+'</font>');
-      $("#address").focus();
+      //$("#address").focus();
       window.error = 1;
     }
     else if(v!='' && !bool){

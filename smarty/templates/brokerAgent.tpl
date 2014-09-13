@@ -308,6 +308,9 @@ function editAgent(brokerId,id, user_id, name,role,status, email, address, city,
     //$("#fax").val(fax);
     $("#status").val(status);
     $("#email").val(email);
+    if(email!=''){
+      $("#email").prop('readonly', 'readonly');
+    }
     $("#qualification").val(qualification);
     $("#img_date1").val(active_since);
     //$("#pan").val(pan);
@@ -329,6 +332,9 @@ function editAgent(brokerId,id, user_id, name,role,status, email, address, city,
       $(this).attr('disabled',false);       
     });   
     }
+
+
+
 }
 
 function cleanFields(){
@@ -346,6 +352,7 @@ function cleanFields(){
     $("#phone").val('');
     //$("#fax").val('');
     $("#email").val('');
+    $("#email").prop('readonly', false);
     //$("#web").val('');
     //$("#pan").val('');
     $("#status").val('');
