@@ -88,7 +88,7 @@
    $twoMonthBeforeDate = date('Y-m-d',$dt2monthBefore); 
    $query = "select count(*) as project_count from (SELECT a.project_id as PROJECT_COUNT FROM `resi_project` 
                 LEFT JOIN resi_project_options a ON( resi_project.project_id = a.project_id ) 
-                LEFT JOIN listings l ON(a.options_id = l.option_id)
+                LEFT JOIN listings l ON(a.options_id = l.option_id and l.listing_category='Primary')
                 LEFT JOIN listing_prices b ON(l.id = b.listing_id)
                WHERE ($active) 
                  AND resi_project.residential_flag = 'Residential' 

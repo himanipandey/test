@@ -10,11 +10,11 @@ $lid = mysql_real_escape_string($_REQUEST['lid']);
 
 $sql = "select rpo.option_type,l.phase_id,pa.project_supply_id,pa.effective_month,pa.availability,ps.listing_id,ps.version 
       from project_supplies ps 
-                inner join listings l on ps.listing_id = l.id
+                inner join listings l on (ps.listing_id = l.id)
                 inner join resi_project_options rpo on l.option_id = rpo.options_id
                 inner join  project_availabilities pa on pa.project_supply_id = ps.id
                 where 
-                listing_id = '$lid' and l.status = 'Active' ";
+                listing_id = '$lid' and l.status = 'Active' and l.listing_category='Primary'";
 
 //print $sql;
 

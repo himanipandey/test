@@ -54,7 +54,8 @@ class CommentsHistory extends ActiveRecord\Model
                    'Audit2' => 'audit2Remark',
                    'SecondaryAudit' => 'secondaryAuditRemark',
                    'Secondary' => 'secondaryRemark',
-                   'FieldSurvey' => 'fieldSurveyRemark'
+                   'FieldSurvey' => 'fieldSurveyRemark',
+                   'SkipUpdationCycle' => 'SkipUpdationCycleRemark'
                     );
         
         foreach($getComments as $value) {
@@ -86,7 +87,8 @@ class CommentsHistory extends ActiveRecord\Model
                    'Audit2' => 'audit2Remark',
                    'SecondaryAudit' => 'secondaryAuditRemark',
                    'Secondary' => 'secondaryRemark',
-                   'FieldSurvey' => 'fieldSurveyRemark'
+                   'FieldSurvey' => 'fieldSurveyRemark',
+                   'SkipUpdationCycle' => 'SkipUpdationCycleRemark'
                     );
         
         foreach($getOldComments as $value) {
@@ -114,7 +116,8 @@ class CommentsHistory extends ActiveRecord\Model
                        'Audit' => 'auditRemark',
                        'SecondaryAudit' => 'secondaryAuditRemark',
                        'Secondary' => 'secondaryRemark',
-                       'FieldSurvey' => 'fieldSurveyRemark'
+                       'FieldSurvey' => 'fieldSurveyRemark',
+                       'SkipUpdationCycle' => 'SkipUpdationCycleRemark'
                         );
 
             foreach($getOldComments as $value) {

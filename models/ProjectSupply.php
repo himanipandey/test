@@ -19,7 +19,7 @@ class ProjectSupply extends Objects {
             $phaseId = NULL;
        # $supply_new = self::find("all", array("joins" => "join listings l on (l.id = project_supplies.listing_id and l.phase_id = $phaseId) join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType')"));
         
-        $supply_new = mysql_query("SELECT `project_supplies`.* FROM `project_supplies` join listings l on (l.id = project_supplies.listing_id and l.phase_id = '$phaseId') join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType') WHERE `project_supplies`.`version`='PreCms'");
+        $supply_new = mysql_query("SELECT `project_supplies`.* FROM `project_supplies` join listings l on (l.id = project_supplies.listing_id and l.phase_id = '$phaseId' and l.listing_category='Primary') join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType') WHERE `project_supplies`.`version`='PreCms'");
 
         if(mysql_num_rows($supply_new)) {
 			$supply_new = mysql_fetch_object($supply_new);
@@ -93,7 +93,7 @@ class ProjectSupply extends Objects {
             from 
              " . self::table_name() . " ps 
              inner join " . ProjectAvailability::table_name() . " pa on (ps.id=pa.project_supply_id and ps.version = 'PreCms')
-             inner join listings ls on ps.listing_id = ls.id
+             inner join listings ls on (ps.listing_id = ls.id and ls.listing_category='Primary')
              inner join resi_project_options rpo on rpo.options_id = ls.option_id    
              inner join 
                 (select ps.id, max(pa.effective_month) mon 
@@ -144,7 +144,7 @@ class ProjectSupply extends Objects {
     }
 
     function isLaunchUnitPhase($phaseId) {
-        $sql = "select * from " . self::table_name() . " s join listings l on (l.id = s.listing_id) where version = 'Cms' and ";
+        $sql = "select * from " . self::table_name() . " s join listings l on (l.id = s.listing_id and l.listing_category='Primary') where version = 'Cms' and ";
         if ($phaseId == '0')
             $sql .= " phase_id is null ";
         else
@@ -154,7 +154,7 @@ class ProjectSupply extends Objects {
     }
 
     function isInventoryAdded($phaseId) {
-        $sql = "select count(*) count from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id = pa.project_supply_id join listings l on (l.id = ps.listing_id) where ps.version = 'Cms' and ";
+        $sql = "select count(*) count from " . self::table_name() . " ps inner join " . ProjectAvailability::table_name() . " pa on ps.id = pa.project_supply_id join listings l on (l.id = ps.listing_id and l.listing_category='Primary') where ps.version = 'Cms' and ";
         if ($phaseId == '0' || $phaseId == NULL)
             $sql .= " phase_id is null ";
         else
@@ -202,7 +202,7 @@ class ProjectSupply extends Objects {
     function isSupplyLaunchVerified($projectId) {
 
         $sql1 = "select l.id from project_supplies ps inner join listings l
-                on ps.listing_id = l.id
+                on (ps.listing_id = l.id and l.listing_category='Primary')
                 inner join resi_project_options rpo on l.option_id = rpo.options_id
                 where 
                 rpo.project_id = '$projectId' and l.status = 'Active' and ps.version in ('PreCms','Cms') group by l.id having count(distinct supply) >1 or count(distinct launched) > 1";
@@ -210,7 +210,7 @@ class ProjectSupply extends Objects {
         
          $sql2 = "select lst.id,ps.version,pa.* from project_availabilities pa
 				inner join project_supplies ps on pa.project_supply_id = ps.id and ps.version in ('PreCms','Cms')
-				inner join listings lst on ps.listing_id = lst.id
+				inner join listings lst on (ps.listing_id = lst.id and lst.listing_category='Primary')
 				inner join resi_project_phase rpp on lst.phase_id = rpp.phase_id and rpp.version = 'Cms'
 				where rpp.project_id = '$projectId'
 				group by lst.id,pa.effective_month
@@ -228,7 +228,7 @@ class ProjectSupply extends Objects {
         $supply = intval($supply);
         if ($phaseId == '0')
             $phaseId = NULL;
-        $supply_new = mysql_fetch_object(mysql_query("SELECT `project_supplies`.* FROM `project_supplies` join listings l on (l.id = project_supplies.listing_id and l.phase_id = '$phaseId') join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType') WHERE `project_supplies`.`version`='PreCms'"));
+        $supply_new = mysql_fetch_object(mysql_query("SELECT `project_supplies`.* FROM `project_supplies` join listings l on (l.id = project_supplies.listing_id and l.phase_id = '$phaseId' and l.listing_category='Primary') join resi_project_options o on (l.option_id = o.options_id and " . ($noOfBedroom == null ? "(o.bedrooms is null OR o.bedrooms = 0)" : "o.bedrooms = $noOfBedroom") . " and o.option_type='$projectType') WHERE `project_supplies`.`version`='PreCms'"));
         if ($supply_new) {
             $supplyId = $supply_new->id;
             $availability = ProjectAvailability::getAvailability($supplyId);
@@ -243,7 +243,7 @@ class ProjectSupply extends Objects {
     }
 
     static function getWebsiteVersionSupplyForAllProjects() {
-        $sql = "select rp.PROJECT_ID, sum(supply) supply from resi_project rp inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' inner join (select rpp.PHASE_ID, rpp.PHASE_TYPE from resi_project_phase rpp inner join resi_project_phase rpp1 on rpp.PROJECT_ID = rpp1.PROJECT_ID and rpp1.version = 'Website' and rpp.version = 'Website' group by rpp.PHASE_ID having count(distinct rpp1.PHASE_TYPE) = 1 or rpp.PHASE_TYPE = 'Actual') t1 on rpp.PHASE_ID = t1.PHASE_ID group by rp.PROJECT_ID";
+        $sql = "select rp.PROJECT_ID, sum(supply) supply from resi_project rp inner join resi_project_phase rpp on rp.PROJECT_ID = rpp.PROJECT_ID and rpp.version = 'Website' and rp.version = 'Website' inner join listings l on rpp.PHASE_ID = l.phase_id and l.status = 'Active' and l.listing_category='Primary' inner join project_supplies ps on l.id = ps.listing_id and ps.version = 'Website' inner join (select rpp.PHASE_ID, rpp.PHASE_TYPE from resi_project_phase rpp inner join resi_project_phase rpp1 on rpp.PROJECT_ID = rpp1.PROJECT_ID and rpp1.version = 'Website' and rpp.version = 'Website' group by rpp.PHASE_ID having count(distinct rpp1.PHASE_TYPE) = 1 or rpp.PHASE_TYPE = 'Actual') t1 on rpp.PHASE_ID = t1.PHASE_ID group by rp.PROJECT_ID";
         return self::find_by_sql($sql);
     }
 

@@ -21,7 +21,9 @@ class DInventoryPriceTmp extends Model {
     }
 
     public static function deleteInvalidPriceEntries() {
-        self::update_all(array('set' => 'average_price_per_unit_area = null, average_total_price = null, average_price_per_unit_area_quarter = null, average_price_per_unit_area_year = null, average_price_per_unit_area_financial_year = null', 'conditions' => 'inventory = 0'));
+        $sql = "update " . self::table_name() . " a inner join " . self::table_name() . " b on a.phase_id = b.phase_id and a.unit_type = b.unit_type and a.bedrooms = b.bedrooms and a.effective_month = DATE_ADD(b.effective_month, INTERVAL 1 MONTH) set a.average_price_per_unit_area = null, a.average_total_price = null, a.average_price_per_unit_area_quarter = null, a.average_price_per_unit_area_year = null, a.average_price_per_unit_area_financial_year = null where a.inventory = 0 and (b.inventory = 0 or b.inventory is null)";
+        self::connection()->query($sql);
+        #self::update_all(array('set' => 'average_price_per_unit_area = null, average_total_price = null, average_price_per_unit_area_quarter = null, average_price_per_unit_area_year = null, average_price_per_unit_area_financial_year = null', 'conditions' => 'inventory = 0'));
     }
 
     public static function populateDemand() {
@@ -128,7 +130,7 @@ class DInventoryPriceTmp extends Model {
     }
 
     public static function updateSupplyAndLaunched() {
-        $sql = "update " . self::table_name() . " a inner join listings d on a.phase_id = d.phase_id and d.status = 'Active' inner join resi_project_options e on d.option_id = e.options_id and (e.bedrooms = a.bedrooms or (a.bedrooms = 0 and e.bedrooms is null)) and a.unit_type = e.option_type and e.option_category = 'Logical' inner join project_supplies f on d.id = f.listing_id and f.version = 'Website' set a.ltd_supply = f.supply, a.ltd_launched_unit = f.launched";
+        $sql = "update " . self::table_name() . " a inner join listings d on (a.phase_id = d.phase_id and d.listing_category='Primary') and d.status = 'Active' inner join resi_project_options e on d.option_id = e.options_id and (e.bedrooms = a.bedrooms or (a.bedrooms = 0 and e.bedrooms is null)) and a.unit_type = e.option_type and e.option_category = 'Logical' inner join project_supplies f on d.id = f.listing_id and f.version = 'Website' set a.ltd_supply = f.supply, a.ltd_launched_unit = f.launched";
         self::connection()->query($sql);
         self::update_all(array('set' => 'supply = ltd_supply, launched_unit = ltd_launched_unit', 'conditions' => 'launch_date = effective_month'));
         self::update_all(array('set' => 'launched_unit = 0, supply = 0', 'conditions' => 'effective_month != launch_date or launch_date is null'));

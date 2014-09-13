@@ -4,6 +4,7 @@
 class ResiProjectOptions extends ActiveRecord\Model
 {
     static $table_name = 'resi_project_options';
+    static $carpet_area_factor = 1.4;
 
     static $has_many = array(
         array('phases', 'class_name' => "ResiProjectPhase", "foreign_key" => "option_id",

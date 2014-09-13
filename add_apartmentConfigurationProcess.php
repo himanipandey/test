@@ -423,9 +423,9 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						try{						
 										
 						$actual_listing = Listings::find_by_sql("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and phase_type = 'Actual' 
-											and lst.status = 'Active' and rpp.version = 'Cms'");											
+											and lst.status = 'Active' and rpp.version = 'Cms' and lst.listing_category='Primary'");											
 						if(!$actual_listing){
-							Listings::update_all(array('set' => 'status = "Inactive"','conditions' => array('option_id' => $list_option_id)));
+							Listings::update_all(array('set' => 'status = "Inactive"','conditions' => array('option_id' => $list_option_id, 'listing_category' => 'Primary')));
 						}						
 						
 						//fetch all the options of bedrooms----------
@@ -437,7 +437,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 							  $all_options[] = $val->options_id;
 						  }
 						  $all_options = implode(",",$all_options);
-						  $all_active_listing = Listings::find('all',array('conditions'=>array("option_id in ($all_options) and status='Active'")));
+						  $all_active_listing = Listings::find('all',array('conditions'=>array("option_id in ($all_options) and status='Active' and listing_category='Primary'")));
 						  if(!$all_active_listing){
 							  $log_option_ids = '';
 							  //now inactive the logical
@@ -475,7 +475,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 							 }
 						}
 		
-						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive') and rpp.version = 'Cms'");
+						$list_id_res = mysql_query("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and lst.listing_category='Primary' and (rpp.phase_type = 'Logical' or rpp.status = 'Inactive' or lst.status = 'Inactive') and rpp.version = 'Cms'");
 						
 						$all_listings = array();
 						while($list_id = mysql_fetch_object($list_id_res)){
