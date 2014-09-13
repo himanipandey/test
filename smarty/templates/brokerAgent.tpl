@@ -308,6 +308,9 @@ function editAgent(brokerId,id, user_id, name,role,status, email, address, city,
     //$("#fax").val(fax);
     $("#status").val(status);
     $("#email").val(email);
+    if(email!=''){
+      $("#email").prop('readonly', 'readonly');
+    }
     $("#qualification").val(qualification);
     $("#img_date1").val(active_since);
     //$("#pan").val(pan);
@@ -329,6 +332,9 @@ function editAgent(brokerId,id, user_id, name,role,status, email, address, city,
       $(this).attr('disabled',false);       
     });   
     }
+
+
+
 }
 
 function cleanFields(){
@@ -346,6 +352,7 @@ function cleanFields(){
     $("#phone").val('');
     //$("#fax").val('');
     $("#email").val('');
+    $("#email").prop('readonly', false);
     //$("#web").val('');
     //$("#pan").val('');
     $("#status").val('');
@@ -392,7 +399,7 @@ function cleanFields(){
     </TD>
           <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
           <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
-    {if $companyAuth == 1}
+    <!--{if $companyAuth == 1}-->
             <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
                 <TR>
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
@@ -622,7 +629,7 @@ function cleanFields(){
             </TR>
           </TBODY></TABLE>
         </TD>
-        {/if}
+        <!--{/if}-->
       </TR>
     </TBODY></TABLE>
   </TD>

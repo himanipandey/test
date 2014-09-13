@@ -41,6 +41,63 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 
     define("TYPEAHEAD_API_URL", "http://proptiger.com/app/v1/typeahead");
 }
+
+else if($_SERVER['SERVER_NAME']=='marketplacecms.proptiger-ws.com')
+{
+	$myDocRoot = dirname(__FILE__);
+	$myDocRoot = str_replace('\\', '/', $myDocRoot);
+	$gblData['beyondServerDocRoot'] = str_replace($_SERVER['DOCUMENT_ROOT'], '', $myDocRoot);
+	if(empty($gblData['beyondServerDocRoot'])){
+		$gblData['beyondServerDocRoot'] = '/';
+	}else if($gblData['beyondServerDocRoot'] == '/'){
+		// do nothing
+	}else{
+		if(!strstr($gblData['beyondServerDocRoot'],"/"))
+			$gblData['beyondServerDocRoot'] = "/".$gblData['beyondServerDocRoot'];
+		$gblData['beyondServerDocRoot'] .= '/';
+	}
+	// e.g. $gblData['beyondServerDocRoot'] = /proptiger/
+	// notice that is prefixed, as well as suffixed with forward slash.
+
+	$gblData['prodServer'] = false;
+	$t = $_SERVER['SERVER_NAME'];
+	define("IMG_SERVER",'http://www.proptiger.com/');
+	define("JS_SERVER","http://$t" . $gblData['beyondServerDocRoot']);
+	define("CSS_SERVER","http://$t" . $gblData['beyondServerDocRoot']);
+	error_reporting(E_ALL);
+	ini_set('display_errors','0');
+	ini_set('log_errors','1');
+
+	define("BEANSTALK_SERVER", 'localhost');
+	define("BEANSTALK_PORT", '11300');
+	
+	
+	//  CRM Database
+	
+	define("DB_CRM_HOST", "208.109.190.204");
+	define("DB_CRM_USER", "root");
+	define("DB_CRM_PASS", "PropTiger1");
+	define("DB_CRM_NAME", "ptigercrm");
+
+	//  Curl call URL
+	define("SERVER_URL", "http://www.proptiger.com");
+	define("SEND_EMAIL", TRUE);
+	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
+	define("RESALE_GROUP_EMAIL", "projects@proptiger.com");
+    define("CLOUDAGENT_RELEASE_USER_URL", "http://cloudagent.in/CAServices/ReleaseOfflineAgent.php?");
+    define("CLOUDAGENT_CALL_URL", "http://cloudagent.in/CAServices/PhoneManualDial.php?");
+    define("CLOUDAGENT_USER", "proptiger");
+    define("CLOUDAGENT_KEY", "KK6553cb21f45e304ffb6c8c92a279fde5");
+
+	define("IMAGE_SERVICE_URL","http://marketplace.proptiger-ws.com:8080/data/v1/entity/image");
+	define("AUDIO_SERVICE_URL","http://marketplace.proptiger-ws.com:8080/data/v1/entity/audio");
+    define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
+    //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
+    define("USER_API_URL","http://marketplace.proptiger-ws.com:8080/app/v1/register");
+    define("TYPEAHEAD_API_URL", "http://marketplace.proptiger-ws.com:8080/app/v1/typeahead");
+   
+}
+
 else{
 	$myDocRoot = dirname(__FILE__);
 	$myDocRoot = str_replace('\\', '/', $myDocRoot);

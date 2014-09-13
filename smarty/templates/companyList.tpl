@@ -44,7 +44,9 @@ jQuery(document).ready(function(){
 
 	$("#lmkSave").click(function(){
 		var compType = $('#companyTypeEdit').children(":selected").val();
-    if(compType=="Broker" && $("#broker_switch").val()=="Advance Information"){
+    if($("#broker_info_status").val()=="Advance")
+      var broker_info_type="Advance";
+    else if(compType=="Broker" && $("#broker_switch").val()=="Advance Information"){
       var broker_info_type="Basic";
     }
     else if(compType=="Broker" && $("#broker_switch").val()=="Basic Information"){
@@ -264,7 +266,7 @@ if(compType=='Broker'){
       window.error = 1;
     }
     else{
-          $('#errmsgcomphone').html('');
+          $('#errmsgcompphone').html('');
     }
 
     if(pincode!='' && !isNumeric(pincode)){
@@ -488,7 +490,7 @@ function valid_compul(v, fun, msg, msgid ){
   var bool = fun(v);
     if(v==''){
       $('#'+msgid).html('<font color="red">'+msg+'</font>');
-      $("#address").focus();
+      //$("#address").focus();
       window.error = 1;
     }
     else if(v!='' && !bool){
@@ -544,7 +546,7 @@ function cleanFields(){
     $("#imgUploadStatus").val("0");
     $("#uploadedImage").val("");
 
-    $('#create_company input text,#create_company select,#create_company textarea').each(function(key, value){
+    $('#create_company input text,#create_company select,#create_company textarea, :text').each(function(key, value){
       $(this).val('');       
     }); 
 
@@ -602,9 +604,9 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
       //basic_info_bt_clicked();
     }
     else{
+      $("#broker_switch").prop("value","Advance Information");
       $("#broker_switch").prop("disabled", true);
       $("#broker_switch").hide();
-      alert(broker_info_type);
     }
     $("#name").val(name);
     $("#des").val(des);
@@ -751,10 +753,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
      $('#create_company').show('slow'); 
     }
 
-    if (id>0)
-      $("#broker_switch").prop("value","Advance Information");
-
-    if(action == 'read'){
+  if(action == 'read'){
 	  $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
 		if($(this).attr('id') != 'exit_button')		   
 	      $(this).attr('disabled',true);		    
@@ -1553,7 +1552,7 @@ function basic_info_bt_clicked(){
     </TD>
           <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
           <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
-    {if $companyAuth == 1}
+    
             <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
                 <TR>
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
@@ -1587,8 +1586,9 @@ function basic_info_bt_clicked(){
                                        {/foreach}
                                     </select>
                                 </td>
-                        <td width="40%" align="left"> <input type="button" name="broker_switch" id="broker_switch" value="Basic Information" onclick="basic_info_bt_clicked();" style="cursor:pointer" > <input type="hidden", id="broker_info_status"> </td>
-                        <td width="40%" align="left" id="errmsgcomptype"></td>
+                        <td width="40%" align="left" id="errmsgcomptype"></td>        
+                        <td width="40%" align="left"> <input type="button" name="broker_switch" id="broker_switch" value="Basic Information" onclick="basic_info_bt_clicked();" style="cursor:pointer" ><input type="hidden", id="broker_info_status"> </td>
+                       
                     </tr>
                     <tr class="broker_basic">
                       
@@ -2167,7 +2167,7 @@ function basic_info_bt_clicked(){
             </TR>
           </TBODY></TABLE>
         </TD>
-        {/if}
+        
       </TR>
     </TBODY></TABLE>
   </TD>
