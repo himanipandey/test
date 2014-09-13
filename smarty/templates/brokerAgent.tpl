@@ -399,7 +399,7 @@ function cleanFields(){
     </TD>
           <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
           <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
-    {if $companyAuth == 1}
+    <!--{if $companyAuth == 1}-->
             <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
                 <TR>
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
@@ -629,7 +629,7 @@ function cleanFields(){
             </TR>
           </TBODY></TABLE>
         </TD>
-        {/if}
+        <!--{/if}-->
       </TR>
     </TBODY></TABLE>
   </TD>
