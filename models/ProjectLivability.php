@@ -59,27 +59,27 @@ class ProjectLivability extends ActiveRecord\Model {
     }
 
     static function populateClubhouse() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 4) t on pl.PROJECT_ID = t.PROJECT_ID set pl.clubhouse = 1";
+        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 4 and rpa.VERIFIED=1) t on pl.PROJECT_ID = t.PROJECT_ID set pl.clubhouse = 1";
         self::connection()->query($sql);
     }
 
     static function populateSecurity() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 11) t on pl.PROJECT_ID = t.PROJECT_ID set pl.security = 1";
+        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 11 and rpa.VERIFIED=1) t on pl.PROJECT_ID = t.PROJECT_ID set pl.security = 1";
         self::connection()->query($sql);
     }
 
     static function populatePowerBackup() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 13) t on pl.PROJECT_ID = t.PROJECT_ID set pl.power_backup = 1";
+        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 13 and rpa.VERIFIED=1) t on pl.PROJECT_ID = t.PROJECT_ID set pl.power_backup = 1";
         self::connection()->query($sql);
     }
 
     static function populateChildrenPlayArea() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 3) t on pl.PROJECT_ID = t.PROJECT_ID set pl.children_play_area = 1";
+        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 3 and rpa.VERIFIED=1) t on pl.PROJECT_ID = t.PROJECT_ID set pl.children_play_area = 1";
         self::connection()->query($sql);
     }
 
     static function populateOtherAmenity() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID, count(*) count from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID not in (3, 4, 13, 11) group by rpa.PROJECT_ID) t on pl.PROJECT_ID = t.PROJECT_ID set pl.other_amenity_count = t.count";
+        $sql = "update project_livability pl inner join (select rp.PROJECT_ID, count(*) count from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID not in (3, 4, 13, 11) and rpa.VERIFIED=1  group by rpa.PROJECT_ID ) t on pl.PROJECT_ID = t.PROJECT_ID set pl.other_amenity_count = t.count";
         self::connection()->query($sql);
 
         $cityNormalizeSql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, max(other_amenity_count) max from project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set pl.other_amenity_count = pl.other_amenity_count/t.max";

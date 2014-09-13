@@ -652,7 +652,7 @@ $arrDetail = array();
 $arrninty = array();
 
 function ProjectAmenities($projectId, &$arrNotninty, &$arrDetail, &$arrninty) {
-    $qrySel = "SELECT * FROM " . RESI_PROJECT_AMENITIES . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qrySel = "SELECT * FROM " . RESI_PROJECT_AMENITIES . " WHERE PROJECT_ID = '" . $projectId . "' and VERIFIED=1";
     $res_Sel = mysql_query($qrySel);
     $arrDetail = array();
     $cnt = 1;
@@ -668,7 +668,7 @@ function ProjectAmenities($projectId, &$arrNotninty, &$arrDetail, &$arrninty) {
 }
 
 function deleteAmenities($projectId) {
-    $qryDel = "DELETE FROM " . RESI_PROJECT_AMENITIES . " WHERE PROJECT_ID = '" . $projectId . "'";
+    $qryDel = "DELETE FROM " . RESI_PROJECT_AMENITIES . " WHERE PROJECT_ID = '" . $projectId . "' AND VERIFIED=1";
     $res_Del = mysql_query($qryDel);
     if ($res_Del)
         return 1;
