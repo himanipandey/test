@@ -592,7 +592,7 @@ function cleanFields(){
                                   
                                  
                                   <TD align=center class=td-border>Ph.N.-{$v['phone']}, Mobile-{$v['mobile']}, Email-{$v['email']}</TD>
-                                  <TD align=center class=td-border>{$v['active_since']}</TD>
+                                  <TD align=center class=td-border>{$v['active_since']|truncate:13}</TD>
                                   <TD align=center class=td-border>{$v['qualification']}</TD>
                                   <TD align=center class=td-border>{$v['status']}</TD>
                                   
