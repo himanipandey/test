@@ -559,8 +559,8 @@ function cleanFields(){
           $(this).prop('checked', false);
     });
 
-    $("coverage_table").find("tr").remove();
-    $("off_loc_table").find("tr").remove();
+    $("#coverage_table tbody tr").remove();
+    $("#off_loc_table").find("tr").remove();
 
     $('#errmsgcity').html('');
     $('#errmsgcomptype').html('');
