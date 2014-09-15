@@ -559,6 +559,8 @@ function cleanFields(){
           $(this).prop('checked', false);
     });
 
+    $("coverage_table").find("tr").remove();
+    $("off_loc_table").find("tr").remove();
 
     $('#errmsgcity').html('');
     $('#errmsgcomptype').html('');
@@ -1552,7 +1554,7 @@ function basic_info_bt_clicked(){
     </TD>
           <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
           <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
-    
+    {if $companyAuth == 1}
             <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
                 <TR>
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
@@ -2167,7 +2169,7 @@ function basic_info_bt_clicked(){
             </TR>
           </TBODY></TABLE>
         </TD>
-        
+        {/if}
       </TR>
     </TBODY></TABLE>
   </TD>
