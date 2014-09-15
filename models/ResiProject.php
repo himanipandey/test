@@ -165,7 +165,8 @@ class ResiProject extends Objects
         $conn->query($delete_phase);
         $conn->query($delete_inventory);
         $conn->query($delete_supply);
-        $conn->query($delete_price);
+        // commenting to prevent deletion of marketplace listings... should be removed once appropriate fix is done
+        #$conn->query($delete_price);
     }
     
     public static function partially_migrate_projects() {
