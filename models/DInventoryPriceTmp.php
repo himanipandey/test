@@ -177,8 +177,12 @@ class DInventoryPriceTmp extends Model {
         $financialYearSql = "update " . self::table_name() . " dipt inner join (select substring_index(group_concat(id order by effective_month desc), ',', 1) id, substring_index(group_concat($field order by effective_month desc), ',', 1) financial_year_value from " . self::table_name() . " where effective_month between '" . MIN_B2B_DATE . "' and '" . MAX_B2B_DATE . " 'group by phase_id, unit_type, bedrooms, financial_year) t on dipt.id = t.id set dipt." . $field . "_financial_year = t.financial_year_value";
         self::connection()->query($financialYearSql);
     }
-    
+
     public static function removeZeroSizes(){
         self::update_all(array('set' => 'average_size = null, average_total_price = null', 'conditions' => 'average_size = 0'));
+    }
+
+    public static function deleteEntriesWithoutMonth() {
+        self::delete_all(array('conditions' => 'effective_month is null'));
     }
 }

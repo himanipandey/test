@@ -94,6 +94,7 @@ DInventoryPriceTmp::deleteInvalidPriceEntries();
 DInventoryPriceTmp::removeZeroSizes();
 DInventoryPriceTmp::updateFirstPromoisedCompletionDate();
 DInventoryPriceTmp::updateConstructionStatus();
+DInventoryPriceTmp::deleteEntriesWithoutMonth();
 DInventoryPriceTmp::populateDemand();
 
 if (runTests()) {
