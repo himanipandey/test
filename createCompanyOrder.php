@@ -7,6 +7,7 @@ include("dbConfig.php");
 include("modelsConfig.php");
 include("includes/configs/configs.php");
 include_once("./function/locality_functions.php");
+include_once("common/function.php");
 include_once("includes/send_mail_amazon.php");
 AdminAuthentication();
 include('createCompanyOrderProcess.php');
