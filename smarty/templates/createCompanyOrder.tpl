@@ -316,7 +316,7 @@
 							  </td>
 						   </tr>
 						   <tr class="subs_user_{$k}">
-							  <td width="20%" align="right" >Contact No : </td>
+							  <td width="20%" align="right" ><font color="red">*</font>Contact No : </td>
 							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} onkeypress='return isNumberKey(event)' type=text name="txtSubsUserCont[]"  id="txtSubsUserCont{$k}" value="{$txtSubsUserCont}" style="width:140px;"></td> {if $ErrorMsg["txtSubsUserCont"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserCont"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 						   </tr>
 						   <tr class="subs_user_{$k}">
@@ -594,10 +594,10 @@ jQuery(document).ready(function(){
 		errFlagUser = "User-"+v+": Email ID must be valid.";	
 		return false;	
 	  }
-	  /*else if($('#txtSubsUserCont'+v).val().trim() == ''){
+	  if($('#txtSubsUserCont'+v).val().trim() == ''){
 	  	errFlagUser = "User-"+v+": contact no. must be valid.";  
 	  	return false;			
-	  }	*/  	    
+	  }		    
 	});		
 	
 	if(errFlagUser != ''){

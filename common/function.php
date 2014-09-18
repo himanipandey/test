@@ -442,3 +442,49 @@ function checkCompanyExist($email,$id,$mode,$status){
 	  return true;
 }
 
+
+
+function curl_request($post, $method, $url){
+        //echo "curl-start:".microtime(true)."<br>";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                    
+            'Content-Type: application/json',                                                                                
+            'Content-Length: ' . strlen($post))                                                                       
+        ); 
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$method);
+        if($method == "POST" || $method == "PUT")
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        $response= curl_exec($ch);
+       
+        $responseArr = json_decode($response);
+        
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $response_header = substr($response, 0, $header_size);
+        $response_body = json_decode(substr($response, $header_size));
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close ($ch);
+        //echo $response_body->statusCode; echo $response_body->data->id; echo $response_body->error->msg;
+        //print("<pre>"); print_r($pos); echo $url;//echo "head:";var_dump($response_header); echo "body:"; var_dump($response_body);echo "status:"; var_dump($status);
+        //die();
+        //echo "curl-end:".microtime(true)."<br>";
+        return array("header" => $response_header, "id" => $response_body->data->id, "statusCode" => $response_body->statusCode, "error"=> $response_body->error->msg);
+        //return $response;
+    }
+
+
+function randomPassword() {
+    $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+    $pass = array(); //remember to declare $pass as an array
+    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+    for ($i = 0; $i < 8; $i++) {
+        $n = rand(0, $alphaLength);
+        $pass[] = $alphabet[$n];
+    }
+    return implode($pass); //turn the array into a string
+}
+
+
