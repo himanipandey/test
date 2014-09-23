@@ -52,7 +52,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tbody style="display:none"> 
+                                <tbody > 
                                 <tr>
                                     <td>
                                         <label class="lbl"> Select a Suburb </label>
@@ -82,7 +82,7 @@
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="imgCategory" id="imgCat" onchange="updateImageCat()">
+                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
                                             <option value="other">Select Category</option>
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>

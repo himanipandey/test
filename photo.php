@@ -28,6 +28,7 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
        //echo strlen($imgDisplayName);echo "<br>";
                     $imgDisplayName = preg_replace("/\s+/", " ", $imgDisplayName);
                     //echo strlen($imgDisplayName); die();
+        //die($imgDisplayName);
         if ( $city ) {
             $smarty->assign( 'cityId', $city );
         }
@@ -563,7 +564,10 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
     }
     $smarty->assign( 'photoCSS', 1 );
     $localityType = ImageServiceUpload::$image_types;
-    $smarty->assign( 'localityType', $localityType['landmark'] );
+    $smarty->assign( 'localityType', $localityType['locality'] );
+    $landmarkType = ImageServiceUpload::$image_types;
+    $smarty->assign( 'landmarkType', $landmarkType['landmark'] );
+
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."upload-photo.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");

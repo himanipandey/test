@@ -280,12 +280,17 @@ function updateDisplayLocation() {
         }
         $("#imgName").val($('#img-name').val()); 
         return;
+    }
+    else if(window.areaResponse['locality']){
+        $('#area-txt-name').html( "Locality : "+$('#area-type-loc :selected').text()); 
+        $('#img-name').html($('#area-type-loc :selected').text()+"-"+"heroShot").val($('#area-type-loc :selected').text()+"-"+"heroShot"); 
+        $("#imgName").val($('#img-name').val()); 
     } 
     else{
-        $('#area-txt-name').html( "Landmark : "); 
+        $('#area-txt-name').html( "Locality : "); 
 
     }
-     $('#area-txt-name').html( "Landmark : "); 
+     //$('#area-txt-name').html( "Locality : "); 
     /*else if ( window.areaResponse['locality'] != 0 ) {
         areaType = "Locality";
         elementId = "drp-dwn-locality-" + window.areaResponse['locality'];
@@ -331,8 +336,8 @@ function verifyPhotoFormData() {
 
 function validateThisImg( img ) {
     if (! window.areaResponse['landmark'] > 0 ) {
-        alert('please select a Landmark from Search Landmark Field.');
-        return false;
+        //alert('please select a Landmark from Search Landmark Field.');
+        //return false;
     }
     if ( img.files.length == 0 ) {
         alert('please select at-least 1 image');
@@ -360,8 +365,8 @@ function validateThisImg( img ) {
 
 function getPhotos() {
     if (! window.areaResponse['landmark'] > 0 ) {
-        alert('please select a Landmark from Search Landmark Field.');
-        return false;
+        //alert('please select a Landmark from Search Landmark Field.');
+        //return false;
     }
     toggleSaveBtn( 'hide' );
     $("#submitBUtton").show();
