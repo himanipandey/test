@@ -39,33 +39,20 @@ jQuery(document).ready(function(){
 
 
 	$("#agentSave").click(function(){
-		var broker = $('#broker').children(":selected").val();
-		var name = $('#name').val().trim();        
-		var address = $('#address').val().trim();
-    	var city = $('#city option:selected').val();
-		var pincode = $('#pincode').val().trim();
-	    var compphone = $('#compphone').val().trim();
-	    //var img = $('#uploadedImage').val();
-	    //var img = $(':file').val();
-	   // var ipArr = [];
-	    //$('input[name="ips[]"]').each(function() {
-	     // ipArr.push($(this).val());
-	    //});
-		//var person = $('#person').val().trim();
-		var phone = $('#phone').val().trim();
-		//var fax = $('#fax').val().trim();
-		var email = $('#email').val().trim();
-		//var web = $('#web').val();
-		//var pan = $('#pan').val().trim();
-		var status = $('#status').val(); 
-    var agentRole = $('#role option:selected').val();
-    var qualification = $('#qualification option:selected').val();
-    var activeSince = $('#img_date1').val();
-		var agentId = $('#agentId').val();
-    var userId = $('#userId').val();
+	
+		var optionId = $('#optionId').val().trim();        
+		var price = $('#price').val().trim();
+    var discount = $('#discount').val().trim();        
+    var expiryDate = $('#img_date1').val().trim();
+   // var redeemHr = $('#redeemHr :selected').val().trim();        
+    var totalInventory = $('#totalInventory').val().trim();
+    var remainInventory = $('#remainInventory').val().trim();
+
+    	
+    var couponId = $('#couponId').val();
 		 var error = 0;
 	    var mode='';
-	    if(agentId) {
+	    if(couponId) {
         mode = 'update';
         //imgId = $('#imgid').val();
       }
@@ -74,108 +61,115 @@ jQuery(document).ready(function(){
         //imgId = '';
       } 
 
-    if(email==''){
-      $('#errmsgemail').html('<font color="red">Please provide an Email Id.</font>');
-      $("#email").focus();
+    if(remainInventory==''){
+      $('#errmsgRemainInventory').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $("#remainInventory").focus();
         error = 1;
     }
-    else if(!validateEmail(email)){
-       $('#errmsgemail').html('<font color="red">Please provide a valid email.</font>');
-       $("#email").focus();
+    else if(!isNumeric(remainInventory)){
+       $('#errmsgRemainInventory').html('<font color="red">Please provide a valid email.</font>');
+       $("#remainInventory").focus();
           error = 1;
     }
     else{
-          $('#errmsgemail').html('');
+          $('#errmsgRemainInventory').html('');
     }  
-      
+ 
 
-    if(phone==''){
-     	$('#errmsgphone').html('<font color="red">Please provide a Mobile No.</font>');
-	    $("#phone").focus();
-	      error = 1;
-  	}
-  	else if(!isNumeric1(phone)){
-  		 $('#errmsgphone').html('<font color="red">Please provide a 10 digit Numeric Value.</font>');
-  		 $("#phone").focus();
-  	      error = 1;
-  	}
-    else{
-          $('#errmsgphone').html('');
+    if(totalInventory==''){
+      $('#errmsgTotalInventory').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $("#totalInventory").focus();
+        error = 1;
     }
+    else if(!isNumeric(totalInventory)){
+       $('#errmsgTotalInventory').html('<font color="red">Please provide a valid email.</font>');
+       $("#totalInventory").focus();
+          error = 1;
+    }
+    else{
+          $('#errmsgTotalInventory').html('');
+    } 
+
+   /* if(redeemHr==''){
+      $('#errmsgRedeemHr').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $("#redeemHr").focus();
+        error = 1;
+    }
+    else if(!isNumeric(redeemHr)){
+       $('#errmsgRedeemHr').html('<font color="red">Please provide a valid email.</font>');
+       $("#redeemHr").focus();
+          error = 1;
+    }
+    else{
+          $('#errmsgRedeemHr').html('');
+    } 
+*/
+    if(expiryDate==''){
+      $('#errmsgPurchaseExpDate').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $("#img_date1").focus();
+        error = 1;
+    }
+    
+    else{
+          $('#errmsgPurchaseExpDate').html('');
+    } 
+
+    if(discount==''){
+      $('#errmsgDiscount').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $("#discount").focus();
+        error = 1;
+    }
+    else if(!isNumeric(discount)){
+       $('#errmsgDiscount').html('<font color="red">Please provide a valid email.</font>');
+       $("#discount").focus();
+          error = 1;
+    }
+    else{
+          $('#errmsgDiscount').html('');
+    } 
+
+    if(price==''){
+      $('#errmsgPrice').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $("#price").focus();
+        error = 1;
+    }
+    else if(!isNumeric(price)){
+       $('#errmsgPrice').html('<font color="red">Please provide a valid email.</font>');
+       $("#price").focus();
+          error = 1;
+    }
+    else{
+          $('#errmsgPrice').html('');
+    } 
+
+
+    if(optionId==''){
+      $('#errmsgOptionId').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $("#optionId").focus();
+        error = 1;
+    }
+    else if(!isNumeric(optionId)){
+       $('#errmsgOptionId').html('<font color="red">Please provide a valid email.</font>');
+       $("#optionId").focus();
+          error = 1;
+    }
+    else{
+          $('#errmsgOptionId').html('');
+    } 
+
 
    
-    if(compphone!='' && !isNumeric1(compphone)){
-      $('#errmsgcompphone').html('<font color="red">Please provide a Numeric Value.</font>');
-      $("#compphone").focus();
-      error = 1;
-    }
-    else{
-          $('#errmsgcomphone').html('');
-    }
-
-    if(pincode!='' && !isNumeric(pincode)){
-      $('#errmsgpincode').html('<font color="red">Please provide a Numeric Value.</font>');
-      $("#pincode").focus();
-      error = 1;
-    }
-    else{
-          $('#errmsgpincode').html('');
-    }
-
-    if(city <= 0 || city=='') {
-      $('#errmsgcity').html('<font color="red">Please select a City.</font>');
-      $("#city").focus();
-      error = 1;
-    }
-    else{
-          $('#errmsgcity').html('');
-    }
-
-    if(address==''){
-      $('#errmsgaddress').html('<font color="red">Please provide an Address for the company</font>');
-      $("#address").focus();
-      error = 1;
-    }
-    else{
-          $('#errmsgaddress').html('');
-    }
-
-    if(name==''){
-      $('#errmsgname').html('<font color="red">Please provide a Company Name.</font>');
-      $("#name").focus();
-      error = 1;
-    }
-    else{
-          $('#errmsgname').html('');
-    }
-
-    if(broker==''){
-      $('#errmsgbroker').html('<font color="red">Please select a Company Type.</font>');
-      $("#broker").focus();
-      error = 1;
-    }
-    else{
-          $('#errmsgbroker').html('');
-    }
-
-   /* if($("#imgUploadStatus").val()=="0"){
-      error = 1;
-      $('#errmsglogo').html('<font color="red">Please upload a Company Logo.</font>');
-    }
-  */
 
 
 
 
-
-
-    var data = { id:agentId, userId:userId, brokerId:broker, name:name, address : address, city:city, pincode : pincode, compphone : compphone, phone:phone, email:email, status:status, agent_role:agentRole, active_since:activeSince, qualification:qualification, task : "createAgent", mode:mode}; 
+    var data = { id:couponId, optionId:optionId, price:price, discount:discount, expiryDate:expiryDate, totalInventory : totalInventory, remainInventory:remainInventory, mode:mode, task:'create_coupon'}; 
 
 	    if (error==0){
       
 	      	$.ajax({
 	            type: "POST",
-	            url: "/saveBrokerAgent.php",
+	            url: "/saveCouponCatalogue.php",
 	            data: data,
               
 	            success:function(msg){
@@ -188,7 +182,7 @@ jQuery(document).ready(function(){
 	               else if(msg == 2){
 	                //$("#onclick-create").text("Landmark Already Added.");
 	                   
-	                   location.reload(true); 
+	                  // location.reload(true); 
 	               }
 	               else if(msg == 3){
 	                //$("#onclick-create").text("Error in Adding Landmark.");
@@ -206,6 +200,107 @@ jQuery(document).ready(function(){
 
 
 	});
+
+
+
+
+
+
+
+
+  $.widget( "custom.catcomplete", $.ui.autocomplete, {
+   
+    _renderItem: function( ul, item ) {
+      var res = item.id.split("-");
+          var tableName = res[1];
+      return $( "<li>" )
+        .append( $( "<a>" ).text( item.label + "........." +tableName ) )
+        .appendTo( ul );
+    },
+  
+
+  });
+
+
+ $( "#project" ).catcomplete({
+     
+      //alert("hello");
+      source: function( request, response ) {
+        $.ajax({
+          url: "{$url}"+"?query="+$("#project").val().trim()+"&typeAheadType=(project)&rows=10",
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full",
+           
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            //alert(data);
+            response( $.map( data.data, function( item ) {              
+                return {
+                label: item.displayText,
+                value: item.label,
+                id:item.id,
+                }
+              
+            }));
+          }
+        });
+      },
+      
+      select: function( event, ui ) {
+        selectedItem = ui.item;
+        var res = ui.item.id.split("-");
+          //window.projectId = res[2];
+          var projectId = res[2];
+          var data = { projectId:projectId,  task:'get_options'}; 
+          
+          $.ajax({
+              type: "POST",
+              url: "/saveCouponCatalogue.php",
+              data: data,
+              
+              success:function(msg){
+           if(msg == 1){
+                 
+                 //location.reload(true);
+                 $(window).scrollTop(0);
+                  //$("#onclick-create").text("Landmark Successfully Created.");
+                 }
+                 else if(msg == 2){
+                  //$("#onclick-create").text("Landmark Already Added.");
+                     
+                    // location.reload(true); 
+                 }
+                 else if(msg == 3){
+                  //$("#onclick-create").text("Error in Adding Landmark.");
+                     alert("error");
+                 }
+                 else if(msg == 4){
+                  //$("#onclick-create").text("No Landmark Selected.");
+                     alert("no data");
+                 }
+                 else alert(msg);
+              },
+          });
+
+
+        //alert(selectedItem.label);
+        //log( ui.item ?
+         // "Selected: " + ui.item.label :
+          //"Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      },
+
+    });
+
+
 
 });
 
@@ -287,34 +382,21 @@ function validateEmail(email) {
 }
 {/literal}
 
-function editAgent(brokerId,id, user_id, name,role,status, email, address, city, pin, mobile, phone, active_since,qualification, action){
+function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory, inventory_left, action){
 
-  console.log(qualification);
     cleanFields();
-    $("#broker").val(brokerId);
-    $("#agentId").val(id);
-    $("#userId").val(user_id);
-    $('#city').val(city);
-    $("#role").val(role);
-    $("#name").val(name);
-    //$("#des").val(des);
-    $("#address").val(address);
-    $("#pincode").val(pin);
-    $("#compphone").val(phone);
-
-    //$("#person").val(person);
-    $("#phone").val(mobile);
-    //$("#web").val(lmkweb);
-    //$("#fax").val(fax);
-    $("#status").val(status);
-    $("#email").val(email);
-    if(email!=''){
-      $("#email").prop('readonly', 'readonly');
-    }
-    $("#qualification").val(qualification);
-    $("#img_date1").val(active_since);
-    //$("#pan").val(pan);
-    //$('#search-top').hide('slow');
+    $("#couponId").val(id);
+    
+    $('#optionId').val(option_id);
+    $("#price").val(price);
+    $("#discount").val(discount);
+   
+    $("#img_date1").val(expiryDate);
+    
+    $("#totalInventory").val(total_inventory);
+    
+    $("#remainInventory").val(inventory_left);
+   
     $('#search_bottom').hide('slow');
     window.scrollTo(0, 0);
 
@@ -338,44 +420,38 @@ function editAgent(brokerId,id, user_id, name,role,status, email, address, city,
 }
 
 function cleanFields(){
-    $("#broker").val('');
-    $("#agentId").val('');
-    $("#userId").val('');
-    $('#role').val('');
-    $("#name").val('');
-    //$("#des").val('');
-    $("#address").val('');
-    $("#city").val('');
-    $("#pincode").val('');
-    $("#compphone").val('');
-    //$("#person").val('');
-    $("#phone").val('');
-    //$("#fax").val('');
-    $("#email").val('');
-    $("#email").prop('readonly', false);
-    //$("#web").val('');
-    //$("#pan").val('');
-    $("#status").val('');
-    $("#qualification").val('');
+    $("#couponId").val('');
+    
+    $('#optionId').val('');
+    $("#price").val('');
+    $("#discount").val('');
+   
     $("#img_date1").val('');
+    
+    $("#totalInventory").val('');
+    
+    $("#remainInventory").val('');
 
-    $('#errmsgbroker').html('');
-    $('#errmsgcity').html('');
+    $('#errmsgOptionId').html('');
+    $('#errmsgPrice').html('');
     //$('#err').html('');
-    $('#errmsgname').html('');
-    $('#errmsgaddress').html('');
-    $('#errmsgphone').html('');
-    $('#errmsgpincode').html('');
-    //$('#errmsgfax').html('');
-    $('#errmsgcompphone').html('');
-    //$('.errmsgip').each(function() {
-      //$(this).html('');
-    //});
-    //$('#imgPlaceholder').html('');
-    //$('#errmsglogo').html('');
+    $('#errmsgDiscount').html('');
+    $('#errmsgPurchaseExpDate').html('');
+    $('#errmsgTotalInventory').html('');
+    $('#errmsgRemainInventory').html('');
+   
 
 }
 
+function isNumberKey(evt)
+  {
+   var charCode = (evt.which) ? evt.which : event.keyCode;
+  
+   if (charCode > 31 && (charCode < 48 || charCode > 57) || (charCode == 13))
+    return false;
+
+   return true;
+  }
 
 </script>
 
@@ -405,7 +481,7 @@ function cleanFields(){
                   <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                     <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                       <TR>
-                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Broker Agent Management</TD>
+                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Coupon Catalogue Management</TD>
                       </TR>
                     </TBODY></TABLE>
                   </TD>
@@ -415,7 +491,7 @@ function cleanFields(){
                   
 
                   <div align="left" style="margin-bottom:5px;">
-                  <button type="button" id="create_button" align="left">Create New Agent</button>
+                  <button type="button" id="create_button" align="left">Create New Catalogue</button>
                 </div>
                   <div id='create_agent' style="display:none" align="left">
                   <TABLE cellSpacing=2 cellPadding=4 width="93%" align="left" border=0 >
@@ -423,119 +499,63 @@ function cleanFields(){
                     <div>
                     
                     <tr>
-                      <td width="10%" align="right" ><font color = "red">*</font>Company Name: </td>
-                        <td width="20%" height="25" align="left" valign="top">
-                                    <select id="broker" name="broker" onchange="brockerChanged();">
-                                       <option value=''>select Broker</option>
-                                       {foreach from=$brokerArr key=k item=v}
-                                              <option value="{$v['id']}" {if "" ==$v['id']}  selected="selected" {/if}>{$v['name']}</option>
-                                       {/foreach}
-                                    </select>
-                                </td>
-                        <td width="40%" align="left" id="errmsgbroker"></td>
+                      <div class="ui-widget"><td width="10%" align="right" ><font color = "red">*</font>Project : </td>
+                      <td width="40%" align="left" ><input type=text name="project" id="project"  style="width:250px;"></td></div><td width="40%" align="left" id="errmsgOptionId"></td>
+                      <td></td>
                     </tr>
 
                     <tr>
-                      <td width="10%" align="right" ><font color = "red">*</font>Agent Name : </td>
-                      <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
-                      <td><input type="hidden", id="agentId"><input type="hidden", id="userId"></td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Option Id : </td>
+                      <td width="40%" align="left" ><input type=text name="optionId" id="optionId"  style="width:250px;" onkeypress='return isNumberKey(event)'></td><td width="40%" align="left" id="errmsgOptionId"></td>
+                      <td><input type="hidden", id="couponId"></td>
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" >Agent Role : </td>
-                      <td width="30%" align="left"><select id="role" name="role" >
-                        <option name=one value='Broker Agent' selected='selected'>Broker Agent</option>
-                        
-                                
-                        </select>
-                      </td> 
+                      <td width="10%" align="right" ><font color = "red">*</font>Price : </td>
+                      <td width="40%" align="left" ><input type=text name="price" id="price"  style="width:250px;" onkeypress='return isNumberKey(event)'></td><td width="40%" align="left" id="errmsgPrice"></td>
+                     
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" >Status : </td>
-                      <td width="30%" align="left"><select id="status" name="status" >
-                        <option name=one value='Active'> Active </option>
-                        <option name=two value='Inactive' > Inactive </option>
-                                
-                        </select>
-                      </td> 
+                      <td width="10%" align="right" ><font color = "red">*</font>Discount : </td>
+                      <td width="40%" align="left" ><input type=text name="discount" id="discount"  style="width:250px;" onkeypress='return isNumberKey(event)'></td><td width="40%" align="left" id="errmsgDiscount"></td>
+                      <td></td>
                     </tr>
 
                     <tr>
-                      <td colspan="3" align="left" valign="bottom"><hr><b>Contact Details </b> </td>
-                    </tr>
-
-                   <tr>
-                   	<td><table><tr>
-		                      <td width="5%" align="right" ><input type="checkbox" name="copyAddress" id="copyAddress" onchange="copyAddressClick();"></td>
-		                      <td align="left">Copy Company Address</td>
-		            </tr></table></td>          
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" valign="top"><font color = "red">*</font>Address :</td>
-                      <td width="30%" align="left" >
-                      <textarea name="address" rows="10" cols="35" id="address" style="width:250px;"></textarea></td>
-                      <td width="20%" align="left" id="errmsgaddress"></td>
-                   
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" valign="top"><font color = "red">*</font>City :</td>
-                      <td width="30%" align="left" ><select id="city" name="city" >
-                                       <option value=''>select city</option>
-                                       {foreach from=$cityArray key=k item=v}
-                                           <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
-                                       {/foreach}
-                                    </select></td>
-                      <td width="20%" align="left" id="errmsgcity"></td>
-                      
-                      <td><input type="hidden", id="lmkid">  </td>
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" >Pincode : </td>
-                      <td width="30%" align="left"><input type=text name="pincode" id="pincode"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgpincode"></td>
-                    </tr>
-
-
-                    <tr>
-                      <td width="20%" align="right" >Phone No. : </td>
-                      <td width="30%" align="left"><input type=text name="compphone" id="compphone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompphone"></td>
-                    </tr>
-
-                    
-                    <tr>
-                      <td width="20%" align="right" ><font color = "red">*</font>Mobile : </td>
-                      <td width="30%" align="left"><input type=text name="phone" id="phone"  style="width:250px;"></td> <td width="50%" align="left" id="errmsgphone"></td>
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" ><font color = "red">*</font>Email : </td>
-                      <td width="30%" align="left"><input type=text name="email" id="email" style="width:250px;"></td> <td width="50%" align="left" id="errmsgemail"></td>
-                    </tr>
-
-                    <tr>
-                      <td colspan="3"><hr></td>
-                    </tr>
-
-                    <tr>
-                      <td width="20%" align="right" >Operational Since : </td>
+                      <td width="20%" align="right" >Purchase Expiry Date : </td>
                       <td width="30%" align="left" >
                       <input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td>
-                     <td width="20%" align="left" id="errmsginvestdate"></td>
+                     <td width="20%" align="left" id="errmsgPurchaseExpDate"></td>
                     </tr>
-
+<!--
                     <tr>
-                      <td width="20%" align="right" >Agent Qualification : </td>
-                      <td width="30%" align="left"><select id="qualification" name="qualification" >
-                                       <option value=''>Select Qualification</option>
-                                       {foreach from=$sellerQualification key=k item=v}
+                      <td width="20%" align="right" >Redeem Expiry Hours : </td>
+                      <td width="30%" align="left"><select id="redeemHr" name="redeemHr" >
+                                       <option value=''>Select Hours</option>
+                                       {foreach from=$redeemHours key=k item=v}
                                            <option value="{$k}">{$v}</option>
                                        {/foreach}
                                     </select>
                       </td> 
+                      <td width="20%" align="left" id="errmsgRedeemHr"></td>
                     </tr>
+-->
+                    <tr>
+                      <td width="10%" align="right" ><font color = "red">*</font>Total Inventory : </td>
+                      <td width="40%" align="left" ><input type=text name="totalInventory" id="totalInventory"  style="width:250px;" onkeypress='return isNumberKey(event)'></td><td width="40%" align="left" id="errmsgTotalInventory"></td>
+                      <td></td>
+                    </tr>
+
+                    <tr>
+                      <td width="10%" align="right" ><font color = "red">*</font>Inventory Left : </td>
+                      <td width="40%" align="left" ><input type=text name="remainInventory" id="remainInventory"  style="width:250px;" onkeypress='return isNumberKey(event)'></td><td width="40%" align="left" id="errmsgRemainInventory"></td>
+                      <td></td>
+                    </tr>
+
+                    
+
+                    
 
                     <tr>
                       <td >&nbsp;</td>
@@ -558,15 +578,13 @@ function cleanFields(){
                           <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=2% align="center">No.</th>
-                                  <th  width=5% align="center">Broker Name</th>
-                                  <TH  width=8% align="center">Agent Name</TH>
-                                  <TH  width=8% align="center">Agent Role</TH>
-                                  <TH  width=8% align="center">Address</TH>
-                                  <TH  width=8% align="center">Contacts</TH>
-                                  <TH  width=8% align="center">Operational Since</TH>
-                                  <TH  width=8% align="center">Acad Qualification</TH>
-                                  
-                                 <TH width=6% align="center">Status</TH> 
+                                  <th  width=5% align="center">Option Id</th>
+                                  <TH  width=8% align="center">Price</TH>
+                                  <TH  width=8% align="center">Discount</TH>
+                                  <TH  width=8% align="center">Purchase Expiry Date</TH>
+                                  <TH  width=8% align="center">Total Inventory</TH>
+                                  <TH  width=8% align="center">Inventory Left</TH>
+                                 
                                 <TH width=3% align="center">Edit</TH>
                                 </TR>
                               
@@ -575,7 +593,7 @@ function cleanFields(){
                                
                                 {$i=0}
                                 
-                                {foreach from=$agentArr key=k item=v}
+                                {foreach from=$catalogue key=k item=v}
                                     {$i=$i+1}
                                     {if $i%2 == 0}
                                       {$color = "bgcolor = '#F7F7F7'"}
@@ -584,20 +602,20 @@ function cleanFields(){
                                     {/if}
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v['brokerName']}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editAgent('{$v['brokerId']}', '{$v['id']}', '{$v['user_id']}', '{$v['name']}', '{$v['role']}', '{$v['status']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['mobile']}', '{$v['phone']}', '{$v['active_since']}', '{$v['qualification_id']}', 'read');">{$v['name']}</a></TD>
+                                  <TD align=center class=td-border>{$v['option_id']}</TD>
+                                  
                                   <!--<TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>-->
-                                  <TD align=center class=td-border>{$v['role']}</TD>
-                                  <TD align=center class=td-border>{$v['address']}, City-{$v['city_name']}, Pin-{$v['pin']}</TD>
+                                  <TD align=center class=td-border>{$v['coupon_price']}</TD>
+                                  <TD align=center class=td-border>{$v['discount']}</TD>
                                   
                                  
-                                  <TD align=center class=td-border>Ph.N.-{$v['phone']}, Mobile-{$v['mobile']}, Email-{$v['email']}</TD>
-                                  <TD align=center class=td-border>{$v['active_since']|truncate:13}</TD>
-                                  <TD align=center class=td-border>{$v['qualification']}</TD>
-                                  <TD align=center class=td-border>{$v['status']}</TD>
+                                  <TD align=center class=td-border>{$v['purchase_expiry_at']|truncate:13}</TD>
+                                
+                                  <TD align=center class=td-border>{$v['total_inventory']}</TD>
+                                  <TD align=center class=td-border>{$v['inventory_left']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editAgent('{$v['brokerId']}', '{$v['id']}', '{$v['user_id']}', '{$v['name']}', '{$v['role']}', '{$v['status']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['mobile']}', '{$v['phone']}', '{$v['active_since']}', '{$v['qualification_id']}', 'edit');">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCatalogue('{$v['id']}', '{$v['option_id']}', '{$v['coupon_price']}', '{$v['discount']}', '{$v['purchase_expiry_at']}', '{$v['total_inventory']}', '{$v['inventory_left']}', 'edit');">Edit</a> </TD>
 
                                 </TR>
                                 {/foreach}
