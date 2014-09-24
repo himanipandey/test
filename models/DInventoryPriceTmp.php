@@ -9,7 +9,7 @@ class DInventoryPriceTmp extends Model {
 
     static $table_name = 'd_inventory_prices_tmp';
 
-    public static function updateFirstPromoisedCompletionDate($b2bMaxMonth) {
+    public static function updateFirstPromoisedCompletionDate() {
         self::connection()->query("update " . self::table_name() . " dipt inner join (select rpp.PHASE_ID, substring(substring_index(group_concat(rpec.EXPECTED_COMPLETION_DATE order by EXPECTED_COMPLETION_ID ASC), ',', 1), 1, 10) first_promised_completion_date from resi_project_phase rpp inner join resi_proj_expected_completion rpec on rpp.PHASE_ID = rpec.phase_id group by rpp.PHASE_ID) t on dipt.PHASE_ID = t.PHASE_ID set dipt.first_promised_completion_date = t.first_promised_completion_date");
 		self::update_all ( array (
 				'set' => 'first_promised_completion_date = completion_date',
@@ -21,11 +21,7 @@ class DInventoryPriceTmp extends Model {
 		) );
 		self::update_all ( array (
 				'set' => "completion_delay = period_diff(date_format(completion_date, '%Y%m'), date_format(first_promised_completion_date, '%Y%m'))",
-				'conditions' =>  "completion_date > '{$b2bMaxMonth}'"
-		) );
-		self::update_all ( array (
-				'set' => "completion_delay = 0",
-				'conditions' =>  "completion_date <= '{$b2bMaxMonth}'" 
+				'conditions' =>  "first_promised_completion_date < effective_month and completion_date >= effective_month"
 		) );
     }
 
