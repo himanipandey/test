@@ -21,11 +21,11 @@ class DInventoryPriceTmp extends Model {
 		) );
 		self::update_all ( array (
 				'set' => "completion_delay = period_diff(date_format(completion_date, '%Y%m'), date_format(first_promised_completion_date, '%Y%m'))",
-				'conditions' =>  "completion date > " . $b2bMaxMonth
+				'conditions' =>  "completion_date > '{$b2bMaxMonth}'"
 		) );
 		self::update_all ( array (
 				'set' => "completion_delay = 0",
-				'conditions' =>  "completion date <= " . $b2bMaxMonth 
+				'conditions' =>  "completion_date <= '{$b2bMaxMonth}'" 
 		) );
     }
 

@@ -92,7 +92,7 @@ DInventoryPriceTmp::setPeriodAttributes();
 
 DInventoryPriceTmp::deleteInvalidPriceEntries();
 DInventoryPriceTmp::removeZeroSizes();
-DInventoryPriceTmp::updateFirstPromoisedCompletionDate();
+DInventoryPriceTmp::updateFirstPromoisedCompletionDate(MAX_B2B_DATE);
 DInventoryPriceTmp::updateConstructionStatus();
 DInventoryPriceTmp::deleteEntriesWithoutMonth();
 DInventoryPriceTmp::populateDemand();
