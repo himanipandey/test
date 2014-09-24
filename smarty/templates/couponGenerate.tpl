@@ -67,7 +67,7 @@ jQuery(document).ready(function(){
         error = 1;
     }
     else if(!isNumeric(remainInventory)){
-       $('#errmsgRemainInventory').html('<font color="red">Please provide a valid email.</font>');
+       $('#errmsgRemainInventory').html('<font color="red">Please provide a numeric value.</font>');
        $("#remainInventory").focus();
           error = 1;
     }
@@ -77,12 +77,12 @@ jQuery(document).ready(function(){
  
 
     if(totalInventory==''){
-      $('#errmsgTotalInventory').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $('#errmsgTotalInventory').html('<font color="red">Please provide No. of Total Inventory.</font>');
       $("#totalInventory").focus();
         error = 1;
     }
     else if(!isNumeric(totalInventory)){
-       $('#errmsgTotalInventory').html('<font color="red">Please provide a valid email.</font>');
+       $('#errmsgTotalInventory').html('<font color="red">Please provide a numeric value.</font>');
        $("#totalInventory").focus();
           error = 1;
     }
@@ -105,7 +105,7 @@ jQuery(document).ready(function(){
     } 
 */
     if(expiryDate==''){
-      $('#errmsgPurchaseExpDate').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $('#errmsgPurchaseExpDate').html('<font color="red">Please select expiry date.</font>');
       $("#img_date1").focus();
         error = 1;
     }
@@ -115,12 +115,12 @@ jQuery(document).ready(function(){
     } 
 
     if(discount==''){
-      $('#errmsgDiscount').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $('#errmsgDiscount').html('<font color="red">Please provide Coupon Discount.</font>');
       $("#discount").focus();
         error = 1;
     }
     else if(!isNumeric(discount)){
-       $('#errmsgDiscount').html('<font color="red">Please provide a valid email.</font>');
+       $('#errmsgDiscount').html('<font color="red">Please provide a numeric discount.</font>');
        $("#discount").focus();
           error = 1;
     }
@@ -129,12 +129,12 @@ jQuery(document).ready(function(){
     } 
 
     if(price==''){
-      $('#errmsgPrice').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $('#errmsgPrice').html('<font color="red">Please provide Coupon Price.</font>');
       $("#price").focus();
         error = 1;
     }
     else if(!isNumeric(price)){
-       $('#errmsgPrice').html('<font color="red">Please provide a valid email.</font>');
+       $('#errmsgPrice').html('<font color="red">Please provide a numeric Price.</font>');
        $("#price").focus();
           error = 1;
     }
@@ -144,12 +144,12 @@ jQuery(document).ready(function(){
 
 
     if(optionId==''){
-      $('#errmsgOptionId').html('<font color="red">Please provide No. of Inventory Left.</font>');
+      $('#errmsgOptionId').html('<font color="red">Please Select an Option.</font>');
       $("#optionId").focus();
         error = 1;
     }
     else if(!isNumeric(optionId)){
-       $('#errmsgOptionId').html('<font color="red">Please provide a valid email.</font>');
+       $('#errmsgOptionId').html('<font color="red">Please provide a valid Option.</font>');
        $("#optionId").focus();
           error = 1;
     }
@@ -157,9 +157,26 @@ jQuery(document).ready(function(){
           $('#errmsgOptionId').html('');
     } 
 
+    if($("#project").val()==''){
+      $('#errmsgProject').html('<font color="red">Please Select a Project.</font>');
+      $("#project").focus();
+        error = 1;
+    }
+    else{
+          $('#errmsgProject').html('');
+    } 
 
-   
+    if(discount!='' && price!='' && compareNumber(discount,price)){
+      $('#errmsgDiscount').html('<font color="red">discount should be less than price.</font>');
+      $("#discount").focus();
+        error = 1;
+    } 
 
+    if(remainInventory!='' && totalInventory!='' && compareNumber(remainInventory,totalInventory)){
+      $('#errmsgRemainInventory').html('<font color="red">Inventory left should be less than Total Inventory.</font>');
+      $("#remainInventory").focus();
+        error = 1;
+    }
 
 
 
@@ -261,27 +278,30 @@ jQuery(document).ready(function(){
               url: "/saveCouponCatalogue.php",
               data: data,
               
-              success:function(msg){
-           if(msg == 1){
-                 
-                 //location.reload(true);
-                 $(window).scrollTop(0);
-                  //$("#onclick-create").text("Landmark Successfully Created.");
-                 }
-                 else if(msg == 2){
-                  //$("#onclick-create").text("Landmark Already Added.");
-                     
-                    // location.reload(true); 
-                 }
-                 else if(msg == 3){
-                  //$("#onclick-create").text("Error in Adding Landmark.");
-                     alert("error");
-                 }
-                 else if(msg == 4){
-                  //$("#onclick-create").text("No Landmark Selected.");
-                     alert("no data");
-                 }
-                 else alert(msg);
+              success:function(data){
+                 if(data == "error"){
+                       
+                      alert(msg)
+                       $(window).scrollTop(0);
+                        //$("#onclick-create").text("Landmark Successfully Created.");
+                  }
+                      
+                  else {
+                    
+                    var data = $('<textarea />').html(data).text();
+                    data = jQuery.parseJSON(data);
+
+                    console.log(data);
+                    var areaId = 'options';
+                    $('#'+areaId).empty();
+                     $('#'+areaId).append( "<option value='0'><span> Select Option </span></option>" );
+                    for( var __cnt = 0; __cnt < data.length; __cnt++ ) {
+                        var html = "<option value='"+ data[ __cnt ]['OPTIONS_ID'] +"' ";
+                       
+                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +"   (size="+ data[ __cnt ]['SIZE'] + ")</span></option>";
+                        $('#'+areaId).append( html );
+                    }
+                  }
               },
           });
 
@@ -453,6 +473,19 @@ function isNumberKey(evt)
    return true;
   }
 
+function optionIdSelected(value){
+  $("#optionId").val(value);
+}
+
+function compareNumber(v1, v2){
+  if(v1>v2){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
 </script>
 
 
@@ -500,14 +533,16 @@ function isNumberKey(evt)
                     
                     <tr>
                       <div class="ui-widget"><td width="10%" align="right" ><font color = "red">*</font>Project : </td>
-                      <td width="40%" align="left" ><input type=text name="project" id="project"  style="width:250px;"></td></div><td width="40%" align="left" id="errmsgOptionId"></td>
+                      <td width="40%" align="left" ><input type=text name="project" id="project"  style="width:250px;"></td></div><td width="40%" align="left" id="errmsgProject"></td>
                       <td></td>
                     </tr>
 
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Option Id : </td>
-                      <td width="40%" align="left" ><input type=text name="optionId" id="optionId"  style="width:250px;" onkeypress='return isNumberKey(event)'></td><td width="40%" align="left" id="errmsgOptionId"></td>
-                      <td><input type="hidden", id="couponId"></td>
+                      <td width="40%" align="left" ><select name="options" id="options"  style="width:250px;" onChange="optionIdSelected(this.value)">
+                        <option value="">-Select-</option>
+                      </select></td><td width="40%" align="left" id="errmsgOptionId"></td>
+                      <td><input type="hidden", id="couponId"><input type="hidden", id="optionId"></td>
                     </tr>
 
                     <tr>

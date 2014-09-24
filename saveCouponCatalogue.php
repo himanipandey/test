@@ -25,7 +25,7 @@ if($task=='get_options'){
 	while($data = mysql_fetch_assoc($res)){
 		array_push($options, $data);
 	}
-	echo json_encode($options);
+	echo htmlentities(json_encode($options));
 
 }
 
