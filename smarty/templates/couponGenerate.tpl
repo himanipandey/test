@@ -272,38 +272,8 @@ jQuery(document).ready(function(){
           //window.projectId = res[2];
           var projectId = res[2];
           var data = { projectId:projectId,  task:'get_options'}; 
+          fill_options(data);
           
-          $.ajax({
-              type: "POST",
-              url: "/saveCouponCatalogue.php",
-              data: data,
-              
-              success:function(data){
-                 if(data == "error"){
-                       
-                      alert(msg)
-                       $(window).scrollTop(0);
-                        //$("#onclick-create").text("Landmark Successfully Created.");
-                  }
-                      
-                  else {
-                    
-                    var data = $('<textarea />').html(data).text();
-                    data = jQuery.parseJSON(data);
-
-                    console.log(data);
-                    var areaId = 'options';
-                    $('#'+areaId).empty();
-                     $('#'+areaId).append( "<option value='0'><span> Select Option </span></option>" );
-                    for( var __cnt = 0; __cnt < data.length; __cnt++ ) {
-                        var html = "<option value='"+ data[ __cnt ]['OPTIONS_ID'] +"' ";
-                       
-                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +"   (size="+ data[ __cnt ]['SIZE'] + ")</span></option>";
-                        $('#'+areaId).append( html );
-                    }
-                  }
-              },
-          });
 
 
         //alert(selectedItem.label);
@@ -324,6 +294,43 @@ jQuery(document).ready(function(){
 
 });
 
+function fill_options(data1){
+  $.ajax({
+              type: "POST",
+              url: "/saveCouponCatalogue.php",
+              data: data1,
+              
+              success:function(data){
+                 if(data == "error"){
+                       
+                      alert(msg)
+                       $(window).scrollTop(0);
+                        //$("#onclick-create").text("Landmark Successfully Created.");
+                  }
+                      
+                  else {
+                    
+                    var data = $('<textarea />').html(data).text();
+                    data = jQuery.parseJSON(data);
+
+                    console.log(data);
+                    var areaId = 'options1';
+                    $('#'+areaId).empty();
+                     $('#'+areaId).append( "<option value='0'><span> Select Option </span></option>" );
+                    for( var __cnt = 0; __cnt < data.length; __cnt++ ) {
+                      if(data1.option_id==data[ __cnt ]['OPTIONS_ID']){
+                        var html = "<option name='option_"+__cnt +"' selected= 'selected' value='"+ data[ __cnt ]['OPTIONS_ID'] +"' ";
+                      }
+                      else
+                        var html = "<option name='option_"+__cnt +"' value='"+ data[ __cnt ]['OPTIONS_ID'] +"' ";
+                       
+                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +"   (size="+ data[ __cnt ]['SIZE'] + ")<span></option>";
+                        $('#'+areaId).append( html );
+                    }
+                  }
+              },
+          });
+}
 
 function copyAddressClick(){
 	var selectBrokerId = $("#broker").val();
@@ -402,11 +409,18 @@ function validateEmail(email) {
 }
 {/literal}
 
-function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory, inventory_left, action){
+function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory, inventory_left, proj_name, proj_id, action){
 
     cleanFields();
     $("#couponId").val(id);
-    
+
+    $('#project').val(proj_name);
+    var data = { projectId:proj_id,  task:'get_options', option_id:option_id}; 
+    fill_options(data);
+
+    //$('#options1 :selected').val(option_id);
+    $('[name=options1] :selected').val(option_id);
+     //alert($('#options1').val());
     $('#optionId').val(option_id);
     $("#price").val(price);
     $("#discount").val(discount);
@@ -441,7 +455,8 @@ function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory,
 
 function cleanFields(){
     $("#couponId").val('');
-    
+    $('#project').val('');
+    $('#options1').val('');
     $('#optionId').val('');
     $("#price").val('');
     $("#discount").val('');
@@ -474,6 +489,7 @@ function isNumberKey(evt)
   }
 
 function optionIdSelected(value){
+//alert($('#options1').val());
   $("#optionId").val(value);
 }
 
@@ -539,7 +555,7 @@ function compareNumber(v1, v2){
 
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Option Id : </td>
-                      <td width="40%" align="left" ><select name="options" id="options"  style="width:250px;" onChange="optionIdSelected(this.value)">
+                      <td width="40%" align="left" ><select name="options1" id="options1"  style="width:250px;" onChange="optionIdSelected(this.value)">
                         <option value="">-Select-</option>
                       </select></td><td width="40%" align="left" id="errmsgOptionId"></td>
                       <td><input type="hidden", id="couponId"><input type="hidden", id="optionId"></td>
@@ -613,7 +629,8 @@ function compareNumber(v1, v2){
                           <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=2% align="center">No.</th>
-                                  <th  width=5% align="center">Option Id</th>
+                                  <th  width=5% align="center">Project</th>
+                                  <th  width=5% align="center">Option</th>
                                   <TH  width=8% align="center">Price</TH>
                                   <TH  width=8% align="center">Discount</TH>
                                   <TH  width=8% align="center">Purchase Expiry Date</TH>
@@ -637,7 +654,8 @@ function compareNumber(v1, v2){
                                     {/if}
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v['option_id']}</TD>
+                                  <TD align=center class=td-border>{$v['PROJECT_NAME']}</TD>
+                                  <TD align=center class=td-border>{$v['OPTION_NAME']} size({$v['SIZE']})</TD>
                                   
                                   <!--<TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>-->
                                   <TD align=center class=td-border>{$v['coupon_price']}</TD>
@@ -650,7 +668,8 @@ function compareNumber(v1, v2){
                                   <TD align=center class=td-border>{$v['inventory_left']}</TD>
                                   
 
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCatalogue('{$v['id']}', '{$v['option_id']}', '{$v['coupon_price']}', '{$v['discount']}', '{$v['purchase_expiry_at']}', '{$v['total_inventory']}', '{$v['inventory_left']}', 'edit');">Edit</a> </TD>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCatalogue('{$v['id']}', '{$v['option_id']}', '{$v['coupon_price']}', '{$v['discount']}', '{$v['purchase_expiry_at']}', '{$v['total_inventory']}', '{$v['inventory_left']}',
+                                  '{$v['PROJECT_NAME']}', '{$v['PROJECT_ID']}', 'edit');">Edit</a> </TD>
 
                                 </TR>
                                 {/foreach}
