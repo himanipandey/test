@@ -41,7 +41,7 @@
                                     <td>
                                         <label class="lbl"> Upload Photo For </label>
                                         <div class="valueField">
-                                            <input type="radio" name="cb" id="cb" value="0" checked='checked' onclick>Landmark &nbsp; &nbsp;  <input type="radio" name="cb" id="cb" value="1">Locality &nbsp; &nbsp; 
+                                            <input type="radio" name="cb" id="cb" value="0" checked='checked' onclick="radioButtonClicked(this.value);">Landmark &nbsp; &nbsp;  <input type="radio" name="cb" id="cb" value="1" onclick="radioButtonClicked(this.value);">Locality &nbsp; &nbsp; 
                                         </div>
                                     </td>
                                 </tr>
@@ -61,7 +61,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tbody style="display:none;"> 
+                                <tbody class="localityDiv" style="display:none;"> 
                                 <tr>
                                     <td>
                                         <label class="lbl"> Select a Suburb </label>
@@ -87,12 +87,12 @@
                                 
                                 </tbody> 
 
-                                <tr style="display:none;" id="loc_img_cat">
+                                <tr style="display:none;" id="loc_img_cat" class="localityDiv">
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
                                         <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
-                                            <option value="other">Select Category</option>
+                                            
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
                                             {/foreach}
@@ -101,11 +101,11 @@
                                     </td>
                                 </tr>
 
-                                <tr id="lmk_img_cat">
+                                <tr id="lmk_img_cat" class="lmkDiv">
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
+                                        <select name="lmkImgCategory" id="lmkImgCat" onchange="updateDisplayLocation()">
                                             <option value="other">Select Category</option>
                                             {foreach from = $landmarkType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
@@ -115,7 +115,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                <tr class="lmkDiv">
                                     <td width="200px">
                                         <label class="lbl"> Search a Landmark </label>
                                     <div class="ui-widget">

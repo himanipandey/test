@@ -20,7 +20,12 @@ if ( isset( $_REQUEST['upImg'] ) && $_REQUEST['upImg'] == 1 ) {
         $locality = !empty( $_REQUEST['localityId'] ) ? $_REQUEST['localityId'] : 0;
         $landmark = !empty( $_REQUEST['landmarkId'] ) ? $_REQUEST['landmarkId'] : 0;
         $landmarkName = !empty( $_REQUEST['landmarkName'] ) ? $_REQUEST['landmarkName'] : 0;
-        $imgCategory = !empty( $_REQUEST['imgCategory'] ) ? $_REQUEST['imgCategory'] : 'other';
+        $checkbx =  $_REQUEST['cb']; 
+        if($checkbx=="0")
+            $imgCategory = $_REQUEST['lmkImgCategory'] ;
+        else if($checkbx=="1")
+            $imgCategory = !empty( $_REQUEST['imgCategory'] ) ? $_REQUEST['imgCategory'] : 'other';
+        
         $imgDisplayName = !empty( $_REQUEST['imgDisplayName'] ) ? $_REQUEST['imgDisplayName'] : '';
         $imgDescription = !empty( $_REQUEST['imgDescription'] ) ? $_REQUEST['imgDescription'] : null;
         $displayPriority = !empty( $_REQUEST['displayPriority'] ) ? $_REQUEST['displayPriority'] : '999';
