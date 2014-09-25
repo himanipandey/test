@@ -93,8 +93,8 @@ else{
 	define("AUDIO_SERVICE_URL","http://qa.proptiger-ws.com:8080/data/v1/entity/audio");
     define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
-    define("USER_API_URL","http://marketplace.proptiger-ws.com:8080/app/v1/register");
-    define("TYPEAHEAD_API_URL", "http://nightly.proptiger-ws.com:8080/app/v1/typeahead");
+    define("USER_API_URL","http://coupon.proptiger-ws.com:8080/app/v1/register");
+    define("TYPEAHEAD_API_URL", "http://coupon.proptiger-ws.com:8080/app/v1/typeahead");
    
 
 }
