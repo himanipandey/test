@@ -167,14 +167,14 @@ jQuery(document).ready(function(){
     } 
 
     if(discount!='' && price!='' && compareNumber(discount,price)){
-      $('#errmsgDiscount').html('<font color="red">discount should be less than price.</font>');
+      $('#errmsgDiscount').html('<font color="red">discount should be less than or equal to price.</font>');
       $("#discount").focus();
         error = 1;
     } 
 
     if(remainInventory!='' && totalInventory!='' && compareNumber(remainInventory,totalInventory)){
-      $('#errmsgRemainInventory').html('<font color="red">Inventory left should be less than Total Inventory.</font>');
-      $("#remainInventory").focus();
+      $('#errmsgRemainInventory').html('<font color="red">Inventory left should be less than or equal to Total Inventory.</font>');
+      $("#remainInventory").focus(); 
         error = 1;
     }
 
@@ -494,6 +494,8 @@ function optionIdSelected(value){
 }
 
 function compareNumber(v1, v2){
+  v1 = parseInt(v1);
+  v2 = parseInt(v2);
   if(v1>v2){
     return true;
   }
