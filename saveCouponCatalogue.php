@@ -40,6 +40,7 @@ if($task=='create_coupon'){
 	    $redeemHr = $_POST['redeemHr'];
 	    $totalInventory = $_POST['totalInventory'];
 	    $remainInventory = $_POST['remainInventory'];
+	    $email = $_POST['email'];
 	    $mode = $_POST['mode'];
 
 	    if($optionId==0){
@@ -62,9 +63,9 @@ if($task=='create_coupon'){
 				$res = mysql_query($query) or die(mysql_error());
 			    $data = mysql_fetch_assoc($res);
 			    if($data['count'] > 0 ){
-			    	$discounttmp =0;
-			    	$discounttmp = $discount*$v['SIZE'];
-				    $query = "update coupon_catalogue set option_id={$v['OPTIONS_ID']}, coupon_price={$price}, discount={$discounttmp}, purchase_expiry_at='{$expiryDate}', total_inventory={$totalInventory}, inventory_left={$remainInventory}, updated_at=NOW(), updated_by= {$_SESSION['adminId']} where id={$couponId}";
+			    	$discount_type ='SqFt';
+			    	//$discounttmp = $discount*$v['SIZE'];
+				    $query = "update coupon_catalogue set option_id={$v['OPTIONS_ID']}, coupon_price={$price}, discount={$discounttmp}, purchase_expiry_at='{$expiryDate}', total_inventory={$totalInventory}, inventory_left={$remainInventory}, email='{$email}', discount_type='{$discount_type}', updated_at=NOW(), updated_by= {$_SESSION['adminId']} where id={$couponId}";
 			        $res = mysql_query($query) or die(mysql_error());
 			        if(mysql_affected_rows()>0){
 			        	echo "option id {$v['OPTIONS_ID']} updated.<br>";
@@ -73,9 +74,9 @@ if($task=='create_coupon'){
 			        	echo "option id {$v['OPTIONS_ID']} could not be updated.<br>";
 			    }
 			    else{
-			    	$discounttmp =0;
-			    	$discounttmp = $discount*$v['SIZE'];
-				    $query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, created_at, updated_at, updated_by) values({$v['OPTIONS_ID']}, {$price},{$discounttmp},'{$expiryDate}', {$totalInventory},{$remainInventory}, NOW(), NOW(), {$_SESSION['adminId']})";
+			    	$discount_type ='SqFt';
+			    	//$discounttmp = $discount*$v['SIZE'];
+				    $query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, email, discount_type, created_at, updated_at, updated_by) values({$v['OPTIONS_ID']}, {$price},{$discount},'{$expiryDate}', {$totalInventory},{$remainInventory}, '{$email}', '{$discount_type}', NOW(), NOW(), {$_SESSION['adminId']})";
 			        $res = mysql_query($query) or die(mysql_error());
 			        if(mysql_affected_rows()>0){
 			        	echo "option id {$v['OPTIONS_ID']} created.<br>";
@@ -94,15 +95,16 @@ if($task=='create_coupon'){
 		    $data = mysql_fetch_assoc($res);
 		    if($data['count'] > 0 ){
 		    	if($discountType==1){
-		    		$query = "select SIZE from resi_project_options where options_id={$optionId}";
-					$res = mysql_query($query) or die(mysql_error());
-				    $data = mysql_fetch_assoc($res);
-				    //$discounttmp =0;
-		    		$discount = $discount*$data['SIZE'];
+		    		//$query = "select SIZE from resi_project_options where options_id={$optionId}";
+					//$res = mysql_query($query) or die(mysql_error());
+				    //$data = mysql_fetch_assoc($res);
+				    $discount_type ='SqFt';
+		    		//$discount = $discount*$data['SIZE'];
 		    	}
+		    	else
+		    		$discount_type ='Absolute';
 
-
-		        $query = "update coupon_catalogue set option_id={$optionId}, coupon_price={$price}, discount={$discount}, purchase_expiry_at='{$expiryDate}', total_inventory={$totalInventory}, inventory_left={$remainInventory}, updated_at=NOW(), updated_by= {$_SESSION['adminId']} where id={$couponId}";
+		        $query = "update coupon_catalogue set option_id={$optionId}, coupon_price={$price}, discount={$discount}, purchase_expiry_at='{$expiryDate}', total_inventory={$totalInventory}, inventory_left={$remainInventory}, email='{$email}', discount_type='{$discount_type}', updated_at=NOW(), updated_by= {$_SESSION['adminId']} where id={$couponId}";
 		        $res = mysql_query($query) or die(mysql_error());
 		        if(mysql_affected_rows()>0){
 		        	echo "coupon successfully updated.";
@@ -125,9 +127,9 @@ if($task=='create_coupon'){
 			        echo "option id {$v['OPTIONS_ID']} already exist. <br>";
 			    }
 			    else{
-			    	$discounttmp =0;
-			    	$discounttmp = $discount*$v['SIZE'];
-			    	$query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, created_at, updated_at, updated_by) values({$v['OPTIONS_ID']}, {$price},{$discounttmp},'{$expiryDate}', {$totalInventory},{$remainInventory}, NOW(), NOW(), {$_SESSION['adminId']})";
+			    	$discount_type ='SqFt';
+			    	//$discounttmp = $discount*$v['SIZE'];
+			    	$query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, email, discount_type, created_at, updated_at, updated_by) values({$v['OPTIONS_ID']}, {$price},{$discount},'{$expiryDate}', {$totalInventory},{$remainInventory}, '{$email}', '{$discount_type}', NOW(), NOW(), {$_SESSION['adminId']})";
 					$res = mysql_query($query) or die(mysql_error());
 					if($res){
 					 echo "coupon created for {$v['OPTIONS_ID']} <br>";
@@ -150,13 +152,16 @@ if($task=='create_coupon'){
 		    }
 		    else{
 		    	if($discountType==1){
-		    		$query = "select SIZE from resi_project_options where options_id={$optionId}";
-					$res = mysql_query($query) or die(mysql_error());
-				    $data = mysql_fetch_assoc($res);
+		    		//$query = "select SIZE from resi_project_options where options_id={$optionId}";
+					//$res = mysql_query($query) or die(mysql_error());
+				    //$data = mysql_fetch_assoc($res);
+		    		$discount_type ='SqFt';
 				    //$discounttmp =0;
-		    		$discount = $discount*$data['SIZE'];
+		    		//$discount = $discount*$data['SIZE'];
 		    	}
-		    	$query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, created_at, updated_at, updated_by) values({$optionId}, {$price},{$discount},'{$expiryDate}', {$totalInventory},{$remainInventory}, NOW(), NOW(), {$_SESSION['adminId']})";
+		    	else
+		    		$discount_type ='Absolute';
+		    	$query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, email, discount_type, created_at, updated_at, updated_by) values({$optionId}, {$price},{$discount},'{$expiryDate}', {$totalInventory},{$remainInventory}, '{$email}', '{$discount_type}',' NOW(), NOW(), {$_SESSION['adminId']})";
 				$res = mysql_query($query) or die(mysql_error());
 				if($res){
 					 echo "coupon sucessfully created.";

@@ -216,7 +216,7 @@ jQuery(document).ready(function(){
 
 
 
-    var data = { id:couponId, projectId:projectId, optionId:optionId, price:price, discountType:discountType, discount:discount, expiryDate:expiryDate, totalInventory : totalInventory, remainInventory:remainInventory, mode:mode, task:'create_coupon'}; 
+    var data = { id:couponId, projectId:projectId, optionId:optionId, price:price, discountType:discountType, discount:discount, expiryDate:expiryDate, totalInventory : totalInventory, remainInventory:remainInventory, email:email, mode:mode, task:'create_coupon'}; 
 
 	    if (error==0){
       
@@ -351,41 +351,7 @@ function fill_options(data1){
           });
 }
 
-function copyAddressClick(){
-	var selectBrokerId = $("#broker").val();
-	if($("#copyAddress").is(':checked')){
-		if(!jQuery.isEmptyObject({$adressArr})){
-			var addressArr = eval({$adressArr});
-			//console.log(addressArr.);
-			for(var k in addressArr){
-				if (addressArr[k].id==selectBrokerId){
-					$("#address").val(addressArr[k].data[0]);
-					$("#city").val(addressArr[k].data[1]);
-				    $("#pincode").val(addressArr[k].data[2]);
-				    $("#compphone").val(addressArr[k].data[3]);
-				    $("#address").prop('readonly', 'readonly');
-				    $("#city").prop('disabled', true);
-				    $("#pincode").prop('readonly', 'readonly');
-				    $("#compphone").prop('readonly', 'readonly');
-				}
-			}
 
-				/**/
-		}
-	}
-	else{
-		$("#address").prop('readonly', false);
-	    $("#city").prop('disabled', false);
-	    $("#pincode").prop('readonly', false);
-	    $("#compphone").prop('readonly', false);
-
-	}
-}
-
-function brockerChanged(){
-	copyAddressClick();
-
-}
 
 
 function isNumeric(val) {
@@ -428,7 +394,7 @@ function validateEmail(email) {
 }
 {/literal}
 
-function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory, inventory_left, proj_name, proj_id, action){
+function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory, inventory_left, proj_name, proj_id, email, discount_type, action){
 
     cleanFields();
     $("#couponId").val(id);
@@ -445,14 +411,23 @@ function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory,
     $('[name=options1] :selected').val(option_id);
      //alert($('#options1').val());
     $('#optionId').val(option_id);
-    $("#price").val(price);
-    $("#discount").val(discount);
+
+
+    $("#price").val(price.replace(/,/g, ""));
+    $("#discount").val(discount.replace(/,/g, ""));
    
     $("#img_date1").val(expiryDate);
     
     $("#totalInventory").val(total_inventory);
     
     $("#remainInventory").val(inventory_left);
+     $("#email").val(email);
+     if(discount_type=='SqFt'){
+      $("#discountType").val("1");
+     }
+     else{
+      $("#discountType").val("0");
+     }
    
     $('#search_bottom').hide('slow');
     window.scrollTo(0, 0);
@@ -481,6 +456,8 @@ function cleanFields(){
     $('#project').val('');
     $('#projectId').val('');
     $('#options1').val('');
+    $('#project').attr('disabled', false);
+    $('#options1').attr('disabled', false);
     $('#optionId').val('');
     $("#price").val('');
     $("#discount").val('');
@@ -549,6 +526,19 @@ function onChangeValue(id){
     fieldid = "errmsgDiscount";
 
    $("#"+fieldid).html("Rs. "+inWords($("#"+id).val())); 
+   //var res = indianNumberFormat($("#"+id).val());
+    //$("#"+id).val(res);
+
+}
+
+function indianNumberFormat(no){
+  var x= no;
+  var lastThree = x.substring(x.length-3);
+  var otherNumbers = x.substring(0,x.length-3);
+  if(otherNumbers != '')
+      lastThree = ',' + lastThree;
+  var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+ return res;
 }
 
 function isPastDate(date){
@@ -618,7 +608,7 @@ function isPastDate(date){
                     </tr>
 
                     <tr>
-                      <td width="10%" align="right" ><font color = "red">*</font>Option Id : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Option : </td>
                       <td width="40%" align="left" ><select name="options1" id="options1"  style="width:250px;" onChange="optionIdSelected(this.value)">
                         <option value="">-Select-</option>
                       </select></td><td width="40%" align="left" id="errmsgOptionId"></td>
@@ -642,7 +632,7 @@ function isPastDate(date){
 
 
                     <tr>
-                      <td width="10%" align="right" ><font color = "red">*</font>Discount : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Discount on Property : </td>
                       <td width="40%" align="left" ><input type=text name="discount" id="discount"  style="width:250px;" onkeypress='return isNumberKey(event)' onchange="onChangeValue(this.id);"></td><td width="40%" align="left" id="errmsgDiscount"></td>
                       <td></td>
                     </tr>
@@ -711,9 +701,9 @@ function isPastDate(date){
                                   <th  width=2% align="center">No.</th>
                                   <th  width=5% align="center">Project</th>
                                   <th  width=5% align="center">Option</th>
-                                  <TH  width=8% align="center">Price</TH>
-                                  <TH  width=8% align="center">Discount</TH>
-                                  <TH  width=8% align="center">Purchase Expiry Date</TH>
+                                  <TH  width=8% align="center">Coupon Price</TH>
+                                  <TH  width=8% align="center">Discount  on Property</TH>
+                                  <TH  width=8% align="center">Coupon Expiry Date</TH>
                                   <TH  width=8% align="center">Total Inventory</TH>
                                   <TH  width=8% align="center">Inventory Left</TH>
                                  
@@ -734,7 +724,7 @@ function isPastDate(date){
                                     {/if}
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v['PROJECT_NAME']}</TD>
+                                  <TD align=center class=td-border>{$v['BUILDER_NAME']} {$v['PROJECT_NAME']} {$v['PROJECT_ADDRESS']}</TD>
                                   <TD align=center class=td-border>{$v['OPTION_NAME']} size({$v['SIZE']})</TD>
                                   
                                   <!--<TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>-->
@@ -749,7 +739,7 @@ function isPastDate(date){
                                   
 
                                   <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCatalogue('{$v['id']}', '{$v['option_id']}', '{$v['coupon_price']}', '{$v['discount']}', '{$v['purchase_expiry_at']}', '{$v['total_inventory']}', '{$v['inventory_left']}',
-                                  '{$v['PROJECT_NAME']}', '{$v['PROJECT_ID']}', 'edit');">Edit</a> </TD>
+                                  '{$v['PROJECT_NAME']}', '{$v['PROJECT_ID']}', '{$v['email']}','{$v['discount_type']}', 'edit');">Edit</a> </TD>
 
                                 </TR>
                                 {/foreach}
