@@ -78,6 +78,26 @@ jQuery(document).ready(function(){
         //imgId = '';
       } 
 
+if(email != '' && !validateEmail(email)){
+    $('#errmsgEmail').html('<font color="red">Please provide a Valid Contact Email.</font>');
+      $("#email").focus();
+      error = 1;  
+  }
+
+    if(email==''){
+      $('#errmsgEmail').html('<font color="red">Please provide E-mail Id.</font>');
+      $("#email").focus();
+        error = 1;
+    }
+    else if(email != '' && !validateEmail(email)){
+      $('#errmsgEmail').html('<font color="red">Please provide a Valid Contact Email.</font>');
+      $("#email").focus();
+      error = 1;  
+  }
+    else{
+          $('#errmsgEmail').html('');
+    } 
+
     if(remainInventory==''){
       $('#errmsgRemainInventory').html('<font color="red">Please provide No. of Inventory Left.</font>');
       $("#remainInventory").focus();
@@ -406,12 +426,12 @@ function isNumeric1(val) {
         return true;
 }
 
-{literal}
+
 function validateEmail(email) { 
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
 }
-{/literal}
+
 
 function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory, inventory_left, proj_name, proj_id, action){
 
@@ -546,6 +566,11 @@ function isPastDate(date){
     return false;
 }
 
+function validateEmail(email) { 
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
 
 </script>
 
@@ -656,6 +681,12 @@ function isPastDate(date){
                     <tr>
                       <td width="10%" align="right" ><font color = "red">*</font>Inventory Left : </td>
                       <td width="40%" align="left" ><input type=text name="remainInventory" id="remainInventory"  style="width:250px;" onkeypress='return isNumberKey(event)'></td><td width="40%" align="left" id="errmsgRemainInventory"></td>
+                      <td></td>
+                    </tr>
+
+                    <tr>
+                      <td width="10%" align="right" ><font color = "red">*</font>Builder Email : </td>
+                      <td width="40%" align="left" ><input type=text name="email" id="email"  style="width:250px;"></td><td width="40%" align="left" id="errmsgEmail"></td>
                       <td></td>
                     </tr>
 
