@@ -419,9 +419,12 @@ function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory,
     $("#couponId").val(id);
 
     $('#project').val(proj_name);
+    $('#project').attr('disabled', true);
+
     $('#projectId').val(proj_id);
     var data = { projectId:proj_id,  task:'get_options', option_id:option_id}; 
     fill_options(data);
+    $('#options1').attr('disabled', true);
 
     //$('#options1 :selected').val(option_id);
     $('[name=options1] :selected').val(option_id);

@@ -72,8 +72,19 @@ if($task=='create_coupon'){
 			        else
 			        	echo "option id {$v['OPTIONS_ID']} could not be updated.<br>";
 			    }
-			    else
-			    	echo "option id {$v['OPTIONS_ID']} does not exist. <br>";
+			    else{
+			    	$discounttmp =0;
+			    	$discounttmp = $discount*$v['SIZE'];
+				    $query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, created_at, updated_at, updated_by) values({$v['OPTIONS_ID']}, {$price},{$discounttmp},'{$expiryDate}', {$totalInventory},{$remainInventory}, NOW(), NOW(), {$_SESSION['adminId']})";
+			        $res = mysql_query($query) or die(mysql_error());
+			        if(mysql_affected_rows()>0){
+			        	echo "option id {$v['OPTIONS_ID']} created.<br>";
+			        }
+			        else
+			        	echo "option id {$v['OPTIONS_ID']} did not exist and could not be created.<br>";
+
+			    }
+			    	
 			}
 		}
 		else{
