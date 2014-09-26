@@ -64,7 +64,7 @@ jQuery(document).ready(function(){
    // var redeemHr = $('#redeemHr :selected').val().trim();        
     var totalInventory = $('#totalInventory').val().trim();
     var remainInventory = $('#remainInventory').val().trim();
-
+    var email = $('#email').val().trim();
     	
     var couponId = $('#couponId').val();
 		 var error = 0;
@@ -78,14 +78,9 @@ jQuery(document).ready(function(){
         //imgId = '';
       } 
 
-if(email != '' && !validateEmail(email)){
-    $('#errmsgEmail').html('<font color="red">Please provide a Valid Contact Email.</font>');
-      $("#email").focus();
-      error = 1;  
-  }
 
     if(email==''){
-      $('#errmsgEmail').html('<font color="red">Please provide E-mail Id.</font>');
+      $('#errmsgEmail').html('<font color="red">Please provide builder E-mail id.</font>');
       $("#email").focus();
         error = 1;
     }
@@ -426,12 +421,12 @@ function isNumeric1(val) {
         return true;
 }
 
-
+{literal}
 function validateEmail(email) { 
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
 }
-
+{/literal}
 
 function editCatalogue(id, option_id, price,discount,expiryDate,total_inventory, inventory_left, proj_name, proj_id, action){
 
@@ -495,7 +490,9 @@ function cleanFields(){
     $("#totalInventory").val('');
     
     $("#remainInventory").val('');
+    $("#email").val('');
 
+    $('#errmsgProject').html('');
     $('#errmsgOptionId').html('');
     $('#errmsgPrice').html('');
     //$('#err').html('');
@@ -503,7 +500,7 @@ function cleanFields(){
     $('#errmsgPurchaseExpDate').html('');
     $('#errmsgTotalInventory').html('');
     $('#errmsgRemainInventory').html('');
-   
+    $('#errmsgEmail').html('');
 
 }
 
@@ -566,10 +563,7 @@ function isPastDate(date){
     return false;
 }
 
-function validateEmail(email) { 
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-}
+
 
 
 </script>
