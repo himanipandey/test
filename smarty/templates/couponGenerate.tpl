@@ -187,12 +187,12 @@ jQuery(document).ready(function(){
           $('#errmsgProject').html('');
     } 
 
-    if(discount!='' && price!='' && compareNumber(discount,price)){
-      $('#errmsgDiscount').html(discount_word+'<font color="red">discount should be less than or equal to price.</font>');
+    /*if(discount!='' && price!='' && compareNumber(price,discount)){
+      $('#errmsgDiscount').html(discount_word+'<font color="red">discount should be greater than coupon price.</font>');
       $("#discount").focus();
         error = 1;
     } 
-
+*/
     if(remainInventory!='' && totalInventory!='' && compareNumber(remainInventory,totalInventory)){
       $('#errmsgRemainInventory').html('<font color="red">Inventory left should be less than or equal to Total Inventory.</font>');
       $("#remainInventory").focus(); 
@@ -604,7 +604,7 @@ function isPastDate(date){
                     </tr>
 
                     <tr>
-                      <td width="10%" align="right" ><font color = "red">*</font>Price : </td>
+                      <td width="10%" align="right" ><font color = "red">*</font>Coupon Price : </td>
                       <td width="40%" align="left" ><input type=text name="price" id="price"  style="width:250px;" onkeypress='return isNumberKey(event)' onchange="onChangeValue(this.id);"></td><td width="20%" align="left" id="errmsgPrice"></td>
                      
                     </tr>
