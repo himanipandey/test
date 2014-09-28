@@ -36,6 +36,7 @@ jQuery(document).ready(function(){
 	   $('#create_agent').hide('slow'); 
 	 
 	    $('#search_bottom').show('slow');
+      location.reload(true); 
 	});
 
 
@@ -729,7 +730,7 @@ function isPastDate(date){
                                   
                                   <!--<TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>-->
                                   <TD align=center class=td-border>{$v['coupon_price']}</TD>
-                                  <TD align=center class=td-border>{$v['discount']}</TD>
+                                  <TD align=center class=td-border>{$v['discount']} ({$v['discount_type']})</TD>
                                   
                                  
                                   <TD align=center class=td-border>{$v['purchase_expiry_at']|truncate:13}</TD>

@@ -14,10 +14,14 @@ $catalogue = array();
 $query = "select cc.*, rp.PROJECT_ID, rp.PROJECT_NAME, rp.PROJECT_ADDRESS, rb.BUILDER_NAME, rpo.OPTION_NAME, rpo.SIZE from coupon_catalogue cc inner join resi_project_options rpo on rpo.options_id=cc.option_id 
 			inner join resi_project rp on rp.project_id=rpo.project_id 
 			inner join resi_builder rb on rb.builder_id=rp.builder_id
-			group by cc.option_id";
+			group by cc.option_id order by cc.id desc";
 $res = mysql_query($query) or die(mysql_error());
 while($data = mysql_fetch_assoc($res)){
 	$data['coupon_price'] = moneyFormatIndia($data['coupon_price']);
+	if($data['discount_type']=='SqFt'){
+		$data['discount'] = moneyFormatIndia($data['discount']/$data['SIZE']);
+	}
+	else
 	$data['discount'] = moneyFormatIndia($data['discount']);
 	array_push($catalogue, $data);
 }
