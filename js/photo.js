@@ -42,7 +42,7 @@ $(document).ready(function(){
             maxRows: 10,
             name_startsWith: request.term,
             cityId: window.areaResponse['city'],
-            placeType: $("#imgCat :selected").val(),
+            placeType: $("#lmkImgCat :selected").val(),
             task: "upload_photo_page",
 
           },
@@ -248,44 +248,58 @@ function updateDisplayLocation() {
         imgType = "";
         
     }
-     
+    var radio = $('input[name=cb]:checked').val();
+
+    if(radio=="0"){
+        var imgType = $("#lmkImgCat :selected").text();
+        if(imgType.indexOf('Select') >= 0){
+            imgType = "";
+        }
+
+        if ( $('#search').val()!='') {
+            areaType = "Landmark";
+            value = $('#landmarkName').val();
+            $('#area-txt-name').html( areaType + " : " + value );
+            //fill display name for landmarks
+            if ( window.areaResponse['city'] != 0 ) {
+                elementId = "drp-dwn-city-" + window.areaResponse['city'];
+                var cityName = $('#'+elementId).html();
+                if(imgType!="")
+                    $('#img-name').html(imgType+"-"+value).val(imgType+"-"+value); 
+                else if(imgType=="")
+                    $('#img-name').html(value).val(value);
+                else 
+                    $('#img-name').html("").val("");
          
-        //console.log(window.areaResponse);
-
-    
-
-    if ( $('#search').val()!='') {
-        areaType = "Landmark";
-        value = $('#landmarkName').val();
-        $('#area-txt-name').html( areaType + " : " + value );
-        //fill display name for landmarks
-        if ( window.areaResponse['city'] != 0 ) {
-            elementId = "drp-dwn-city-" + window.areaResponse['city'];
-            var cityName = $('#'+elementId).html();
-            if(imgType!="")
-                $('#img-name').html(imgType+"-"+value).val(imgType+"-"+value); 
-            else if(imgType=="")
-                $('#img-name').html(value).val(value);
-            else 
-                $('#img-name').html("").val("");
-     
+            }
+            else{
+                if(imgType!="")
+                 $('#img-name').html(imgType+"-"+value).val(imgType+"-"+value);
+                else if(imgType=="")
+                 $('#img-name').html(value).val(value);
+                else 
+                     $('#img-name').html("").val("");
+            }
+            $("#imgName").val($('#img-name').val()); 
+            return;
         }
         else{
-            if(imgType!="")
-             $('#img-name').html(imgType+"-"+value).val(imgType+"-"+value);
-            else if(imgType=="")
-             $('#img-name').html(value).val(value);
-            else 
-                 $('#img-name').html("").val("");
+            $('#area-txt-name').html( "Landmark" + " : "  );
+            $('#img-name').html("").val("");
+            $("#imgName").val($('#img-name').val()); 
         }
+    }
+    else if(radio=="1"){
+
+        $('#area-txt-name').html( "Locality : "+$('#area-type-loc :selected').text()); 
+        $('#img-name').html($('#area-type-loc :selected').text()+"-"+"heroShot").val($('#area-type-loc :selected').text()+"-"+"heroShot"); 
         $("#imgName").val($('#img-name').val()); 
-        return;
     } 
     else{
-        $('#area-txt-name').html( "Landmark : "); 
+        $('#area-txt-name').html( " "); 
 
     }
-     $('#area-txt-name').html( "Landmark : "); 
+     //$('#area-txt-name').html( "Locality : "); 
     /*else if ( window.areaResponse['locality'] != 0 ) {
         areaType = "Locality";
         elementId = "drp-dwn-locality-" + window.areaResponse['locality'];
@@ -321,18 +335,33 @@ function updateDisplayLocation() {
 }
 
 function verifyPhotoFormData() {
+
+    var radio = $('input[name=cb]:checked').val();
+    var locImgExist = false;
+    if(radio=="1"){
+        var dataResult = getPhotosFromImageService();
+        if ( dataResult['data'] != null && dataResult['data'].length > 0 ) {
+           locImgExist = true;
+           alert("Heroshot Image Already Exist for this localtiy.");
+           return false;
+        }
+        else locImgExist=false;
+    }
+
     var img = document.getElementById('area-img');
     var val = true;
     if ( img ) {
         val = validateThisImg( img );
     }
+
+
     return val;
 }
 
 function validateThisImg( img ) {
     if (! window.areaResponse['landmark'] > 0 ) {
-        alert('please select a Landmark from Search Landmark Field.');
-        return false;
+        //alert('please select a Landmark from Search Landmark Field.');
+        //return false;
     }
     if ( img.files.length == 0 ) {
         alert('please select at-least 1 image');
@@ -358,10 +387,23 @@ function validateThisImg( img ) {
     return true;
 }
 
+function radioButtonClicked(value){
+    if(value=="0"){
+        $(".localityDiv").hide();
+        $(".lmkDiv").show();
+        updateDisplayLocation();
+    }
+    else if(value=="1"){
+        $(".lmkDiv").hide();
+        $(".localityDiv").show();
+        updateDisplayLocation();
+    }
+}
+
 function getPhotos() {
     if (! window.areaResponse['landmark'] > 0 ) {
-        alert('please select a Landmark from Search Landmark Field.');
-        return false;
+        //alert('please select a Landmark from Search Landmark Field.');
+        //return false;
     }
     toggleSaveBtn( 'hide' );
     $("#submitBUtton").show();

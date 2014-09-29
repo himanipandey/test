@@ -23,7 +23,7 @@
                                 <tr>
                                     <td class="hdng" colspan="2">
                                         <IMG height="18" hspace="5" width="18" src="images/arrow.gif">
-                                        Upload photos for Locality/Suburb/City
+                                        Upload photos for Locality/Landmark
                                     </td>
                                 </tr>
                                 {if !empty($message)}
@@ -36,6 +36,15 @@
                                     </tr>
                                 {/if}
                                 <form method="post" onsubmit="return verifyPhotoFormData();" enctype="multipart/form-data">
+
+                                <tr>
+                                    <td>
+                                        <label class="lbl"> Upload Photo For </label>
+                                        <div class="valueField">
+                                            <input type="radio" name="cb" id="cb" value="0" checked='checked' onclick="radioButtonClicked(this.value);">Landmark &nbsp; &nbsp;  <input type="radio" name="cb" id="cb" value="1" onclick="radioButtonClicked(this.value);">Locality &nbsp; &nbsp; 
+                                        </div>
+                                    </td>
+                                </tr>
 
                                 <tr>
                                     <td>
@@ -52,7 +61,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tbody style="display:none"> 
+                                <tbody class="localityDiv" style="display:none;"> 
                                 <tr>
                                     <td>
                                         <label class="lbl"> Select a Suburb </label>
@@ -78,12 +87,12 @@
                                 
                                 </tbody> 
 
-                                <tr>
+                                <tr style="display:none;" id="loc_img_cat" class="localityDiv">
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="imgCategory" id="imgCat" onchange="updateImageCat()">
-                                            <option value="other">Select Category</option>
+                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
+                                            
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
                                             {/foreach}
@@ -92,7 +101,21 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                <tr id="lmk_img_cat" class="lmkDiv">
+                                    <td><label class="lbl">Image Category </label>
+                                   <div class="valueField">
+                                  
+                                        <select name="lmkImgCategory" id="lmkImgCat" onchange="updateDisplayLocation()">
+                                            <option value="other">Select Category</option>
+                                            {foreach from = $landmarkType key = key item = item}
+                                                <option value="{$item}">{$item}</option>
+                                            {/foreach}
+                                            
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr class="lmkDiv">
                                     <td width="200px">
                                         <label class="lbl"> Search a Landmark </label>
                                     <div class="ui-widget">
