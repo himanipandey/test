@@ -161,6 +161,14 @@ jQuery(document).ready(function(){
        $("#discount").focus();
           error = 1;
     }
+    else if(isNumeric(discount)){
+      d = parseInt(discount);
+      if(d>=2000000){
+         $('#errmsgDiscount').html(discount_word+'<font color="red">Discount on Property should be less than Rs 20 Lakh.</font>');
+         $("#discount").focus();
+            error = 1;
+      }
+    }
     else{
           $('#errmsgDiscount').html(discount_word+'');
     } 
@@ -803,4 +811,4 @@ function isPastDate(date){
             }
         });
    
- </script>
+</script>
