@@ -335,11 +335,26 @@ function updateDisplayLocation() {
 }
 
 function verifyPhotoFormData() {
+
+    var radio = $('input[name=cb]:checked').val();
+    var locImgExist = false;
+    if(radio=="1"){
+        var dataResult = getPhotosFromImageService();
+        if ( dataResult['data'] != null && dataResult['data'].length > 0 ) {
+           locImgExist = true;
+           alert("Heroshot Image Already Exist for this localtiy.");
+           return false;
+        }
+        else locImgExist=false;
+    }
+
     var img = document.getElementById('area-img');
     var val = true;
     if ( img ) {
         val = validateThisImg( img );
     }
+
+
     return val;
 }
 
