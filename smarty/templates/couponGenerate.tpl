@@ -163,11 +163,28 @@ jQuery(document).ready(function(){
     }
     else if(isNumeric(discount)){
       d = parseInt(discount);
+      if(discountType=="1"){
+        if(optionId=="0"){
+          //var maxOptionSize = Math.max.apply(Math, window.optionSizArr);
+          var maxOptionSize = Math.max.apply(Math, window.optionSizArr.map(function(a){ return a.option_size; }));
+          d = d*maxOptionSize;
+          //console.log(d);
+        }
+        else{
+          var optionSize =  Math.max.apply(Math, window.optionSizArr.map(function(a){ console.log(optionId); if(a.option_id==optionId) { return a.option_size; } else return 0; }));
+          d = d*optionSize;
+          //console.log(optionId);
+        }
+      }
+
       if(d>=2000000){
          $('#errmsgDiscount').html(discount_word+'<font color="red">Discount on Property should be less than Rs 20 Lakh.</font>');
          $("#discount").focus();
             error = 1;
       }
+      else{
+            $('#errmsgDiscount').html(discount_word+'');
+      } 
     }
     else{
           $('#errmsgDiscount').html(discount_word+'');
@@ -344,7 +361,13 @@ function fill_options(data1){
                     var areaId = 'options1';
                     $('#'+areaId).empty();
                      $('#'+areaId).append( "<option value='-1'><span> Select Option </span></option>" );
+                     window.optionSizArr = []; //for validation purpose
+                     //console.log(window.optionSizArr); 
                     for( var __cnt = 0; __cnt < data.length; __cnt++ ) {
+                      var tmp = {};
+                      tmp.option_id = data[ __cnt ]['OPTIONS_ID'];
+                      tmp.option_size = data[ __cnt ]['SIZE']; 
+                      window.optionSizArr.push(tmp);
                       if(data1.option_id==data[ __cnt ]['OPTIONS_ID']){
                         var html = "<option name='option_"+__cnt +"' selected= 'selected' value='"+ data[ __cnt ]['OPTIONS_ID'] +"' ";
                       }
@@ -487,6 +510,7 @@ function cleanFields(){
     $('#errmsgTotalInventory').html('');
     $('#errmsgRemainInventory').html('');
     $('#errmsgEmail').html('');
+    window.optionSizArr = [];
 
 }
 
