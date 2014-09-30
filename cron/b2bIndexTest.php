@@ -6,7 +6,7 @@
  */
 
 function runTests(){
-    return verifySupply() && verifyLaunched() && verifyPhases() && verifyNonZeroColumns() && verifyNegativeUnitsSold();# && verifyPlotBedrooms();
+    return verifySupply() && verifyLaunched() && verifyPhases() && verifyNonZeroColumns() && verifyNegativeUnitsSold() && verifyInvalidMonths();# && verifyPlotBedrooms();
 }
 
 // verifying if supply and launched unit in new table is correct
@@ -67,6 +67,15 @@ function verifyPlotBedrooms(){
         logError("Error in Plot Bedroom Test");
     }
     return $result;
+}
+
+function verifyInvalidMonths(){
+  $count = DInventoryPriceTmp::count(array('conditions' => 'effective_month is null'));
+  $result = ($count==0);
+  if(!$result){
+    logError("Error in Invalid Month Check test");
+  }
+  return $result;
 }
 
 function logError($msg){
