@@ -59,6 +59,7 @@ while ($completedPhaseConfigCount < $allPhaseConfigCount) {
 
     $aAllInventory = ProjectAvailability::getInventoryForIndexing($aPhaseId);
     $aAllPrice = ListingPrices::getPriceForIndexing($aPhaseId);
+    $aAllSecondaryPrice = ProjectSecondaryPrice::getMonthWisePriceForPhases($aPhaseId);
     $logger->info("Price and inventory data retrieved");
     
     removeInvalidPhaseData($aAllInventory);
@@ -66,11 +67,13 @@ while ($completedPhaseConfigCount < $allPhaseConfigCount) {
 
     fillIntermediateMonths($aAllInventory);
     fillIntermediateMonths($aAllPrice);
+    fillIntermediateMonths($aAllSecondaryPrice);
 
     $aAllInventory = indexArrayOnKey($aAllInventory, 'unique_key');
     $aAllPrice = indexArrayOnKey($aAllPrice, 'unique_key');
+    $aAllSecondaryPrice = indexArrayOnKey($aAllSecondaryPrice, 'unique_key');
 
-    createDocuments($aConfigKey, $aAllInventory, $aAllPrice);
+    createDocuments($aConfigKey, $aAllInventory, $aAllPrice, $aAllSecondaryPrice);
     $logger->info("Indexing complete for $completedPhaseCount phases");
 }
 
@@ -86,7 +89,6 @@ DInventoryPriceTmp::updateProjectDominantType();
 DInventoryPriceTmp::setLaunchDateMonthSales();
 DInventoryPriceTmp::setInventoryOverhang();
 DInventoryPriceTmp::setRateOfSale();
-DInventoryPriceTmp::updateSecondaryPriceForAllProjects();
 
 DInventoryPriceTmp::setPeriodAttributes();
 
@@ -94,7 +96,6 @@ DInventoryPriceTmp::deleteInvalidPriceEntries();
 DInventoryPriceTmp::removeZeroSizes();
 DInventoryPriceTmp::updateFirstPromoisedCompletionDate();
 DInventoryPriceTmp::updateConstructionStatus();
-DInventoryPriceTmp::deleteEntriesWithoutMonth();
 DInventoryPriceTmp::populateDemand();
 
 if (runTests()) {
@@ -110,7 +111,7 @@ if (runTests()) {
 #echo memory_get_peak_usage()."\n";
 #echo memory_get_peak_usage(true)."\n";
 
-function createDocuments($aConfigKey, $aAllInventory, $aAllPrice) {
+function createDocuments($aConfigKey, $aAllInventory, $aAllPrice, $aAllSecondaryPrice) {
     global $logger;
     global $handle;
     global $bulkInsert;
@@ -124,17 +125,21 @@ function createDocuments($aConfigKey, $aAllInventory, $aAllPrice) {
             $monthKey = $key . "/" . $currentMonth;
             $prevMonthKey = $key . "/" . getMonthShiftedDate($currentMonth, -1);
 
+            $configDetail = getConfigDetailForKey($monthKey);
+            $secondaryPriceKey = $configDetail->phase_id . "/" . $currentMonth;
+
             $entry = array();
             $entry['unique_key'] = $monthKey;
             $entry['effective_month'] = $currentMonth;
 
             setConfigLevelValues($entry);
-
-            if (isset($aAllPrice[$monthKey])) {
+            
+            $isMonthBetweenBoundaryDates = (MIN_B2B_DATE <= $currentMonth) && (MAX_B2B_DATE >= $currentMonth);
+            if ($isMonthBetweenBoundaryDates && isset($aAllPrice[$monthKey])) {
                 $entry['average_price_per_unit_area'] = $aAllPrice[$monthKey]->average_price_per_unit_area;
                 $entry['average_total_price'] = $aAllPrice[$monthKey]->average_total_price;
             }
-            if (isset($aAllInventory[$monthKey])) {
+            if ($isMonthBetweenBoundaryDates && isset($aAllInventory[$monthKey])) {
                 $entry['ltd_supply'] = $aAllInventory[$monthKey]->ltd_supply;
                 $entry['ltd_launched_unit'] = $aAllInventory[$monthKey]->ltd_launched;
                 $entry['inventory'] = $aAllInventory[$monthKey]->inventory;
@@ -143,6 +148,9 @@ function createDocuments($aConfigKey, $aAllInventory, $aAllPrice) {
                 } elseif ($entry['effective_month'] === $entry['launch_date']) {
                     $entry['units_sold'] = $aAllInventory[$monthKey]->ltd_launched - $aAllInventory[$monthKey]->inventory;
                 }
+            }
+            if ($isMonthBetweenBoundaryDates && isset($aAllSecondaryPrice[$secondaryPriceKey])){
+                $entry['average_secondary_price_per_unit_area'] = $aAllSecondaryPrice[$secondaryPriceKey]->secondary_price;
             }
             $currentMonth = getMonthShiftedDate($currentMonth, 1);
             $new = new DInventoryPriceTmp($entry);
@@ -157,10 +165,10 @@ function getAllMonths($configKey) {
     global $aAllIndexedPhases;
 
     $months = array();
-    if (!is_null($aAllIndexedPhases[$configKey]->launch_date)) {
+    if (!is_null($aAllIndexedPhases[$configKey]->launch_date) && $aAllIndexedPhases[$configKey]->launch_date != INVALID_DATE) {
         $months[] = $aAllIndexedPhases[$configKey]->launch_date;
     }
-    if (!is_null($aAllIndexedPhases[$configKey]->completion_date)) {
+    if (!is_null($aAllIndexedPhases[$configKey]->completion_date) && $aAllIndexedPhases[$configKey]->completion_date != INVALID_DATE) {
         $months[] = $aAllIndexedPhases[$configKey]->completion_date;
     }
 
@@ -212,12 +220,17 @@ function fillIntermediateMonths(&$aData) {
     $aData = $aNewData;
 }
 
+function getConfigDetailForKey($key){
+    global $aAllIndexedPhases;
+    return $aAllIndexedPhases[substr($key, 0, -11)];
+}
+
 function setConfigLevelValues(&$entry) {
     global $aAllIndexedPhases;
 
     $key = $entry['unique_key'];
 
-    $configDetails = $aAllIndexedPhases[substr($key, 0, -11)];
+    $configDetails = getConfigDetailForKey($key);
 
     $entry['country_id'] = 1;
     $entry['country_name'] = 'India';

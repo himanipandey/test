@@ -43,4 +43,8 @@ class ProjectSecondaryPrice extends ActiveRecord\Model
         $res = $res[0]->all_types;
         return explode(',', $res);
     }
+
+    public static function getMonthWisePriceForPhases($aPhaseIds){
+      return self::find('all', array('conditions' => array('phase_id' => $aPhaseIds), 'group' => 'phase_id, effective_date', 'select' => 'phase_id, effective_date effective_month, avg((min_price+max_price)/2) as secondary_price, concat(phase_id, "/", effective_date) as unique_key, phase_id as key_without_month', 'order'=>'phase_id, effective_date'));
+    }
 }
