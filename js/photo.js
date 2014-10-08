@@ -155,6 +155,9 @@ function areaTypeChanged( areaType ) {
     }
     var data = getSubLocData();
     updateDropDown( data );
+    if ( areaType == 'city' ) {
+        updateDisplayLocation('city');
+    }
     updateDisplayLocation();
 }
 
@@ -238,7 +241,7 @@ function updateImageCat(){
         $('#img-name').html("").val("");   
 }
 
-function updateDisplayLocation() {
+function updateDisplayLocation(id) {
     initVar();
     var areaType  = "",
         elementId = "",
@@ -254,6 +257,14 @@ function updateDisplayLocation() {
         var imgType = $("#lmkImgCat :selected").text();
         if(imgType.indexOf('Select') >= 0){
             imgType = "";
+        }
+
+        if(id=="lmkImgCat" || id=='city'){
+            $('#search').val('');
+            selectedItem = "";
+            $("#landmarkId").val("");
+            $("#landmarkName").val("");
+            window.areaResponse['landmark'] = "";
         }
 
         if ( $('#search').val()!='') {
@@ -396,6 +407,9 @@ function radioButtonClicked(value){
     else if(value=="1"){
         $(".lmkDiv").hide();
         $(".localityDiv").show();
+        window.areaResponse['suburb'] = 0;
+        var data = getSubLocData();
+        updateDropDown( data );
         updateDisplayLocation();
     }
 }
