@@ -3,6 +3,7 @@ class B2BProperties extends ActiveRecord\Model {
 	
 	static $table_name = 'b2b_properties';
 	static $MAX_B2B_DATE_DbColumnLabel = 'end_date';
+	static $MAX_B2B_SCRIPT_DATE_DbColumnLabel = 'indexing_script_end_date';
 	static $MIN_B2B_DATE_DbColumnLabel = 'start_date';
 	static $DEMAND_START_DATE_DbColumnLabel = 'demand_start_date';
 
@@ -13,6 +14,10 @@ class B2BProperties extends ActiveRecord\Model {
 	public static function getB2BMaxDate() {
 		return (self::fetchAndExtractB2BPropertyValue(self::$MAX_B2B_DATE_DbColumnLabel));
 	}
+
+  public static function getB2BScriptMaxDate() {
+    return (self::fetchAndExtractB2BPropertyValue(self::$MAX_B2B_SCRIPT_DATE_DbColumnLabel));
+  }
 	
 	public static function getB2BDemandStartDate() {
 		return (self::fetchAndExtractB2BPropertyValue(self::$DEMAND_START_DATE_DbColumnLabel));
