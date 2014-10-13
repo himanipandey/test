@@ -167,11 +167,26 @@
 			
 			  
 			
-            $post = '{"userName":"'.$email.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pwd.'","confirmPassword":"'.$pwd.'","countryId":"+91"}';
+            //$post = '{"userName":"'.$email.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pwd.'","confirmPassword":"'.$pwd.'","countryId":"+91"}';
             
+            $contactNumbers = array();
+			$contact = array(
+						"contactNumber"=> $phone
+					);
+			array_push($contactNumbers, $contact);
+            
+            $post = array(
+            			"fullName"=>$email,
+            			"email"=>$email,
+            			"contactNumbers"=>$contactNumbers,
+            			"password"=>$pwd,
+            			"confirmPassword"=>$pwd,
+            			"countryId"=>"+91"
+            		);
+
             $url = USER_API_URL;
             //echo $post;
-            $response = curl_request($post, 'POST', $url);
+            $response = curl_request(json_encode($post), 'POST', $url);
             if($response['statusCode']=="2XX"){
               $userId = $response['id'];
             }
@@ -391,11 +406,28 @@
 			  //mysql_query("INSERT INTO `proptiger`.`FORUM_USER` (`USER_ID`, `USERNAME`, `EMAIL`, `CONTACT`, `PROVIDERID`, `PROVIDER`, `FB_IMAGE_URL`, `IMAGE`, `PASSWORD`, `CITY`, `COUNTRY_ID`, `UNIQUE_USER_ID`, `CREATED_DATE`, `STATUS`, `IS_SUBSCRIBED`, `UNSUBSCRIBED_AT`) VALUES (NULL, '', '".$email."','".$phone."', '0', '', '', ' ', '".md5($pwd)."', '".$cityArray[$compArr[0]['city']]."', '1', '', '".date('Y-m-d H:i:s')."', '1', 0, '".date('Y-m-d H:i:s')."');") or die(mysql_error());
 			  //$userId = mysql_insert_id();
 
-			  $post = '{"userName":"'.$email.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pwd.'","confirmPassword":"'.$pwd.'","countryId":"+91"}';
+			 //$post = '{"userName":"'.$email.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pwd.'","confirmPassword":"'.$pwd.'","countryId":"+91"}';
+
+			$contactNumbers = array();
+			$contact = array(
+						"contactNumber"=> $phone
+					);
+			array_push($contactNumbers, $contact);
+
+			
+            
+			  $post = array(
+            			"fullName"=>$email,
+            			"email"=>$email,
+            			"contactNumbers"=>$contactNumbers,
+            			"password"=>$pwd,
+            			"confirmPassword"=>$pwd,
+            			"countryId"=>"+91"
+            		);
             
             $url = USER_API_URL;
             //echo $post;
-            $response = curl_request($post, 'POST', $url);
+            $response = curl_request(json_encode($post), 'POST', $url);
             if($response['statusCode']=="2XX"){
               $userId = $response['id'];
             }
