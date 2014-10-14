@@ -629,7 +629,7 @@ if ($_POST['forwardFlag'] == 'yes') {
                 update_remark_status($_POST['newRemarkId']);
         }
     }
-    if($flgLogical == 1){
+    if($flgLogical == 1 && !($projectDetails[0]['project_status'] == 'NotLaunched' || $projectDetails[0]['project_status'] == 'OnHold' || $projectDetails[0]['project_status'] == 'Cancelled')){
         $errorValidation = "<font color = 'red'>Please enter supply for all phases</font>";
         $smarty->assign("errorValidation",$errorValidation);
     }else
