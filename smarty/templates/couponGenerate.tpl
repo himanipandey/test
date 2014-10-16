@@ -426,7 +426,7 @@ function validateEmail(email) {
     
     var res = email.split(";");
     var email1 = res[0].trim();
-    var email2 = res[1].trim(); alert("1"+email1+ "  2"+email2);
+    var email2 = res[1].trim(); //alert("1"+email1+ "  2"+email2);
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return (re.test(email1) && re.test(email2));
 
