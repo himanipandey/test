@@ -453,7 +453,8 @@ function curl_request($post, $method, $url){
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(                    
             'Content-Type: application/json',                                                                                
-            'Content-Length: ' . strlen($post))                                                                       
+            'Content-Length: ' . strlen($post),
+            'applicationType: b2b')                                                                       
         ); 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$method);
         if($method == "POST" || $method == "PUT")
