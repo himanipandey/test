@@ -78,7 +78,7 @@
                                         <label class="lbl"> Select a Locality </label>
                                         <div class="valueField">
                                             <input type="hidden" name="upImg" value="1">
-                                            <select name="localityId" id="area-type-loc" onchange="updateDisplayLocation()">
+                                            <select name="localityId" id="area-type-loc" onchange="updateDisplayLocation(this.id)">
                                                 <option value="">Select Locality</option>
                                             </select>
                                         </div>
@@ -91,7 +91,7 @@
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation()">
+                                        <select name="imgCategory" id="imgCat" onchange="updateDisplayLocation(this.id)">
                                             
                                             {foreach from = $localityType key = key item = item}
                                                 <option value="{$item}">{$item}</option>
@@ -105,7 +105,7 @@
                                     <td><label class="lbl">Image Category </label>
                                    <div class="valueField">
                                   
-                                        <select name="lmkImgCategory" id="lmkImgCat" onchange="updateDisplayLocation()">
+                                        <select name="lmkImgCategory" id="lmkImgCat" onchange="updateDisplayLocation(this.id)">
                                             <option value="other">Select Category</option>
                                             {foreach from = $landmarkType key = key item = item}
                                                 <option value="{$item}">{$item}</option>

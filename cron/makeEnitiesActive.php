@@ -3,9 +3,11 @@ $docroot = dirname(__FILE__) . "/../";
 
 require_once $docroot.'dbConfig.php';
 
-list($builders, $localities) = getActiveBuildersAndLocalites();
-$suburbs = getActiveSuburbs($localities);
-$cities = getActiveCities($suburbs);
+//list($builders, $localities) = getActiveBuildersAndLocalites();
+$builders = getActiveBuilders();
+$localities = getActiveLocalities();
+$suburbs = getActiveSuburbs();
+$cities = getActiveCities();
 
 print_r($builders);
 print_r($localities);
@@ -16,18 +18,19 @@ print_r($cities);
 setEntityActive($localities, "locality_id", "cms.locality");
 setEntityActive($suburbs, "suburb_id", "cms.suburb");
 setEntityActive($cities, "city_id", "cms.city");
+setEntityActive($builders, "builder_id", "cms.resi_builder");
 
 // making entities in active.
 setEntityInActive($localities, "locality_id", "cms.locality");
 setEntityInActive($suburbs, "suburb_id", "cms.suburb");
 setEntityInActive($cities, "city_id", "cms.city");
+setEntityActive($builders, "builder_id", "cms.resi_builder");
 
 function setEntityInActive($entityData, $columnName, $entityTable)
 {
     $entityStr = implode(",", $entityData);
-    
+        
     $sql = "UPDATE $entityTable set status = 'Inactive' WHERE $columnName NOT IN ($entityStr)";
-QRY;
     $rs = doQuery($sql);
 
     if(empty($rs))
@@ -51,11 +54,9 @@ function setEntityActive($entityData, $columnName, $entityTable)
     }
 }
 
-function getActiveCities($suburbs)
+function getActiveCities()
 {
-    $suburbIdStr = implode(",", $suburbs);
-
-    $sql = "SELECT distinct(city_id) FROM cms.suburb WHERE suburb_id IN ($suburbIdStr)";
+    $sql = "select distinct c.city_id from cms.city c join cms.suburb s on (c.city_id = s.city_id) join cms.locality l on (s.suburb_id = l.suburb_id) join cms.resi_project rp on (l.locality_id = rp.locality_id) join resi_project_options rpo on (rp.project_id = rpo.project_id) where s.status = 'Active' and l.status = 'Active' and rp.status = 'Active' and rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual'";
     $rs = doQuery($sql);
 
     $cities = array();
@@ -65,10 +66,9 @@ function getActiveCities($suburbs)
     return $cities;
 }
 
-function getActiveSuburbs($localities)
+function getActiveSuburbs()
 {
-    $localityIdStr = implode(",", $localities);
-    $sql = "SELECT distinct(suburb_id) FROM cms.locality WHERE locality_id in ($localityIdStr)";
+    $sql = "select distinct s.suburb_id from cms.suburb s join cms.locality l on (s.suburb_id = l.suburb_id) join cms.resi_project rp on (l.locality_id = rp.locality_id) join resi_project_options rpo on (rp.project_id = rpo.project_id) where s.status = 'Active' and l.status = 'Active' and rp.status = 'Active' and rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual'";
     $rs = doQuery($sql);
 
     $suburbs = array();
@@ -96,6 +96,27 @@ function getActiveBuildersAndLocalites()
 
     return array(array_keys($builders), array_keys($localities) );
 }
+
+function getActiveBuilders(){
+    $sql = "select distinct rb.builder_id from cms.resi_builder rb join resi_project rp on (rp.builder_id = rb.builder_id) join resi_project_options rpo on (rp.project_id = rpo.project_id) where rp.status = 'Active' and rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual'";
+    $rs = doQuery($sql);
+    $builders = array();
+    while(($row = mysql_fetch_row($rs)) !== FALSE ) {
+        $builders[] = $row[0];
+    }
+    return $builders;
+}
+
+function getActiveLocalities() {
+    $sql = "select distinct l.locality_id from cms.locality l join cms.resi_project rp on (l.locality_id = rp.locality_id) join cms.resi_project_options rpo on (rp.project_id = rpo.project_id) where l.status = 'Active' and rp.status = 'Active' and rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual'";
+    $rs = doQuery($sql);
+    $localities = array();
+    while(($row = mysql_fetch_row($rs)) !== FALSE ) {
+	$localities[] = $row[0];
+    }
+    return $localities;    
+}
+
 
 function doQuery($qry) {
     $res = mysql_query($qry) or die(mysql_error());
