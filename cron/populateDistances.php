@@ -15,7 +15,7 @@ error_reporting(E_ALL);
 
 require_once (dirname(__FILE__) . '/../modelsConfig.php');
 
-LandmarkDistance::delete_all();
+LandmarkDistance::truncate();
 LandmarkDistance::insertProjectDistance();
 LandmarkDistance::insertLocalityDistance();
 LandmarkDistance::deleteInsignificantEntries();

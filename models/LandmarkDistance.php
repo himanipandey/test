@@ -43,6 +43,10 @@ class LandmarkDistance extends ActiveRecord\Model {
         self::connection()->query($sql);
     }
 
+    static function truncate(){
+      self::connection()->query("truncate table " . self::$table_name);
+    }
+
     static function insertLocalityDistance() {
         global $latLongList;
 
