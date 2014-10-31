@@ -123,11 +123,26 @@ if($_POST['task']=='createAgent'){
             if(!$data1['USER_ID']>0){
                
                 $pass = randomPassword();
-                $post = '{"userName":"'.$name.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pass.'","confirmPassword":"'.$pass.'","countryId":"+91"}';
+                //$post = '{"userName":"'.$name.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pass.'","confirmPassword":"'.$pass.'","countryId":"+91"}';
                 
+                    $contactNumbers = array();
+            $contact = array(
+                        "contactNumber"=> $phone
+                    );
+            array_push($contactNumbers, $contact);
+
+              $post = array(
+                        "fullName"=>$name,
+                        "email"=>$email,
+                        "contactNumbers"=>$contactNumbers,
+                        "password"=>$pass,
+                        "confirmPassword"=>$pass,
+                        "countryId"=>"+91"
+                    );
+
                 $url = USER_API_URL;
                 //echo $post;
-                $response = curl_request($post, 'POST', $url);
+                $response = curl_request(json_encode($post), 'POST', $url);
                 if($response['statusCode']=="2XX"){
                     $user_id = $response['id'];
                     $to = 'mohit.dargan@proptiger.com';
@@ -226,11 +241,27 @@ if($_POST['task']=='createAgent'){
         //print_r($data['USER_ID']); die;
         if(!$data['USER_ID']>0){
             $pass = randomPassword();
-            $post = '{"userName":"'.$name.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pass.'","confirmPassword":"'.$pass.'","countryId":"+91"}';
+            //$post = '{"userName":"'.$name.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pass.'","confirmPassword":"'.$pass.'","countryId":"+91"}';
+
+            $contactNumbers = array();
+            $contact = array(
+                        "contactNumber"=> $phone
+                    );
+            array_push($contactNumbers, $contact);
+
+            
+              $post = array(
+                        "fullName"=>$name,
+                        "email"=>$email,
+                        "contactNumbers"=>$contactNumbers,
+                        "password"=>$pass,
+                        "confirmPassword"=>$pass,
+                        "countryId"=>"+91"
+                    );
             
             $url = USER_API_URL;
             //echo $post;
-            $response = curl_request($post, 'POST', $url);
+            $response = curl_request(json_encode($post), 'POST', $url);
             if($response['statusCode']=="2XX"){
               $user_id = $response['id'];
 
