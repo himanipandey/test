@@ -225,7 +225,7 @@ function copyAddressClick(){
 				    $("#address").prop('readonly', 'readonly');
 				    $("#city").prop('disabled', true);
 				    $("#pincode").prop('readonly', 'readonly');
-				    $("#compphone").prop('readonly', 'readonly');
+				    //$("#compphone").prop('readonly', 'readonly');
 				}
 			}
 
