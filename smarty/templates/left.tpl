@@ -37,6 +37,10 @@
                     <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
                       <td align="left" height="22"><A class="leftnav" href="brokerAgent.php"><font color = "#f15a22">Broker Agent Management</font></A></td>
             </tr>
+            <tr>
+                    <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                      <td align="left" height="22"><A class="leftnav" href="findOTP.php"><font color = "#f15a22">One Time Password</font></A></td>
+            </tr>
 
             
             <tr>
