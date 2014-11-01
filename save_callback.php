@@ -14,6 +14,71 @@
     $duration = "'$data[Duration]'";
     $dialStatus = "'$data[DialStatus]'";
 
+    //get project Id from callId  //multiple project with a callid which one to save.
+
+    $sql = "select ProjectId from CallProject where CallId={$callId}";
+    $res = mysql_query($sql);
+    while ($d = mysql_fetch_assoc($res)) {
+        # code...
+    }
+
+
+    //download and save file 
+
+    $filenameArr = explode("/", $audio); 
+    $filename = array_pop($filenameArr);
+    $path = $newImagePath.$filename;
+
+    $audio_file = file_get_contents($audio);
+
+    file_put_contents($path, $audio_file, LOCK_EX);
+
+
+
+    //upload to media service
+    $media_extra_attributes = array('startTime'=>$st, 'endTime'=>$et, 'callDuration'=>$duration, 'dialStatus'=>$dialStatus);
+   $jsonMediaExtraAttributes= json_encode($media_extra_attributes);
+   $post = array('file'=>'@tmpfile.mp3','objectType'=>'call',
+           'objectId' => $callId, 'documentType' => 'recording', 'mediaExtraAttributes'=>$jsonMediaExtraAttributes);
+   $url = AUDIO_SERVICE_URL;
+   $method = "POST";
+
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL,$url);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_VERBOSE, 1);
+   curl_setopt($ch, CURLOPT_HEADER, 1);
+   curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$method);
+   if($method == "POST" || $method == "PUT")
+       curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+   $response= curl_exec($ch);
+   $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+   $response_header = substr($response, 0, $header_size);
+   $response_body = json_decode(substr($response, $header_size));
+   $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+   curl_close ($ch);
+
+   $response = array("header" => $response_header, "body" => $response_body, "status" => $status);
+
+    // save response from media service to cms db
+   if(empty($serviceResponse["service"]->response_body->error->msg)){
+       $audio_id = $serviceResponse["service"]->response_body->data->id;
+
+       $audio_link = $serviceResponse["service"]->response_body->data->absolutePath;
+       $sql = "UPDATE CallDetails SET "
+               . "AudioLink=" . $audio_link . ", " 
+               . "StartTime=" . $st . ", "
+               . "EndTime=" . $et . ", "
+               . "CallDuration=" . $duration . ", "
+               . "DialStatus=" . $dialStatus . ", "
+               . "CallbackJson='" . $test
+               . "' WHERE CallId=". $callId .";";
+       mysql_query($sql);
+                                               
+   }
+
+
+
     $sql = "UPDATE CallDetails SET "
     . "AudioLink=" . $audio . ", " 
     . "StartTime=" . $st . ", "
