@@ -184,7 +184,7 @@ if(compType=='Broker'){
 
   if (broker_info_type=="Advance"){
     valid_compul(since_op, isNumeric1, "Please provide a valid date.", "errmsgdate");
-    valid_compul(stn, isNumeric1, "Please provide a numeric service tax no.", "errmsgstn");
+    valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
     valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
     valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
     valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
@@ -260,7 +260,12 @@ if(compType=='Broker'){
       error = 1;	
 	}
 
-    if(compphone!='' && !isNumeric1(compphone)){
+    if(compphone==''){
+      $('#errmsgcompphone').html('<font color="red">Please provide an Office Phone no.</font>');
+      $("#compphone").focus();
+      window.error = 1;
+    }
+    else if(compphone!='' && !isNumeric1(compphone)){
       $('#errmsgcompphone').html('<font color="red">Please provide a Numeric Value.</font>');
       $("#compphone").focus();
       window.error = 1;
@@ -473,6 +478,12 @@ function isNumeric1(val) {
 
         return true;
 }
+function isAlphaNumeric(val){
+  return true;
+}
+
+
+
 
 function valid_noncompul(v, msg, msgid ){
   console.log(v +":"+msgid);
@@ -1656,7 +1667,7 @@ function basic_info_bt_clicked(){
 
 
                     <tr class="broker_basic">
-                      <td width="20%" align="right" >Office Phone No. : </td>
+                      <td width="20%" align="right" ><font color = "red">*</font>Office Phone No. : </td>
                       <td width="30%" align="left"><input type=text name="compphone" class="broker_basic" id="compphone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompphone"></td>
                     </tr>
 

@@ -95,7 +95,7 @@ jQuery(document).ready(function(){
 	      error = 1;
   	}
   	else if(!isNumeric1(phone)){
-  		 $('#errmsgphone').html('<font color="red">Please provide a 10 digit Numeric Value.</font>');
+  		 $('#errmsgphone').html('<font color="red">Please provide a 7-10 digit Numeric Value.</font>');
   		 $("#phone").focus();
   	      error = 1;
   	}
@@ -225,7 +225,7 @@ function copyAddressClick(){
 				    $("#address").prop('readonly', 'readonly');
 				    $("#city").prop('disabled', true);
 				    $("#pincode").prop('readonly', 'readonly');
-				    $("#compphone").prop('readonly', 'readonly');
+				    //$("#compphone").prop('readonly', 'readonly');
 				}
 			}
 
