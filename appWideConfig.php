@@ -94,7 +94,7 @@ else{
     define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
     define("USER_API_URL","http://coupon.proptiger-ws.com:8080/app/v1/register");
-    define("TYPEAHEAD_API_URL", "http://coupon.proptiger-ws.com:8080/app/v1/typeahead");
+    define("TYPEAHEAD_API_URL", "http://proptiger.com:8080/app/v1/typeahead");
    
 
 }
