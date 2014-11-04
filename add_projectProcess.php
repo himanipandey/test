@@ -262,7 +262,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	    	}
 	    }
 
-        if($skipUpdationCycle == 0 && empty($txtSkipUpdationRemark)){
+        if($skipUpdationCycle == 1 && empty($txtSkipUpdationRemark)){
             $ErrorMsg["txtSkipUpdationCycle"] = "Please enter Remarks for skipping update cycle!.";
         }
 
