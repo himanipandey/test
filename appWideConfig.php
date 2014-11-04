@@ -39,7 +39,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 
     define("AUDIO_SERVICE_URL","http://www.proptiger.com/data/v1/entity/audio");
 
-    define("TYPEAHEAD_API_URL", "http://proptiger.com/app/v1/typeahead");
+    define("TYPEAHEAD_API_URL", "http://proptiger.com:8080/app/v1/typeahead");
 }
 
 
