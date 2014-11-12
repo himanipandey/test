@@ -510,19 +510,7 @@ jQuery(document).ready(function(){
 		return false;  
 	  }		  
 	}
-	if(orderDate != ''){
-		date = orderDate;		
-		d1 = new Date(date).toDateString();		
-		d2 = new Date().toDateString();
-		d1 = new Date(d1);
-		d2 = new Date(d2);
-		if(d1<d2){
-		  alert("Order Date must be Current or Future date.");
-		  $("#txtOrderDur option[value='']").attr('selected', 'selected');
-		  $("#txtExpiryTrialOrderDate").val("");
-		  return false;
-		}
-	  }	  
+	  
 	 //payment details validations
 	 if(orderType == 'paid'){	
 	   if($('#txtOrderAmt').val().trim() == '' || $('#txtOrderAmt').val().trim() == 0){
