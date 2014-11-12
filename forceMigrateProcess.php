@@ -31,8 +31,8 @@
         exec("/usr/bin/php ".strval(dirname(__FILE__))."/cron/migrateProjects.php  > /dev/null 2>/dev/null &");
         
         fclose($handle);
-        exec("cd /home/sysadmin/production/cron/migration; php migrateRefData.php; php main.php $tmpFile");
-        exec("cd  /home/sysadmin/production/solr; php solrIndex.php $projectId");
+        exec("ssh sysadmin@10.0.0.26 cd /home/sysadmin/production/cron/migration ; php migrateRefData.php ; php main.php $tmpFile");
+        exec("ssh sysadmin@10.0.0.153 cd /home/sysadmin/production/solr/ ; php solrIndex.php $projectId");
         $msg = "Successfully migrated following ProjectIds:<br>$projectId";
 
     }
