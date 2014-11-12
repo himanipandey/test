@@ -1206,7 +1206,7 @@ function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
     $Sql = "INSERT INTO " . CITY . " SET
 			LABEL 	   			= '" . d_($txtCityName) . "',
 			STATUS 	   			= '" . d_($status) . "',
-			URL					= '" . d_($txtCityUrl) . "',
+			URL					= '" . d_(strtolower($txtCityUrl)) . "',
 			DISPLAY_ORDER		= '" . d_($DisplayOrder) . "',
 			DESCRIPTION			= '" . d_($desc) . "',
                         created_at = now(),    

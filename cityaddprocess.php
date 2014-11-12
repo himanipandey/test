@@ -104,7 +104,7 @@ if (isset($_POST['btnSave'])) {
 		$updateQry = "UPDATE ".CITY." SET 
                             LABEL					=	'".$txtCityName."',
                             STATUS				=	'".$status."',
-                            URL					=	'".$txtCityUrl."',
+                            URL					=	'".strtolower($txtCityUrl)."',
                             DISPLAY_ORDER			=	'".$DisplayOrder."',
                             updated_at = now(),
                             DESCRIPTION	= '" . d_($desc) . "' WHERE CITY_ID='".$cityid."'";
