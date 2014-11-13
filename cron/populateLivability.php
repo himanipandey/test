@@ -62,3 +62,6 @@ LocalityLivability::populateCompletionPercentage();
 LocalityLivability::populateOverAllLivability();
 LocalityLivability::ensureMinLivability();
 LocalityLivability::populateLivabilityInLocalities();
+
+
+LandmarkDistance::truncate();
