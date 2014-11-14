@@ -17,6 +17,7 @@ class CompanyOrder extends ActiveRecord\Model
 	  foreach($all_orders as $v){
 		$res = array();  
 		$res['order_id'] = $v->id;
+                $res['order_name'] = $v->order_name;
 	    $res['company_id'] = $v->company_id;
 	    $res['name'] = $v->name;
 	    $res['contact_person'] = $v->contact_person;

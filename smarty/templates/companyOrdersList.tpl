@@ -42,6 +42,7 @@
                                 <TR class = "headingrowcolor">
                                   <th  width=2% align="center">No.</th>
                                   <th  width=5% align="center">Order ID</th>
+                                  <th  width=5% align="center">Order Name</th>
                                   <TH  width=8% align="center">Client ID</TH>
                                   <TH  width=8% align="center">Sales Person ID</TH>
                                   <TH  width=8% align="center">Company Name</TH>
