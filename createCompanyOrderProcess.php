@@ -242,7 +242,7 @@
   }
   
   if($_POST['btnEditSave'] == 'Update'){
-	 
+	 echo "<pre>";print_r($_REQUEST);die;
 	$orderId = $_POST['orderId'];
 	$subs_id = $_POST['subsId'];  
 	  
