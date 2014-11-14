@@ -44,7 +44,7 @@ class CompanyOrder extends ActiveRecord\Model
 		left join proptiger.user_subscription_mappings  on proptiger.company_subscriptions.id = proptiger.user_subscription_mappings.subscription_id
         left join proptiger.FORUM_USER  on proptiger.user_subscription_mappings.user_id =  proptiger.FORUM_USER.user_id
 		left join proptiger_admin on company_orders.sales_persion_id = proptiger_admin.adminid
-		','select'=>'proptiger_admin.fname,proptiger_admin.adminid,proptiger.permissions.object_type_id,proptiger.permissions.object_id,proptiger.subscription_columns.column_group,proptiger.subscription_sections.section,proptiger.company_subscriptions.id as subscription_id,company.name as company_name,broker_contacts.name as contact_person,proptiger.FORUM_USER.email,company_orders.company_id,company_orders.order_type,company_orders.order_date,company_orders.trial_duration,company_orders.order_expiry_date,company_orders.order_amount, company_order_payments.payment_method,company_order_payments.id as payment_id,company_order_payments.payment_instrument_no,company_order_payments.payment_amount,company_order_payments.payment_date','conditions'=>array('company_orders.id=?',$orderId)));
+		','select'=>'proptiger_admin.fname,proptiger_admin.adminid,proptiger.permissions.object_type_id,proptiger.permissions.object_id,proptiger.subscription_columns.column_group,proptiger.subscription_sections.section,proptiger.company_subscriptions.id as subscription_id,company.name as company_name,broker_contacts.name as contact_person,proptiger.FORUM_USER.email,company_orders.company_id,company_orders.order_type,company_orders.order_date,company_orders.trial_duration,company_orders.order_expiry_date,company_orders.order_amount,company_orders.order_name, company_order_payments.payment_method,company_order_payments.id as payment_id,company_order_payments.payment_instrument_no,company_order_payments.payment_amount,company_order_payments.payment_date','conditions'=>array('company_orders.id=?',$orderId)));
 		
 		//print "<pre>".print_r($order_details,1)."</pre>";//	die;	
 		$order_all_details = array();
@@ -55,6 +55,7 @@ class CompanyOrder extends ActiveRecord\Model
 		$order_user_details = array();		
 		
 		$order_all_details['order_id'] = $orderId;
+                $order_all_details['order_name'] = $order_details[0]->order_name;
 		$order_all_details['client_id'] = $order_details[0]->company_id;
 		$order_all_details['company_name'] = $order_details[0]->company_name;
 		$order_all_details['sales_person_id'] = $order_details[0]->adminid;
