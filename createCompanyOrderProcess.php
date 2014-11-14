@@ -18,6 +18,7 @@
   if($_POST['btnSave'] == 'Save'){
 	$order_id = '';  
 	$txtCompId = trim($_POST['txtCompId']);
+        $orderName = trim($_POST['orderName']);
 	$txtCompName = trim($_POST['txtCompName']);
 	$txtSalesPerson = trim($_POST['txtSalesPerson']);
 	$txtOrderDate = trim($_POST['txtOrderDate']);
@@ -49,7 +50,7 @@
 	
 	CompanyOrder::transaction(function(){
 	  	
-	  global $order_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
+	  global $order_id,$txtCompId,$orderName,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
 	
 	  try{
 		  
@@ -61,13 +62,14 @@
 		  
 		  
 		  #Company Subcription
-		  $res = mysql_query("INSERT INTO `proptiger`.`company_subscriptions` (`id`, `company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`) VALUES (NULL, '".$txtCompId."', '".$_SESSION['adminId']."', '".$expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."')");
+		  $res = mysql_query("INSERT INTO `proptiger`.`company_subscriptions` (`id`, order_name,`company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`) VALUES (NULL, '".$orderName."', '".$txtCompId."', '".$_SESSION['adminId']."', '".$expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."')");
 		  
 		  $subs_id = mysql_insert_id();
 		  
 		  #company Orders
 		  $company_order = new CompanyOrder();
 		  $company_order->company_id = $txtCompId;
+                  $company_order->order_name = $orderName;
 		  $company_order->subscription_id = $subs_id;
 		  $company_order->sales_persion_id = $txtSalesPerson;
 		  $company_order->order_type = $orderType;
@@ -245,6 +247,7 @@
 	$subs_id = $_POST['subsId'];  
 	  
 	$txtCompId = trim($_POST['txtCompId']);
+        $orderName = trim($_POST['orderName']);
 	$txtCompName = trim($_POST['txtCompName']);
 	$txtSalesPerson = trim($_POST['txtSalesPerson']);
 	$txtOrderDate = trim($_POST['txtOrderDate']);
@@ -279,7 +282,7 @@
 	
 	CompanyOrder::transaction(function(){
 	  	
-	  global $orderId,$subs_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
+	  global $orderId,$orderName,$subs_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
 	
 	  try{
 		  $expiry_date='';
@@ -294,6 +297,7 @@
 		  #company Orders
 		  $company_order = CompanyOrder::find($orderId);
 		  $company_order->company_id = $txtCompId;
+                  $company_order->order_name = $orderName;
 		  $company_order->subscription_id = $subs_id;
 		  $company_order->sales_persion_id = $txtSalesPerson;
 		  $company_order->order_type = $orderType;

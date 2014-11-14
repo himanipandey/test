@@ -45,9 +45,9 @@
 			      <div>
 				{$error_flag}	  
 				<tr>
-				  <td width="20%" align="right" ><font color="red">*</font>Company: </td>
+				  <td width="20%" align="right" ><font color="red">*</font>Order Name: </td>
 				  <td width="30%" align="left">
-					  <input type=text name="txtCompId" id="txtCompId" value="{$txtCompId}" placeholder="Client ID" readonly=true style="width:250px;">
+					  <input type=text name="orderName" id="orderName" value="{$orderName}" placeholder="Client ID" readonly=true style="width:250px;">
 					  <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OR</b><br/>
 					  <input type=text name="txtCompName" id="txtCompName" value="{$txtCompName}" placeholder="Company Name" readonly=true style="width:250px;">
 				  </td>
@@ -55,6 +55,16 @@
 					  {if $page=='view'}
 					    <a href="createCompanyOrder.php?o={$orderId}&page=edit"><strong>Edit Order</strong></a>
 					  {/if}
+				  </td>
+				</tr>
+                                
+                                <tr>
+				  <td width="20%" align="right" ><font color="red">*</font>Company: </td>
+				  <td width="30%" align="left">
+					  <input type=text name="txtCompId" id="txtCompId" value="{$txtCompId}" placeholder="Client ID" readonly=true style="width:250px;">
+				  </td>
+				  <td width="50%" align="left" >
+					&nbsp;
 				  </td>
 				</tr>
 				
