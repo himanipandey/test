@@ -242,7 +242,6 @@
   }
   
   if($_POST['btnEditSave'] == 'Update'){
-	 echo "<pre>";print_r($_REQUEST);die;
 	$orderId = $_POST['orderId'];
 	$subs_id = $_POST['subsId'];  
 	  
@@ -475,6 +474,7 @@
 	 
 	 //basic
 	 $smarty->assign('txtCompId',$order_details['client_id']);
+         $smarty->assign('orderName',$order_details['order_name']);
 	 $smarty->assign('txtCompName',$order_details['company_name']);
 	 $smarty->assign('txtSalesPerson',$order_details['sales_person_id']);
 	 $smarty->assign('txtOrderDate',$order_details['order_date']);
