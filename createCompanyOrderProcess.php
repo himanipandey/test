@@ -62,7 +62,7 @@
 		  
 		  
 		  #Company Subcription
-		  $res = mysql_query("INSERT INTO `proptiger`.`company_subscriptions` (`id`, order_name,`company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`) VALUES (NULL, '".$orderName."', '".$txtCompId."', '".$_SESSION['adminId']."', '".$expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."')");
+		  $res = mysql_query("INSERT INTO `proptiger`.`company_subscriptions` (`id`,`company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`) VALUES (NULL, '".$txtCompId."', '".$_SESSION['adminId']."', '".$expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."')");
 		  
 		  $subs_id = mysql_insert_id();
 		  
