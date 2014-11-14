@@ -222,8 +222,20 @@ if($_POST['task']=='createComp'){
             
             $res_sql = mysql_query($sql) or die(mysql_error());
 
-            $query1 = "UPDATE addresses SET address_line_1='{$address}', city_id='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='company' and table_id='{$id}' and type='HQ')";
-            $res1 = mysql_query($query1) or die(mysql_error());
+            $query_check = mysql_query("select * from addresses where (table_name='company' and table_id='{$id}' and type='HQ')") or die (mysql_error());
+            
+            if(mysql_num_rows($query_check)>0){
+                $query1 = "UPDATE addresses SET address_line_1='{$address}', city_id='{$city}', pincode='{$pin}', updated_by={$_SESSION['adminId']}, updated_at=NOW()  WHERE (table_name='company' and table_id='{$id}' and type='HQ')";
+                //echo $query1; die();
+                $res1 = mysql_query($query1) or die(mysql_error());                
+            }
+            else{
+                $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, pincode, type, updated_by, created_at) values ('company', '{$id}', '{$address}', '{$city}', '{$pin}', 'HQ', {$_SESSION['adminId']}, NOW())";
+                //echo $query1; die();
+                $res1 = mysql_query($query1) or die(mysql_error());
+            }
+
+            
 
             $query_find_ips = "delete from company_ips where company_id={$id}";
             $res = mysql_query($query_find_ips) or die(mysql_error()); 
@@ -237,6 +249,7 @@ if($_POST['task']=='createComp'){
 
 /***************************** address update **********************************************/
             $query = "delete from addresses WHERE (table_name='company' and table_id='{$id}' and type='Other')";
+           
             $res = mysql_query($query) or die(mysql_error());
             if($off_loc_data){
                 $offLocStr = '';
@@ -245,7 +258,7 @@ if($_POST['task']=='createComp'){
                 }
                 $offLocStr = rtrim($offLocStr,', ');
                 $query1 = "INSERT INTO addresses (table_name, table_id, address_line_1, city_id, locality_id, type, updated_by, created_at) values".$offLocStr;
-                //echo $query1;
+                
                 $res1 = mysql_query($query1) or die(mysql_error());
             }
 /******************************* coverage update *************************************/            
@@ -302,18 +315,19 @@ if($_POST['task']=='createComp'){
                 $res = mysql_query($query);
                 $data = mysql_fetch_assoc($res);
                 if($data['id']){
-                    $query3 = "UPDATE contact_numbers SET contact_no='{$compfax}', updated_by={$_SESSION['adminId']}, updated_at=NOW() WHERE (table_name='company' and table_id='{$id}' and type='phone1')";
+                    $query3 = "UPDATE contact_numbers SET contact_no='{$compfax}', updated_by={$_SESSION['adminId']}, updated_at=NOW() WHERE (table_name='company' and table_id='{$id}' and type='fax')";
             
                     $res3 = mysql_query($query3) or die(mysql_error());
                 }
                 else{
-                     $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$id}', '+91', '{$compfax}', 'phone1', {$_SESSION['adminId']}, NOW())";
+                     $query3 = "INSERT INTO contact_numbers (table_name, table_id, contry_code, contact_no, type, updated_by, created_at) values ('company', '{$id}', '+91', '{$compfax}', 'fax', {$_SESSION['adminId']}, NOW())";
                       
                      $res3 = mysql_query($query3) or die(mysql_error());
                 }
             }
 
-/****************** save company customer care details*******************************************/        if($cust_care_data){  
+/****************** save company customer care details*******************************************/        
+            if($cust_care_data){  
                 $query = "delete from contact_numbers  where (table_name='company' and table_id={$id} and (type='cc_fax' or type='cc_phone' or type='cc_mobile'))";
                 $res = mysql_query($query) or die(mysql_error());
 

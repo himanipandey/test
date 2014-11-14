@@ -655,8 +655,8 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
    
     $("#pan").val(pan);
 
-    $('#img_date1').val(active_since.substring(0,10)); 
-
+   // $('#img_date1').val(active_since.substring(0,10)); 
+   $('#img_date1').val(active_since); 
     //var data = a;
     if(type=="Broker"){
       $("#broker_extra_field").show();
@@ -1616,6 +1616,7 @@ function basic_info_bt_clicked(){
                       <td width="30%" align="left"><select id="compLegalType" name="compLegalType" class="broker_basic">
                         <option name=one value=''>Select Company Legal Type</option>
                         <option name=one value='proprietorship'>Proprietorship</option>
+                        <option name=one value='partnership'>Partnership</option>
                         <option name=two value='private-limited' >Private Limited</option>
                         <option name=two value='limited' >Limited</option>
                         <option name=two value='individual' >Individual</option>
