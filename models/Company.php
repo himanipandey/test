@@ -223,13 +223,20 @@ class Company extends ActiveRecord\Model
             $arr['pan'] = $v->pan;
             $arr['email'] = $v->primary_email;
             $active_since = $v->active_since;
-            if(strlen($active_since) < 20){
-                $arr['active_since'] = $active_since;
-            }
-            else{
-                $active_since = substr($active_since, 0, -5);
-                $active_since = strtotime($active_since);
-                $active_since = date("Y:m:d", $active_since);
+          
+            
+            if(strlen($active_since) > 0){
+                if(strlen($active_since) < 20 ){
+                    $active_since = substr($active_since, 0, 10);
+                    $active_since = strtotime($active_since);
+                    $active_since = date("Y:m:d", $active_since);
+                  
+                }
+                else{
+                    $active_since = substr($active_since, 0, -5);
+                    $active_since = strtotime($active_since);
+                    $active_since = date("Y:m:d", $active_since);
+                }
             }
             $arr['active_since'] = $active_since;
             $arr['web'] = $v->website;

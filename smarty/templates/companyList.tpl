@@ -183,7 +183,7 @@ if(compType=='Broker'){
   var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
 
   if (broker_info_type=="Advance"){
-    valid_compul(since_op, isNumeric1, "Please provide a valid date.", "errmsgdate");
+    valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
     valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
     valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
     valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
@@ -479,6 +479,10 @@ function isNumeric1(val) {
         return true;
 }
 function isAlphaNumeric(val){
+  return true;
+}
+
+function isDate(val){
   return true;
 }
 
