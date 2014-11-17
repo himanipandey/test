@@ -483,6 +483,9 @@ function isAlphaNumeric(val){
 }
 
 function isDate(val){
+  if(val=="")
+    return false
+  else
   return true;
 }
 

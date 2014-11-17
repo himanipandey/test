@@ -35,7 +35,7 @@ $namearr = array();
 $namearr = Company::getCompanyNameByQuery('br');
 //print_r($namearr);
 
-/*
+
 
 //get company logo
 foreach ($compArr as $k => $v) {
@@ -57,7 +57,7 @@ foreach ($compArr as $k => $v) {
     }
 
 }
-*/
+
 $smarty->assign("compArr", $compArr);
 
 //print("<pre>");
