@@ -29,7 +29,7 @@ function prepareDisplayData($dateFrom, $dateTo){
 	inner join proptiger_admin pa
 	on pas.ASSIGNED_TO = pa.adminid
 	where pas.ASSIGNED_TO != 0 
-	and DATE(pas.ASSIGN_TIME) >= '$dateFrom' and DATE(pas.ASSIGN_TIME) <= '$dateTo'
+	and DATE(pas.UPDATION_TIME) >= '$dateFrom' and DATE(pas.UPDATION_TIME) <= '$dateTo'
 	group by pas.ASSIGNED_TO") or die(mysql_error());
 	
 	if($data_sql){
