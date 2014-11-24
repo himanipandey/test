@@ -15,4 +15,10 @@ class AmenitiesMaster extends ActiveRecord\Model
         }
         return $returnArr;
     }
+
+    static $other_amenity_id = 99;
+    static $children_play_area_id = 3;
+    static $clubhouse_id = 4;
+    static $power_backup_id = 13;
+    static $security_id = 11;
 }
