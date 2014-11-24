@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors', '1');
-ini_set('memory_limit', '7G');
+ini_set('memory_limit', '3G');
 set_time_limit(0);
 error_reporting(E_ALL);
 
@@ -10,6 +10,7 @@ require_once ($currentDir . '/../modelsConfig.php');
 require_once ($currentDir . '/../cron/cronFunctions.php');
 require_once ($currentDir . '/../cron/b2bIndexTest.php');
 require_once ($currentDir . '/../dbConfig.php');
+require_once ($currentDir . '/../includes/send_mail_amazon.php');
 
 define("INVALID_DATE", "0000-00-01");
 define('MIN_B2B_DATE', B2BProperties::getB2BMinDate());
@@ -17,6 +18,8 @@ define('MAX_B2B_DATE', B2BProperties::getB2BMaxDate());
 define('B2B_DEMAND_START_DATE', B2BProperties::getB2BDemandStartDate());
 define('CSV_FIELD_DELIMITER', '~#~');
 define('CSV_LINE_DELIMITER', "\r\n");
+
+define('B2B_SUCCESS_EMAIL_RECIPIENT', 'ankur.dhawan@proptiger.com');
 
 $bulkInsert = FALSE;
 if (isset($argv[1]) && $argv[1] == 'bulkInsert') {
@@ -101,6 +104,7 @@ DInventoryPriceTmp::populateDemand();
 if (runTests()) {
     DInventoryPriceTmp::connection()->query("rename table d_inventory_prices to d_inventory_prices_old, d_inventory_prices_tmp to d_inventory_prices, d_inventory_prices_old to d_inventory_prices_tmp;");
     $logger->info("Migration successful.");
+    sendRawEmailFromAmazon(B2B_SUCCESS_EMAIL_RECIPIENT, '', '', 'B2B Data Migration Successful', 'Migration successful on server: ' . exec('hostname') . ' .', '', '', array(B2B_SUCCESS_EMAIL_RECIPIENT));
 } else {
     $logger->error("Test Cases Failed.");
 }
