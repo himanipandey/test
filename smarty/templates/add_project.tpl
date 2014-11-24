@@ -132,19 +132,19 @@
 		  }
 		  var value = $('select[name="skipUpdationCycle"]').val();
 		 if(value=="0"){
-			$(".skipUpdationCycleBlock").show();
+			$(".skipUpdationCycleBlock").hide();
 		}
 		else{
-			$(".skipUpdationCycleBlock").hide();
+			$(".skipUpdationCycleBlock").show();
 		}
 	})
 
 	function skipUpdationCycleChanged(value){
 		if(value=="0"){
-			$(".skipUpdationCycleBlock").show();
+			$(".skipUpdationCycleBlock").hide();
 		}
 		else{
-			$(".skipUpdationCycleBlock").hide();
+			$(".skipUpdationCycleBlock").show();
 		}
 	}
        

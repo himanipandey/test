@@ -14,7 +14,7 @@ require_once ($currentDir . '/../includes/send_mail_amazon.php');
 
 define("INVALID_DATE", "0000-00-01");
 define('MIN_B2B_DATE', B2BProperties::getB2BMinDate());
-define('MAX_B2B_DATE', B2BProperties::getB2BMaxDate());
+define('MAX_B2B_DATE', B2BProperties::getB2BScriptMaxDate());
 define('B2B_DEMAND_START_DATE', B2BProperties::getB2BDemandStartDate());
 define('CSV_FIELD_DELIMITER', '~#~');
 define('CSV_LINE_DELIMITER', "\r\n");

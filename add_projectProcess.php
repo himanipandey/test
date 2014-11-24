@@ -261,8 +261,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 			$ErrorMsg["txtpower_backup_capacity"] = "Power Backup Capacity must be numeric and less than 10.";
 	    	}
 	    }
-
-        if($skipUpdationCycle == 0 && empty($txtSkipUpdationRemark)){
+//echo $skipUpdationCycle."<br>".$txtSkipUpdationRemark;
+        if($skipUpdationCycle == skipUpdationCycle_Id && empty($txtSkipUpdationRemark)){
             $ErrorMsg["txtSkipUpdationCycle"] = "Please enter Remarks for skipping update cycle!.";
         }
 
@@ -484,7 +484,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            }
        }
 
-       
+       //print_r($ErrorMsg); die();
      //  echo $ErrorMsg['launchDate'];
   //echo $Status ."==". OCCUPIED_ID_3 ." or ". READY_FOR_POSSESSION_ID_4."==>$launchDt";die;
        if($township == '')

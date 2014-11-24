@@ -16,6 +16,9 @@
     $companyOrderViewAuth = isUserPermitted('comp-orders-mgmt', 'view');
     $smarty->assign("companyOrderViewAuth", $companyOrderViewAuth);
 
+    $couponAuth = isUserPermitted('coupon', 'manage');
+    $smarty->assign("couponAuth", $couponAuth);
+
     $cityAuth = isUserPermitted('city', 'manage');
     $smarty->assign("cityAuth", $cityAuth);
     
