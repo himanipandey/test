@@ -11,6 +11,8 @@ class ProjectLivability extends ActiveRecord\Model {
     static $clubhouse_column_name = 'clubhouse';
     static $power_backup_column_name = 'power_backup';
     static $security_column_name = 'security';
+    static $min_units_per_floor = 1;
+
     static $column_name_for_landmark_type = array(
         1 => 'school', // school
         2 => 'hospital', // hospital
@@ -92,12 +94,12 @@ class ProjectLivability extends ActiveRecord\Model {
         $aProjectSupply = indexArrayOnKey($aProjectSupply, 'project_id');
         foreach ($aFloorCount as $floorCount) {
             $projectId = $floorCount->project_id;
-            if (isset($aProjectSupply[$projectId])) {
-                $unitsPerFloor = $aProjectSupply[$projectId]->supply / $floorCount->floor_count;
+            if (isset($aProjectSupply[$projectId]) && isset($aProjectSupply[$projectId]->supply) && $aProjectSupply[$projectId]->supply>0) {
+                $unitsPerFloor = $floorCount->floor_count / $aProjectSupply[$projectId]->supply;
                 self::update_all(array('conditions' => array('project_id' => $projectId), 'set' => "unit_per_floor = $unitsPerFloor"));
             }
         }
-
+        self::update_all(array('conditions'=>"unit_per_floor > 1/(" . ProjectLivability::$min_units_per_floor . ")", 'set'=>"unit_per_floor = 1/(" . ProjectLivability::$min_units_per_floor . ")"));
         self::normalizeColumnOnCity('unit_per_floor');
     }
 
