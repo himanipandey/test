@@ -42,33 +42,45 @@ class DInventoryPriceTmp extends Model {
     }
 
     public static function populateProjectDemand() {
-        $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.PROJECT_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE from ptigercrm.LEADS l inner join ptigercrm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID inner join resi_project_ids rpi on rpi.id = lp.PROJECT_ID where l.PROJECT_TYPE is not null and l.PROJECT_TYPE <> '' and l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE >= '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.ACTIVE = '1' group by l.LEAD_ID, lp.PROJECT_ID order by lead_key";
-        $aAllLead = self::find_by_sql($allLeadSql);
-        $aAllLead = groupOnKey($aAllLead, 'lead_key');
+        $start = 0;
+        $rows = 5000;
+        while(true){
+          $allLeadSql = "select concat_ws('/', l.LEAD_ID, date_format(min(lp.CREATED_DATE), '%Y-%m')) lead_key, lp.PROJECT_ID, l.PROJECT_TYPE UNIT_TYPE, if(l.PROJECT_TYPE = 'plot', 0, group_concat(distinct l.BEDROOMS)) all_bedrooms, date_format(min(lp.CREATED_DATE), '%Y-%m-01') EFFECTIVE_MONTH, l.CLIENT_TYPE from ptigercrm.LEADS l inner join ptigercrm.LEAD_PROJECTS lp on l.LEAD_ID = lp.LEAD_ID inner join resi_project_ids rpi on rpi.id = lp.PROJECT_ID where l.PROJECT_TYPE is not null
+          and l.PROJECT_TYPE <> '' and l.CLIENT_TYPE is not null and l.CLIENT_TYPE <> '' and lp.CREATED_DATE >= '" . B2B_DEMAND_START_DATE . " 00:00:00' and lp.ACTIVE = '1' group by l.LEAD_ID, lp.PROJECT_ID order by lead_key limit $start, $rows";
+          $aAllLead = self::find_by_sql($allLeadSql);
+          $dbRowCount = count($aAllLead);
+          if(count($aAllLead)==0)break;
 
-        $aAllBedRoomCount = self::getBedroomCountForAllProjects();
-        $aAllPhaseCount = self::getPhaseCountForAllProjectBedrooms();
+          $aProjectId = getArrayFromObjectArray($aAllLead, 'project_id');
+          $aAllLead = groupOnKey($aAllLead, 'lead_key');
 
-        foreach ($aAllLead as $aAllProjectLead) {
-            $leadProjectCount = count($aAllProjectLead);
-            foreach ($aAllProjectLead as $projectLead) {
-                $key = implode("/", array($projectLead->project_id, ucfirst($projectLead->unit_type)));
+          $aAllBedRoomCount = self::getBedroomCountForAllProjects($aProjectId);
+          $aAllPhaseCount = self::getPhaseCountForAllProjectBedrooms($aProjectId);
 
-                $bedrooms = isset($aAllBedRoomCount[$key]) ? $aAllBedRoomCount[$key] : NULL;
-                if (!empty($bedrooms)) {
-                    $bedrooms = $bedrooms->all_bedrooms;
-                    $leadBedrooms = array_intersect(explode(",", $projectLead->all_bedrooms), explode(",", $bedrooms));
-                    $bedroomCount = count($leadBedrooms);
-                    foreach ($leadBedrooms as $bedroom) {
-                        $phaseCount = $aAllPhaseCount[implode("/", array($projectLead->project_id, ucfirst($projectLead->unit_type), $bedroom))]->phase_count;
-                        if ($projectLead->client_type === 'buyer') {
-                            $updateStr = "customer_demand = (customer_demand+(1/($leadProjectCount*$bedroomCount*$phaseCount)))";
-                        } elseif ($projectLead->client_type === 'investor') {
-                            $updateStr = "investor_demand = (investor_demand+(1/($leadProjectCount*$bedroomCount*$phaseCount)))";
-                        }
-                        self::update_all(array('set' => $updateStr, 'conditions' => array('project_id' => $projectLead->project_id, 'unit_type' => $projectLead->unit_type, 'bedrooms' => $bedroom, 'effective_month' => $projectLead->effective_month)));
-                    }
-                }
+          foreach ($aAllLead as $aAllProjectLead) {
+              $leadProjectCount = count($aAllProjectLead);
+              if($dbRowCount===$rows && $aAllProjectLead === end($aAllLead))break;
+              $start += $leadProjectCount;
+
+              foreach ($aAllProjectLead as $projectLead) {
+                  $key = implode("/", array($projectLead->project_id, ucfirst($projectLead->unit_type)));
+
+                  $bedrooms = isset($aAllBedRoomCount[$key]) ? $aAllBedRoomCount[$key] : NULL;
+                  if (!empty($bedrooms)) {
+                      $bedrooms = $bedrooms->all_bedrooms;
+                      $leadBedrooms = array_intersect(explode(",", $projectLead->all_bedrooms), explode(",", $bedrooms));
+                      $bedroomCount = count($leadBedrooms);
+                      foreach ($leadBedrooms as $bedroom) {
+                          $phaseCount = $aAllPhaseCount[implode("/", array($projectLead->project_id, ucfirst($projectLead->unit_type), $bedroom))]->phase_count;
+                          if ($projectLead->client_type === 'buyer') {
+                              $updateStr = "customer_demand = (customer_demand+(1/($leadProjectCount*$bedroomCount*$phaseCount)))";
+                          } elseif ($projectLead->client_type === 'investor') {
+                              $updateStr = "investor_demand = (investor_demand+(1/($leadProjectCount*$bedroomCount*$phaseCount)))";
+                          }
+                          self::update_all(array('set' => $updateStr, 'conditions' => array('project_id' => $projectLead->project_id, 'unit_type' => $projectLead->unit_type, 'bedrooms' => $bedroom, 'effective_month' => $projectLead->effective_month)));
+                      }
+                  }
+              }
             }
         }
     }
@@ -118,13 +130,13 @@ class DInventoryPriceTmp extends Model {
         return $result;
     }
 
-    public static function getBedroomCountForAllProjects() {
-        $aData = self::find('all', array('select' => "concat_ws('/', project_id, unit_type) unique_key, project_id, unit_type, effective_month, group_concat(distinct bedrooms) all_bedrooms, count(distinct bedrooms) bedroom_count", 'group' => 'project_id, unit_type'));
+    public static function getBedroomCountForAllProjects($aProjectId) {
+        $aData = self::find('all', array('select' => "concat_ws('/', project_id, unit_type) unique_key, project_id, unit_type, effective_month, group_concat(distinct bedrooms) all_bedrooms, count(distinct bedrooms) bedroom_count", 'group' => 'project_id, unit_type', 'conditions'=>array('project_id'=>$aProjectId)));
         return indexArrayOnKey($aData, 'unique_key');
     }
 
-    public static function getPhaseCountForAllProjectBedrooms() {
-        $aData = self::find('all', array('select' => "concat_ws('/', project_id, unit_type, bedrooms) unique_key, project_id, unit_type, effective_month, count(distinct phase_id) phase_count", 'group' => 'project_id, unit_type, bedrooms, effective_month'));
+    public static function getPhaseCountForAllProjectBedrooms($aProjectId) {
+        $aData = self::find('all', array('select' => "concat_ws('/', project_id, unit_type, bedrooms) unique_key, project_id, unit_type, effective_month, count(distinct phase_id) phase_count", 'group' => 'project_id, unit_type, bedrooms, effective_month', 'conditions'=>array('project_id'=>$aProjectId)));
         return indexArrayOnKey($aData, 'unique_key');
     }
 

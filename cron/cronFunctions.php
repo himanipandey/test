@@ -212,3 +212,11 @@ function truncateTable($tableName){
     $sql = "truncate table $tableName";
     ActiveRecord\Connection::instance()->query($sql);
 }
+
+function getArrayFromObjectArray($aData, $key){
+    $result = array();
+    foreach($aData as $data){
+        $result[] = $data->$key;
+    }
+    return $result;
+}

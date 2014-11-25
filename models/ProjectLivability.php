@@ -7,6 +7,12 @@ require_once (dirname(__FILE__) . '/../cron/cronConfig.php');
 class ProjectLivability extends ActiveRecord\Model {
 
     static $table_name = 'project_livability';
+    static $children_play_area_column_name = 'children_play_area';
+    static $clubhouse_column_name = 'clubhouse';
+    static $power_backup_column_name = 'power_backup';
+    static $security_column_name = 'security';
+    static $min_units_per_floor = 1;
+
     static $column_name_for_landmark_type = array(
         1 => 'school', // school
         2 => 'hospital', // hospital
@@ -58,28 +64,14 @@ class ProjectLivability extends ActiveRecord\Model {
         self::normalizeColumnOnCity($columnName);
     }
 
-    static function populateClubhouse() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 4 and rpa.VERIFIED=1) t on pl.PROJECT_ID = t.PROJECT_ID set pl.clubhouse = 1";
-        self::connection()->query($sql);
-    }
-
-    static function populateSecurity() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 11 and rpa.VERIFIED=1) t on pl.PROJECT_ID = t.PROJECT_ID set pl.security = 1";
-        self::connection()->query($sql);
-    }
-
-    static function populatePowerBackup() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 13 and rpa.VERIFIED=1) t on pl.PROJECT_ID = t.PROJECT_ID set pl.power_backup = 1";
-        self::connection()->query($sql);
-    }
-
-    static function populateChildrenPlayArea() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = 3 and rpa.VERIFIED=1) t on pl.PROJECT_ID = t.PROJECT_ID set pl.children_play_area = 1";
-        self::connection()->query($sql);
+    static function populateProjectAmenityLivability($amenityId, $livabilityColumnName) {
+        $projectSql = "select distinct rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = $amenityId and rpa.VERIFIED=1 UNION select distinct rp.PROJECT_ID from resi_project rp inner join resi_project rpt on rp.version = rpt.version and rp.township_id = rpt.township_id and rp.township_id is not null and rp.township_id != 0 inner join resi_project_amenities rpa on rpt.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = $amenityId and rpa.VERIFIED=1";
+        $updateSql = "update project_livability pl inner join ($projectSql) t on pl.PROJECT_ID = t.PROJECT_ID set pl.$livabilityColumnName = 1";
+        self::connection()->query($updateSql);
     }
 
     static function populateOtherAmenity() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID, count(*) count from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID not in (3, 4, 13, 11) and rpa.VERIFIED=1  group by rpa.PROJECT_ID ) t on pl.PROJECT_ID = t.PROJECT_ID set pl.other_amenity_count = t.count";
+        $sql = "update project_livability pl inner join (select rp.PROJECT_ID, count(*) count from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID not in (3, 4, 13, 11) and rpa.VERIFIED=1 and (rp.township_id is null or rp.township_id = 0) group by rpa.PROJECT_ID union select rp.PROJECT_ID, count(distinct if(rpa.amenity_id = 99, rpa.amenity_display_name, rpa.amenity_id)) count from resi_project rp inner join resi_project rpt on rp.version = rpt.version and rp.township_id = rpt.township_id and rp.township_id is not null and rp.township_id != 0 inner join resi_project_amenities rpa on rpt.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID not in (3, 4, 13, 11) and rpa.VERIFIED=1 group by rp.project_id) t on pl.PROJECT_ID = t.PROJECT_ID set pl.other_amenity_count = t.count";
         self::connection()->query($sql);
 
         $cityNormalizeSql = "update project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID inner join (select s.CITY_ID, max(other_amenity_count) max from project_livability pl inner join resi_project rp on pl.project_id = rp.PROJECT_ID and rp.version = 'Website' inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on s.SUBURB_ID = l.SUBURB_ID group by s.CITY_ID) t on s.CITY_ID = t.CITY_ID set pl.other_amenity_count = pl.other_amenity_count/t.max";
@@ -102,12 +94,12 @@ class ProjectLivability extends ActiveRecord\Model {
         $aProjectSupply = indexArrayOnKey($aProjectSupply, 'project_id');
         foreach ($aFloorCount as $floorCount) {
             $projectId = $floorCount->project_id;
-            if (isset($aProjectSupply[$projectId])) {
-                $unitsPerFloor = $aProjectSupply[$projectId]->supply / $floorCount->floor_count;
+            if (isset($aProjectSupply[$projectId]) && isset($aProjectSupply[$projectId]->supply) && $aProjectSupply[$projectId]->supply>0) {
+                $unitsPerFloor = $floorCount->floor_count / $aProjectSupply[$projectId]->supply;
                 self::update_all(array('conditions' => array('project_id' => $projectId), 'set' => "unit_per_floor = $unitsPerFloor"));
             }
         }
-
+        self::update_all(array('conditions'=>"unit_per_floor > 1/(" . ProjectLivability::$min_units_per_floor . ")", 'set'=>"unit_per_floor = 1/(" . ProjectLivability::$min_units_per_floor . ")"));
         self::normalizeColumnOnCity('unit_per_floor');
     }
 
