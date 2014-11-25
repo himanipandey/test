@@ -81,13 +81,16 @@ function projectStatusUpdate($projectId){
             $arr = array_count_values($all_status);
             if($arr[5] == count($all_status))
                 $project_status = 5;
-            if($arr[2] == count($all_status))
+            elseif($arr[2] == count($all_status))
                 $project_status = 2;
-            if((array_key_exists(5,$arr) && array_key_exists(2,$arr) && array_key_exists(6,$arr)) || (array_key_exists(5,$arr) && array_key_exists(6,$arr)) || (array_key_exists(5,$arr) && array_key_exists(2,$arr)))
+            elseif(array_key_exists(5,$arr))
                 $project_status = 5;
-            if((array_key_exists(2,$arr) && array_key_exists(6,$arr)) || ($arr[6] == count($all_status)))
+            elseif(array_key_exists(6,$arr))
+                $project_status = 6;
+            else
                 $project_status = 6;
         }
+            
 	 mysql_query("update resi_project set project_status_id = '$project_status' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
 	    
   }else{
