@@ -183,7 +183,7 @@ if(compType=='Broker'){
   var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
 
   if (broker_info_type=="Advance"){
-    valid_compul(since_op, isNumeric1, "Please provide a valid date.", "errmsgdate");
+    valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
     valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
     valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
     valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
@@ -482,6 +482,13 @@ function isAlphaNumeric(val){
   return true;
 }
 
+function isDate(val){
+  if(val=="")
+    return false
+  else
+  return true;
+}
+
 
 
 
@@ -655,8 +662,8 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
    
     $("#pan").val(pan);
 
-    $('#img_date1').val(active_since.substring(0,10)); 
-
+   // $('#img_date1').val(active_since.substring(0,10)); 
+   $('#img_date1').val(active_since); 
     //var data = a;
     if(type=="Broker"){
       $("#broker_extra_field").show();
@@ -1616,6 +1623,7 @@ function basic_info_bt_clicked(){
                       <td width="30%" align="left"><select id="compLegalType" name="compLegalType" class="broker_basic">
                         <option name=one value=''>Select Company Legal Type</option>
                         <option name=one value='proprietorship'>Proprietorship</option>
+                        <option name=one value='partnership'>Partnership</option>
                         <option name=two value='private-limited' >Private Limited</option>
                         <option name=two value='limited' >Limited</option>
                         <option name=two value='individual' >Individual</option>

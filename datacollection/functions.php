@@ -28,7 +28,7 @@ function saveStatusUpdateByExecutive($projectID, $status, $remark){
     $result = dbQuery($sql);
     if(count($result)==1){
         $ID = $result[0]['ID'];
-        $sql = "update project_assignment set STATUS = '$status', EXECUTIVE_REMARK = '$remark' where ID = $ID;";
+        $sql = "update project_assignment set STATUS = '$status', EXECUTIVE_REMARK = '$remark', updation_time = now() where ID = $ID;";
         $result = dbExecute($sql);
     }
     dbExecute('commit');
