@@ -566,6 +566,7 @@ $updatePhase = array(
 if (!isset($_POST['forwardFlag']))
     $_POST['forwardFlag'] = '';
 
+$arrNotLaunchOnHOldCancled = array('2','5','6');
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
@@ -629,7 +630,7 @@ if ($_POST['forwardFlag'] == 'yes') {
                 update_remark_status($_POST['newRemarkId']);
         }
     }
-    if($flgLogical == 1){
+    if($flgLogical == 1 && !in_array($projectDetails[0]['PROJECT_STATUS_ID'],$arrNotLaunchOnHOldCancled) && $projectDetails[0]['RESIDENTIAL_FLAG'] == 'Residential'){
         $errorValidation = "<font color = 'red'>Please enter supply for all phases</font>";
         $smarty->assign("errorValidation",$errorValidation);
     }else
