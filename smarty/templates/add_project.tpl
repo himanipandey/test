@@ -453,8 +453,9 @@
                                                                       <select name = "project_type" id = "optionType" class = 'optionType'>
 									  <option value =''>Project Type</option>
                                                                             {foreach from=$arrResidentialType key=k item=v}
-
-                                                                                <option {if $k == $project_type} selected {/if} {if $residential == 'NonResidential'}style = "display:none;"{/if}  value = "{$k}" >{ucwords($v|lower)|replace:'_':' '}</option>
+                                                                                {if $k != 7}
+                                                                                   <option {if $k == $project_type} selected {/if} {if $residential == 'NonResidential'}style = "display:none;"{/if}  value = "{$k}" >{ucwords($v|lower)|replace:'_':' '}</option>
+                                                                                {/if}
                                                                             {/foreach}
 
                                                                             {foreach from=$arrCommercialType key=kComm item=vComm}

@@ -566,7 +566,8 @@ $updatePhase = array(
 if (!isset($_POST['forwardFlag']))
     $_POST['forwardFlag'] = '';
 
-if ($_POST['forwardFlag'] == 'yes') {
+$arrNotLaunchOnHOldCancled = array('2','5','6');
+if ($_POST['forwardFlag'] == 'yes') { 
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
     
@@ -601,7 +602,7 @@ if ($_POST['forwardFlag'] == 'yes') {
                                           join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
                                       where l.phase_id = ".$valPhaseId." and l.listing_category='Primary' and rpo.OPTION_CATEGORY = 'Logical'";
                    $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
-                   if(mysql_num_rows($resPhaseActual) == 0){
+                   if(mysql_num_rows($resPhaseActual) == 0 && (!in_array($projectDetails[0]['PROJECT_STATUS_ID'],$arrNotLaunchOnHOldCancled) && $projectDetails[0]['RESIDENTIAL_FLAG'] == 'Residential')){
                     $flgLogical = 1;
                     //echo $flgLogical."ghdf";
                    }
