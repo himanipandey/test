@@ -2,7 +2,7 @@
 	$AmenitiesArr	=	AmenitiesList();	
 	$smarty->assign("AmenitiesArr",$AmenitiesArr);
 	//echo "<pre>";
-		//print_r($AmenitiesArr);
+	//	print_r($AmenitiesArr);
 	//echo "</pre>";//die;
 	/*************************************/
 	$sourcepath=array();
@@ -19,6 +19,7 @@
             $smarty->assign("arrNotninty", $arrNotninty);
             $smarty->assign("arrninty", $arrninty);
             $smarty->assign("edit_project", $projectId);
+           // echo "<pre>";print_r($arrNotninty);
 	}
 	else $smarty->assign("edit_project", '');
     
@@ -33,7 +34,7 @@
 
     $preview = $_REQUEST['preview'];
     $smarty->assign("preview", $preview);
-   //echo "<pre>";print_r($_REQUEST);die;
+   //echo "<pre>";print_r($_REQUEST);//die;
     if (isset($_POST['btnSave']))
     {
             $qryIns_one = "INSERT INTO ".RESI_PROJECT_AMENITIES." (PROJECT_ID,AMENITY_DISPLAY_NAME,AMENITY_ID) VALUES ";	
@@ -45,7 +46,6 @@
             $newArr = array();
             $AmenityListngFlg = 0;
             $amenityToDel = array();
-            //echo "<pre>";print_r($_REQUEST);
             foreach($_REQUEST as $key=>$val)
             {
                 if(strstr($key,'#'))
@@ -60,19 +60,24 @@
                         $amenity_id   = $exp[1];
 
                         $key_display = "display_name_".$amenity_id;
+                        if(array_key_exists($amenity_id, $arrNotninty))
+                                $amntId = $amenity_id;
                         if(array_key_exists($key_display,$_REQUEST))
                         {
                             if($_REQUEST[$key_display][0] != '' AND !in_array($_REQUEST[$key_display][0],$newArr))
                             {
-                                    $amntChk = amenityCheck($projectId, str_replace("_"," ",$_REQUEST[$key_display][0]));
-                                    if($amntChk){
+                                    $amntChk = amenityCheck($projectId, $amenity_id);
+                                    
+                                    if($amntChk == true){
                                         $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".addslashes($_REQUEST[$key_display][0])."' where project_id = $projectId and amenity_id = $amenity_id";
-                                    }else
+                                    }else{
                                         $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."','".$amenity_id."'),";
+                                  
+                                        }
                             }
                             else
                             {
-                                    $amntChk = amenityCheck($projectId, $amenity_name);
+                                    $amntChk = amenityCheck($projectId, $amntId);
                                     if($amntChk){
                                         $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".addslashes($amenity_name)."' where project_id = $projectId and amenity_id = $amenity_id";
                                         
@@ -210,10 +215,10 @@
               header("Location:add_apartmentConfiguration.php?projectId=".$projectId);
     }
 
-function amenityCheck($projectId, $amenityDisplayName){
-    $qrySel = "select * from resi_project_amenities where project_id = $projectId and amenity_display_name = '".addslashes($amenityDisplayName)."'";
+function amenityCheck($projectId, $amntId){
+    $qrySel = "select * from resi_project_amenities where project_id = $projectId and amenity_id = '".$amntId."'";
     $resSel = mysql_query($qrySel) or die(mysql_error());
-    if(mysql_num_rows($result)>0)
+    if(mysql_num_rows($resSel)>0)
         return true;
     else
         return false;
