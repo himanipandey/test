@@ -45,7 +45,7 @@
             $newArr = array();
             $AmenityListngFlg = 0;
             $amenityToDel = array();
-            ///echo "<pre>";print_r($_REQUEST);
+            //echo "<pre>";print_r($_REQUEST);
             foreach($_REQUEST as $key=>$val)
             {
                 if(strstr($key,'#'))
@@ -85,11 +85,16 @@
                             $amenity_name = $exp[0];
                             $amenity_id   = $exp[1];
                             $amenityToDel[] = $amenity_id;
-                            $qryAmntLstng = "select id from listing_amenities where project_amenity_id = $amenity_id";
-                            $resAmntLstng = mysql_query($qryAmntLstng) or die(mysql_error());
-                            $dataAmnt = mysql_fetch_assoc($resAmntLstng);
-                            if($dataAmnt['id'] != ''){
-                                $AmenityListngFlg = 1;
+                            if($val != 0){
+                                $qrySelId = "select id from resi_project_amenities where amenity_display_name = '".addslashes($amenity_name)."' and project_id = $projectId";
+                                $resSelId = mysql_query($qrySelId) or die(mysql_error());
+                                $dataId = mysql_fetch_assoc($resSelId);
+                                $qryAmntLstng = "select id from listing_amenities where project_amenity_id = ".$dataId['id'];
+                                $resAmntLstng = mysql_query($qryAmntLstng) or die(mysql_error());
+                                $dataAmnt = mysql_fetch_assoc($resAmntLstng);
+                                if($dataAmnt['id'] != ''){
+                                    $AmenityListngFlg = 1;
+                                }
                             }
                     }
                 }
