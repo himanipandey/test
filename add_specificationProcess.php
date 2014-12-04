@@ -77,12 +77,13 @@
                             }
                             else
                             {
-                                    $amntChk = amenityCheck($projectId, $amntId);
+                                    $amntChk = amenityCheck($projectId, $amenity_id);
                                     if($amntChk){
                                         $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($amenity_name))."' where project_id = $projectId and amenity_id = $amenity_id";
                                         
-                                     }else    
+                                     }else  {  
                                         $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($amenity_name))."','".$amenity_id."'),";
+                                     }
                             }
                         }
                     }else{  //check in listing amenity
