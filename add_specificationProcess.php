@@ -70,8 +70,8 @@
                                         if($amntChk == true ){
                                             $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."' where project_id = $projectId and amenity_id = $amenity_id";
                                         }else{
-                                            $isVerrified = amenityCheckVerified($projectId, $amenity_id);
-                                            if($isVerrified == true)
+                                            //$isVerrified = amenityCheckVerified($projectId, $amenity_id);
+                                            //if($isVerrified == true)
                                                 $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."','".$amenity_id."'),";
                                         }
                                 }
@@ -82,8 +82,8 @@
                                         $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($amenity_name))."' where project_id = $projectId and amenity_id = $amenity_id";
 
                                      }else  {   
-                                         $isVerrified = amenityCheckVerified($projectId, $amenity_id);
-                                         if($isVerrified == true)
+                                        // $isVerrified = amenityCheckVerified($projectId, $amenity_id);
+                                         //if($isVerrified == true)
                                             $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($amenity_name))."','".$amenity_id."'),";
                                      }
                                 }
@@ -91,6 +91,8 @@
                         }
                     }
                 }
+                // echo $qryIns;
+                //echo $qryUpdateAmnt;die;
                 //check in listing amenity
                 foreach($_REQUEST as $key=>$val)
                 {
@@ -193,7 +195,7 @@
                     }
 
                     if($ErrMsg1 == '3'){
-                         $ErrMsg = 'Please delete existing amenity listing';
+                         $ErrMsg = 'Please delete existing listing amenities';
                          $smarty->assign("ErrMsg", $ErrMsg);
                     }
                     elseif($ErrMsg1 != '' && $ErrMsg2 != '')
