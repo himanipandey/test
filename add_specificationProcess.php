@@ -60,8 +60,6 @@
                         $amenity_id   = $exp[1];
 
                         $key_display = "display_name_".$amenity_id;
-                        if(array_key_exists($amenity_id, $arrNotninty))
-                                $amntId = $amenity_id;
                         if(array_key_exists($key_display,$_REQUEST))
                         {
                             if($_REQUEST[$key_display][0] != '' AND !in_array($_REQUEST[$key_display][0],$newArr))
@@ -86,22 +84,30 @@
                                      }
                             }
                         }
-                    }else{  //check in listing amenity
-                            $exp = explode("#",$key);
-                            $amenity_name = $exp[0];
-                            $amenity_id   = $exp[1];
-                            $amenityToDel[] = $amenity_id;
-
-                            $qryAmntLstng = "select a.id from resi_project_amenities a join listing_amenities l
-                                            on a.id = l.project_amenity_id where a.project_id = $projectId";
-                            $resAmntLstng = mysql_query($qryAmntLstng) or die(mysql_error());
-                            $dataAmnt = mysql_fetch_assoc($resAmntLstng);
-                            if($dataAmnt['id'] != ''){
-                                $AmenityListngFlg = 1;
-                            }
                     }
                 }
             }
+            //check in listing amenity
+            foreach($_REQUEST as $key=>$val)
+            {
+                if(strstr($key,'#'))
+                {	
+                    $exp = explode("#",$key);
+                    $amenity_name = $exp[0];
+                    $amenity_id   = $exp[1];
+                    if($val == 0 && array_key_exists($amenity_id, $arrNotninty))
+                    {
+                        $amenityToDel[] = $amenity_id;
+                        $qryAmntLstng = "select a.id from resi_project_amenities a join listing_amenities l
+                                            on a.id = l.project_amenity_id where a.project_id = $projectId and a.id =$amenity_id";
+                        $resAmntLstng = mysql_query($qryAmntLstng) or die(mysql_error());
+                        $dataAmnt = mysql_fetch_assoc($resAmntLstng);
+                        if($dataAmnt['id'] != ''){
+                            $AmenityListngFlg = 1;
+                        }
+                    }
+                }
+             }
                 if($AmenityListngFlg == 0){
                     //delete other amenities of 99 id
                     $toDelAmenity = implode(",",$amenityToDel);
