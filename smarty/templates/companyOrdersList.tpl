@@ -42,6 +42,7 @@
                                 <TR class = "headingrowcolor">
                                   <th  width=2% align="center">No.</th>
                                   <th  width=5% align="center">Order ID</th>
+                                  <th  width=5% align="center">Order Name</th>
                                   <TH  width=8% align="center">Client ID</TH>
                                   <TH  width=8% align="center">Sales Person ID</TH>
                                   <TH  width=8% align="center">Company Name</TH>
@@ -67,6 +68,7 @@
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border><a href="createCompanyOrder.php?o={$v['order_id']}&page=view">{$v['order_id']}</a></TD>
+                                  <TD align=center class=td-border>{$v['order_name']}</TD>
                                   <TD align=center class=td-border><a href="companyList.php?compid={$v['company_id']}">{$v['company_id']}</a></TD>
                                   <TD align=center class=td-border>{$v['sales_persion_id']}</TD>
                                   <TD align=center class=td-border>{$v['name']}</TD>

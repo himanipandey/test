@@ -57,6 +57,16 @@
 					  {/if}
 				  </td>
 				</tr>
+                                
+                                <tr>
+				  <td width="20%" align="right" >Order Name: </td>
+				  <td width="30%" align="left">
+					  <input type=text name="orderName" id="orderName" value="{$orderName}" style="width:250px;">
+				  </td>
+				  <td width="50%" align="left" >
+					  &nbsp;
+				  </td>
+				</tr>
 				
 				<tr>
 				  <td width="20%" align="right" ><font color="red">*</font>Sales Person : </td>
