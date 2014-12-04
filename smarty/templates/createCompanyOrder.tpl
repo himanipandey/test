@@ -513,7 +513,7 @@ jQuery(document).ready(function(){
 	  }		  
 	}
         ordDt = new Date(orderDate).toDateString();
-        ordDtOld = new Date(txtOrderDateOld).toDateString();
+        ordDtOld = new Date(orderDateOld).toDateString();
         alert(ordDt+"=="+ordDtOld);
 	if(orderDate != '' && ordDt != ordDtOld){
 		date = orderDate;		
