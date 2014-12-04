@@ -75,6 +75,7 @@
 				  <td width="20%" align="right" ><font color="red">*</font>Order Date : </td>
 				  <td width="30%" align="left"> <input value="{$txtOrderDate}" name="txtOrderDate" type="text" class="formstyle2" id="txtOrderDate" readonly="1" size="10" />  
 				  {if $page!='view'}
+                                      <input type = "hidden" name = "txtOrderDateOld" id = "txtOrderDateOld" value="{$txtOrderDateOld}">
 				  <img src="../images/cal_1.jpg" id="txtOrderDate_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
 				  {/if}
 				  </td> {if $ErrorMsg["txtOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
@@ -485,6 +486,7 @@ jQuery(document).ready(function(){
 	compName = $('#txtCompName').val().trim();
 	salesPer = $('#txtSalesPerson').val().trim();
 	orderDate = $('#txtOrderDate').val();
+        orderDateOld = $('#txtOrderDateOld').val();
 	orderType = $("input[name='orderType']:checked").val();
 	orderDur = $("#txtOrderDur").val();	
 	//access
@@ -510,7 +512,19 @@ jQuery(document).ready(function(){
 		return false;  
 	  }		  
 	}
-	  
+	if(orderDate != '' && txtOrderDateOld != txtOrderDate){
+		date = orderDate;		
+		d1 = new Date(date).toDateString();		
+		d2 = new Date().toDateString();
+		d1 = new Date(d1);
+		d2 = new Date(d2);
+		if(d1<d2){
+		  alert("Order Date must be Current or Future date.");
+		  $("#txtOrderDur option[value='']").attr('selected', 'selected');
+		  $("#txtExpiryTrialOrderDate").val("");
+		  return false;
+		}
+	  }	  
 	 //payment details validations
 	 if(orderType == 'paid'){	
 	   if($('#txtOrderAmt').val().trim() == '' || $('#txtOrderAmt').val().trim() == 0){
