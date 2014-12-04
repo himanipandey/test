@@ -532,15 +532,19 @@ function broker_call_edit(callId, brokerId)
 	{$prelaunchDate = $projectDetails[0]['PRE_LAUNCH_DATE']}
 	{$stageProject = $projectDetails[0].PROJECT_STAGE}
 	
-	{if count($accessModule)>0}
-             <br> 
-            <span>
-                Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
-                <input type = "radio" name = "validationChk" value = "N">No<br>
-            </span>
-	{else}
-	   <span style = "display:none;"><input type = "radio" name = "validationChk" value = "Y" checked></span>
-	{/if}
+        {if $skipUpdtnCycle == 1}
+            {if count($accessModule)>0}
+                 <br> 
+                <span>
+                    Move Validation?<input type = "radio" name = "validationChk" value = "Y" checked>Yes&nbsp;
+                    <input type = "radio" name = "validationChk" value = "N">No<br>
+                </span>
+            {else}
+               <span style = "display:none;"><input type = "radio" name = "validationChk" value = "Y" checked></span>
+            {/if}
+        {else}
+        <br>
+        {/if}
 	{if $projectDetails[0].PROJECT_STAGE=='NewProject'}
             {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                  <button id="phaseChange" onclick="changePhase({$projectId},'{$projectDetails[0].PROJECT_PHASE}','forward','{$projectStatus}','{$arrAllCompletionDateChk}',
