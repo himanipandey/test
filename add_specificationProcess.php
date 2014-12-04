@@ -108,11 +108,17 @@
                     }
                 }
              }
+             echo $AmenityListngFlg;
+            // echo count($amenityToDel);die;
                 if($AmenityListngFlg == 0){
                     //delete other amenities of 99 id
                     $toDelAmenity = implode(",",$amenityToDel);
-                    $qryDel = "delete from resi_project_amenities where project_id = $projectId and (amenity_id = 99 or amenity_id in($toDelAmenity))";
-                    $resDel = mysql_query($qryDel) or die(mysql_error()." error in listing deletion");
+                    if(count($amenityToDel)>0)
+                        $qryAnd = "  or amenity_id in($toDelAmenity)";
+                    else
+                        $qryAnd = '';
+                        $qryDel = "delete from resi_project_amenities where project_id = $projectId and (amenity_id = 99$qryAnd)";
+                        $resDel = mysql_query($qryDel) or die(mysql_error()." error in listing deletion");
                     if($resDel){
                         foreach($qryUpdateAmnt as $updtQry){
                             $resUpdt = mysql_query($updtQry) or die(mysql_error()." error in update amenity");
@@ -122,17 +128,14 @@
                             if($val != '')
                                 $qryIns .= "('".$projectId."','".addslashes(str_replace("_"," ",$val))."','99'),";
                         }
-                        //echo $qryIns_one.$qryIns;//die("here");
+                        //echo $qryIns_one.$qryIns;die("here");
                         if($qryIns != '')
                         {
                             $qryIns = $qryIns_one.$qryIns;
                             $qryins = substr($qryIns,0,-1);
                             mysql_query($qryins) or die(mysql_error());
                         }
-                        else
-                        {
-                                $ErrMsg1 = '1';
-                        }
+                       
 
                         $master_bedroom_flooring	=	trim($_POST['master_bedroom_flooring']);
                         $other_bedroom_flooring		=	trim($_POST['other_bedroom_flooring']);
