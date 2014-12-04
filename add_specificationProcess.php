@@ -46,8 +46,8 @@
                 $newArr = array();
                 $AmenityListngFlg = 0;
                 $amenityToDel = array();
-                echo "<pre>";print_r($_REQUEST);
-                echo "<pre>";print_r($arrNotninty);//die;
+               // echo "<pre>";print_r($_REQUEST);
+               // echo "<pre>";print_r($arrNotninty);//die;
                 foreach($_REQUEST as $key=>$val)
                 {
                     if(strstr($key,'#'))
@@ -97,22 +97,22 @@
                     if(strstr($key,'#'))
                     {	
                         $exp = explode("#",$key);
-                        $amenity_name = $exp[0];
+                       $amenity_name = $exp[0];
                         $amenity_id   = $exp[1];
                         if($val == 0 && array_key_exists($amenity_id, $arrNotninty))
-                        {
-                            $amenityToDel[] = $amenity_id;
+                        { 
                             $qryAmntLstng = "select a.id from resi_project_amenities a join listing_amenities l
-                                                on a.id = l.project_amenity_id where a.project_id = $projectId and a.id =$amenity_id";
+                                                on a.id = l.project_amenity_id where a.project_id = $projectId and a.amenity_id =$amenity_id";
                             $resAmntLstng = mysql_query($qryAmntLstng) or die(mysql_error());
                             $dataAmnt = mysql_fetch_assoc($resAmntLstng);
                             if($dataAmnt['id'] != ''){
                                 $AmenityListngFlg = 1;
+                            }else{
+                                $amenityToDel[] = $amenity_id;
                             }
                         }
                     }
                  }
-                 //echo count($amenityToDel);
                     if($AmenityListngFlg == 0){
                         //delete other amenities of 99 id
                         $toDelAmenity = implode(",",$amenityToDel);
