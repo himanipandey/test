@@ -804,7 +804,7 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-                               <tr>
+                               <tr>                         {if $skipUpdtnCycle == 1}
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
                                                                     <select name="skipUpdationCycle" onchange="skipUpdationCycleChanged(this.value)">
                                                                         <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
@@ -813,28 +813,32 @@
                                                                     <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
                                                                 </td>
 								<td width="50%" align="left"><font color="red"></font></td>
+                                                            {else}
+                                                            {/if}
 							   </tr>
 
-							   {if array_key_exists('SkipUpdationCycleRemark',$projectComments)}   
-                                                            <tr class="skipUpdationCycleBlock">
-                                                                <td width="20%" align="right" valign="top"><b>Skip Updation Cycle Old Remark :</b> </td>
-                                                                <td width="30%" align="left" colspan="2">{$projectComments['SkipUpdationCycleRemark']->comment_text}</td>
-                                                            </tr>
-                                                            {else if array_key_exists('SkipUpdationCycleRemark',$projectOldComments)}
-                                                              <tr class="skipUpdationCycleBlock">
-                                                                <td width="20%" align="right" valign="top"><b>Skip Updation Cycle Old Remark :</b> </td>
-                                                                <td width="30%" align="left" colspan="2">{$projectOldComments['SkipUpdationCycleRemark']->comment_text}</td>
+                                                           {if $skipUpdtnCycle == 1}
+                                                            {if array_key_exists('SkipUpdationCycleRemark',$projectComments)}   
+                                                             <tr class="skipUpdationCycleBlock">
+                                                                 <td width="20%" align="right" valign="top"><b>Skip Updation Cycle Old Remark :</b> </td>
+                                                                 <td width="30%" align="left" colspan="2">{$projectComments['SkipUpdationCycleRemark']->comment_text}</td>
                                                              </tr>
+                                                             {else if array_key_exists('SkipUpdationCycleRemark',$projectOldComments)}
+                                                               <tr class="skipUpdationCycleBlock">
+                                                                 <td width="20%" align="right" valign="top"><b>Skip Updation Cycle Old Remark :</b> </td>
+                                                                 <td width="30%" align="left" colspan="2">{$projectOldComments['SkipUpdationCycleRemark']->comment_text}</td>
+                                                              </tr>
+                                                             {/if}
+                                                            <tr class="skipUpdationCycleBlock">
+                                                                   <td width="20%" align="right" valign="top"><font color ="red">*</font><b>Skip Updation Cycle Remark :</b> </td>
+                                                                   <td width="30%" align="left">
+                                                                          <textarea name="txtSkipUpdationRemark" rows="10" cols="45" id = "txtSkipUpdationRemark">{$txtSkipUpdationRemark}</textarea>
+                                                                   </td>
+                                                                   <td width="50%" align="left">
+                                                                           <font color="red">{if $ErrorMsg["txtSkipUpdationCycle"] != ''} {$ErrorMsg["txtSkipUpdationCycle"]} {/if}<span id = "err_skip_updation_cycle" style = "display:none;">Please enter Remarks for skipping update cycle!</span></font>
+                                                                   </td>
+                                                            </tr>
                                                             {/if}
-							   <tr class="skipUpdationCycleBlock">
-								  <td width="20%" align="right" valign="top"><font color ="red">*</font><b>Skip Updation Cycle Remark :</b> </td>
-								  <td width="30%" align="left">
-									 <textarea name="txtSkipUpdationRemark" rows="10" cols="45" id = "txtSkipUpdationRemark">{$txtSkipUpdationRemark}</textarea>
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtSkipUpdationCycle"] != ''} {$ErrorMsg["txtSkipUpdationCycle"]} {/if}<span id = "err_skip_updation_cycle" style = "display:none;">Please enter Remarks for skipping update cycle!</span></font>
-								  </td>
-							   </tr>
 
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
