@@ -70,8 +70,6 @@
                                         if($amntChk == true ){
                                             $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."' where project_id = $projectId and amenity_id = $amenity_id and verified = 1";
                                         }else{
-                                            //$isVerrified = amenityCheckVerified($projectId, $amenity_id);
-                                            //if($isVerrified == true)
                                                 $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."','".$amenity_id."'),";
                                         }
                                 }
@@ -82,8 +80,6 @@
                                         $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($amenity_name))."' where project_id = $projectId and amenity_id = $amenity_id and verified = 1";
 
                                      }else  {   
-                                        // $isVerrified = amenityCheckVerified($projectId, $amenity_id);
-                                         //if($isVerrified == true)
                                             $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($amenity_name))."','".$amenity_id."'),";
                                      }
                                 }
@@ -104,7 +100,7 @@
                         if($val == 0 && array_key_exists($amenity_id, $arrNotninty))
                         { 
                             $qryAmntLstng = "select a.id from resi_project_amenities a join listing_amenities l
-                                                on a.id = l.project_amenity_id where a.project_id = $projectId and a.amenity_id =$amenity_id";
+                                                on a.id = l.project_amenity_id where a.project_id = $projectId and a.amenity_id =$amenity_id and verified = 1";
                             $resAmntLstng = mysql_query($qryAmntLstng) or die(mysql_error());
                             $dataAmnt = mysql_fetch_assoc($resAmntLstng);
                             if($dataAmnt['id'] != ''){
@@ -122,7 +118,7 @@
                             $qryAnd = "  or amenity_id in($toDelAmenity)";
                         else
                             $qryAnd = '';
-                            $qryDel = "delete from resi_project_amenities where project_id = $projectId and (amenity_id = 99$qryAnd)";
+                            $qryDel = "delete from resi_project_amenities where project_id = $projectId and verified = 1 and (amenity_id = 99$qryAnd)";
                             $resDel = mysql_query($qryDel) or die(mysql_error()." error in listing deletion");
                         if($resDel){
                             foreach($qryUpdateAmnt as $updtQry){
@@ -239,20 +235,7 @@
                 return false;
 
         }
-        
-        function amenityCheckVerified($projectId, $amenity_id){
-           echo "<br>", $qrySel = "select verified from resi_project_amenities where project_id = $projectId and amenity_id = '".$amenity_id."'";
-            $resSel = mysql_query($qrySel) or die(mysql_error());
-            $dataVerified = mysql_fetch_assoc($resSel);
-            if(mysql_num_rows($resSel)>0){
-                if($dataVerified['verified'] == 1)
-                   return true;
-                else
-                   return false;
-            }else
-                 return true;
-
-        }
+       
 	/**************************************/
 	
 
