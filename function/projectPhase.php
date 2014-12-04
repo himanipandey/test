@@ -77,8 +77,20 @@ function projectStatusUpdate($projectId){
 		$project_status = 8;
 	elseif(in_array(3,$all_status) || in_array(4,$all_status)) //Ready for possession or Occupied
 		$project_status = 3;	
-	else
-	    $project_status = 6;
+        else{    //code by Vimlesh Rajput project status from phase status bug id is is-469 on jira on 25th Nov 2014
+            $arr = array_count_values($all_status);
+            if($arr[5] == count($all_status))
+                $project_status = 5;
+            elseif($arr[2] == count($all_status))
+                $project_status = 2;
+            elseif(array_key_exists(5,$arr))
+                $project_status = 5;
+            elseif(array_key_exists(6,$arr))
+                $project_status = 6;
+            else
+                $project_status = 6;
+        }
+            
 	 mysql_query("update resi_project set project_status_id = '$project_status' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
 	    
   }else{
