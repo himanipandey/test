@@ -512,8 +512,10 @@ jQuery(document).ready(function(){
 		return false;  
 	  }		  
 	}
-        alert(txtOrderDateOld+"=="+txtOrderDate);
-	if(orderDate != '' && txtOrderDateOld != txtOrderDate){
+        ordDt = new Date(orderDate).toDateString();
+        ordDtOld = new Date(txtOrderDateOld).toDateString();
+        alert(ordDt+"=="+ordDtOld);
+	if(orderDate != '' && ordDt != ordDtOld){
 		date = orderDate;		
 		d1 = new Date(date).toDateString();		
 		d2 = new Date().toDateString();
