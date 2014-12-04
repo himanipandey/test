@@ -69,7 +69,7 @@
                                     $amntChk = amenityCheck($projectId, $amenity_id);
                                     
                                     if($amntChk == true){
-                                        $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".addslashes($_REQUEST[$key_display][0])."' where project_id = $projectId and amenity_id = $amenity_id";
+                                        $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."' where project_id = $projectId and amenity_id = $amenity_id";
                                     }else{
                                         $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."','".$amenity_id."'),";
                                   
@@ -79,7 +79,7 @@
                             {
                                     $amntChk = amenityCheck($projectId, $amntId);
                                     if($amntChk){
-                                        $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".addslashes($amenity_name)."' where project_id = $projectId and amenity_id = $amenity_id";
+                                        $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($amenity_name))."' where project_id = $projectId and amenity_id = $amenity_id";
                                         
                                      }else    
                                         $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($amenity_name))."','".$amenity_id."'),";
