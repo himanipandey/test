@@ -512,6 +512,7 @@ jQuery(document).ready(function(){
 		return false;  
 	  }		  
 	}
+        alert(txtOrderDateOld+"=="+txtOrderDate);
 	if(orderDate != '' && txtOrderDateOld != txtOrderDate){
 		date = orderDate;		
 		d1 = new Date(date).toDateString();		
