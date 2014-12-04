@@ -34,7 +34,7 @@
 
         $preview = $_REQUEST['preview'];
         $smarty->assign("preview", $preview);
-       //echo "<pre>";print_r($_REQUEST);//die;
+      // echo "<pre>";print_r($_REQUEST);//die;
         if (isset($_POST['btnSave']))
         {
                 $qryIns_one = "INSERT INTO ".RESI_PROJECT_AMENITIES." (PROJECT_ID,AMENITY_DISPLAY_NAME,AMENITY_ID) VALUES ";	
@@ -46,6 +46,8 @@
                 $newArr = array();
                 $AmenityListngFlg = 0;
                 $amenityToDel = array();
+                echo "<pre>";print_r($_REQUEST);
+                echo "<pre>";print_r($arrNotninty);//die;
                 foreach($_REQUEST as $key=>$val)
                 {
                     if(strstr($key,'#'))
@@ -62,23 +64,27 @@
                             $key_display = "display_name_".$amenity_id;
                             if(array_key_exists($key_display,$_REQUEST))
                             {
-                                if($_REQUEST[$key_display][0] != '' AND !in_array($_REQUEST[$key_display][0],$newArr))
-                                {
+                                if($_REQUEST[$key_display][0] != '')
+                                {  
                                         $amntChk = amenityCheck($projectId, $amenity_id);
-
-                                        if($amntChk == true){
+                                        if($amntChk == true ){
                                             $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."' where project_id = $projectId and amenity_id = $amenity_id";
-                                        }else
-                                            $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."','".$amenity_id."'),";
+                                        }else{
+                                            $isVerrified = amenityCheckVerified($projectId, $amenity_id);
+                                            if($isVerrified == true)
+                                                $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($_REQUEST[$key_display][0]))."','".$amenity_id."'),";
+                                        }
                                 }
                                 else
                                 {
                                     $amntChk = amenityCheck($projectId, $amenity_id);
-                                    if($amntChk){
+                                    if($amntChk == true){ 
                                         $qryUpdateAmnt[] = "update resi_project_amenities set amenity_display_name = '".str_replace("_"," ",addslashes($amenity_name))."' where project_id = $projectId and amenity_id = $amenity_id";
 
-                                     }else  {  
-                                        $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($amenity_name))."','".$amenity_id."'),";
+                                     }else  {   
+                                         $isVerrified = amenityCheckVerified($projectId, $amenity_id);
+                                         if($isVerrified == true)
+                                            $qryIns .= "('".$projectId."','".str_replace("_"," ",addslashes($amenity_name))."','".$amenity_id."'),";
                                      }
                                 }
                             }
@@ -106,7 +112,7 @@
                         }
                     }
                  }
-                // echo count($amenityToDel);die;
+                 //echo count($amenityToDel);
                     if($AmenityListngFlg == 0){
                         //delete other amenities of 99 id
                         $toDelAmenity = implode(",",$amenityToDel);
@@ -223,12 +229,26 @@
         }
 
         function amenityCheck($projectId, $amntId){
-            $qrySel = "select * from resi_project_amenities where project_id = $projectId and amenity_id = '".$amntId."'";
+            $qrySel = "select * from resi_project_amenities where project_id = $projectId and amenity_id = '".$amntId."' and verified = 1";
             $resSel = mysql_query($qrySel) or die(mysql_error());
             if(mysql_num_rows($resSel)>0)
                 return true;
             else
                 return false;
+
+        }
+        
+        function amenityCheckVerified($projectId, $amenity_id){
+           echo "<br>", $qrySel = "select verified from resi_project_amenities where project_id = $projectId and amenity_id = '".$amenity_id."'";
+            $resSel = mysql_query($qrySel) or die(mysql_error());
+            $dataVerified = mysql_fetch_assoc($resSel);
+            if(mysql_num_rows($resSel)>0){
+                if($dataVerified['verified'] == 1)
+                   return true;
+                else
+                   return false;
+            }else
+                 return true;
 
         }
 	/**************************************/
