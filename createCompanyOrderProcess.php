@@ -440,7 +440,7 @@
 			  $email_message = "Hi,<br/><br/> Your account has been created at Proptiger.com.<br/>
 			  User = ".$email."<br/>"."Password = ".$pwd."<br/><br/>Regards,<br/>Proptiger.com";
 			  //$to = $email;
-                          $to = 'kapil.pathak@proptiger.com';
+                          $to = 'dl.login@proptiger.com';
 			  $sender = "no-reply@proptiger.com";
 			  $headers  = 'MIME-Version: 1.0' . "\r\n";
 			  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
