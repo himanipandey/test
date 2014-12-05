@@ -107,6 +107,7 @@ if (runTests()) {
     sendRawEmailFromAmazon(B2B_SUCCESS_EMAIL_RECIPIENT, '', '', 'B2B Data Migration Successful', 'Migration successful on server: ' . exec('hostname') . ' .', '', '', array(B2B_SUCCESS_EMAIL_RECIPIENT));
 } else {
     $logger->error("Test Cases Failed.");
+    sendRawEmailFromAmazon(B2B_SUCCESS_EMAIL_RECIPIENT, '', '', 'B2B Data Migration Failed', 'Migration failed on server: ' . exec('hostname') . ' due to failure in test cases .', '', '',   array(B2B_SUCCESS_EMAIL_RECIPIENT));
 }
 
 #echo "\n";
