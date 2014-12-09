@@ -32,9 +32,6 @@
     if(!isset($_POST['city']))
             $_POST['city'] = '';
 
-    if(!isset($_REQUEST['locality']))
-            $_REQUEST['locality'] = '';
-
     if(!isset($_REQUEST['Residential']))
             $_REQUEST['Residential'] = '';	
 
@@ -75,7 +72,7 @@
 
     $projectDataArr = array();
     $NumRows =  $city = $builder = $project_name = '';
-
+//echo "<pre>";print_r($_REQUEST);//die;
     $citylist = City::CityArr();
     $builderList = ResiBuilder::BuilderEntityArr();
     $projectStatus = ResiProject::projectStatusMaster();
@@ -89,7 +86,6 @@
     $transfer = $_REQUEST['transfer'];
     $search = $_REQUEST['search'];
     $city = $_REQUEST['city'];
-    $locality = $_REQUEST['locality'];
     $builder = $_REQUEST['builder'];
     $phase = $_REQUEST['phase'];
     $arrPhase = explode('|',$_REQUEST['stage']);
@@ -99,7 +95,6 @@
     $Active = $_REQUEST['Active'];
     $Availability = $_REQUEST['Availability'];
     $selectdata = $_POST['selectdata'];
-
     $smarty->assign("projectStatus",$projectStatus);
     $smarty->assign("citylist", $citylist);
     $smarty->assign("builderList", $builderList);	
@@ -107,7 +102,7 @@
     $smarty->assign("search", $search);
     $smarty->assign("Residential", $_REQUEST['Residential']);
     $smarty->assign("Status", $_REQUEST['Status']);
-    $smarty->assign("city", $city);
+    $smarty->assign("city", $_REQUEST['city']);
     $smarty->assign("builder", $builder);
     $smarty->assign("exp_supply_date_from", $exp_supply_date_from);
     $smarty->assign("exp_supply_date_to", $exp_supply_date_to);
@@ -122,24 +117,10 @@
     if($search != '' OR $transfer != '' OR $_POST['projectId'] != '' OR $updateRemark !='')
     {
 	$project_name= $_REQUEST['project_name'];
-        $smarty->assign("locality", $locality);
         $smarty->assign("phase", $phase);
         $smarty->assign("updationCycle", $updationCycle);
         $smarty->assign("stage", $stage);
-        
-        if($city != '')
-        { 
-			$getLocality = Array();
-            if($city == 'othercities'){
-				foreach($arrOtherCities as $key => $value){
-					$cityLocality = Locality::getLocalityByCity($key);
-					if(!empty($cityLocality))
-						$getLocality = array_merge($getLocality,$cityLocality);
-				}
-			}else
-				$getLocality = Locality::getLocalityByCity($city);
-			$smarty->assign("getLocality", $getLocality);
-        }
+
         $QueryMember1 = "Select p.PROJECT_ID,p.PROJECT_PHASE_ID,p.PROJECT_STAGE_ID,ph.name as PROJECT_PHASE, 
                 st.name as PROJECT_STAGE 
                 FROM ".RESI_PROJECT." p 
@@ -181,17 +162,23 @@
                      $and  = ' AND ';
              }
               
-
-             if($_REQUEST['city'] != '')
+             if($_REQUEST['city'][0] != '')
              {
-                    $city = '';
-                    if($_REQUEST['city'] == 'othercities'){
+                    $city = array();
+                    $newCityArr = array();
+                    foreach ($_REQUEST['city'] as $val){
+                        if($val != 'othercities')
+                            $newCityArr[] = $val;
+                    }
+                    if(in_array("othercities",$_REQUEST['city'])){
                            $OtherCitiesKeys = array_keys($arrOtherCities);
-                           $city = implode(",",$OtherCitiesKeys);
-                    }else{
-                            $city = $_REQUEST['city'];
+                           $city[] = $OtherCitiesKeys;
+                    }elseif(count($newCityArr)>0){
+                        
+                            $city[] = $newCityArr;
                    }
-                 $QueryMember .= $and." city.city_id in ($city)";
+                   $cityListVal = implode(",",$city[0]);
+                 $QueryMember .= $and." city.city_id in ($cityListVal)";
                  $and  = ' AND ';
              }
              if($_REQUEST['project_name'] != '')
@@ -217,11 +204,7 @@
                  $and  = ' AND ';
              }
 
-             if($_REQUEST['locality'] != '')
-             {
-                 $QueryMember .= $and." locality.LOCALITY_ID = '".$_REQUEST['locality']."'";
-                 $and  = ' AND ';
-             }
+            
              if($_REQUEST['builder'] != '')
              {
                  $QueryMember .= $and." BUILDER_ID = '".$_REQUEST['builder']."'";
@@ -267,9 +250,8 @@
                     and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null)";
 
         }
-        $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
+       $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
     }
-    
     $assignPhase = $_REQUEST['updatePhase'];
     $expPhase = explode("|",$assignPhase);
     

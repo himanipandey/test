@@ -3,10 +3,11 @@
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 <script>
-function downloadExcel(phase,stage)
+function downloadExcel(phase,stage,cityArr)
 {
 	$('#current_dwnld_phase').val(phase);
 	$('#current_dwnld_stage').val(stage);
+        $('#dwnld_city').val(cityArr);
 	document.frmdownload.action = "ajax/downloadProject.php";
 	
 	document.frmdownload.submit();
@@ -57,26 +58,6 @@ function stateChanged()
     if (xmlHttp.readyState==4)
     {
       document.getElementById('statusRefresh'+idfordiv).innerHTML=xmlHttp.responseText;
-    }
-}
-
-function update_locality(ctid)
-{
-    xmlHttpLoc=GetXmlHttpObject()
-
-    var url="Refreshlocality.php?ctid="+ctid;	
-    xmlHttpLoc.onreadystatechange=stateChanged
-    xmlHttpLoc.open("GET",url,true)
-    xmlHttpLoc.send(null)
-}
-	
-function stateChanged()
-{
-
-    if (xmlHttpLoc.readyState==4)
-    {	
-        document.getElementById("LocalityList").innerHTML=xmlHttpLoc.responseText;
-        $('#locality').attr('style','width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;');
     }
 }
 	
@@ -213,7 +194,6 @@ $(function() {
 </script>
 <form name='frmdownload' method='post' action='ajax/downloadProject.php'>
 <input type='hidden' name='dwnld_city' id='dwnld_city' value="{$_POST['city']}">
-<input type='hidden' name='dwnld_locality' id='dwnld_locality' value="{$_POST['locality']}">
 <input type='hidden' name='dwnld_mode' id='dwnld_mode' value="{$_POST['mode']}">
 <input type='hidden' name='dwnld_builder' id='dwnld_builder' value="{$_POST['builder']}">
 <input type='hidden' name='dwnld_phase' id='dwnld_phase' value="{$_POST['phase']}">
@@ -276,14 +256,14 @@ $(function() {
                                             </td>
                                           </tr>
                                           <tr>
-                                      <td align="right" style = "padding-left:20px;" height='35'><b>City:</b></td>
+                                      <td align="right" style = "padding-left:20px;" height='35' valign = "top"><b>City:</b></td>
                                       <td align="left" style = "padding-left:20px;" width='65%'>
-                                          <select name = 'city' id = "city" onchange = "update_locality(this.value);">
+                                          <select name = 'city[]' id = "city" multiple  style='width:220px;border:1px solid #c2c2c2;padding:3px;height:180px;'>
                                               <option value = "">Select City</option>
                                               {foreach from = $citylist key= key item = val}
-                                                  <option value = "{$key}" {if $city == $key} selected  {else}{/if}>{$val}</option>
+                                                  <option value = "{$key}" {if in_array($key,$city)} selected  {else}{/if}>{$val}</option>
                                               {/foreach}
-                                              <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
+                                              <option value = "othercities" {if in_array('othercities',$city)} selected  {else}{/if}>Other cities</option>
                                           </select>
                                       </td>
                                   </tr>
@@ -440,6 +420,8 @@ $(function() {
                                {$ctrl = 1}
                                {$flagcheck=0}
                                {$totcnt = 0}
+                               {$arrProjectVStage = array()}
+                               {$arrProjectVPhase = array()}
                                {if count($projectDataArr)>0}
                                {foreach from=$projectDataArr key=key item=arrVal}				  	  
                                      <tr bgcolor='#ffffff'>
@@ -478,13 +460,17 @@ $(function() {
                                                 {if $arrVal['PROJECT_PHASE'] == 'NewProject'} NewProject Audit {else}{$arrVal['PROJECT_PHASE']}{/if}
                                              </td>
                                              <td align='center' style='padding-left:5px;'>
+                                                 {$arrProjectVStage[] = $arrVal['PROJECT_STAGE']}
+                                                 {$arrProjectVPhase[] = $arrVal['PROJECT_PHASE']}
                                                  <a href='javascript:void(0);' onClick='javascript:downloadExcel("{$arrVal['PROJECT_STAGE']}","{$arrVal['PROJECT_PHASE']}");'><img src='images/excel.png' border='0'></a>
                                              </td>
                                       </tr>
                                      {$ctrl = $ctrl + 1}
                                      {$totcnt = $totcnt + $arrVal['CNT']}
                                {/foreach}
-                               <tr bgcolor='#ffffff'><td align='center' height='35' colspan='2'><b>Total Projects</b></td><td align='center'>{$totcnt}</td><td colspan='3'></td></tr>
+                                <tr bgcolor='#ffffff'><td align='center' height='35' colspan='2'><b>Total Projects</b></td><td align='center'>{$totcnt}</td><td colspan='2'></td>
+                               <td align  = "center"><a href='javascript:void(0);' onClick='javascript:downloadExcel("{implode(",",$arrProjectVStage)}","{implode(",",$arrProjectVPhase)}","{implode(",",$city)}");'><img src='images/excel.png' border='0'></a></td>
+                               </tr>
                                {else}
                                      <tr bgcolor='#ffffff'><td colspan='6' align='center' valign='middle' height='80'>No record found for the selected search criteria</td></tr>
                                {/if}
