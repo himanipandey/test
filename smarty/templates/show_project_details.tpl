@@ -2054,6 +2054,7 @@ function broker_call_edit(callId, brokerId)
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Effecive Date</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Unit Name</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Size</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt>Carpet Area</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Price Per Unit Area</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
@@ -2078,6 +2079,9 @@ function broker_call_edit(callId, brokerId)
                       </td>
                       <td >
                          {if isset($valueInner['size'])} {$valueInner['size']} {else} -- {/if}
+                      </td>
+                       <td >
+                         {if isset($valueInner['carpet_area'])} {$valueInner['carpet_area']} {else} -- {/if}
                       </td>
                       <td >
                         {if isset($valueInner['latestPrice'])} {$valueInner['latestPrice']} {else} -- {/if}

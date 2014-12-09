@@ -53,7 +53,7 @@ if($_REQUEST['edit'] == 'edit')
         $smarty->assign("TYPE_ID", $arrProjectType['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval", $arrProjectType['OPTION_NAME']);
         $smarty->assign("txtSizeval", $arrProjectType['SIZE']);
-        $smarty->assign("txtCarpetAreaInfo", $arrProjectType['CARPET_AREA_INFO']);
+        $smarty->assign("txtSizevalCarpet", $arrProjectType['CARPET_AREA']);
         $smarty->assign("txtPricePerUnitAreaval", $arrProjectType['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPricePerUnitAreaDpval", $arrProjectType['PRICE_PER_UNIT_AREA_DP']);
         $smarty->assign("txtPricePerUnitHighval", $arrProjectType['PRICE_PER_UNIT_HIGH']);
@@ -71,7 +71,6 @@ if($_REQUEST['edit'] == 'edit')
         $smarty->assign("poojaroomsval",$arrProjectType['POOJA_ROOM']);
         $smarty->assign("statusval",$arrProjectType['STATUS']);
         $smarty->assign("txtNoOfFloor",$arrProjectType['NO_OF_FLOORS']);
-        $smarty->assign("txtDisplayCarpetArea",$arrProjectType['DISPLAY_CARPET_AREA']);
         $smarty->assign("TYPE_ID_P", $arrProjectType_P['OPTIONS_ID']);
         $smarty->assign("unitType_P", $arrProjectType_P['UNIT_TYPE']);
         $smarty->assign("txtUnitName_P", $arrProjectType_P['OPTION_NAME']);
@@ -81,11 +80,10 @@ if($_REQUEST['edit'] == 'edit')
         $smarty->assign("txtSizeLen_P", $arrProjectType_P['LENGTH_OF_PLOT']);
         $smarty->assign("txtSizeBre_P", $arrProjectType_P['BREADTH_OF_PLOT']);
         $smarty->assign("statusval_P",$arrProjectType_P['STATUS']);
-
         $smarty->assign("TYPE_ID_VA", $arrProjectType_VA['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval_VA", $arrProjectType_VA['OPTION_NAME']);
         $smarty->assign("txtSizeval_VA", $arrProjectType_VA['SIZE']);
-        $smarty->assign("txtCarpetAreaInfo_VA", $arrProjectType_VA['DISPLAY_CARPET_AREA']);
+        $smarty->assign("txtSizevalCarpet_VA", $arrProjectType_VA['CARPET_AREA']);
         $smarty->assign("txtPricePerUnitAreaval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA']);
         $smarty->assign("txtPricePerUnitAreaDpval_VA", $arrProjectType_VA['PRICE_PER_UNIT_AREA_DP']);
         $smarty->assign("txtPricePerUnitHighval_VA", $arrProjectType_VA['PRICE_PER_UNIT_HIGH']);
@@ -129,9 +127,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
             {
                 $txtUnitName = $_REQUEST['txtUnitName'][$key];
                 $txtSize = $_REQUEST['txtSize'][$key];
+                $txtSizeCarpet = $_REQUEST['txtSizeCarpet'][$key];
                 
-                $txtCarpetAreaInfo = (int)($_REQUEST['txtCarpetAreaInfo_'.$key] == "on");               
-                $txtDisplayCarpetArea = (bool)($_REQUEST['txtCarpetAreaInfo_'.$key] == "on");
                 $txtPricePerUnitArea = $_REQUEST['txtPricePerUnitArea'][$key];
                 $txtPricePerUnitAreaDp = $_REQUEST['txtPricePerUnitAreaDp'][$key];
                 $txtPricePerUnitHigh = $_REQUEST['txtPricePerUnitHigh'][$key];
@@ -161,6 +158,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
            
                 $txtUnitNameval[$key] =	trim($txtUnitName);
                 $txtSizeval[$key] = trim($txtSize);
+                $txtSizevalCarpet[$key] = trim($txtSizeCarpet);
                 $txtPricePerUnitAreaval[$key] =	trim($txtPricePerUnitArea);
                 $txtPricePerUnitAreaDpval[$key]	= trim($txtPricePerUnitAreaDp);
 
@@ -174,7 +172,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("pid", $pid);
                 $smarty->assign("txtUnitNameval", $txtUnitNameval);
                 $smarty->assign("txtSizeval", $txtSizeval);
-                $smarty->assign("txtCarpetAreaInfo", $txtCarpetAreaInfo);
+                $smarty->assign("txtSizevalCarpet", $txtSizevalCarpet);
                 $smarty->assign("txtPricePerUnitAreaval", $txtPricePerUnitAreaval);
                 $smarty->assign("txtPricePerUnitAreaDpval", $txtPricePerUnitAreaDpval);
                 $smarty->assign("txtPricePerUnitHighval", $txtPricePerUnitHigh);
@@ -197,11 +195,10 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("servantroomsval",$servantroomsval);
                 $smarty->assign("poojaroomsval",$poojaroomsval);
                 $smarty->assign("statusval",$statusval);
-                $smarty->assign("txtDisplayCarpetArea",$txtDisplayCarpetArea);
                 //incase of villa
                 $smarty->assign("txtUnitNameval_VA", $txtUnitNameval);
                 $smarty->assign("txtSizeval_VA", $txtSizeval);
-                $smarty->assign("txtCarpetAreaInfo_VA", $txtCarpetAreaInfo);
+                $smarty->assign("txtSizevalCarpet_VA", $txtSizevalCarpet);
                 $smarty->assign("txtPricePerUnitAreaval_VA", $txtPricePerUnitAreaval);
                 $smarty->assign("txtPricePerUnitAreaDpval_VA", $txtPricePerUnitAreaDpval);
                 $smarty->assign("txtPricePerUnitHighval_VA", $txtPricePerUnitHigh);
@@ -222,7 +219,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $smarty->assign("servantroomsval_VA",$servantroomsval);
                 $smarty->assign("poojaroomsval_VA",$poojaroomsval);
                 $smarty->assign("statusval_VA",$statusval);
-                $smarty->assign("txtDisplayCarpetArea",$txtDisplayCarpetArea);
                 //array_push($ErrorMsg2, $key);
                // echo $_REQUEST['unitType'][$key]."<br>";
                 if ($_REQUEST['unitType'][$key]!='Plot' && $_REQUEST['unitType'][$key]!='Commercial'
@@ -345,6 +341,9 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->option_name = $txtUnitName;
                     if($txtSize == '' || $txtSize == 0)$txtSize = null;
                     $option->size = $txtSize;
+                    
+                    if($txtSizeCarpet == '' || $txtSizeCarpet == 0)$txtSizeCarpet = null;
+                    $option->carpet_area = $txtSizeCarpet;
 //                    $option->carpet_area_info = $txtCarpetAreaInfo;
 //                    $option->price_per_unit_area = $txtPricePerUnitArea;
 //                    $option->price_per_unit_area_dp = (int)$txtPricePerUnitAreaDp;
@@ -366,7 +365,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     $option->length_of_plot = (is_numeric($txtSizeLen[$key]))?(int)$txtSizeLen[$key]:NULL;
                     $option->breadth_of_plot = (is_numeric($txtSizeBre[$key]))?(int)$txtSizeBre[$key]:NULL;
                     $option->updated_by = $_SESSION["adminId"];
-                    $option->display_carpet_area = $txtCarpetAreaInfo;					
 		   /* $optionTxt = $option->bedrooms."-".$option->bathrooms."-".$option->option_name."-".$option->size;
                     foreach ($option_txt_array as $key1 => $value1) {
                         if($key!=$key1 && $optionTxt==$value1){
