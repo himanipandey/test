@@ -10,7 +10,7 @@ $future_date = date("Y-m-d",strtotime('+1 days'));
 $latLongList = '0,1,2,3,4,5,6,7,8,9';
 $currentDate = date("Y-m-d");
 $cityList = "20,11,6,8,88,2,5,12,1,21,18,16";
-/*$dailyEmail = array(
+$dailyEmail = array(
 	array(
 		'sql'=>"SELECT 
                             rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, rp.PROJECT_URL, c.LABEL as CITY 
@@ -82,9 +82,9 @@ $cityList = "20,11,6,8,88,2,5,12,1,21,18,16";
             'sendifnodata'=>0
         )
 );
-*/
-$dailyEmail = array(
-    /* array(
+
+$weeklyEmail = array(
+     array(
             'sql'=>"select rp.PROJECT_ID, rp.PROJECT_NAME from resi_project rp 
              where 
                 rp.version = 'Cms'
@@ -99,7 +99,7 @@ $dailyEmail = array(
              where 
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and project_status_id in(8,1,7) and promised_completion_date < '$currentDate'
                     and promised_completion_date != '0000-00-00' and promised_completion_date is not null;",*/
-             /*  'sql'=>"SELECT rpp.PROJECT_ID,rp.PROJECT_NAME,rpp.PHASE_ID,rpp.PHASE_TYPE,rpp.PHASE_NAME,rpp.COMPLETION_DATE FROM resi_project_phase rpp
+               'sql'=>"SELECT rpp.PROJECT_ID,rp.PROJECT_NAME,rpp.PHASE_ID,rpp.PHASE_TYPE,rpp.PHASE_NAME,rpp.COMPLETION_DATE FROM resi_project_phase rpp
 						INNER JOIN resi_project rp on rpp.PROJECT_ID = rp.PROJECT_ID AND rp.version = 'Cms'
 						WHERE rpp.version = 'Cms' 
 						AND rpp.status = 'Active' 
@@ -114,11 +114,11 @@ $dailyEmail = array(
                'recipients'=>array('ankur.dhawan@proptiger.com','ravi.srivastava@proptiger.com'), 
                'attachmentname'=>'projects_whose_status_is_pre_launch_under_construction_launch_projects_but_expected_completion_date_is_in_past',
                'sendifnodata'=>0
-        ),*/
+        ),
      array(
             'sql'=>"select rp.project_id,rp.project_name,l.label as LOCALITY_NAME, c.label as CITY_NAME,rp.LATITUDE as PROJECT_LATITUDE,rp.LONGITUDE as PROJECT_LONGITUDE,l.latitude as LOCALITY_LATITUDE,l.longitude as LOCALITY_LONGITUDE,((ACOS(SIN(rp.latitude * PI() / 180) * SIN(l.latitude * PI() / 180) + COS(rp.latitude * PI() / 180) 
                 * COS(l.latitude * PI() / 180) * COS((rp.longitude - l.longitude) * PI() / 180)) * 180 
-                 / PI()) * 60 * 1.1515)*1.609344 AS `distance`               
+                 / PI()) * 60 * 1.1515)*1.609344 AS `DISTANCE`               
  
                 from resi_project rp join locality l on rp.locality_id = l.locality_id 
                 join suburb s on l.suburb_id = s.suburb_id
@@ -129,8 +129,8 @@ $dailyEmail = array(
                'recipients'=>array('vimlesh.rajput@proptiger.com','manish.goyal@proptiger.com'), 
                'attachmentname'=>'PIDs_greater_than_10km_from_locality_center',
                'sendifnodata'=>0
-        )
-    /*array(
+        ),
+    array(
             'sql'=>"SELECT rp.project_id,rp.project_name,rp.project_status,max(img.taken_at) created_at
 					FROM proptiger.Image img
 					INNER JOIN proptiger.ImageType imgt ON img.ImageType_id = imgt.id and imgt.id = 3
@@ -199,6 +199,6 @@ $dailyEmail = array(
                'recipients'=>array('ankur.dhawan@proptiger.com','Ravi.srivastava@proptiger.com'), 
                'attachmentname'=>'Missing_latitude_longitude_list',
                'sendifnodata'=>0
-        )*/
+        )
 );
 ?>
