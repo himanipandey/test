@@ -116,7 +116,7 @@ $dailyEmail = array(
                'sendifnodata'=>0
         ),*/
      array(
-            'sql'=>"select rp.project_id,rp.project_name,l.label as LOCALITY_NAME, c.label as CITY_NAME,rp.LATITUDE,rp.LONGITUDE,((ACOS(SIN(rp.latitude * PI() / 180) * SIN(l.latitude * PI() / 180) + COS(rp.latitude * PI() / 180) 
+            'sql'=>"select rp.project_id,rp.project_name,l.label as LOCALITY_NAME, c.label as CITY_NAME,rp.LATITUDE as PROJECT_LATITUDE,rp.LONGITUDE as PROJECT_LONGITUDE,l.latitude as LOCALITY_LATITUDE,l.longitude as LOCALITY_LONGITUDE,((ACOS(SIN(rp.latitude * PI() / 180) * SIN(l.latitude * PI() / 180) + COS(rp.latitude * PI() / 180) 
                 * COS(l.latitude * PI() / 180) * COS((rp.longitude - l.longitude) * PI() / 180)) * 180 
                  / PI()) * 60 * 1.1515)*1.609344 AS `distance`               
  
