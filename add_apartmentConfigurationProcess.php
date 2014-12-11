@@ -397,24 +397,23 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         $listing->save();
                         
                         //apartment type add
-                            $apartmentType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project_options' )));
-                      
-                            if($apartmentType){
+                            $apartmentsType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'APARTMENTS_TYPE', 'table_name' => 'resi_project_options' )));
+                            if($apartmentsType){
                                     if(is_numeric($apartmentType)){
-                                            $apartmentType = TableAttributes::find($apartmentType[0]->id);
-                                            $apartmentType->updated_by = $_SESSION['adminId'];
-                                            $apartmentType->attribute_value = $apartmentType;
-                                            $apartmentType->save();		
+                                            $apartmentsType = TableAttributes::find($apartmentType[0]->id);
+                                            $apartmentsType->updated_by = $_SESSION['adminId'];
+                                            $apartmentsType->attribute_value = $apartmentType;
+                                            $apartmentsType->save();		
                             }
                             }else{				
                              //add mode by dataEntry
-                                    $apartmentType = new TableAttributes();
-                                    $apartmentType->table_name = 'resi_project_options';
-                                    $apartmentType->table_id = $option->options_id;
-                                    $apartmentType->attribute_name = 'APARTMENTS_TYPE';
-                                    $apartmentType->attribute_value = $apartmentType;
-                                    $apartmentType->updated_by = $_SESSION['adminId'];
-                                    $apartmentType->save();		 
+                                    $apartmentsType = new TableAttributes();
+                                    $apartmentsType->table_name = 'resi_project_options';
+                                    $apartmentsType->table_id = $option->options_id;
+                                    $apartmentsType->attribute_name = 'APARTMENTS_TYPE';
+                                    $apartmentsType->attribute_value = $apartmentType;
+                                    $apartmentsType->updated_by = $_SESSION['adminId'];
+                                    $apartmentsType->save();	 
                             }
                       }
 						
@@ -514,12 +513,25 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						
 						ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $list_option_id,$projectId)));
                                                 
-                                                //update  attribute
-                                                $apartmentType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project_options' )));
-                                                $updateAtribute = TableAttributes::find($list_option_id);
-                                                $updateAtribute->updated_by = $_SESSION['adminId'];
-                                                $updateAtribute->attribute_value = $apartmentType;
-                                                $updateAtribute->save();
+                                                //apartment type add
+                                                $apartmentsType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'APARTMENTS_TYPE', 'table_name' => 'resi_project_options' )));
+                                                if($apartmentsType){
+                                                        if(is_numeric($apartmentType)){
+                                                                $apartmentsType = TableAttributes::find($apartmentType[0]->id);
+                                                                $apartmentsType->updated_by = $_SESSION['adminId'];
+                                                                $apartmentsType->attribute_value = $apartmentType;
+                                                                $apartmentsType->save();		
+                                                }
+                                                }else{				
+                                                 //add mode by dataEntry
+                                                        $apartmentsType = new TableAttributes();
+                                                        $apartmentsType->table_name = 'resi_project_options';
+                                                        $apartmentsType->table_id = $option->options_id;
+                                                        $apartmentsType->attribute_name = 'APARTMENTS_TYPE';
+                                                        $apartmentsType->attribute_value = $apartmentType;
+                                                        $apartmentsType->updated_by = $_SESSION['adminId'];
+                                                        $apartmentsType->save();	 
+                                                }
                                                 
 						}catch(Exception $e)
 						{
