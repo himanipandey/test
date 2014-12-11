@@ -155,6 +155,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $bathrooms = $_REQUEST['bathrooms'][$key];
                 $unitType = $_REQUEST['unitType'][$key];
                 $status	= $_REQUEST['propstatus'][$key];
+                $apartmentType	= $_REQUEST['apartmentType'][$key];
                 
                 if($unitType != 'Plot' && $unitType != 'Shop' && $unitType != 'Office' && $unitType != 'Other')
                     $pid[] = trim($txtUnitName);
@@ -382,7 +383,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 
                     if(empty($ErrorMsg2)){
 					 // $option_txt_array[] = $optionTxt;
-					  $result = $option->save();
+					  $result = $option->save(); 
                       if ($action == 'insert') {
                         $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
                         $listing = new Listings();
@@ -394,9 +395,30 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         $listing->updated_by = $_SESSION['adminId'];
                         $listing->created_at = date('Y-m-d H:i:s');
                         $listing->save();
+                        
+                        //apartment type add
+                            $apartmentType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project_options' )));
+                      
+                            if($apartmentType){
+                                    if(is_numeric($apartmentType)){
+                                            $apartmentType = TableAttributes::find($apartmentType[0]->id);
+                                            $apartmentType->updated_by = $_SESSION['adminId'];
+                                            $apartmentType->attribute_value = $apartmentType;
+                                            $apartmentType->save();		
+                            }
+                            }else{				
+                             //add mode by dataEntry
+                                    $apartmentType = new TableAttributes();
+                                    $apartmentType->table_name = 'resi_project_options';
+                                    $apartmentType->table_id = $option->options_id;
+                                    $apartmentType->attribute_name = 'APARTMENTS_TYPE';
+                                    $apartmentType->attribute_value = $apartmentType;
+                                    $apartmentType->updated_by = $_SESSION['adminId'];
+                                    $apartmentType->save();		 
+                            }
                       }
 						
-					}
+		    }
                     
                 }
                 else
@@ -491,7 +513,14 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						ResiProjOptionsRoomSize::delete_all(array('conditions' => array('options_id' => $list_option_id)));	
 						
 						ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $list_option_id,$projectId)));
-					
+                                                
+                                                //update  attribute
+                                                $apartmentType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project_options' )));
+                                                $updateAtribute = TableAttributes::find($list_option_id);
+                                                $updateAtribute->updated_by = $_SESSION['adminId'];
+                                                $updateAtribute->attribute_value = $apartmentType;
+                                                $updateAtribute->save();
+                                                
 						}catch(Exception $e)
 						{
 							if(strstr($e, 'listing_prices_fk_1'))
@@ -501,8 +530,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 							else
 							  $ErrorMsg1 = 'Couuld not delete!';							
 							return false;
-						}					
-								
+						}							
 					});					
 					############## Transaction End ##############							  
 					

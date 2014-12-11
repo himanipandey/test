@@ -193,10 +193,10 @@
 
                           {/foreach}
 
-                        <tr><td colspan="17"><b><span style='font-size:15px;'>APARTMENTS</span></b></td></tr>
-                        <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
+                        <tr><td colspan="18"><b><span style='font-size:15px;'>APARTMENTS</span></b></td></tr>
+                        <tr><td colspan="18"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
                         {foreach from = $ErrorMsg2  key=k1 item = v1}
-                            <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}Row {($v1['dupkey'])+1} is duplicate of Row {($v1['key'])+1} {/if}</font></td></tr>
+                            <tr><td colspan="18"><font color="red">{$projecteror} {if $projectId != ''}Row {($v1['dupkey'])+1} is duplicate of Row {($v1['key'])+1} {/if}</font></td></tr>
                         {/foreach}
                         <tr class = "headingrowcolor" >
                           <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >
@@ -216,6 +216,7 @@
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt >Price Per Unit Low</td>
 							
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Number of Floors</td>-->
+                          <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Apartment's Type</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Balcony</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                           <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
@@ -333,7 +334,13 @@
 
 
                                 <input onkeypress="return isNumberKey(event)" type="hidden" name=txtVillaGardenArea[] tempName="txtVillaGardenArea"  id=txtVillaGardenArea value="{$txtVillaGardenArea[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
-
+                           <td>
+                                 <select tempName="apartmentType" name = apartmentType[] style="border:1px solid #c3c3c3;">
+                                    <option value = "">Select</option>
+                                    <option value = 'studio'>Studio</option>
+                                    <option value = 'penthouse'>Penthouse</option>
+                                 </select>
+                          </td>
                            <td>
                                  <select tempName="Balconys" name = Balconys[] style="border:1px solid #c3c3c3;">
                                     <option value = "">Select</option>
@@ -349,6 +356,7 @@
                                     <option {if $balconysval[{$smarty.section.foo.index}] == '10'} value = "10" selected = 'selected' {else} value = "10" {/if}>10</option>
                                 </select>
                           </td>
+                          
 
                            <td>
                                  <select tempName="studyrooms" name = studyrooms[] style="border:1px solid #c3c3c3;">
