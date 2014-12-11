@@ -409,7 +409,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                                  $apartmentsType->attribute_value = $apartmentType;
                                  $apartmentsType->updated_by = $_SESSION['adminId'];
                                  $apartmentsType->save();	 
-                         }else if(is_numeric($apartmentType)){
+                         }else{
                              echo $apartmentType[0]->id."=".$apartmentType."<br>";
                                 $apartmentsType = TableAttributes::find($apartmentType[0]->id);
                                 $apartmentsType->updated_by = $_SESSION['adminId'];
