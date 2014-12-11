@@ -410,6 +410,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                                  $apartmentsType->updated_by = $_SESSION['adminId'];
                                  $apartmentsType->save();	 
                          }else if(is_numeric($apartmentType)){
+                             echo $apartmentType[0]->id."=".$apartmentType."<br>";
                                 $apartmentsType = TableAttributes::find($apartmentType[0]->id);
                                 $apartmentsType->updated_by = $_SESSION['adminId'];
                                 $apartmentsType->attribute_value = $apartmentType;
@@ -539,7 +540,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     }
     
     
-    
+    die("end");
     if(empty($ErrorMsg) && empty($ErrorMsg2) && $ErrorMsg1 == '')
     {
 		updateD_Availablitiy($projectId); // update D_availability 
