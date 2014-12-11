@@ -409,8 +409,12 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                                  $apartmentsType->attribute_value = $apartmentType;
                                  $apartmentsType->updated_by = $_SESSION['adminId'];
                                  $apartmentsType->save();	 
-                         }
-						
+                         }else if(is_numeric($apartmentType)){
+                                $apartmentsType = TableAttributes::find($apartmentType[0]->id);
+                                $apartmentsType->updated_by = $_SESSION['adminId'];
+                                $apartmentsType->attribute_value = $apartmentType;
+                                $apartmentsType->save();		
+                        }						
 		    }
                     
                 }
@@ -506,17 +510,6 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						ResiProjOptionsRoomSize::delete_all(array('conditions' => array('options_id' => $list_option_id)));	
 						
 						ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $list_option_id,$projectId)));
-                                                
-                                                //apartment type add
-                                                $apartmentsType = TableAttributes::find('all',array('conditions' => array('table_id' => $list_option_id, 'attribute_name' => 'APARTMENTS_TYPE', 'table_name' => 'resi_project_options' )));
-                                                if($apartmentsType){
-                                                        if(is_numeric($apartmentType)){
-                                                                $apartmentsType = TableAttributes::find($apartmentType[0]->id);
-                                                                $apartmentsType->updated_by = $_SESSION['adminId'];
-                                                                $apartmentsType->attribute_value = $apartmentType;
-                                                                $apartmentsType->save();		
-                                                   }
-                                                }
                                                 
 						}catch(Exception $e)
 						{
