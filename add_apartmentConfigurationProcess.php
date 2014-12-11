@@ -384,6 +384,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                     if(empty($ErrorMsg2)){
 					 // $option_txt_array[] = $optionTxt;
 					  $result = $option->save(); 
+                       $apartmentsType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'APARTMENTS_TYPE', 'table_name' => 'resi_project_options' )));                  
                       if ($action == 'insert') {
                         $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
                         $listing = new Listings();
@@ -396,11 +397,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                         $listing->created_at = date('Y-m-d H:i:s');
                         $listing->save();
                         
-                       
-                      }
-                    //apartment type add
-                         $apartmentsType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'APARTMENTS_TYPE', 'table_name' => 'resi_project_options' )));
-                         if(!$apartmentsType && $apartmentType != ''){
+                        if(!$apartmentsType && $apartmentType != ''){
                           //add mode by dataEntry
                                  $apartmentsType = new TableAttributes();
                                  $apartmentsType->table_name = 'resi_project_options';
@@ -409,13 +406,14 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                                  $apartmentsType->attribute_value = $apartmentType;
                                  $apartmentsType->updated_by = $_SESSION['adminId'];
                                  $apartmentsType->save();	 
-                         }else{
-                             //echo $apartmentType[0]->id."=".$apartmentType."<br>";
-                                $apartmentsType = TableAttributes::find($apartmentType[0]->id);
-                                $apartmentsType->updated_by = $_SESSION['adminId'];
-                                $apartmentsType->attribute_value = $apartmentType;
-                                $apartmentsType->save();		
-                        }						
+                         }
+                      }else{
+                            $apartmentType[0]->id."=".$apartmentType."<br>";
+                            $apartmentsType = TableAttributes::find($apartmentType[0]->id);
+                            $apartmentsType->updated_by = $_SESSION['adminId'];
+                            $apartmentsType->attribute_value = $apartmentType;
+                            $apartmentsType->save();
+                      }	
 		    }
                     
                 }
@@ -540,6 +538,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
     }
     
     
+    die("end");
     if(empty($ErrorMsg) && empty($ErrorMsg2) && $ErrorMsg1 == '')
     {
 		updateD_Availablitiy($projectId); // update D_availability 
