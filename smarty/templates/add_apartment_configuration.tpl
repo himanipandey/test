@@ -337,8 +337,8 @@
                            <td>
                                  <select tempName="apartmentType" name = apartmentType[] style="border:1px solid #c3c3c3;">
                                     <option value = "">Select</option>
-                                    <option value = 'studio'>Studio</option>
-                                    <option value = 'penthouse'>Penthouse</option>
+                                    <option value = 'studio' {if $apartmentType[$smarty.section.foo.index] == 'studio'}selected{/if}>Studio</option>
+                                    <option value = 'penthouse' {if $apartmentType[$smarty.section.foo.index] == 'penthouse'}selected{/if}>Penthouse</option>
                                  </select>
                           </td>
                            <td>

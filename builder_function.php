@@ -691,7 +691,9 @@ function ProjectType($projectId) {
     $res = mysql_query($qry);
 
     while ($data = mysql_fetch_assoc($res)) {
+         
         if ($data['OPTION_TYPE'] == 'Apartment') {
+            $apartmentsType = TableAttributes::find('all',array('conditions' => array('table_id' => $data['OPTIONS_ID'], 'attribute_name' => 'APARTMENTS_TYPE', 'table_name' => 'resi_project_options' )));
             $arrProjectType['OPTIONS_ID'][] = $data['OPTIONS_ID'];
             $arrProjectType['OPTION_NAME'][] = $data['OPTION_NAME'];
             $arrProjectType['OPTION_TYPE'][] = $data['OPTION_TYPE'];
@@ -710,6 +712,7 @@ function ProjectType($projectId) {
             $arrProjectType['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType['CARPET_AREA'][] = $data['CARPET_AREA'];
             $arrProjectType['DISPLAY_CARPET_AREA'][] = $data['DISPLAY_CARPET_AREA'];
+            $arrProjectType['APARTMENTS_TYPE'][] = $apartmentsType[0]->attribute_value;
         } else if ($data['OPTION_TYPE'] == 'Plot') {
             $arrProjectType_P['OPTIONS_ID'][] = $data['OPTIONS_ID'];
             $arrProjectType_P['OPTION_NAME'][] = $data['OPTION_NAME'];
