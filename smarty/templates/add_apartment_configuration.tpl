@@ -442,20 +442,23 @@
                               <td nowrap="nowrap" width="7%" align="left" class=whiteTxt><font color = red>*</font>Unit Name</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Carpet Area Info</td>
-                              <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
-                              <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
-
-                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit High</td>
-                              <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Price Per Unit Low</td>
-                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa floors</td> -->
+                             <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa floors</td> 
                                <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Plot Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Terrace Area</td>
                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Villa Garden Area</td>
                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Balcony</td>
-
-                               <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
+                              <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Study Room</td>
                                <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Servant Room</td>
                                 <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Pooja Room</td>
+                              <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td>
+                              <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area DP</td>
+                               <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit High</td>
+                              <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Price Per Unit Low</td>-->
+                             
+                              
+                              
+
+                              
                              <!--   <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td> -->
 
                             </tr>
@@ -561,13 +564,13 @@
                               </td>
                                <td   >
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitLow[] tempName="txtPricePerUnitLow"  id=txtPricePerUnitLow value="{$txtPricePerUnitLowval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10" readonly="">
-
+-->
                               </td>
 
 							  <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtVillaFloors[] tempName="txtVillaFloors"  id=txtVillaFloors value="{$txtVillaFloors_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
 
-                          </td> -->
+                          </td> 
 
                                     <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtVillaPlotArea[] tempName="txtVillaPlotArea"  id=txtVillaPlotArea value="{$txtVillaPlotArea_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
