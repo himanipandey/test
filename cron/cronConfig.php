@@ -126,7 +126,7 @@ $weeklyEmail = array(
              where ( rp.LATITUDE  not in ($latLongList) AND rp.LONGITUDE not in ($latLongList)) and
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and c.city_id in($cityList) having distance >10 ;",
                'subject'=>'PIDs greater than 10km from locality center',
-               'recipients'=>array('vimlesh.rajput@proptiger.com','manish.goyal@proptiger.com'), 
+               'recipients'=>array('ankur.dhawan@proptiger.com','Sandeep.jakhar@proptiger.com','Suneel.kumar@proptiger.com'), 
                'attachmentname'=>'PIDs_greater_than_10km_from_locality_center',
                'sendifnodata'=>0
         ),
