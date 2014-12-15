@@ -274,26 +274,24 @@ $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
 
 $NumRows = mysql_num_rows($QueryExecute);
 
-$contents = "";
-
-$contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' style='font-size:11px;font-family:tahoma,arial,verdana;vertical-align:middle;text-align:center;'>
-<tr bgcolor='#f2f2f2'>
-<td>SNO</td>
-<td>PROJECT ID</td>
-<td>BUILDER NAME</td>
-<td>PROJECT NAME</td>
-<td>CITY</td>
-<td>LOCALITY</td>
-<td>PROJECT STATUS</td>
-<td>ASSIGNED DEPARTMENT</td>
-<td>BOOKING STATUS</td>
-<td>PHASE</td>
-<td>STAGE</td>
-<td>STAGE MOVEMENT DATE</td>
-<td>STAGE MOVEMENT DONE BY</td>
-<td>UPDATION LABEL</td></tr>
-";
 $cnt = 1;
+$arrAll = array();
+$arrAll['CNT'] = '';
+$arrAll['PROJECT ID'] = '';
+$arrAll['BUILDER NAME'] = '';
+$arrAll['PROJECT NAME'] = '';
+$arrAll['CITY'] = '';
+$arrAll['LOCALITY'] = '';
+$arrAll['PROJECT STATUS'] = '';
+$arrAll['ASSIGNED DEPARTMENT'] = '';
+$arrAll['BOOKING STATUS'] = '';
+$arrAll['PHASE'] = '';
+
+$arrAll['STAGE'] = '';
+$arrAll['STAGE MOVEMENT DATE'] = '';
+$arrAll['STAGE MOVEMENT DONE BY'] = '';
+$arrAll['UPDATION LABEL'] = '';
+
 while($ob1 = mysql_fetch_assoc($QueryExecute))
 {
 	$stage = $ob1['PROJECT_STAGE'];
@@ -323,34 +321,66 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	$updation_label = $ob1['UPDATION_LABEL'];
 	if($phase == 'NewProject') $phse = 'NewProject Audit';
         else $phse = $phase;
-	$contents .= "
-	<tr bgcolor='#f2f2f2'>
-	<td>".$cnt."</td>
-	<td>".$projid."</td>
-	<td>".$builder."</td>
-	<td>".$projname."</td>
-        <td>".$cityname."</td>
-        <td>".$localityname."</td>    
-	<td>".$proj_status."</td>
-        <td>".$currentCycle."</td>  
-	<td>".$booking_status."</td>
-	<td>".$stage."</td>
-        <td>".$phse."</td>
-	      <td>".$date_time."</td>
-        <td>".$stage_move_by."</td>            
-	<td>".$updation_label."</td>
 
-	</tr>
-";
+        $arrAll['CNT'][] = $cnt;
+        $arrAll['PROJECT ID'][] = $projid;
+        $arrAll['BUILDER NAME'][] = $builder;
+        $arrAll['PROJECT NAME'][] = $projname;
+        $arrAll['CITY'][] = $cityname;
+        $arrAll['LOCALITY'][] = $localityname;
+        $arrAll['PROJECT STATUS'][] = $proj_status;
+        $arrAll['ASSIGNED DEPARTMENT'][] = $currentCycle;
+        $arrAll['BOOKING STATUS'][] = $booking_status;
+        $arrAll['PHASE'][] = $stage;
+
+        $arrAll['STAGE'][] = $phse;
+        $arrAll['STAGE MOVEMENT DATE'][] = $date_time;
+        $arrAll['STAGE MOVEMENT DONE BY'][] = $stage_move_by;
+        $arrAll['UPDATION LABEL'][] = $updation_label;
+
 	$cnt++;
 
 }
+//echo "<pre>";print_r($arrAll['PROJECT NAME']);die;
+    $filename ="excelreport-".date('YmdHis').".csv";
+    header( 'Content-Type: text/csv' );
+    header( "Content-Disposition: attachment;filename=$filename" );
+    //echo $contents; exit;
+     $trow = $arrAll;
+ if($trow)
+    echocsv( array_keys( $trow ) );
 
-$contents .= "</table>";
-//echo $contents; exit;
-$filename ="excelreport-".date('YmdHis').".xls";
-header('Content-type: application/ms-excel');
-header('Content-Disposition: attachment; filename='.$filename);
-echo $contents;
-
+ $count = 0;
+ foreach($arrAll['CNT'] as $k=>$v){
+        $arrAllInner = array();
+        $arrAllInner['CNT'] = $k;
+        $arrAllInner['PROJECT ID'] = $arrAll['PROJECT ID'][$count];
+        $arrAllInner['BUILDER NAME'] = $arrAll['BUILDER NAME'][$count];
+        $arrAllInner['PROJECT NAME'] = $arrAll['PROJECT NAME'][$count];
+        $arrAllInner['CITY'] = $arrAll['CITY'][$count];
+        $arrAllInner['LOCALITY'] = $arrAll['LOCALITY'][$count];
+        $arrAllInner['PROJECT STATUS'] = $arrAll['PROJECT STATUS'][$count];
+        $arrAllInner['ASSIGNED DEPARTMENT'] = $arrAll['ASSIGNED DEPARTMENT'][$count];
+        $arrAllInner['BOOKING STATUS'] = $arrAll['BOOKING STATUS'][$count];
+        $arrAllInner['PHASE'] = $arrAll['PHASE'][$count];
+        $arrAllInner['STAGE'] = $arrAll['STAGE'][$count];
+        $arrAllInner['STAGE MOVEMENT DATE'] = $arrAll['STAGE MOVEMENT DATE'][$count];
+        $arrAllInner['STAGE MOVEMENT DONE BY'] = $arrAll['CITY'][$count];
+        $arrAllInner['UPDATION LABEL'] = $arrAll['UPDATION LABEL'][$count];
+         $count++;
+        echocsv( $arrAllInner );
+       
+ }
+ 
+ function echocsv( $fields )  {
+    $separator = '';
+    foreach ( $fields as $field )    {
+      if ( preg_match( '/\\r|\\n|,|"/', $field ) )     {
+        $field = '"' . str_replace( '"', '""', $field ) . '"';
+      }
+      echo $separator . $field;
+      $separator = ',';
+    }
+    echo "\r\n";
+  }
 ?>
