@@ -402,8 +402,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                       }else{  
                          
                       }
-                      
-                        if($apartmentsType[0]->attribute_value != $apartmentType && $apartmentType != '' ){ 
+                      echo $apartmentsType[0]->attribute_value." != ".$apartmentType;//die("-end");
+                        if($apartmentsType[0]->attribute_value != $apartmentType && $apartmentType != '' && $apartmentsType[0]->attribute_value=='' ){ 
                           //add mode by dataEntry
                                  $apartmentsType = new TableAttributes();
                                  $apartmentsType->table_name = 'resi_project_options';
