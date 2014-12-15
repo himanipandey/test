@@ -29,4 +29,11 @@ class ResiProjectOptions extends ActiveRecord\Model
         $beds_per_apartment = ResiProjectOptions::find_by_sql($query);
         return $beds_per_apartment;
     }
+    
+    public static function set_table_attribute($options_id, $attribute_name, $attribute_value, $updated_by){
+        $option = self::virtual_find($options_id);
+        $option->$attribute_name = $attribute_value;
+        $option->set_attr_updated_by($updated_by);
+        $option->save();
+    }
 }
