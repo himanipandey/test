@@ -7,7 +7,7 @@ include("../builder_function.php");
 require_once("../common/function.php");
 include("../includes/configs/phaseStageConfig.php");
 date_default_timezone_set('Asia/Kolkata');
-
+//echo "<pre>";print_r($_POST);die;
 $arrOtherCities = 
   array(
 		"24"=>"Chandigarh",
@@ -52,9 +52,6 @@ if(!isset($_POST['dwnld_search']))
 if(!isset($_POST['dwnld_city']))
 	$_POST['dwnld_city'] = '';
 
-if(!isset($_POST['dwnld_locality']))
-	$_POST['dwnld_locality'] = '';
-
 if(!isset($_POST['dwnld_Residential']))
 	$_POST['dwnld_Residential'] = '';
 
@@ -90,15 +87,34 @@ $NumRows =  $city = $builder = $project_name = '';
 $transfer = $_POST['dwnld_transfer'];
 $search = $_POST['dwnld_search'];
 $city =	$_POST['dwnld_city'];
-if($city == 'othercities'){
+/*if(in_array()$city == 'othercities'){
 	$group_city_ids = array();
 	foreach($arrOtherCities as $key => $value){
 		$group_city_ids[] = $key;
 	}
 	$city= implode(",",$group_city_ids);
 }
+*/
+$cityListVal = '';
+$expCity = explode(",",$_POST['dwnld_city']);
+if($expCity[0] != '')
+{
+       $city = array();
+       $newCityArr = array();
+       foreach ($expCity as $val){
+           if($val != 'othercities')
+               $newCityArr[] = $val;
+       }
+       if(in_array("othercities",$expCity)){
+              $OtherCitiesKeys = array_keys($arrOtherCities);
+              $city[] = $OtherCitiesKeys;
+       }elseif(count($newCityArr)>0){
 
-$locality = $_POST['dwnld_locality'];
+               $city[] = $newCityArr;
+      }
+      $cityListVal = implode(",",$city[0]);
+}
+
 $builder = $_POST['dwnld_builder'];
 $phase = $_POST['current_dwnld_phase'];
 $arrPhaseTag = explode('|',$_POST['dwnld_stage']);
@@ -190,14 +206,9 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
             $and  = ' AND ';
         }
 
-        if($_POST['dwnld_locality'] != '')
+        if($cityListVal != '')
         {
-            $QueryMember .= $and." RP.LOCALITY_ID = '".$_POST['dwnld_locality']."'";
-            $and  = ' AND ';
-        }
-        if($_POST['dwnld_city'] != '')
-        {
-            $QueryMember .= $and." sub.CITY_ID in (".$city.")";
+            $QueryMember .= $and." sub.CITY_ID in (".$cityListVal.")";
             $and  = ' AND ';
         }
         if($_POST['dwnld_builder'] != '')
@@ -207,14 +218,27 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         }
         if($_POST['current_dwnld_phase'] != '')
         {
-            $getProjectStage = ProjectStage::getStageByName($_POST['current_dwnld_phase']);
-            $QueryMember .= $and." RP.PROJECT_STAGE_ID = '".$getProjectStage[0]->id."'";
+            $phaseList = explode(",",$_POST['current_dwnld_phase']);
+            $phsId = array();
+            foreach($phaseList as $val){
+                $getProjectPhase = ProjectStage::getStageByName($val);
+                $phsId[] = $getProjectPhase[0]->id;
+            }
+            $phsList = implode(",",$phsId);
+            $QueryMember .= $and." RP.PROJECT_STAGE_ID in($phsList)";
             $and  = ' AND ';
         }
         if($stage != '')
         {
-            $getProjectPhase = ProjectPhase::getPhaseByName($stage);
-            $QueryMember .= $and." RP.PROJECT_PHASE_ID = '".$getProjectPhase[0]->id."'";
+            $stageList = explode(",",$stage);
+            $stgId = array();
+            foreach($stageList as $val){
+                $getProjectStage = ProjectPhase::getPhaseByName($val);
+                $stgId[] = $getProjectStage[0]->id;
+            }
+            $stgList = implode(",",$stgId);
+            
+            $QueryMember .= $and." RP.PROJECT_PHASE_ID in($stgList)";
             $and  = ' AND ';
         }
         if($updation_cycle != '')
@@ -245,31 +269,29 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
 }
 $arrPropId = array();
 $QueryMember1 = $QueryMember1 . $QueryMember." Group By rpp.PROJECT_ID";
-
+//die;
 $QueryExecute = mysql_query($QueryMember1) or die(mysql_error());
 
 $NumRows = mysql_num_rows($QueryExecute);
 
-$contents = "";
-
-$contents .= "<table cellspacing=1 bgcolor='#c3c3c3' cellpadding=0 width='100%' style='font-size:11px;font-family:tahoma,arial,verdana;vertical-align:middle;text-align:center;'>
-<tr bgcolor='#f2f2f2'>
-<td>SNO</td>
-<td>PROJECT ID</td>
-<td>BUILDER NAME</td>
-<td>PROJECT NAME</td>
-<td>CITY</td>
-<td>LOCALITY</td>
-<td>PROJECT STATUS</td>
-<td>ASSIGNED DEPARTMENT</td>
-<td>BOOKING STATUS</td>
-<td>PHASE</td>
-<td>STAGE</td>
-<td>STAGE MOVEMENT DATE</td>
-<td>STAGE MOVEMENT DONE BY</td>
-<td>UPDATION LABEL</td></tr>
-";
 $cnt = 1;
+$arrAll = array();
+$arrAll['CNT'] = '';
+$arrAll['PROJECT ID'] = '';
+$arrAll['BUILDER NAME'] = '';
+$arrAll['PROJECT NAME'] = '';
+$arrAll['CITY'] = '';
+$arrAll['LOCALITY'] = '';
+$arrAll['PROJECT STATUS'] = '';
+$arrAll['ASSIGNED DEPARTMENT'] = '';
+$arrAll['BOOKING STATUS'] = '';
+$arrAll['PHASE'] = '';
+
+$arrAll['STAGE'] = '';
+$arrAll['STAGE MOVEMENT DATE'] = '';
+$arrAll['STAGE MOVEMENT DONE BY'] = '';
+$arrAll['UPDATION LABEL'] = '';
+
 while($ob1 = mysql_fetch_assoc($QueryExecute))
 {
 	$stage = $ob1['PROJECT_STAGE'];
@@ -299,34 +321,66 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
 	$updation_label = $ob1['UPDATION_LABEL'];
 	if($phase == 'NewProject') $phse = 'NewProject Audit';
         else $phse = $phase;
-	$contents .= "
-	<tr bgcolor='#f2f2f2'>
-	<td>".$cnt."</td>
-	<td>".$projid."</td>
-	<td>".$builder."</td>
-	<td>".$projname."</td>
-        <td>".$cityname."</td>
-        <td>".$localityname."</td>    
-	<td>".$proj_status."</td>
-        <td>".$currentCycle."</td>  
-	<td>".$booking_status."</td>
-	<td>".$stage."</td>
-        <td>".$phse."</td>
-	      <td>".$date_time."</td>
-        <td>".$stage_move_by."</td>            
-	<td>".$updation_label."</td>
 
-	</tr>
-";
+        $arrAll['CNT'][] = $cnt;
+        $arrAll['PROJECT ID'][] = $projid;
+        $arrAll['BUILDER NAME'][] = $builder;
+        $arrAll['PROJECT NAME'][] = $projname;
+        $arrAll['CITY'][] = $cityname;
+        $arrAll['LOCALITY'][] = $localityname;
+        $arrAll['PROJECT STATUS'][] = $proj_status;
+        $arrAll['ASSIGNED DEPARTMENT'][] = $currentCycle;
+        $arrAll['BOOKING STATUS'][] = $booking_status;
+        $arrAll['PHASE'][] = $stage;
+
+        $arrAll['STAGE'][] = $phse;
+        $arrAll['STAGE MOVEMENT DATE'][] = $date_time;
+        $arrAll['STAGE MOVEMENT DONE BY'][] = $stage_move_by;
+        $arrAll['UPDATION LABEL'][] = $updation_label;
+
 	$cnt++;
 
 }
+//echo "<pre>";print_r($arrAll['PROJECT NAME']);die;
+    $filename ="excelreport-".date('YmdHis').".csv";
+    header( 'Content-Type: text/csv' );
+    header( "Content-Disposition: attachment;filename=$filename" );
+    //echo $contents; exit;
+     $trow = $arrAll;
+ if($trow)
+    echocsv( array_keys( $trow ) );
 
-$contents .= "</table>";
-//echo $contents; exit;
-$filename ="excelreport-".date('YmdHis').".xls";
-header('Content-type: application/ms-excel');
-header('Content-Disposition: attachment; filename='.$filename);
-echo $contents;
-
+ $count = 0;
+ foreach($arrAll['CNT'] as $k=>$v){
+        $arrAllInner = array();
+        $arrAllInner['CNT'] = $k+1;
+        $arrAllInner['PROJECT ID'] = $arrAll['PROJECT ID'][$count];
+        $arrAllInner['BUILDER NAME'] = $arrAll['BUILDER NAME'][$count];
+        $arrAllInner['PROJECT NAME'] = $arrAll['PROJECT NAME'][$count];
+        $arrAllInner['CITY'] = $arrAll['CITY'][$count];
+        $arrAllInner['LOCALITY'] = $arrAll['LOCALITY'][$count];
+        $arrAllInner['PROJECT STATUS'] = $arrAll['PROJECT STATUS'][$count];
+        $arrAllInner['ASSIGNED DEPARTMENT'] = $arrAll['ASSIGNED DEPARTMENT'][$count];
+        $arrAllInner['BOOKING STATUS'] = $arrAll['BOOKING STATUS'][$count];
+        $arrAllInner['PHASE'] = $arrAll['PHASE'][$count];
+        $arrAllInner['STAGE'] = $arrAll['STAGE'][$count];
+        $arrAllInner['STAGE MOVEMENT DATE'] = $arrAll['STAGE MOVEMENT DATE'][$count];
+        $arrAllInner['STAGE MOVEMENT DONE BY'] = $arrAll['CITY'][$count];
+        $arrAllInner['UPDATION LABEL'] = $arrAll['UPDATION LABEL'][$count];
+         $count++;
+        echocsv( $arrAllInner );
+       
+ }
+ 
+ function echocsv( $fields )  {
+    $separator = '';
+    foreach ( $fields as $field )    {
+      if ( preg_match( '/\\r|\\n|,|"/', $field ) )     {
+        $field = '"' . str_replace( '"', '""', $field ) . '"';
+      }
+      echo $separator . $field;
+      $separator = ',';
+    }
+    echo "\r\n";
+  }
 ?>
