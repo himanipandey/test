@@ -268,22 +268,6 @@ $(function() {
                                       </td>
                                   </tr>
 
-                                  <tr>
-                                        <td align="right"  style = "padding-left:20px;" height='35'><b>Locality:</b></td>
-                                        <td align="left" style = "padding-left:20px;">
-                                        <span id = "LocalityList">
-                                            <select name = 'locality' id = "locality" onchange="localitySelect(this.value);">
-                                                <option value = "">Select Locality</option>
-                                                {foreach from = $getLocality item = value}
-                                                    <option value = "{$value->locality_id}" 
-                                                    {if $locality == $value->locality_id} selected {/if} >{if $city == "othercities"}{$value->cityname} - {/if}{$value->label}</option>
-                                                {/foreach}
-                                              </select>
-                                        </span>
-                                        </td>
-                                  <input type="hidden" name = "locality" id = "localitySelectText" value="{$locality}">
-                                  </tr>		
-
                                   <tr  bgcolor='#fcfcfc'>
                                       <td align="right" style = "padding-left:20px;" height='35'><b>Builder:</b></td>
                                       <td align="left" style = "padding-left:20px;" height='35'>
