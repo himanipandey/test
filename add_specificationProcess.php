@@ -187,10 +187,10 @@
                         }
                     }else
                     {
-                        $ErrMsg1 = '3';
+                        $ErrMsg1 = 3;
                     }
-echo $ErrMsg1;die("here");
-                    if($ErrMsg1 == '3'){
+
+                    if($ErrMsg1 == 3){
                          $ErrMsg = 'Please delete existing listing amenities';
                          $smarty->assign("ErrMsg", $ErrMsg);
                     }
