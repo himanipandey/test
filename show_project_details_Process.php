@@ -57,12 +57,13 @@ foreach($optionsDetails as $key => $value) {
     $listing_price = ListingPrices::find('all',array('conditions'=>
     array('listing_id = ?', $value->id),"limit" => 1, "order" => "effective_date desc",'select' => 
                     'effective_date'));
-                
+             
+    
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['option_name'] = $value->option_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['phase_name'] = $value->phase_name;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['size'] = $value->size;
-    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = date('Y-m-d',strtotime($listing_price[0]->effective_date));
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['booking_status_id'] = $value->booking_status_id;
 }
@@ -72,8 +73,6 @@ $ProjectPhases = $ProjectPhases[0];
 $ProjectOptionDetail = ProjectOptionDetail($projectId);
 $PreviousMonthsData = getPrevMonthProjectData($projectId);
 $PreviousMonthsAvailability = getFlatAvailability($projectId);
-//echo "<pre>";
-//print_r($optionsDetails);
 $arrPriceListData = array();
 $cnt = 0;
 $arrPrevMonthDate = array();
@@ -566,7 +565,8 @@ $updatePhase = array(
 if (!isset($_POST['forwardFlag']))
     $_POST['forwardFlag'] = '';
 
-if ($_POST['forwardFlag'] == 'yes') {
+$arrNotLaunchOnHOldCancled = array('2','5','6');
+if ($_POST['forwardFlag'] == 'yes') { 
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
     
@@ -601,7 +601,7 @@ if ($_POST['forwardFlag'] == 'yes') {
                                           join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
                                       where l.phase_id = ".$valPhaseId." and l.listing_category='Primary' and rpo.OPTION_CATEGORY = 'Logical'";
                    $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
-                   if(mysql_num_rows($resPhaseActual) == 0){
+                   if(mysql_num_rows($resPhaseActual) == 0 && (!in_array($projectDetails[0]['PROJECT_STATUS_ID'],$arrNotLaunchOnHOldCancled) && $projectDetails[0]['RESIDENTIAL_FLAG'] == 'Residential')){
                     $flgLogical = 1;
                     //echo $flgLogical."ghdf";
                    }

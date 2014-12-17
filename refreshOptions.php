@@ -23,9 +23,11 @@
         ?>
         <?php
             foreach ($arrResidentialType as $key=>$vComm ) {
+                if($key != 7){
             ?>
                <option value = "<?php echo $key; ?>"><?php echo ucfirst(strtolower($vComm)); ?></option>
             <?php
+                }
             }
         ?>
         <?php

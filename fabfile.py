@@ -1,5 +1,5 @@
 from fabric.api import *
-#fab -Hsysadmin@180.179.212.8 deploy_tag:tagname  this is the command for the code to be deployed on noida-2 server
+#fab -Hsysadmin@cms.proptiger.com deploy_tag:tagname  this is the command for the code to be deployed on noida-2 server
 def deploy_tag(tag):
   local("git archive --format tar.gz --output /tmp/cms.tar.gz refs/tags/%s^{}" %(tag))
   put('/tmp/cms.tar.gz', '/tmp')

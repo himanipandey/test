@@ -152,4 +152,10 @@
         $processAssignmentExec = 1;
     $smarty->assign("processAssignmentExec",$processAssignmentExec);
     
+    $skipUpdationYesNo = isUserPermitted('skip-updation-cycle', 'skipAccess');
+    $skipUpdtnCycle = 0; 
+    if($skipUpdationYesNo == 1)
+        $skipUpdtnCycle = 1;
+    $smarty->assign("skipUpdtnCycle",$skipUpdtnCycle);
+    
 ?>
