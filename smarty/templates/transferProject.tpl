@@ -151,8 +151,22 @@ function makeLabel()
 	}
 }
 
-function showHidePhase(phaseName,stageName)
+function showHidePhase(phaseName,stageName,PCount)
 {
+    var selectedProject = $('#totProject').val();
+    alert(selectedProject);
+    if(selectedProject == 0){
+        document.getElementById("totProject").value = PCount;
+      //  $('#totProject').val() = PCount;
+        alert("inner"+PCount);
+        }
+    else{
+    alert(selectedProject+"_"+PCount);
+        var totProject = parseInt(selectedProject)+parseInt(PCount);
+    }
+    var finalTotP = document.getElementById("totProject").value;
+    alert(finalTotP+" here");
+
     var phaseNameList = '';
     $('.showHideCls:checked').each(function(){
         phaseNameList = phaseNameList+"#"+$(this).val();
@@ -174,6 +188,7 @@ function showHidePhase(phaseName,stageName)
 
 function removeExtraCode()
 {
+    alert("here");
     var id = $("#removePhaseCode").val();
     if(id == 0)
     {
@@ -212,6 +227,7 @@ $(function() {
 <input type='hidden' name='current_dwnld_phase' id='current_dwnld_phase' value="">
 <input type='hidden' name='current_dwnld_stage' id='current_dwnld_stage' value="">
 </form>
+<input type = "text" name = "totProject" id = "totProject" value="0">
 <span id = "removePhaseCode" style = "display:none"></span>
 	<TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -414,7 +430,7 @@ $(function() {
                                                 {if count($forceMigrateModule)>0}
                                                     {$phaseName = $arrVal['PROJECT_PHASE']}
                                                     {$stageName = $arrVal['PROJECT_STAGE']}
-                                                    <input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','{$stageName}');" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
+                                                    <input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','{$stageName}',{$arrVal['CNT']});" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
                                                     {if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}
                                                     > 
                                                     {$flagcheck=1}
@@ -422,7 +438,7 @@ $(function() {
                                                     {if $arrVal['PROJECT_STAGE'] == 'NoStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'Audit2'} 
                                                         {$phaseName = $arrVal['PROJECT_PHASE']}
                                                         {$stageName = $arrVal['PROJECT_STAGE']}
-                                                        <input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName');" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
+                                                        <input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName',{$arrVal['CNT']});" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
                                                         {if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}
                                                         > 
                                                         {$flagcheck=1}
@@ -430,7 +446,7 @@ $(function() {
                                                         -
                                                     {/if}
                                                {/if}
-                                            </td>
+                               </td>
                                              <td align='center'>{$ctrl}</td>
                                              <td align='center'>{$arrVal['CNT']}</td>
                                              <td style='padding-left:5px;'>
