@@ -164,7 +164,7 @@ for (var i=0;i<prevalue.length;i++){
 
  }
  if(parseInt(sum) >= 4000){
- alert("Project selected maximum limit exceeded!");
+ alert("Maximum 4000 projects can be selected!");
  document.getElementById(id).checked = false;
   return false; 
 } 
