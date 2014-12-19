@@ -48,10 +48,10 @@ if($_REQUEST['edit'] == 'edit')
         }
 
         /**********************Query for select values according project type for update**********************/
-
         $smarty->assign("edit_project", $projectId);
         $smarty->assign("TYPE_ID", $arrProjectType['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval", $arrProjectType['OPTION_NAME']);
+        $smarty->assign("apartmentType", $arrProjectType['APARTMENTS_TYPE']);
         $smarty->assign("txtSizeval", $arrProjectType['SIZE']);
         $smarty->assign("txtCarpetAreaInfo", $arrProjectType['CARPET_AREA_INFO']);
         $smarty->assign("txtPricePerUnitAreaval", $arrProjectType['PRICE_PER_UNIT_AREA']);
@@ -155,6 +155,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
                 $bathrooms = $_REQUEST['bathrooms'][$key];
                 $unitType = $_REQUEST['unitType'][$key];
                 $status	= $_REQUEST['propstatus'][$key];
+                $apartmentType	= $_REQUEST['apartmentType'][$key];
                 
                 if($unitType != 'Plot' && $unitType != 'Shop' && $unitType != 'Office' && $unitType != 'Other')
                     $pid[] = trim($txtUnitName);
@@ -382,21 +383,47 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 
                     if(empty($ErrorMsg2)){
 					 // $option_txt_array[] = $optionTxt;
-					  $result = $option->save();
-                      if ($action == 'insert') {
+					  $result = $option->save(); 
+                       $apartmentsType = TableAttributes::find('all',array('conditions' => array('table_id' => $option->options_id, 'attribute_name' => 'APARTMENTS_TYPE', 'table_name' => 'resi_project_options' )));                  
+                       //echo "<pre>"; print_r($apartmentsType);
+                       
+                       if ($action == 'insert') {
                         $phases = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical')));
                         $listing = new Listings();
                         $listing->option_id = $option->options_id;
                         $listing->phase_id = $phases[0]->phase_id;
                         $listing->listing_category = 'Primary';
                         $listing->status = 'Active';
-                        $listing->updated_at = date('Y-m-d H:i:s');
+                         $listing->updated_at = date('Y-m-d H:i:s');
                         $listing->updated_by = $_SESSION['adminId'];
                         $listing->created_at = date('Y-m-d H:i:s');
                         $listing->save();
+                        
+                      }else{  
+                         
                       }
-						
-					}
+                      echo $apartmentsType[0]->attribute_value." != ".$apartmentType;//die("-end");
+                        if($apartmentsType[0]->attribute_value != $apartmentType && $apartmentType != '' && $apartmentsType[0]->attribute_value=='' ){ 
+                          //add mode by dataEntry
+                                 $apartmentsType = new TableAttributes();
+                                 $apartmentsType->table_name = 'resi_project_options';
+                                 $apartmentsType->table_id = $option->options_id;
+                                 $apartmentsType->attribute_name = 'APARTMENTS_TYPE';
+                                 $apartmentsType->attribute_value = $apartmentType;
+                                 $apartmentsType->updated_by = $_SESSION['adminId'];
+                                 $apartmentsType->save();	 
+                         }else{                             
+                               //echo $apartmentType." != ".$apartmentsType[0]->attribute_value;die;
+                                if($apartmentType == '' && $apartmentsType[0]->attribute_value != ''){  
+                                    $qryDel = "delete from table_attributes where id = ".$apartmentsType[0]->id." and table_name = 'resi_project_options'";
+                                    $resDel = mysql_query($qryDel) or die(mysql_error());
+                                }elseif($apartmentType != $apartmentsType[0]->attribute_value){ 
+                                   $qryUpdt = "update table_attributes set attribute_value = '".$apartmentType."',updated_by = ".$_SESSION['adminId']
+                                                  ."  where id = ".$apartmentsType[0]->id." and table_name = 'resi_project_options'";
+                                   $resUpdt = mysql_query($qryUpdt) or die(mysql_error());
+                                }
+                         }
+		    }
                     
                 }
                 else
@@ -491,7 +518,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 						ResiProjOptionsRoomSize::delete_all(array('conditions' => array('options_id' => $list_option_id)));	
 						
 						ResiProjectOptions::delete_all(array('conditions' => array('options_id = ? and project_id = ?', $list_option_id,$projectId)));
-					
+                                                
 						}catch(Exception $e)
 						{
 							if(strstr($e, 'listing_prices_fk_1'))
@@ -501,8 +528,7 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 							else
 							  $ErrorMsg1 = 'Couuld not delete!';							
 							return false;
-						}					
-								
+						}							
 					});					
 					############## Transaction End ##############							  
 					
@@ -513,14 +539,11 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
         }
          $plotIncrease++;
     }
-
     //if(($flgins == 0) && (count($_REQUEST['bed']) == 15))
     if($flgins == 0)
     {
         $ErrorMsg1 = 'Please select atleast one unit name';
     }
-    
-    
     
     if(empty($ErrorMsg) && empty($ErrorMsg2) && $ErrorMsg1 == '')
     {
