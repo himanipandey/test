@@ -182,122 +182,161 @@
                                                 <td width="20%" align="left" colspan='4'>Flooring : </td>
                                   </tr>
                                   <tr>
-                                                <td align="right" valign ="top">Master Bedroom</td><td colspan='3'>
-                                                <textarea style="width:357px;height:50px;" name="master_bedroom_flooring">{$master_bedroom_flooring}</textarea>
-                                   </tr>
-                                   <tr>
-                                                <td align="right" valign ="top">Other Bedroom</td><td colspan='3'>
-                                                <textarea style="width:357px;height:50px;" name="other_bedroom_flooring">{$other_bedroom_flooring}</textarea>
-                                                </td>		  
-                                   </tr>
-                                    <tr>
-                                                <td align="right" valign ="top">Living/Dining</td><td colspan='3'>
-
-                                                <textarea style="width:357px;height:50px;" name="living_room_flooring">{$living_room_flooring}</textarea>
-                                                </td>		  
-                                   </tr>
-                                   <tr>
-                                                <td align="right" valign ="top">Kitchen</td><td colspan='3'>
-
-                                                <textarea style="width:357px;height:50px;" name="kitchen_flooring">{$kitchen_flooring}</textarea>
-                                                </td>		   
-                                   </tr>
-
-                                   <tr>
-                                                <td align="right" valign ="top">Toilets</td><td colspan='3'>
-
-                                                <textarea style="width:357px;height:50px;" name="toilets_flooring">{$toilets_flooring}</textarea>
-                                                </td>		  
-                                   </tr>
-
-                                    <tr>
-                                                <td align="right" valign ="top">Balcony</td><td colspan='3'>
-                                                        <textarea style="width:357px;height:50px;" name="balcony_flooring">{$balcony_flooring}</textarea>
-                                                </td>		  
-                                    </tr>
-
-                                   <tr>
-                                          <td width="20%" align="left" colspan='4' valign ="top">Walls : </td>
-                                   </tr>
-
-                                   <tr>
-                                                <td align="right" valign ="top">Interior</td><td colspan='3'>
-                                                        <textarea style="width:357px;height:50px;" name="interior_walls">{$interior_walls}</textarea>
-                                                </td>						
-                                        </tr>
-                                   <tr>
-                                                <td align="right" valign ="top">Exterior</td><td colspan='3'>
-
-                                                        <textarea style="width:357px;height:50px;" name="exterior_walls">{$exterior_walls}</textarea>
-                                                </td>		  
-                                   </tr>
-
-                                  <tr>
-                                                <td align="right" valign ="top">Kitchen</td><td colspan='3'>
-                                                        <textarea style="width:357px;height:50px;" name="kitchen_walls">{$kitchen_walls}</textarea>
-                                                </td>		  
-                                  </tr>
-
-                                   <tr>
-                                                <td align="right" valign ="top">Toilets</td><td colspan='3'>
-                                                        <textarea style="width:357px;height:50px;" name="toilets_walls">{$toilets_walls}</textarea>
-                                                </td>		  
-                                  </tr>
-
-                                  <tr>
-                                                <td width="20%" align="left" colspan='4'>Fittings and Fixtures : </td>
-                                  </tr>
-
-                                  <tr>
-                                        <td align="right" valign ="top">Kitchen</td><td colspan='3'>
-                                                <textarea style="width:357px;height:50px;" name="kitchen_fixtures">{$kitchen_fixtures}</textarea>
-                                        </td>						
-
+                                            <td align="right" valign ="top">Master Bedroom</td><td colspan='2'>
+                                                <textarea style="width:357px;height:50px;" name="master_bedroom_flooring">{$master_bedroom_flooring}</textarea></td>
+                                            <td width="50%" align="left">
+                                                 <font color="red">{if $ErrorMsg["master_bedroom_flooring"] != ''} {$ErrorMsg["master_bedroom_flooring"]} {/if}</font>
+                                           </td>
                                   </tr>
                                   <tr>
-                                                <td align="right" valign ="top">Toilets</td><td colspan='3'>
-                                                        <textarea style="width:357px;height:50px;" name="toilets_fixtures">{$toilets_fixtures}</textarea>
-
-                                                </td>		  
-                                   </tr>
-                                   <tr>
-                                                 <td width="20%" align="left" colspan='4'>Doors : </td>
+                                        <td align="right" valign ="top">Other Bedroom</td><td colspan='2'>
+                                        <textarea style="width:357px;height:50px;" name="other_bedroom_flooring">{$other_bedroom_flooring}</textarea>
+                                        </td>	
+                                        <td width="50%" align="left">
+                                                 <font color="red">{if $ErrorMsg["other_bedroom_flooring"] != ''} {$ErrorMsg["other_bedroom_flooring"]} {/if}</font>
+                                        </td>
                                   </tr>
                                   <tr>
-                                                <td align="right" valign ="top">Main</td>
-                                                <td colspan='3'>
-                                                        <textarea style="width:357px;height:50px;" name="main_doors">{$main_doors}</textarea>
-                                                </td>						
+                                        <td align="right" valign ="top">Living/Dining</td><td colspan='2'>
+                                        <textarea style="width:357px;height:50px;" name="living_room_flooring">{$living_room_flooring}</textarea>
+                                        </td>	
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["living_room_flooring"] != ''} {$ErrorMsg["living_room_flooring"]} {/if}</font>
+                                       </td>
+                                 </tr>
+                                 <tr>
+                                        <td align="right" valign ="top">Kitchen</td><td colspan='2'>
+                                        <textarea style="width:357px;height:50px;" name="kitchen_flooring">{$kitchen_flooring}</textarea>
+                                        </td>
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["kitchen_flooring"] != ''} {$ErrorMsg["kitchen_flooring"]} {/if}</font>
+                                       </td>
+                                 </tr>
+                                 <tr>
+                                        <td align="right" valign ="top">Toilets</td><td colspan='2'>
+                                        <textarea style="width:357px;height:50px;" name="toilets_flooring">{$toilets_flooring}</textarea>
+                                        </td>
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["toilets_flooring"] != ''} {$ErrorMsg["toilets_flooring"]} {/if}</font>
+                                       </td>
+                                 </tr>
 
-                                   </tr>
-                                   <tr>
-                                                <td align="right" valign ="top">Internal</td>
-                                                <td colspan='3'>
-                                                        <textarea style="width:357px;height:50px;" name="internal_doors">{$internal_doors}</textarea>
-                                                </td> 
-                                  </tr>
-                                   <tr>
-                                                <td width="20%" align="left"  valign ="top">Windows : </td>
-                                                <td colspan='3'>
-                                                        <textarea style="width:357px;height:50px;" name="windows">{$Windows}</textarea>
+                                 <tr>
+                                        <td align="right" valign ="top">Balcony</td><td colspan='2'>
+                                            <textarea style="width:357px;height:50px;" name="balcony_flooring">{$balcony_flooring}</textarea>
+                                        </td>	
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["balcony_flooring"] != ''} {$ErrorMsg["balcony_flooring"]} {/if}</font>
+                                       </td>
+                                 </tr>
 
-                                                </td>
-                                  </tr>
+                                 <tr>
+                                      <td width="20%" align="left" colspan='4' valign ="top">Walls : </td>
+                                 </tr>
 
-                                  <tr>
-                                          <td width="20%" align="left"  valign ="top">Electrical Fitting : </td>
-                                          <td colspan='3'>
+                                 <tr>
+                                        <td align="right" valign ="top">Interior</td><td colspan='2'>
+                                                <textarea style="width:357px;height:50px;" name="interior_walls">{$interior_walls}</textarea>
+                                        </td>	
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["interior_walls"] != ''} {$ErrorMsg["interior_walls"]} {/if}</font>
+                                       </td>
+                                 </tr>
+                                 <tr>
+                                        <td align="right" valign ="top">Exterior</td><td colspan='2'>
+                                            <textarea style="width:357px;height:50px;" name="exterior_walls">{$exterior_walls}</textarea>
+                                        </td>
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["exterior_walls"] != ''} {$ErrorMsg["exterior_walls"]} {/if}</font>
+                                       </td>
+                                </tr>
 
-                                                <textarea style="width:357px;height:50px;" name="electrical_fitting">{$electrical_fitting}</textarea>
-                                          </td>
-                                  </tr>
+                                <tr>
+                                        <td align="right" valign ="top">Kitchen</td><td colspan='2'>
+                                             <textarea style="width:357px;height:50px;" name="kitchen_walls">{$kitchen_walls}</textarea>
+                                        </td>	
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["kitchen_walls"] != ''} {$ErrorMsg["kitchen_walls"]} {/if}</font>
+                                       </td>
+                                </tr>
 
-                                   <tr>
+                                <tr>
+                                    <td align="right" valign ="top">Toilets</td><td colspan='2'>
+                                         <textarea style="width:357px;height:50px;" name="toilets_walls">{$toilets_walls}</textarea>
+                                    </td>
+                                    <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["toilets_walls"] != ''} {$ErrorMsg["toilets_walls"]} {/if}</font>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                        <td width="20%" align="left" colspan='4'>Fittings and Fixtures : </td>
+                                </tr>
+
+                                <tr>
+                                    <td align="right" valign ="top">Kitchen</td><td colspan='2'>
+                                            <textarea style="width:357px;height:50px;" name="kitchen_fixtures">{$kitchen_fixtures}</textarea>
+                                    </td>
+                                    <td width="50%" align="left">
+                                         <font color="red">{if $ErrorMsg["kitchen_fixtures"] != ''} {$ErrorMsg["kitchen_fixtures"]} {/if}</font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right" valign ="top">Toilets</td><td colspan='2'>
+                                            <textarea style="width:357px;height:50px;" name="toilets_fixtures">{$toilets_fixtures}</textarea>
+                                    </td>
+                                    <td width="50%" align="left">
+                                         <font color="red">{if $ErrorMsg["toilets_fixtures"] != ''} {$ErrorMsg["toilets_fixtures"]} {/if}</font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                        <td width="20%" align="left" colspan='4'>Doors : </td>
+                                </tr>
+                                <tr>
+                                        <td align="right" valign ="top">Main</td>
+                                        <td colspan='2'>
+                                            <textarea style="width:357px;height:50px;" name="main_doors">{$main_doors}</textarea>
+                                        </td>
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["main_doors"] != ''} {$ErrorMsg["main_doors"]} {/if}</font>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td align="right" valign ="top">Internal</td>
+                                        <td colspan='2'>
+                                             <textarea style="width:357px;height:50px;" name="internal_doors">{$internal_doors}</textarea>
+                                        </td> 
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["internal_doors"] != ''} {$ErrorMsg["internal_doors"]} {/if}</font>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td width="20%" align="left"  valign ="top">Windows : </td>
+                                        <td colspan='2'>
+                                                <textarea style="width:357px;height:50px;" name="windows">{$Windows}</textarea>
+                                        </td>
+                                        <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["windows"] != ''} {$ErrorMsg["windows"]} {/if}</font>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td width="20%" align="left"  valign ="top">Electrical Fitting : </td>
+                                        <td colspan='2'>
+                                              <textarea style="width:357px;height:50px;" name="electrical_fitting">{$electrical_fitting}</textarea>
+                                        </td>
+                                        <td width="50%" align="left">
+                                          <font color="red">{if $ErrorMsg["electrical_fitting"] != ''} {$ErrorMsg["electrical_fitting"]} {/if}</font>
+                                        </td>
+                                </tr>
+                                <tr>
                                           <td width="20%" align="left"  valign ="top">Others : </td>
-                                          <td colspan='3'>
+                                          <td colspan='2'>
                                                 <textarea style="width:357px;height:50px;" name="others">{$others}</textarea>
                                           </td> 
-                                  </tr>
+                                          <td width="50%" align="left">
+                                            <font color="red">{if $ErrorMsg["electrical_fitting"] != ''} {$ErrorMsg["electrical_fitting"]} {/if}</font>
+                                          </td>
+                                </tr>
                                 <input type = "hidden" name = "projectId" value = "{$projectId}">
                                 <tr style ="border:1px solid #c2c2c2;height:30px;width:70px;background:#999999;color:#fff;font-weight:bold;cursor:hand;pointer:hand;">
 				  <td colspan = "2" align="right" style="padding-left:152px;" >
