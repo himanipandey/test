@@ -125,7 +125,7 @@ if(isset($_REQUEST['searchProject'])){
     $toilets_fixtures = $_REQUEST['toilets_fixtures'];
     $main_doors = $_REQUEST['main_doors'];
     $internal_doors = $_REQUEST['internal_doors'];
-    $windows = $_REQUEST['windows'];
+    $Windows = $_REQUEST['Windows'];
     $electrical_fitting = $_REQUEST['electrical_fitting'];
     $others = $_REQUEST['others'];
     

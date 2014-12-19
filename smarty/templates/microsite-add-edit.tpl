@@ -107,32 +107,32 @@
                                            <textarea name="projectDesc" rows="20" cols="90"  class ="myTextEditor" id = "projectDesc">{$projectDesc}</textarea>
                                           
                                     </td>
-                                    <td width="50%" align="left">
+                                    <td width="50%" align="left" valign = "top">
                                             <font color="red">{if $ErrorMsg["projectDesc"] != ''} {$ErrorMsg["projectDesc"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
                                    </td>
                                </tr>
 				<tr>
 				  <td width="20%" align="right" > <b><font color = "red">*</font>Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitle id=metaTitle value="{$metaTitle}" style="width:360px;"></td>
-				  <td width="50%" align="left">
+				  <td width="50%" align="left" valign = "top">
                                             <font color="red">{if $ErrorMsg["metaTitle"] != ''} {$ErrorMsg["metaTitle"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta title!</span></font>
                                    </td>
 				</tr>
 				<tr>
 				  <td width="20%" align="right" valign="top"><b><font color = "red">*</font>Meta Keywords :</b></td>
 				  <td width="30%" align="left" >
-				  <textarea name="metaKeywords" rows="10" cols="45">{$metaKeywords}</textarea>
-                                    </td>
-                                  <td width="50%" align="left">
+                                    <textarea name="metaKeywords" rows="10" cols="45">{$metaKeywords}</textarea>
+                                  </td>
+                                  <td width="50%" align="left" valign = "top">
                                             <font color="red">{if $ErrorMsg["metaKeywords"] != ''} {$ErrorMsg["metaKeywords"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta keywords!</span></font>
                                    </td>
 				</tr>
 				<tr>
 				  <td width="20%" align="right" valign="top"><b><font color = "red">*</font>Meta Description :</b></td>
 				  <td width="30%" align="left" >
-				  <textarea name="metaDescription" rows="10" cols="45">{$metaDescription}</textarea>
+                                    <textarea name="metaDescription" rows="10" cols="45">{$metaDescription}</textarea>
 				  </td>
-                                  <td width="50%" align="left">
+                                  <td width="50%" align="left" valign = "top">
                                             <font color="red">{if $ErrorMsg["metaDescription"] != ''} {$ErrorMsg["metaDescription"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta Description!</span></font>
                                    </td>
 				</tr>
@@ -140,7 +140,7 @@
                                 <tr>
                                     <td width="20%" align="left"  valign ="top"><b><font color = "red">*</font>GA CODE :</b> </td>
                                     <td width="30%" align="left" >
-                                          <input type=text name=gaCode id=gaCode value="{$gaCode}" style="width:360px;">
+                                          <textarea name="gaCode" rows="10" cols="45">{$gaCode}</textarea>
                                     </td> 
                                      <td width="50%" align="left">
                                             <font color="red">{if $ErrorMsg["gaCode"] != ''} {$ErrorMsg["gaCode"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta Description!</span></font>
@@ -182,14 +182,14 @@
                                                 <td width="20%" align="left" colspan='4'>Flooring : </td>
                                   </tr>
                                   <tr>
-                                            <td align="right" valign ="top">Master Bedroom</td><td colspan='2'>
+                                            <td align="right" valign ="top">Master Bedroom</td><td>
                                                 <textarea style="width:357px;height:50px;" name="master_bedroom_flooring">{$master_bedroom_flooring}</textarea></td>
                                             <td width="50%" align="left">
                                                  <font color="red">{if $ErrorMsg["master_bedroom_flooring"] != ''} {$ErrorMsg["master_bedroom_flooring"]} {/if}</font>
                                            </td>
                                   </tr>
                                   <tr>
-                                        <td align="right" valign ="top">Other Bedroom</td><td colspan='2'>
+                                        <td align="right" valign ="top">Other Bedroom</td><td>
                                         <textarea style="width:357px;height:50px;" name="other_bedroom_flooring">{$other_bedroom_flooring}</textarea>
                                         </td>	
                                         <td width="50%" align="left">
@@ -197,7 +197,7 @@
                                         </td>
                                   </tr>
                                   <tr>
-                                        <td align="right" valign ="top">Living/Dining</td><td colspan='2'>
+                                        <td align="right" valign ="top">Living/Dining</td><td>
                                         <textarea style="width:357px;height:50px;" name="living_room_flooring">{$living_room_flooring}</textarea>
                                         </td>	
                                         <td width="50%" align="left">
@@ -205,7 +205,7 @@
                                        </td>
                                  </tr>
                                  <tr>
-                                        <td align="right" valign ="top">Kitchen</td><td colspan='2'>
+                                        <td align="right" valign ="top">Kitchen</td><td>
                                         <textarea style="width:357px;height:50px;" name="kitchen_flooring">{$kitchen_flooring}</textarea>
                                         </td>
                                         <td width="50%" align="left">
@@ -213,7 +213,7 @@
                                        </td>
                                  </tr>
                                  <tr>
-                                        <td align="right" valign ="top">Toilets</td><td colspan='2'>
+                                        <td align="right" valign ="top">Toilets</td><td>
                                         <textarea style="width:357px;height:50px;" name="toilets_flooring">{$toilets_flooring}</textarea>
                                         </td>
                                         <td width="50%" align="left">
@@ -222,7 +222,7 @@
                                  </tr>
 
                                  <tr>
-                                        <td align="right" valign ="top">Balcony</td><td colspan='2'>
+                                        <td align="right" valign ="top">Balcony</td><td>
                                             <textarea style="width:357px;height:50px;" name="balcony_flooring">{$balcony_flooring}</textarea>
                                         </td>	
                                         <td width="50%" align="left">
@@ -235,7 +235,7 @@
                                  </tr>
 
                                  <tr>
-                                        <td align="right" valign ="top">Interior</td><td colspan='2'>
+                                        <td align="right" valign ="top">Interior</td><td>
                                                 <textarea style="width:357px;height:50px;" name="interior_walls">{$interior_walls}</textarea>
                                         </td>	
                                         <td width="50%" align="left">
@@ -243,7 +243,7 @@
                                        </td>
                                  </tr>
                                  <tr>
-                                        <td align="right" valign ="top">Exterior</td><td colspan='2'>
+                                        <td align="right" valign ="top">Exterior</td><td>
                                             <textarea style="width:357px;height:50px;" name="exterior_walls">{$exterior_walls}</textarea>
                                         </td>
                                         <td width="50%" align="left">
@@ -252,7 +252,7 @@
                                 </tr>
 
                                 <tr>
-                                        <td align="right" valign ="top">Kitchen</td><td colspan='2'>
+                                        <td align="right" valign ="top">Kitchen</td><td>
                                              <textarea style="width:357px;height:50px;" name="kitchen_walls">{$kitchen_walls}</textarea>
                                         </td>	
                                         <td width="50%" align="left">
@@ -261,7 +261,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td align="right" valign ="top">Toilets</td><td colspan='2'>
+                                    <td align="right" valign ="top">Toilets</td><td>
                                          <textarea style="width:357px;height:50px;" name="toilets_walls">{$toilets_walls}</textarea>
                                     </td>
                                     <td width="50%" align="left">
@@ -274,7 +274,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td align="right" valign ="top">Kitchen</td><td colspan='2'>
+                                    <td align="right" valign ="top">Kitchen</td><td>
                                             <textarea style="width:357px;height:50px;" name="kitchen_fixtures">{$kitchen_fixtures}</textarea>
                                     </td>
                                     <td width="50%" align="left">
@@ -282,7 +282,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td align="right" valign ="top">Toilets</td><td colspan='2'>
+                                    <td align="right" valign ="top">Toilets</td><td>
                                             <textarea style="width:357px;height:50px;" name="toilets_fixtures">{$toilets_fixtures}</textarea>
                                     </td>
                                     <td width="50%" align="left">
@@ -294,7 +294,7 @@
                                 </tr>
                                 <tr>
                                         <td align="right" valign ="top">Main</td>
-                                        <td colspan='2'>
+                                        <td>
                                             <textarea style="width:357px;height:50px;" name="main_doors">{$main_doors}</textarea>
                                         </td>
                                         <td width="50%" align="left">
@@ -303,7 +303,7 @@
                                 </tr>
                                 <tr>
                                         <td align="right" valign ="top">Internal</td>
-                                        <td colspan='2'>
+                                        <td>
                                              <textarea style="width:357px;height:50px;" name="internal_doors">{$internal_doors}</textarea>
                                         </td> 
                                         <td width="50%" align="left">
@@ -312,16 +312,16 @@
                                 </tr>
                                 <tr>
                                         <td width="20%" align="left"  valign ="top">Windows : </td>
-                                        <td colspan='2'>
-                                                <textarea style="width:357px;height:50px;" name="windows">{$Windows}</textarea>
+                                        <td>
+                                                <textarea style="width:357px;height:50px;" name="Windows">{$Windows}</textarea>
                                         </td>
                                         <td width="50%" align="left">
-                                            <font color="red">{if $ErrorMsg["windows"] != ''} {$ErrorMsg["windows"]} {/if}</font>
+                                            <font color="red">{if $ErrorMsg["Windows"] != ''} {$ErrorMsg["Windows"]} {/if}</font>
                                         </td>
                                 </tr>
                                 <tr>
                                         <td width="20%" align="left"  valign ="top">Electrical Fitting : </td>
-                                        <td colspan='2'>
+                                        <td>
                                               <textarea style="width:357px;height:50px;" name="electrical_fitting">{$electrical_fitting}</textarea>
                                         </td>
                                         <td width="50%" align="left">
@@ -330,7 +330,7 @@
                                 </tr>
                                 <tr>
                                           <td width="20%" align="left"  valign ="top">Others : </td>
-                                          <td colspan='2'>
+                                          <td>
                                                 <textarea style="width:357px;height:50px;" name="others">{$others}</textarea>
                                           </td> 
                                           <td width="50%" align="left">
