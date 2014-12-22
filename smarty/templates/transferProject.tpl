@@ -462,7 +462,7 @@ $(function() {
                                              <td align='center' style='padding-left:5px;'>
                                                  {$arrProjectVStage[] = $arrVal['PROJECT_STAGE']}
                                                  {$arrProjectVPhase[] = $arrVal['PROJECT_PHASE']}
-                                                 <a href='javascript:void(0);' onClick='javascript:downloadExcel("{$arrVal['PROJECT_STAGE']}","{$arrVal['PROJECT_PHASE']}");'><img src='images/excel.png' border='0'></a>
+                                                 <a href='javascript:void(0);' onClick='javascript:downloadExcel("{$arrVal['PROJECT_STAGE']}","{$arrVal['PROJECT_PHASE']}","{implode(",",$city)}");'><img src='images/excel.png' border='0'></a>
                                              </td>
                                       </tr>
                                      {$ctrl = $ctrl + 1}
