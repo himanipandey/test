@@ -78,6 +78,13 @@
 				</tr>
 
 				<tr>
+                                    <td width="20%" align="right" ><font color = "red">*</font><b>Project Title :</b> </td>
+                                    <input type=hidden name="projectNameOld" id="projectNameOld" value="{$projectTitle}" style="width:357px;">
+                                    <td width="30%" align="left"><input type=text name=projectTitle id=projectTitle value="{$projectTitle}" style="width:357px;"></td>
+                                    {if $ErrorMsg["projectTitle"] != ''}
+                                    <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["projectTitle"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+				</tr>
+                                <tr>
                                     <td width="20%" align="right" ><font color = "red">*</font><b>Project Name :</b> </td>
                                     <input type=hidden name="projectNameOld" id="projectNameOld" value="{$projectName}" style="width:357px;">
                                     <td width="30%" align="left"><input type=text name=projectName id=projectName value="{$projectName}" style="width:357px;"></td>
@@ -100,6 +107,11 @@
 				  <td width="30%" align="left" ><input type=text name="localityName" id="localityName" value="{$localityName}" style="width:357px;">
                                       {if $ErrorMsg["localityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["localityName"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
+                                <tr>
+				  <td width="20%" align="right" valign="top"><font color = "red">*</font><b>Contact :</b></td>
+				  <td width="30%" align="left" ><input type=text name="contactNumber" id="contactNumber" value="{$contactNumber}" style="width:357px;">
+                                      {if $ErrorMsg["contactNumber"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["contactNumber"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+				</tr>
                                 
                                 <tr>
                                     <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Description :</b> </td>
@@ -109,6 +121,17 @@
                                     </td>
                                     <td width="50%" align="left" valign = "top">
                                             <font color="red">{if $ErrorMsg["projectDesc"] != ''} {$ErrorMsg["projectDesc"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
+                                   </td>
+                               </tr>
+                               
+                               <tr>
+                                    <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Disclaimer :</b> </td>
+                                    <td width="30%" align="left">
+                                           <textarea name="projectDisclaimer" rows="20" cols="90"  class ="myTextEditor" id = "projectDisclaimer">{$projectDisclaimer}</textarea>
+                                          
+                                    </td>
+                                    <td width="50%" align="left" valign = "top">
+                                            <font color="red">{if $ErrorMsg["projectDisclaimer"] != ''} {$ErrorMsg["projectDisclaimer"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Disclaimer!</span></font>
                                    </td>
                                </tr>
 				<tr>

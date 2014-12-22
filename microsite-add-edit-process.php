@@ -93,11 +93,14 @@ if(isset($_REQUEST['searchProject'])){
     
    // echo "<pre>";print_r($_REQUEST);die;
     $projectName = $_REQUEST['projectName'];
+    $projectTitle = $_REQUEST['projectTitle'];
     $projectId = $_REQUEST['projectId'];
     $builderName = $_REQUEST['builderName'];
     $cityName = $_REQUEST['cityName'];
     $localityName = $_REQUEST['localityName'];
+    $contactNumber = $_REQUEST['contactNumber'];
     $projectDesc = $_REQUEST['projectDesc'];
+    $projectDisclaimer = $_REQUEST['projectDisclaimer'];
     $metaTitle = $_REQUEST['metaTitle'];
     $metaKeywords = $_REQUEST['metaKeywords'];
     $metaDescription = $_REQUEST['metaDescription'];
@@ -133,8 +136,11 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("builderName",$builderName);
     $smarty->assign("suburbName",$suburbName);
     $smarty->assign("localityName",$localityName);
+    $smarty->assign("contactNumber",$contactNumber);    
     $smarty->assign("projectName",$projectName);
+    $smarty->assign("projectTitle",$projectTitle);
     $smarty->assign("projectDesc",$projectDesc);
+    $smarty->assign("projectDisclaimer",$projectDisclaimer);
     $smarty->assign("cityName",$cityName);
     
     $smarty->assign("metaTitle",$metaTitle);
@@ -168,6 +174,15 @@ if(isset($_REQUEST['searchProject'])){
     }elseif(stristr(strtolower($projectName),'proptiger')){
         $ErrorMsg["projectName"] = "Proptiger word is not allowed.";
     }
+    
+    if(empty($projectTitle)){
+       $ErrorMsg["projectTitle"] = "project title can't be blank.";
+    }elseif(!preg_match('/^[a-zA-Z0-9 ]+$/', $projectTitle)){
+       $ErrorMsg["projectTitle"] = "Special characters are not allowed.";
+    }elseif(stristr(strtolower($projectTitle),'proptiger')){
+        $ErrorMsg["projectTitle"] = "Proptiger word is not allowed.";
+    }
+    
     if(empty($builderName)){
        $ErrorMsg["builderName"] = "Builder name can't be blank.";
     }elseif(stristr(strtolower($builderName),'proptiger')){
@@ -184,6 +199,12 @@ if(isset($_REQUEST['searchProject'])){
         $ErrorMsg["localityName"] = "Proptiger word is not allowed.";
     }
     
+    if(empty($contactNumber)){
+       $ErrorMsg["contactNumber"] = "Contact number can't be blank.";
+    }elseif(stristr(strtolower($contactNumber),'proptiger')){
+        $ErrorMsg["contactNumber"] = "Proptiger word is not allowed.";
+    }
+    
     if(empty($metaTitle)){
        $ErrorMsg["metaTitle"] = "Meta title can't be blank.";
     }elseif(stristr(strtolower($metaTitle),'proptiger')){
@@ -198,6 +219,11 @@ if(isset($_REQUEST['searchProject'])){
        $ErrorMsg["metaDescription"] = "Meta description can't be blank.";
     }elseif(stristr(strtolower($metaDescription),'proptiger')){
         $ErrorMsg["metaDescription"] = "Proptiger word is not allowed.";
+    }
+    if(empty($projectDisclaimer)){
+       $ErrorMsg["projectDisclaimer"] = "Project disclaimer can't be blank.";
+    }elseif(stristr(strtolower($projectDisclaimer),'proptiger')){
+        $ErrorMsg["projectDisclaimer"] = "Proptiger word is not allowed.";
     }
     if(empty($projectDesc)){
        $ErrorMsg["projectDesc"] = "Project description can't be blank.";
@@ -267,14 +293,38 @@ if(isset($_REQUEST['searchProject'])){
     }    
   
     $smarty->assign("ErrorMsg", $ErrorMsg);
-    echo"<pre>"; 
-     echo json_encode($_REQUEST);die;
+    //echo"<pre>"; 
+    // echo json_encode($_REQUEST);die;
      if(count($ErrorMsg)>0) {
             // Do Nothing
        }
        else {
+           
+           //json array
+           $jsonArr = array();
+           $jsonArr['title'] = $_REQUEST['projectTitle'];
+           $jsonArr['project'] = $_REQUEST['projectName'];
+           $jsonArr['builder'] = $_REQUEST['builderName'];
+           $jsonArr['locality'] = $_REQUEST['localityName'];
+           $jsonArr['city'] = $_REQUEST['cityName'];
+           $jsonArr['contactNumber'] = $_REQUEST['contactNumber'];
+           $jsonArr['project'] = $_REQUEST['projectName'];
+           $jsonArr['builder'] = $_REQUEST['builderName'];
+           $jsonArr['locality'] = $_REQUEST['localityName'];
+           $jsonArr['city'] = $_REQUEST['cityName'];
+           $jsonArr['contactNumber'] = $_REQUEST['contactNumber'];
+           $jsonArr['description'] = $_REQUEST['projectDesc'];
+           $jsonArr['disclaimer'] = $_REQUEST['projectDisclaimer'];
+           
+           foreach($_REQUEST['configId'] as $k=>$v){
+                $jsonArr['pricetable']['type'] = $_REQUEST['price_unitName'][$k];
+                $arrProjectConfig['pricetable']['area'] = $_REQUEST['price_PerUnitArea'][$k];
+                $arrProjectConfig['pricetable']['rate'] = $_REQUEST['price_size'][$k];
+                $arrProjectConfig['pricetable']['bsp'] = $_REQUEST['price_size'][$k];
+            }
+           
          //encoding the PHP array
-            echo json_encode($_REQUEST);die;
+            echo json_encode($arrProjectConfig);die;
        }
 
 }
