@@ -91,7 +91,7 @@ if(isset($_REQUEST['searchProject'])){
     /* gets the data from a URL */
 }elseif($_REQUEST['generateMicrosite']){
     
-    echo "<pre>";print_r($_REQUEST);//die;
+   // echo "<pre>";print_r($_REQUEST);die;
     $projectName = $_REQUEST['projectName'];
     $projectId = $_REQUEST['projectId'];
     $builderName = $_REQUEST['builderName'];
@@ -267,11 +267,14 @@ if(isset($_REQUEST['searchProject'])){
     }    
   
     $smarty->assign("ErrorMsg", $ErrorMsg);
+    echo"<pre>"; 
+     echo json_encode($_REQUEST);die;
      if(count($ErrorMsg)>0) {
             // Do Nothing
        }
        else {
-           
+         //encoding the PHP array
+            echo json_encode($_REQUEST);die;
        }
 
 }
