@@ -151,8 +151,24 @@ function makeLabel()
 	}
 }
 
-function showHidePhase(phaseName,stageName)
+function showHidePhase(phaseName,stageName, id)
 {
+var checkedVals = $('.showHideCls:checkbox:checked').map(function() {
+    return $(this).attr('rel');
+}).get();
+var stringVal = checkedVals.join(",");
+
+var prevalue=stringVal.split(","), sum = 0;
+for (var i=0;i<prevalue.length;i++){
+    sum += parseInt(prevalue[i]); //<--- Use a parseInt to cast it or use parseFloat
+
+ }
+ if(parseInt(sum) >= 4000){
+ alert("Maximum 4000 projects can be selected!");
+ document.getElementById(id).checked = false;
+  return false; 
+} 
+   //$("#maxProject").val(sum);
     var phaseNameList = '';
     $('.showHideCls:checked').each(function(){
         phaseNameList = phaseNameList+"#"+$(this).val();
@@ -414,7 +430,7 @@ $(function() {
                                                 {if count($forceMigrateModule)>0}
                                                     {$phaseName = $arrVal['PROJECT_PHASE']}
                                                     {$stageName = $arrVal['PROJECT_STAGE']}
-                                                    <input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','{$stageName}');" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
+                                                    <input rel = "{$arrVal['CNT']}" class = "showHideCls" id = "{$ctrl}" type='checkbox' onclick =  "showHidePhase('{$phaseName}','{$stageName}',{$ctrl});" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
                                                     {if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}
                                                     > 
                                                     {$flagcheck=1}
@@ -422,7 +438,7 @@ $(function() {
                                                     {if $arrVal['PROJECT_STAGE'] == 'NoStage' || $arrVal['PROJECT_STAGE'] == '' || $arrVal['PROJECT_PHASE'] == 'Audit2'} 
                                                         {$phaseName = $arrVal['PROJECT_PHASE']}
                                                         {$stageName = $arrVal['PROJECT_STAGE']}
-                                                        <input class = "showHideCls" type='checkbox' onclick =  "showHidePhase('{$phaseName}','$stageName');" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
+                                                        <input rel= "{$arrVal['CNT']}" class = "showHideCls" type='checkbox'  id = "{$ctrl}" onclick =  "showHidePhase('{$phaseName}','{$stageName}',{$ctrl});" name='selectdata[]' value="{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}" 
                                                         {if in_array("{$arrVal['PROJECT_STAGE']}|{$arrVal['PROJECT_PHASE']}",$selectdata)} checked {/if}
                                                         > 
                                                         {$flagcheck=1}
@@ -430,7 +446,7 @@ $(function() {
                                                         -
                                                     {/if}
                                                {/if}
-                                            </td>
+                               </td>
                                              <td align='center'>{$ctrl}</td>
                                              <td align='center'>{$arrVal['CNT']}</td>
                                              <td style='padding-left:5px;'>
@@ -446,7 +462,7 @@ $(function() {
                                              <td align='center' style='padding-left:5px;'>
                                                  {$arrProjectVStage[] = $arrVal['PROJECT_STAGE']}
                                                  {$arrProjectVPhase[] = $arrVal['PROJECT_PHASE']}
-                                                 <a href='javascript:void(0);' onClick='javascript:downloadExcel("{$arrVal['PROJECT_STAGE']}","{$arrVal['PROJECT_PHASE']}");'><img src='images/excel.png' border='0'></a>
+                                                 <a href='javascript:void(0);' onClick='javascript:downloadExcel("{$arrVal['PROJECT_STAGE']}","{$arrVal['PROJECT_PHASE']}","{implode(",",$city)}");'><img src='images/excel.png' border='0'></a>
                                              </td>
                                       </tr>
                                      {$ctrl = $ctrl + 1}
