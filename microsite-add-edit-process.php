@@ -112,14 +112,28 @@ if(isset($_REQUEST['searchProject'])){
     $metaTitleLocationMap = $_REQUEST['metaTitleLocationMap'];
     $metaTitleContactus = $_REQUEST['metaTitleContactus'];
     
+    $ErrorMsg = array();
+    
     $arrProjectConfig = array();
     foreach($_REQUEST['configId'] as $k=>$v){
+        if(stristr(strtolower($_REQUEST['price_unitName'][$k]),'proptiger'))
+               $ErrorMsg['configName'] = "Proptiger word is not allowed."; 
         $arrProjectConfig[$v]['price_unitName'] = $_REQUEST['price_unitName'][$k];
         $arrProjectConfig[$v]['price_PerUnitArea'] = $_REQUEST['price_PerUnitArea'][$k];
         $arrProjectConfig[$v]['price_size'] = $_REQUEST['price_size'][$k];
         $arrProjectConfig[$v]['price_budget'] = $_REQUEST['price_size'][$k];
     }
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
+    
+    $arrImage = array();
+    foreach($_REQUEST['imageName'] as $k=>$v){
+        if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger'))
+           $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
+        //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
+        $arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
+        $arrImage[$k]['imageAlt'] = $_REQUEST['imageAlt'][$k];
+    }
+    $smarty->assign("arrImage",$arrImage);
     $master_bedroom_flooring = $_REQUEST['master_bedroom_flooring'];
     $gaCode = $_REQUEST['gaCode'];
     $other_bedroom_flooring = $_REQUEST['other_bedroom_flooring'];
@@ -181,7 +195,6 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("electrical_fitting",$electrical_fitting);
     $smarty->assign("others",$others);
 
-    $ErrorMsg = array();
     if(empty($projectName)){
        $ErrorMsg["projectName"] = "Project name can't be blank.";
     }elseif(!preg_match('/^[a-zA-Z0-9 ]+$/', $projectName)){
@@ -211,6 +224,9 @@ if(isset($_REQUEST['searchProject'])){
        $ErrorMsg["contactNumber"] = "Contact number can't be blank.";
     }elseif(stristr(strtolower($contactNumber),'proptiger')){
         $ErrorMsg["contactNumber"] = "Proptiger word is not allowed.";
+    }
+    elseif(!preg_match("/^[0-9]{10}$/",$contactNumber)) {
+        $ErrorMsg["contactNumber"] = "Please enter a valid mobile number.";
     }
     
     if(empty($metaTitle)){
@@ -293,7 +309,7 @@ if(isset($_REQUEST['searchProject'])){
   
     $smarty->assign("ErrorMsg", $ErrorMsg);
     //echo"<pre>"; 
-    // echo json_encode($_REQUEST);die;
+    // echo json_encode($ErrorMsg);die;
      if(count($ErrorMsg)>0) {
             // Do Nothing
        }
@@ -303,6 +319,8 @@ if(isset($_REQUEST['searchProject'])){
            $jsonArr = array();
            $jsonArr['project'] = $_REQUEST['projectName'];
            $jsonArr['builder'] = $_REQUEST['builderName'];
+           $jsonArr['builderLogo'] = 'logo.gif';
+           
            $jsonArr['locality'] = $_REQUEST['localityName'];
            $jsonArr['city'] = $_REQUEST['cityName'];
            $jsonArr['contactNumber'] = $_REQUEST['contactNumber'];
@@ -315,16 +333,34 @@ if(isset($_REQUEST['searchProject'])){
            
            //json array for price page
            $jsonArr['pricetable']['title'] = $_REQUEST['metaTitlePriceList'];
-           
+           //echo "<pre>";print_r($_REQUEST['price_unitName']);
+           $arrConfig = array();
            foreach($_REQUEST['configId'] as $k=>$v){
                if($_REQUEST['price_unitName'][$k] != ''){
-                    $jsonArr['pricetable'][$k]['type'] = $_REQUEST['price_unitName'][$k];
-                    $jsonArr['pricetable'][$k]['area'] = $_REQUEST['price_PerUnitArea'][$k];
-                    $jsonArr['pricetable'][$k]['rate'] = $_REQUEST['price_size'][$k];
-                    $jsonArr['pricetable'][$k]['bsp'] = $_REQUEST['price_size'][$k];
+                    $arrConfig[$k]['type'] = $_REQUEST['price_unitName'][$k];
+                    $arrConfig[$k]['area'] = $_REQUEST['price_PerUnitArea'][$k];
+                    $arrConfig[$k]['rate'] = $_REQUEST['price_size'][$k];
+                    $arrConfig[$k]['bsp'] = $_REQUEST['price_budget'][$k];
                }
             }
+            $jsonArr['pricetable'] = $arrConfig;
+            
+            $arrImgTitle = array();
+            $arrImgName = array();
+            $arrImgAlt = array();
+            foreach($_REQUEST['imageName'] as $k=>$v){
+                if($_REQUEST['imageAlt'][$k] != ''){
+                    $arrImgTitle[$k] = $_REQUEST['imageTitle'][$k];
+                    $arrImgName[$k] = $_REQUEST['imageName'][$k];
+                    $arrImgAlt[$k] = $_REQUEST['imageAlt'][$k];
+                }
+            }
+            
+            $jsonArr['slidingImages']['imgs'] = $arrImgName;
+            $jsonArr['slidingImages']['imgstitle'] = $arrImgTitle;
+            $jsonArr['slidingImages']['imgAlt'] = $arrImgAlt;
            //json array for specification page
+          //  echo "<pre>";print_r($_REQUEST);die;
            $jsonArr['specification']['title'] = $_REQUEST['metaTitleSpecification'];
            $jsonArr['specification']['specificationInfo']['Flooring']['MasterBedroom'] = $_REQUEST['master_bedroom_flooring'];
            $jsonArr['specification']['specificationInfo']['Flooring']['OtherBedroom'] = $_REQUEST['other_bedroom_flooring'];
@@ -365,10 +401,12 @@ if(isset($_REQUEST['searchProject'])){
            //json array for contact us
            $jsonArr['contactus']['title'] = $_REQUEST['metaTitleContactus'];
          //encoding the PHP array
-         //rmdir($ErrorMsg)
-            $fp = fopen('microsite.json', 'w');
-            fwrite($fp, json_encode($jsonArr));
-            fclose($fp);//die;
+           if(is_dir('microsite.json'))
+              rmdir('microsite.json');
+           $fp = fopen('microsite.json', 'w');
+           fwrite($fp, json_encode($jsonArr));
+           fclose($fp);//die;
+           $smarty->assign("succesMsg","<font color = green>Microsite code has been generated successfully</font>");
           
        }
 

@@ -70,6 +70,9 @@
                                 </form>
                             
                             </tr>  
+                            {if $succesMsg != ''}
+                                <tr><td colspan="2">{$succesMsg}</td></tr>
+                            {else}
                              <form method="post" enctype="multipart/form-data">    
                              <tr>
                                     <td  align = "center" colspan = "2">
@@ -102,7 +105,7 @@
 				</tr>
                                 <tr>
 				  <td width="20%" align="right" valign="top"><font color = "red">*</font><b>Contact :</b></td>
-				  <td width="30%" align="left" ><input type=text name="contactNumber" id="contactNumber" value="{$contactNumber}" style="width:357px;">
+				  <td width="30%" align="left" ><input type=text name="contactNumber" onkeypress="return isNumberKey(event)" id="contactNumber" value="{$contactNumber}" style="width:357px;">
                                       {if $ErrorMsg["contactNumber"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["contactNumber"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
                                 
@@ -149,6 +152,11 @@
                                   <td width="50%" align="left" valign = "top">&nbsp;</td>
 				</tr>
                                 <tr>
+				  <td width="20%" align="right" nowrap> <b>Specification Meta Title : </b></td>
+				  <td width="30%" align="left" ><input type=text name=metaTitleSpecification id=metaTitleSpecification value="{$metaTitleSpecification}" style="width:360px;"></td>
+				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				</tr>
+                                 <tr>
 				  <td width="20%" align="right" nowrap> <b>Floor Plan Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitleFloorPlan id=metaTitleFloorPlan value="{$metaTitleFloorPlan}" style="width:360px;"></td>
 				  <td width="50%" align="left" valign = "top">&nbsp;</td>
@@ -190,11 +198,14 @@
                                   </tr>
                                 <tr>
                                     <td   align="left"  valign ="top" colspan = "3"><b>Price :</b> </td>
-                                  </tr>
+                                </tr>
                                   
                                   <tr>
                                       <td width="100%" align="left"  valign ="top" colspan="3" style = "padding-left: 60px;">
                                           <table width = 40% align = "left" style = "border :1px solid; color: #677788;">
+                                              {if $ErrorMsg['configName'] != ''}
+                                                  <tr><td align = "left" colspan="4"><font color = "red">{$ErrorMsg['configName']}</font></td></tr>
+                                              {/if}
                                               <tr><td align = "left"><b>Unit Name</b></td>
                                                   <td align = "left"><b>Price Per Unit Area</b></td>
                                                   <td align = "left"><b>Size per sq ft</b></td>
@@ -250,6 +261,37 @@
                                       
                                       </td>
                                   </tr>
+                                  
+                                  <!--code for image title name and alt tag-->
+                                  <tr>
+                                    <td   align="left"  valign ="top" colspan = "3"><b>Slider Images :</b> </td>
+                                </tr>
+                                  
+                                  <tr>
+                                      <td width="100%" align="left"  valign ="top" colspan="3" style = "padding-left: 60px;">
+                                          <table width = 30% align = "left" style = "border :1px solid; color: #677788;">
+                                              {if $ErrorMsg['imgTitleName'] != ''}
+                                                  <tr><td align = "left" colspan="3"><font color = "red">{$ErrorMsg['imgTitleName']}</font></td></tr>
+                                              {/if}
+                                              <tr><td align = "left"><b>Name</b></td>
+                                                  <td align = "left"><b>Title</b></td>
+                                                  <td align = "left"><b>Alt Tag</b></td>
+                                              </tr>
+                                              {$cnt = 1}
+                                              {section name=imageDetail loop=5 step=0}
+                                              <tr>
+                                                  <td align = "center"><input type="text" name="imageName[]" value="slide-0{$cnt}.jpg" readonly=""></td>
+                                                  <td align = "center"><input type="text" name="imageTitle[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageTitle']}"></td>
+                                                  <td align = "center"><input type="text" name="imageAlt[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageAlt']}"></td>
+                                              </tr>
+                                              {$cnt = $cnt+1}
+                                             {/section}
+                                              
+                                          </table>
+                                      
+                                      </td>
+                                  </tr>
+                                  <!--end code for images-->
                                   <tr>
                                     <td   align="left"  valign ="top" colspan = "3">&nbsp;</td>
                                   </tr>
@@ -423,6 +465,7 @@
 				  </td>
 				</tr>
                                 </form>
+                                {/if}
 			    </TABLE>
 <!--			</fieldset>-->
 	            </td>
