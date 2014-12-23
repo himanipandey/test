@@ -51,7 +51,7 @@
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 		
-		{if $accessBuilder == ''}
+		{if $micrositeFlgExec == 1}
 		     
 <!--			<fieldset class="field-border">
 			  <legend><b>Message</b></legend>-->
