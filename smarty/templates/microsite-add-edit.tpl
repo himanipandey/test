@@ -77,13 +77,6 @@
                                     </td>
 				</tr>
 
-				<tr>
-                                    <td width="20%" align="right" ><font color = "red">*</font><b>Project Title :</b> </td>
-                                    <input type=hidden name="projectNameOld" id="projectNameOld" value="{$projectTitle}" style="width:357px;">
-                                    <td width="30%" align="left"><input type=text name=projectTitle id=projectTitle value="{$projectTitle}" style="width:357px;"></td>
-                                    {if $ErrorMsg["projectTitle"] != ''}
-                                    <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["projectTitle"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
-				</tr>
                                 <tr>
                                     <td width="20%" align="right" ><font color = "red">*</font><b>Project Name :</b> </td>
                                     <input type=hidden name="projectNameOld" id="projectNameOld" value="{$projectName}" style="width:357px;">
@@ -135,29 +128,55 @@
                                    </td>
                                </tr>
 				<tr>
-				  <td width="20%" align="right" > <b><font color = "red">*</font>Meta Title : </b></td>
+				  <td width="20%" align="right" > <b><font color = "red">*</font>Project Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitle id=metaTitle value="{$metaTitle}" style="width:360px;"></td>
 				  <td width="50%" align="left" valign = "top">
                                             <font color="red">{if $ErrorMsg["metaTitle"] != ''} {$ErrorMsg["metaTitle"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta title!</span></font>
                                    </td>
 				</tr>
 				<tr>
-				  <td width="20%" align="right" valign="top"><b><font color = "red">*</font>Meta Keywords :</b></td>
+				  <td width="20%" align="right" valign="top"><b>Project Meta Keywords :</b></td>
 				  <td width="30%" align="left" >
                                     <textarea name="metaKeywords" rows="10" cols="45">{$metaKeywords}</textarea>
                                   </td>
-                                  <td width="50%" align="left" valign = "top">
-                                            <font color="red">{if $ErrorMsg["metaKeywords"] != ''} {$ErrorMsg["metaKeywords"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta keywords!</span></font>
-                                   </td>
+                                  <td width="50%" align="left" valign = "top"> &nbsp; </td>
 				</tr>
 				<tr>
-				  <td width="20%" align="right" valign="top"><b><font color = "red">*</font>Meta Description :</b></td>
+				  <td width="20%" align="right" valign="top" nowrap><b>Project Meta Description :</b></td>
 				  <td width="30%" align="left" >
                                     <textarea name="metaDescription" rows="10" cols="45">{$metaDescription}</textarea>
 				  </td>
-                                  <td width="50%" align="left" valign = "top">
-                                            <font color="red">{if $ErrorMsg["metaDescription"] != ''} {$ErrorMsg["metaDescription"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta Description!</span></font>
-                                   </td>
+                                  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				</tr>
+                                <tr>
+				  <td width="20%" align="right" nowrap> <b>Floor Plan Meta Title : </b></td>
+				  <td width="30%" align="left" ><input type=text name=metaTitleFloorPlan id=metaTitleFloorPlan value="{$metaTitleFloorPlan}" style="width:360px;"></td>
+				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				</tr>
+                                <tr>
+				  <td width="20%" align="right" nowrap> <b>Payment Plan Meta Title : </b></td>
+				  <td width="30%" align="left" ><input type=text name=metaTitlePaymentPlan id=metaTitlePaymentPlan value="{$metaTitlePaymentPlan}" style="width:360px;"></td>
+				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				</tr>
+                                <tr>
+				  <td width="20%" align="right" > <b>Price List Meta Title : </b></td>
+				  <td width="30%" align="left" ><input type=text name=metaTitlePriceList id=metaTitlePriceList value="{$metaTitlePriceList}" style="width:360px;"></td>
+				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				</tr>
+                                <tr>
+				  <td width="20%" align="right" nowrap> <b>Site Plan Meta Title : </b></td>
+				  <td width="30%" align="left" ><input type=text name=metaTitleSitePlan id=metaTitleSitePlan value="{$metaTitleSitePlan}" style="width:360px;"></td>
+				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				</tr>
+                                <tr>
+				  <td width="20%" align="right" nowrap> <b>Location Map Meta Title : </b></td>
+				  <td width="30%" align="left" nowrap><input type=text name=metaTitleLocationMap id=metaTitleLocationMap value="{$metaTitleLocationMap}" style="width:360px;"></td>
+				  <td width="50%" align="left" valign = "top"></td>
+				</tr>
+                                <tr>
+				  <td width="20%" align="right" nowrap> <b>Contactus Meta Title : </b></td>
+				  <td width="30%" align="left" ><input type=text name=metaTitleContactus id=metaTitleContactus value="{$metaTitleContactus}" style="width:360px;"></td>
+				  <td width="50%" align="left" valign = "top">&nbsp;</td>
 				</tr>
                                 
                                 <tr>
@@ -165,7 +184,7 @@
                                     <td width="30%" align="left" >
                                           <textarea name="gaCode" rows="10" cols="45">{$gaCode}</textarea>
                                     </td> 
-                                     <td width="50%" align="left">
+                                     <td width="50%" align="left" valign = "top">
                                             <font color="red">{if $ErrorMsg["gaCode"] != ''} {$ErrorMsg["gaCode"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta Description!</span></font>
                                    </td>
                                   </tr>
@@ -181,15 +200,52 @@
                                                   <td align = "left"><b>Size per sq ft</b></td>
                                                   <td align = "left"><b>BSP</b></td>
                                               </tr>
-                                              {foreach from = $arrProjectConfig key = key item = item}
+                                              {$cnt = 0}
+                                              {if $projectId != ''}
+                                                {foreach from = $arrProjectConfig key = key item = item}
+                                                <tr>
+                                                <input type = "hidden" name = "configId[]" value = "{$key}">
+                                                    <td align = "center"><input type="text" name="price_unitName[]" value="{$item['price_unitName']}"></td>
+                                                    <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$item['price_PerUnitArea']}"></td>
+                                                    <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$item['price_size']}"></td>
+                                                    <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$item['price_budget']}"></td>
+                                                </tr>
+
+                                                {$cnt = $key}
+                                                {/foreach} 
+                                              {/if}
+                                              {if $cnt == 0 && $projectId == ''}{$key = 1}{else}{$key = $cnt+1}{/if}
                                               <tr>
                                               <input type = "hidden" name = "configId[]" value = "{$key}">
-                                                  <td align = "center"><input type="text" name="price_unitName[]" value="{$item['price_unitName']}"></td>
-                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$item['price_PerUnitArea']}"></td>
-                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$item['price_size']}"></td>
-                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$item['price_budget']}"></td>
+                                                  <td align = "center"><input type="text" name="price_unitName[]" value="{$arrProjectConfig[$key]['price_unitName']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$arrProjectConfig[$key]['price_PerUnitArea']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$arrProjectConfig[$key]['price_size']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$arrProjectConfig[$key]['price_budget']}"></td>
                                               </tr>
-                                              {/foreach}
+                                              {if $cnt == 0 && $projectId == ''}{$key = 2}{else}{$key = $cnt+2}{/if}
+                                              <tr>
+                                              <input type = "hidden" name = "configId[]" value = "{$key}">
+                                                  <td align = "center"><input type="text" name="price_unitName[]" value="{$arrProjectConfig[$key]['price_unitName']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$arrProjectConfig[$key]['price_PerUnitArea']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$arrProjectConfig[$key]['price_size']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$arrProjectConfig[$key]['price_budget']}"></td>
+                                              </tr>
+                                              {if $cnt == 0 && $projectId == ''}{$key = 3}{else}{$key = $cnt+3}{/if}
+                                              <tr>
+                                              <input type = "hidden" name = "configId[]" value = "{$key}">
+                                                  <td align = "center"><input type="text" name="price_unitName[]" value="{$arrProjectConfig[$key]['price_unitName']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$arrProjectConfig[$key]['price_PerUnitArea']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$arrProjectConfig[$key]['price_size']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$arrProjectConfig[$key]['price_budget']}"></td>
+                                              </tr>
+                                              {if $cnt == 0 && $projectId == ''}{$key = 4}{else}{$key = $cnt+4}{/if}
+                                              <tr>
+                                              <input type = "hidden" name = "configId[]" value = "{$key}">
+                                                  <td align = "center"><input type="text" name="price_unitName[]" value="{$arrProjectConfig[$key]['price_unitName']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$arrProjectConfig[$key]['price_PerUnitArea']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$arrProjectConfig[$key]['price_size']}"></td>
+                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$arrProjectConfig[$key]['price_budget']}"></td>
+                                              </tr>
                                           </table>
                                       
                                       </td>

@@ -93,7 +93,6 @@ if(isset($_REQUEST['searchProject'])){
     
    // echo "<pre>";print_r($_REQUEST);die;
     $projectName = $_REQUEST['projectName'];
-    $projectTitle = $_REQUEST['projectTitle'];
     $projectId = $_REQUEST['projectId'];
     $builderName = $_REQUEST['builderName'];
     $cityName = $_REQUEST['cityName'];
@@ -104,6 +103,14 @@ if(isset($_REQUEST['searchProject'])){
     $metaTitle = $_REQUEST['metaTitle'];
     $metaKeywords = $_REQUEST['metaKeywords'];
     $metaDescription = $_REQUEST['metaDescription'];
+    
+    $metaTitleSpecification = $_REQUEST['metaTitleSpecification'];
+    $metaTitleFloorPlan = $_REQUEST['metaTitleFloorPlan'];
+    $metaTitlePaymentPlan = $_REQUEST['metaTitlePaymentPlan'];
+    $metaTitlePriceList = $_REQUEST['metaTitlePriceList'];
+    $metaTitleSitePlan = $_REQUEST['metaTitleSitePlan'];
+    $metaTitleLocationMap = $_REQUEST['metaTitleLocationMap'];
+    $metaTitleContactus = $_REQUEST['metaTitleContactus'];
     
     $arrProjectConfig = array();
     foreach($_REQUEST['configId'] as $k=>$v){
@@ -138,7 +145,6 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("localityName",$localityName);
     $smarty->assign("contactNumber",$contactNumber);    
     $smarty->assign("projectName",$projectName);
-    $smarty->assign("projectTitle",$projectTitle);
     $smarty->assign("projectDesc",$projectDesc);
     $smarty->assign("projectDisclaimer",$projectDisclaimer);
     $smarty->assign("cityName",$cityName);
@@ -146,6 +152,15 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("metaTitle",$metaTitle);
     $smarty->assign("metaKeywords",$metaKeywords);
     $smarty->assign("metaDescription",$metaDescription);
+
+    $smarty->assign("metaTitleSpecification",$metaTitleSpecification);
+    $smarty->assign("metaTitleFloorPlan",$metaTitleFloorPlan);
+    $smarty->assign("metaTitlePaymentPlan",$metaTitlePaymentPlan);
+    $smarty->assign("metaTitlePriceList",$metaTitlePriceList);
+    $smarty->assign("metaTitleSitePlan",$metaTitleSitePlan);
+    $smarty->assign("metaTitleLocationMap",$metaTitleLocationMap);
+    $smarty->assign("metaTitleContactus",$metaTitleContactus);
+    
     $smarty->assign("gaCode",$gaCode);
     $smarty->assign("master_bedroom_flooring",$master_bedroom_flooring);
     $smarty->assign("other_bedroom_flooring",$other_bedroom_flooring);
@@ -174,14 +189,7 @@ if(isset($_REQUEST['searchProject'])){
     }elseif(stristr(strtolower($projectName),'proptiger')){
         $ErrorMsg["projectName"] = "Proptiger word is not allowed.";
     }
-    
-    if(empty($projectTitle)){
-       $ErrorMsg["projectTitle"] = "project title can't be blank.";
-    }elseif(!preg_match('/^[a-zA-Z0-9 ]+$/', $projectTitle)){
-       $ErrorMsg["projectTitle"] = "Special characters are not allowed.";
-    }elseif(stristr(strtolower($projectTitle),'proptiger')){
-        $ErrorMsg["projectTitle"] = "Proptiger word is not allowed.";
-    }
+  
     
     if(empty($builderName)){
        $ErrorMsg["builderName"] = "Builder name can't be blank.";
@@ -210,16 +218,7 @@ if(isset($_REQUEST['searchProject'])){
     }elseif(stristr(strtolower($metaTitle),'proptiger')){
         $ErrorMsg["metaTitle"] = "Proptiger word is not allowed.";
     }
-     if(empty($metaKeywords)){
-       $ErrorMsg["metaKeywords"] = "Meta keywords can't be blank.";
-    }elseif(stristr(strtolower($metaKeywords),'proptiger')){
-        $ErrorMsg["metaKeywords"] = "Proptiger word is not allowed.";
-    }
-    if(empty($metaDescription)){
-       $ErrorMsg["metaDescription"] = "Meta description can't be blank.";
-    }elseif(stristr(strtolower($metaDescription),'proptiger')){
-        $ErrorMsg["metaDescription"] = "Proptiger word is not allowed.";
-    }
+    
     if(empty($projectDisclaimer)){
        $ErrorMsg["projectDisclaimer"] = "Project disclaimer can't be blank.";
     }elseif(stristr(strtolower($projectDisclaimer),'proptiger')){
@@ -300,31 +299,77 @@ if(isset($_REQUEST['searchProject'])){
        }
        else {
            
-           //json array
+           //json array for home page
            $jsonArr = array();
-           $jsonArr['title'] = $_REQUEST['projectTitle'];
            $jsonArr['project'] = $_REQUEST['projectName'];
            $jsonArr['builder'] = $_REQUEST['builderName'];
            $jsonArr['locality'] = $_REQUEST['localityName'];
            $jsonArr['city'] = $_REQUEST['cityName'];
            $jsonArr['contactNumber'] = $_REQUEST['contactNumber'];
-           $jsonArr['project'] = $_REQUEST['projectName'];
-           $jsonArr['builder'] = $_REQUEST['builderName'];
-           $jsonArr['locality'] = $_REQUEST['localityName'];
-           $jsonArr['city'] = $_REQUEST['cityName'];
-           $jsonArr['contactNumber'] = $_REQUEST['contactNumber'];
-           $jsonArr['description'] = $_REQUEST['projectDesc'];
-           $jsonArr['disclaimer'] = $_REQUEST['projectDisclaimer'];
+           
+           $jsonArr['home']['description'] = $_REQUEST['projectDesc'];
+           $jsonArr['home']['disclaimer'] = $_REQUEST['projectDisclaimer'];
+           $jsonArr['home']['title'] = $_REQUEST['metaTitle'];
+           $jsonArr['home']['metaKeyword'] = $_REQUEST['metaKeywords'];
+           $jsonArr['home']['metaDescription'] = $_REQUEST['metaDescription'];
+           
+           //json array for price page
+           $jsonArr['pricetable']['title'] = $_REQUEST['metaTitlePriceList'];
            
            foreach($_REQUEST['configId'] as $k=>$v){
-                $jsonArr['pricetable']['type'] = $_REQUEST['price_unitName'][$k];
-                $arrProjectConfig['pricetable']['area'] = $_REQUEST['price_PerUnitArea'][$k];
-                $arrProjectConfig['pricetable']['rate'] = $_REQUEST['price_size'][$k];
-                $arrProjectConfig['pricetable']['bsp'] = $_REQUEST['price_size'][$k];
+               if($_REQUEST['price_unitName'][$k] != ''){
+                    $jsonArr['pricetable'][$k]['type'] = $_REQUEST['price_unitName'][$k];
+                    $jsonArr['pricetable'][$k]['area'] = $_REQUEST['price_PerUnitArea'][$k];
+                    $jsonArr['pricetable'][$k]['rate'] = $_REQUEST['price_size'][$k];
+                    $jsonArr['pricetable'][$k]['bsp'] = $_REQUEST['price_size'][$k];
+               }
             }
+           //json array for specification page
+           $jsonArr['specification']['title'] = $_REQUEST['metaTitleSpecification'];
+           $jsonArr['specification']['specificationInfo']['Flooring']['MasterBedroom'] = $_REQUEST['master_bedroom_flooring'];
+           $jsonArr['specification']['specificationInfo']['Flooring']['OtherBedroom'] = $_REQUEST['other_bedroom_flooring'];
+           $jsonArr['specification']['specificationInfo']['Flooring']['LivingRoom'] = $_REQUEST['living_room_flooring'];
+           $jsonArr['specification']['specificationInfo']['Flooring']['Kitchen'] = $_REQUEST['kitchen_flooring'];
+           $jsonArr['specification']['specificationInfo']['Flooring']['Toilets'] = $_REQUEST['toilets_flooring'];
+           $jsonArr['specification']['specificationInfo']['Flooring']['Balcony'] = $_REQUEST['balcony_flooring'];
+          
+           $jsonArr['specification']['specificationInfo']['Walls']['Interior'] = $_REQUEST['interior_walls'];
+           $jsonArr['specification']['specificationInfo']['Walls']['Exterior'] = $_REQUEST['exterior_walls'];
+           $jsonArr['specification']['specificationInfo']['Walls']['Kitchen'] = $_REQUEST['kitchen_walls'];
+           $jsonArr['specification']['specificationInfo']['Walls']['Toilets'] = $_REQUEST['toilets_walls'];
            
+           $jsonArr['specification']['specificationInfo']['Fittings']['Kitchen'] = $_REQUEST['kitchen_fixtures'];
+           $jsonArr['specification']['specificationInfo']['Fittings']['Toilets'] = $_REQUEST['toilets_fixtures'];
+           
+           $jsonArr['specification']['specificationInfo']['Doors']['Main'] = $_REQUEST['main_doors'];
+           $jsonArr['specification']['specificationInfo']['Doors']['Internal'] = $_REQUEST['internal_doors'];
+           
+           $jsonArr['specification']['specificationInfo']['Windows']['Window'] = $_REQUEST['Windows'];
+           
+           $jsonArr['specification']['specificationInfo']['Electrical']['Fitting'] = $_REQUEST['electrical_fitting'];
+           
+           $jsonArr['specification']['specificationInfo']['Others']['Other'] = $_REQUEST['others'];
+           
+           //json array for floor plan page
+           $jsonArr['floorplan']['title'] = $_REQUEST['metaTitleFloorPlan'];
+           
+           //json array for payment plan
+           $jsonArr['paymentplan']['title'] = $_REQUEST['metaTitlePaymentPlan'];
+           
+           //json array for site plan
+           $jsonArr['siteplan']['title'] = $_REQUEST['metaTitleSitePlan'];
+           
+           //json array for location map
+           $jsonArr['locationmap']['title'] = $_REQUEST['metaTitleLocationMap'];
+           
+           //json array for contact us
+           $jsonArr['contactus']['title'] = $_REQUEST['metaTitleContactus'];
          //encoding the PHP array
-            echo json_encode($arrProjectConfig);die;
+         //rmdir($ErrorMsg)
+            $fp = fopen('microsite.json', 'w');
+            fwrite($fp, json_encode($jsonArr));
+            fclose($fp);//die;
+          
        }
 
 }
