@@ -365,7 +365,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         $arrAllInner['PHASE'] = $arrAll['PHASE'][$count];
         $arrAllInner['STAGE'] = $arrAll['STAGE'][$count];
         $arrAllInner['STAGE MOVEMENT DATE'] = $arrAll['STAGE MOVEMENT DATE'][$count];
-        $arrAllInner['STAGE MOVEMENT DONE BY'] = $arrAll['CITY'][$count];
+        $arrAllInner['STAGE MOVEMENT DONE BY'] = $arrAll['STAGE MOVEMENT DONE BY'][$count];
         $arrAllInner['UPDATION LABEL'] = $arrAll['UPDATION LABEL'][$count];
          $count++;
         echocsv( $arrAllInner );
