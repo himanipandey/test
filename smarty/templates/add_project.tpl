@@ -142,11 +142,9 @@
 	function skipUpdationCycleChanged(value){
 		if(value=="0"){
 			$(".skipUpdationCycleBlock").hide();
-                        $("#skip_b2b").val(0);
 		}
 		else{
 			$(".skipUpdationCycleBlock").show();
-                        $("#skip_b2b").val(1);
 		}
 	}
        
@@ -805,7 +803,6 @@
 								  
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font>
-                                                                  <input type = "text" name = "skip_b2b" id = "skip_b2b" value="{$skip_b2b}">
                                                                   </td>
 							   </tr>
                                <tr>                         {if $skipUpdtnCycle == 1}
@@ -844,7 +841,18 @@
                                                                    </td>
                                                             </tr>
                                                             {/if}
-
+                                                            {if $skipUpdtnCycle == 1}
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign ="top"><b> Skip B2B: </b> </td><td width="30%" align="left">
+                                                                        <select name="skip_b2b">
+                                                                            <option value="0" {if $skip_b2b == 0} selected = selected {/if}>No</option>
+                                                                            <option value="1" {if $skip_b2b == 1} selected {/if}>Yes</option>
+                                                                        </select>
+                                                                        <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
+                                                                    </td>
+                                                                    <td width="50%" align="left"><font color="red"></font></td>
+                                                                </tr>
+                                                            {/if}
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
 									<input type="checkbox" name="redevelopmentProject" {if $redevelopmentProject} checked {/if} />

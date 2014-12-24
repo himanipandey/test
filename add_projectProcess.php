@@ -109,7 +109,6 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
             $txtSkipUpdationRemark = $_POST["txtSkipUpdationRemark"];
             $skip_b2b = $_REQUEST['skip_b2b'];
-                       
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
                $suburbSelect = Suburb::SuburbArr($_POST['cityId']);
@@ -578,7 +577,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['expected_supply_date'] = $exp_launch_date;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
             $arrInsertUpdateProject['no_of_towers'] = $numberOfTowers;
-            $arrInsertUpdateProject['skip_b2b'] = $skip_b2b;
+            if(isset($_REQUEST['skip_b2b']))
+                $arrInsertUpdateProject['skip_b2b'] = $skip_b2b;
             
             if($skipUpdationCycle == skipUpdationCycle_Id)
                 $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
