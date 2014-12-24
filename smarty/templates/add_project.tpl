@@ -142,9 +142,11 @@
 	function skipUpdationCycleChanged(value){
 		if(value=="0"){
 			$(".skipUpdationCycleBlock").hide();
+                        $("#skip_b2b").val(0);
 		}
 		else{
 			$(".skipUpdationCycleBlock").show();
+                        $("#skip_b2b").val(1);
 		}
 	}
        
@@ -802,7 +804,9 @@
 									</select>
 								  
 								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
+								  <td width="50%" align="left"><font color="red"></font>
+                                                                  <input type = "text" name = "skip_b2b" id = "skip_b2b" value="{$skip_b2b}">
+                                                                  </td>
 							   </tr>
                                <tr>                         {if $skipUpdtnCycle == 1}
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
@@ -815,6 +819,7 @@
 								<td width="50%" align="left"><font color="red"></font></td>
                                                             {else}
                                                             {/if}
+                                                            
 							   </tr>
 
                                                            {if $skipUpdtnCycle == 1}

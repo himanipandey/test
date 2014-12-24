@@ -108,6 +108,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $completionDate = $_POST["completionDate"];
             $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
             $txtSkipUpdationRemark = $_POST["txtSkipUpdationRemark"];
+            $skip_b2b = $_REQUEST['skip_b2b'];
                        
             /***************Query for suburb selected************/
             if( $_POST['cityId'] != '' ) {
@@ -186,7 +187,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("completionDate", $completionDate);
             $smarty->assign("redevelopmentProject", $redevelopmentProject);
             $smarty->assign("txtSkipUpdationRemark", $txtSkipUpdationRemark);
-            
+            $smarty->assign("skip_b2b", $skip_b2b);
             
             /***********Folder name**********/
             if(!empty($builderId)){
@@ -577,6 +578,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $arrInsertUpdateProject['expected_supply_date'] = $exp_launch_date;
             $arrInsertUpdateProject['updated_by'] = $_SESSION['adminId'];
             $arrInsertUpdateProject['no_of_towers'] = $numberOfTowers;
+            $arrInsertUpdateProject['skip_b2b'] = $skip_b2b;
+            
             if($skipUpdationCycle == skipUpdationCycle_Id)
                 $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
             else if($skipUpdationCycle == 0 && $updationCycleIdOld == skipUpdationCycle_Id)
@@ -816,6 +819,8 @@ elseif ($projectId!='') {
     $smarty->assign("txtProjectLocation", $txtProjectLocation);
     $smarty->assign("bank_arr", projectBankList($projectId));
     $smarty->assign("numberOfTowers", $ProjectDetail->no_of_towers);
+    $smarty->assign("skip_b2b", $ProjectDetail->skip_b2b);
+    
     $booking_status_id = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical'),'select' => 
                     'BOOKING_STATUS_ID'));
     $smarty->assign("bookingStatus", $booking_status_id[0]->booking_status_id);
