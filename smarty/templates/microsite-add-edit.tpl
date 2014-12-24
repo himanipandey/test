@@ -188,20 +188,18 @@
 				</tr>
                                 
                                 <tr>
-                                    <td width="20%" align="left"  valign ="top"><b><font color = "red">*</font>GA CODE :</b> </td>
+                                    <td width="20%" align="left"  valign ="top"><b>GA CODE :</b> </td>
                                     <td width="30%" align="left" >
                                           <textarea name="gaCode" rows="10" cols="45">{$gaCode}</textarea>
                                     </td> 
-                                     <td width="50%" align="left" valign = "top">
-                                            <font color="red">{if $ErrorMsg["gaCode"] != ''} {$ErrorMsg["gaCode"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter meta Description!</span></font>
-                                   </td>
+                                     <td width="50%" align="left" valign = "top">&nbsp;</td>
                                   </tr>
                                 <tr>
                                     <td   align="left"  valign ="top" colspan = "3"><b>Price :</b> </td>
                                 </tr>
                                   
                                   <tr>
-                                      <td width="100%" align="left"  valign ="top" colspan="3" style = "padding-left: 60px;">
+                                      <td width="100%" align="left"  valign ="top" colspan="2" style = "padding-left: 60px;">
                                           <table width = 40% align = "left" style = "border :1px solid; color: #677788;">
                                               {if $ErrorMsg['configName'] != ''}
                                                   <tr><td align = "left" colspan="4"><font color = "red">{$ErrorMsg['configName']}</font></td></tr>
@@ -209,7 +207,6 @@
                                               <tr><td align = "left"><b>Unit Name</b></td>
                                                   <td align = "left"><b>Price Per Unit Area</b></td>
                                                   <td align = "left"><b>Size per sq ft</b></td>
-                                                  <td align = "left"><b>BSP</b></td>
                                               </tr>
                                               {$cnt = 0}
                                               {if $projectId != ''}
@@ -219,7 +216,6 @@
                                                     <td align = "center"><input type="text" name="price_unitName[]" value="{$item['price_unitName']}"></td>
                                                     <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$item['price_PerUnitArea']}"></td>
                                                     <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$item['price_size']}"></td>
-                                                    <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$item['price_budget']}"></td>
                                                 </tr>
 
                                                 {$cnt = $key}
@@ -231,7 +227,6 @@
                                                   <td align = "center"><input type="text" name="price_unitName[]" value="{$arrProjectConfig[$key]['price_unitName']}"></td>
                                                   <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$arrProjectConfig[$key]['price_PerUnitArea']}"></td>
                                                   <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$arrProjectConfig[$key]['price_size']}"></td>
-                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$arrProjectConfig[$key]['price_budget']}"></td>
                                               </tr>
                                               {if $cnt == 0 && $projectId == ''}{$key = 2}{else}{$key = $cnt+2}{/if}
                                               <tr>
@@ -239,7 +234,6 @@
                                                   <td align = "center"><input type="text" name="price_unitName[]" value="{$arrProjectConfig[$key]['price_unitName']}"></td>
                                                   <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$arrProjectConfig[$key]['price_PerUnitArea']}"></td>
                                                   <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$arrProjectConfig[$key]['price_size']}"></td>
-                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$arrProjectConfig[$key]['price_budget']}"></td>
                                               </tr>
                                               {if $cnt == 0 && $projectId == ''}{$key = 3}{else}{$key = $cnt+3}{/if}
                                               <tr>
@@ -247,7 +241,6 @@
                                                   <td align = "center"><input type="text" name="price_unitName[]" value="{$arrProjectConfig[$key]['price_unitName']}"></td>
                                                   <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$arrProjectConfig[$key]['price_PerUnitArea']}"></td>
                                                   <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$arrProjectConfig[$key]['price_size']}"></td>
-                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$arrProjectConfig[$key]['price_budget']}"></td>
                                               </tr>
                                               {if $cnt == 0 && $projectId == ''}{$key = 4}{else}{$key = $cnt+4}{/if}
                                               <tr>
@@ -255,7 +248,6 @@
                                                   <td align = "center"><input type="text" name="price_unitName[]" value="{$arrProjectConfig[$key]['price_unitName']}"></td>
                                                   <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_PerUnitArea[]" value="{$arrProjectConfig[$key]['price_PerUnitArea']}"></td>
                                                   <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_size[]" value="{$arrProjectConfig[$key]['price_size']}"></td>
-                                                  <td align = "center"><input onkeypress="return isNumberKey(event)" type="text" name="price_budget[]" value="{$arrProjectConfig[$key]['price_budget']}"></td>
                                               </tr>
                                           </table>
                                       
@@ -280,7 +272,7 @@
                                               {$cnt = 1}
                                               {section name=imageDetail loop=5 step=0}
                                               <tr>
-                                                  <td align = "center"><input type="text" name="imageName[]" value="slide-0{$cnt}.jpg" readonly=""></td>
+                                                  <td align = "center"><input type="text" name="imageName[]" value="slider-0{$cnt}.jpg" readonly=""></td>
                                                   <td align = "center"><input type="text" name="imageTitle[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageTitle']}"></td>
                                                   <td align = "center"><input type="text" name="imageAlt[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageAlt']}"></td>
                                               </tr>
