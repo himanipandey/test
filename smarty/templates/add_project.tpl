@@ -802,7 +802,8 @@
 									</select>
 								  
 								  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
+								  <td width="50%" align="left"><font color="red"></font>
+                                                                  </td>
 							   </tr>
                                <tr>                         {if $skipUpdtnCycle == 1}
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
@@ -815,6 +816,7 @@
 								<td width="50%" align="left"><font color="red"></font></td>
                                                             {else}
                                                             {/if}
+                                                            
 							   </tr>
 
                                                            {if $skipUpdtnCycle == 1}
@@ -839,7 +841,18 @@
                                                                    </td>
                                                             </tr>
                                                             {/if}
-
+                                                            {if $skipUpdtnCycle == 1}
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign ="top"><b> Skip B2B: </b> </td><td width="30%" align="left">
+                                                                        <select name="skip_b2b">
+                                                                            <option value="0" {if $skip_b2b == 0} selected = selected {/if}>No</option>
+                                                                            <option value="1" {if $skip_b2b == 1} selected {/if}>Yes</option>
+                                                                        </select>
+                                                                        <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
+                                                                    </td>
+                                                                    <td width="50%" align="left"><font color="red"></font></td>
+                                                                </tr>
+                                                            {/if}
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
 									<input type="checkbox" name="redevelopmentProject" {if $redevelopmentProject} checked {/if} />
