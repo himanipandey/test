@@ -1696,7 +1696,7 @@ function fetchProjectCallingLinks($projectId, $projectType, $audioLinkChk = '') 
     else
         $and = "";
     $qry = "SELECT 
-               d.AudioLink,a.FNAME,d.CampaignName,d.Remark,d.ContactNumber,d.StartTime,d.EndTime,p.BROKER_ID,p.CallId 
+               d.AudioLink,a.FNAME,d.CampaignName,d.Remark,d.ContactNumber,d.StartTime,d.EndTime,d.media_service_status,p.BROKER_ID,p.CallId 
             FROM 
                (" . CALLDETAILS . " d LEFT JOIN " . CALLPROJECT . " p 
             ON
@@ -1713,6 +1713,18 @@ function fetchProjectCallingLinks($projectId, $projectType, $audioLinkChk = '') 
     $arrCallLink = array();
     if (mysql_num_rows($res) > 0) {
         while ($data = mysql_fetch_assoc($res)) {
+            if($data['media_service_status']=='Uploaded'){
+                $url = AUDIO_SERVICE_URL."?objectType=call&objectId=".$data['CallId'];
+                $content = file_get_contents($url);
+                $imgPath = json_decode($content);
+                
+                foreach($imgPath->data as $k1=>$v1){
+                    $service_audio_path = $v1->absoluteUrl;
+                }
+                if(isset($service_audio_path) && $service_audio_path!='')
+                    $data['AudioLink']=$service_audio_path;
+            }    
+
             array_push($arrCallLink, $data);
         }
     }
