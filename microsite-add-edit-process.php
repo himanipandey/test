@@ -403,6 +403,7 @@ if(isset($_REQUEST['searchProject'])){
          //encoding the PHP array
            if(is_dir('microsite.json'))
               rmdir('microsite.json');
+           touch('microsite.json',0777);
            $fp = fopen('microsite.json', 'w');
            fwrite($fp, json_encode($jsonArr));
            fclose($fp);//die;
