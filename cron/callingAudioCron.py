@@ -41,9 +41,9 @@ def download_audio(url, CallId):
 def audio_poster(objectType, objectId, documentType, priority, filename):
     payload = {"objectType":objectType, "objectId":objectId, "documentType":documentType, "priority":priority}
     files = {'file': open(filename, 'rb')}
-    print 'alok:',(target_url, payload, files)
+    #print 'alok:',(target_url, payload, files)
     r = requests.post(target_url, data=payload, files=files)
-    print 'alok2',r.text
+    #print 'alok2',r.text
     if r.status_code==200:
         logger.debug('%s has posted for Call Id-%s'%(filename, objectId))
         os.remove(filename)
