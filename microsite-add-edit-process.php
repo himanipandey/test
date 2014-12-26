@@ -336,7 +336,7 @@ if(isset($_REQUEST['searchProject'])){
                  $arrConfig[$k]['type'] = $_REQUEST['price_unitName'][$k];
                  $arrConfig[$k]['area'] = $_REQUEST['price_PerUnitArea'][$k];
                  $arrConfig[$k]['rate'] = $_REQUEST['price_size'][$k];
-                 $arrConfig[$k]['BSP'] = $_REQUEST['price_size'][$k]*$_REQUEST['price_PerUnitArea'][$k];
+                 $arrConfig[$k]['BSP'] = "".$_REQUEST['price_size'][$k]*$_REQUEST['price_PerUnitArea'][$k]."";
                  if($cntCont <= 9)
                     $arrFloorImg[] = "floorplan-0$cntCont.jpg";
                  else
@@ -401,9 +401,14 @@ if(isset($_REQUEST['searchProject'])){
         $jsonArr['pricelist']['location-map']['title'] = $_REQUEST['metaTitleLocationMap'];
         $arrLocationImg = array('locationmap-01.jpg','locationmap-02.jpg','locationmap-03.jpg');
         $jsonArr['pricelist']['location-map']['locationmap'] = $arrLocationImg;
+        
+         //json array for location map
+        $jsonArr['pricelist']['price-list']['title'] = $_REQUEST['metaTitlePriceList'];
+        //$arrLocationImg = array('locationmap-01.jpg','locationmap-02.jpg','locationmap-03.jpg');
+        //$jsonArr['pricelist']['location-map']['locationmap'] = $arrLocationImg;
 
         //json array for contact us
-        $jsonArr['pricelist']['contactus']['title'] = $_REQUEST['metaTitleContactus'];
+        $jsonArr['pricelist']['contact-us']['title'] = $_REQUEST['metaTitleContactus'];
       //encoding the PHP array
         if(is_dir('microsite.json'))
            rmdir('microsite.json');
@@ -411,10 +416,10 @@ if(isset($_REQUEST['searchProject'])){
         $fp = fopen('microsite.json', 'w');
         fwrite($fp, json_encode($jsonArr));
         fclose($fp);//die;
-        $smarty->assign("succesMsg","<font color = green>Microsite code has been generated successfully</font>"); 
+        $smarty->assign("succesMsg","<font color = green>Microsite data has been generated successfully</font>"); 
     
       //  $filename ="microsite.json";
-        $file = 'microsite.json';
+      /*  $file = 'microsite.json';
         header("Cache-Control: public");
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename={$file}");
@@ -422,7 +427,7 @@ if(isset($_REQUEST['searchProject'])){
         header("Content-Transfer-Encoding: binary");
 
         readfile($file);
-        
+        */
     }
 }
 

@@ -72,6 +72,7 @@
                             </tr>  
                             {if $succesMsg != ''}
                                 <tr><td colspan="2">{$succesMsg}</td></tr>
+                                <tr><td colspan="2"><a rel="nofollow" href="micrositeDownload.php?download_file=microsite.json">Download Microsite Data here</a></td></tr>
                             {else}
                              <form method="post" enctype="multipart/form-data">    
                              <tr>
