@@ -4,7 +4,7 @@
  * Created By Vimlesh Rajput on 26th Dec 2014
  */
 
- $file_url = 'microsite.json';
+ $file_url = '/tmp/microsite.json';
 header('Content-Type: application/octet-stream');
 header("Content-Transfer-Encoding: Binary"); 
 header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\""); 
