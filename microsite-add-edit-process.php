@@ -410,10 +410,10 @@ if(isset($_REQUEST['searchProject'])){
         //json array for contact us
         $jsonArr['pricelist']['contact-us']['title'] = $_REQUEST['metaTitleContactus'];
       //encoding the PHP array
-        if(is_dir('microsite.json'))
-           rmdir('microsite.json');
-        touch('microsite.json',0777);
-        $fp = fopen('microsite.json', 'w');
+        if(is_dir('/tmp/microsite.json'))
+           rmdir('/tmp/microsite.json');
+        touch('/tmp/microsite.json',0777);
+        $fp = fopen('/tmp/microsite.json', 'w');
         fwrite($fp, json_encode($jsonArr));
         fclose($fp);//die;
         $smarty->assign("succesMsg","<font color = green>Microsite data has been generated successfully</font>"); 
