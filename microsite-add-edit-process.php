@@ -9,7 +9,7 @@
 if(isset($_REQUEST['searchProject'])){ 
     $projectId = $_REQUEST['projectId'];
     $smarty->assign("projectId",$projectId);
-    $projectUrl = "http://nightly.proptiger-ws.com:8080/app/v4/project-detail/$projectId";
+    $projectUrl = SERVER_URL."/app/v4/project-detail/$projectId";
     $data = get_data($projectUrl);
     $obj = json_decode($data);
 //echo "<pre>";print_r($obj);
