@@ -118,7 +118,7 @@ if(isset($_REQUEST['searchProject'])){
     $ErrorMsg = array();
     
     $arrProjectConfig = array();
-echo "<pre>";print_r($_REQUEST['price_unitName']);die;
+//echo "<pre>";print_r($_REQUEST['price_unitName']);die;
     foreach($_REQUEST['configId'] as $k=>$v){
         if(stristr(strtolower($_REQUEST['price_unitName'][$k]),'proptiger'))
                $ErrorMsg['configName'] = "Proptiger word is not allowed."; 
@@ -130,6 +130,7 @@ echo "<pre>";print_r($_REQUEST['price_unitName']);die;
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
     
     $arrImage = array();
+echo "<pre>"; print_r($_REQUEST['imageName']);die;
     foreach($_REQUEST['imageName'] as $k=>$v){
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
