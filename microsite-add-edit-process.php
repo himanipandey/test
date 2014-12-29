@@ -139,7 +139,8 @@ if(isset($_REQUEST['searchProject'])){
 	   $ErrorMsg['imgTitleName'] = "Slider Image Alt tag and title is maandatory.";
 	}
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
-        $arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
+        $arrImage[$k]['imageName'] = $_REQUEST['imageName'][$k];
+	$arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
         $arrImage[$k]['imageAlt'] = $_REQUEST['imageAlt'][$k];
     }
     $smarty->assign("arrImage",$arrImage);
