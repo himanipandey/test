@@ -137,7 +137,7 @@ die;
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
-	elseif($arrImage[$k]['imageTitle'] == '' || $arrImage[$k]['imageAlt'] == ''){
+	elseif($arrImage['imageTitle'][$k] == '' || $arrImage['imageAlt'][$k] == ''){
 	   $ErrorMsg['imgTitleName'] = "Slider Image name, Alt tag and title is mandatory.";
 	}
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
