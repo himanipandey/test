@@ -365,21 +365,21 @@ if($_REQUEST['imageName'][0] == '')
          $arrImgTitle = array();
          $arrImgName = array();
          $arrImgAlt = array();
-echo "<pre>";
-print_r($_REQUEST['imageName']);
+//echo "<pre>";
+//print_r($_REQUEST['imageName']);
          foreach($_REQUEST['imageName'] as $k=>$v){
                  $arrImgTitle[$k] = $_REQUEST['imageTitle'][$k];
                  $arrImgName[$k] = $_REQUEST['imageName'][$k];
                  $arrImgAlt[$k] = $_REQUEST['imageAlt'][$k];
          }  
-print_r($arrImgTitle);
-print_r($arrImgName);
-print_r($arrImgAlt);
+//print_r($arrImgTitle);
+//print_r($arrImgName);
+//print_r($arrImgAlt);
          $jsonArr['pricelist']['slidingImages']['imgs'] = $arrImgName;
          $jsonArr['pricelist']['slidingImages']['imgstitle'] = $arrImgTitle;
          $jsonArr['pricelist']['slidingImages']['imgAlt'] = $arrImgAlt;
-print_r($jsonArr);
-die;
+//print_r($jsonArr);
+//die;
         //json array for specification page
        //  echo "<pre>";print_r($_REQUEST);die;
         $jsonArr['pricelist']['specification']['title'] = $_REQUEST['metaTitleSpecification'];
