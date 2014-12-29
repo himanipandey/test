@@ -7,8 +7,10 @@
  */
 //echo "<pre>";print_r($_REQUEST);DIE;
 if(isset($_REQUEST['searchProject'])){ 
-    $projectId = $_REQUEST['projectId'];
+    $projectId = $_REQUEST['projectId']; 
+    $sliderImgCnt = $_REQUEST['sliderImgCnt'];
     $smarty->assign("projectId",$projectId);
+    $smarty->assign("sliderImgCnt",$sliderImgCnt);
     $projectUrl = SERVER_URL."/app/v4/project-detail/$projectId";
     $data = get_data($projectUrl);
     $obj = json_decode($data);
@@ -94,6 +96,7 @@ if(isset($_REQUEST['searchProject'])){
    // echo "<pre>";print_r($_REQUEST);die;
     $projectName = $_REQUEST['projectName'];
     $projectId = $_REQUEST['projectId'];
+    $sliderImgCnt = $_REQUEST['sliderImgCnt'];
     $builderName = $_REQUEST['builderName'];
     $cityName = $_REQUEST['cityName'];
     $localityName = $_REQUEST['localityName'];
@@ -126,8 +129,11 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
     
     $arrImage = array();
+  echo "<pre>";
+print_r($_REQUEST['imageName']);die("here");
     foreach($_REQUEST['imageName'] as $k=>$v){
-        if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger'))
+        if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
+	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
         $arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
@@ -154,6 +160,7 @@ if(isset($_REQUEST['searchProject'])){
     $others = $_REQUEST['others'];
     
     $smarty->assign("projectId",$projectId);
+    $smarty->assign("sliderImgCnt",$sliderImgCnt);
     $smarty->assign("builderName",$builderName);
     $smarty->assign("suburbName",$suburbName);
     $smarty->assign("localityName",$localityName);

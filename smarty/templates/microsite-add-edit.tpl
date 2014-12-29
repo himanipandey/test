@@ -64,6 +64,15 @@
                                     <b>Project Id</b>:&nbsp;
                                     <input type="text" name = "projectId" value="{$projectId}">
                                     &nbsp;
+				    <b>Slider Images Count</b>:&nbsp;
+                                    <select name = "sliderImgCnt">
+					{$cntSlder = 1}
+                                          {section name=sliderImgCnt loop=20 step=1}
+					  	<option value = "{$cntSlder}" {if $cntSlder == $sliderImgCnt}selected{/if}>{$cntSlder}</option>
+					   {$cntSlder = $cntSlder+1}
+					  {/section}
+				    </select>
+                                    &nbsp;
                                     <input type = "submit" name = "searchProject" value="Get Project Detail">
                                      </fieldset>
                                 </td>
@@ -259,7 +268,7 @@
                                   <tr>
                                     <td   align="left"  valign ="top" colspan = "3"><b>Slider Images :</b> </td>
                                 </tr>
-                                  
+                                 <tr><td colspan = "3">slider image name should be in 'slider-01.jpg' format</td></tr> 
                                   <tr>
                                       <td width="100%" align="left"  valign ="top" colspan="3" style = "padding-left: 60px;">
                                           <table width = 30% align = "left" style = "border :1px solid; color: #677788;">
@@ -271,9 +280,9 @@
                                                   <td align = "left"><b>Alt Tag</b></td>
                                               </tr>
                                               {$cnt = 1}
-                                              {section name=imageDetail loop=5 step=0}
+                                              {section name=imageDetail loop=$sliderImgCnt step=0}
                                               <tr>
-                                                  <td align = "center"><input type="text" name="imageName[]" value="slider-0{$cnt}.jpg" readonly=""></td>
+                                                  <td align = "center"><input type="text" name="imageName[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageName']}"></td>
                                                   <td align = "center"><input type="text" name="imageTitle[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageTitle']}"></td>
                                                   <td align = "center"><input type="text" name="imageAlt[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageAlt']}"></td>
                                               </tr>
