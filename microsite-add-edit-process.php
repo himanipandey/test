@@ -130,7 +130,7 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
     
     $arrImage = array();
-echo "<pre>"; print_r($_REQUEST['imageName']);die;
+//echo "<pre>"; print_r($_REQUEST['imageName']);die;
     foreach($_REQUEST['imageName'] as $k=>$v){
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
