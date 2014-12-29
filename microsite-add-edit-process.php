@@ -134,6 +134,7 @@ if(isset($_REQUEST['searchProject'])){
 //print_r($_REQUEST);
 //die;
     foreach($_REQUEST['imageName'] as $k=>$v){
+echo "<br>$k".count($arrImage['imageTitle'][$k])."_".count($arrImage['imageAlt'][$k]);
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
