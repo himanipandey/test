@@ -268,7 +268,7 @@
                                   <tr>
                                     <td   align="left"  valign ="top" colspan = "3"><b>Slider Images :</b> </td>
                                 </tr>
-                                 <tr><td colspan = "3">slider image name should be in 'slider-01.jpg' format</td></tr> 
+                                 <tr><td colspan = "3" align = "center">slider image name should be in 'slider-01.jpg' format</td></tr> 
                                   <tr>
                                       <td width="100%" align="left"  valign ="top" colspan="3" style = "padding-left: 60px;">
                                           <table width = 30% align = "left" style = "border :1px solid; color: #677788;">
