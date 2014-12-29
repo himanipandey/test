@@ -130,12 +130,12 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
     
     $arrImage = array();
-echo "<pre>"; print_r($_REQUEST['imageName']);
+//echo "<pre>"; print_r($_REQUEST['imageName']);
 //print_r($_REQUEST);
 //die;
-if(count($_REQUEST['imageName'][0]) == 0)
+if($_REQUEST['imageName'][0] == '')
 	$ErrorMsg['imgTitleName'] = "Please select atleast one slider image.";
-echo count($_REQUEST['imageName'][0]);die;
+//echo count($_REQUEST['imageName'][0]);die;
     foreach($_REQUEST['imageName'] as $k=>$v){
 //echo "<br>$k".count($arrImage['imageTitle'][$k])."_".count($arrImage['imageAlt'][$k]);
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
