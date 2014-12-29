@@ -130,17 +130,19 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
     
     $arrImage = array();
-//echo "<pre>"; print_r($_REQUEST['imageName']);
+echo "<pre>"; print_r($_REQUEST['imageName']);
 //print_r($_REQUEST);
 //die;
+if(count($_REQUEST['imageName']) == 0)
+	$ErrorMsg['imgTitleName'] = "Please select atleast one slider image.";
     foreach($_REQUEST['imageName'] as $k=>$v){
-echo "<br>$k".count($arrImage['imageTitle'][$k])."_".count($arrImage['imageAlt'][$k]);
+//echo "<br>$k".count($arrImage['imageTitle'][$k])."_".count($arrImage['imageAlt'][$k]);
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
-	elseif(count($arrImage['imageTitle'][$k]) == 0 || count($arrImage['imageAlt'][$k]) == 0){
-	   $ErrorMsg['imgTitleName'] = "Slider Image name, Alt tag and title is mandatory.";
-	}
+	//elseif(count($arrImage['imageTitle'][$k]) == 0 || count($arrImage['imageAlt'][$k]) == 0){
+	 //  $ErrorMsg['imgTitleName'] = "Slider Image name, Alt tag and title is mandatory.";
+	//}
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
         $arrImage[$k]['imageName'] = $_REQUEST['imageName'][$k];
 	$arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
