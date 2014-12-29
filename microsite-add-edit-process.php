@@ -366,11 +366,9 @@ if($_REQUEST['imageName'][0] == '')
          $arrImgName = array();
          $arrImgAlt = array();
          foreach($_REQUEST['imageName'] as $k=>$v){
-             if($_REQUEST['imageAlt'][$k] != ''){
                  $arrImgTitle[$k] = $_REQUEST['imageTitle'][$k];
                  $arrImgName[$k] = $_REQUEST['imageName'][$k];
                  $arrImgAlt[$k] = $_REQUEST['imageAlt'][$k];
-             }
          }       
          $jsonArr['pricelist']['slidingImages']['imgs'] = $arrImgName;
          $jsonArr['pricelist']['slidingImages']['imgstitle'] = $arrImgTitle;
