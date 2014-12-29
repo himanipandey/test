@@ -118,6 +118,7 @@ if(isset($_REQUEST['searchProject'])){
     $ErrorMsg = array();
     
     $arrProjectConfig = array();
+echo "<pre>";print_r($_REQUEST['price_unitName']);die;
     foreach($_REQUEST['configId'] as $k=>$v){
         if(stristr(strtolower($_REQUEST['price_unitName'][$k]),'proptiger'))
                $ErrorMsg['configName'] = "Proptiger word is not allowed."; 
@@ -129,12 +130,13 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
     
     $arrImage = array();
-  echo "<pre>";
-print_r($_REQUEST['imageName']);die("here");
     foreach($_REQUEST['imageName'] as $k=>$v){
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
+	elseif($arrImage[$k]['imageTitle'] == '' || $arrImage[$k]['imageAlt']){
+	   $ErrorMsg['imgTitleName'] = "Slider Image Alt tag and title is maandatory.";
+	}
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
         $arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
         $arrImage[$k]['imageAlt'] = $_REQUEST['imageAlt'][$k];
