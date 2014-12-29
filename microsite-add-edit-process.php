@@ -133,7 +133,7 @@ if(isset($_REQUEST['searchProject'])){
 echo "<pre>"; print_r($_REQUEST['imageName']);
 //print_r($_REQUEST);
 //die;
-if(count($_REQUEST['imageName']) == 0)
+if(count($_REQUEST['imageName'][0]) == 0)
 	$ErrorMsg['imgTitleName'] = "Please select atleast one slider image.";
     foreach($_REQUEST['imageName'] as $k=>$v){
 //echo "<br>$k".count($arrImage['imageTitle'][$k])."_".count($arrImage['imageAlt'][$k]);
