@@ -9,27 +9,30 @@ $localities = getActiveLocalities();
 $suburbs = getActiveSuburbs();
 $cities = getActiveCities();
 
-print_r($builders);
-print_r($localities);
-print_r($suburbs);
-print_r($cities);
+#print_r($builders);
+#print_r($localities);
+#print_r($suburbs);
+#print_r($cities);
 
 // making entities active.
-setEntityActive($localities, "locality_id", "cms.locality");
-setEntityActive($suburbs, "suburb_id", "cms.suburb");
-setEntityActive($cities, "city_id", "cms.city");
-setEntityActive($builders, "builder_id", "cms.resi_builder");
+setEntityActive($localities[0], "locality_id", "cms.locality");
+setEntityActiveInCms($localities[1], "locality_id", "cms.locality");
+setEntityActive($suburbs[0], "suburb_id", "cms.suburb");
+setEntityActiveInCms($suburbs[1], "suburb_id", "cms.suburb");
+setEntityActive($cities[0], "city_id", "cms.city");
+setEntityActiveInCms($cities[1], "city_id", "cms.city");
+setEntityActive($builders[0], "builder_id", "cms.resi_builder");
+setEntityActiveInCms($builders[1], "builder_id", "cms.resi_builder");
 
 // making entities in active.
-setEntityInActive($localities, "locality_id", "cms.locality");
-setEntityInActive($suburbs, "suburb_id", "cms.suburb");
-setEntityInActive($cities, "city_id", "cms.city");
-setEntityActive($builders, "builder_id", "cms.resi_builder");
+setEntityInActive($localities[2], "locality_id", "cms.locality");
+setEntityInActive($suburbs[2], "suburb_id", "cms.suburb");
+setEntityInActive($cities[2], "city_id", "cms.city");
+setEntityInActive($builders[2], "builder_id", "cms.resi_builder");
 
 function setEntityInActive($entityData, $columnName, $entityTable)
 {
-    $entityStr = implode(",", $entityData);
-        
+    $entityStr = implode(",", $entityData);        
     $sql = "UPDATE $entityTable set status = 'Inactive' WHERE $columnName NOT IN ($entityStr)";
     $rs = doQuery($sql);
 
@@ -43,7 +46,6 @@ function setEntityInActive($entityData, $columnName, $entityTable)
 function setEntityActive($entityData, $columnName, $entityTable)
 {
     $entityStr = implode(",", $entityData);
-    
     $sql = "UPDATE $entityTable set status = 'Active' WHERE $columnName IN ($entityStr)";
     $rs = doQuery($sql);
 
@@ -54,28 +56,32 @@ function setEntityActive($entityData, $columnName, $entityTable)
     }
 }
 
+function setEntityActiveInCms($entityData, $columnName, $entityTable) {
+    $entityStr = implode(",", $entityData);
+    if (empty($entityStr)) {
+      return;
+    }
+    $sql = "UPDATE $entityTable set status = 'ActiveInCms' WHERE $columnName IN ($entityStr)";
+    $rs = doQuery($sql);
+    if(empty($rs))
+    {
+        echo $sql."\n";
+        echo mysql_error()."\n";
+    }
+}
+
 function getActiveCities()
 {
-    $sql = "select distinct c.city_id from cms.city c join cms.suburb s on (c.city_id = s.city_id) join cms.locality l on (s.suburb_id = l.suburb_id) join cms.resi_project rp on (l.locality_id = rp.locality_id) join resi_project_options rpo on (rp.project_id = rpo.project_id) where s.status = 'Active' and l.status = 'Active' and rp.status = 'Active' and rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual'";
+    $sql = "select c.city_id, sum(if(rp.status = 'Active', 1, 0)) active_count, sum(if(rp.status = 'ActiveInCms', 1, 0)) active_cms_count from cms.city c join cms.suburb s on (c.city_id = s.city_id) join cms.locality l on (s.suburb_id = l.suburb_id) join cms.resi_project rp on (l.locality_id = rp.locality_id) join cms.resi_project_options rpo on (rp.project_id = rpo.project_id) where rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual' group by c.city_id";
     $rs = doQuery($sql);
-
-    $cities = array();
-    while( ($row=mysql_fetch_row($rs)) !== FALSE)
-        $cities[] = $row[0];
-
-    return $cities;
+    return getActiveData($rs);
 }
 
 function getActiveSuburbs()
 {
-    $sql = "select distinct s.suburb_id from cms.suburb s join cms.locality l on (s.suburb_id = l.suburb_id) join cms.resi_project rp on (l.locality_id = rp.locality_id) join resi_project_options rpo on (rp.project_id = rpo.project_id) where s.status = 'Active' and l.status = 'Active' and rp.status = 'Active' and rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual'";
+    $sql = "select s.suburb_id, sum(if(rp.status = 'Active', 1, 0)) active_count, sum(if(rp.status = 'ActiveInCms', 1, 0)) active_cms_count from cms.suburb s join cms.locality l on (s.suburb_id = l.suburb_id) join cms.resi_project rp on (l.locality_id = rp.locality_id) join cms.resi_project_options rpo on (rp.project_id = rpo.project_id) where rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual' group by s.suburb_id";
     $rs = doQuery($sql);
-
-    $suburbs = array();
-    while( ($row=mysql_fetch_row($rs)) !== FALSE)
-        $suburbs[] = $row[0];
-
-    return $suburbs;
+    return getActiveData($rs);
 }
 
 function getActiveBuildersAndLocalites()
@@ -98,25 +104,32 @@ function getActiveBuildersAndLocalites()
 }
 
 function getActiveBuilders(){
-    $sql = "select distinct rb.builder_id from cms.resi_builder rb join resi_project rp on (rp.builder_id = rb.builder_id) join resi_project_options rpo on (rp.project_id = rpo.project_id) where rp.status = 'Active' and rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual'";
+    $sql = "select rb.builder_id, sum(if(rp.status = 'Active', 1, 0)) active_count, sum(if(rp.status = 'ActiveInCms', 1, 0)) active_cms_count from cms.resi_builder rb join cms.resi_project rp on (rb.builder_id = rp.builder_id) join cms.resi_project_options rpo on (rp.project_id = rpo.project_id) where rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual' group by rb.builder_id";
     $rs = doQuery($sql);
-    $builders = array();
-    while(($row = mysql_fetch_row($rs)) !== FALSE ) {
-        $builders[] = $row[0];
-    }
-    return $builders;
+    return getActiveData($rs);  
 }
 
 function getActiveLocalities() {
-    $sql = "select distinct l.locality_id from cms.locality l join cms.resi_project rp on (l.locality_id = rp.locality_id) join cms.resi_project_options rpo on (rp.project_id = rpo.project_id) where l.status = 'Active' and rp.status = 'Active' and rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual'";
+    $sql = "select l.locality_id, sum(if(rp.status = 'Active', 1, 0)) active_count, sum(if(rp.status = 'ActiveInCms', 1, 0)) active_cms_count from cms.locality l join cms.resi_project rp on (l.locality_id = rp.locality_id) join cms.resi_project_options rpo on (rp.project_id = rpo.project_id) where rp.version = 'Website' and rp.residential_flag = 'Residential' and rpo.option_category = 'Actual' group by l.locality_id";
     $rs = doQuery($sql);
-    $localities = array();
-    while(($row = mysql_fetch_row($rs)) !== FALSE ) {
-	$localities[] = $row[0];
-    }
-    return $localities;    
+    return getActiveData($rs);
 }
 
+function getActiveData($rs) {
+    $activeInWebsite = array();
+    $activeInCms = array();
+    $completeActive = array();
+    while( ($row=mysql_fetch_row($rs)) !== FALSE)
+        if ($row[1] > 0) {
+            $activeInWebsite[] = $row[0];
+	    $completeActive[] = $row[0];
+	}
+	else if ($row[2] > 0) {
+            $activeInCms[] = $row[0];
+	    $completeActive[] = $row[0];
+	}
+    return array($activeInWebsite, $activeInCms, $completeActive);
+}
 
 function doQuery($qry) {
     $res = mysql_query($qry) or die(mysql_error());
