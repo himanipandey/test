@@ -135,8 +135,8 @@ if(isset($_REQUEST['searchProject'])){
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
-	elseif($arrImage[$k]['imageTitle'] == '' || $arrImage[$k]['imageAlt']){
-	   $ErrorMsg['imgTitleName'] = "Slider Image Alt tag and title is maandatory.";
+	elseif($arrImage[$k]['imageTitle'] == '' || $arrImage[$k]['imageAlt'] == ''){
+	   $ErrorMsg['imgTitleName'] = "Slider Image name, Alt tag and title is mandatory.";
 	}
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
         $arrImage[$k]['imageName'] = $_REQUEST['imageName'][$k];
