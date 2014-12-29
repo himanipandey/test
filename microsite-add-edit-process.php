@@ -93,7 +93,7 @@ if(isset($_REQUEST['searchProject'])){
     /* gets the data from a URL */
 }elseif($_REQUEST['generateMicrosite']){
     
-    echo "<pre>";print_r($_REQUEST);die;
+    //echo "<pre>";print_r($_REQUEST);die;
     $projectName = $_REQUEST['projectName'];
     $projectId = $_REQUEST['projectId'];
     $sliderImgCnt = $_REQUEST['sliderImgCnt'];
