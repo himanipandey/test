@@ -374,10 +374,12 @@ print_r($_REQUEST['imageName']);
          }  
 print_r($arrImgTitle);
 print_r($arrImgName);
-print_r($arrImgAlt);die;
+print_r($arrImgAlt);
          $jsonArr['pricelist']['slidingImages']['imgs'] = $arrImgName;
          $jsonArr['pricelist']['slidingImages']['imgstitle'] = $arrImgTitle;
          $jsonArr['pricelist']['slidingImages']['imgAlt'] = $arrImgAlt;
+print_r($jsonArr);
+die;
         //json array for specification page
        //  echo "<pre>";print_r($_REQUEST);die;
         $jsonArr['pricelist']['specification']['title'] = $_REQUEST['metaTitleSpecification'];
