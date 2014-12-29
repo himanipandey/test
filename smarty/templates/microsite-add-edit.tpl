@@ -461,6 +461,7 @@
                                           </td>
                                 </tr>
                                 <input type = "hidden" name = "projectId" value = "{$projectId}">
+				<input type = "hidden" name = "sliderImgCnt" value = "{$sliderImgCnt}">
                                 <tr style ="border:1px solid #c2c2c2;height:30px;width:70px;background:#999999;color:#fff;font-weight:bold;cursor:hand;pointer:hand;">
 				  <td colspan = "2" align="right" style="padding-left:152px;" >
 				  <input type="submit" name="generateMicrosite" id="generateMicrosite" value="Generate Microsite Code">
