@@ -172,7 +172,7 @@
 				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitleFloorPlan"] != ''} {$ErrorMsg["metaTitleFloorPlan"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter floor plan meta title!</span></font></td>
 				</tr>
                                 <tr>
-				  <td width="20%" align="right" nowrap> <b>Payment Plan Meta Title : </b></td>
+				  <td width="20%" align="right" nowrap> <b><font color = "red">*</font>Payment Plan Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitlePaymentPlan id=metaTitlePaymentPlan value="{$metaTitlePaymentPlan}" style="width:360px;"></td>
 				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitlePaymentPlan"] != ''} {$ErrorMsg["metaTitlePaymentPlan"]} {/if}<span id = "err_project_bhk" style = "display:none;">{$ErrorMsg["metaTitlePaymentPlan"]}</span></font></td>
 				</tr>
@@ -187,7 +187,7 @@
 				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitleSitePlan"] != ''} {$ErrorMsg["metaTitleSitePlan"]} {/if}<span id = "err_project_bhk" style = "display:none;">{$ErrorMsg["metaTitleSitePlan"]}</span></font></td>
 				</tr>
                                 <tr>
-				  <td width="20%" align="right" nowrap> <b>Location Map Meta Title : </b></td>
+				  <td width="20%" align="right" nowrap> <b><font color = "red">*</font>Location Map Meta Title : </b></td>
 				  <td width="30%" align="left" nowrap><input type=text name=metaTitleLocationMap id=metaTitleLocationMap value="{$metaTitleLocationMap}" style="width:360px;"></td>
 				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitleLocationMap"] != ''} {$ErrorMsg["metaTitleLocationMap"]} {/if}<span id = "err_project_bhk" style = "display:none;">{$ErrorMsg["metaTitleLocationMap"]}</span></font></td>
 				</tr>

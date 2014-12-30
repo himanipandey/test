@@ -14,13 +14,13 @@ if(isset($_REQUEST['searchProject'])){
 
 
     $arrImage = array();
-
     for($i=1;$i<=$sliderImgCnt;$i++){
         if($i>9)
             $arrImage[$k]['imageName'] = "slider-$i.jpg";
 	else
 	   $arrImage[$k]['imageName'] = "slider-0$i.jpg";
     }
+echo "<pre>";print_r($arrImage);
     $smarty->assign("arrImage",$arrImage);
 
     $projectUrl = SERVER_URL."/app/v4/project-detail/$projectId";
