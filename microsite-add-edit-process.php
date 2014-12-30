@@ -141,8 +141,8 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
     
     $arrImage = array();
-echo "<pre>"; print_r($_REQUEST['imageName']);
-print_r($_REQUEST);
+//echo "<pre>"; print_r($_REQUEST['imageName']);
+//print_r($_REQUEST);
 
 if($_REQUEST['imageName'][0] == '')
 	$ErrorMsg['imgTitleName'] = "Please select atleast one slider image.";
@@ -160,8 +160,8 @@ if($_REQUEST['imageName'][0] == '')
 	$arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
         $arrImage[$k]['imageAlt'] = $_REQUEST['imageAlt'][$k];
     }
-print_r($ErrorMsg);
-die;
+//print_r($ErrorMsg);
+//die;
     $smarty->assign("arrImage",$arrImage);
     $master_bedroom_flooring = $_REQUEST['master_bedroom_flooring'];
     $gaCode = $_REQUEST['gaCode'];
