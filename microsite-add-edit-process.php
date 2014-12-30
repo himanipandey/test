@@ -11,6 +11,18 @@ if(isset($_REQUEST['searchProject'])){
     $sliderImgCnt = $_REQUEST['sliderImgCnt'];
     $smarty->assign("projectId",$projectId);
     $smarty->assign("sliderImgCnt",$sliderImgCnt);
+
+
+    $arrImage = array();
+
+    for($i=1;$i<=$sliderImgCnt;$i++){
+        if($i>9)
+            $arrImage[$k]['imageName'] = "slider-$i.jpg";
+	else
+	   $arrImage[$k]['imageName'] = "slider-0$i.jpg";
+    }
+    $smarty->assign("arrImage",$arrImage);
+
     $projectUrl = SERVER_URL."/app/v4/project-detail/$projectId";
     $data = get_data($projectUrl);
     $obj = json_decode($data);
@@ -141,9 +153,9 @@ if($_REQUEST['imageName'][0] == '')
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
-	//elseif(count($arrImage['imageTitle'][$k]) == 0 || count($arrImage['imageAlt'][$k]) == 0){
-	 //  $ErrorMsg['imgTitleName'] = "Slider Image name, Alt tag and title is mandatory.";
-	//}
+	elseif(count($arrImage['imageTitle'][$k]) == 0 || count($arrImage['imageAlt'][$k]) == 0){
+	   $ErrorMsg['imgTitleName'] = "Slider Image name, Alt tag and title is mandatory.";
+	}
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
         $arrImage[$k]['imageName'] = $_REQUEST['imageName'][$k];
 	$arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
@@ -262,7 +274,50 @@ if($_REQUEST['imageName'][0] == '')
     }elseif(stristr(strtolower($projectDesc),'proptiger')){
         $ErrorMsg["projectDesc"] = "Proptiger word is not allowed.";
     }
-    
+
+    if(empty($metaTitleSpecification)){
+       $ErrorMsg["metaTitleSpecification"] = "Specification meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleSpecification),'proptiger')){
+        $ErrorMsg["metaTitleSpecification"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitleFloorPlan)){
+       $ErrorMsg["metaTitleFloorPlan"] = "Floor plan meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleFloorPlan),'proptiger')){
+        $ErrorMsg["metaTitleFloorPlan"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitlePaymentPlan)){
+       $ErrorMsg["metaTitlePaymentPlan"] = "Payment plan meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitlePaymentPlan),'proptiger')){
+        $ErrorMsg["metaTitlePaymentPlan"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitlePriceList)){
+       $ErrorMsg["metaTitlePriceList"] = "Price list meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitlePriceList),'proptiger')){
+        $ErrorMsg["metaTitlePriceList"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitleSitePlan)){
+       $ErrorMsg["metaTitleSitePlan"] = "Site plan meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleSitePlan),'proptiger')){
+        $ErrorMsg["metaTitleSitePlan"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitleLocationMap)){
+       $ErrorMsg["metaTitleLocationMap"] = "Location map meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleLocationMap),'proptiger')){
+        $ErrorMsg["metaTitleLocationMap"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitleContactus)){
+       $ErrorMsg["metaTitleContactus"] = "Contactus meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleContactus),'proptiger')){
+        $ErrorMsg["metaTitleContactus"] = "Proptiger word is not allowed.";
+    }
+
+
     //specification proptiger word searching
     if(stristr(strtolower($master_bedroom_flooring),'proptiger')){
        $ErrorMsg["master_bedroom_flooring"] = "Proptiger word is not allowed.";
@@ -378,7 +433,7 @@ if($_REQUEST['imageName'][0] == '')
          $jsonArr['pricelist']['slidingImages']['imgs'] = $arrImgName;
          $jsonArr['pricelist']['slidingImages']['imgstitle'] = $arrImgTitle;
          $jsonArr['pricelist']['slidingImages']['imgAlt'] = $arrImgAlt;
-//print_r($jsonArr);
+print_r($jsonArr);
 //die;
         //json array for specification page
        //  echo "<pre>";print_r($_REQUEST);die;

@@ -162,39 +162,39 @@
                                   <td width="50%" align="left" valign = "top">&nbsp;</td>
 				</tr>
                                 <tr>
-				  <td width="20%" align="right" nowrap> <b>Specification Meta Title : </b></td>
+				  <td width="20%" align="right" nowrap> <b><font color = "red">*</font>Specification Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitleSpecification id=metaTitleSpecification value="{$metaTitleSpecification}" style="width:360px;"></td>
-				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitleSpecification"] != ''} {$ErrorMsg["metaTitleSpecification"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter specification meta title!</span></font></td>
 				</tr>
                                  <tr>
-				  <td width="20%" align="right" nowrap> <b>Floor Plan Meta Title : </b></td>
+				  <td width="20%" align="right" nowrap> <b><font color = "red">*</font>Floor Plan Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitleFloorPlan id=metaTitleFloorPlan value="{$metaTitleFloorPlan}" style="width:360px;"></td>
-				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitleFloorPlan"] != ''} {$ErrorMsg["metaTitleFloorPlan"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter floor plan meta title!</span></font></td>
 				</tr>
                                 <tr>
 				  <td width="20%" align="right" nowrap> <b>Payment Plan Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitlePaymentPlan id=metaTitlePaymentPlan value="{$metaTitlePaymentPlan}" style="width:360px;"></td>
-				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitlePaymentPlan"] != ''} {$ErrorMsg["metaTitlePaymentPlan"]} {/if}<span id = "err_project_bhk" style = "display:none;">{$ErrorMsg["metaTitlePaymentPlan"]}</span></font></td>
 				</tr>
                                 <tr>
-				  <td width="20%" align="right" > <b>Price List Meta Title : </b></td>
+				  <td width="20%" align="right" > <b><font color = "red">*</font>Price List Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitlePriceList id=metaTitlePriceList value="{$metaTitlePriceList}" style="width:360px;"></td>
-				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitlePriceList"] != ''} {$ErrorMsg["metaTitlePriceList"]} {/if}<span id = "err_project_bhk" style = "display:none;">{$ErrorMsg["metaTitlePriceList"]}</span></font></td>
 				</tr>
                                 <tr>
-				  <td width="20%" align="right" nowrap> <b>Site Plan Meta Title : </b></td>
+				  <td width="20%" align="right" nowrap> <b><font color = "red">*</font>Site Plan Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitleSitePlan id=metaTitleSitePlan value="{$metaTitleSitePlan}" style="width:360px;"></td>
-				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitleSitePlan"] != ''} {$ErrorMsg["metaTitleSitePlan"]} {/if}<span id = "err_project_bhk" style = "display:none;">{$ErrorMsg["metaTitleSitePlan"]}</span></font></td>
 				</tr>
                                 <tr>
 				  <td width="20%" align="right" nowrap> <b>Location Map Meta Title : </b></td>
 				  <td width="30%" align="left" nowrap><input type=text name=metaTitleLocationMap id=metaTitleLocationMap value="{$metaTitleLocationMap}" style="width:360px;"></td>
-				  <td width="50%" align="left" valign = "top"></td>
+				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitleLocationMap"] != ''} {$ErrorMsg["metaTitleLocationMap"]} {/if}<span id = "err_project_bhk" style = "display:none;">{$ErrorMsg["metaTitleLocationMap"]}</span></font></td>
 				</tr>
                                 <tr>
-				  <td width="20%" align="right" nowrap> <b>Contactus Meta Title : </b></td>
+				  <td width="20%" align="right" nowrap> <b><font color = "red">*</font>Contactus Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitleContactus id=metaTitleContactus value="{$metaTitleContactus}" style="width:360px;"></td>
-				  <td width="50%" align="left" valign = "top">&nbsp;</td>
+				  <td width="50%" align="left" valign = "top"><font color="red">{if $ErrorMsg["metaTitleContactus"] != ''} {$ErrorMsg["metaTitleContactus"]} {/if}<span id = "err_project_bhk" style = "display:none;">{$ErrorMsg["metaTitleContactus"]}</span></font></td>
 				</tr>
                                 
                                 <tr>
@@ -282,7 +282,7 @@
                                               {$cnt = 1}
                                               {section name=imageDetail loop=$sliderImgCnt step=0}
                                               <tr>
-                                                  <td align = "center"><input type="text" name="imageName[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageName']}"></td>
+                                                  <td align = "center"><input type="text" name="imageName[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageName']}" readonly></td>
                                                   <td align = "center"><input type="text" name="imageTitle[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageTitle']}"></td>
                                                   <td align = "center"><input type="text" name="imageAlt[]" value="{$arrImage[{$smarty.section.imageDetail.index}]['imageAlt']}"></td>
                                               </tr>
