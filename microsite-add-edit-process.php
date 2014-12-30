@@ -20,7 +20,6 @@ if(isset($_REQUEST['searchProject'])){
 	else
 	   $arrImage[$i-1]['imageName'] = "slider-0$i.jpg";
     }
-echo "<pre>";print_r($arrImage);
     $smarty->assign("arrImage",$arrImage);
 
     $projectUrl = SERVER_URL."/app/v4/project-detail/$projectId";
@@ -153,7 +152,7 @@ if($_REQUEST['imageName'][0] == '')
         if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
 	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
-	elseif(count($arrImage['imageTitle'][$k]) == 0 || count($arrImage['imageAlt'][$k]) == 0){
+	elseif(count($_REQUEST['imageTitle'][$k]) == 0 || count($_REQUEST['imageAlt'][$k]) == 0){
 	   $ErrorMsg['imgTitleName'] = "Slider Image name, Alt tag and title is mandatory.";
 	}
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
