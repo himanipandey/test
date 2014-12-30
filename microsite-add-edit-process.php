@@ -7,8 +7,21 @@
  */
 //echo "<pre>";print_r($_REQUEST);DIE;
 if(isset($_REQUEST['searchProject'])){ 
-    $projectId = $_REQUEST['projectId'];
+    $projectId = $_REQUEST['projectId']; 
+    $sliderImgCnt = $_REQUEST['sliderImgCnt'];
     $smarty->assign("projectId",$projectId);
+    $smarty->assign("sliderImgCnt",$sliderImgCnt);
+
+
+    $arrImage = array();
+    for($i=1;$i<=$sliderImgCnt;$i++){
+        if($i>9)
+            $arrImage[$i-1]['imageName'] = "slider-$i.jpg";
+	else
+	   $arrImage[$i-1]['imageName'] = "slider-0$i.jpg";
+    }
+    $smarty->assign("arrImage",$arrImage);
+
     $projectUrl = SERVER_URL."/app/v4/project-detail/$projectId";
     $data = get_data($projectUrl);
     $obj = json_decode($data);
@@ -91,9 +104,10 @@ if(isset($_REQUEST['searchProject'])){
     /* gets the data from a URL */
 }elseif($_REQUEST['generateMicrosite']){
     
-   // echo "<pre>";print_r($_REQUEST);die;
+    //echo "<pre>";print_r($_REQUEST);die;
     $projectName = $_REQUEST['projectName'];
     $projectId = $_REQUEST['projectId'];
+    $sliderImgCnt = $_REQUEST['sliderImgCnt'];
     $builderName = $_REQUEST['builderName'];
     $cityName = $_REQUEST['cityName'];
     $localityName = $_REQUEST['localityName'];
@@ -115,6 +129,7 @@ if(isset($_REQUEST['searchProject'])){
     $ErrorMsg = array();
     
     $arrProjectConfig = array();
+//echo "<pre>";print_r($_REQUEST['price_unitName']);die;
     foreach($_REQUEST['configId'] as $k=>$v){
         if(stristr(strtolower($_REQUEST['price_unitName'][$k]),'proptiger'))
                $ErrorMsg['configName'] = "Proptiger word is not allowed."; 
@@ -126,13 +141,27 @@ if(isset($_REQUEST['searchProject'])){
     $smarty->assign("arrProjectConfig",$arrProjectConfig);
     
     $arrImage = array();
+//echo "<pre>"; print_r($_REQUEST['imageName']);
+//print_r($_REQUEST);
+
+if($_REQUEST['imageName'][0] == '')
+	$ErrorMsg['imgTitleName'] = "Please select atleast one slider image.";
+//echo count($_REQUEST['imageName'][0]);die;
     foreach($_REQUEST['imageName'] as $k=>$v){
-        if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger'))
+//echo "<br>$k".count($arrImage['imageTitle'][$k])."_".count($arrImage['imageAlt'][$k]);
+        if(stristr(strtolower($_REQUEST['imageTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['imageAlt'][$k]),'proptiger')
+	   || stristr(strtolower($_REQUEST['imageName'][$k]),'proptiger'))
            $ErrorMsg['imgTitleName'] = "Proptiger word is not allowed."; 
+	elseif($_REQUEST['imageTitle'][$k] == '' || $_REQUEST['imageAlt'][$k] == ''){
+	   $ErrorMsg['imgTitleName'] = "Slider Image name, Alt tag and title is mandatory.";
+	}
         //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
-        $arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
+        $arrImage[$k]['imageName'] = $_REQUEST['imageName'][$k];
+	$arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
         $arrImage[$k]['imageAlt'] = $_REQUEST['imageAlt'][$k];
     }
+//print_r($ErrorMsg);
+//die;
     $smarty->assign("arrImage",$arrImage);
     $master_bedroom_flooring = $_REQUEST['master_bedroom_flooring'];
     $gaCode = $_REQUEST['gaCode'];
@@ -154,6 +183,7 @@ if(isset($_REQUEST['searchProject'])){
     $others = $_REQUEST['others'];
     
     $smarty->assign("projectId",$projectId);
+    $smarty->assign("sliderImgCnt",$sliderImgCnt);
     $smarty->assign("builderName",$builderName);
     $smarty->assign("suburbName",$suburbName);
     $smarty->assign("localityName",$localityName);
@@ -245,7 +275,50 @@ if(isset($_REQUEST['searchProject'])){
     }elseif(stristr(strtolower($projectDesc),'proptiger')){
         $ErrorMsg["projectDesc"] = "Proptiger word is not allowed.";
     }
-    
+
+    if(empty($metaTitleSpecification)){
+       $ErrorMsg["metaTitleSpecification"] = "Specification meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleSpecification),'proptiger')){
+        $ErrorMsg["metaTitleSpecification"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitleFloorPlan)){
+       $ErrorMsg["metaTitleFloorPlan"] = "Floor plan meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleFloorPlan),'proptiger')){
+        $ErrorMsg["metaTitleFloorPlan"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitlePaymentPlan)){
+       $ErrorMsg["metaTitlePaymentPlan"] = "Payment plan meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitlePaymentPlan),'proptiger')){
+        $ErrorMsg["metaTitlePaymentPlan"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitlePriceList)){
+       $ErrorMsg["metaTitlePriceList"] = "Price list meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitlePriceList),'proptiger')){
+        $ErrorMsg["metaTitlePriceList"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitleSitePlan)){
+       $ErrorMsg["metaTitleSitePlan"] = "Site plan meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleSitePlan),'proptiger')){
+        $ErrorMsg["metaTitleSitePlan"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitleLocationMap)){
+       $ErrorMsg["metaTitleLocationMap"] = "Location map meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleLocationMap),'proptiger')){
+        $ErrorMsg["metaTitleLocationMap"] = "Proptiger word is not allowed.";
+    }
+
+    if(empty($metaTitleContactus)){
+       $ErrorMsg["metaTitleContactus"] = "Contactus meta title can't be blank.";
+    }elseif(stristr(strtolower($metaTitleContactus),'proptiger')){
+        $ErrorMsg["metaTitleContactus"] = "Proptiger word is not allowed.";
+    }
+
+
     //specification proptiger word searching
     if(stristr(strtolower($master_bedroom_flooring),'proptiger')){
        $ErrorMsg["master_bedroom_flooring"] = "Proptiger word is not allowed.";
@@ -348,16 +421,21 @@ if(isset($_REQUEST['searchProject'])){
          $arrImgTitle = array();
          $arrImgName = array();
          $arrImgAlt = array();
+//echo "<pre>";
+//print_r($_REQUEST['imageName']);
          foreach($_REQUEST['imageName'] as $k=>$v){
-             if($_REQUEST['imageAlt'][$k] != ''){
                  $arrImgTitle[$k] = $_REQUEST['imageTitle'][$k];
                  $arrImgName[$k] = $_REQUEST['imageName'][$k];
                  $arrImgAlt[$k] = $_REQUEST['imageAlt'][$k];
-             }
-         }       
+         }  
+//print_r($arrImgTitle);
+//print_r($arrImgName);
+//print_r($arrImgAlt);
          $jsonArr['pricelist']['slidingImages']['imgs'] = $arrImgName;
          $jsonArr['pricelist']['slidingImages']['imgstitle'] = $arrImgTitle;
          $jsonArr['pricelist']['slidingImages']['imgAlt'] = $arrImgAlt;
+//print_r($jsonArr);
+//die;
         //json array for specification page
        //  echo "<pre>";print_r($_REQUEST);die;
         $jsonArr['pricelist']['specification']['title'] = $_REQUEST['metaTitleSpecification'];
