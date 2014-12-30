@@ -434,7 +434,7 @@ if($_REQUEST['imageName'][0] == '')
          $jsonArr['pricelist']['slidingImages']['imgs'] = $arrImgName;
          $jsonArr['pricelist']['slidingImages']['imgstitle'] = $arrImgTitle;
          $jsonArr['pricelist']['slidingImages']['imgAlt'] = $arrImgAlt;
-print_r($jsonArr);
+//print_r($jsonArr);
 //die;
         //json array for specification page
        //  echo "<pre>";print_r($_REQUEST);die;
