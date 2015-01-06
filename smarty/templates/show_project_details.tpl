@@ -1305,6 +1305,20 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+                                                
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Skip B2B: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].SKIP_B2B == 0}
+                                                               No
+                                                        {else}
+                                                               Yes
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                         <b> Price Display On Website: </b>

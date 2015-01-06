@@ -158,4 +158,10 @@
         $skipUpdtnCycle = 1;
     $smarty->assign("skipUpdtnCycle",$skipUpdtnCycle);
     
+    $micrositeExec = isUserPermitted('microsite', 'microsite-access');
+    $micrositeFlgExec = 0; 
+    if($micrositeExec == 1)
+        $micrositeFlgExec = 1;
+    $smarty->assign("micrositeFlgExec",$micrositeFlgExec);
+    
 ?>
