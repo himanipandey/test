@@ -7,7 +7,7 @@
 	include("dbConfig.php");
 	//include("includes/configs/configs.php");
 
-	AdminAuthentication();
+	//AdminAuthentication();
 
     $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName,rb.builder_name from resi_project rp
                     join resi_builder rb on rp.builder_id = rb.builder_id
