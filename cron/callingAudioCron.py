@@ -24,7 +24,7 @@ logger.addHandler(ch)
 db = MySQLdb.connect('localhost', 'root', 'root', 'cms')
 cursor = db.cursor()
 
-target_url = 'http://qa.proptiger-ws.com:8080/data/v1/entity/audio'
+target_url = 'https://beta-new.proptiger-ws.com/data/v1/entity/audio'
 
 def download_audio(url, CallId):
     filename = url.split('/')[-1]
