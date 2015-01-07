@@ -15,7 +15,7 @@ ini_set('display_errors','1');
                     join resi_builder rb on rp.builder_id = rb.builder_id
                    join locality l on rp.locality_id = l.locality_id
                    join suburb s on l.suburb_id = s.suburb_id
-                   join city c on s.city_id = c.city_id where rp.version = 'Cms' limit 10";
+                   join city c on s.city_id = c.city_id where rp.version = 'Cms' limit 1000";
     $resPDetail = mysql_query($qryPDetail) or die(mysql_error());
 
 echo "Following project url not matched";
@@ -27,10 +27,10 @@ echo "iiner";
 echo "<pre>"; print_r($data);
             $txtProjectURL = createProjectURLOneTime($data['cityName'], $data['localityName'], $data['builder_name'], $data['project_name'], $data['project_id']);
             
-            //if($data['localityName'] != $txtProjectURL){
+            if($data['localityName'] != $txtProjectURL){
                 echo "Existing URL: ".$data['project_url'] ."<====>According to current format: ". $txtProjectURL."<br>";
-die("inner");
-            //}
+//die("inner");
+            }
            // $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
                 //    where PROJECT_ID=".$data['project_id']." and version = 'Cms'";
             //$resUrl = mysql_query($updateQuery) or die(mysql_error());
