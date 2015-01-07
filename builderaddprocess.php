@@ -400,7 +400,7 @@ if ($_POST['btnSave'] == "Save")
 
                         //update all project url if builder name update
                             if($txtBuilderUrlOld != $txtBuilderUrl){
-                                $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName from RESI_PROJECT rp
+                                $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName from ".RESI_PROJECT." rp
                                                join locality l on rp.locality_id = l.locality_id
                                                join suburb s on l.suburb_id = s.suburb_id
                                                join city c on s.city_id = c.city_id where rp.builder_id = $builderid and rp.version = 'Cms'";
