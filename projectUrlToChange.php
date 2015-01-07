@@ -1,4 +1,4 @@
-'<?php
+<?php
 
 	include("smartyConfig.php");
 	include("appWideConfig.php");
