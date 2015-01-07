@@ -42,10 +42,41 @@ function createProjectURLOneTime($city, $locality, $builderName, $projectName, $
     $locality = trim(strtolower($locality));
     $builder = trim(strtolower($builderName));
     $project = trim(strtolower($projectName));
-    $projectId = getIdByType($projectId, 'project');
+    $projectId = getIdByTypeOneTime($projectId, 'project');
     $projectURL = $city.'/'.$locality.'/'.$builder.'-'.$project.'-'.$projectId;
     $url = preg_replace( '/\s+/', '-', $projectURL);
     return $url;
+}
+function getIdByTypeOneTime( $id, $id_type ) {
+    $txt = "";
+    if ( !empty( $id_type ) && is_numeric( $id ) ) {
+        $add_value = -1;
+        switch( $id_type ) {
+            case 'city':
+                $add_value = 0;
+                break;
+            case 'suburb':
+                $add_value = 0;
+                break;
+            case 'locality':
+                $add_value = 0;
+                break;
+            case 'builder':
+                $add_value = 0;
+                break;
+            case 'project':
+                $add_value = 0;                                                                                                                  
+                break;
+            case 'property':
+                $add_value = 0;
+                break;
+        }
+        if ( $add_value != -1 ) {
+            $txt = $add_value + ( int )$id;
+            $txt = "$txt";
+        }
+    }
+    return $txt;
 }
 ?>
 
