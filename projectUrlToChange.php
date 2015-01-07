@@ -22,11 +22,13 @@ echo "Following project url not matched";
 echo mysql_num_rows($resPDetail);
     if(mysql_num_rows($resPDetail)>0){
 echo "iiner";
+echo "<pre>"; print_r($resPDetail);
         while($data = mysql_fetch_assoc($resPDetail)){
             $txtProjectURL = createProjectURL($data['cityName'], $data['localityName'], $data['builder_name'], $data['project_name'], $data['project_id']);
-            die("inner");
+            
             //if($data['localityName'] != $txtProjectURL){
                 echo "Existing URL: ".$data['project_url'] ."<====>According to current format: ". $txtProjectURL."<br>";
+die("inner");
             //}
            // $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
                 //    where PROJECT_ID=".$data['project_id']." and version = 'Cms'";
