@@ -1,13 +1,13 @@
 <?php
 
+	error_reporting(1);
+ini_set('display_errors','1');
 	include("smartyConfig.php");
 	include("appWideConfig.php");
 	include("dbConfig.php");
 	include("includes/configs/configs.php");
-	date_default_timezone_set('Asia/Kolkata');
-	include("builder_function.php"); 
-	AdminAuthentication();	
-	include("modelsConfig.php");
+
+	AdminAuthentication();
 
     $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName,rb.builder_name from ".RESI_PROJECT." rp
                     join resi_builder rb on rp.builder_id = rb.builder_id
@@ -30,5 +30,15 @@ echo "Following project url not matched";
         }
     }
 	
+function createProjectURL($city, $locality, $builderName, $projectName, $projectId){
+    $city = trim(strtolower($city));
+    $locality = trim(strtolower($locality));
+    $builder = trim(strtolower($builderName));
+    $project = trim(strtolower($projectName));
+    $projectId = getIdByType($projectId, 'project');
+    $projectURL = $city.'/'.$locality.'/'.$builder.'-'.$project.'-'.$projectId;
+    $url = preg_replace( '/\s+/', '-', $projectURL);
+    return $url;
+}
 ?>
 
