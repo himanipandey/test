@@ -25,7 +25,7 @@ echo "iiner";
 
         while($data = mysql_fetch_assoc($resPDetail)){
 echo "<pre>"; print_r($data);
-            $txtProjectURL = createProjectURL($data['cityName'], $data['localityName'], $data['builder_name'], $data['project_name'], $data['project_id']);
+            $txtProjectURL = createProjectURLOneTime($data['cityName'], $data['localityName'], $data['builder_name'], $data['project_name'], $data['project_id']);
             
             //if($data['localityName'] != $txtProjectURL){
                 echo "Existing URL: ".$data['project_url'] ."<====>According to current format: ". $txtProjectURL."<br>";
@@ -37,7 +37,7 @@ die("inner");
         }
     }
 	
-function createProjectURL($city, $locality, $builderName, $projectName, $projectId){
+function createProjectURLOneTime($city, $locality, $builderName, $projectName, $projectId){
     $city = trim(strtolower($city));
     $locality = trim(strtolower($locality));
     $builder = trim(strtolower($builderName));
