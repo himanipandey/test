@@ -27,7 +27,7 @@ echo "Following project url not matched";
 //echo "<pre>"; print_r($data);
             $txtProjectURL = createProjectURLOneTime($data['cityName'], $data['localityName'], $data['builder_name'], $data['project_name'], $data['project_id']);
             
-            if($data['localityName'] != $txtProjectURL){
+            if($data['project_url'] != $txtProjectURL){
                 echo "Existing URL: ".$data['project_url'] ."<====>According to current format: ". $txtProjectURL."<br>";
 //die("inner");
             }
