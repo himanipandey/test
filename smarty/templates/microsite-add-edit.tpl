@@ -130,16 +130,7 @@
                                    </td>
                                </tr>
                                
-                               <tr>
-                                    <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Disclaimer :</b> </td>
-                                    <td width="30%" align="left">
-                                           <textarea name="projectDisclaimer" rows="20" cols="90"  class ="myTextEditor" id = "projectDisclaimer">{$projectDisclaimer}</textarea>
-                                          
-                                    </td>
-                                    <td width="50%" align="left" valign = "top">
-                                            <font color="red">{if $ErrorMsg["projectDisclaimer"] != ''} {$ErrorMsg["projectDisclaimer"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Disclaimer!</span></font>
-                                   </td>
-                               </tr>
+                              
 				<tr>
 				  <td width="20%" align="right" > <b><font color = "red">*</font>Project Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitle id=metaTitle value="{$metaTitle}" style="width:360px;"></td>

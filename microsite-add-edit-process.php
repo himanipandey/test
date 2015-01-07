@@ -113,7 +113,6 @@ if(isset($_REQUEST['searchProject'])){
     $localityName = $_REQUEST['localityName'];
     $contactNumber = $_REQUEST['contactNumber'];
     $projectDesc = $_REQUEST['projectDesc'];
-    $projectDisclaimer = $_REQUEST['projectDisclaimer'];
     $metaTitle = $_REQUEST['metaTitle'];
     $metaKeywords = $_REQUEST['metaKeywords'];
     $metaDescription = $_REQUEST['metaDescription'];
@@ -190,7 +189,6 @@ if($_REQUEST['imageName'][0] == '')
     $smarty->assign("contactNumber",$contactNumber);    
     $smarty->assign("projectName",$projectName);
     $smarty->assign("projectDesc",$projectDesc);
-    $smarty->assign("projectDisclaimer",$projectDisclaimer);
     $smarty->assign("cityName",$cityName);
     
     $smarty->assign("metaTitle",$metaTitle);
@@ -265,11 +263,6 @@ if($_REQUEST['imageName'][0] == '')
         $ErrorMsg["metaTitle"] = "Proptiger word is not allowed.";
     }
     
-    if(empty($projectDisclaimer)){
-       $ErrorMsg["projectDisclaimer"] = "Project disclaimer can't be blank.";
-    }elseif(stristr(strtolower($projectDisclaimer),'proptiger')){
-        $ErrorMsg["projectDisclaimer"] = "Proptiger word is not allowed.";
-    }
     if(empty($projectDesc)){
        $ErrorMsg["projectDesc"] = "Project description can't be blank.";
     }elseif(stristr(strtolower($projectDesc),'proptiger')){
@@ -387,7 +380,6 @@ if($_REQUEST['imageName'][0] == '')
         $jsonArr['pricelist']['project'] = $_REQUEST['projectName'];
         $jsonArr['pricelist']['builder'] = $_REQUEST['builderName'];
         $jsonArr['pricelist']['builderLogo'] = 'builder-logo.jpg';
-        $jsonArr['pricelist']['disclaimer'] = $_REQUEST['projectDisclaimer'];
         $jsonArr['pricelist']['locality'] = $_REQUEST['localityName'];
         $jsonArr['pricelist']['city'] = $_REQUEST['cityName'];
         $jsonArr['pricelist']['contact'] = $_REQUEST['contactNumber'];
