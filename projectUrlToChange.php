@@ -1,13 +1,15 @@
 <?php
 
 	error_reporting(1);
-    ini_set('display_errors','1');
+ini_set('display_errors','1');
 	include("smartyConfig.php");
 	include("appWideConfig.php");
 	include("dbConfig.php");
-	//include("includes/configs/configs.php");
-
-	//AdminAuthentication();
+	include("includes/configs/configs.php");
+	include("builder_function.php");
+        include("modelsConfig.php"); 
+	AdminAuthentication();
+        //include("function/projectPhase.php");
 
     $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName,rb.builder_name from resi_project rp
                     join resi_builder rb on rp.builder_id = rb.builder_id
