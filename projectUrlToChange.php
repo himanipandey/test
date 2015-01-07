@@ -5,10 +5,10 @@ ini_set('display_errors','1');
 	include("smartyConfig.php");
 	include("appWideConfig.php");
 	include("dbConfig.php");
-	include("includes/configs/configs.php");
-	include("builder_function.php");
+	//include("includes/configs/configs.php");
+	//include("builder_function.php");
         include("modelsConfig.php"); 
-	AdminAuthentication();
+	//AdminAuthentication();
         //include("function/projectPhase.php");
 
     $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName,rb.builder_name from resi_project rp
@@ -19,6 +19,7 @@ ini_set('display_errors','1');
     $resPDetail = mysql_query($qryPDetail) or die(mysql_error());
 
 echo "Following project url not matched";
+echo mysql_num_rows($resPDetail);
     if(mysql_num_rows($resPDetail)>0){
         while($data = mysql_fetch_assoc($resPDetail)){
             $txtProjectURL = createProjectURL($data['cityName'], $data['localityName'], $data['builder_name'], $data['project_name'], $data['project_id']);
