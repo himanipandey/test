@@ -392,12 +392,12 @@ if($_REQUEST['imageName'][0] == '')
         $jsonArr['pricelist']['city'] = $_REQUEST['cityName'];
         $jsonArr['pricelist']['contact'] = $_REQUEST['contactNumber'];
 
-        $jsonArr['pricelist']['home']['description'] = $_REQUEST['projectDesc'];
-        $jsonArr['pricelist']['home']['title'] = $_REQUEST['metaTitle'];
-        $jsonArr['pricelist']['home']['metaKeyword'] = $_REQUEST['metaKeywords'];
-        $jsonArr['pricelist']['home']['metaDescription'] = $_REQUEST['metaDescription'];
+        $jsonArr['pricelist']['index']['description'] = $_REQUEST['projectDesc'];
+        $jsonArr['pricelist']['index']['title'] = $_REQUEST['metaTitle'];
+        $jsonArr['pricelist']['index']['metaKeyword'] = $_REQUEST['metaKeywords'];
+        $jsonArr['pricelist']['index']['metaDescription'] = $_REQUEST['metaDescription'];
         $arrHomeImg = array("locationmap-01.jpg","siteplan-01.jpg","floorplan-01.jpg");
-        $jsonArr['pricelist']['home']['homePagePlanImages'] = $arrHomeImg;
+        $jsonArr['pricelist']['index']['homePagePlanImages'] = $arrHomeImg;
 
         //json array for price page
         $jsonArr['pricelist']['pricetable']['title'] = $_REQUEST['metaTitlePriceList'];
@@ -407,8 +407,8 @@ if($_REQUEST['imageName'][0] == '')
         foreach($_REQUEST['configId'] as $k=>$v){
             if($_REQUEST['price_unitName'][$k] != ''){
                  $arrConfig[$k]['type'] = $_REQUEST['price_unitName'][$k];
-                 $arrConfig[$k]['area'] = $_REQUEST['price_PerUnitArea'][$k];
-                 $arrConfig[$k]['rate'] = $_REQUEST['price_size'][$k];
+                 $arrConfig[$k]['area'] = $_REQUEST['price_size'][$k];
+                 $arrConfig[$k]['rate'] = $_REQUEST['price_PerUnitArea'][$k];
                  $arrConfig[$k]['BSP'] = "".$_REQUEST['price_size'][$k]*$_REQUEST['price_PerUnitArea'][$k]."";
                  if($cntCont <= 9)
                     $arrFloorImg[] = "floorplan-0$cntCont.jpg";
