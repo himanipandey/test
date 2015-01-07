@@ -21,10 +21,10 @@ ini_set('display_errors','1');
 echo "Following project url not matched";
 
     if(mysql_num_rows($resPDetail)>0){
-echo "iiner";
+//echo "iiner";
 
         while($data = mysql_fetch_assoc($resPDetail)){
-echo "<pre>"; print_r($data);
+//echo "<pre>"; print_r($data);
             $txtProjectURL = createProjectURLOneTime($data['cityName'], $data['localityName'], $data['builder_name'], $data['project_name'], $data['project_id']);
             
             if($data['localityName'] != $txtProjectURL){
