@@ -497,8 +497,8 @@ function projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName){
    if(mysql_num_rows($resPDetail)>0){
        while($data = mysql_fetch_assoc($resPDetail)){
              $txtProjectURL = createProjectURL($data['cityName'], $data['localityName'], $txtBuilderName, $data['project_name'], $data['project_id']);
-             echo $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
-                              where PROJECT_ID=".$data['project_id'];die;
+             $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
+                              where PROJECT_ID=".$data['project_id'];
              $resUrl = mysql_query($updateQuery) or die(mysql_error());
       }
    }
