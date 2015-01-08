@@ -19,7 +19,7 @@
     $resPDetail = mysql_query($qryPDetail) or die(mysql_error());
 
 echo "<b>Following project url not matched and have been updated successfully<br></b>";
-echo mysql_num_rows($resPDetail);die;
+//echo mysql_num_rows($resPDetail);die;
     if(mysql_num_rows($resPDetail)>0){
 //echo "iiner";
 $cnt = 1;
