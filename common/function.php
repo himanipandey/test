@@ -488,7 +488,7 @@ function randomPassword() {
     return implode($pass); //turn the array into a string
 }
 
-function projectUrlUpdateByBuilderNameChange($builderid){
+function projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName){
     $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName from ".RESI_PROJECT." rp
                    join locality l on rp.locality_id = l.locality_id
                    join suburb s on l.suburb_id = s.suburb_id
@@ -497,8 +497,8 @@ function projectUrlUpdateByBuilderNameChange($builderid){
    if(mysql_num_rows($resPDetail)>0){
        while($data = mysql_fetch_assoc($resPDetail)){
              $txtProjectURL = createProjectURL($data['cityName'], $data['localityName'], $txtBuilderName, $data['project_name'], $data['project_id']);
-             $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
-                              where PROJECT_ID=".$data['project_id'];
+             echo $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
+                              where PROJECT_ID=".$data['project_id'];die;
              $resUrl = mysql_query($updateQuery) or die(mysql_error());
       }
    }

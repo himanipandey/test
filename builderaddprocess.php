@@ -285,7 +285,7 @@ if ($_POST['btnSave'] == "Save")
 
                                 //update all project url if builder name update
                                 if($txtBuilderUrlOld != $txtBuilderUrl)
-                                    projectUrlUpdateByBuilderNameChange($builderid);
+                                    projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName);
                                 header("Location:BuilderList.php?page=1&sort=all");
                             } else
                                 $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
@@ -386,7 +386,7 @@ if ($_POST['btnSave'] == "Save")
 
                         //update all project url if builder name update
                         if($txtBuilderUrlOld != $txtBuilderUrl)
-                           projectUrlUpdateByBuilderNameChange($builderid);
+                           projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName);
                         header("Location:BuilderList.php?page=1&sort=all");
                     }
                     else
