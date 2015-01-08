@@ -163,8 +163,8 @@ for (var i=0;i<prevalue.length;i++){
     sum += parseInt(prevalue[i]); //<--- Use a parseInt to cast it or use parseFloat
 
  }
- if(parseInt(sum) >= 4000){
- alert("Maximum 4000 projects can be selected!");
+ if(parseInt(sum) >= 15000){
+ alert("Maximum 15000 projects can be selected!");
  document.getElementById(id).checked = false;
   return false; 
 } 
