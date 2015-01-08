@@ -284,22 +284,8 @@ if ($_POST['btnSave'] == "Save")
                                 mysql_query($updateQuery) or die(mysql_error());
 
                                 //update all project url if builder name update
-                                if($txtBuilderUrlOld != $txtBuilderUrl){
-                                    $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName from ".RESI_PROJECT." rp
-                                                   join locality l on rp.locality_id = l.locality_id
-                                                   join suburb s on l.suburb_id = s.suburb_id
-                                                   join city c on s.city_id = c.city_id where rp.builder_id = $builderid and rp.version = 'Cms'";
-                                    $resPDetail = mysql_query($qryPDetail) or die(mysql_error());
-                                    if(mysql_num_rows($resPDetail)>0){
-                                        while($data = mysql_fetch_assoc($resPDetail)){
-                                            $txtProjectURL = createProjectURL($data['cityName'], $data['localityName'], $txtBuilderName, $data['project_name'], $data['project_id']);
-                                            $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
-                                                    where PROJECT_ID=".$data['project_id'];
-                                            $resUrl = mysql_query($updateQuery) or die(mysql_error());
-                                        }
-                                    }
-                                }
-                                //end code update all project url if builder name update
+                                if($txtBuilderUrlOld != $txtBuilderUrl)
+                                    projectUrlUpdateByBuilderNameChange($builderid);
                                 header("Location:BuilderList.php?page=1&sort=all");
                             } else
                                 $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
@@ -399,22 +385,8 @@ if ($_POST['btnSave'] == "Save")
                         mysql_query($updateQuery) or die(mysql_error());
 
                         //update all project url if builder name update
-                            if($txtBuilderUrlOld != $txtBuilderUrl){
-                                $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName from ".RESI_PROJECT." rp
-                                               join locality l on rp.locality_id = l.locality_id
-                                               join suburb s on l.suburb_id = s.suburb_id
-                                               join city c on s.city_id = c.city_id where rp.builder_id = $builderid and rp.version = 'Cms'";
-                                $resPDetail = mysql_query($qryPDetail) or die(mysql_error());
-                                if(mysql_num_rows($resPDetail)>0){
-                                    while($data = mysql_fetch_assoc($resPDetail)){
-                                        $txtProjectURL = createProjectURL($data['cityName'], $data['localityName'], $txtBuilderName, $data['project_name'], $data['project_id']);
-                                        $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
-                                                where PROJECT_ID=".$data['project_id'];
-                                        $resUrl = mysql_query($updateQuery) or die(mysql_error());
-                                    }
-                                }
-                            }
-                        //end code update all project url if builder name update
+                        if($txtBuilderUrlOld != $txtBuilderUrl)
+                           projectUrlUpdateByBuilderNameChange($builderid);
                         header("Location:BuilderList.php?page=1&sort=all");
                     }
                     else
