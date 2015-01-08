@@ -26,7 +26,7 @@ cursor = db.cursor()
 
 #target_url = 'https://proptiger.com/data/v1/entity/audio'
 
-target_url = 'https://beta-new.proptiger-ws.com/data/v1/entity/audio'
+target_url = 'https://qa.proptiger-ws.com/data/v1/entity/audio'
 
 
 def download_audio(url, CallId):

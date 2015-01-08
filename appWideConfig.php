@@ -80,7 +80,7 @@ else{
 	define("DB_CRM_NAME", "ptigercrm");
 
 	//  Curl call URL
-	define("SERVER_URL", "https://beta-new.proptiger-ws.com");
+	define("SERVER_URL", "https://qa.proptiger-ws.com");
 	define("SEND_EMAIL", TRUE);
 	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
 	define("RESALE_GROUP_EMAIL", "projects@proptiger.com");
@@ -89,12 +89,12 @@ else{
     define("CLOUDAGENT_USER", "proptiger");
     define("CLOUDAGENT_KEY", "KK6553cb21f45e304ffb6c8c92a279fde5");
 
-	define("IMAGE_SERVICE_URL","https://beta-new.proptiger-ws.com/data/v1/entity/image");
-	define("AUDIO_SERVICE_URL","https://beta-new.proptiger-ws.com/data/v1/entity/audio");
+	define("IMAGE_SERVICE_URL","https://qa.proptiger-ws.com/data/v1/entity/image");
+	define("AUDIO_SERVICE_URL","https://qa.proptiger-ws.com/data/v1/entity/audio");
     define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
-    define("USER_API_URL","https://beta-new.proptiger-ws.com/app/v1/register");
-    define("TYPEAHEAD_API_URL", "https://beta-new.proptiger-ws.com/app/v1/typeahead");
+    define("USER_API_URL","https://qa.proptiger-ws.com/app/v1/register");
+    define("TYPEAHEAD_API_URL", "https://qa.proptiger-ws.com/app/v1/typeahead");
    
 
 }
