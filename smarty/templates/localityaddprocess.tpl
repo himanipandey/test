@@ -132,7 +132,8 @@
 				  <td width="30%" align="left" >
 				    <select name = "status" id="status" style="width:150px;"> 
 					  <option  value = "Active" {if $status == 'Active'}selected{/if}>Active</option>
-                                          <option  value = "Inactive" {if $status == 'Inactive'}selected{/if}>Inactive</option>		
+                      <option  value = "Inactive" {if $status == 'Inactive'}selected{/if}>Inactive</option>	
+                      <!--<option  value = "ActiveInCms" {if $status == 'ActiveInCms'}selected{/if}>ActiveInCms</option>-->	
 					 </select>
 				 </td>				   
 				 <td width="50%" align="left"></td>

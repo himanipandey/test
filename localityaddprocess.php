@@ -192,6 +192,14 @@
                                       value('".$txtCityName."','".$parent_subId."','".$status."','null','null','" . d_($desc) . "','".$_SESSION['adminId']."',now(),999)";
                                 $res = mysql_query($qry) or die(mysql_error());
                                 $locId = mysql_insert_id();
+
+                                //CODE FOR CREATE ENTRY IN PROPTIGERS PERMISSIONS TABLE
+                                    $qryfetchObject = "select * from proptiger.ObjectType where type = 'locality'";
+                                    $resObject = mysql_query($qryfetchObject) or die(mysql_error());
+                                    $objectType = mysql_fetch_assoc($resObject);
+                                    $insQry = "insert into proptiger.permissions set object_type_id = ".$objectType['id'].",object_id = $locId";
+                                    $resQry = mysql_query($insQry) or die(mysql_error());
+                                //End CODE FOR CREATE ENTRY IN PROPTIGERS PERMISSIONS TABLE
                                 $cityFind = City::find($cityId);  
                                 $url = createLocalityURL($txtCityName, $cityFind->label, $locId, 'locality');
                                 $qry = "UPDATE ".LOCALITY." SET URL = '$url',updated_by = '".$_SESSION['adminId']."',updated_at = now()
