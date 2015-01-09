@@ -426,8 +426,6 @@ if($_REQUEST['floorName'][0] != ''){
         $jsonArr['pricelist']['index']['title'] = $_REQUEST['metaTitle'];
         $jsonArr['pricelist']['index']['metaKeyword'] = $_REQUEST['metaKeywords'];
         $jsonArr['pricelist']['index']['metaDescription'] = $_REQUEST['metaDescription'];
-        $arrHomeImg = array("locationmap-01.jpg","siteplan-01.jpg","floorplan-01.jpg");
-        $jsonArr['pricelist']['index']['homePagePlanImages'] = $arrHomeImg;
 
         //json array for price page
         $jsonArr['pricelist']['pricetable']['title'] = $_REQUEST['metaTitlePriceList'];
