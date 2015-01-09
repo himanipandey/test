@@ -21,10 +21,10 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 
-db = MySQLdb.connect('localhost', 'root', 'root', 'cms')
+db = MySQLdb.connect('10.0.38.170', 'cms', 'CMS@123', 'cms') 
 cursor = db.cursor()
 
-target_url = 'http://qa.proptiger-ws.com:8080/data/v1/entity/audio'
+target_url = 'http://proptiger.com/data/v1/entity/audio'
 
 def download_audio(url, CallId):
     filename = url.split('/')[-1]
@@ -62,7 +62,7 @@ def update_status(callID):
         
 
 if __name__=='__main__':
-    query = 'select CallId, AudioLink from CallDetails where AudioLink regexp "mp3" and media_service_status="NotUploaded" order by CallId desc'
+    query = 'select CallId, AudioLink from CallDetails where AudioLink regexp "mp3" and media_service_status="NotUploaded" and CreationTime> DATE_SUB(NOW(), INTERVAL 20 DAY) order by CallId desc '
     cursor.execute(query)
     rows = cursor.fetchall()
 

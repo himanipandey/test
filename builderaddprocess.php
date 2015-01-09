@@ -267,6 +267,8 @@ if ($_POST['btnSave'] == "Save")
                             $imgPath = explode("images_new/",$imgurl);
                             $ImgDbFinalPath = "/".$imgPath[1];
 
+                            
+                            
                             $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl,$DisplayOrder,$ImgDbFinalPath,$builderid,$address,$city,$pincode,$ceo,$employee,$established,$delivered_project,$area_delivered,$ongoing_project,$website,$revenue,$debt,$contactArr,$oldbuilder, $image_id);
                             if($rt)
                             {
@@ -280,6 +282,10 @@ if ($_POST['btnSave'] == "Save")
                                 $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
                                 $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
                                 mysql_query($updateQuery) or die(mysql_error());
+
+                                //update all project url if builder name update
+                                if($txtBuilderUrlOld != $txtBuilderUrl)
+                                    projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName);
                                 header("Location:BuilderList.php?page=1&sort=all");
                             } else
                                 $ErrorMsg['dataInsertionError'] = "Please try again there is a problem";
@@ -377,6 +383,10 @@ if ($_POST['btnSave'] == "Save")
                         $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
                         $updateQuery = 'UPDATE '.RESI_BUILDER.' set URL="'.$txtBuilderUrl.'" WHERE BUILDER_ID='.$builderid;
                         mysql_query($updateQuery) or die(mysql_error());
+
+                        //update all project url if builder name update
+                        if($txtBuilderUrlOld != $txtBuilderUrl)
+                           projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName);
                         header("Location:BuilderList.php?page=1&sort=all");
                     }
                     else
