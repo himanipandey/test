@@ -50,8 +50,8 @@
 	      </TR>
               <TR>
                 <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
-		
-		{if $micrositeFlgExec == 1}
+
+	{if $micrositeFlgExec == 1}
 		     
 <!--			<fieldset class="field-border">
 			  <legend><b>Message</b></legend>-->
@@ -64,14 +64,23 @@
                                     <b>Project Id</b>:&nbsp;
                                     <input type="text" name = "projectId" value="{$projectId}">
                                     &nbsp;
-				    <b>Slider Images Count</b>:&nbsp;
-                                    <select name = "sliderImgCnt">
-					{$cntSlder = 1}
-                                          {section name=sliderImgCnt loop=20 step=1}
-					  	<option value = "{$cntSlder}" {if $cntSlder == $sliderImgCnt}selected{/if}>{$cntSlder}</option>
-					   {$cntSlder = $cntSlder+1}
-					  {/section}
-				    </select>
+				                    <b>Slider Images Count</b>:&nbsp;
+                                     <select name = "sliderImgCnt">
+					                {$cntSlder = 1}
+                                       {section name=sliderImgCnt loop=20 step=1}
+					                  	<option value = "{$cntSlder}" {if $cntSlder == $sliderImgCnt}selected{/if}>{$cntSlder}</option>
+					                   {$cntSlder = $cntSlder+1}
+					                  {/section}
+				                    </select>
+                                                    &nbsp;
+				                    <b>Floor Plan Images Count</b>:&nbsp;
+                                      <select name = "flrImgCnt">
+					                {$cntFlr = 0}
+                                       {section name=flrImgCnt loop=20 step=1}
+					                  	<option value = "{$cntFlr}" {if $cntFlr == $flrImgCnt}selected{/if}>{$cntFlr}</option>
+					                   {$cntFlr = $cntFlr+1}
+					                  {/section}
+				                    </select>
                                     &nbsp;
                                     <input type = "submit" name = "searchProject" value="Get Project Detail">
                                      </fieldset>
@@ -130,16 +139,7 @@
                                    </td>
                                </tr>
                                
-                               <tr>
-                                    <td width="20%" align="right" valign="top"><b><b><font color ="red">*</font><b>Project Disclaimer :</b> </td>
-                                    <td width="30%" align="left">
-                                           <textarea name="projectDisclaimer" rows="20" cols="90"  class ="myTextEditor" id = "projectDisclaimer">{$projectDisclaimer}</textarea>
-                                          
-                                    </td>
-                                    <td width="50%" align="left" valign = "top">
-                                            <font color="red">{if $ErrorMsg["projectDisclaimer"] != ''} {$ErrorMsg["projectDisclaimer"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Disclaimer!</span></font>
-                                   </td>
-                               </tr>
+                              
 				<tr>
 				  <td width="20%" align="right" > <b><font color = "red">*</font>Project Meta Title : </b></td>
 				  <td width="30%" align="left" ><input type=text name=metaTitle id=metaTitle value="{$metaTitle}" style="width:360px;"></td>
@@ -294,6 +294,40 @@
                                       </td>
                                   </tr>
                                   <!--end code for images-->
+
+
+                                  <!--code for floor image title name and alt tag-->
+                                  <tr>
+                                    <td   align="left"  valign ="top" colspan = "3"><b>Floor Images :</b> </td>
+                                </tr>
+                                
+                                  <tr>
+                                      <td width="100%" align="left"  valign ="top" colspan="3" style = "padding-left: 60px;">
+                                          <table width = 30% align = "left" style = "border :1px solid; color: #677788;">
+                                              {if $ErrorMsg['flrTitleName'] != ''}
+                                                  <tr><td align = "left" colspan="3"><font color = "red">{$ErrorMsg['flrTitleName']}</font></td></tr>
+                                              {/if}
+                                              <tr><td align = "left"><b>Name</b></td>
+                                                  <td align = "left"><b>Title</b></td>
+                                                  <td align = "left"><b>Alt Tag</b></td>
+                                              </tr>
+                                              {$cnt = 1}
+                                              {section name=imageDetail loop=$flrImgCnt step=0}
+                                              <tr>
+                                                  <td align = "center"><input type="text" name="floorName[]" value="{$arrFloor[$cnt-1]['floorName']}" readonly></td>
+                                                  <td align = "center"><input type="text" name="floorTitle[]" value="{$arrFloor[{$cnt-1}]['floorTitle']}"></td>
+                                                  <td align = "center"><input type="text" name="floorAlt[]" value="{$arrFloor[{$cnt-1}]['floorAlt']}"></td>
+                                              </tr>
+                                              {$cnt = $cnt+1}
+                                             {/section}
+                                              
+                                          </table>
+                                      
+                                      </td>
+                                  </tr>
+                                  <!--end code for images-->
+
+
                                   <tr>
                                     <td   align="left"  valign ="top" colspan = "3">&nbsp;</td>
                                   </tr>
@@ -461,23 +495,24 @@
                                           </td>
                                 </tr>
                                 <input type = "hidden" name = "projectId" value = "{$projectId}">
-				<input type = "hidden" name = "sliderImgCnt" value = "{$sliderImgCnt}">
+				                <input type = "hidden" name = "sliderImgCnt" value = "{$sliderImgCnt}">
+                                <input type = "hidden" name = "flrImgCnt" value = "{$flrImgCnt}">
                                 <tr style ="border:1px solid #c2c2c2;height:30px;width:70px;background:#999999;color:#fff;font-weight:bold;cursor:hand;pointer:hand;">
 				  <td colspan = "2" align="right" style="padding-left:152px;" >
 				  <input type="submit" name="generateMicrosite" id="generateMicrosite" value="Generate Microsite Code">
 				  </td>
 				</tr>
                                 </form>
-                                {/if}
+                                {/if} 
 			    </TABLE>
 <!--			</fieldset>-->
 	            </td>
 		  </tr>
 		</TABLE>
-                                                         
-                {else}
+          {else}
                     <font color="red">No Access</font>
-                {/if}
+                {/if}                                               
+              
 	      </TD>
             </TR>
           </TBODY></TABLE>
