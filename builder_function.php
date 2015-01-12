@@ -711,7 +711,6 @@ function ProjectType($projectId) {
             $arrProjectType['VILLA_TERRACE_AREA'][] = $data['VILLA_TERRACE_AREA'];
             $arrProjectType['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType['CARPET_AREA'][] = $data['CARPET_AREA'];
-            $arrProjectType['DISPLAY_CARPET_AREA'][] = $data['DISPLAY_CARPET_AREA'];
             $arrProjectType['APARTMENTS_TYPE'][] = $apartmentsType[0]->attribute_value;
         } else if ($data['OPTION_TYPE'] == 'Plot') {
             $arrProjectType_P['OPTIONS_ID'][] = $data['OPTIONS_ID'];
@@ -751,7 +750,6 @@ function ProjectType($projectId) {
             $arrProjectType_VA['VILLA_TERRACE_AREA'][] = $data['VILLA_TERRACE_AREA'];
             $arrProjectType_VA['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType_VA['CARPET_AREA'][] = $data['CARPET_AREA'];
-            $arrProjectType_VA['DISPLAY_CARPET_AREA'][] = $data['DISPLAY_CARPET_AREA'];
         }
     }
 }

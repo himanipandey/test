@@ -5,12 +5,14 @@
  * Created by Vimlesh Rajput on 16th Dec 2014
  * project id for testing 647719
  */
-//echo "<pre>";print_r($_REQUEST);DIE;
+
 if(isset($_REQUEST['searchProject'])){ 
     $projectId = $_REQUEST['projectId']; 
     $sliderImgCnt = $_REQUEST['sliderImgCnt'];
+    $flrImgCnt = $_REQUEST['flrImgCnt'];
     $smarty->assign("projectId",$projectId);
     $smarty->assign("sliderImgCnt",$sliderImgCnt);
+    $smarty->assign("flrImgCnt",$flrImgCnt);
 
 
     $arrImage = array();
@@ -22,10 +24,22 @@ if(isset($_REQUEST['searchProject'])){
     }
     $smarty->assign("arrImage",$arrImage);
 
+    //floor plan
+    $arrImageFloor = array();
+    for($i=1;$i<=$flrImgCnt;$i++){
+        if($i>9)
+            $arrImageFloor[$i-1]['floorName'] = "floorplan-$i.jpg";
+	else
+	   $arrImageFloor[$i-1]['floorName'] = "floorplan-0$i.jpg";
+    }
+    $smarty->assign("arrFloor",$arrImageFloor);
+
     $projectUrl = SERVER_URL."/app/v4/project-detail/$projectId";
+
     $data = get_data($projectUrl);
     $obj = json_decode($data);
 //echo "<pre>";print_r($obj);
+//echo "<pre>";print_r($_REQUEST);//DIE;
     //project detail basic info
     $builderName = $obj->data->builder->name;
     $suburbName = $obj->data->locality->suburb->label;
@@ -108,12 +122,12 @@ if(isset($_REQUEST['searchProject'])){
     $projectName = $_REQUEST['projectName'];
     $projectId = $_REQUEST['projectId'];
     $sliderImgCnt = $_REQUEST['sliderImgCnt'];
+    $flrImgCnt = $_REQUEST['flrImgCnt'];
     $builderName = $_REQUEST['builderName'];
     $cityName = $_REQUEST['cityName'];
     $localityName = $_REQUEST['localityName'];
     $contactNumber = $_REQUEST['contactNumber'];
     $projectDesc = $_REQUEST['projectDesc'];
-    $projectDisclaimer = $_REQUEST['projectDisclaimer'];
     $metaTitle = $_REQUEST['metaTitle'];
     $metaKeywords = $_REQUEST['metaKeywords'];
     $metaDescription = $_REQUEST['metaDescription'];
@@ -160,9 +174,30 @@ if($_REQUEST['imageName'][0] == '')
 	$arrImage[$k]['imageTitle'] = $_REQUEST['imageTitle'][$k];
         $arrImage[$k]['imageAlt'] = $_REQUEST['imageAlt'][$k];
     }
+
+//floor plan image validation
+$arrFloor = array();
+if($_REQUEST['floorName'][0] != ''){
+     foreach($_REQUEST['floorName'] as $k=>$v){
+    //echo "<br>$k".count($arrImage['imageTitle'][$k])."_".count($arrImage['imageAlt'][$k]);
+            if(stristr(strtolower($_REQUEST['floorTitle'][$k]),'proptiger') || stristr(strtolower($_REQUEST['floorAlt'][$k]),'proptiger')
+	       || stristr(strtolower($_REQUEST['floorName'][$k]),'proptiger'))
+               $ErrorMsg['flrTitleName'] = "Proptiger word is not allowed."; 
+	       elseif($_REQUEST['floorTitle'][$k] == '' || $_REQUEST['floorAlt'][$k] == ''){
+	       $ErrorMsg['flrTitleName'] = "Floor image name, Alt tag and title is mandatory.";
+	      }
+        //$ErrorMsg['configName'] = "Proptiger word is not allowed.";
+        $arrFloor[$k]['floorName'] = $_REQUEST['floorName'][$k];
+        $arrFloor[$k]['floorTitle'] = $_REQUEST['floorTitle'][$k];
+        $arrFloor[$k]['floorAlt'] = $_REQUEST['floorAlt'][$k];
+    }
+
+}
+
 //print_r($ErrorMsg);
 //die;
     $smarty->assign("arrImage",$arrImage);
+    $smarty->assign("arrFloor",$arrFloor);
     $master_bedroom_flooring = $_REQUEST['master_bedroom_flooring'];
     $gaCode = $_REQUEST['gaCode'];
     $other_bedroom_flooring = $_REQUEST['other_bedroom_flooring'];
@@ -184,13 +219,13 @@ if($_REQUEST['imageName'][0] == '')
     
     $smarty->assign("projectId",$projectId);
     $smarty->assign("sliderImgCnt",$sliderImgCnt);
+    $smarty->assign("flrImgCnt",$flrImgCnt);
     $smarty->assign("builderName",$builderName);
     $smarty->assign("suburbName",$suburbName);
     $smarty->assign("localityName",$localityName);
     $smarty->assign("contactNumber",$contactNumber);    
     $smarty->assign("projectName",$projectName);
     $smarty->assign("projectDesc",$projectDesc);
-    $smarty->assign("projectDisclaimer",$projectDisclaimer);
     $smarty->assign("cityName",$cityName);
     
     $smarty->assign("metaTitle",$metaTitle);
@@ -265,11 +300,6 @@ if($_REQUEST['imageName'][0] == '')
         $ErrorMsg["metaTitle"] = "Proptiger word is not allowed.";
     }
     
-    if(empty($projectDisclaimer)){
-       $ErrorMsg["projectDisclaimer"] = "Project disclaimer can't be blank.";
-    }elseif(stristr(strtolower($projectDisclaimer),'proptiger')){
-        $ErrorMsg["projectDisclaimer"] = "Proptiger word is not allowed.";
-    }
     if(empty($projectDesc)){
        $ErrorMsg["projectDesc"] = "Project description can't be blank.";
     }elseif(stristr(strtolower($projectDesc),'proptiger')){
@@ -387,17 +417,15 @@ if($_REQUEST['imageName'][0] == '')
         $jsonArr['pricelist']['project'] = $_REQUEST['projectName'];
         $jsonArr['pricelist']['builder'] = $_REQUEST['builderName'];
         $jsonArr['pricelist']['builderLogo'] = 'builder-logo.jpg';
-        $jsonArr['pricelist']['disclaimer'] = $_REQUEST['projectDisclaimer'];
         $jsonArr['pricelist']['locality'] = $_REQUEST['localityName'];
         $jsonArr['pricelist']['city'] = $_REQUEST['cityName'];
         $jsonArr['pricelist']['contact'] = $_REQUEST['contactNumber'];
 
-        $jsonArr['pricelist']['home']['description'] = $_REQUEST['projectDesc'];
-        $jsonArr['pricelist']['home']['title'] = $_REQUEST['metaTitle'];
-        $jsonArr['pricelist']['home']['metaKeyword'] = $_REQUEST['metaKeywords'];
-        $jsonArr['pricelist']['home']['metaDescription'] = $_REQUEST['metaDescription'];
-        $arrHomeImg = array("locationmap-01.jpg","siteplan-01.jpg","floorplan-01.jpg");
-        $jsonArr['pricelist']['home']['homePagePlanImages'] = $arrHomeImg;
+        $jsonArr['pricelist']['index']['description'] = $_REQUEST['projectDesc'];
+        $jsonArr['pricelist']['disclaimer'] = 'This website is for the purpose of information only and not to be considered as official website.';
+        $jsonArr['pricelist']['index']['title'] = $_REQUEST['metaTitle'];
+        $jsonArr['pricelist']['index']['metaKeyword'] = $_REQUEST['metaKeywords'];
+        $jsonArr['pricelist']['index']['metaDescription'] = $_REQUEST['metaDescription'];
 
         //json array for price page
         $jsonArr['pricelist']['pricetable']['title'] = $_REQUEST['metaTitlePriceList'];
@@ -407,8 +435,8 @@ if($_REQUEST['imageName'][0] == '')
         foreach($_REQUEST['configId'] as $k=>$v){
             if($_REQUEST['price_unitName'][$k] != ''){
                  $arrConfig[$k]['type'] = $_REQUEST['price_unitName'][$k];
-                 $arrConfig[$k]['area'] = $_REQUEST['price_PerUnitArea'][$k];
-                 $arrConfig[$k]['rate'] = $_REQUEST['price_size'][$k];
+                 $arrConfig[$k]['area'] = $_REQUEST['price_size'][$k];
+                 $arrConfig[$k]['rate'] = $_REQUEST['price_PerUnitArea'][$k];
                  $arrConfig[$k]['BSP'] = "".$_REQUEST['price_size'][$k]*$_REQUEST['price_PerUnitArea'][$k]."";
                  if($cntCont <= 9)
                     $arrFloorImg[] = "floorplan-0$cntCont.jpg";
@@ -434,6 +462,30 @@ if($_REQUEST['imageName'][0] == '')
          $jsonArr['pricelist']['slidingImages']['imgs'] = $arrImgName;
          $jsonArr['pricelist']['slidingImages']['imgstitle'] = $arrImgTitle;
          $jsonArr['pricelist']['slidingImages']['imgAlt'] = $arrImgAlt;
+
+
+//floor plan images code start here
+
+         $arrFlrTitle = array();
+         $arrFlrName = array();
+         $arrFlrAlt = array();
+//echo "<pre>";
+//print_r($_REQUEST['imageName']);
+if($_REQUEST['floorName'][0] != ''){
+         foreach($_REQUEST['floorName'] as $k=>$v){
+                 $arrFlrTitle[$k] = $_REQUEST['floorTitle'][$k];
+                 $arrFlrName[$k] = $_REQUEST['floorName'][$k];
+                 $arrFlrAlt[$k] = $_REQUEST['floorAlt'][$k];
+         }  
+        
+        $jsonArr['pricelist']['floor-plan']['floorimage'] = $arrFlrName;
+        $jsonArr['pricelist']['floor-plan']['imgstitle'] = $arrFlrTitle;
+        $jsonArr['pricelist']['floor-plan']['imgAlt'] = $arrFlrAlt;
+        
+}
+$jsonArr['pricelist']['floor-plan']['title'] = $_REQUEST['metaTitleFloorPlan'];
+//json array for floor plan page123456
+
 //print_r($jsonArr);
 //die;
         //json array for specification page
@@ -463,10 +515,6 @@ if($_REQUEST['imageName'][0] == '')
 
         $jsonArr['pricelist']['specification']['specificationInfo']['Others']['Other'] = $_REQUEST['others'];
 
-        //json array for floor plan page
-        $jsonArr['pricelist']['floor-plan']['title'] = $_REQUEST['metaTitleFloorPlan'];
-        $jsonArr['pricelist']['floor-plan']['floorimage'] = $arrFloorImg;
-
         //json array for payment plan
         $jsonArr['pricelist']['payment-plan']['title'] = $_REQUEST['metaTitlePaymentPlan'];
         $arrPaymentImg = array('paymentplan-01.jpg','paymentplan-02.jpg','paymentplan-03.jpg');
@@ -487,6 +535,7 @@ if($_REQUEST['imageName'][0] == '')
 
         //json array for contact us
         $jsonArr['pricelist']['contact-us']['title'] = $_REQUEST['metaTitleContactus'];
+//echo "<pre>"; print_r($jsonArr);
       //encoding the PHP array
         if(is_dir('/tmp/microsite.json'))
            rmdir('/tmp/microsite.json');
