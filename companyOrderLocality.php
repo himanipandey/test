@@ -38,11 +38,11 @@
 			echo  "<select name = 'locality' id = 'locality' onchange = 'localitySelect(this.value);'>";
 			echo  "<option value=''>Select locality</option>"; 
 		} 	
-echo "asdfghjgh";print_r($getLocality);
+//echo "asdfghjgh";print_r($getLocality);
         foreach( $arrLocSub as $k=>$locDetail )
         {	
-		echo  "<optgroup label=".$k." style='background-color: #EFF8FB'>".$k."++here</optgroup>";
-		 foreach( $locDetail as $value )
+		echo  "<optgroup label='".$k."' style='background-color: #EFF8FB'>".$k."</optgroup>";
+		foreach( $locDetail as $value )
         	{
 			if($ctid == 'othercities'){
 				
