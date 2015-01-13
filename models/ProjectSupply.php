@@ -86,7 +86,7 @@ class ProjectSupply extends Objects {
 
     function projectSupplyForProjectPage($projectId) {
         $result = array();
-        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.COMPLETION_DATE, rpp.submitted_date, rpp.project_id,  rpp.BOOKING_STATUS_ID,
+        $query = "select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.REMARKS, rpp.COMPLETION_DATE, rpp.submitted_date, rpp.project_id,  rpp.BOOKING_STATUS_ID,
             ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply, ps.launched, 
             pa.availability, pa.comment, pa.effective_month, rpo.option_type as project_type,ls.id as listing_id
              ,psm.display_name as CONSTRUCTION_STATUS
@@ -107,7 +107,7 @@ class ProjectSupply extends Objects {
              left join " . ResiProjectPhase::table_name() . "  rpp on (ls.phase_id = rpp.PHASE_ID and rpp.version = 'Cms')
              join project_status_master psm on rpp.construction_status = psm.id  
       union 
-            select rpp.PHASE_NAME, rpp.LAUNCH_DATE, 
+            select rpp.PHASE_NAME, rpp.LAUNCH_DATE, rpp.REMARKS,
                 rpp.COMPLETION_DATE, rpp.submitted_date, rpp.project_id,rpp.BOOKING_STATUS_ID, ls.phase_id, rpo.bedrooms as no_of_bedroom, ps.supply,
                 ps.launched, pa.availability, pa.comment, pa.effective_month, 
                 rpo.option_type as project_type,ls.id as listing_id , psm.display_name as CONSTRUCTION_STATUS
@@ -124,6 +124,7 @@ class ProjectSupply extends Objects {
             $entry = array();
             $entry['PHASE_NAME'] = $value->phase_name;
             $entry['LAUNCH_DATE'] = $value->launch_date;
+	     $entry['REMARKS'] = $value->remarks;
             $entry['COMPLETION_DATE'] = $value->completion_date;
             $entry['submitted_date'] = $value->submitted_date;
             $entry['PROJECT_ID'] = $value->project_id;

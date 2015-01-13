@@ -6,12 +6,15 @@
     include("modelsConfig.php");
     include("includes/configs/configs.php");
      $ctid = $_REQUEST["ctid"];
-             
+     if(isset($_REQUEST["companyOrder"]))
+	$companyLocality = 1;
+     else
+        $companyLocality = 0;       
     if($ctid != '') {       
 		$getLocality = Array();      
         if($ctid == 'othercities'){
 			foreach($arrOtherCities as $key => $value){
-				$cityLocality = Locality::getLocalityByCity($key);
+				$cityLocality = Locality::getLocalityByCity($key,$companyLocality);
 				if(!empty($cityLocality))
 					$getLocality = array_merge($getLocality,$cityLocality);
 			}
@@ -20,7 +23,7 @@
 			$getSuburb = Suburb::SuburbArr($ctid);					
 		}*/
 		else
-			$getLocality = Locality::getLocalityByCity($ctid);							  
+			$getLocality = Locality::getLocalityByCity($ctid,$companyLocality);							  
 			//echo "<pre>";print_r($getLocality);	
 	if(isset($_REQUEST["companyOrder"])){
 		$arrLocSub = array();
