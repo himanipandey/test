@@ -687,7 +687,7 @@ jQuery(document).ready(function(){
 	 selected_locs.splice(selected_locs.indexOf(id),1);
 	 $('input[name="all_locs"]').val(selected_locs.join(","));
 	 //updating added locality html	
-	   var url="Refreshlocality.php";
+	   var url="companyOrderLocality.php";
 	   $.ajax({
 	     'url':url,
 	     'data':"locArr="+selected_locs+"&&compOrder=1",
@@ -701,7 +701,7 @@ jQuery(document).ready(function(){
   function update_locality(ctid)
   {
 	 $("#locs_cities_locs").val('');
-     var url="Refreshlocality.php?ctid="+ctid+"&suburb=include";
+     var url="companyOrderLocality.php?ctid="+ctid+"&suburb=include";
      $.ajax({
 	   'url':url,
 	   success:function(data){
