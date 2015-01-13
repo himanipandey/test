@@ -21,10 +21,16 @@
 		}*/
 		else
 			$getLocality = Locality::getLocalityByCity($ctid);							  
-						
-        
+			//echo "<pre>";print_r($getLocality);	
+	if(isset($_REQUEST["companyOrder"])){
+		$arrLocSub = array();
+		foreach( $getLocality as $value ){
+			$arrLocSub[$value->suburbname][] = $value;	
+		}
+	}
+	//echo "<pre>";print_r($arrLocSub);	
         if($_REQUEST["suburb"] == 'include'){
-			echo  "<select style='min-height:200px' name = 'locality' id = 'locality' onchange = 'localitySelect(this.value);'  multiple>";
+			echo  "<select style='min-height:500px' name = 'locality' id = 'locality' onchange = 'localitySelect(this.value);'  multiple>";
 			echo  "<option value=".$ctid.">ALL Localities</option>"; 
 			/*foreach($getSuburb as $key=>$value)
 			{
@@ -34,13 +40,36 @@
 			echo  "<select name = 'locality' id = 'locality' onchange = 'localitySelect(this.value);'>";
 			echo  "<option value=''>Select locality</option>"; 
 		} 	
-        foreach( $getLocality as $value )
-        {
+
+	if(isset($_REQUEST["companyOrder"])){
+		$arrLocSub = array();
+		foreach( $getLocality as $value ){
+			$arrLocSub[$value->suburbname][] = $value;	
+		}
+	
+		foreach( $arrLocSub as $k=>$locDetail )
+		{	
+			echo  "<optgroup label='".$k."' style='background-color: #EFF8FB'>".$k."</optgroup>";
+			foreach( $locDetail as $value )
+			{
+				if($ctid == 'othercities'){
+				
+					echo "<option value=".$value->locality_id.">".$value->cityname." - ".$value->label . "</option>"; 
+				}
+				else{
+					echo "<option value=".$value->locality_id.">".$value->label . "</option>";
+				}
+			}
+		}   
+	}else{
+		foreach( $getLocality as $value )
+        	{
 			if($ctid == 'othercities')
 				echo "<option value=".$value->locality_id.">".$value->cityname." - ".$value->label . "</option>"; 
 			else
 				echo "<option value=".$value->locality_id.">".$value->label . "</option>";
-        }        
+        	} 
+	}     
         echo  "</select>";
     }
     elseif(isset($_REQUEST["locArr"]) && $_REQUEST["compOrder"]==1){
