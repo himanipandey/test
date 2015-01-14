@@ -2827,18 +2827,19 @@ function broker_call_edit(callId, brokerId)
 																{/if}
 
 															</td>
-														{/if}
-													
-														{$olderValuePhase = $key}
-													
-														{if $olderValueType != $keyInner || $olderValueType == ''}<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}" width = "250px">
-															{if $lastItem['REMARKS'] != ''}
-																	
+															<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}" width = "250px">
+																{if $lastItem['REMARKS'] != ''}
+																
 																	{$lastItem['REMARKS']}
 																{else}
 																	--
 																{/if}
-														</td>
+															</td>
+														{/if}
+													
+														{$olderValuePhase = $key}
+													
+														{if $olderValueType != $keyInner || $olderValueType == ''}
 														<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}">
 															{$keyInner}
 														</td>
