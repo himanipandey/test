@@ -2747,7 +2747,6 @@ function broker_call_edit(callId, brokerId)
 										<tr class="headingrowcolor" height="30px;">
 											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status<br> Construction Status </b></td>
-<td class="whiteTxt" align = "center" nowrap><b>Phase Remark</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
@@ -2763,6 +2762,7 @@ function broker_call_edit(callId, brokerId)
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase Remark</b></td>
 											
 
 										</tr>
@@ -2827,18 +2827,12 @@ function broker_call_edit(callId, brokerId)
 																{/if}
 
 															</td>
+															
 														{/if}
 													
 														{$olderValuePhase = $key}
 													
-														{if $olderValueType != $keyInner || $olderValueType == ''}<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}" width = "250px">
-															{if $lastItem['REMARKS'] != ''}
-																	
-																	{$lastItem['REMARKS']}
-																{else}
-																	--
-																{/if}
-														</td>
+														{if $olderValueType != $keyInner || $olderValueType == ''}
 														<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}">
 															{$keyInner}
 														</td>
@@ -2978,7 +2972,15 @@ function broker_call_edit(callId, brokerId)
 															{/if}
 														{/if}
 													</td>
-													
+													<td align = "center" nowrap>
+													{if $key != $newK}
+													{if $lastItem['REMARKS'] != ''}
+																
+														{$lastItem['REMARKS']}
+													{else}
+														--
+													{/if}	 {$newK = $key}{/if}
+												</td>
 													 
 												</tr>	
 												{/foreach}
@@ -3038,6 +3040,7 @@ function broker_call_edit(callId, brokerId)
 
 												</tr>
 												{/if}
+												
 								
 							</table>
 						
