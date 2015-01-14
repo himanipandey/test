@@ -194,7 +194,7 @@ $(".pt_reqflrplan").fancybox();
 													
 													<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 
-															<b>{$ImageDataListingArr[data].UNIT_NAME}( {$ImageDataListingArr[data].SIZE} /{$ImageDataListingArr[data].MEASURE} )</b>
+															<b>{$ImageDataListingArr[data].UNIT_NAME}( {$ImageDataListingArr[data].SIZE} {if $ImageDataListingArr[data].CARPET_AREA != '' && $ImageDataListingArr[data].SIZE != ''} , {$ImageDataListingArr[data].CARPET_AREA}{/if} {if $ImageDataListingArr[data].CARPET_AREA != '' && $ImageDataListingArr[data].SIZE == ''} {$ImageDataListingArr[data].CARPET_AREA}{/if} /{$ImageDataListingArr[data].MEASURE} )</b>
 															<br><br>
 															
 															<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].IMAGE_URL}														
