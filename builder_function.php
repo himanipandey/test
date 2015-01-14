@@ -455,7 +455,7 @@ function ProjectOptionDetail($projectId) {
     $columns = "P.OPTIONS_ID,P.PROJECT_ID,P.OPTION_NAME,P.OPTION_TYPE,P.SIZE,P.BEDROOMS,P.BATHROOMS,
         P.CREATED_AT,P.STUDY_ROOM,P.SERVANT_ROOM,P.BALCONY,P.POOJA_ROOM,P.VILLA_PLOT_AREA,
         P.VILLA_NO_FLOORS,P.VILLA_TERRACE_AREA,P.VILLA_GARDEN_AREA,P.CARPET_AREA,P.LENGTH_OF_PLOT,
-        P.BREADTH_OF_PLOT";
+        P.BREADTH_OF_PLOT,P.CARPET_AREA";
     $qrySel = "SELECT
                     $columns,
                     GROUP_CONCAT(O.IMAGE_URL) FLOOR_IMAGES
@@ -778,7 +778,7 @@ function allProjectImages($projectId) {
 
 function allProjectFloorImages($projectId) {
     $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
-        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+        UNIT_TYPE,CARPET_AREA FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
     $resOpt = mysql_query($qryOpt);
 
     $ImageDataListingArr = array();
@@ -802,7 +802,7 @@ function allProjectFloorImages($projectId) {
 
 function getAllProjectOptionsExceptPlot($projectId){
     $qryOpt = "SELECT OPTIONS_ID as OPTION_ID, OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
-        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId. " AND OPTION_CATEGORY = 'Actual' AND OPTION_TYPE != 'Plot'";
+        UNIT_TYPE,CARPET_AREA FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId. " AND OPTION_CATEGORY = 'Actual' AND OPTION_TYPE != 'Plot'";
     $resOpt = mysql_query($qryOpt);
     $OptionsArr = array();
     while ($dataOpt = mysql_fetch_assoc($resOpt)) {
