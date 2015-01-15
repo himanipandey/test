@@ -377,7 +377,12 @@ function fill_options(data1){
 			var carpet = data[ __cnt ]['CARPET_AREA'];
 			var carpetDisplay = '';
 			if(carpet) carpetDisplay = "(carpet area="+ data[ __cnt ]['CARPET_AREA'] + ")";
-                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +"   (size="+ data[ __cnt ]['SIZE'] + ")"+carpetDisplay+"<span></option>";
+
+			var size = data[ __cnt ]['SIZE'];
+			var SizeDisplay = '';
+			if(size) SizeDisplay = "(size="+ data[ __cnt ]['SIZE'] + ")";
+
+                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +SizeDisplay+carpetDisplay+"<span></option>";
                         $('#'+areaId).append( html );
                     }
                     $('#'+areaId).append( "<option value='0'><span> All </span></option>" );
