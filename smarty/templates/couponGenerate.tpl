@@ -771,7 +771,7 @@ function isPastDate(date){
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v['BUILDER_NAME']} {$v['PROJECT_NAME']} {$v['PROJECT_ADDRESS']}</TD>
-                                  <TD align=center class=td-border>{$v['OPTION_NAME']} size({$v['SIZE']}) {if $v['CARPET_AREA'] != ''}, Carpet Area($v['CARPET_AREA']){/if}</TD>
+                                  <TD align=center class=td-border>{$v['OPTION_NAME']} size({$v['SIZE']}) {if $v['CARPET_AREA'] != ''}, Carpet Area({$v['CARPET_AREA']}){/if}</TD>
                                   
                                   <!--<TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>-->
                                   <TD align=center class=td-border>{$v['coupon_price']}</TD>
