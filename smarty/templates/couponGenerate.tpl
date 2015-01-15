@@ -374,7 +374,10 @@ function fill_options(data1){
                       else
                         var html = "<option name='option_"+__cnt +"' value='"+ data[ __cnt ]['OPTIONS_ID'] +"' ";
                        
-                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +"   (size="+ data[ __cnt ]['SIZE'] + ")<span></option>";
+			var carpet = data[ __cnt ]['CARPET_AREA'];
+			var carpetDisplay = '';
+			if(carpet) carpetDisplay = "(carpet area="+ data[ __cnt ]['CARPET_AREA'] + ")";
+                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +"   (size="+ data[ __cnt ]['SIZE'] + ")"+carpetDisplay+"<span></option>";
                         $('#'+areaId).append( html );
                     }
                     $('#'+areaId).append( "<option value='0'><span> All </span></option>" );
@@ -760,7 +763,7 @@ function isPastDate(date){
                           <tbody>
                                
                                 {$i=0}
-                                
+
                                 {foreach from=$catalogue key=k item=v}
                                     {$i=$i+1}
                                     {if $i%2 == 0}
