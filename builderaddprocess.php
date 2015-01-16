@@ -20,8 +20,9 @@ if ($_POST['btnExit'] == "Exit")
 if ($_POST['btnSave'] == "Save")
 {
     //die($_REQUEST['serviceImageId']);
-	$txtBuilderName			=	trim($_POST['txtBuilderName']);
-        $legalEntity			=	trim($_POST['legalEntity']);
+	
+	$txtBuilderName			=	replaceSpaces(trim($_POST['txtBuilderName']));
+        $legalEntity			=	replaceSpaces(trim($_POST['legalEntity']));
 	$txtBuilderDescription          =	trim($_POST['txtBuilderDescription']);
 	$txtOldBuilderDescription	=	trim($_POST['txtOldBuilderDescription']);
 	$content_flag		    =	trim($_POST['content_flag']);

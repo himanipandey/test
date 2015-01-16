@@ -38,7 +38,7 @@ $smarty->assign("bookingStatuses", $bookingStatuses);
 
 if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 	if ( $_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save" ) {
-	    $txtProjectName = trim($_POST['txtProjectName']);
+	    $txtProjectName = replaceSpaces(trim($_POST['txtProjectName']));
             $builderId = trim($_POST['builderId']);
             $cityId = trim($_POST['cityId']);
             $suburbId =	trim($_POST['suburbId']);
@@ -85,7 +85,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            
             $residential = (trim($_POST['residential']))?$_POST['residential']:'Residential'; //setting up defualt value if empty
             $township =	trim($_POST['township']);
-            $projName =	trim($_POST['txtProjectName']);
+            $projName =	replaceSpaces(trim($_POST['txtProjectName']));
             $no_of_plot = trim($_POST['no_of_plot']);
             $open_space = trim($_POST['open_space']);
             $shouldDisplayPrice = trim($_POST['shouldDisplayPrice']);	
