@@ -22,11 +22,11 @@ logger.addHandler(fh)
 logger.addHandler(ch)
 
 #production
-#db = MySQLdb.connect('10.0.38.170', 'cms', 'CMS@123', 'cms') 
-#production
+db = MySQLdb.connect('10.0.38.170', 'cms', 'CMS@123', 'cms') 
+#qa
 #db = MySQLdb.connect('172.16.1.223', 'root', 'root', 'cms')
 #beta
-db = MySQLdb.connect('localhost', 'root', 'root', 'cms')
+#db = MySQLdb.connect('localhost', 'root', 'root', 'cms')
 
 cursor = db.cursor()
 
