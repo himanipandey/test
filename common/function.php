@@ -506,4 +506,9 @@ function projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName){
     return true;
 }
 
+function replaceSpaces($string){
+	$output = preg_replace('!\s+!', ' ', $string);
+	return $output;
+}
+
 
