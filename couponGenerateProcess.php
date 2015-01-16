@@ -20,7 +20,10 @@ while($data = mysql_fetch_assoc($res)){
 	$data['coupon_price'] = moneyFormatIndia($data['coupon_price']);
 	if($data['discount_type']=='SqFt'){
 		
-		$data['discount'] = moneyFormatIndia($data['discount']/$data['SIZE']);
+		if($data['SIZE'] != '')
+			$data['discount'] = moneyFormatIndia($data['discount']/$data['SIZE']);
+		else
+			$data['discount'] = moneyFormatIndia($data['discount']/$data['CARPET_AREA']);
 	}
 	else
 	$data['discount'] = moneyFormatIndia($data['discount']);
