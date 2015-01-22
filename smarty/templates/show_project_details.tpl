@@ -1003,6 +1003,17 @@ function broker_call_edit(callId, brokerId)
                                                       {$projectDetails[0].PROJECT_DESCRIPTION}
                                                   </td>
 						</tr>
+						<tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Description Reviewed:</b></td>
+                                                    <td>
+                                                    	{if $projectDetails[0].desc_content_flag == 1}
+                                                          'Yes'
+                                                      	{else}
+                                                          'No'
+                                                      	{/if}
+                                                      
+                                                  </td>
+						</tr>
                                                 <tr height="25px;">
                                                     <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Project Comments:</b></td>
                                                     <td>
