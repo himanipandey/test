@@ -428,7 +428,6 @@ if ($_REQUEST['towerId'] != '') {
 
 $smarty->assign("arrSpecification", $arrSpecification);
 
-die("here");
 $smarty->assign("projectId", $projectId);
 $smarty->assign("ProjectTypeArr", $ProjectTypeArr);
 $smarty->assign("enum_value", $enum_value);
@@ -445,7 +444,7 @@ $qry = "SELECT rp.*,ps.project_status,ps.display_name,t.township_name,mps.name a
     left join master_power_backup_types mpbt on rp.power_backup_type_id = mpbt.id
     left join table_attributes ta on ta.table_id=rp.project_id and ta.table_name='resi_project' and ta.attribute_name='DESC_CONTENT_FLAG'
     WHERE rp.PROJECT_ID = '" . $projectId . "' and rp.version = 'Cms'";
-    die($qry);
+    //die($qry);
 $res = mysql_query($qry) or die(mysql_error());
 if (!mysql_num_rows($res) > 0) {
     $smarty->assign("error", "error");
