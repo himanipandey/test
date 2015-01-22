@@ -1007,9 +1007,9 @@ function broker_call_edit(callId, brokerId)
                                                     <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Description Reviewed:</b></td>
                                                     <td>
                                                     	{if $projectDetails[0].desc_content_flag == 1}
-                                                          'Yes'
+                                                          Yes
                                                       	{else}
-                                                          'No'
+                                                          No
                                                       	{/if}
                                                       
                                                   </td>
