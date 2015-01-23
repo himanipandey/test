@@ -7,6 +7,7 @@ class ResiProject extends Objects
     static $table_name = 'resi_project';
     static $default_scope = array("version" => "Cms");
     static $virtual_primary_key = 'project_id';
+    static $pre_launch_status_id = 8;
 
     static $has_many = array(
         array('resi_amenities', 'class_name' => "ResiProjectAmenities", "foreign_key" => "PROJECT_ID"),

@@ -17,6 +17,11 @@ $currentDir = dirname(__FILE__);
 require_once ($currentDir . '/../modelsConfig.php');
 require_once ($currentDir . '/../cron/cronFunctions.php');
 
+define('PROPTIGER_URL', "https://www.proptiger.com/");
+define('CALL_TIMEOUT', 0);
+
+ProjectPrimaryIndex::populatePrimaryIndex();
+
 ProjectLivability::repopulateProjectIds();
 LocalityLivability::repopulateLocalityIds();
 
@@ -62,6 +67,5 @@ LocalityLivability::populateCompletionPercentage();
 LocalityLivability::populateOverAllLivability();
 LocalityLivability::ensureMinLivability();
 LocalityLivability::populateLivabilityInLocalities();
-
 
 LandmarkDistance::truncate();
