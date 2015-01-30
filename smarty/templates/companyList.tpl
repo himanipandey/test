@@ -99,7 +99,7 @@ jQuery(document).ready(function(){
 
 /************************* new field added for broker ****************************/
   //loop through all values of office location table rows to get data
-  for(var i=0; i<window.offLocTabRowNo; i++){
+  /*for(var i=0; i<window.offLocTabRowNo; i++){
     var row =  document.getElementById("officeLocRowId_"+i);
     if(row){
       var rowData = { "address" :$("#off_loc_address_id_"+i).text().trim(), c_id:$("#off_loc_city_id_"+i).val(), loc_id:$("#off_loc_loc_id_"+i).val(), db_id:$("#off_loc_dbId_"+i).val()};
@@ -120,7 +120,7 @@ jQuery(document).ready(function(){
       coverage_data.push(rowData);
 
     }
-  }
+  }*/
 
  //loop through all values of contact persons rows
   for(var i=0; i<=window.contactTableNo; i++){
@@ -139,7 +139,7 @@ jQuery(document).ready(function(){
 
 //get customer care data
 
-  var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };
+ /* var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };*/
 
   valid_noncompul($("#cc_phone").val().trim(), "Please provide a numeric phone no.", "errmsgcc_phone");
   valid_noncompul($("#cc_mobile").val().trim(), "Please provide a numeric mobile no.", "errmsgcc_mobile");
@@ -180,13 +180,15 @@ if(compType=='Broker'){
 
 
    
-  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
+  //var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
+
+  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, ptManager:ptManager };
 
   if (broker_info_type=="Advance"){
     valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
-    valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
+    /*valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
     valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
-    valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
+    valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");*/
     valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
     valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
   }
@@ -195,7 +197,9 @@ if(compType=='Broker'){
   //console.log(coverage_data);
   //console.log(contact_person_data); 
     
-   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+   //var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+
+   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, contact_person_data:contact_person_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
 
 /******************************validation****************************************/    
 
@@ -577,8 +581,8 @@ function cleanFields(){
           $(this).prop('checked', false);
     });
 
-    $("#coverage_table tbody tr").remove();
-    $("#off_loc_table").find("tr").remove();
+    /*$("#coverage_table tbody tr").remove();
+    $("#off_loc_table").find("tr").remove();*/
 
     $('#errmsgcity').html('');
     $('#errmsgcomptype').html('');
@@ -596,11 +600,11 @@ function cleanFields(){
     $('#errmsgcomplegaltype').html('');
     $('#errmsgpan').html('');
     $('#errmsgemail').html('');
-    $('#errmsgemployeeNo').html('');
+    //$('#errmsgemployeeNo').html('');
     $('#errmsgtttype').html('');
     $('#errmsgptmanager').html('');
-    $('#errmsgofficesize').html('');
-    $('#errmsgstn').html('');
+    //$('#errmsgofficesize').html('');
+    //$('#errmsgstn').html('');
     $('#errmsgdate').html('');
     
 
@@ -1821,9 +1825,9 @@ function basic_info_bt_clicked(){
 
 
 <!--  customer care starts --------------------------------------------------------------------     -->
-                    <tr height="15">
+                    <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Customer Care Details</b></td>
-                    </tr> 
+                    </tr>  -->
 
                     <!--<tr>
                       <td width="20%" align="right" >Website : </td>
@@ -1831,7 +1835,7 @@ function basic_info_bt_clicked(){
                     </tr>-->
 
                     
-                    <tr>
+                    <!-- <tr>
 
                       <td width="20%" align="right" >Cust Care Phone : </td>
                       <td width="30%" align="left"><input type=text name="phone" id="cc_phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_phone"><input type=hidden name="phone" id="cc_phone_id"></td>
@@ -1847,7 +1851,7 @@ function basic_info_bt_clicked(){
                       <td width="20%" align="right" valign="top">Cust Care Fax :</td>
                      <td width="30%" align="left"><input type=text name="fax" id="cc_fax" style="width:250px;"></td> 
                     <td width="20%" align="left" id="errmsgcc_fax"><input type=hidden name="phone" id="cc_fax_id"></td>
-                    </tr>
+                    </tr> -->
 
                    <!--<tr>
                       <td width="20%" align="right" >Cust Care Email : </td>
@@ -1855,7 +1859,7 @@ function basic_info_bt_clicked(){
                     </tr>-->
 
 <!--   office locations --------------------------------------------------------------     -->
-                   <tr height="15">
+                   <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Office Locations</b></td>
                     </tr> 
                     <tr id="offAddDiv" style="display:none">
@@ -1912,11 +1916,11 @@ function basic_info_bt_clicked(){
                     <tr>
                       <td width="20%" align="right" ><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="openOfficeAddDiv();"></td>
                       <td width="20%" align="left" ><input type="button" align="left" id="addOffLoc" value="Delete" style="cursor:pointer" onclick="deleteOfficeRow();"></td>
-                    </tr>
+                    </tr> -->
 
 
 <!--  coverage ----------------------------------------------------------------------> 
-                    <tr height="15">
+                    <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Coverage</b></td>
                     </tr> 
 
@@ -1971,7 +1975,7 @@ function basic_info_bt_clicked(){
                     <tr>
                       <td width="20%" align="right" ><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="openCoverageDiv();"></td>
                       <td width="20%" align="left" ><input type="button" align="left" id="addOffLoc" value="Delete" style="cursor:pointer" onclick="deleteCoverageRow();"></td>
-                    </tr>
+                    </tr> -->
 
 
 <!--  coverage ends --------------------------------------------------------------------     -->                    
@@ -2072,7 +2076,7 @@ function basic_info_bt_clicked(){
                           <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
                         </tr>
 
-                        <tr>
+                        <!-- <tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Service Tax No : </td>
                           <td width="30%" align="left"><input type=text name="stn" id="stn" style="width:250px;"></td> <td width="20%" align="left" id="errmsgstn"><input type=hidden id="bd_id"></td>
                         </tr>
@@ -2085,7 +2089,7 @@ function basic_info_bt_clicked(){
                         <tr>
                           <td width="20%" align="right" ><font color = "red">*</font># Employees : </td>
                           <td width="30%" align="left"><input type=text name="employeeNo" id="employeeNo" style="width:250px;"></td> <td width="20%" align="left" id="errmsgemployeeNo"></td>
-                        </tr>
+                        </tr> -->
 
                         <tr>
                           <td width="10%" align="right" ><font color = "red">*</font>PT Relationship Manager: </td>
