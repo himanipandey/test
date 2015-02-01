@@ -322,6 +322,18 @@ $(function() {
                                            </select>
                                         </td>
                                   </tr>
+
+                                  <tr>
+                                        <td width="50" align="right" style = "padding-left:20px;" height='35' nowrap><b>Skip B2B:</b></td>
+                                        <td width="50" align="left" style = "padding-left:20px;">
+                                            <select name="skipB2B" id = "skipB2B">
+                                              <option   value="">Select </option>
+                                               <option {if $skipB2B=='1'} selected="selected" {/if} value="1">Yes </option>
+                                               <option {if $skipB2B=='0'} selected="selected" {/if} value="0">No </option>    
+                                           </select>
+                                        </td>
+                                  </tr>
+
                                   <tr bgcolor='#fcfcfc'>
                                       <td align="right" style = "padding-left:20px;" height='35'><b>Stage:</b></td>
                                       <td align="left" style = "padding-left:20px;" height='35'>

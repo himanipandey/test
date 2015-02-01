@@ -48,6 +48,9 @@
     if(!isset($_REQUEST['exp_supply_date_to']))
     $_REQUEST['exp_supply_date_to'] = '';
     $exp_supply_date_to = $_REQUEST['exp_supply_date_to'];
+
+    if(!isset($_REQUEST['skipB2B']) || $_REQUEST['skipB2B']=='')
+        $_REQUEST['skipB2B'] = '';
     
     $errorMsg = '';
     if(isset($_REQUEST['exp_supply_date_from']) && isset($_REQUEST['exp_supply_date_to'])){
@@ -91,6 +94,7 @@
     $arrPhase = explode('|',$_REQUEST['stage']);
     $stage = $arrPhase[0];
     $updationCycle = $_REQUEST['updationCycle'];
+    $skipB2B = $_REQUEST['skipB2B']; //die("skip:".$skipB2B);
     $Status = $_REQUEST['Status'];
     $Active = $_REQUEST['Active'];
     $Availability = $_REQUEST['Availability'];
@@ -98,7 +102,8 @@
     $smarty->assign("projectStatus",$projectStatus);
     $smarty->assign("citylist", $citylist);
     $smarty->assign("builderList", $builderList);	
-    $smarty->assign("UpdationArr", $UpdationArr);	
+    $smarty->assign("UpdationArr", $UpdationArr);
+    $smarty->assign("skipB2B", $skipB2B);	
     $smarty->assign("search", $search);
     $smarty->assign("Residential", $_REQUEST['Residential']);
     $smarty->assign("Status", $_REQUEST['Status']);
@@ -242,15 +247,15 @@
                  $and  = ' AND ';
              }
              $QueryMember .= $and ." version = 'Cms' 
-                 and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null)";
+                 and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) and SKIP_B2B ='".$skipB2B."' ";
         }
         else
         {
                 $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' 
-                    and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null)";
-
+                    and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) and SKIP_B2B ='".$skipB2B."' ";
         }
        $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
+       //die($QueryMember2);
     }
     $assignPhase = $_REQUEST['updatePhase'];
     $expPhase = explode("|",$assignPhase);
