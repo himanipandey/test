@@ -139,11 +139,11 @@ jQuery(document).ready(function(){
 
 //get customer care data
 
- /* var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };*/
-
+ /* var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };
   valid_noncompul($("#cc_phone").val().trim(), "Please provide a numeric phone no.", "errmsgcc_phone");
   valid_noncompul($("#cc_mobile").val().trim(), "Please provide a numeric mobile no.", "errmsgcc_mobile");
   valid_noncompul($("#cc_fax").val().trim(), "Please provide a numeric fax no.", "errmsgcc_fax");
+*/
 
 // broker extra fields
   
@@ -172,17 +172,20 @@ if(compType=='Broker'){
   var bd_id = $('#bd_id').val(); 
   var legalType = $('#compLegalType').children(":selected").val();
   var frating = $('#frating').children(":selected").val();
+  var device = $('#device').children(":selected").val();
   var since_op = $('#img_date1').val(); 
   var stn = $('#stn').val();
   var officeSize = $('#officeSize').val();
   var employeeNo = $('#employeeNo').val();
   var ptManager = $('#ptManager').children(":selected").val();
-
-
+  if($('input:radio[name=relative]:checked').val() == "Yes")
+    var ptRelative = $('#ptRelative').children(":selected").val();
+  else
+    var ptRelative = 0;
    
   //var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
 
-  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, ptManager:ptManager };
+  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, device:device, since_op:since_op, ptManager:ptManager, ptRelative:ptRelative };
 
   if (broker_info_type=="Advance"){
     valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
@@ -440,6 +443,15 @@ $.widget( "custom.catcomplete2", $.ui.autocomplete, {
         $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
       },
 
+    });
+
+
+    $(".relative").click(function(){
+      if($('input:radio[name=relative]:checked').val() == "Yes")
+          $("#ptRelative").show();
+      else
+        $("#ptRelative").hide();
+      
     });
 
 
@@ -764,6 +776,13 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
   $('#officeSize').val(bD.office_size);
   $('#employeeNo').val(bD.employee_no);
   $('#ptManager').val(bD.pt_manager_id);
+  $('#ptRelative').val(bD.pt_relative_id);
+  $('#device').val(bD.primary_device_used);
+
+  if(bD.pt_relative_id>0){
+    $("#relative_yes").prop("checked", true);
+    $("#ptRelative").show();
+  }
 
 
 
@@ -1557,6 +1576,8 @@ function basic_info_bt_clicked(){
 
 }
 
+
+
 </script>
 {/literal}
 
@@ -1615,10 +1636,16 @@ function basic_info_bt_clicked(){
                        
                     </tr>
                     <tr class="broker_basic">
-                      
                       <div class="ui-widget">
                       <td width="10%" align="right" ><font color = "red">*</font>Name : </td>
                       <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="name"  style="width:250px;"></td> </div><td width="40%" align="left" id="errmsgname"></td>
+                      <td><input type="hidden", id="compid"></td>
+                    </tr>
+
+                    <tr id="broker Id" style="display:none" class="broker_basic">
+                      <div class="ui-widget">
+                      <td width="10%" align="right" ><font color = "red">*</font>Broker Id : </td>
+                      <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="name" readonly="readonly" style="width:250px;"></td> </div><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="compid"></td>
                     </tr>
 
@@ -2069,10 +2096,28 @@ function basic_info_bt_clicked(){
                             <option name=one value='9.00'>9.0</option>
                             <option name=two value='9.50' >9.5</option>
                             <option name=one value='10.00'>10.0</option>
-                                    
                             </select>
+                          </td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Primary Device Usage : </td>
+                          <td width="30%" align="left">
+                           <select id="device" name="device" valign="center"> 
+                              <option name=one value='0'>Select Device Used</option>
+                              <option name=one value='1'>Desktop</option>
+                              <option name=two value='2'>Laptop</option>
+                              <option name=one value='3'>Smart Phone</option>
+                              <option name=two value='4'>Tablet</option>
+                          </select>
+                          </td>
+                          <td width="20%" align="left" id="errmsgdevice"></td>
+                          
+                        </tr>
+
+
                         <tr>
-                          <td width="20%" align="right" ><font color = "red">*</font>Operation Since : </td>
+                          <td width="20%" align="right" ><font color = "red">*</font>Years in Operations : </td>
                           <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
                         </tr>
 
@@ -2091,7 +2136,7 @@ function basic_info_bt_clicked(){
                           <td width="30%" align="left"><input type=text name="employeeNo" id="employeeNo" style="width:250px;"></td> <td width="20%" align="left" id="errmsgemployeeNo"></td>
                         </tr> -->
 
-                        <tr>
+                        <tr >
                           <td width="10%" align="right" ><font color = "red">*</font>PT Relationship Manager: </td>
                             <td width="20%" height="25" align="left" valign="top">
                                         <select id="ptManager" name="ptManager" >
@@ -2102,6 +2147,21 @@ function basic_info_bt_clicked(){
                                         </select>
                                     </td>
                             <td width="40%" align="left" id="errmsgptmanager"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra" >
+                          <td width="10%" align="right" ><font color = "red"></font>Any Relative in Proptiger: </td>
+                            <td width="20%" height="25" align="left" valign="top">
+                              <input type="radio" name="relative"  value='Yes' class="relative" id='relative_yes'>Yes &nbsp; &nbsp; <br>
+                              <input type="radio" name="relative" value="No" class="relative" id='relative_no' checked='checked'>No &nbsp; &nbsp;
+                                    <select  id="ptRelative" name="ptRelative" style="display:none">
+                                       <option value='0'>select Relative</option>
+                                       {foreach from=$ptRelative key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                    </td>
+                            <td width="40%" align="left" id="errmsgptrelative"></td>
                         </tr>
                       </table>
                       </td>
