@@ -6,8 +6,13 @@ require_once($docroot.'amazon-sdk/sdk.class.php');
 function sendMailFromAmazon($to,  $subject, $message, $from , $cc=null, $bcc=null, $ajaxCall=true) {
 
     //Provide the Key and Secret keys from amazon here.
-    $AWS_KEY = "AKIAIPT74FHV5KIH6CBA";
-    $AWS_SECRET_KEY = "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";
+    #old keys
+    #$AWS_KEY = "AKIAIPT74FHV5KIH6CBA";
+    #$AWS_SECRET_KEY = "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";
+
+    #new keys
+    $AWS_KEY = "AKIAIERS5YQ2JMRPGGQA";
+    $AWS_SECRET_KEY = "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";
     //certificate_authority true means will read CA of amazon sdk and false means will read CA of OS
     $CA = true;
 
@@ -46,8 +51,17 @@ function sendMailFromAmazon($to,  $subject, $message, $from , $cc=null, $bcc=nul
 }
 
 function sendRawEmailFromAmazon($to, $from, $cc, $subject, $body, $attachmentname, $attachmentpath, $destination, $ajaxCall=true){
-        $AWS_KEY = "AKIAIPT74FHV5KIH6CBA";
-	$AWS_SECRET_KEY = "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";
+    
+
+	#old keys
+    #$AWS_KEY = "AKIAIPT74FHV5KIH6CBA";
+    #$AWS_SECRET_KEY = "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";
+
+    #new keys
+    $AWS_KEY = "AKIAIERS5YQ2JMRPGGQA";
+    $AWS_SECRET_KEY = "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";
+
+
 	$CA = true;
 	$amazonSes = new AmazonSES(array( "key" => $AWS_KEY, "secret" => $AWS_SECRET_KEY, "certificate_authority" => $CA ));
         if($to != "")
