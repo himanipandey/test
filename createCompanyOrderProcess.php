@@ -217,7 +217,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             			"attributeValue"=>$disable_otp,
             		);
               $response_otp = curl_request(json_encode($post), 'POST', $url);
-              var_dump($response_otp); //die("here1");
+              //var_dump($response_otp); //die("here1");
             }
              
             else die("error in user mapping : ".$response['error']);
@@ -458,7 +458,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 
 
 			    }
-			    var_dump($response);
+			    //var_dump($response);
 	    		if($attributeId){
 	    			$url = USER_ATTRIBUTES_API_URL."/{$userId->USER_ID}/attribute/{$attributeId}";
 
@@ -473,7 +473,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	            			"attributeValue"=>$disable_otp,
 	            		);
 	              $response_otp = curl_request(json_encode($post), 'PUT', $url);
-	              var_dump($response_otp);die("herererrrew");
+	              //var_dump($response_otp);die("herererrrew");
 	    		}
 	    		else{
 	    			$url = USER_ATTRIBUTES_API_URL."/{$userId->USER_ID}/attribute";
@@ -489,9 +489,9 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	            			"attributeValue"=>$disable_otp,
 	            		);
 	              $response_otp = curl_request(json_encode($post), 'POST', $url);
-	              print("<pre>");
-	              var_dump($url); var_dump(json_encode($post));
-	              var_dump($response_otp);die("herererrrew");
+	              //print("<pre>");
+	              //var_dump($url); var_dump(json_encode($post));
+	              //var_dump($response_otp);die("herererrrew");
 	    		}
 
 			  
@@ -540,7 +540,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             			"attributeValue"=>$disable_otp,
             		);
               $response_otp = curl_request(json_encode($post), 'POST', $url);
-              var_dump($response_otp); //die("here dfdsadf");
+              //var_dump($response_otp); //die("here dfdsadf");
             }
             else die("error in user mapping : ".$response['error']);
 
@@ -604,8 +604,8 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	 $smarty->assign('gAccess_ids',json_encode($order_details['gAccess_ids']));
 
 	 $userIds = $order_details['user_ids'];
-	 print("<pre>");
-	 print_r($order_details);
+	 //print("<pre>");
+	 //print_r($order_details);
     $url = USER_DETAILS_API_URL."/?userId=".implode($userIds, ",");
     $response = file_get_contents($url);
     $full_name = array();
@@ -613,8 +613,8 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
     $contact_no = array();
     $otp_disable = array();
     $user_nos = 0;
-   echo $url; 
-	var_dump($response); 
+   //echo $url; 
+	//var_dump($response); 
 	
 	$response = json_decode($response);
     if($response->statusCode=="2XX"){
