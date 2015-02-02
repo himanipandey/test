@@ -61,7 +61,7 @@ $(document).ready(function(){
 			var roomCategory=$("#roomCategory").html();
 		
 			html+="<div><form name='f1' method='post' id='f1'><div><input type='hidden' name='optionId' value='"+optionID+"' ></div>";
-			html+="<div style='width:700px;'><span style='width:100px; float:left;'><b>Type</b></span><span style='width:150px; float:left;'><b>Category Room</b></span><span style='width:150px; float:left;'><b>Length(ft)</b></span><span style='width:150px; float:left;'><b>Breath(ft)</b></span></div><br/>";
+			html+="<div style='width:700px;'><span style='width:100px; float:left;'><b>Type</b></span><span style='width:150px; float:left;'><b>Category Rooms</b></span><span style='width:100px; float:left;'><b>Length(ft) </b></span><span style='width:100px; float:left;'><b>Length(inch) </b></span><span style='width:100px; float:left;'><b>Breath(ft)</b></span><span style='width:100px; float:left;'><b>Breath(inch)</b></span></div><br/>";
 			var j = 1;
 			if(beds!=0)
 			{
