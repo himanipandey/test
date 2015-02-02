@@ -217,7 +217,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             			"attributeValue"=>$disable_otp,
             		);
               $response_otp = curl_request(json_encode($post), 'POST', $url);
-              //var_dump($response_otp); //die("here1");
+             // var_dump($response_otp); echo "creating new user new otp : new order";
             }
              
             else die("error in user mapping : ".$response['error']);
@@ -300,6 +300,8 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	$noLicen = trim($_POST['noLicen']);
 	$txtSubsUserName = $_POST['txtSubsUserName'];
 	$txtSubsUserEmail = $_POST['txtSubsUserEmail'];
+	//echo "email".$txtSubsUserEmail;
+	print_r($txtSubsUserEmail);
 	$txtSubsUserCont = $_POST['txtSubsUserCont'];
 	$txtSubsUserGroup = $_POST['txtSubsUserGroup'];
 	$txtSubsUserOtp = $_POST['txtSubsUserOtp'];
@@ -429,12 +431,12 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 			$name = trim(mysql_real_escape_string($txtSubsUserName[$cnt]));
 			$email = trim(mysql_real_escape_string($txtSubsUserEmail[$cnt]));
 			$phone = trim(mysql_real_escape_string($txtSubsUserCont[$cnt]));			
-			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'") or die(mysql_error()); 
+			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'") or die(mysql_error()); //var_dump("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'");
 			if(mysql_num_rows($sql_user)){  
 			  $userId = mysql_fetch_object($sql_user);	 
 			  $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error()); 
 			  //update disable_otp field
-			  
+			  echo "hellodf";
 			  $url = USER_DETAILS_API_URL."/?userId=".$userId->USER_ID; 
 			  //$url = USER_DETAILS_API_URL; 
 			  //$url = $url."/?userId=".$userId;
@@ -473,7 +475,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	            			"attributeValue"=>$disable_otp,
 	            		);
 	              $response_otp = curl_request(json_encode($post), 'PUT', $url);
-	              //var_dump($response_otp);die("herererrrew");
+	             // var_dump($response_otp); echo "updating old user old otp";
 	    		}
 	    		else{
 	    			$url = USER_ATTRIBUTES_API_URL."/{$userId->USER_ID}/attribute";
@@ -491,7 +493,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	              $response_otp = curl_request(json_encode($post), 'POST', $url);
 	              //print("<pre>");
 	              //var_dump($url); var_dump(json_encode($post));
-	              //var_dump($response_otp);die("herererrrew");
+	              //var_dump($response_otp);echo "creating old user new otp";
 	    		}
 
 			  
@@ -510,7 +512,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 						"contactNumber"=> $phone
 					);
 			array_push($contactNumbers, $contact);
-
+            echo "creating new user";
 			
             
 			  $post = array(
@@ -540,7 +542,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             			"attributeValue"=>$disable_otp,
             		);
               $response_otp = curl_request(json_encode($post), 'POST', $url);
-              //var_dump($response_otp); //die("here dfdsadf");
+              //var_dump($response_otp); echo "creating new user new otp";
             }
             else die("error in user mapping : ".$response['error']);
 
@@ -562,7 +564,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 			$cnt++;	 
 		  }		  
 		   		  
-		  		  
+		 die("stopped"); 		  
 	  }catch(Exception $e){	
 		  $error_flag = "Some error occurs in Company Order Saving! Try Again";	 	  
 		  return false;	  
@@ -639,7 +641,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
     }
     
 
-
+print_r($otp_disable);
     $smarty->assign('txtSubsUserName',$full_name);
 	 //$smarty->assign('txtSubsUserEmail',$order_details['user_emails']);
    	 $smarty->assign('txtSubsUserEmail',$user_emails);
