@@ -217,7 +217,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             			"attributeValue"=>$disable_otp,
             		);
               $response_otp = curl_request(json_encode($post), 'POST', $url);
-              //var_dump($response_otp); die("here1");
+              var_dump($response_otp); //die("here1");
             }
              
             else die("error in user mapping : ".$response['error']);
@@ -458,7 +458,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 
 
 			    }
-			    //var_dump($response);
+			    var_dump($response);
 	    		if($attributeId){
 	    			$url = USER_ATTRIBUTES_API_URL."/{$userId->USER_ID}/attribute/{$attributeId}";
 
@@ -473,6 +473,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	            			"attributeValue"=>$disable_otp,
 	            		);
 	              $response_otp = curl_request(json_encode($post), 'PUT', $url);
+	              var_dump($response_otp);die("herererrrew");
 	    		}
 	    		else{
 	    			$url = USER_ATTRIBUTES_API_URL."/{$userId->USER_ID}/attribute";
@@ -539,6 +540,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             			"attributeValue"=>$disable_otp,
             		);
               $response_otp = curl_request(json_encode($post), 'POST', $url);
+              var_dump($response_otp); //die("here dfdsadf");
             }
             else die("error in user mapping : ".$response['error']);
 
@@ -626,8 +628,9 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
     		$attributes = array();
     		$attributes = $d->attributes;
     		foreach ($attributes as $k => $v) {
-    			if($v->attributeName=='OTP_DISABLE')
+    			if($v->attributeName=='OTP_DISABLE'){
     				array_push($otp_disable, $v->attributeValue); 
+    			}
 
     		}
     	}
@@ -635,7 +638,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 
     }
     
-	     
+
 
     $smarty->assign('txtSubsUserName',$full_name);
 	 //$smarty->assign('txtSubsUserEmail',$order_details['user_emails']);

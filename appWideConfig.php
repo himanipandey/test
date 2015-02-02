@@ -96,7 +96,7 @@ else{
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
     define("USER_API_URL","https://dev.proptiger-ws.com/app/v1/register");
     define("TYPEAHEAD_API_URL", "https://dev.proptiger-ws.com/app/v1/typeahead");  
-    define("USER_ATTRIBUTES_API_URL", "https://dev.proptiger-ws.com/data/v1/entity/user");
+    define("USER_ATTRIBUTES_API_URL", "https://dev.proptiger-ws.com/userservice/data/v1/entity/user");
     define("USER_DETAILS_API_URL", "https://dev.proptiger-ws.com/userservice/app/v1/user-details");
 }
 ?>
