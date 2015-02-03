@@ -7,7 +7,8 @@
 		$count=$_POST['count'];
 		$optionId= trim($_POST['optionId']);
 		$rowId=$_POST['rowId'];
-		
+		print("<pre>");
+		print_r($_POST); die();
 		//deleted old records
 		$sql_del_old="DELETE FROM ".PROJECT_OPTIONS_ROOM_SIZE." WHERE `OPTIONS_ID` = '$optionId'";
 		mysql_query($sql_del_old) or die(mysql_error());

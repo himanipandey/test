@@ -22,16 +22,29 @@ $(document).ready(function(){
 			}
 		});
 		requestURL=requestURL.substring(0, requestURL.length - 1);
-		//alert(requestURL);
+		//console.log(requestURL);
+		//var params = $.parseParams(requestURL);
+		//console.log(params);
+		var optionID = getParameterByName("typeid_edit", requestURL);
+		//console.log(optionID);
 		$.ajax({
         url: "insertOptions.php?d="+rowId,
         type: "post",
+        dataType: "JSON",
         data: requestURL,
         // callback handler that will be called on success
         success: function(response){
-	
-			var array = response.split('_');
-			var optionID=array[0];
+			console.log(response);
+			//var d = response;
+			var d = $.parseJSON(response);
+
+
+			
+
+			
+
+			//var array = response.split('_');
+			/*var optionID=array[0];
 			var beds=array[1];
 			var bathrooms=array[2];
 			var balconys=array[3];
@@ -58,18 +71,50 @@ $(document).ready(function(){
 			var familyroomsizes=array[21]; familyroomsizes = familyroomsizes.split('#');
 			
 			var html='';
-			var roomCategory=$("#roomCategory").html();
-		
+			var roomCategory=$("#roomCategory").html();*/
+		var html='';
 			html+="<div><form name='f1' method='post' id='f1'><div><input type='hidden' name='optionId' value='"+optionID+"' ></div>";
-			html+="<div style='width:700px;'><span style='width:100px; float:left;'><b>Type</b></span><span style='width:150px; float:left;'><b>Category Rooms</b></span><span style='width:100px; float:left;'><b>Length(ft) </b></span><span style='width:100px; float:left;'><b>Length(inch) </b></span><span style='width:100px; float:left;'><b>Breath(ft)</b></span><span style='width:100px; float:left;'><b>Breath(inch)</b></span></div><br/>";
-			var j = 1;
-			if(beds!=0)
+			html+="<div style='width:700px;'><span style='width:200px; float:left;'><b>Type</b></span><span style='width:100px; float:left;'><b><font color='red'>*</font>Length(ft) </b></span><span style='width:100px; float:left;'><b>Length(inch) </b></span><span style='width:100px; float:left;'><b><font color='red'>*</font>Breath(ft)</b></span><span style='width:100px; float:left;'><b>Breath(inch)</b></span></div><br/>";
+			var j = 0;
+
+			var count = {};
+			$.each(d, function(i,v){
+				if(count[v.ROOM_CATEGORY_ID]==0 || !count[v.ROOM_CATEGORY_ID]){
+					count[v.ROOM_CATEGORY_ID] = 1;
+				}
+				else
+					count[v.ROOM_CATEGORY_ID] = count[v.ROOM_CATEGORY_ID]+1;
+
+				console.log(v);
+				if(v.ROOM_LENGTH==null)
+					v.ROOM_LENGTH='';
+				if(v.ROOM_LENGTH_INCH==null)
+					v.ROOM_LENGTH_INCH='';
+				if(v.ROOM_BREATH==null)
+					v.ROOM_BREATH='';
+				if(v.ROOM_BREATH_INCH==null)
+					v.ROOM_BREATH_INCH='';
+				j++;
+				html+="<br><div style='width:700px;'>"+
+
+					"<span style='width:200px; float:left;'>"+ v.CATEGORY_NAME + " " +count[v.ROOM_CATEGORY_ID]+" : </span> "+
+					"<span style='width:100px; float:left;'> <input type='text' name='length_ft_"+v.ROOM_CATEGORY_ID+"_"+ count[v.ROOM_CATEGORY_ID]+"'  onkeypress='return isNumberKey(event)' value='"+v.ROOM_LENGTH+"' /> </span>" +
+
+					"<span style='width:100px; float:left;'><input type='text' name='length_ft_inch_"+v.ROOM_CATEGORY_ID+"_"+ count[v.ROOM_CATEGORY_ID]+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_LENGTH_INCH+"' /></span>"+
+					 "<span style='width:100px; float:left;'><input type='text' name='breath_ft_"+v.ROOM_CATEGORY_ID+"_"+ count[v.ROOM_CATEGORY_ID]+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_BREATH+"' /></span>"+
+					 "<span style='width:100px; float:left;'><input type='text' name='breath_inch_"+v.ROOM_CATEGORY_ID+"_"+ count[v.ROOM_CATEGORY_ID]+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_BREATH_INCH+"' /></span>"+
+					 "</div></br>";
+			}); 
+
+
+
+			/*if(beds!=0)
 			{
 
 				for (var i=1; i<=beds; i++) {
 					roomsizes = bedsizes[i]; ''; length = ''; breath = '';bed_cats = bedscat[i];
 					//fetching existing sizes
-					if(typeof roomsizes != 'undefined' && roomsizes!=''){
+					if(typeof roomsizes != 'undefined' && roomsizhtml+="<br><div>Bedroom "+i+" : "+bedRoomCategory+" <input type='text' name='length_"+j+"'  onkeypress='return isNumberKey(event)' value='"+length+"' /> &nbsp;&nbsp;&nbsp;<input type='text' name='breath_"+j+"' onkeypress='return isNumberKey(event)' value='"+breath+"' /></div>";es!=''){
 						roomsizes = roomsizes.split('@');
 						length = roomsizes[0];
 						breath = roomsizes[1];
@@ -127,7 +172,7 @@ $(document).ready(function(){
 				html+="<br><div><span style='width:110px; float:left;'>Pooja Room "+i+" :  <input type='hidden' name='roomCategory_"+j+"' value='"+10+"'></span> <span style='width:100px; float:left;'>&nbsp;</span><input type='text' name='length_"+j+"' onkeypress='return isNumberKey(event)' value='"+roomLength(poojaroomsizes,i)+"' /> &nbsp;&nbsp;&nbsp;<input type='text' name='breath_"+j+"' onkeypress='return isNumberKey(event)' value='"+roomBreath(poojaroomsizes,i)+"' /></div>";
 				j++;
 				}
-			}
+			}*/
 			/*
 			var diningsizes=array[15]; diningsizes = diningsizes.split('#');
 			var kitchensizes=array[16]; kitchensizes = kitchensizes.split('#');
@@ -137,11 +182,11 @@ $(document).ready(function(){
 			var utilityroomsizes=array[20]; utilityroomsizes = utilityroomsizes.split('#');
 			var familyroomsizes=array[21]; familyroomsizes = familyroomsizes.split('#');*/
 			
-			html+="<br><div><span style='width:110px; float:left;'>Living : <input type='hidden' name='roomCategory_"+j+"' value='"+5+"'></span><span style='width:100px; float:left;'>&nbsp;</span><input type='text'  name='length_"+j+"' onkeypress='return isNumberKey(event)' value='"+roomLength(livingsizes,1)+"' />&nbsp;<input type='text' name='breath_"+j+"' onkeypress='return isNumberKey(event)' value='"+roomBreath(livingsizes,1)+"' /></div>"; j++;
+			/*html+="<br><div><span style='width:110px; float:left;'>Living : <input type='hidden' name='roomCategory_"+j+"' value='"+5+"'></span><span style='width:100px; float:left;'>&nbsp;</span><input type='text'  name='length_"+j+"' onkeypress='return isNumberKey(event)' value='"+roomLength(livingsizes,1)+"' />&nbsp;<input type='text' name='breath_"+j+"' onkeypress='return isNumberKey(event)' value='"+roomBreath(livingsizes,1)+"' /></div>"; j++;
 			html+="<br><div><span style='width:110px; float:left;'>Dining : <input type='hidden' name='roomCategory_"+j+"' value='"+6+"'></span><span style='width:100px; float:left;'>&nbsp;</span><input type='text'  name='length_"+j+"' onkeypress='return isNumberKey(event)'  value='"+roomLength(diningsizes,1)+"'  />&nbsp;<input type='text'name='breath_"+j+"' onkeypress='return isNumberKey(event)'  value='"+roomBreath(diningsizes,1)+"' /></div>"; j++;
 			html+="<br><div><span style='width:110px; float:left;'>Kitchen : <input type='hidden' name='roomCategory_"+j+"' value='"+4+"'></span><span style='width:100px; float:left;'>&nbsp;</span><input type='text'  name='length_"+j+"' onkeypress='return isNumberKey(event)'  value='"+roomLength(kitchensizes,1)+"' />&nbsp;<input type='text' name='breath_"+j+"' onkeypress='return isNumberKey(event)'  value='"+roomBreath(kitchensizes,1)+"' /></div>"; j++;
 			html+="<br><div><span style='width:110px; float:left;'>Powder : <input type='hidden' name='roomCategory_"+j+"' value='"+11+"'></span><span style='width:100px; float:left;'>&nbsp;</span><input type='text'  name='length_"+j+"' onkeypress='return isNumberKey(event)'   value='"+roomLength(powderroomsizes,1)+"' />&nbsp;<input type='text' name='breath_"+j+"' onkeypress='return isNumberKey(event)'   value='"+roomBreath(powderroomsizes,1)+"' /></div>"; j++;
-			html+="<br><div><span style='width:110px; float:left;'>Utility : <input type='hidden' name='roomCategory_"+j+"' value='"+13+"'></span><span style='width:100px; float:left;'>&nbsp;</span><input type='text'  name='length_"+j+"' onkeypress='return isNumberKey(event)'   value='"+roomLength(utilityroomsizes,1)+"' />&nbsp;<input type='text' name='breath_"+j+"' onkeypress='return isNumberKey(event)'   value='"+roomBreath(utilityroomsizes,1)+"'/></div>";
+			html+="<br><div><span style='width:110px; float:left;'>Utility : <input type='hidden' name='roomCategory_"+j+"' value='"+13+"'></span><span style='width:100px; float:left;'>&nbsp;</span><input type='text'  name='length_"+j+"' onkeypress='return isNumberKey(event)'   value='"+roomLength(utilityroomsizes,1)+"' />&nbsp;<input type='text' name='breath_"+j+"' onkeypress='return isNumberKey(event)'   value='"+roomBreath(utilityroomsizes,1)+"'/></div>";*/
 
 			html+="<input type='hidden' name='count' value='"+j+"'>";
 			html+="<input type='hidden' name='rowId' value='"+rowId+"'>";
@@ -182,17 +227,25 @@ $(document).ready(function(){
 function submitroomCategory() {
 	var i = jQuery("#f1").serialize();
 
+
+	//if(false = validate()) return false;
+
 	$.ajax({
         url: "enquiryRoom.php",
         type: "post",
         data: i,
 	     // callback handler that will be called on success
         success: function(response){
-			$("#row_"+response).remove();
-			jQuery.fancybox.close();
+        	console.log(response);
+			//$("#row_"+response).remove();
+			//jQuery.fancybox.close();
 
 		}
 	});
+
+}
+
+function validate(){
 
 }
 
@@ -229,3 +282,10 @@ function submitroomCategory() {
 	 
 	 return breath;
   }
+
+  function getParameterByName(name, qstring) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(qstring);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}

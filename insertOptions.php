@@ -12,8 +12,8 @@
 	$txtVillaFloors				=	'0';
 	$txtVillaTerraceArea		=	'0';
 	$txtVillaGardenArea			=	'0';
-	
-	
+	//print("<pre>");
+	//print_r($_REQUEST); //die();
 
 	$projectId=$_REQUEST['projectId'];
 	$balconys=$_REQUEST['Balconys'];
@@ -49,7 +49,6 @@
 		
 	if($typeid_edit == '')
 	{
-	
 		$sql	=	"INSERT INTO  ".PROJECT_OPTIONS."
 						SET
 							`PROJECT_ID`				=	'".$projectId."',
@@ -79,7 +78,7 @@
 	}
 	else
 	{
-			
+
 		$sql	=	"UPDATE  ".PROJECT_OPTIONS."
 						SET
 							`OPTION_NAME`					=	'".$txtUnitName."',
@@ -104,10 +103,11 @@
 								`PROJECT_ID`	=	'".$projectId."'
 							 AND
 								OPTIONS_ID		=	'".$typeid_edit."'";
-
 		$res=mysql_query($sql) or die(mysql_error());
 		$optionId = $typeid_edit;
 		}
+
+
 						if($bed=='')
 						{
 							$bed=0;
@@ -138,16 +138,21 @@
 						$str=$optionId."_".$bed."_".$bathrooms."_".$balconys."_".$servantrooms."_".$studyrooms."_".$poojarooms."_".$rowId;
 						
 						//fetch existing room sizes for the current option
-						$sql_room_sizes = mysql_query("SELECT * FROM ".PROJECT_OPTIONS_ROOM_SIZE." WHERE `OPTIONS_ID` = '$optionId'");
+						$query = "SELECT * FROM ".PROJECT_OPTIONS_ROOM_SIZE." pors right join room_category rc on rc.ROOM_CATEGORY_ID= pors.ROOM_CATEGORY_ID and pors.OPTIONS_ID= '{$optionId}' order by rc.ROOM_CATEGORY_ID ASC ";
+						//die($query);
+						$sql_room_sizes = mysql_query($query); 
 						$room_sizes = '#';
-						
+
+						$room_sizes_arr = array();
 						if($sql_room_sizes){
 						
-							$room_sizes_arr = array();
+							
 							
 								while($sizes_row = mysql_fetch_object($sql_room_sizes)){
+
+									array_push($room_sizes_arr, $sizes_row);
 									
-									if($sizes_row->ROOM_CATEGORY_ID == 1 || $sizes_row->ROOM_CATEGORY_ID == 2){ //bed
+									/*if($sizes_row->ROOM_CATEGORY_ID == 1 || $sizes_row->ROOM_CATEGORY_ID == 2){ //bed
 										$room_sizes_arr['beds'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
 										$room_sizes_arr['bedscat'][] = $sizes_row->ROOM_CATEGORY_ID;
 									}
@@ -174,13 +179,15 @@
 									if($sizes_row->ROOM_CATEGORY_ID == 13) //Utility Room
 										$room_sizes_arr['utilityroom'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
 									if($sizes_row->ROOM_CATEGORY_ID == 14) //Family Room
-										$room_sizes_arr['familyroom'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;
+										$room_sizes_arr['familyroom'][] = $sizes_row->ROOM_LENGTH.'@'.$sizes_row->ROOM_BREATH;*/
 									
 								}
 														
 						}
 						
-						echo $str."_"."beds#".implode('#',$room_sizes_arr['beds'])."_"."bedscat#".implode('#',$room_sizes_arr['bedscat'])."_"."bathrooms#".implode('#',$room_sizes_arr['bathrooms'])."_"."balconys#".implode('#',$room_sizes_arr['balconys'])."_"."servantrooms#".implode('#',$room_sizes_arr['servantrooms'])."_"."studyroom#".implode('#',$room_sizes_arr['studyroom'])."_"."poojaroom#".implode('#',$room_sizes_arr['poojaroom'])."_"."dining#".implode('#',$room_sizes_arr['dining'])."_"."kitchen#".implode('#',$room_sizes_arr['kitchen'])."_"."living#".implode('#',$room_sizes_arr['living'])."_"."powderroom#".implode('#',$room_sizes_arr['powderroom'])."_"."terrace#".implode('#',$room_sizes_arr['terrace'])."_"."utilityroom#".implode('#',$room_sizes_arr['utilityroom'])."_"."familyroom#".implode('#',$room_sizes_arr['familyroom']);
+						echo json_encode($room_sizes_arr);
+
+						//echo $str."_"."beds#".implode('#',$room_sizes_arr['beds'])."_"."bedscat#".implode('#',$room_sizes_arr['bedscat'])."_"."bathrooms#".implode('#',$room_sizes_arr['bathrooms'])."_"."balconys#".implode('#',$room_sizes_arr['balconys'])."_"."servantrooms#".implode('#',$room_sizes_arr['servantrooms'])."_"."studyroom#".implode('#',$room_sizes_arr['studyroom'])."_"."poojaroom#".implode('#',$room_sizes_arr['poojaroom'])."_"."dining#".implode('#',$room_sizes_arr['dining'])."_"."kitchen#".implode('#',$room_sizes_arr['kitchen'])."_"."living#".implode('#',$room_sizes_arr['living'])."_"."powderroom#".implode('#',$room_sizes_arr['powderroom'])."_"."terrace#".implode('#',$room_sizes_arr['terrace'])."_"."utilityroom#".implode('#',$room_sizes_arr['utilityroom'])."_"."familyroom#".implode('#',$room_sizes_arr['familyroom']);
 
 
 
