@@ -301,7 +301,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	$txtSubsUserName = $_POST['txtSubsUserName'];
 	$txtSubsUserEmail = $_POST['txtSubsUserEmail'];
 	//echo "email".$txtSubsUserEmail;
-	print_r($txtSubsUserEmail);
+	//print_r($txtSubsUserEmail);
 	$txtSubsUserCont = $_POST['txtSubsUserCont'];
 	$txtSubsUserGroup = $_POST['txtSubsUserGroup'];
 	$txtSubsUserOtp = $_POST['txtSubsUserOtp'];
@@ -436,7 +436,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 			  $userId = mysql_fetch_object($sql_user);	 
 			  $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error()); 
 			  //update disable_otp field
-			  echo "hellodf";
+			  //echo "hellodf";
 			  $url = USER_DETAILS_API_URL."/?userId=".$userId->USER_ID; 
 			  //$url = USER_DETAILS_API_URL; 
 			  //$url = $url."/?userId=".$userId;
@@ -512,7 +512,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 						"contactNumber"=> $phone
 					);
 			array_push($contactNumbers, $contact);
-            echo "creating new user";
+            //echo "creating new user";
 			
             
 			  $post = array(
@@ -564,7 +564,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 			$cnt++;	 
 		  }		  
 		   		  
-		 die("stopped"); 		  
+		 //die("stopped"); 		  
 	  }catch(Exception $e){	
 		  $error_flag = "Some error occurs in Company Order Saving! Try Again";	 	  
 		  return false;	  
@@ -641,7 +641,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
     }
     
 
-print_r($otp_disable);
+//print_r($otp_disable);
     $smarty->assign('txtSubsUserName',$full_name);
 	 //$smarty->assign('txtSubsUserEmail',$order_details['user_emails']);
    	 $smarty->assign('txtSubsUserEmail',$user_emails);
