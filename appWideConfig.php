@@ -40,7 +40,8 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
     define("AUDIO_SERVICE_URL","https://www.proptiger.com/data/v1/entity/audio");
 
     define("TYPEAHEAD_API_URL", "https://www.proptiger.com/app/v1/typeahead");
-    define("USER_ATTRIBUTES_API_URL", "https://www.proptiger.com/data/v1/entity/user/attribute/");
+    define("USER_ATTRIBUTES_API_URL", "https://www.proptiger.com/userservice/data/v1/entity/user");
+    define("USER_DETAILS_API_URL", "https://www.proptiger.com/userservice/app/v1/user-details");
 }
 
 

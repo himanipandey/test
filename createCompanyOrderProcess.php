@@ -217,7 +217,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             			"attributeValue"=>$disable_otp,
             		);
               $response_otp = curl_request(json_encode($post), 'POST', $url);
-             // var_dump($response_otp); echo "creating new user new otp : new order";
+             //var_dump($response_otp); echo "creating new user new otp : new order"; die();
             }
              
             else die("error in user mapping : ".$response['error']);
@@ -475,7 +475,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	            			"attributeValue"=>$disable_otp,
 	            		);
 	              $response_otp = curl_request(json_encode($post), 'PUT', $url);
-	             // var_dump($response_otp); echo "updating old user old otp";
+	             //var_dump($response_otp); echo "updating old user old otp"; die();
 	    		}
 	    		else{
 	    			$url = USER_ATTRIBUTES_API_URL."/{$userId->USER_ID}/attribute";
@@ -493,7 +493,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	              $response_otp = curl_request(json_encode($post), 'POST', $url);
 	              //print("<pre>");
 	              //var_dump($url); var_dump(json_encode($post));
-	              //var_dump($response_otp);echo "creating old user new otp";
+	             //var_dump($response_otp);echo "creating old user new otp";die();
 	    		}
 
 			  
@@ -542,7 +542,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             			"attributeValue"=>$disable_otp,
             		);
               $response_otp = curl_request(json_encode($post), 'POST', $url);
-              //var_dump($response_otp); echo "creating new user new otp";
+              //var_dump($response_otp); echo "creating new user new otp";die();
             }
             else die("error in user mapping : ".$response['error']);
 
