@@ -137,13 +137,33 @@
 
 						$str=$optionId."_".$bed."_".$bathrooms."_".$balconys."_".$servantrooms."_".$studyrooms."_".$poojarooms."_".$rowId;
 						
+						$room_no_arr = array(
+								"beds"=>$bed,
+								"bathrooms"=>$bathrooms,
+								"balconys"=>$balconys,
+								"servantrooms"=>$servantrooms,
+								"studyrooms"=>$studyrooms,
+								"poojarooms"=>$poojarooms
+							);
+						$room_category_id_arr = array(
+								"beds"=>2,
+								"bathrooms"=>3,
+								"balconys"=>7,
+								"servantrooms"=>8,
+								"studyrooms"=>9,
+								"poojarooms"=>10
+							);
+
+						$room_sizes_arr = array();
+						array_push($room_sizes_arr, $room_no_arr);
+						array_push($room_sizes_arr, $room_category_id_arr);
 						//fetch existing room sizes for the current option
 						$query = "SELECT * FROM ".PROJECT_OPTIONS_ROOM_SIZE." pors right join room_category rc on rc.ROOM_CATEGORY_ID= pors.ROOM_CATEGORY_ID and pors.OPTIONS_ID= '{$optionId}' order by rc.ROOM_CATEGORY_ID ASC ";
 						//die($query);
 						$sql_room_sizes = mysql_query($query); 
 						$room_sizes = '#';
 
-						$room_sizes_arr = array();
+						
 						if($sql_room_sizes){
 						
 							

@@ -38,21 +38,22 @@ $(document).ready(function(){
 			//var d = response;
 			var d = $.parseJSON(response);
 
-
+			var room_size = d[0];
+			var beds=room_size.beds;
+			var bathrooms=room_size.bathrooms;
+			var balconys=room_size.balconys;
+			var servantrooms=room_size.servantrooms;
+			var studyroom=room_size.studyroom;
+			var poojaroom=room_size.poojaroom;
 			
-
-			
-
-			//var array = response.split('_');
-			/*var optionID=array[0];
-			var beds=array[1];
-			var bathrooms=array[2];
-			var balconys=array[3];
-			var servantrooms=array[4];
-			var studyroom=array[5];
-			var poojaroom=array[6];
-			var rowId=array[7];
-			
+			var room_category_id = d[1];
+			var beds_catg_id=room_category_id.beds;
+			var bathrooms_catg_id=room_category_id.bathrooms;
+			var balconys_catg_id=room_category_id.balconys;
+			var servantrooms_catg_id=room_category_id.servantrooms;
+			var studyroom_catg_id=room_category_id.studyroom;
+			var poojaroom_catg_id=room_category_id.poojaroom;
+			/*
 			//room sizes
 			var bedsizes=array[8]; bedsizes = bedsizes.split('#');
 			var bedscat=array[9]; bedscat = bedscat.split('#');
@@ -73,11 +74,21 @@ $(document).ready(function(){
 			var html='';
 			var roomCategory=$("#roomCategory").html();*/
 		var html='';
-			html+="<div><form name='f1' method='post' id='f1'><div><input type='hidden' name='optionId' value='"+optionID+"' ></div>";
+			html+="<div><form name='f1' method='post' id='f1'><div><input type='hidden' name='optionId' id='optionId' value='"+optionID+"' ></div>";
 			html+="<div style='width:700px;'><span style='width:200px; float:left;'><b>Type</b></span><span style='width:100px; float:left;'><b><font color='red'>*</font>Length(ft) </b></span><span style='width:100px; float:left;'><b>Length(inch) </b></span><span style='width:100px; float:left;'><b><font color='red'>*</font>Breath(ft)</b></span><span style='width:100px; float:left;'><b>Breath(inch)</b></span></div><br/>";
 			var j = 0;
 
 			var count = {};
+
+			if(beds!=0){
+				for (var i=1; i<=beds; i++) {
+					
+				}
+
+			}
+
+
+
 			$.each(d, function(i,v){
 				if(count[v.ROOM_CATEGORY_ID]==0 || !count[v.ROOM_CATEGORY_ID]){
 					count[v.ROOM_CATEGORY_ID] = 1;
@@ -98,11 +109,12 @@ $(document).ready(function(){
 				html+="<br><div style='width:700px;'>"+
 
 					"<span style='width:200px; float:left;'>"+ v.CATEGORY_NAME + " " +count[v.ROOM_CATEGORY_ID]+" : </span> "+
-					"<span style='width:100px; float:left;'> <input type='text' name='length_ft_"+v.ROOM_CATEGORY_ID+"_"+ count[v.ROOM_CATEGORY_ID]+"'  onkeypress='return isNumberKey(event)' value='"+v.ROOM_LENGTH+"' /> </span>" +
+					"<span style='width:100px; float:left;'> <input type='text' name='length_ft_"+j+"'  onkeypress='return isNumberKey(event)' value='"+v.ROOM_LENGTH+"' /> </span>" +
 
-					"<span style='width:100px; float:left;'><input type='text' name='length_ft_inch_"+v.ROOM_CATEGORY_ID+"_"+ count[v.ROOM_CATEGORY_ID]+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_LENGTH_INCH+"' /></span>"+
-					 "<span style='width:100px; float:left;'><input type='text' name='breath_ft_"+v.ROOM_CATEGORY_ID+"_"+ count[v.ROOM_CATEGORY_ID]+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_BREATH+"' /></span>"+
-					 "<span style='width:100px; float:left;'><input type='text' name='breath_inch_"+v.ROOM_CATEGORY_ID+"_"+ count[v.ROOM_CATEGORY_ID]+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_BREATH_INCH+"' /></span>"+
+					"<span style='width:100px; float:left;'><input type='text' name='length_inch_"+j+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_LENGTH_INCH+"' /></span>"+
+					 "<span style='width:100px; float:left;'><input type='text' name='breath_ft_"+j+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_BREATH+"' /></span>"+
+					 "<span style='width:100px; float:left;'><input type='text' name='breath_inch_"+j+"' onkeypress='return isNumberKey(event)' value='"+v.ROOM_BREATH_INCH+"' /></span>"+
+					 "<input type='hidden' name ='room_category_id_"+j+"' value='"+ v.ROOM_CATEGORY_ID +"' >"+
 					 "</div></br>";
 			}); 
 
@@ -194,6 +206,7 @@ $(document).ready(function(){
 			html+="<br><br><div><input type='button' name='Save' value='Save' onClick='submitroomCategory()'/></div></form></div>";
 
 
+			html+="<br><br><input type='text' name='newCategory' id='newCategory'> <input type='button' name='addCategory' onclick='addRoomCategory();' >"
 
 
 			 $.fancybox({
@@ -226,7 +239,7 @@ $(document).ready(function(){
 
 function submitroomCategory() {
 	var i = jQuery("#f1").serialize();
-
+ 
 
 	//if(false = validate()) return false;
 
@@ -242,6 +255,42 @@ function submitroomCategory() {
 
 		}
 	});
+
+}
+
+function addRoomCategory(){
+	var roomCategory = ("#newCategory").val().trim();
+	var optionID = ("#optionID").val();
+	var data = { rC:roomCategory, optionID:optionID , task:"newCategory"}
+	if(roomCategory!=''){
+		$.ajax({
+	        url: "enquiryRoom.php",
+	        type: "post",
+	        data: data,
+		     // callback handler that will be called on success
+	        success: function(response){
+	        	var d = $.parseJSON(response);
+	        	console.log(d);
+	        	window.j++;
+	        	window.html += "<br><div style='width:700px;'>"+
+
+					"<span style='width:200px; float:left;'>"+ roomCategory +" : </span> "+
+					"<span style='width:100px; float:left;'> <input type='text' name='length_ft_"+j+"'  onkeypress='return isNumberKey(event)' value='"+v.ROOM_LENGTH+"' /> </span>" +
+
+					"<span style='width:100px; float:left;'><input type='text' name='length_inch_"+j+"' onkeypress='return isNumberKey(event)' value='' /></span>"+
+					 "<span style='width:100px; float:left;'><input type='text' name='breath_ft_"+j+"' onkeypress='return isNumberKey(event)' value='' /></span>"+
+					 "<span style='width:100px; float:left;'><input type='text' name='breath_inch_"+j+"' onkeypress='return isNumberKey(event)' value='' /></span>"+
+					 "<input type='hidden' name ='room_category_id_"+j+"' value='"+ d+"' >"+
+					 "</div></br>";
+
+				$.fancybox.update();
+
+				//$("#row_"+response).remove();
+				//jQuery.fancybox.close();
+
+			}
+		});
+	}
 
 }
 
