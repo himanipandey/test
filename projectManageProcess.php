@@ -132,8 +132,12 @@
 
 		if(!isset($_REQUEST['Residential']))
                     $_REQUEST['Residential'] = '';
+        if(!isset($_REQUEST['govtProjects']))
+                    $_REQUEST['govtProjects'] = '';
 
 		$smarty->assign("Residential", $_REQUEST['Residential']);
+
+		$smarty->assign("govtProjects", $_REQUEST['govtProjects']);
 
 		if(count($_REQUEST['Availability'])>0)
                     $Availability  = implode(",", $_REQUEST['Availability']);
@@ -182,6 +186,8 @@
                         $arrSearchFields['project_name'] = trim($_REQUEST['project_name']);
                     if($_REQUEST['Residential'] != '')
                         $arrSearchFields['residential_flag'] = $_REQUEST['Residential'];
+                    if($_REQUEST['govtProjects'] != '')
+                        $arrSearchFields['govtProjects_flag'] = $_REQUEST['govtProjects'];
 
                     if($Availability != '')
                     {

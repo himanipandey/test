@@ -386,6 +386,18 @@ $(function() {
                                        </select>
                                         </td>
                                     </tr>
+
+                                    <tr>
+                                         <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Govt Projects:</b></td>
+                                        <td width="50" align="left" style = "padding-left:20px;">
+                                        <select name="govtProjects" id="govtProjects" >
+                                          <option value="">Select</option>
+                                          <option value="govtProjects" {if $govtProjects == 'govtProjects'}selected {else}{/if}>Yes</option>
+                                          <option value="nonGovtProjects" {if $govtProjects == 'nongovtProjects'}selected {else}{/if}>No</option>
+                                       </select>
+                                        </td>
+                                    </tr>
+
                                     <tr><td>&nbsp;</td></tr>
                                     <tr>
                                          <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Township:</b></td>

@@ -107,6 +107,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $numberOfTowers = $_POST["numberOfTowers"];
             $completionDate = $_POST["completionDate"];
             $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
+            $govtAuthorityProject = ($_POST["govtAuthorityProject"])? 1 : 0;
             $txtSkipUpdationRemark = $_POST["txtSkipUpdationRemark"];
             $skip_b2b = $_REQUEST['skip_b2b'];
             /***************Query for suburb selected************/
@@ -185,6 +186,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("numberOfTowers", $numberOfTowers);
             $smarty->assign("completionDate", $completionDate);
             $smarty->assign("redevelopmentProject", $redevelopmentProject);
+            $smarty->assign("govtAuthorityProject", $govtAuthorityProject);
             $smarty->assign("txtSkipUpdationRemark", $txtSkipUpdationRemark);
             $smarty->assign("skip_b2b", $skip_b2b);
             
@@ -634,6 +636,25 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 				$redev_pro->updated_by = $_SESSION['adminId'];
 				$redev_pro->save();
 			}
+
+            $govt_pro = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'GOVT_PROJECT', 'table_name' => 'resi_project' )));
+           
+           if($govt_pro){
+            
+                $govt_pro = TableAttributes::find($govt_pro[0]->id);
+                $govt_pro->updated_by = $_SESSION['adminId'];
+                $govt_pro->attribute_value = $govtAuthorityProject;
+                $govt_pro->save();     
+               
+            }else{
+                $govt_pro = new TableAttributes();
+                $govt_pro->table_name = 'resi_project';
+                $govt_pro->table_id = $returnProject->project_id;
+                $govt_pro->attribute_name = 'GOVT_PROJECT';
+                $govt_pro->attribute_value = $govtAuthorityProject;
+                $govt_pro->updated_by = $_SESSION['adminId'];
+                $govt_pro->save();
+            }
 			
 			
 			
@@ -826,6 +847,9 @@ elseif ($projectId!='') {
     $smarty->assign("bookingStatus", $booking_status_id[0]->booking_status_id);
     $redevelopmentProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));              
     $smarty->assign("redevelopmentProject", $redevelopmentProject[0]->attribute_value);
+
+    $govtAuthorityProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'GOVT_PROJECT', 'table_name' => 'resi_project' )));              
+    $smarty->assign("govtAuthorityProject", $govtAuthorityProject[0]->attribute_value);
     
      $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project' )));              
     $smarty->assign("contentFlag", $contentFlag[0]->attribute_value);

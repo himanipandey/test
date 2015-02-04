@@ -1054,6 +1054,14 @@ function broker_call_edit(callId, brokerId)
 								  	{/if} 
 								{/foreach}
 							</td>
+						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Govt Project: </b>
+                                                    </td>
+                                                    <td>
+                                                        {$govt_flag}
+                                                    </td>
 						</tr>						
 						<!--<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left" valign ="top">

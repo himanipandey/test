@@ -470,14 +470,10 @@
 							   </tr>
 
 							   <tr>
-								  <td width="20%" align="right"><font color ="red">*</font><b>Is Authority(HUDA/GDA/DDA) Project :</b> </td>
-								  <td width="30%" align="left">
-                                                                     
-								  </td>
-								  <td width="50%" align="left">
-									  <font color="red">{if $ErrorMsg["txtProject_type"] != ''} {$ErrorMsg["txtProject_type"]} {/if}<span id = "err_project_type" style ="display:none;">Please select project type!</span></font>	
-									  {if $project_type != '' && $project_type != 0}<font color="red"><span id = "err_project_typeChk">{$ErrorMsgType['showTypeError']}</span></font>{/if}	  
-								  </td>
+								  <td width="20%" align="right" valign ="top"><b> Is Govt Project: </b> </td><td width="30%" align="left">
+									<input type="checkbox" name="govtAuthorityProject" {if $govtAuthorityProject} checked {/if} />
+                                  </td>
+								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
 
 							   <tr>
