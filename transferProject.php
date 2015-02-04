@@ -246,12 +246,20 @@
                  $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
                  $and  = ' AND ';
              }
-             $QueryMember .= $and ." version = 'Cms' 
-                 and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) and SKIP_B2B ='".$skipB2B."' ";
+             if($skipB2B=='')
+                    $QueryMember .= $and ." version = 'Cms' 
+                     and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) ";
+            else
+                $QueryMember .= $and ." version = 'Cms' 
+                     and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) and SKIP_B2B ='".$skipB2B."' ";
         }
         else
-        {
-                $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' 
+        {       
+                if($skipB2B=='')
+                    $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' 
+                    and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) ";
+                else
+                 $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' 
                     and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) and SKIP_B2B ='".$skipB2B."' ";
         }
        $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";

@@ -328,8 +328,8 @@ $(function() {
                                         <td width="50" align="left" style = "padding-left:20px;">
                                             <select name="skipB2B" id = "skipB2B">
                                               <option   value="">Select </option>
-                                               <option {if $skipB2B=='1'} selected="selected" {/if} value="1">Yes </option>
-                                               <option {if $skipB2B=='0'} selected="selected" {/if} value="0">No </option>    
+                                               <option {if $skipB2B=='0'} selected="selected" {/if} value="0">Yes </option>
+                                               <option {if $skipB2B==''} selected="selected" {/if} value="">No </option>    
                                            </select>
                                         </td>
                                   </tr>
