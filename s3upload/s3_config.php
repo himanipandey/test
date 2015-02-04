@@ -6,5 +6,5 @@ require_once dirname(__FILE__)."/image_upload.php";
 
 $bucket="testing-proptiger";
 
-$s3 = AwsFileManager::get_s3_object('AKIAI5FTEFLES7UMOD4A', 'HMvOkDtE4OtZJFPkGozE7lEaFuKUWZbcjnNdWnSm');
+$s3 = AwsFileManager::get_s3_object('AKIAIERS5YQ2JMRPGGQA', '+HyVEmVlBzx0IQYLfYTKFa32K7FeaiaZ/rrHqpFn');
 ?>
