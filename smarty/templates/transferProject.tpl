@@ -212,6 +212,7 @@ $(function() {
 <input type='hidden' name='dwnld_city' id='dwnld_city' value="{$_POST['city']}">
 <input type='hidden' name='dwnld_mode' id='dwnld_mode' value="{$_POST['mode']}">
 <input type='hidden' name='dwnld_builder' id='dwnld_builder' value="{$_POST['builder']}">
+<input type='hidden' name='dwnld_skip_B2B' id='dwnld_skip_B2B' value="{$_POST['skipB2B']}">
 <input type='hidden' name='dwnld_phase' id='dwnld_phase' value="{$_POST['phase']}">
 <input type='hidden' name='dwnld_stage' id='dwnld_stage' value="{$_POST['stage']}">
 <input type='hidden' name='dwnld_Residential' id='dwnld_Residential' value="{$_POST['Residential']}">

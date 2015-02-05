@@ -55,6 +55,9 @@ if(!isset($_POST['dwnld_city']))
 if(!isset($_POST['dwnld_Residential']))
 	$_POST['dwnld_Residential'] = '';
 
+if(!isset($_POST['dwnld_skip_B2B']))
+  $_POST['dwnld_skip_B2B'] = '';
+
 if(!isset($_POST['dwnld_Active']))
 	$_POST['dwnld_Active'] = '';
 
@@ -157,8 +160,10 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                   INNER JOIN
                     resi_project_phase rpp on RP.PROJECT_ID = rpp.PROJECT_ID ";
 
-    $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and ";
-
+    if ($_POST['dwnld_skip_B2B'] != '')
+      $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and RP.SKIP_B2B='".$_POST['dwnld_skip_B2B'] ."' and ";
+    else
+      $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and ";
     if($_POST['dwnld_projectId'] == '')
     {
         if($_REQUEST['dwnld_Availability'] != '')
