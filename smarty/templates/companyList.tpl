@@ -627,6 +627,7 @@ function cleanFields(){
 function editCompany(id,name,type, broker_info_type, des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, compfax, phone, active_since, web, a, action){
     cleanFields();
     $("#compid").val(id);
+    $("#brokerId").val(id); console.log( $("#brokerId").val());
     $('#city').val(city);
     $("#companyTypeEdit").val(type);
     $("#broker_info_status").val(broker_info_type);
@@ -643,6 +644,10 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
       $("#broker_switch").prop("value","Advance Information");
       $("#broker_switch").prop("disabled", true);
       $("#broker_switch").hide();
+    }
+    if(type=="Broker"){
+      console.log("here"+type);
+      $("#broker_id").show();
     }
     $("#name").val(name);
     $("#des").val(des);
@@ -1511,6 +1516,7 @@ function companyTypeChanged(){
     $("#legalType").show();
     $("#broker_switch").show();
     $("#broker_switch").val("Basic Information");
+    $('.broker_basic').show();
     if (compid>0 && broker_info_status=="Basic"){
       $('#main_table tr').not('.broker_basic').hide();
       $('#broker_extra_field').show();
@@ -1518,6 +1524,8 @@ function companyTypeChanged(){
       $('#broker_table_extra tbody tr').not('.broker_basic').hide();
       $("#broker_switch").prop("value","Advance Information");
     }
+    if(("#brokerId").val()!='')
+      ("#broker_id").show();
   }
   else{
     $("#broker_switch").hide();
@@ -1568,6 +1576,9 @@ function basic_info_bt_clicked(){
       $('#broker_table_extra tbody tr').not('.broker_basic').hide();
       $("#broker_switch").prop("value","Advance Information");
     }
+
+    if(("#brokerId").val()!='')
+      ("#broker_id").show();
   
   
  //$('#main_table tr.broker_basic').show();
@@ -1642,11 +1653,11 @@ function basic_info_bt_clicked(){
                       <td><input type="hidden", id="compid"></td>
                     </tr>
 
-                    <tr id="broker Id" style="display:none" class="broker_basic">
+                    <tr id="broker_id" style="display:none" class="broker_basic">
                       <div class="ui-widget">
-                      <td width="10%" align="right" ><font color = "red">*</font>Broker Id : </td>
-                      <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="name" readonly="readonly" style="width:250px;"></td> </div><td width="40%" align="left" id="errmsgname"></td>
-                      <td><input type="hidden", id="compid"></td>
+                      <td width="10%" align="right" ><font color = "red"></font>Broker Id : </td>
+                      <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="brokerId" readonly="readonly" style="width:250px;" ></td> </div><td width="40%" align="left" id="errmsgname"></td>
+                     
                     </tr>
 
                     <tr id="legalType" style="display:none" class="broker_basic">
