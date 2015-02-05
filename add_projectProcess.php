@@ -645,23 +645,23 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 				$redev_pro->save();
 			}
 
-            $authority_table = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'housing_authority_id', 'table_name' => 'resi_project' )));
+            $authority_table = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'HOUSING_AUTHORITY_ID', 'table_name' => 'resi_project' )));
            
            if($authority_table){
             
                 $authority_table = TableAttributes::find($authority_table[0]->id);
                 $authority_table->updated_by = $_SESSION['adminId'];
-                $authority_table->attribute_value = $govtAuthorityProject;
+                $authority_table->attribute_value = $authority;
                 $authority_table->save();     
                
             }else{
-                $govt_pro = new TableAttributes();
-                $govt_pro->table_name = 'resi_project';
-                $govt_pro->table_id = $returnProject->project_id;
-                $govt_pro->attribute_name = 'GOVT_PROJECT';
-                $govt_pro->attribute_value = $govtAuthorityProject;
-                $govt_pro->updated_by = $_SESSION['adminId'];
-                $govt_pro->save();
+                $authority_table = new TableAttributes();
+                $authority_table->table_name = 'resi_project';
+                $authority_table->table_id = $returnProject->project_id;
+                $authority_table->attribute_name = 'HOUSING_AUTHORITY_ID';
+                $authority_table->attribute_value = $authority;
+                $authority_table->updated_by = $_SESSION['adminId'];
+                $authority_table->save();
             }
 			
 			
@@ -836,7 +836,7 @@ elseif ($projectId!='') {
     $smarty->assign("architect", stripslashes($ProjectDetail->architect_name));
     $smarty->assign("residential", stripslashes($ProjectDetail->residential_flag));
     $smarty->assign("township", stripslashes($ProjectDetail->township_id ));
-    $smarty->assign("authority", stripslashes($ProjectDetail->authority_id ));
+    //$smarty->assign("authority", stripslashes($ProjectDetail->authority_id ));
     $smarty->assign("pre_launch_date", stripslashes($ProjectDetail->pre_launch_date));
     $smarty->assign("exp_launch_date", stripslashes($ProjectDetail->expected_supply_date));
     $smarty->assign("open_space", stripslashes($ProjectDetail->open_space));
@@ -857,8 +857,8 @@ elseif ($projectId!='') {
     $redevelopmentProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));              
     $smarty->assign("redevelopmentProject", $redevelopmentProject[0]->attribute_value);
 
-    $govtAuthorityProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'GOVT_PROJECT', 'table_name' => 'resi_project' )));              
-    $smarty->assign("govtAuthorityProject", $govtAuthorityProject[0]->attribute_value);
+    $authority = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'HOUSING_AUTHORITY_ID', 'table_name' => 'resi_project' )));              
+    $smarty->assign("authority", $authority[0]->attribute_value);
     
      $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project' )));              
     $smarty->assign("contentFlag", $contentFlag[0]->attribute_value);

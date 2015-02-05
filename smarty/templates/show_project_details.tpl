@@ -1055,14 +1055,7 @@ function broker_call_edit(callId, brokerId)
 								{/foreach}
 							</td>
 						</tr>
-						<tr height="25px;">
-                                                    <td nowrap="nowrap" width="6%" align="left">
-                                                            <b> Govt Project: </b>
-                                                    </td>
-                                                    <td>
-                                                        {$govt_flag}
-                                                    </td>
-						</tr>						
+											
 						<!--<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left" valign ="top">
                                                             <b>Reason For UnLaunched Units:</b>
@@ -1265,6 +1258,18 @@ function broker_call_edit(callId, brokerId)
                                                     <td>
                                                         {if $projectDetails[0].township_name != ''}
                                                                 {$projectDetails[0].township_name}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Housing Authority:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $authority != ''}
+                                                                {$authority}
                                                         {else}
                                                                 --
                                                         {/if}

@@ -809,12 +809,7 @@
                                                                 <td width="50%" align="left">&nbsp;</td>
 							   </tr>
 
-							   <tr>
-								  <td width="20%" align="right" valign ="top"><b> Is Govt Project: </b> </td><td width="30%" align="left">
-									<input type="checkbox" name="govtAuthorityProject" {if $govtAuthorityProject} checked {/if} />
-                                  </td>
-								  <td width="50%" align="left"><font color="red"></font></td>
-							   </tr>
+							   
 
 
 							   <tr>

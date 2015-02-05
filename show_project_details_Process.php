@@ -41,8 +41,8 @@ $smarty->assign("arrCalingPrimary", $arrCalingPrimary);
 $redevelopment_flag = fetchProjectRedevelolpmentFlag($projectId);
 $smarty->assign("redevelopment_flag", $redevelopment_flag);
 
-$govt_flag = fetchProjectGovtFlag($projectId);
-$smarty->assign("govt_flag", $govt_flag);
+$authority = fetchProjectHousingAuthority($projectId);
+$smarty->assign("authority", $authority);
 
 /* * ****start display other pricing******/
 $otherPricing = fetch_other_price($projectId);

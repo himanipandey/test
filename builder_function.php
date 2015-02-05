@@ -2177,17 +2177,17 @@ function fetchProjectRedevelolpmentFlag($projectId){
      return ($flag->attribute_value)? "Yes" : "No";
 	
 }
-function fetchProjectGovtFlag($projectId){
+function fetchProjectHousingAuthority($projectId){
     
      $select = "select attribute_value from table_attributes 
-            where table_name = 'resi_project' and table_id = $projectId and attribute_name = 'GOVT_PROJECT'";
+            where table_name = 'resi_project' and table_id = $projectId and attribute_name = 'HOUSING_AUTHORITY_ID'";
      $qrySelect = mysql_query($select) or die(mysql_error());
-     
-     if($qrySelect)
+     //die($select);
+     if($qrySelect){
         $flag = mysql_fetch_object($qrySelect);
-     
-     
-     return ($flag->attribute_value)? "Yes" : "No";
+        $authority = HousingAuthorities::getAuthoritiesById($flag->attribute_value);
+     }
+     return $authority[0]->authority_name;
     
 }
 
