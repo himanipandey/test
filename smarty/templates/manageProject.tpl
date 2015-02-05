@@ -387,16 +387,7 @@ $(function() {
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                         <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Govt Projects:</b></td>
-                                        <td width="50" align="left" style = "padding-left:20px;">
-                                        <select name="govtProjects" id="govtProjects" >
-                                          <option value="">Select</option>
-                                          <option value="govtProjects" {if $govtProjects == 'govtProjects'}selected {else}{/if}>Yes</option>
-                                          <option value="nonGovtProjects" {if $govtProjects == 'nongovtProjects'}selected {else}{/if}>No</option>
-                                       </select>
-                                        </td>
-                                    </tr>
+                                    
 
                                     <tr><td>&nbsp;</td></tr>
                                     <tr>
@@ -406,6 +397,19 @@ $(function() {
                                           <option value="">Select Township</option>
                                            {foreach from = $arrTownshipDetail key = key item = value}
                                                <option value="{$key}" {if $key == $townshipId} selected {/if}>{$key} - {$value}</option>
+                                           {/foreach}
+                                       </select>
+                                        </td>
+                                    </tr>
+                                    <tr><td>&nbsp;</td></tr>
+
+                                    <tr>
+                                         <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Housing Authority:</b></td>
+                                        <td width="50" align="left" style = "padding-left:20px;">
+                                        <select name="authorityId" id="authorityId" >
+                                          <option value="">Select Authority</option>
+                                           {foreach from = $arrAuthorityDetail key = key item = value}
+                                               <option value="{$key}" {if $key == $authorityId} selected {/if}>{$key} - {$value}</option>
                                            {/foreach}
                                        </select>
                                         </td>

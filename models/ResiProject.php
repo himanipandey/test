@@ -90,6 +90,10 @@ class ResiProject extends Objects
 
     		   $conditions .= "resi_project.$key  like '$value%' $proj_nam_and";          
     	 }
+       elseif( $key == 'authorityId' ){
+
+        $conditions .= "  ta.attribute_value like '{$value}' $proj_nam_and";          
+       }
     	 elseif($key == 'D_AVAILABILITY'){
     		
     		 if(is_array($value))
@@ -144,11 +148,11 @@ class ResiProject extends Objects
                      left join city
                         on suburb.city_id = city.city_id  
                       left join table_attributes ta 
-                        on ta.table_id = resi_project.PROJECT_ID AND ta.table_name='resi_project'
+                        on ta.table_id = resi_project.PROJECT_ID AND ta.table_name='resi_project' AND ta.attribute_name='HOUSING_AUTHORITY_ID' 
                         WHERE ".
 
     						$conditions." $ands resi_project.version = 'Cms'".$offer_condition;
-    						
+    					//die($query);	
            $projectSearch = ResiProject::find_by_sql($query);  
          
            return $projectSearch;

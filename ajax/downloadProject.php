@@ -116,6 +116,7 @@ if($expCity[0] != '')
 }
 
 $builder = $_POST['dwnld_builder'];
+$authority = $_POST['dwnld_authority'];
 $phase = $_POST['current_dwnld_phase'];
 $arrPhaseTag = explode('|',$_POST['dwnld_stage']);
 $stage = $_POST['current_dwnld_stage'];
@@ -155,7 +156,10 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                  INNER JOIN
                     project_status_master psm on RP.PROJECT_STATUS_ID = psm.id
                   INNER JOIN
-                    resi_project_phase rpp on RP.PROJECT_ID = rpp.PROJECT_ID ";
+                    resi_project_phase rpp on RP.PROJECT_ID = rpp.PROJECT_ID 
+                  left join table_attributes ta 
+                        on ta.table_id = RP.PROJECT_ID AND ta.table_name='resi_project' AND ta.attribute_name='HOUSING_AUTHORITY_ID'  
+                    ";
 
     $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and ";
 
@@ -214,6 +218,12 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         if($_POST['dwnld_builder'] != '')
         {
             $QueryMember .= $and." RP.BUILDER_ID = '".$_POST['dwnld_builder']."'";
+            $and  = ' AND ';
+        }
+
+        if($_POST['dwnld_authority'] != '')
+        {
+            $QueryMember .= $and." ta.attribute_value = '".$_POST['dwnld_authority']."'";
             $and  = ' AND ';
         }
         if($_POST['current_dwnld_phase'] != '')
