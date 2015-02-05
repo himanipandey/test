@@ -646,7 +646,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
       $("#broker_switch").hide();
     }
     if(type=="Broker"){
-      console.log("here"+type);
+      //console.log("here"+type);
       $("#broker_id").show();
     }
     $("#name").val(name);
@@ -698,7 +698,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
     //var data = $("#extra_data").val();
     
     //var data = eval('("data":'+ a+ ') ');
-    console.log(a.data);
+    //console.log(a.data);
     var cP =  a.data.cont_person;
     for(var i=0; i<cP.length; i++){
       if(i>0)
@@ -720,7 +720,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
     var tableId = "off_loc_table";
     for(var i=0; i<offLoc.length; i++){
       var data = { table_id:tableId, dbId:offLoc[i].id, first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:offLoc[i].c_name, }, third:{ label:"label", text:offLoc[i].loc_name,}, fourth:{ label:"label", text:offLoc[i].address,}, city_id:offLoc[i].c_id, loc_id:offLoc[i].loc_id};
-        addOfficeLocRow(data);
+        //addOfficeLocRow(data);
     }
 
 
@@ -740,16 +740,16 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
         p_name='All Projects of'; b_name=c[i].b_name;
       }
       var data = { table_id:tableId, dbId:c[i].id, first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:c[i].c_name, }, third:{ label:"label", text:c[i].loc_name,}, fourth:{ label:"label", text:p_name,}, fifth:{ label:"label", text:b_name,}, city_id:c[i].c_id, loc_id:c[i].loc_id, p_id:c[i].p_id, type:type};
-        addCoverageRow(data);
+        //addCoverageRow(data);
     }
 
     var cc = a.data.cust_care;  
-      $("#cc_phone").val(cc.phone);
+     /* $("#cc_phone").val(cc.phone);
       $("#cc_phone_id").val(cc.phone_id);
       $("#cc_mobile").val(cc.mobile);
       $("#cc_mobile_id").val(cc.mobile_id);
       $("#cc_fax").val(cc.fax);
-      $("#cc_fax_id").val(cc.fax_id);
+      $("#cc_fax_id").val(cc.fax_id);*/
 
 
     var pT = a.data.broker_prop_type;
@@ -777,9 +777,9 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
   $('#bd_id').val(bD.id);
   $('#compLegalType').val(bD.legal_type);
   $('#frating').val(bD.rating);
-  $('#stn').val(bD.service_tax_no);
-  $('#officeSize').val(bD.office_size);
-  $('#employeeNo').val(bD.employee_no);
+  //$('#stn').val(bD.service_tax_no);
+  //$('#officeSize').val(bD.office_size);
+  //$('#employeeNo').val(bD.employee_no);
   $('#ptManager').val(bD.pt_manager_id);
   $('#ptRelative').val(bD.pt_relative_id);
   $('#device').val(bD.primary_device_used);
