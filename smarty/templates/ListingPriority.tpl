@@ -147,29 +147,73 @@ $("#exit_button").click(function(){
 
 
 $("#lmkSave").click(function(){
-
+    var temp = [];
     var cityid = $("#cityddEdit :selected").text().trim();
     var broker_name = $("#bkn2 :selected").text().trim();
-    //var projectid = $("#projectid :selected").text().trim();
-    var projectid = $("#projectId").val().trim();
+    //var projectid = $("#project :selected").text().trim();
+    var projectid = $("#project").val().trim();
     var projid = $("#proj").val().trim();
-    var cityid = $("#bh3 :selected").text().trim();
-    var cityid = $("#facing2 :selected").text().trim();
+    var bhk1 = $("#bh3 :selected").text().trim();
+    var facing = $("#facing2 :selected").text().trim();
     var size = $("#other_input").val().trim();
     var bathroom = $("#bath2").val().trim();
     var toilet = $("#tol3").val().trim();
+    var tower = $("#tower2").val().trim();
+    var floor = $("#floor2").val().trim();
+    var price_type = $("#prs5 :selected").text().trim();
+    var price = $("#prs3").val().trim();
+    var trancefer_rate = $("#tfr2").val().trim();
+    var price_in = "Lakhs";
 
-    
+    var flat_number = $("#flt2").val().trim();
+    var parking = $("#park2 :selected").text().trim();
+    var loan_bank = $("#bank_list2 :selected").text().trim();
+    var plc_val = $("#plc3").val().trim();
+    var study_room = "No";
+    var servant_room = "No";
 
-    var bhk = $('#bhk').val();
-    var facing = $('#facing').children(":selected").val();
-    var floor = $('#floor').val();
+    temp[0] = cityid;
+    temp[1] = broker_name;
+    temp[2] = projectid;
+    temp[3] = projid;
+    temp[4] = bhk1;
+    temp[5] = facing;
+    temp[6] = size;  
+    temp[7] = bathroom;
+    temp[8] = toilet;
+    temp[9] = tower;
+    temp[10] = floor;
+    temp[11] = price_type;
+    temp[12] = price;
+    temp[13] = trancefer_rate;
+    temp[14] = price_in;
+    temp[15] = flat_number;
+    temp[16] = parking;
+    temp[17] = loan_bank;
+    temp[18] = plc_val;
+    temp[19] = study_room;
+    temp[20] = servant_room;
 
-    var park = $('#park').children(":selected").val();
-    var tower = $('#tower').val();
-    var flt_no = $('#flt_no').val();
-    var bankddEdit = $("#bankddEdit :selected").text().trim();
+    var i;
+    for(i = 0; i < temp.length; i++)  {
+        console.log(i + ' - ' + temp[i]);
+    }
     //alert(bt[0]+'-'+bt[1]+'-'+bt[2]+'-'+bt[3]+'-'+bt[4]);  
+    console.log("---------------------------------");
+
+    $.ajax({
+            type: "POST",
+            url: '/saveNearPlacePriority.php',
+            data: { cityid: cityid, broker_name:broker_name, projectid : projectid, projid : projid,  bhk: bhk1, facing : facing, size:size, bathroom:bathroom, toilet:toilet, tower:tower, floor : floor , price_type:price_type, price:price, trancefer_rate:trancefer_rate, price_in:price_in, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room},
+
+            success:function(msg){
+              //alert(msg);
+              console.log(msg);
+                alert("Saved");
+                location.reload(true);  
+            },
+          });
+
 
 
     /*id="size"
@@ -217,7 +261,7 @@ $("#lmkSave").click(function(){
 
  
 
-    if(lmkphone!=''){
+    /*if(lmkphone!=''){
       	if(!isPhnumber(lmkphone)) {
         	$('#errmsgphone').html('<font color="red">Phone No. must be numeric and 6-14 characters</font>');
         	$("#lmkphone").focus();
@@ -277,7 +321,7 @@ $("#lmkSave").click(function(){
       $("#lmkaddress").focus();
       error = 1;
     }
-    else */
+    else 
     if (/[^\w#,.\- ]/.test(lmkaddress)){
         $('#errmsgaddress').html('<font color="red">Special characters are not allowed in Landmark name</font>');
       	$("#lmkaddress").focus();
@@ -316,7 +360,7 @@ $("#lmkSave").click(function(){
     
 
 
-    if (error==0) {
+    //if (error==0) {
       
       $.ajax({
             type: "POST",
@@ -324,7 +368,9 @@ $("#lmkSave").click(function(){
             data: { id:lmkid, cid: cityid, placeid:placeid, name : lmkname, address : lmkaddress, lat : lmklat, lon : lmklong, phone:lmkphone, web:lmkweb, prio:lmkprio, status:lmkstatus, task : 'createLandmarkAlias' , mode:mode},
             success:function(msg){
               //alert(msg);
-               if(msg == 1){
+                alert("Saved");
+                location.reload(true);  
+               /*if(msg == 1){
                 alert("Saved");
                 location.reload(true);
                 //$("#onclick-create").text("Landmark Successfully Created.");
@@ -342,14 +388,14 @@ $("#lmkSave").click(function(){
                 //$("#onclick-create").text("No Landmark Selected.");
                    alert("no data");
                }
-               else alert(msg);
+               else alert(msg); 
             },
-          });
+          }); */
 
-    }
+    //}
   });
    
-   $.widget( "custom.catcomplete", $.ui.autocomplete, {
+  $.widget( "custom.catcomplete", $.ui.autocomplete, {
     
     _renderItem: function( ul, item ) {
       //alert(item.label);
