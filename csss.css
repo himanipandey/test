@@ -1,0 +1,377 @@
+#city{
+	position: absolute;
+	width: 1200px;
+	top:200px;
+	left:300px;
+}
+#city1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+#cityddEdit{
+	position: relative;
+	margin-left:20px;
+}
+
+#bkn{
+	position: absolute;
+	width: 1200px;
+	top:250px;
+	left:300px;
+}
+#bkn1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+
+#bkn2{
+	position: relative;
+	margin-left: 20px;
+}
+
+#prj{
+	position: absolute;
+	width:1200px;
+	left: 300px;
+	top: 300px;
+}
+#project1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+#project{
+	position: relative;
+	margin-left: 20px;
+}
+#proj1{
+	position: relative;
+	padding-left: 0px;
+	width: 100px;
+	text-align: center;
+}
+#proj{
+	position: relative;
+	margin-left: 20px;
+}
+
+#bhk{
+	position: absolute;
+	left: 300px;
+	top: 350px;
+	width: 1200px;
+}
+#bh1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+#bh3{
+	position: relative;
+	margin-left: 20px;
+}
+
+#facing1{
+	position: relative;
+	padding-left: 100px;
+	width: 100px;
+	text-align: center;
+}
+
+#facing2{
+	position: relative;
+	margin-left: 32px;
+}
+
+#othr{
+	position: absolute;
+	left: 300px;
+	top: 400px;
+	width: 1200px;
+
+}
+#othr1{
+	position: relative;
+	padding-left: 200px;
+	width: 40px;
+	text-align: center;
+}
+
+#other_input{
+	position: relative;
+	height: 15px;
+	width: 60px;
+}
+
+#othr2{
+	position: relative;
+	width: 100px;
+}
+
+#bath{
+	position: relative;
+	margin-left: 50px;
+	width: 60px;
+	text-align: center;
+}
+
+#bath1{
+	position: relative;
+	width: 60px;
+}
+
+#bath2{
+	position: relative;
+	height: 15px;
+	width: 60px;
+}
+
+#tol1{
+	position: relative;
+	width: 60px;
+	text-align: center;
+}
+
+#tol2{
+	position: relative;
+	width: 200px;
+}
+
+#tol3{
+	position: relative;
+	height: 15px;
+	width: 60px;
+}
+
+#tower_floor{
+	position: absolute;
+	left: 300px;
+	top: 450px;
+	width: 1200px;
+}
+
+#tower1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}	
+
+#tower2{
+	position: relative;
+	margin-left: 20px;
+}
+
+#floor1{
+	position: relative;
+	padding-left: 200px;
+	width: 100px;
+	text-align: center;
+}
+
+#floor2{
+	position: relative;
+	margin-left: 32px;
+}
+
+#flat_park{
+	position: absolute;
+	left: 300px;
+	top: 500px;
+	width: 1200px;
+}
+
+#flt1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+
+#flt2{
+	position: relative;
+	margin-left: 20px;
+}
+
+#park1{
+	position: relative;
+	padding-left: 200px;
+	width: 100px;
+	text-align: center;
+}
+
+#park2{
+	position: relative;
+	margin-left: 32px;
+}
+
+#prs_trf{
+	position: absolute;
+	left: 300px;
+	top: 550px;
+	width: 1200px;
+}
+
+
+#prs1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+
+#prs5{
+	position: relative;
+	margin-left: 20px; 
+}
+
+#prs3{
+	/*display: none;*/
+	position: relative;
+}
+
+#tfr1{
+	position: relative;
+	padding-left: 100px;
+	width: 100px;
+	text-align: center;
+}
+
+
+#tfr2{
+	position: relative;
+	margin-left: 32px;
+}
+
+#prs_typ{
+	position: absolute;
+	left: 300px;
+	top: 600px;
+	width: 1500px;
+}
+
+#pr{
+	position: relative;
+	padding-left: 250px;
+	width: 340px;
+}
+
+#tr{
+	position: relative;
+}
+
+#hln{
+	position: absolute;
+	left: 300px;
+	top: 650px;
+	width: 1200px;
+}
+
+#hln1{
+	position: relative;
+	width: 120px;
+	margin-left: 10px;
+	text-align: center;
+}
+
+#hln2{
+	position: relative;
+	margin-left: 20px; 	
+	width: 100px;
+}
+
+#bank_list1{
+	position: relative;
+	width: 250px;
+	margin-left: 40px;
+} 
+#bank_list2{
+	display: none;
+	position: relative;
+	width: 100px;
+}
+
+#plc1{
+	position: relative;
+	text-align: center;
+	width: 100px;
+}
+
+#plc2{
+	position: relative;
+	width: 130px;
+}
+
+#plc3{
+	display: none;
+	position: relative;
+	width: 100px;
+
+}
+
+
+#study_servant{
+	position: absolute;
+	left: 300px;
+	top: 720px;
+	width: 1200px;
+
+}
+
+#study1{
+	position: relative;
+	width: 120px;
+	text-align: center;
+}
+
+#study{
+	position: relative;
+	width: 330px;
+}
+
+
+#servant1{
+	position: relative;
+width: 130px;
+}
+
+#servant{
+	position: relative;
+	margin-left: 750px;
+	margin-top: 0px;
+}
+
+
+
+
+
+
+
+.size1{
+	position: absolute;
+	margin-left: -50px;
+	margin-top: 200px;
+}
+
+#size{
+	position: absolute;
+	margin-left: 0px;
+	margin-top: 200px;
+}
+
+#sqft{
+	position: absolute;
+	margin-left: -280px;
+	margin-top: 200px;
+}
+
+.sel{
+	position: absolute;
+	margin-top:50px;
+	margin-left:0px;
+}
+
+.rad{
+	position: absolute;
+	margin-left: 600px;
+	margin-top: 200px;
+}

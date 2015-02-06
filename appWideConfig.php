@@ -1,4 +1,4 @@
-
+ 	
 <?php
 require_once "$_SERVER[DOCUMENT_ROOT]/includes/session.php";
 
@@ -94,8 +94,9 @@ else{
     define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
     define("USER_API_URL","http://coupon.proptiger-ws.com:8080/app/v1/register");
-    define("TYPEAHEAD_API_URL", "http://proptiger.com:8080/app/v1/typeahead");
-   
+    define("TYPEAHEAD_API_URL", "http://proptiger.com/app/v3/typeahead");
+	//define("project_detail", "http://proptiger.com//data/v1/entity/amenity?projectId=513233"); 
+	define("project_detail", "http://proptiger.com/app/v1/project-detail?projectId=");  
 
 }
 ?>

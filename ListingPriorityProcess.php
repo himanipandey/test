@@ -5,14 +5,26 @@ $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 $smarty->assign('dirname',$dirName);
 
+$bankArray = BankList::arrBank();
+$smarty->assign("bankArray",$bankArray);
+$smarty->assign('dirname',$dirname);
+
+$brokerArray = BrokerAgent::getAllBrokerAgents(0);
+$smarty->assign("brokerArray",$brokerArray);
+$smarty->assign('dirname',$dirname);
+
+
 $orderby = 'ASC';
 if(isset($_POST['asc_x'])) $orderby = 'ASC';
 else if(isset($_POST['desc_x'])) $orderby = 'DESC';
 
 $cityId = $_REQUEST['citydd']; 
+//echo '*********************************', $cityId, '############################################ \n\n';
 
 	
 $smarty->assign('cityId',$cityId);
+$smarty->assign('url12', TYPEAHEAD_API_URL);
+$smarty->assign('url13', project_detail);
 
 $suburbArr = array();
 $suburbArr = Suburb::SuburbArr($cityId);
@@ -46,6 +58,7 @@ $NearPlacesArr = array();
 if(isset($_REQUEST['submit'])) {
     if($_REQUEST['locality'] == '')
        $_REQUEST['localityId'] = '';
+
     if(!empty($_REQUEST['localityId']) && !empty($cityId))
     {
         $localityId = $_REQUEST['localityId'];

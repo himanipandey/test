@@ -76,7 +76,8 @@ class BrokerAgent extends ActiveRecord\Model
             //$arr['city'] = $v->city;
 
 
-            array_push($returnArr, $arr);
+            //array_push($returnArr, $arr);    Changed here !!
+            array_push($returnArr, $arr['brokerName']);
 
 
         }
