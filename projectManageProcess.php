@@ -22,6 +22,13 @@
     }
     //sort($arrTownshipDetail);
     $smarty->assign("arrTownshipDetail", $arrTownshipDetail);
+
+	$authorities = HousingAuthorities::getAllAuthorities();
+    $arrAuthorityDetail = array();
+    foreach($authorities as $value) {
+        $arrAuthorityDetail[$value->id] = $value->authority_name;
+    }
+    $smarty->assign("arrAuthorityDetail", $arrAuthorityDetail);
     
     if(!isset($_REQUEST['Active']))
     {
@@ -108,8 +115,11 @@
                 
                 if(!isset($_REQUEST['townshipId']))
                     $_REQUEST['townshipId'] = '';
+                if(!isset($_REQUEST['authorityId']))
+                    $_REQUEST['authorityId'] = '';
 		
 		$smarty->assign("townshipId", $_REQUEST['townshipId']);
+		$smarty->assign("authorityId", $_REQUEST['authorityId']);
                 $smarty->assign("phase", $phase);
 		$smarty->assign("stage", $stage);
                 $smarty->assign("updationCycle", $updationCycle);
@@ -132,8 +142,12 @@
 
 		if(!isset($_REQUEST['Residential']))
                     $_REQUEST['Residential'] = '';
+        if(!isset($_REQUEST['govtProjects']))
+                    $_REQUEST['govtProjects'] = '';
 
 		$smarty->assign("Residential", $_REQUEST['Residential']);
+
+		$smarty->assign("govtProjects", $_REQUEST['govtProjects']);
 
 		if(count($_REQUEST['Availability'])>0)
                     $Availability  = implode(",", $_REQUEST['Availability']);
@@ -182,6 +196,8 @@
                         $arrSearchFields['project_name'] = trim($_REQUEST['project_name']);
                     if($_REQUEST['Residential'] != '')
                         $arrSearchFields['residential_flag'] = $_REQUEST['Residential'];
+                    if($_REQUEST['govtProjects'] != '')
+                        $arrSearchFields['govtProjects_flag'] = $_REQUEST['govtProjects'];
 
                     if($Availability != '')
                     {
@@ -210,6 +226,8 @@
                         $arrSearchFields['project_phase_id'] = $_REQUEST['phase'];
                     if($_REQUEST['townshipId'] != '')
                         $arrSearchFields['township_id'] = $_REQUEST['townshipId'];
+                    if($_REQUEST['authorityId'] != '')
+                        $arrSearchFields['authorityId'] = $_REQUEST['authorityId'];
                     if($stage != '')
                         $arrSearchFields['project_stage_id'] = $stage;
                     if($updationCycle != '')

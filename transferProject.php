@@ -84,12 +84,20 @@
     $smarty->assign("getProjectStages", $getProjectStages);
     $getProjectPhases = ProjectPhase::getProjectPhases();
     $smarty->assign("getProjectPhases", $getProjectPhases);
+
+    $authorities = HousingAuthorities::getAllAuthorities();
+    $arrAuthorityDetail = array();
+    foreach($authorities as $value) {
+        $arrAuthorityDetail[$value->id] = $value->authority_name;
+    }
+    $smarty->assign("arrAuthorityDetail", $arrAuthorityDetail);
     
     $updateRemark= $_REQUEST['updateRemark'];
     $transfer = $_REQUEST['transfer'];
     $search = $_REQUEST['search'];
     $city = $_REQUEST['city'];
     $builder = $_REQUEST['builder'];
+    $authority = $_REQUEST['authority'];
     $phase = $_REQUEST['phase'];
     $arrPhase = explode('|',$_REQUEST['stage']);
     $stage = $arrPhase[0];
@@ -109,6 +117,7 @@
     $smarty->assign("Status", $_REQUEST['Status']);
     $smarty->assign("city", $_REQUEST['city']);
     $smarty->assign("builder", $builder);
+    $smarty->assign("authority", $authority);
     $smarty->assign("exp_supply_date_from", $exp_supply_date_from);
     $smarty->assign("exp_supply_date_to", $exp_supply_date_to);
     $smarty->assign("project_name", $project_name);
@@ -133,7 +142,8 @@
                 left join  master_project_stages st on p.project_stage_id = st.id 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id";
+                left join city on suburb.city_id = city.city_id
+                left join table_attributes ta on ta.table_id=p.project_id and ta.table_name='resi_project' and ta.attribute_name='HOUSING_AUTHORITY_ID' ";
 
         $QueryMember2 = "Select COUNT(p.PROJECT_ID) CNT,p.PROJECT_PHASE_ID,p.PROJECT_STAGE_ID,
                 ph.name as PROJECT_PHASE, st.name as PROJECT_STAGE 
@@ -142,7 +152,8 @@
                 left join  master_project_stages st on p.project_stage_id = st.id 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id";
+                left join city on suburb.city_id = city.city_id
+                left join table_attributes ta on ta.table_id=p.project_id and ta.table_name='resi_project' and ta.attribute_name='HOUSING_AUTHORITY_ID' ";
 
         $and = " WHERE ";
 
@@ -215,6 +226,13 @@
                  $QueryMember .= $and." BUILDER_ID = '".$_REQUEST['builder']."'";
                  $and  = ' AND ';
              }
+
+             if($_REQUEST['authority'] != '')
+             {
+                 $QueryMember .= $and." ta.attribute_value = '".$_REQUEST['authority']."'";
+                 $and  = ' AND ';
+             }
+
              if($_REQUEST['phase'] != '')
              {
                  $QueryMember .= $and." PROJECT_PHASE_ID = '".$_REQUEST['phase']."'";

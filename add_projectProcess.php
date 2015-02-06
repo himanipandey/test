@@ -5,6 +5,7 @@ $CityDataArr = City::CityArr();
 $BankListArr = BankList::arrBank();
 $projectStatus = ResiProject::projectStatusMaster();
 $allTownships = Townships::getAllTownships();
+$allAuthorities = HousingAuthorities::getAllAuthorities();
 $getPowerBackupTypes = PowerBackupTypes::getPowerBackupTypes();
 
 //die("");
@@ -15,6 +16,7 @@ $smarty->assign("CityDataArr",$CityDataArr);
 $smarty->assign("BankListArr",$BankListArr);
 $smarty->assign("projectStatus",$projectStatus);
 $smarty->assign("allTownships",$allTownships);
+$smarty->assign("allAuthorities",$allAuthorities);
 $smarty->assign("getPowerBackupTypes",$getPowerBackupTypes);
 $smarty->assign("display_order", 999);
 /*************************************/
@@ -85,6 +87,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
            
             $residential = (trim($_POST['residential']))?$_POST['residential']:'Residential'; //setting up defualt value if empty
             $township =	trim($_POST['township']);
+            $authority = trim($_POST['authority']);
             $projName =	replaceSpaces(trim($_POST['txtProjectName']));
             $no_of_plot = trim($_POST['no_of_plot']);
             $open_space = trim($_POST['open_space']);
@@ -107,6 +110,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $numberOfTowers = $_POST["numberOfTowers"];
             $completionDate = $_POST["completionDate"];
             $redevelopmentProject = ($_POST["redevelopmentProject"])? 1 : 0;
+            $govtAuthorityProject = ($_POST["govtAuthorityProject"])? 1 : 0;
             $txtSkipUpdationRemark = $_POST["txtSkipUpdationRemark"];
             $skip_b2b = $_REQUEST['skip_b2b'];
             /***************Query for suburb selected************/
@@ -168,6 +172,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("eff_date_to_prom", $_POST['eff_date_to_prom']);
             $smarty->assign("residential", $_POST['residential']);
             $smarty->assign("township", $_POST['township']);
+            $smarty->assign("authority", $_POST['authority']);
             $smarty->assign("open_space", $_POST['open_space']);
             $smarty->assign("shouldDisplayPrice", $_POST['shouldDisplayPrice']);
             $smarty->assign("txtCallingRemark", $_POST['txtCallingRemark']);
@@ -185,6 +190,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
             $smarty->assign("numberOfTowers", $numberOfTowers);
             $smarty->assign("completionDate", $completionDate);
             $smarty->assign("redevelopmentProject", $redevelopmentProject);
+            $smarty->assign("govtAuthorityProject", $govtAuthorityProject);
             $smarty->assign("txtSkipUpdationRemark", $txtSkipUpdationRemark);
             $smarty->assign("skip_b2b", $skip_b2b);
             
@@ -489,6 +495,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
   //echo $Status ."==". OCCUPIED_ID_3 ." or ". READY_FOR_POSSESSION_ID_4."==>$launchDt";die;
        if($township == '')
            $township = null;
+       if($authority == '')
+           $authority = null;
        if($powerBackup == '')
            $powerBackup = null;
        $smarty->assign("projectTypeOld",$_REQUEST['project_type_hidden']);
@@ -571,6 +579,8 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
                 $arrInsertUpdateProject['promised_completion_date'] = $eff_date_to_prom;
             $arrInsertUpdateProject['residential_flag'] = $residential;
             $arrInsertUpdateProject['township_id'] = $township;
+            //$arrInsertUpdateProject['authority_id'] = $authority;
+
             $arrInsertUpdateProject['open_space'] = $open_space;
             $arrInsertUpdateProject['project_status_id'] = $Status;
             $arrInsertUpdateProject['should_display_price'] = $shouldDisplayPrice;
@@ -634,6 +644,25 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
 				$redev_pro->updated_by = $_SESSION['adminId'];
 				$redev_pro->save();
 			}
+
+            $authority_table = TableAttributes::find('all',array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'HOUSING_AUTHORITY_ID', 'table_name' => 'resi_project' )));
+           
+           if($authority_table){
+            
+                $authority_table = TableAttributes::find($authority_table[0]->id);
+                $authority_table->updated_by = $_SESSION['adminId'];
+                $authority_table->attribute_value = $authority;
+                $authority_table->save();     
+               
+            }else{
+                $authority_table = new TableAttributes();
+                $authority_table->table_name = 'resi_project';
+                $authority_table->table_id = $returnProject->project_id;
+                $authority_table->attribute_name = 'HOUSING_AUTHORITY_ID';
+                $authority_table->attribute_value = $authority;
+                $authority_table->updated_by = $_SESSION['adminId'];
+                $authority_table->save();
+            }
 			
 			
 			
@@ -807,6 +836,7 @@ elseif ($projectId!='') {
     $smarty->assign("architect", stripslashes($ProjectDetail->architect_name));
     $smarty->assign("residential", stripslashes($ProjectDetail->residential_flag));
     $smarty->assign("township", stripslashes($ProjectDetail->township_id ));
+    //$smarty->assign("authority", stripslashes($ProjectDetail->authority_id ));
     $smarty->assign("pre_launch_date", stripslashes($ProjectDetail->pre_launch_date));
     $smarty->assign("exp_launch_date", stripslashes($ProjectDetail->expected_supply_date));
     $smarty->assign("open_space", stripslashes($ProjectDetail->open_space));
@@ -826,6 +856,9 @@ elseif ($projectId!='') {
     $smarty->assign("bookingStatus", $booking_status_id[0]->booking_status_id);
     $redevelopmentProject = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'REDEVELOPMENT_PROJECT', 'table_name' => 'resi_project' )));              
     $smarty->assign("redevelopmentProject", $redevelopmentProject[0]->attribute_value);
+
+    $authority = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'HOUSING_AUTHORITY_ID', 'table_name' => 'resi_project' )));              
+    $smarty->assign("authority", $authority[0]->attribute_value);
     
      $contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project' )));              
     $smarty->assign("contentFlag", $contentFlag[0]->attribute_value);
