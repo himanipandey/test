@@ -35,7 +35,7 @@
     else
         $conditionsTownships = '';
     if(!empty($cityId)){
-        $conditionsCity = $AND."city_id = '$cityId'";
+        $conditionsCity = $AND."c.city_id = '$cityId'";
     }
     else{
         $conditionsCity = '';
