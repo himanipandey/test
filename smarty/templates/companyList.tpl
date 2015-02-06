@@ -99,7 +99,7 @@ jQuery(document).ready(function(){
 
 /************************* new field added for broker ****************************/
   //loop through all values of office location table rows to get data
-  for(var i=0; i<window.offLocTabRowNo; i++){
+  /*for(var i=0; i<window.offLocTabRowNo; i++){
     var row =  document.getElementById("officeLocRowId_"+i);
     if(row){
       var rowData = { "address" :$("#off_loc_address_id_"+i).text().trim(), c_id:$("#off_loc_city_id_"+i).val(), loc_id:$("#off_loc_loc_id_"+i).val(), db_id:$("#off_loc_dbId_"+i).val()};
@@ -120,7 +120,7 @@ jQuery(document).ready(function(){
       coverage_data.push(rowData);
 
     }
-  }
+  }*/
 
  //loop through all values of contact persons rows
   for(var i=0; i<=window.contactTableNo; i++){
@@ -139,11 +139,11 @@ jQuery(document).ready(function(){
 
 //get customer care data
 
-  var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };
-
+ /* var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };
   valid_noncompul($("#cc_phone").val().trim(), "Please provide a numeric phone no.", "errmsgcc_phone");
   valid_noncompul($("#cc_mobile").val().trim(), "Please provide a numeric mobile no.", "errmsgcc_mobile");
   valid_noncompul($("#cc_fax").val().trim(), "Please provide a numeric fax no.", "errmsgcc_fax");
+*/
 
 // broker extra fields
   
@@ -172,21 +172,26 @@ if(compType=='Broker'){
   var bd_id = $('#bd_id').val(); 
   var legalType = $('#compLegalType').children(":selected").val();
   var frating = $('#frating').children(":selected").val();
+  var device = $('#device').children(":selected").val();
   var since_op = $('#img_date1').val(); 
   var stn = $('#stn').val();
   var officeSize = $('#officeSize').val();
   var employeeNo = $('#employeeNo').val();
   var ptManager = $('#ptManager').children(":selected").val();
-
-
+  if($('input:radio[name=relative]:checked').val() == "Yes")
+    var ptRelative = $('#ptRelative').children(":selected").val();
+  else
+    var ptRelative = 0;
    
-  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
+  //var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
+
+  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, device:device, since_op:since_op, ptManager:ptManager, ptRelative:ptRelative };
 
   if (broker_info_type=="Advance"){
     valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
-    valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
+    /*valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
     valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
-    valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
+    valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");*/
     valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
     valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
   }
@@ -195,7 +200,9 @@ if(compType=='Broker'){
   //console.log(coverage_data);
   //console.log(contact_person_data); 
     
-   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+   //var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+
+   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, contact_person_data:contact_person_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
 
 /******************************validation****************************************/    
 
@@ -439,6 +446,15 @@ $.widget( "custom.catcomplete2", $.ui.autocomplete, {
     });
 
 
+    $(".relative").click(function(){
+      if($('input:radio[name=relative]:checked').val() == "Yes")
+          $("#ptRelative").show();
+      else
+        $("#ptRelative").hide();
+      
+    });
+
+
   //$("#lmkSave").click(function(){
 
   //});
@@ -577,8 +593,8 @@ function cleanFields(){
           $(this).prop('checked', false);
     });
 
-    $("#coverage_table tbody tr").remove();
-    $("#off_loc_table").find("tr").remove();
+    /*$("#coverage_table tbody tr").remove();
+    $("#off_loc_table").find("tr").remove();*/
 
     $('#errmsgcity').html('');
     $('#errmsgcomptype').html('');
@@ -596,11 +612,11 @@ function cleanFields(){
     $('#errmsgcomplegaltype').html('');
     $('#errmsgpan').html('');
     $('#errmsgemail').html('');
-    $('#errmsgemployeeNo').html('');
+    //$('#errmsgemployeeNo').html('');
     $('#errmsgtttype').html('');
     $('#errmsgptmanager').html('');
-    $('#errmsgofficesize').html('');
-    $('#errmsgstn').html('');
+    //$('#errmsgofficesize').html('');
+    //$('#errmsgstn').html('');
     $('#errmsgdate').html('');
     
 
@@ -611,6 +627,7 @@ function cleanFields(){
 function editCompany(id,name,type, broker_info_type, des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, compfax, phone, active_since, web, a, action){
     cleanFields();
     $("#compid").val(id);
+    $("#brokerId").val(id); console.log( $("#brokerId").val());
     $('#city').val(city);
     $("#companyTypeEdit").val(type);
     $("#broker_info_status").val(broker_info_type);
@@ -627,6 +644,10 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
       $("#broker_switch").prop("value","Advance Information");
       $("#broker_switch").prop("disabled", true);
       $("#broker_switch").hide();
+    }
+    if(type=="Broker"){
+      //console.log("here"+type);
+      $("#broker_id").show();
     }
     $("#name").val(name);
     $("#des").val(des);
@@ -677,7 +698,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
     //var data = $("#extra_data").val();
     
     //var data = eval('("data":'+ a+ ') ');
-    console.log(a.data);
+    //console.log(a.data);
     var cP =  a.data.cont_person;
     for(var i=0; i<cP.length; i++){
       if(i>0)
@@ -699,7 +720,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
     var tableId = "off_loc_table";
     for(var i=0; i<offLoc.length; i++){
       var data = { table_id:tableId, dbId:offLoc[i].id, first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:offLoc[i].c_name, }, third:{ label:"label", text:offLoc[i].loc_name,}, fourth:{ label:"label", text:offLoc[i].address,}, city_id:offLoc[i].c_id, loc_id:offLoc[i].loc_id};
-        addOfficeLocRow(data);
+        //addOfficeLocRow(data);
     }
 
 
@@ -719,16 +740,16 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
         p_name='All Projects of'; b_name=c[i].b_name;
       }
       var data = { table_id:tableId, dbId:c[i].id, first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:c[i].c_name, }, third:{ label:"label", text:c[i].loc_name,}, fourth:{ label:"label", text:p_name,}, fifth:{ label:"label", text:b_name,}, city_id:c[i].c_id, loc_id:c[i].loc_id, p_id:c[i].p_id, type:type};
-        addCoverageRow(data);
+        //addCoverageRow(data);
     }
 
     var cc = a.data.cust_care;  
-      $("#cc_phone").val(cc.phone);
+     /* $("#cc_phone").val(cc.phone);
       $("#cc_phone_id").val(cc.phone_id);
       $("#cc_mobile").val(cc.mobile);
       $("#cc_mobile_id").val(cc.mobile_id);
       $("#cc_fax").val(cc.fax);
-      $("#cc_fax_id").val(cc.fax_id);
+      $("#cc_fax_id").val(cc.fax_id);*/
 
 
     var pT = a.data.broker_prop_type;
@@ -756,10 +777,17 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
   $('#bd_id').val(bD.id);
   $('#compLegalType').val(bD.legal_type);
   $('#frating').val(bD.rating);
-  $('#stn').val(bD.service_tax_no);
-  $('#officeSize').val(bD.office_size);
-  $('#employeeNo').val(bD.employee_no);
+  //$('#stn').val(bD.service_tax_no);
+  //$('#officeSize').val(bD.office_size);
+  //$('#employeeNo').val(bD.employee_no);
   $('#ptManager').val(bD.pt_manager_id);
+  $('#ptRelative').val(bD.pt_relative_id);
+  $('#device').val(bD.primary_device_used);
+
+  if(bD.pt_relative_id>0){
+    $("#relative_yes").prop("checked", true);
+    $("#ptRelative").show();
+  }
 
 
 
@@ -1488,6 +1516,7 @@ function companyTypeChanged(){
     $("#legalType").show();
     $("#broker_switch").show();
     $("#broker_switch").val("Basic Information");
+    $('.broker_basic').show();
     if (compid>0 && broker_info_status=="Basic"){
       $('#main_table tr').not('.broker_basic').hide();
       $('#broker_extra_field').show();
@@ -1495,6 +1524,8 @@ function companyTypeChanged(){
       $('#broker_table_extra tbody tr').not('.broker_basic').hide();
       $("#broker_switch").prop("value","Advance Information");
     }
+    if(("#brokerId").val()!='')
+      ("#broker_id").show();
   }
   else{
     $("#broker_switch").hide();
@@ -1545,6 +1576,9 @@ function basic_info_bt_clicked(){
       $('#broker_table_extra tbody tr').not('.broker_basic').hide();
       $("#broker_switch").prop("value","Advance Information");
     }
+
+    if(("#brokerId").val()!='')
+      ("#broker_id").show();
   
   
  //$('#main_table tr.broker_basic').show();
@@ -1552,6 +1586,8 @@ function basic_info_bt_clicked(){
  //$(".broker_basic").show()
 
 }
+
+
 
 </script>
 {/literal}
@@ -1611,11 +1647,17 @@ function basic_info_bt_clicked(){
                        
                     </tr>
                     <tr class="broker_basic">
-                      
                       <div class="ui-widget">
                       <td width="10%" align="right" ><font color = "red">*</font>Name : </td>
                       <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="name"  style="width:250px;"></td> </div><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="compid"></td>
+                    </tr>
+
+                    <tr id="broker_id" style="display:none" class="broker_basic">
+                      <div class="ui-widget">
+                      <td width="10%" align="right" ><font color = "red"></font>Broker Id : </td>
+                      <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="brokerId" readonly="readonly" style="width:250px;" ></td> </div><td width="40%" align="left" id="errmsgname"></td>
+                     
                     </tr>
 
                     <tr id="legalType" style="display:none" class="broker_basic">
@@ -1821,9 +1863,9 @@ function basic_info_bt_clicked(){
 
 
 <!--  customer care starts --------------------------------------------------------------------     -->
-                    <tr height="15">
+                    <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Customer Care Details</b></td>
-                    </tr> 
+                    </tr>  -->
 
                     <!--<tr>
                       <td width="20%" align="right" >Website : </td>
@@ -1831,7 +1873,7 @@ function basic_info_bt_clicked(){
                     </tr>-->
 
                     
-                    <tr>
+                    <!-- <tr>
 
                       <td width="20%" align="right" >Cust Care Phone : </td>
                       <td width="30%" align="left"><input type=text name="phone" id="cc_phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_phone"><input type=hidden name="phone" id="cc_phone_id"></td>
@@ -1847,7 +1889,7 @@ function basic_info_bt_clicked(){
                       <td width="20%" align="right" valign="top">Cust Care Fax :</td>
                      <td width="30%" align="left"><input type=text name="fax" id="cc_fax" style="width:250px;"></td> 
                     <td width="20%" align="left" id="errmsgcc_fax"><input type=hidden name="phone" id="cc_fax_id"></td>
-                    </tr>
+                    </tr> -->
 
                    <!--<tr>
                       <td width="20%" align="right" >Cust Care Email : </td>
@@ -1855,7 +1897,7 @@ function basic_info_bt_clicked(){
                     </tr>-->
 
 <!--   office locations --------------------------------------------------------------     -->
-                   <tr height="15">
+                   <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Office Locations</b></td>
                     </tr> 
                     <tr id="offAddDiv" style="display:none">
@@ -1912,11 +1954,11 @@ function basic_info_bt_clicked(){
                     <tr>
                       <td width="20%" align="right" ><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="openOfficeAddDiv();"></td>
                       <td width="20%" align="left" ><input type="button" align="left" id="addOffLoc" value="Delete" style="cursor:pointer" onclick="deleteOfficeRow();"></td>
-                    </tr>
+                    </tr> -->
 
 
 <!--  coverage ----------------------------------------------------------------------> 
-                    <tr height="15">
+                    <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Coverage</b></td>
                     </tr> 
 
@@ -1971,7 +2013,7 @@ function basic_info_bt_clicked(){
                     <tr>
                       <td width="20%" align="right" ><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="openCoverageDiv();"></td>
                       <td width="20%" align="left" ><input type="button" align="left" id="addOffLoc" value="Delete" style="cursor:pointer" onclick="deleteCoverageRow();"></td>
-                    </tr>
+                    </tr> -->
 
 
 <!--  coverage ends --------------------------------------------------------------------     -->                    
@@ -2065,14 +2107,32 @@ function basic_info_bt_clicked(){
                             <option name=one value='9.00'>9.0</option>
                             <option name=two value='9.50' >9.5</option>
                             <option name=one value='10.00'>10.0</option>
-                                    
                             </select>
+                          </td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Primary Device Usage : </td>
+                          <td width="30%" align="left">
+                           <select id="device" name="device" valign="center"> 
+                              <option name=one value='0'>Select Device Used</option>
+                              <option name=one value='1'>Desktop</option>
+                              <option name=two value='2'>Laptop</option>
+                              <option name=one value='3'>Smart Phone</option>
+                              <option name=two value='4'>Tablet</option>
+                          </select>
+                          </td>
+                          <td width="20%" align="left" id="errmsgdevice"></td>
+                          
+                        </tr>
+
+
                         <tr>
-                          <td width="20%" align="right" ><font color = "red">*</font>Operation Since : </td>
+                          <td width="20%" align="right" ><font color = "red">*</font>Years in Operations : </td>
                           <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
                         </tr>
 
-                        <tr>
+                        <!-- <tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Service Tax No : </td>
                           <td width="30%" align="left"><input type=text name="stn" id="stn" style="width:250px;"></td> <td width="20%" align="left" id="errmsgstn"><input type=hidden id="bd_id"></td>
                         </tr>
@@ -2085,9 +2145,9 @@ function basic_info_bt_clicked(){
                         <tr>
                           <td width="20%" align="right" ><font color = "red">*</font># Employees : </td>
                           <td width="30%" align="left"><input type=text name="employeeNo" id="employeeNo" style="width:250px;"></td> <td width="20%" align="left" id="errmsgemployeeNo"></td>
-                        </tr>
+                        </tr> -->
 
-                        <tr>
+                        <tr >
                           <td width="10%" align="right" ><font color = "red">*</font>PT Relationship Manager: </td>
                             <td width="20%" height="25" align="left" valign="top">
                                         <select id="ptManager" name="ptManager" >
@@ -2098,6 +2158,21 @@ function basic_info_bt_clicked(){
                                         </select>
                                     </td>
                             <td width="40%" align="left" id="errmsgptmanager"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra" >
+                          <td width="10%" align="right" ><font color = "red"></font>Any Relative in Proptiger: </td>
+                            <td width="20%" height="25" align="left" valign="top">
+                              <input type="radio" name="relative"  value='Yes' class="relative" id='relative_yes'>Yes &nbsp; &nbsp; <br>
+                              <input type="radio" name="relative" value="No" class="relative" id='relative_no' checked='checked'>No &nbsp; &nbsp;
+                                    <select  id="ptRelative" name="ptRelative" style="display:none">
+                                       <option value='0'>select Relative</option>
+                                       {foreach from=$ptRelative key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                    </td>
+                            <td width="40%" align="left" id="errmsgptrelative"></td>
                         </tr>
                       </table>
                       </td>
