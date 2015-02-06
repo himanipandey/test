@@ -9,7 +9,7 @@
 	if($_POST['task']=='newCategory'){
 		$roomCategory = $_POST['rC'];
 		$optionId = $_POST['optionId'];
-		$query = "insert into room_category('CATEGORY_NAME') values('{$roomCategory}')";
+		$query = "insert into room_category(CATEGORY_NAME) values('{$roomCategory}')";
 		mysql_query($query) or die(mysql_error());
 		$newCategoryId = mysql_insert_id();
 		echo $newCategoryId;

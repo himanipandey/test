@@ -206,7 +206,7 @@ $(document).ready(function(){
 			html+="<br><br><div><input type='button' name='Save' value='Save' onClick='submitroomCategory()'/></div></form></div>";
 
 
-			html+="<br><br><input type='text' name='newCategory' id='newCategory'> <input type='button' name='addCategory' onclick='addRoomCategory();' >"
+			html+="<br><br><input type='text' name='newCategory' id='newCategory'> <input type='button' name='addCategory' onclick='addRoomCategory();' value='Create' >"
 
 
 			 $.fancybox({
@@ -259,10 +259,11 @@ function submitroomCategory() {
 }
 
 function addRoomCategory(){
-	var roomCategory = ("#newCategory").val().trim();
-	var optionID = ("#optionID").val();
+	var roomCategory = $("#newCategory").val().trim();
+	var optionID = $("#optionId").val();
 	var data = { rC:roomCategory, optionID:optionID , task:"newCategory"}
-	if(roomCategory!=''){
+	console.log(data);
+	if(roomCategory!='' && optionID!=''){
 		$.ajax({
 	        url: "enquiryRoom.php",
 	        type: "post",
