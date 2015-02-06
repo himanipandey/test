@@ -418,7 +418,8 @@ function getProjectFromOption($optionId){
 }
 
 function configSizeCheckFlag($projectId){
-  $flagSql = mysql_fetch_object(mysql_query("select count(options_id) as cnt from resi_project_options where project_id = '$projectId' and (size is null or size=0) and option_category = 'Actual'"));
+  $flagSql = mysql_fetch_object(mysql_query("select count(options_id) as cnt from resi_project_options where project_id = '$projectId' 
+            and (size is null or size=0) and (carpet_area is null or carpet_area=0) and option_category = 'Actual'"));
   if($flagSql->cnt > 0)
     return 1;
   else 
@@ -503,6 +504,11 @@ function projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName){
       }
    }
     return true;
+}
+
+function replaceSpaces($string){
+	$output = preg_replace('!\s+!', ' ', $string);
+	return $output;
 }
 
 

@@ -38,7 +38,7 @@
             header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
     }
     if (isset($_POST['btnSave'])) {
-                $txtCityName = trim($_POST['txtCityName']);
+                $txtCityName = replaceSpaces(trim($_POST['txtCityName']));
                 $txtCityUrl	= trim($_POST['txtCityUrl']);
                 $txtMetaTitle = trim($_POST['txtMetaTitle']);
                 $txtMetaKeywords = trim($_POST['txtMetaKeywords']);
