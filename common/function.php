@@ -418,7 +418,8 @@ function getProjectFromOption($optionId){
 }
 
 function configSizeCheckFlag($projectId){
-  $flagSql = mysql_fetch_object(mysql_query("select count(options_id) as cnt from resi_project_options where project_id = '$projectId' and (size is null or size=0) and option_category = 'Actual'"));
+  $flagSql = mysql_fetch_object(mysql_query("select count(options_id) as cnt from resi_project_options where project_id = '$projectId' 
+            and (size is null or size=0) and (carpet_area is null or carpet_area=0) and option_category = 'Actual'"));
   if($flagSql->cnt > 0)
     return 1;
   else 
@@ -486,6 +487,28 @@ function randomPassword() {
         $pass[] = $alphabet[$n];
     }
     return implode($pass); //turn the array into a string
+}
+
+function projectUrlUpdateByBuilderNameChange($builderid,$txtBuilderName){
+    $qryPDetail = "select rp.project_id,rp.project_name,rp.project_url,l.label as localityName,c.label as cityName from ".RESI_PROJECT." rp
+                   join locality l on rp.locality_id = l.locality_id
+                   join suburb s on l.suburb_id = s.suburb_id
+                   join city c on s.city_id = c.city_id where rp.builder_id = $builderid and rp.version = 'Cms'";
+   $resPDetail = mysql_query($qryPDetail) or die(mysql_error());
+   if(mysql_num_rows($resPDetail)>0){
+       while($data = mysql_fetch_assoc($resPDetail)){
+             $txtProjectURL = createProjectURL($data['cityName'], $data['localityName'], $txtBuilderName, $data['project_name'], $data['project_id']);
+             $updateQuery = "UPDATE ".RESI_PROJECT." set PROJECT_URL='".$txtProjectURL."' 
+                              where PROJECT_ID=".$data['project_id'];
+             $resUrl = mysql_query($updateQuery) or die(mysql_error());
+      }
+   }
+    return true;
+}
+
+function replaceSpaces($string){
+	$output = preg_replace('!\s+!', ' ', $string);
+	return $output;
 }
 
 

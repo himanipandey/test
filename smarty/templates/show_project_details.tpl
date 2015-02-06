@@ -2068,6 +2068,7 @@ function broker_call_edit(callId, brokerId)
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Effecive Date</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Unit Name</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Size</td>
+                         <td nowrap="nowrap"  align="left" class=whiteTxt>Carpet Area</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Price Per Unit Area</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
@@ -2092,6 +2093,9 @@ function broker_call_edit(callId, brokerId)
                       </td>
                       <td >
                          {if isset($valueInner['size'])} {$valueInner['size']} {else} -- {/if}
+                      </td>
+                       <td >
+                         {if isset($valueInner['carpet_area'])} {$valueInner['carpet_area']} {else} -- {/if}
                       </td>
                       <td >
                         {if isset($valueInner['latestPrice'])} {$valueInner['latestPrice']} {else} -- {/if}
@@ -2742,7 +2746,7 @@ function broker_call_edit(callId, brokerId)
 								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 										<tr class="headingrowcolor" height="30px;">
 											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status<br> Construction Status</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status<br> Construction Status </b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
 											
@@ -2758,6 +2762,9 @@ function broker_call_edit(callId, brokerId)
 											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
 											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
 											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
+											<td class="whiteTxt" align = "center" nowrap><b>Phase Remark</b></td>
+											
+
 										</tr>
 										{$olderValuePhase = ''}
 										{$cnt = 0}
@@ -2818,8 +2825,9 @@ function broker_call_edit(callId, brokerId)
 																{else}
 																	--
 																{/if}
-                                                                                                                                
+
 															</td>
+															
 														{/if}
 													
 														{$olderValuePhase = $key}
@@ -2828,6 +2836,7 @@ function broker_call_edit(callId, brokerId)
 														<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}">
 															{$keyInner}
 														</td>
+														
 														{/if}
 														{$olderValueType = $keyInner}
 														
@@ -2963,7 +2972,16 @@ function broker_call_edit(callId, brokerId)
 															{/if}
 														{/if}
 													</td>
-													
+													<td align = "center" nowrap>
+													{if $key != $newK}
+													{if $lastItem['REMARKS'] != ''}
+																
+														{$lastItem['REMARKS']}
+													{else}
+														--
+													{/if}	 {$newK = $key}{/if}
+												</td>
+													 
 												</tr>	
 												{/foreach}
 												{if count($arrPhaseTypeCount[$key][$keyInner])>1}
@@ -3022,6 +3040,7 @@ function broker_call_edit(callId, brokerId)
 
 												</tr>
 												{/if}
+												
 								
 							</table>
 						

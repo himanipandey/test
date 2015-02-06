@@ -14,7 +14,7 @@ if(isset($_POST['btnExit'])){
 
 if (isset($_POST['btnSave'])) {
 
-		$txtCityName = trim($_POST['txtCityName']);
+		$txtCityName = replaceSpaces(trim($_POST['txtCityName']));
 		$txtCityUrl = '';
 		$txtCityUrlOld = trim($_POST['txtCityUrlOld']);
 		$DisplayOrder = trim($_POST['DisplayOrder']);
