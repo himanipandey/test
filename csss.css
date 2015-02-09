@@ -31,6 +31,20 @@
 	margin-left: 20px;
 }
 
+#seller1{
+	position: relative;
+	padding-left: 0px;
+	width: 100px;
+	text-align: center;
+}
+#seller3{
+	position: relative;
+	margin-left: 20px;
+}
+
+
+
+
 #prj{
 	position: absolute;
 	width:1200px;
@@ -331,7 +345,7 @@
 
 #servant1{
 	position: relative;
-width: 130px;
+	width: 130px;
 }
 
 #servant{
@@ -339,6 +353,35 @@ width: 130px;
 	margin-left: 750px;
 	margin-top: 0px;
 }
+
+
+#discription1{
+	position: absolute;
+	left: 300px;
+	top: 800px;
+	width: 1200px;
+	height: 100px;
+	/*background-color: gold;*/
+}
+#discription4{
+	position: relative;
+	padding-left: 30px;
+	/*background-color: gold;*/
+}
+#discription2{
+	position: relative;
+	width: 670px;
+	height: 100px;
+	/*background-color: red;*/
+}
+#discription3{
+	position: relative;
+	margin-left: 30px;
+	width: 100%;
+	height: 100%;
+}
+
+
 
 
 

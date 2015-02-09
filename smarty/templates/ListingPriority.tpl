@@ -151,6 +151,7 @@ $("#lmkSave").click(function(){
     var temp = [];
     var cityid = $("#cityddEdit :selected").val().trim();
     var broker_name = $("#bkn2 :selected").text().trim();
+
     var broker_id = $("#bkn2 :selected").val().trim();
     //var projectid = $("#project :selected").text().trim();
     var project_name = $("#project").val().trim();
@@ -191,10 +192,17 @@ $("#lmkSave").click(function(){
     console.log(size+" "+ bedrooms+" "+bathrooms+" "+property_id+" "+unit_type);
 
 
+    var seller_id = $("#seller3").val().trim();
+    //var projectid = $("#project :selected").text().trim();
+    var projectid = $("#project").val().trim();
+    var projid = $("#proj").val().trim();
+    var bhk1 = $("#bh3 :selected").text().trim();    
+
     var facing = $("#facing2 :selected").text().trim();
     
     var tower = $("#tower2").val().trim();
     var floor = $("#floor2").val().trim();
+
     var price_type = parseInt($("#prs5 :selected").val());
     var price = "";
     var price_per_unit_area = "";
@@ -202,8 +210,13 @@ $("#lmkSave").click(function(){
       price = $("#prs3").val().trim();
     else
       price_per_unit_area = $("#prs3").val().trim();
+
+    var price_type = $("#prs5 :selected").text().trim();
+    var price = $("#prs3").val().trim();
+    
+
     var trancefer_rate = $("#tfr2").val().trim();
-    var price_in = "Lakhs";
+    var price_in = "Lakhs";    
 
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
@@ -211,6 +224,7 @@ $("#lmkSave").click(function(){
     var plc_val = $("#plc3").val().trim();
     var study_room = "No";
     var servant_room = "No";
+    var discription = $("#discription3").val().trim();
 
     /*temp[0] = cityid;
     temp[1] = broker_name;
@@ -248,9 +262,11 @@ $("#lmkSave").click(function(){
 
             success:function(msg){
               //alert(msg);
+
               console.log(msg);
-                //alert("Saved");
-                //location.reload(true);  
+              
+                alert("Saved");
+
             },
           });
 
@@ -911,9 +927,16 @@ function update_locality(ctid)
                                       {/foreach}
                                 </select>
                             </td>
-                      
-                            <td width="40%" align="left" id="errmsgbroker_name">
+                            <td width="100px;">
+
+                            </td>
                             
+
+                            <td id="seller1">
+                                Seller ID:
+                            </td>
+                            <td id="seller2">
+                              <input type=text name="seller3" id="seller3">       
                             </td>
                         </tr>
 
@@ -1140,7 +1163,7 @@ function update_locality(ctid)
 	                        </td> 
 	                         
 	                        <td>
-	                              <input type=text name="plc3" id="plc3" width="20px" style="text-align: center;">
+	                              <input type=text name="plc3" id="plc3" width="20px" style="text-align: left;">
 	                        </td>
                       </tr>    
 
@@ -1158,6 +1181,10 @@ function update_locality(ctid)
                             </label>
                           </td>
 
+                          <td>
+
+                          </td>
+
                           <td id = "servant1">
                               Servant Room
                           </td>
@@ -1172,13 +1199,23 @@ function update_locality(ctid)
                           </td>  
                       </tr>
 
+                      <tr id="discription1">
+                        <td id = "discription4">
+                            Description
+                        </td>
+                        <td id = "discription2">
+                              <input type=text name="discription3" id="discription3"  />
+                        </td>
+                      </tr>
+
+
 
           </form>          
                 
             			<tr>
                       <td width="400px"> </td>
 
-                    		<td align="left" style="padding-top:700px;" >
+                    		<td align="left" style="padding-top:900px;" >
                        			<input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp;     
                        			<input type="button" name="exit_button" id="exit_button" value="Exit" style="cursor:pointer">                 
                     		</td>
@@ -1198,12 +1235,12 @@ function update_locality(ctid)
                           <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=1% align="center">Serial</th>
-                                  <th  width=5% align="center">Name</th>
-                                  <TH  width=8% align="center">Vicinity</TH>
-                                  <TH  width=4% align="center">Place Type</TH>
-                                  <TH  width=8% align="center">Location in Map</TH>
+                                  <th  width=5% align="center">City</th>
+                                  <TH  width=8% align="center">Broker Name</TH>
+                                  <TH  width=4% align="center">Project</TH>
+                                  <TH  width=8% align="center">Listing</TH>
                                   
-                                  <TH  width=4% align="center">Priority
+                                  <TH  width=4% align="center">Price
                                  <!-- {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
                                       <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
                                   {else}
@@ -1211,7 +1248,7 @@ function update_locality(ctid)
                                   {/if}-->
                                   </TH> 
                                  <TH width=6% align="center">Status</TH> 
-         <TH width=3% align="center">Save</TH>
+                                 <TH width=3% align="center">Save</TH>
                                 </TR>
                               
                           </thead>
@@ -1232,38 +1269,39 @@ function update_locality(ctid)
                                     {else}                            
                                       {$color = "bgcolor = '#FCFCFC'"}
                                     {/if}
-                                <TR {$color}>
-                                  <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v.name}</TD>
-                                  <TD align=center class=td-border>{$v.vicinity}</TD>
-                                  <TD align=center class=td-border>{$v.placeType}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
-                  <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
+                                  <TR {$color}>
+                                    <TD align=center class=td-border>{$i} </TD>
+                                    <TD align=center class=td-border>{$v.name}</TD>
+                                    <TD align=center class=td-border>{$v.vicinity}</TD>
+                                    <TD align=center class=td-border>{$v.placeType}</TD>
+                                    <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
+                                    <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
 
-                                  </TD>
+                                    </TD>
                                   
-                                  <!--<TD align=center class=td-border>{$v.priority}</TD>-->
+                                    <!--<TD align=center class=td-border>{$v.priority}</TD>-->
                                    
-                                   <TD align=center class=td-border>
-                                    <select id="priority{$v.id}" value="" >
-          <option name=one value=1  {if $v.priority == 1} selected="selected"  {/if}>1</option>
-          <option name=two value=2  {if $v.priority == 2} selected="selected"  {/if}>2</option>
-          <option name=three value=3 {if $v.priority == 3} selected="selected"  {/if}>3</option>
-          <option name=four value=4 {if $v.priority == 4} selected="selected"  {/if}>4</option>
-          <option name=five value=5 {if $v.priority == 5} selected="selected"  {/if}>5</option>
-          </select>
-          </TD>
-        <TD align=center class=td-border>  
-  <select id="status{$v.id}" value=''>
-          <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
-          <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
+                                    <TD align=center class=td-border>
+                                      <select id="priority{$v.id}" value="" >
+                                                  <option name=one value=1  {if $v.priority == 1} selected="selected"  {/if}>1</option>
+                                                  <option name=two value=2  {if $v.priority == 2} selected="selected"  {/if}>2</option>
+                                                  <option name=three value=3 {if $v.priority == 3} selected="selected"  {/if}>3</option>
+                                                  <option name=four value=4 {if $v.priority == 4} selected="selected"  {/if}>4</option>
+                                                  <option name=five value=5 {if $v.priority == 5} selected="selected"  {/if}>5</option>
+                                      </select>
+                                    </TD>
+                                    <TD align=center class=td-border>  
+                                        <select id="status{$v.id}" value=''>
+                                            <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
+                                            <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
                   
-        </select>
-      
-
-      </TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Save</a> <button type="button" id="edit_button{$v.id}" onclick="return landmarkEdit('{$v.id}', '{$v.city_id}', '{$v.place_type_id}', '{$v.name}', '{$v.vicinity}', '{$v.latitude}', '{$v.longitude}', '{$v.phone_number}', '{$v.website}', '{$v.priority}', '{$v.status}')" align="left">Edit</button></TD>
-                                </TR>
+                                        </select>
+                                    </TD>
+                                    
+                                    <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Save</a> <button type="button" id="edit_button{$v.id}" onclick="return landmarkEdit('{$v.id}', '{$v.city_id}', '{$v.place_type_id}', '{$v.name}', '{$v.vicinity}', '{$v.latitude}', '{$v.longitude}', '{$v.phone_number}', '{$v.website}', '{$v.priority}', '{$v.status}')" align="left">Edit</button>
+                                    </TD>
+                                
+                                  </TR>
                                 {/foreach}
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>

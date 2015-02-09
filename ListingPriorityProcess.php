@@ -144,6 +144,7 @@ try{
     }
 
 
+
  
 
  } 
@@ -165,5 +166,11 @@ $smarty->assign('resaleListings',$resaleListings);
 
 
 
+
+
+
+
+
+$smarty->assign('nearPlacesArr',$NearPlacesArr);
 
 ?>
