@@ -47,6 +47,7 @@
 			    $data['OPTION_ID'] = $v1['OPTION_ID'];
 			    $data['UNIT_TYPE'] = $v1['UNIT_TYPE'];
 			    $data['SIZE'] = $v1['SIZE'];
+			    $data['CARPET_AREA'] = $v1['CARPET_AREA'];
 			    $data['UNIT_NAME'] = $v1['UNIT_NAME'];
 			    if($v1['UNIT_TYPE']=='Apartment'){
 			    	//array_push($floorPlanOptionsArr, $apartmentArr);
