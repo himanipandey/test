@@ -103,12 +103,12 @@
 	position: absolute;
 	left: 300px;
 	top: 400px;
-	width: 1200px;
+	width: 1800px;
 
 }
 #othr1{
 	position: relative;
-	padding-left: 200px;
+	padding-left: 100px;
 	width: 40px;
 	text-align: center;
 }
@@ -150,13 +150,30 @@
 
 #tol2{
 	position: relative;
-	width: 200px;
+	width: 80px;
 }
 
 #tol3{
 	position: relative;
 	height: 15px;
 	width: 60px;
+}
+
+#appartment1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+
+#appartment2{
+	position: relative;
+	width: 80px;
+}
+
+#appartment3{
+	position: relative;
+	height: 15px;
+	width: 120px;
 }
 
 #tower_floor{

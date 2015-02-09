@@ -940,8 +940,8 @@ function update_locality(ctid)
                             </td>
                         </tr>
      
-                        <tr id = "othr" style="display:none;">
-                            <td id="othr1">
+                        <tr id = "othr" >
+                            <td id="othr1" padding-left: 100px;>
                                   *Size
                             </td>
                             <td id="othr2">
@@ -958,6 +958,20 @@ function update_locality(ctid)
                             </td>
                             <td id="tol2">
                                   <input type=text name="tol3" id="tol3">
+                            </td>
+                            <td id="appartment1">
+                                  *Apparthment
+                            </td>
+                            <td id="appartment2">
+                                  <select name="appartment3" id="appartment3" style="height:28px">
+                                    <option value=''>Apartment</option>  
+                                      <option value="1">Villa</option>
+                                      <option value="2">Plot</option>
+                                      <option value="3">Commercial</option>
+                                      <option value="4">Shop</option>
+                                      <option value="5">Office</option>
+                                      <option value="6">Other</option>
+                                </select>
                             </td>
                         </tr>
   
@@ -1021,18 +1035,18 @@ function update_locality(ctid)
                             <td width="570px" align="left" id="pr" >
                               <label  for="one" style="font-size:11px;">
                                 lkhs &nbsp;   
-                                 <input type="radio" id="lkhs1" name="lkhs1" value="1" checked="checked" /> 
+                                 <input type="radio" id="lkhs1" name="prstp1" value="1" checked="checked" /> 
                                  &nbsp;&nbsp; crs &nbsp;
-                                 <input type="radio" id="crs1" name="crs1" value="2" />
+                                 <input type="radio" id="crs1" name="prstp1" value="2" />
                               </label>    
                             </td>
                         
                             <td width="630px" align="left" id="tr" >
                               <label  for="one" style="font-size:11px;">
                                 lkhs &nbsp;   
-                                  <input type="radio" id="lkhs2" name="lkhs2" value="1" checked="checked" /> 
+                                  <input type="radio" id="lkhs2" name="prstp2" value="1" checked="checked" /> 
                                   &nbsp;&nbsp; crs &nbsp;
-                                  <input type="radio" id="crs2" name="crs2" value="2" />
+                                  <input type="radio" id="crs2" name="prstp2" value="2" />
                               </label>    
                             </td>  
 
