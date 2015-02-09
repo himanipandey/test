@@ -22,8 +22,7 @@
 var pid;
 var bt = [];
 var option = [];
-
-
+var sel = [];
 
 
 function chkConfirm() 
@@ -146,6 +145,32 @@ $("#exit_button").click(function(){
    	$('#search-bottom').show('slow');
 });
 
+$("#bkn2").change(function () {
+    var broker_id = $("#bkn2 :selected").val().trim();   
+    console.log(broker_id);
+    $.ajax({
+            type: "POST",
+            url: '/saveSecondaryListings.php',
+            data: { broker_id:broker_id, task:'get_seller'},
+
+            success:function(msg){
+
+              console.log(msg);
+              $('#seller3').html(''); 
+              var options = $("#seller3");
+              //var i = 0;
+
+
+              msg = $.parseJSON(msg);
+              $.each(msg, function(k,v) {
+                console.log(v);
+                  options.append($("<option/>").val(v['user_id']).text(v['name']));
+                
+              });  
+              
+            },
+          });
+});
 
 $("#lmkSave").click(function(){
     var temp = [];
@@ -153,6 +178,9 @@ $("#lmkSave").click(function(){
     var broker_name = $("#bkn2 :selected").text().trim();
 
     var broker_id = $("#bkn2 :selected").val().trim();
+        
+
+
     //var projectid = $("#project :selected").text().trim();
     var project_name = $("#project").val().trim();
     var project_id = $("#proj").val().trim();
@@ -171,10 +199,10 @@ $("#lmkSave").click(function(){
         if (k==parseInt(option_sel)){
           console.log("here0");
           console.log(v);
-           size = v['size'];
-           bedrooms = v['bedrooms'];
+          size = v['size'];
+          bedrooms = v['bedrooms'];
           bathrooms = v['bathrooms'];
-           property_id = v['propertyId'];
+          property_id = v['propertyId'];
           unit_type = v['unitType'];
         }
       });
@@ -204,6 +232,7 @@ $("#lmkSave").click(function(){
     var floor = $("#floor2").val().trim();
 
     var price_type = parseInt($("#prs5 :selected").val());
+
     var price = "";
     var price_per_unit_area = "";
     if (price_type==1)
@@ -211,19 +240,41 @@ $("#lmkSave").click(function(){
     else
       price_per_unit_area = $("#prs3").val().trim();
 
-    var price_type = $("#prs5 :selected").text().trim();
-    var price = $("#prs3").val().trim();
-    
+    if ($('[name="lkhs1"]').is(':checked'))  {
+      price_new = parseFloat(price) * 100000;
+      price_per_unit_area = parseFloat(price_per_unit_area) * 100000;      
+    } else {
+      price_new = parseFloat(price) * 10000000;
+      price_per_unit_area = parseFloat(price_per_unit_area) * 10000000;
+    }
+  
 
+    var transfer_new;
     var trancefer_rate = $("#tfr2").val().trim();
     var price_in = "Lakhs";    
+    if ($('[name="lkhs2"]').is(':checked'))  {
+      transfer_new = parseFloat(trancefer_rate) * 100000; 
+    } else {
+      transfer_new = parseFloat(trancefer_rate) * 10000000;
+    }
 
+    var appratment = $("#appartment3 :selected").text().trim();
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
     var loan_bank = $("#bank_list2 :selected").val().trim();
     var plc_val = $("#plc3").val().trim();
-    var study_room = "No";
-    var servant_room = "No";
+    var study_room = "";
+    if ($('[name="yes_study"]').is(':checked'))  {
+      study_room = "YES";     
+    } else {
+      study_room = "NO";
+    }  
+    var servant_room = "";
+     if ($('[name="yes_servant"]').is(':checked'))  {
+      servant_room = "YES";     
+    } else {
+      servant_room = "NO";
+    } 
     var discription = $("#discription3").val().trim();
 
     /*temp[0] = cityid;
@@ -315,140 +366,6 @@ $("#lmkSave").click(function(){
     if(lmkid) mode = 'update';
     else mode='create';
 
- 
-
-    /*if(lmkphone!=''){
-      	if(!isPhnumber(lmkphone)) {
-        	$('#errmsgphone').html('<font color="red">Phone No. must be numeric and 6-14 characters</font>');
-        	$("#lmkphone").focus();
-        	error=1;
-      	} else {
-          	$('#errmsgphone').html('');
-        }
-    } else {
-            $('#errmsgphone').html('');
-    }
-
-
-    if(lmklong==''){
-      	$('#errmsglong').html('<font color="red">Please enter Latitude</font>');
-      	$("#lmklong").focus();
-      	error = 1;
-    } else {
-      	if(!isNumeric(lmklong)) {
-        	$('#errmsglong').html('<font color="red">Please enter numeric Longitude</font>');
-        	$("#lmklong").focus();
-        	error = 1;
-      	} else {
-        	if (!(parseInt(lmklong)<=180) || !(parseInt(lmklong)>=-180)) {
-        		$('#errmsglong').html('<font color="red">Please enter Longitude between -180 and +180</font>');
-          		$("#lmklong").focus();
-          		error = 1;
-        	} else {
-          		$('#errmsglong').html('');
-        	}
-      	}
-    }  
-    //latitude   
-    
-    if(lmklat==''){
-      	$('#errmsglat').html('<font color="red">Please enter Latitude</font>');
-      	$("#lmklat").focus();
-      	error = 1;
-    } else {
-      	if(!isNumeric(lmklat)) {
-        	$('#errmsglat').html('<font color="red">Please enter Numeric Latitude</font>');
-        	$("#lmklat").focus();
-        	error=1;
-      	} else {
-        	if (!(parseInt(lmklat)<=180) || !(parseInt(lmklat)>=-180)) {
-        		$('#errmsglat').html('<font color="red">Please enter Latitude between -180 and +180</font>');
-          		$("#lmklat").focus();
-          		error = 1;
-        	} else {
-          		$('#errmsglat').html('');
-        	}
-      	}
-    }
-  
-    //address
-   /* if(lmkaddress==''){
-      $('#errmsgaddress').html('<font color="red">Please enter Landmark Address</font>');
-      $("#lmkaddress").focus();
-      error = 1;
-    }
-    else 
-    if (/[^\w#,.\- ]/.test(lmkaddress)){
-        $('#errmsgaddress').html('<font color="red">Special characters are not allowed in Landmark name</font>');
-      	$("#lmkaddress").focus();
-      	error = 1;
-    } else {
-      	$('#errmsgaddress').html('');
-    }
-
-    //name
-
-    if(lmkname==''){
-      	$('#errmsgname').html('<font color="red">Please enter Landmark name</font>');
-      	$("#lmkname").focus();
-      	error = 1;
-    } else if (/[^\w.\- ]/i.test(lmkname)) {
-      	$('#errmsgname').html('<font color="red">Special characters are not allowed in Landmark name</font>');
-      	$("#lmkname").focus();
-      	error = 1;
-    } else {
-      	$('#errmsgname').html('');
-    }
-
-    if(!placeid) {
-      	$('#errmsgplacetype').html('<font color="red">Please select Place Type.</font>');
-       	$("#placeTypeEdit").focus();
-      	error=1;
-    } 
-    else $('#errmsgplacetype').html('');
-
-    if(!cityid){
-      	$('#errmsgcity').html('<font color="red">Please select City.</font>');
-        $("#cityddEdit").focus();
-      	error=1;
-    }
-    else $('#errmsgcity').html(''); 
-    
-
-
-    //if (error==0) {
-      
-      $.ajax({
-            type: "POST",
-            url: '/saveNearPlacePriority.php',
-            data: { id:lmkid, cid: cityid, placeid:placeid, name : lmkname, address : lmkaddress, lat : lmklat, lon : lmklong, phone:lmkphone, web:lmkweb, prio:lmkprio, status:lmkstatus, task : 'createLandmarkAlias' , mode:mode},
-            success:function(msg){
-              //alert(msg);
-                alert("Saved");
-                location.reload(true);  
-               /*if(msg == 1){
-                alert("Saved");
-                location.reload(true);
-                //$("#onclick-create").text("Landmark Successfully Created.");
-               }
-               else if(msg == 2){
-                //$("#onclick-create").text("Landmark Already Added.");
-                   alert("Already Saved");
-                   location.reload(true); 
-               }
-               else if(msg == 3){
-                //$("#onclick-create").text("Error in Adding Landmark.");
-                   alert("error");
-               }
-               else if(msg == 4){
-                //$("#onclick-create").text("No Landmark Selected.");
-                   alert("no data");
-               }
-               else alert(msg); 
-            },
-          }); */
-
-    //}
   });
    
   $.widget( "custom.catcomplete", $.ui.autocomplete, {
@@ -923,7 +840,7 @@ function update_locality(ctid)
                                 <select id="bkn2" name="bkn2" onchange = "update_locality(this.value);">
                                       <option value=''>select name</option>
                                       {foreach from=$brokerArray key=k item=v} 
-                                          <option value="{$k}">{$v}</option>
+                                          <option value="{$v['id']}">{$v['name']}</option>
                                       {/foreach}
                                 </select>
                             </td>
@@ -933,10 +850,14 @@ function update_locality(ctid)
                             
 
                             <td id="seller1">
-                                Seller ID:
+                                Seller Name:
                             </td>
                             <td id="seller2">
-                              <input type=text name="seller3" id="seller3">       
+                              <!-- <input type=text name="seller3" id="seller3"> --> 
+                              <select id="seller3" name="seller3" >
+                                    <option value=''>Seller ID</option>
+                                    
+                                </select>      
                             </td>
                         </tr>
 
@@ -1006,7 +927,7 @@ function update_locality(ctid)
                                   *Bathroom
                             </td>
                             <td id="bath1">
-                                  <input type=text name="bed2" id="bed2">  
+                                  <input type=text name="bed2" id="bed2" style="width:60px">  
                             </td>
                             <td id="tol1">
                                   *Toilet
@@ -1068,7 +989,6 @@ function update_locality(ctid)
                                       <option value='0'>Select</option>  
                                       <option value="1">All Inclusive</option>
                                       <option value="2">Per Sq. Ft.</option>
-                                      <option value="3">Others</option>
                                   </select>
                                 </td>
 
@@ -1087,21 +1007,25 @@ function update_locality(ctid)
 
                         <tr id="prs_typ">
                             
-                            <td width="570px" align="left" id="pr" >
-                              <label  for="one" style="font-size:11px;">
+                            <td width="110px" align="left" id="pr" style="padding-left:120px" >
+                              <label  for="one" style="font-size:11px;" >
                                 lkhs &nbsp;   
-                                 <input type="radio" id="lkhs1" name="prstp1" value="1" checked="checked" /> 
+                                 <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
                                  &nbsp;&nbsp; crs &nbsp;
-                                 <input type="radio" id="crs1" name="prstp1" value="2" />
+                                 <input type="radio" id="crs1" name="crs1" value="n" />
                               </label>    
+                            </td>
+
+                            <td width="400px" style="margin-left=-20px">
+                                <input type=text name="flt2" id="flt2" style="width:100px">
                             </td>
                         
                             <td width="630px" align="left" id="tr" >
                               <label  for="one" style="font-size:11px;">
                                 lkhs &nbsp;   
-                                  <input type="radio" id="lkhs2" name="prstp2" value="1" checked="checked" /> 
+                                  <input type="radio" id="lkhs2" name="prstp2" value="y" checked="checked" /> 
                                   &nbsp;&nbsp; crs &nbsp;
-                                  <input type="radio" id="crs2" name="prstp2" value="2" />
+                                  <input type="radio" id="crs2" name="prstp2" value="n" />
                               </label>    
                             </td>  
 

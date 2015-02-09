@@ -1,6 +1,9 @@
 <?php
 //calling function for all the cities
 
+
+
+
 $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 $smarty->assign('dirname',$dirName);
@@ -9,8 +12,12 @@ $bankArray = BankList::arrBank();
 $smarty->assign("bankArray",$bankArray);
 $smarty->assign('dirname',$dirname);
 
-$brokerArray = BrokerAgent::getAllBrokerAgents(0);
+$arr = Array('type'=> 'Broker');
+$brokerArray= Company::getAllCompany($arr);
+//print_r($brokerArray);
 $smarty->assign("brokerArray",$brokerArray);
+
+
 $smarty->assign('dirname',$dirname);
 
 
@@ -52,7 +59,7 @@ if(!empty($_REQUEST['placeType']))
     //$smarty->assign('suburbId',$suburbId);
    // $projectArr = getProjectArr($suburbId,'suburb',$orderby);
 }
-echo "<pre>";
+//echo "<pre>";
 
 
 $resaleListings = array();
@@ -124,13 +131,13 @@ try{
     
     //echo '\n\n', $res["raw_headers"]);
    
-     if($ck_new!='')
+    if($ck_new!='')
     {    
         $responseLists = \Httpful\Request::get($uriListing)->addHeader("COOKIE", $ck_new )->send(); 
-        var_dump($responseLists->body);
+        //var_dump($responseLists->body);
         if($responseLists->body->statusCode=="2XX"){
             $data = $responseLists->body->data;
-            var_dump($data);
+            //var_dump($data);
             foreach ($data as $k => $v){ 
                 //$uriListingDetail =  "https://qa.proptiger-ws.com/data/v1/entity/user/listing/".$v->id;                
                 //$responseListingDetail = \Httpful\Request::get($uriListingDetail)->addHeader("COOKIE", $ck_new )->send();

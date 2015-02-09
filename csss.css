@@ -72,6 +72,7 @@
 }
 
 #bhk{
+	/*display: none;*/
 	position: absolute;
 	left: 300px;
 	top: 350px;
@@ -277,15 +278,22 @@
 	position: absolute;
 	left: 300px;
 	top: 600px;
-	width: 1500px;
+	width: 1200px;
 }
 
 #pr{
 	position: relative;
-	padding-left: 250px;
-	width: 340px;
+
 }
 
+#oth1{
+	position: relative;
+}
+
+#oth2{
+	position: relative;
+	margin-left: -200px;
+}
 #tr{
 	position: relative;
 }
