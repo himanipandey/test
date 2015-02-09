@@ -127,5 +127,8 @@ else{
     //print_r($NearPlacesArr);
 
 }*/
+
+
+
 $smarty->assign('nearPlacesArr',$NearPlacesArr);
 ?>

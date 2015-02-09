@@ -25,13 +25,76 @@ ini_set('display_errors','1');
     echo  $_POST['study_room'];
     echo  $_POST['servant_room'];
 
+    $bhk = $_POST['bhk1'];
+    $flag = 0;
+    $st1 = "";
+    $st2 = "";
+    for ($i = 0; $i < $bhk.size; $i++)  {
+        if($flag == 0) {
+            $st1 = $st1.$bhk[$i];
+            if($bhk[$i] == ',')  {
+                $flag = 1;
+                break;
+            }
+            if($flag == 1){
+              $st2 = $st2.$bhk[$i];
+            } 
+        }
+    }
+
+    $bthrm = "";
+    $toil = "";
+    if (strpos($st1,',') !== false) {
+        $flag = 0;
+        for($i = 0; $i < $st1.size; $i++)  {
+            if($flag === 0)  {
+                $bthrm = $bthrm.$st1[$i];
+                if($st1[$i] === '+') {
+                    $flag = 1;
+                }
+            }
+            if(flag === 1) {
+                $toil = $toil.$st1[$i];
+
+            }
+        }
+    }
+
+    $st = "0123456789";
+    $bedrooms = "";
+    for($i = 0; $i < $bthrm.size; $i++)  {
+        if (strpos($st,$bthrm[$i]) !== false) {
+            $bedrooms = $bedrooms.$bthrm[$i];
+        } else {
+            break;
+        }
+    }
+
+    $toilets = "";
+    for($i = 0; $i < $bthrm.size; $i++)  {
+        if (strpos($st,$toil[$i]) !== false) {
+            $toilets = $toilets.$toil[$i];
+        } else {
+            break;
+        }
+    }
+
+    $sz = "";
+    for($i = 0; $i < $st2.size; $i++)  {
+        if (strpos($st,$st2[$i]) !== false) {
+            $sz = $sz.$st2[$i];
+        } else {
+            break;
+        }
+    }
+    
 $dataArr = array();
 $dataArr['floor'] = $_POST['floor'];
 $jsonDump = array(
     'comment' => $_POST['broker_name']
     );
 $dataArr['jsonDump'] = $jsonDump;
-$dataArr['sellerId'] = "1216008";
+$dataArr['sellerId'] = $_POST['seller_id'];
 $dataArr['flatNumber'] = $_POST['flat_number'];
 $dataArr['homeLoanBankId'] = $_POST['loan_bank'];
 $dataArr['noOfCarParks'] = $_POST['parking'];
@@ -39,9 +102,9 @@ $dataArr['negotiable'] = "true";
 $dataArr['transferCharges'] = $_POST['trancefer_rate']; 
 $dataArr['plc'] = $_POST['plc_val'];
 $otherInfo = array(
-    'size'=> $_POST['size'],
+    'size'=> $sz,
     'projectId'=> $_POST['projectid'],
-    'bedrooms'=> $_POST['bhk1'],
+    'bedrooms'=> $bedrooms,
     'unitType'=> "Sq. Ft.",
     'penthouse'=>"true",
     'studio' => "true",
@@ -56,7 +119,7 @@ $currentListingPrice = array(
     'pricePerUnitArea'=> $_POST['price']
     );
 $dataArr['currentListingPrice'] = $currentListingPrice;
-
+$dataArr['discription'] = $_POST['discription'];
 
 
 //'{"floor":{$x},"jsonDump":"{\"comment\":\"anubhav\"}","sellerId":"1216008","flatNumber":"D-12","homeLoanBankId":"1","noOfCarParks":"3","negotiable":"true","transferCharges":1000,"plc":200,"otherInfo":{"size":"100","projectId":"656368","bedrooms":"3","unitType":"Plot","penthouse":"true","studio":"true","facing":"North"},"masterAmenityIds":[1,2,3,4],"currentListingPrice":{"pricePerUnitArea":2000,}}'
@@ -66,7 +129,10 @@ $dataJson = json_encode($dataArr);
 
     $uri = "http://qa.proptiger-ws.com/data/v1/entity/user/listing";
     $uri1 = "https://qa.proptiger-ws.com/app/v1/login?username=admin-10@proptiger.com&password=1234";
+    $i = 0;
+    while($i < 10) {
 
+    }    
     try{ 
         $response_login = \Httpful\Request::post($uri1)->sendIt();
         
