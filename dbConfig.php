@@ -4,7 +4,7 @@
 
 define("SYSTEM_USER_ID", "53");
 
-define("DB_PROJECT_HOST", "192.168.1.8");
+define("DB_PROJECT_HOST", "localhost");
 define("DB_PROJECT_USER", "root");
 define("DB_PROJECT_PASS", "root");
 define("DB_PROJECT_NAME", "cms");
