@@ -52,80 +52,118 @@ if(!empty($_REQUEST['placeType']))
     //$smarty->assign('suburbId',$suburbId);
    // $projectArr = getProjectArr($suburbId,'suburb',$orderby);
 }
-//echo "<pre>";
-//print_r($_REQUEST);die;
-$NearPlacesArr = array();
-if(isset($_REQUEST['submit'])) {
-    if($_REQUEST['locality'] == '')
-       $_REQUEST['localityId'] = '';
+echo "<pre>";
 
-    if(!empty($_REQUEST['localityId']) && !empty($cityId))
-    {
-        $localityId = $_REQUEST['localityId'];
-        $smarty->assign('localityId',$localityId);
-       // echo $nearPlaceTypesId;//die;
-        if(!empty($nearPlaceTypesId))
-        {
-            $NearPlacesArr = getNearPlacesArr($_REQUEST['status'], $cityId, $localityId,'locality',$orderby, $nearPlaceTypesId);
-            
-        }
-        else
-        {
-            //print_r("here");
-        $NearPlacesArr = getNearPlacesArr($_REQUEST['status'], $cityId, $localityId,'locality',$orderby);
-        //print_r($NearPlacesArr);
-        }
-    }
-    else if(!empty($cityId))
-    {
-        if(!empty($nearPlaceTypesId))
-        {
-            $NearPlacesArr = getNearPlacesArrfromcity($_REQUEST['status'], $cityId, $orderby, $nearPlaceTypesId);
-        }
-        else
-        {
-            //print_r("here");
-           $NearPlacesArr = getNearPlacesArrfromcity($_REQUEST['status'], $cityId, $orderby);
-           //print_r($NearPlacesArr);
-        }
 
-        //print_r($NearPlacesArr);
+$resaleListings = array();
 
-    }
-}
-else{
-    if(!empty($_REQUEST['localityId']) && !empty($cityId))
-    {
-        $localityId = $_REQUEST['localityId'];
-        $smarty->assign('localityId',$localityId);
-       /* if(!empty($nearPlaceTypesId))
-        {
-            $NearPlacesArr = getNearPlacesArr( $cityId, $localityId,'locality',$orderby, $nearPlaceTypesId);
-            //print_r("here");
+
+ 
+// And you're ready to go!
+//$url = "http://api.tuxx.co.uk/demo/server/time.php&app_id=" . $appID . "&app_key=" . $appKey;
+//$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true"; //master
+$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true"; //normal user
+
+//$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&fields=seller,id&start=0&rows=10";
+$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&start=0&rows=1";
+//$uri = "https://qa.proptiger-ws.com/data/v1/entity/user/listing";
+//$dataArr = array();
+//$dataArr['sellerId'] = "1216008";
+//$dataJson = json_encode($dataArr);
+try{ 
+
+    //$response = \Httpful\Request::post($uri1)->send();                     
+    //$response1 = \Httpful\Request::get($uri)->send();
+    //->body('{"floor":"2","jsonDump":"{\"comment\":\"anubhav\"}","sellerId":"1216008","flatNumber":"D-12","homeLoanBankId":"1","noOfCarParks":"3","negotiable":"true","transferCharges":1000,"plc":200,"otherInfo":{"size":"100","projectId":"656368","bedrooms":"3","unitType":"Plot","penthouse":"true","studio":"true","facing":"North"},"masterAmenityIds":[1,2,3,4],"currentListingPrice":{"pricePerUnitArea":2000,}}') // lets attach a body/payload...
+    //echo $response;
+    //echo $response1;
+
+    /*$response = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
+    ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
+    ->authenticateWith('admin-10@proptiger.com', '1234')  // authenticate with basic auth...
+    ->body('{"json":"is awesome"}')             // attach a body/payload...
+    ->send(); */
+
+    $responseLogin = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
+    ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
+    ->body('')             // attach a body/payload...
+    ->send(); 
+
+
+   // print("<pre>");
+    //$res = var_dump($response);
+    //echo '-------------------------------------------------------------------------------','\n';
+    //print_r($response.object); 
+    //$data = json_decode($response);
+    $header = $responseLogin->headers;
+    $header = $header->toArray();
+    $ck = $header['set-cookie'];
+    
+    $ck_new = "";
+    for($i = 0; $i < strlen($ck); $i++)  {
+        if($ck[$i] == ';')  {
+            break;
         }
-        else
-        {
-            //print_r("here");
-        $NearPlacesArr = getNearPlacesArr($cityId, $localityId,'locality',$orderby);
-        //print_r($NearPlacesArr);
-        }*/
+        $ck_new = $ck_new.$ck[$i];
     }
-}
-/*else if(!empty($cityId))
-{
-    if(!empty($nearPlaceTypesId))
-    {
-        $NearPlacesArr = getNearPlacesArrfromcity($cityId, $orderby, $nearPlaceTypesId);
-    }
-    else
-    {
-        //print_r("here");
-       $NearPlacesArr = getNearPlacesArrfromcity($cityId, $orderby);
-       //print_r($NearPlacesArr);
-    }
+
+
+    //print_r($ck_new);
+
+    /*$ck_name = "JSESSIONID";
+    setcookie($ck_name,$ck_new,time()+3600*24*100,"/","");
+
+    if(!isset($_COOKIE[$ck_name])) {
+    echo "Cookie named '" . $ck_name . "' is not set!";
+    } 
+    else {
+        echo "Cookie '" . $ck_name . "' is set!<br>";
+        echo "Value is: " . $_COOKIE[$ck_name];
+    }*/
+
+    
+    //echo '\n\n', $res["raw_headers"]);
    
-    //print_r($NearPlacesArr);
+     if($ck_new!='')
+    {    
+        $responseLists = \Httpful\Request::get($uriListing)->addHeader("COOKIE", $ck_new )->send(); 
+        var_dump($responseLists->body);
+        if($responseLists->body->statusCode=="2XX"){
+            $data = $responseLists->body->data;
+            var_dump($data);
+            foreach ($data as $k => $v){ 
+                //$uriListingDetail =  "https://qa.proptiger-ws.com/data/v1/entity/user/listing/".$v->id;                
+                //$responseListingDetail = \Httpful\Request::get($uriListingDetail)->addHeader("COOKIE", $ck_new )->send();
+                //if($responseListingDetail->body->statusCode=="2XX"){
+                    array_push($resaleListings,$v);
+                //}
 
-}*/
-$smarty->assign('nearPlacesArr',$NearPlacesArr);
+            }
+        }
+
+    }
+
+
+ 
+
+ } 
+ catch(Exception $e)  {
+    print_R($e);
+ }
+//print_r($resaleListings);
+$smarty->assign('resaleListings',$resaleListings);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>
