@@ -62,10 +62,10 @@ $resaleListings = array();
 // And you're ready to go!
 //$url = "http://api.tuxx.co.uk/demo/server/time.php&app_id=" . $appID . "&app_key=" . $appKey;
 //$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true"; //master
-$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true"; //normal user
+$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-10@proptiger.com&password=1234&rememberme=true"; //normal user
 
 //$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&fields=seller,id&start=0&rows=10";
-$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&start=0&rows=1";
+$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&start=0&rows=10";
 //$uri = "https://qa.proptiger-ws.com/data/v1/entity/user/listing";
 //$dataArr = array();
 //$dataArr['sellerId'] = "1216008";
