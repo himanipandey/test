@@ -6,7 +6,7 @@ define("SYSTEM_USER_ID", "53");
 
 define("DB_PROJECT_HOST", "localhost");
 define("DB_PROJECT_USER", "root");
-define("DB_PROJECT_PASS", "proptiger");
+define("DB_PROJECT_PASS", "root");
 define("DB_PROJECT_NAME", "cms");
 
 $db = mysql_connect(DB_PROJECT_HOST, DB_PROJECT_USER, DB_PROJECT_PASS);

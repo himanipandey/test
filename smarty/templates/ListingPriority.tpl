@@ -21,6 +21,7 @@
 <script language="javascript">
 var pid;
 var bt = [];
+var option = [];
 
 
 
@@ -148,36 +149,86 @@ $("#exit_button").click(function(){
 
 $("#lmkSave").click(function(){
     var temp = [];
-    var cityid = $("#cityddEdit :selected").text().trim();
+    var cityid = $("#cityddEdit :selected").val().trim();
     var broker_name = $("#bkn2 :selected").text().trim();
+
+    var broker_id = $("#bkn2 :selected").val().trim();
+    //var projectid = $("#project :selected").text().trim();
+    var project_name = $("#project").val().trim();
+    var project_id = $("#proj").val().trim();
+    var bhk1 = $("#bh3 :selected").text().trim();
+    var option_sel = $("#bh3 :selected").val();
+    var size = "";
+    var bedrooms ="";
+    var bathrooms = "";
+    var property_id = "";
+    var unit_type = "";
+    
+    if (parseInt(option_sel) < option.length){
+      
+      $.each(option, function(k,v){
+        
+        if (k==parseInt(option_sel)){
+          console.log("here0");
+          console.log(v);
+           size = v['size'];
+           bedrooms = v['bedrooms'];
+          bathrooms = v['bathrooms'];
+           property_id = v['propertyId'];
+          unit_type = v['unitType'];
+        }
+      });
+      
+    }
+    else{
+      console.log("hereq");
+       size = $("#other_input").val().trim();
+       bedrooms = $("#bed2").val().trim();
+      bathrooms = $("#tol3").val();
+       property_id = "";
+       unit_type = "";
+    }
+
+    console.log(size+" "+ bedrooms+" "+bathrooms+" "+property_id+" "+unit_type);
+
+
     var seller_id = $("#seller3").val().trim();
     //var projectid = $("#project :selected").text().trim();
     var projectid = $("#project").val().trim();
     var projid = $("#proj").val().trim();
     var bhk1 = $("#bh3 :selected").text().trim();    
+
     var facing = $("#facing2 :selected").text().trim();
-    var size = $("#other_input").val().trim();
-    var bathroom = $("#bath2").val().trim();
-    var toilet = $("#tol3").val().trim();
+    
     var tower = $("#tower2").val().trim();
     var floor = $("#floor2").val().trim();
+
+    var price_type = parseInt($("#prs5 :selected").val());
+    var price = "";
+    var price_per_unit_area = "";
+    if (price_type==1)
+      price = $("#prs3").val().trim();
+    else
+      price_per_unit_area = $("#prs3").val().trim();
+
     var price_type = $("#prs5 :selected").text().trim();
     var price = $("#prs3").val().trim();
     
+
     var trancefer_rate = $("#tfr2").val().trim();
     var price_in = "Lakhs";    
 
     var flat_number = $("#flt2").val().trim();
-    var parking = $("#park2 :selected").text().trim();
-    var loan_bank = $("#bank_list2 :selected").text().trim();
+    var parking = $("#park2 :selected").val();
+    var loan_bank = $("#bank_list2 :selected").val().trim();
     var plc_val = $("#plc3").val().trim();
     var study_room = "No";
     var servant_room = "No";
     var discription = $("#discription3").val().trim();
 
-    temp[0] = cityid;
+    /*temp[0] = cityid;
     temp[1] = broker_name;
-    temp[2] = projectid;
+    temp[2] = project_id;
     temp[3] = projid;
     temp[4] = bhk1;
     temp[5] = facing;
@@ -202,20 +253,20 @@ $("#lmkSave").click(function(){
         console.log(i + ' - ' + temp[i]);
     }
     //alert(bt[0]+'-'+bt[1]+'-'+bt[2]+'-'+bt[3]+'-'+bt[4]);  
-    console.log("---------------------------------");
+    console.log("---------------------------------");*/
 
     $.ajax({
             type: "POST",
-            url: '/saveNearPlacePriority.php',
-            data: { cityid: cityid, broker_name:broker_name, projectid : projectid, projid : projid,  bhk: bhk1, facing : facing, size:size, bathroom:bathroom, toilet:toilet, tower:tower, floor : floor , price_type:price_type, price:price, trancefer_rate:trancefer_rate, price_in:price_in, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room},
+            url: '/saveSecondaryListings.php',
+            data: { cityid: cityid, broker_name:broker_name, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room},
 
             success:function(msg){
               //alert(msg);
 
               console.log(msg);
-                
+              
                 alert("Saved");
-                location.reload(true);  
+
             },
           });
 
@@ -471,19 +522,22 @@ $("#lmkSave").click(function(){
                 var v2 = data.data.projectDetails.projectName;
                 var v3 = data.data.locality.newsTag;
                 
-                console.log(v1);
-                console.log(v2);
-                console.log(v3);
+                //console.log(v1);
+                //console.log(v2);
+                //console.log(v3);
 
 
 
                 var ln = data.data.properties.length;
-                console.log(ln);
+                //console.log(ln);
                 for(i = 0; i < ln; i++)  {
                   bt[i] = data.data.properties[i].unitName+', '+data.data.properties[i].size+' '+data.data.properties[i].measure;
-                  console.log(i);
+                  option[i] =  data.data.properties[i];
+                  //bt[i]['option_id'] = data.data.properties[i].unitName;
+                  //console.log(data.data.properties[i]);
                 }  
-
+                //console.log(option);
+                //console.log(bt);
 
                 $('#proj').html('');
                 $(function () {
@@ -564,7 +618,7 @@ $("#lmkSave").click(function(){
 
                 for(i = 0; i < ln2; i++)  {
                   bt[i] = data.data.properties[i].unitName+', '+data.data.properties[i].size+' '+data.data.properties[i].measure;
-                  console.log(i);
+                  //console.log(i);
                 }  
 
 
@@ -605,6 +659,7 @@ $("#lmkSave").click(function(){
       },*/
 
     });  
+
 
 
 });
@@ -916,8 +971,8 @@ function update_locality(ctid)
                                 <select id="bh3" name="bh3">
                                     <option value=''> BHK </option>    
                                     <script language="javascript" type="text/javascript"> 
-                                    for(var d=1;d< bt.length;d++)  {
-                                        document.write("<option>"+bt[d]+"</option>");
+                                    for(var d=0;d< bt.length;d++)  {
+                                        document.write("<option value='"+option[d].propertyId+"' >"+bt[d]+"</option>");
                                     }
                                     </script>
                                 </select>
@@ -951,7 +1006,7 @@ function update_locality(ctid)
                                   *Bathroom
                             </td>
                             <td id="bath1">
-                                  <input type=text name="bath2" id="bath2">  
+                                  <input type=text name="bed2" id="bed2">  
                             </td>
                             <td id="tol1">
                                   *Toilet
