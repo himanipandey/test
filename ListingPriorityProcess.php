@@ -12,10 +12,15 @@ $bankArray = BankList::arrBank();
 $smarty->assign("bankArray",$bankArray);
 $smarty->assign('dirname',$dirname);
 
-//$arr = Array('type'=> 'Broker');
-//$brokerArray= Company::getAllCompany($arr);
-$brokerArray = Company::find('all', array('conditions'=>array("type = 'Broker' and status = 'Active'" )));
+$brokerArray = array();
+$broker = Company::find('all', array('conditions'=>array("type = 'Broker' and status = 'Active'" )));
 //print_r($brokerArray);
+foreach ($companyDetail as $v) {
+    $tmp['id'] = $v->id;
+    $tmp['name'] = $v->name;
+    array_push($brokerArray, $tmp);
+}
+
 $smarty->assign("brokerArray",$brokerArray);
 
 
