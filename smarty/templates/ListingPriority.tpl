@@ -97,22 +97,83 @@ function cleanFields(){
 
 }
 
-function landmarkEdit(id,cityid,placeid,lmkname,lmkaddress,lmklat,lmklong,lmkphone,lmkweb,lmkprio,lmkstatus){
+function editListing(str){
     cleanFields();
-    $("#lmkid").val(id);
-    $('#cityddEdit').val(cityid);
-    $("#placeTypeEdit").val(placeid);
-    $("#Edit").val(placeid);
-    $("#lmkname").val(lmkname);
-    $("#lmkaddress").val(lmkaddress);
-    $("#lmklat").val(lmklat);
-    $("#lmklong").val(lmklong);
-    $("#lmkphone").val(lmkphone);
-    $("#lmkweb").val(lmkweb);
-    $("#lmkprio").val(lmkprio);
-    $("#lmkstatus").val(lmkstatus);
-    $('#search-top').hide('slow');
-    $('#search-bottom').hide('slow');
+    console.log(str.jsonDump.tower);
+    //var List = $.parseJSON(str);
+    //console.log(List);
+
+    $("#listing_id").val(str.id);
+    $("#cityddEdit").val(str.property.project.locality.suburb.city.id);
+    //$("#bkn2").val(str.seller.id);
+    $("#project").val(str.property.project.name);
+    $("#proj").val(str.property.project.projectId);
+    $("#seller3").val(str.seller.id);
+    $("#facing2").val(str.facing);
+    
+    $("#floor2").val(str.floor);
+    $("#tfr2").val(str.transferCharges);
+    $("#flt2").val(str.flatNumber);
+   
+
+    
+
+   var unit_name = str.property.unitName+"-"+str.property.size+" "+str.property.unitType; 
+
+    $('#bh3').html(''); 
+    $('#bh3').append($("<option selected='selected' />").val(str.propertyId).text(unit_name));
+    var jsonDump = $.parseJSON(str.jsonDump);
+    $("#tower2").val(jsonDump.tower);
+ 
+    
+
+
+
+
+    
+    if(str.currentListingPrice.pricePerUnitArea >0){
+       $("#prs5").val('2');
+       $("#prs3").val(str.currentListingPrice.pricePerUnitArea );
+     }
+    else{
+      $("#prs5").val('1');
+      $("#prs3").val(str.currentListingPrice.price);
+    }
+    $("#othr_prs").val(str.currentListingPrice.otherCharges);
+
+    
+
+   
+    
+  
+
+
+
+
+     $("#park2").val(str.noOfCarParks);
+    $("#bank_list2").val(str.homeLoanBankId);
+    $("#plc3").val(str.plc);
+    $("#discription3").val(jsonDump.description);
+   
+    
+
+
+   
+   /* var study_room = "";
+    if ($('[name="yes_study"]').is(':checked'))  {
+      study_room = "YES";     
+    } else {
+      study_room = "NO";
+    }  
+    var servant_room = "";
+     if ($('[name="yes_servant"]').is(':checked'))  {
+      servant_room = "YES";     
+    } else {
+      servant_room = "NO";
+    } 
+    var discription = $("#discription3").val().trim();*/
+
+
     window.scrollTo(0, 0);
 
     if($('#create_Landmark').css('display') == 'none'){ 
@@ -217,8 +278,9 @@ $("#lmkSave").click(function(){
        unit_type = "";
     }
 
-    console.log(size+" "+ bedrooms+" "+bathrooms+" "+property_id+" "+unit_type);
+   
 
+   
 
     var seller_id = $("#seller3").val().trim();
     //var projectid = $("#project :selected").text().trim();
@@ -583,133 +645,17 @@ $("#lmkSave").click(function(){
 
 
 
-function openProjectPriorityAdd()
-{
-    var cityid      = $('#citydd').val();
-    var localityid  = $('#locality').val();
-    var suburbid    = $('#sub').val();
-    var url = '/setProjectPriority.php?cityId='+cityid+'&localityid='+localityid+'&suburbid='+suburbid;
-    $.fancybox({
-        'width'                : 720,
-        'height'               : 200,
-        'scrolling'            : 'yes',
-        'href'                 : url,
-        'type'                 : 'iframe'
-    })
-}
 
 
-function nearPlacePriorityEdit(id,type)
-{
-    var cityid      = $('#citydd').val();
-    var localityid  = $('#locality').val();
-    var suburbid    = $('#sub').val();
-    var priority    = $('#priority'+id).val();
-    var status      =  $('#status'+id).val();
-//alert(cityid+priority+status);
-    $.ajax({
-            type: "POST",
-            url: '/saveNearPlacePriority.php',
-            data: { nearPlaceId: id, prio:priority, cityId:cityid, loc:localityid, sub:suburbid, status:status, task:'editpriority' },
-            success:function(msg){
-               if(msg == 1){
-                   alert("Successfully updated");
-                   location.reload(true); 
-               }
-               if(msg == 2){
-                   alert("Error Wrong Near Place selected");
-                   return false;
-               }
-               if(msg == 4){
-                   alert("Please enter valid Priority. Priority should be numeric and between 0 to 6.");
-                   return false;
-               }
-            }
-        })
-
-    /*
-    var url = '/setNearPlacePriority.php?cityId='+cityid+'&localityid='+localityid+'&suburbid='+suburbid+'&type='+type+'&id='+id+'&priority='+priority+'&status='+status+'&mode=edit';
-    $.fancybox({
-        'width'                :720,
-        'height'               :200,
-        'scrolling'            : 'yes',
-        'href'                 : url,
-        'type'                : 'iframe'
-    })  */
-}
-
-function projectPriorityDelete(id,type)
-{
-    var cityid      = $('#citydd').val();
-    var localityid  = $('#locality').val();
-    var suburbid    = $('#sub').val();
-    var r = confirm("Are you sure you want to reset");
-    if (r == true)
-    {
-        $.ajax({
-          type: "POST",
-          url: '/deletePriority.php',
-          data: { mode:'project', cityId:cityid, localityid:localityid, suburbid: suburbid, type:type, id:id },
-          success:function(msg){
-            if(msg == 1){
-                 alert("Priority Successfully deleted");
-                 window.location.reload(true); 
-             }
-          }
-      })
-    }
-    else
-    {
-        alert("OK");
-    } 
-    
-}
 
 
-function openMap(lat, lon)
-{
-var url = 'https://maps.google.com/maps?q= '+lat+','+lon;
-window.open(url,'1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;
 
- //alert (lat+lon);
-    /*var url = '/https://maps.google.com/maps?q= '+lat+','+lon;
-    alert (url);
-    $.fancybox({
-        'width'                :800,
-        'height'               :800,
-        'scrolling'            : 'yes',
-        'href'                 : url,
-        'type'                : 'iframe'
-    })*/
-}
 
-function show_loc_inst(){
-    var wid = screen.width/3;
-    var hei = (screen.height/2+25);
-    var w = window.open("Surprise1", "_blank","toolbar=no ,left=300, top=200, scrollbar=yes, location=0, status=no,titlebar=no,menubar=no,width="+wid +",height=" +hei);
-    var d = w.document.open();
-    d.write("<!DOCTYPE html><html><body><h1>Instructions</h1><p>1. Select the city and optinally locality and suburb to see the current projects in that area.</p><p>2. You can set at the max 15 projects for a given area.</p><p>3. Click Add Project to add a project.In that popup box, type in either project name, or project id to insert that project. </p><p>3.1. Type in the priority in the priority field.Lower numeric value is higher priority.</p><p>3.2. Check the checkbox to auto shift the projects, if desired.If this is selected, then projects at and below specified priority are shifted down 1 priority level. If this is not selected, then multiple projects could be at the same priority(which is fine, if that is what you want.)</p><p>4. Projects after first 15 would be  automatically reset to default priority.</p></body></html>");
-    d.close();
-}
 
-/*************Ajax code************/
-function update_locality(ctid)
-{
-    $("#localitySelectText").val('');
-      $.ajax({
-          type: "POST",
-          url: 'Refreshlocality.php?ctid='+ctid,
-          data: { ctid:ctid},
-          success:function(msg){
-                  document.getElementById("LocalityList").innerHTML=msg;
-          }
-      })
-    }
-    
- function localitySelect(localityId) {
-      $("#localityId").val(localityId);
- }
-/*******************End Ajax Code*************/
+
+
+
+
 </script>
 
   <TR>
@@ -843,6 +789,7 @@ function update_locality(ctid)
                                           <option value="{$v['id']}">{$v['name']}</option>
                                       {/foreach}
                                 </select>
+                                <input type='hidden' id='listing_id'>
                             </td>
                             <td width="100px;">
 
@@ -1179,13 +1126,9 @@ function update_locality(ctid)
                                   <TH  width=8% align="center">Listing</TH>
                                   
                                   <TH  width=4% align="center">Price
-                                 <!-- {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
-                                      <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
-                                  {else}
-                                      <span style="clear:both;margin-left:10px"><input type="image" name="desc" value="desc" src="images/arrow-down.png"></span>
-                                  {/if}-->
+                                
                                   </TH> 
-                                 <TH width=6% align="center">Status</TH> 
+                                
                                  <TH width=3% align="center">Save</TH>
                                 </TR>
                               
@@ -1200,7 +1143,7 @@ function update_locality(ctid)
                                 {else}
                                     {$type = DISPLAY_ORDER}
                                 {/if}-->
-                                {foreach from=$nearPlacesArr key=k item=v}
+                                {foreach from=$resaleListings key=k item=v}
                                     {$i=$i+1}
                                     {if $i%2 == 0}
                                       {$color = "bgcolor = '#F7F7F7'"}
@@ -1209,35 +1152,25 @@ function update_locality(ctid)
                                     {/if}
                                   <TR {$color}>
                                     <TD align=center class=td-border>{$i} </TD>
-                                    <TD align=center class=td-border>{$v.name}</TD>
-                                    <TD align=center class=td-border>{$v.vicinity}</TD>
-                                    <TD align=center class=td-border>{$v.placeType}</TD>
-                                    <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
+                                    <TD align=center class=td-border>{$v['val']->property->project->locality->suburb->city->label}</TD>
+                                    <TD align=center class=td-border>{$v['val']->seller->fullName}</TD>
+                                    <TD align=center class=td-border>{$v['val']->property->project->name}, {$v['val']->property->project->builder->name}</TD>
+                                    <TD align=center class=td-border>{$v['val']->property->unitName}-{$v['val']->property->size}-{$v->val->property->unitType}
                                     <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
 
                                     </TD>
+                                    {if $v['val']->currentListingPrice->pricePerUnitArea != 0}
+                                    <TD align=center class=td-border>{$v['val']->currentListingPrice->pricePerUnitArea}</TD>
+                                    {else}
+                                    <TD align=center class=td-border>{$v['val']->currentListingPrice->price}</TD>
+                                    {/if} 
+                                    <TD align=center class=td-border><button type="button" id="edit_button_{$v->id}" onclick="return editListing({$v['json']})" align="left">Edit</button></TD>
+                                
                                   
-                                    <!--<TD align=center class=td-border>{$v.priority}</TD>-->
-                                   
-                                    <TD align=center class=td-border>
-                                      <select id="priority{$v.id}" value="" >
-                                                  <option name=one value=1  {if $v.priority == 1} selected="selected"  {/if}>1</option>
-                                                  <option name=two value=2  {if $v.priority == 2} selected="selected"  {/if}>2</option>
-                                                  <option name=three value=3 {if $v.priority == 3} selected="selected"  {/if}>3</option>
-                                                  <option name=four value=4 {if $v.priority == 4} selected="selected"  {/if}>4</option>
-                                                  <option name=five value=5 {if $v.priority == 5} selected="selected"  {/if}>5</option>
-                                      </select>
-                                    </TD>
-                                    <TD align=center class=td-border>  
-                                        <select id="status{$v.id}" value=''>
-                                            <option name=one value='Active' {if $v.status == 'Active'} selected="selected"  {/if}> Active </option>
-                                            <option name=two value='Inactive' {if $v.status == 'Inactive'} selected="selected" {/if}> Inactive </option>
-                  
-                                        </select>
-                                    </TD>
+                                  
                                     
-                                    <TD align=center class=td-border><a href="javascript:void(0);" onclick="return nearPlacePriorityEdit('{$v.id}','{$type}','{$v.priority}','{$v.status}');">Save</a> <button type="button" id="edit_button{$v.id}" onclick="return landmarkEdit('{$v.id}', '{$v.city_id}', '{$v.place_type_id}', '{$v.name}', '{$v.vicinity}', '{$v.latitude}', '{$v.longitude}', '{$v.phone_number}', '{$v.website}', '{$v.priority}', '{$v.status}')" align="left">Edit</button>
-                                    </TD>
+                                    
+                                    
                                 
                                   </TR>
                                 {/foreach}
