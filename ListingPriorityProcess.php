@@ -150,6 +150,22 @@ try{
                 //$uriListingDetail =  "https://qa.proptiger-ws.com/data/v1/entity/user/listing/".$v->id;                
                 //$responseListingDetail = \Httpful\Request::get($uriListingDetail)->addHeader("COOKIE", $ck_new )->send();
                 //if($responseListingDetail->body->statusCode=="2XX"){
+                $seller_id = $v->seller->id;
+                $company_id='';
+                if($seller_id){
+                    $Sql = "SELECT c.name FROM company c inner join company_users cu on c.id=cu.company_id WHERE cu.user_id=".$seller_id." and c.status = 'Active' and cu.status='Active' ";
+                    //echo $Sql;
+                    $Sel = array();
+                    $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in fetching data from company_users');
+                    $cnt = 0;
+                    if (mysql_num_rows($ExecSql) > 0) {
+                        $Res = mysql_fetch_assoc($ExecSql);
+                        $broker_name = $Res['name'];
+                           
+                    }
+                    $v->seller->brokerName = $broker_name; 
+                }
+                
                 $tmp['json'] = htmlentities(json_encode($v));
                 $tmp['val'] = $v;
                     array_push($resaleListings,$tmp);

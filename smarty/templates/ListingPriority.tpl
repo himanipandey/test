@@ -1310,7 +1310,7 @@ $("#tol3").keypress(function (e) {
                                   <TR {$color}>
                                     <TD align=center class=td-border>{$i} </TD>
                                     <TD align=center class=td-border>{$v['val']->property->project->locality->suburb->city->label}</TD>
-                                    <TD align=center class=td-border>{$v['val']->seller->fullName}</TD>
+                                    <TD align=center class=td-border>{$v['val']->seller->brokerName}</TD>
                                     <TD align=center class=td-border>{$v['val']->property->project->name}, {$v['val']->property->project->builder->name}</TD>
                                     <TD align=center class=td-border>{$v['val']->property->unitName}-{$v['val']->property->size}-{$v->val->property->unitType}
                                     <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
