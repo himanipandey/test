@@ -10,12 +10,14 @@ $('document').ready(function(){
 
 	$('#prs5').click(function(){
 		$('#prs3').show(1);
-		if($('#prs5').val() === '0'){	
-			$('#prs3').show(1);	
+		if($('#prs5').val() === 'two'){	
+			$('#other_charges').show();	
 		} else {
-			$('#prs3').show(1);
+			$('#other_charges').hide();
 		}
 	});
+
+	
 
 	$('#yes_conf').click(function(){
 		$('#no_conf').removeAttr('checked');

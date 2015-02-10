@@ -26,6 +26,8 @@ if(isset($_POST['asc_x'])) $orderby = 'ASC';
 else if(isset($_POST['desc_x'])) $orderby = 'DESC';
 
 $cityId = $_REQUEST['citydd']; 
+if($cityId=='')
+    $cityId=2;
 //echo '*********************************', $cityId, '############################################ \n\n';
 
 	
@@ -68,11 +70,11 @@ $resaleListings = array();
  
 // And you're ready to go!
 //$url = "http://api.tuxx.co.uk/demo/server/time.php&app_id=" . $appID . "&app_key=" . $appKey;
-//$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true"; //master
-$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-10@proptiger.com&password=1234&rememberme=true"; //normal user
+$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true"; //master
+//$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-10@proptiger.com&password=1234&rememberme=true"; //normal user
 
 //$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&fields=seller,id,property&start=0&rows=10";
-$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&start=0&rows=10&fields=seller,seller.fullName,id,listing,listing.facing,listing.jsonDump,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,property,property.propertyId,property.project,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
+$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?listingCategory=Resale&cityId={$cityId}&start=0&fields=seller,seller.fullName,id,listing,listing.facing,listing.jsonDump,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,property,property.propertyId,property.project,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
 //$uri = "https://qa.proptiger-ws.com/data/v1/entity/user/listing";
 //$dataArr = array();
 //$dataArr['sellerId'] = "1216008";
@@ -160,8 +162,8 @@ try{
  catch(Exception $e)  {
     print_R($e);
  }
-print("<pre>");
-print_r($resaleListings);
+//print("<pre>");
+//print_r($resaleListings);
 
 $jsonListing = htmlentities(json_encode($resaleListings));
 

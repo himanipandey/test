@@ -42,10 +42,7 @@ function selectLocality(value){
 }
 function submitButton(){ 
     var cityid = $('#citydd').val();
-    var locality_id = $('#locality').val();
-    var placeType = $('#placeType').val();
-    var statusId = $('#statusId').val();
-    window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+locality_id+"&status="+statusId+"&placeType=placeType";
+    window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid;
 }
 
 function isNumeric(val) {
@@ -74,32 +71,18 @@ function isPhnumber(val) {
 }
 
 function cleanFields(){
-    $("#lmkid").val('');
-    $('#cityddEdit').val('');
-    $("#placeTypeEdit").val('');
-    $("#lmkname").val('');
-    $("#lmkaddress").val('');
-    $("#lmklat").val('');
-    $("#lmklong").val('');
-    $("#lmkphone").val('');
-    $("#lmkweb").val('');
-    $("#lmkprio").val('');
-    $("#lmkstatus").val('');
-
-    $('#errmsgcity').html('');
-    $('#errmsgplacetype').html('');
-    $('#errmsgname').html('');
-    $('#errmsgaddress').html('');
-    $('#errmsglat').html('');
-    $('#errmsglong').html('');
-    $('#errmsgphone').html('');
-    $('#errmsgweb').html('');
+  $('#create_Landmark input text,#create_Landmark select,#create_Landmark textarea, :text').each(function(key, value){
+      $(this).val('');       
+    }); 
 
 }
 
 function editListing(str){
     cleanFields();
-    console.log(str.jsonDump.tower);
+    //console.log(str.jsonDump.tower);
+    $('#search-top').hide('slow');
+    $('#search-bottom').hide('slow');
+    $('#create_Landmark').show('slow'); 
     //var List = $.parseJSON(str);
     //console.log(List);
 
@@ -108,7 +91,24 @@ function editListing(str){
     //$("#bkn2").val(str.seller.id);
     $("#project").val(str.property.project.name);
     $("#proj").val(str.property.project.projectId);
-    $("#seller3").val(str.seller.id);
+    var seller_id = str.seller.id;
+
+    $.ajax({
+            type: "POST",
+            url: '/saveSecondaryListings.php',
+            data: { seller_id:seller_id, task:'get_broker'},
+
+            success:function(msg){
+
+              console.log(msg);
+              $('#bkn2').val(msg); 
+              getSeller();
+
+              
+            },
+          });
+
+    $("#seller3").val(seller_id);
     $("#facing2").val(str.facing);
     
     $("#floor2").val(str.floor);
@@ -121,11 +121,19 @@ function editListing(str){
    var unit_name = str.property.unitName+"-"+str.property.size+" "+str.property.unitType; 
 
     $('#bh3').html(''); 
-    $('#bh3').append($("<option selected='selected' />").val(str.propertyId).text(unit_name));
+    $('#bh3').append($("<option selected='selected' />").val("0").text(unit_name));
     var jsonDump = $.parseJSON(str.jsonDump);
     $("#tower2").val(jsonDump.tower);
  
-    
+    option.length = 0;
+    var tmp = [];
+     tmp['size']= str.property.size;
+        tmp['bedrooms'] = str.property.bedrooms;
+      tmp['bathrooms'] = str.property.bathrooms;
+        tmp['propertyId'] =str.property.propertyId;
+      tmp['unitType'] = str.property.unitType;
+      option.push(tmp);
+      console.log(option);
 
 
 
@@ -133,13 +141,23 @@ function editListing(str){
     
     if(str.currentListingPrice.pricePerUnitArea >0){
        $("#prs5").val('2');
-       $("#prs3").val(str.currentListingPrice.pricePerUnitArea );
+       var price_value = parseFloat(str.currentListingPrice.pricePerUnitArea);
+       price_value = price_value/100000;
+       price_value = price_value.toFixed(2).toString();
+
+
+       $("#prs3").val(price_value);
+
      }
     else{
       $("#prs5").val('1');
-      $("#prs3").val(str.currentListingPrice.price);
+      var price_value = parseFloat(str.currentListingPrice.price);
+       price_value = price_value/100000;
+       price_value = price_value.toFixed(2).toString();
+       $("#prs3").val(price_value);
+
     }
-    $("#othr_prs").val(str.currentListingPrice.otherCharges);
+    $("#othr_prs2").val(str.currentListingPrice.otherCharges);
 
     
 
@@ -152,8 +170,18 @@ function editListing(str){
 
      $("#park2").val(str.noOfCarParks);
     $("#bank_list2").val(str.homeLoanBankId);
+    if(str.homeLoanBankId!=''){
+      $("#bank_list2").show();
+      $('#yes').prop('checked', true);
+      $('#no').prop('checked', false);
+    }
     $("#plc3").val(str.plc);
-    $("#discription3").val(jsonDump.description);
+    if(str.plc!=''){
+      $("#plc3").show();
+      $('#plcn').prop('checked', false);
+    }
+    $("#description3").val(jsonDump.description);
+    $("#review3").val(jsonDump.review);
    
     
 
@@ -176,38 +204,13 @@ function editListing(str){
 
     window.scrollTo(0, 0);
 
-    if($('#create_Landmark').css('display') == 'none'){ 
-     $('#create_Landmark').show('slow'); 
-    }
+     /*$('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
+      $(this).attr('disabled',false);       
+    });*/
 }
 
-jQuery(document).ready(function(){  
-  var i;
-
-$('#search-top').show('slow');
-    $('#search-bottom').show('slow');
-
-String.prototype.isMatch = function(s){
-	var b = this.match(s)!==null
-    return b;
-}
- 
-$("#create_button").click(function(){
-  	cleanFields();
-  	$('#search-top').hide('slow');
-    $('#search-bottom').hide('slow');
-    $('#create_Landmark').show('slow'); 
-});
-
-$("#exit_button").click(function(){
-   cleanFields();
-   	$('#create_Landmark').hide('slow'); 
-   	$('#search-top').show('slow');
-   	$('#search-bottom').show('slow');
-});
-
-$("#bkn2").change(function () {
-    var broker_id = $("#bkn2 :selected").val().trim();   
+function getSeller(){
+   var broker_id = $("#bkn2 :selected").val().trim();   
     console.log(broker_id);
     $.ajax({
             type: "POST",
@@ -231,17 +234,60 @@ $("#bkn2").change(function () {
               
             },
           });
+}
+
+jQuery(document).ready(function(){  
+  var i;
+
+$('#search-top').show('slow');
+    $('#search-bottom').show('slow');
+
+String.prototype.isMatch = function(s){
+	var b = this.match(s)!==null
+    return b;
+}
+ 
+$("#create_button").click(function(){
+  	cleanFields();
+  	$('#search-top').hide('slow');
+    $('#search-bottom').hide('slow');
+    $('#create_Landmark').show('slow'); 
 });
+
+  
+
+  $("#exit_button").click(function(){
+    cleanFields();
+     $('#create_company').hide('slow'); 
+   
+      $('#search_bottom').show('slow');
+  });
+
+
+
+$("#exit_button").click(function(){
+   cleanFields();
+   	$('#create_Landmark').hide('slow'); 
+   	$('#search-top').show('slow');
+   	$('#search-bottom').show('slow');
+});
+
+$("#bkn2").change(function () {
+
+   getSeller();
+   
+});
+
+
 
 $("#lmkSave").click(function(){
     var temp = [];
+    var listing_id = $("#listing_id").val();
     var cityid = $("#cityddEdit :selected").val().trim();
     var broker_name = $("#bkn2 :selected").text().trim();
 
     var broker_id = $("#bkn2 :selected").val().trim();
-        
-
-
+      
     //var projectid = $("#project :selected").text().trim();
     var project_name = $("#project").val().trim();
     var project_id = $("#proj").val().trim();
@@ -270,7 +316,6 @@ $("#lmkSave").click(function(){
       
     }
     else{
-      console.log("hereq");
        size = $("#other_input").val().trim();
        bedrooms = $("#bed2").val().trim();
       bathrooms = $("#tol3").val();
@@ -280,13 +325,13 @@ $("#lmkSave").click(function(){
 
    
 
-   
 
-    var seller_id = $("#seller3").val().trim();
+    var seller_id = $("#seller3 :selected").val().trim(); 
+
     //var projectid = $("#project :selected").text().trim();
-    var projectid = $("#project").val().trim();
-    var projid = $("#proj").val().trim();
-    var bhk1 = $("#bh3 :selected").text().trim();    
+    //var projectid = $("#project").val().trim();
+    //var projid = $("#proj").val().trim();
+    //var bhk1 = $("#bh3 :selected").text().trim();    
 
     var facing = $("#facing2 :selected").text().trim();
     
@@ -297,19 +342,24 @@ $("#lmkSave").click(function(){
 
     var price = "";
     var price_per_unit_area = "";
+    var other_prs = $("#othr_prs2").val().trim();
+    var flag = 0;
+    
+    var ops = parseFloat(other_prs);
     if (price_type==1)
       price = $("#prs3").val().trim();
     else
       price_per_unit_area = $("#prs3").val().trim();
 
     if ($('[name="lkhs1"]').is(':checked'))  {
-      price_new = parseFloat(price) * 100000;
-      price_per_unit_area = parseFloat(price_per_unit_area) * 100000;      
+      price = parseFloat(price) * 100000;
+      price_per_unit_area = parseFloat(price_per_unit_area) * 100000; 
+      
     } else {
-      price_new = parseFloat(price) * 10000000;
+      price = parseFloat(price) * 10000000;
       price_per_unit_area = parseFloat(price_per_unit_area) * 10000000;
     }
-  
+    
 
     var transfer_new;
     var trancefer_rate = $("#tfr2").val().trim();
@@ -337,7 +387,22 @@ $("#lmkSave").click(function(){
     } else {
       servant_room = "NO";
     } 
-    var discription = $("#discription3").val().trim();
+    var description = $("#description3").val().trim();
+    var review = $("#review3").val().trim();
+
+    var task='';
+    if(listing_id!='')
+       task="update";
+    else
+       task="create";
+
+
+     //validation checks
+
+
+
+
+
 
     /*temp[0] = cityid;
     temp[1] = broker_name;
@@ -371,14 +436,14 @@ $("#lmkSave").click(function(){
     $.ajax({
             type: "POST",
             url: '/saveSecondaryListings.php',
-            data: { cityid: cityid, broker_name:broker_name, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
               //alert(msg);
 
               console.log(msg);
               
-                alert("Saved");
+                alert(msg);
 
             },
           });
@@ -508,7 +573,7 @@ $("#lmkSave").click(function(){
 
 
                 var ln = data.data.properties.length;
-                //console.log(ln);
+                option.length=0;
                 for(i = 0; i < ln; i++)  {
                   bt[i] = data.data.properties[i].unitName+', '+data.data.properties[i].size+' '+data.data.properties[i].measure;
                   option[i] =  data.data.properties[i];
@@ -697,17 +762,17 @@ $("#lmkSave").click(function(){
 		                        <form method = "post">
 		            	            <tr>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <select id="citydd" name="citydd" onchange = "update_locality(this.value);">
+		                                    <!--<select id="citydd" name="citydd" onchange = "update_locality(this.value);">
 		                                       <option value=''>select city</option>
 		                                       {foreach from=$cityArray key=k item=v}
 		                                           <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
 		                                       {/foreach}
-		                                    </select>
+		                                    </select> -->
 		                                </td>
 		                                <td width = "10px">&nbsp;
 		                                </td>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <span id = "LocalityList">
+		                                    <!--<span id = "LocalityList">
 		                                    <select id="locality" name="locality" onchange = "localitySelect(this.value);">
 		                                       <option value=''>select locality</option>
 		                                       {foreach from=$localityArr key=k item=v}
@@ -715,30 +780,37 @@ $("#lmkSave").click(function(){
 		                                              selected="selected" {/if}>{$v->label}</option>
 		                                       {/foreach}
 		                                    </select>
-		                                    </span>
+		                                    </span> -->
 		                                </td>
-		                          		<input type="hidden" name="localityId" id = "localityId" value="{$localityId}">
+		                          		<!-- <input type="hidden" name="localityId" id = "localityId" value="{$localityId}"> -->
 		                                
 		                                <td width = "10px">&nbsp;
 		                                </td>
 		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <select id="placeType" name="placeType">
+		                                    <!-- <select id="placeType" name="placeType">
 		                                       <option value=''>select place type</option>
 		                                       {foreach from=$nearPlaceTypesArray key=k item=v}
 		                                              <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
 		                                       {/foreach}
 		                                    </select>
+                                        -->
 		                                </td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <select name="status">
+		                                    <!--<select name="status">
 		                                       <option value='Active' {if $status == 'Active'}selected{/if}>Active</option>
 		                                       <option value='Inactive' {if $status == 'Inactive'}selected{/if}>Inactive</option>
-		                                    </select>
+		                                    </select> -->
+                                        <select id="citydd" name="citydd" onchange = "update_locality(this.value);">
+                                           <option value=''>select city</option>
+                                           {foreach from=$cityArray key=k item=v}
+                                               <option value="{$k}" {if $k==$cityId}  selected="selected" {/if}>{$v}</option>
+                                           {/foreach}
+                                        </select>
 		                                </td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
+		                                    <input type = "submit" name = "submit" value = "submit" onclick="submitButton();">
 		                                </td>
 		                          </tr>
 		                        </form>
@@ -863,7 +935,7 @@ $("#lmkSave").click(function(){
                             </td>
                         </tr>
      
-                        <tr id = "othr" >
+                        <tr id = "othr" style="display: none;">
                             <td id="othr1" padding-left: 100px;>
                                   *Size
                             </td>
@@ -933,9 +1005,9 @@ $("#lmkSave").click(function(){
                                 
                                 <td id="prs4">
                                   <select id="prs5" name="prs5" style="width:100px">
-                                      <option value='0'>Select</option>  
-                                      <option value="1">All Inclusive</option>
-                                      <option value="2">Per Sq. Ft.</option>
+                                      <option value='zero'>Select</option>  
+                                      <option value='one'>All Inclusive</option>
+                                      <option value='two'>Per Sq. Ft.</option>
                                   </select>
                                 </td>
 
@@ -963,11 +1035,12 @@ $("#lmkSave").click(function(){
                               </label>    
                             </td>
 
-                            <td width="400px" style="margin-left=-20px">
-                                <input type=text name="flt2" id="flt2" style="width:100px">
+                         
+                            <td width="400px" style="margin-left=-20px; display:none;" id="other_charges">Other Charges:
+                                <input type=text name="othr_prs2" id="othr_prs2" style="width:100px;">
                             </td>
                         
-                            <td width="630px" align="left" id="tr" >
+                            <td width="630px" align="left" id="tr" style="padding-left:200px;">
                               <label  for="one" style="font-size:11px;">
                                 lkhs &nbsp;   
                                   <input type="radio" id="lkhs2" name="prstp2" value="y" checked="checked" /> 
@@ -1087,13 +1160,62 @@ $("#lmkSave").click(function(){
                       <tr id="discription1">
                         <td id = "discription4">
                             Description
+                        </td> 
+                        <td id = "discription2" style="width:300px"> 
+                              <textarea type=text name="description3" id="description3" style="width:250px" >
+                              </textarea>
                         </td>
-                        <td id = "discription2">
-                              <input type=text name="discription3" id="discription3"  />
+                        <td id="review1">
+                            Review
+                        </td>
+                        <td id="review2">
+                            <textarea type=text name="review3" id="review3" style="height:100px;width:250px" >
+                            </textarea>
                         </td>
                       </tr>
+                      <!--<a target="_blank" href="https://www.proptiger.com/">  
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:330px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/"> 
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:500px; WIDTH:150px; HEIGHT:100px" SRC="sunrise.jpeg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/"> 
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:670px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:840px; WIDTH:150px; HEIGHT:100px" SRC="sunrise.jpeg">
+                        </IMG>  
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:1010px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      
 
-
+                      <a target="_blank" href="https://www.proptiger.com/"> 
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:330px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:500px; WIDTH:150px; HEIGHT:100px" SRC="sunrise.jpeg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:670px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:840px; WIDTH:150px; HEIGHT:100px" SRC="sunrise.jpeg">
+                        </IMG>
+                      </a>                       
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:1010px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>  -->
+ 
 
           </form>          
                 
@@ -1174,6 +1296,42 @@ $("#lmkSave").click(function(){
                                 
                                   </TR>
                                 {/foreach}
+                                <!--{$adjacents = 3}
+                                {$total_pages = 8}
+                                {$limit = 5}
+                                {$page = 3}
+                                { if $page > 0 }
+                                  { $start = ($page-1) * $limit }    
+                                { else }
+                                  { $start = 0 }
+                                
+                                { if ($page == 0) }
+                                  { $page = 1 }   
+                                
+                                { $prev = $page - 1 }              
+                                { $next = $page + 1 }            
+                                { $lastpage = ceil($total_pages/$limit) }   
+                                { $lpm1 = $lastpage - 1 } 
+                                { $pagination = "" }
+                                  { if($lastpage > 1) }
+                                      { $pagination = "<div class=\"pagination\">"; }
+                                        { if ($page > 1) }
+                                           { $pagination.= "<a href=\"$targetpage?page=$prev\">� previous</a>";}
+                                        { else }
+                                           { $pagination.= "<span class=\"disabled\">� previous</span>"; 
+                                                      
+                                                       
+                                            if ($lastpage < 7 + ($adjacents * 2)) 
+                                                      { 
+                                                        for ($counter = 1; $counter <= $lastpage; $counter++)
+                                                        {
+                                                          if ($counter == $page)
+                                                            $pagination.= "<span class=\"current\">$counter</span>";
+                                                          else
+                                                            $pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";         
+                                                        }
+                                                      }
+                                                      -->
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>
                           <tfoot>
@@ -1194,6 +1352,13 @@ $("#lmkSave").click(function(){
                                                                 <select class="pagenum input-mini" title="Select page number"></select>
                                                             </th>
                                                         </tr>
+                                                        <tr>
+                                                            <th >
+                                                            </th>
+                                                          
+                                                            
+                                                        </tr>
+
                            </tfoot>
                         </form>
                     </TABLE>

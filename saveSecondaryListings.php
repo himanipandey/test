@@ -8,7 +8,7 @@ require_once("dbConfig.php");
 
 if($_POST['task'] === 'get_seller')  {
     
-    $Sql = "SELECT user_id, name FROM company_users  WHERE company_id=".$_POST['broker_id']." and status = 'Active'";
+    $Sql = "SELECT user_id, name FROM company_users  WHERE company_id=".$_POST['broker_id']." and status = 'Active' and user_id is not null";
     $Sel = array();
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in fetching data from company_users');
     $cnt = 0;
@@ -18,7 +18,8 @@ if($_POST['task'] === 'get_seller')  {
             $tmp = array();
             $tmp['user_id'] = $Res['user_id'];
             $tmp['name'] = $Res['name'];
-            array_push($Sel, $tmp);
+            if($Res['user_id']!='')
+                array_push($Sel, $tmp);
             $cnt++;
         }    
     }
@@ -28,13 +29,39 @@ if($_POST['task'] === 'get_seller')  {
     echo json_encode($Sel);
     //$smarty->assign("sel",$Sel);
 
-} else {
+}
+else if($_POST['task'] === 'get_broker')  {
+    $company_id='';
+    $Sql = "SELECT c.id FROM company c inner join company_users cu on c.id=cu.company_id WHERE cu.user_id=".$_POST['seller_id']." and c.status = 'Active' and cu.status='Active' ";
+    //echo $Sql;
+    $Sel = array();
+    $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in fetching data from company_users');
+    $cnt = 0;
+    if (mysql_num_rows($ExecSql) > 0) {
+        $Res = mysql_fetch_assoc($ExecSql);
+        $broker_id = $Res['id'];
+           
+    }
+    //echo $cnt;
+   
+
+    echo $broker_id;
+    //$smarty->assign("sel",$Sel);
+
+} 
+else {
     //$listing_id = $_POST['listing_id'];
-    $listing_id = 295044;
+    $listing_id='';
+    
 
     $dataArr = array();
-    $dataArr['sellerId'] = "1216008";//$_POST['broker_id'];
-    //$dataArr['propertyId'] = $_POST['property_id'];
+    if($_POST['task']=='update' && $_POST['listing_id']!=''){
+        $listing_id=$_POST['listing_id'];
+        //$dataArr['listingId'] = $_POST['listing_id'];
+    }
+    $dataArr['sellerId'] = $_POST['seller_id'];//"1216008";//
+
+    $dataArr['propertyId'] = $_POST['property_id'];
     $otherInfo = array(
         'size'=> $_POST['size'],
         'projectId'=> $_POST['project_id'],
@@ -50,11 +77,12 @@ if($_POST['task'] === 'get_seller')  {
     $jsonDump = array(
         'comment' => "comment",
         'tower' => $_POST['tower'],
+        'description' => $_POST['description'],
+        'review' => $_POST['review'],
         'study_room' => $_POST['study_room'],
         'servant_room' => $_POST['servant_room'],
         );
-    //$dataArr['jsonDump'] = $jsonDump;
-    $dataArr['jsonDump'] = json_encode($jsonDump);
+    //$dataArr['jsonDump'] = json_encode($jsonDump);
 
     $dataArr['flatNumber'] = $_POST['flat_number'];
     $dataArr['homeLoanBankId'] = $_POST['loan_bank'];
@@ -67,9 +95,19 @@ if($_POST['task'] === 'get_seller')  {
         1,2,3,4
         );
     //$dataArr['masterAmenityIds'] = $masterAmenityIds;
+    if($_POST['price_per_unit_area'] != NaN)
+        $pricePerUnitArea = $_POST['price_per_unit_area'];
+    else
+        $pricePerUnitArea =0;
+    if($_POST['price'] !=NaN){
+        $price = $_POST['price'];
+    }
+    else
+        $price =0;
+    
     $currentListingPrice = array(
-        'pricePerUnitArea'=> $_POST['price_per_unit_area'],
-        'price'=> $_POST['price'],
+        'pricePerUnitArea'=> $pricePerUnitArea,
+        'price'=> $price,
         'otherCharges'=> '',
         'comment'=>''
         );
@@ -81,7 +119,8 @@ if($_POST['task'] === 'get_seller')  {
     //'{"floor":{$x},"jsonDump":"{\"comment\":\"anubhav\"}","sellerId":"1216008","flatNumber":"D-12","homeLoanBankId":"1","noOfCarParks":"3","negotiable":"true","transferCharges":1000,"plc":200,"otherInfo":{"size":"100","projectId":"656368","bedrooms":"3","unitType":"Plot","penthouse":"true","studio":"true","facing":"North"},"masterAmenityIds":[1,2,3,4],"currentListingPrice":{"pricePerUnitArea":2000,}}'
 
 
-
+//print("<pre>");
+//print_r($dataArr);
     $dataJson = json_encode($dataArr);
     //print("<pre>");
     //print_r($dataArr); die;
@@ -134,6 +173,9 @@ if($_POST['task'] === 'get_seller')  {
                 ->body($dataJson)
                 ->addHeader("COOKIE", $ck_new) 
                 ->send(); 
+                //echo "update";
+                //var_dump($response);
+
                 if($response->body->statusCode=="2XX"){
                     echo "Listing successfully updated";
                 }
@@ -147,6 +189,8 @@ if($_POST['task'] === 'get_seller')  {
                 ->body($dataJson)
                 ->addHeader("COOKIE", $ck_new) 
                 ->send(); 
+                //echo "create";
+                //var_dump($response);
                 if($response->body->statusCode=="2XX"){
                     echo "Listing successfully created";
                 }
