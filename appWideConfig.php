@@ -39,8 +39,10 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 
     define("AUDIO_SERVICE_URL","https://www.proptiger.com/data/v1/entity/audio");
 
-    define("TYPEAHEAD_API_URL", "https://www.proptiger.com/app/v1/typeahead");
+    define("TYPEAHEAD_API_URL", "https://www.proptiger.com/app/v3/typeahead");
     define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");
+    define("LISTING_API_URL", "https://proptiger.com/data/v1/entity/user/listing");
+	define("ADMIN_USER_LOGIN_API_URL", "https://proptiger.com/userservice/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true");
 }
 
 
@@ -99,6 +101,9 @@ else{
     define("TYPEAHEAD_API_URL", "https://proptiger.com/app/v3/typeahead");
 	//define("project_detail", "http://proptiger.com//data/v1/entity/amenity?projectId=513233"); 
 	define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");  
+	define("LISTING_API_URL", "https://qa.proptiger-ws.com/data/v1/entity/user/listing");
+	define("ADMIN_USER_LOGIN_API_URL", "https://qa.proptiger-ws.com/userservice/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true");
+
 
 
 }

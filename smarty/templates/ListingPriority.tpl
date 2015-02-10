@@ -398,6 +398,13 @@ $("#lmkSave").click(function(){
     else
        task="create";
 
+     if(property_id=='') {
+      if(project_id=='' ||  bedrooms=='' || unit_type=='' || size=='' ){
+        alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
+        return true;
+      }
+     }
+
 
      //validation checks
 
@@ -706,6 +713,32 @@ $("#lmkSave").click(function(){
 
     });  
 
+$("#other_input").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+
+$("#bed2").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+
+$("#tol3").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
 
 
 });
@@ -839,7 +872,7 @@ $("#lmkSave").click(function(){
                     	<div>
 <!--City Tr-->         		<tr id="city">
                       			<td id="city1">
-                      				*City
+                      				City
                       			</td>
                             <td>
                                 <select id="cityddEdit" name="cityddEdit" >
@@ -854,10 +887,10 @@ $("#lmkSave").click(function(){
 
                         <tr id="bkn">
                             <td id = "bkn1">
-                                *Broker Name
+                                Broker Name
                             </td>
                             <td id = "bkn3">
-                                <select id="bkn2" name="bkn2" onchange = "update_locality(this.value);">
+                                <select id="bkn2" name="bkn2" onchange="getSeller();">
                                       <option value=''>select name</option>
                                       {foreach from=$brokerArray key=k item=v} 
                                           <option value="{$v['id']}">{$v['name']}</option>
@@ -886,7 +919,7 @@ $("#lmkSave").click(function(){
                       			<div class="ui-widget">
                         			<td id="project1">
                           			<font color = "red">
-                              			*
+                              			
                           			</font>
                           			Project
                         			</td>
@@ -920,7 +953,7 @@ $("#lmkSave").click(function(){
                                 </select>
                             </td>
                             <td id = "facing1">
-                                *Facing
+                                Facing
                             </td>
                             <td>
                                 <select id="facing2" name="facing2">
@@ -945,19 +978,19 @@ $("#lmkSave").click(function(){
                                   <input type=text name="other_input" id="other_input"> 
                             </td>
                             <td id="bath">
-                                  *Bathroom
+                                  *Bedroom
                             </td>
                             <td id="bath1">
                                   <input type=text name="bed2" id="bed2" style="width:60px">  
                             </td>
                             <td id="tol1">
-                                  *Toilet
+                                  Toilet
                             </td>
                             <td id="tol2">
                                   <input type=text name="tol3" id="tol3">
                             </td>
                             <td id="appartment1">
-                                  *Apparthment
+                                  *Option Type
                             </td>
                             <td id="appartment2">
                                   <select name="appartment3" id="appartment3" style="height:28px">
@@ -976,7 +1009,7 @@ $("#lmkSave").click(function(){
                     
                         <tr id="tower_floor"> 
                             <td id="tower1">
-                              *Tower
+                              Tower
                             </td>
                             <td >
                                 <input type=text name="tower2" id="tower2" style="width:100px">
@@ -986,7 +1019,7 @@ $("#lmkSave").click(function(){
                             </td>
 
                       			<td id="floor1">
-                          			*Floor
+                          			Floor
                       			</td>
                       			<td>
                           			<input type=text name="floor2" id="floor2" style="width:100px">
@@ -1000,7 +1033,7 @@ $("#lmkSave").click(function(){
                				  <tr id="prs_trf">
 
                           			<td id="prs1">
-                              			*Price: 
+                              			Price: 
                           			</td>
                               
                                                              
@@ -1065,7 +1098,7 @@ $("#lmkSave").click(function(){
                             </td>
 
 		                      	<td id="park1">
-		                      	   	*Car Parks
+		                      	   	Car Parks
 		                      	</td>
 		                        <td>
 		                            <select id="park2" name="park2" style="width:100px">
@@ -1088,7 +1121,7 @@ $("#lmkSave").click(function(){
                     	<tr id="hln" height="40px;">
                        
                         	<td id="hln1">
-                                *Home Loan
+                                Home Loan
                         	</td>
 
                         	<td  id="hln2" >

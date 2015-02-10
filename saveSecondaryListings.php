@@ -3,8 +3,9 @@
 error_reporting(1);
 ini_set('display_errors','1');
 include('httpful.phar');
+require_once("appWideConfig.php");
+include("dbConfig.php");
 
-require_once("dbConfig.php");
 
 if($_POST['task'] === 'get_seller')  {
     
@@ -67,8 +68,8 @@ else {
         'projectId'=> $_POST['project_id'],
         'bedrooms'=> $_POST['bedrooms'],
         'unitType'=> "Apartment", //$_POST['unit_type'],
-        'penthouse'=>"true",
-        'studio' => "true",
+        'penthouse'=>"false",
+        'studio' => "false",
         ); 
     $dataArr['otherInfo'] = $otherInfo;
 
@@ -126,8 +127,8 @@ else {
      //var_dump($dataJson);   
 
 
-        $uri = "https://qa.proptiger-ws.com/data/v1/entity/user/listing";
-        $uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-1223006@proptiger.com&password=1234&rememberme=true";
+        $uri = LISTING_API_URL;
+        $uriLogin = ADMIN_USER_LOGIN_API_URL;
 
         /*try{ 
             $response_login = \Httpful\Request::post($uri1)->sendIt();
@@ -150,7 +151,7 @@ else {
         ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
         ->body('')             // attach a body/payload...
         ->send(); 
-
+var_dump($response_login);die();
         $header = $response_login->headers;
         $header = $header->toArray();
         $ck = $header['set-cookie'];
