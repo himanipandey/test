@@ -1,5 +1,5 @@
 <?php
-echo "dgsahdsj";
+
 require_once('header.php');
 if(!isset($_SESSION['AdminLogin']))
 	$_SESSION['AdminLogin'] = '';

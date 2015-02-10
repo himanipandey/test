@@ -151,7 +151,7 @@ else {
         ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
         ->body('')             // attach a body/payload...
         ->send(); 
-var_dump($response_login);die();
+//var_dump($response_login);die();
         $header = $response_login->headers;
         $header = $header->toArray();
         $ck = $header['set-cookie'];
