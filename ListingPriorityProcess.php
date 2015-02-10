@@ -80,7 +80,7 @@ $uriLogin = ADMIN_USER_LOGIN_API_URL; //master
 //$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-10@proptiger.com&password=1234&rememberme=true"; //normal user
 
 //$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&fields=seller,id,property&start=0&rows=10";
-$uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start=0&fields=seller,seller.fullName,id,listing,listing.facing,listing.jsonDump,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,property,property.propertyId,property.project,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
+$uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start=0&fields=seller,seller.fullName,id,listing,listing.facing,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,property,property.propertyId,property.project,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
 //$uri = "https://qa.proptiger-ws.com/data/v1/entity/user/listing";
 //$dataArr = array();
 //$dataArr['sellerId'] = "1216008";
@@ -153,7 +153,7 @@ try{
                 $seller_id = $v->seller->id;
                 $company_id='';
                 if($seller_id){
-                    $Sql = "SELECT c.name FROM company c inner join company_users cu on c.id=cu.company_id WHERE cu.user_id=".$seller_id." and c.status = 'Active' and cu.status='Active' ";
+                    $Sql = "SELECT c.name, c.id FROM company c inner join company_users cu on c.id=cu.company_id WHERE cu.user_id=".$seller_id." and c.status = 'Active' and cu.status='Active' ";
                     //echo $Sql;
                     $Sel = array();
                     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in fetching data from company_users');
@@ -161,9 +161,11 @@ try{
                     if (mysql_num_rows($ExecSql) > 0) {
                         $Res = mysql_fetch_assoc($ExecSql);
                         $broker_name = $Res['name'];
+                        $broker_id = $Res['id'];
                            
                     }
                     $v->seller->brokerName = $broker_name; 
+                    $v->seller->brokerId = $broker_id; 
                 }
                 
                 $tmp['json'] = htmlentities(json_encode($v));

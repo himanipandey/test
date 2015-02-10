@@ -11,9 +11,15 @@ $('document').ready(function(){
 	$('#prs5').click(function(){
 		$('#prs3').show(1);
 		if($('#prs5').val() === 'two'){	
-			$('#other_charges').show();	
+			$('#other_charges').show();
 		} else {
 			$('#other_charges').hide();
+		}
+
+		if($('#prs5').val() === 'one'){	
+			$('#pr').show();
+		} else {
+			$('#pr').hide();
 		}
 	});
 

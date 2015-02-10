@@ -72,9 +72,13 @@ function isPhnumber(val) {
 
 function cleanFields(){
   $('#create_Landmark input text,#create_Landmark select,#create_Landmark textarea, :text').each(function(key, value){
-      $(this).val('');       
-    }); 
+      $(this).val('');
 
+
+    }); 
+   $("#seller3").html('');
+   $("#bh3").html('');
+   $("#listing_id").val("");
 }
 
 function editListing(str){
@@ -84,31 +88,35 @@ function editListing(str){
     $('#search-bottom').hide('slow');
     $('#create_Landmark').show('slow'); 
     //var List = $.parseJSON(str);
-    //console.log(List);
+    console.log(str);
 
-    $("#listing_id").val(str.id);
+    if(str.id!=null)
+      $("#listing_id").val(str.id);
     $("#cityddEdit").val(str.property.project.locality.suburb.city.id);
     //$("#bkn2").val(str.seller.id);
     $("#project").val(str.property.project.name);
     $("#proj").val(str.property.project.projectId);
-    var seller_id = str.seller.id;
+    if(str.seller!=null){
+      var seller_id = str.seller.id;
+      console.log(seller_id);
+      /*$.ajax({
+              type: "POST",
+              url: '/saveSecondaryListings.php',
+              data: { seller_id:seller_id, task:'get_broker'},
 
-    $.ajax({
-            type: "POST",
-            url: '/saveSecondaryListings.php',
-            data: { seller_id:seller_id, task:'get_broker'},
+              success:function(msg){
 
-            success:function(msg){
+                console.log(msg);
+                $('#bkn2').val(msg); 
+                getSeller();
 
-              console.log(msg);
-              $('#bkn2').val(msg); 
-              getSeller();
-
-              
-            },
-          });
-
-    $("#seller3").val(seller_id);
+                
+              },
+            });*/
+      $('#bkn2').val(str.seller.brokerId); 
+      getSeller();
+      $("#seller3").val(seller_id);
+    }
     $("#facing2").val(str.facing);
     
     $("#floor2").val(str.floor);
@@ -123,7 +131,12 @@ function editListing(str){
     $('#bh3').html(''); 
     $('#bh3').append($("<option selected='selected' />").val("0").text(unit_name));
     var jsonDump = $.parseJSON(str.jsonDump);
-    $("#tower2").val(jsonDump.tower);
+    if(jsonDump!=null){
+      $("#tower2").val(jsonDump.tower);
+    }
+    
+    $("#description3").val(str.description);
+    $("#review3").val(str.remark);
  
     option.length = 0;
     var tmp = [];
@@ -133,31 +146,32 @@ function editListing(str){
         tmp['propertyId'] =str.property.propertyId;
       tmp['unitType'] = str.property.unitType;
       option.push(tmp);
-      console.log(option);
+      //console.log(option);
 
 
 
+    if(str.currentListingPrice != null){
+      if(str.currentListingPrice.pricePerUnitArea > 0){
+         $("#prs5").val('2');
+         var price_value = str.currentListingPrice.pricePerUnitArea;
+         $('#pr').hide();
+         $('#other_charges').show();
 
-    
-    if(str.currentListingPrice.pricePerUnitArea >0){
-       $("#prs5").val('2');
-       var price_value = parseFloat(str.currentListingPrice.pricePerUnitArea);
-       price_value = price_value/100000;
-       price_value = price_value.toFixed(2).toString();
+         $("#prs3").val(price_value);
 
+       }
+      else if(str.currentListingPrice.price >0) {
+        $("#prs5").val('1');
+        var price_value = parseFloat(str.currentListingPrice.price);
+         price_value = price_value/100000;
+         price_value = price_value.toFixed(2).toString();
+         $("#prs3").val(price_value);
+         $('#pr').show();
+         $('#other_charges').hide();
 
-       $("#prs3").val(price_value);
-
-     }
-    else{
-      $("#prs5").val('1');
-      var price_value = parseFloat(str.currentListingPrice.price);
-       price_value = price_value/100000;
-       price_value = price_value.toFixed(2).toString();
-       $("#prs3").val(price_value);
-
+      }
+      $("#othr_prs2").val(str.currentListingPrice.otherCharges);
     }
-    $("#othr_prs2").val(str.currentListingPrice.otherCharges);
 
     
 
@@ -180,11 +194,14 @@ function editListing(str){
       $("#plc3").show();
       $('#plcn').prop('checked', false);
     }
-    $("#description3").val(jsonDump.description);
-    $("#review3").val(jsonDump.review);
+    
    
     
-
+    $("#cityddEdit").attr('disabled',true);
+    $("#project").attr('readonly',true);
+    $("#proj").attr('readonly',true);
+    $("#bh3").attr('disabled',true);
+    
 
    
    /* var study_room = "";
@@ -210,7 +227,7 @@ function editListing(str){
 }
 
 function getSeller(){
-   var broker_id = $("#bkn2 :selected").val().trim();   
+   var broker_id = $("#bkn2 :selected").val();   
     console.log(broker_id);
     $.ajax({
             type: "POST",
@@ -251,7 +268,11 @@ $("#create_button").click(function(){
   	cleanFields();
   	$('#search-top').hide('slow');
     $('#search-bottom').hide('slow');
-    $('#create_Landmark').show('slow'); 
+    $('#create_Landmark').show('slow');
+    $("#cityddEdit").attr('disabled',false);
+    $("#project").attr('readonly',false);
+    $("#proj").attr('readonly',false);
+    $("#bh3").attr('disabled',false); 
 });
 
   
@@ -272,21 +293,21 @@ $("#exit_button").click(function(){
    	$('#search-bottom').show('slow');
 });
 
-$("#bkn2").change(function () {
+/*$("#bkn2").change(function () {
 
    getSeller();
    
-});
+});*/
 
 
 
 $("#lmkSave").click(function(){
     var temp = [];
     var listing_id = $("#listing_id").val();
-    var cityid = $("#cityddEdit :selected").val().trim();
+    var cityid = $("#cityddEdit :selected").val();
     var broker_name = $("#bkn2 :selected").text().trim();
 
-    var broker_id = $("#bkn2 :selected").val().trim();
+    var broker_id = $("#bkn2 :selected").val();
       
     //var projectid = $("#project :selected").text().trim();
     var project_name = $("#project").val().trim();
@@ -320,23 +341,23 @@ $("#lmkSave").click(function(){
        bedrooms = $("#bed2").val().trim();
       bathrooms = $("#tol3").val();
        property_id = "";
-       unit_type = "";
+       unit_type = $("#appartment3 :selected").text();
     }
 
    
 
 
-    var seller_id = $("#seller3 :selected").val().trim(); 
+    var seller_id = $("#seller3 :selected").val(); 
 
     //var projectid = $("#project :selected").text().trim();
     //var projectid = $("#project").val().trim();
     //var projid = $("#proj").val().trim();
     //var bhk1 = $("#bh3 :selected").text().trim();    
 
-    var facing = $("#facing2 :selected").text().trim();
+    var facing = $("#facing2 :selected").val();
     if(facing=='')
       facing=null;
-    
+    //console.log(facing);
     var tower = $("#tower2").val().trim();
     var floor = $("#floor2").val().trim();
 
@@ -348,19 +369,21 @@ $("#lmkSave").click(function(){
     var flag = 0;
     
     var ops = parseFloat(other_prs);
-    if (price_type==1)
+    if (price_type==1){
       price = $("#prs3").val().trim();
-    else
+      if ($('[name="lkhs1"]').is(':checked'))  {
+        price = parseFloat(price) * 100000;
+        
+      } else {
+        price = parseFloat(price) * 10000000;
+      }
+    }
+    else{
       price_per_unit_area = $("#prs3").val().trim();
 
-    if ($('[name="lkhs1"]').is(':checked'))  {
-      price = parseFloat(price) * 100000;
-      price_per_unit_area = parseFloat(price_per_unit_area) * 100000; 
-      
-    } else {
-      price = parseFloat(price) * 10000000;
-      price_per_unit_area = parseFloat(price_per_unit_area) * 10000000;
     }
+
+    
     
 
     var transfer_new;
@@ -372,10 +395,10 @@ $("#lmkSave").click(function(){
       transfer_new = parseFloat(trancefer_rate) * 10000000;
     }
 
-    var appratment = $("#appartment3 :selected").text().trim();
+    var appratment = $("#appartment3 :selected").text();
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
-    var loan_bank = $("#bank_list2 :selected").val().trim();
+    var loan_bank = $("#bank_list2 :selected").val();
     var plc_val = $("#plc3").val().trim();
     var study_room = "";
     if ($('[name="yes_study"]').is(':checked'))  {
@@ -399,6 +422,7 @@ $("#lmkSave").click(function(){
        task="create";
 
      if(property_id=='') {
+      console.log(project_id+" "+bedrooms+" "+unit_type+" "+size);
       if(project_id=='' ||  bedrooms=='' || unit_type=='' || size=='' ){
         alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
         return true;
@@ -584,7 +608,9 @@ $("#lmkSave").click(function(){
                 var ln = data.data.properties.length;
                 option.length=0;
                 for(i = 0; i < ln; i++)  {
-                  bt[i] = data.data.properties[i].unitName+', '+data.data.properties[i].size+' '+data.data.properties[i].measure;
+                  var size = data.data.properties[i].size;
+                  if (size==null) size = '';
+                  bt[i] = data.data.properties[i].unitName+', '+size+' '+data.data.properties[i].measure;
                   option[i] =  data.data.properties[i];
                   //bt[i]['option_id'] = data.data.properties[i].unitName;
                   //console.log(data.data.properties[i]);
@@ -957,7 +983,7 @@ $("#tol3").keypress(function (e) {
                             </td>
                             <td>
                                 <select id="facing2" name="facing2">
-                                    <option value=''>Facing</option>  
+                                    <option value=''>Select</option>  
                                       <option value="East">East</option>
                                       <option value="West">West</option>
                                       <option value="North">North</option>
@@ -1061,7 +1087,7 @@ $("#tol3").keypress(function (e) {
 
                         <tr id="prs_typ">
                             
-                            <td width="110px" align="left" id="pr" style="padding-left:120px" >
+                            <td width="110px" align="left" id="pr" style="padding-left:120px;display:none;" >
                               <label  for="one" style="font-size:11px;" >
                                 lkhs &nbsp;   
                                  <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
@@ -1075,7 +1101,7 @@ $("#tol3").keypress(function (e) {
                                 <input type=text name="othr_prs2" id="othr_prs2" style="width:100px;">
                             </td>
                         
-                            <td width="630px" align="left" id="tr" style="padding-left:200px;">
+                            <td width="630px" align="left" id="tr" style="padding-left:200px; display:none;">
                               <label  for="one" style="font-size:11px;">
                                 lkhs &nbsp;   
                                   <input type="radio" id="lkhs2" name="prstp2" value="y" checked="checked" /> 
@@ -1317,9 +1343,9 @@ $("#tol3").keypress(function (e) {
 
                                     </TD>
                                     {if $v['val']->currentListingPrice->pricePerUnitArea != 0}
-                                    <TD align=center class=td-border>{$v['val']->currentListingPrice->pricePerUnitArea}</TD>
+                                    <TD align=center class=td-border>Price Per Unit Area - {$v['val']->currentListingPrice->pricePerUnitArea}</TD>
                                     {else}
-                                    <TD align=center class=td-border>{$v['val']->currentListingPrice->price}</TD>
+                                    <TD align=center class=td-border>Price - {$v['val']->currentListingPrice->price}</TD>
                                     {/if} 
                                     <TD align=center class=td-border><button type="button" id="edit_button_{$v->id}" onclick="return editListing({$v['json']})" align="left">Edit</button></TD>
                                 

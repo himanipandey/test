@@ -61,7 +61,8 @@ else {
         //$dataArr['listingId'] = $_POST['listing_id'];
     }
     $dataArr['sellerId'] = $_POST['seller_id'];//"1216008";//
-    $dataArr['facing'] = $_POST['facing'];
+    if(!empty($_POST['facing']))
+        $dataArr['facing'] = $_POST['facing'];
     $dataArr['propertyId'] = $_POST['property_id'];
     $otherInfo = array(
         'size'=> $_POST['size'],
@@ -77,17 +78,17 @@ else {
     $jsonDump = array(
         'comment' => "comment",
         'tower' => $_POST['tower'],
-        'description' => $_POST['description'],
-        'review' => $_POST['review'],
         'study_room' => $_POST['study_room'],
         'servant_room' => $_POST['servant_room'],
         );
-    //$dataArr['jsonDump'] = json_encode($jsonDump);
+    $dataArr['jsonDump'] = json_encode($jsonDump);
+    $dataArr['description'] =$_POST['description'];
+    $dataArr['remark'] =$_POST['review'];
 
     $dataArr['flatNumber'] = $_POST['flat_number'];
     $dataArr['homeLoanBankId'] = $_POST['loan_bank'];
     $dataArr['noOfCarParks'] = $_POST['parking'];
-    $dataArr['negotiable'] = "true";
+    //$dataArr['negotiable'] = "true";
     $dataArr['transferCharges'] = $_POST['trancefer_rate']; 
     $dataArr['plc'] = $_POST['plc_val'];
 
@@ -111,7 +112,8 @@ else {
         'otherCharges'=> '',
         'comment'=>''
         );
-    $dataArr['currentListingPrice'] = $currentListingPrice;
+    if((isset($pricePerUnitArea) && $pricePerUnitArea!='') || (isset($price) && $price!=''))
+        $dataArr['currentListingPrice'] = $currentListingPrice;
 
 
     /*"{"floor":"2","jsonDump":{"comment":"QA Marketplace Test Company"},"sellerId":null,"flatNumber":"3","homeLoanBankId":"select bank","noOfCarParks":"4","negotiable":"true","transferCharges":"","plc":"","otherInfo":{"size":"","projectId":"503095","bedrooms":null,"unitType":"Sq. Ft.","facing":"East"},"currentListingPrice":{"pricePerUnitArea":"100"}}"*/
@@ -120,7 +122,7 @@ else {
 
 
 //print("<pre>");
-//print_r($dataArr);
+//print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
     //print_r($dataArr); die;
@@ -190,7 +192,7 @@ else {
                 ->addHeader("COOKIE", $ck_new) 
                 ->send(); 
                 //echo "create";
-                //var_dump($response);
+                var_dump($response);
                 if($response->body->statusCode=="2XX"){
                     echo "Listing successfully created";
                 }
