@@ -60,7 +60,7 @@ else {
         //$dataArr['listingId'] = $_POST['listing_id'];
     }
     $dataArr['sellerId'] = $_POST['seller_id'];//"1216008";//
-
+    $dataArr['facing'] = $_POST['facing'];
     $dataArr['propertyId'] = $_POST['property_id'];
     $otherInfo = array(
         'size'=> $_POST['size'],
@@ -69,7 +69,6 @@ else {
         'unitType'=> "Apartment", //$_POST['unit_type'],
         'penthouse'=>"true",
         'studio' => "true",
-        'facing' => "North" //$_POST['facing']
         ); 
     $dataArr['otherInfo'] = $otherInfo;
 

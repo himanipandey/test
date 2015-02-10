@@ -334,6 +334,8 @@ $("#lmkSave").click(function(){
     //var bhk1 = $("#bh3 :selected").text().trim();    
 
     var facing = $("#facing2 :selected").text().trim();
+    if(facing=='')
+      facing=null;
     
     var tower = $("#tower2").val().trim();
     var floor = $("#floor2").val().trim();
