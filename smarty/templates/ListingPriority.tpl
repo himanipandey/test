@@ -178,9 +178,7 @@ $("#lmkSave").click(function(){
     var broker_name = $("#bkn2 :selected").text().trim();
 
     var broker_id = $("#bkn2 :selected").val().trim();
-        
-
-
+      
     //var projectid = $("#project :selected").text().trim();
     var project_name = $("#project").val().trim();
     var project_id = $("#proj").val().trim();
@@ -219,12 +217,12 @@ $("#lmkSave").click(function(){
 
     console.log(size+" "+ bedrooms+" "+bathrooms+" "+property_id+" "+unit_type);
 
-
-    var seller_id = $("#seller3").val().trim();
+    var seller_id = $("#seller3 :selected").val().trim(); 
+    
     //var projectid = $("#project :selected").text().trim();
-    var projectid = $("#project").val().trim();
-    var projid = $("#proj").val().trim();
-    var bhk1 = $("#bh3 :selected").text().trim();    
+    //var projectid = $("#project").val().trim();
+    //var projid = $("#proj").val().trim();
+    //var bhk1 = $("#bh3 :selected").text().trim();    
 
     var facing = $("#facing2 :selected").text().trim();
     
@@ -235,19 +233,33 @@ $("#lmkSave").click(function(){
 
     var price = "";
     var price_per_unit_area = "";
+    var other_prs = $("#othr_prs2").val().trim();
+    var flag = 0;
+    if(other_prs == "") {
+      flag = 0;
+    } else {
+      flag = 1;
+    }
+    var ops = parseFloat(other_prs);
     if (price_type==1)
       price = $("#prs3").val().trim();
     else
       price_per_unit_area = $("#prs3").val().trim();
 
     if ($('[name="lkhs1"]').is(':checked'))  {
-      price_new = parseFloat(price) * 100000;
-      price_per_unit_area = parseFloat(price_per_unit_area) * 100000;      
+      price = parseFloat(price) * 100000;
+      price_per_unit_area = parseFloat(price_per_unit_area) * 100000; 
+      if(flag == 1) {
+        price_per_unit_area = price_per_unit_area + ops;     
+      } 
     } else {
-      price_new = parseFloat(price) * 10000000;
+      price = parseFloat(price) * 10000000;
       price_per_unit_area = parseFloat(price_per_unit_area) * 10000000;
+      if(flag == 1) {
+        price_per_unit_area = price_per_unit_area + ops;     
+      }
     }
-  
+    
 
     var transfer_new;
     var trancefer_rate = $("#tfr2").val().trim();
@@ -276,6 +288,8 @@ $("#lmkSave").click(function(){
       servant_room = "NO";
     } 
     var discription = $("#discription3").val().trim();
+    var review = $("#review3").val().trim();
+
 
     /*temp[0] = cityid;
     temp[1] = broker_name;
@@ -751,17 +765,17 @@ function update_locality(ctid)
 		                        <form method = "post">
 		            	            <tr>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <select id="citydd" name="citydd" onchange = "update_locality(this.value);">
+		                                    <!--<select id="citydd" name="citydd" onchange = "update_locality(this.value);">
 		                                       <option value=''>select city</option>
 		                                       {foreach from=$cityArray key=k item=v}
 		                                           <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
 		                                       {/foreach}
-		                                    </select>
+		                                    </select> -->
 		                                </td>
 		                                <td width = "10px">&nbsp;
 		                                </td>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <span id = "LocalityList">
+		                                    <!--<span id = "LocalityList">
 		                                    <select id="locality" name="locality" onchange = "localitySelect(this.value);">
 		                                       <option value=''>select locality</option>
 		                                       {foreach from=$localityArr key=k item=v}
@@ -769,26 +783,33 @@ function update_locality(ctid)
 		                                              selected="selected" {/if}>{$v->label}</option>
 		                                       {/foreach}
 		                                    </select>
-		                                    </span>
+		                                    </span> -->
 		                                </td>
-		                          		<input type="hidden" name="localityId" id = "localityId" value="{$localityId}">
+		                          		<!-- <input type="hidden" name="localityId" id = "localityId" value="{$localityId}"> -->
 		                                
 		                                <td width = "10px">&nbsp;
 		                                </td>
 		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <select id="placeType" name="placeType">
+		                                    <!-- <select id="placeType" name="placeType">
 		                                       <option value=''>select place type</option>
 		                                       {foreach from=$nearPlaceTypesArray key=k item=v}
 		                                              <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
 		                                       {/foreach}
 		                                    </select>
+                                        -->
 		                                </td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <select name="status">
+		                                    <!--<select name="status">
 		                                       <option value='Active' {if $status == 'Active'}selected{/if}>Active</option>
 		                                       <option value='Inactive' {if $status == 'Inactive'}selected{/if}>Inactive</option>
-		                                    </select>
+		                                    </select> -->
+                                        <select id="citydd" name="citydd" onchange = "update_locality(this.value);">
+                                           <option value=''>select city</option>
+                                           {foreach from=$cityArray key=k item=v}
+                                               <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
+                                           {/foreach}
+                                        </select>
 		                                </td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="20%" height="25" align="left" valign="top">
@@ -916,7 +937,7 @@ function update_locality(ctid)
                             </td>
                         </tr>
      
-                        <tr id = "othr" >
+                        <tr id = "othr" style="display: none;">
                             <td id="othr1" padding-left: 100px;>
                                   *Size
                             </td>
@@ -986,9 +1007,9 @@ function update_locality(ctid)
                                 
                                 <td id="prs4">
                                   <select id="prs5" name="prs5" style="width:100px">
-                                      <option value='0'>Select</option>  
-                                      <option value="1">All Inclusive</option>
-                                      <option value="2">Per Sq. Ft.</option>
+                                      <option value='zero'>Select</option>  
+                                      <option value='one'>All Inclusive</option>
+                                      <option value='two'>Per Sq. Ft.</option>
                                   </select>
                                 </td>
 
@@ -1016,8 +1037,8 @@ function update_locality(ctid)
                               </label>    
                             </td>
 
-                            <td width="400px" style="margin-left=-20px">
-                                <input type=text name="flt2" id="flt2" style="width:100px">
+                            <td width="400px" style="margin-left=-20px" >
+                                <input type=text name="othr_prs2" id="othr_prs2" style="width:100px;">
                             </td>
                         
                             <td width="630px" align="left" id="tr" >
@@ -1140,13 +1161,62 @@ function update_locality(ctid)
                       <tr id="discription1">
                         <td id = "discription4">
                             Description
+                        </td> 
+                        <td id = "discription2" style="width:300px"> 
+                              <textarea type=text name="discription3" id="discription3" style="width:250px" >
+                              </textarea>
                         </td>
-                        <td id = "discription2">
-                              <input type=text name="discription3" id="discription3"  />
+                        <td id="review1">
+                            Review
+                        </td>
+                        <td id="review2">
+                            <textarea type=text name="review3" id="review3" style="height:100px;width:250px" >
+                            </textarea>
                         </td>
                       </tr>
+                      <!--<a target="_blank" href="https://www.proptiger.com/">  
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:330px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/"> 
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:500px; WIDTH:150px; HEIGHT:100px" SRC="sunrise.jpeg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/"> 
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:670px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:840px; WIDTH:150px; HEIGHT:100px" SRC="sunrise.jpeg">
+                        </IMG>  
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:950px; LEFT:1010px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      
 
-
+                      <a target="_blank" href="https://www.proptiger.com/"> 
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:330px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:500px; WIDTH:150px; HEIGHT:100px" SRC="sunrise.jpeg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:670px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:840px; WIDTH:150px; HEIGHT:100px" SRC="sunrise.jpeg">
+                        </IMG>
+                      </a>                       
+                      <a target="_blank" href="https://www.proptiger.com/">   
+                        <IMG STYLE="position:absolute; TOP:1070px; LEFT:1010px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
+                        </IMG>
+                      </a>  -->
+ 
 
           </form>          
                 
@@ -1241,6 +1311,42 @@ function update_locality(ctid)
                                 
                                   </TR>
                                 {/foreach}
+                                <!--{$adjacents = 3}
+                                {$total_pages = 8}
+                                {$limit = 5}
+                                {$page = 3}
+                                { if $page > 0 }
+                                  { $start = ($page-1) * $limit }    
+                                { else }
+                                  { $start = 0 }
+                                
+                                { if ($page == 0) }
+                                  { $page = 1 }   
+                                
+                                { $prev = $page - 1 }              
+                                { $next = $page + 1 }            
+                                { $lastpage = ceil($total_pages/$limit) }   
+                                { $lpm1 = $lastpage - 1 } 
+                                { $pagination = "" }
+                                  { if($lastpage > 1) }
+                                      { $pagination = "<div class=\"pagination\">"; }
+                                        { if ($page > 1) }
+                                           { $pagination.= "<a href=\"$targetpage?page=$prev\">� previous</a>";}
+                                        { else }
+                                           { $pagination.= "<span class=\"disabled\">� previous</span>"; 
+                                                      
+                                                       
+                                            if ($lastpage < 7 + ($adjacents * 2)) 
+                                                      { 
+                                                        for ($counter = 1; $counter <= $lastpage; $counter++)
+                                                        {
+                                                          if ($counter == $page)
+                                                            $pagination.= "<span class=\"current\">$counter</span>";
+                                                          else
+                                                            $pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";         
+                                                        }
+                                                      }
+                                                      -->
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>
                           <tfoot>
@@ -1261,6 +1367,13 @@ function update_locality(ctid)
                                                                 <select class="pagenum input-mini" title="Select page number"></select>
                                                             </th>
                                                         </tr>
+                                                        <tr>
+                                                            <th >
+                                                            </th>
+                                                          
+                                                            
+                                                        </tr>
+
                            </tfoot>
                         </form>
                     </TABLE>
