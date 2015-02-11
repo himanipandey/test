@@ -10,16 +10,16 @@ $('document').ready(function(){
 
 	$('#prs5').click(function(){
 		$('#prs3').show(1);
-		if($('#prs5').val() === '2'){	
+		if($('#prs5 :selected').val() == '2'){	
 			$('#other_charges').show();
-		} else {
-			$('#other_charges').hide();
+			$('#pr').hide();
 		}
-
-		if($('#prs5').val() === '1'){	
+		else if($('#prs5 :selected').val() == '1'){	
 			$('#pr').show();
+			$('#other_charges').hide();
 		} else {
 			$('#pr').hide();
+			$('#other_charges').hide();
 		}
 	});
 

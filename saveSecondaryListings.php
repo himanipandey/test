@@ -68,6 +68,7 @@ else {
         'size'=> $_POST['size'],
         'projectId'=> $_POST['project_id'],
         'bedrooms'=> $_POST['bedrooms'],
+        'bathrooms'=> $_POST['bathrooms'], 
         'unitType'=> "Apartment", //$_POST['unit_type'],
         'penthouse'=>"false",
         'studio' => "false",
@@ -76,7 +77,6 @@ else {
 
     $dataArr['floor'] = $_POST['floor'];
     $jsonDump = array(
-        'comment' => "comment",
         'tower' => $_POST['tower'],
         //'study_room' => $_POST['study_room'],
         //'servant_room' => $_POST['servant_room'],
@@ -105,11 +105,17 @@ else {
     }
     else
         $price =0;
+    if($_POST['other_charges'] !=NaN){
+        $other_charges = $_POST['other_charges'];
+    }
+    else
+        $other_charges =0;
+    
     
     $currentListingPrice = array(
         'pricePerUnitArea'=> $pricePerUnitArea,
         'price'=> $price,
-        'otherCharges'=> '',
+        'otherCharges'=> $other_charges,
         'comment'=>''
         );
     if((isset($pricePerUnitArea) && $pricePerUnitArea!='') || (isset($price) && $price!=''))

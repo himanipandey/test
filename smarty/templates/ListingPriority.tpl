@@ -193,6 +193,12 @@ function editListing(str){
     if(str.plc!=''){
       $("#plc3").show();
       $('#plcn').prop('checked', false);
+      $('#plcy').prop('checked', true);
+    }
+    else{
+      $("#plc3").hide();
+      $('#plcn').prop('checked', true);
+      $('#plcy').prop('checked', false);
     }
     
    
@@ -377,11 +383,25 @@ $("#lmkSave").click(function(){
       } else {
         price = parseFloat(price) * 10000000;
       }
+
+      if(price==null){
+        alert("Wrong format Price. Only Intergers and decimals allowed.")
+        return false;
+      }
+
     }
     else{
       price_per_unit_area = $("#prs3").val().trim();
+      price_per_unit_area = parseInt(price_per_unit_area);
+      if(price_per_unit_area==null){
+        alert("Wrong format Price. Only Intergers allowed.")
+        return false;
+      }
 
     }
+
+    //console.log(bathrooms+" "+price_per_unit_area+" "+price+" "+other_prs);
+    
 
     
     
@@ -469,7 +489,7 @@ $("#lmkSave").click(function(){
     $.ajax({
             type: "POST",
             url: '/saveSecondaryListings.php',
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
               //alert(msg);
@@ -477,6 +497,7 @@ $("#lmkSave").click(function(){
               console.log(msg);
               
                 alert(msg);
+                location.reload();
 
             },
           });
@@ -759,6 +780,72 @@ $("#bed2").keypress(function (e) {
 
 $("#tol3").keypress(function (e) {
      //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && e.which != 46 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+
+$("#floor2").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0  && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+
+
+$("#prs3").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if($("#prs5 :selected").val()=='1'){
+       if (e.which != 8 && e.which != 0 && e.which != 46 && (e.which < 48 || e.which > 57)) {
+          //display error message
+          //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+                 return false;
+      }
+      /*{literal}
+      var regexPattern = /^\d{0,8}(\.\d{1,2})?$/;         
+        //Allow only Number as well 0nly 2 digit after dot(.)
+      {/literal}   
+      if(!regexPattern.test($("#prs3").val()))
+        return false; */
+
+    }
+    else{
+      if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+          //display error message
+          //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+                 return false;
+      }
+    }
+            
+
+   });
+
+
+$("#othr_prs2").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0  && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+
+
+$("#tfr2").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0  && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+
+$("#plc3").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
      if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
         //display error message
         //$("#errmsg").html("Digits Only").show().fadeOut("slow");
@@ -988,10 +1075,10 @@ $("#tol3").keypress(function (e) {
                                       <option value="West">West</option>
                                       <option value="North">North</option>
                                       <option value="South">South</option>
-                                      <option value="North East">North East</option>
-                                      <option value="South East">South East</option>
-                                      <option value="North West">North West</option>
-                                      <option value="South West">South West</option>
+                                      <option value="NorthEast">North East</option>
+                                      <option value="SouthEast">South East</option>
+                                      <option value="NorthWest">North West</option>
+                                      <option value="SouthWest">South West</option>
                                 </select>
                             </td>
                         </tr>
