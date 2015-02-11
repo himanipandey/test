@@ -189,6 +189,12 @@ function editListing(str){
       $('#yes').prop('checked', true);
       $('#no').prop('checked', false);
     }
+    else{
+      $("#bank_list2").hide();
+      $("#bank_list2").val('');
+      $('#yes').prop('checked', false);
+      $('#no').prop('checked', true);
+    }
     $("#plc3").val(str.plc);
     if(str.plc!=''){
       $("#plc3").show();
@@ -197,6 +203,7 @@ function editListing(str){
     }
     else{
       $("#plc3").hide();
+      $('#plc3').val("");
       $('#plcn').prop('checked', true);
       $('#plcy').prop('checked', false);
     }
@@ -352,8 +359,8 @@ $("#lmkSave").click(function(){
 
    
 
-
-    var seller_id = $("#seller3 :selected").val(); 
+    var seller_id = '';
+    seller_id = $("#seller3 :selected").val(); 
 
     //var projectid = $("#project :selected").text().trim();
     //var projectid = $("#project").val().trim();
@@ -384,10 +391,7 @@ $("#lmkSave").click(function(){
         price = parseFloat(price) * 10000000;
       }
 
-      if(price==null){
-        alert("Wrong format Price. Only Intergers and decimals allowed.")
-        return false;
-      }
+      
 
     }
     else{
@@ -400,7 +404,7 @@ $("#lmkSave").click(function(){
 
     }
 
-    //console.log(bathrooms+" "+price_per_unit_area+" "+price+" "+other_prs);
+    
     
 
     
@@ -442,16 +446,36 @@ $("#lmkSave").click(function(){
        task="create";
 
      if(property_id=='') {
-      console.log(project_id+" "+bedrooms+" "+unit_type+" "+size);
-      if(project_id=='' ||  bedrooms=='' || unit_type=='' || size=='' ){
-        alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
+      //console.log(project_id+" "+bedrooms+" "+unit_type+" "+size);
+      if($("#bh3 :selected").val()!='other'){
+        alert("Project is a compulsory field.");
         return true;
+      }
+      else{  
+        if(project_id=='' ||  bedrooms=='' || unit_type=='' || size=='' ){
+          alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
+          return true;
+        }
       }
      }
 
-
+//console.log("s:"+seller_id+" ppa:"+price_per_unit_area+" p:"+price+" op:"+other_prs);
      //validation checks
+     var error = '';
 
+     if(seller_id=='' || !seller_id){
+      error += "Seller Name is compulsory field. "
+     }
+     if((price=='' || price==null || !price) && (price_per_unit_area=='' || price_per_unit_area==null || !price_per_unit_area)){
+      error += "Price is compulsory field. "
+     }
+     if (error != '' ){
+      alert(error);
+      return true;
+     }
+      
+
+   
 
 
 
@@ -492,12 +516,18 @@ $("#lmkSave").click(function(){
             data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
-              //alert(msg);
-
-              console.log(msg);
-              
+              if(msg=="update"){
+                alert("Listing Successfully updated");
+                //location.reload();
+              }
+              else if(msg=="create"){
+                alert("Listing Successfully created");
+                //location.reload();
+              }
+              else{
                 alert(msg);
-                location.reload();
+              }
+
 
             },
           });
@@ -1000,7 +1030,7 @@ $("#plc3").keypress(function (e) {
 
                         <tr id="bkn">
                             <td id = "bkn1">
-                                Broker Name
+                                <font color="red">*</font>Broker Name
                             </td>
                             <td id = "bkn3">
                                 <select id="bkn2" name="bkn2" onchange="getSeller();">
@@ -1017,7 +1047,7 @@ $("#plc3").keypress(function (e) {
                             
 
                             <td id="seller1">
-                                Seller Name:
+                                <font color="red">*</font>Seller Name:
                             </td>
                             <td id="seller2">
                               <!-- <input type=text name="seller3" id="seller3"> --> 
@@ -1032,7 +1062,7 @@ $("#plc3").keypress(function (e) {
                       			<div class="ui-widget">
                         			<td id="project1">
                           			<font color = "red">
-                              			
+                              			*
                           			</font>
                           			Project
                         			</td>
@@ -1053,7 +1083,7 @@ $("#plc3").keypress(function (e) {
        
                     		<tr id="bhk">
                             <td id = "bh1">
-                                *BHK
+                                <font color="red">*</font>BHK
                             </td>
                             <td id="bh2">
                                 <select id="bh3" name="bh3">
@@ -1085,13 +1115,13 @@ $("#plc3").keypress(function (e) {
      
                         <tr id = "othr" style="display: none;">
                             <td id="othr1" padding-left: 100px;>
-                                  *Size
+                                  <font color="red">*</font>Size
                             </td>
                             <td id="othr2">
                                   <input type=text name="other_input" id="other_input"> 
                             </td>
                             <td id="bath">
-                                  *Bedroom
+                                  <font color="red">*</font>Bedroom
                             </td>
                             <td id="bath1">
                                   <input type=text name="bed2" id="bed2" style="width:60px">  
@@ -1103,7 +1133,7 @@ $("#plc3").keypress(function (e) {
                                   <input type=text name="tol3" id="tol3">
                             </td>
                             <td id="appartment1">
-                                  *Option Type
+                                  <font color="red">*</font>Option Type
                             </td>
                             <td id="appartment2">
                                   <select name="appartment3" id="appartment3" style="height:28px">

@@ -65,6 +65,7 @@ $('document').ready(function(){
 	$('#no').click(function(){
 		$('#yes').removeAttr('checked');
 		$('#bank_list2').hide(1);
+		$('#bank_list2').val("");
 	});
 
 	$('#plcy').click(function(){
@@ -75,6 +76,7 @@ $('document').ready(function(){
 	$('#plcn').click(function(){
 		$('#plcy').removeAttr('checked');
 		$('#plc3').hide(1);
+		$('#plc3').val("");
 	});
 
 

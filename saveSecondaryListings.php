@@ -185,7 +185,7 @@ else {
                 //var_dump($response);
 
                 if($response->body->statusCode=="2XX"){
-                    echo "Listing successfully updated";
+                    echo "update";
                 }
                 else{
                      echo $response->body->error->msg;
@@ -200,7 +200,7 @@ else {
                 //echo "create";
                 //var_dump($response);
                 if($response->body->statusCode=="2XX"){
-                    echo "Listing successfully created";
+                    echo "create";
                 }
                 else{
                      echo $response->body->error->msg;
