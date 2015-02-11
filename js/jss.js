@@ -10,13 +10,13 @@ $('document').ready(function(){
 
 	$('#prs5').click(function(){
 		$('#prs3').show(1);
-		if($('#prs5').val() === 'two'){	
+		if($('#prs5').val() === '2'){	
 			$('#other_charges').show();
 		} else {
 			$('#other_charges').hide();
 		}
 
-		if($('#prs5').val() === 'one'){	
+		if($('#prs5').val() === '1'){	
 			$('#pr').show();
 		} else {
 			$('#pr').hide();

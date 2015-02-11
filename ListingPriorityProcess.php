@@ -106,7 +106,7 @@ try{
 
 
    // print("<pre>");
-    $res = var_dump($response);
+    //$res = var_dump($responseLogin);
     //echo '-------------------------------------------------------------------------------','\n';
     //print_r($response.object); 
     //$data = json_decode($response);

@@ -152,7 +152,7 @@ function editListing(str){
 
     if(str.currentListingPrice != null){
       if(str.currentListingPrice.pricePerUnitArea > 0){
-         $("#prs5").val('two');
+         $("#prs5").val('2');
          var price_value = str.currentListingPrice.pricePerUnitArea;
          $('#pr').hide();
          $('#other_charges').show();
@@ -161,7 +161,7 @@ function editListing(str){
 
        }
       else if(str.currentListingPrice.price >0) {
-        $("#prs5").val('one');
+        $("#prs5").val('1');
         var price_value = parseFloat(str.currentListingPrice.price);
          price_value = price_value/100000;
          price_value = price_value.toFixed(2).toString();
@@ -1066,9 +1066,9 @@ $("#tol3").keypress(function (e) {
                                 
                                 <td id="prs4">
                                   <select id="prs5" name="prs5" style="width:100px">
-                                      <option value='zero'>Select</option>  
-                                      <option value='one'>All Inclusive</option>
-                                      <option value='two'>Per Sq. Ft.</option>
+                                      <option value='0'>Select</option>  
+                                      <option value='1'>All Inclusive</option>
+                                      <option value='2'>Per Sq. Ft.</option>
                                   </select>
                                 </td>
 
@@ -1089,7 +1089,7 @@ $("#tol3").keypress(function (e) {
                             
                             <td width="110px" align="left" id="pr" style="padding-left:120px;display:none;" >
                               <label  for="one" style="font-size:11px;" >
-                                lkhs &nbsp;   
+                                lacss &nbsp;   
                                  <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
                                  &nbsp;&nbsp; crs &nbsp;
                                  <input type="radio" id="crs1" name="crs1" value="n" />
