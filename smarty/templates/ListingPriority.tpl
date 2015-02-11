@@ -152,7 +152,7 @@ function editListing(str){
 
     if(str.currentListingPrice != null){
       if(str.currentListingPrice.pricePerUnitArea > 0){
-         $("#prs5").val('2');
+         $("#prs5").val('two');
          var price_value = str.currentListingPrice.pricePerUnitArea;
          $('#pr').hide();
          $('#other_charges').show();
@@ -161,7 +161,7 @@ function editListing(str){
 
        }
       else if(str.currentListingPrice.price >0) {
-        $("#prs5").val('1');
+        $("#prs5").val('one');
         var price_value = parseFloat(str.currentListingPrice.price);
          price_value = price_value/100000;
          price_value = price_value.toFixed(2).toString();
@@ -1186,7 +1186,7 @@ $("#tol3").keypress(function (e) {
 	                        </td>
                       </tr>    
 
-                      <tr id="study_servant">
+                      <tr id="study_servant" style="display:none;">
                           <td id = "study1">
                               Study Room
                           </td>
@@ -1227,7 +1227,7 @@ $("#tol3").keypress(function (e) {
                               </textarea>
                         </td>
                         <td id="review1">
-                            Review
+                            Remark
                         </td>
                         <td id="review2">
                             <textarea type=text name="review3" id="review3" style="height:100px;width:250px" >

@@ -78,8 +78,8 @@ else {
     $jsonDump = array(
         'comment' => "comment",
         'tower' => $_POST['tower'],
-        'study_room' => $_POST['study_room'],
-        'servant_room' => $_POST['servant_room'],
+        //'study_room' => $_POST['study_room'],
+        //'servant_room' => $_POST['servant_room'],
         );
     $dataArr['jsonDump'] = json_encode($jsonDump);
     $dataArr['description'] =$_POST['description'];
@@ -192,7 +192,7 @@ else {
                 ->addHeader("COOKIE", $ck_new) 
                 ->send(); 
                 //echo "create";
-                var_dump($response);
+                //var_dump($response);
                 if($response->body->statusCode=="2XX"){
                     echo "Listing successfully created";
                 }
