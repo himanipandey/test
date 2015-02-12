@@ -197,31 +197,35 @@ function editListing(str){
 
      $("#park2").val(str.noOfCarParks);
     $("#bank_list2").val(str.homeLoanBankId);
-    if(str.homeLoanBankId!=''){
+    if(str.homeLoanBankId!='' && str.homeLoanBankId!=null && str.homeLoanBankId>0){
+      console.log("bank yes");
       $("#bank_list2").show();
-      $('#yes').prop('checked', true);
-      $('#no').prop('checked', false);
+      $('#yes').attr('checked', true);
+      $('#no').removeAttr('checked');
     }
     else{
+      console.log("bank no");
       $("#bank_list2").hide();
       $("#bank_list2").val('');
-      $('#yes').prop('checked', false);
-      $('#no').prop('checked', true);
+      $('#yes').removeAttr('checked');
+      $('#no').attr('checked', true);
     }
     $("#plc3").val(str.plc);
-    if(str.plc!=''){
+    if(str.plc!='' && str.plc!=null && str.plc>0){
+      console.log("plc yes");
       $("#plc3").show();
-      $('#plcn').prop('checked', false);
-      $('#plcy').prop('checked', true);
+      $('#plcn').removeAttr('checked');
+      $('#plcy').attr('checked', true);
     }
     else{
+      console.log("plc no");
       $("#plc3").hide();
       $('#plc3').val("");
-      $('#plcn').prop('checked', true);
-      $('#plcy').prop('checked', false);
+      $('#plcn').attr('checked', true);
+      $('#plcy').removeAttr('checked');
     }
     
-   
+    console.log(str);
     
     $("#cityddEdit").attr('disabled',true);
     $("#project").attr('readonly',true);
@@ -254,6 +258,7 @@ function editListing(str){
 
 function getSeller(){
    var broker_id = $("#bkn2 :selected").val(); 
+   $('#seller3').html(''); 
    if(broker_id==null || broker_id=='')  
     return true;
     //console.log(broker_id);
@@ -265,7 +270,7 @@ function getSeller(){
             success:function(msg){
 
               console.log(msg);
-              $('#seller3').html(''); 
+              
               var options = $("#seller3");
               //var i = 0;
 
@@ -279,6 +284,14 @@ function getSeller(){
               
             },
           });
+}
+
+function exitButtonClicked(){
+  cleanFields();
+     $('#create_company').hide('slow'); 
+   
+      $('#search_bottom').show('slow');
+      location.reload();
 }
 
 jQuery(document).ready(function(){  
@@ -301,16 +314,15 @@ $("#create_button").click(function(){
     $("#project").attr('readonly',false);
     $("#proj").attr('readonly',false);
     $("#bh3").attr('disabled',false); 
+    $('#prs5').val('1');
+    
 });
 
   
 
   $("#exit_button").click(function(){
-    cleanFields();
-     $('#create_company').hide('slow'); 
-   
-      $('#search_bottom').show('slow');
-      location.reload();
+    exitButtonClicked();
+    
   });
 
 
@@ -468,14 +480,16 @@ $("#lmkSave").click(function(){
         return true;
       }
       else{ 
-        if(unit_type=='Appartment' || unit_type=='Appartment') { 
-          if(project_id=='' ||  bedrooms=='' || unit_type=='' || size=='' ){
+        if(unit_type=='Apartment' || unit_type=='Villa') { 
+          console.log(unit_type);
+          if(project_id=='' ||  bedrooms=='' || unit_type=='Select' || size=='' ){
             alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
             return true;
           }
         }
         else{
-          if(project_id=='' || unit_type=='' || size=='' ){
+          console.log(unit_type);
+          if(project_id=='' || unit_type=='' || size=='' || unit_type=='Select'){
             alert("project, size, Option Type are must if BHK 'Others' is selected.");
             return true;
           }
@@ -538,21 +552,34 @@ $("#lmkSave").click(function(){
             type: "POST",
             async: false,
             url: '/saveSecondaryListings.php',
+            /*beforeSend: function(){
+              $body = $("body");
+              $body.addClass("loading"); $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);*/
+            },
             data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
               
               
               if(msg==2){
-                //alert("Listing Successfully updated");
+                /*$body = $("body");
+               
+                //exitButtonClicked();
+                alert("Listing Successfully updated"); $body.removeClass("loading");
+                 $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
                 location.reload();
               }
               else if(msg==1){
-                //alert("Listing Successfully created");
+                $body = $("body");
+                //$body.removeClass("loading");
+                //exitButtonClicked();
+                /*alert("Listing Successfully created"); $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
                 location.reload();
               }
               else{
-                alert(msg);
+                //$body = $("body");
+                //$body.removeClass("loading");
+                alert(msg); /*$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
               }
 
 
@@ -1215,7 +1242,7 @@ $("#plc3").keypress(function (e) {
                                 <td id="prs4">
                                   <select id="prs5" name="prs5" style="width:100px">
                                       <option value='0'>Select</option>  
-                                      <option value='1'>All Inclusive</option>
+                                      <option value='1' selected="selected">All Inclusive</option>
                                       <option value='2'>Per Sq. Ft.</option>
                                   </select>
                                 </td>
