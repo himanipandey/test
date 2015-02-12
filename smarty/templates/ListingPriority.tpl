@@ -541,13 +541,14 @@ $("#lmkSave").click(function(){
             data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
-              msg = $.parseJSON(msg);
-              if(msg=="update"){
-                alert("Listing Successfully updated");
+              
+              
+              if(msg==2){
+                //alert("Listing Successfully updated");
                 location.reload();
               }
-              else if(msg=="create"){
-                alert("Listing Successfully created");
+              else if(msg==1){
+                //alert("Listing Successfully created");
                 location.reload();
               }
               else{
@@ -1248,7 +1249,7 @@ $("#plc3").keypress(function (e) {
                                 <input type=text name="othr_prs2" id="othr_prs2" style="width:100px;">
                             </td>
                         
-                            <td width="630px" align="left" id="tr" style="padding-left:200px; display:none;">
+                            <td width="630px" align="left" id="tr" style="display:none;">
                               <label  for="one" style="font-size:11px;">
                                 lkhs &nbsp;   
                                   <input type="radio" id="lkhs2" name="prstp2" value="y" checked="checked" /> 

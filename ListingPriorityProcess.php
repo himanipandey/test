@@ -85,7 +85,7 @@ $uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start=0&
 //$dataArr = array();
 //$dataArr['sellerId'] = "1216008";
 //$dataJson = json_encode($dataArr);
-try{ 
+/*try{ 
 
     
 
@@ -156,7 +156,7 @@ try{
  } 
  catch(Exception $e)  {
     print_R($e);
- }
+ }*/
 //print("<pre>");
 //print_r($resaleListings);
 
