@@ -253,8 +253,10 @@ function editListing(str){
 }
 
 function getSeller(){
-   var broker_id = $("#bkn2 :selected").val();   
-    console.log(broker_id);
+   var broker_id = $("#bkn2 :selected").val(); 
+   if(broker_id==null || broker_id=='')  
+    return true;
+    //console.log(broker_id);
     $.ajax({
             type: "POST",
             url: '/saveSecondaryListings.php',
@@ -308,6 +310,7 @@ $("#create_button").click(function(){
      $('#create_company').hide('slow'); 
    
       $('#search_bottom').show('slow');
+      location.reload();
   });
 
 
@@ -464,10 +467,18 @@ $("#lmkSave").click(function(){
         alert("Project is a compulsory field.");
         return true;
       }
-      else{  
-        if(project_id=='' ||  bedrooms=='' || unit_type=='' || size=='' ){
-          alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
-          return true;
+      else{ 
+        if(unit_type=='Appartment' || unit_type=='Appartment') { 
+          if(project_id=='' ||  bedrooms=='' || unit_type=='' || size=='' ){
+            alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
+            return true;
+          }
+        }
+        else{
+          if(project_id=='' || unit_type=='' || size=='' ){
+            alert("project, size, Option Type are must if BHK 'Others' is selected.");
+            return true;
+          }
         }
       }
      }
@@ -525,10 +536,12 @@ $("#lmkSave").click(function(){
 
     $.ajax({
             type: "POST",
+            async: false,
             url: '/saveSecondaryListings.php',
             data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
+              msg = $.parseJSON(msg);
               if(msg=="update"){
                 alert("Listing Successfully updated");
                 location.reload();
@@ -613,6 +626,7 @@ $("#lmkSave").click(function(){
           url: "{$url12}"+"?query="+$("#project").val().trim()+"&typeAheadType=(project)&city="+$("#cityddEdit :selected").text().trim()+"&rows=10",
           //url: "{$url12}"+"?query="+$("#proj").val().trim()+$("#cityddEdit :selected").text().trim(),
           dataType: "json",
+          async: false,
           data: {
             featureClass: "P",
             style: "full", 
@@ -649,6 +663,7 @@ $("#lmkSave").click(function(){
               //alert("Hello"); 
               url: "{$url13}"+projectId,
               dataType: "json",
+              async: false,
               data: {
                 featureClass: "P",
                 style: "full", 
@@ -740,6 +755,7 @@ $("#lmkSave").click(function(){
               //alert("Hello"); 
               url: "{$url13}"+$("#proj").val(),
               dataType: "json",
+              async: false,
               data: {
                 featureClass: "P",
                 style: "full", 
@@ -1427,7 +1443,7 @@ $("#plc3").keypress(function (e) {
 
 
 
-                    <div class="modal"></div>
+                    <div class="modal">Please Wait..............</div>
                     <div id="search-bottom">
                     <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
                         <form name="form1" method="post" action="">

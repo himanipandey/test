@@ -130,8 +130,8 @@ $('document').ready(function(){
 	$body = $("body");
 
 	$(document).on({
-	    ajaxStart: function() { $body.addClass("loading");    },
-	     ajaxStop: function() { $body.removeClass("loading"); }    
+	    ajaxStart: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);},
+	     ajaxStop: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);}    
 	});
 
 

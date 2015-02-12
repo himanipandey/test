@@ -95,11 +95,6 @@ try{
     ->send(); 
 
 
-   // print("<pre>");
-    //$res = var_dump($responseLogin);
-    //echo '-------------------------------------------------------------------------------','\n';
-    //print_r($response.object); 
-    //$data = json_decode($response);
     $header = $responseLogin->headers;
     $header = $header->toArray();
     $ck = $header['set-cookie'];
@@ -113,21 +108,7 @@ try{
     }
 
 
-    //print_r($ck_new);
-
-    $ck_name = "JSESSIONID";
-    setcookie($ck_name,$ck_new,time()+3600*24*100,"/","");
-
-    if(!isset($_COOKIE[$ck_name])) {
-    echo "Cookie named '" . $ck_name . "' is not set!";
-    } 
-    else {
-        echo "Cookie '" . $ck_name . "' is set!<br>";
-        echo "Value is: " . $_COOKIE[$ck_name];
-    }
-
-    
-    //echo '\n\n', $res["raw_headers"]);
+   
    
     if($ck_new!='')
     {    
