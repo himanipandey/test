@@ -352,7 +352,7 @@ $("#lmkSave").click(function(){
     else{
        size = $("#other_input").val().trim();
        bedrooms = $("#bed2").val().trim();
-      bathrooms = $("#tol3").val();
+       bathrooms = $("#tol3").val();
        property_id = "";
        unit_type = $("#appartment3 :selected").text();
     }
@@ -420,6 +420,35 @@ $("#lmkSave").click(function(){
     }
 
     var appratment = $("#appartment3 :selected").text();
+    var penthouse_stdio_temp = $("#penthouse_sel :selected").text();
+  
+    var penthouse = "NO";
+    var studio = "No";
+  
+    if(penthouse_stdio_temp == "Penthouse") {
+        if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
+            penthouse = "YES";
+        } else {
+            penthouse = "NO";
+        }
+    } else if(penthouse_stdio_temp == "Studio") { 
+        if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
+            studio = "YES";
+        } else {
+            studio = "NO"; 
+        }
+    }
+
+    var negotiable = false;
+    if ($('[name="negotiable_yes"]').is(':checked'))  {
+        negotiable = true;
+    } else {
+        negotiable = false;
+    }
+
+    //alert("penthouse = "+penthouse);
+    //alert("studio = " + studio);
+
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
     var loan_bank = $("#bank_list2 :selected").val();
@@ -513,7 +542,7 @@ $("#lmkSave").click(function(){
     $.ajax({
             type: "POST",
             url: '/saveSecondaryListings.php',
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse:penthouse, studio:studio, negotiable:negotiable, description:description, review:review, task:task},
 
             success:function(msg){
               if(msg=="update"){
@@ -592,6 +621,72 @@ $("#lmkSave").click(function(){
   
 
   });
+
+  $( "#project_search" ).catcomplete({
+      source: function( request, response ) {
+        
+        $.ajax({
+          url: "{$url12}"+"?query="+$("#project_search").val().trim()+"&typeAheadType=(project)&city="+$("#citydd :selected").text().trim()+"&rows=10",
+          //url: "{$url12}"+"?query="+$("#proj").val().trim()+$("#cityddEdit :selected").text().trim(),
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full", 
+            name_startsWith: request.term
+          }, 
+           
+          success: function( data ) { 
+            response( $.map( data.data, function( item ) {              
+                return {
+                label: item.displayText,
+                value: item.label,
+                id:item.id,
+                }
+                 
+            }));
+          }
+        });      
+      },
+              
+      select: function( event, ui ) {
+        window.selectedItem = ui.item;
+        var res = ui.item.id.split("-");
+          var projectId = res[2];
+          pid = projectId;
+          console.log(projectId);
+
+          $("#projectId").val(projectId); 
+          var data = { projectId:projectId,  task:'get_options'}; 
+           
+          //find_project_options();
+          
+          console.log("{$url13}"+projectId);
+          $.ajax({
+              //alert("Hello"); 
+              url: "{$url13}"+projectId,
+              dataType: "json",
+              data: {
+                featureClass: "P",
+                style: "full", 
+                //name_startsWith: request.term
+              },
+              
+              success: function( data ) {
+                  ///// Write code what u want...                 
+              }
+          });
+          //}
+      },
+      
+
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      },
+
+    }); 
      
    $( "#project" ).catcomplete({
       source: function( request, response ) {
@@ -962,17 +1057,7 @@ $("#plc3").keypress(function (e) {
 		                                </td>
 		                          		<!-- <input type="hidden" name="localityId" id = "localityId" value="{$localityId}"> -->
 		                                
-		                                <td width = "10px">&nbsp;
-		                                </td>
-		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <!-- <select id="placeType" name="placeType">
-		                                       <option value=''>select place type</option>
-		                                       {foreach from=$nearPlaceTypesArray key=k item=v}
-		                                              <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
-		                                       {/foreach}
-		                                    </select>
-                                        -->
-		                                </td>
+		                                
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="15%" height="25" align="left" valign="top">
 		                                    <!--<select name="status">
@@ -986,6 +1071,20 @@ $("#plc3").keypress(function (e) {
                                            {/foreach}
                                         </select>
 		                                </td>
+                                    <td width = "10px">&nbsp;
+                                    </td>
+                                    <td width="15%" height="25" align="left" valign="top">
+                                        <!-- <select id="placeType" name="placeType">
+                                           <option value=''>select place type</option>
+                                           {foreach from=$nearPlaceTypesArray key=k item=v}
+                                                  <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
+                                           {/foreach}
+                                        </select>
+                                        -->
+                                      
+                                      <input type=text name="project_search" id="project_search"  style="width:210px;"> 
+                              
+                                    </td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="20%" height="25" align="left" valign="top">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="submitButton();">
@@ -1113,8 +1212,8 @@ $("#plc3").keypress(function (e) {
                             </td>
                         </tr>
      
-                        <tr id = "othr" style="display: none;">
-                            <td id="othr1" padding-left: 100px;>
+                        <tr id = "othr" style="display: none; left: 200px">
+                            <td id="othr1">
                                   <font color="red">*</font>Size
                             </td>
                             <td id="othr2">
@@ -1124,7 +1223,7 @@ $("#plc3").keypress(function (e) {
                                   <font color="red">*</font>Bedroom
                             </td>
                             <td id="bath1">
-                                  <input type=text name="bed2" id="bed2" style="width:60px">  
+                                  <input type=text name="bed2" id="bed2" style="width:60px;height:15px">  
                             </td>
                             <td id="tol1">
                                   Toilet
@@ -1146,6 +1245,25 @@ $("#plc3").keypress(function (e) {
                                       <option value="6">Other</option>
                                 </select>
                             </td>
+                            <td id="penthouse_td1" style="padding-left:20px;">
+                                  <font color="red">*</font>Other
+                            </td>
+                            <td id="penthouse_td2">
+                                  <select name="penthouse_sel" id="penthouse_sel" style="height:28px;width:120px">
+                                    <option value=''>Select</option>  
+                                      <option value="1">Penthouse</option>
+                                      <option value="2">Studio</option>
+                                </select>
+                            </td>
+                            <td width="110px" align="left" id="penthouse_td3" >
+                              <label  for="one" style="font-size:11px;" >
+                                &nbsp;&nbsp;Yes &nbsp;   
+                                 <input type="radio" id="penthouse_studio_yes" name="penthouse_studio_yes" value="y"/> 
+                                 &nbsp;&nbsp; No &nbsp;
+                                 <input type="radio" id="penthouse_studio_yes" name="penthouse_studio_yes" value="n" checked="checked" />
+                              </label>    
+                            </td>
+
                         </tr>
   
 
@@ -1303,7 +1421,7 @@ $("#plc3").keypress(function (e) {
 	                        </td>
                       </tr>    
 
-                      <tr id="study_servant" style="display:none;">
+                      <tr id="study_servant" >
                           <td id = "study1">
                               Study Room
                           </td>
@@ -1333,6 +1451,20 @@ $("#plc3").keypress(function (e) {
                                 <input type="radio" id="no_servant" name="no_servant" value="2" checked="checked" />
                             </label>
                           </td>  
+                      </tr>
+
+                      <tr id = "negotiable_id" style="position:absolute;left:300px;top:780px">
+                          <td id = "negotiable_id1" style="position:relative; width:110px; text-align:center">
+                              Negotiable  
+                          </td>    
+                          <td id = "negotiable_id2">
+                            <label  for="one" style="font-size:11px;">
+                              &nbsp;&nbsp;Yes &nbsp;   
+                                <input type="radio" id="negotiable_yes" name="negotiable_yes" value="1" /> 
+                                &nbsp;&nbsp; No &nbsp;
+                                <input type="radio" id="negotiable_no" name="negotiable_no" value="0" checked="checked" />
+                            </label>
+                          </td>
                       </tr>
 
                       <tr id="discription1">

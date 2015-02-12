@@ -85,7 +85,7 @@ $uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start=0&
 //$dataArr = array();
 //$dataArr['sellerId'] = "1216008";
 //$dataJson = json_encode($dataArr);
-try{ 
+/*try{ 
 
     //$response = \Httpful\Request::post($uri1)->send();                     
     //$response1 = \Httpful\Request::get($uri)->send();
@@ -93,11 +93,11 @@ try{
     //echo $response;
     //echo $response1;
 
-    /*$response = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
-    ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
-    ->authenticateWith('admin-10@proptiger.com', '1234')  // authenticate with basic auth...
-    ->body('{"json":"is awesome"}')             // attach a body/payload...
-    ->send(); */
+    //$response = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
+    //->sendsJson()                               // tell it we're sending (Content-Type) JSON...
+    //->authenticateWith('admin-10@proptiger.com', '1234')  // authenticate with basic auth...
+    //->body('{"json":"is awesome"}')             // attach a body/payload...
+    //->send(); 
 
     $responseLogin = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
     ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
@@ -105,7 +105,7 @@ try{
     ->send(); 
 
 
-   // print("<pre>");
+    // print("<pre>");
     //$res = var_dump($responseLogin);
     //echo '-------------------------------------------------------------------------------','\n';
     //print_r($response.object); 
@@ -122,22 +122,6 @@ try{
         $ck_new = $ck_new.$ck[$i];
     }
 
-
-    //print_r($ck_new);
-
-    /*$ck_name = "JSESSIONID";
-    setcookie($ck_name,$ck_new,time()+3600*24*100,"/","");
-
-    if(!isset($_COOKIE[$ck_name])) {
-    echo "Cookie named '" . $ck_name . "' is not set!";
-    } 
-    else {
-        echo "Cookie '" . $ck_name . "' is set!<br>";
-        echo "Value is: " . $_COOKIE[$ck_name];
-    }*/
-
-    
-    //echo '\n\n', $res["raw_headers"]);
    
     if($ck_new!='')
     {    
@@ -185,7 +169,7 @@ try{
  } 
  catch(Exception $e)  {
     print_R($e);
- }
+ } */
 //print("<pre>");
 //print_r($resaleListings);
 

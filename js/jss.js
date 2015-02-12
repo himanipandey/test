@@ -79,8 +79,6 @@ $('document').ready(function(){
 		$('#plc3').val("");
 	});
 
-
-
 	$('#yes_study').click(function(){
 		$('#no_study').removeAttr('checked');
 	});
@@ -95,5 +93,12 @@ $('document').ready(function(){
 
 	$('#no_servant').click(function(){
 		$('#yes_servant').removeAttr('checked');
+	});
+
+	$('#negotiable_yes').click(function(){
+		$('#negotiable_no').removeAttr('checked');
+	});
+	$('#negotiable_no').click(function(){
+		$('#negotiable_yes').removeAttr('checked');
 	});
 });
