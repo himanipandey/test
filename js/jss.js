@@ -5,9 +5,36 @@ $('document').ready(function(){
 			$('#othr').show(1);	
 		} else {
 			$('#othr').hide(1);
+			$('#othr2').val('');
+			$('#bed2').val('');
+			$('#tol3').val('');
+			$('#appartment3').val('');
+
 		}
 	});
 
+//option type change event handler
+	$('#appartment3').click(function(){
+		if($('#appartment3 :selected').val() == '1'  || $('#appartment3 :selected').val() == '2'){	
+			$('#bath').show();
+			$('#bath1').show();
+			$('#tol1').show();
+			$('#tol2').show();
+		}
+		
+		 else {
+			$('#bath').hide();
+			$('#bath1').hide();
+			$('#tol1').hide();
+			$('#tol2').hide();
+
+			$('#bed2').val('');
+			$('#tol3').val('');
+		}
+	});
+
+
+//price change event handler
 	$('#prs5').click(function(){
 		$('#prs3').show(1);
 		if($('#prs5 :selected').val() == '2'){	
@@ -17,9 +44,11 @@ $('document').ready(function(){
 		else if($('#prs5 :selected').val() == '1'){	
 			$('#pr').show();
 			$('#other_charges').hide();
+			$('#othr_prs2').val('');
 		} else {
 			$('#pr').hide();
 			$('#other_charges').hide();
+			$('#othr_prs2').val('');
 		}
 	});
 
@@ -96,4 +125,14 @@ $('document').ready(function(){
 	$('#no_servant').click(function(){
 		$('#yes_servant').removeAttr('checked');
 	});
+
+// ajax loader
+	$body = $("body");
+
+	$(document).on({
+	    ajaxStart: function() { $body.addClass("loading");    },
+	     ajaxStop: function() { $body.removeClass("loading"); }    
+	});
+
+
 });

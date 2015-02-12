@@ -73,12 +73,16 @@ function isPhnumber(val) {
 function cleanFields(){
   $('#create_Landmark input text,#create_Landmark select,#create_Landmark textarea, :text').each(function(key, value){
       $(this).val('');
-
-
     }); 
    $("#seller3").html('');
    $("#bh3").html('');
    $("#listing_id").val("");
+   $('#othr').hide();
+   $('#other_charges').hide();
+   $('#pr').hide();
+   $('#plc3').hide(1);
+   $('#bank_list2').hide(1);
+   
 }
 
 function editListing(str){
@@ -128,8 +132,16 @@ function editListing(str){
 
    var unit_name = str.property.unitName+"-"+str.property.size+" "+str.property.unitType; 
 
+//fill option field
+
     $('#bh3').html(''); 
     $('#bh3').append($("<option selected='selected' />").val("0").text(unit_name));
+    $('#othr').hide(1);
+    $('#othr2').val('');
+      $('#bed2').val('');
+      $('#tol3').val('');
+      $('#appartment3').val('');
+
     var jsonDump = $.parseJSON(str.jsonDump);
     if(jsonDump!=null){
       $("#tower2").val(jsonDump.tower);
@@ -168,6 +180,7 @@ function editListing(str){
          $("#prs3").val(price_value);
          $('#pr').show();
          $('#other_charges').hide();
+         $('#othr_prs2').val('');
 
       }
       $("#othr_prs2").val(str.currentListingPrice.otherCharges);
@@ -518,11 +531,11 @@ $("#lmkSave").click(function(){
             success:function(msg){
               if(msg=="update"){
                 alert("Listing Successfully updated");
-                //location.reload();
+                location.reload();
               }
               else if(msg=="create"){
                 alert("Listing Successfully created");
-                //location.reload();
+                location.reload();
               }
               else{
                 alert(msg);
@@ -1137,13 +1150,14 @@ $("#plc3").keypress(function (e) {
                             </td>
                             <td id="appartment2">
                                   <select name="appartment3" id="appartment3" style="height:28px">
-                                    <option value=''>Apartment</option>  
-                                      <option value="1">Villa</option>
-                                      <option value="2">Plot</option>
-                                      <option value="3">Commercial</option>
-                                      <option value="4">Shop</option>
-                                      <option value="5">Office</option>
-                                      <option value="6">Other</option>
+                                      <option value=''>Select</option> 
+                                      <option value='1'>Apartment</option>  
+                                      <option value="2">Villa</option>
+                                      <option value="3">Plot</option>
+                                      <option value="4">Commercial</option>
+                                      <option value="5">Shop</option>
+                                      <option value="6">Office</option>
+                                      <option value="7">Other</option>
                                 </select>
                             </td>
                         </tr>
@@ -1176,7 +1190,7 @@ $("#plc3").keypress(function (e) {
                				  <tr id="prs_trf">
 
                           			<td id="prs1">
-                              			Price: 
+                              			<font color="red">*</font>Price: 
                           			</td>
                               
                                                              
@@ -1206,7 +1220,7 @@ $("#plc3").keypress(function (e) {
                             
                             <td width="110px" align="left" id="pr" style="padding-left:120px;display:none;" >
                               <label  for="one" style="font-size:11px;" >
-                                lacss &nbsp;   
+                                lacs &nbsp;   
                                  <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
                                  &nbsp;&nbsp; crs &nbsp;
                                  <input type="radio" id="crs1" name="crs1" value="n" />
@@ -1277,7 +1291,7 @@ $("#plc3").keypress(function (e) {
                         	</td>
                        
                         	<td id="bank_list1" height="40px;">
-                            	<select name="bank_list2" id="bank_list2" height="5px" >
+                            	<select name="bank_list2" id="bank_list2" height="5px" width="50px" >
                                  	<option value=''> select bank	</option>
                                     {foreach from=$bankArray key=k item=v}
                                         <option value="{$k}" {if $bankId==$k}  selected="selected" {/if}>{$v}</option>
@@ -1413,7 +1427,7 @@ $("#plc3").keypress(function (e) {
 
 
 
-
+                    <div class="modal"></div>
                     <div id="search-bottom">
                     <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
                         <form name="form1" method="post" action="">

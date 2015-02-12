@@ -69,18 +69,18 @@ else {
         'projectId'=> $_POST['project_id'],
         'bedrooms'=> $_POST['bedrooms'],
         'bathrooms'=> $_POST['bathrooms'], 
-        'unitType'=> "Apartment", //$_POST['unit_type'],
+        'unitType'=> $_POST['unit_type'],//"Apartment", //
         'penthouse'=>"false",
         'studio' => "false",
         ); 
     $dataArr['otherInfo'] = $otherInfo;
 
     $dataArr['floor'] = $_POST['floor'];
-    $jsonDump = array(
-        'tower' => $_POST['tower'],
-        //'study_room' => $_POST['study_room'],
-        //'servant_room' => $_POST['servant_room'],
-        );
+    $jsonDump = array();
+    $tower = $_POST['tower'];
+    if(isset($tower) && !empty($tower))
+        $jsonDump['tower'] = $tower;
+        
     $dataArr['jsonDump'] = json_encode($jsonDump);
     $dataArr['description'] =$_POST['description'];
     $dataArr['remark'] =$_POST['review'];
