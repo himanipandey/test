@@ -185,7 +185,7 @@ else {
                 //var_dump($response);
 
                 if($response->body->statusCode=="2XX"){
-                    echo "update";
+                    echo "2";
                 }
                 else{
                      echo $response->body->error->msg;
@@ -200,7 +200,7 @@ else {
                 //echo "create";
                 //var_dump($response);
                 if($response->body->statusCode=="2XX"){
-                    echo "create";
+                    echo "1";
                 }
                 else{
                      echo $response->body->error->msg;

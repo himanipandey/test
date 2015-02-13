@@ -127,11 +127,26 @@ $('document').ready(function(){
 	});
 
 // ajax loader
-	$body = $("body");
 
+	 /*$('#modal').ajaxStart(function () {
+        $(this).fadeIn('fast');
+    }).ajaxStop(function () {
+        $(this).stop().fadeOut('fast');
+    });
+
+    $('#modal').ajaxStart(function () {
+        $(this).fadeIn('fast');
+    }).ajaxStop(function () {
+        $(this).stop().fadeOut('fast');
+    });*/
+
+	$body = $("body");
+	
 	$(document).on({
-	    ajaxStart: function() { $body.addClass("loading");    },
-	     ajaxStop: function() { $body.removeClass("loading"); }    
+	    ajaxStart: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);},
+	     ajaxStop: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);}  
+
+	   
 	});
 
 
