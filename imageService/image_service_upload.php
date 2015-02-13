@@ -120,12 +120,12 @@ class ImageServiceUpload{
         "bank" => array("logo" => "logo"),
         "company" => array("logo" => "logo"),
         "listing" => array(
-            "bedroom"=> "bedroom",
-            "bathroom"=>"bathroom",
-            "balcony"=>"balcony", 
-            "living"=> "living",
-            "dining"=> "dining",
-            "others"=> "others",
+            "bedroom"=> "Bedroom",
+            "bathroom"=>"Bathroom",
+            "balcony"=>"Balcony", 
+            "living"=> "Living",
+            "dining"=> "Dining",
+            "other"=> "Other",
             ),
     );
 

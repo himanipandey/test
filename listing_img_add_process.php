@@ -13,8 +13,21 @@
     //$smarty->assign("imagetype", $_REQUEST['imagetype']);
 
 
-    $listingId = $_REQUEST['listingId'];
+    $listingId = $_REQUEST['listing_id'];
+    $smarty->assign("listingId", $listingId);
 
+    $sql = "select rp.project_name, rb.builder_name, rpo.option_type, rpo.bedrooms, rpo.bathrooms, rpo.size from listings l 
+    		inner join resi_project_phase rpp on rpp.phase_id=l.phase_id 
+    		inner join resi_project_options rpo on l.option_id=rpo.options_id 
+    		inner join resi_project rp on rp.project_id=rpp.project_id
+    		inner join resi_builder rb on rp.builder_id=rb.builder_id
+    		where l.id={$listingId} group by l.id";
+   //echo $sql;
+
+    $res = mysql_query($sql) or die(mysql_error());
+    $listingDetail=mysql_fetch_assoc($res);
+    var_dump($listingDetail);
+    $smarty->assign("listingDetail", $listingDetail);
 
 
 
@@ -392,15 +405,26 @@ if($_POST['listing_edit']=='yes'){
 			//die("here");
 			if(empty($ErrorMsgEdit)){	
 			//die("here");	
-				if($preview == 'true')
+				/*if($preview == 'true')
 					header("Location:listing_img_add.php?listingId=".$listingId);
 				else
-					header("listing_img_add.php?listingId=".$listingId);
+					header("listing_img_add.php?listingId=".$listingId);*/
+				header('Location: '.$_SERVER['REQUEST_URI']);
 			}
 
 		}
 
+	else if(isset($_POST['btnExit']))
+	{
+        
+           header("Location:listing_list.php");
+
+	}
+
 	$smarty->assign("ErrorMsgEdit", $ErrorMsgEdit);
+
+
+
 }
 
 
@@ -574,35 +598,22 @@ else{
 
 			//die("here0");
 			if(empty($ErrorMsg)){
-				if($_POST['Next'] == 'Add More')
-						header("Location:project_img_add.php?projectId=".$projectId);
-				else if($_POST['Next'] == 'Save')
-						header("Location:ProjectList.php?projectId=".$projectId);
-				else
-					header("Location:add_specification.php?projectId=".$projectId);
+				//header("Location:listing_list.php");
+				header('Location: '.$_SERVER['REQUEST_URI']);
 			}
 		}
 	}
-	else if(isset($_POST['Skip']))
+	/*else if(isset($_POST['Skip']))
 	{
 	      header("Location:add_specification.php?projectId=".$projectId);
-	}
+	}*/
 	else if(isset($_POST['exit']))
 	{
-		 header("Location:ProjectList.php?projectId=".$projectId);
+		 header("Location:listing_list.php");
 	}
 
 
 	 $smarty->assign("ErrorMsg", $ErrorMsg);
-	 /***************Project dropdown*************/
-	 $Project	=	array();
-	 	$qry	=	"SELECT PROJECT_ID,PROJECT_NAME,BUILDER_NAME FROM ".RESI_PROJECT." ORDER BY BUILDER_NAME ASC";
-	 	$res	=	mysql_query($qry);
-
-	 		while ($dataArr = mysql_fetch_array($res))
-			 {
-				array_push($Project, $dataArr);
-			 }
-			 $smarty->assign("Project", $Project);
+	 
 }
 ?>

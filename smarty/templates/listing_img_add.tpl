@@ -176,7 +176,13 @@ $(document).ready(function(){
                 <TD class=h1 align=left background=../images/heading_bg.gif bgColor=#ffffff height=40>
                   <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                     <TR>
-                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18> Add New Listing Images({$ProjectDetail[0]['BUILDER_NAME']} {$ProjectDetail[0]['PROJECT_NAME']})</TD>
+                      <TD class=h1 width="67%"><IMG height=18 hspace=5 src="../images/arrow.gif" width=18> Add/Edit Listing Images-{$listingId}
+                       ({$listingDetail['project_name']}, 
+                       {if $listingDetail['builder_name']} {$listingDetail['builder_name']},{/if} 
+                       {if $listingDetail['bedrooms']}{$listingDetail['bedrooms']}BHK- {/if} 
+                       {if $listingDetail['bathrooms']}{$listingDetail['bathrooms']}T-{/if}
+                       {if $listingDetail['size']} {$listingDetail['size']}SqFt-{/if}
+                       {if $listingDetail['option_type']}{$listingDetail['option_type']}{/if})</TD>
                       <TD align=right ></TD>
                     </TR>
 		  </TBODY></TABLE>
@@ -199,11 +205,11 @@ $(document).ready(function(){
 				</tr>
 
 				<tr>
-				  <td width="20%" align="right" ><b>Project Name :</b><font color = "red">*</font> </td>
+				  <td width="20%" align="right" ><b>Listing Id :</b><font color = "red">*</font> </td>
 				   <td width="30%" align="left" >
 				   
-					{ucwords($ProjectDetail[0]['PROJECT_NAME'])}
-					<input type = "hidden" name = "projectId" value = "{$ProjectDetail[0]['PROJECT_ID']}">
+					{$listingId}
+					<input type = "hidden" name = "listing_id" value = "{$listingId}">
 					
 				   </td>
 				  <td width="50%" align="left" ></td>
@@ -216,7 +222,7 @@ $(document).ready(function(){
 					<option value =''>Select Type</option>
 					{foreach $listing_image_types key=k item=v}
 						
-                        <option value ='{$v}' {if $PType == $v} selected {/if}>{$v}</option>
+                        <option value ='{$v}' {if $PType == $k} selected {/if}>{$v}</option>
                                                    
 						
                     {/foreach}   
@@ -519,15 +525,15 @@ $(document).ready(function(){
 				  
 				  <td colspan = "2" align="right" style="padding-left:152px;" >
 				  <input type="hidden" name="edit_project" value="{$edit_project}" />
-				  {if $edit_project == ''}
-					  <input type="submit" name="Next" id="more" value="Add More" style = "font-size:16px;">
-					   <input type="submit" name="Next" id="Next" value="Next" style = "font-size:16px;">
-					  &nbsp;&nbsp;<input type="submit" name="Skip" id="Skip" value="Skip" style = "font-size:16px;">
-				  {else}
-						<input type="submit" name="Next" id="more" value="Add More" style = "font-size:16px;">
-						<input type="submit" name="Next" id="more" value="Save" style = "font-size:16px;">
+				  
+					  <!--<input type="submit" name="Next" id="more" value="Add More" style = "font-size:16px;">-->
+					   <!-- <input type="submit" name="Next" id="Next" value="Submit" style = "font-size:16px;">
+					  &nbsp;&nbsp;<input type="submit" name="Skip" id="Skip" value="Skip" style = "font-size:16px;"> -->
+				 
+						<!--<input type="submit" name="Next" id="more" value="Add More" style = "font-size:16px;">-->
+						<input type="submit" name="Next" id="Next" value="Submit" style = "font-size:16px;">
 						<input type="submit" name="exit" id="exit" value="Exit" style = "font-size:16px;">
-				  {/if}
+				 
 				  </td>
 				</tr>
 			      </div>
@@ -557,8 +563,8 @@ $(document).ready(function(){
 					<tr>
 						<td width="100%" align="left" >
 				  
-						<div id="imagesDiv">
-						Delete all: <input type='checkbox'  id="hdnCheckUncheck" value='0' name='checkall' onclick=" checkednewAll()">
+						<div id="imagesDiv"><!--
+						Delete all: <input type='checkbox'  id="hdnCheckUncheck" value='0' name='checkall' onclick=" checkednewAll()"> -->
 							<br>
 						<form name="f1" id="f1" method="post" action ="" enctype = "multipart/form-data">
 						   <input type="hidden" name="listing_edit" value="yes" >
