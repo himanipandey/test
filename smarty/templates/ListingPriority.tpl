@@ -315,6 +315,7 @@ $("#create_button").click(function(){
     $("#proj").attr('readonly',false);
     $("#bh3").attr('disabled',false); 
     $('#prs5').val('1');
+    $('#pr').show();
     
 });
 
@@ -515,55 +516,25 @@ $("#lmkSave").click(function(){
 
    
 
-
-
-
-
-    /*temp[0] = cityid;
-    temp[1] = broker_name;
-    temp[2] = project_id;
-    temp[3] = projid;
-    temp[4] = bhk1;
-    temp[5] = facing;
-    temp[6] = size;  
-    temp[7] = bathroom;
-    temp[8] = toilet;
-    temp[9] = tower;
-    temp[10] = floor;
-    temp[11] = price_type;
-    temp[12] = price;
-    temp[13] = trancefer_rate;
-    temp[14] = price_in;
-    temp[15] = flat_number;
-    temp[16] = parking;
-    temp[17] = loan_bank;
-    temp[18] = plc_val;
-    temp[19] = study_room;
-    temp[20] = servant_room;
-
-    var i;
-    for(i = 0; i < temp.length; i++)  {
-        console.log(i + ' - ' + temp[i]);
-    }
-    //alert(bt[0]+'-'+bt[1]+'-'+bt[2]+'-'+bt[3]+'-'+bt[4]);  
-    console.log("---------------------------------");*/
-
+    var $body = $("body");
+    //$("body").addClass("loading"); /*$("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);*/
     $.ajax({
             type: "POST",
-            async: false,
+            //async: false,
             url: '/saveSecondaryListings.php',
-            /*beforeSend: function(){
-              $body = $("body");
-              $body.addClass("loading"); $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);
-            },*/
+            beforeSend: function(){
+              console.log('in ajax beforeSend');
+              $("body").addClass("loading");
+            },
             data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
               
-              
+              console.log('in ajax success');
+              //return;
               if(msg==2){
                 
-               
+               $("body").removeClass("loading");
                 exitButtonClicked();
                 //alert("Listing Successfully updated");
                 /*$body = $("body"); $body.removeClass("loading");
@@ -571,21 +542,23 @@ $("#lmkSave").click(function(){
                 //location.reload();
               }
               else if(msg==1){
+                $("body").removeClass("loading");
                 //$body = $("body");
                 //$body.removeClass("loading");
                 exitButtonClicked();
-                /*alert("Listing Successfully created"); $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
+                //alert("Listing Successfully created"); //$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
                 //location.reload();
               }
               else{
                 //
                 //$body = $("body");
-                //$body.removeClass("loading");
+                $("body").removeClass("loading");
                 alert(msg); /*$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
               }
 
 
             },
+           
           });
 
 
@@ -656,7 +629,6 @@ $("#lmkSave").click(function(){
           url: "{$url12}"+"?query="+$("#project").val().trim()+"&typeAheadType=(project)&city="+$("#cityddEdit :selected").text().trim()+"&rows=10",
           //url: "{$url12}"+"?query="+$("#proj").val().trim()+$("#cityddEdit :selected").text().trim(),
           dataType: "json",
-          async: false,
           data: {
             featureClass: "P",
             style: "full", 
@@ -693,7 +665,6 @@ $("#lmkSave").click(function(){
               //alert("Hello"); 
               url: "{$url13}"+projectId,
               dataType: "json",
-              async: false,
               data: {
                 featureClass: "P",
                 style: "full", 

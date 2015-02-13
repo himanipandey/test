@@ -127,11 +127,24 @@ $('document').ready(function(){
 	});
 
 // ajax loader
-	$body = $("body");
 
+	 /*$('#modal').ajaxStart(function () {
+        $(this).fadeIn('fast');
+    }).ajaxStop(function () {
+        $(this).stop().fadeOut('fast');
+    });
+
+    $('#modal').ajaxStart(function () {
+        $(this).fadeIn('fast');
+    }).ajaxStop(function () {
+        $(this).stop().fadeOut('fast');
+    });*/
+
+	$body = $("body");
+	
 	$(document).on({
-	    ajaxSend: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);},
-	     ajaxComplete: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);}  
+	    ajaxStart: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);},
+	     ajaxStop: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);}  
 
 	   
 	});
