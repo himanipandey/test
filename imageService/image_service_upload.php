@@ -20,7 +20,8 @@ class ImageServiceUpload{
         "city" => "city",
         "suburb" => "suburb",
         "landmark" => "landmark",
-        "company" => "company"
+        "company" => "company",
+        "listing" => "listing"
     );
     static $sec_image_types = array(
         "project" => array(
@@ -30,6 +31,7 @@ class ImageServiceUpload{
                 "Main Others"=>"mainOthers"
             ),
         ),
+       
     );
     static $image_types = array(
         "project" => array(
@@ -116,8 +118,12 @@ class ImageServiceUpload{
             "sportscomplex" => "sportsComplex"
         ),
         "bank" => array("logo" => "logo"),
-        "company" => array("logo" => "logo")
-        );
+        "company" => array("logo" => "logo"),
+        "listing" => array(
+            "Bedroom"=> "Bedroom",
+            "Bathroom"=>"Bathroom", 
+            "Others"=>"Others"),
+    );
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;
