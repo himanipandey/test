@@ -82,6 +82,7 @@ function cleanFields(){
    $('#pr').hide();
    $('#plc3').hide(1);
    $('#bank_list2').hide(1);
+   $("#image_link").html("");
    
 }
 
@@ -96,6 +97,7 @@ function editListing(str){
 
     if(str.id!=null)
       $("#listing_id").val(str.id);
+    $("#image_link").html("<a href=listing_img_add.php?listing_id="+str.id+">Add/Edit Listing Images</a>");
     $("#cityddEdit").val(str.property.project.locality.suburb.city.id);
     //$("#bkn2").val(str.seller.id);
     $("#project").val(str.property.project.name);
@@ -530,9 +532,10 @@ $("#lmkSave").click(function(){
 
             success:function(msg){
               
-              console.log('in ajax success');
+              console.log(msg);
+              msg = $.parseJSON(msg);//console.log(msg.msg);
               //return;
-              if(msg==2){
+              if(msg.code==2){
                 
                $("body").removeClass("loading");
                 exitButtonClicked();
@@ -541,11 +544,12 @@ $("#lmkSave").click(function(){
                  $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
                 //location.reload();
               }
-              else if(msg==1){
+              else if(msg.code==1){
                 $("body").removeClass("loading");
                 //$body = $("body");
-                //$body.removeClass("loading");
-                exitButtonClicked();
+                //$body.removeClass("loading");$("#image_link").html("<a href=c+str.id+">Add/Edit Listing Images</a>");
+                location.href = "listing_img_add.php?listing_id="+msg.msg;
+                //exitButtonClicked();
                 //alert("Listing Successfully created"); //$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
                 //location.reload();
               }
@@ -553,7 +557,7 @@ $("#lmkSave").click(function(){
                 //
                 //$body = $("body");
                 $("body").removeClass("loading");
-                alert(msg); /*$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
+                alert(msg.msg); /*$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
               }
 
 
@@ -1381,6 +1385,13 @@ $("#plc3").keypress(function (e) {
                             <textarea type=text name="review3" id="review3" style="height:100px;width:250px" >
                             </textarea>
                         </td>
+                      </tr>
+
+                      <tr >
+                        <td id = "image_link" colspan="4">
+                            
+                        </td> 
+                        
                       </tr>
                       <!--<a target="_blank" href="https://www.proptiger.com/">  
                         <IMG STYLE="position:absolute; TOP:950px; LEFT:330px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">

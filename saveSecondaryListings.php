@@ -174,6 +174,7 @@ else {
         //echo $ck_new;
         if($ck_new!='')
         {    
+            $returnArr = array();
             if($listing_id!=''){
                 $uri = $uri."/".$listing_id;
                 $response = \Httpful\Request::put($uri)           
@@ -185,10 +186,16 @@ else {
                 //var_dump($response);
 
                 if($response->body->statusCode=="2XX"){
-                    echo "2";
+                   // echo "2";
+                    $returnArr['code'] = "2";
+                    $returnArr['msg'] = "update";
+                    echo json_encode($returnArr);
                 }
                 else{
-                     echo $response->body->error->msg;
+                     //echo $response->body->error->msg;
+                    $returnArr['code'] = "0";
+                    $returnArr['msg'] = $response->body->error->msg;
+                    echo json_encode($returnArr);
                 }
             }
             else{
@@ -200,10 +207,17 @@ else {
                 //echo "create";
                 //var_dump($response);
                 if($response->body->statusCode=="2XX"){
-                    echo "1";
+                    $id = $response->body->data->id;
+
+                    $returnArr['code'] = "1";
+                    $returnArr['msg'] = $id;
+                    echo json_encode($returnArr);
                 }
                 else{
-                     echo $response->body->error->msg;
+                     //echo $response->body->error->msg;
+                    $returnArr['code'] = "0";
+                    $returnArr['msg'] = $response->body->error->msg;
+                    echo json_encode($returnArr);
                 }
             }
 
