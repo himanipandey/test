@@ -12,7 +12,7 @@ ResiProject::delete_website_version();
 ResiProject::partially_migrate_projects();
 //Locality::updateLocalityCoordinates();
 
-$missingProjects = ResiProject::get_recent_projects_without_website_version(86400*2);
+$missingProjects = ResiProject::get_recent_projects_without_website_version(86400*7);
 
 foreach ($missingProjects as $project) {
     $projectMigration = new ProjectMigration();
