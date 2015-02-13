@@ -17,97 +17,7 @@ function refreshimg(ct)
 	}		
 }
 
-function tagged_date_change(e)
-{
-	
-	if($('select#PType').val() == 'Construction Status')
-	{
-		taggedYear = $("#"+e.id).val().substring(2,4);
-		taggedMonth = $("#"+e.id).val().substring(5,7);
-		if(taggedMonth=="01")taggedMonth="Jan";
-		else if(taggedMonth=="02")taggedMonth="Feb";
-		else if(taggedMonth=="03")taggedMonth="March";
-		else if(taggedMonth=="04")taggedMonth="Apr";
-		else if(taggedMonth=="05")taggedMonth="May";
-		else if(taggedMonth=="06")taggedMonth="June";
-		else if(taggedMonth=="07")taggedMonth="July";
-		else if(taggedMonth=="08")taggedMonth="Aug";
-		else if(taggedMonth=="09")taggedMonth="Sept";
-		else if(taggedMonth=="10")taggedMonth="Oct";
-		else if(taggedMonth=="11")taggedMonth="Nov";
-		else if(taggedMonth=="12")taggedMonth="Dec";
 
-		taggedMonthval = taggedMonth+"-"+taggedYear;
-
-
-		var element = $(e).parent('div').parent('div').children(":text");
-		var towertext = $(e).parent().parent().children(".taggedDate").children("select").children(":selected").text();
-		if(towertext.toLowerCase().search(/select|other/i) >= 0)
-			element.val($('select#PType').val()+" " +taggedMonthval);
-		else
-			element.val(towertext+ " " + $('select#PType').val()+" " +taggedMonthval);
-	}
-	
-}
-
-function tower_change(e)
-{
-	
-	if($('select#PType').val() == 'Construction Status' || $('select#PType').val() == 'Cluster Plan')
-	{
-		var element = $(e).parent('div').parent('div').children(":text");
-		
-		var date = $(e).parent().parent().children(".taggedMonth").children("input:text").val();
-		if($('select#PType').val() == 'Cluster Plan'){
-			var floorfrom = $(e).siblings("input:[id='floor_from']").val().trim();
-			var floorto = $(e).siblings("input:[id='floor_to']").val().trim();
-			if($(e).children(":selected").text().toLowerCase().search(/select|other/i) >= 0){
-				if(floorfrom.trim()=="" && floorto.trim()=="")
-					element.val($('select#PType').val());
-				else if(floorfrom=="" || floorto=="")
-					element.val($('select#PType').val()+" for "+ appendToNo(floorfrom) + appendToNo(floorto) + " Floor");
-				else
-					element.val($('select#PType').val()+" from "+ appendToNo(floorfrom)+" to "+appendToNo(floorto) +" Floor");
-			}
-			else{
-				if(floorfrom=="" && floorto=="")
-					element.val($(e).children(":selected").text() + " "+$('select#PType').val());
-				else if(floorfrom=="" || floorto=="")
-					element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" for "+ appendToNo(floorfrom) + appendToNo(floorto) + " Floor");
-				else
-					element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" from "+ appendToNo(floorfrom)+" to "+appendToNo(floorto) +" Floor");
-			}	
-		}
-		else if($('select#PType').val() == 'Construction Status'){
-
-			taggedYear = date.substring(2,4);
-		taggedMonth = date.substring(5,7);
-		if(taggedMonth=="01")taggedMonth="Jan";
-		else if(taggedMonth=="02")taggedMonth="Feb";
-		else if(taggedMonth=="03")taggedMonth="March";
-		else if(taggedMonth=="04")taggedMonth="Apr";
-		else if(taggedMonth=="05")taggedMonth="May";
-		else if(taggedMonth=="06")taggedMonth="June";
-		else if(taggedMonth=="07")taggedMonth="July";
-		else if(taggedMonth=="08")taggedMonth="Aug";
-		else if(taggedMonth=="09")taggedMonth="Sept";
-		else if(taggedMonth=="10")taggedMonth="Oct";
-		else if(taggedMonth=="11")taggedMonth="Nov";
-		else if(taggedMonth=="12")taggedMonth="Dec";
-
-		taggedMonthval = taggedMonth+"-"+taggedYear;
-
-			if($(e).children(":selected").text().toLowerCase().search(/select|other/i) >= 0)
-			element.val($('select#PType').val()+" "+ taggedMonthval);
-			else
-			element.val($(e).children(":selected").text() + " "+$('select#PType').val()+" "+ taggedMonthval);
-		}
-
-		
-			
-	}
-	
-}
 function isNumeric(val) {
         var validChars = '0123456789.';
         var validCharsforfirstdigit = '-01234567890';
@@ -122,107 +32,6 @@ function isNumeric(val) {
 
 
         return true;
-}
-function floor_change_from(e)
-{
-	if(isNumeric($(e).val()))
-	{
-		if($('select#PType').val() == 'Cluster Plan')
-		{
-			
-			var titlefield = $(e).parent('div').parent('div').children(":text");
-			var	floor_to = $(e).siblings(":text");
-			var towertext = $(e).siblings("select").children(":selected").text();
-			if(towertext.toLowerCase().search(/select|other/i) >= 0){
-				if($(e).val().trim()=="" && floor_to.val().trim()=="")
-					titlefield.val("Cluster Plan");
-				else if ($(e).val().trim()=="" || floor_to.val().trim()=="")
-					titlefield.val("Cluster Plan for " +appendToNo($(e).val())+appendToNo(floor_to.val()) +" Floor");
-				else{
-					if(validateFloor($(e).val().trim(), floor_to.val().trim()) =="true" )
-						titlefield.val("Cluster Plan from " +appendToNo($(e).val())+ " to " +appendToNo(floor_to.val()) +" Floor");
-					else{
-						alert("Floor To should be greater than Floor From");
-						$(e).val("");floor_to.val("");
-						titlefield.val("Cluster Plan");
-
-					}
-
-				}
-			}
-			else{
-				if($(e).val().trim()=="" && floor_to.val().trim()=="")
-					titlefield.val(towertext+ " Cluster Plan");
-				else if($(e).val().trim()=="" || floor_to.val().trim()=="")
-					titlefield.val(towertext+ " Cluster Plan for " +appendToNo($(e).val())+appendToNo(floor_to.val()) +" Floor");
-				else{
-					if(validateFloor($(e).val().trim(), floor_to.val().trim()) =="true" )
-						titlefield.val(towertext+ " Cluster Plan from " +appendToNo($(e).val())+" to "+appendToNo(floor_to.val()) +" Floor");
-					else{
-						alert("Floor To should be greater than Floor From");
-						$(e).val("");floor_to.val("");
-						titlefield.val(towertext+ " Cluster Plan"); 
-					}
-
-				}
-			}
-				
-		}
-	}
-	else{
-		alert("Please Provide a numeric Value in Floor No. fields.");
-		$(e).val("");
-	}
-}
-
-function floor_change_to(e)
-{
-	
-	if(isNumeric($(e).val()))
-	{
-		if($('select#PType').val() == 'Cluster Plan')
-		{
-			
-			var titlefield = $(e).parent('div').parent('div').children(":text");
-			var	floor_from = $(e).siblings(":text");
-			var towertext = $(e).siblings("select").children(":selected").text();
-			if(towertext.toLowerCase().search(/select|other/i) >= 0){
-				if($(e).val().trim()=="" && floor_from.val().trim()=="")
-					titlefield.val("Cluster Plan");
-				else if ($(e).val().trim()=="" || floor_from.val().trim()=="")
-					titlefield.val("Cluster Plan for " +appendToNo(floor_from.val())+appendToNo($(e).val())+" Floor");
-				else{
-					if(validateFloor(floor_from.val().trim(), $(e).val().trim()) =="true" )
-						titlefield.val("Cluster Plan from " +appendToNo(floor_from.val())+" to "+appendToNo($(e).val())+" Floor");
-					else{
-						alert("Floor To should be greater than Floor From");
-						$(e).val("");floor_from.val("");
-						titlefield.val("Cluster Plan"); 
-					}
-				}
-			}
-			else{
-				if($(e).val().trim()=="" && floor_from.val().trim()=="")
-					titlefield.val(towertext+ " Cluster Plan");
-				else if($(e).val().trim()=="" || floor_from.val().trim()=="")
-					titlefield.val(towertext+ " Cluster Plan for "+appendToNo(floor_from.val())+appendToNo($(e).val()) +" Floor");
-				else{
-					if(validateFloor(floor_from.val().trim(), $(e).val().trim()) =="true" )
-						titlefield.val(towertext+ " Cluster Plan from "+appendToNo(floor_from.val())+" to "+appendToNo($(e).val()) +" Floor");
-					else{
-						alert("Floor To should be greater than Floor From");
-						$(e).val("");floor_from.val("");
-						titlefield.val(towertext+ " Cluster Plan"); 
-					}
-				}
-			}
-				
-		}
-	}
-	else{
-		alert("Please Provide a numeric Value in Floor No. fields.");
-		$(e).val("");
-	}
 }
 
 
@@ -287,83 +96,36 @@ $(document).ready(function(){
 	 $('.taggedDate').hide();
 	  $('.taggedMonth').hide();
 	  $('input[name= "title[]"]').each(function(index, elm){
-					if($('select#PType').val() != "Amenities")	
-					 $(this).val($('select#PType').val());
-					else{
-							$(this).val('');
-					}
 					
-					 if($('select#PType').val() != "Cluster Plan"){	
-					 	$(this).attr("readonly", true);
-					}
-					else{
-						$(this).attr("readonly", false);
-					}
+					 $(this).val($('select#PType').val());
+					$(this).attr("readonly", true);
+					
+					
+					
 
 				});
-	if($('select#PType').val() == 'Construction Status'){
-			$('.taggedDate').each(function(){
-			  $(this).show();
-			  if($(this).children('#tower_dropdown').length == 0){
-			 //	$(this).append('&nbsp;&nbsp;<b>Month:<font color = "red">*</font>&nbsp;&nbsp;');
-			//	$(this).append($('#select_date').html());
-				$(this).append('&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;');
-				$(this).append($('#select_tower').html());
-			 }
-					
-			});
-			$('.taggedMonth').each(function(){
-						
-					 $(this).show();	
-				});
-		
-	}
+
 	var itype = $('select#PType').val();	         
-	if(itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other' ){
+	
  	
 			$('.taggedDate').each(function(){
 			  $(this).show();
 			  if($(this).children('#tower_dropdown').length == 0){
 				$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
 				$(this).append($('#select_display_order').html());
-				if(itype=='Amenities')
-			  	$(this).append($('#amenitiesTypeDiv').html());
+				
 			  }
 			  
 
 					
 			});
-	}
-	if($('select#PType').val() == 'Cluster Plan'){
-				
-				$('.taggedDate').each(function(){
-				  $(this).show();
-				  
-				 if($(this).children('#tower_dropdown').length == 0){
-					$(this).append('&nbsp;&nbsp;<b>Tower:<font color = "red">*</font></b>&nbsp;&nbsp;');
-					$(this).append($('#select_tower').html());
-				 }
-				 if($(this).children('#floor_from').length == 0){
-					$(this).append($('#select_floor').html());
-				  }
-							
-				});
-			 }
+	
+
 	
 	 $('select#PType').change(function(k, v){
-	 			$("#amenitiesTypeDiv").hide();
 	 			$('input[name= "title[]"]').each(function(index, elm){
-					if($('select#PType').val() != "Amenities")	
-					 $(this).val($('select#PType').val());
-					else{
-							$(this).val('');
-					}
-					// $(this).attr("readonly", true);
-					 if($('select#PType').val() != "Cluster Plan"){	
-					 	$(this).attr("readonly", true);
-					}	
-					else
-						$(this).attr("readonly", false);
+					$(this).val($('select#PType').val());
+					$(this).attr("readonly", false);
 				});
 	 	
 			$('.taggedDate').each(function(){
@@ -373,52 +135,18 @@ $(document).ready(function(){
 						
 					 $(this).hide();	
 				})
-			 if($(this).val() == 'Construction Status'){
-				 $('.taggedDate').each(function(){
-					 $(this).show();
-					 if($(this).children('#tower_dropdown').length == 0){
-					//	$(this).append('&nbsp;&nbsp;<b>Month:<font color = "red">*</font>&nbsp;&nbsp;');
-					//	$(this).append($('#select_date').html());
-						$(this).append('&nbsp;&nbsp;<b>Tower:&nbsp;&nbsp;');
-						$(this).append($('#select_tower').html());
-					 }
-					
-				 });
-				$('.taggedMonth').each(function(){
-						
-					 $(this).show();	
-				});
-					
-			 }
+			 
 		var itype = $('select#PType').val();	         
-		if( itype== 'Elevation' || itype== 'Amenities' || itype== 'Main Other'){
-				
 				$('.taggedDate').each(function(){
 				  $(this).show();
 				  if($(this).children('#tower_dropdown').length == 0){
 					$(this).append('&nbsp;&nbsp;<b>Display Order:&nbsp;&nbsp;');  
 					$(this).append($('#select_display_order').html());
-					if(itype=='Amenities')
-			  			$(this).append($('#amenitiesTypeDiv').html());
 				  }
 						
 				});
-			 }
-	    if($('select#PType').val() == 'Cluster Plan'){
-	    		
-				$('.taggedDate').each(function(){
-				  $(this).show();
-				  
-				 if($(this).children('#tower_dropdown').length == 0){
-					$(this).append('&nbsp;&nbsp;<b>Tower:<font color = "red">*</font></b>&nbsp;&nbsp;');
-					$(this).append($('#select_tower').html());
-				 }
-				 if($(this).children('#floor_from').length == 0){
-					$(this).append($('#select_floor').html());
-				  }
-							
-				});
-			 }
+			 
+	   
 
 		});
 
@@ -485,27 +213,15 @@ $(document).ready(function(){
 				  <td width="20%" align="right" ><b>Image Type :</b><font color = "red">*</font></td>
 				   <td width="30%" align="left" >
 					<select name = "PType" id = "PType">
-						<option value =''>Select Type</option>
-                                                {if $linkShowHide == 0}
-                                                    <option value ='Elevation' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Elevation'} selected {/if}>Elevation</option>
-                                                    <option value ='Amenities' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Amenities'} selected {/if}>Amenities</option>
-                                                    <option value ='Main Other' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Main Other'} selected {/if}>Main Other</option>
-                                                    <option value ='Location Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Location Plan'} selected {/if}>Location Plan</option>
-                                                    <option value ='Layout Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Layout Plan'} selected {/if}>Layout Plan</option>
-                                                    <option value ='Site Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Site Plan'} selected {/if}>Site Plan</option>
-                                                    <option value ='Master Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Master Plan'} selected {/if}>Master Plan</option>
-                                                    <option value ='Cluster Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Cluster Plan'} selected {/if}>Cluster Plan</option>
-                                                    <option value ='Construction Status' {if $PType == 'Construction Status' || $imagetype == 'const'} selected {/if}>Construction Status</option>
-                                                    <option value ='Payment Plan' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Payment Plan'} selected {/if}>Payment Plan</option>
-                                                    <!--<option value ='Specification' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Specification'} selected {/if}>Specification</option>
-                                                    <option value ='Price List' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Price List'} selected {/if}>Price List</option>
-                                                    <option value ='Application Form' {if $imagetype == 'const'} disabled="disabled" {/if} {if $PType == 'Application Form'} selected {/if}>Application Form</option>-->
-						{else}
-                                                    <option value ='Construction Status' {if $PType == 'Construction Status' || $imagetype == 'const'} selected {/if}>Construction Status</option>
-                                                {/if}
+					<option value =''>Select Type</option>
+					{foreach $listing_image_types key=k item=v}
+						
+                        <option value ='{$v}' {if $PType == $v} selected {/if}>{$v}</option>
+                                                   
+						
+                    {/foreach}   
 					</select>	
-                                        <input type="hidden" name = "linkShowHide" value="{$linkShowHide}">
-				  
+                      
 				 
 				 	</td>
 				</tr>
@@ -821,6 +537,143 @@ $(document).ready(function(){
 			 </form>
           </td>
 		  </tr>
+
+
+		 <!-- image edit  --> 
+
+		<TR>
+                <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+				  <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=1 style = "border:1px solid;">
+					<form method="post" enctype="multipart/form-data">
+					<tr>
+					<td  align = "left" colspan = "2">
+						{if count($ErrorMsgEdit)>0}
+					   {foreach from=$ErrorMsgEdit item=data}
+					   <font color = "red" style="font-size:17px;">{$data}</font><br>
+					   {/foreach}
+					{/if}
+					</td>
+				</tr>
+					<tr>
+						<td width="100%" align="left" >
+				  
+						<div id="imagesDiv">
+						Delete all: <input type='checkbox'  id="hdnCheckUncheck" value='0' name='checkall' onclick=" checkednewAll()">
+							<br>
+						<form name="f1" id="f1" method="post" action ="" enctype = "multipart/form-data">
+						   <input type="hidden" name="listing_edit" value="yes" >
+							<table cellpadding=0 cellspacing=1>
+								<tr>
+									<td>
+										<table  cellpadding=0 cellspacing=1 bgcolor='#c2c2c2'>
+											<tr bgcolor='#ffffff'>
+									
+												{$cnt = 0}
+												{$date_cnt = 0}
+												{section name=data loop=$ImageDataListingArr}
+						
+												<td class = "tdcls_{$cnt}" >
+													<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
+														
+															<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}
+															
+															" target="_blank">
+																<img src="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}?width=130&height=100" height="70px" width="70px" title="{$ImageDataListingArr[data].SERVICE_IMAGE_PATH}" alt="{$ImageDataListingArr[data].alt_text}" />
+															</a>
+															<br>
+														Image Type:{$ImageDataListingArr[data].PLAN_IMAGE}<input type = "text" readonly name = "PType[{$cnt}]" id="PType{$cnt}"
+														value = "{$ImageDataListingArr[data].PLAN_TYPE}"
+														STYLE="width: 165px;border:1px solid #c3c3c3;">
+                                                                                                                
+                                                                                                                <input type = "hidden" name = "currentPlanId[{$cnt}]"
+														value = "{$ImageDataListingArr[data].PROJECT_PLAN_ID}">
+
+														<input type="hidden" value="{$path}{$ImageDataListingArr[data].PLAN_IMAGE}" name="property_image_path[{$cnt}]" /><br><br>
+                                                        <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
+														Image Title:<font color = "red">*</font><input type="text" name="title[{$cnt}]" {if $ImageDataListingArr[data].PLAN_TYPE != 'Cluster Plan'}readonly="readonly"{/if} value = "{$ImageDataListingArr[data].TITLE}"  STYLE="width: 165px;border:1px solid #c3c3c3;" id="title{$cnt}"/><br><br>
+														{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
+														<div class="taggedDate">
+															Tagged Date:<font color = "red">*</font>&nbsp;&nbsp;
+															<input name="img_date{$cnt}" type="text" class="formstyle2" id="img_date{$cnt}" readonly="1" size="10"  value="{{$ImageDataListingArr[data].tagged_month}}" onchange="tagged_date_change({$cnt})"/>  <img src="../images/cal_1.jpg" id="img_date_trigger{$cnt}" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+															<br><br>
+															Tower:&nbsp;&nbsp;
+															<select name= "txtTowerId[{$cnt}]" onchange='tower_change({$cnt})' id="tower{$cnt}">
+																<option value="" >--Select Tower--</option>
+																{section name=towerdata loop=$towerDetail}
+																	<option value="{$towerDetail[towerdata].TOWER_ID}" {if $ImageDataListingArr[data].tower_id == $towerDetail[towerdata].TOWER_ID} selected {/if} >{$towerDetail[towerdata].TOWER_NAME}</option>
+																{/section}
+																	<option value="0" {if $ImageDataListingArr[data].tower_id == "0"} selected {/if}>Other</option>
+															</select>
+														</div>
+														{/if}
+														{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
+														<div class="taggedDate1">
+															Tower:<font color = "red">*</font>&nbsp;&nbsp;
+															<select name= "txtTowerId[{$cnt}]" onchange='tower_change({$cnt})' id="tower{$cnt}">
+																<option value="" >--Select Tower--</option>
+																{section name=towerdata loop=$towerDetail}
+																	<option value="{$towerDetail[towerdata].TOWER_ID}" {if $ImageDataListingArr[data].tower_id == $towerDetail[towerdata].TOWER_ID} selected {/if} >{$towerDetail[towerdata].TOWER_NAME}</option>
+																{/section}
+																{if count($towerDetail)<1}
+																	<option value="0" {if $ImageDataListingArr[data].tower_id == "0"} selected {/if}>Other</option>
+																{/if}
+															</select>
+															<br><br>
+															Floor No. From:<font color = "red"></font>&nbsp;&nbsp;<input name="floor_from{$cnt}" type="text" class="formstyle2" id="floor_from{$cnt}" size="10"  onchange="floor_change_from({$cnt})" />	
+															&nbsp;&nbsp;<br>Floor No. To:<font color = "red"></font>&nbsp;&nbsp;
+																<input name="floor_to[{$cnt}]" type="text" class="formstyle2" id="floor_to{$cnt}" size="10"  onchange="floor_change_to({$cnt})" />
+														</div>
+														{/if}
+														
+															Display Order:&nbsp;&nbsp;
+															<select name= "txtdisplay_order[{$cnt}]" >
+																{foreach from=$display_order_div_edit key=keyss item=datass}
+																	<option value="{$keyss}"  {if $ImageDataListingArr[data].display_order == $keyss} selected {/if}>{$datass}</option>
+																{/foreach}																	
+															</select>
+															<br/>
+														
+														<br/><br/>
+														Delete:<input type="radio" name="chk_name[{$cnt}]" value="delete_img" id="chk_{$cnt}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														Edit:<input type="radio" name="chk_name[{$cnt}]"  value="edit_img"><br><br>
+														New Image?:<input type="file" name="img[{$cnt}]"/>
+														
+														
+
+
+													</div>
+												</td>
+												{$cnt = $cnt+1}
+												{/section}
+											</tr>
+										</table>
+									</td>
+								</tr>
+					
+								<tr>
+								 
+								  <td colspan = "2" align="right" style="padding-left:152px;" >
+								  <span id = 'rowcount' style = 'display:none;'>{$count}</span>
+								   <span id = 'rowPropCount' style = 'display:none;'>{$countPropImages}</span>
+								  
+								  <input type="hidden" name="projectId" value="{$projectId}" />
+								  <input type="submit" name="btnSave" id="btnSave" value="Submit" style = "font-size:16px;"  >
+								  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style = "font-size:16px;">
+								  </td>
+								</tr>
+								</form>
+						</table>
+			
+
+				</div>
+				</td>
+				</tr>
+
+
+
+
+
+
 		</TABLE>
 	      </TD>
             </TR>

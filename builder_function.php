@@ -2277,6 +2277,39 @@ function checkDuplicateDisplayOrder($projectId, $display_order, $image_type, $se
 				
 	return ($vcount->cnt)? $vcount->cnt : 0; */
 }
+
+function checkDuplicateDisplayOrderListing($listingId, $display_order, $image_type, $service_image_id=0 ){
+    
+    $url = ImageServiceUpload::$image_upload_url."?objectType=listing&objectId=".$listingId;
+
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+
+    $orderArr = array();
+    $cnt=0; 
+    //echo "submit:".$image_type.$display_order.$service_image_id."<br>";
+    foreach($imgPath->data as $k=>$v){
+        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
+        $str = ucfirst (implode(" ",$arr));
+//echo $v->id.$str.$v->priority."<br>";
+        if($service_image_id==$v->id){
+
+        }
+        else if($str==$image_type && $v->priority!="5"){
+           // if (!in_array($v->priority, $orderArr)){
+             //   array_push($orderArr, $v->priority)
+           // }
+
+            if($v->priority==$display_order)
+                {$cnt=1; echo "yes";}
+        }
+
+    }
+
+    return $cnt;
+   
+}
+
 function updateD_Availablitiy($projectId){
 	
 	$no_of_phases = 0;

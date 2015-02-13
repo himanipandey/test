@@ -120,9 +120,13 @@ class ImageServiceUpload{
         "bank" => array("logo" => "logo"),
         "company" => array("logo" => "logo"),
         "listing" => array(
-            "Bedroom"=> "Bedroom",
-            "Bathroom"=>"Bathroom", 
-            "Others"=>"Others"),
+            "bedroom"=> "bedroom",
+            "bathroom"=>"bathroom",
+            "balcony"=>"balcony", 
+            "living"=> "living",
+            "dining"=> "dining",
+            "others"=> "others",
+            ),
     );
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
