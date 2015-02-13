@@ -554,29 +554,31 @@ $("#lmkSave").click(function(){
             url: '/saveSecondaryListings.php',
             /*beforeSend: function(){
               $body = $("body");
-              $body.addClass("loading"); $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);*/
-            },
+              $body.addClass("loading"); $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);
+            },*/
             data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
               
               
               if(msg==2){
-                /*$body = $("body");
+                
                
-                //exitButtonClicked();
-                alert("Listing Successfully updated"); $body.removeClass("loading");
+                exitButtonClicked();
+                //alert("Listing Successfully updated");
+                /*$body = $("body"); $body.removeClass("loading");
                  $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
-                location.reload();
+                //location.reload();
               }
               else if(msg==1){
-                $body = $("body");
+                //$body = $("body");
                 //$body.removeClass("loading");
-                //exitButtonClicked();
+                exitButtonClicked();
                 /*alert("Listing Successfully created"); $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
-                location.reload();
+                //location.reload();
               }
               else{
+                //
                 //$body = $("body");
                 //$body.removeClass("loading");
                 alert(msg); /*$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
