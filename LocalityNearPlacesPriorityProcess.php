@@ -12,7 +12,6 @@ else if(isset($_POST['desc_x'])) $orderby = 'DESC';
 $cityId = $_REQUEST['citydd']; 
 
 	
-
 $smarty->assign('cityId',$cityId);
 
 $suburbArr = array();

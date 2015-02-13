@@ -11,18 +11,19 @@ include("modelsConfig.php");
 
 include("includes/configs/configs.php");
 
-include("builder_function.php");
+include("listing_function.php");
 //die("here");
-include("function/functions_priority.php");
+include("function/functions_listing.php");
+include("httpful.phar");
 //die("here");
 
 AdminAuthentication();
 //die("here");
 
-    include('LocalityNearPlacesPriorityProcess.php');
+    include('ListingPriorityProcess.php');
     //die("here");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
-	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."localityNearPlacesPriority.tpl");
+	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."ListingPriority.tpl");
 	
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 	

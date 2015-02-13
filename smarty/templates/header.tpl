@@ -13,9 +13,7 @@
 	<!-- <link href="{$FORUM_SERVER_PATH}css/calendar.css" rel="stylesheet" type="text/css">
 	<link href="{$FORUM_SERVER_PATH}css/picker.css" rel="stylesheet" type="text/css"> -->
 	<!-- <script language="javascript" src="{$FORUM_SERVER_PATH}js/calendar.js"></script>
-	<script language="javascript" src="{$FORUM_SERVER_PATH}js/picker.js"></script>
-
- -->
+	<script language="javascript" src="{$FORUM_SERVER_PATH}js/picker.js"></script> -->
 	
 </head>
 <body >
