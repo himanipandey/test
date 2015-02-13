@@ -26,7 +26,7 @@
 
     $res = mysql_query($sql) or die(mysql_error());
     $listingDetail=mysql_fetch_assoc($res);
-    var_dump($listingDetail);
+    //var_dump($listingDetail);
     $smarty->assign("listingDetail", $listingDetail);
 
 

@@ -189,7 +189,7 @@ $(document).ready(function(){
 		</TD>
 	      </TR>
               <TR>
-                <TD vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
+                <TD vAlign="top" align="middle" class="backgorund-rt" height="250"><BR>
 			 <form method="post" enctype="multipart/form-data" >
 			  <TABLE cellSpacing=2 cellPadding=2 width="43%" align=center border=1 style = "border:1px solid;">
 			   
