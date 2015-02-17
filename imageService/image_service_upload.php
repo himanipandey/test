@@ -125,6 +125,7 @@ class ImageServiceUpload{
             "balcony"=>"Balcony", 
             "living"=> "Living",
             "dining"=> "Dining",
+            "kitchen"=> "Kitchen",
             "other"=> "Other",
             ),
     );

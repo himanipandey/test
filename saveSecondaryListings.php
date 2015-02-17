@@ -102,6 +102,7 @@ else {
         $pricePerUnitArea =0;
     if($_POST['price'] !=NaN){
         $price = $_POST['price'];
+        $price = round($price, -2);
     }
     else
         $price =0;

@@ -176,7 +176,7 @@ function editListing(str){
        }
       else if(str.currentListingPrice.price >0) {
         $("#prs5").val('1');
-        var price_value = parseFloat(str.currentListingPrice.price);
+        var price_value = parseFloat(str.currentListingPrice.price).toFixed(2);
          price_value = price_value/100000;
          price_value = price_value.toFixed(2).toString();
          $("#prs3").val(price_value);
@@ -412,14 +412,19 @@ $("#lmkSave").click(function(){
     var other_prs = $("#othr_prs2").val().trim();
     var flag = 0;
     
-    var ops = parseFloat(other_prs);
+    var ops = parseFloat(other_prs).toFixed(2);
     if (price_type==1){
       price = $("#prs3").val().trim();
       if ($('[name="lkhs1"]').is(':checked'))  {
-        price = parseFloat(price) * 100000;
+        if(price!=''){
+
+          price = parseInt(parseFloat(price).toFixed(2) * 100000);
+        }
         
       } else {
-        price = parseFloat(price) * 10000000;
+        if(price!=''){
+          price = parseInt(parseFloat(price).toFixed(2) * 10000000);
+        }
       }
 
       
@@ -435,21 +440,25 @@ $("#lmkSave").click(function(){
 
     }
 
-    
+console.log(price);
+//return true;    
     
 
-    
+  /*  function strip(number) {
+return (parseFloat(number.toPrecision(2)));
+}*/
     
 
     var transfer_new;
     var trancefer_rate = $("#tfr2").val().trim();
     var price_in = "Lakhs";    
     if ($('[name="lkhs2"]').is(':checked'))  {
-      transfer_new = parseFloat(trancefer_rate) * 100000; 
+      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
     } else {
-      transfer_new = parseFloat(trancefer_rate) * 10000000;
+      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000;
     }
-
+console.log(transfer_new);
+//return true;
     var appratment = $("#appartment3 :selected").text();
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
