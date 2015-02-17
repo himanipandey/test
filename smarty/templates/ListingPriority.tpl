@@ -417,6 +417,7 @@ $("#lmkSave").click(function(){
       price = $("#prs3").val().trim();
       if ($('[name="lkhs1"]').is(':checked'))  {
         if(price!=''){
+
           price = parseInt(parseFloat(price).toFixed(2) * 100000);
         }
         
