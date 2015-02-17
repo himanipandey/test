@@ -2116,10 +2116,9 @@ function basic_info_bt_clicked(){
                           <td width="30%" align="left">
                            <select id="device" name="device" valign="center"> 
                               <option name=one value='0'>Select Device Used</option>
-                              <option name=one value='1'>Desktop</option>
-                              <option name=two value='2'>Laptop</option>
-                              <option name=one value='3'>Smart Phone</option>
-                              <option name=two value='4'>Tablet</option>
+                              {foreach from=$devices key=k item=v}
+                                <option name=one value='{$k}'>{$v}</option>
+                              {/foreach}
                           </select>
                           </td>
                           <td width="20%" align="left" id="errmsgdevice"></td>

@@ -3,6 +3,9 @@
     /*******Auth code******/
     $builderAuth = isUserPermitted('builder', 'manage');
     $smarty->assign("builderAuth", $builderAuth);
+
+    $authorityAuth = isUserPermitted('authority', 'manage');
+    $smarty->assign("authorityAuth", $authorityAuth);
     
     $bulkProjUpdateAuth = isUserPermitted('bulk-project-update', 'read');
     $smarty->assign("bulkProjUpdateAuth", $bulkProjUpdateAuth);

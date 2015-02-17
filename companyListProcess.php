@@ -1,5 +1,5 @@
 <?php
-print("<pre>");
+//print("<pre>");
 $compid= $_REQUEST['compid'];
 
 $typeArr = Company::getCompanyType(); 
@@ -20,6 +20,9 @@ $smarty->assign('resiProjectType', $resiProjectType);
 
 $transactionType = TransactionType::TransactionTypeArr();
 $smarty->assign('transactionType', $transactionType);
+
+$devices = Devices::getAllDevices();
+$smarty->assign('devices', $devices);
 
 //print_r($transactionType);
 
@@ -49,7 +52,7 @@ $namearr = Company::getCompanyNameByQuery('br');
 
 
 //get company logo
-/*foreach ($compArr as $k => $v) {
+foreach ($compArr as $k => $v) {
 	# code...
 
 	$objectId = $v['id'];
@@ -67,7 +70,7 @@ $namearr = Company::getCompanyNameByQuery('br');
         $compArr[$k]['image_id'] = $v1->id;
     }
 
-}*/
+}
 
 $smarty->assign("compArr", $compArr);
 
