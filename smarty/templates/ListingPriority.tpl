@@ -416,10 +416,14 @@ $("#lmkSave").click(function(){
     if (price_type==1){
       price = $("#prs3").val().trim();
       if ($('[name="lkhs1"]').is(':checked'))  {
-        price = parseFloat(price).toFixed(2) * 100000;
+        if(price!=''){
+          price = parseInt(parseFloat(price).toFixed(2) * 100000);
+        }
         
       } else {
-        price = parseFloat(price).toFixed(2) * 10000000;
+        if(price!=''){
+          price = parseInt(parseFloat(price).toFixed(2) * 10000000);
+        }
       }
 
       
@@ -439,7 +443,9 @@ console.log(price);
 //return true;    
     
 
-    
+  /*  function strip(number) {
+return (parseFloat(number.toPrecision(2)));
+}*/
     
 
     var transfer_new;
