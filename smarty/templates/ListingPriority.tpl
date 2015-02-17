@@ -436,7 +436,7 @@ $("#lmkSave").click(function(){
     }
 
 console.log(price);
-return true;    
+//return true;    
     
 
     
@@ -450,7 +450,8 @@ return true;
     } else {
       transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000;
     }
-
+console.log(transfer_new);
+//return true;
     var appratment = $("#appartment3 :selected").text();
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
