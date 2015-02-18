@@ -210,8 +210,14 @@ function writeToImageService($imageParams){
                // print_r($service_extra_paramsArr);//die();
 
         if($params['delete']=="yes"){
-             $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id']));
+            if($params['dtype']=="3D"){
+                $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id'], "dtype" => "3D" ));
                 $postArr[$k] = $s3upload->delete();
+            }
+            else{
+                $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id']));
+                $postArr[$k] = $s3upload->delete();
+            } 
         }        
         else if($IMG==""){
                     //print'<pre>';
@@ -300,13 +306,23 @@ function writeToImageService($imageParams){
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 //die();
-////print'<pre>';
-  //  print_r($postArr); die();
+/*print'<pre>';
+print_r($postArr); die();*/
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
     $method = $d['method'];
     $post = $d['params'];
+    if(array_key_exists("documentType", $post)) {
+        if(!empty($post['documentType'])){
+            $url = DOC_SERVICE_URL;
+        }
+    }
+    /*if(array_key_exists("dtype", $imageParams[$id]['params'])) {
+        if($imageParams[$id]['params']['dtype']=="3D"){
+            $url = DOC_SERVICE_URL;
+        }
+    }*/
     $curly[$id] = curl_init();
  
     //$url = (is_array($d) && !empty($url) ? $url : "");

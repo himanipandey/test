@@ -7,12 +7,13 @@
 	$plot = array();
 	$commercial = array();
 	$uploadedArr = array(); // array of titles ALREADY uploaded in image service 
-	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex");
-	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan");
+	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex", "3D Floor Plan");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan", "3D Floor Plan");
 	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan", "Terrace Floor Plan", "Duplex Floor Plan");
 	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan", "Penthouse Floor Plan", "Terrace Floor Plan");
 	$triplex = array("Lower Level Floor", "Medium Level Floor", "Upper Level Floor", "Terrace Floor Plan");
 	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan", "Ground Floor Plan");
+	//$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan", "Ground Floor Plan");
 
 	$watermark_path = 'images/pt_shadow1.png';
 	$projectId				=	$_REQUEST['projectId'];
@@ -30,6 +31,7 @@
 	    $objectId = $v['OPTION_ID'];
 	    
 	    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+	    $a_3d_url = DOC_SERVICE_URL."?objectType=$objectType&objectId=".$objectId;
 	    //echo $url;
 	    $content = file_get_contents($url);
 	    $imgPath = json_decode($content);
@@ -38,6 +40,13 @@
 	    foreach($imgPath->data as $k1=>$v1){
 				array_push($arr, $v1->title);
 		}
+
+		$a_3d_content = file_get_contents($a_3d_url);
+	    $a_3d_Path = json_decode($a_3d_content);
+	    foreach($a_3d_Path->data as $k1=>$v1){
+				array_push($arr, $v1->description);
+		}
+
 		$uploadedArr[$k] = implode("-", $arr);
 		if($v['UNIT_TYPE']=='Apartment'){
 			$floorPlanOptionsArr[$k] = $apartmentArr;
@@ -205,17 +214,28 @@
 										if(strstr($file,$_FILES["imgurl"]["name"][$key]))
 										{
 											
-
-											$params = array(
+											if($floor_name=="3D Floor Plan"){
+												$params = array(
+							                        "image_type" => "3d_floor_plan",
+							                        "folder" => $extra_path,
+							                        "count" => "floor_plan".$key,
+							                        "image" => $file,
+							                        "title" => $floor_name,
+							                        "description" => $floor_name,
+							                        "altText" => $altText,
+							                	);
+											}
+											else{
+												$params = array(
 							                        "image_type" => "floor_plan",
 							                        "folder" => $extra_path,
 							                        "count" => "floor_plan".$key,
 							                        "image" => $file,
 							                        "title" => $floor_name,
 							                        "altText" => $altText,
-							                        
-							                       
-							                );
+							                	);
+											}
+											
 
 											$unitImageArr['params'] = $params;
 						                     $fileEndName[$key] = "floor-plan";
@@ -299,7 +319,10 @@
         	
 	        if(empty($v->error->msg)){
 	            $image_id = $v->data->id;
-
+	            if($floor_name=="3D Floor Plan"){
+	            	$image_id = $v->id;
+	            }
+	            
 	            $file = $_FILES["imgurl"]["tmp_name"][$key];
 	            
 	            $img_path = $createFolder."/".$file;
@@ -383,7 +406,7 @@
                     	$res	 =	mysql_query($qry) or die(mysql_error());
 						
 					}
-					$image_id=0;
+					$image_id=0;  //echo $qry; die("here");
 
 			}
 			else {
@@ -401,6 +424,8 @@
 					$strErr1 = substr_replace($strErr1, $insert_string, $pos+19, 0);
 				}
 				$ErrorMsg["ImgError"] .= $strErr.$strErr1."<br>";
+
+				//die("here1");
 			}
 		}
 

@@ -54,7 +54,7 @@
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
 			{/foreach}
       	}
-        else if(value == "Floor Plan" || value == "Floor Plan"){
+        else if(value == "Floor Plan" || value == "Floor Plan" || value == "3D Floor Plan"){
       		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
 

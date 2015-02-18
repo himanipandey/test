@@ -213,6 +213,8 @@ $(".pt_reqflrplan").fancybox();
 
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
 
+                                                        <input type="hidden" value="{$ImageDataListingArr[data].PLAN_TYPE}" name="plan_type[{$cnt}]" />
+
 														<input type="hidden" value="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}" name="property_image_path[{$cnt}]" /><br><br>
 														
 														<b>Image Title:<font color = "red">*</font></b><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].NAME}" readonly="readonly" STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>

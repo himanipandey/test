@@ -8,7 +8,7 @@
 	$villApartment = array();
 	$plot = array();
 	$commercial = array();
-	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex");
+	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex", "3D Floor Plan");
 	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor");
 	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
 	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan");
@@ -38,7 +38,9 @@
 		    $objectId = $v1['OPTION_ID'];
 		    
 		    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+		    $a_3d_url = DOC_SERVICE_URL."?objectType=$objectType&objectId=".$objectId;
 		    //echo $url;
+
 		    $content = file_get_contents($url);
 		    $imgPath = json_decode($content);
 		    $data = array();
@@ -72,9 +74,9 @@
 		        $data['SERVICE_IMAGE_ID'] = $v->id;
 		        //$data['objectType'] = $v->imageType->objectType->type;
 		        //$data['objectId'] = $v->objectId; 
-		        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
-		        $str = ucfirst (implode(" ",$arr));
-		        $data['PLAN_TYPE'] = "View ".$str;
+		        //$arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
+		        //$str = ucfirst (implode(" ",$arr));
+		        $data['PLAN_TYPE'] = "2D";
 		        $data['DISPLAY_ORDER'] = $v->priority;
 		        $data['IMAGE_DESCRIPTION'] = $v->description;
 		        $data['IMAGE_URL'] = $v->absolutePath;
@@ -100,9 +102,69 @@
 
 			}
 
+			$a_3d_content = file_get_contents($a_3d_url);
+		    $a_3d_Path = json_decode($a_3d_content);
+		    foreach($a_3d_Path->data as $k=>$v){
+			    $data = array();
+			    $data['OPTION_ID'] = $v1['OPTION_ID'];
+			    $data['UNIT_TYPE'] = $v1['UNIT_TYPE'];
+			    $data['SIZE'] = $v1['SIZE'];
+			    $data['CARPET_AREA'] = $v1['CARPET_AREA'];
+			    $data['UNIT_NAME'] = $v1['UNIT_NAME'];
+			    if($v1['UNIT_TYPE']=='Apartment'){
+			    	//array_push($floorPlanOptionsArr, $apartmentArr);
+					$floorPlanOptionsArr[count($ImageDataListingArr)] = $apartmentArr;
+					//array_push($villApartment, )
+					$villApartment[count($ImageDataListingArr)] = "yes";
+					//echo $k;
+				}
+				else if($v1['UNIT_TYPE']=='Villa'){
+					//array_push($floorPlanOptionsArr, $villaArray);
+					$floorPlanOptionsArr[count($ImageDataListingArr)] = $villaArray;
+					$villApartment[count($ImageDataListingArr)] = "yes";
+				}
+				else if($v1['UNIT_TYPE']=='Plot'){
+					//unset($ProjectOptionDetail[$k]);
+					$plot[count($ImageDataListingArr)] = "yes";
+				}
+					
+				else if($v1['UNIT_TYPE']=='commercial')
+					$commercial[count($ImageDataListingArr)] = "yes";
+
+		        $data['SERVICE_IMAGE_ID'] = $v->id;
+		        //$data['objectType'] = $v->imageType->objectType->type;
+		        //$data['objectId'] = $v->objectId; 
+		        //$arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
+		        //$str = ucfirst (implode(" ",$arr));
+		        $data['PLAN_TYPE'] = "3D"; //.$str;
+		        $data['DISPLAY_ORDER'] = $v->priority;
+		        $data['IMAGE_DESCRIPTION'] = $v->description;
+		        $data['IMAGE_URL'] = $v->absoluteUrl;
+		        $data['NAME'] = $v->description;
+		        $data['STATUS'] = $v->active;
+		        $data['alt_text'] = $v->altText;
+		        //if(isset($v->createdAt))//if($v->created_at)
+		        //	$data['tagged_month'] = gmdate("Y-m-d", $v->createdAt);
+		        //else
+		        	//$data['tagged_month'] = gmdate("Y-m-d", time());
+
+		         //$str = trim(trim($v->jsonDump, '{'), '}');
+		        //$towerarr = explode(":", $str);
+		        //$data['tower_id'] = (int)trim($towerarr[1],"\"");
+		       //var_dump($data['tower_id']);
+		        
+		       // echo $data['tower_id'];
+		        //echo $data['tower_id'].$data['tagged_month']."<br>";
+		        //print_r($v->jsonDump);
+		        array_push($ImageDataListingArr, $data);
+		        //echo $data['NAME']; 
+		      
+
+			}
+
 		}
-		 //print'<pre>';
-	//print_r($floorPlanOptionsArr);
+		 /*print'<pre>';
+	print_r($ImageDataListingArr);*/
 //print'<pre>';
 	//print_r($villApartment);
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
@@ -182,10 +244,23 @@
                                                    /********delete image from db if checked but not browes new image*********/
 
                                $service_image_id = $_REQUEST['service_image_id'][$k];
-                               $params = array(
+                               $dtype = $_REQUEST['plan_type'][$k];
+                               if($dtype=="3D"){
+                               	$params = array(
+			                        "service_image_id" => $service_image_id,
+			                        "delete" => "yes",
+			                        "dtype" => $dtype,
+			                    );
+                               }
+                               else{
+                               	$params = array(
 			                        "service_image_id" => $service_image_id,
 			                        "delete" => "yes",
 			                    );
+                               }
+                               
+
+
 								$unitImageArr = array();
 								$unitImageArr['params'] = $params;
 								$unitImageArr['img'] = "";
