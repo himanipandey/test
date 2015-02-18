@@ -198,6 +198,17 @@
 			                $img['type'] = $_FILES["imgurl"]["type"][$key];
 			                $img['name'] = $_FILES["imgurl"]["name"][$key];
 			                $img['tmp_name'] = $_FILES["imgurl"]["tmp_name"][$key];	
+			                //list($width, $height) = getimagesize($img['tmp_name']);
+			               	list($width, $height) = getimagesize($createFolder."/" . $imgurl1);
+			               	$media_extra_attributes = array("width" => $width, "height" => $height);
+			               	$media_extra_attributes = json_encode($media_extra_attributes);
+			               	//$media_extra_attributes =  "{'width':".$width.", 'height':".$height."}";
+			               	//$media_extra_attributes = '{"width":1053, "height":600}';
+
+			               	
+			                //var_dump($width);
+			                //var_dump($width); 
+			                //die("here");
 			                $unitImageArr['img'] = $img;
 			        		$unitImageArr['objectId'] = $option_id;
 			        		$unitImageArr['objectType'] = "option";
@@ -223,8 +234,9 @@
 							                        "title" => $floor_name,
 							                        "description" => $floor_name,
 							                        "altText" => $altText,
+							                        //"mediaExtraAttributes" => $media_extra_attributes
 							                	);
-											}
+											}  
 											else{
 												$params = array(
 							                        "image_type" => "floor_plan",

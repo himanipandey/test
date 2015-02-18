@@ -191,7 +191,14 @@ function writeToImageService($imageParams){
         $newImagePath = $v['newImagePath'];
 
         $service_extra_paramsArr = array( 
-            "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'],"altText"=>$params['altText'], "jsonDump"=>json_encode($params['jsonDump']));
+            "priority"=>$params['priority'],
+            "title"=>$params['title'],
+            "description"=>$params['description'],
+            "takenAt"=>$params['tagged_date'],
+            "altText"=>$params['altText'], 
+            "jsonDump"=>json_encode($params['jsonDump']), 
+            "mediaExtraAttributes" => $params['mediaExtraAttributes'] 
+        );
 
         if(!isset($params['tagged_date']) || empty($params['tagged_date']))
                     unset($service_extra_paramsArr["takenAt"]);
@@ -205,6 +212,8 @@ function writeToImageService($imageParams){
                     unset($service_extra_paramsArr["title"]);
         if(!isset($params['altText']) || empty($params['altText']))
                     unset($service_extra_paramsArr["altText"]);
+        if(!isset($params['mediaExtraAttributes']) || empty($params['mediaExtraAttributes']))
+                    unset($service_extra_paramsArr["mediaExtraAttributes"]);
 
                // print'<pre>';
                // print_r($service_extra_paramsArr);//die();
