@@ -306,8 +306,8 @@ function writeToImageService($imageParams){
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 //die();
-/*print'<pre>';
-print_r($postArr); die();*/
+print'<pre>';
+print_r($postArr); die();
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
