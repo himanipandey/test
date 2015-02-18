@@ -211,7 +211,8 @@ function writeToImageService($imageParams){
 
         if($params['delete']=="yes"){
             if($params['dtype']=="3D"){
-                $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id'], "dtype" => "3D" ));
+                $extra_paramsArr = array("dtype" => "3D");
+                $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id'],  "service_extra_params" => $extra_paramsArr));
                 $postArr[$k] = $s3upload->delete();
             }
             else{
@@ -306,8 +307,8 @@ function writeToImageService($imageParams){
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 //die();
-print'<pre>';
-print_r($postArr); die();
+//print'<pre>';
+//print_r($postArr); die();
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
