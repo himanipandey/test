@@ -45,11 +45,14 @@ class BrokerAgent extends ActiveRecord\Model
             $result = self::Connection()->query($sql);
             $mobile = $result->fetch(PDO::FETCH_NUM);
      
-          
+            $arrtemp = array();
             $arr = array();
             $arr['id'] = $v->id;
             $arr['brokerId'] = $v->company_id;
             $arr['brokerName'] = $broker_name[0];
+            
+            $arrtemp[$v->company_id] = $arr['brokerName'];
+
             $arr['name'] = $v->name;
             $arr['role'] = $v->seller_type;
             //$arr['des'] = $v->description;
@@ -76,7 +79,8 @@ class BrokerAgent extends ActiveRecord\Model
             //$arr['city'] = $v->city;
 
 
-            array_push($returnArr, $arr);
+            array_push($returnArr, $arr);    //Changed here !!
+            //array_push($returnArr, $arr['brokerName']);
 
 
         }
@@ -84,7 +88,10 @@ class BrokerAgent extends ActiveRecord\Model
         return $returnArr;
     }
 
-    
+     /*static function getBrokerAgentsByCompany($companyId) {
+        $agentsDetail = BrokerAgent::find('all',array('conditions'=>array("company_id = $companyId ")));
+        return $agentsDetail;
+    }*/
     
     
     

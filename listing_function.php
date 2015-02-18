@@ -455,7 +455,7 @@ function ProjectOptionDetail($projectId) {
     $columns = "P.OPTIONS_ID,P.PROJECT_ID,P.OPTION_NAME,P.OPTION_TYPE,P.SIZE,P.BEDROOMS,P.BATHROOMS,
         P.CREATED_AT,P.STUDY_ROOM,P.SERVANT_ROOM,P.BALCONY,P.POOJA_ROOM,P.VILLA_PLOT_AREA,
         P.VILLA_NO_FLOORS,P.VILLA_TERRACE_AREA,P.VILLA_GARDEN_AREA,P.CARPET_AREA,P.LENGTH_OF_PLOT,
-        P.BREADTH_OF_PLOT,P.CARPET_AREA";
+        P.BREADTH_OF_PLOT";
     $qrySel = "SELECT
                     $columns,
                     GROUP_CONCAT(O.IMAGE_URL) FLOOR_IMAGES
@@ -711,6 +711,7 @@ function ProjectType($projectId) {
             $arrProjectType['VILLA_TERRACE_AREA'][] = $data['VILLA_TERRACE_AREA'];
             $arrProjectType['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType['CARPET_AREA'][] = $data['CARPET_AREA'];
+            $arrProjectType['DISPLAY_CARPET_AREA'][] = $data['DISPLAY_CARPET_AREA'];
             $arrProjectType['APARTMENTS_TYPE'][] = $apartmentsType[0]->attribute_value;
         } else if ($data['OPTION_TYPE'] == 'Plot') {
             $arrProjectType_P['OPTIONS_ID'][] = $data['OPTIONS_ID'];
@@ -750,6 +751,7 @@ function ProjectType($projectId) {
             $arrProjectType_VA['VILLA_TERRACE_AREA'][] = $data['VILLA_TERRACE_AREA'];
             $arrProjectType_VA['VILLA_GARDEN_AREA'][] = $data['VILLA_GARDEN_AREA'];
             $arrProjectType_VA['CARPET_AREA'][] = $data['CARPET_AREA'];
+            $arrProjectType_VA['DISPLAY_CARPET_AREA'][] = $data['DISPLAY_CARPET_AREA'];
         }
     }
 }
@@ -778,7 +780,7 @@ function allProjectImages($projectId) {
 
 function allProjectFloorImages($projectId) {
     $qryOpt = "SELECT OPTIONS_ID,OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
-        UNIT_TYPE,CARPET_AREA FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
+        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId;
     $resOpt = mysql_query($qryOpt);
 
     $ImageDataListingArr = array();
@@ -802,7 +804,7 @@ function allProjectFloorImages($projectId) {
 
 function getAllProjectOptionsExceptPlot($projectId){
     $qryOpt = "SELECT OPTIONS_ID as OPTION_ID, OPTION_NAME as UNIT_NAME,SIZE,OPTION_TYPE as 
-        UNIT_TYPE,CARPET_AREA FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId. " AND OPTION_CATEGORY = 'Actual' AND OPTION_TYPE != 'Plot'";
+        UNIT_TYPE FROM " . RESI_PROJECT_OPTIONS . " WHERE PROJECT_ID = " . $projectId. " AND OPTION_CATEGORY = 'Actual' AND OPTION_TYPE != 'Plot'";
     $resOpt = mysql_query($qryOpt);
     $OptionsArr = array();
     while ($dataOpt = mysql_fetch_assoc($resOpt)) {
@@ -2177,20 +2179,6 @@ function fetchProjectRedevelolpmentFlag($projectId){
      return ($flag->attribute_value)? "Yes" : "No";
 	
 }
-function fetchProjectHousingAuthority($projectId){
-    
-     $select = "select attribute_value from table_attributes 
-            where table_name = 'resi_project' and table_id = $projectId and attribute_name = 'HOUSING_AUTHORITY_ID'";
-     $qrySelect = mysql_query($select) or die(mysql_error());
-     //die($select);
-     if($qrySelect){
-        $flag = mysql_fetch_object($qrySelect);
-        $authority = HousingAuthorities::getAuthoritiesById($flag->attribute_value);
-     }
-     return $authority[0]->authority_name;
-    
-}
-
 function checkDuplicateVideoLink($projectId,$videoLinkUrl,$video_id=0){
 	
 	$condition = '';
@@ -2291,39 +2279,6 @@ function checkDuplicateDisplayOrder($projectId, $display_order, $image_type, $se
 				
 	return ($vcount->cnt)? $vcount->cnt : 0; */
 }
-
-function checkDuplicateDisplayOrderListing($listingId, $display_order, $image_type, $service_image_id=0 ){
-    
-    $url = ImageServiceUpload::$image_upload_url."?objectType=listing&objectId=".$listingId;
-
-    $content = file_get_contents($url);
-    $imgPath = json_decode($content);
-
-    $orderArr = array();
-    $cnt=0; 
-    //echo "submit:".$image_type.$display_order.$service_image_id."<br>";
-    foreach($imgPath->data as $k=>$v){
-        $arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
-        $str = ucfirst (implode(" ",$arr));
-//echo $v->id.$str.$v->priority."<br>";
-        if($service_image_id==$v->id){
-
-        }
-        else if($str==$image_type && $v->priority!="5"){
-           // if (!in_array($v->priority, $orderArr)){
-             //   array_push($orderArr, $v->priority)
-           // }
-
-            if($v->priority==$display_order)
-                {$cnt=1; echo "yes";}
-        }
-
-    }
-
-    return $cnt;
-   
-}
-
 function updateD_Availablitiy($projectId){
 	
 	$no_of_phases = 0;

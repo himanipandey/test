@@ -7,6 +7,12 @@
     $authorityAuth = isUserPermitted('authority', 'manage');
     $smarty->assign("authorityAuth", $authorityAuth);
     
+    $listingAuth = isUserPermitted('listing', 'manage');
+    $smarty->assign("listingAuth", $listingAuth);
+
+    $listingPhotoAuth = isUserPermitted('listing-photo', 'manage');
+    $smarty->assign("listingPhotoAuth", $listingPhotoAuth);
+
     $bulkProjUpdateAuth = isUserPermitted('bulk-project-update', 'read');
     $smarty->assign("bulkProjUpdateAuth", $bulkProjUpdateAuth);
     
