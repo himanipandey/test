@@ -496,7 +496,7 @@ if( isset($_POST['btnSave']) || isset($_POST['btnExit']) ) {
        if($township == '')
            $township = null;
        if($authority == '')
-           $authority = null;
+           $authority = "0";
        if($powerBackup == '')
            $powerBackup = null;
        $smarty->assign("projectTypeOld",$_REQUEST['project_type_hidden']);
