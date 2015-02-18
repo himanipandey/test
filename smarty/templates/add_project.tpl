@@ -469,6 +469,8 @@
 								  </td>
 							   </tr>
 
+							   
+
 							   <tr>
 								  <td width="20%" align="right"><b>Project Latitude :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectLattitude" id="txtProjectLattitude" value="{$txtProjectLattitude}" style="width:360px;" /></td>
@@ -793,6 +795,23 @@
                                                                 <td width="50%" align="left">&nbsp;</td>
 							   </tr>
 							   
+							   <tr>
+                                                                <td width="20%" align="right" valign ="top"><b>Housing Authority:</b> </td><td width="30%" align="left">
+                                                                    <select name = "authority">
+                                                                        <option value="">Select Options</option>
+                                                                        {foreach from = $allAuthorities item = item}
+                                                                            <option value="{$item->id}" {if $item->id == $authority}selected{/if}>
+                                                                                {$item->authority_name}
+                                                                            </option>
+                                                                        {/foreach}
+                                                                    </select>
+                                                                </td>
+                                                                <td width="50%" align="left">&nbsp;</td>
+							   </tr>
+
+							   
+
+
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Show price on website ?</b> </td><td width="30%" align="left">
 									{if $shouldDisplayPrice == ''}{$shouldDisplayPrice =1}{/if}

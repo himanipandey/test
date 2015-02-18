@@ -212,6 +212,9 @@ $(function() {
 <input type='hidden' name='dwnld_city' id='dwnld_city' value="{$_POST['city']}">
 <input type='hidden' name='dwnld_mode' id='dwnld_mode' value="{$_POST['mode']}">
 <input type='hidden' name='dwnld_builder' id='dwnld_builder' value="{$_POST['builder']}">
+<input type='hidden' name='dwnld_authority' id='dwnld_authority' value="{$_POST['authority']}">
+<input type='hidden' name='dwnld_skip_B2B' id='dwnld_skip_B2B' value="{$_POST['skipB2B']}">
+
 <input type='hidden' name='dwnld_phase' id='dwnld_phase' value="{$_POST['phase']}">
 <input type='hidden' name='dwnld_stage' id='dwnld_stage' value="{$_POST['stage']}">
 <input type='hidden' name='dwnld_Residential' id='dwnld_Residential' value="{$_POST['Residential']}">
@@ -295,6 +298,19 @@ $(function() {
                                          </select>
                                       </td>
                                  </tr>
+
+                                 <tr  bgcolor='#fcfcfc'>
+                                      <td align="right" style = "padding-left:20px;" height='35'><b>Housing Authority:</b></td>
+                                      <td align="left" style = "padding-left:20px;" height='35'>
+                                          <select name = 'authority' id = "authority"  style='width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;'>
+                                           <option value = "">Select Authority</option>
+                                           {foreach from = $arrAuthorityDetail key= key item = val}
+                                              <option value = "{$key}" {if $authority == $key} selected {/if}>{$val}</option>
+                                           {/foreach}
+                                         </select>
+                                      </td>
+                                 </tr>
+
                                   <tr>
                                     <td align="right" style = "padding-left:20px;" height='35'><b>Phase:</b></td>
                                     <td align="left" style = "padding-left:20px;" height='35'>
@@ -322,6 +338,18 @@ $(function() {
                                            </select>
                                         </td>
                                   </tr>
+
+                                  <tr>
+                                        <td width="50" align="right" style = "padding-left:20px;" height='35' nowrap><b>Skip B2B:</b></td>
+                                        <td width="50" align="left" style = "padding-left:20px;">
+                                            <select name="skipB2B" id = "skipB2B">
+                                              <option   value="">Select </option>
+                                               <option {if $skipB2B=='0'} selected="selected" {/if} value="0">Yes </option>
+                                               <option {if $skipB2B==''} selected="selected" {/if} value="">No </option>    
+                                           </select>
+                                        </td>
+                                  </tr>
+
                                   <tr bgcolor='#fcfcfc'>
                                       <td align="right" style = "padding-left:20px;" height='35'><b>Stage:</b></td>
                                       <td align="left" style = "padding-left:20px;" height='35'>

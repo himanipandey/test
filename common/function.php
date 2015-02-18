@@ -180,14 +180,17 @@ function writeToImageService($imageParams){
     //print("<pre>");
     //print_r($imageParams);//die();
     foreach ($imageParams as $k => $v) {
-        //print_r($v);
+
+        # code...
+          //print'<pre>';
+          //print_r($v); die();
+
         if($v['upload_from_tmp']=="yes"){
                 $postArr[$k]= $v;
            //die("here");
+
         }
         else{
-
-            
             $params = $v['params'];
             $IMG = $v['img'];
             $objectId = $v['objectId'];
@@ -195,7 +198,14 @@ function writeToImageService($imageParams){
             $newImagePath = $v['newImagePath'];
 
             $service_extra_paramsArr = array( 
-                "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'],"altText"=>$params['altText'], "jsonDump"=>json_encode($params['jsonDump']));
+                "priority"=>$params['priority'],
+                "title"=>$params['title'],
+                "description"=>$params['description'],
+                "takenAt"=>$params['tagged_date'],
+                "altText"=>$params['altText'], 
+                "jsonDump"=>json_encode($params['jsonDump']), 
+                "mediaExtraAttributes" => $params['mediaExtraAttributes'] 
+            );
 
             if(!isset($params['tagged_date']) || empty($params['tagged_date']))
                         unset($service_extra_paramsArr["takenAt"]);
@@ -209,22 +219,34 @@ function writeToImageService($imageParams){
                         unset($service_extra_paramsArr["title"]);
             if(!isset($params['altText']) || empty($params['altText']))
                         unset($service_extra_paramsArr["altText"]);
+            if(!isset($params['mediaExtraAttributes']) || empty($params['mediaExtraAttributes']))
+                        unset($service_extra_paramsArr["mediaExtraAttributes"]);
 
-
-
-
-
+                   // print'<pre>';
+                   // print_r($service_extra_paramsArr);//die();
 
             if($params['delete']=="yes"){
-                 $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id']));
+                if($params['dtype']=="3D"){
+                    $extra_paramsArr = array("dtype" => "3D");
+                    $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id'],  "service_extra_params" => $extra_paramsArr));
                     $postArr[$k] = $s3upload->delete();
+                }
+                else{
+                    $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id']));
+                    $postArr[$k] = $s3upload->delete();
+                } 
             }        
             else if($IMG==""){
                         //print'<pre>';
                         //print_r($params);//die();
+                        //die("here");
                 $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId,
                              "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));
                 $postArr[$k] = $s3upload->updateWithoutImage();
+            //$returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
+
+        //print_r($v);
+        
                 //$returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
             }
                  
@@ -308,12 +330,22 @@ Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 //die();
 //print'<pre>';
-//var_dump($postArr); 
+
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
     $method = $d['method'];
     $post = $d['params'];
+    if(array_key_exists("documentType", $post)) {
+        if(!empty($post['documentType'])){
+            $url = DOC_SERVICE_URL;
+        }
+    }
+    /*if(array_key_exists("dtype", $imageParams[$id]['params'])) {
+        if($imageParams[$id]['params']['dtype']=="3D"){
+            $url = DOC_SERVICE_URL;
+        }
+    }*/
     $curly[$id] = curl_init();
  
     //$url = (is_array($d) && !empty($url) ? $url : "");

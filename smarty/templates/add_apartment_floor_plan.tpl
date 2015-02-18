@@ -54,7 +54,7 @@
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
 			{/foreach}
       	}
-        else if(value == "Floor Plan" || value == "Floor Plan"){
+        else if(value == "Floor Plan" || value == "Floor Plan" || value == "3D Floor Plan"){
       		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
 
@@ -153,7 +153,7 @@
 				  <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
 	
 				  <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
-				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
+				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size/Carpet Area</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Unit Type</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Floor Plan Options</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt><font color="red">*</font>Floor Plan Name</td>
@@ -190,7 +190,9 @@
 				  
 				  </td>
 				 
-				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}</td>
+				  <td>{if $ProjectOptionDetail[$smarty.section.foo.index]['SIZE'] == ''}- {/if}{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}/{if $ProjectOptionDetail[$smarty.section.foo.index]['CARPET_AREA'] == ''} -{/if}
+{$ProjectOptionDetail[$smarty.section.foo.index]['CARPET_AREA']}
+</td>
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_TYPE']}</td>
 				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
 				  <td><select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">

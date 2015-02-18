@@ -189,7 +189,7 @@ class Company extends ActiveRecord\Model
 
 /********************************broker details*******************************************/
             //$broker_details = array();
-            $sql = "SELECT id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id FROM broker_details WHERE broker_id='{$v->id}' ";
+            $sql = "SELECT id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used FROM broker_details WHERE broker_id='{$v->id}' ";
             $result = self::Connection()->query($sql);
             $broker_details = $result->fetch(PDO::FETCH_ASSOC);
 
