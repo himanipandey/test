@@ -14,7 +14,7 @@ debug 			= FALSE
 ;Database
 ;
 db_type 		= "mysql"
-db_host			= "192.168.1.8"
+db_host			= "localhost"
 db_user			= "gacl"
 db_password		= "gacl"
 db_name			= "gacl"
