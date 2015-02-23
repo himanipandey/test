@@ -48,7 +48,8 @@
       		{foreach from=$penthouse item=data}
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
 			{/foreach}
-      	}
+  
+    	}
       	else if(value== "Ground Floor"){
       		{foreach from=$ground_floor item=data}
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
@@ -62,7 +63,9 @@
       		var str = $("#uploaded_"+c).val();
       		var str1 = $("#uploaded3D_"+c).val();
 
-      		//alert(str);
+      		console.log("str="+str);
+		console.log("str1="+str1);
+
       		if (str.indexOf($(this).text()) >= 0 && $(this).text()!="3D Floor Plan")
 		    	$(this).attr("disabled", true);
 		    else if (str1.indexOf($(this).text()) >= 0   && $(this).text()=="3D Floor Plan")
