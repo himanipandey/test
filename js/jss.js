@@ -1,4 +1,11 @@
 $('document').ready(function(){
+	//
+ 	/*for(i=1;i<=100;i++) {
+		$("#total_floor1").append("<option>"+i+"</option>");
+	}    */
+
+
+
 	var bh3 = '#bh3';
 	$(bh3).click(function(){
 		if($(bh3).val() === 'other'){	
@@ -8,20 +15,29 @@ $('document').ready(function(){
 		}
 	});
 
-	$('#prs5').click(function(){
-		$('#prs3').show(1);
-		if($('#prs5 :selected').val() == '2'){	
-			$('#other_charges').show();
-			$('#pr').hide();
-		}
-		else if($('#prs5 :selected').val() == '1'){	
-			$('#pr').show();
-			$('#other_charges').hide();
+	var appartment3 = '#appartment3';
+	$(appartment3).click(function(){
+		if($(appartment3).val() === '1' || $(appartment3).val() === '2'){	
+			$('#study_servant').show(1);	
 		} else {
-			$('#pr').hide();
-			$('#other_charges').hide();
+			$('#study_servant').hide(1);
 		}
 	});
+
+	$('#prs5').click(function(){
+		//$('#prs3').show(1);
+		if($('#prs5 :selected').val() == '2'){	
+			$('#other_charges').show();
+			$('#othr_prs2').show();
+			$('#tr').show();
+		}
+		else {
+			//$('#pr').hide();
+			$('#other_charges').hide();
+			$('#othr_prs2').hide();
+			$('#tr').hide();
+		}
+	}); 
 
 	
 
@@ -41,6 +57,12 @@ $('document').ready(function(){
 		$('#proj1').hide(1);
 	});
 
+	$('#lkhs_tfr').click(function(){
+		$('#crs_tfr').removeAttr('checked');
+	});
+	$('#crs_tfr').click(function(){
+		$('#lkhs_tfr').removeAttr('checked');
+	});
 
 
 	$('#crs1').click(function(){

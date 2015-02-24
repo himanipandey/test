@@ -6,10 +6,31 @@ include('httpful.phar');
 require_once("appWideConfig.php");
 include("dbConfig.php");
 
+if($_POST['task'] === 'get_tower')  {
+   
+    $Sql = "SELECT TOWER_ID,PROJECT_ID,TOWER_NAME FROM resi_project_tower_details WHERE PROJECT_ID =".$_POST['project_id']." ";
+    $tower = '';
+    $ExecSql = mysql_query($Sql) or die();
+    $cnt = 0;
+    if (mysql_num_rows($ExecSql) > 0) {
+        while($Res = mysql_fetch_assoc($ExecSql)) {
+            $tower = $Res['TOWER_NAME'];
+        }    
+    }
+    //echo $cnt;
+   
 
-if($_POST['task'] === 'get_seller')  {
+    //echo json_encode($tower);
+    echo $tower;
+    //echo "Finish";
+    //$smarty->assign("sel",$Sel);
+
+}
+
+else if($_POST['task'] === 'get_seller')  {
     
     $Sql = "SELECT user_id, name FROM company_users  WHERE company_id=".$_POST['broker_id']." and status = 'Active' and user_id is not null";
+    //$Sql = "SELECT user_id, name FROM company_users  WHERE company_id=".$_POST['broker_id']."";
     $Sel = array();
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in fetching data from company_users');
     $cnt = 0;
@@ -112,6 +133,15 @@ else {
         $other_charges =0;
     
     
+    if($pricePerUnitArea == '' || $pricePerUnitArea == null) {
+        $pricePerUnitArea = null;
+    }
+    if($$price == '' || $$price == null) {
+        $$price = null;
+    }
+    if($$other_charges == '' || $$other_charges == null) {
+        $$other_charges = null;
+    }
     $currentListingPrice = array(
         'pricePerUnitArea'=> $pricePerUnitArea,
         'price'=> $price,
@@ -137,7 +167,7 @@ else {
 
         $uri = LISTING_API_URL;
         $uriLogin = ADMIN_USER_LOGIN_API_URL;
-
+        //$urlNew: $url + "?page="+page+ "&size="size;
         /*try{ 
             $response_login = \Httpful\Request::post($uri1)->sendIt();
             
@@ -154,7 +184,7 @@ else {
         } catch(Exception $e)  {
             print_R($e);
         }*/
-
+        //echo "dhsjadfhsjdkdf";    
         $response_login = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
         ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
         ->body('')             // attach a body/payload...
