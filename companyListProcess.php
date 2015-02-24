@@ -1,5 +1,5 @@
 <?php
-
+//print("<pre>");
 $compid= $_REQUEST['compid'];
 
 $typeArr = Company::getCompanyType(); 
@@ -21,13 +21,27 @@ $smarty->assign('resiProjectType', $resiProjectType);
 $transactionType = TransactionType::TransactionTypeArr();
 $smarty->assign('transactionType', $transactionType);
 
-$sql = "select ADMINID, FNAME, LNAME from proptiger.PROPTIGER_ADMIN where DEPARTMENT='SALES'";
+$devices = Devices::getAllDevices();
+$smarty->assign('devices', $devices);
+
+//print_r($transactionType);
+
+$sql = "select ADMINID, FNAME, LNAME from proptiger.PROPTIGER_ADMIN where DEPARTMENT='SALES' order by FNAME ASC, LNAME ASC";
 $res = mysql_query($sql);
 $ptRelManager = array();
 while($data = mysql_fetch_assoc($res)){
     $ptRelManager[$data['ADMINID']] = $data['FNAME']." ".$data['LNAME'];
 }
 $smarty->assign('ptRelManager', $ptRelManager);
+
+$sql = "select ADMINID, FNAME, LNAME, DEPARTMENT from proptiger.PROPTIGER_ADMIN order by FNAME ASC, LNAME ASC, DEPARTMENT ASC";
+$res = mysql_query($sql);
+$ptRelative = array();
+while($data = mysql_fetch_assoc($res)){
+    $ptRelative[$data['ADMINID']] = $data['FNAME']." ".$data['LNAME']."     (".$data['DEPARTMENT'].")";
+}
+$smarty->assign('ptRelative', $ptRelative);
+
 
 $smarty->assign('url', TYPEAHEAD_API_URL);
 

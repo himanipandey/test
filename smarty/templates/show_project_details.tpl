@@ -1003,6 +1003,17 @@ function broker_call_edit(callId, brokerId)
                                                       {$projectDetails[0].PROJECT_DESCRIPTION}
                                                   </td>
 						</tr>
+						<tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Description Reviewed:</b></td>
+                                                    <td>
+                                                    	{if $projectDetails[0].desc_content_flag == 1}
+                                                          Yes
+                                                      	{else}
+                                                          No
+                                                      	{/if}
+                                                      
+                                                  </td>
+						</tr>
                                                 <tr height="25px;">
                                                     <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Project Comments:</b></td>
                                                     <td>
@@ -1054,7 +1065,8 @@ function broker_call_edit(callId, brokerId)
 								  	{/if} 
 								{/foreach}
 							</td>
-						</tr>						
+						</tr>
+											
 						<!--<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left" valign ="top">
                                                             <b>Reason For UnLaunched Units:</b>
@@ -1257,6 +1269,18 @@ function broker_call_edit(callId, brokerId)
                                                     <td>
                                                         {if $projectDetails[0].township_name != ''}
                                                                 {$projectDetails[0].township_name}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Housing Authority:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $authority != ''}
+                                                                {$authority}
                                                         {else}
                                                                 --
                                                         {/if}
@@ -1992,7 +2016,7 @@ function broker_call_edit(callId, brokerId)
 											</a>
 											<br>
 										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
-                                        <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({$ImageDataListingArrFloor[data].SIZE} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
+                                        <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({if $ImageDataListingArrFloor[data].SIZE != ''}{$ImageDataListingArrFloor[data].SIZE}{/if} {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE != ''} , {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if}  {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE == ''} {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
 									</div>
 								</td>
 								{$cnt = $cnt+1} 		

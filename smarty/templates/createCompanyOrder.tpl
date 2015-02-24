@@ -311,12 +311,12 @@
 					   <fieldset class="subs_user_{$k}">
 						 <legend>User-{$k}:</legend>
 					     <table class="subs_user_{$k}">
-						  		 
-						   <tr class="subs_user_{$k}">
-							  <td width="20%" align="right" ><font color="red">*</font>Email : </td>
-							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} type=text name="txtSubsUserEmail[]" id="txtSubsUserEmail{$k}" value="{$txtSubsUser[$k-1]}" style="width:240px;"></td> 
+
+					     	<tr class="subs_user_{$k}">
+							  <td width="20%" align="right" ><font color="red">*</font>Full Name : </td>
+							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} {if $page=='edit'}readonly="readonly"{/if} type=text name="txtSubsUserName[]" id="txtSubsUserName{$k}" value="{$txtSubsUserName[$k-1]}" style="width:240px;"></td> 
 							  <td width="50%" align="left" >
-							  {if $ErrorMsg["txtSubsUserEmail"] != ''} <font color = "red">{$ErrorMsg["txtSubsUserEmail"]}</font>{/if}
+							  {if $ErrorMsg["txtSubsUserName"] != ''} <font color = "red">{$ErrorMsg["txtSubsUserName"]}</font>{/if}
 							  {if $page!='view'}
   							   <span style="float:right">
 								  <a href = "javascript:void(0);">
@@ -325,19 +325,35 @@
 								 </span>
 							  {/if}
 							  </td>
+						   	</tr>
+
+						   <tr class="subs_user_{$k}">
+							  <td width="20%" align="right" ><font color="red">*</font>Email : </td>
+							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} {if $page=='edit'}readonly="readonly"{/if} type=text name="txtSubsUserEmail[]" id="txtSubsUserEmail{$k}" value="{$txtSubsUserEmail[$k-1]}" style="width:240px;"></td> 
+							  <td width="50%" align="left" >
+							  {if $ErrorMsg["txtSubsUserEmail"] != ''} <font color = "red">{$ErrorMsg["txtSubsUserEmail"]}</font>{/if}
+							 
+							  </td>
 						   </tr>
 						   <tr class="subs_user_{$k}">
 							  <td width="20%" align="right" ><font color="red">*</font>Contact No : </td>
-							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} onkeypress='return isNumberKey(event)' type=text name="txtSubsUserCont[]"  id="txtSubsUserCont{$k}" value="{$txtSubsUserCont}" style="width:140px;"></td> {if $ErrorMsg["txtSubsUserCont"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserCont"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} {if $page=='edit'}readonly="readonly"{/if} onkeypress='return isNumberKey(event)' type=text name="txtSubsUserCont[]"  id="txtSubsUserCont{$k}" value="{$txtSubsUserCont[$k-1]}" style="width:140px;"></td> {if $ErrorMsg["txtSubsUserCont"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserCont"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 						   </tr>
 						   <tr class="subs_user_{$k}">
 							  <td width="20%" align="right" >User Group : </td>
 							  <td width="30%" align="left">
-							    <select name="txtSubsUserGroup[]">
+							    <select name="txtSubsUserGroup[]"  {if $page=='view'}disabled=true{/if} {if $page=='edit'}readonly="readonly"{/if}>
 									<option value="defualt">Default User Group</option>
 							    </select>
 							  </td>
 							  {if $ErrorMsg["txtSubsUserEmail"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserEmail"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+						   </tr>
+						   <tr class="subs_user_{$k}">
+							  <td width="20%" align="right" >Disable OTP : </td>
+							  <td width="30%" align="left">
+							  	<input type="checkbox" name="txtSubsUserOtp[]" {if $page=='view'}disabled{/if} {if $txtSubsUserOtp[$k-1]=='TRUE'} checked='checked' {/if}  value="TRUE"  />
+							  </td>
+							  {if $ErrorMsg["txtSubsUserOtp"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserOtp"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 						   </tr>
 						 </table>
 						</fieldset>
@@ -651,6 +667,10 @@ jQuery(document).ready(function(){
 	subs_user.push(total_subs_user);
 	$('#userNo').val(subs_user.length);
 	$('.subs_user_'+total_subs_user).show();	
+	$('#txtSubsUserName'+total_subs_user).attr('readonly', false);
+	$('#txtSubsUserEmail'+total_subs_user).attr('readonly', false);
+	$('#txtSubsUserCont'+total_subs_user).attr('readonly', false);
+	$('#txtSubsUserGroup'+total_subs_user).attr('readonly', false);
   }
   
   function removeUser(id,rid){	

@@ -109,6 +109,7 @@ $uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start=0&
 //$dataJson = json_encode($dataArr);
 /*try{ 
 
+<<<<<<< HEAD
     //$response = \Httpful\Request::post($uri1)->send();                     
     //$response1 = \Httpful\Request::get($uri)->send();
     //->body('{"floor":"2","jsonDump":"{\"comment\":\"anubhav\"}","sellerId":"1216008","flatNumber":"D-12","homeLoanBankId":"1","noOfCarParks":"3","negotiable":"true","transferCharges":1000,"plc":200,"otherInfo":{"size":"100","projectId":"656368","bedrooms":"3","unitType":"Plot","penthouse":"true","studio":"true","facing":"North"},"masterAmenityIds":[1,2,3,4],"currentListingPrice":{"pricePerUnitArea":2000,}}') // lets attach a body/payload...
@@ -120,6 +121,9 @@ $uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start=0&
     //->authenticateWith('admin-10@proptiger.com', '1234')  // authenticate with basic auth...
     //->body('{"json":"is awesome"}')             // attach a body/payload...
     //->send(); 
+=======
+    
+>>>>>>> ceef04bcbae254e11c89e70f4b4e2905c5f55054
 
     $responseLogin = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
     ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
@@ -127,11 +131,14 @@ $uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start=0&
     ->send(); 
 
 
+<<<<<<< HEAD
     // print("<pre>");
     //$res = var_dump($responseLogin);
     //echo '-------------------------------------------------------------------------------','\n';
     //print_r($response.object); 
     //$data = json_decode($response);
+=======
+>>>>>>> ceef04bcbae254e11c89e70f4b4e2905c5f55054
     $header = $responseLogin->headers;
     $header = $header->toArray();
     $ck = $header['set-cookie'];
@@ -144,6 +151,11 @@ $uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start=0&
         $ck_new = $ck_new.$ck[$i];
     }
 
+<<<<<<< HEAD
+=======
+
+   
+>>>>>>> ceef04bcbae254e11c89e70f4b4e2905c5f55054
    
     if($ck_new!='')
     {    

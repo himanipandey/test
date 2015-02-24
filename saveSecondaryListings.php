@@ -90,18 +90,24 @@ else {
         'projectId'=> $_POST['project_id'],
         'bedrooms'=> $_POST['bedrooms'],
         'bathrooms'=> $_POST['bathrooms'], 
+<<<<<<< HEAD
         'unitType'=>  $_POST['unit_type'],
         'penthouse'=>$_POST['penthouse'],
         'studio' => $_POST['studio'],
+=======
+        'unitType'=> $_POST['unit_type'],//"Apartment", //
+        'penthouse'=>"false",
+        'studio' => "false",
+>>>>>>> ceef04bcbae254e11c89e70f4b4e2905c5f55054
         ); 
     $dataArr['otherInfo'] = $otherInfo;
 
     $dataArr['floor'] = $_POST['floor'];
-    $jsonDump = array(
-        'tower' => $_POST['tower'],
-        //'study_room' => $_POST['study_room'],
-        //'servant_room' => $_POST['servant_room'],
-        );
+    $jsonDump = array();
+    $tower = $_POST['tower'];
+    if(isset($tower) && !empty($tower))
+        $jsonDump['tower'] = $tower;
+        
     $dataArr['jsonDump'] = json_encode($jsonDump);
     $dataArr['description'] =$_POST['description'];
     $dataArr['remark'] =$_POST['review'];
@@ -123,6 +129,7 @@ else {
         $pricePerUnitArea =0;
     if($_POST['price'] !=NaN){
         $price = $_POST['price'];
+        $price = round($price, -2);
     }
     else
         $price =0;
@@ -204,6 +211,7 @@ else {
         //echo $ck_new;
         if($ck_new!='')
         {    
+            $returnArr = array();
             if($listing_id!=''){
                 $uri = $uri."/".$listing_id;
                 $response = \Httpful\Request::put($uri)           
@@ -215,10 +223,16 @@ else {
                 //var_dump($response);
 
                 if($response->body->statusCode=="2XX"){
-                    echo "update";
+                   // echo "2";
+                    $returnArr['code'] = "2";
+                    $returnArr['msg'] = "update";
+                    echo json_encode($returnArr);
                 }
                 else{
-                     echo $response->body->error->msg;
+                     //echo $response->body->error->msg;
+                    $returnArr['code'] = "0";
+                    $returnArr['msg'] = $response->body->error->msg;
+                    echo json_encode($returnArr);
                 }
             }
             else{
@@ -230,10 +244,17 @@ else {
                 //echo "create";
                 //var_dump($response);
                 if($response->body->statusCode=="2XX"){
-                    echo "create";
+                    $id = $response->body->data->id;
+
+                    $returnArr['code'] = "1";
+                    $returnArr['msg'] = $id;
+                    echo json_encode($returnArr);
                 }
                 else{
-                     echo $response->body->error->msg;
+                     //echo $response->body->error->msg;
+                    $returnArr['code'] = "0";
+                    $returnArr['msg'] = $response->body->error->msg;
+                    echo json_encode($returnArr);
                 }
             }
 

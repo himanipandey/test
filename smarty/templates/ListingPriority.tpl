@@ -73,12 +73,17 @@ function isPhnumber(val) {
 function cleanFields(){
   $('#create_Landmark input text,#create_Landmark select,#create_Landmark textarea, :text').each(function(key, value){
       $(this).val('');
-
-
     }); 
    $("#seller3").html('');
    $("#bh3").html('');
    $("#listing_id").val("");
+   $('#othr').hide();
+   $('#other_charges').hide();
+   $('#pr').hide();
+   $('#plc3').hide(1);
+   $('#bank_list2').hide(1);
+   $("#image_link").html("");
+   
 }
 
 function editListing(str){
@@ -92,6 +97,7 @@ function editListing(str){
 
     if(str.id!=null)
       $("#listing_id").val(str.id);
+    $("#image_link").html("<a href=listing_img_add.php?listing_id="+str.id+">Add/Edit Listing Images</a>");
     $("#cityddEdit").val(str.property.project.locality.suburb.city.id);
     //$("#bkn2").val(str.seller.id);
     $("#project").val(str.property.project.name);
@@ -128,8 +134,16 @@ function editListing(str){
 
    var unit_name = str.property.unitName+"-"+str.property.size+" "+str.property.unitType; 
 
+//fill option field
+
     $('#bh3').html(''); 
     $('#bh3').append($("<option selected='selected' />").val("0").text(unit_name));
+    $('#othr').hide(1);
+    $('#othr2').val('');
+      $('#bed2').val('');
+      $('#tol3').val('');
+      $('#appartment3').val('');
+
     var jsonDump = $.parseJSON(str.jsonDump);
     if(jsonDump!=null){
       $("#tower2").val(jsonDump.tower);
@@ -162,12 +176,13 @@ function editListing(str){
        }
       else if(str.currentListingPrice.price >0) {
         $("#prs5").val('1');
-        var price_value = parseFloat(str.currentListingPrice.price);
+        var price_value = parseFloat(str.currentListingPrice.price).toFixed(2);
          price_value = price_value/100000;
          price_value = price_value.toFixed(2).toString();
          $("#prs3").val(price_value);
          $('#pr').show();
          $('#other_charges').hide();
+         $('#othr_prs2').val('');
 
       }
       $("#othr_prs2").val(str.currentListingPrice.otherCharges);
@@ -184,31 +199,35 @@ function editListing(str){
 
      $("#park2").val(str.noOfCarParks);
     $("#bank_list2").val(str.homeLoanBankId);
-    if(str.homeLoanBankId!=''){
+    if(str.homeLoanBankId!='' && str.homeLoanBankId!=null && str.homeLoanBankId>0){
+      console.log("bank yes");
       $("#bank_list2").show();
-      $('#yes').prop('checked', true);
-      $('#no').prop('checked', false);
+      $('#yes').attr('checked', true);
+      $('#no').removeAttr('checked');
     }
     else{
+      console.log("bank no");
       $("#bank_list2").hide();
       $("#bank_list2").val('');
-      $('#yes').prop('checked', false);
-      $('#no').prop('checked', true);
+      $('#yes').removeAttr('checked');
+      $('#no').attr('checked', true);
     }
     $("#plc3").val(str.plc);
-    if(str.plc!=''){
+    if(str.plc!='' && str.plc!=null && str.plc>0){
+      console.log("plc yes");
       $("#plc3").show();
-      $('#plcn').prop('checked', false);
-      $('#plcy').prop('checked', true);
+      $('#plcn').removeAttr('checked');
+      $('#plcy').attr('checked', true);
     }
     else{
+      console.log("plc no");
       $("#plc3").hide();
       $('#plc3').val("");
-      $('#plcn').prop('checked', true);
-      $('#plcy').prop('checked', false);
+      $('#plcn').attr('checked', true);
+      $('#plcy').removeAttr('checked');
     }
     
-   
+    console.log(str);
     
     $("#cityddEdit").attr('disabled',true);
     $("#project").attr('readonly',true);
@@ -224,8 +243,11 @@ function editListing(str){
 }
 
 function getSeller(){
-   var broker_id = $("#bkn2 :selected").val();   
-    console.log(broker_id);
+   var broker_id = $("#bkn2 :selected").val(); 
+   $('#seller3').html(''); 
+   if(broker_id==null || broker_id=='')  
+    return true;
+    //console.log(broker_id);
     $.ajax({
             type: "POST",
             url: '/saveSecondaryListings.php',
@@ -234,7 +256,7 @@ function getSeller(){
             success:function(msg){
 
               console.log(msg);
-              $('#seller3').html(''); 
+              
               var options = $("#seller3");
               //var i = 0;
 
@@ -250,28 +272,15 @@ function getSeller(){
           });
 }
 
-/*function getTower(){
-   //var broker_id = $("#bkn2 :selected").val();
-   var project_id = $("#proj").val().trim();   
-    //console.log(broker_id);
-    $.ajax({
-            type: "POST",
-            url: '/saveSecondaryListings.php',
-            data: { project_id:project_id, task:'get_tower'},
-
-            success:function(msg){
-
-              console.log(msg);
-              $('#tower2').html(''); 
-              //var i = 0;
 
 
-              msg = $.parseJSON(msg);
-              $('#tower2').html(msg); 
-              
-            },
-    });
-}*/
+function exitButtonClicked(){
+  cleanFields();
+     $('#create_company').hide('slow'); 
+   
+      $('#search_bottom').show('slow');
+      location.reload();
+}
 
 
 jQuery(document).ready(function(){  
@@ -294,15 +303,16 @@ $("#create_button").click(function(){
     $("#project").attr('readonly',false);
     $("#proj").attr('readonly',false);
     $("#bh3").attr('disabled',false); 
+    $('#prs5').val('1');
+    $('#pr').show();
+    
 });
 
   
 
   $("#exit_button").click(function(){
-    cleanFields();
-     $('#create_company').hide('slow'); 
-   
-      $('#search_bottom').show('slow');
+    exitButtonClicked();
+    
   });
 
 
@@ -398,14 +408,19 @@ $("#lmkSave").click(function(){
     var other_prs = $("#othr_prs2").val().trim();
     var flag = 0;
     
-    var ops = parseFloat(other_prs);
+    var ops = parseFloat(other_prs).toFixed(2);
     if (price_type==1){
       price = $("#prs3").val().trim();
       if ($('[name="lkhs1"]').is(':checked'))  {
-        price = parseFloat(price) * 100000;
+        if(price!=''){
+
+          price = parseInt(parseFloat(price).toFixed(2) * 100000);
+        }
         
       } else {
-        price = parseFloat(price) * 10000000;
+        if(price!=''){
+          price = parseInt(parseFloat(price).toFixed(2) * 10000000);
+        }
       }
 
       
@@ -421,21 +436,29 @@ $("#lmkSave").click(function(){
 
     }
 
-    
+console.log(price);
+//return true;    
     
 
-    
     var phase_id = $("#phase_id3 :selected").val();      
+
 
     var transfer_new;
     var trancefer_rate = $("#tfr2").val().trim();
     var price_in = "Lakhs";    
-    if ($('[name="lkhs_tfr"]').is(':checked'))  {
-      transfer_new = parseFloat(trancefer_rate) * 100000; 
-    } else {
-      transfer_new = parseFloat(trancefer_rate) * 10000000;
-    }
 
+    if ($('[name="lkhs_tfr"]').is(':checked'))  {
+      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
+    } else {
+      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000; 
+    }  
+    if ($('[name="lkhs2"]').is(':checked'))  {
+      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
+    } else {
+      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000;
+    }
+console.log(transfer_new);
+//return true;
     var appratment = $("#appartment3 :selected").text();
     var penthouse_stdio_temp = $("#penthouse_sel :selected").text();
   
@@ -497,10 +520,20 @@ $("#lmkSave").click(function(){
         alert("Project is a compulsory field.");
         return true;
       }
-      else{  
-        if(project_id=='' ||  bedrooms=='' || unit_type=='' || size=='' ){
-          alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
-          return true;
+      else{ 
+        if(unit_type=='Apartment' || unit_type=='Villa') { 
+          console.log(unit_type);
+          if(project_id=='' ||  bedrooms=='' || unit_type=='Select' || size=='' ){
+            alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
+            return true;
+          }
+        }
+        else{
+          console.log(unit_type);
+          if(project_id=='' || unit_type=='' || size=='' || unit_type=='Select'){
+            alert("project, size, Option Type are must if BHK 'Others' is selected.");
+            return true;
+          }
         }
       }
      }
@@ -523,59 +556,53 @@ $("#lmkSave").click(function(){
 
    
 
-
-
-
-
-    /*temp[0] = cityid;
-    temp[1] = broker_name;
-    temp[2] = project_id;
-    temp[3] = projid;
-    temp[4] = bhk1;
-    temp[5] = facing;
-    temp[6] = size;  
-    temp[7] = bathroom;
-    temp[8] = toilet;
-    temp[9] = tower;
-    temp[10] = floor;
-    temp[11] = price_type;
-    temp[12] = price;
-    temp[13] = trancefer_rate;
-    temp[14] = price_in;
-    temp[15] = flat_number;
-    temp[16] = parking;
-    temp[17] = loan_bank;
-    temp[18] = plc_val;
-    temp[19] = study_room;
-    temp[20] = servant_room;
-
-    var i;
-    for(i = 0; i < temp.length; i++)  {
-        console.log(i + ' - ' + temp[i]);
-    }
-    //alert(bt[0]+'-'+bt[1]+'-'+bt[2]+'-'+bt[3]+'-'+bt[4]);  
-    console.log("---------------------------------");*/
-
+    var $body = $("body");
+    //$("body").addClass("loading"); /*$("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);*/
     $.ajax({
             type: "POST",
+            //async: false,
             url: '/saveSecondaryListings.php',
+
+            beforeSend: function(){
+              console.log('in ajax beforeSend');
+              $("body").addClass("loading");
+            },
             data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse:penthouse, studio:studio, negotiable:negotiable, description:description, review:review, task:task},
 
+
             success:function(msg){
-              if(msg=="update"){
-                alert("Listing Successfully updated");
+              
+              console.log(msg);
+              msg = $.parseJSON(msg);//console.log(msg.msg);
+              //return;
+              if(msg.code==2){
+                
+               $("body").removeClass("loading");
+                exitButtonClicked();
+                //alert("Listing Successfully updated");
+                /*$body = $("body"); $body.removeClass("loading");
+                 $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
                 //location.reload();
               }
-              else if(msg=="create"){
-                alert("Listing Successfully created");
+              else if(msg.code==1){
+                $("body").removeClass("loading");
+                //$body = $("body");
+                //$body.removeClass("loading");$("#image_link").html("<a href=c+str.id+">Add/Edit Listing Images</a>");
+                location.href = "listing_img_add.php?listing_id="+msg.msg;
+                //exitButtonClicked();
+                //alert("Listing Successfully created"); //$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
                 //location.reload();
               }
               else{
-                alert(msg);
+                //
+                //$body = $("body");
+                $("body").removeClass("loading");
+                alert(msg.msg); /*$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
               }
 
 
             },
+           
           });
 
 
@@ -912,6 +939,7 @@ $("#lmkSave").click(function(){
               //alert("Hello"); 
               url: "{$url13}"+$("#proj").val(),
               dataType: "json",
+              async: false,
               data: {
                 featureClass: "P",
                 style: "full", 
@@ -1394,6 +1422,7 @@ $("#plc3").keypress(function (e) {
                             </td>
                             <td id="appartment2">
                                   <select name="appartment3" id="appartment3" style="height:28px">
+
                                     <option value="0">Select</option>
                                     <option value="1">Appartment</option>>  
                                     <option value="2">Villa</option>
@@ -1402,6 +1431,7 @@ $("#plc3").keypress(function (e) {
                                     <option value="5">Shop</option>
                                     <option value="6">Office</option>
                                     <option value="7">Other</option>
+
                                 </select>
                             </td>
                             
@@ -1492,7 +1522,7 @@ $("#plc3").keypress(function (e) {
                				  <tr id="prs_trf">
 
                           			<td id="prs1">
-                              			Price: 
+                              			<font color="red">*</font>Price: 
                           			</td>
                               
                                                              
@@ -1500,7 +1530,7 @@ $("#plc3").keypress(function (e) {
                                 <td id="prs4">
                                   <select id="prs5" name="prs5" style="width:100px">
                                       <option value='0'>Select</option>  
-                                      <option value='1'>All Inclusive</option>
+                                      <option value='1' selected="selected">All Inclusive</option>
                                       <option value='2'>Per Sq. Ft.</option>
                                   </select>
                                 </td>
@@ -1529,7 +1559,9 @@ $("#plc3").keypress(function (e) {
                             </td>
 
                         
+
                             <td width="630px" align="left" id="tr" style="padding-left:250px; display:none">
+
                               <label  for="one" style="font-size:11px;">
                                 lacs &nbsp;   
                                   <input type="radio" id="lkhs2" name="prstp2" value="y" checked="checked" /> 
@@ -1588,7 +1620,7 @@ $("#plc3").keypress(function (e) {
                         	</td>
                        
                         	<td id="bank_list1" height="40px;">
-                            	<select name="bank_list2" id="bank_list2" height="5px" >
+                            	<select name="bank_list2" id="bank_list2" height="5px" width="50px" >
                                  	<option value=''> select bank	</option>
                                     {foreach from=$bankArray key=k item=v}
                                         <option value="{$k}" {if $bankId==$k}  selected="selected" {/if}>{$v}</option>
@@ -1660,6 +1692,13 @@ $("#plc3").keypress(function (e) {
                             </textarea>
                         </td>
                       </tr>
+
+                      <tr >
+                        <td id = "image_link" colspan="4">
+                            
+                        </td> 
+                        
+                      </tr>
                       <!--<a target="_blank" href="https://www.proptiger.com/">  
                         <IMG STYLE="position:absolute; TOP:950px; LEFT:330px; WIDTH:150px; HEIGHT:100px" SRC="car.jpg">
                         </IMG>
@@ -1722,7 +1761,7 @@ $("#plc3").keypress(function (e) {
 
 
 
-
+                    <div class="modal">Please Wait..............</div>
                     <div id="search-bottom">
                     <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
                         <form name="form1" method="post" action="">

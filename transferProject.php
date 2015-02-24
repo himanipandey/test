@@ -48,6 +48,9 @@
     if(!isset($_REQUEST['exp_supply_date_to']))
     $_REQUEST['exp_supply_date_to'] = '';
     $exp_supply_date_to = $_REQUEST['exp_supply_date_to'];
+
+    if(!isset($_REQUEST['skipB2B']) || $_REQUEST['skipB2B']=='')
+        $_REQUEST['skipB2B'] = '';
     
     $errorMsg = '';
     if(isset($_REQUEST['exp_supply_date_from']) && isset($_REQUEST['exp_supply_date_to'])){
@@ -81,16 +84,25 @@
     $smarty->assign("getProjectStages", $getProjectStages);
     $getProjectPhases = ProjectPhase::getProjectPhases();
     $smarty->assign("getProjectPhases", $getProjectPhases);
+
+    $authorities = HousingAuthorities::getAllAuthorities();
+    $arrAuthorityDetail = array();
+    foreach($authorities as $value) {
+        $arrAuthorityDetail[$value->id] = $value->authority_name;
+    }
+    $smarty->assign("arrAuthorityDetail", $arrAuthorityDetail);
     
     $updateRemark= $_REQUEST['updateRemark'];
     $transfer = $_REQUEST['transfer'];
     $search = $_REQUEST['search'];
     $city = $_REQUEST['city'];
     $builder = $_REQUEST['builder'];
+    $authority = $_REQUEST['authority'];
     $phase = $_REQUEST['phase'];
     $arrPhase = explode('|',$_REQUEST['stage']);
     $stage = $arrPhase[0];
     $updationCycle = $_REQUEST['updationCycle'];
+    $skipB2B = $_REQUEST['skipB2B']; //die("skip:".$skipB2B);
     $Status = $_REQUEST['Status'];
     $Active = $_REQUEST['Active'];
     $Availability = $_REQUEST['Availability'];
@@ -98,12 +110,14 @@
     $smarty->assign("projectStatus",$projectStatus);
     $smarty->assign("citylist", $citylist);
     $smarty->assign("builderList", $builderList);	
-    $smarty->assign("UpdationArr", $UpdationArr);	
+    $smarty->assign("UpdationArr", $UpdationArr);
+    $smarty->assign("skipB2B", $skipB2B);	
     $smarty->assign("search", $search);
     $smarty->assign("Residential", $_REQUEST['Residential']);
     $smarty->assign("Status", $_REQUEST['Status']);
     $smarty->assign("city", $_REQUEST['city']);
     $smarty->assign("builder", $builder);
+    $smarty->assign("authority", $authority);
     $smarty->assign("exp_supply_date_from", $exp_supply_date_from);
     $smarty->assign("exp_supply_date_to", $exp_supply_date_to);
     $smarty->assign("project_name", $project_name);
@@ -128,7 +142,8 @@
                 left join  master_project_stages st on p.project_stage_id = st.id 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id";
+                left join city on suburb.city_id = city.city_id
+                left join table_attributes ta on ta.table_id=p.project_id and ta.table_name='resi_project' and ta.attribute_name='HOUSING_AUTHORITY_ID' ";
 
         $QueryMember2 = "Select COUNT(p.PROJECT_ID) CNT,p.PROJECT_PHASE_ID,p.PROJECT_STAGE_ID,
                 ph.name as PROJECT_PHASE, st.name as PROJECT_STAGE 
@@ -137,7 +152,8 @@
                 left join  master_project_stages st on p.project_stage_id = st.id 
                 left join locality on p.locality_id = locality.locality_id
                 left join suburb on locality.suburb_id = suburb.suburb_id
-                left join city on suburb.city_id = city.city_id";
+                left join city on suburb.city_id = city.city_id
+                left join table_attributes ta on ta.table_id=p.project_id and ta.table_name='resi_project' and ta.attribute_name='HOUSING_AUTHORITY_ID' ";
 
         $and = " WHERE ";
 
@@ -210,6 +226,13 @@
                  $QueryMember .= $and." BUILDER_ID = '".$_REQUEST['builder']."'";
                  $and  = ' AND ';
              }
+
+             if($_REQUEST['authority'] != '')
+             {
+                 $QueryMember .= $and." ta.attribute_value = '".$_REQUEST['authority']."'";
+                 $and  = ' AND ';
+             }
+
              if($_REQUEST['phase'] != '')
              {
                  $QueryMember .= $and." PROJECT_PHASE_ID = '".$_REQUEST['phase']."'";
@@ -241,16 +264,24 @@
                  $QueryMember .= $and." EXPECTED_SUPPLY_DATE >= '".$exp_supply_date_from."'";
                  $and  = ' AND ';
              }
-             $QueryMember .= $and ." version = 'Cms' 
-                 and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null)";
+             if($skipB2B=='')
+                    $QueryMember .= $and ." version = 'Cms' 
+                     and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) ";
+            else
+                $QueryMember .= $and ." version = 'Cms' 
+                     and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) and SKIP_B2B ='".$skipB2B."' ";
         }
         else
-        {
-                $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' 
-                    and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null)";
-
+        {       
+                if($skipB2B=='')
+                    $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' 
+                    and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) ";
+                else
+                 $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' 
+                    and (updation_cycle_id != ".skipUpdationCycle_Id." OR updation_cycle_id is null) and SKIP_B2B ='".$skipB2B."' ";
         }
        $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";
+       //die($QueryMember2);
     }
     $assignPhase = $_REQUEST['updatePhase'];
     $expPhase = explode("|",$assignPhase);

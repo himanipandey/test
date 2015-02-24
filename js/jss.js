@@ -12,8 +12,34 @@ $('document').ready(function(){
 			$('#othr').show(1);	
 		} else {
 			$('#othr').hide(1);
+			$('#othr2').val('');
+			$('#bed2').val('');
+			$('#tol3').val('');
+			$('#appartment3').val('');
+
 		}
 	});
+
+//option type change event handler
+	$('#appartment3').click(function(){
+		if($('#appartment3 :selected').val() == '1'  || $('#appartment3 :selected').val() == '2'){	
+			$('#bath').show();
+			$('#bath1').show();
+			$('#tol1').show();
+			$('#tol2').show();
+		}
+		
+		 else {
+			$('#bath').hide();
+			$('#bath1').hide();
+			$('#tol1').hide();
+			$('#tol2').hide();
+
+			$('#bed2').val('');
+			$('#tol3').val('');
+		}
+	});
+
 
 	var appartment3 = '#appartment3';
 	$(appartment3).click(function(){
@@ -23,6 +49,9 @@ $('document').ready(function(){
 			$('#study_servant').hide(1);
 		}
 	});
+
+
+//price change event handler
 
 	$('#prs5').click(function(){
 		//$('#prs3').show(1);
@@ -117,10 +146,35 @@ $('document').ready(function(){
 		$('#yes_servant').removeAttr('checked');
 	});
 
+
 	$('#negotiable_yes').click(function(){
 		$('#negotiable_no').removeAttr('checked');
 	});
 	$('#negotiable_no').click(function(){
 		$('#negotiable_yes').removeAttr('checked');
 	});
+
+// ajax loader
+
+	 /*$('#modal').ajaxStart(function () {
+        $(this).fadeIn('fast');
+    }).ajaxStop(function () {
+        $(this).stop().fadeOut('fast');
+    });
+
+    $('#modal').ajaxStart(function () {
+        $(this).fadeIn('fast');
+    }).ajaxStop(function () {
+        $(this).stop().fadeOut('fast');
+    });*/
+
+	$body = $("body");
+	
+	$(document).on({
+	    ajaxStart: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);},
+	     ajaxStop: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);}  
+
+	   
+	});
+
 });

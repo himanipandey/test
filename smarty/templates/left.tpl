@@ -41,7 +41,7 @@
 
             <tr>
                     <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-                      <td align="left" height="22"><A class="leftnav" href="photo-listing.php"><font color = "#f15a22">Upload Listing Photo</font></A></td>
+                      <td align="left" height="22"><A class="leftnav" href="listing_img_add.php"><font color = "#f15a22">Upload Listing Photo</font></A></td>
             </tr>
 
             <tr>
@@ -49,6 +49,7 @@
             </tr>
 
         {/if}
+
 
         {if $companyAuth == true}
             <tr>
@@ -130,6 +131,15 @@
             <tr>
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
+        {if $authorityAuth == true}
+            <tr>
+                    <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                      <td align="left" height="22"><A class="leftnav" href="housingAuthorities.php" title = "TownShips"><font color = "#f15a22">Housing Authorities Management</font></A></td>
+            </tr>
+            <tr>
+                    <td class="thinline" align="left" colSpan="2"></td>
+            </tr>
+        {/if}
        
         {if $bankAuth == true}
             <tr>

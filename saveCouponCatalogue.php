@@ -20,7 +20,7 @@ $task = $_POST['task'];
 if($task=='get_options'){
 	$options = array();
 	$projectId = $_POST['projectId'];
-	$query = "select * from resi_project_options rpo where project_id={$projectId} and option_category='Actual'";
+	$query = "select * from resi_project_options rpo where project_id={$projectId} and option_category='Actual' and (size is not null or carpet_area is not null)";
 	$res = mysql_query($query) or die(mysql_error());
 	while($data = mysql_fetch_assoc($res)){
 		array_push($options, $data);
@@ -46,7 +46,7 @@ if($task=='create_coupon'){
 	    if($optionId==0){
 	    	//die("here");
 		    $options = array();
-		    $query = "select rpo.OPTIONS_ID, rpo.SIZE from resi_project_options rpo where project_id={$projectId} and option_category='Actual'";
+		    $query = "select rpo.OPTIONS_ID, rpo.SIZE,rpo.CARPET_AREA from resi_project_options rpo where project_id={$projectId} and option_category='Actual'  and (rpo.size is not null or rpo.carpet_area is not null)";
 			$res = mysql_query($query) or die(mysql_error());
 			while($data = mysql_fetch_assoc($res)){
 				array_push($options, $data);
@@ -64,7 +64,10 @@ if($task=='create_coupon'){
 			    $data = mysql_fetch_assoc($res);
 			    if($data['count'] > 0 ){
 			    	$discount_type ='SqFt';
-			    	$discounttmp = $discount*$v['SIZE'];
+				if($v['SIZE'] != null)
+			    		$discounttmp = $discount*$v['SIZE'];
+				else
+					$discounttmp = $discount*$v['CARPET_AREA'];
 				    $query = "update coupon_catalogue set option_id={$v['OPTIONS_ID']}, coupon_price={$price}, discount={$discounttmp}, purchase_expiry_at='{$expiryDate}', total_inventory={$totalInventory}, inventory_left={$remainInventory}, email='{$email}', discount_type='{$discount_type}', updated_at=NOW(), updated_by= {$_SESSION['adminId']} where id={$couponId}";
 			        $res = mysql_query($query) or die(mysql_error());
 			        if(mysql_affected_rows()>0){
@@ -75,7 +78,10 @@ if($task=='create_coupon'){
 			    }
 			    else{
 			    	$discount_type ='SqFt';
-			    	$discounttmp = $discount*$v['SIZE'];
+			    	if($v['SIZE'] != null)
+			    		$discounttmp = $discount*$v['SIZE'];
+				else
+					$discounttmp = $discount*$v['CARPET_AREA'];
 				    $query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, email, discount_type, created_at, updated_at, updated_by) values({$v['OPTIONS_ID']}, {$price},{$discounttmp},'{$expiryDate}', {$totalInventory},{$remainInventory}, '{$email}', '{$discount_type}', NOW(), NOW(), {$_SESSION['adminId']})";
 			        $res = mysql_query($query) or die(mysql_error());
 			        if(mysql_affected_rows()>0){
@@ -96,12 +102,15 @@ if($task=='create_coupon'){
 		    if($data['count'] > 0 ){
 		    	if($discountType==1){
 
-		    		$query = "select SIZE from resi_project_options where options_id={$optionId}";
+		    		$query = "select SIZE,CARPET_AREA from resi_project_options where options_id={$optionId}   and (size is not null or carpet_area is not null)";
 					$res = mysql_query($query) or die(mysql_error());
 				    $data = mysql_fetch_assoc($res);
 		    		$discounttmp = 0;
 				    $discount_type ='SqFt';
-		    		$discounttmp = $discount*$data['SIZE'];
+		    		if($data['SIZE'] != null)
+			    		$discounttmp = $discount*$data['SIZE'];
+				else
+					$discounttmp = $discount*$data['CARPET_AREA'];
 		    		//die("here");
 		    	}
 		    	else{
@@ -123,7 +132,7 @@ if($task=='create_coupon'){
 
 	}
 	############## create new coupon
-	else{
+	else{ 
 		if($optionId==0){
 			foreach ($options as $k => $v) {
 				$query = "select count(*) as count from coupon_catalogue where option_id={$v['OPTIONS_ID']}";
@@ -135,7 +144,10 @@ if($task=='create_coupon'){
 			    else{
 			    	$discount_type ='SqFt';
 			    	$discounttmp=0;
-			    	$discounttmp = $discount*$v['SIZE'];
+			    	if($v['SIZE'] != null)
+			    		$discounttmp = $discount*$v['SIZE'];
+				else
+					$discounttmp = $discount*$v['CARPET_AREA'];
 			    	$query = "insert into coupon_catalogue (option_id, coupon_price, discount, purchase_expiry_at, total_inventory, inventory_left, email, discount_type, created_at, updated_at, updated_by) values({$v['OPTIONS_ID']}, {$price},{$discounttmp},'{$expiryDate}', {$totalInventory},{$remainInventory}, '{$email}', '{$discount_type}', NOW(), NOW(), {$_SESSION['adminId']})";
 					$res = mysql_query($query) or die(mysql_error());
 					if($res){
@@ -151,20 +163,23 @@ if($task=='create_coupon'){
 		}
 		else{
 
-			$query = "select count(*) as count from coupon_catalogue where option_id={$optionId}";
-			$res = mysql_query($query) or die(mysql_error());
+	            $query = "select count(*) as count from coupon_catalogue where option_id={$optionId}";
+		    $res = mysql_query($query) or die(mysql_error());
 		    $data = mysql_fetch_assoc($res);
 		    if($data['count'] > 0 ){
 		        die("There can be only one catalogue against an Option.");
 		    }
 		    else{
 		    	if($discountType==1){
-		    		$query = "select SIZE from resi_project_options where options_id={$optionId}";
-					$res = mysql_query($query) or die(mysql_error());
-				    $data = mysql_fetch_assoc($res);
+		    		$query = "select SIZE,CARPET_AREA from resi_project_options where options_id={$optionId} and (size is not null or carpet_area is not null)";
+				$res = mysql_query($query) or die(mysql_error());
+				$data = mysql_fetch_assoc($res);
 		    		$discount_type ='SqFt';
-				    $discounttmp =0;
-		    		$discounttmp = $discount*$data['SIZE'];
+				$discounttmp =0;
+		    		if($data['SIZE'] != null)
+			    		$discounttmp = $discount*$data['SIZE'];
+				else
+					$discounttmp = $discount*$data['CARPET_AREA'];
 		    	}
 		    	else{
 		    		$discount_type ='Absolute';

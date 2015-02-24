@@ -194,7 +194,7 @@ $(".pt_reqflrplan").fancybox();
 													
 													<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
 
-															<b>{$ImageDataListingArr[data].UNIT_NAME}( {$ImageDataListingArr[data].SIZE} /{$ImageDataListingArr[data].MEASURE} )</b>
+															<b>{$ImageDataListingArr[data].UNIT_NAME}( {$ImageDataListingArr[data].SIZE} {if $ImageDataListingArr[data].CARPET_AREA != '' && $ImageDataListingArr[data].SIZE != ''} , {$ImageDataListingArr[data].CARPET_AREA}(Carpet Area){/if} {if $ImageDataListingArr[data].CARPET_AREA != '' && $ImageDataListingArr[data].SIZE == ''} {$ImageDataListingArr[data].CARPET_AREA}(Carpet Area){/if} /{$ImageDataListingArr[data].MEASURE} )</b>
 															<br><br>
 															
 															<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].IMAGE_URL}														
@@ -212,6 +212,8 @@ $(".pt_reqflrplan").fancybox();
 														name = "option_id[{$cnt}]">
 
                                                         <input type="hidden" value="{$ImageDataListingArr[data].SERVICE_IMAGE_ID}" name="service_image_id[{$cnt}]" />
+
+                                                        <input type="hidden" value="{$ImageDataListingArr[data].PLAN_TYPE}" name="plan_type[{$cnt}]" />
 
 														<input type="hidden" value="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}" name="property_image_path[{$cnt}]" /><br><br>
 														
