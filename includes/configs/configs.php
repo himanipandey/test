@@ -80,7 +80,7 @@ $smarty->assign("FORUM_PATH", FORUM_PATH);
 /*Forum paths ends*/
 /*ends*/
 
-$smarty->assign("proptiger_broker_id", '410');
+$smarty->assign("proptiger_broker_id", '171');
 
 /*Added by siddharth for Forum Module Tables on 12th Jan 2012*/
 DEFINE("FUSER",FORUM_TABLE_PREFIX."USER");

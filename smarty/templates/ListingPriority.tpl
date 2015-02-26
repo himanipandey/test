@@ -147,6 +147,12 @@ function editListing(str){
     var jsonDump = $.parseJSON(str.jsonDump);
     if(jsonDump!=null){
       $("#tower2").val(jsonDump.tower);
+      $("#name").val(jsonDump.owner_name);
+      $("#email").val(jsonDump.owner_email);
+      $("#number").val(jsonDump.owner_number);
+
+
+
     }
     
     $("#description3").val(str.description);
@@ -352,10 +358,40 @@ $("#lmkSave").click(function(){
     var broker_name = $("#bkn2 :selected").text().trim();
 
     var broker_id = $("#bkn2 :selected").val();
-    
+    var pt_broker_id =  $("#pt_broker_id").val();
+    console.log(broker_id +" "+pt_broker_id);
+
+
     var owner_name = $("#name").val().trim();
     var owner_email = $("#email").val().trim();
     var owner_number = $("#number").val().trim();
+    if(broker_id==pt_broker_id){
+          
+
+          if(owner_name == ''||owner_name == null) {
+            owner_name = null;
+            alert('Enter Owner Name!!');
+            return false;
+          }
+
+          //
+          
+          
+          if(owner_number == ''||owner_number == null) {
+            owner_number = null;
+            alert('Enter Owner Number!!');
+            return false;
+          } else {
+            if(!isNumeric(owner_number)){
+              alert('Enter Only numeric owner contact no.');
+            return false;
+            }
+          }
+            
+
+    }
+          
+    
 
     //var projectid = $("#project :selected").text().trim();
     var project_name = $("#project").val().trim();
@@ -939,7 +975,21 @@ $("#plc3").keypress(function (e) {
 
 
 
+function isNumeric(val) {
+        var validChars = '0123456789';
+        //var validCharsforfirstdigit = '1234567890';
+        /*if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
+                return false;*/
+        
 
+        for(var i = 1; i < val.length; i++) {
+            if(validChars.indexOf(val.charAt(i)) == -1)
+                return false;
+        }
+
+
+        return true;
+}
 
 
 
@@ -1107,7 +1157,7 @@ $("#plc3").keypress(function (e) {
 
                         <tr id="name_number">
                               <td id="name1">
-                                <font id= "name_font">
+                                <font id= "name_font" color='red' style="display:none">
                                     *
                                 </font>
                                 Owner Name
@@ -1123,7 +1173,7 @@ $("#plc3").keypress(function (e) {
                                   <input type=text name="email" id="email"  style="width:120px;">
                               </td>
                               <td id="number1">
-                                <font id="number_font">
+                                <font id="number_font" color="red" style="display:none">
                                     *
                                 </font>
                                 Contact Number:
