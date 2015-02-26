@@ -368,6 +368,8 @@ $(function(){
       // target the pager markup - see the HTML block below
       container: $(".pager"),
 
+      size: 25,
+
       // use this format: "http:/mydatabase.com?page={ page }&size={ size }&{ sortList:col }"
       // where {page} is replaced by the page number (or use {page+1} to get a one-based index),
       // {size} is replaced by the number of records to show,
