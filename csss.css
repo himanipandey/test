@@ -43,13 +43,52 @@
 }
 
 
+#name_number{
+	position: absolute;
+	width:1200px;
+	left: 300px;
+	top: 300px;
+}
+#name1{
+	position: relative;
+	width: 100px;
+	text-align: center;
+}
+#name{
+	position: relative;
+	padding-left: 0px;
+	margin-left: 20px;
+}
+
+#email1{
+	position: relative;
+	width: 80px;
+	padding-left: 10px;
+	text-align: center;
+}
+#email{
+	position: relative;
+	
+}
+
+#number1{
+	position: relative;
+	padding-left: 20px;
+	width: 110px;
+	text-align: center;
+}
+#number{
+	position: relative;
+	margin-left: 20px;
+}
+
 
 
 #prj{
 	position: absolute;
 	width:1200px;
 	left: 300px;
-	top: 300px;
+	top: 350px;
 }
 #project1{
 	position: relative;
@@ -75,7 +114,7 @@
 	/*display: none;*/
 	position: absolute;
 	left: 300px;
-	top: 350px;
+	top: 400px;
 	width: 1200px;
 }
 #bh1{
@@ -102,7 +141,7 @@
 
 #othr{
 	position: absolute;
-	top: 400px;
+	top: 450px;
 	width: 1800px;
 	
 
@@ -126,6 +165,7 @@
 
 #bath{
 	position: relative;
+	display: none;
 	margin-left: 50px;
 	width: 60px;
 	text-align: center;
@@ -133,28 +173,33 @@
 
 #bath1{
 	position: relative;
+	display: none;
 	width: 60px;
 }
 
 #bath2{
 	position: relative;
+	display: none;
 	height: 15px;
 	width: 60px;
 }
 
 #tol1{
 	position: relative;
+	display: none;
 	width: 60px;
 	text-align: center;
 }
 
 #tol2{
 	position: relative;
+	display: none;
 	width: 80px;
 }
 
 #tol3{
 	position: relative;
+	display: none;
 	height: 15px;
 	width: 60px;
 }
@@ -179,7 +224,7 @@
 #study_servant{
 	position: absolute;
 	left: 350px;
-	top: 450px;
+	top: 500px;
 	width: 1200px;
 
 }
@@ -229,7 +274,7 @@
 #tower_floor{
 	position: absolute;
 	left: 300px;
-	top: 510px;
+	top: 560px;
 	width: 1200px;
 }
 
@@ -259,7 +304,7 @@
 #flat_park{
 	position: absolute;
 	left: 300px;
-	top: 580px;
+	top: 630px;
 	width: 1200px;
 }
 
@@ -289,7 +334,7 @@
 #prs_trf{
 	position: absolute;
 	left: 300px;
-	top: 650px;
+	top: 700px;
 	width: 1200px;
 }
 
@@ -327,7 +372,7 @@
 #prs_typ{
 	position: absolute;
 	left: 300px;
-	top: 680px;
+	top: 730px;
 	width: 1200px;
 }
 
@@ -351,7 +396,7 @@
 #hln{
 	position: absolute;
 	left: 300px;
-	top: 800px;
+	top: 850px;
 	width: 1200px;
 }
 
@@ -423,7 +468,7 @@
 #discription1{
 	position: absolute;
 	left: 300px;
-	top: 880px;
+	top: 930px;
 	width: 1200px;
 	height: 120px;
 	/*background-color: gold;*/

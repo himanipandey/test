@@ -462,6 +462,9 @@ define("DEF_PAGE_SIZE",10);
 define("SUBJECT_CREATE_ACCOUNT",'You have an account with PropTiger.com');
 define("FORGOT_PASSWORD_SUBJECT_CREATE_ACCOUNT",'You account detail of PropTiger.com');
 
+//define("proptiger_broker_id",'100');
+$smarty->assign("proptiger_broker_id", "100");
+
 
 //define('SERVER_PATH','/opt/lampp/htdocs/proptiger');
 define('SERVER_PATH','.');
