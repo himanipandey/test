@@ -547,9 +547,9 @@ $("#lmkSave").click(function(){
     //var projid = $("#proj").val().trim();
     //var bhk1 = $("#bh3 :selected").text().trim();    
     
-    var name = $("#name").val().trim();
-    var email = $("#email").val().trim();
-    var number = $("#number").val().trim();
+    var owner_name = $("#name").val().trim();
+    var owner_email = $("#email").val().trim();
+    var owner_number = $("#number").val().trim();
 
     var facing = $("#facing2 :selected").val();
     if(facing=='')
@@ -659,17 +659,17 @@ $("#lmkSave").click(function(){
     var parking = $("#park2 :selected").val();
     var loan_bank = $("#bank_list2 :selected").val();
     var plc_val = $("#plc3").val().trim();
-    var study_room = "";
+    var study_room = false;
     if ($('[name="yes_study"]').is(':checked'))  {
-      study_room = "YES";     
+      study_room = true;     
     } else {
-      study_room = "NO";
+      study_room = false;
     }  
-    var servant_room = "";
+    var servant_room = false;
      if ($('[name="yes_servant"]').is(':checked'))  {
-      servant_room = "YES";     
+      servant_room = true;     
     } else {
-      servant_room = "NO";
+      servant_room = false;
     } 
     var description = $("#description3").val().trim();
     var review = $("#review3").val().trim();
@@ -735,7 +735,7 @@ $("#lmkSave").click(function(){
               console.log('in ajax beforeSend');
               $("body").addClass("loading");
             },
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse:penthouse, studio:studio, negotiable:negotiable, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse:penthouse, studio:studio, negotiable:negotiable, description:description, review:review, task:task},
 
 
             success:function(msg){
@@ -748,20 +748,15 @@ $("#lmkSave").click(function(){
               if(msg.code==2){
                 
                $("body").removeClass("loading");
-                exitButtonClicked();
-                //alert("Listing Successfully updated");
-                /*$body = $("body"); $body.removeClass("loading");
-                 $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
-                //location.reload();
+                //exitButtonClicked();
+                
+
               }
               else if(msg.code==1){
                 $("body").removeClass("loading");
-                //$body = $("body");
-                //$body.removeClass("loading");$("#image_link").html("<a href=c+str.id+">Add/Edit Listing Images</a>");
-                location.href = "listing_img_add.php?listing_id="+msg.msg;
-                //exitButtonClicked();
-                //alert("Listing Successfully created"); //$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
-                //location.reload();
+                
+                //location.href = "listing_img_add.php?listing_id="+msg.msg;
+                
               }
               else{
                 //
@@ -1493,9 +1488,7 @@ $("#plc3").keypress(function (e) {
                                   <input type=text name="name" id="name"  style="width:100px;">
                               </td>
                               <td id="email1">
-                                <font id="email_font">
-                                    *
-                                </font>
+                                
                                 Email
                               </td>
                               <td id="email2">

@@ -108,8 +108,36 @@ else {
     $jsonDump = array();
     $tower = $_POST['tower'];
     $total_floor = $_POST['total_floor'];
+    $phaseId = $_POST['phase_id'];
+
+
+/***  listing v2 values  ****************************************************/   
     if(isset($tower) && !empty($tower))
-        $jsonDump['tower'] = $tower;
+        $dataArr['towerId'] =$tower;
+    if(isset($phaseId) && !empty($phaseId))
+        $dataArr['phaseId'] =$phaseId;
+/*** json dump values  ****************************************************/    
+    if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+    if(isset($owner_name) && !empty($owner_name))
+        $jsonDump['total_floor'] =$total_floor;
+    if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+    if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+    if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+    if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+    if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+    if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+    
+
+
+
+
     echo "Tower ",$tower;
     echo "Total_floor",$total_floor;
     $dataArr['jsonDump'] = json_encode($jsonDump);
