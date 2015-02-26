@@ -264,12 +264,10 @@ function getSeller(){
               msg = $.parseJSON(msg);
               $.each(msg, function(k,v) {
                 console.log(v);
-                  options.append($("<option/>").val(v['user_id']).text(v['name']));
-                
-              });  
-              
+                  options.append($("<option/>").val(v['user_id']).text(v['name']));    
+              });    
             },
-          });
+    });
 }
 
 
@@ -384,12 +382,16 @@ $("#lmkSave").click(function(){
     //var projectid = $("#project").val().trim();
     //var projid = $("#proj").val().trim();
     //var bhk1 = $("#bh3 :selected").text().trim();    
+    
+    var name = $("#name").val().trim();
+    var email = $("#email").val().trim();
+    var number = $("#number").val().trim();
 
     var facing = $("#facing2 :selected").val();
     if(facing=='')
       facing=null;
     //console.log(facing);
-    var tower = $("#tower2").val().trim();
+    var tower = $("#tower2 :selected").val();
     var floor = $("#floor2").val().trim();
     var total_floor_check = $("#total_floor1 :selected").text();
     var total_floor;
@@ -436,8 +438,8 @@ $("#lmkSave").click(function(){
 
     }
 
-console.log(price);
-//return true;    
+    console.log(price);
+    //return true;    
     
 
     var phase_id = $("#phase_id3 :selected").val();      
@@ -457,25 +459,25 @@ console.log(price);
     } else {
       transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000;
     }
-console.log(transfer_new);
-//return true;
+    console.log(transfer_new);
+    //return true;
     var appratment = $("#appartment3 :selected").text();
     var penthouse_stdio_temp = $("#penthouse_sel :selected").text();
   
-    var penthouse = "NO";
-    var studio = "No";
+    var penthouse = false;
+    var studio = false;
   
     if(penthouse_stdio_temp == "Penthouse") {
         if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
-            penthouse = "YES";
+            penthouse = true;
         } else {
-            penthouse = "NO";
+            penthouse = false;
         }
     } else if(penthouse_stdio_temp == "Studio") { 
         if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
-            studio = "YES";
+            studio = true;
         } else {
-            studio = "NO"; 
+            studio = false; 
         }
     }
 
@@ -538,6 +540,8 @@ console.log(transfer_new);
       }
      }
 
+
+
 //console.log("s:"+seller_id+" ppa:"+price_per_unit_area+" p:"+price+" op:"+other_prs);
      //validation checks
      var error = '';
@@ -575,6 +579,8 @@ console.log(transfer_new);
               console.log(msg);
               msg = $.parseJSON(msg);//console.log(msg.msg);
               //return;
+              console.log(msg.code);
+              console.log(msg.msg);
               if(msg.code==2){
                 
                $("body").removeClass("loading");
@@ -604,33 +610,6 @@ console.log(transfer_new);
             },
            
           });
-
-
-
-    /*id="size"
-    id="errmsgsize"
-    id="bhk"
-    id="errmsgbhk"
-    id="facing"
-    id="errmsgfacing"
-    id="floor"
-    id="errmsgfloor"
-    id="lakhs"
-    id="crs"
-    id="park"
-    id = "park1"
-    id="tower"
-    id="flt_no"
-    id="yes"
-    id="no"
-    id="bankddEdit"
-    id="plcy"
-    id="plcn"
-    id="plc3"
-    id="lmkSave"
-    id="exit_button" */
-
-
 
 
     var placeid = "";
@@ -857,13 +836,18 @@ console.log(transfer_new);
                         data: { project_id:project_id, task:'get_tower'},
 
                         success:function(msg){  
-                          console.log(msg); 
-                          //var i = 0;
+                           console.log(msg);
+              
+                            var options = $("#tower2");
+                            //var i = 0;
 
 
-                          //msg = $.parseJSON(msg);
-                          $('#tower2').val(msg); 
-                          
+                            msg = $.parseJSON(msg);
+                            $.each(msg, function(k,v) {
+                              //console.log(v);
+                              options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
+                              
+                            }); 
                         },
                 });    
 
@@ -901,18 +885,6 @@ console.log(transfer_new);
                         }
                           
                 });               
- 
-                
-                //console.log(bt);
-                //$("#bhk").val(bt);
-                /*response( $.map( data.data, function( item ) {              
-                  return {
-                  label: item.displayText,
-                  value: item.label,
-                  id:item.id,
-                  } 
-                      
-                }));*/
               }
           });
 
@@ -1046,16 +1018,20 @@ console.log(transfer_new);
                         data: { project_id:project_id, task:'get_tower'},
 
                         success:function(msg){  
-                          console.log(msg); 
-                          //var i = 0;
+                           console.log(msg);
+              
+                            var options = $("#tower2");
+                            //var i = 0;
 
 
-                          //msg = $.parseJSON(msg);
-                          $('#tower2').val(msg); 
-                          
+                            msg = $.parseJSON(msg);
+                            $.each(msg, function(k,v) {
+                              console.log(v);
+                              options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
+                              
+                            }); 
                         },
-                });    
-     
+                });   
               }
           });
           //}
@@ -1337,11 +1313,42 @@ $("#plc3").keypress(function (e) {
                             <td id="seller2">
                               <!-- <input type=text name="seller3" id="seller3"> --> 
                               <select id="seller3" name="seller3" >
-                                    <option value=''>Seller ID</option>
-                                    
-                                </select>      
+                                    <option value=''>Seller ID</option>                                    
+                              </select>      
                             </td>
                         </tr>
+
+                        <tr id="name_number">
+                              <td id="name1">
+                                <font id= "name_font">
+                                    *
+                                </font>
+                                Owner Name
+                              </td>
+                              <td id="name2">
+                                  <input type=text name="name" id="name"  style="width:100px;">
+                              </td>
+                              <td id="email1">
+                                <font id="email_font">
+                                    *
+                                </font>
+                                Email
+                              </td>
+                              <td id="email2">
+                                  <input type=text name="email" id="email"  style="width:120px;">
+                              </td>
+                              <td id="number1">
+                                <font id="number_font">
+                                    *
+                                </font>
+                                Contact Number:
+                              </td>
+                              <td class="number2">
+                                <input type=text name="number" id="number" style="width:100px;">   
+                                <input type=hidden value="{$proptiger_broker_id}" name="pt_broker_id" id="pt_broker_id" style="width:100px;">  
+                              </td>          
+                        </tr>
+
 
                     		<tr id="prj">
                       			<div class="ui-widget">
@@ -1486,7 +1493,10 @@ $("#plc3").keypress(function (e) {
                               Tower
                             </td>
                             <td >
-                                <input type=text name="tower2" id="tower2" style="width:100px">
+                                <!--<input type=text name="tower2" id="tower2" style="width:100px"> -->
+                                <select id="tower2" name="tower2" style="width:140px">
+                                    <option value=''>Select</option>
+                                </select>
                             </td>
                             <td  align="left" id="phase_id1" style="padding-left:30px">
                                   Phase 
@@ -1646,7 +1656,7 @@ $("#plc3").keypress(function (e) {
 	                        </td>
                       </tr>    
 
-                      <tr id = "negotiable_id" style="position:absolute;left:300px;top:740px">
+                      <tr id = "negotiable_id" style="position:absolute;left:300px;top:790px">
                           <td id ="tfr1" >
                               Transfer Rate:
                           </td>

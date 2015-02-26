@@ -4,6 +4,17 @@ $('document').ready(function(){
 		$("#total_floor1").append("<option>"+i+"</option>");
 	}    */
 
+	var pt_broker_id = '#pt_broker_id';
+	var seller_id = $("#seller3 :selected").val();
+	if($(pt_broker_id).val() === seller_id) {	
+		$('#name_font').show(1);	
+		$('#email_font').show(1);
+		$('#number_font').show(1);
+	} else {
+		$('#name_font').hide(1);	
+		$('#email_font').hide(1);
+		$('#number_font').hide(1);
+	}
 
 
 	var bh3 = '#bh3';
@@ -12,6 +23,7 @@ $('document').ready(function(){
 			$('#othr').show(1);	
 		} else {
 			$('#othr').hide(1);
+			$('#study_servant').hide(1);
 			$('#othr2').val('');
 			$('#bed2').val('');
 			$('#tol3').val('');
@@ -56,9 +68,10 @@ $('document').ready(function(){
 	$('#prs5').click(function(){
 		//$('#prs3').show(1);
 		if($('#prs5 :selected').val() == '2'){	
-			$('#other_charges').show();
+			//$('#other_charges').show();
 			$('#othr_prs2').show();
 			$('#tr').show();
+			$('#other_charges').show();
 		}
 		else {
 			//$('#pr').hide();

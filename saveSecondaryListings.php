@@ -9,19 +9,25 @@ include("dbConfig.php");
 if($_POST['task'] === 'get_tower')  {
    
     $Sql = "SELECT TOWER_ID,PROJECT_ID,TOWER_NAME FROM resi_project_tower_details WHERE PROJECT_ID =".$_POST['project_id']." ";
-    $tower = '';
+    $Tower = array();
     $ExecSql = mysql_query($Sql) or die();
     $cnt = 0;
     if (mysql_num_rows($ExecSql) > 0) {
         while($Res = mysql_fetch_assoc($ExecSql)) {
-            $tower = $Res['TOWER_NAME'];
+            $tmp = array();
+            $tmp['tower_id'] = $Res['TOWER_ID'];
+            $tmp['tower_name'] = $Res['TOWER_NAME'];
+            if($Res['TOWER_ID']!='')
+                array_push($Tower, $tmp);
+            $cnt++;
+            //$tower = $Res['TOWER_NAME'];
         }    
     }
     //echo $cnt;
    
 
-    //echo json_encode($tower);
-    echo $tower;
+    echo json_encode($Tower);
+    //echo $tower;
     //echo "Finish";
     //$smarty->assign("sel",$Sel);
 
@@ -90,27 +96,28 @@ else {
         'projectId'=> $_POST['project_id'],
         'bedrooms'=> $_POST['bedrooms'],
         'bathrooms'=> $_POST['bathrooms'], 
-<<<<<<< HEAD
+
         'unitType'=>  $_POST['unit_type'],
         'penthouse'=>$_POST['penthouse'],
         'studio' => $_POST['studio'],
-=======
-        'unitType'=> $_POST['unit_type'],//"Apartment", //
-        'penthouse'=>"false",
-        'studio' => "false",
->>>>>>> ceef04bcbae254e11c89e70f4b4e2905c5f55054
+        /*'penthouse'=> false,
+        'studio' => false,*/
+
         ); 
     $dataArr['otherInfo'] = $otherInfo;
 
     $dataArr['floor'] = $_POST['floor'];
     $jsonDump = array();
     $tower = $_POST['tower'];
+    $total_floor = $_POST['total_floor'];
     if(isset($tower) && !empty($tower))
         $jsonDump['tower'] = $tower;
-        
+    echo "Tower ",$tower;
+    echo "Total_floor",$total_floor;
     $dataArr['jsonDump'] = json_encode($jsonDump);
     $dataArr['description'] =$_POST['description'];
     $dataArr['remark'] =$_POST['review'];
+
 
     $dataArr['flatNumber'] = $_POST['flat_number'];
     $dataArr['homeLoanBankId'] = $_POST['loan_bank'];
@@ -196,7 +203,7 @@ else {
         ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
         ->body('')             // attach a body/payload...
         ->send(); 
-//var_dump($response_login);die();
+        var_dump($response_login);die();
         $header = $response_login->headers;
         $header = $header->toArray();
         $ck = $header['set-cookie'];
