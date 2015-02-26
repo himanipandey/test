@@ -1,20 +1,20 @@
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="tablesorter/css/pager-ajax.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
-<link rel="stylesheet" type="text/css" href="csss.css">
-<script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script> 
-<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script>
-<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">  
+<link rel="stylesheet" type="text/css" href="csss.css"> 
+<script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script>  
+<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script> 
 <script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
-<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script> 
 <script type="text/javascript" src="js/tablesorter_default_table.js"></script>
-<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/calendar.js"></script> 
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
-<script type="text/javascript" src="jscal/calendar-setup.js"></script>
-<script type="text/javascript" src="js/numberToWords.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script> 
+<script type="text/javascript" src="js/numberToWords.js"></script> 
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="/js/jss.js"></script> 
 
@@ -238,22 +238,6 @@ function editListing(str){
     $("#bh3").attr('disabled',true);
     
 
-   
-   /* var study_room = "";
-    if ($('[name="yes_study"]').is(':checked'))  {
-      study_room = "YES";     
-    } else {
-      study_room = "NO";
-    }  
-    var servant_room = "";
-     if ($('[name="yes_servant"]').is(':checked'))  {
-      servant_room = "YES";     
-    } else {
-      servant_room = "NO";
-    } 
-    var discription = $("#discription3").val().trim();*/
-
-
     window.scrollTo(0, 0);
 
      /*$('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
@@ -291,6 +275,8 @@ function getSeller(){
           });
 }
 
+
+
 function exitButtonClicked(){
   cleanFields();
      $('#create_company').hide('slow'); 
@@ -298,6 +284,7 @@ function exitButtonClicked(){
       $('#search_bottom').show('slow');
       location.reload();
 }
+
 
 jQuery(document).ready(function(){  
   var i;
@@ -547,7 +534,7 @@ $("#lmkSave").click(function(){
     else{
        size = $("#other_input").val().trim();
        bedrooms = $("#bed2").val().trim();
-      bathrooms = $("#tol3").val();
+       bathrooms = $("#tol3").val();
        property_id = "";
        unit_type = $("#appartment3 :selected").text();
     }
@@ -568,7 +555,16 @@ $("#lmkSave").click(function(){
     //console.log(facing);
     var tower = $("#tower2").val().trim();
     var floor = $("#floor2").val().trim();
-
+    var total_floor_check = $("#total_floor1 :selected").text();
+    var total_floor;
+    if(total_floor_check == "Select") {
+      total_floor = null;
+      alert('Select Total Floor!!');
+      return false;
+    } else {
+      total_floor = parseInt(total_floor_check);
+    }
+    
     var price_type = parseInt($("#prs5 :selected").val());
 
     var price = "";
@@ -608,14 +604,18 @@ console.log(price);
 //return true;    
     
 
-  /*  function strip(number) {
-return (parseFloat(number.toPrecision(2)));
-}*/
-    
+    var phase_id = $("#phase_id3 :selected").val();      
+
 
     var transfer_new;
     var trancefer_rate = $("#tfr2").val().trim();
     var price_in = "Lakhs";    
+
+    if ($('[name="lkhs_tfr"]').is(':checked'))  {
+      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
+    } else {
+      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000; 
+    }  
     if ($('[name="lkhs2"]').is(':checked'))  {
       transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
     } else {
@@ -624,6 +624,35 @@ return (parseFloat(number.toPrecision(2)));
 console.log(transfer_new);
 //return true;
     var appratment = $("#appartment3 :selected").text();
+    var penthouse_stdio_temp = $("#penthouse_sel :selected").text();
+  
+    var penthouse = "NO";
+    var studio = "No";
+  
+    if(penthouse_stdio_temp == "Penthouse") {
+        if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
+            penthouse = "YES";
+        } else {
+            penthouse = "NO";
+        }
+    } else if(penthouse_stdio_temp == "Studio") { 
+        if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
+            studio = "YES";
+        } else {
+            studio = "NO"; 
+        }
+    }
+
+    var negotiable = false;
+    if ($('[name="negotiable_yes"]').is(':checked'))  {
+        negotiable = true;
+    } else {
+        negotiable = false;
+    }
+
+    //alert("penthouse = "+penthouse);
+    //alert("studio = " + studio);
+
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
     var loan_bank = $("#bank_list2 :selected").val();
@@ -697,11 +726,13 @@ console.log(transfer_new);
             type: "POST",
             //async: false,
             url: '/saveSecondaryListings.php',
+
             beforeSend: function(){
               console.log('in ajax beforeSend');
               $("body").addClass("loading");
             },
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse:penthouse, studio:studio, negotiable:negotiable, description:description, review:review, task:task},
+
 
             success:function(msg){
               
@@ -798,12 +829,12 @@ console.log(transfer_new);
   
 
   });
-     
-   $( "#project" ).catcomplete({
+
+  $( "#project_search" ).catcomplete({
       source: function( request, response ) {
         
         $.ajax({
-          url: "{$url12}"+"?query="+$("#project").val().trim()+"&typeAheadType=(project)&city="+$("#cityddEdit :selected").text().trim()+"&rows=10",
+          url: "{$url12}"+"?query="+$("#project_search").val().trim()+"&typeAheadType=(project)&city="+$("#citydd :selected").text().trim()+"&rows=10",
           //url: "{$url12}"+"?query="+$("#proj").val().trim()+$("#cityddEdit :selected").text().trim(),
           dataType: "json",
           data: {
@@ -849,13 +880,80 @@ console.log(transfer_new);
               },
               
               success: function( data ) {
+                  ///// Write code what u want...                 
+              }
+          });
+          //}
+      },
+      
+
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      },
+
+    }); 
+     
+   $( "#project" ).catcomplete({
+      source: function( request, response ) {
+        
+        $.ajax({
+          url: "{$url12}"+"?query="+$("#project").val().trim()+"&typeAheadType=(project)&city="+$("#cityddEdit :selected").text().trim()+"&rows=10",
+          //url: "{$url12}"+"?query="+$("#proj").val().trim()+$("#cityddEdit :selected").text().trim(),
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full", 
+            name_startsWith: request.term
+          }, 
+           
+          success: function( data ) { 
+            response( $.map( data.data, function( item ) {              
+                return {
+                label: item.displayText,
+                value: item.label,
+                id:item.id,
+                }
+                 
+            }));
+          }
+        });      
+      },
+              
+      select: function( event, ui ) {
+        window.selectedItem = ui.item;
+        var res = ui.item.id.split("-");
+          var projectId = res[2];
+          pid = projectId;
+          console.log(projectId);
+
+          $("#projectId").val(projectId); 
+          var data = { projectId:projectId,  task:'get_options'}; 
+           
+          //find_project_options();
+                
+          console.log("{$url13}"+projectId+"/phase");
+          $.ajax({
+              //alert("Hello"); 
+              url: "{$url13}"+projectId,
+              dataType: "json",
+              data: {
+                featureClass: "P",
+                style: "full", 
+                //name_startsWith: request.term
+              },
+              
+              success: function( data ) {
                   
 
                 //var v1 = data.data.properties[0].unitName;
                 var v1 = data.data.projectDetails.builder.name;
                 var v2 = data.data.projectDetails.projectName;
                 var v3 = data.data.locality.newsTag;
-                
+                console.log(data);
+                //alert(data.data);
                 //console.log(v1);
                 //console.log(v2);
                 //console.log(v3);
@@ -897,7 +995,76 @@ console.log(transfer_new);
                     i++;
                     j++;
                 });   
-                                  
+                
+                $('#total_floor1').html('');  
+                var total_floor_array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101];
+                var floor_option = $('#total_floor1');
+                var j = 0;
+                console.log('Floor option');
+                //floor_option.append($("<option/>").val(0).text('Select');
+                $.each(total_floor_array, function() {
+                    if (j == 0)  {
+                       floor_option.append($("<option/>").val(j).text('Select'));   
+                    } else {
+                       floor_option.append($("<option/>").val(j).text(total_floor_array[j-1]));
+                    }
+                    j++;
+                    //console.log(j);
+                });
+
+                var project_id = $("#proj").val().trim();
+                //var project_id = '500055';   
+                //alert(project_id);
+                $.ajax({
+                        type: "POST",
+                        url: '/saveSecondaryListings.php',
+                        data: { project_id:project_id, task:'get_tower'},
+
+                        success:function(msg){  
+                          console.log(msg); 
+                          //var i = 0;
+
+
+                          //msg = $.parseJSON(msg);
+                          $('#tower2').val(msg); 
+                          
+                        },
+                });    
+
+                $.ajax({
+                        type: "POST",
+                        url: "{$url_phase_id}"+projectId+"/phase",
+                        dataType: "json",
+                        data: {
+                        featureClass: "P",
+                        style: "full", 
+                        //name_startsWith: request.term
+                        },
+              
+                        success: function( data ) {
+                          var ln2 = data.data.length;
+                          //phase_id3
+                          //option.length=0;
+                          //console.log(ln2);
+                          //console.log(data.data[0].phaseId);
+                          var phase_ids1 = [];
+                          var phase_ids2 = [];
+                          for(i = 0; i < ln2; i++)  {
+                              console.log(data.data[i].phaseId);
+                              phase_ids1.push(data.data[i].phaseId);
+                              phase_ids2.push(data.data[i].phaseName);
+                          } 
+                          $('#phase_id3').html(''); 
+                          var phase_options = $("#phase_id3");
+                          var i = 0;
+
+                          $.each(phase_ids2, function() {
+                              phase_options.append($("<option/>").val(phase_ids1[i]).text(phase_ids2[i]));
+                              i++;
+                          });
+                        }
+                          
+                });               
  
                 
                 //console.log(bt);
@@ -912,6 +1079,9 @@ console.log(transfer_new);
                 }));*/
               }
           });
+
+
+          
           //}
       },
       
@@ -980,7 +1150,75 @@ console.log(transfer_new);
                     options.append($("<option/>").val('other').text(bbt[j]));
                     i++;
                     j++;
-                });   
+                });
+
+                $('#total_floor1').html('');  
+                var total_floor_array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101];
+
+                var floor_option = $('#total_floor1');
+                var j = 0;
+                console.log('Floor option');
+                //floor_option.append($("<option/>").val(0).text('Select');
+                $.each(total_floor_array, function() {
+                    if (j == 0)  {
+                       floor_option.append($("<option/>").val(j).text('Select'));   
+                    } else {
+                       floor_option.append($("<option/>").val(j).text(total_floor_array[j-1]));
+                    }
+                    j++;
+                    //console.log(j);
+                });  
+
+                var project_id = $("#proj").val().trim();
+                //var project_id = '500055';   
+                //alert(project_id);
+                $.ajax({
+                        type: "POST",
+                        url: "{$url_phase_id}"+project_id+"/phase",
+                        dataType: "json",
+                        data: {
+                        featureClass: "P",
+                        style: "full", 
+                        //name_startsWith: request.term
+                        },
+              
+                        success: function( data ) {
+                          var ln2 = data.data.length;
+                         
+                          var phase_ids1 = [];
+                          var phase_ids2 = [];
+                          for(i = 0; i < ln2; i++)  {
+                              console.log(data.data[i].phaseId);
+                              phase_ids1.push(data.data[i].phaseId);
+                              phase_ids2.push(data.data[i].phaseName);
+                             
+                          } 
+                          $('#phase_id3').html(''); 
+                          var phase_options = $("#phase_id3");
+                          var i = 0;
+
+                          $.each(phase_ids2, function() {
+                              phase_options.append($("<option/>").val(phase_ids1[i]).text(phase_ids2[i]));
+                              i++;
+                          }); 
+                        },
+                });
+
+                $.ajax({
+                        type: "POST",
+                        url: '/saveSecondaryListings.php',
+                        data: { project_id:project_id, task:'get_tower'},
+
+                        success:function(msg){  
+                          console.log(msg); 
+                          //var i = 0;
+
+
+                          //msg = $.parseJSON(msg);
+                          $('#tower2').val(msg); 
+                          
+                        },
+                });    
      
               }
           });
@@ -1169,17 +1407,7 @@ $("#plc3").keypress(function (e) {
 		                                </td>
 		                          		<!-- <input type="hidden" name="localityId" id = "localityId" value="{$localityId}"> -->
 		                                
-		                                <td width = "10px">&nbsp;
-		                                </td>
-		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <!-- <select id="placeType" name="placeType">
-		                                       <option value=''>select place type</option>
-		                                       {foreach from=$nearPlaceTypesArray key=k item=v}
-		                                              <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
-		                                       {/foreach}
-		                                    </select>
-                                        -->
-		                                </td>
+		                                
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="15%" height="25" align="left" valign="top">
 		                                    <!--<select name="status">
@@ -1193,6 +1421,20 @@ $("#plc3").keypress(function (e) {
                                            {/foreach}
                                         </select>
 		                                </td>
+                                    <td width = "10px">&nbsp;
+                                    </td>
+                                    <td width="15%" height="25" align="left" valign="top">
+                                        <!-- <select id="placeType" name="placeType">
+                                           <option value=''>select place type</option>
+                                           {foreach from=$nearPlaceTypesArray key=k item=v}
+                                                  <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
+                                           {/foreach}
+                                        </select>
+                                        -->
+                                      
+                                      <input type=text name="project_search" id="project_search"  style="width:210px;"> 
+                              
+                                    </td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="20%" height="25" align="left" valign="top">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="submitButton();">
@@ -1320,8 +1562,8 @@ $("#plc3").keypress(function (e) {
                             </td>
                         </tr>
      
-                        <tr id = "othr" style="display: none;">
-                            <td id="othr1" padding-left: 100px;>
+                        <tr id = "othr" style="left: 350px; display:none;">
+                            <td id="othr1">
                                   <font color="red">*</font>Size
                             </td>
                             <td id="othr2">
@@ -1331,7 +1573,7 @@ $("#plc3").keypress(function (e) {
                                   <font color="red">*</font>Bedroom
                             </td>
                             <td id="bath1">
-                                  <input type=text name="bed2" id="bed2" style="width:60px">  
+                                  <input type=text name="bed2" id="bed2" style="width:60px;height:15px">  
                             </td>
                             <td id="tol1">
                                   Toilet
@@ -1344,19 +1586,64 @@ $("#plc3").keypress(function (e) {
                             </td>
                             <td id="appartment2">
                                   <select name="appartment3" id="appartment3" style="height:28px">
-                                      <option value=''>Select</option> 
-                                      <option value='1'>Apartment</option>  
-                                      <option value="2">Villa</option>
-                                      <option value="3">Plot</option>
-                                      <option value="4">Commercial</option>
-                                      <option value="5">Shop</option>
-                                      <option value="6">Office</option>
-                                      <option value="7">Other</option>
+
+                                    <option value="0">Select</option>
+                                    <option value="1">Appartment</option>>  
+                                    <option value="2">Villa</option>
+                                    <option value="3">Plot</option>
+                                    <option value="4">Commercial</option>
+                                    <option value="5">Shop</option>
+                                    <option value="6">Office</option>
+                                    <option value="7">Other</option>
+
                                 </select>
                             </td>
+                            
+
                         </tr>
   
+                        <tr id="study_servant" style="display: none;">
+                          <td id = "study1">
+                              Study Room
+                          </td>
+                                              
+                          <td width="200px" align="left" id="study" >
+                            <label  for="one" style="font-size:11px;">
+                              Yes &nbsp;   
+                                <input type="radio" id="yes_study" name="yes_study" value="1" /> 
+                                &nbsp;&nbsp; No &nbsp;
+                                <input type="radio" id="no_study" name="no_study" value="2" checked="checked" />
+                            </label>
+                          </td>
 
+                          <td>
+
+                          </td>
+
+                          <td id = "servant1">
+                              Servant Room
+                          </td>
+                                              
+                          <td width="120px" align="left" id="servant" >
+                            <label  for="one" style="font-size:11px;">
+                              Yes &nbsp;   
+                                <input type="radio" id="yes_servant" name="yes_servant" value="1" /> 
+                                &nbsp;&nbsp; No &nbsp;
+                                <input type="radio" id="no_servant" name="no_servant" value="2" checked="checked" />
+                            </label>
+                          </td>
+
+                          <td id="penthouse_td1">
+                                  <font color="red">*</font>Other
+                            </td>
+                            <td id="penthouse_td2">
+                                  <select name="penthouse_sel" id="penthouse_sel" style="height:28px;width:120px">
+                                    <option value=''>Select</option>  
+                                      <option value="1">Penthouse</option>
+                                      <option value="2">Studio</option>
+                                </select>
+                            </td> 
+                      </tr>
                     
                         <tr id="tower_floor"> 
                             <td id="tower1">
@@ -1365,19 +1652,34 @@ $("#plc3").keypress(function (e) {
                             <td >
                                 <input type=text name="tower2" id="tower2" style="width:100px">
                             </td>
-                            <td  align="left" id="errmsgtower">
-                                
+                            <td  align="left" id="phase_id1" style="padding-left:30px">
+                                  Phase 
                             </td>
-
+                            <td  align="left" id="phase_id2">
+                                 <select id="phase_id3" name="phase_id3" style="width:140px">
+                                    <option value=''>Select</option>
+                                </select> 
+                            </td>  
                       			<td id="floor1">
                           			Floor
                       			</td>
                       			<td>
-                          			<input type=text name="floor2" id="floor2" style="width:100px">
+                          			<input type=text name="floor2" id="floor2" style="width:50px">
                       			</td>
                       			<td  align="left" id="errmsgfloor">
                       				
                       			</td>
+                            <td id="total_floor" style = "width:50px">
+                                Out of
+                            </td>
+
+                            <td>
+                                <select id="total_floor1" name="total_floor1" style="width:80px">
+                                    <option value=''>Select</option>
+                                    
+                                </select>
+
+                            </td>
                       
                     		</tr>
 
@@ -1400,19 +1702,18 @@ $("#plc3").keypress(function (e) {
                                 <td id="prs2">
                                     <input type=text name="prs3" id="prs3" style="width:100px">
                                 </td> 
-
-                                <td id ="tfr1" >
-                                  Transfer Rate:
+                                <td id="other_charges" style="display:none"> 
+                                    Other Charges:
+                                </td>  
+                                <td>
+                                    <input type=text name="othr_prs2" id="othr_prs2" style="width:100px;display:none">
                                 </td>
-                                <td >
-                                    <input type=text name="tfr2" id="tfr2" style="width:100px">
-                                </td>
-
+                                
                     		</tr> 
 
                         <tr id="prs_typ">
                             
-                            <td width="110px" align="left" id="pr" style="padding-left:120px;display:none;" >
+                            <td width="110px" align="left" id="pr" style="padding-left:240px;" >
                               <label  for="one" style="font-size:11px;" >
                                 lacs &nbsp;   
                                  <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
@@ -1421,14 +1722,12 @@ $("#plc3").keypress(function (e) {
                               </label>    
                             </td>
 
-                         
-                            <td width="400px" style="margin-left=-20px; display:none;" id="other_charges">Other Charges:
-                                <input type=text name="othr_prs2" id="othr_prs2" style="width:100px;">
-                            </td>
                         
-                            <td width="630px" align="left" id="tr" style="display:none;">
+
+                            <td width="630px" align="left" id="tr" style="padding-left:250px; display:none">
+
                               <label  for="one" style="font-size:11px;">
-                                lkhs &nbsp;   
+                                lacs &nbsp;   
                                   <input type="radio" id="lkhs2" name="prstp2" value="y" checked="checked" /> 
                                   &nbsp;&nbsp; crs &nbsp;
                                   <input type="radio" id="crs2" name="prstp2" value="n" />
@@ -1511,36 +1810,34 @@ $("#plc3").keypress(function (e) {
 	                        </td>
                       </tr>    
 
-                      <tr id="study_servant" style="display:none;">
-                          <td id = "study1">
-                              Study Room
+                      <tr id = "negotiable_id" style="position:absolute;left:300px;top:740px">
+                          <td id ="tfr1" >
+                              Transfer Rate:
                           </td>
-                                              
-                          <td width="200px" align="left" id="study" >
+                          <td >
+                              <input type=text name="tfr2" id="tfr2" style="width:100px">
+                          </td>
+
+                          <td width="110px" align="left" id="tfr_price" style="padding-left:0px;" >
+                              <label  for="one" style="font-size:11px;" >
+                                lacs &nbsp;   
+                                <input type="radio" id="lkhs_tfr" name="lkhs_tfr" value="y" checked="checked" /> 
+                                &nbsp;&nbsp; crs &nbsp;
+                                <input type="radio" id="crs_tfr" name="crs_tfr" value="n" />
+                              </label>    
+                          </td>
+
+                          <td id = "negotiable_id1" style="position:relative;padding-left:120px;width:110px; text-align:center">
+                              Negotiable  
+                        </td>    
+                          <td id = "negotiable_id2">
                             <label  for="one" style="font-size:11px;">
-                              Yes &nbsp;   
-                                <input type="radio" id="yes_study" name="yes_study" value="1" /> 
+                              &nbsp;&nbsp;Yes &nbsp;   
+                                <input type="radio" id="negotiable_yes" name="negotiable_yes" value="1" /> 
                                 &nbsp;&nbsp; No &nbsp;
-                                <input type="radio" id="no_study" name="no_study" value="2" checked="checked" />
+                                <input type="radio" id="negotiable_no" name="negotiable_no" value="0" checked="checked" />
                             </label>
                           </td>
-
-                          <td>
-
-                          </td>
-
-                          <td id = "servant1">
-                              Servant Room
-                          </td>
-                                              
-                          <td width="200px" align="left" id="servant" >
-                            <label  for="one" style="font-size:11px;">
-                              Yes &nbsp;   
-                                <input type="radio" id="yes_servant" name="yes_servant" value="1" /> 
-                                &nbsp;&nbsp; No &nbsp;
-                                <input type="radio" id="no_servant" name="no_servant" value="2" checked="checked" />
-                            </label>
-                          </td>  
                       </tr>
 
                       <tr id="discription1">
@@ -1689,42 +1986,7 @@ $("#plc3").keypress(function (e) {
                                 
                                   </TR>
                                 {/foreach}
-                                <!--{$adjacents = 3}
-                                {$total_pages = 8}
-                                {$limit = 5}
-                                {$page = 3}
-                                { if $page > 0 }
-                                  { $start = ($page-1) * $limit }    
-                                { else }
-                                  { $start = 0 }
-                                
-                                { if ($page == 0) }
-                                  { $page = 1 }   
-                                
-                                { $prev = $page - 1 }              
-                                { $next = $page + 1 }            
-                                { $lastpage = ceil($total_pages/$limit) }   
-                                { $lpm1 = $lastpage - 1 } 
-                                { $pagination = "" }
-                                  { if($lastpage > 1) }
-                                      { $pagination = "<div class=\"pagination\">"; }
-                                        { if ($page > 1) }
-                                           { $pagination.= "<a href=\"$targetpage?page=$prev\">� previous</a>";}
-                                        { else }
-                                           { $pagination.= "<span class=\"disabled\">� previous</span>"; 
-                                                      
-                                                       
-                                            if ($lastpage < 7 + ($adjacents * 2)) 
-                                                      { 
-                                                        for ($counter = 1; $counter <= $lastpage; $counter++)
-                                                        {
-                                                          if ($counter == $page)
-                                                            $pagination.= "<span class=\"current\">$counter</span>";
-                                                          else
-                                                            $pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";         
-                                                        }
-                                                      }
-                                                      -->
+                               
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>
                           
@@ -1753,9 +2015,12 @@ $("#plc3").keypress(function (e) {
                                 </td>
                               </tr>
                           </tfoot>
+
                         </form>
                     </TABLE>
+
                   </div>
+
                  </TD>
             </TR>
           </TBODY></TABLE>
