@@ -352,7 +352,11 @@ $("#lmkSave").click(function(){
     var broker_name = $("#bkn2 :selected").text().trim();
 
     var broker_id = $("#bkn2 :selected").val();
-      
+    
+    var owner_name = $("#name").val().trim();
+    var owner_email = $("#email").val().trim();
+    var owner_number = $("#number").val().trim();
+
     //var projectid = $("#project :selected").text().trim();
     var project_name = $("#project").val().trim();
     var project_id = $("#proj").val().trim();
@@ -537,7 +541,7 @@ console.log(transfer_new);
               console.log('in ajax beforeSend');
               $("body").addClass("loading");
             },
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
 
             success:function(msg){
               
@@ -1100,6 +1104,36 @@ $("#plc3").keypress(function (e) {
                                 </select>      
                             </td>
                         </tr>
+
+                        <tr id="name_number">
+                              <td id="name1">
+                                <font id= "name_font">
+                                    *
+                                </font>
+                                Owner Name
+                              </td>
+                              <td id="name2">
+                                  <input type=text name="name" id="name"  style="width:100px;">
+                              </td>
+                              <td id="email1">
+                                
+                                Email
+                              </td>
+                              <td id="email2">
+                                  <input type=text name="email" id="email"  style="width:120px;">
+                              </td>
+                              <td id="number1">
+                                <font id="number_font">
+                                    *
+                                </font>
+                                Contact Number:
+                              </td>
+                              <td class="number2">
+                                <input type=text name="number" id="number" style="width:100px;">   
+                                <input type=hidden value="{$proptiger_broker_id}" name="pt_broker_id" id="pt_broker_id" style="width:100px;">  
+                              </td>          
+                        </tr>
+
 
                     		<tr id="prj">
                       			<div class="ui-widget">

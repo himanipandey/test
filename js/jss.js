@@ -1,4 +1,17 @@
 $('document').ready(function(){
+
+	var pt_id_broker = '#pt_broker_id';
+	var seller_id = $("#seller3 :selected").val();
+		if($(pt_id_broker).val() === seller_id){	
+			$('#name_font').show(1);
+			$('#number_font').show(1);	
+		} else {
+			$('#name_font').hide(1);
+			$('#number_font').hide(1);	
+
+		}
+
+
 	var bh3 = '#bh3';
 	$(bh3).click(function(){
 		if($(bh3).val() === 'other'){	

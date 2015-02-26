@@ -78,8 +78,17 @@ else {
     $dataArr['floor'] = $_POST['floor'];
     $jsonDump = array();
     $tower = $_POST['tower'];
+    $owner_name = $_POST['owner_name'];
+    $owner_email = $_POST['owner_email'];
+    $owner_number = $_POST['owner_number'];
+    if(isset($owner_name) && !empty($owner_name))
+        $jsonDump['owner_name'] = $owner_name;
     if(isset($tower) && !empty($tower))
         $jsonDump['tower'] = $tower;
+    if(isset($owner_email) && !empty($owner_email))
+        $jsonDump['owner_email'] = $owner_email;
+    if(isset($owner_number) && !empty($owner_number))
+        $jsonDump['owner_number'] = $owner_number;
         
     $dataArr['jsonDump'] = json_encode($jsonDump);
     $dataArr['description'] =$_POST['description'];
