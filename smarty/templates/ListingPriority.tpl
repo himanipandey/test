@@ -347,6 +347,16 @@ $(function(){
       widgets: ['zebra', 'filter']
     })
 
+    //before initialize
+    .on('pagerBeforeInitialized', function(event, pager){
+    var table = this,
+        $table = $(this);
+
+    pager.page = 0;            // set current page here
+    pager.size = 25;           // set current size here
+    pager.currentFilters = []; // set initial filters here
+  })
+
     // initialize the pager plugin
     // ****************************
     .tablesorterPager({
@@ -442,7 +452,7 @@ $(function(){
       output: '{startRow} to {endRow} ({totalRows})',
 
       // apply disabled classname to the pager arrows when the rows at either extreme is visible - default is true
-      updateArrows: false,
+      updateArrows: true,
 
       // starting page of the pager (zero based index)
       page: 0,
