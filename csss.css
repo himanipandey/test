@@ -1,5 +1,6 @@
 #city{
 	position: absolute;
+	/*display: none;*/
 	width: 1200px;
 	top:200px;
 	left:300px;
@@ -15,7 +16,8 @@
 }
 
 #bkn{
-	position: absolute;
+	/*position: absolute;*/
+	display: none;
 	width: 1200px;
 	top:250px;
 	left:300px;
@@ -44,7 +46,7 @@
 
 
 #name_number{
-	position: absolute;
+	/*position: absolute;*/
 	width:1200px;
 	left: 300px;
 	top: 300px;
@@ -85,7 +87,8 @@
 
 
 #prj{
-	position: absolute;
+	/*position: absolute;*/
+	display: none;
 	width:1200px;
 	left: 300px;
 	top: 350px;
@@ -113,6 +116,7 @@
 #bhk{
 	/*display: none;*/
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
 	top: 400px;
 	width: 1200px;
@@ -141,6 +145,7 @@
 
 #othr{
 	position: absolute;
+	/*display: none;*/
 	top: 450px;
 	width: 1800px;
 	
@@ -223,6 +228,7 @@
 
 #study_servant{
 	position: absolute;
+	display: none;
 	left: 350px;
 	top: 500px;
 	width: 1200px;
@@ -273,6 +279,7 @@
 
 #tower_floor{
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
 	top: 560px;
 	width: 1200px;
@@ -303,6 +310,7 @@
 
 #flat_park{
 	position: absolute;
+	display: none;
 	left: 300px;
 	top: 630px;
 	width: 1200px;
@@ -333,6 +341,7 @@
 
 #prs_trf{
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
 	top: 700px;
 	width: 1200px;
@@ -370,7 +379,8 @@
 
 
 #prs_typ{
-	position: absolute;
+	/*position: absolute;*/
+	display: none;
 	left: 300px;
 	top: 730px;
 	width: 1200px;
@@ -395,6 +405,7 @@
 
 #hln{
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
 	top: 850px;
 	width: 1200px;
@@ -445,7 +456,8 @@
 
 
 #negotiable_id{
-	position: absolute;
+	/*position: absolute;*/
+	display: none;
 	/*left: 300px;
 	/*top: 780px;*/
 	width: 1200px;
@@ -467,6 +479,7 @@
 
 #discription1{
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
 	top: 930px;
 	width: 1200px;
