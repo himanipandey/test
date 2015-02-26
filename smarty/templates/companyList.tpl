@@ -356,7 +356,8 @@ if(compType=='Broker'){
 	            data: data,
               
 	            success:function(msg){
-				   if(msg == 1){
+                console.log("msg"+msg);
+				        if(msg == 1){
 	               
 	               location.reload(true);
                  $(window).scrollTop(0);
@@ -2115,7 +2116,7 @@ function basic_info_bt_clicked(){
                           <td width="20%" align="right" valign="top">Primary Device Usage : </td>
                           <td width="30%" align="left">
                            <select id="device" name="device" valign="center"> 
-                              <option name=one value='0'>Select Device Used</option>
+                              <option name=one value=''>Select Device Used</option>
                               {foreach from=$devices key=k item=v}
                                 <option name=one value='{$k}'>{$v}</option>
                               {/foreach}
@@ -2165,7 +2166,7 @@ function basic_info_bt_clicked(){
                               <input type="radio" name="relative"  value='Yes' class="relative" id='relative_yes'>Yes &nbsp; &nbsp; <br>
                               <input type="radio" name="relative" value="No" class="relative" id='relative_no' checked='checked'>No &nbsp; &nbsp;
                                     <select  id="ptRelative" name="ptRelative" style="display:none">
-                                       <option value='0'>select Relative</option>
+                                       <option value=''>select Relative</option>
                                        {foreach from=$ptRelative key=k item=v}
                                               <option value="{$k}">{$v}</option>
                                        {/foreach}
