@@ -88,6 +88,8 @@ function cleanFields(){
 }
 
 function editListing(str){
+  debugger;
+  str = JSON.parse(decodeURIComponent(str));
     cleanFields();
     //console.log(str.jsonDump.tower);
     $('#search-top').hide('slow');
@@ -438,7 +440,7 @@ $(function(){
                 // add each table cell data to row array
                 if (indx >= 0) {
                   if(indx==6)
-                    row[indx] =  "<button type='button' id='edit_button_"+d[r][c+1]+"' onclick='return editListing("+JSON.stringify(d[r][c]).html()+")' align='left'>Edit</button>" ;
+                    row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ "\"" +encodeURIComponent(JSON.stringify(d[r][c]))+ "\"" + ")' align='left'>Edit</button>" ;
                   else
                     row[indx] =   d[r][c];
                 }

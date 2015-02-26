@@ -16,7 +16,7 @@ $uriLogin = ADMIN_USER_LOGIN_API_URL; //master
 //$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-10@proptiger.com&password=1234&rememberme=true"; //normal user
 
 //$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&fields=seller,id,property&start=0&rows=10";
-$uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start={$start}&rows={$size}&fields=seller,seller.fullName,id,listing,listing.facing,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,property,property.propertyId,property.project,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
+$uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start={$start}&rows={$size}&fields=seller,seller.fullName,id,listing,listing.facing,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,property,property.propertyId,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
 //$uri = "https://qa.proptiger-ws.com/data/v1/entity/user/listing";
 //$dataArr = array();
 //$dataArr['sellerId'] = "1216008";
@@ -97,7 +97,7 @@ try{
                                             "Project" => $v->property->project->name. ", ".$v->property->project->builder->name,
                                             "Listing" => $v->property->unitName."-".$v->property->size."-".$v->property->unitType,
                                             "Price" => $price,
-                                            "Save" => htmlentities(json_encode($v)),
+                                            "Save" => $v,
                                             "id" => $v->id
                         );
                 //var_dump($rows);
