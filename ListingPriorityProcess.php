@@ -105,7 +105,7 @@ try{
     }
 
 
-   var_dump($responseLogin);
+   //var_dump($responseLogin);
    
     if($ck_new!='')
     {    
