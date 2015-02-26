@@ -88,7 +88,7 @@ function cleanFields(){
 }
 
 function editListing(str){
-  debugger;
+  //debugger;
   str = JSON.parse(decodeURIComponent(str));
     cleanFields();
     //console.log(str.jsonDump.tower);
@@ -429,7 +429,7 @@ $(function(){
                   if(indx==6)
                     row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ "\"" +encodeURIComponent(JSON.stringify(d[r][c]))+ "\"" + ")' align='left'>Edit</button>" ;
                   else
-                    row[indx] =   d[r][c];
+                    row[indx] = d[r][c];
                 }
               }
             }

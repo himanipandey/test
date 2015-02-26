@@ -12,6 +12,8 @@ $bankArray = BankList::arrBank();
 $smarty->assign("bankArray",$bankArray);
 $smarty->assign('dirname',$dirname);
 
+$project_id = $_REQUEST['project'];
+
 
 /*
     static function getLocalityByCity($ctid,$companyLocality = null) {

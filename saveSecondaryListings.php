@@ -90,15 +90,11 @@ else {
         'projectId'=> $_POST['project_id'],
         'bedrooms'=> $_POST['bedrooms'],
         'bathrooms'=> $_POST['bathrooms'], 
-<<<<<<< HEAD
+
         'unitType'=>  $_POST['unit_type'],
         'penthouse'=>$_POST['penthouse'],
         'studio' => $_POST['studio'],
-=======
-        'unitType'=> $_POST['unit_type'],//"Apartment", //
-        'penthouse'=>"false",
-        'studio' => "false",
->>>>>>> ceef04bcbae254e11c89e70f4b4e2905c5f55054
+
         ); 
     $dataArr['otherInfo'] = $otherInfo;
 
