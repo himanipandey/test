@@ -1,4 +1,5 @@
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
+<link rel="stylesheet" type="text/css" href="tablesorter/css/pager-ajax.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="csss.css">
@@ -342,6 +343,167 @@ $("#exit_button").click(function(){
    getSeller();
    
 });*/
+
+// tablesorter ajax pager
+
+{literal}
+$(function(){
+
+  // Initialize tablesorter
+  // ***********************
+  $("#listing_table")
+    .tablesorter({
+      theme: 'blue',
+      widthFixed: true,
+      sortLocaleCompare: true, // needed for accented characters in the data
+      sortList: [ [0,1] ],
+      widgets: ['zebra', 'filter']
+    })
+
+    // initialize the pager plugin
+    // ****************************
+    .tablesorterPager({
+
+      // **********************************
+      //  Description of ALL pager options
+      // **********************************
+
+      // target the pager markup - see the HTML block below
+      container: $(".pager"),
+
+      // use this format: "http:/mydatabase.com?page={ page }&size={ size }&{ sortList:col }"
+      // where {page} is replaced by the page number (or use {page+1} to get a one-based index),
+      // {size} is replaced by the number of records to show,
+      // {sortList:col} adds the sortList to the url into a "col" array, and {filterList:fcol} adds
+      // the filterList to the url into an "fcol" array.
+      // So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
+      // and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
+      //ajaxUrl : 'assets/City{page}.json?{filterList:filter}&{sortList:column}',
+      //ajaxUrl : '/ajax_listing_table_copy.php?page={page}&size={size}&{sortList:col}',
+      ajaxUrl : '/ajax_tablesorter_listing.php?page={page}&size={size}&{sortList:col}',
+      // modify the url after all processing has been applied
+      customAjaxUrl: function(table, url) {
+          // manipulate the url string as you desire
+          // url += '&cPage=' + window.location.pathname;
+          // trigger my custom event
+          $(table).trigger('changingUrl', url);
+          // send the server the current page
+          return url;
+      },
+
+      // add more ajax settings here
+      // see http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
+      ajaxObject: {
+        dataType: 'json'
+      },
+
+      // process ajax so that the following information is returned:
+      // [ total_rows (number), rows (array of arrays), headers (array; optional) ]
+      // example:
+      // [
+      //   100,  // total rows
+      //   [
+      //     [ "row1cell1", "row1cell2", ... "row1cellN" ],
+      //     [ "row2cell1", "row2cell2", ... "row2cellN" ],
+      //     ...
+      //     [ "rowNcell1", "rowNcell2", ... "rowNcellN" ]
+      //   ],
+      //   [ "header1", "header2", ... "headerN" ] // optional
+      // ]
+      // OR
+      // return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
+      ajaxProcessing: function(data){
+        console.log(data);
+        if (data && data.hasOwnProperty('rows')) {
+          var indx, r, row, c, d = data.rows,
+          // total number of rows (required)
+          total = data.total_rows,
+          // array of header names (optional)
+          headers = data.headers,
+          // cross-reference to match JSON key within data (no spaces)
+          headerXref = headers.join(',').replace(/\s+/g,'').split(','),
+          // all rows: array of arrays; each internal array has the table cell data for that row
+          rows = [],
+          // len should match pager set size (c.size)
+          len = d.length;
+          // this will depend on how the json is set up - see City0.json
+          // rows
+          for ( r=0; r < len; r++ ) {
+            row = []; // new row array
+            // cells
+            for ( c in d[r] ) {
+              if (typeof(c) === "string") {
+                // match the key with the header to get the proper column index
+                indx = $.inArray( c, headerXref );
+                // add each table cell data to row array
+                if (indx >= 0) {
+                  if(indx==6)
+                    row[indx] =  "<button type='button' id='edit_button_"+d[r][c+1]+"' onclick='return editListing("+JSON.stringify(d[r][c]).html()+")' align='left'>Edit</button>" ;
+                  else
+                    row[indx] =   d[r][c];
+                }
+              }
+            }
+            rows.push(row); // add new row array to rows array
+          }
+          // in version 2.10, you can optionally return $(rows) a set of table rows within a jQuery object
+          return [ total, rows, headers ];
+        }
+      },
+
+      // output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
+      output: '{startRow} to {endRow} ({totalRows})',
+
+      // apply disabled classname to the pager arrows when the rows at either extreme is visible - default is true
+      updateArrows: false,
+
+      // starting page of the pager (zero based index)
+      page: 0,
+
+      // Number of visible rows - default is 10
+      size: 25,
+
+      // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+      // table row set to a height to compensate; default is false
+      fixedHeight: false,
+
+      // remove rows from the table to speed up the sort of large tables.
+      // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+      removeRows: false,
+
+      // css class names of pager arrows
+      cssNext        : '.next',  // next page arrow
+      cssPrev        : '.prev',  // previous page arrow
+      cssFirst       : '.first', // go to first page arrow
+      cssLast        : '.last',  // go to last page arrow
+      cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
+      cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
+      cssErrorRow    : 'tablesorter-errorRow', // error information row
+
+      // class added to arrows when at the extremes (i.e. prev/first arrows are "disabled" when on the first page)
+      cssDisabled    : 'disabled' // Note there is no period "." in front of this class name
+
+    });
+
+});
+
+{/literal}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1466,9 +1628,9 @@ $("#plc3").keypress(function (e) {
 
                     <div class="modal">Please Wait..............</div>
                     <div id="search-bottom">
-                    <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
+                    <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 id="listing_table" class="tablesorter">
                         <form name="form1" method="post" action="">
-                          <thead>
+                           <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=1% align="center">Serial</th>
                                   <th  width=5% align="center">City</th>
@@ -1563,32 +1725,32 @@ $("#plc3").keypress(function (e) {
                                                       -->
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>
+                          
                           <tfoot>
-                                                        <tr>
-                                                            <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
-                                                                
-                                                                <button class="btn first"><i class="icon-step-backward"></i></button>
-                                                                <button class="btn prev"><i class="icon-arrow-left"></i></button>
-                                                                <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-                                                                <button class="btn next"><i class="icon-arrow-right"></i></button>
-                                                                <button class="btn last"><i class="icon-step-forward"></i></button>
-                                                                <select class="pagesize input-mini" title="Select page size">
-                                                                    <option value="10">10</option>
-                                                                    <option value="20">20</option>
-                                                                    <option value="50">50</option>
-                                                                    <option selected="selected" value="100">100</option>
-                                                                </select>
-                                                                <select class="pagenum input-mini" title="Select page number"></select>
-                                                            </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th >
-                                                            </th>
-                                                          
-                                                            
-                                                        </tr>
-
-                           </tfoot>
+                              <tr>
+                                <th>1</th> <!-- tfoot text will be updated at the same time as the thead -->
+                                <th>2</th>
+                                <th>3</th>
+                                <th>4</th>
+                                <th>5</th>
+                                <th>6</th>
+                                <th>7</th>
+                              </tr>
+                              <tr>
+                                <td class="pager" colspan="7">
+                                  <img src="tablesorter/addons/pager/icons/first.png" class="first"/>
+                                  <img src="tablesorter/addons/pager/icons/prev.png" class="prev"/>
+                                  <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+                                  <img src="tablesorter/addons/pager/icons/next.png" class="next"/>
+                                  <img src="tablesorter/addons/pager/icons/last.png" class="last"/>
+                                  <select class="pagesize">
+                                  <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                  </select>
+                                </td>
+                              </tr>
+                          </tfoot>
                         </form>
                     </TABLE>
                   </div>
