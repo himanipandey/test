@@ -52,7 +52,7 @@ $namearr = Company::getCompanyNameByQuery('br');
 
 
 //get company logo
-foreach ($compArr as $k => $v) {
+/*foreach ($compArr as $k => $v) {
 	# code...
 
 	$objectId = $v['id'];
@@ -70,7 +70,7 @@ foreach ($compArr as $k => $v) {
         $compArr[$k]['image_id'] = $v1->id;
     }
 
-}
+}*/
 
 $smarty->assign("compArr", $compArr);
 
