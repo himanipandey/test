@@ -558,7 +558,7 @@ $("#lmkSave").click(function(){
     var tower = $("#tower2 :selected").val();
     var floor = $("#floor2").val().trim();
     var total_floor_check = $("#total_floor1 :selected").text();
-    var total_floor;
+    var total_floor = null;
     if(total_floor_check == "Select") {
       total_floor = null;
       alert('Select Total Floor!!');
@@ -628,8 +628,8 @@ $("#lmkSave").click(function(){
     var appratment = $("#appartment3 :selected").text();
     var penthouse_stdio_temp = $("#penthouse_sel :selected").text();
   
-    var penthouse = false;
-    var studio = false;
+    var penthouse = null;
+    var studio = null;
   
     if(penthouse_stdio_temp == "Penthouse") {
         if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
@@ -645,7 +645,7 @@ $("#lmkSave").click(function(){
         }
     }
 
-    var negotiable = false;
+    var negotiable = null;
     if ($('[name="negotiable_yes"]').is(':checked'))  {
         negotiable = true;
     } else {
@@ -748,14 +748,14 @@ $("#lmkSave").click(function(){
               if(msg.code==2){
                 
                $("body").removeClass("loading");
-                //exitButtonClicked();
+                exitButtonClicked();
                 
 
               }
               else if(msg.code==1){
                 $("body").removeClass("loading");
                 
-                //location.href = "listing_img_add.php?listing_id="+msg.msg;
+                location.href = "listing_img_add.php?listing_id="+msg.msg;
                 
               }
               else{

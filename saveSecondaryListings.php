@@ -98,10 +98,16 @@ else {
         'bathrooms'=> $_POST['bathrooms'], 
 
         'unitType'=>  $_POST['unit_type'],
-        'penthouse'=>$_POST['penthouse'],
-        'studio' => $_POST['studio'],
-
         ); 
+
+    if($_POST['penthouse'] != null) {
+        $otherInfo['penthouse'] = $_POST['penthouse'];
+    }
+    if($_POST['studio'] != null) {
+        $otherInfo['studio'] = $_POST['studio'];
+    }
+
+        
     $dataArr['otherInfo'] = $otherInfo;
 
     $dataArr['floor'] = $_POST['floor'];
@@ -109,7 +115,10 @@ else {
     $tower = $_POST['tower'];
     $total_floor = $_POST['total_floor'];
     $phaseId = $_POST['phase_id'];
-
+    $owner_name = $_POST['owner_name'];
+    $powner_email = $_POST['owner_email'];
+    $study_room = $_POST['study_room'];
+    $servant_room = $_POST['servant_room'];
 
 /***  listing v2 values  ****************************************************/   
     if(isset($tower) && !empty($tower))
@@ -120,19 +129,16 @@ else {
     if(isset($total_floor) && !empty($total_floor))
         $jsonDump['total_floor'] =$total_floor;
     if(isset($owner_name) && !empty($owner_name))
-        $jsonDump['total_floor'] =$total_floor;
-    if(isset($total_floor) && !empty($total_floor))
-        $jsonDump['total_floor'] =$total_floor;
-    if(isset($total_floor) && !empty($total_floor))
-        $jsonDump['total_floor'] =$total_floor;
-    if(isset($total_floor) && !empty($total_floor))
-        $jsonDump['total_floor'] =$total_floor;
-    if(isset($total_floor) && !empty($total_floor))
-        $jsonDump['total_floor'] =$total_floor;
-    if(isset($total_floor) && !empty($total_floor))
-        $jsonDump['total_floor'] =$total_floor;
-    if(isset($total_floor) && !empty($total_floor))
-        $jsonDump['total_floor'] =$total_floor;
+        $jsonDump['owner_name'] =$owner_name;
+    if(isset($owner_email) && !empty($owner_email))
+        $jsonDump['owner_email'] =$owner_email;
+    if(isset($owner_number) && !empty($owner_number))
+        $jsonDump['owner_number'] =$owner_number;
+    if(isset($study_room) && !empty($study_room))
+        $jsonDump['study_room'] =$study_room;
+    if(isset($servant_room) && !empty($servant_room))
+        $jsonDump['servant_room'] = $servant_room;
+
     
 
 
@@ -148,7 +154,10 @@ else {
     $dataArr['flatNumber'] = $_POST['flat_number'];
     $dataArr['homeLoanBankId'] = $_POST['loan_bank'];
     $dataArr['noOfCarParks'] = $_POST['parking'];
-    //$dataArr['negotiable'] = "true";
+    if($_POST['negotiable'] != null)  {
+        $dataArr['negotiable'] = $_POST['negotiable'];    
+    }
+    
     $dataArr['transferCharges'] = $_POST['trancefer_rate']; 
     $dataArr['plc'] = $_POST['plc_val'];
 
@@ -229,7 +238,7 @@ else {
         ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
         ->body('')             // attach a body/payload...
         ->send(); 
-        var_dump($response_login);die();
+        //var_dump($response_login);die();
         $header = $response_login->headers;
         $header = $header->toArray();
         $ck = $header['set-cookie'];
