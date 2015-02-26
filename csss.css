@@ -165,6 +165,7 @@
 
 #bath{
 	position: relative;
+	display: none;
 	margin-left: 50px;
 	width: 60px;
 	text-align: center;
@@ -172,28 +173,33 @@
 
 #bath1{
 	position: relative;
+	display: none;
 	width: 60px;
 }
 
 #bath2{
 	position: relative;
+	display: none;
 	height: 15px;
 	width: 60px;
 }
 
 #tol1{
 	position: relative;
+	display: none;
 	width: 60px;
 	text-align: center;
 }
 
 #tol2{
 	position: relative;
+	display: none;
 	width: 80px;
 }
 
 #tol3{
 	position: relative;
+	display: none;
 	height: 15px;
 	width: 60px;
 }

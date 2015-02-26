@@ -39,6 +39,7 @@ $('document').ready(function(){
 			$('#bath1').show();
 			$('#tol1').show();
 			$('#tol2').show();
+			$('#tol3').show();
 		}
 		
 		 else {
