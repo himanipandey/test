@@ -113,10 +113,12 @@ else {
     $dataArr['floor'] = $_POST['floor'];
     $jsonDump = array();
     $tower = $_POST['tower'];
+
     $total_floor = $_POST['total_floor'];
     $phaseId = $_POST['phase_id'];
     $owner_name = $_POST['owner_name'];
     $powner_email = $_POST['owner_email'];
+    $owner_number = $_POST['owner_number'];
     $study_room = $_POST['study_room'];
     $servant_room = $_POST['servant_room'];
 
@@ -140,12 +142,6 @@ else {
         $jsonDump['servant_room'] = $servant_room;
 
     
-
-
-
-
-    echo "Tower ",$tower;
-    echo "Total_floor",$total_floor;
     $dataArr['jsonDump'] = json_encode($jsonDump);
     $dataArr['description'] =$_POST['description'];
     $dataArr['remark'] =$_POST['review'];

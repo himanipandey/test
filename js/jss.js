@@ -1,26 +1,28 @@
 $('document').ready(function(){
-	//
- 	/*for(i=1;i<=100;i++) {
-		$("#total_floor1").append("<option>"+i+"</option>");
-	}    */
 
-	var pt_broker_id = '#pt_broker_id';
-	var seller_id = $("#seller3 :selected").val();
-	if($(pt_broker_id).val() === seller_id) {	
-		$('#name_font').show(1);	
-		$('#email_font').show(1);
-		$('#number_font').show(1);
-	} else {
-		$('#name_font').hide(1);	
-		$('#email_font').hide(1);
-		$('#number_font').hide(1);
-	}
 
+	$("#bkn2").click(function(){
+		var broker_id = $("#bkn2 :selected").val();
+	    var pt_broker_id =  $("#pt_broker_id").val();
+	    console.log(broker_id +" "+pt_broker_id);
+			if(broker_id == pt_broker_id){
+				console.log("ids matched" );	
+				$('#name_font').show(1);
+				$('#number_font').show(1);	
+			} else {
+				console.log("ids not matched");	
+				$('#name_font').hide(1);
+				$('#number_font').hide(1);	
+
+			}
+	});
 
 	var bh3 = '#bh3';
 	$(bh3).click(function(){
 		if($(bh3).val() === 'other'){	
-			$('#othr').show(1);	
+			/*$('#othr').show(1);*/	
+			$('#appartment1').show(1);
+			$('#appartment2').show(1);
 		} else {
 			$('#othr').hide(1);
 			$('#study_servant').hide(1);
@@ -28,21 +30,32 @@ $('document').ready(function(){
 			$('#bed2').val('');
 			$('#tol3').val('');
 			$('#appartment3').val('');
+			$('#appartment1').hide(1);
+			$('#appartment2').hide(1);
+
 
 		}
 	});
 
 //option type change event handler
-	$('#appartment3').click(function(){
-		if($('#appartment3 :selected').val() == '1'  || $('#appartment3 :selected').val() == '2'){	
+
+
+	var appartment3 = '#appartment3';
+	$(appartment3).click(function(){
+		if($(appartment3).val() === '1' || $(appartment3).val() === '2'){	
+			$('#study_servant').show(1);
+			$('#othr').show();	
 			$('#bath').show();
 			$('#bath1').show();
 			$('#tol1').show();
 			$('#tol2').show();
 			$('#tol3').show();
-		}
-		
-		 else {
+			
+			
+
+		} else {
+			$('#study_servant').hide(1);
+			$('#othr').hide();
 			$('#bath').hide();
 			$('#bath1').hide();
 			$('#tol1').hide();
@@ -50,16 +63,6 @@ $('document').ready(function(){
 
 			$('#bed2').val('');
 			$('#tol3').val('');
-		}
-	});
-
-
-	var appartment3 = '#appartment3';
-	$(appartment3).click(function(){
-		if($(appartment3).val() === '1' || $(appartment3).val() === '2'){	
-			$('#study_servant').show(1);	
-		} else {
-			$('#study_servant').hide(1);
 		}
 	});
 
@@ -129,11 +132,11 @@ $('document').ready(function(){
 
 	$('#no').click(function(){
 		$('#yes').removeAttr('checked');
-		$('#bank_list2').hide(1);
+		$('#bank_list2').show(1);
 		$('#bank_list2').val("");
 	});
 
-	$('#plcy').click(function(){
+	/*$('#plcy').click(function(){
 		$('#plcn').removeAttr('checked');
 		$('#plc3').show(1);
 	});
@@ -142,7 +145,7 @@ $('document').ready(function(){
 		$('#plcy').removeAttr('checked');
 		$('#plc3').hide(1);
 		$('#plc3').val("");
-	});
+	});*/
 
 	$('#yes_study').click(function(){
 		$('#no_study').removeAttr('checked');

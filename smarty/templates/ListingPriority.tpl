@@ -81,8 +81,8 @@ function cleanFields(){
    $('#othr').hide();
    $('#other_charges').hide();
    $('#pr').hide();
-   $('#plc3').hide(1);
-   $('#bank_list2').hide(1);
+   /*$('#plc5').hide(1);
+   $('#bnk_lst').hide(1);*/
    $("#image_link").html("");
    
 }
@@ -150,6 +150,12 @@ function editListing(str){
     var jsonDump = $.parseJSON(str.jsonDump);
     if(jsonDump!=null){
       $("#tower2").val(jsonDump.tower);
+      $("#name").val(jsonDump.owner_name);
+      $("#email").val(jsonDump.owner_email);
+      $("#number").val(jsonDump.owner_number);
+
+
+
     }
     
     $("#description3").val(str.description);
@@ -171,9 +177,11 @@ function editListing(str){
       if(str.currentListingPrice.pricePerUnitArea > 0){
          $("#prs5").val('2');
          var price_value = str.currentListingPrice.pricePerUnitArea;
-         $('#pr').hide();
+         $('#pr').show();
+         $('#tr').show();
          $('#other_charges').show();
-
+         $('#othr_prs2').show();
+         $("#othr_prs2").val(str.currentListingPrice.otherCharges);
          $("#prs3").val(price_value);
 
        }
@@ -188,7 +196,8 @@ function editListing(str){
          $('#othr_prs2').val('');
 
       }
-      $("#othr_prs2").val(str.currentListingPrice.otherCharges);
+      
+      
     }
 
     
@@ -201,31 +210,31 @@ function editListing(str){
 
 
      $("#park2").val(str.noOfCarParks);
-    $("#bank_list2").val(str.homeLoanBankId);
+    $("#bnk_lst").val(str.homeLoanBankId);
     if(str.homeLoanBankId!='' && str.homeLoanBankId!=null && str.homeLoanBankId>0){
       console.log("bank yes");
-      $("#bank_list2").show();
-      $('#yes').attr('checked', true);
-      $('#no').removeAttr('checked');
+      $("#bnk_lst").show();
+      /*$('#yes').attr('checked', true);
+      $('#no').removeAttr('checked');*/
     }
     else{
       console.log("bank no");
-      $("#bank_list2").hide();
-      $("#bank_list2").val('');
-      $('#yes').removeAttr('checked');
-      $('#no').attr('checked', true);
+      /*$("#bank_list2").hide();*/
+      $("#bnk_lst").val('');
+      /*$('#yes').removeAttr('checked');
+      $('#no').attr('checked', true);*/
     }
-    $("#plc3").val(str.plc);
+    $("#plc5").val(str.plc);
     if(str.plc!='' && str.plc!=null && str.plc>0){
       console.log("plc yes");
-      $("#plc3").show();
+      $("#plc5").show();
       $('#plcn').removeAttr('checked');
       $('#plcy').attr('checked', true);
     }
     else{
       console.log("plc no");
-      $("#plc3").hide();
-      $('#plc3').val("");
+      /*$("#plc5").hide();*/
+      $('#plc5').val("");
       $('#plcn').attr('checked', true);
       $('#plcy').removeAttr('checked');
     }
@@ -493,19 +502,6 @@ $(function(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 $("#lmkSave").click(function(){
     var temp = [];
     var listing_id = $("#listing_id").val();
@@ -513,7 +509,41 @@ $("#lmkSave").click(function(){
     var broker_name = $("#bkn2 :selected").text().trim();
 
     var broker_id = $("#bkn2 :selected").val();
-      
+    var pt_broker_id =  $("#pt_broker_id").val();
+    console.log(broker_id +" "+pt_broker_id);
+
+
+    var owner_name = $("#name").val().trim();
+    var owner_email = $("#email").val().trim();
+    var owner_number = $("#number").val().trim();
+    if(broker_id==pt_broker_id){
+          
+
+          if(owner_name == ''||owner_name == null) {
+            owner_name = null;
+            alert('Enter Owner Name!!');
+            return false;
+          }
+
+          //
+          
+          
+          if(owner_number == ''||owner_number == null) {
+            owner_number = null;
+            alert('Enter Owner Number!!');
+            return false;
+          } else {
+            if(!isNumeric(owner_number)){
+              alert('Enter Only numeric owner contact no.');
+            return false;
+            }
+          }
+            
+
+    }
+          
+    
+
     //var projectid = $("#project :selected").text().trim();
     var project_name = $("#project").val().trim();
     var project_id = $("#proj").val().trim();
@@ -600,9 +630,6 @@ $("#lmkSave").click(function(){
           price = parseInt(parseFloat(price).toFixed(2) * 10000000);
         }
       }
-
-      
-
     }
     else{
       price_per_unit_area = $("#prs3").val().trim();
@@ -621,15 +648,22 @@ $("#lmkSave").click(function(){
     var phase_id = $("#phase_id3 :selected").val();      
 
 
-    var transfer_new;
+    var transfer_new = null;
     var trancefer_rate = $("#tfr2").val().trim();
     var price_in = "Lakhs";    
 
-    if ($('[name="lkhs_tfr"]').is(':checked'))  {
-      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
-    } else {
-      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000; 
-    }  
+    var trancefer_rate_check = $("#transfer_sel").val().trim();
+	if(trancefer_rate_check == '') {
+		alert("Select price type for transfer");
+	} else {
+	    if (trancefer_rate_check == '1')  {
+	      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
+	    } else if(trancefer_rate_check == '2'){
+	      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000; 
+	    }  
+	}
+
+     
     if ($('[name="lkhs2"]').is(':checked'))  {
       transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
     } else {
@@ -658,9 +692,10 @@ $("#lmkSave").click(function(){
     }
 
     var negotiable = null;
-    if ($('[name="negotiable_yes"]').is(':checked'))  {
+    var nego_select_check = $("#nego_select :selected").val();
+    if (nego_select_check == '1')  {
         negotiable = true;
-    } else {
+    } else if(nego_select_check == '2'){
         negotiable = false;
     }
 
@@ -669,20 +704,25 @@ $("#lmkSave").click(function(){
 
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
-    var loan_bank = $("#bank_list2 :selected").val();
-    var plc_val = $("#plc3").val().trim();
-    var study_room = false;
-    if ($('[name="yes_study"]').is(':checked'))  {
-      study_room = true;     
-    } else {
-      study_room = false;
+    var loan_bank = $("#bnk_lst :selected").val();
+    var plc_val = $("#plc5").val().trim();
+    
+    var study_room = null;
+    var study_room_check = $("#study_sel :selected").val();
+    if (study_room_check == '1')  {
+          study_room = true;
+    } else if(servant_room_check == '2'){
+      study_room = false
     }  
-    var servant_room = false;
-     if ($('[name="yes_servant"]').is(':checked'))  {
-      servant_room = true;     
-    } else {
-      servant_room = false;
+    
+    var servant_room = null;
+    var servant_room_check = $("#servant_sel :selected").val();
+    if (servant_room_check == '1')  {
+          study_room = true;
+    } else if(servant_room_check == '2'){
+      study_room = false
     } 
+
     var description = $("#description3").val().trim();
     var review = $("#review3").val().trim();
 
@@ -747,7 +787,9 @@ $("#lmkSave").click(function(){
               console.log('in ajax beforeSend');
               $("body").addClass("loading");
             },
+
             data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse:penthouse, studio:studio, negotiable:negotiable, description:description, review:review, task:task},
+
 
 
             success:function(msg){
@@ -1302,7 +1344,7 @@ $("#tfr2").keypress(function (e) {
     }
    });
 
-$("#plc3").keypress(function (e) {
+$("#plc5").keypress(function (e) {
      //if the letter is not digit then display error and don't type anything
      if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
         //display error message
@@ -1320,7 +1362,21 @@ $("#plc3").keypress(function (e) {
 
 
 
+function isNumeric(val) {
+        var validChars = '0123456789';
+        //var validCharsforfirstdigit = '1234567890';
+        /*if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
+                return false;*/
+        
 
+        for(var i = 1; i < val.length; i++) {
+            if(validChars.indexOf(val.charAt(i)) == -1)
+                return false;
+        }
+
+
+        return true;
+}
 
 
 
@@ -1445,8 +1501,8 @@ $("#plc3").keypress(function (e) {
                   	<form method="post" enctype="multipart/form-data" id="formlmk" name="formlmk">
                     	<input type="hidden" name="old_sub_name" value="">
                     	<div>
-<!--City Tr-->         		<tr id="city">
-                      			<td id="city1">
+<!--City Tr-->         		<tr id="city" style="left:300px;">
+                      			<td id="city1"">
                       				City
                       			</td>
                             <td>
@@ -1487,37 +1543,47 @@ $("#plc3").keypress(function (e) {
                                     <option value=''>Seller ID</option>                                    
                               </select>      
                             </td>
+                            	
                         </tr>
+                      
+                        	<hr id = "line1" >
+                      
 
-                        <tr id="name_number">
+                        <tr id="name_number1">
                               <td id="name1">
-                                <font id= "name_font">
+
+                                <font id= "name_font" color='red' style="display:none">
                                     *
                                 </font>
                                 Owner Name
                               </td>
+                        
                               <td id="name2">
-                                  <input type=text name="name" id="name"  style="width:100px;">
+                                  <input type=text name="name" id="name"  style="width:150px;">
                               </td>
+                        </tr>
+                        <tr id="name_number2">      
                               <td id="email1">
                                 
                                 Email
                               </td>
                               <td id="email2">
-                                  <input type=text name="email" id="email"  style="width:120px;">
+                                  <input type=text name="email" id="email"  style="width:150px;">
                               </td>
                               <td id="number1">
-                                <font id="number_font">
+
+                                <font id="number_font" color="red" style="display:none">
                                     *
                                 </font>
                                 Contact Number:
                               </td>
                               <td class="number2">
-                                <input type=text name="number" id="number" style="width:100px;">   
+                                <input type=text name="number" id="number" style="width:150px;">   
                                 <input type=hidden value="{$proptiger_broker_id}" name="pt_broker_id" id="pt_broker_id" style="width:100px;">  
                               </td>          
                         </tr>
-
+                        	
+                        		<hr id = "line2" >
 
                     		<tr id="prj">
                       			<div class="ui-widget">
@@ -1531,101 +1597,92 @@ $("#plc3").keypress(function (e) {
                             			<input type=text name="project" id="project"  style="width:210px;">
                         			</td>
                         			<td  style="text-align: center;" width="100px;">
-                                  OR
-                            	</td>
-                              <td id="proj1">
-                                Project ID:
-                              </td>
-                              <td class="proj2">
-                                <input type=text name="proj" id="proj">       
-                              </td>
+                                  		OR
+                            		</td>
+	                              <td id="proj1">
+	                                Project ID:
+	                              </td>
+	                              <td class="proj2">
+	                                <input type=text name="proj" id="proj" style="width:100px">       
+	                              </td>
                       			</div>         		
                     		</tr>
        
                     		<tr id="bhk">
-                            <td id = "bh1">
-                                <font color="red">*</font>BHK
-                            </td>
-                            <td id="bh2">
-                                <select id="bh3" name="bh3">
-                                    <option value=''> BHK </option>    
-                                    <script language="javascript" type="text/javascript"> 
-                                    for(var d=0;d< bt.length;d++)  {
-                                        document.write("<option value='"+option[d].propertyId+"' >"+bt[d]+"</option>");
-                                    }
-                                    </script>
-                                </select>
-                            </td>
-                            <td id = "facing1">
-                                Facing
-                            </td>
-                            <td>
-                                <select id="facing2" name="facing2">
-                                    <option value=''>Select</option>  
-                                      <option value="East">East</option>
-                                      <option value="West">West</option>
-                                      <option value="North">North</option>
-                                      <option value="South">South</option>
-                                      <option value="NorthEast">North East</option>
-                                      <option value="SouthEast">South East</option>
-                                      <option value="NorthWest">North West</option>
-                                      <option value="SouthWest">South West</option>
-                                </select>
-                            </td>
-                        </tr>
-     
-                        <tr id = "othr" style="left: 350px; display:none;">
+	                            <td id = "bh1">
+	                                <font color="red">*</font>BHK
+	                            </td>
+	                            <td id="bh2">
+	                                <select id="bh3" name="bh3">
+	                                    <option value=''> BHK </option>    
+	                                    <script language="javascript" type="text/javascript"> 
+	                                    for(var d=0;d< bt.length;d++)  {
+	                                        document.write("<option value='"+option[d].propertyId+"' >"+bt[d]+"</option>");
+	                                    }
+	                                    </script>
+	                                </select>
+	                            </td>
+	                            <td id="appartment1">
+	                                  <font color="red">*</font>Option Type
+	                            </td>
+	                            <td id="appartment2">
+	                                  <select name="appartment3" id="appartment3" style="height:28px">
+
+	                                    <option value="0">Select</option>
+	                                    <option value="1">Appartment</option>>  
+	                                    <option value="2">Villa</option>
+	                                    <option value="3">Plot</option>
+	                                    <option value="4">Commercial</option>
+	                                    <option value="5">Shop</option>
+	                                    <option value="6">Office</option>
+	                                    <option value="7">Other</option>
+
+	                                </select>
+	                            </td>
+	                          
+                            </tr>
+						   
+                        <tr id = "othr">
                             <td id="othr1">
-                                  <font color="red">*</font>Size
+                                  <font size="1" color="red">*</font>
+                                  <font size="1">
+                                  Size
+                                  </font>
                             </td>
                             <td id="othr2">
                                   <input type=text name="other_input" id="other_input"> 
                             </td>
                             <td id="bath">
-                                  <font color="red">*</font>Bedroom
+                                  <font size="1" color="red">*</font>
+                                  <font size="1">Bedroom</font>
                             </td>
                             <td id="bath1">
                                   <input type=text name="bed2" id="bed2" style="width:60px;height:15px">  
                             </td>
                             <td id="tol1">
+                            	<font size="1">
                                   Toilet
+                                </font>
                             </td>
                             <td id="tol2">
                                   <input type=text name="tol3" id="tol3">
                             </td>
-                            <td id="appartment1">
-                                  <font color="red">*</font>Option Type
-                            </td>
-                            <td id="appartment2">
-                                  <select name="appartment3" id="appartment3" style="height:28px">
-
-                                    <option value="0">Select</option>
-                                    <option value="1">Appartment</option>>  
-                                    <option value="2">Villa</option>
-                                    <option value="3">Plot</option>
-                                    <option value="4">Commercial</option>
-                                    <option value="5">Shop</option>
-                                    <option value="6">Office</option>
-                                    <option value="7">Other</option>
-
-                                </select>
-                            </td>
-                            
-
                         </tr>
   
-                        <tr id="study_servant" style="display: none;">
+                        <tr id="study_servant" >
                           <td id = "study1">
+                          	<font size = "1">
                               Study Room
+                            </font>
+
                           </td>
-                                              
-                          <td width="200px" align="left" id="study" >
-                            <label  for="one" style="font-size:11px;">
-                              Yes &nbsp;   
-                                <input type="radio" id="yes_study" name="yes_study" value="1" /> 
-                                &nbsp;&nbsp; No &nbsp;
-                                <input type="radio" id="no_study" name="no_study" value="2" checked="checked" />
-                            </label>
+                           <td id="study">                   
+	                          <select name="study_sel" id="study_sel" style="height:28px;width:70px">
+
+		                                    <option value="0">Select</option>
+		                                    <option value="1">Yes</option>
+		                                    <option value="2">No</option>  
+		                      </select>
                           </td>
 
                           <td>
@@ -1633,48 +1690,67 @@ $("#plc3").keypress(function (e) {
                           </td>
 
                           <td id = "servant1">
+                          	<font size = "1">
                               Servant Room
+                            </font>
                           </td>
                                               
                           <td width="120px" align="left" id="servant" >
-                            <label  for="one" style="font-size:11px;">
-                              Yes &nbsp;   
-                                <input type="radio" id="yes_servant" name="yes_servant" value="1" /> 
-                                &nbsp;&nbsp; No &nbsp;
-                                <input type="radio" id="no_servant" name="no_servant" value="2" checked="checked" />
-                            </label>
+                            <select name="servant_sel" id="servant_sel" style="height:28px;width:70px">
+
+	                                    <option value="0">Select</option>
+	                                    <option value="1">Yes</option>
+	                                    <option value="2">No</option>  
+	                        </select>
                           </td>
 
                           <td id="penthouse_td1">
-                                  <font color="red">*</font>Other
+                                  <font size="1" color="red">*</font>
+                                  <font size="1">
+                                  Other
+                                  </font>
                             </td>
                             <td id="penthouse_td2">
-                                  <select name="penthouse_sel" id="penthouse_sel" style="height:28px;width:120px">
+                                  <select name="penthouse_sel" id="penthouse_sel" style="height:28px;width:70px">
                                     <option value=''>Select</option>  
                                       <option value="1">Penthouse</option>
                                       <option value="2">Studio</option>
                                 </select>
                             </td> 
                       </tr>
-                    
+                    		<hr id = "line3" >
+
                         <tr id="tower_floor"> 
-                            <td id="tower1">
-                              Tower
-                            </td>
-                            <td >
-                                <!--<input type=text name="tower2" id="tower2" style="width:100px"> -->
-                                <select id="tower2" name="tower2" style="width:140px">
-                                    <option value=''>Select</option>
-                                </select>
-                            </td>
-                            <td  align="left" id="phase_id1" style="padding-left:30px">
+                            
+                            <td  align="left" id="phase_id1" style="width:100px;">
                                   Phase 
                             </td>
                             <td  align="left" id="phase_id2">
                                  <select id="phase_id3" name="phase_id3" style="width:140px">
                                     <option value=''>Select</option>
                                 </select> 
-                            </td>  
+                            </td> 
+                            <td id="tower1">
+                              		Tower
+                           		</td>
+                           		<td >
+                                <!--<input type=text name="tower2" id="tower2" style="width:100px"> -->
+                                <select id="tower2" name="tower2" style="width:140px">
+                                    <option value=''>Select</option>
+                                </select>
+                            </td> 	
+
+                         </tr>
+
+
+                        <tr id="tower_floor2">
+                        		<td id="flt1">
+                                	Flat Number
+                            	</td>
+	                            <td id="flt3">
+	                               <input type=text name="flt2" id="flt2" style="width:100px">
+	                            </td>    
+
                       			<td id="floor1">
                           			Floor
                       			</td>
@@ -1696,9 +1772,59 @@ $("#plc3").keypress(function (e) {
 
                             </td>
                       
-                    		</tr>
+                    	</tr>
 
-               				  <tr id="prs_trf">
+                    	<tr id = "flat_park">
+
+		                      	<td id="park1">
+		                      	   	Car Parks
+		                      	</td>
+		                        <td>
+		                            <select id="park2" name="park2" style="width:100px">
+		                                <option value=''>Select</option>                                         
+		                                <option value="0">0</option>
+		                                <option value="1">1</option>
+		                                <option value="2">2</option>
+		                                <option value="3">3</option>
+		                                <option value="4">4</option>
+		                                <option value="5">5</option>
+		                            </select>    
+		                        </td>
+		                      	<td align="left" id="errmsgpark" style="width:220px;">
+		                      			
+		                      	</td>
+			                      	<td id = "negotiable_id1" style="position:relative;width:100px; text-align:left;">
+	                             		 Negotiable  
+			                        </td>    
+		                          <td id = "negotiable_id2">
+		                            <select id="nego_select" name="nego_select" style="width:120px">
+	                                    <option value=''>Select</option>  
+	                                      <option value="0">Yes</option>
+	                                      <option value="1">No</option>
+
+	                                </select>
+		                          </td>
+                        </tr>
+                       	<tr id="facing_project">
+                       		 	<td id = "facing1">
+	                                Facing
+	                            </td>
+	                            <td>
+	                                <select id="facing2" name="facing2" style="width:120px">
+	                                    <option value=''>Select</option>  
+	                                      <option value="East">East</option>
+	                                      <option value="West">West</option>
+	                                      <option value="North">North</option>
+	                                      <option value="South">South</option>
+	                                      <option value="NorthEast">North East</option>
+	                                      <option value="SouthEast">South East</option>
+	                                      <option value="NorthWest">North West</option>
+	                                      <option value="SouthWest">South West</option>
+	                                </select>
+	                            </td>	
+                       	</tr>
+                        	<hr id = "line4" >
+               			<tr id="prs_trf">
 
                           			<td id="prs1">
                               			<font color="red">*</font>Price: 
@@ -1717,7 +1843,7 @@ $("#plc3").keypress(function (e) {
                                 <td id="prs2">
                                     <input type=text name="prs3" id="prs3" style="width:100px">
                                 </td> 
-                                <td id="other_charges" style="display:none"> 
+                                <td id="other_charges" style="display:none;"> 
                                     Other Charges:
                                 </td>  
                                 <td>
@@ -1728,7 +1854,7 @@ $("#plc3").keypress(function (e) {
 
                         <tr id="prs_typ">
                             
-                            <td width="110px" align="left" id="pr" style="padding-left:240px;" >
+                            <td width="110px" align="left" id="pr" style="padding-left:220px;" >
                               <label  for="one" style="font-size:11px;" >
                                 lacs &nbsp;   
                                  <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
@@ -1739,7 +1865,7 @@ $("#plc3").keypress(function (e) {
 
                         
 
-                            <td width="630px" align="left" id="tr" style="padding-left:250px; display:none">
+                            <td width="630px" align="left" id="tr" style="padding-left:220px;display:none">
 
                               <label  for="one" style="font-size:11px;">
                                 lacs &nbsp;   
@@ -1751,115 +1877,61 @@ $("#plc3").keypress(function (e) {
 
                         </tr>
 
-		                    <tr id = "flat_park">
-                            <td id="flt1">
-                                Flat Number
-                            </td>
-                            <td>
-                               <input type=text name="flt2" id="flt2" style="width:100px">
-                            </td>
-                            <td align="left" id="errmsgflt_no">
-                                
-                            </td>
-
-		                      	<td id="park1">
-		                      	   	Car Parks
-		                      	</td>
-		                        <td>
-		                            <select id="park2" name="park2" style="width:100px">
-		                                <option value=''>Select</option>                                         
-		                                <option value="0">0</option>
-		                                <option value="1">1</option>
-		                                <option value="2">2</option>
-		                                <option value="3">3</option>
-		                                <option value="4">4</option>
-		                                <option value="5">5</option>
-		                            </select>    
-		                        </td>
-		                      	<td align="left" id="errmsgpark">
-		                      			
-		                      	</td>
-                        </tr>
-                       
+		                
 
 
-                    	<tr id="hln" height="40px;">
+                    	<tr id="hln">
                        
                         	<td id="hln1">
                                 Home Loan
                         	</td>
 
                         	<td  id="hln2" >
-                          		<label for="one" style="font-size:11px;">
-                            		&nbsp; Yes   
-                              		<input type="radio" id="yes" name="yes" value="1" /> 
-                            		&nbsp; No &nbsp;
-                              		<input type="radio" id="no" name="no" value="2" checked="checked" />
-                          		</label>
-                        	</td>
-                       
-                        	<td id="bank_list1" height="40px;">
-                            	<select name="bank_list2" id="bank_list2" height="5px" width="50px" >
+                          		<select name="bnk_lst" id="bnk_lst" style="width:100px;" >
                                  	<option value=''> select bank	</option>
                                     {foreach from=$bankArray key=k item=v}
                                         <option value="{$k}" {if $bankId==$k}  selected="selected" {/if}>{$v}</option>
                                     {/foreach}
-                            	</select>
+                            	</select> 
                         	</td> 
                        
+
 	                        <td id = "plc1">
 	                            PLC
 	                        </td>
-	                                            
-	                        <td id="plc2" >
-	                          <label  for="one" style="font-size:11px;" style="text-align: top;">
-	                            Yes &nbsp;   
-	                              <input type="radio" id="plcy" name="plcy" value="1" /> 
-                                &nbsp;&nbsp;&nbsp;&nbsp; No &nbsp;
-	                              <input type="radio" id="plcn" name="plcn" value="2" checked="checked" />
-	                          </label>
+	                                        
+	                        <td id="plc4" >
+	                           <input type=text name="plc5" id="plc5" width="20px" style="text-align: left;">
 	                        </td> 
 	                         
-	                        <td>
-	                              <input type=text name="plc3" id="plc3" width="20px" style="text-align: left;">
-	                        </td>
+	                        
                       </tr>    
 
-                      <tr id = "negotiable_id" style="position:absolute;left:300px;top:790px">
+                      <tr id = "negotiable_id" style="position:absolute;left:300px;top:1240px">
                           <td id ="tfr1" >
-                              Transfer Rate:
+                              Transfer Rate:     
                           </td>
                           <td >
                               <input type=text name="tfr2" id="tfr2" style="width:100px">
                           </td>
 
-                          <td width="110px" align="left" id="tfr_price" style="padding-left:0px;" >
-                              <label  for="one" style="font-size:11px;" >
-                                lacs &nbsp;   
-                                <input type="radio" id="lkhs_tfr" name="lkhs_tfr" value="y" checked="checked" /> 
-                                &nbsp;&nbsp; crs &nbsp;
-                                <input type="radio" id="crs_tfr" name="crs_tfr" value="n" />
-                              </label>    
+                          <td width="110px" align="left" id="tfr_price" style="padding-left:-10px;" >
+                              <select name="transfer_sel" id="transfer_sel" style="height:28px;width:80px">
+		                                    <option value="0">Select</option>
+		                                    <option value="1">Lacs</option>
+		                                    <option value="2">Crs</option>  
+		                      </select> 
                           </td>
 
-                          <td id = "negotiable_id1" style="position:relative;padding-left:120px;width:110px; text-align:center">
-                              Negotiable  
-                        </td>    
-                          <td id = "negotiable_id2">
-                            <label  for="one" style="font-size:11px;">
-                              &nbsp;&nbsp;Yes &nbsp;   
-                                <input type="radio" id="negotiable_yes" name="negotiable_yes" value="1" /> 
-                                &nbsp;&nbsp; No &nbsp;
-                                <input type="radio" id="negotiable_no" name="negotiable_no" value="0" checked="checked" />
-                            </label>
-                          </td>
+                          
                       </tr>
+                      		<hr id = "line5" >
 
                       <tr id="discription1">
                         <td id = "discription4">
                             Description
                         </td> 
-                        <td id = "discription2" style="width:300px"> 
+                        <td id = "discription2" > 
                               <textarea type=text name="description3" id="description3" style="width:250px" >
                               </textarea>
                         </td>
@@ -1927,7 +1999,7 @@ $("#plc3").keypress(function (e) {
             			<tr>
                       <td width="400px"> </td>
 
-                    		<td align="left" style="padding-top:900px;" >
+                    		<td align="left" style="padding-top:1480px;" >
                        			<input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp;     
                        			<input type="button" name="exit_button" id="exit_button" value="Exit" style="cursor:pointer">                 
                     		</td>
