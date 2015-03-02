@@ -40,14 +40,15 @@
 	    foreach($imgPath->data as $k1=>$v1){
 				array_push($arr, $v1->title);
 		}
-
+		$arr1 = array();
 		$a_3d_content = file_get_contents($a_3d_url);
 	    $a_3d_Path = json_decode($a_3d_content);
 	    foreach($a_3d_Path->data as $k1=>$v1){
-				array_push($arr, $v1->description);
+				array_push($arr1, $v1->description);
 		}
 
 		$uploadedArr[$k] = implode("-", $arr);
+		$uploadedArr3D[$k] = implode("-", $arr1);
 		if($v['UNIT_TYPE']=='Apartment'){
 			$floorPlanOptionsArr[$k] = $apartmentArr;
 			$villApartment[$k] = "yes";
@@ -85,6 +86,7 @@
 	$smarty->assign("penthouse", $penthouse);
 	$smarty->assign("ground_floor", $ground_floor);
 	$smarty->assign("uploadedStr", $uploadedArr);
+	$smarty->assign("uploadedStr3D", $uploadedArr3D);
 	if(isset($_GET['edit']))
 	{
 		$smarty->assign("edit_projct", $projectId);

@@ -115,9 +115,11 @@ else {
     $tower = $_POST['tower'];
 
 /*    $total_floor = $_POST['total_floor'];
+
     $phaseId = $_POST['phase_id'];
     $owner_name = $_POST['owner_name'];
     $powner_email = $_POST['owner_email'];
+    $owner_number = $_POST['owner_number'];
     $study_room = $_POST['study_room'];
     $servant_room = $_POST['servant_room'];
 
@@ -145,6 +147,7 @@ else {
 
 
 
+
    /* echo "Tower ",$tower;
     echo "Total_floor",$total_floor;
 
@@ -160,6 +163,7 @@ else {
     if(isset($owner_number) && !empty($owner_number))
         $jsonDump['owner_number'] = $owner_number;*/
         
+
 
     $dataArr['jsonDump'] = json_encode($jsonDump);
     $dataArr['description'] =$_POST['description'];

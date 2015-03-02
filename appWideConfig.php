@@ -118,12 +118,16 @@ else{
 	//define("ADMIN_USER_LOGIN_API_URL", "https://qa.proptiger-ws.com/userservice/app/v1/login?username=manish_goyal140789@yahoo.in&password=1234&rememberme=true");
 
 
+	//define("phase_detail","https://www.proptiger.com/data/v1/entity/project/");
+	//https://www.proptiger.com/data/v1/entity/project/640042/phase?fields=phaseId
 
 	define("ADMIN_USER_LOGIN_API_URL", "https://qa.proptiger-ws.com/userservice/app/v1/login?username=api-admin@proptiger.com&password=1234&rememberme=true");
 
 
+
 	define("phase_detail","https://www.proptiger.com/data/v1/entity/project/");
 	//https://www.proptiger.com/data/v1/entity/project/640042/phase?fields=phaseId
+
 
 
 

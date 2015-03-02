@@ -48,7 +48,8 @@
       		{foreach from=$penthouse item=data}
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
 			{/foreach}
-      	}
+  
+    	}
       	else if(value== "Ground Floor"){
       		{foreach from=$ground_floor item=data}
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
@@ -60,8 +61,14 @@
 
       	$("#floor_name_"+c+" option").each(function() {
       		var str = $("#uploaded_"+c).val();
-      		//alert(str);
-      		if (str.indexOf($(this).text()) >= 0)
+      		var str1 = $("#uploaded3D_"+c).val();
+
+      		console.log("str="+str);
+		console.log("str1="+str1);
+
+      		if (str.indexOf($(this).text()) >= 0 && $(this).text()!="3D Floor Plan")
+		    	$(this).attr("disabled", true);
+		    else if (str1.indexOf($(this).text()) >= 0   && $(this).text()=="3D Floor Plan")
 		    	$(this).attr("disabled", true);
 		});
       	
@@ -207,6 +214,8 @@
 				  		<Option value="0">Select Floor Plan Name</Option>
 				  	</select></td>
 				  	<input type = "hidden" id = "uploaded_{($smarty.section.foo.index+1)}" value="{$uploadedStr[$smarty.section.foo.index]}">
+				  	<input type = "hidden" id = "uploaded3D_{($smarty.section.foo.index+1)}" value="{$uploadedStr3D[$smarty.section.foo.index]}">
+
 				  {else}
 				  <td></td>
 				  	<td><input type = "text" name = "floor_name[]"   {if $plot[$smarty.section.foo.index] == 'yes'} 

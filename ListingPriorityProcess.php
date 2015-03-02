@@ -40,8 +40,6 @@ foreach ($broker as $v) {
 }
 //print_r($brokerArray);
 $smarty->assign("brokerArray",$brokerArray);
-
-
 $smarty->assign('dirname',$dirname);
 
 
@@ -65,7 +63,6 @@ $smarty->assign('url15', ADMIN_USER_LOGIN_API_URL);
 $suburbArr = array();
 $suburbArr = Suburb::SuburbArr($cityId);
 $smarty->assign('suburbArr',$suburbArr);
-
 	
 
 $locArr = array();
@@ -171,8 +168,11 @@ try{
         }
 
     }
-*/
 
+
+
+
+*/
 //print("<pre>");
 //print_r($resaleListings);
 
