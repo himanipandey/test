@@ -121,6 +121,9 @@ if($_POST['task']=='find_project_builder'){
 }
 
 if($_POST['task']=='createComp'){ 
+
+
+
     $id = $_POST['id'];
     $type = $_POST['type'];
     $broker_info_type = $_POST['broker_info_type']; 
@@ -373,16 +376,19 @@ if($_POST['task']=='createComp'){
             }
 /****************** save broker extra details ************************************************/
             if($type=="Broker" && isset($bef)){
+                
                 $query = "select id, broker_id from broker_details where broker_id={$id}";
                 $res = mysql_query($query) or die(mysql_error());
                 $data=mysql_fetch_assoc($res);
                 if($data){
-                    $query = "Update broker_details set legal_type='{$bef['legalType']}', rating= '{$bef['frating']}', service_tax_no='{$bef['stn']}', office_size= '{$bef['officeSize']}', employee_no='{$bef['employeeNo']}', pt_manager_id= '{$bef['ptManager']}', updated_by= {$_SESSION['adminId']} where broker_id={$id}";
+                    $query = "Update broker_details set legal_type='{$bef['legalType']}', rating= '{$bef['frating']}', service_tax_no='{$bef['stn']}', office_size= '{$bef['officeSize']}', employee_no='{$bef['employeeNo']}', pt_manager_id= '{$bef['ptManager']}', pt_relative_id= ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", primary_device_used=".($bef['device'] == '' ? 'NULL' : $bef['device']).", updated_by= {$_SESSION['adminId']} where broker_id={$id}";
+                    //die($query);
                     $res = mysql_query($query) or die(mysql_error());
                 }
                 else{
-                    $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', {$_SESSION['adminId']}, NOW())";
-                    $res = mysql_query($query) or die(mysql_error());
+                    $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used, updated_by, created_at) values('{$id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".($bef['device'] == '' ? 'NULL' : $bef['device']).",  {$_SESSION['adminId']}, NOW())";
+                    //die($query);
+                    $res = mysql_query($query) or die(mysql_error()); //die("hello");
                 }
 
                 $query = "update company set active_since='{$bef['since_op']}' where id='{$id}'";
@@ -550,7 +556,12 @@ if($_POST['task']=='createComp'){
             }
 /****************** save broker extra details ************************************************/
             if($type=="Broker" && isset($bef)){
-                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', {$_SESSION['adminId']}, NOW())";
+                if($bef['device']=='') 
+                    $bef['device']=='NULL';
+                if($bef['ptRelative']=='') 
+                    $bef['ptRelative']=='NULL';
+                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".($bef['device'] == '' ? 'NULL' : $bef['device']).", {$_SESSION['adminId']}, NOW())";
+                //die($query);
                 $res = mysql_query($query) or die(mysql_error());
 
                 $query = "update company set active_since='{$bef['since_op']}' where id='{$comp_id}'";

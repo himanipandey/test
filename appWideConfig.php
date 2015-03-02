@@ -1,4 +1,4 @@
-
+ 	
 <?php
 require_once "$_SERVER[DOCUMENT_ROOT]/includes/session.php";
 
@@ -34,12 +34,21 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
 	define("RESALE_GROUP_EMAIL", "projects@proptiger.com");
     define("IMAGE_SERVICE_URL","https://www.proptiger.com/data/v1/entity/image");
-
+    define("DOC_SERVICE_URL","https://proptiger.com/data/v1/entity/document");
     define("USER_API_URL","https://www.proptiger.com/app/v1/register");
 
     define("AUDIO_SERVICE_URL","https://www.proptiger.com/data/v1/entity/audio");
 
-    define("TYPEAHEAD_API_URL", "https://www.proptiger.com/app/v1/typeahead");
+
+
+    define("USER_ATTRIBUTES_API_URL", "https://www.proptiger.com/userservice/data/v1/entity/user");
+    define("USER_DETAILS_API_URL", "https://www.proptiger.com/userservice/app/v1/user-details");
+
+    define("TYPEAHEAD_API_URL", "https://www.proptiger.com/app/v3/typeahead");
+    define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");
+    define("LISTING_API_URL", "https://proptiger.com/data/v1/entity/user/listing");
+	define("ADMIN_USER_LOGIN_API_URL", "https://proptiger.com/userservice/app/v1/login?username=api-admin@proptiger.com&password=1234&rememberme=true");
+
 }
 
 
@@ -90,12 +99,25 @@ else{
     define("CLOUDAGENT_KEY", "KK6553cb21f45e304ffb6c8c92a279fde5");
 
 	define("IMAGE_SERVICE_URL","https://qa.proptiger-ws.com/data/v1/entity/image");
+
+	define("DOC_SERVICE_URL","https://qa.proptiger-ws.com/data/v1/entity/document");
 	define("AUDIO_SERVICE_URL","https://qa.proptiger-ws.com/data/v1/entity/audio");
     define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/nightlytest.proptiger.com");  //for staging
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
-    define("USER_API_URL","https://qa.proptiger-ws.com/app/v1/register");
-    define("TYPEAHEAD_API_URL", "https://qa.proptiger-ws.com/app/v1/typeahead");
-   
+    define("USER_API_URL","https://dev.proptiger-ws.com/app/v1/register");
+    define("USER_ATTRIBUTES_API_URL", "https://dev.proptiger-ws.com/userservice/data/v1/entity/user");
+    define("USER_DETAILS_API_URL", "https://dev.proptiger-ws.com/userservice/app/v1/user-details");
+
+    //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
+
+    define("TYPEAHEAD_API_URL", "https://proptiger.com/app/v3/typeahead");
+	//define("project_detail", "http://proptiger.com//data/v1/entity/amenity?projectId=513233"); 
+	define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");  
+	define("LISTING_API_URL", "https://qa.proptiger-ws.com/data/v1/entity/user/listing");
+	//define("ADMIN_USER_LOGIN_API_URL", "https://qa.proptiger-ws.com/userservice/app/v1/login?username=manish_goyal140789@yahoo.in&password=1234&rememberme=true");
+	define("ADMIN_USER_LOGIN_API_URL", "https://qa.proptiger-ws.com/userservice/app/v1/login?username=api-admin@proptiger.com&password=1234&rememberme=true");
+
+
 
 }
 ?>

@@ -12,6 +12,7 @@ class ProjectLivability extends ActiveRecord\Model {
     static $power_backup_column_name = 'power_backup';
     static $security_column_name = 'security';
     static $min_units_per_floor = 1;
+    static $new_launch_units_per_floor_livability = 0.1667;
 
     static $column_name_for_landmark_type = array(
         1 => 'school', // school
@@ -68,6 +69,8 @@ class ProjectLivability extends ActiveRecord\Model {
         $projectSql = "select distinct rp.PROJECT_ID from resi_project rp inner join resi_project_amenities rpa on rp.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = $amenityId and rpa.VERIFIED=1 UNION select distinct rp.PROJECT_ID from resi_project rp inner join resi_project rpt on rp.version = rpt.version and rp.township_id = rpt.township_id and rp.township_id is not null and rp.township_id != 0 inner join resi_project_amenities rpa on rpt.PROJECT_ID = rpa.PROJECT_ID where rp.version = 'Website' and rpa.AMENITY_ID = $amenityId and rpa.VERIFIED=1";
         $updateSql = "update project_livability pl inner join ($projectSql) t on pl.PROJECT_ID = t.PROJECT_ID set pl.$livabilityColumnName = 1";
         self::connection()->query($updateSql);
+        $updateSql = "update " . self::$table_name . " pl inner join " . ResiProject::$table_name . " rp on pl.project_id = rp.project_id and rp.version = 'Website' and rp.PROJECT_STATUS_ID = " . ResiProject::$pre_launch_status_id . " set pl.$livabilityColumnName = 1";
+        self::connection()->query($updateSql);
     }
 
     static function populateOtherAmenity() {
@@ -100,6 +103,10 @@ class ProjectLivability extends ActiveRecord\Model {
             }
         }
         self::update_all(array('conditions'=>"unit_per_floor > 1/(" . ProjectLivability::$min_units_per_floor . ")", 'set'=>"unit_per_floor = 1/(" . ProjectLivability::$min_units_per_floor . ")"));
+        
+        $updateSql = "update " . self::$table_name . " pl inner join " . ResiProject::$table_name . " rp on pl.project_id = rp.project_id and rp.version = 'Website' and rp.PROJECT_STATUS_ID = " . ResiProject::$pre_launch_status_id . " set pl.unit_per_floor = " . self::$new_launch_units_per_floor_livability . " where unit_per_floor = 0";
+        self::connection()->query($updateSql);
+        
         self::normalizeColumnOnCity('unit_per_floor');
     }
 

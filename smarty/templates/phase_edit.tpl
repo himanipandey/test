@@ -325,14 +325,14 @@
                                                         </td>
                                                         <td width="50%" align="left"></td>
                                                         </tr>
-                                                                                
+                                                                        
                                                         <tr class="options_select" style="display: none">
                                                             <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
-                                                                        <td width="30%" align="left">
-                                                                            <select name="options[]" id="options" multiple="multiple" style="width: 236px; height: 210px;" disabled>
+                                                                        <td width="40%" align="left">
+                                                                            <select name="options[]" id="options" multiple="multiple" style="width: 320px; height: 210px;" disabled>
                                                                                 <option value="-1" {if count($phase_options) <= 0}selected="selected"{/if}>Select Option</option>
                                                                                 {foreach $options as $option}
-                                                                                    <option {if in_array($option->options_id, $option_ids) && count($phase_options) > 0}selected="selected"{/if} value="{$option->options_id}">{$option->option_name} - {$option->size} sqft - {$option->option_type}</option>
+                                                                                    <option {if in_array($option->options_id, $option_ids) && count($phase_options) > 0}selected="selected"{/if} value="{$option->options_id}">{$option->option_name} - {$option->size} {if $option->size != '' && $option->carpet_area != ''} , {$option->carpet_area}(Carpet){/if} {if $option->size == '' && $option->carpet_area != ''}{$option->carpet_area}(Carpet){/if}  sqft - {$option->option_type}</option>
                                                                                 {/foreach}
                                                                             </select>
                                                                         </td>

@@ -41,6 +41,9 @@ $smarty->assign("arrCalingPrimary", $arrCalingPrimary);
 $redevelopment_flag = fetchProjectRedevelolpmentFlag($projectId);
 $smarty->assign("redevelopment_flag", $redevelopment_flag);
 
+$authority = fetchProjectHousingAuthority($projectId);
+$smarty->assign("authority", $authority);
+
 /* * ****start display other pricing******/
 $otherPricing = fetch_other_price($projectId);
 $smarty->assign("otherPricing", $otherPricing);
@@ -262,6 +265,7 @@ $optionsArr = getAllProjectOptionsExceptPlot($projectId);
                 $data['OPTION_ID'] = $v1['OPTION_ID'];
                 $data['UNIT_TYPE'] = $v1['UNIT_TYPE'];
                 $data['SIZE'] = $v1['SIZE'];
+		$data['CARPET_AREA'] = $v1['CARPET_AREA'];
                 $data['UNIT_NAME'] = $v1['UNIT_NAME'];
                
 
@@ -428,7 +432,6 @@ if ($_REQUEST['towerId'] != '') {
 
 $smarty->assign("arrSpecification", $arrSpecification);
 
-
 $smarty->assign("projectId", $projectId);
 $smarty->assign("ProjectTypeArr", $ProjectTypeArr);
 $smarty->assign("enum_value", $enum_value);
@@ -436,14 +439,16 @@ $smarty->assign("AmenitiesArr", $AmenitiesArr);
 
 $projectDetails = array();
 $qry = "SELECT rp.*,ps.project_status,ps.display_name,t.township_name,mps.name as PROJECT_STAGE,
-    mpp.name as PROJECT_PHASE,mpbt.display_name as power_backup
+    mpp.name as PROJECT_PHASE,mpbt.display_name as power_backup, ta.attribute_value as desc_content_flag
     FROM " . RESI_PROJECT . " rp
     left join project_status_master ps on rp.project_status_id = ps.id
     left join townships t on rp.township_id = t.id
     left join master_project_stages mps on rp.project_stage_id = mps.id
     left join master_project_phases mpp on rp.project_phase_id = mpp.id
     left join master_power_backup_types mpbt on rp.power_backup_type_id = mpbt.id
+    left join table_attributes ta on ta.table_id=rp.project_id and ta.table_name='resi_project' and ta.attribute_name='DESC_CONTENT_FLAG'
     WHERE rp.PROJECT_ID = '" . $projectId . "' and rp.version = 'Cms'";
+    //die($qry);
 $res = mysql_query($qry) or die(mysql_error());
 if (!mysql_num_rows($res) > 0) {
     $smarty->assign("error", "error");
