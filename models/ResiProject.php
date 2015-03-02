@@ -193,6 +193,7 @@ class ResiProject extends Objects
             SET a.LATITUDE = b.LATITUDE,
             a.PROJECT_ADDRESS = b.PROJECT_ADDRESS,
             a.LONGITUDE = b.LONGITUDE,
+            a.BUILDER_ID = b.BUILDER_ID,
             a.SHOULD_DISPLAY_PRICE = b.SHOULD_DISPLAY_PRICE,
             a.D_AVAILABILITY= b.D_AVAILABILITY,
             a.LOCALITY_ID  = b.LOCALITY_ID,

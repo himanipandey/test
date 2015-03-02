@@ -113,7 +113,8 @@ else {
     $dataArr['floor'] = $_POST['floor'];
     $jsonDump = array();
     $tower = $_POST['tower'];
-    $total_floor = $_POST['total_floor'];
+
+/*    $total_floor = $_POST['total_floor'];
     $phaseId = $_POST['phase_id'];
     $owner_name = $_POST['owner_name'];
     $powner_email = $_POST['owner_email'];
@@ -121,12 +122,12 @@ else {
     $servant_room = $_POST['servant_room'];
 
 /***  listing v2 values  ****************************************************/   
-    if(isset($tower) && !empty($tower))
+   /* if(isset($tower) && !empty($tower))
         $dataArr['towerId'] =$tower;
     if(isset($phaseId) && !empty($phaseId))
-        $dataArr['phaseId'] =$phaseId;
+        $dataArr['phaseId'] =$phaseId;*/
 /*** json dump values  ****************************************************/    
-    if(isset($total_floor) && !empty($total_floor))
+    /*if(isset($total_floor) && !empty($total_floor))
         $jsonDump['total_floor'] =$total_floor;
     if(isset($owner_name) && !empty($owner_name))
         $jsonDump['owner_name'] =$owner_name;
@@ -137,15 +138,29 @@ else {
     if(isset($study_room) && !empty($study_room))
         $jsonDump['study_room'] =$study_room;
     if(isset($servant_room) && !empty($servant_room))
-        $jsonDump['servant_room'] = $servant_room;
+        $jsonDump['servant_room'] = $servant_room;*/
 
     
 
 
 
 
-    echo "Tower ",$tower;
+   /* echo "Tower ",$tower;
     echo "Total_floor",$total_floor;
+
+    $owner_name = $_POST['owner_name'];
+    $owner_email = $_POST['owner_email'];
+    $owner_number = $_POST['owner_number'];
+    if(isset($owner_name) && !empty($owner_name))
+        $jsonDump['owner_name'] = $owner_name;
+    if(isset($tower) && !empty($tower))
+        $jsonDump['tower'] = $tower;
+    if(isset($owner_email) && !empty($owner_email))
+        $jsonDump['owner_email'] = $owner_email;
+    if(isset($owner_number) && !empty($owner_number))
+        $jsonDump['owner_number'] = $owner_number;*/
+        
+
     $dataArr['jsonDump'] = json_encode($jsonDump);
     $dataArr['description'] =$_POST['description'];
     $dataArr['remark'] =$_POST['review'];

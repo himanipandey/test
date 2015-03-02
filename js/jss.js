@@ -1,20 +1,22 @@
 $('document').ready(function(){
-	//
- 	/*for(i=1;i<=100;i++) {
-		$("#total_floor1").append("<option>"+i+"</option>");
-	}    */
 
-	var pt_broker_id = '#pt_broker_id';
-	var seller_id = $("#seller3 :selected").val();
-	if($(pt_broker_id).val() === seller_id) {	
-		$('#name_font').show(1);	
-		$('#email_font').show(1);
-		$('#number_font').show(1);
-	} else {
-		$('#name_font').hide(1);	
-		$('#email_font').hide(1);
-		$('#number_font').hide(1);
-	}
+
+	$("#bkn2").click(function(){
+		var broker_id = $("#bkn2 :selected").val();
+	    var pt_broker_id =  $("#pt_broker_id").val();
+	    console.log(broker_id +" "+pt_broker_id);
+			if(broker_id == pt_broker_id){
+				console.log("ids matched" );	
+				$('#name_font').show(1);
+				$('#number_font').show(1);	
+			} else {
+				console.log("ids not matched");	
+				$('#name_font').hide(1);
+				$('#number_font').hide(1);	
+
+			}
+	});
+
 
 
 	var bh3 = '#bh3';
