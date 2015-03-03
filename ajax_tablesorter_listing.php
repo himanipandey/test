@@ -9,14 +9,28 @@ include("httpful.phar");
 
 $page =  $_REQUEST['page'];
 $size = $_REQUEST['size'];
+//$size = 1;
 $start = $page*$size;
+
+$cityId = $_REQUEST['city']; 
+if($cityId=='')
+    $cityId=2;
+$projectId = $_REQUEST['project']; 
+$projStr=NULL;
+if(isset($projectId) && !empty($projectId))
+    $projStr = "&projectId=".$projectId;
+
+
+
 $tbsorterArr = array();
 
 $uriLogin = ADMIN_USER_LOGIN_API_URL; //master
 //$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-10@proptiger.com&password=1234&rememberme=true"; //normal user
-$projectId="653678";
+//$projectId="653678";
 //$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&fields=seller,id,property&start=0&rows=10";
-$uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}&start={$start}&rows={$size}&fields=seller,seller.fullName,id,listing,listing.facing,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,property,property.propertyId,property.project.name,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
+$uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}{$projStr}&start={$start}&rows={$size}&fields=seller,seller.fullName,id,listing,listing.facingId,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,listing.towerId,listing.phaseId,property,property.propertyId,property.project.name,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
+
+//echo $uriListing; die;
 //$uri = "https://qa.proptiger-ws.com/data/v1/entity/user/listing";
 //$dataArr = array();
 //$dataArr['sellerId'] = "1216008";
@@ -88,7 +102,12 @@ try{
                     $price = "Price Per Unit Area - ".$v->currentListingPrice->pricePerUnitArea;
                 else
                     $price = "Price - ".$v->currentListingPrice->price;
-                $v->property->project->description = "";                        
+                if ($v->currentListingPrice->otherCharges != 0)
+                    $price .= "<br>Other Charges - ".$v->currentListingPrice->otherCharges;
+                $v->property->project->description = '';
+                $v->property->project->locality->description = ''; 
+                $v->property->project->locality->suburb->description = '';   
+                $v->property->project->locality->suburb->city->description = '';                            
                 //echo "here";
                 $rows = array(
                                             "Serial" => $start+$k+1,
@@ -97,7 +116,7 @@ try{
                                             "Project" => $v->property->project->name. ", ".$v->property->project->builder->name,
                                             "Listing" => $v->property->unitName."-".$v->property->size."-".$v->property->unitType,
                                             "Price" => $price,
-                                            "Save" => $v,
+                                            "Save" =>  json_encode($v),//htmlentities(json_encode($v)), //$v,
                                             "id" => $v->id
                         );
                 //var_dump($rows);

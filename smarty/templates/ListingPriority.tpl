@@ -43,7 +43,12 @@ function selectLocality(value){
 }
 function submitButton(){ 
     var cityid = $('#citydd').val();
-    window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid;
+    var projectid = null;
+    if($("#project_search").val().trim()!='')
+     projectid = $('#selProjId').val();
+    var projectName = $('#project_search').val().trim();
+    window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName;
+    return false;
 }
 
 function isNumeric(val) {
@@ -87,16 +92,24 @@ function cleanFields(){
    
 }
 
+
+
 function editListing(str){
+  console.log("inside editListing");
+  
   //debugger;
-  str = JSON.parse(decodeURIComponent(str));
+  console.log(str);
+  //str = unescape(str);
+  //console.log(str);
+  str = JSON.parse(unescape(str));
+  console.log(str);
     cleanFields();
     //console.log(str.jsonDump.tower);
     $('#search-top').hide('slow');
     $('#search-bottom').hide('slow');
     $('#create_Landmark').show('slow'); 
     //var List = $.parseJSON(str);
-    console.log(str);
+    ///console.log(str);
 
     if(str.id!=null)
       $("#listing_id").val(str.id);
@@ -104,7 +117,14 @@ function editListing(str){
     $("#cityddEdit").val(str.property.project.locality.suburb.city.id);
     //$("#bkn2").val(str.seller.id);
     $("#project").val(str.property.project.name);
-    $("#proj").val(str.property.project.projectId);
+    var projectId = str.property.project.projectId;
+    $("#proj").val(projectId);
+    get_phases(projectId);
+    get_towers(projectId);
+    $("#towerIdHidden").val(str.towerId);
+    $("#phaseIdHidden").val(str.phaseId);
+
+
     if(str.seller!=null){
       var seller_id = str.seller.id;
       console.log(seller_id);
@@ -125,6 +145,7 @@ function editListing(str){
       $('#bkn2').val(str.seller.brokerId); 
       getSeller();
       $("#seller3").val(seller_id);
+      debugger;
     }
     $("#facing2").val(str.facing);
     
@@ -132,6 +153,7 @@ function editListing(str){
     $("#tfr2").val(str.transferCharges);
     $("#flt2").val(str.flatNumber);
    
+
 
     
 
@@ -149,15 +171,19 @@ function editListing(str){
 
     var jsonDump = $.parseJSON(str.jsonDump);
     if(jsonDump!=null){
-      $("#tower2").val(jsonDump.tower);
+      
       $("#name").val(jsonDump.owner_name);
       $("#email").val(jsonDump.owner_email);
       $("#number").val(jsonDump.owner_number);
+
+      $("#total_floor1").val(jsonDump.total_floor);
 
 
 
     }
     
+
+
     $("#description3").val(str.description);
     $("#review3").val(str.remark);
  
@@ -238,6 +264,17 @@ function editListing(str){
       $('#plcn').attr('checked', true);
       $('#plcy').removeAttr('checked');
     }
+
+
+
+    if(str.negotiable!=null){
+      if(str.negotiable==true){
+        $("#nego_select").val("1");
+      }
+      if(str.negotiable==false){
+        $("#nego_select").val("2");
+      }
+    }
     
     console.log(str);
     
@@ -246,6 +283,15 @@ function editListing(str){
     $("#proj").attr('readonly',true);
     $("#bh3").attr('disabled',true);
     
+
+    /*if(str.towerId!=null){
+      //var a = $("#tower2 options")
+      $("#tower2").val(str.towerId);
+      debugger;
+    }
+    if(str.phaseId!=null){
+      $("#phase_id3").val(str.phaseId);
+    }*/
 
     window.scrollTo(0, 0);
 
@@ -340,11 +386,19 @@ $("#exit_button").click(function(){
    
 });*/
 
+
+$('#project_search').val(getParameterByName('projectName'));
+$('#selProjId').val(getParameterByName('projectId'));
+$('#citydd').val(getParameterByName('citydd'));
+
 // tablesorter ajax pager
 
 {literal}
 $(function(){
-
+/*var selCity = null;
+selCity = $("#citydd :selected").val();
+var selProject = null;
+selProject = $("#selProjId").val();*/
   // Initialize tablesorter
   // ***********************
   $("#listing_table")
@@ -388,11 +442,14 @@ $(function(){
       // and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
       //ajaxUrl : 'assets/City{page}.json?{filterList:filter}&{sortList:column}',
       //ajaxUrl : '/ajax_listing_table_copy.php?page={page}&size={size}&{sortList:col}',
+      //ajaxUrl : '/ajax_tablesorter_listing.php?page={page}&size={size}&{sortList:col}&city={selCity}&project={selProject}',
       ajaxUrl : '/ajax_tablesorter_listing.php?page={page}&size={size}&{sortList:col}',
       // modify the url after all processing has been applied
       customAjaxUrl: function(table, url) {
           // manipulate the url string as you desire
-          // url += '&cPage=' + window.location.pathname;
+           url += '&city=' + $("#citydd :selected").val();  
+           if($("#project_search").val().trim()!='')
+            url += '&project=' + $("#selProjId").val(); 
           // trigger my custom event
           $(table).trigger('changingUrl', url);
           // send the server the current page
@@ -443,10 +500,20 @@ $(function(){
               if (typeof(c) === "string") {
                 // match the key with the header to get the proper column index
                 indx = $.inArray( c, headerXref );
+
                 // add each table cell data to row array
                 if (indx >= 0) {
-                  if(indx==6)
-                    row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ "\"" +encodeURIComponent(JSON.stringify(d[r][c]))+ "\"" + ")' align='left'>Edit</button>" ;
+                  if(indx==6){//encodeURIComponent(JSON.stringify(d[r][c]))
+                    //d[r][c] = {'description': "hello'yes boys"};  
+                    var a = d[r][c];
+                    //console.log(a);
+                    a = escape(d[r][c]);
+                    //console.log(a);
+                    row[indx] =  "<button type='button' id='edit_button_' onclick='editListing("+JSON.stringify(a)+")' align='left'>Edit</button>";
+                 //var hello = {};
+                 //console.log(d[r][c]);
+                  //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
+                   }
                   else
                     row[indx] = d[r][c];
                 }
@@ -499,7 +566,7 @@ $(function(){
 
 
 
-
+populate_total_floor();
 
 
 $("#lmkSave").click(function(){
@@ -510,7 +577,7 @@ $("#lmkSave").click(function(){
 
     var broker_id = $("#bkn2 :selected").val();
     var pt_broker_id =  $("#pt_broker_id").val();
-    console.log(broker_id +" "+pt_broker_id);
+    //console.log(broker_id +" "+pt_broker_id);
 
 
     var owner_name = $("#name").val().trim();
@@ -560,8 +627,8 @@ $("#lmkSave").click(function(){
       $.each(option, function(k,v){
         
         if (k==parseInt(option_sel)){
-          console.log("here0");
-          console.log(v);
+          //console.log("here0");
+          //console.log(v);
           size = v['size'];
           bedrooms = v['bedrooms'];
           bathrooms = v['bathrooms'];
@@ -641,7 +708,7 @@ $("#lmkSave").click(function(){
 
     }
 
-    console.log(price);
+    //console.log(price);
     //return true;    
     
 
@@ -652,7 +719,7 @@ $("#lmkSave").click(function(){
     var trancefer_rate = $("#tfr2").val().trim();
     var price_in = "Lakhs";    
 
-    var trancefer_rate_check = $("#transfer_sel").val().trim();
+    /*var trancefer_rate_check = $("#transfer_sel").val().trim();
 	if(trancefer_rate_check == '') {
 		alert("Select price type for transfer");
 	} else {
@@ -661,7 +728,7 @@ $("#lmkSave").click(function(){
 	    } else if(trancefer_rate_check == '2'){
 	      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000; 
 	    }  
-	}
+	}*/
 
      
     if ($('[name="lkhs2"]').is(':checked'))  {
@@ -669,15 +736,14 @@ $("#lmkSave").click(function(){
     } else {
       transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000;
     }
-    console.log(transfer_new);
+    //console.log(transfer_new);
     //return true;
     var appratment = $("#appartment3 :selected").text();
-    var penthouse_stdio_temp = $("#penthouse_sel :selected").text();
+    var penthouse_studio = $("#penthouse_sel :selected").val();
   
-    var penthouse = null;
-    var studio = null;
+    
   
-    if(penthouse_stdio_temp == "Penthouse") {
+    /*if(penthouse_stdio_temp == "1") {
         if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
             penthouse = true;
         } else {
@@ -689,7 +755,7 @@ $("#lmkSave").click(function(){
         } else {
             studio = false; 
         }
-    }
+    }*/
 
     var negotiable = null;
     var nego_select_check = $("#nego_select :selected").val();
@@ -710,17 +776,17 @@ $("#lmkSave").click(function(){
     var study_room = null;
     var study_room_check = $("#study_sel :selected").val();
     if (study_room_check == '1')  {
-          study_room = true;
+          study_room = "1";
     } else if(servant_room_check == '2'){
-      study_room = false
+      study_room = "0";
     }  
     
     var servant_room = null;
     var servant_room_check = $("#servant_sel :selected").val();
     if (servant_room_check == '1')  {
-          study_room = true;
+          servant_room = "1";
     } else if(servant_room_check == '2'){
-      study_room = false
+      servant_room = "0";
     } 
 
     var description = $("#description3").val().trim();
@@ -740,14 +806,14 @@ $("#lmkSave").click(function(){
       }
       else{ 
         if(unit_type=='Apartment' || unit_type=='Villa') { 
-          console.log(unit_type);
+          //console.log(unit_type);
           if(project_id=='' ||  bedrooms=='' || unit_type=='Select' || size=='' ){
             alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
             return true;
           }
         }
         else{
-          console.log(unit_type);
+          //console.log(unit_type);
           if(project_id=='' || unit_type=='' || size=='' || unit_type=='Select'){
             alert("project, size, Option Type are must if BHK 'Others' is selected.");
             return true;
@@ -785,10 +851,10 @@ $("#lmkSave").click(function(){
 
             beforeSend: function(){
               console.log('in ajax beforeSend');
-              $("body").addClass("loading");
+              //$("body").addClass("loading");
             },
 
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse:penthouse, studio:studio, negotiable:negotiable, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task},
 
 
 
@@ -858,6 +924,7 @@ $("#lmkSave").click(function(){
 
   });
 
+  // to get  listings on the table based on project search
   $( "#project_search" ).catcomplete({
       source: function( request, response ) {
         
@@ -891,27 +958,10 @@ $("#lmkSave").click(function(){
           pid = projectId;
           console.log(projectId);
 
-          $("#projectId").val(projectId); 
-          var data = { projectId:projectId,  task:'get_options'}; 
-           
-          //find_project_options();
+          $("#selProjId").val(projectId); 
           
-          console.log("{$url13}"+projectId);
-          $.ajax({
-              //alert("Hello"); 
-              url: "{$url13}"+projectId,
-              dataType: "json",
-              data: {
-                featureClass: "P",
-                style: "full", 
-                //name_startsWith: request.term
-              },
-              
-              success: function( data ) {
-                  ///// Write code what u want...                 
-              }
-          });
-          //}
+           
+          
       },
       
 
@@ -923,7 +973,9 @@ $("#lmkSave").click(function(){
       },
 
     }); 
-     
+
+
+//project search to get options autocomplete     
    $( "#project" ).catcomplete({
       source: function( request, response ) {
         
@@ -1024,80 +1076,15 @@ $("#lmkSave").click(function(){
                     j++;
                 });   
                 
-                $('#total_floor1').html('');  
-                var total_floor_array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101];
-                var floor_option = $('#total_floor1');
-                var j = 0;
-                console.log('Floor option');
-                //floor_option.append($("<option/>").val(0).text('Select');
-                $.each(total_floor_array, function() {
-                    if (j == 0)  {
-                       floor_option.append($("<option/>").val(j).text('Select'));   
-                    } else {
-                       floor_option.append($("<option/>").val(j).text(total_floor_array[j-1]));
-                    }
-                    j++;
-                    //console.log(j);
-                });
+                
 
                 var project_id = $("#proj").val().trim();
                 //var project_id = '500055';   
                 //alert(project_id);
-                $.ajax({
-                        type: "POST",
-                        url: '/saveSecondaryListings.php',
-                        data: { project_id:project_id, task:'get_tower'},
-
-                        success:function(msg){  
-                           console.log(msg);
-              
-                            var options = $("#tower2");
-                            //var i = 0;
-
-
-                            msg = $.parseJSON(msg);
-                            $.each(msg, function(k,v) {
-                              //console.log(v);
-                              options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
-                              
-                            }); 
-                        },
-                });    
-
-                $.ajax({
-                        type: "POST",
-                        url: "{$url_phase_id}"+projectId+"/phase",
-                        dataType: "json",
-                        data: {
-                        featureClass: "P",
-                        style: "full", 
-                        //name_startsWith: request.term
-                        },
-              
-                        success: function( data ) {
-                          var ln2 = data.data.length;
-                          //phase_id3
-                          //option.length=0;
-                          //console.log(ln2);
-                          //console.log(data.data[0].phaseId);
-                          var phase_ids1 = [];
-                          var phase_ids2 = [];
-                          for(i = 0; i < ln2; i++)  {
-                              console.log(data.data[i].phaseId);
-                              phase_ids1.push(data.data[i].phaseId);
-                              phase_ids2.push(data.data[i].phaseName);
-                          } 
-                          $('#phase_id3').html(''); 
-                          var phase_options = $("#phase_id3");
-                          var i = 0;
-
-                          $.each(phase_ids2, function() {
-                              phase_options.append($("<option/>").val(phase_ids1[i]).text(phase_ids2[i]));
-                              i++;
-                          });
-                        }
-                          
-                });               
+                get_towers(project_id);
+                   
+                get_phases(projectId);
+                               
               }
           });
 
@@ -1193,58 +1180,9 @@ $("#lmkSave").click(function(){
                 var project_id = $("#proj").val().trim();
                 //var project_id = '500055';   
                 //alert(project_id);
-                $.ajax({
-                        type: "POST",
-                        url: "{$url_phase_id}"+project_id+"/phase",
-                        dataType: "json",
-                        data: {
-                        featureClass: "P",
-                        style: "full", 
-                        //name_startsWith: request.term
-                        },
-              
-                        success: function( data ) {
-                          var ln2 = data.data.length;
-                         
-                          var phase_ids1 = [];
-                          var phase_ids2 = [];
-                          for(i = 0; i < ln2; i++)  {
-                              console.log(data.data[i].phaseId);
-                              phase_ids1.push(data.data[i].phaseId);
-                              phase_ids2.push(data.data[i].phaseName);
-                             
-                          } 
-                          $('#phase_id3').html(''); 
-                          var phase_options = $("#phase_id3");
-                          var i = 0;
-
-                          $.each(phase_ids2, function() {
-                              phase_options.append($("<option/>").val(phase_ids1[i]).text(phase_ids2[i]));
-                              i++;
-                          }); 
-                        },
-                });
-
-                $.ajax({
-                        type: "POST",
-                        url: '/saveSecondaryListings.php',
-                        data: { project_id:project_id, task:'get_tower'},
-
-                        success:function(msg){  
-                           console.log(msg);
-              
-                            var options = $("#tower2");
-                            //var i = 0;
-
-
-                            msg = $.parseJSON(msg);
-                            $.each(msg, function(k,v) {
-                              console.log(v);
-                              options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
-                              
-                            }); 
-                        },
-                });   
+              get_phases(project_id);  
+              get_towers(project_id);
+                   
               }
           });
           //}
@@ -1358,9 +1296,89 @@ $("#plc5").keypress(function (e) {
 
 
 
+function get_towers(project_id){
+  $.ajax({
+                        type: "POST",
+                        url: '/saveSecondaryListings.php',
+                        data: { project_id:project_id, task:'get_tower'},
+
+                        success:function(msg){  
+                           console.log(msg);
+              
+                            var options = $("#tower2");
+                            //var i = 0;
 
 
+                            msg = $.parseJSON(msg);
+                            $.each(msg, function(k,v) {
+                              options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
+                            }); 
+                            var towerId = $("#towerIdHidden").val();
+                            if(towerId!='')
+                              options.val(towerId);
 
+
+                        },
+                });
+}
+
+function get_phases(projectId){
+  $.ajax({
+                        type: "POST",
+                        url: "{$url_phase_id}"+projectId+"/phase",
+                        dataType: "json",
+                        data: {
+                        featureClass: "P",
+                        style: "full", 
+                        //name_startsWith: request.term
+                        },
+              
+                        success: function( data ) {
+                          var ln2 = data.data.length;
+                          //phase_id3
+                          //option.length=0;
+                          //console.log(ln2);
+                          //console.log(data.data[0].phaseId);
+                          var phase_ids1 = [];
+                          var phase_ids2 = [];
+                          for(i = 0; i < ln2; i++)  {
+                              console.log(data.data[i].phaseId);
+                              phase_ids1.push(data.data[i].phaseId);
+                              phase_ids2.push(data.data[i].phaseName);
+                          } 
+                          $('#phase_id3').html(''); 
+                          var phase_options = $("#phase_id3");
+                          var i = 0;
+
+                          $.each(phase_ids2, function() {
+                              phase_options.append($("<option/>").val(phase_ids1[i]).text(phase_ids2[i]));
+                              i++;
+                          });
+                          var phaseId = $("#phaseIdHidden").val();
+                            if(phaseId!='')
+                              phase_options.val(phaseId);
+                        }
+                          
+                });
+}
+
+function populate_total_floor(){
+  $('#total_floor1').html('');  
+                var total_floor_array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101];
+                var floor_option = $('#total_floor1');
+                var j = 0;
+                console.log('Floor option');
+                //floor_option.append($("<option/>").val(0).text('Select');
+                $.each(total_floor_array, function() {
+                    if (j == 0)  {
+                       floor_option.append($("<option/>").val(j).text('Select'));   
+                    } else {
+                       floor_option.append($("<option/>").val(j).text(total_floor_array[j-1]));
+                    }
+                    j++;
+                    //console.log(j);
+                });
+}
 
 function isNumeric(val) {
         var validChars = '0123456789';
@@ -1379,7 +1397,12 @@ function isNumeric(val) {
 }
 
 
-
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 
 
@@ -1421,15 +1444,10 @@ function isNumeric(val) {
 		            <td>
 		        	    <div id="search-top">
 		                    <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">
-		                        <form method = "post">
+		                        <form method = "get">
 		            	            <tr>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <!--<select id="citydd" name="citydd" onchange = "update_locality(this.value);">
-		                                       <option value=''>select city</option>
-		                                       {foreach from=$cityArray key=k item=v}
-		                                           <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
-		                                       {/foreach}
-		                                    </select> -->
+		                                   
 		                                </td>
 		                                <td width = "10px">&nbsp;
 		                                </td>
@@ -1453,10 +1471,10 @@ function isNumeric(val) {
 		                                       <option value='Active' {if $status == 'Active'}selected{/if}>Active</option>
 		                                       <option value='Inactive' {if $status == 'Inactive'}selected{/if}>Inactive</option>
 		                                    </select> -->
-                                        <select id="citydd" name="citydd" onchange = "update_locality(this.value);">
+                                        <select id="citydd" name="citydd" >
                                            <option value=''>select city</option>
                                            {foreach from=$cityArray key=k item=v}
-                                               <option value="{$k}" {if $k==$cityId}  selected="selected" {/if}>{$v}</option>
+                                               <option value="{$k}" {if $k==$cityId}  {/if}>{$v}</option>
                                            {/foreach}
                                         </select>
 		                                </td>
@@ -1472,11 +1490,12 @@ function isNumeric(val) {
                                         -->
                                       
                                       <input type=text name="project_search" id="project_search"  style="width:210px;"> 
+                                      <input type=hidden name="selProjId" id="selProjId" >
                               
                                     </td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <input type = "submit" name = "submit" value = "submit" onclick="submitButton();">
+		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
 		                                </td>
 		                          </tr>
 		                        </form>
@@ -1502,7 +1521,7 @@ function isNumeric(val) {
                     	<input type="hidden" name="old_sub_name" value="">
                     	<div>
 <!--City Tr-->         		<tr id="city" style="left:300px;">
-                      			<td id="city1"">
+                      			<td id="city1">
                       				City
                       			</td>
                             <td>
@@ -1629,7 +1648,7 @@ function isNumeric(val) {
 	                                  <select name="appartment3" id="appartment3" style="height:28px">
 
 	                                    <option value="0">Select</option>
-	                                    <option value="1">Appartment</option>>  
+	                                    <option value="1">Apartment</option>>  
 	                                    <option value="2">Villa</option>
 	                                    <option value="3">Plot</option>
 	                                    <option value="4">Commercial</option>
@@ -1729,6 +1748,7 @@ function isNumeric(val) {
                                  <select id="phase_id3" name="phase_id3" style="width:140px">
                                     <option value=''>Select</option>
                                 </select> 
+                                <input type=hidden name='phaseIdHidden' id='phaseIdHidden'>
                             </td> 
                             <td id="tower1">
                               		Tower
@@ -1738,6 +1758,7 @@ function isNumeric(val) {
                                 <select id="tower2" name="tower2" style="width:140px">
                                     <option value=''>Select</option>
                                 </select>
+                                <input type=hidden name='towerIdHidden' id='towerIdHidden'>
                             </td> 	
 
                          </tr>
@@ -1761,7 +1782,7 @@ function isNumeric(val) {
                       				
                       			</td>
                             <td id="total_floor" style = "width:50px">
-                                Out of
+                                Total Floors 
                             </td>
 
                             <td>
@@ -1799,8 +1820,8 @@ function isNumeric(val) {
 		                          <td id = "negotiable_id2">
 		                            <select id="nego_select" name="nego_select" style="width:120px">
 	                                    <option value=''>Select</option>  
-	                                      <option value="0">Yes</option>
-	                                      <option value="1">No</option>
+	                                      <option value="1">Yes</option>
+	                                      <option value="2">No</option>
 
 	                                </select>
 		                          </td>
@@ -1812,14 +1833,10 @@ function isNumeric(val) {
 	                            <td>
 	                                <select id="facing2" name="facing2" style="width:120px">
 	                                    <option value=''>Select</option>  
-	                                      <option value="East">East</option>
-	                                      <option value="West">West</option>
-	                                      <option value="North">North</option>
-	                                      <option value="South">South</option>
-	                                      <option value="NorthEast">North East</option>
-	                                      <option value="SouthEast">South East</option>
-	                                      <option value="NorthWest">North West</option>
-	                                      <option value="SouthWest">South West</option>
+                                      {foreach $dirctionsArr  key=k item=v}
+                                      <option value="{$v['id']}">{$v['direction']}</option>
+                                      {/foreach}
+	                                      
 	                                </select>
 	                            </td>	
                        	</tr>
@@ -1883,7 +1900,7 @@ function isNumeric(val) {
                     	<tr id="hln">
                        
                         	<td id="hln1">
-                                Home Loan
+                                Home Loan Bank
                         	</td>
 
                         	<td  id="hln2" >
@@ -1911,17 +1928,17 @@ function isNumeric(val) {
                           <td id ="tfr1" >
                               Transfer Rate:     
                           </td>
-                          <td >
+                          <td colspan="2">
                               <input type=text name="tfr2" id="tfr2" style="width:100px">
                           </td>
 
-                          <td width="110px" align="left" id="tfr_price" style="padding-left:-10px;" >
+                          <!-- <td width="110px" align="left" id="tfr_price" style="padding-left:-10px;" >
                               <select name="transfer_sel" id="transfer_sel" style="height:28px;width:80px">
 		                                    <option value="0">Select</option>
 		                                    <option value="1">Lacs</option>
 		                                    <option value="2">Crs</option>  
 		                      </select> 
-                          </td>
+                          </td> -->
 
                           
                       </tr>
@@ -2033,46 +2050,7 @@ function isNumeric(val) {
                               
                           </thead>
                           <tbody>
-                                <!--<TR><TD colspan=12 class=td-border>&nbsp;</TD></TR>-->
-                                {$i=0}
-                                <!--{if isset($suburbId)}
-                                    {$type = DISPLAY_ORDER_SUBURB}
-                                {else if isset($localityId)}
-                                    {$type = DISPLAY_ORDER_LOCALITY}
-                                {else}
-                                    {$type = DISPLAY_ORDER}
-                                {/if}-->
-                                {foreach from=$resaleListings key=k item=v}
-                                    {$i=$i+1}
-                                    {if $i%2 == 0}
-                                      {$color = "bgcolor = '#F7F7F7'"}
-                                    {else}                            
-                                      {$color = "bgcolor = '#FCFCFC'"}
-                                    {/if}
-                                  <TR {$color}>
-                                    <TD align=center class=td-border>{$i} </TD>
-                                    <TD align=center class=td-border>{$v['val']->property->project->locality->suburb->city->label}</TD>
-                                    <TD align=center class=td-border>{$v['val']->seller->brokerName}</TD>
-                                    <TD align=center class=td-border>{$v['val']->property->project->name}, {$v['val']->property->project->builder->name}</TD>
-                                    <TD align=center class=td-border>{$v['val']->property->unitName}-{$v['val']->property->size}-{$v->val->property->unitType}
-                                    <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
-
-                                    </TD>
-                                    {if $v['val']->currentListingPrice->pricePerUnitArea != 0}
-                                    <TD align=center class=td-border>Price Per Unit Area - {$v['val']->currentListingPrice->pricePerUnitArea}</TD>
-                                    {else}
-                                    <TD align=center class=td-border>Price - {$v['val']->currentListingPrice->price}</TD>
-                                    {/if} 
-                                    <TD align=center class=td-border><button type="button" id="edit_button_{$v->id}" onclick="return editListing({$v['json']})" align="left">Edit</button></TD>
-                                
-                                  
-                                  
-                                    
-                                    
-                                    
-                                
-                                  </TR>
-                                {/foreach}
+                               
                                
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>

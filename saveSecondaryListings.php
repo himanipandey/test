@@ -89,8 +89,10 @@ else {
     }
     $dataArr['sellerId'] = $_POST['seller_id'];//"1216008";//
     if(!empty($_POST['facing']))
-        $dataArr['facing'] = $_POST['facing'];
-    $dataArr['propertyId'] = $_POST['property_id'];
+        $dataArr['facingId'] = $_POST['facing'];
+    if(isset($_POST['property_id']) && !empty($_POST['property_id']))
+        $dataArr['propertyId'] =$_POST['property_id'];
+    //$dataArr['propertyId'] = $_POST['property_id'];
     $otherInfo = array(
         'size'=> $_POST['size'],
         'projectId'=> $_POST['project_id'],
@@ -100,85 +102,100 @@ else {
         'unitType'=>  $_POST['unit_type'],
         ); 
 
-    if($_POST['penthouse'] != null) {
-        $otherInfo['penthouse'] = $_POST['penthouse'];
+    $penthouse_studio = $_POST['penthouse_studio'];
+    if(isset($penthouse_studio) && !empty($penthouse_studio)){
+        if($penthouse_studio=="1")
+            $otherInfo['penthouse'] = "true";
+        if($penthouse_studio=="2")
+            $otherInfo['studio'] = "true";
     }
-    if($_POST['studio'] != null) {
-        $otherInfo['studio'] = $_POST['studio'];
+
+
+    
+    if($_POST['study_room'] != null) {
+        $otherInfo['studyRoom'] = $_POST['study_room'];
+    }
+    if($_POST['servant_room'] != null) {
+        $otherInfo['servantRoom'] = $_POST['servant_room'];
     }
 
         
     $dataArr['otherInfo'] = $otherInfo;
 
-    $dataArr['floor'] = $_POST['floor'];
-    $jsonDump = array();
-    $tower = $_POST['tower'];
-
-/*    $total_floor = $_POST['total_floor'];
-
-    $phaseId = $_POST['phase_id'];
-    $owner_name = $_POST['owner_name'];
-    $powner_email = $_POST['owner_email'];
-    $owner_number = $_POST['owner_number'];
-    $study_room = $_POST['study_room'];
-    $servant_room = $_POST['servant_room'];
-
-/***  listing v2 values  ****************************************************/   
-   /* if(isset($tower) && !empty($tower))
-        $dataArr['towerId'] =$tower;
-    if(isset($phaseId) && !empty($phaseId))
-        $dataArr['phaseId'] =$phaseId;*/
-/*** json dump values  ****************************************************/    
-    /*if(isset($total_floor) && !empty($total_floor))
-        $jsonDump['total_floor'] =$total_floor;
-    if(isset($owner_name) && !empty($owner_name))
-        $jsonDump['owner_name'] =$owner_name;
-    if(isset($owner_email) && !empty($owner_email))
-        $jsonDump['owner_email'] =$owner_email;
-    if(isset($owner_number) && !empty($owner_number))
-        $jsonDump['owner_number'] =$owner_number;
-    if(isset($study_room) && !empty($study_room))
-        $jsonDump['study_room'] =$study_room;
-    if(isset($servant_room) && !empty($servant_room))
-        $jsonDump['servant_room'] = $servant_room;*/
-
+    if(isset($_POST['floor']) && !empty($_POST['floor']))
+        $dataArr['floor'] = $_POST['floor'];
     
-
-
-
-
-
-   /* echo "Tower ",$tower;
-    echo "Total_floor",$total_floor;
-
+    $jsonDump = array();
     $owner_name = $_POST['owner_name'];
     $owner_email = $_POST['owner_email'];
     $owner_number = $_POST['owner_number'];
+
+    $tower = $_POST['tower'];
+    $phaseId = $_POST['phase_id'];
+
+    $study_room = $_POST['study_room'];
+    $servant_room = $_POST['servant_room'];
+
+    $total_floor = $_POST['total_floor'];
+
+/***  listing v2 values  ****************************************************/   
+    if(isset($tower) && !empty($tower))
+        $dataArr['towerId'] =$tower;
+    if(isset($phaseId) && !empty($phaseId))
+        $dataArr['phaseId'] =$phaseId;
+
+  
+
+    
+    
+    
+
+
+/*** json dump values  ****************************************************/    
+   if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+
+    
     if(isset($owner_name) && !empty($owner_name))
         $jsonDump['owner_name'] = $owner_name;
-    if(isset($tower) && !empty($tower))
-        $jsonDump['tower'] = $tower;
+   
     if(isset($owner_email) && !empty($owner_email))
         $jsonDump['owner_email'] = $owner_email;
     if(isset($owner_number) && !empty($owner_number))
-        $jsonDump['owner_number'] = $owner_number;*/
+        $jsonDump['owner_number'] = $owner_number;
         
 
 
     $dataArr['jsonDump'] = json_encode($jsonDump);
-    $dataArr['description'] =$_POST['description'];
-    $dataArr['remark'] =$_POST['review'];
+
+    if(isset($_POST['description']) && !empty($_POST['description']))
+        $dataArr['description'] =$_POST['description'];
 
 
-    $dataArr['flatNumber'] = $_POST['flat_number'];
-    $dataArr['homeLoanBankId'] = $_POST['loan_bank'];
-    $dataArr['noOfCarParks'] = $_POST['parking'];
+    if(isset($_POST['review']) && !empty($_POST['review']))
+        $dataArr['remark'] =$_POST['review'];
+
+    if(isset($_POST['flat_number']) && !empty($_POST['flat_number']))
+        $dataArr['flatNumber'] =$_POST['flat_number'];
+
+
+    if(isset($_POST['loan_bank']) && !empty($_POST['loan_bank']))
+        $dataArr['homeLoanBankId'] =$_POST['loan_bank'];
+
+    if(isset($_POST['parking']) && !empty($_POST['parking']))
+        $dataArr['noOfCarParks'] =$_POST['parking'];
+
+
+    if(isset($_POST['trancefer_rate']) && !empty($_POST['trancefer_rate']))
+        $dataArr['transferCharges'] =$_POST['trancefer_rate'];
+
+    if(isset($_POST['plc_val']) && !empty($_POST['plc_val']))
+        $dataArr['plc'] =$_POST['plc_val'];
+
     if($_POST['negotiable'] != null)  {
         $dataArr['negotiable'] = $_POST['negotiable'];    
     }
     
-    $dataArr['transferCharges'] = $_POST['trancefer_rate']; 
-    $dataArr['plc'] = $_POST['plc_val'];
 
     $masterAmenityIds = array(
         1,2,3,4
@@ -225,12 +242,12 @@ else {
     //'{"floor":{$x},"jsonDump":"{\"comment\":\"anubhav\"}","sellerId":"1216008","flatNumber":"D-12","homeLoanBankId":"1","noOfCarParks":"3","negotiable":"true","transferCharges":1000,"plc":200,"otherInfo":{"size":"100","projectId":"656368","bedrooms":"3","unitType":"Plot","penthouse":"true","studio":"true","facing":"North"},"masterAmenityIds":[1,2,3,4],"currentListingPrice":{"pricePerUnitArea":2000,}}'
 
 
-//print("<pre>");
-//print_r($dataArr); 
+print("<pre>");
+print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
     //print_r($dataArr); die;
-     //var_dump($dataJson);   
+     var_dump($dataJson);   
 
 
         $uri = LISTING_API_URL;

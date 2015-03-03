@@ -70,24 +70,19 @@ $locArr = Locality::getLocalityByCity($cityId);
 //print_r($locArr);
 $smarty->assign('localityArr',$locArr);
 
-$NearPlaceTypesArr = NearPlaceTypes::getNearPlaceTypesEnabled();
-//print_r($NearPlaceTypesArr);
-$smarty->assign("nearPlaceTypesArray", $NearPlaceTypesArr);
-$smarty->assign('status',$_REQUEST['status']);
-$smarty->assign('placeType',$_REQUEST['placeType']);
-//echo "<pre>";
-//print_r($_REQUEST);die;
-if(!empty($_REQUEST['placeType']))
-{
-    $nearPlaceTypesId = $_REQUEST['placeType']; 
-    $smarty->assign('nearPlaceTypesId',$nearPlaceTypesId);
-    //$suburbId = $_REQUEST['suburb'];
-    //$smarty->assign('suburbId',$suburbId);
-   // $projectArr = getProjectArr($suburbId,'suburb',$orderby);
+
+$dirctionsArr = array();
+$res = MasterDirections::find('all');
+foreach ($res as $v) {
+    $tmp = array();
+    $tmp['id'] = $v->id;
+    $tmp['direction'] = $v->direction;
+    array_push($dirctionsArr, $tmp);
 }
-//echo "<pre>";
 
 
+$smarty->assign('dirctionsArr',$dirctionsArr);
+//print_r($dirctionsArr);
 $resaleListings = array();
 
 
