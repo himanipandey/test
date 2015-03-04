@@ -1729,9 +1729,9 @@ function getParameterByName(name) {
                           </td>
 
                           <td id="penthouse_td1">
-                                  <font size="1" color="red">*</font>
+                                  
                                   <font size="1">
-                                  Other
+                                  Apartment Type
                                   </font>
                             </td>
                             <td id="penthouse_td2">

@@ -56,7 +56,7 @@ $('document').ready(function(){
 
 		} else {
 			$('#study_servant').hide(1);
-			$('#othr').hide();
+			$('#othr').show();
 			$('#bath').hide();
 			$('#bath1').hide();
 			$('#tol1').hide();
@@ -64,6 +64,9 @@ $('document').ready(function(){
 
 			$('#bed2').val('');
 			$('#tol3').val('');
+
+			$('#othr1').show();
+			$('#othr2').show();
 		}
 	});
 
