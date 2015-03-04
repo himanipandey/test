@@ -242,12 +242,12 @@ else {
     //'{"floor":{$x},"jsonDump":"{\"comment\":\"anubhav\"}","sellerId":"1216008","flatNumber":"D-12","homeLoanBankId":"1","noOfCarParks":"3","negotiable":"true","transferCharges":1000,"plc":200,"otherInfo":{"size":"100","projectId":"656368","bedrooms":"3","unitType":"Plot","penthouse":"true","studio":"true","facing":"North"},"masterAmenityIds":[1,2,3,4],"currentListingPrice":{"pricePerUnitArea":2000,}}'
 
 
-print("<pre>");
-print_r($dataArr); 
+//print("<pre>");
+//print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
     //print_r($dataArr); die;
-     var_dump($dataJson);   
+     //var_dump($dataJson);   
 
 
         $uri = LISTING_API_URL;
