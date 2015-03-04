@@ -672,8 +672,6 @@ $("#lmkSave").click(function(){
     var total_floor = null;
     if(total_floor_check == "Select") {
       total_floor = null;
-      alert('Select Total Floor!!');
-      return false;
     } else {
       total_floor = parseInt(total_floor_check);
     }
@@ -836,6 +834,10 @@ $("#lmkSave").click(function(){
      if((price=='' || price==null || !price) && (price_per_unit_area=='' || price_per_unit_area==null || !price_per_unit_area)){
       error += "Price is compulsory field. "
      }
+     if(phase_id=='' || !phase_id){
+      error += "Phase is compulsory field. "
+     }
+
      if (error != '' ){
       alert(error);
       return true;
@@ -1352,6 +1354,7 @@ function get_phases(projectId){
                           var phase_options = $("#phase_id3");
                           var i = 0;
 
+                          phase_options.append($("<option/>").val("").text("Select"));
                           $.each(phase_ids2, function() {
                               phase_options.append($("<option/>").val(phase_ids1[i]).text(phase_ids2[i]));
                               i++;
@@ -1743,7 +1746,7 @@ function getParameterByName(name) {
 
                         <tr id="tower_floor"> 
                             
-                            <td  align="left" id="phase_id1" style="width:100px;">
+                            <td  align="left" id="phase_id1" style="width:100px;"><font  color="red">*</font>
                                   Phase 
                             </td>
                             <td  align="left" id="phase_id2">
