@@ -1159,7 +1159,7 @@ function broker_call_edit(callId, brokerId)
 								<b>Project URL:</b>
 							</td>
 							<td>
-								<a href = "http://www.proptiger.com/{$projectDetails[0].PROJECT_URL}">{$projectDetails[0].PROJECT_URL}</a>
+								<a href = "https://www.proptiger.com/{$projectDetails[0].PROJECT_URL}">{$projectDetails[0].PROJECT_URL}</a>
 							</td>
 						</tr>
 						<tr height="25px;">

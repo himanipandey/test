@@ -24,7 +24,7 @@
 				<table border="0" cellpadding="0" cellspacing="0" width="100%" style='border-bottom:1px solid #F17715;border-top:1px solid #c2c2c2;'>
 					<tr>
 						<td width = '16%'  bgcolor = '#ffffff' align="center" valign="middle">
-							<a target="_new"  href = 'http://www.proptiger.com'><img border = '0' src='{$FORUM_POPUP_IMAGE_PATH}adminlogo.gif' width='150'></a>
+							<a target="_new"  href = 'http://cms.proptiger.com'><img border = '0' src='{$FORUM_POPUP_IMAGE_PATH}adminlogo.gif' width='150'></a>
 						</td>
 						<td width = "41%" bgcolor = '#666666'  height="40" align="right" valign="middle"><font size="4" color="#FFFFFF">Projects Administrator Panel</font></td>
 						<td width = "41%" bgcolor = '#666666'  height="40" align="right" valign="middle" style ="padding-right:30px;">
