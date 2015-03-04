@@ -145,9 +145,9 @@ function editListing(str){
       $('#bkn2').val(str.seller.brokerId); 
       getSeller();
       $("#seller3").val(seller_id);
-      debugger;
+      //debugger;
     }
-    $("#facing2").val(str.facing);
+    $("#facing2").val(str.facingId);
     
     $("#floor2").val(str.floor);
     $("#tfr2").val(str.transferCharges);
@@ -203,7 +203,7 @@ function editListing(str){
       if(str.currentListingPrice.pricePerUnitArea > 0){
          $("#prs5").val('2');
          var price_value = str.currentListingPrice.pricePerUnitArea;
-         $('#pr').show();
+         $('#pr').hide();
          $('#tr').show();
          $('#other_charges').show();
          $('#othr_prs2').show();
@@ -1850,7 +1850,7 @@ function getParameterByName(name) {
                                                              
                                 
                                 <td id="prs4">
-                                  <select id="prs5" name="prs5" style="width:100px">
+                                  <select id="prs5" name="prs5" style="width:150px">
                                       <option value='0'>Select</option>  
                                       <option value='1' selected="selected">All Inclusive</option>
                                       <option value='2'>Per Sq. Ft.</option>
@@ -1871,7 +1871,7 @@ function getParameterByName(name) {
 
                         <tr id="prs_typ">
                             
-                            <td width="110px" align="left" id="pr" style="padding-left:220px;" >
+                            <td width="110px" align="left" id="pr" style="padding-left:220px;display:none" colspan="2">
                               <label  for="one" style="font-size:11px;" >
                                 lacs &nbsp;   
                                  <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
@@ -1882,7 +1882,7 @@ function getParameterByName(name) {
 
                         
 
-                            <td width="630px" align="left" id="tr" style="padding-left:220px;display:none">
+                            <!-- <td width="630px" align="left" id="tr" style="padding-left:220px;display:none">
 
                               <label  for="one" style="font-size:11px;">
                                 lacs &nbsp;   
@@ -1890,7 +1890,7 @@ function getParameterByName(name) {
                                   &nbsp;&nbsp; crs &nbsp;
                                   <input type="radio" id="crs2" name="prstp2" value="n" />
                               </label>    
-                            </td>  
+                            </td>  --> 
 
                         </tr>
 
@@ -1904,7 +1904,7 @@ function getParameterByName(name) {
                         	</td>
 
                         	<td  id="hln2" >
-                          		<select name="bnk_lst" id="bnk_lst" style="width:100px;" >
+                          		<select name="bnk_lst" id="bnk_lst" style="width:200px;" >
                                  	<option value=''> select bank	</option>
                                     {foreach from=$bankArray key=k item=v}
                                         <option value="{$k}" {if $bankId==$k}  selected="selected" {/if}>{$v}</option>

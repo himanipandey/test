@@ -75,14 +75,14 @@ $('document').ready(function(){
 		if($('#prs5 :selected').val() == '2'){	
 			//$('#other_charges').show();
 			$('#othr_prs2').show();
-			$('#tr').show();
 			$('#other_charges').show();
+			$('#pr').hide();
 		}
 		else {
 			//$('#pr').hide();
 			$('#other_charges').hide();
 			$('#othr_prs2').hide();
-			$('#tr').hide();
+			$('#pr').show();
 		}
 	}); 
 
