@@ -8,6 +8,13 @@ $smarty->assign("comptype", $typeArr);
 $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 
+$res = City::find('all', array('conditions'=>array("IS_SERVING = '1' and status = 'Active'" ) ));
+$ptBranchArray = array();
+foreach($res as $value) {
+    $ptBranchArray[$value->city_id] = $value->label;
+}
+$smarty->assign("ptBranchArray", $ptBranchArray);
+
 if($compid){
 	$compArr = Company::getAllCompany($arr=array('id'=>$compid));
 }
@@ -23,6 +30,10 @@ $smarty->assign('transactionType', $transactionType);
 
 $devices = Devices::getAllDevices();
 $smarty->assign('devices', $devices);
+
+$bankArray = BankList::arrBank();
+$smarty->assign("bankArray",$bankArray);
+
 
 //print_r($transactionType);
 

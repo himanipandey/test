@@ -734,6 +734,12 @@ $smarty->assign("arrResidentialType",$arrResidentialType);
 $smarty->assign("arrCommercialType",$arrCommercialType);
 $arrAllType = array("Shop","Office",'Other','Commercial');
 $smarty->assign("arrAllType",$arrAllType);
+
+$bankAccountType = array(
+	"1" => "Saving",
+	"2" => "Current",
+	);
+$smarty->assign("bankAccountType",$bankAccountType);
 /********config for project type of residential/nonresidential******************/
 
 

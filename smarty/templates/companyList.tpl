@@ -168,10 +168,27 @@ if(compType=='Broker'){
     }
   });
 
+var device = [];
+  $(".device").each(function(){
+    if($(this).is(':checked')){
+      var v = $(this).val();
+      var a = { id: "tt_db_id_"+v, val:v};
+      device.push(v);
+    }
+  });
   //console.log(transactionType);
   var bd_id = $('#bd_id').val(); 
   var legalType = $('#compLegalType').children(":selected").val();
   var frating = $('#frating').children(":selected").val();
+
+  var bankId = $('#bankName').children(":selected").val();
+  var accountNo = $('#accountNo').val().trim();
+  var accountType = $('#accountType').children(":selected").val();
+  var ifscCode = $('#ifscCode').val().trim();
+
+  var formSignUpDate = $('#img_date2').val(); 
+  var signUpBranch = $('#signUpBranch :selected').val();
+
   var device = $('#device').children(":selected").val();
   var since_op = $('#img_date1').val(); 
   var stn = $('#stn').val();
@@ -185,15 +202,15 @@ if(compType=='Broker'){
    
   //var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
 
-  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, device:device, since_op:since_op, ptManager:ptManager, ptRelative:ptRelative };
+  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, bankId:bankId, accountNo:accountNo, accountType:accountType, ifscCode:ifscCode, formSignUpDate:formSignUpDate, signUpBranch:signUpBranch, device:device, since_op:since_op, ptManager:ptManager, ptRelative:ptRelative };
 
   if (broker_info_type=="Advance"){
-    valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
+    //valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
     /*valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
     valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
     valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");*/
     valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
-    valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
+    //valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
   }
 }
 
@@ -267,12 +284,12 @@ if(compType=='Broker'){
       error = 1;	
 	}
 
-    if(compphone==''){
+    /*if(compphone==''){
       $('#errmsgcompphone').html('<font color="red">Please provide an Office Phone no.</font>');
       $("#compphone").focus();
       window.error = 1;
     }
-    else if(compphone!='' && !isNumeric1(compphone)){
+    else*/ if(compphone!='' && !isNumeric1(compphone)){
       $('#errmsgcompphone').html('<font color="red">Please provide a Numeric Value.</font>');
       $("#compphone").focus();
       window.error = 1;
@@ -1718,7 +1735,7 @@ function basic_info_bt_clicked(){
 
 
                     <tr class="broker_basic">
-                      <td width="20%" align="right" ><font color = "red">*</font>Office Phone No. : </td>
+                      <td width="20%" align="right" ><font color = "red"></font>Office Phone No. : </td>
                       <td width="30%" align="left"><input type=text name="compphone" class="broker_basic" id="compphone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompphone"></td>
                     </tr>
 
@@ -2065,7 +2082,7 @@ function basic_info_bt_clicked(){
                         </tr>
                         
                         <tr class="broker_basic_extra">
-                          <td width="10%" align="right" valign="top"><font color = "red">*</font>Transaction Types : </td>
+                          <td width="10%" align="right" valign="top"><font color = "red"></font>Transaction Types : </td>
                           <td width="30%" align="left">
                             <table width="100%">
                               {$i=0}
@@ -2112,15 +2129,105 @@ function basic_info_bt_clicked(){
                           </td>
                         </tr>
 
+                    <tr class="broker_basic_extra">
+                      <td colspan="3" align="left" ><hr><b>Broker Bank Details</b></td>
+                    </tr>
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Bank Name: </td>
+                          <td width="30%" align="left">
+                              <select name="bankName" id="bankName" height="5px" width="200px" >
+                                  <option value=''> select bank </option>
+                                    {foreach from=$bankArray key=k item=v}
+                                        <option value="{$k}" >{$v}</option>
+                                    {/foreach}
+                              </select>
+                          </td>
+                          <td width="20%" align="left" id="errmsgbankname"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Account No: </td>
+                          <td width="30%" align="left">
+                             <input type=text name="accountNo" id="accountNo" style="width:250px;">
+                          </td>
+                          <td width="20%" align="left" id="errmsgaccountno"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Account Type: </td>
+                          <td width="30%" align="left">
+                             <select name="accountType" id="accountType" height="5px" width="200px" >
+                                  <option value=''> select </option>
+                                    {foreach from=$bankAccountType key=k item=v}
+                                        <option value="{$k}">{$v}</option>
+                                    {/foreach}
+                              </select>
+                          </td>
+                          <td width="20%" align="left" id="errmsgaccounttype"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">IFSC Code: </td>
+                          <td width="30%" align="left">
+                             <input type=text name="ifscCode" id="ifscCode" style="width:250px;">
+                          </td>
+                          <td width="20%" align="left" id="errmsgifsccode"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td colspan="3" align="left" ><hr><b>Broker SignUp Details</b></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" ><font color = "red"></font>Form SignUp Date: </td>
+                          <td width="30%" align="left"><input name="img_date2" type="text" class="formstyle2" id="img_date2" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger2" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgsignupdate"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top"><font color='red'>*</font>Proptiger Branch: </td>
+                          <td width="30%" align="left">
+                          <select id="signUpBranch" name="signUpBranch" ><option value=''>Select City</option>
+                                           {foreach from=$ptBranchArray key=k item=v}
+                                               <option value="{$k}">{$v}</option>
+                                           {/foreach}
+                          </select>
+                          </td>
+                          <td width="20%" align="left" id="errmsgsignupbranch"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Upload Signup Form Soft Copy: </td>
+                          <td width="30%" align="left">
+                             <input type="file" name='signUpForm' id="signUpForm" >
+                          </td>
+                          <td width="20%" align="left" id="errmsgsignupform"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td colspan="3" align="left" ><hr><b></b></td>
+                        </tr>
+
                         <tr class="broker_basic_extra">
                           <td width="20%" align="right" valign="top">Primary Device Usage : </td>
                           <td width="30%" align="left">
-                           <select id="device" name="device" valign="center"> 
+                           <!-- <select id="device" name="device" valign="center"> 
                               <option name=one value=''>Select Device Used</option>
                               {foreach from=$devices key=k item=v}
                                 <option name=one value='{$k}'>{$v}</option>
                               {/foreach}
-                          </select>
+                          </select> -->
+                        
+                            <table width="100%">
+                              {$i=0}
+                            {foreach $devices key=k item=v}
+                              {$i=$i+1}
+                              {if $i%2!=0}<tr>{/if}
+                              <td >
+                            <input type='checkbox' name='device[]' class='device' value='{$k}'>{$v}<input type='hidden' id="tt_db_id_{$k}"> </td>
+                            {if $i%2==0}</tr>{/if}
+                            {/foreach}
+                          </table>
+                          
                           </td>
                           <td width="20%" align="left" id="errmsgdevice"></td>
                           
@@ -2128,7 +2235,7 @@ function basic_info_bt_clicked(){
 
 
                         <tr>
-                          <td width="20%" align="right" ><font color = "red">*</font>Years in Operations : </td>
+                          <td width="20%" align="right" ><font color = "red"></font>Years in Operations : </td>
                           <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
                         </tr>
 
@@ -2285,7 +2392,7 @@ function basic_info_bt_clicked(){
                                                                                                                          
         var cals_dict = {}
         
-        for(i=1;i<=1;i++){
+        for(i=1;i<=2;i++){
             cals_dict["img_date_trigger"+i] = "img_date"+i;
      
         };
