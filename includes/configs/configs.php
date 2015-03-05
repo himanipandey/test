@@ -734,6 +734,13 @@ $smarty->assign("arrResidentialType",$arrResidentialType);
 $smarty->assign("arrCommercialType",$arrCommercialType);
 $arrAllType = array("Shop","Office",'Other','Commercial');
 $smarty->assign("arrAllType",$arrAllType);
+
+/********config for crawling automation and youtube upload******************/
+$smarty->assign("lookup_table_update_url","http://54.151.224.235:8000/lookup/");
+$smarty->assign("resale_prices_update_url","http://54.151.224.235:8000/cms/");
+$smarty->assign("youtube_upload_url","http://54.151.224.235:8000/youtube/");
+
+$smarty->assign("arrAllType",$arrAllType);
 /********config for project type of residential/nonresidential******************/
 
 
