@@ -262,10 +262,10 @@ if(compType=='Broker'){
     }
 
     if(email != '' && !validateEmail(email)){
-	  $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
+	   $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
       $("#email").focus();
       error = 1;	
-	}
+	  }
 
     if(compphone==''){
       $('#errmsgcompphone').html('<font color="red">Please provide an Office Phone no.</font>');

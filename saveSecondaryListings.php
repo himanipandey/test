@@ -6,10 +6,37 @@ include('httpful.phar');
 require_once("appWideConfig.php");
 include("dbConfig.php");
 
+if($_POST['task'] === 'get_tower')  {
+   
+    $Sql = "SELECT TOWER_ID,PROJECT_ID,TOWER_NAME FROM resi_project_tower_details WHERE PROJECT_ID =".$_POST['project_id']." ";
+    $Tower = array();
+    $ExecSql = mysql_query($Sql) or die();
+    $cnt = 0;
+    if (mysql_num_rows($ExecSql) > 0) {
+        while($Res = mysql_fetch_assoc($ExecSql)) {
+            $tmp = array();
+            $tmp['tower_id'] = $Res['TOWER_ID'];
+            $tmp['tower_name'] = $Res['TOWER_NAME'];
+            if($Res['TOWER_ID']!='')
+                array_push($Tower, $tmp);
+            $cnt++;
+            //$tower = $Res['TOWER_NAME'];
+        }    
+    }
+    //echo $cnt;
+   
 
-if($_POST['task'] === 'get_seller')  {
+    echo json_encode($Tower);
+    //echo $tower;
+    //echo "Finish";
+    //$smarty->assign("sel",$Sel);
+
+}
+
+else if($_POST['task'] === 'get_seller')  {
     
     $Sql = "SELECT user_id, name FROM company_users  WHERE company_id=".$_POST['broker_id']." and status = 'Active' and user_id is not null";
+    //$Sql = "SELECT user_id, name FROM company_users  WHERE company_id=".$_POST['broker_id']."";
     $Sel = array();
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in fetching data from company_users');
     $cnt = 0;
@@ -62,44 +89,113 @@ else {
     }
     $dataArr['sellerId'] = $_POST['seller_id'];//"1216008";//
     if(!empty($_POST['facing']))
-        $dataArr['facing'] = $_POST['facing'];
-    $dataArr['propertyId'] = $_POST['property_id'];
+        $dataArr['facingId'] = $_POST['facing'];
+    if(isset($_POST['property_id']) && !empty($_POST['property_id']))
+        $dataArr['propertyId'] =$_POST['property_id'];
+    //$dataArr['propertyId'] = $_POST['property_id'];
     $otherInfo = array(
         'size'=> $_POST['size'],
         'projectId'=> $_POST['project_id'],
         'bedrooms'=> $_POST['bedrooms'],
         'bathrooms'=> $_POST['bathrooms'], 
-        'unitType'=> $_POST['unit_type'],//"Apartment", //
-        'penthouse'=>"false",
-        'studio' => "false",
+
+        'unitType'=>  $_POST['unit_type'],
         ); 
+
+    $penthouse_studio = $_POST['penthouse_studio'];
+    if(isset($penthouse_studio) && !empty($penthouse_studio)){
+        if($penthouse_studio=="1")
+            $otherInfo['penthouse'] = "true";
+        if($penthouse_studio=="2")
+            $otherInfo['studio'] = "true";
+    }
+
+
+    
+    if($_POST['study_room'] != null) {
+        $otherInfo['studyRoom'] = $_POST['study_room'];
+    }
+    if($_POST['servant_room'] != null) {
+        $otherInfo['servantRoom'] = $_POST['servant_room'];
+    }
+
+        
     $dataArr['otherInfo'] = $otherInfo;
 
-    $dataArr['floor'] = $_POST['floor'];
+    if(isset($_POST['floor']) && !empty($_POST['floor']))
+        $dataArr['floor'] = $_POST['floor'];
+    
     $jsonDump = array();
-    $tower = $_POST['tower'];
     $owner_name = $_POST['owner_name'];
     $owner_email = $_POST['owner_email'];
     $owner_number = $_POST['owner_number'];
+
+    $tower = $_POST['tower'];
+    $phaseId = $_POST['phase_id'];
+
+    $study_room = $_POST['study_room'];
+    $servant_room = $_POST['servant_room'];
+
+    $total_floor = $_POST['total_floor'];
+
+/***  listing v2 values  ****************************************************/   
+    if(isset($tower) && !empty($tower))
+        $dataArr['towerId'] =$tower;
+    if(isset($phaseId) && !empty($phaseId))
+        $dataArr['phaseId'] =$phaseId;
+
+  
+
+    
+    
+    
+
+
+/*** json dump values  ****************************************************/    
+   if(isset($total_floor) && !empty($total_floor))
+        $jsonDump['total_floor'] =$total_floor;
+
+    
     if(isset($owner_name) && !empty($owner_name))
         $jsonDump['owner_name'] = $owner_name;
-    if(isset($tower) && !empty($tower))
-        $jsonDump['tower'] = $tower;
+   
     if(isset($owner_email) && !empty($owner_email))
         $jsonDump['owner_email'] = $owner_email;
     if(isset($owner_number) && !empty($owner_number))
         $jsonDump['owner_number'] = $owner_number;
         
-    $dataArr['jsonDump'] = json_encode($jsonDump);
-    $dataArr['description'] =$_POST['description'];
-    $dataArr['remark'] =$_POST['review'];
 
-    $dataArr['flatNumber'] = $_POST['flat_number'];
-    $dataArr['homeLoanBankId'] = $_POST['loan_bank'];
-    $dataArr['noOfCarParks'] = $_POST['parking'];
-    //$dataArr['negotiable'] = "true";
-    $dataArr['transferCharges'] = $_POST['trancefer_rate']; 
-    $dataArr['plc'] = $_POST['plc_val'];
+
+    $dataArr['jsonDump'] = json_encode($jsonDump);
+
+    if(isset($_POST['description']) && !empty($_POST['description']))
+        $dataArr['description'] =$_POST['description'];
+
+
+    if(isset($_POST['review']) && !empty($_POST['review']))
+        $dataArr['remark'] =$_POST['review'];
+
+    if(isset($_POST['flat_number']) && !empty($_POST['flat_number']))
+        $dataArr['flatNumber'] =$_POST['flat_number'];
+
+
+    if(isset($_POST['loan_bank']) && !empty($_POST['loan_bank']))
+        $dataArr['homeLoanBankId'] =$_POST['loan_bank'];
+
+    if(isset($_POST['parking']) && !empty($_POST['parking']))
+        $dataArr['noOfCarParks'] =$_POST['parking'];
+
+
+    if(isset($_POST['trancefer_rate']) && !empty($_POST['trancefer_rate']))
+        $dataArr['transferCharges'] =$_POST['trancefer_rate'];
+
+    if(isset($_POST['plc_val']) && !empty($_POST['plc_val']))
+        $dataArr['plc'] =$_POST['plc_val'];
+
+    if($_POST['negotiable'] != null)  {
+        $dataArr['negotiable'] = $_POST['negotiable'];    
+    }
+    
 
     $masterAmenityIds = array(
         1,2,3,4
@@ -122,6 +218,15 @@ else {
         $other_charges =0;
     
     
+    if($pricePerUnitArea == '' || $pricePerUnitArea == null) {
+        $pricePerUnitArea = null;
+    }
+    if($$price == '' || $$price == null) {
+        $$price = null;
+    }
+    if($$other_charges == '' || $$other_charges == null) {
+        $$other_charges = null;
+    }
     $currentListingPrice = array(
         'pricePerUnitArea'=> $pricePerUnitArea,
         'price'=> $price,
@@ -147,7 +252,7 @@ else {
 
         $uri = LISTING_API_URL;
         $uriLogin = ADMIN_USER_LOGIN_API_URL;
-
+        //$urlNew: $url + "?page="+page+ "&size="size;
         /*try{ 
             $response_login = \Httpful\Request::post($uri1)->sendIt();
             
@@ -164,12 +269,12 @@ else {
         } catch(Exception $e)  {
             print_R($e);
         }*/
-
+        //echo "dhsjadfhsjdkdf";    
         $response_login = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
         ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
         ->body('')             // attach a body/payload...
         ->send(); 
-//var_dump($response_login);die();
+        //var_dump($response_login);die();
         $header = $response_login->headers;
         $header = $header->toArray();
         $ck = $header['set-cookie'];
