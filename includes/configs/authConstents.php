@@ -13,6 +13,9 @@
     $listingPhotoAuth = isUserPermitted('listing-photo', 'manage');
     $smarty->assign("listingPhotoAuth", $listingPhotoAuth);
 
+    $crawlingAuth = isUserPermitted('crawling', 'manage');
+    $smarty->assign("crawlingAuth", $crawlingAuth);
+
     $bulkProjUpdateAuth = isUserPermitted('bulk-project-update', 'read');
     $smarty->assign("bulkProjUpdateAuth", $bulkProjUpdateAuth);
     

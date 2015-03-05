@@ -1,9 +1,6 @@
 <?php
 //calling function for all the cities
 
-
-
-
 $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 $smarty->assign('dirname',$dirName);
@@ -108,7 +105,7 @@ try{
     }
 
 
-   
+   //var_dump($responseLogin);
    
     if($ck_new!='')
     {    

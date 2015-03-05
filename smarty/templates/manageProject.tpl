@@ -607,8 +607,11 @@ $(function() {
                                         {/if}
                                     {else}
                                         <option value = "project_img_add.php?projectId={$value->project_id}&edit=edit&auth=auth&imagetype=const">Add Construction Image</option>
+                                        
                                     {/if}
                                     <option value = "project_video_add.php?projectId={$value->project_id}&edit=add">Add/Edit Video</option>
+                                    <option value = "add_specification.php?projectId={$value->project_id}&edit=edit">Edit/Add Specification and Amenities</option>
+                                        <option value = "add_apartmentConfiguration.php?projectId={$value->project_id}&edit=edit">Add/Edit Configuration</option>
                             </select>
 
 

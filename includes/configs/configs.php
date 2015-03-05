@@ -80,6 +80,7 @@ $smarty->assign("FORUM_PATH", FORUM_PATH);
 /*Forum paths ends*/
 /*ends*/
 
+$smarty->assign("proptiger_broker_id", '410');
 
 /*Added by siddharth for Forum Module Tables on 12th Jan 2012*/
 DEFINE("FUSER",FORUM_TABLE_PREFIX."USER");
@@ -732,6 +733,13 @@ while($ProjectType = mysql_fetch_assoc($resType)){
 $smarty->assign("arrResidentialType",$arrResidentialType);
 $smarty->assign("arrCommercialType",$arrCommercialType);
 $arrAllType = array("Shop","Office",'Other','Commercial');
+$smarty->assign("arrAllType",$arrAllType);
+
+/********config for crawling automation and youtube upload******************/
+$smarty->assign("lookup_table_update_url","http://54.151.224.235:8000/lookup/");
+$smarty->assign("resale_prices_update_url","http://54.151.224.235:8000/cms/");
+$smarty->assign("youtube_upload_url","http://54.151.224.235:8000/youtube/");
+
 $smarty->assign("arrAllType",$arrAllType);
 /********config for project type of residential/nonresidential******************/
 
