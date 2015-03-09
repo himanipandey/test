@@ -1355,6 +1355,46 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+                                                <!-- @Jitendra pathak -->
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Construction Contractor: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].cons_comp != ''}
+                                                               {$projectDetails[0].cons_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Maintenace Contractor: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].maint_comp != ''}
+                                                               {$projectDetails[0].maint_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Landscape Architect: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].lands_arch_comp != ''}
+                                                               {$projectDetails[0].lands_arch_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
+                                                
+                                                
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Power backup: </b>
