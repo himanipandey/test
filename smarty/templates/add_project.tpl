@@ -975,7 +975,7 @@
         $(".company-type").catcomplete({
             source: function( request, response ) {
               $.ajax({
-                url: "/searchCompany.php",
+                url: "/ajax/searchCompany.php",
                 dataType: "json",
                 data: {
                   companyType: this.element.attr("name"),
