@@ -1,9 +1,16 @@
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
+
 <script type="text/javascript" src="js/jquery.js"></script>
+
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
+
 <script type="text/javascript" src="js/common.js?version=4"></script>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+
 <script type="text/javascript">
     tinyMCE.init({
         //mode : "textareas",
@@ -824,6 +831,33 @@
 								  <td width="50%" align="left"><font color="red"></font>
                                                                   </td>
 							   </tr>
+                                                           
+                                                           <!-- @Jitendra pathak -->
+                                                           <tr>
+                                                               <td width="20%" align="right" valign="top"><b>Construction Contractor</b></td>
+                                                               <td width="30%" align="left" valign="top">
+                                                                   <input type = "text" name = "ConstructionContractor" id = "ConstructionContractor" value = "{$constructionContractor}" style ="width:360px;" data-id="ConstructionContractorId" class="company-type">
+                                                                   <input type = "hidden" name = "ConstructionContractorId" id = "ConstructionContractorId" value = "{$constructionContractorId}" style ="width:360px;">
+                                                               </td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td width="20%" align="right" valign="top"><b>Maintenance Contractor</b></td>
+                                                               <td width="30%" align="left" valign="top">
+                                                                   <input type = "text" name = "MaintenanceContractor" id = "MaintenanceContractor" value = "{$maintenanceContractor}" style ="width:360px;" data-id="MaintenanceContractorId" class="company-type">
+                                                                   <input type = "hidden" name = "MaintenanceContractorId" id = "MaintenanceContractorId" value = "{$maintenanceContractorId}" style ="width:360px;">
+                                                               </td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td width="20%" align="right" valign="top"><b>Landscape Architect</b></td>
+                                                               <td width="30%" align="left" valign="top">
+                                                                   <input type = "text" name = "LandscapeArchitect" id = "LandscapeArchitect" value = "{$landscapeArchitect}" style ="width:360px;" data-id="LandscapeArchitectId" class="company-type">
+                                                                   <input type = "hidden" name = "LandscapeArchitectId" id = "LandscapeArchitectId" value = "{$landscapeArchitectId}" style ="width:360px;">
+                                                               </td>
+                                                           </tr>
+                                                           
+                                                           
+                                                           
+                                                           
                                <tr>                         {if $skipUpdtnCycle == 1}
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
                                                                     <select name="skipUpdationCycle" onchange="skipUpdationCycleChanged(this.value)">
@@ -920,4 +954,56 @@
         });
     });
     
+    //@jitendra pathak
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {   
+        _renderItem: function( ul, item ) {
+          //var res = item..split("-");
+              //var tableName = res[1];
+          return $( "<li>" )
+            .append( $( "<a>" ).text( item.label ) )
+            .appendTo( ul );
+        },
+     });
+    $(document).ready(function()   {
+        
+        $(".company-type").blur(function(){
+            if($(this).val()==''){
+                var elemId = $(this).attr("data-id");
+                $("#" + elemId).val('');
+            }
+        });
+        $(".company-type").catcomplete({
+            source: function( request, response ) {
+              $.ajax({
+                url: "/ajax/searchCompany.php",
+                dataType: "json",
+                data: {
+                  companyType: this.element.attr("name"),
+                  companyTerm: request.term
+                },
+                success: function( data ) {
+                  response( $.map( data.data, function( comapnyName, comapnyId ) {              
+                      return {
+                      label: comapnyName,
+                      value: comapnyName,
+                      id:comapnyId,
+                      }
+
+                  }));
+                }
+              });
+            },
+      
+            select: function( event, ui ) {
+              var elemId = $(this).attr("data-id");
+              $("#" + elemId).val(ui.item.id);
+            },
+            open: function() {
+              $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+              $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+        });        
+    });
 </script>
