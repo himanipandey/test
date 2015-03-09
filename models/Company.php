@@ -326,5 +326,15 @@ class Company extends ActiveRecord\Model
         return $city;
     }
 
+    
+    static function getCompanyNamesByTypeTerm($type, $name) {
+        
+        $companyDetail = Company::find('all',array('conditions'=>array("type = '{$type}' and name like '%{$name}%' and status = 'Active'")));
+        $list = array();
+        foreach ($companyDetail as $v) {
+            $list[$v->id] = $v->name;
+        }
+        return $list;        
+    }
 
 }
