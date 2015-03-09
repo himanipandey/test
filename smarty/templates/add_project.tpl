@@ -839,6 +839,7 @@
                                                                    <input type = "text" name = "ConstructionContractor" id = "ConstructionContractor" value = "{$constructionContractor}" style ="width:360px;" data-id="ConstructionContractorId" class="company-type">
                                                                    <input type = "hidden" name = "ConstructionContractorId" id = "ConstructionContractorId" value = "{$constructionContractorId}" style ="width:360px;">
                                                                </td>
+                                                               <td with="50%"><font class="company-type-error" style="color: red;display: none">Select contarctor from the suggestion list only</font></td>
                                                            </tr>
                                                            <tr>
                                                                <td width="20%" align="right" valign="top"><b>Maintenance Contractor</b></td>
@@ -846,6 +847,7 @@
                                                                    <input type = "text" name = "MaintenanceContractor" id = "MaintenanceContractor" value = "{$maintenanceContractor}" style ="width:360px;" data-id="MaintenanceContractorId" class="company-type">
                                                                    <input type = "hidden" name = "MaintenanceContractorId" id = "MaintenanceContractorId" value = "{$maintenanceContractorId}" style ="width:360px;">
                                                                </td>
+                                                               <td with="50%"><font class="company-type-error" style="color: red;display: none">Select contarctor from the suggestion list only</font></td>
                                                            </tr>
                                                            <tr>
                                                                <td width="20%" align="right" valign="top"><b>Landscape Architect</b></td>
@@ -853,6 +855,7 @@
                                                                    <input type = "text" name = "LandscapeArchitect" id = "LandscapeArchitect" value = "{$landscapeArchitect}" style ="width:360px;" data-id="LandscapeArchitectId" class="company-type">
                                                                    <input type = "hidden" name = "LandscapeArchitectId" id = "LandscapeArchitectId" value = "{$landscapeArchitectId}" style ="width:360px;">
                                                                </td>
+                                                               <td with="50%"><font class="company-type-error" style="color: red;display: none">Select architect from the suggestion list only</font></td>
                                                            </tr>
                                                            
                                                            
@@ -966,12 +969,12 @@
      });
     $(document).ready(function()   {
         
-        $(".company-type").blur(function(){
+        /*$(".company-type").blur(function(){
             if($(this).val()==''){
                 var elemId = $(this).attr("data-id");
                 $("#" + elemId).val('');
             }
-        });
+        });*/
         $(".company-type").catcomplete({
             source: function( request, response ) {
               $.ajax({
@@ -997,6 +1000,17 @@
             select: function( event, ui ) {
               var elemId = $(this).attr("data-id");
               $("#" + elemId).val(ui.item.id);
+              $("#"+elemId).parent().parent().find('.company-type-error').hide();
+            },
+            change: function (event, ui){
+                var elemId = $(this).attr("data-id");
+                if (!ui.item &&(this.value !='')) {
+                    $("#" + elemId).val('');
+                    $("#"+elemId).parent().parent().find('.company-type-error').show();
+                }else if(this.value ==''){
+                    $("#" + elemId).val('');
+                    $("#"+elemId).parent().parent().find('.company-type-error').hide();
+                }
             },
             open: function() {
               $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -1004,6 +1018,14 @@
             close: function() {
               $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
             }
-        });        
+        });
+        
+        
+        $("#btnSave").click(function (){
+            if($('.company-type-error').is(":visible")){
+                alert('Please correct the fields, marked in red');
+                return false;
+            }
+        });
     });
 </script>

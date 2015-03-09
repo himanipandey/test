@@ -439,7 +439,10 @@ $smarty->assign("AmenitiesArr", $AmenitiesArr);
 
 $projectDetails = array();
 $qry = "SELECT rp.*,ps.project_status,ps.display_name,t.township_name,mps.name as PROJECT_STAGE,
-    mpp.name as PROJECT_PHASE,mpbt.display_name as power_backup, ta.attribute_value as desc_content_flag
+    mpp.name as PROJECT_PHASE,mpbt.display_name as power_backup, 
+    ta1.attribute_value as cons_cont, ta2.attribute_value as maint_cont, ta3.attribute_value as lands_arch,
+    copm1.name as cons_comp, copm2.name as maint_comp, copm3.name as lands_arch_comp,
+    ta.attribute_value as desc_content_flag
     FROM " . RESI_PROJECT . " rp
     left join project_status_master ps on rp.project_status_id = ps.id
     left join townships t on rp.township_id = t.id
@@ -447,6 +450,12 @@ $qry = "SELECT rp.*,ps.project_status,ps.display_name,t.township_name,mps.name a
     left join master_project_phases mpp on rp.project_phase_id = mpp.id
     left join master_power_backup_types mpbt on rp.power_backup_type_id = mpbt.id
     left join table_attributes ta on ta.table_id=rp.project_id and ta.table_name='resi_project' and ta.attribute_name='DESC_CONTENT_FLAG'
+    left join table_attributes ta1 on ta1.table_id=rp.project_id and ta1.table_name='resi_project' and ta1.attribute_name='ConstructionContractor'
+    left join table_attributes ta2 on ta2.table_id=rp.project_id and ta2.table_name='resi_project' and ta2.attribute_name='MaintenanceContractor'
+    left join table_attributes ta3 on ta3.table_id=rp.project_id and ta3.table_name='resi_project' and ta3.attribute_name='LandscapeArchitect'
+    left join company copm1 on copm1.id=ta1.attribute_value
+    left join company copm2 on copm2.id=ta2.attribute_value
+    left join company copm3 on copm3.id=ta3.attribute_value
     WHERE rp.PROJECT_ID = '" . $projectId . "' and rp.version = 'Cms'";
     //die($qry);
 $res = mysql_query($qry) or die(mysql_error());
@@ -458,6 +467,8 @@ while ($data = mysql_fetch_array($res)) {
     $projectStage = $data['PROJECT_STAGE'];
     array_push($projectDetails, $data);
 }
+//echo "<pre>";
+//print_r($projectDetails);
 
 $joinbank = "inner join bank_list bl on project_banks.bank_id = bl.bank_id";
 $bankList = ProjectBanks::find('all',array('joins' => $joinbank,'conditions'=>
