@@ -1,16 +1,12 @@
 <?php
+        $projectId  = $_REQUEST['projectId'];
 	$AmenitiesArr = AmenitiesList();
-        $clubHouseAreaId = array_search('Club House Area', $AmenitiesArr);
-        if($clubHouseAreaId){
-            $smarty->assign('clubHouseAreaId', $clubHouseAreaId);
-            $smarty->assign('clubHouseArea', $AmenitiesArr[$clubHouseAreaId]);
-            unset($AmenitiesArr[$clubHouseAreaId]);
-        }
+        $resProjectAmenityId = findHouseClubAmenityId($projectId);
+        $attr_temp= TableAttributes::find(array('conditions'=>array('table_name'=>'resi_project_amenities','table_id'=>$resProjectAmenityId,'attribute_name'=>'CLUB_HOUSE_AREA')));
+        
+        $smarty->assign('clubHouseArea', $attr_temp->attribute_value);
 	$smarty->assign("AmenitiesArr",$AmenitiesArr);
-//	echo "<pre>";
-//	print_r($AmenitiesArr);
-//	echo "</pre>";
-//        die;
+
 	/*************************************/
 	$sourcepath=array();
 	$destinationpath=array();
@@ -44,6 +40,9 @@
       // echo "<pre>";print_r($_REQUEST);//die;
         if (isset($_POST['btnSave']))
         {
+                
+                insertclubAreaAttribute($projectId);
+                
                 $qryIns_one = "INSERT INTO ".RESI_PROJECT_AMENITIES." (PROJECT_ID,AMENITY_DISPLAY_NAME,AMENITY_ID) VALUES ";	
                 $qryIns = '';
                 $ErrMsg     = '';
@@ -242,7 +241,37 @@
                 return false;
 
         }
-       
+        
+        // @ jitendra pathak
+        function insertclubAreaAttribute($projectId){
+            
+            $clubHouseArea = trim($_REQUEST['club_house_area']);
+            $clubHouse = $_REQUEST[current(preg_grep('/^Club_House/', array_keys($_REQUEST)))];
+            
+            $resProjectAmenityId = findHouseClubAmenityId($projectId);
+            
+            TableAttributes::delete_all(array('conditions'=>array('table_name'=>'resi_project_amenities','table_id'=>$resProjectAmenityId,'attribute_name'=>'CLUB_HOUSE_AREA')));
+            if($clubHouseArea && $clubHouse>0){
+                $tableAttr = new TableAttributes();
+                $tableAttr->table_name = 'resi_project_amenities';
+                $tableAttr->table_id = $resProjectAmenityId;
+                $tableAttr->attribute_name = 'CLUB_HOUSE_AREA';
+                $tableAttr->attribute_value = $clubHouseArea;
+                $tableAttr->updated_by = $_SESSION['adminId'];
+                $tableAttr->save();
+            }
+        }
+        function findHouseClubAmenityId($projectId){
+            $qryAmenityId = "SELECT id FROM resi_project_amenities where project_id = $projectId and amenity_id =4";
+            $resAmenityId = mysql_query($qryAmenityId) or die(mysql_error());
+            $dataAmenityId = mysql_fetch_assoc($resAmenityId);
+            if(count($dataAmenityId)>0){
+                return $dataAmenityId['id'];
+            }
+            return FALSE;
+        }
+
+
 	/**************************************/
 	
 

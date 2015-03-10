@@ -1667,9 +1667,9 @@ function broker_call_edit(callId, brokerId)
 									 {if count($arrNotninty[$k]) >0} {$arrNotninty[$k]} {else} -- {/if}  
 								  {/if}
                                                                   {if $v=='Club House'}
-                                                                      <label style="margin-left:20px"><b>{$clubArea} </b> : </label>
-                                                                      {if !in_array($arrNotninty[$clubAreaId],$AmenitiesArr)}
-									 {if count($arrNotninty[$clubAreaId]) >0} {$arrNotninty[$clubAreaId]} {else} -- {/if}  
+                                                                      <label style="margin-left:20px"><b>Club House Area </b> : </label>
+                                                                      {if $clubHouseArea}
+									 {if $clubHouseArea >0} {$clubHouseArea} {else} -- {/if}  
                                                                        {/if}
                                                                   {/if}
 								  </td>	
