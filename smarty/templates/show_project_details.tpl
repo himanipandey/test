@@ -1659,12 +1659,19 @@ function broker_call_edit(callId, brokerId)
 						{if $k != 99}
 						{if array_key_exists($k,$arrNotninty)}
 						<tr height="25px;">
+                                                    
 							<td nowrap="nowrap" align="left"><b>{$v} :</b></td>
 								 <td align ="left" nowrap>
 								 
 								  {if !in_array($arrNotninty[$k],$AmenitiesArr)}
 									 {if count($arrNotninty[$k]) >0} {$arrNotninty[$k]} {else} -- {/if}  
 								  {/if}
+                                                                  {if $v=='Club House'}
+                                                                      <label style="margin-left:20px"><b>{$clubArea} </b> : </label>
+                                                                      {if !in_array($arrNotninty[$clubAreaId],$AmenitiesArr)}
+									 {if count($arrNotninty[$clubAreaId]) >0} {$arrNotninty[$clubAreaId]} {else} -- {/if}  
+                                                                       {/if}
+                                                                  {/if}
 								  </td>	
 							 {/if}
 						</tr>

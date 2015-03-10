@@ -4,11 +4,7 @@ $ProjectTypeArr = ResiProjectType::ProjectTypeArr();
 $BankListArr = BankList::arrBank();
 $enum_value = ResiProject::projectStatusMaster();
 $AmenitiesArr = AmenitiesList();
-echo "<pre>";
-print_r($AmenitiesArr);
-echo "</pre>";
-die;
-
+$clubAreaId = array_search('Club House Area', $AmenitiesArr);
 
 $projectId = $_REQUEST['projectId'];
 
@@ -441,6 +437,8 @@ $smarty->assign("projectId", $projectId);
 $smarty->assign("ProjectTypeArr", $ProjectTypeArr);
 $smarty->assign("enum_value", $enum_value);
 $smarty->assign("AmenitiesArr", $AmenitiesArr);
+$smarty->assign("clubAreaId", $clubAreaId);
+$smarty->assign("clubArea", $AmenitiesArr[$clubAreaId]);
 
 $projectDetails = array();
 $qry = "SELECT rp.*,ps.project_status,ps.display_name,t.township_name,mps.name as PROJECT_STAGE,

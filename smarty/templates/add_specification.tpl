@@ -81,21 +81,21 @@ $(document).ready(function(){
                                                                                    <input type= "text" name = "display_name_{$k}[]"  style="width:150px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" >
                                                                                    <label class="club-area-cont">{$clubHouseArea}</label>
                                                                                    <input type= "number" name = "display_name_{$clubHouseAreaId}[]" class="club-area-input"  style="width:150px;" maxlength = "100" value = "{if !in_array($arrNotninty[$clubHouseAreaId],$AmenitiesArr)}{$arrNotninty[$clubHouseAreaId]}{/if}" >
-                                                                                   <div style="display: none">
+                                                                                   <div style="display: block">
                                                                                        <input id="rdo_club_area_yes" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='{$k}'   checked='checked'/>
                                                                                        <input id="rdo_club_area_no" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='0'/>
                                                                                    </div>
                                                                                </td>
                                                                             {else}
-                                                                               <td  width="10%"><input d="rdo_club_yes" type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
+                                                                               <td  width="10%"><input id="rdo_club_yes" type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
                                                                                <td> <input id="rdo_club_no" type='radio' name="{$v}#{$k}" value='0'  checked='checked'/> No   </td>
                                                                                <td> 
                                                                                    <input type= "text" name = "display_name_{$k}[]"  style="width:150px;" maxlength = "100" >
                                                                                    <label class="club-area-cont">{$clubHouseArea}</label>
                                                                                    <input type= "number" name = "display_name_{$clubHouseAreaId}[]" class="club-area-input"  style="width:150px;" maxlength = "100" value = "{if !in_array($arrNotninty[$clubHouseAreaId],$AmenitiesArr)}{$arrNotninty[$clubHouseAreaId]}{/if}" >
-                                                                                   <div style="display: none">
-                                                                                       <input id="rdo_club_area_yes" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='{$k}'   checked='checked'/>
-                                                                                       <input id="rdo_club_area_no" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='0'/>
+                                                                                   <div style="display: block">
+                                                                                       <input id="rdo_club_area_yes" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='{$k}' />
+                                                                                       <input id="rdo_club_area_no" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='0' checked='checked' />
                                                                                    </div>
                                                                                </td>
                                                                             {/if}		 
