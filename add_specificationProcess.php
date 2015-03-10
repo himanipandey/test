@@ -41,8 +41,6 @@
         if (isset($_POST['btnSave']))
         {
                 
-                insertclubAreaAttribute($projectId);
-                
                 $qryIns_one = "INSERT INTO ".RESI_PROJECT_AMENITIES." (PROJECT_ID,AMENITY_DISPLAY_NAME,AMENITY_ID) VALUES ";	
                 $qryIns = '';
                 $ErrMsg     = '';
@@ -209,8 +207,10 @@
                     {
                         if($_POST['btnSave'] == "Save")
                         {
-                            if($preview == 'true')
+                            if($preview == 'true'){
+                                insertclubAreaAttribute($projectId);
                                 header("Location:show_project_details.php?projectId=".$projectId);
+                            }
                             else
                                header("Location:ProjectList.php?projectId=".$projectId);
                         }
