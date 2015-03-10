@@ -207,8 +207,8 @@
                     {
                         if($_POST['btnSave'] == "Save")
                         {
+                            insertclubAreaAttribute($projectId);
                             if($preview == 'true'){
-                                insertclubAreaAttribute($projectId);
                                 header("Location:show_project_details.php?projectId=".$projectId);
                             }
                             else
