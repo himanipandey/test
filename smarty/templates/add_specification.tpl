@@ -81,7 +81,7 @@ $(document).ready(function(){
                                                                                    <input type= "text" name = "display_name_{$k}[]"  style="width:150px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" >
                                                                                    <label class="club-area-cont">{$clubHouseArea}</label>
                                                                                    <input type= "number" name = "display_name_{$clubHouseAreaId}[]" class="club-area-input"  style="width:150px;" maxlength = "100" value = "{if !in_array($arrNotninty[$clubHouseAreaId],$AmenitiesArr)}{$arrNotninty[$clubHouseAreaId]}{/if}" >
-                                                                                   <div style="display: block">
+                                                                                   <div style="display: none">
                                                                                        <input id="rdo_club_area_yes" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='{$k}'   checked='checked'/>
                                                                                        <input id="rdo_club_area_no" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='0'/>
                                                                                    </div>
@@ -93,7 +93,7 @@ $(document).ready(function(){
                                                                                    <input type= "text" name = "display_name_{$k}[]"  style="width:150px;" maxlength = "100" >
                                                                                    <label class="club-area-cont">{$clubHouseArea}</label>
                                                                                    <input type= "number" name = "display_name_{$clubHouseAreaId}[]" class="club-area-input"  style="width:150px;" maxlength = "100" value = "{if !in_array($arrNotninty[$clubHouseAreaId],$AmenitiesArr)}{$arrNotninty[$clubHouseAreaId]}{/if}" >
-                                                                                   <div style="display: block">
+                                                                                   <div style="display: none">
                                                                                        <input id="rdo_club_area_yes" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='{$k}' />
                                                                                        <input id="rdo_club_area_no" type='radio' name="{$clubHouseArea}#{$clubHouseAreaId}" value='0' checked='checked' />
                                                                                    </div>
