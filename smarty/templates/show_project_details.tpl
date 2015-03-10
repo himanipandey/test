@@ -1694,16 +1694,24 @@ function broker_call_edit(callId, brokerId)
 							  
 							</tr>
 						{/if}
+                                                {array_search('Club House Area',$AmenitiesArr)}
 						{foreach from=$AmenitiesArr key=k item=v} 
 						{if $k != 99}
 						{if array_key_exists($k,$arrNotninty)}
 						<tr height="25px;">
+                                                    
 							<td nowrap="nowrap" align="left"><b>{$v} :</b></td>
 								 <td align ="left" nowrap>
 								 
 								  {if !in_array($arrNotninty[$k],$AmenitiesArr)}
 									 {if count($arrNotninty[$k]) >0} {$arrNotninty[$k]} {else} -- {/if}  
 								  {/if}
+                                                                  {if $v=='Club House'}
+                                                                      <label style="margin-left:20px"><b>Club House Area </b> : </label>
+                                                                      {if $clubHouseArea}
+									 {if $clubHouseArea >0} {$clubHouseArea} {else} -- {/if}  
+                                                                       {/if}
+                                                                  {/if}
 								  </td>	
 							 {/if}
 						</tr>
