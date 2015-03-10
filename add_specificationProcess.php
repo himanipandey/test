@@ -40,7 +40,10 @@
       // echo "<pre>";print_r($_REQUEST);//die;
         if (isset($_POST['btnSave']))
         {
-                
+         
+                $resProjectAmenityId = findHouseClubAmenityId($projectId);
+                TableAttributes::delete_all(array('conditions'=>array('table_name'=>'resi_project_amenities','table_id'=>$resProjectAmenityId,'attribute_name'=>'CLUB_HOUSE_AREA')));
+            
                 $qryIns_one = "INSERT INTO ".RESI_PROJECT_AMENITIES." (PROJECT_ID,AMENITY_DISPLAY_NAME,AMENITY_ID) VALUES ";	
                 $qryIns = '';
                 $ErrMsg     = '';
@@ -207,8 +210,8 @@
                     {
                         if($_POST['btnSave'] == "Save")
                         {
+                            insertclubAreaAttribute($projectId);
                             if($preview == 'true'){
-                                insertclubAreaAttribute($projectId);
                                 header("Location:show_project_details.php?projectId=".$projectId);
                             }
                             else
@@ -247,14 +250,11 @@
             
             $clubHouseArea = trim($_REQUEST['club_house_area']);
             $clubHouse = $_REQUEST[current(preg_grep('/^Club_House/', array_keys($_REQUEST)))];
-            
-            $resProjectAmenityId = findHouseClubAmenityId($projectId);
-            
-            TableAttributes::delete_all(array('conditions'=>array('table_name'=>'resi_project_amenities','table_id'=>$resProjectAmenityId,'attribute_name'=>'CLUB_HOUSE_AREA')));
+                      
             if($clubHouseArea && $clubHouse>0){
                 $tableAttr = new TableAttributes();
                 $tableAttr->table_name = 'resi_project_amenities';
-                $tableAttr->table_id = $resProjectAmenityId;
+                $tableAttr->table_id = findHouseClubAmenityId($projectId);
                 $tableAttr->attribute_name = 'CLUB_HOUSE_AREA';
                 $tableAttr->attribute_value = $clubHouseArea;
                 $tableAttr->updated_by = $_SESSION['adminId'];
