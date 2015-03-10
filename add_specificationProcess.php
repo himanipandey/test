@@ -1,9 +1,16 @@
 <?php
-	$AmenitiesArr = AmenitiesList();	
+	$AmenitiesArr = AmenitiesList();
+        $clubHouseAreaId = array_search('Club House Area', $AmenitiesArr);
+        if($clubHouseAreaId){
+            $smarty->assign('clubHouseAreaId', $clubHouseAreaId);
+            $smarty->assign('clubHouseArea', $AmenitiesArr[$clubHouseAreaId]);
+            unset($AmenitiesArr[$clubHouseAreaId]);
+        }
 	$smarty->assign("AmenitiesArr",$AmenitiesArr);
-	//echo "<pre>";
-	//	print_r($AmenitiesArr);
-	//echo "</pre>";//die;
+//	echo "<pre>";
+//	print_r($AmenitiesArr);
+//	echo "</pre>";
+//        die;
 	/*************************************/
 	$sourcepath=array();
 	$destinationpath=array();

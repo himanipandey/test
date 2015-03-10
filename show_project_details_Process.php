@@ -4,6 +4,11 @@ $ProjectTypeArr = ResiProjectType::ProjectTypeArr();
 $BankListArr = BankList::arrBank();
 $enum_value = ResiProject::projectStatusMaster();
 $AmenitiesArr = AmenitiesList();
+echo "<pre>";
+print_r($AmenitiesArr);
+echo "</pre>";
+die;
+
 
 $projectId = $_REQUEST['projectId'];
 

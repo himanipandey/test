@@ -1654,6 +1654,7 @@ function broker_call_edit(callId, brokerId)
 							  
 							</tr>
 						{/if}
+                                                {array_search('Club House Area',$AmenitiesArr)}
 						{foreach from=$AmenitiesArr key=k item=v} 
 						{if $k != 99}
 						{if array_key_exists($k,$arrNotninty)}
