@@ -1,8 +1,10 @@
+
 /*!
  * tablesorter pager plugin
  * updated 4/12/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
+
 ;(function($) {
 	"use strict";
 	/*jshint supernew:true */
@@ -19,6 +21,8 @@
 			// So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
 			// and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
 			ajaxUrl: null,
+			//ajaxUrl: "http:/mydatabase.com?page={page}&size={size}"
+			//ajaxUrl: "{$url12}"+"?query="+$("#project_search").val().trim()+"&typeAheadType=(project)&city="+$("#citydd :selected").text().trim()+"&rows=10",
 
 			// modify the url after all processing has been applied
 			customAjaxUrl: function(table, url) { return url; },
@@ -128,9 +132,23 @@
 						$(c.cssGoto, c.container).html(t).val(c.page + 1);
 					}
 				}
+			
 			}
 			pagerArrows(c);
 			if (c.initialized) { $(table).trigger('pagerComplete', c); }
+			/*$(document).ready(function() {
+				$.ajax({
+					type: 'post',
+					url: 'saveSecondaryListing.php',
+					data: {
+						page_number = 5,
+						p_size = 10
+					},
+					success : function(){
+						console.log(data);
+					}
+				});
+			})*/
 		},
 
 		fixHeight = function(table, c) {

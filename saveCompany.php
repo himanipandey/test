@@ -143,6 +143,7 @@ if($_POST['task']=='createComp'){
     $compfax   = $_POST['compfax'];
     $email   = $_POST['email'];
     $image = $_POST['image'];
+    $signUpForm = $_POST['signUpForm'];
 //echo $image;
     $ipArr = $_POST['ipArr'];
     
@@ -158,10 +159,11 @@ if($_POST['task']=='createComp'){
     $contact_person_data = $_POST['contact_person_data'];
     $cust_care_data = $_POST['cust_care_data'];
     $bef = $_POST['broker_extra_fields'];
+    $bank_details = $_POST['bank_details'];
 
 
 
-    //var_dump($bef); die();
+    //prepare params for image service
     if(isset($_POST['image']) && $image!=""){
         //print_r($_FILES[]);
         //$file = $_FILES
@@ -197,6 +199,45 @@ if($_POST['task']=='createComp'){
             $unitImageArr['objectType'] = "company";
             $unitImageArr['newImagePath'] = $newImagePath;
             $unitImageArr['params'] = $params;  
+            
+
+    }
+
+    if(isset($_POST['signUpForm']) && $signUpForm!=""){
+        //print_r($_FILES[]);
+        //$file = $_FILES
+
+        $file =  $newImagePath."company/".$signUpForm;
+      //var_dump($file);
+      
+
+        $finfo = finfo_open();
+         
+        $fileinfo = finfo_file($finfo, $file, FILEINFO_MIME);
+         
+        finfo_close($finfo);
+        //var_dump($fileinfo);
+        $imgtype = explode(";", $fileinfo);
+        $imgParams = array();
+        $imgParams['name']= $image;
+        $imgParams['type'] = $imgtype[0];
+
+        $params = array(
+                        "image_type" => "logo",
+                        "folder" => "company/",
+                        "image" => $image,
+                        "title" => $name,
+                        "altText" => $altText,
+                        
+        );
+
+        $dest       =   $newImagePath."company/".$image;
+        $postArr = array();
+        $unitImageArr = array();
+        $unitImageArr['img'] = $imgParams;
+        $unitImageArr['objectType'] = "company";
+        $unitImageArr['newImagePath'] = $newImagePath;
+        $unitImageArr['params'] = $params;  
             
 
     }
@@ -381,12 +422,12 @@ if($_POST['task']=='createComp'){
                 $res = mysql_query($query) or die(mysql_error());
                 $data=mysql_fetch_assoc($res);
                 if($data){
-                    $query = "Update broker_details set legal_type='{$bef['legalType']}', rating= '{$bef['frating']}', service_tax_no='{$bef['stn']}', office_size= '{$bef['officeSize']}', employee_no='{$bef['employeeNo']}', pt_manager_id= '{$bef['ptManager']}', pt_relative_id= ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", primary_device_used=".($bef['device'] == '' ? 'NULL' : $bef['device']).", updated_by= {$_SESSION['adminId']} where broker_id={$id}";
+                    $query = "Update broker_details set legal_type='{$bef['legalType']}', rating= '{$bef['frating']}', service_tax_no='{$bef['stn']}', office_size= '{$bef['officeSize']}', employee_no='{$bef['employeeNo']}', pt_manager_id= '{$bef['ptManager']}', pt_relative_id= ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", form_signup_date='{$bef['formSignUpDate']}',form_signup_branch=".($bef['ptRelative'] == '' ? 'NULL' : $bef['signUpBranch']).", updated_by= {$_SESSION['adminId']} where broker_id={$id}";
                     //die($query);
                     $res = mysql_query($query) or die(mysql_error());
                 }
                 else{
-                    $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used, updated_by, created_at) values('{$id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".($bef['device'] == '' ? 'NULL' : $bef['device']).",  {$_SESSION['adminId']}, NOW())";
+                    $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", '{$bef['formSignUpDate']}', ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).",  {$_SESSION['adminId']}, NOW())";
                     //die($query);
                     $res = mysql_query($query) or die(mysql_error()); //die("hello");
                 }
@@ -416,6 +457,40 @@ if($_POST['task']=='createComp'){
                     $transacStr = rtrim($transacStr,', ');
                     $query = "insert into transaction_type_mappings(table_name, table_id, transaction_type_id, updated_by, created_at) value". $transacStr;
                     $res = mysql_query($query) or die(mysql_error());
+                }
+
+                $query = "delete from device_mappings where (table_name='company' and  table_id={$id})"; //echo $query; die();
+                $res = mysql_query($query) or die(mysql_error());
+                if($bef['device']){
+                    $transacStr = '';
+                    foreach ($bef['device'] as $k => $v) {
+                        $transacStr .= " ('company',  '{$id}', '{$v}', '{$_SESSION['adminId']}', NOW()), ";
+                    }
+                    $transacStr = rtrim($transacStr,', ');
+                    $query = "insert into device_mappings(table_name, table_id, device_id, updated_by, created_at) value". $transacStr;
+                    $res = mysql_query($query) or die(mysql_error());
+                }
+
+                //update bank details
+                if($bank_details!=''){
+                    //$bankStr = '';
+                    $query_to_check = "select * from bank_details where table_name='company' and table_id={$id}";
+                    $res = mysql_query($query_to_check) or die(mysql_error());
+                    $data=mysql_fetch_assoc($res);
+                    if($data){
+                        $query = "update bank_details set bank_id='{$bank_details['bankId']}' , account_no='{$bank_details['accountNo']}', account_type='{$bank_details['accountType']}', ifsc_code='{$bank_details['ifscCode']}' where table_name='company' and table_id={$id}";
+                        $res = mysql_query($query) or die(mysql_error());
+                    }
+                    else{
+                        $bankStr = " ('company',  '{$comp_id}', '{$bank_details['bankId']}', '{$bank_details['accountNo']}', '{$bank_details['accountType']}', '{$bank_details['ifscCode']}', {$_SESSION['adminId']}, NOW()) ";
+                    
+                        //$bankStr = rtrim($bankStr,', ');
+                        $query = "insert into bank_details(table_name, table_id, bank_id, account_no, account_type, ifsc_code, updated_by, created_at) value". $bankStr;
+                        $res = mysql_query($query) or die(mysql_error());
+
+                    }
+
+                    
                 }
             }
 
@@ -560,8 +635,10 @@ if($_POST['task']=='createComp'){
                     $bef['device']=='NULL';
                 if($bef['ptRelative']=='') 
                     $bef['ptRelative']=='NULL';
-                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".($bef['device'] == '' ? 'NULL' : $bef['device']).", {$_SESSION['adminId']}, NOW())";
+                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", '{$bef['formSignUpDate']}', ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).", {$_SESSION['adminId']}, NOW())";
                 //die($query);
+
+               
                 $res = mysql_query($query) or die(mysql_error());
 
                 $query = "update company set active_since='{$bef['since_op']}' where id='{$comp_id}'";
@@ -584,6 +661,28 @@ if($_POST['task']=='createComp'){
                     }
                     $transacStr = rtrim($transacStr,', ');
                     $query = "insert into transaction_type_mappings(table_name, table_id, transaction_type_id, updated_by, created_at) value". $transacStr;
+                    $res = mysql_query($query) or die(mysql_error());
+                }
+
+
+                if($bef['device']){
+                    $transacStr = '';
+                    foreach ($bef['device'] as $k => $v) {
+                        $transacStr .= " ('company',  '{$comp_id}', '{$v}', '{$_SESSION['adminId']}', NOW()), ";
+                    }
+                    $transacStr = rtrim($transacStr,', ');
+                    $query = "insert into device_mappings(table_name, table_id, device_id, updated_by, created_at) value". $transacStr;
+                    $res = mysql_query($query) or die(mysql_error());
+                }
+                //save bank details
+
+                if($bank_details!=''){
+                    //$bankStr = '';
+                    
+                    $bankStr = " ('company',  '{$comp_id}', '{$bank_details['bankId']}', '{$bank_details['accountNo']}', '{$bank_details['accountType']}', '{$bank_details['ifscCode']}', {$_SESSION['adminId']}, NOW()) ";
+                    
+                    //$bankStr = rtrim($bankStr,', ');
+                    $query = "insert into bank_details(table_name, table_id, bank_id, account_no, account_type, ifsc_code, updated_by, created_at) value". $bankStr;
                     $res = mysql_query($query) or die(mysql_error());
                 }
             }

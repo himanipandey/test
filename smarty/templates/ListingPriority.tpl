@@ -1,19 +1,20 @@
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
+<link rel="stylesheet" type="text/css" href="tablesorter/css/pager-ajax.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
-<link rel="stylesheet" type="text/css" href="csss.css">
-<script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script> 
-<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script>
-<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">  
+<link rel="stylesheet" type="text/css" href="csss.css"> 
+<script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script>  
+<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script> 
 <script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
-<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script> 
 <script type="text/javascript" src="js/tablesorter_default_table.js"></script>
-<script type="text/javascript" src="jscal/calendar.js"></script>
+<script type="text/javascript" src="jscal/calendar.js"></script> 
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
-<script type="text/javascript" src="jscal/calendar-setup.js"></script>
-<script type="text/javascript" src="js/numberToWords.js"></script>
+<script type="text/javascript" src="jscal/calendar-setup.js"></script> 
+<script type="text/javascript" src="js/numberToWords.js"></script> 
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="/js/jss.js"></script> 
 
@@ -42,7 +43,12 @@ function selectLocality(value){
 }
 function submitButton(){ 
     var cityid = $('#citydd').val();
-    window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid;
+    var projectid = null;
+    if($("#project_search").val().trim()!='')
+     projectid = $('#selProjId').val();
+    var projectName = $('#project_search').val().trim();
+    window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName;
+    return false;
 }
 
 function isNumeric(val) {
@@ -80,20 +86,30 @@ function cleanFields(){
    $('#othr').hide();
    $('#other_charges').hide();
    $('#pr').hide();
-   $('#plc3').hide(1);
-   $('#bank_list2').hide(1);
+   /*$('#plc5').hide(1);
+   $('#bnk_lst').hide(1);*/
    $("#image_link").html("");
    
 }
 
+
+
 function editListing(str){
+  console.log("inside editListing");
+  
+  //debugger;
+  console.log(str);
+  //str = unescape(str);
+  //console.log(str);
+  str = JSON.parse(unescape(str));
+  console.log(str);
     cleanFields();
     //console.log(str.jsonDump.tower);
     $('#search-top').hide('slow');
     $('#search-bottom').hide('slow');
     $('#create_Landmark').show('slow'); 
     //var List = $.parseJSON(str);
-    console.log(str);
+    ///console.log(str);
 
     if(str.id!=null)
       $("#listing_id").val(str.id);
@@ -101,34 +117,45 @@ function editListing(str){
     $("#cityddEdit").val(str.property.project.locality.suburb.city.id);
     //$("#bkn2").val(str.seller.id);
     $("#project").val(str.property.project.name);
-    $("#proj").val(str.property.project.projectId);
+    var projectId = str.property.project.projectId;
+    $("#proj").val(projectId);
+    get_phases(projectId);
+    get_towers(projectId);
+    $("#towerIdHidden").val(str.towerId);
+    $("#phaseIdHidden").val(str.phaseId);
+
+
     if(str.seller!=null){
       var seller_id = str.seller.id;
       console.log(seller_id);
-      /*$.ajax({
-              type: "POST",
-              url: '/saveSecondaryListings.php',
-              data: { seller_id:seller_id, task:'get_broker'},
-
-              success:function(msg){
-
-                console.log(msg);
-                $('#bkn2').val(msg); 
-                getSeller();
-
-                
-              },
-            });*/
+      
       $('#bkn2').val(str.seller.brokerId); 
       getSeller();
       $("#seller3").val(seller_id);
+      //debugger;
+
+      //var broker_id = $("#bkn2 :selected").val();
+      var pt_broker_id =  $("#pt_broker_id").val();
+      //console.log(broker_id +" "+pt_broker_id);
+      if(str.seller.brokerId == pt_broker_id){
+        console.log("ids matched" );  
+        $('#name_font').show(1);
+        $('#number_font').show(1);  
+      } else {
+        console.log("ids not matched"); 
+        $('#name_font').hide(1);
+        $('#number_font').hide(1);  
+
+      }
+
     }
-    $("#facing2").val(str.facing);
+    $("#facing2").val(str.facingId);
     
     $("#floor2").val(str.floor);
     $("#tfr2").val(str.transferCharges);
     $("#flt2").val(str.flatNumber);
    
+
 
     
 
@@ -146,15 +173,19 @@ function editListing(str){
 
     var jsonDump = $.parseJSON(str.jsonDump);
     if(jsonDump!=null){
-      $("#tower2").val(jsonDump.tower);
+      
       $("#name").val(jsonDump.owner_name);
       $("#email").val(jsonDump.owner_email);
       $("#number").val(jsonDump.owner_number);
+
+      $("#total_floor1").val(jsonDump.total_floor);
 
 
 
     }
     
+
+
     $("#description3").val(str.description);
     $("#review3").val(str.remark);
  
@@ -175,8 +206,10 @@ function editListing(str){
          $("#prs5").val('2');
          var price_value = str.currentListingPrice.pricePerUnitArea;
          $('#pr').hide();
+         $('#tr').show();
          $('#other_charges').show();
-
+         $('#othr_prs2').show();
+         $("#othr_prs2").val(str.currentListingPrice.otherCharges);
          $("#prs3").val(price_value);
 
        }
@@ -191,7 +224,8 @@ function editListing(str){
          $('#othr_prs2').val('');
 
       }
-      $("#othr_prs2").val(str.currentListingPrice.otherCharges);
+      
+      
     }
 
     
@@ -204,33 +238,44 @@ function editListing(str){
 
 
      $("#park2").val(str.noOfCarParks);
-    $("#bank_list2").val(str.homeLoanBankId);
+    $("#bnk_lst").val(str.homeLoanBankId);
     if(str.homeLoanBankId!='' && str.homeLoanBankId!=null && str.homeLoanBankId>0){
       console.log("bank yes");
-      $("#bank_list2").show();
-      $('#yes').attr('checked', true);
-      $('#no').removeAttr('checked');
+      $("#bnk_lst").show();
+      /*$('#yes').attr('checked', true);
+      $('#no').removeAttr('checked');*/
     }
     else{
       console.log("bank no");
-      $("#bank_list2").hide();
-      $("#bank_list2").val('');
-      $('#yes').removeAttr('checked');
-      $('#no').attr('checked', true);
+      /*$("#bank_list2").hide();*/
+      $("#bnk_lst").val('');
+      /*$('#yes').removeAttr('checked');
+      $('#no').attr('checked', true);*/
     }
-    $("#plc3").val(str.plc);
+    $("#plc5").val(str.plc);
     if(str.plc!='' && str.plc!=null && str.plc>0){
       console.log("plc yes");
-      $("#plc3").show();
+      $("#plc5").show();
       $('#plcn').removeAttr('checked');
       $('#plcy').attr('checked', true);
     }
     else{
       console.log("plc no");
-      $("#plc3").hide();
-      $('#plc3').val("");
+      /*$("#plc5").hide();*/
+      $('#plc5').val("");
       $('#plcn').attr('checked', true);
       $('#plcy').removeAttr('checked');
+    }
+
+
+
+    if(str.negotiable!=null){
+      if(str.negotiable==true){
+        $("#nego_select").val("1");
+      }
+      if(str.negotiable==false){
+        $("#nego_select").val("2");
+      }
     }
     
     console.log(str);
@@ -241,21 +286,14 @@ function editListing(str){
     $("#bh3").attr('disabled',true);
     
 
-   
-   /* var study_room = "";
-    if ($('[name="yes_study"]').is(':checked'))  {
-      study_room = "YES";     
-    } else {
-      study_room = "NO";
-    }  
-    var servant_room = "";
-     if ($('[name="yes_servant"]').is(':checked'))  {
-      servant_room = "YES";     
-    } else {
-      servant_room = "NO";
-    } 
-    var discription = $("#discription3").val().trim();*/
-
+    /*if(str.towerId!=null){
+      //var a = $("#tower2 options")
+      $("#tower2").val(str.towerId);
+      debugger;
+    }
+    if(str.phaseId!=null){
+      $("#phase_id3").val(str.phaseId);
+    }*/
 
     window.scrollTo(0, 0);
 
@@ -286,13 +324,13 @@ function getSeller(){
               msg = $.parseJSON(msg);
               $.each(msg, function(k,v) {
                 console.log(v);
-                  options.append($("<option/>").val(v['user_id']).text(v['name']));
-                
-              });  
-              
+                  options.append($("<option/>").val(v['user_id']).text(v['name']));    
+              });    
             },
-          });
+    });
 }
+
+
 
 function exitButtonClicked(){
   cleanFields();
@@ -301,6 +339,7 @@ function exitButtonClicked(){
       $('#search_bottom').show('slow');
       location.reload();
 }
+
 
 jQuery(document).ready(function(){  
   var i;
@@ -350,6 +389,190 @@ $("#exit_button").click(function(){
 });*/
 
 
+$('#project_search').val(getParameterByName('projectName'));
+$('#selProjId').val(getParameterByName('projectId'));
+$('#citydd').val(getParameterByName('citydd'));
+
+// tablesorter ajax pager
+
+{literal}
+$(function(){
+/*var selCity = null;
+selCity = $("#citydd :selected").val();
+var selProject = null;
+selProject = $("#selProjId").val();*/
+  // Initialize tablesorter
+  // ***********************
+  $("#listing_table")
+    .tablesorter({
+      theme: 'blue',
+      widthFixed: true,
+      sortLocaleCompare: true, // needed for accented characters in the data
+      sortList: [ [0,1] ],
+      widgets: ['zebra'],
+      widgetOptions : {
+        filter_serversideFiltering : false,
+      } 
+    })
+
+    //before initialize
+    .on('pagerBeforeInitialized', function(event, pager){
+    var table = this,
+        $table = $(this);
+
+    pager.page = 0;            // set current page here
+    pager.size = 25;           // set current size here
+    pager.currentFilters = []; // set initial filters here
+  })
+
+    // initialize the pager plugin
+    // ****************************
+    .tablesorterPager({
+
+      // **********************************
+      //  Description of ALL pager options
+      // **********************************
+
+      // target the pager markup - see the HTML block below
+      container: $(".pager"),
+
+      size: 25,
+
+      // use this format: "http:/mydatabase.com?page={ page }&size={ size }&{ sortList:col }"
+      // where {page} is replaced by the page number (or use {page+1} to get a one-based index),
+      // {size} is replaced by the number of records to show,
+      // {sortList:col} adds the sortList to the url into a "col" array, and {filterList:fcol} adds
+      // the filterList to the url into an "fcol" array.
+      // So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
+      // and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
+      //ajaxUrl : 'assets/City{page}.json?{filterList:filter}&{sortList:column}',
+      //ajaxUrl : '/ajax_listing_table_copy.php?page={page}&size={size}&{sortList:col}',
+      //ajaxUrl : '/ajax_tablesorter_listing.php?page={page}&size={size}&{sortList:col}&city={selCity}&project={selProject}',
+      ajaxUrl : '/ajax_tablesorter_listing.php?page={page}&size={size}&{sortList:col}',
+      // modify the url after all processing has been applied
+      customAjaxUrl: function(table, url) {
+          // manipulate the url string as you desire
+           url += '&city=' + $("#citydd :selected").val();  
+           //if($("#project_search").val().trim()!='')
+            url += '&project=' + $("#selProjId").val(); 
+          // trigger my custom event
+          $(table).trigger('changingUrl', url);
+          // send the server the current page
+          return url;
+      },
+
+      // add more ajax settings here
+      // see http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
+      ajaxObject: {
+        dataType: 'json'
+      },
+
+      // process ajax so that the following information is returned:
+      // [ total_rows (number), rows (array of arrays), headers (array; optional) ]
+      // example:
+      // [
+      //   100,  // total rows
+      //   [
+      //     [ "row1cell1", "row1cell2", ... "row1cellN" ],
+      //     [ "row2cell1", "row2cell2", ... "row2cellN" ],
+      //     ...
+      //     [ "rowNcell1", "rowNcell2", ... "rowNcellN" ]
+      //   ],
+      //   [ "header1", "header2", ... "headerN" ] // optional
+      // ]
+      // OR
+      // return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
+      ajaxProcessing: function(data){
+        console.log(data);
+        if (data && data.hasOwnProperty('rows')) {
+          var indx, r, row, c, d = data.rows,
+          // total number of rows (required)
+          total = data.total_rows,
+          // array of header names (optional)
+          headers = data.headers,
+          // cross-reference to match JSON key within data (no spaces)
+          headerXref = headers.join(',').replace(/\s+/g,'').split(','),
+          // all rows: array of arrays; each internal array has the table cell data for that row
+          rows = [],
+          // len should match pager set size (c.size)
+          len = d.length;
+          // this will depend on how the json is set up - see City0.json
+          // rows
+          for ( r=0; r < len; r++ ) {
+            row = []; // new row array
+            // cells
+            for ( c in d[r] ) {
+              if (typeof(c) === "string") {
+                // match the key with the header to get the proper column index
+                indx = $.inArray( c, headerXref );
+
+                // add each table cell data to row array
+                if (indx >= 0) {
+                  if(indx==6){//encodeURIComponent(JSON.stringify(d[r][c]))
+                    //d[r][c] = {'description': "hello'yes boys"};  
+                    var a = d[r][c];
+                    //console.log(a);
+                    a = escape(d[r][c]);
+                    //console.log(a);
+                    row[indx] =  "<button type='button' id='edit_button_' onclick='editListing("+JSON.stringify(a)+")' align='left'>Edit</button>";
+                 //var hello = {};
+                 //console.log(d[r][c]);
+                  //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
+                   }
+                  else
+                    row[indx] = d[r][c];
+                }
+              }
+            }
+            rows.push(row); // add new row array to rows array
+          }
+          // in version 2.10, you can optionally return $(rows) a set of table rows within a jQuery object
+          return [ total, rows, headers ];
+        }
+      },
+
+      // output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
+      output: '{startRow} to {endRow} ({totalRows})',
+
+      // apply disabled classname to the pager arrows when the rows at either extreme is visible - default is true
+      updateArrows: true,
+
+      // starting page of the pager (zero based index)
+      page: 0,
+
+      // Number of visible rows - default is 10
+      size: 25,
+
+      // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+      // table row set to a height to compensate; default is false
+      fixedHeight: false,
+
+      // remove rows from the table to speed up the sort of large tables.
+      // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+      removeRows: false,
+
+      // css class names of pager arrows
+      cssNext        : '.next',  // next page arrow
+      cssPrev        : '.prev',  // previous page arrow
+      cssFirst       : '.first', // go to first page arrow
+      cssLast        : '.last',  // go to last page arrow
+      cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
+      cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
+      cssErrorRow    : 'tablesorter-errorRow', // error information row
+
+      // class added to arrows when at the extremes (i.e. prev/first arrows are "disabled" when on the first page)
+      cssDisabled    : 'disabled' // Note there is no period "." in front of this class name
+
+    });
+
+});
+
+{/literal}
+
+
+
+populate_total_floor();
+
 
 $("#lmkSave").click(function(){
     var temp = [];
@@ -359,7 +582,7 @@ $("#lmkSave").click(function(){
 
     var broker_id = $("#bkn2 :selected").val();
     var pt_broker_id =  $("#pt_broker_id").val();
-    console.log(broker_id +" "+pt_broker_id);
+    //console.log(broker_id +" "+pt_broker_id);
 
 
     var owner_name = $("#name").val().trim();
@@ -409,8 +632,8 @@ $("#lmkSave").click(function(){
       $.each(option, function(k,v){
         
         if (k==parseInt(option_sel)){
-          console.log("here0");
-          console.log(v);
+          //console.log("here0");
+          //console.log(v);
           size = v['size'];
           bedrooms = v['bedrooms'];
           bathrooms = v['bathrooms'];
@@ -423,7 +646,7 @@ $("#lmkSave").click(function(){
     else{
        size = $("#other_input").val().trim();
        bedrooms = $("#bed2").val().trim();
-      bathrooms = $("#tol3").val();
+       bathrooms = $("#tol3").val();
        property_id = "";
        unit_type = $("#appartment3 :selected").text();
     }
@@ -437,14 +660,25 @@ $("#lmkSave").click(function(){
     //var projectid = $("#project").val().trim();
     //var projid = $("#proj").val().trim();
     //var bhk1 = $("#bh3 :selected").text().trim();    
+    
+    var owner_name = $("#name").val().trim();
+    var owner_email = $("#email").val().trim();
+    var owner_number = $("#number").val().trim();
 
     var facing = $("#facing2 :selected").val();
     if(facing=='')
       facing=null;
     //console.log(facing);
-    var tower = $("#tower2").val().trim();
+    var tower = $("#tower2 :selected").val();
     var floor = $("#floor2").val().trim();
-
+    var total_floor_check = $("#total_floor1 :selected").text();
+    var total_floor = null;
+    if(total_floor_check == "Select") {
+      total_floor = null;
+    } else {
+      total_floor = parseInt(total_floor_check);
+    }
+    
     var price_type = parseInt($("#prs5 :selected").val());
 
     var price = "";
@@ -466,9 +700,6 @@ $("#lmkSave").click(function(){
           price = parseInt(parseFloat(price).toFixed(2) * 10000000);
         }
       }
-
-      
-
     }
     else{
       price_per_unit_area = $("#prs3").val().trim();
@@ -480,42 +711,87 @@ $("#lmkSave").click(function(){
 
     }
 
-console.log(price);
-//return true;    
+    //console.log(price);
+    //return true;    
     
 
-  /*  function strip(number) {
-return (parseFloat(number.toPrecision(2)));
-}*/
-    
+    var phase_id = $("#phase_id3 :selected").val();      
 
-    var transfer_new;
+
+    var transfer_new = null;
     var trancefer_rate = $("#tfr2").val().trim();
     var price_in = "Lakhs";    
+
+    /*var trancefer_rate_check = $("#transfer_sel").val().trim();
+	if(trancefer_rate_check == '') {
+		alert("Select price type for transfer");
+	} else {
+	    if (trancefer_rate_check == '1')  {
+	      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
+	    } else if(trancefer_rate_check == '2'){
+	      transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000; 
+	    }  
+	}*/
+
+     
     if ($('[name="lkhs2"]').is(':checked'))  {
       transfer_new = parseFloat(trancefer_rate).toFixed(2) * 100000; 
     } else {
       transfer_new = parseFloat(trancefer_rate).toFixed(2) * 10000000;
     }
-console.log(transfer_new);
-//return true;
+    //console.log(transfer_new);
+    //return true;
     var appratment = $("#appartment3 :selected").text();
+    var penthouse_studio = $("#penthouse_sel :selected").val();
+  
+    
+  
+    /*if(penthouse_stdio_temp == "1") {
+        if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
+            penthouse = true;
+        } else {
+            penthouse = false;
+        }
+    } else if(penthouse_stdio_temp == "Studio") { 
+        if ($('[name="penthouse_studio_yes"]').is(':checked'))  {
+            studio = true;
+        } else {
+            studio = false; 
+        }
+    }*/
+
+    var negotiable = null;
+    var nego_select_check = $("#nego_select :selected").val();
+    if (nego_select_check == '1')  {
+        negotiable = true;
+    } else if(nego_select_check == '2'){
+        negotiable = false;
+    }
+
+    //alert("penthouse = "+penthouse);
+    //alert("studio = " + studio);
+
     var flat_number = $("#flt2").val().trim();
     var parking = $("#park2 :selected").val();
-    var loan_bank = $("#bank_list2 :selected").val();
-    var plc_val = $("#plc3").val().trim();
-    var study_room = "";
-    if ($('[name="yes_study"]').is(':checked'))  {
-      study_room = "YES";     
-    } else {
-      study_room = "NO";
+    var loan_bank = $("#bnk_lst :selected").val();
+    var plc_val = $("#plc5").val().trim();
+    
+    var study_room = null;
+    var study_room_check = $("#study_sel :selected").val();
+    if (study_room_check == '1')  {
+          study_room = "1";
+    } else if(servant_room_check == '2'){
+      study_room = "0";
     }  
-    var servant_room = "";
-     if ($('[name="yes_servant"]').is(':checked'))  {
-      servant_room = "YES";     
-    } else {
-      servant_room = "NO";
+    
+    var servant_room = null;
+    var servant_room_check = $("#servant_sel :selected").val();
+    if (servant_room_check == '1')  {
+          servant_room = "1";
+    } else if(servant_room_check == '2'){
+      servant_room = "0";
     } 
+
     var description = $("#description3").val().trim();
     var review = $("#review3").val().trim();
 
@@ -533,14 +809,14 @@ console.log(transfer_new);
       }
       else{ 
         if(unit_type=='Apartment' || unit_type=='Villa') { 
-          console.log(unit_type);
+          //console.log(unit_type);
           if(project_id=='' ||  bedrooms=='' || unit_type=='Select' || size=='' ){
             alert("project, bedroom, size, Option Type are must if BHK 'Others' is selected.");
             return true;
           }
         }
         else{
-          console.log(unit_type);
+          //console.log(unit_type);
           if(project_id=='' || unit_type=='' || size=='' || unit_type=='Select'){
             alert("project, size, Option Type are must if BHK 'Others' is selected.");
             return true;
@@ -548,6 +824,8 @@ console.log(transfer_new);
         }
       }
      }
+
+
 
 //console.log("s:"+seller_id+" ppa:"+price_per_unit_area+" p:"+price+" op:"+other_prs);
      //validation checks
@@ -559,6 +837,10 @@ console.log(transfer_new);
      if((price=='' || price==null || !price) && (price_per_unit_area=='' || price_per_unit_area==null || !price_per_unit_area)){
       error += "Price is compulsory field. "
      }
+     if(phase_id=='' || !phase_id){
+      error += "Phase is compulsory field. "
+     }
+
      if (error != '' ){
       alert(error);
       return true;
@@ -573,34 +855,35 @@ console.log(transfer_new);
             type: "POST",
             //async: false,
             url: '/saveSecondaryListings.php',
+
             beforeSend: function(){
               console.log('in ajax beforeSend');
               $("body").addClass("loading");
             },
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, floor : floor , price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, description:description, review:review, task:task},
+
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task},
+
+
 
             success:function(msg){
               
               console.log(msg);
               msg = $.parseJSON(msg);//console.log(msg.msg);
               //return;
+              console.log(msg.code);
+              console.log(msg.msg);
               if(msg.code==2){
                 
                $("body").removeClass("loading");
                 exitButtonClicked();
-                //alert("Listing Successfully updated");
-                /*$body = $("body"); $body.removeClass("loading");
-                 $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
-                //location.reload();
+                
+
               }
               else if(msg.code==1){
                 $("body").removeClass("loading");
-                //$body = $("body");
-                //$body.removeClass("loading");$("#image_link").html("<a href=c+str.id+">Add/Edit Listing Images</a>");
+                
                 location.href = "listing_img_add.php?listing_id="+msg.msg;
-                //exitButtonClicked();
-                //alert("Listing Successfully created"); //$body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);*/
-                //location.reload();
+                
               }
               else{
                 //
@@ -613,33 +896,6 @@ console.log(transfer_new);
             },
            
           });
-
-
-
-    /*id="size"
-    id="errmsgsize"
-    id="bhk"
-    id="errmsgbhk"
-    id="facing"
-    id="errmsgfacing"
-    id="floor"
-    id="errmsgfloor"
-    id="lakhs"
-    id="crs"
-    id="park"
-    id = "park1"
-    id="tower"
-    id="flt_no"
-    id="yes"
-    id="no"
-    id="bankddEdit"
-    id="plcy"
-    id="plcn"
-    id="plc3"
-    id="lmkSave"
-    id="exit_button" */
-
-
 
 
     var placeid = "";
@@ -674,7 +930,59 @@ console.log(transfer_new);
   
 
   });
-     
+
+  // to get  listings on the table based on project search
+  $( "#project_search" ).catcomplete({
+      source: function( request, response ) {
+        
+        $.ajax({
+          url: "{$url12}"+"?query="+$("#project_search").val().trim()+"&typeAheadType=(project)&city="+$("#citydd :selected").text().trim()+"&rows=10",
+          //url: "{$url12}"+"?query="+$("#proj").val().trim()+$("#cityddEdit :selected").text().trim(),
+          dataType: "json",
+          data: {
+            featureClass: "P",
+            style: "full", 
+            name_startsWith: request.term
+          }, 
+           
+          success: function( data ) { 
+            response( $.map( data.data, function( item ) {              
+                return {
+                label: item.displayText,
+                value: item.label,
+                id:item.id,
+                }
+                 
+            }));
+          }
+        });      
+      },
+              
+      select: function( event, ui ) {
+        window.selectedItem = ui.item;
+        var res = ui.item.id.split("-");
+          var projectId = res[2];
+          pid = projectId;
+          console.log(projectId);
+
+          $("#selProjId").val(projectId); 
+          
+           
+          
+      },
+      
+
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      },
+
+    }); 
+
+
+//project search to get options autocomplete     
    $( "#project" ).catcomplete({
       source: function( request, response ) {
         
@@ -712,8 +1020,8 @@ console.log(transfer_new);
           var data = { projectId:projectId,  task:'get_options'}; 
            
           //find_project_options();
-          
-          console.log("{$url13}"+projectId);
+                
+          console.log("{$url13}"+projectId+"/phase");
           $.ajax({
               //alert("Hello"); 
               url: "{$url13}"+projectId,
@@ -731,7 +1039,8 @@ console.log(transfer_new);
                 var v1 = data.data.projectDetails.builder.name;
                 var v2 = data.data.projectDetails.projectName;
                 var v3 = data.data.locality.newsTag;
-                
+                console.log(data);
+                //alert(data.data);
                 //console.log(v1);
                 //console.log(v2);
                 //console.log(v3);
@@ -773,21 +1082,21 @@ console.log(transfer_new);
                     i++;
                     j++;
                 });   
-                                  
- 
                 
-                //console.log(bt);
-                //$("#bhk").val(bt);
-                /*response( $.map( data.data, function( item ) {              
-                  return {
-                  label: item.displayText,
-                  value: item.label,
-                  id:item.id,
-                  } 
-                      
-                }));*/
+                
+
+                var project_id = $("#proj").val().trim();
+                //var project_id = '500055';   
+                //alert(project_id);
+                get_towers(project_id);
+                   
+                get_phases(projectId);
+                               
               }
           });
+
+
+          
           //}
       },
       
@@ -856,8 +1165,31 @@ console.log(transfer_new);
                     options.append($("<option/>").val('other').text(bbt[j]));
                     i++;
                     j++;
-                });   
-     
+                });
+
+                $('#total_floor1').html('');  
+                var total_floor_array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101];
+
+                var floor_option = $('#total_floor1');
+                var j = 0;
+                console.log('Floor option');
+                //floor_option.append($("<option/>").val(0).text('Select');
+                $.each(total_floor_array, function() {
+                    if (j == 0)  {
+                       floor_option.append($("<option/>").val(j).text('Select'));   
+                    } else {
+                       floor_option.append($("<option/>").val(j).text(total_floor_array[j-1]));
+                    }
+                    j++;
+                    //console.log(j);
+                });  
+
+                var project_id = $("#proj").val().trim();
+                //var project_id = '500055';   
+                //alert(project_id);
+              get_phases(project_id);  
+              get_towers(project_id);
+                   
               }
           });
           //}
@@ -957,7 +1289,7 @@ $("#tfr2").keypress(function (e) {
     }
    });
 
-$("#plc3").keypress(function (e) {
+$("#plc5").keypress(function (e) {
      //if the letter is not digit then display error and don't type anything
      if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
         //display error message
@@ -971,9 +1303,90 @@ $("#plc3").keypress(function (e) {
 
 
 
+function get_towers(project_id){
+  $.ajax({
+                        type: "POST",
+                        url: '/saveSecondaryListings.php',
+                        data: { project_id:project_id, task:'get_tower'},
+
+                        success:function(msg){  
+                           console.log(msg);
+              
+                            var options = $("#tower2");
+                            //var i = 0;
 
 
+                            msg = $.parseJSON(msg);
+                            $.each(msg, function(k,v) {
+                              options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
+                            }); 
+                            var towerId = $("#towerIdHidden").val();
+                            if(towerId!='')
+                              options.val(towerId);
 
+
+                        },
+                });
+}
+
+function get_phases(projectId){
+  $.ajax({
+                        type: "POST",
+                        url: "{$url_phase_id}"+projectId+"/phase",
+                        dataType: "json",
+                        data: {
+                        featureClass: "P",
+                        style: "full", 
+                        //name_startsWith: request.term
+                        },
+              
+                        success: function( data ) {
+                          var ln2 = data.data.length;
+                          //phase_id3
+                          //option.length=0;
+                          //console.log(ln2);
+                          //console.log(data.data[0].phaseId);
+                          var phase_ids1 = [];
+                          var phase_ids2 = [];
+                          for(i = 0; i < ln2; i++)  {
+                              console.log(data.data[i].phaseId);
+                              phase_ids1.push(data.data[i].phaseId);
+                              phase_ids2.push(data.data[i].phaseName);
+                          } 
+                          $('#phase_id3').html(''); 
+                          var phase_options = $("#phase_id3");
+                          var i = 0;
+
+                          phase_options.append($("<option/>").val("").text("Select"));
+                          $.each(phase_ids2, function() {
+                              phase_options.append($("<option/>").val(phase_ids1[i]).text(phase_ids2[i]));
+                              i++;
+                          });
+                          var phaseId = $("#phaseIdHidden").val();
+                            if(phaseId!='')
+                              phase_options.val(phaseId);
+                        }
+                          
+                });
+}
+
+function populate_total_floor(){
+  $('#total_floor1').html('');  
+                var total_floor_array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101];
+                var floor_option = $('#total_floor1');
+                var j = 0;
+                console.log('Floor option');
+                //floor_option.append($("<option/>").val(0).text('Select');
+                $.each(total_floor_array, function() {
+                    if (j == 0)  {
+                       floor_option.append($("<option/>").val(j).text('Select'));   
+                    } else {
+                       floor_option.append($("<option/>").val(j).text(total_floor_array[j-1]));
+                    }
+                    j++;
+                    //console.log(j);
+                });
+}
 
 function isNumeric(val) {
         var validChars = '0123456789';
@@ -992,7 +1405,12 @@ function isNumeric(val) {
 }
 
 
-
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 
 
@@ -1034,15 +1452,10 @@ function isNumeric(val) {
 		            <td>
 		        	    <div id="search-top">
 		                    <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">
-		                        <form method = "post">
+		                        <form method = "get">
 		            	            <tr>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <!--<select id="citydd" name="citydd" onchange = "update_locality(this.value);">
-		                                       <option value=''>select city</option>
-		                                       {foreach from=$cityArray key=k item=v}
-		                                           <option value="{$k}" {if $cityId==$k}  selected="selected" {/if}>{$v}</option>
-		                                       {/foreach}
-		                                    </select> -->
+		                                   
 		                                </td>
 		                                <td width = "10px">&nbsp;
 		                                </td>
@@ -1059,33 +1472,38 @@ function isNumeric(val) {
 		                                </td>
 		                          		<!-- <input type="hidden" name="localityId" id = "localityId" value="{$localityId}"> -->
 		                                
-		                                <td width = "10px">&nbsp;
-		                                </td>
-		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <!-- <select id="placeType" name="placeType">
-		                                       <option value=''>select place type</option>
-		                                       {foreach from=$nearPlaceTypesArray key=k item=v}
-		                                              <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
-		                                       {/foreach}
-		                                    </select>
-                                        -->
-		                                </td>
+		                                
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="15%" height="25" align="left" valign="top">
 		                                    <!--<select name="status">
 		                                       <option value='Active' {if $status == 'Active'}selected{/if}>Active</option>
 		                                       <option value='Inactive' {if $status == 'Inactive'}selected{/if}>Inactive</option>
 		                                    </select> -->
-                                        <select id="citydd" name="citydd" onchange = "update_locality(this.value);">
+                                        <select id="citydd" name="citydd" >
                                            <option value=''>select city</option>
                                            {foreach from=$cityArray key=k item=v}
-                                               <option value="{$k}" {if $k==$cityId}  selected="selected" {/if}>{$v}</option>
+                                               <option value="{$k}" {if $k==$cityId}  {/if}>{$v}</option>
                                            {/foreach}
                                         </select>
 		                                </td>
+                                    <td width = "10px">&nbsp;
+                                    </td>
+                                    <td width="15%" height="25" align="left" valign="top">
+                                        <!-- <select id="placeType" name="placeType">
+                                           <option value=''>select place type</option>
+                                           {foreach from=$nearPlaceTypesArray key=k item=v}
+                                                  <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
+                                           {/foreach}
+                                        </select>
+                                        -->
+                                      
+                                      <input type=text name="project_search" id="project_search"  style="width:210px;"> 
+                                      <input type=hidden name="selProjId" id="selProjId" >
+                              
+                                    </td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <input type = "submit" name = "submit" value = "submit" onclick="submitButton();">
+		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
 		                                </td>
 		                          </tr>
 		                        </form>
@@ -1110,7 +1528,7 @@ function isNumeric(val) {
                   	<form method="post" enctype="multipart/form-data" id="formlmk" name="formlmk">
                     	<input type="hidden" name="old_sub_name" value="">
                     	<div>
-<!--City Tr-->         		<tr id="city">
+<!--City Tr-->         		<tr id="city" style="left:300px;">
                       			<td id="city1">
                       				City
                       			</td>
@@ -1149,41 +1567,50 @@ function isNumeric(val) {
                             <td id="seller2">
                               <!-- <input type=text name="seller3" id="seller3"> --> 
                               <select id="seller3" name="seller3" >
-                                    <option value=''>Seller ID</option>
-                                    
-                                </select>      
+                                    <option value=''>Seller ID</option>                                    
+                              </select>      
                             </td>
+                            	
                         </tr>
+                      
+                        	<hr id = "line1" >
+                      
 
-                        <tr id="name_number">
+                        <tr id="name_number1">
                               <td id="name1">
+
                                 <font id= "name_font" color='red' style="display:none">
                                     *
                                 </font>
                                 Owner Name
                               </td>
+                        
                               <td id="name2">
-                                  <input type=text name="name" id="name"  style="width:100px;">
+                                  <input type=text name="name" id="name"  style="width:150px;">
                               </td>
+                        </tr>
+                        <tr id="name_number2">      
                               <td id="email1">
                                 
                                 Email
                               </td>
                               <td id="email2">
-                                  <input type=text name="email" id="email"  style="width:120px;">
+                                  <input type=text name="email" id="email"  style="width:150px;">
                               </td>
                               <td id="number1">
+
                                 <font id="number_font" color="red" style="display:none">
                                     *
                                 </font>
                                 Contact Number:
                               </td>
                               <td class="number2">
-                                <input type=text name="number" id="number" style="width:100px;">   
+                                <input type=text name="number" id="number" style="width:150px;">   
                                 <input type=hidden value="{$proptiger_broker_id}" name="pt_broker_id" id="pt_broker_id" style="width:100px;">  
                               </td>          
                         </tr>
-
+                        	
+                        		<hr id = "line2" >
 
                     		<tr id="prj">
                       			<div class="ui-widget">
@@ -1197,176 +1624,186 @@ function isNumeric(val) {
                             			<input type=text name="project" id="project"  style="width:210px;">
                         			</td>
                         			<td  style="text-align: center;" width="100px;">
-                                  OR
-                            	</td>
-                              <td id="proj1">
-                                Project ID:
-                              </td>
-                              <td class="proj2">
-                                <input type=text name="proj" id="proj">       
-                              </td>
+                                  		OR
+                            		</td>
+	                              <td id="proj1">
+	                                Project ID:
+	                              </td>
+	                              <td class="proj2">
+	                                <input type=text name="proj" id="proj" style="width:100px">       
+	                              </td>
                       			</div>         		
                     		</tr>
        
                     		<tr id="bhk">
-                            <td id = "bh1">
-                                <font color="red">*</font>BHK
-                            </td>
-                            <td id="bh2">
-                                <select id="bh3" name="bh3">
-                                    <option value=''> BHK </option>    
-                                    <script language="javascript" type="text/javascript"> 
-                                    for(var d=0;d< bt.length;d++)  {
-                                        document.write("<option value='"+option[d].propertyId+"' >"+bt[d]+"</option>");
-                                    }
-                                    </script>
-                                </select>
-                            </td>
-                            <td id = "facing1">
-                                Facing
-                            </td>
-                            <td>
-                                <select id="facing2" name="facing2">
-                                    <option value=''>Select</option>  
-                                      <option value="East">East</option>
-                                      <option value="West">West</option>
-                                      <option value="North">North</option>
-                                      <option value="South">South</option>
-                                      <option value="NorthEast">North East</option>
-                                      <option value="SouthEast">South East</option>
-                                      <option value="NorthWest">North West</option>
-                                      <option value="SouthWest">South West</option>
-                                </select>
-                            </td>
-                        </tr>
-     
-                        <tr id = "othr" style="display: none;">
-                            <td id="othr1" padding-left: 100px;>
-                                  <font color="red">*</font>Size
+	                            <td id = "bh1">
+	                                <font color="red">*</font>BHK
+	                            </td>
+	                            <td id="bh2">
+	                                <select id="bh3" name="bh3">
+	                                    <option value=''> BHK </option>    
+	                                    <script language="javascript" type="text/javascript"> 
+	                                    for(var d=0;d< bt.length;d++)  {
+	                                        document.write("<option value='"+option[d].propertyId+"' >"+bt[d]+"</option>");
+	                                    }
+	                                    </script>
+	                                </select>
+	                            </td>
+	                            <td id="appartment1">
+	                                  <font color="red">*</font>Option Type
+	                            </td>
+	                            <td id="appartment2">
+	                                  <select name="appartment3" id="appartment3" style="height:28px">
+
+	                                    <option value="0">Select</option>
+	                                    <option value="1">Apartment</option>>  
+	                                    <option value="2">Villa</option>
+	                                    <option value="3">Plot</option>
+	                                    <option value="4">Commercial</option>
+	                                    <option value="5">Shop</option>
+	                                    <option value="6">Office</option>
+	                                    <option value="7">Other</option>
+
+	                                </select>
+	                            </td>
+	                          
+                            </tr>
+						   
+                        <tr id = "othr">
+                            <td id="othr1">
+                                  <font size="1" color="red">*</font>
+                                  <font size="1">
+                                  Size
+                                  </font>
                             </td>
                             <td id="othr2">
                                   <input type=text name="other_input" id="other_input"> 
                             </td>
                             <td id="bath">
-                                  <font color="red">*</font>Bedroom
+                                  <font size="1" color="red">*</font>
+                                  <font size="1">Bedroom</font>
                             </td>
                             <td id="bath1">
-                                  <input type=text name="bed2" id="bed2" style="width:60px">  
+                                  <input type=text name="bed2" id="bed2" style="width:60px;height:15px">  
                             </td>
                             <td id="tol1">
+                            	<font size="1">
                                   Toilet
+                                </font>
                             </td>
                             <td id="tol2">
                                   <input type=text name="tol3" id="tol3">
                             </td>
-                            <td id="appartment1">
-                                  <font color="red">*</font>Option Type
-                            </td>
-                            <td id="appartment2">
-                                  <select name="appartment3" id="appartment3" style="height:28px">
-                                      <option value=''>Select</option> 
-                                      <option value='1'>Apartment</option>  
-                                      <option value="2">Villa</option>
-                                      <option value="3">Plot</option>
-                                      <option value="4">Commercial</option>
-                                      <option value="5">Shop</option>
-                                      <option value="6">Office</option>
-                                      <option value="7">Other</option>
-                                </select>
-                            </td>
                         </tr>
   
+                        <tr id="study_servant" >
+                          <td id = "study1">
+                          	<font size = "1">
+                              Study Room
+                            </font>
 
-                    
+                          </td>
+                           <td id="study">                   
+	                          <select name="study_sel" id="study_sel" style="height:28px;width:70px">
+
+		                                    <option value="0">Select</option>
+		                                    <option value="1">Yes</option>
+		                                    <option value="2">No</option>  
+		                      </select>
+                          </td>
+
+                          <td>
+
+                          </td>
+
+                          <td id = "servant1">
+                          	<font size = "1">
+                              Servant Room
+                            </font>
+                          </td>
+                                              
+                          <td width="120px" align="left" id="servant" >
+                            <select name="servant_sel" id="servant_sel" style="height:28px;width:70px">
+
+	                                    <option value="0">Select</option>
+	                                    <option value="1">Yes</option>
+	                                    <option value="2">No</option>  
+	                        </select>
+                          </td>
+
+                          <td id="penthouse_td1">
+                                  
+                                  <font size="1">
+                                  Apartment Type
+                                  </font>
+                            </td>
+                            <td id="penthouse_td2">
+                                  <select name="penthouse_sel" id="penthouse_sel" style="height:28px;width:70px">
+                                    <option value=''>Select</option>  
+                                      <option value="1">Penthouse</option>
+                                      <option value="2">Studio</option>
+                                </select>
+                            </td> 
+                      </tr>
+                    		<hr id = "line3" >
+
                         <tr id="tower_floor"> 
+                            
+                            <td  align="left" id="phase_id1" style="width:100px;"><font  color="red">*</font>
+                                  Phase 
+                            </td>
+                            <td  align="left" id="phase_id2">
+                                 <select id="phase_id3" name="phase_id3" style="width:140px">
+                                    <option value=''>Select</option>
+                                </select> 
+                                <input type=hidden name='phaseIdHidden' id='phaseIdHidden'>
+                            </td> 
                             <td id="tower1">
-                              Tower
-                            </td>
-                            <td >
-                                <input type=text name="tower2" id="tower2" style="width:100px">
-                            </td>
-                            <td  align="left" id="errmsgtower">
-                                
-                            </td>
+                              		Tower
+                           		</td>
+                           		<td >
+                                <!--<input type=text name="tower2" id="tower2" style="width:100px"> -->
+                                <select id="tower2" name="tower2" style="width:140px">
+                                    <option value=''>Select</option>
+                                </select>
+                                <input type=hidden name='towerIdHidden' id='towerIdHidden'>
+                            </td> 	
+
+                         </tr>
+
+
+                        <tr id="tower_floor2">
+                        		<td id="flt1">
+                                	Flat Number
+                            	</td>
+	                            <td id="flt3">
+	                               <input type=text name="flt2" id="flt2" style="width:100px">
+	                            </td>    
 
                       			<td id="floor1">
                           			Floor
                       			</td>
                       			<td>
-                          			<input type=text name="floor2" id="floor2" style="width:100px">
+                          			<input type=text name="floor2" id="floor2" style="width:50px">
                       			</td>
                       			<td  align="left" id="errmsgfloor">
                       				
                       			</td>
-                      
-                    		</tr>
-
-               				  <tr id="prs_trf">
-
-                          			<td id="prs1">
-                              			<font color="red">*</font>Price: 
-                          			</td>
-                              
-                                                             
-                                
-                                <td id="prs4">
-                                  <select id="prs5" name="prs5" style="width:100px">
-                                      <option value='0'>Select</option>  
-                                      <option value='1' selected="selected">All Inclusive</option>
-                                      <option value='2'>Per Sq. Ft.</option>
-                                  </select>
-                                </td>
-
-                                <td id="prs2">
-                                    <input type=text name="prs3" id="prs3" style="width:100px">
-                                </td> 
-
-                                <td id ="tfr1" >
-                                  Transfer Rate:
-                                </td>
-                                <td >
-                                    <input type=text name="tfr2" id="tfr2" style="width:100px">
-                                </td>
-
-                    		</tr> 
-
-                        <tr id="prs_typ">
-                            
-                            <td width="110px" align="left" id="pr" style="padding-left:120px;display:none;" >
-                              <label  for="one" style="font-size:11px;" >
-                                lacs &nbsp;   
-                                 <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
-                                 &nbsp;&nbsp; crs &nbsp;
-                                 <input type="radio" id="crs1" name="crs1" value="n" />
-                              </label>    
+                            <td id="total_floor" style = "width:50px">
+                                Total Floors 
                             </td>
 
-                         
-                            <td width="400px" style="margin-left=-20px; display:none;" id="other_charges">Other Charges:
-                                <input type=text name="othr_prs2" id="othr_prs2" style="width:100px;">
-                            </td>
-                        
-                            <td width="630px" align="left" id="tr" style="display:none;">
-                              <label  for="one" style="font-size:11px;">
-                                lkhs &nbsp;   
-                                  <input type="radio" id="lkhs2" name="prstp2" value="y" checked="checked" /> 
-                                  &nbsp;&nbsp; crs &nbsp;
-                                  <input type="radio" id="crs2" name="prstp2" value="n" />
-                              </label>    
-                            </td>  
-
-                        </tr>
-
-		                    <tr id = "flat_park">
-                            <td id="flt1">
-                                Flat Number
-                            </td>
                             <td>
-                               <input type=text name="flt2" id="flt2" style="width:100px">
+                                <select id="total_floor1" name="total_floor1" style="width:80px">
+                                    <option value=''>Select</option>
+                                    
+                                </select>
+
                             </td>
-                            <td align="left" id="errmsgflt_no">
-                                
-                            </td>
+                      
+                    	</tr>
+
+                    	<tr id = "flat_park">
 
 		                      	<td id="park1">
 		                      	   	Car Parks
@@ -1382,92 +1819,144 @@ function isNumeric(val) {
 		                                <option value="5">5</option>
 		                            </select>    
 		                        </td>
-		                      	<td align="left" id="errmsgpark">
+		                      	<td align="left" id="errmsgpark" style="width:220px;">
 		                      			
 		                      	</td>
+			                      	<td id = "negotiable_id1" style="position:relative;width:100px; text-align:left;">
+	                             		 Negotiable  
+			                        </td>    
+		                          <td id = "negotiable_id2">
+		                            <select id="nego_select" name="nego_select" style="width:120px">
+	                                    <option value=''>Select</option>  
+	                                      <option value="1">Yes</option>
+	                                      <option value="2">No</option>
+
+	                                </select>
+		                          </td>
                         </tr>
-                       
+                       	<tr id="facing_project">
+                       		 	<td id = "facing1">
+	                                Facing
+	                            </td>
+	                            <td>
+	                                <select id="facing2" name="facing2" style="width:120px">
+	                                    <option value=''>Select</option>  
+                                      {foreach $dirctionsArr  key=k item=v}
+                                      <option value="{$v['id']}">{$v['direction']}</option>
+                                      {/foreach}
+	                                      
+	                                </select>
+	                            </td>	
+                       	</tr>
+                        	<hr id = "line4" >
+               			<tr id="prs_trf">
+
+                          			<td id="prs1">
+                              			<font color="red">*</font>Price: 
+                          			</td>
+                              
+                                                             
+                                
+                                <td id="prs4">
+                                  <select id="prs5" name="prs5" style="width:150px">
+                                      <option value='0'>Select</option>  
+                                      <option value='1' selected="selected">All Inclusive</option>
+                                      <option value='2'>Per Sq. Ft.</option>
+                                  </select>
+                                </td>
+
+                                <td id="prs2">
+                                    <input type=text name="prs3" id="prs3" style="width:100px">
+                                </td> 
+                                <td id="other_charges" style="display:none;"> 
+                                    Other Charges:
+                                </td>  
+                                <td>
+                                    <input type=text name="othr_prs2" id="othr_prs2" style="width:100px;display:none">
+                                </td>
+                                
+                    		</tr> 
+
+                        <tr id="prs_typ">
+                            
+                            <td width="110px" align="left" id="pr" style="padding-left:220px;display:none" colspan="2">
+                              <label  for="one" style="font-size:11px;" >
+                                lacs &nbsp;   
+                                 <input type="radio" id="lkhs1" name="lkhs1" value="y" checked="checked" /> 
+                                 &nbsp;&nbsp; crs &nbsp;
+                                 <input type="radio" id="crs1" name="crs1" value="n" />
+                              </label>    
+                            </td>
+
+                        
+
+                            <!-- <td width="630px" align="left" id="tr" style="padding-left:220px;display:none">
+
+                              <label  for="one" style="font-size:11px;">
+                                lacs &nbsp;   
+                                  <input type="radio" id="lkhs2" name="prstp2" value="y" checked="checked" /> 
+                                  &nbsp;&nbsp; crs &nbsp;
+                                  <input type="radio" id="crs2" name="prstp2" value="n" />
+                              </label>    
+                            </td>  --> 
+
+                        </tr>
+
+		                
 
 
-                    	<tr id="hln" height="40px;">
+                    	<tr id="hln">
                        
                         	<td id="hln1">
-                                Home Loan
+                                Home Loan Bank
                         	</td>
 
                         	<td  id="hln2" >
-                          		<label for="one" style="font-size:11px;">
-                            		&nbsp; Yes   
-                              		<input type="radio" id="yes" name="yes" value="1" /> 
-                            		&nbsp; No &nbsp;
-                              		<input type="radio" id="no" name="no" value="2" checked="checked" />
-                          		</label>
-                        	</td>
-                       
-                        	<td id="bank_list1" height="40px;">
-                            	<select name="bank_list2" id="bank_list2" height="5px" width="50px" >
+                          		<select name="bnk_lst" id="bnk_lst" style="width:200px;" >
                                  	<option value=''> select bank	</option>
                                     {foreach from=$bankArray key=k item=v}
                                         <option value="{$k}" {if $bankId==$k}  selected="selected" {/if}>{$v}</option>
                                     {/foreach}
-                            	</select>
+                            	</select> 
                         	</td> 
                        
+
 	                        <td id = "plc1">
 	                            PLC
 	                        </td>
-	                                            
-	                        <td id="plc2" >
-	                          <label  for="one" style="font-size:11px;" style="text-align: top;">
-	                            Yes &nbsp;   
-	                              <input type="radio" id="plcy" name="plcy" value="1" /> 
-                                &nbsp;&nbsp;&nbsp;&nbsp; No &nbsp;
-	                              <input type="radio" id="plcn" name="plcn" value="2" checked="checked" />
-	                          </label>
+	                                        
+	                        <td id="plc4" >
+	                           <input type=text name="plc5" id="plc5" width="20px" style="text-align: left;">
 	                        </td> 
 	                         
-	                        <td>
-	                              <input type=text name="plc3" id="plc3" width="20px" style="text-align: left;">
-	                        </td>
+	                        
                       </tr>    
 
-                      <tr id="study_servant" style="display:none;">
-                          <td id = "study1">
-                              Study Room
+                      <tr id = "negotiable_id" style="position:absolute;left:300px;top:1240px">
+                          <td id ="tfr1" >
+                              Transfer Rate:     
                           </td>
-                                              
-                          <td width="200px" align="left" id="study" >
-                            <label  for="one" style="font-size:11px;">
-                              Yes &nbsp;   
-                                <input type="radio" id="yes_study" name="yes_study" value="1" /> 
-                                &nbsp;&nbsp; No &nbsp;
-                                <input type="radio" id="no_study" name="no_study" value="2" checked="checked" />
-                            </label>
+                          <td colspan="2">
+                              <input type=text name="tfr2" id="tfr2" style="width:100px">
                           </td>
 
-                          <td>
+                          <!-- <td width="110px" align="left" id="tfr_price" style="padding-left:-10px;" >
+                              <select name="transfer_sel" id="transfer_sel" style="height:28px;width:80px">
+		                                    <option value="0">Select</option>
+		                                    <option value="1">Lacs</option>
+		                                    <option value="2">Crs</option>  
+		                      </select> 
+                          </td> -->
 
-                          </td>
-
-                          <td id = "servant1">
-                              Servant Room
-                          </td>
-                                              
-                          <td width="200px" align="left" id="servant" >
-                            <label  for="one" style="font-size:11px;">
-                              Yes &nbsp;   
-                                <input type="radio" id="yes_servant" name="yes_servant" value="1" /> 
-                                &nbsp;&nbsp; No &nbsp;
-                                <input type="radio" id="no_servant" name="no_servant" value="2" checked="checked" />
-                            </label>
-                          </td>  
+                          
                       </tr>
+                      		<hr id = "line5" >
 
                       <tr id="discription1">
                         <td id = "discription4">
                             Description
                         </td> 
-                        <td id = "discription2" style="width:300px"> 
+                        <td id = "discription2" > 
                               <textarea type=text name="description3" id="description3" style="width:250px" >
                               </textarea>
                         </td>
@@ -1535,7 +2024,7 @@ function isNumeric(val) {
             			<tr>
                       <td width="400px"> </td>
 
-                    		<td align="left" style="padding-top:900px;" >
+                    		<td align="left" style="padding-top:1480px;" >
                        			<input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp;     
                        			<input type="button" name="exit_button" id="exit_button" value="Exit" style="cursor:pointer">                 
                     		</td>
@@ -1550,9 +2039,9 @@ function isNumeric(val) {
 
                     <div class="modal">Please Wait..............</div>
                     <div id="search-bottom">
-                    <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
+                    <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 id="listing_table" class="tablesorter">
                         <form name="form1" method="post" action="">
-                          <thead>
+                           <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=1% align="center">Serial</th>
                                   <th  width=5% align="center">City</th>
@@ -1569,113 +2058,42 @@ function isNumeric(val) {
                               
                           </thead>
                           <tbody>
-                                <!--<TR><TD colspan=12 class=td-border>&nbsp;</TD></TR>-->
-                                {$i=0}
-                                <!--{if isset($suburbId)}
-                                    {$type = DISPLAY_ORDER_SUBURB}
-                                {else if isset($localityId)}
-                                    {$type = DISPLAY_ORDER_LOCALITY}
-                                {else}
-                                    {$type = DISPLAY_ORDER}
-                                {/if}-->
-                                {foreach from=$resaleListings key=k item=v}
-                                    {$i=$i+1}
-                                    {if $i%2 == 0}
-                                      {$color = "bgcolor = '#F7F7F7'"}
-                                    {else}                            
-                                      {$color = "bgcolor = '#FCFCFC'"}
-                                    {/if}
-                                  <TR {$color}>
-                                    <TD align=center class=td-border>{$i} </TD>
-                                    <TD align=center class=td-border>{$v['val']->property->project->locality->suburb->city->label}</TD>
-                                    <TD align=center class=td-border>{$v['val']->seller->brokerName}</TD>
-                                    <TD align=center class=td-border>{$v['val']->property->project->name}, {$v['val']->property->project->builder->name}</TD>
-                                    <TD align=center class=td-border>{$v['val']->property->unitName}-{$v['val']->property->size}-{$v->val->property->unitType}
-                                    <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
-
-                                    </TD>
-                                    {if $v['val']->currentListingPrice->pricePerUnitArea != 0}
-                                    <TD align=center class=td-border>Price Per Unit Area - {$v['val']->currentListingPrice->pricePerUnitArea}</TD>
-                                    {else}
-                                    <TD align=center class=td-border>Price - {$v['val']->currentListingPrice->price}</TD>
-                                    {/if} 
-                                    <TD align=center class=td-border><button type="button" id="edit_button_{$v->id}" onclick="return editListing({$v['json']})" align="left">Edit</button></TD>
-                                
-                                  
-                                  
-                                    
-                                    
-                                    
-                                
-                                  </TR>
-                                {/foreach}
-                                <!--{$adjacents = 3}
-                                {$total_pages = 8}
-                                {$limit = 5}
-                                {$page = 3}
-                                { if $page > 0 }
-                                  { $start = ($page-1) * $limit }    
-                                { else }
-                                  { $start = 0 }
-                                
-                                { if ($page == 0) }
-                                  { $page = 1 }   
-                                
-                                { $prev = $page - 1 }              
-                                { $next = $page + 1 }            
-                                { $lastpage = ceil($total_pages/$limit) }   
-                                { $lpm1 = $lastpage - 1 } 
-                                { $pagination = "" }
-                                  { if($lastpage > 1) }
-                                      { $pagination = "<div class=\"pagination\">"; }
-                                        { if ($page > 1) }
-                                           { $pagination.= "<a href=\"$targetpage?page=$prev\">� previous</a>";}
-                                        { else }
-                                           { $pagination.= "<span class=\"disabled\">� previous</span>"; 
-                                                      
-                                                       
-                                            if ($lastpage < 7 + ($adjacents * 2)) 
-                                                      { 
-                                                        for ($counter = 1; $counter <= $lastpage; $counter++)
-                                                        {
-                                                          if ($counter == $page)
-                                                            $pagination.= "<span class=\"current\">$counter</span>";
-                                                          else
-                                                            $pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";         
-                                                        }
-                                                      }
-                                                      -->
+                               
+                               
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>
+                          
                           <tfoot>
-                                                        <tr>
-                                                            <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
-                                                                
-                                                                <button class="btn first"><i class="icon-step-backward"></i></button>
-                                                                <button class="btn prev"><i class="icon-arrow-left"></i></button>
-                                                                <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-                                                                <button class="btn next"><i class="icon-arrow-right"></i></button>
-                                                                <button class="btn last"><i class="icon-step-forward"></i></button>
-                                                                <select class="pagesize input-mini" title="Select page size">
-                                                                    <option value="10">10</option>
-                                                                    <option value="20">20</option>
-                                                                    <option value="50">50</option>
-                                                                    <option selected="selected" value="100">100</option>
-                                                                </select>
-                                                                <select class="pagenum input-mini" title="Select page number"></select>
-                                                            </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th >
-                                                            </th>
-                                                          
-                                                            
-                                                        </tr>
+                              <tr>
+                                <th>1</th> <!-- tfoot text will be updated at the same time as the thead -->
+                                <th>2</th>
+                                <th>3</th>
+                                <th>4</th>
+                                <th>5</th>
+                                <th>6</th>
+                                <th>7</th>
+                              </tr>
+                              <tr>
+                                <td class="pager" colspan="7">
+                                  <img src="tablesorter/addons/pager/icons/first.png" class="first"/>
+                                  <img src="tablesorter/addons/pager/icons/prev.png" class="prev"/>
+                                  <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+                                  <img src="tablesorter/addons/pager/icons/next.png" class="next"/>
+                                  <img src="tablesorter/addons/pager/icons/last.png" class="last"/>
+                                  <select class="pagesize">
+                                  <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                  </select>
+                                </td>
+                              </tr>
+                          </tfoot>
 
-                           </tfoot>
                         </form>
                     </TABLE>
+
                   </div>
+
                  </TD>
             </TR>
           </TBODY></TABLE>

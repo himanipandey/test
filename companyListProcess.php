@@ -34,6 +34,20 @@ $smarty->assign('devices', $devices);
 $bankArray = BankList::arrBank();
 $smarty->assign("bankArray",$bankArray);
 
+$sql = "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'bank_details' AND COLUMN_NAME = 'account_type'";
+$res = mysql_query($sql);
+$bankAccountType = array();
+while($data = mysql_fetch_assoc($res)){
+    preg_match_all("/'([\w ]*)'/", $data['COLUMN_TYPE'], $values);
+}
+$smarty->assign('bankAccountType', $values[1]);
+
+
+
+
+
+
+
 
 //print_r($transactionType);
 

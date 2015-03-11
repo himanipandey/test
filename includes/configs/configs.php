@@ -80,7 +80,7 @@ $smarty->assign("FORUM_PATH", FORUM_PATH);
 /*Forum paths ends*/
 /*ends*/
 
-$smarty->assign("proptiger_broker_id", '410');
+
 
 /*Added by siddharth for Forum Module Tables on 12th Jan 2012*/
 DEFINE("FUSER",FORUM_TABLE_PREFIX."USER");
@@ -106,6 +106,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 	define('OFFLINE_PROJECT_INTERNET_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME']."/images/");
 	define('OFFLINE_PROJECT_IMAGE_SAVE_PATH', $_SERVER['DOCUMENT_ROOT']."/images/");
 	//define('OFFLINE_PROJECT_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME']."/admin_cms/offlineproject/");
+	$smarty->assign("proptiger_broker_id", '410');
 }
 else
 {
@@ -113,6 +114,7 @@ else
 	define('OFFLINE_PROJECT_INTERNET_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/images/");
 	define('OFFLINE_PROJECT_IMAGE_SAVE_PATH', $_SERVER['DOCUMENT_ROOT'].$dirName."/images/");
 	//define('OFFLINE_PROJECT_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/admin_cms/offlineproject/");
+	$smarty->assign("proptiger_broker_id", '171');
 }
 
 define('OFFLINE_PROJECT_SERVER_PATH','');
@@ -463,6 +465,9 @@ define("DEF_PAGE_SIZE",10);
 define("SUBJECT_CREATE_ACCOUNT",'You have an account with PropTiger.com');
 define("FORGOT_PASSWORD_SUBJECT_CREATE_ACCOUNT",'You account detail of PropTiger.com');
 
+//define("proptiger_broker_id",'100');
+//$smarty->assign("proptiger_broker_id", "100");
+
 
 //define('SERVER_PATH','/opt/lampp/htdocs/proptiger');
 define('SERVER_PATH','.');
@@ -735,11 +740,20 @@ $smarty->assign("arrCommercialType",$arrCommercialType);
 $arrAllType = array("Shop","Office",'Other','Commercial');
 $smarty->assign("arrAllType",$arrAllType);
 
+
 $bankAccountType = array(
 	"1" => "Saving",
 	"2" => "Current",
 	);
 $smarty->assign("bankAccountType",$bankAccountType);
+
+/********config for crawling automation and youtube upload******************/
+$smarty->assign("lookup_table_update_url","http://54.151.224.235:8000/lookup/");
+$smarty->assign("resale_prices_update_url","http://54.151.224.235:8000/cms/");
+$smarty->assign("youtube_upload_url","http://54.151.224.235:8000/youtube/");
+
+$smarty->assign("arrAllType",$arrAllType);
+
 /********config for project type of residential/nonresidential******************/
 
 

@@ -66,6 +66,7 @@ jQuery(document).ready(function(){
     var web = $('#web').val();
 
     var img = $('#uploadedImage').val();
+    var sign_up_form = $('#uploadedSignUpForm').val();
     //var img = $(':file').val();
     var ipArr = [];
     $('input[name="ips[]"]').each(function() {
@@ -172,11 +173,11 @@ var device = [];
   $(".device").each(function(){
     if($(this).is(':checked')){
       var v = $(this).val();
-      var a = { id: "tt_db_id_"+v, val:v};
+      //var a = { id: "tt_db_id_"+v, val:v};
       device.push(v);
     }
   });
-  //console.log(transactionType);
+  console.log(device);
   var bd_id = $('#bd_id').val(); 
   var legalType = $('#compLegalType').children(":selected").val();
   var frating = $('#frating').children(":selected").val();
@@ -185,11 +186,13 @@ var device = [];
   var accountNo = $('#accountNo').val().trim();
   var accountType = $('#accountType').children(":selected").val();
   var ifscCode = $('#ifscCode').val().trim();
+  var bank_details = '';
+  if(bankId || accountNo || accountType || ifscCode)
+   bank_details = { bankId:bankId, accountNo:accountNo, accountType:accountType, ifscCode:ifscCode };
 
   var formSignUpDate = $('#img_date2').val(); 
   var signUpBranch = $('#signUpBranch :selected').val();
 
-  var device = $('#device').children(":selected").val();
   var since_op = $('#img_date1').val(); 
   var stn = $('#stn').val();
   var officeSize = $('#officeSize').val();
@@ -202,7 +205,7 @@ var device = [];
    
   //var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
 
-  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, bankId:bankId, accountNo:accountNo, accountType:accountType, ifscCode:ifscCode, formSignUpDate:formSignUpDate, signUpBranch:signUpBranch, device:device, since_op:since_op, ptManager:ptManager, ptRelative:ptRelative };
+  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, formSignUpDate:formSignUpDate, signUpBranch:signUpBranch, device:device, since_op:since_op, ptManager:ptManager, ptRelative:ptRelative };
 
   if (broker_info_type=="Advance"){
     //valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
@@ -219,7 +222,7 @@ var device = [];
     
    //var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
 
-   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, contact_person_data:contact_person_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, signUpForm:sign_up_form, imageId:imgId, ipArr : ipArr, contact_person_data:contact_person_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, bank_details:bank_details, task : "createComp", mode:mode}; 
 
 /******************************validation****************************************/    
 
@@ -279,10 +282,10 @@ var device = [];
     }
 
     if(email != '' && !validateEmail(email)){
-	  $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
+	   $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
       $("#email").focus();
       error = 1;	
-	}
+	  }
 
     /*if(compphone==''){
       $('#errmsgcompphone').html('<font color="red">Please provide an Office Phone no.</font>');
@@ -376,14 +379,14 @@ var device = [];
                 console.log("msg"+msg);
 				        if(msg == 1){
 	               
-	               location.reload(true);
+	               //location.reload(true);
                  $(window).scrollTop(0);
 	                //$("#onclick-create").text("Landmark Successfully Created.");
 	               }
 	               else if(msg == 2){
 	                //$("#onclick-create").text("Landmark Already Added.");
 	                   
-	                   location.reload(true); 
+	                   //location.reload(true); 
 	               }
 	               else if(msg == 3){
 	                //$("#onclick-create").text("Error in Adding Landmark.");
@@ -791,21 +794,40 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
       }
     });
 
+    var devices = a.data.devices;
+    $(".device").each(function(){
+      for(var i=0; i<devices.length; i++){
+         if( $(this).val()==devices[i].device_id ){
+          $(this).prop('checked', true);
+          //$("#tt_db_id_"+$(this).val()).val(tT[i].id);
+        }
+      }
+    });
+
   var bD = a.data.broker_details; 
   $('#bd_id').val(bD.id);
   $('#compLegalType').val(bD.legal_type);
   $('#frating').val(bD.rating);
   //$('#stn').val(bD.service_tax_no);
-  //$('#officeSize').val(bD.office_size);
+  //$('#officeSize').val(bD.office_size); 
   //$('#employeeNo').val(bD.employee_no);
   $('#ptManager').val(bD.pt_manager_id);
   $('#ptRelative').val(bD.pt_relative_id);
-  $('#device').val(bD.primary_device_used);
+  $('#img_date2').val(bD.form_signup_date);
+  $('#signUpBranch').val(bD.form_signup_branch);
+  //$('#device').val(bD.primary_device_used);
 
   if(bD.pt_relative_id>0){
     $("#relative_yes").prop("checked", true);
     $("#ptRelative").show();
   }
+
+  var bankDetails = a.data.bank_details; 
+  //$('#bd_id').val(bD.id);
+  $('#bankName').val(bankDetails.bank_id);
+  $('#accountNo').val(bankDetails.account_no);
+  $('#accountType').val(bankDetails.account_type);
+  $('#ifscCode').val(bankDetails.ifsc_code);
 
 
 
@@ -909,6 +931,7 @@ function validateEmail(email)
 
 jQuery(function(){
                 iframeUpload.init();
+                iframeUploadSignUpForm.init();
             });
 
 
@@ -937,6 +960,39 @@ var iframeUpload = {
             else{
               $("#errmsglogo").html('<font color="red">Image Upload Failed.</font>');
               $("#imgUploadStatus").val("0");
+            }
+            
+        }
+        
+    }
+};
+
+
+
+var iframeUploadSignUpForm = {
+    init: function() {
+        jQuery('#uploadSignUpForm').append('<iframe name="uploadiframeSignup" onload="iframeUploadSignUpForm.complete();"></iframe>');
+        jQuery('form.uploadSignUpForm').attr('target','uploadiframeSignup');
+        //jQuery(document).on('submit', 'form.uploadForm', iframeUpload.started);
+    },
+    started: function() {
+        jQuery('#response').removeClass().addClass('loading').html('Loading, please wait.').show();
+        jQuery('#uploadSignUpForm').hide();
+    },
+    complete: function(){
+        jQuery('#uploadSignUpForm').show();
+        var response = jQuery("iframe").contents().text();
+        if(response){
+            response = jQuery.parseJSON(response);
+            if(response.status == 1){
+              $("#errmsgsignupform").html('<font color="green">Image Successfully Uploaded.</font>');
+              $("#signUpFormUploadStatus").val("1");
+              $("#uploadedSignUpForm").val(response.image);
+
+            }
+            else{
+              $("#errmsgsignupform").html('<font color="red">Image Upload Failed.</font>');
+              $("#signUpFormUploadStatus").val("0");
             }
             
         }
@@ -2159,7 +2215,7 @@ function basic_info_bt_clicked(){
                              <select name="accountType" id="accountType" height="5px" width="200px" >
                                   <option value=''> select </option>
                                     {foreach from=$bankAccountType key=k item=v}
-                                        <option value="{$k}">{$v}</option>
+                                        <option value="{$v}">{$v}</option>
                                     {/foreach}
                               </select>
                           </td>
@@ -2195,13 +2251,25 @@ function basic_info_bt_clicked(){
                           <td width="20%" align="left" id="errmsgsignupbranch"></td>
                         </tr>
 
-                        <tr class="broker_basic_extra">
+                        <!-- <tr class="broker_basic_extra">
                           <td width="20%" align="right" valign="top">Upload Signup Form Soft Copy: </td>
                           <td width="30%" align="left">
                              <input type="file" name='signUpForm' id="signUpForm" >
                           </td>
                           <td width="20%" align="left" id="errmsgsignupform"></td>
-                        </tr>
+                        </tr> -->
+
+                        </form>
+                        <form action="saveCompanyLogo.php" target="uploadiframeSignup" name="uploadSignUpForm" id="uploadSignUpForm" method="POST" enctype = "multipart/form-data">
+                          <tr>
+                            <td width="20%" align="right" >Upload Signup Form Soft Copy: </td>
+                            <td width="30%" align="left"><input type="file" name='signUpForm' id="signUpForm" ><input type="hidden" name='signUpFormUploadStatus' id="signUpFormUploadStatus" value="0"><input type="hidden" name='uploadedSignUpForm' id="uploadedSignUpForm" value=""><input type="submit" id="uploadSignUp" value="uploadSignUp" name="submit"></td> <td width="20%" align="left" id="errmsgsignupform"></td>
+                          </tr>
+                          
+
+                        </form>
+                        
+                        <form>
 
                         <tr class="broker_basic_extra">
                           <td colspan="3" align="left" ><hr><b></b></td>

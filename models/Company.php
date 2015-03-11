@@ -189,7 +189,7 @@ class Company extends ActiveRecord\Model
 
 /********************************broker details*******************************************/
             //$broker_details = array();
-            $sql = "SELECT id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used FROM broker_details WHERE broker_id='{$v->id}' ";
+            $sql = "SELECT id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch FROM broker_details WHERE broker_id='{$v->id}' ";
             $result = self::Connection()->query($sql);
             $broker_details = $result->fetch(PDO::FETCH_ASSOC);
 
@@ -206,6 +206,17 @@ class Company extends ActiveRecord\Model
             $transac_type = array();
             while($data = $result->fetch(PDO::FETCH_ASSOC)){
                 array_push($transac_type, $data);
+            }
+
+            $sql = "SELECT id, bank_id, account_no, account_type, ifsc_code FROM bank_details WHERE (table_name='company' and table_id='{$v->id}') ";
+            $result = self::Connection()->query($sql);
+            $bank_details = $result->fetch(PDO::FETCH_ASSOC);
+
+            $sql = "SELECT id, device_id FROM device_mappings WHERE (table_name='company' and table_id='{$v->id}') ";
+            $result = self::Connection()->query($sql);
+            $devices = array();
+            while($data = $result->fetch(PDO::FETCH_ASSOC)){
+                array_push($devices, $data);
             }
             //$cust_care['phone'] = $ph['contact_no'];transac_type
             //$cust_care['phone_id'] = $ph['id'];
@@ -239,6 +250,22 @@ class Company extends ActiveRecord\Model
                 }
             }
             $arr['active_since'] = $active_since;
+
+            $form_signup_date = $broker_details['form_signup_date'];
+            if(strlen($form_signup_date) > 0){
+                if(strlen($form_signup_date) < 20 ){
+                    $form_signup_date = substr($form_signup_date, 0, 10);
+                    $form_signup_date = strtotime($form_signup_date);
+                    $form_signup_date = date("Y:m:d", $form_signup_date);
+                  
+                }
+                else{
+                    $form_signup_date = substr($form_signup_date, 0, -5);
+                    $form_signup_date = strtotime($form_signup_date);
+                    $form_signup_date = date("Y:m:d", $form_signup_date);
+                }
+            }
+            $broker_details['form_signup_date'] = $form_signup_date;
             $arr['web'] = $v->website;
 
             $arr['address'] = $address_hq_row['address_line_1'];
@@ -261,7 +288,8 @@ class Company extends ActiveRecord\Model
             $extra['broker_details'] = $broker_details;
             $extra['broker_prop_type'] = $broker_prop_type;
             $extra['transac_type'] = $transac_type;
-
+            $extra['devices'] = $devices;
+            $extra['bank_details'] = $bank_details;
             $arr['extra'] = $extra;
             $arr['extra_json'] = htmlentities('{"data":'.json_encode($extra).'}');
             $arr['city_name'] = $city[0];
