@@ -29,7 +29,8 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	$txtOrderDate = trim($_POST['txtOrderDate']);
 	$orderType = trim($_POST['orderType']);
 	$txtOrderDur = trim($_POST['txtOrderDur']);
-	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+//	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryOrderDate']);
 	$txtOrderAmt = trim($_POST['txtOrderAmt']);
 	$txtExpiryOrderDate = trim($_POST['txtExpiryOrderDate']);
 	$txtPaymentMethod = $_POST['txtPaymentMethod'];
@@ -56,9 +57,11 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	$all_locs = trim($_POST['all_locs']);	
 	$all_locs = ($all_locs)?explode(",",$all_locs):'';	
 	
+        $subs_status = trim($_POST['status']);
+
 	CompanyOrder::transaction(function(){
 	  	
-	  global $order_id,$txtCompId,$orderName,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserName, $txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$txtSubsUserOtp,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
+	  global $order_id,$txtCompId,$orderName,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserName, $txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$txtSubsUserOtp,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray,$subs_status;
 	
 	  try{
 		  
@@ -70,7 +73,8 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 		  
 		  
 		  #Company Subcription
-		  $res = mysql_query("INSERT INTO `proptiger`.`company_subscriptions` (`id`,`company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`) VALUES (NULL, '".$txtCompId."', '".$_SESSION['adminId']."', '".$expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."')");
+                  $sqlInsert="INSERT INTO `proptiger`.`company_subscriptions` (`id`,`company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`, `status`) VALUES (NULL, '".$txtCompId."', '".$_SESSION['adminId']."', '".$expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."', '".$subs_status."')";
+		  $res = mysql_query($sqlInsert);
 		  
 		  $subs_id = mysql_insert_id();
 		  
@@ -84,7 +88,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 		  $company_order->order_date = $txtOrderDate;
 		  if($orderType == 'trial'){
 			 $company_order->order_expiry_date = $txtExpiryTrialOrderDate; 
-			 $company_order->trial_duration =  $txtOrderDur;
+			 $company_order->trial_duration =  '';
 			 $company_order->order_amount =  '';
 		  }
 		  if($orderType == 'paid'){
@@ -199,8 +203,10 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             		);
 
             $url = USER_API_URL;
+//            $url = 'https://qa.proptiger-ws.com/app/v1/register';
             //echo $post;
             $response = curl_request(json_encode($post), 'POST', $url);
+            
             if($response['statusCode']=="2XX"){
             	//echo "here";
               $userId = $response['id'];
@@ -279,7 +285,8 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	$txtOrderDate = trim($_POST['txtOrderDate']);
 	$orderType = trim($_POST['orderType']);
 	$txtOrderDur = trim($_POST['txtOrderDur']);
-	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+//	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryOrderDate']);
 	$txtOrderAmt = trim($_POST['txtOrderAmt']);
 	$txtExpiryOrderDate = trim($_POST['txtExpiryOrderDate']);
 	
@@ -307,12 +314,14 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	$txtSubsUserOtp = $_POST['txtSubsUserOtp'];
 	$pmtNo = trim($_POST['pmtNo']);
 	$userNo = trim($_POST['userNo']);
-	$all_locs = trim($_POST['all_locs']);	
-	$all_locs = ($all_locs)?explode(",",$all_locs):'';	
+	$all_locs = trim($_POST['all_locs']);
+	$all_locs = ($all_locs)?explode(",",$all_locs):'';
 	
+        $subs_status = trim($_POST['status']);
+        
 	CompanyOrder::transaction(function(){
 	  	
-	  global $orderId,$orderName,$subs_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen, $txtSubsUserName,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup, $txtSubsUserOtp, $pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
+	  global $orderId,$orderName,$subs_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen, $txtSubsUserName,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup, $txtSubsUserOtp, $pmtNo,$userNo,$all_locs,$error_flag,$cityArray,$subs_status;
 	
 	  try{
 		  $expiry_date='';
@@ -322,7 +331,8 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 		    $expiry_date = $txtExpiryOrderDate;
 		    
 		    #Company Subcription
-		  $res = mysql_query("UPDATE `proptiger`.`company_subscriptions` SET `expiry_time`='".$expiry_date."' WHERE id='".$subs_id."'");
+                  $sqlUpdate = "UPDATE `proptiger`.`company_subscriptions` SET `expiry_time`='".$expiry_date."', `status`='".$subs_status."' WHERE id='".$subs_id."'";
+		  $res = mysql_query($sqlUpdate);
 		  		    
 		  #company Orders
 		  $company_order = CompanyOrder::find($orderId);
@@ -334,7 +344,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 		  $company_order->order_date = $txtOrderDate;
 		  if($orderType == 'trial'){
 			 $company_order->order_expiry_date = $txtExpiryTrialOrderDate; 
-			 $company_order->trial_duration =  $txtOrderDur;
+			 $company_order->trial_duration =  '';
 			 $company_order->order_amount =  '';
 		  }
 		  if($orderType == 'paid'){
@@ -525,6 +535,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
             		);
             
             $url = USER_API_URL;
+//            $url = 'https://qa.proptiger-ws.com/app/v1/register';
             //echo $post;
             $response = curl_request(json_encode($post), 'POST', $url);
             if($response['statusCode']=="2XX"){
@@ -593,6 +604,7 @@ if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o'
 	 $smarty->assign('txtExpiryTrialOrderDate',$order_details['order_expiry_date']);
 	 $smarty->assign('txtExpiryOrderDate',$order_details['order_expiry_date']);
 	 $smarty->assign('txtOrderAmt',$order_details['order_amount']);
+	 $smarty->assign('subscription_status',$order_details['subscription_status']);
 	
 	 //payment
 	 $smarty->assign('txtPaymentDetails',$order_details['payment_details']);	 
