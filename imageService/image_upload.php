@@ -48,7 +48,7 @@ class ImageUpload{
     }
 
     function upload(){
-        $this->validate();
+        //$this->validate();
        
         //$service_object = $this->upload_service();
         //return array("service" => $service_object);
@@ -56,7 +56,7 @@ class ImageUpload{
     }
 
     function update(){
-        $this->validate();
+        //$this->validate();
         $options = $this->options;
         //$s3_object = $this->upload_s3();
         //print'<pre>';print_r($options); 

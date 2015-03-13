@@ -29,7 +29,6 @@ if($_POST['task']=='office_locations'){
     while ($data = mysql_fetch_assoc($res)) {
         $html .= "<option value='".$data['locality_id']."' >".$data['label']."</option>";
      }
-
                                       
     echo $html;
 }
@@ -121,7 +120,6 @@ if($_POST['task']=='find_project_builder'){
 }
 
 if($_POST['task']=='createComp'){ 
-
 
 
     $id = $_POST['id'];
@@ -219,25 +217,25 @@ if($_POST['task']=='createComp'){
         //var_dump($fileinfo);
         $imgtype = explode(";", $fileinfo);
         $imgParams = array();
-        $imgParams['name']= $image;
+        $imgParams['name'] = $signUpForm;
         $imgParams['type'] = $imgtype[0];
 
         $params = array(
-                        "image_type" => "logo",
+                        "image_type" => "companySignupForm",
                         "folder" => "company/",
-                        "image" => $image,
+                        "image" => $signUpForm,
                         "title" => $name,
                         "altText" => $altText,
                         
         );
 
-        $dest       =   $newImagePath."company/".$image;
+        $dest       =   $newImagePath."company/".$signUpForm;
         $postArr = array();
-        $unitImageArr = array();
-        $unitImageArr['img'] = $imgParams;
-        $unitImageArr['objectType'] = "company";
-        $unitImageArr['newImagePath'] = $newImagePath;
-        $unitImageArr['params'] = $params;  
+        $signUpArr = array();
+        $signUpArr['img'] = $imgParams;
+        $signUpArr['objectType'] = "company";
+        $signUpArr['newImagePath'] = $newImagePath;
+        $signUpArr['params'] = $params;  
             
 
     }
@@ -497,11 +495,22 @@ if($_POST['task']=='createComp'){
 /****************** save images to Image Service ************************************************/
 
                
-                if(isset($_POST['image']) && $image!=""){                   
+                                  
                     $unitImageArr['objectId'] = $id;
                     $unitImageArr['params']['service_image_id'] = $imageId;
                     $unitImageArr['params']['update'] = "update";
-                    $postArr[] = $unitImageArr;         
+                     
+                if(isset($_POST['image']) && $image!=""){ 
+                    array_push($postArr, $unitImageArr);
+                }
+                    $signUpArr['objectId'] = $id;
+                    $signUpArr['params']['service_image_id'] = $imageId;
+                    $signUpArr['params']['update'] = "update";
+                if(isset($_POST['signUpForm']) && $signUpForm!=""){ 
+                    array_push($postArr, $signUpArr);
+                }
+                
+                if(!empty($postArr)){         
                     $response   = writeToImageService($postArr);
                     //print_r($response); die;
                     foreach ($response as $k => $v) {            
@@ -515,6 +524,8 @@ if($_POST['task']=='createComp'){
                             echo $Error;
                         }
                     }
+
+
                 }
             //}
 

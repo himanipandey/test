@@ -70,6 +70,8 @@ class Company extends ActiveRecord\Model
    
     static function getCompanyOtherDetails($companyDetail){
         $returnArr = array();
+        $returnArr['table_rows'] = array();
+        $k = 0;
         foreach ($companyDetail as $v) {
             $sql = "SELECT id, address_line_1, city_id, pincode FROM addresses WHERE (table_name='company' and table_id={$v->id} and type='HQ')";
             $result = self::Connection()->query($sql);
@@ -303,8 +305,28 @@ class Company extends ActiveRecord\Model
             */
             //$arr['city'] = $v->city;
 
+            $cont_person_str = "";
+            //print("<pre>");
+            //print_r($cont_person_row); 
+            foreach ($cont_person_row as $k1 => $v1) {
+                $cont_person_str .= $v1['person']." &nbsp;Contact No.-".$v1['phone1'];
+            }
+
+
+            $rows = array(
+                                            "Serial" => $start+$k+1,
+                                            "Type" => $v->type,
+                                            "Name" => $v->name,
+                                            "Address" => $arr['address']." City-".$arr['city_name']." Pin-".$arr['pin']." Ph.N.-".$arr['compphone'], 
+                                            "ContactPerson" => $cont_person_str,
+                                            "Status" =>  $arr['status'],
+                                            "Edit" => json_encode($arr),
+                        );
+            array_push($returnArr['table_rows'], $rows);
 
             array_push($returnArr, $arr);
+
+            $k++;
 
         }
 
