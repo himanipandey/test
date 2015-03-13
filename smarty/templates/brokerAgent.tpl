@@ -293,6 +293,8 @@ function editAgent(brokerId,id, user_id, name,role,status, email, address, city,
     cleanFields();
     $("#broker").val(brokerId);
     $("#agentId").val(id);
+    $("#agent_id").val(id);
+    $("#agent_id_tr").show();
     $("#userId").val(user_id);
     $('#city').val(city);
     $("#role").val(role);
@@ -368,6 +370,9 @@ function cleanFields(){
     $('#errmsgpincode').html('');
     //$('#errmsgfax').html('');
     $('#errmsgcompphone').html('');
+    $('#agent_id_tr').hide();
+    $('#agent_id').val("");
+
     //$('.errmsgip').each(function() {
       //$(this).html('');
     //});
@@ -439,6 +444,12 @@ function cleanFields(){
                       <td width="10%" align="right" ><font color = "red">*</font>Agent Name : </td>
                       <td width="40%" align="left" ><input type=text name="name" id="name"  style="width:250px;"></td><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="agentId"><input type="hidden", id="userId"></td>
+                    </tr>
+
+                    <tr style="display:none" id="agent_id_tr">
+                      <div class="ui-widget">
+                      <td width="10%" align="right" ><font color = "red"></font>Agent Id : </td>
+                      <td width="40%" align="left" ><input type=text name="name" class="" id="agent_id" readonly="readonly" style="width:250px;" ></td> </div><td width="40%" align="left" id=" "></td>
                     </tr>
 
                     <tr>

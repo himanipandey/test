@@ -1,6 +1,7 @@
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="tablesorter/css/pager-ajax.css">
 <script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script> 
 <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
 <script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
@@ -12,6 +13,48 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+
+
+<style>
+  /*  css for ajax loader
+  */
+
+
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        40%;
+    left:       60%;
+    height:     20%;
+    width:      20%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+    
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+</style>
+
+
 
 {literal}
 <script language="javascript">
@@ -241,10 +284,20 @@ selProject = $("#selProjId").val();*/
 
 });
 
+//js for loading
 
+$body = $("body");
+  
+  $(document).on({
+      ajaxStart: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);
+  },
+       ajaxStop: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);
+    }  
 
+     
+  });
 
-
+//save form
 
 	$("#lmkSave").click(function(){
 		var compType = $('#companyTypeEdit').children(":selected").val();
@@ -571,26 +624,30 @@ var device = [];
 
 
    
-
+var $body = $("body");
 	    if (window.error==0){
       
 	      	$.ajax({ 
 	            type: "POST",
 	            url: "/saveCompany.php",
 	            data: data,
+              beforeSend: function(){
+                console.log('in ajax beforeSend');
+                $("body").addClass("loading");
+              },
               
 	            success:function(msg){
                 console.log("msg"+msg);
+                $("body").removeClass("loading");
 				        if(msg == 1){
-	               
-	               //location.reload(true);
+	               location.reload(true);
                  $(window).scrollTop(0);
 	                //$("#onclick-create").text("Landmark Successfully Created.");
 	               }
 	               else if(msg == 2){
 	                //$("#onclick-create").text("Landmark Already Added.");
 	                   
-	                   //location.reload(true); 
+	                   location.reload(true); 
 	               }
 	               else if(msg == 3){
 	                //$("#onclick-create").text("Error in Adding Landmark.");
