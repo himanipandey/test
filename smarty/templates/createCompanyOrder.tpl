@@ -154,6 +154,17 @@
 				  {/if}
 				  </td> {if $ErrorMsg["txtExpiryOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtExpiryOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
+                                
+                                <tr>
+				  <td width="20%" align="right" >Subscription Status</td>
+				  <td width="30%" align="left">
+                                      <select id="subs_status"  name="status">
+                                          <option value="Active" {if $subscription_status=='Active'}selected{/if}>Active</option>
+                                          <option value="Inactive" {if $subscription_status=='Inactive'}selected{/if}>Inactive</option>
+                                      </select>
+                                  </td>
+				  <td width="50%" align="left" ></td>
+				</tr>
 				
 				<tr class="paid_order">
 				  <td width="20%" align="right" ><b>Payment Details</b> : </td>
@@ -360,17 +371,6 @@
 					   {/for}
 				  </td>
 				  <td width="20%" align="right" >&nbsp;</td>
-				</tr>
-                                
-                                <tr>
-				  <td width="20%" align="right" >Subscription Status</td>
-				  <td width="30%" align="left">
-                                      <select id="subs_status"  name="status">
-                                          <option value="Active" {if $subscription_status=='Active'}selected{/if}>Active</option>
-                                          <option value="Inactive" {if $subscription_status=='Inactive'}selected{/if}>Inactive</option>
-                                      </select>
-                                  </td>
-				  <td width="50%" align="left" ></td>
 				</tr>
 				
 				<tr>
