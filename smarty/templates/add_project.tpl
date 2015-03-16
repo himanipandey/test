@@ -956,6 +956,14 @@
             showsTime	  :	true
         });
     });
+    $(document).ready(function(){
+        $("#btnSave").click(function(){
+            if($("#f_date_c_prom").val() == '0000-00-00'){
+                alert('Invalid Promised Completion Date:');
+                return false;
+            }
+        });
+    });
     
     //@jitendra pathak
     $.widget( "custom.catcomplete", $.ui.autocomplete, {   
