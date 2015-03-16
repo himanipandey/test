@@ -47,7 +47,7 @@ class ProjectAvailability extends Model {
     
     public static function getAvailability($supplyId){
 		
-            $sql = "select availability from ".self::table_name()." where  project_supply_id ='".$supplyId."' order by `effective_month` desc limit 1";
+            $sql = "select availability from ".self::table_name()." where  project_supply_id ='".$supplyId."' order by `effective_month` desc limit 1"; die($sql);
             $res = self::find_by_sql($sql);
             if($res)
                     return $res[0]->availability;
@@ -55,6 +55,18 @@ class ProjectAvailability extends Model {
                     return 0;
 		
 	}
+
+    public static function getAllAvailabilitiesForSupply($supplyId){
+        
+            $sql = "select max(availability) as availability from ".self::table_name()." where  project_supply_id ='".$supplyId."' ";
+            $res = self::find_by_sql($sql);
+            if($res)
+                    return $res[0]->availability;
+            else
+                    return 0;
+            return $res;
+        
+    }
 
     public static function copyProjectInventoryToWebsite($projectId, $updatedBy){
         $result = array();
