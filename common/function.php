@@ -552,4 +552,22 @@ function replaceSpaces($string){
 	return $output;
 }
 
-
+/*
+ * Author : Jitendra pathak
+ * Purpose : debugging and formatted output
+ */
+function pr($data){
+    echo "<pre>";
+    print_r($data);
+    echo "<pre>";
+}
+/*
+ * Author : Jitendra pathak
+ * Purpose : debug and die and formatted output
+ */
+function prd($data){
+    echo "<pre>";
+    print_r($data);
+    echo "<pre>";
+    die;
+}

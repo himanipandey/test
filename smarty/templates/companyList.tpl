@@ -631,11 +631,14 @@ var $body = $("body");
 	            type: "POST",
 	            url: "/saveCompany.php",
 	            data: data,
+
               beforeSend: function(){
                 console.log('in ajax beforeSend');
                 $("body").addClass("loading");
+                $("#lmkSave").attr('disabled','disabled');
               },
               
+
 	            success:function(msg){
                 console.log("msg"+msg);
                 $("body").removeClass("loading");
@@ -652,15 +655,22 @@ var $body = $("body");
 	               else if(msg == 3){
 	                //$("#onclick-create").text("Error in Adding Landmark.");
 	                   alert("error");
+                           $("#lmkSave").removeAttr('disabled');
 	               }
 	               else if(msg == 4){
 	                //$("#onclick-create").text("No Landmark Selected.");
 	                   alert("no data");
+                           $("#lmkSave").removeAttr('disabled');
 	               }
 	               else if(msg == 9){
 	                  alert("Company with Same Contact Email Already Exist!");
+                          $("#lmkSave").removeAttr('disabled');
 	               }
-	               else alert(msg);
+	               else{ 
+                           alert(msg);
+                           $("#lmkSave").removeAttr('disabled');
+                       };
+                       
 	            },
 	        });
 

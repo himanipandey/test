@@ -12,6 +12,19 @@ function refreshother(ct)
         document.getElementById(id).style.display='';
     }		
 }
+$(document).ready(function(){
+    $('#rdo_club_yes').change(function(){
+        $("#rdo_club_area_yes").attr('checked','checked');
+        $("#rdo_club_area_no").removeAttr('checked');
+        $('.club-area-input').val('');
+    });
+    $('#rdo_club_no').change(function(){
+        $("#rdo_club_area_no").attr('checked','checked');
+        $("#rdo_club_area_yes").removeAttr('checked');
+        $('.club-area-input').val('');
+    });
+});
+
 </script>
   <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
@@ -57,19 +70,45 @@ function refreshother(ct)
 							
 							{foreach from=$AmenitiesArr key=k item=v} 
 								{if $k != 99}
-								<tr>
-                                                                    <td  align="right">{$v}</td>
+                                                                    {if $v=='Club House'}
+                                                                       <tr>
+                                                                            <td  align="right">{$v}</td>
 
-                                                                    {if array_key_exists($k,$arrNotninty)}
-                                                                       <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'   checked='checked'/> Yes </td>
-                                                                       <td> <input type='radio' name="{$v}#{$k}" value='0'/> No   </td>
-                                                                       <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" ></td>	
-                                                                    {else}
-                                                                       <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
-                                                                       <td> <input type='radio' name="{$v}#{$k}" value='0'  checked='checked'/> No   </td>
-                                                                       <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" ></td>	
-                                                                    {/if}		 
-								</tr>
+                                                                            {if array_key_exists($k,$arrNotninty)}
+                                                                               <td  width="10%"><input id="rdo_club_yes" type='radio' name="{$v}#{$k}" value='{$k}'   checked='checked'/> Yes </td>
+                                                                               <td> <input id="rdo_club_no" type='radio' name="{$v}#{$k}" value='0'/> No   </td>
+                                                                               <td width> 
+                                                                                   <input type= "text" name = "display_name_{$k}[]"  style="width:150px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" >
+                                                                                   <label class="club-area-cont">Club House Area</label>
+                                                                                   <input type= "number" name = "club_house_area" class="club-area-input"  style="width:150px;" maxlength = "100" value = "{$clubHouseArea}" >
+                                                                                   
+                                                                               </td>
+                                                                            {else}
+                                                                               <td  width="10%"><input id="rdo_club_yes" type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
+                                                                               <td> <input id="rdo_club_no" type='radio' name="{$v}#{$k}" value='0'  checked='checked'/> No   </td>
+                                                                               <td> 
+                                                                                   <input type= "text" name = "display_name_{$k}[]"  style="width:150px;" maxlength = "100" >
+                                                                                   <label class="club-area-cont">Club House Area</label>
+                                                                                   <input type= "number" name = "club_house_area" class="club-area-input"  style="width:150px;" maxlength = "100" value = "{$clubHouseArea}" >
+                                                                               </td>
+                                                                            {/if}		 
+                                                                        </tr> 
+                                                                     
+                                                                        {continue}
+                                                                     {/if}
+                                                                    <tr>
+                                                                        <td  align="right">{$v}</td>
+
+                                                                        {if array_key_exists($k,$arrNotninty)}
+                                                                           <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'   checked='checked'/> Yes </td>
+                                                                           <td> <input type='radio' name="{$v}#{$k}" value='0'/> No   </td>
+                                                                           <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" value = "{if !in_array($arrNotninty[$k],$AmenitiesArr)}{$arrNotninty[$k]}{/if}" ></td>	
+                                                                        {else}
+                                                                           <td  width="10%"><input type='radio' name="{$v}#{$k}" value='{$k}'/> Yes </td>
+                                                                           <td> <input type='radio' name="{$v}#{$k}" value='0'  checked='checked'/> No   </td>
+                                                                           <td> <input type= "text" name = "display_name_{$k}[]"  style="width:357px;" maxlength = "100" ></td>	
+                                                                        {/if}		 
+                                                                    </tr>
 								{/if}
 							 {/foreach}
 							 <tr>
