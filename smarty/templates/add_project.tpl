@@ -919,5 +919,17 @@
             showsTime	  :	true
         });
     });
+    $(document).ready(function(){
+        $("#btnSave").click(function(){
+            if($("#exp_f_date_c_to").val() == '0000-00-00'){
+                alert('Invalid Expected Supply Date');
+                return false;
+            }
+            if($("#f_date_c_prom").val() == '0000-00-00'){
+                alert('Invalid Promised Completion Date:');
+                return false;
+            }
+        });
+    });
     
 </script>
