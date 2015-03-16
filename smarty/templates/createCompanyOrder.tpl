@@ -572,21 +572,7 @@ jQuery(document).ready(function(){
 		 alert("Order Amount is required.");
 		 return false;   
 	   }	
-	   if($('#txtExpiryOrderDate').val() == ''){
-		 alert("Expiry Date is required.");
-		 return false;   
-	   } 
-	   if($('#txtExpiryOrderDate').val() != ''){
-		date = $('#txtExpiryOrderDate').val();		
-		d1 = new Date(date).toDateString();		
-		d2 = new Date(orderDate).toDateString();
-		d1 = new Date(d1);
-		d2 = new Date(d2);
-		if(d1<d2){
-		  alert("Order Expiry Date must greater than the Order Date.");		 
-		  return false;
-		}
-	  }	
+	   
 	   
 	   if(pmt_detail.length == 0){
 		 alert("Payment Details required.");  
@@ -604,7 +590,23 @@ jQuery(document).ready(function(){
 			return false;			
 		  }  	    
 	  });		  
-	} 	
+	}
+        
+        if($('#txtExpiryOrderDate').val() == ''){
+		 alert("Expiry Date is required.");
+		 return false;   
+        } 
+        if($('#txtExpiryOrderDate').val() != ''){
+             date = $('#txtExpiryOrderDate').val();
+             d1 = new Date(date).toDateString();
+             d2 = new Date(orderDate).toDateString();
+             d1 = new Date(d1);
+             d2 = new Date(d2);
+             if(d1<d2){
+               alert("Order Expiry Date must greater than the Order Date.");		 
+               return false;
+             }
+	  }
 	
 	if(errFlagPmt != ''){
 	  alert(errFlagPmt);
