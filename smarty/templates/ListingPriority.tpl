@@ -409,7 +409,10 @@ selProject = $("#selProjId").val();*/
       widthFixed: true,
       sortLocaleCompare: true, // needed for accented characters in the data
       sortList: [ [0,1] ],
-      widgets: ['zebra', 'filter']
+      widgets: ['zebra'],
+      widgetOptions : {
+        filter_serversideFiltering : false,
+      } 
     })
 
     //before initialize
@@ -450,7 +453,7 @@ selProject = $("#selProjId").val();*/
       customAjaxUrl: function(table, url) {
           // manipulate the url string as you desire
            url += '&city=' + $("#citydd :selected").val();  
-           if($("#project_search").val().trim()!='')
+           //if($("#project_search").val().trim()!='')
             url += '&project=' + $("#selProjId").val(); 
           // trigger my custom event
           $(table).trigger('changingUrl', url);

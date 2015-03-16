@@ -120,7 +120,9 @@ class ImageServiceUpload{
             "sportscomplex" => "sportsComplex"
         ),
         "bank" => array("logo" => "logo"),
-        "company" => array("logo" => "logo"),
+        "company" => array("logo" => "logo",
+                "companysignupform" => "companySignupForm"
+            ),
         "listing" => array(
             "bedroom"=> "Bedroom",
             "bathroom"=>"Bathroom",
@@ -131,6 +133,8 @@ class ImageServiceUpload{
             "other"=> "Other",
             ),
     );
+
+    static $document_types = array("3d_floor_plan", "companysignupform");
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;
@@ -148,8 +152,8 @@ class ImageServiceUpload{
     }
 
     function upload(){
-
-        if($this->image_type == '3d_floor_plan'){
+        
+        if(in_array($this->image_type,  static::$document_types)){
             if(!isset($this->image))
                 $params = array('file'=>$this->image,'objectType'=>static::$object_types[$this->object],
                 'objectId' => $this->object_id, 'documentType' => static::$image_types[$this->object][$this->image_type]);
