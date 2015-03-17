@@ -52,6 +52,10 @@ $conditionStr .= $compid == '' ? '' : " id = '$compid' and ";
 $conditionStr = substr($conditionStr, 0, -4);
 //var_dump($compid);
 
+if($status != '' || $name != '' || $compType != ''){
+	//$start = 0;
+}
+
 
 $companyCount = Company::find('all', array('conditions'=>array($conditionStr)));
 $totalCount = count($companyCount);
