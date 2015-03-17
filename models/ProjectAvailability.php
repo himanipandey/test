@@ -56,9 +56,9 @@ class ProjectAvailability extends Model {
 		
 	}
 
-    public static function getAllAvailabilitiesForSupply($supplyId){
+    public static function getMaxAvailabilitiesForSupply($supplyId){
         
-            $sql = "select max(availability) as availability from ".self::table_name()." where  project_supply_id ='".$supplyId."' ";
+            $sql = "select max(availability) as availability from ".self::table_name()." where  project_supply_id ='".$supplyId."' "; //die($sql);
             $res = self::find_by_sql($sql);
             if($res)
                     return $res[0]->availability;
