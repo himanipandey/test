@@ -148,12 +148,18 @@ selProject = $("#selProjId").val();*/
 
 
           $(".tablesorter-filter").each(function(){ 
-            if($(this).attr("data-column")=="1") 
+            if($(this).attr("data-column")=="1"){ 
               compType= $(this).val(); 
-            if($(this).attr("data-column")=="2") 
+              //page = 0;
+            } 
+            if($(this).attr("data-column")=="2") { 
               name= $(this).val(); 
-            if($(this).attr("data-column")=="6") 
+              //page = 0;
+            }
+            if($(this).attr("data-column")=="6") { 
               status= $(this).val(); 
+              //page = 0;
+            }
           });
 
            url += '&compType=' +compType;  
@@ -342,10 +348,12 @@ $body = $("body");
     if(compid) {
       mode = 'update';
       imgId = $('#imgid').val();
+      formId = $('#formid').val();
     }
     else {
       mode='create';
       imgId = '';
+      formId = '';
     } 
 
    
@@ -479,7 +487,7 @@ var device = [];
     
    //var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
 
-   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, signUpForm:sign_up_form, imageId:imgId, ipArr : ipArr, contact_person_data:contact_person_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, bank_details:bank_details, task : "createComp", mode:mode}; 
+   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, signUpForm:sign_up_form, imageId:imgId, formId:formId, ipArr : ipArr, contact_person_data:contact_person_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, bank_details:bank_details, task : "createComp", mode:mode}; 
 
 /******************************validation****************************************/    
 
@@ -980,10 +988,7 @@ console.log(str);
     $("#compemail").val(email);
    // var ipstring = ipstring.substring(0, ipstring.length -1);
 
-    var str = '<img src = "'+imgpath+'?width=130&height=100"  alt = "'+imgalttext+'">';
-
-    $('#imgPlaceholder').html(str);
-    $("#imgid").val(imgid);
+    
 
     var ipsarr = ipsstr.split("-");
     
@@ -1138,7 +1143,47 @@ console.log(str);
   $('#accountType').val(bankDetails.account_type);
   $('#ifscCode').val(bankDetails.ifsc_code);
 
+//get logo and signupform
 
+  $.ajax({ 
+              type: "POST",
+              url: "/saveCompany.php",
+              data: {'compId': id , 'task':'getCompanyLogo'  },
+
+              beforeSend: function(){
+                console.log('in ajax beforeSend');
+                $("body").addClass("loading");
+                $("#lmkSave").attr('disabled','disabled');
+              },
+              
+
+              success:function(msg){
+                msg = JSON.parse(msg);
+                console.log(msg);
+                $("body").removeClass("loading");
+
+                if(msg){
+                  if(msg.logo){
+                    var logo = msg.logo;
+                    console.log("f-"+logo['service_image_path']);
+                    console.log("s-"+logo.service_image_path);
+                    var imgStr = '<img src = "'+logo['service_image_path']+'?width=130&height=100"  alt = "'+logo['alt_text']+'">';
+                    $('#imgPlaceholder').html(imgStr);
+                    $("#imgid").val(logo['service_image_id']);
+                  }
+                  if(msg.signUpForm){
+                    var doc = msg.signUpForm
+                    var docStr = '<a href = "'+doc['service_image_path']+'" > Signup Form Link </a>';
+                    $('#signUpPlaceholder').html(docStr);
+                    $("#formid").val(doc['service_image_id']);
+                  }
+                 
+                  //$("#onclick-create").text("Landmark Successfully Created.");
+                 }
+                 
+                       
+              },
+          });
 
 
 
@@ -1978,6 +2023,13 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+function onNewImageUpload(){
+  $("#errmsglogo").html('');
+}
+function onNewSignUpFormUpload(){
+  $("#errmsgsignupform").html('');
+}
+
 </script>
 {/literal}
 
@@ -2139,7 +2191,7 @@ function getParameterByName(name) {
                   <form action="saveCompanyLogo.php" target="uploadiframe" name="uploadForm" id="uploadForm" method="POST" enctype = "multipart/form-data">
                     <tr>
                       <td width="20%" align="right" >Change Logo : </td>
-                      <td width="30%" align="left"><input type="file" name='companyImg' id="companyImg" ><input type="hidden" name='imgUploadStatus' id="imgUploadStatus" value="0"><input type="hidden" name='uploadedImage' id="uploadedImage" value=""><input type="submit" id="upload" value="Upload" name="submit"></td> <td width="20%" align="left" id="errmsglogo"></td>
+                      <td width="30%" align="left"><input type="file" name='companyImg' id="companyImg" onchange="onNewImageUpload()"><input type="hidden" name='imgUploadStatus' id="imgUploadStatus" value="0"><input type="hidden" name='uploadedImage' id="uploadedImage" value=""><input type="submit" id="upload" value="Upload" name="submit"></td> <td width="20%" align="left" id="errmsglogo"></td>
                     </tr>
                     
 
@@ -2574,11 +2626,16 @@ function getParameterByName(name) {
                           <td width="20%" align="left" id="errmsgsignupform"></td>
                         </tr> -->
 
+                        <tr>
+                          <td width="20%" align="right" >Uploaded SignUp Form : </td>
+                          <td width="30%" align="left" id="signUpPlaceholder"></td> <td width="20%" align="left" id=""><input type="hidden" name='formid' id="formid"></td>
+                        </tr>
+
                         </form>
                         <form action="saveCompanyLogo.php" target="uploadiframeSignup" name="uploadSignUpForm" id="uploadSignUpForm" method="POST" enctype = "multipart/form-data">
                           <tr>
                             <td width="20%" align="right" >Upload Signup Form Soft Copy: </td>
-                            <td width="30%" align="left"><input type="file" name='signUpForm' id="signUpForm" ><input type="hidden" name='signUpFormUploadStatus' id="signUpFormUploadStatus" value="0"><input type="hidden" name='uploadedSignUpForm' id="uploadedSignUpForm" value=""><input type="submit" id="uploadSignUp" value="uploadSignUp" name="submit"></td> <td width="20%" align="left" id="errmsgsignupform"></td>
+                            <td width="30%" align="left"><input type="file" name='signUpForm' id="signUpForm" onchange="onNewSignUpFormUpload()"><input type="hidden" name='signUpFormUploadStatus' id="signUpFormUploadStatus" value="0"><input type="hidden" name='uploadedSignUpForm' id="uploadedSignUpForm" value=""><input type="submit" id="uploadSignUp" value="uploadSignUp" name="submit"></td> <td width="20%" align="left" id="errmsgsignupform"></td>
                           </tr>
                           
 

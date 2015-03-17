@@ -119,6 +119,40 @@ if($_POST['task']=='find_project_builder'){
     //echo $data['locality_id'];
 }
 
+if($_POST['task']=='getCompanyLogo'){
+    $objectId = $_POST['compId'];
+    $arr = array('logo'=> array(), 'signUpForm'=>array());
+    $objectType = "company";
+    //$url = readFromImageService($objectType, $objectId);
+    //print ""
+    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+    $data = array();
+    foreach($imgPath->data as $k1=>$v1){
+        //if($k1==0){
+            $arr['logo']['service_image_path'] = $v1->absolutePath;
+            $arr['logo']['alt_text'] = $v1->altText;
+            $arr['logo']['service_image_id'] = $v1->id;
+        //}
+    }
+    $url = ImageServiceUpload::$doc_upload_url."?objectType=$objectType&objectId=".$objectId."&documentType=companySignupForm";
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+    $data = array();
+    foreach($imgPath->data as $k1=>$v1){
+        //if($k1==0){
+            $arr['signUpForm']['service_image_path'] = $v1->absoluteUrl;
+            //$arr['signUpForm']['alt_text'] = $v1->altText;
+            $arr['signUpForm']['service_image_id'] = $v1->id;
+        //}
+    }
+
+
+
+    echo json_encode($arr);
+}
+
 if($_POST['task']=='createComp'){ 
 
 
@@ -225,7 +259,7 @@ if($_POST['task']=='createComp'){
                         "folder" => "company/",
                         "image" => $signUpForm,
                         "title" => $name,
-                        "altText" => $altText,
+                        //"altText" => $altText,
                         
         );
 
@@ -245,6 +279,7 @@ if($_POST['task']=='createComp'){
     if($mode=='update' && $id!==null){
         
         $imageId = $_POST['imageId'];
+        $signupformId = $_POST['formId'];
         
         $sql_comp = mysql_query("select * from company where id='{$id}'") or die (mysql_error());
             
@@ -504,7 +539,7 @@ if($_POST['task']=='createComp'){
                     array_push($postArr, $unitImageArr);
                 }
                     $signUpArr['objectId'] = $id;
-                    $signUpArr['params']['service_image_id'] = $imageId;
+                    $signUpArr['params']['service_image_id'] = $signupformId;
                     $signUpArr['params']['update'] = "update";
                 if(isset($_POST['signUpForm']) && $signUpForm!=""){ 
                     array_push($postArr, $signUpArr);

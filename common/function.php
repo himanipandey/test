@@ -421,7 +421,7 @@ else if(count($postArr)==1){
     }
 
 }*/
-var_dump($result);die();
+//var_dump($result);die();
     return $result;
 }
 
