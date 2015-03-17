@@ -70,6 +70,8 @@ class Company extends ActiveRecord\Model
    
     static function getCompanyOtherDetails($companyDetail){
         $returnArr = array();
+        $returnArr['table_rows'] = array();
+        $k = 0;
         foreach ($companyDetail as $v) {
             $sql = "SELECT id, address_line_1, city_id, pincode FROM addresses WHERE (table_name='company' and table_id={$v->id} and type='HQ')";
             $result = self::Connection()->query($sql);
@@ -189,7 +191,7 @@ class Company extends ActiveRecord\Model
 
 /********************************broker details*******************************************/
             //$broker_details = array();
-            $sql = "SELECT id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used FROM broker_details WHERE broker_id='{$v->id}' ";
+            $sql = "SELECT id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch FROM broker_details WHERE broker_id='{$v->id}' ";
             $result = self::Connection()->query($sql);
             $broker_details = $result->fetch(PDO::FETCH_ASSOC);
 
@@ -206,6 +208,17 @@ class Company extends ActiveRecord\Model
             $transac_type = array();
             while($data = $result->fetch(PDO::FETCH_ASSOC)){
                 array_push($transac_type, $data);
+            }
+
+            $sql = "SELECT id, bank_id, account_no, account_type, ifsc_code FROM bank_details WHERE (table_name='company' and table_id='{$v->id}') ";
+            $result = self::Connection()->query($sql);
+            $bank_details = $result->fetch(PDO::FETCH_ASSOC);
+
+            $sql = "SELECT id, device_id FROM device_mappings WHERE (table_name='company' and table_id='{$v->id}') ";
+            $result = self::Connection()->query($sql);
+            $devices = array();
+            while($data = $result->fetch(PDO::FETCH_ASSOC)){
+                array_push($devices, $data);
             }
             //$cust_care['phone'] = $ph['contact_no'];transac_type
             //$cust_care['phone_id'] = $ph['id'];
@@ -239,6 +252,22 @@ class Company extends ActiveRecord\Model
                 }
             }
             $arr['active_since'] = $active_since;
+
+            $form_signup_date = $broker_details['form_signup_date'];
+            if(strlen($form_signup_date) > 0){
+                if(strlen($form_signup_date) < 20 ){
+                    $form_signup_date = substr($form_signup_date, 0, 10);
+                    $form_signup_date = strtotime($form_signup_date);
+                    $form_signup_date = date("Y:m:d", $form_signup_date);
+                  
+                }
+                else{
+                    $form_signup_date = substr($form_signup_date, 0, -5);
+                    $form_signup_date = strtotime($form_signup_date);
+                    $form_signup_date = date("Y:m:d", $form_signup_date);
+                }
+            }
+            $broker_details['form_signup_date'] = $form_signup_date;
             $arr['web'] = $v->website;
 
             $arr['address'] = $address_hq_row['address_line_1'];
@@ -261,7 +290,8 @@ class Company extends ActiveRecord\Model
             $extra['broker_details'] = $broker_details;
             $extra['broker_prop_type'] = $broker_prop_type;
             $extra['transac_type'] = $transac_type;
-
+            $extra['devices'] = $devices;
+            $extra['bank_details'] = $bank_details;
             $arr['extra'] = $extra;
             $arr['extra_json'] = htmlentities('{"data":'.json_encode($extra).'}');
             $arr['city_name'] = $city[0];
@@ -275,8 +305,28 @@ class Company extends ActiveRecord\Model
             */
             //$arr['city'] = $v->city;
 
+            $cont_person_str = "";
+            //print("<pre>");
+            //print_r($cont_person_row); 
+            foreach ($cont_person_row as $k1 => $v1) {
+                $cont_person_str .= $v1['person']." &nbsp;Contact No.-".$v1['phone1'];
+            }
+
+
+            $rows = array(
+                                            "Serial" => $start+$k+1,
+                                            "Type" => $v->type,
+                                            "Name" => $v->name,
+                                            "Address" => $arr['address']." City-".$arr['city_name']." Pin-".$arr['pin']." Ph.N.-".$arr['compphone'], 
+                                            "ContactPerson" => $cont_person_str,
+                                            "Status" =>  $arr['status'],
+                                            "Edit" => json_encode($arr),
+                        );
+            array_push($returnArr['table_rows'], $rows);
 
             array_push($returnArr, $arr);
+
+            $k++;
 
         }
 
@@ -326,5 +376,15 @@ class Company extends ActiveRecord\Model
         return $city;
     }
 
+    
+    static function getCompanyNamesByTypeTerm($type, $name) {
+        
+        $companyDetail = Company::find('all',array('conditions'=>array("type = '{$type}' and name like '%{$name}%' and status = 'Active'")));
+        $list = array();
+        foreach ($companyDetail as $v) {
+            $list[$v->id] = $v->name;
+        }
+        return $list;        
+    }
 
 }

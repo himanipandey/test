@@ -44,7 +44,9 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
     define("USER_ATTRIBUTES_API_URL", "https://www.proptiger.com/userservice/data/v1/entity/user");
     define("USER_DETAILS_API_URL", "https://www.proptiger.com/userservice/app/v1/user-details");
 
-    define("TYPEAHEAD_API_URL", "https://www.proptiger.com/app/v3/typeahead");
+//    define("TYPEAHEAD_API_URL", "https://www.proptiger.com/app/v3/typeahead");
+//    Changed By Jitendra pathak
+    define("TYPEAHEAD_API_URL", "https://www.proptiger.com/columbus/app/v3/typeahead");
     define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");
     define("LISTING_API_URL", "https://proptiger.com/data/v1/entity/user/listing");
 	define("ADMIN_USER_LOGIN_API_URL", "https://proptiger.com/userservice/app/v1/login?username=api-admin@proptiger.com&password=1234&rememberme=true");
@@ -111,7 +113,9 @@ else{
 
     //define("SERVER_PATH_SOLR_RESTART", "/home/sysadmin/production/");  //for server
 
-    define("TYPEAHEAD_API_URL", "https://proptiger.com/app/v3/typeahead");
+//    define("TYPEAHEAD_API_URL", "https://proptiger.com/app/v3/typeahead");
+//    Changed By Jitendra pathak
+    define("TYPEAHEAD_API_URL", "https://proptiger.com/columbus/app/v3/typeahead");
 	//define("project_detail", "http://proptiger.com//data/v1/entity/amenity?projectId=513233"); 
 	define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");  
 	define("LISTING_API_URL", "https://qa.proptiger-ws.com/data/v1/entity/user/listing");

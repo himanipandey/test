@@ -178,7 +178,7 @@ function writeToImageService($imageParams){
     $postArr = array();;
     $result = array();
     //print("<pre>");
-    //print_r($imageParams);//die();
+    //print_r($imageParams);die();
     foreach ($imageParams as $k => $v) {
 
         # code...
@@ -268,11 +268,11 @@ function writeToImageService($imageParams){
                 else {
                     //  unknown format !!
                 }
-                if ( $imgType == "" ) {
+                /*if ( $imgType == "" ) {
                     //die("here1");
                     $returnValue['error'] = "format not supported";
                 }
-                else {
+                else {*/
                     //  no error
                     if($params['image']){
                         //die("here2");
@@ -309,7 +309,7 @@ function writeToImageService($imageParams){
                     
                     
                     
-                }
+                //}
             }
 
         }
@@ -329,8 +329,8 @@ function writeToImageService($imageParams){
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 //die();
-/*print'<pre>';
-print_r($postArr); die();*/
+//print'<pre>';
+//print_r($postArr); die();
 
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
@@ -421,7 +421,7 @@ else if(count($postArr)==1){
     }
 
 }*/
-//var_dump($result);die();
+var_dump($result);die();
     return $result;
 }
 
@@ -552,4 +552,22 @@ function replaceSpaces($string){
 	return $output;
 }
 
-
+/*
+ * Author : Jitendra pathak
+ * Purpose : debugging and formatted output
+ */
+function pr($data){
+    echo "<pre>";
+    print_r($data);
+    echo "<pre>";
+}
+/*
+ * Author : Jitendra pathak
+ * Purpose : debug and die and formatted output
+ */
+function prd($data){
+    echo "<pre>";
+    print_r($data);
+    echo "<pre>";
+    die;
+}

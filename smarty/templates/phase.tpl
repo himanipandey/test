@@ -68,6 +68,11 @@
             $(err).hide();
           }
         });
+        
+        if($("#completion_date").val() == '0000-00-00'){
+            alert('Invalid Completion Date');
+            return false;
+        }
 
         return date_flag && name_flag && flat_bed && villa_bed;
     }

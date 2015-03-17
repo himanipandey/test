@@ -1159,7 +1159,7 @@ function broker_call_edit(callId, brokerId)
 								<b>Project URL:</b>
 							</td>
 							<td>
-								<a href = "http://www.proptiger.com/{$projectDetails[0].PROJECT_URL}">{$projectDetails[0].PROJECT_URL}</a>
+								<a href = "https://www.proptiger.com/{$projectDetails[0].PROJECT_URL}">{$projectDetails[0].PROJECT_URL}</a>
 							</td>
 						</tr>
 						<tr height="25px;">
@@ -1355,6 +1355,46 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+                                                <!-- @Jitendra pathak -->
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Construction Contractor: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].cons_comp != ''}
+                                                               {$projectDetails[0].cons_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Maintenace Contractor: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].maint_comp != ''}
+                                                               {$projectDetails[0].maint_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Landscape Architect: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].lands_arch_comp != ''}
+                                                               {$projectDetails[0].lands_arch_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
+                                                
+                                                
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Power backup: </b>
@@ -1654,16 +1694,24 @@ function broker_call_edit(callId, brokerId)
 							  
 							</tr>
 						{/if}
+                                                {array_search('Club House Area',$AmenitiesArr)}
 						{foreach from=$AmenitiesArr key=k item=v} 
 						{if $k != 99}
 						{if array_key_exists($k,$arrNotninty)}
 						<tr height="25px;">
+                                                    
 							<td nowrap="nowrap" align="left"><b>{$v} :</b></td>
 								 <td align ="left" nowrap>
 								 
 								  {if !in_array($arrNotninty[$k],$AmenitiesArr)}
 									 {if count($arrNotninty[$k]) >0} {$arrNotninty[$k]} {else} -- {/if}  
 								  {/if}
+                                                                  {if $v=='Club House'}
+                                                                      <label style="margin-left:20px"><b>Club House Area </b> : </label>
+                                                                      {if $clubHouseArea}
+									 {if $clubHouseArea >0} {$clubHouseArea} {else} -- {/if}  
+                                                                       {/if}
+                                                                  {/if}
 								  </td>	
 							 {/if}
 						</tr>
