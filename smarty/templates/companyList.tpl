@@ -929,8 +929,13 @@ function cleanFields(){
     $('.errmsgip').each(function() {
       $(this).html('');
     });
+
     $('#imgPlaceholder').html('');
     $('#errmsglogo').html('');
+    $('#signUpPlaceholder').html('');
+    $('#errmsglogo').html('');
+    $('#errmsgsignupform').html('');
+
     $('#errmsgcomplegaltype').html('');
     $('#errmsgpan').html('');
     $('#errmsgemail').html('');
