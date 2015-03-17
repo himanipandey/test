@@ -115,13 +115,21 @@ if ($_POST['btnSave'] == "Save")
 	    /******code for builder url already exists******/
         $bldrURL = "";
         if($builderid != ''){
-            $bldrURL = " and BUILDER_ID!=".$builderid;
+            $bldrURL = " AND BUILDER_ID!=".$builderid;
         }
-	    $qryUrl = "SELECT * FROM ".RESI_BUILDER." WHERE ENTITY = '".$legalEntity."'".$bldrURL;
-	    $resUrl = mysql_query($qryUrl) or die(mysql_error());
-	    if(mysql_num_rows($resUrl)>0){
-	 	    $ErrorMsg["legalEntity"] = "This Builder already exists.";
-	    }
+        $qryStr = "SELECT * FROM ".RESI_BUILDER." WHERE (ENTITY = '".$legalEntity."' OR BUILDER_NAME ='".$txtBuilderName."') ".$bldrURL;
+        $resBuilder = mysql_query($qryStr) or die(mysql_error());
+        if(mysql_num_rows($resBuilder)>0){
+            while ($dataBuilder = mysql_fetch_assoc($resBuilder)) {
+                if(strtolower($dataBuilder["BUILDER_NAME"])==strtolower($txtBuilderName)){
+                    $ErrorMsg["txtBuilderName"] = "This builder name is already exists.";
+                }
+                if(strtolower($dataBuilder["ENTITY"])==strtolower($legalEntity)){
+                    $ErrorMsg["legalEntity"] = "This entity name is already exists.";
+                }
+            }
+            
+        }
 	    /******end code for builder url already exists******/
 	//  die; 
 	if($_FILES['txtBuilderImg']['type'] != '')
@@ -147,18 +155,17 @@ if ($_POST['btnSave'] == "Save")
 
             }
             /**code for duplicate builder name or entity name***/
-            if($builderid == '' && $txtBuilderName != '' && $legalEntity != '') {
-                $qryBuilder = "SELECT * FROM ".RESI_BUILDER." 
-                                WHERE
-                                   ENTITY = '".$legalEntity."'";
-                $resBuilder = mysql_query($qryBuilder);
-                $dataBuilder = mysql_fetch_assoc($resBuilder);
-
-                if(count($dataBuilder)>0) {
-                    if($legalEntity == $dataBuilder['ENTITY'])
-                         $ErrorMsg["legalEntity"] = "This entity already exists.";
-                }
-            }
+//            if($builderid == '' && $txtBuilderName != '' && $legalEntity != '') {
+//                $qryBuilder = "SELECT * FROM ".RESI_BUILDER." 
+//                                WHERE
+//                                   ENTITY = '".$legalEntity."'";
+//                $resBuilder = mysql_query($qryBuilder);
+//                $dataBuilder = mysql_fetch_assoc($resBuilder);
+//                if(count($dataBuilder)>0) {
+//                    if($legalEntity == $dataBuilder['ENTITY'])
+//                         $ErrorMsg["legalEntity"] = "This entity already exists.";
+//                }
+//            }
             /**code for duplicate builder name or entity name***/
 
             if(is_array($ErrorMsg)) {
