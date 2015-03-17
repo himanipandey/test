@@ -130,22 +130,22 @@ if($_POST['task']=='getCompanyLogo'){
     $imgPath = json_decode($content);
     $data = array();
     foreach($imgPath->data as $k1=>$v1){
-        //if($k1==0){
+        if($k1==0){
             $arr['logo']['service_image_path'] = $v1->absolutePath;
             $arr['logo']['alt_text'] = $v1->altText;
             $arr['logo']['service_image_id'] = $v1->id;
-        //}
+        }
     }
     $url = ImageServiceUpload::$doc_upload_url."?objectType=$objectType&objectId=".$objectId."&documentType=companySignupForm";
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
     $data = array();
     foreach($imgPath->data as $k1=>$v1){
-        //if($k1==0){
+        if($k1==0){
             $arr['signUpForm']['service_image_path'] = $v1->absoluteUrl;
             //$arr['signUpForm']['alt_text'] = $v1->altText;
             $arr['signUpForm']['service_image_id'] = $v1->id;
-        //}
+        }
     }
 
 
@@ -455,12 +455,20 @@ if($_POST['task']=='createComp'){
                 $res = mysql_query($query) or die(mysql_error());
                 $data=mysql_fetch_assoc($res);
                 if($data){
-                    $query = "Update broker_details set legal_type='{$bef['legalType']}', rating= '{$bef['frating']}', service_tax_no='{$bef['stn']}', office_size= '{$bef['officeSize']}', employee_no='{$bef['employeeNo']}', pt_manager_id= '{$bef['ptManager']}', pt_relative_id= ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", form_signup_date='{$bef['formSignUpDate']}',form_signup_branch=".($bef['ptRelative'] == '' ? 'NULL' : $bef['signUpBranch']).", updated_by= {$_SESSION['adminId']} where broker_id={$id}";
+                    if ($bef['formSignUpDate']=='') 
+                        $signup = "form_signup_date=null";
+                    else 
+                        $signup = "form_signup_date='{$bef['formSignUpDate']}'";
+                    $query = "Update broker_details set legal_type='{$bef['legalType']}', rating= '{$bef['frating']}', service_tax_no='{$bef['stn']}', office_size= '{$bef['officeSize']}', employee_no='{$bef['employeeNo']}', pt_manager_id= '{$bef['ptManager']}', pt_relative_id= ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.",form_signup_branch=".($bef['ptRelative'] == '' ? 'NULL' : $bef['signUpBranch']).", updated_by= {$_SESSION['adminId']} where broker_id={$id}";
                     //die($query);
                     $res = mysql_query($query) or die(mysql_error());
                 }
                 else{
-                    $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", '{$bef['formSignUpDate']}', ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).",  {$_SESSION['adminId']}, NOW())";
+                    if ($bef['formSignUpDate']=='') 
+                        $signup = "null";
+                    else 
+                        $signup = "'{$bef['formSignUpDate']}'";
+                    $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.", ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).",  {$_SESSION['adminId']}, NOW())";
                     //die($query);
                     $res = mysql_query($query) or die(mysql_error()); //die("hello");
                 }
@@ -681,7 +689,12 @@ if($_POST['task']=='createComp'){
                     $bef['device']=='NULL';
                 if($bef['ptRelative']=='') 
                     $bef['ptRelative']=='NULL';
-                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", '{$bef['formSignUpDate']}', ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).", {$_SESSION['adminId']}, NOW())";
+                if ($bef['formSignUpDate']=='') 
+                    $signup = "null";
+                else 
+                    $signup = "'{$bef['formSignUpDate']}'";
+
+                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.", ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).", {$_SESSION['adminId']}, NOW())";
                 //die($query);
 
                
@@ -734,7 +747,7 @@ if($_POST['task']=='createComp'){
             }
 
 /****************** save images to Image Service ************************************************/
-            if(isset($_POST['image']) && $image!=""){
+            /*if(isset($_POST['image']) && $image!=""){
                 $unitImageArr['objectId'] = $comp_id;
                 $postArr[] = $unitImageArr;         
                 $response   = writeToImageService($postArr);
@@ -753,7 +766,44 @@ if($_POST['task']=='createComp'){
                         echo $Error;
                     }
                 }
+            }*/
+
+        $unitImageArr['objectId'] = $comp_id;
+        //$unitImageArr['params']['service_image_id'] = $imageId;
+        //$unitImageArr['params']['update'] = "update";
+             
+        if(isset($_POST['image']) && $image!=""){ 
+            array_push($postArr, $unitImageArr);
+        }
+            $signUpArr['objectId'] = $comp_id;
+            //$signUpArr['params']['service_image_id'] = $signupformId;
+            //$signUpArr['params']['update'] = "update";
+        if(isset($_POST['signUpForm']) && $signUpForm!=""){ 
+            array_push($postArr, $signUpArr);
+        }
+        
+        if(!empty($postArr)){         
+            $response   = writeToImageService($postArr);
+            //print_r($response); die;
+            foreach ($response as $k => $v) {            
+                if(empty($v->error->msg)){                           
+                    $image_id = $v->data->id;
+                    //echo $image_id;//$image_id = $image_id->id;
+                }
+                else {
+                    
+                    $Error = $v->error->msg;
+                    echo $Error;
+                }
             }
+
+
+        }
+
+
+
+
+
             echo "1";
         }
         else

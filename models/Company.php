@@ -236,7 +236,6 @@ class Company extends ActiveRecord\Model
             $arr['pan'] = $v->pan;
             $arr['email'] = $v->primary_email;
             $active_since = $v->active_since;
-          
             
             if(strlen($active_since) > 0){
                 if(strlen($active_since) < 20 ){
@@ -254,7 +253,13 @@ class Company extends ActiveRecord\Model
             $arr['active_since'] = $active_since;
 
             $form_signup_date = $broker_details['form_signup_date'];
+            /*if($v->id==167){
+                echo "hello";
+                var_dump($form_signup_date);
+            }*/
             if(strlen($form_signup_date) > 0){
+                /*if($v->id==167)
+                    die("inside");*/
                 if(strlen($form_signup_date) < 20 ){
                     $form_signup_date = substr($form_signup_date, 0, 10);
                     $form_signup_date = strtotime($form_signup_date);

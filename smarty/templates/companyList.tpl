@@ -478,7 +478,16 @@ var device = [];
     valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
     valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");*/
     valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
+    //valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
     //valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
+    if(signUpBranch==''){
+      $('#errmsgsignupbranch').html('<font color="red">Please Select a Signup Branch.</font>');
+      $("#signUpBranch").focus();
+      window.error = 1;
+    }
+    else{
+          $('#errmsgsignupbranch').html('');
+    }
   }
 }
 
@@ -649,7 +658,7 @@ var $body = $("body");
 
 	            success:function(msg){
                 console.log("msg"+msg);
-                $("body").removeClass("loading");
+                //$("body").removeClass("loading");
 				        if(msg == 1){
 	               location.reload(true);
                  $(window).scrollTop(0);
@@ -880,7 +889,14 @@ function cleanFields(){
     $("#imgUploadStatus").val("0");
     $("#uploadedImage").val("");
 
-    $('#create_company input text,#create_company select,#create_company textarea, :text').each(function(key, value){
+    $("#formid").val('');
+    $("#signUpFormUploadStatus").val("0");
+    $("#uploadedSignUpForm").val("");
+
+    $("#signUpForm").val("");
+    $("#companyImg").val("");
+
+    $('#create_company input text,#create_company select, #create_company textarea, :text').each(function(key, value){
       $(this).val('');       
     }); 
 
@@ -892,6 +908,12 @@ function cleanFields(){
     $(".Transaction").each(function(){
           $(this).prop('checked', false);
     });
+
+    $(".device").each(function(){
+          $(this).prop('checked', false);
+    });
+
+
 
     /*$("#coverage_table tbody tr").remove();
     $("#off_loc_table").find("tr").remove();*/
@@ -1167,13 +1189,16 @@ console.log(str);
                     var logo = msg.logo;
                     console.log("f-"+logo['service_image_path']);
                     console.log("s-"+logo.service_image_path);
+
                     var imgStr = '<img src = "'+logo['service_image_path']+'?width=130&height=100"  alt = "'+logo['alt_text']+'">';
                     $('#imgPlaceholder').html(imgStr);
                     $("#imgid").val(logo['service_image_id']);
                   }
                   if(msg.signUpForm){
                     var doc = msg.signUpForm
-                    var docStr = '<a href = "'+doc['service_image_path']+'" > Signup Form Link </a>';
+                    var docStr = "";
+                    if(doc['service_image_path'])
+                      docStr = '<a href = "'+doc['service_image_path']+'" > Signup Form Link </a>';
                     $('#signUpPlaceholder').html(docStr);
                     $("#formid").val(doc['service_image_id']);
                   }
@@ -1340,13 +1365,13 @@ var iframeUploadSignUpForm = {
         if(response){
             response = jQuery.parseJSON(response);
             if(response.status == 1){
-              $("#errmsgsignupform").html('<font color="green">Image Successfully Uploaded.</font>');
+              $("#errmsgsignupform").html('<font color="green">Document Successfully Uploaded.</font>');
               $("#signUpFormUploadStatus").val("1");
               $("#uploadedSignUpForm").val(response.image);
 
             }
             else{
-              $("#errmsgsignupform").html('<font color="red">Image Upload Failed.</font>');
+              $("#errmsgsignupform").html('<font color="red">Document Upload Failed.</font>');
               $("#signUpFormUploadStatus").val("0");
             }
             
