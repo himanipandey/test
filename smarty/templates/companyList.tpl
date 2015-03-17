@@ -1173,7 +1173,7 @@ console.log(str);
                   }
                   if(msg.signUpForm){
                     var doc = msg.signUpForm
-                    var docStr = '<img src = "'+doc['service_image_path']+'?width=130&height=100"  alt = "'+doc['alt_text']+'">';
+                    var docStr = '<a href = "'+doc['service_image_path']+'" > Signup Form Link </a>';
                     $('#signUpPlaceholder').html(docStr);
                     $("#formid").val(doc['service_image_id']);
                   }
@@ -2023,6 +2023,13 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+function onNewImageUpload(){
+  $("#errmsglogo").html('');
+}
+function onNewSignUpFormUpload(){
+  $("#errmsgsignupform").html('');
+}
+
 </script>
 {/literal}
 
@@ -2184,7 +2191,7 @@ function getParameterByName(name) {
                   <form action="saveCompanyLogo.php" target="uploadiframe" name="uploadForm" id="uploadForm" method="POST" enctype = "multipart/form-data">
                     <tr>
                       <td width="20%" align="right" >Change Logo : </td>
-                      <td width="30%" align="left"><input type="file" name='companyImg' id="companyImg" ><input type="hidden" name='imgUploadStatus' id="imgUploadStatus" value="0"><input type="hidden" name='uploadedImage' id="uploadedImage" value=""><input type="submit" id="upload" value="Upload" name="submit"></td> <td width="20%" align="left" id="errmsglogo"></td>
+                      <td width="30%" align="left"><input type="file" name='companyImg' id="companyImg" onchange="onNewImageUpload()"><input type="hidden" name='imgUploadStatus' id="imgUploadStatus" value="0"><input type="hidden" name='uploadedImage' id="uploadedImage" value=""><input type="submit" id="upload" value="Upload" name="submit"></td> <td width="20%" align="left" id="errmsglogo"></td>
                     </tr>
                     
 
@@ -2628,7 +2635,7 @@ function getParameterByName(name) {
                         <form action="saveCompanyLogo.php" target="uploadiframeSignup" name="uploadSignUpForm" id="uploadSignUpForm" method="POST" enctype = "multipart/form-data">
                           <tr>
                             <td width="20%" align="right" >Upload Signup Form Soft Copy: </td>
-                            <td width="30%" align="left"><input type="file" name='signUpForm' id="signUpForm" ><input type="hidden" name='signUpFormUploadStatus' id="signUpFormUploadStatus" value="0"><input type="hidden" name='uploadedSignUpForm' id="uploadedSignUpForm" value=""><input type="submit" id="uploadSignUp" value="uploadSignUp" name="submit"></td> <td width="20%" align="left" id="errmsgsignupform"></td>
+                            <td width="30%" align="left"><input type="file" name='signUpForm' id="signUpForm" onchange="onNewSignUpFormUpload()"><input type="hidden" name='signUpFormUploadStatus' id="signUpFormUploadStatus" value="0"><input type="hidden" name='uploadedSignUpForm' id="uploadedSignUpForm" value=""><input type="submit" id="uploadSignUp" value="uploadSignUp" name="submit"></td> <td width="20%" align="left" id="errmsgsignupform"></td>
                           </tr>
                           
 
