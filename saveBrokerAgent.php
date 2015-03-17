@@ -265,11 +265,11 @@ if($_POST['task']=='createAgent'){
             if($response['statusCode']=="2XX"){
               $user_id = $response['id'];
 
-              $query = "select pa.ADMINEMAIL from broker_details bd inner join proptiger.PROPTIGER_ADMIN pa on bd.pt_manager_id=pa.ADMINID where bd.broker_id={$brokerId}";
+              //$query = "select pa.ADMINEMAIL from broker_details bd inner join proptiger.PROPTIGER_ADMIN pa on bd.pt_manager_id=pa.ADMINID where bd.broker_id={$brokerId}";
               //echo $query;
-              $res = mysql_query($query);
-              $data = mysql_fetch_assoc($res);
-              $pt_manager_email = $data['ADMINEMAIL'];
+              //$res = mysql_query($query);
+              //$data = mysql_fetch_assoc($res);
+              //$pt_manager_email = $data['ADMINEMAIL'];
 
 
               $to = 'mohit.dargan@proptiger.com';
@@ -285,8 +285,8 @@ if($_POST['task']=='createAgent'){
               //$headers .= 'To: '.$email."\r\n";
               //$headers .= 'From: '.$sender."\r\n";
               sendMailFromAmazon($to, $subject, $email_message, $sender,$cc,null,false);
-              sendMailFromAmazon($pt_manager_email, $subject, $email_message, $sender,null,null,false);
-              sendMailFromAmazon($email, $subject, $email_message, $sender,null,null,false);
+              //sendMailFromAmazon($pt_manager_email, $subject, $email_message, $sender,null,null,false);
+              //sendMailFromAmazon($email, $subject, $email_message, $sender,null,null,false);
               //sendMailFromAmazon("manmohan.pandey@proptiger.com", $subject, $email_message, $sender,null,null,false);
               //echo $pt_manager_email; 
               //die($pt_manager_email);
