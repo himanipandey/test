@@ -277,7 +277,9 @@ if($_POST['task']=='createComp'){
            
     
     if($mode=='update' && $id!==null){
-        
+        echo "<pre>";
+        print_r();
+        die;
         $imageId = $_POST['imageId'];
         $signupformId = $_POST['formId'];
         
@@ -810,6 +812,35 @@ if($_POST['task']=='createComp'){
             echo "3";
     }
        
+}
+
+function send_mail($options){
+    $options['subject'] = 'Your New Proptiger Account';
+    $options['sender'] = 'no-reply@proptiger.com';
+    $options['message'] = "<table width='938' border='1' style='width:562.5pt;border:solid #333333 1.0pt'>"
+            . "<tr><td style='border:none;background:whitesmoke;padding:0in 0in 0in 0in'> "
+            . "<table width='938' style='width:562.5pt'>"
+            . "<tr><td width='656' style='width:393.75pt;padding:7.5pt 7.5pt 7.5pt 7.5pt'>"
+            . "<p style='line-height:105%'><img width='190' height='65' src='".FORUM_INTERNET_IMAGE_PATH."agent_email_logo.jpg'></p></td>"            
+            . "<td width='281' style='width:168.75pt;padding:0in 0in 0in 0in'><p style='line-height:105%'>"
+            . "<img width='218' height='35' src='".FORUM_INTERNET_IMAGE_PATH."agent_email_url.jpg'></p></td></tr>"
+            . "</table></td></tr><tr><td style='border:none;padding:7.5pt 7.5pt 7.5pt 7.5pt'>"
+            . "Dear {$options['agent_name']} <br>"
+            . "<p>We would like to thank you for choosing PropTiger.com. "
+            . "We have received your signed channel partner signup form and "
+            . "we are delighted to inform that you have been successfully empanelled with us. </p>"
+            . "<p><b>Your Unique Channel Partner Code is “{$options['agent_id']}” </b> <br>"
+            . "Please use this Unique Code for all future communications with PropTiger.com <br>"
+            . "Our customer service team is there to assist you for any further query / support you need in this regard. "
+            . "Feel free to contact us contact us at +91 92788 92788 or email to customer.service@proptiger.com for any query / support.<br> </p>"
+            . "Thanking you,<br>"
+            . "Customer Service Team <br>"
+            . "PropTiger.com<br>"
+            . "<small>Note : This is system generated email, therefore; please do not reply <small>"
+            . "</td></tr></table>";
+    
+    
+    sendMailFromAmazon($options['to'], $options['subject'], $options['message'], $options['sender'], $options['cc'], null, false);
 }
 
     
