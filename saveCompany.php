@@ -276,10 +276,7 @@ if($_POST['task']=='createComp'){
 
            
     
-    if($mode=='update' && $id!==null){
-        echo "<pre>";
-        print_r();
-        die;
+    if($mode=='update' && $id!==null){      
         $imageId = $_POST['imageId'];
         $signupformId = $_POST['formId'];
         
@@ -535,6 +532,7 @@ if($_POST['task']=='createComp'){
 
                     
                 }
+                
             }
 
 /****************** save images to Image Service ************************************************/
@@ -701,6 +699,7 @@ if($_POST['task']=='createComp'){
 
                
                 $res = mysql_query($query) or die(mysql_error());
+                $email_broker_id= mysql_insert_id();
 
                 $query = "update company set active_since='{$bef['since_op']}' where id='{$comp_id}'";
                 $res = mysql_query($query) or die(mysql_error());
@@ -746,6 +745,13 @@ if($_POST['task']=='createComp'){
                     $query = "insert into bank_details(table_name, table_id, bank_id, account_no, account_type, ifsc_code, updated_by, created_at) value". $bankStr;
                     $res = mysql_query($query) or die(mysql_error());
                 }
+                
+                $sqlPtManager = "SELECT pa.ADMINEMAIL as pt_manager_email FROM proptiger.PROPTIGER_ADMIN pa WHERE pa.ADMINID={$bef['ptManager']}";
+                $resPtManager = mysql_query($sqlPtManager) or die(mysql_error());
+                $dataPtManager=mysql_fetch_assoc($resPtManager);
+                $options = array('to'=>$email,'agent_id'=>$email_broker_id, 'agent_name'=>$name, 'cc'=>$dataPtManager['pt_manager_email']);
+                send_mail($options);
+                
             }
 
 /****************** save images to Image Service ************************************************/
