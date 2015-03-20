@@ -696,12 +696,19 @@ if($_POST['task']=='createComp'){
                     $signup = "'{$bef['formSignUpDate']}'";
 
                 $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.", ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).", {$_SESSION['adminId']}, NOW())";
-                //die($query);
-
-               
                 $res = mysql_query($query) or die(mysql_error());
+                
+                $insertCompCodeSqlStr = "INSERT INTO company_code(COMPANY_ID) VALUES('{$comp_id}')";
+                $resInsert = mysql_query($insertCompCodeSqlStr) or die(mysql_error());
+                $channel_partner_id = mysql_insert_id();
+                $channel_partner_id = str_pad($channel_partner_id, 4, '0', STR_PAD_LEFT);
+                
+                $sqlCity = "SELECT ABBREVIATION FROM city WHERE CITY_ID={$bef['signUpBranch']}";
+                $resCity = mysql_query($sqlCity) or die(mysql_error());
+                $dataCity= mysql_fetch_assoc($resCity);
+                $channel_partner_code = $dataCity["ABBREVIATION"]."CP".$channel_partner_id."".date("my");
 
-                $query = "update company set active_since='{$bef['since_op']}' where id='{$comp_id}'";
+                $query = "update company set active_since='{$bef['since_op']}', unique_code='{$channel_partner_code}' where id='{$comp_id}'";
                 $res = mysql_query($query) or die(mysql_error());
 
                 if($bef['projectType']){
@@ -749,7 +756,7 @@ if($_POST['task']=='createComp'){
                 $sqlPtManager = "SELECT pa.ADMINEMAIL as pt_manager_email FROM proptiger.PROPTIGER_ADMIN pa WHERE pa.ADMINID={$bef['ptManager']}";
                 $resPtManager = mysql_query($sqlPtManager) or die(mysql_error());
                 $dataPtManager=mysql_fetch_assoc($resPtManager);
-                $options = array('to'=>$email,'agent_id'=>$comp_id, 'agent_name'=>$name, 'cc'=>$dataPtManager['pt_manager_email']);
+                $options = array('to'=>$email,'agent_id'=>$channel_partner_code, 'agent_name'=>$name, 'cc'=>$dataPtManager['pt_manager_email']);
                 send_mail($options);
                 
             }
