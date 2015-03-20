@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: swapnil
  * Date: 7/19/13
@@ -315,7 +316,7 @@ function writeToImageService($imageParams){
         }
     }
      
-  // print'<pre>';   print_r($postArr);die();
+  //print'<pre>';   print_r($postArr);die();
   // array of curl handles
     $curly = array();
   // data to be returned
@@ -342,6 +343,7 @@ $logger = Logger::getLogger("main");
             $url = DOC_SERVICE_URL;
         }
     }
+ 
     /*if(array_key_exists("dtype", $imageParams[$id]['params'])) {
         if($imageParams[$id]['params']['dtype']=="3D"){
             $url = DOC_SERVICE_URL;
@@ -570,4 +572,21 @@ function prd($data){
     print_r($data);
     echo "<pre>";
     die;
+}
+/**
+ * getProjectBrochure : fetch the project brochure link
+ */
+function getProjectBrochure($projectId){
+    
+    $url = ImageServiceUpload::$doc_upload_url."?objectType=project&objectId=".$projectId."&documentType=projectBrouchure";
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+    $data = array();
+    foreach($imgPath->data as $k1=>$v1){
+        if($k1==0){
+            $arr['projectBrouchure']['service_image_path'] = $v1->absoluteUrl;
+            $arr['projectBrouchure']['service_image_id'] = $v1->id;
+        }
+    }    
+    return $arr;
 }
