@@ -1986,8 +1986,8 @@
                     $('#broker_table_extra tbody tr').not('.broker_basic').hide();
                     $("#broker_switch").prop("value", "Advance Information");
                 }
-                if (("#brokerId").val() != '')
-                    ("#broker_id").show();
+                if ($("#brokerId").val() != '')
+                    $("#broker_id").show();
             }
             else {
                 $("#broker_switch").hide();

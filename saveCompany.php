@@ -13,6 +13,7 @@ include("builder_function.php");
 include("function/functions_priority.php");
 include("common/function.php");
 include("imageService/image_upload.php");
+include_once("includes/send_mail_amazon.php");
 
 AdminAuthentication();
 
