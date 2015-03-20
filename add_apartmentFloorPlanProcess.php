@@ -7,13 +7,17 @@
 	$plot = array();
 	$commercial = array();
 	$uploadedArr = array(); // array of titles ALREADY uploaded in image service 
-	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex", "3D Floor Plan");
-	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan", "3D Floor Plan");
+	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex", "3D Floor Plan", "Panorama");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan", "3D Floor Plan", "Panorama");
 	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan", "Terrace Floor Plan", "Duplex Floor Plan");
 	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan", "Penthouse Floor Plan", "Terrace Floor Plan");
 	$triplex = array("Lower Level Floor", "Medium Level Floor", "Upper Level Floor", "Terrace Floor Plan");
 	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan", "Ground Floor Plan");
 	//$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan", "Ground Floor Plan");
+
+
+	// used to differentialte image types with doc types, 3D Floor Plan not added because its actually an image type
+	$documentTypeArr = array("Panorama");
 
 	$watermark_path = 'images/pt_shadow1.png';
 	$projectId				=	$_REQUEST['projectId'];
@@ -115,18 +119,19 @@
 				
 			if($_REQUEST['floor_name'][$key] != '' && $_REQUEST['floor_name'][$key] != "0")
 			{
-	   
+	   //die("heere121");
 	   	//echo strtolower($_FILES["imgurl"]["type"][$key]);
 	   		  if($_FILES['imgurl']['name'][$key] != '')
 	   		  {
+	   		  	
 	   		  	$flgins	=	1;	
-				if(!in_array(strtolower($_FILES["imgurl"]["type"][$key]), $arrImg))
+				if(!in_array(strtolower($_FILES["imgurl"]["type"][$key]), $arrImg) && !in_array($_REQUEST['floor_name'][$key], $documentTypeArr))
 				{
-					$ErrorMsg1 = "You can upload only jpg / jpeg gif png images.";//die("here");
+					$ErrorMsg1 = "You can upload only jpg / jpeg gif png images.";
 				}   
-				else if(!preg_match("/-floor-plan\.[a-z]{3,4}$/", $_FILES["imgurl"]["name"][$key]))
+				else if(!preg_match("/-floor-plan\.[a-z]{3,4}$/", $_FILES["imgurl"]["name"][$key]) && !in_array($_REQUEST['floor_name'][$key], $documentTypeArr))
 				{
-					$ErrorMsg1 = "The word 'floor-plan' should be part of image name at end.";
+					$ErrorMsg1 = "The word 'floor-plan' should be part of image name at end."; 
 				}
 				else
 				{
@@ -177,15 +182,18 @@
 							{
 								 $flgimg	=	1;
 							}
-							if($flrplan != '')
+							//die("d-".$flrplan);
+							//if($flrplan != '') //conditions was updated to be true
+							if(true)
 							{
 								$txtlocationplan 	= move_uploaded_file($_FILES["imgurl"]["tmp_name"][$key], "".$createFolder."/" . $imgurl1);
+								//echo "here4";
                                 //$s3upload = new S3Upload($s3, $bucket, "".$createFolder."/" .$imgurl1, $projecttbl."/".$imgurl1 );
                                 //$s3upload->upload();
 
 								if(!$txtlocationplan)
 								{
-									$ErrorMsg1 .= "Problem in Image Upload Please Try Again.";
+									$ErrorMsg1 .= "Problem in Upload Please Try Again."; //echo "here5";//die("hererr");
 									break;
 								}
 								else
@@ -193,7 +201,7 @@
 								$source[]			=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/" .  $_FILES["imgurl"]["name"][$key];
 								$dest[]				=	$newImagePath.$BuilderName."/".strtolower($ProjectName)."/". $_FILES["imgurl"]["name"][$key];
 								$imgurl8 			= $projecttbl."/".$imgurl1;
-								
+								//echo "here6";
 
 								$img = array();
 			                $img['error'] = $_FILES["imgurl"]["error"][$key];
@@ -201,7 +209,15 @@
 			                $img['name'] = $_FILES["imgurl"]["name"][$key];
 			                $img['tmp_name'] = $_FILES["imgurl"]["tmp_name"][$key];	
 			                //list($width, $height) = getimagesize($img['tmp_name']);
-			               	list($width, $height) = getimagesize($createFolder."/" . $imgurl1);
+
+			                if(in_array($_REQUEST['floor_name'][$key], $documentTypeArr)){
+			                	$width = "1053";
+			                	$height =  "600";
+			                }
+			                else{
+			                	list($width, $height) = getimagesize($createFolder."/" . $imgurl1);
+			                }
+			               	
 			               	$media_extra_attributes = array("width" => $width, "height" => $height);
 			               	$media_extra_attributes = json_encode($media_extra_attributes);
 			               	//$media_extra_attributes =  "{'width':".$width.", 'height':".$height."}";
@@ -221,12 +237,14 @@
 								{
 								while (false !== ($file = readdir($handle)))
 								{
-									if(strstr($file,'floor-plan'))
+									//if(strstr($file,'floor-plan'))
+									if(true)	
 									{
+										
 										/************Working for floor plan***********************/
 										if(strstr($file,$_FILES["imgurl"]["name"][$key]))
 										{
-											
+										//echo "here8";	
 											if($floor_name=="3D Floor Plan"){
 												$params = array(
 							                        "image_type" => "3d_floor_plan",
@@ -238,7 +256,20 @@
 							                        "altText" => $altText,
 							                        //"mediaExtraAttributes" => $media_extra_attributes
 							                	);
-											}  
+											}
+											else if($floor_name=="Panorama"){
+												$params = array(
+							                        "image_type" => "panorama",
+							                        "folder" => $extra_path,
+							                        "count" => "floor_plan".$key,
+							                        "image" => $file,
+							                        "title" => $floor_name,
+							                        "description" => $floor_name,
+							                        "altText" => $altText,
+							                        //"mediaExtraAttributes" => $media_extra_attributes
+							                	);
+							                	//echo "here"
+											}   
 											else{
 												$params = array(
 							                        "image_type" => "floor_plan",
@@ -252,8 +283,8 @@
 											
 
 											$unitImageArr['params'] = $params;
-						                     $fileEndName[$key] = "floor-plan";
-						                     $postArr[$key] = $unitImageArr;
+						                    $fileEndName[$key] = "floor-plan";
+						                    $postArr[$key] = $unitImageArr;
 
 							                    //  add images to image service
 
@@ -324,7 +355,7 @@
 				}
 			}
 
-
+//print_r($postArr); die;
 		$serviceResponse = writeToImageService($postArr);
 		//print("<pre>");var_dump($serviceResponse);die();
 		//$serviceResponse = json_decode($serviceResponse);

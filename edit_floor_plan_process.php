@@ -8,12 +8,14 @@
 	$villApartment = array();
 	$plot = array();
 	$commercial = array();
-	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex", "3D Floor Plan");
-	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor");
+	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex", "3D Floor Plan", "Panorama");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Panorama");
 	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
 	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan");
 	$triplex = array("Ground Floor Plan", "First Floor Plan", "Second Floor Plan");
 	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan");
+
+	$documentTypeArr = array("Panoramic");
 		$watermark_path = 'images/pt_shadow1.png';
 		 $projectId = $_GET['projectId'];
 		$projectDetail = ProjectDetail($projectId);
@@ -105,6 +107,7 @@
 			$a_3d_content = file_get_contents($a_3d_url);
 		    $a_3d_Path = json_decode($a_3d_content);
 		    foreach($a_3d_Path->data as $k=>$v){
+		    	
 			    $data = array();
 			    $data['OPTION_ID'] = $v1['OPTION_ID'];
 			    $data['UNIT_TYPE'] = $v1['UNIT_TYPE'];
@@ -130,6 +133,9 @@
 					
 				else if($v1['UNIT_TYPE']=='commercial')
 					$commercial[count($ImageDataListingArr)] = "yes";
+				if(in_array($v->objectMediaType->type, $documentTypeArr)){
+					$data['DOCUMENT_TYPE'] = "yes";
+				}
 
 		        $data['SERVICE_IMAGE_ID'] = $v->id;
 		        //$data['objectType'] = $v->imageType->objectType->type;
