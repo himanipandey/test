@@ -1454,50 +1454,23 @@ function getParameterByName(name) {
 		                    <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">
 		                        <form method = "get">
 		            	            <tr>
-		                                <td width="20%" height="25" align="left" valign="top">
-		                                   
-		                                </td>
-		                                <td width = "10px">&nbsp;
-		                                </td>
-		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <!--<span id = "LocalityList">
-		                                    <select id="locality" name="locality" onchange = "localitySelect(this.value);">
-		                                       <option value=''>select locality</option>
-		                                       {foreach from=$localityArr key=k item=v}
-		                                           <option value="{$v->locality_id}" {if $localityId==$v->locality_id}
-		                                              selected="selected" {/if}>{$v->label}</option>
-		                                       {/foreach}
-		                                    </select>
-		                                    </span> -->
-		                                </td>
-		                          		<!-- <input type="hidden" name="localityId" id = "localityId" value="{$localityId}"> -->
-		                                
-		                                
+		                                <td width="20%" height="25" align="left" valign="top"></td>
+		                                <td width = "10px">&nbsp;</td>
+		                                <td width="20%" height="25" align="left" valign="top"></td>
 		                                <td width = "10px">&nbsp;</td>
 		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <!--<select name="status">
-		                                       <option value='Active' {if $status == 'Active'}selected{/if}>Active</option>
-		                                       <option value='Inactive' {if $status == 'Inactive'}selected{/if}>Inactive</option>
-		                                    </select> -->
-                                        <select id="citydd" name="citydd" >
-                                           <option value=''>select city</option>
-                                           {foreach from=$cityArray key=k item=v}
-                                               <option value="{$k}" {if $k==$cityId}  {/if}>{$v}</option>
-                                           {/foreach}
-                                        </select>
+                                                    <select id="citydd" name="citydd" >
+                                                       <option value=''>select city</option>
+                                                       {foreach from=$cityArray key=k item=v}
+                                                           <option value="{$k}" {if $k==$cityId}  {/if}>{$v}</option>
+                                                       {/foreach}
+                                                    </select>
 		                                </td>
                                     <td width = "10px">&nbsp;
                                     </td>
                                     <td width="15%" height="25" align="left" valign="top">
-                                        <!-- <select id="placeType" name="placeType">
-                                           <option value=''>select place type</option>
-                                           {foreach from=$nearPlaceTypesArray key=k item=v}
-                                                  <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
-                                           {/foreach}
-                                        </select>
-                                        -->
-                                      
                                       <input type=text name="project_search" id="project_search"  style="width:210px;"> 
+                                      <input type=text name="project_search_id" id="project_search_id" placeholder="Listing Id"  style="width:210px;"> 
                                       <input type=hidden name="selProjId" id="selProjId" >
                               
                                     </td>
