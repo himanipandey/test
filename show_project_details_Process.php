@@ -549,6 +549,9 @@ $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
 
+/*********fetching project brochure***************/
+$brochure = getProjectBrochure($projectId);
+$smarty->assign("projectBrochure", $brochure['projectBrouchure']['service_image_path']);
 
 /* * ****code for project comment fetch from commeny history table**** */
 $cycleId = $projectDetails[0]['PROJECT_STAGE'];
