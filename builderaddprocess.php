@@ -117,7 +117,7 @@ if ($_POST['btnSave'] == "Save")
         if($builderid != ''){
             $bldrURL = " AND BUILDER_ID!=".$builderid;
         }
-        $qryStr = "SELECT * FROM ".RESI_BUILDER." WHERE (ENTITY = '".$legalEntity."' OR BUILDER_NAME ='".$txtBuilderName."') ".$bldrURL;
+        $qryStr = "SELECT * FROM ".RESI_BUILDER." WHERE (ENTITY = '".$legalEntity."' OR BUILDER_NAME ='".$txtBuilderName."') AND builder_status=0 ".$bldrURL;
         $resBuilder = mysql_query($qryStr) or die(mysql_error());
         if(mysql_num_rows($resBuilder)>0){
             while ($dataBuilder = mysql_fetch_assoc($resBuilder)) {
@@ -128,9 +128,8 @@ if ($_POST['btnSave'] == "Save")
                     $ErrorMsg["legalEntity"] = "This entity name is already exists.";
                 }
             }
-            
         }
-	    /******end code for builder url already exists******/
+	/******end code for builder url already exists******/
 	//  die; 
 	if($_FILES['txtBuilderImg']['type'] != '')
             {

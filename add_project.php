@@ -4,6 +4,8 @@ ini_set('display_errors','1');
 	include("smartyConfig.php");
 	include("appWideConfig.php");
 	include("dbConfig.php");
+        include_once("log4php/Logger.php");
+        include_once("imageService/image_upload.php");
 	include("includes/configs/configs.php");
 	include("builder_function.php");
         include("modelsConfig.php"); 
