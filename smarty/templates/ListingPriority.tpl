@@ -1448,17 +1448,13 @@ function getParameterByName(name) {
 		<TR>
 		<TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 		    <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
-				<tr>
+                        <tr>
 		            <td>
-		        	    <div id="search-top">
-		                    <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">
-		                        <form method = "get">
+                                <div id="search-top">
+                                    <form method = "get">
+                                        <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">		                        
 		            	            <tr>
-		                                <td width="20%" height="25" align="left" valign="top"></td>
-		                                <td width = "10px">&nbsp;</td>
-		                                <td width="20%" height="25" align="left" valign="top"></td>
-		                                <td width = "10px">&nbsp;</td>
-		                                <td width="15%" height="25" align="left" valign="top">
+		                                <td height="25" align="left" valign="top">
                                                     <select id="citydd" name="citydd" >
                                                        <option value=''>select city</option>
                                                        {foreach from=$cityArray key=k item=v}
@@ -1466,25 +1462,23 @@ function getParameterByName(name) {
                                                        {/foreach}
                                                     </select>
 		                                </td>
-                                    <td width = "10px">&nbsp;
-                                    </td>
-                                    <td width="15%" height="25" align="left" valign="top">
-                                      <input type=text name="project_search" id="project_search"  style="width:210px;"> 
-                                      <input type=text name="project_search_id" id="project_search_id" placeholder="Listing Id"  style="width:210px;"> 
-                                      <input type=hidden name="selProjId" id="selProjId" >
-                              
-                                    </td>
-		                                <td width = "10px">&nbsp;</td>
-		                                <td width="20%" height="25" align="left" valign="top">
+                                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
+                                                    <input type=text name="project_search" id="project_search" placeholder="Project"  style="width:210px;">
+                                                  <input type=hidden name="selProjId" id="selProjId" >
+                                                </td>
+                                                <td style="padding-left: 10px;">
+                                                    <input type=text name="project_search_id" id="project_search_id" placeholder="Listing Id"  style="width:210px;">
+                                                </td>
+		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
 		                                </td>
-		                          </tr>
-		                        </form>
-		                    </table>
+                                            </tr>
+                                        </table>
+                                    </form>
 		                </div> 
 		            </td>
-                </tr>
-            </table>  
+                    </tr>
+                </table>
 
 
 
