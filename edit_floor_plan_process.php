@@ -8,12 +8,12 @@
 	$villApartment = array();
 	$plot = array();
 	$commercial = array();
-	$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex", "3D Floor Plan", "Panorama");
+	/*$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex", "3D Floor Plan", "Panorama");
 	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Panorama");
 	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
 	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan");
 	$triplex = array("Ground Floor Plan", "First Floor Plan", "Second Floor Plan");
-	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan");
+	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan");*/
 
 	$documentTypeArr = array("Panoramic");
 		$watermark_path = 'images/pt_shadow1.png';
