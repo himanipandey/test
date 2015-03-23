@@ -4,16 +4,11 @@
 		include("ftp.new.php");
 		$ErrorMsg='';
 		$postArr = array();
-		$floorPlanOptionsArr = array();
+		//$floorPlanOptionsArr = array();
 	$villApartment = array();
 	$plot = array();
 	$commercial = array();
-	/*$apartmentArr = array("Floor Plan", "Simplex", "Duplex", "Penthouse", "Triplex", "3D Floor Plan", "Panorama");
-	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Panorama");
-	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan");
-	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan");
-	$triplex = array("Ground Floor Plan", "First Floor Plan", "Second Floor Plan");
-	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan");*/
+		
 
 	$documentTypeArr = array("Panoramic");
 		$watermark_path = 'images/pt_shadow1.png';
@@ -55,14 +50,14 @@
 			    $data['UNIT_NAME'] = $v1['UNIT_NAME'];
 			    if($v1['UNIT_TYPE']=='Apartment'){
 			    	//array_push($floorPlanOptionsArr, $apartmentArr);
-					$floorPlanOptionsArr[count($ImageDataListingArr)] = $apartmentArr;
+					//$floorPlanOptionsArr[count($ImageDataListingArr)] = $apartmentArr;
 					//array_push($villApartment, )
 					$villApartment[count($ImageDataListingArr)] = "yes";
 					//echo $k;
 				}
 				else if($v1['UNIT_TYPE']=='Villa'){
 					//array_push($floorPlanOptionsArr, $villaArray);
-					$floorPlanOptionsArr[count($ImageDataListingArr)] = $villaArray;
+					//$floorPlanOptionsArr[count($ImageDataListingArr)] = $villaArray;
 					$villApartment[count($ImageDataListingArr)] = "yes";
 				}
 				else if($v1['UNIT_TYPE']=='Plot'){
@@ -116,14 +111,14 @@
 			    $data['UNIT_NAME'] = $v1['UNIT_NAME'];
 			    if($v1['UNIT_TYPE']=='Apartment'){
 			    	//array_push($floorPlanOptionsArr, $apartmentArr);
-					$floorPlanOptionsArr[count($ImageDataListingArr)] = $apartmentArr;
+					//$floorPlanOptionsArr[count($ImageDataListingArr)] = $apartmentArr;
 					//array_push($villApartment, )
 					$villApartment[count($ImageDataListingArr)] = "yes";
 					//echo $k;
 				}
 				else if($v1['UNIT_TYPE']=='Villa'){
 					//array_push($floorPlanOptionsArr, $villaArray);
-					$floorPlanOptionsArr[count($ImageDataListingArr)] = $villaArray;
+					//$floorPlanOptionsArr[count($ImageDataListingArr)] = $villaArray;
 					$villApartment[count($ImageDataListingArr)] = "yes";
 				}
 				else if($v1['UNIT_TYPE']=='Plot'){
@@ -176,14 +171,14 @@
 		$smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 		//$smarty->assign("img_path", $img_path);
 		
-		$smarty->assign("floorPlanOptionsArr", $floorPlanOptionsArr);
+		//$smarty->assign("floorPlanOptionsArr", $floorPlanOptionsArr);
 	$smarty->assign("villApartment", $villApartment);
 	$smarty->assign("plot", $plot);
 	$smarty->assign("commercial", $commercial);
-	$smarty->assign("duplex", $duplex);
-	$smarty->assign("triplex", $triplex);
-	$smarty->assign("penthouse", $penthouse);
-	$smarty->assign("ground_floor", $ground_floor);
+	/*$smarty->assign("duplex", $duplex);
+	$smarty->assign("triplex", $triplex);*/
+	/*$smarty->assign("penthouse", $penthouse);
+	$smarty->assign("ground_floor", $ground_floor);*/
 		$count+=count($ImageDataFloorArr);
 		$count+=count($ImageDataListingArr);
 

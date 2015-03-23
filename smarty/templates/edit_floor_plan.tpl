@@ -89,7 +89,7 @@ function check()
 	}	
 }
 
-function onSelectOption(c){
+/*function onSelectOption(c){
 
       	$("#floor_name_"+c+" option").each(function() {
 		    $(this).remove();
@@ -128,7 +128,7 @@ function onSelectOption(c){
       	
       	//$('<option>').val(imgName1).text(imgName1).appendTo('#floor_name_'+c);
       	//$('<option>').val(imgName2).text(imgName2).appendTo('#floor_name_'+c);
-    }
+    }*/
 
 
 $(".pt_reqflrplan").fancybox();
