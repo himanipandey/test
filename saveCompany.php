@@ -698,7 +698,12 @@ if($_POST['task']=='createComp'){
                 $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.", ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).", {$_SESSION['adminId']}, NOW())";
                 $res = mysql_query($query) or die(mysql_error());
                 
-                $insertCompCodeSqlStr = "INSERT INTO company_code(COMPANY_ID) VALUES('{$comp_id}')";
+                $sqlCompCode = "SELECT id FROM company_code ORDER BY id DESC LIMIT 1";
+                $resCompCode = mysql_query($sqlCompCode) or die(mysql_error());
+                $dataCompCode= mysql_fetch_assoc($resCompCode);
+                $compCodeId = $dataCompCode['id']+1;
+                
+                $insertCompCodeSqlStr = "INSERT INTO company_code(ID,COMPANY_ID) VALUES({$compCodeId},{$comp_id})";
                 $resInsert = mysql_query($insertCompCodeSqlStr) or die(mysql_error());
                 $channel_partner_id = mysql_insert_id();
                 $channel_partner_id = str_pad($channel_partner_id, 4, '0', STR_PAD_LEFT);
