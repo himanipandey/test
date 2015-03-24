@@ -1,6 +1,7 @@
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="tablesorter/css/pager-ajax.css">
 <script type="text/javascript" src="/js/jquery/jquery-1.4.4.min.js"></script> 
 <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> 
 <script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
@@ -13,13 +14,55 @@
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
+
+<style>
+  /*  css for ajax loader
+  */
+
+
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        40%;
+    left:       60%;
+    height:     20%;
+    width:      20%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+    
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+</style>
+
+
+
 {literal}
 <script language="javascript">
 
 
 jQuery(document).ready(function(){ 
- 
-  
+
+
 	$("#create_button").click(function(){
 	  cleanFields();
 	   
@@ -41,6 +84,226 @@ jQuery(document).ready(function(){
 	});
 
 
+
+$(function(){
+/*var selCity = null;
+selCity = $("#citydd :selected").val();
+var selProject = null;
+selProject = $("#selProjId").val();*/
+  // Initialize tablesorter
+  // ***********************
+  $("#company_table")
+    .tablesorter({
+      theme: 'blue',
+      widthFixed: true,
+      sortLocaleCompare: true, // needed for accented characters in the data
+      sortList: [ [0,1] ],
+      widgets: ['zebra'],
+      widgetOptions : {
+        filter_serversideFiltering : false,
+      } 
+    })
+
+    //before initialize
+    .on('pagerBeforeInitialized', function(event, pager){
+    var table = this,
+        $table = $(this);
+
+    pager.page = 0;            // set current page here
+    pager.size = 25;           // set current size here
+    pager.currentFilters = []; // set initial filters here
+  })
+
+    // initialize the pager plugin
+    // ****************************
+    .tablesorterPager({
+
+      // **********************************
+      //  Description of ALL pager options
+      // **********************************
+
+      // target the pager markup - see the HTML block below
+      container: $(".pager"),
+
+      size: 25,
+
+      // use this format: "http:/mydatabase.com?page={ page }&size={ size }&{ sortList:col }"
+      // where {page} is replaced by the page number (or use {page+1} to get a one-based index),
+      // {size} is replaced by the number of records to show,
+      // {sortList:col} adds the sortList to the url into a "col" array, and {filterList:fcol} adds
+      // the filterList to the url into an "fcol" array.
+      // So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
+      // and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
+      //ajaxUrl : 'assets/City{page}.json?{filterList:filter}&{sortList:column}',
+      //ajaxUrl : '/ajax_listing_table_copy.php?page={page}&size={size}&{sortList:col}',
+      //ajaxUrl : '/ajax_tablesorter_listing.php?page={page}&size={size}&{sortList:col}&city={selCity}&project={selProject}',
+      ajaxUrl : '/ajaxGetCompany.php?page={page}&size={size}&{sortList:col}',
+      // modify the url after all processing has been applied
+      customAjaxUrl: function(table, url) {
+          // manipulate the url string as you desire
+          var compType="";
+          var name="";
+          var status="";
+          var compid = getParameterByName('compid');
+
+
+          $(".tablesorter-filter").each(function(){ 
+            if($(this).attr("data-column")=="1"){ 
+              compType= $(this).val(); 
+              //page = 0;
+            } 
+            if($(this).attr("data-column")=="2") { 
+              name= $(this).val(); 
+              //page = 0;
+            }
+            if($(this).attr("data-column")=="6") { 
+              status= $(this).val(); 
+              //page = 0;
+            }
+          });
+
+           url += '&compType=' +compType;  
+           //if($("#project_search").val().trim()!='')
+            url += '&name=' + name; 
+            url += '&status=' + status; 
+            url += '&compid=' + compid; 
+          // trigger my custom event
+          $(table).trigger('changingUrl', url);
+          // send the server the current page
+          return url;
+      },
+
+      // add more ajax settings here
+      // see http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
+      ajaxObject: {
+        dataType: 'json'
+      },
+
+      // process ajax so that the following information is returned:
+      // [ total_rows (number), rows (array of arrays), headers (array; optional) ]
+      // example:
+      // [
+      //   100,  // total rows
+      //   [
+      //     [ "row1cell1", "row1cell2", ... "row1cellN" ],
+      //     [ "row2cell1", "row2cell2", ... "row2cellN" ],
+      //     ...
+      //     [ "rowNcell1", "rowNcell2", ... "rowNcellN" ]
+      //   ],
+      //   [ "header1", "header2", ... "headerN" ] // optional
+      // ]
+      // OR
+      // return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
+      ajaxProcessing: function(data){
+        console.log(data);
+        if (data && data.hasOwnProperty('rows')) {
+          var indx, r, row, c, d = data.rows,
+          // total number of rows (required)
+          total = data.total_rows,
+          // array of header names (optional)
+          headers = data.headers,
+          // cross-reference to match JSON key within data (no spaces)
+          headerXref = headers.join(',').replace(/\s+/g,'').split(','),
+          // all rows: array of arrays; each internal array has the table cell data for that row
+          rows = [],
+          // len should match pager set size (c.size)
+          len = d.length;
+          var serialNo = data.serialNo;
+          // this will depend on how the json is set up - see City0.json
+          // rows
+          for ( r=0; r < len; r++ ) {
+            row = []; // new row array
+            // cells
+            for ( c in d[r] ) {
+              if (typeof(c) === "string") {
+                // match the key with the header to get the proper column index
+                indx = $.inArray( c, headerXref );
+
+                // add each table cell data to row array
+                if (indx >= 0) {
+                  if(indx==0){
+                    row[indx] = serialNo+r;
+                  }
+                  else if(indx==6){//encodeURIComponent(JSON.stringify(d[r][c]))
+                    //d[r][c] = {'description': "hello'yes boys"};  
+                    var a = d[r][c];
+                    var b = JSON.parse(a);
+                    
+                    a = escape(d[r][c]);
+                    
+                    var edit = 'edit';
+                    row[indx] = "<a href='javascript:void(0);' onclick='editCompany("+JSON.stringify(a)+ ", "+JSON.stringify(edit)+")'>Edit</a><br/><a href='/companyOrdersList.php?compId="+JSON.stringify(b.id)+"'>ViewOrders</a><br/><a href='/createCompanyOrder.php?c="+JSON.stringify(b.id)+"'>AddOrders</a><input type='hidden' id='extra_data' value='{$v['extra_json']}'>";
+
+                    //<a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['broker_info_type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a><input type="hidden" id="extra_data" value='{$v['extra_json']}'>
+
+                    //console.log(a);
+                    //row[indx] =  "<button type='button' id='edit_button_' onclick='editCompany("+JSON.stringify(a)+")' align='left'>Edit</button>";
+                 //var hello = {};
+                 //console.log(d[r][c]);
+                  //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
+                  }
+                  else
+                    row[indx] = d[r][c];
+                }
+              }
+            }
+            rows.push(row); // add new row array to rows array
+          }
+          // in version 2.10, you can optionally return $(rows) a set of table rows within a jQuery object
+          return [ total, rows, headers ];
+        }
+      },
+
+      // output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
+      output: '{startRow} to {endRow} ({totalRows})',
+
+      // apply disabled classname to the pager arrows when the rows at either extreme is visible - default is true
+      updateArrows: true,
+
+      // starting page of the pager (zero based index)
+      page: 0,
+
+      // Number of visible rows - default is 10
+      size: 25,
+
+      // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+      // table row set to a height to compensate; default is false
+      fixedHeight: false,
+
+      // remove rows from the table to speed up the sort of large tables.
+      // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+      removeRows: false,
+
+      // css class names of pager arrows
+      cssNext        : '.next',  // next page arrow
+      cssPrev        : '.prev',  // previous page arrow
+      cssFirst       : '.first', // go to first page arrow
+      cssLast        : '.last',  // go to last page arrow
+      cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
+      cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
+      cssErrorRow    : 'tablesorter-errorRow', // error information row
+
+      // class added to arrows when at the extremes (i.e. prev/first arrows are "disabled" when on the first page)
+      cssDisabled    : 'disabled' // Note there is no period "." in front of this class name
+
+    });
+
+});
+
+//js for loading
+
+$body = $("body");
+  
+  $(document).on({
+      ajaxStart: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);
+  },
+       ajaxStop: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);
+    }  
+
+     
+  });
+
+//save form
 
 	$("#lmkSave").click(function(){
 		var compType = $('#companyTypeEdit').children(":selected").val();
@@ -66,6 +329,7 @@ jQuery(document).ready(function(){
     var web = $('#web').val();
 
     var img = $('#uploadedImage').val();
+    var sign_up_form = $('#uploadedSignUpForm').val();
     //var img = $(':file').val();
     var ipArr = [];
     $('input[name="ips[]"]').each(function() {
@@ -84,10 +348,12 @@ jQuery(document).ready(function(){
     if(compid) {
       mode = 'update';
       imgId = $('#imgid').val();
+      formId = $('#formid').val();
     }
     else {
       mode='create';
       imgId = '';
+      formId = '';
     } 
 
    
@@ -99,7 +365,7 @@ jQuery(document).ready(function(){
 
 /************************* new field added for broker ****************************/
   //loop through all values of office location table rows to get data
-  for(var i=0; i<window.offLocTabRowNo; i++){
+  /*for(var i=0; i<window.offLocTabRowNo; i++){
     var row =  document.getElementById("officeLocRowId_"+i);
     if(row){
       var rowData = { "address" :$("#off_loc_address_id_"+i).text().trim(), c_id:$("#off_loc_city_id_"+i).val(), loc_id:$("#off_loc_loc_id_"+i).val(), db_id:$("#off_loc_dbId_"+i).val()};
@@ -120,7 +386,7 @@ jQuery(document).ready(function(){
       coverage_data.push(rowData);
 
     }
-  }
+  }*/
 
  //loop through all values of contact persons rows
   for(var i=0; i<=window.contactTableNo; i++){
@@ -139,11 +405,11 @@ jQuery(document).ready(function(){
 
 //get customer care data
 
-  var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };
-
+ /* var cust_care_data = { phone:$("#cc_phone").val().trim(),  mobile:$("#cc_mobile").val().trim(), fax:$("#cc_fax").val().trim() };
   valid_noncompul($("#cc_phone").val().trim(), "Please provide a numeric phone no.", "errmsgcc_phone");
   valid_noncompul($("#cc_mobile").val().trim(), "Please provide a numeric mobile no.", "errmsgcc_mobile");
   valid_noncompul($("#cc_fax").val().trim(), "Please provide a numeric fax no.", "errmsgcc_fax");
+*/
 
 // broker extra fields
   
@@ -168,34 +434,69 @@ if(compType=='Broker'){
     }
   });
 
-  //console.log(transactionType);
+var device = [];
+  $(".device").each(function(){
+    if($(this).is(':checked')){
+      var v = $(this).val();
+      //var a = { id: "tt_db_id_"+v, val:v};
+      device.push(v);
+    }
+  });
+  console.log(device);
   var bd_id = $('#bd_id').val(); 
   var legalType = $('#compLegalType').children(":selected").val();
   var frating = $('#frating').children(":selected").val();
+
+  var bankId = $('#bankName').children(":selected").val();
+  var accountNo = $('#accountNo').val().trim();
+  var accountType = $('#accountType').children(":selected").val();
+  var ifscCode = $('#ifscCode').val().trim();
+  var bank_details = '';
+  if(bankId || accountNo || accountType || ifscCode)
+   bank_details = { bankId:bankId, accountNo:accountNo, accountType:accountType, ifscCode:ifscCode };
+
+  var formSignUpDate = $('#img_date2').val(); 
+  var signUpBranch = $('#signUpBranch :selected').val();
+
   var since_op = $('#img_date1').val(); 
   var stn = $('#stn').val();
   var officeSize = $('#officeSize').val();
   var employeeNo = $('#employeeNo').val();
   var ptManager = $('#ptManager').children(":selected").val();
-
-
+  if($('input:radio[name=relative]:checked').val() == "Yes")
+    var ptRelative = $('#ptRelative').children(":selected").val();
+  else
+    var ptRelative = 0;
    
-  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
+  //var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, since_op:since_op, stn:stn, officeSize:officeSize, employeeNo:employeeNo, ptManager:ptManager };
+
+  var broker_extra_fields = { id:bd_id, legalType:legalType, projectType:projectType, transactionType:transactionType, frating:frating, formSignUpDate:formSignUpDate, signUpBranch:signUpBranch, device:device, since_op:since_op, ptManager:ptManager, ptRelative:ptRelative };
 
   if (broker_info_type=="Advance"){
-    valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
-    valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
+    //valid_compul(since_op, isDate, "Please provide a valid date.", "errmsgdate");
+    /*valid_compul(stn, isAlphaNumeric, "Please provide a numeric service tax no.", "errmsgstn");
     valid_compul(officeSize, isNumeric1, "Please provide a no.", "errmsgofficesize");
-    valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");
+    valid_compul(employeeNo, isNumeric1, "Please provide a no.", "errmsgemployeeNo");*/
     valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
-    valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
+    //valid_compul(ptManager, isNumeric1, "Please select a Proptiger Manager.", "errmsgptmanager");
+    //valid_compul(transactionType, valid_tt_type, "Please select a transaction type.", "errmsgtttype");
+    if(signUpBranch==''){
+      $('#errmsgsignupbranch').html('<font color="red">Please Select a Signup Branch.</font>');
+      $("#signUpBranch").focus();
+      window.error = 1;
+    }
+    else{
+          $('#errmsgsignupbranch').html('');
+    }
   }
 }
 
   //console.log(coverage_data);
   //console.log(contact_person_data); 
     
-   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+   //var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
+
+   var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, signUpForm:sign_up_form, imageId:imgId, formId:formId, ipArr : ipArr, contact_person_data:contact_person_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, bank_details:bank_details, task : "createComp", mode:mode}; 
 
 /******************************validation****************************************/    
 
@@ -255,17 +556,17 @@ if(compType=='Broker'){
     }
 
     if(email != '' && !validateEmail(email)){
-	  $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
+	   $('#errmsgemail').html('<font color="red">Please provide a Valid Contact Email.</font>');
       $("#email").focus();
       error = 1;	
-	}
+	  }
 
-    if(compphone==''){
+    /*if(compphone==''){
       $('#errmsgcompphone').html('<font color="red">Please provide an Office Phone no.</font>');
       $("#compphone").focus();
       window.error = 1;
     }
-    else if(compphone!='' && !isNumeric1(compphone)){
+    else*/ if(compphone!='' && !isNumeric1(compphone)){
       $('#errmsgcompphone').html('<font color="red">Please provide a Numeric Value.</font>');
       $("#compphone").focus();
       window.error = 1;
@@ -340,17 +641,25 @@ if(compType=='Broker'){
 
 
    
-
+var $body = $("body");
 	    if (window.error==0){
       
 	      	$.ajax({ 
 	            type: "POST",
 	            url: "/saveCompany.php",
 	            data: data,
+
+              beforeSend: function(){
+                console.log('in ajax beforeSend');
+                $("body").addClass("loading");
+                $("#lmkSave").attr('disabled','disabled');
+              },
               
+
 	            success:function(msg){
-				   if(msg == 1){
-	               
+                console.log("msg"+msg);
+                //$("body").removeClass("loading");
+				        if(msg == 1){
 	               location.reload(true);
                  $(window).scrollTop(0);
 	                //$("#onclick-create").text("Landmark Successfully Created.");
@@ -363,15 +672,22 @@ if(compType=='Broker'){
 	               else if(msg == 3){
 	                //$("#onclick-create").text("Error in Adding Landmark.");
 	                   alert("error");
+                           $("#lmkSave").removeAttr('disabled');
 	               }
 	               else if(msg == 4){
 	                //$("#onclick-create").text("No Landmark Selected.");
 	                   alert("no data");
+                           $("#lmkSave").removeAttr('disabled');
 	               }
 	               else if(msg == 9){
 	                  alert("Company with Same Contact Email Already Exist!");
+                          $("#lmkSave").removeAttr('disabled');
 	               }
-	               else alert(msg);
+	               else{ 
+                           alert(msg);
+                           $("#lmkSave").removeAttr('disabled');
+                       };
+                       
 	            },
 	        });
 
@@ -436,6 +752,15 @@ $.widget( "custom.catcomplete2", $.ui.autocomplete, {
         $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
       },
 
+    });
+
+
+    $(".relative").click(function(){
+      if($('input:radio[name=relative]:checked').val() == "Yes")
+          $("#ptRelative").show();
+      else
+        $("#ptRelative").hide();
+      
     });
 
 
@@ -564,7 +889,14 @@ function cleanFields(){
     $("#imgUploadStatus").val("0");
     $("#uploadedImage").val("");
 
-    $('#create_company input text,#create_company select,#create_company textarea, :text').each(function(key, value){
+    $("#formid").val('');
+    $("#signUpFormUploadStatus").val("0");
+    $("#uploadedSignUpForm").val("");
+
+    $("#signUpForm").val("");
+    $("#companyImg").val("");
+
+    $('#create_company input text,#create_company select, #create_company textarea, :text').each(function(key, value){
       $(this).val('');       
     }); 
 
@@ -577,8 +909,14 @@ function cleanFields(){
           $(this).prop('checked', false);
     });
 
-    $("#coverage_table tbody tr").remove();
-    $("#off_loc_table").find("tr").remove();
+    $(".device").each(function(){
+          $(this).prop('checked', false);
+    });
+
+
+
+    /*$("#coverage_table tbody tr").remove();
+    $("#off_loc_table").find("tr").remove();*/
 
     $('#errmsgcity').html('');
     $('#errmsgcomptype').html('');
@@ -591,16 +929,21 @@ function cleanFields(){
     $('.errmsgip').each(function() {
       $(this).html('');
     });
+
     $('#imgPlaceholder').html('');
     $('#errmsglogo').html('');
+    $('#signUpPlaceholder').html('');
+    $('#errmsglogo').html('');
+    $('#errmsgsignupform').html('');
+
     $('#errmsgcomplegaltype').html('');
     $('#errmsgpan').html('');
     $('#errmsgemail').html('');
-    $('#errmsgemployeeNo').html('');
+    //$('#errmsgemployeeNo').html('');
     $('#errmsgtttype').html('');
     $('#errmsgptmanager').html('');
-    $('#errmsgofficesize').html('');
-    $('#errmsgstn').html('');
+    //$('#errmsgofficesize').html('');
+    //$('#errmsgstn').html('');
     $('#errmsgdate').html('');
     
 
@@ -608,9 +951,39 @@ function cleanFields(){
 
 
 
-function editCompany(id,name,type, broker_info_type, des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, compfax, phone, active_since, web, a, action){
+function editCompany(str, action){
+  //id,name,type, broker_info_type, des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, compfax, phone, active_since, web, a, action
+
     cleanFields();
+    str = JSON.parse(unescape(str));
+    console.log("here123");
+console.log(str);
+    var id = str.id;
+    var name = str.name;
+    var type = str.type;
+    var broker_info_type = str.broker_info_type;
+    var des = str.des;
+    var status = str.status;
+    var pan = str.pan;
+    var email = str.email;
+    var address = str.address;
+    var city = str.city;
+    var pin = str.pin;
+    var compphone = str.compphone;
+    var imgpath = str.service_image_path;
+    var imgid = str.image_id;
+    var imgalttext = str.alt_text;
+    var ipsstr = str.ipsstr;
+    var person = str.person;
+    var compfax = str.compfax;
+    var phone = str.phone;
+    var active_since = str.active_since;
+    var web = str.web;
+    var a = str.extra_json;
+
+
     $("#compid").val(id);
+    $("#brokerId").val(id); //console.log( $("#brokerId").val());
     $('#city').val(city);
     $("#companyTypeEdit").val(type);
     $("#broker_info_status").val(broker_info_type);
@@ -628,6 +1001,10 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
       $("#broker_switch").prop("disabled", true);
       $("#broker_switch").hide();
     }
+    if(type=="Broker"){
+      //console.log("here"+type);
+      $("#broker_id").show();
+    }
     $("#name").val(name);
     $("#des").val(des);
     $("#address").val(address);
@@ -638,10 +1015,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
     $("#compemail").val(email);
    // var ipstring = ipstring.substring(0, ipstring.length -1);
 
-    var str = '<img src = "'+imgpath+'?width=130&height=100"  alt = "'+imgalttext+'">';
-
-    $('#imgPlaceholder').html(str);
-    $("#imgid").val(imgid);
+    
 
     var ipsarr = ipsstr.split("-");
     
@@ -673,11 +1047,20 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
       $("#broker_extra_field").hide();
       $("#legalType").hide();
     }
-    var a = eval('('+a+')');
+    //console.log("here");
+
+
+    
+    //a = JSON.parse(unescape(a));
+    //a = JSON.stringify(a);
+    a = $('<div/>').html(a).text();
+    a = eval('('+a+')'); 
+    //console.log(a);
+    //console.log("here1");
     //var data = $("#extra_data").val();
     
     //var data = eval('("data":'+ a+ ') ');
-    console.log(a.data);
+    //console.log(a.data);
     var cP =  a.data.cont_person;
     for(var i=0; i<cP.length; i++){
       if(i>0)
@@ -699,7 +1082,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
     var tableId = "off_loc_table";
     for(var i=0; i<offLoc.length; i++){
       var data = { table_id:tableId, dbId:offLoc[i].id, first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:offLoc[i].c_name, }, third:{ label:"label", text:offLoc[i].loc_name,}, fourth:{ label:"label", text:offLoc[i].address,}, city_id:offLoc[i].c_id, loc_id:offLoc[i].loc_id};
-        addOfficeLocRow(data);
+        //addOfficeLocRow(data);
     }
 
 
@@ -719,16 +1102,16 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
         p_name='All Projects of'; b_name=c[i].b_name;
       }
       var data = { table_id:tableId, dbId:c[i].id, first:{ checkbox:"checkbox", class:"class" }, second:{ label:"label", text:c[i].c_name, }, third:{ label:"label", text:c[i].loc_name,}, fourth:{ label:"label", text:p_name,}, fifth:{ label:"label", text:b_name,}, city_id:c[i].c_id, loc_id:c[i].loc_id, p_id:c[i].p_id, type:type};
-        addCoverageRow(data);
+        //addCoverageRow(data);
     }
 
     var cc = a.data.cust_care;  
-      $("#cc_phone").val(cc.phone);
+     /* $("#cc_phone").val(cc.phone);
       $("#cc_phone_id").val(cc.phone_id);
       $("#cc_mobile").val(cc.mobile);
       $("#cc_mobile_id").val(cc.mobile_id);
       $("#cc_fax").val(cc.fax);
-      $("#cc_fax_id").val(cc.fax_id);
+      $("#cc_fax_id").val(cc.fax_id);*/
 
 
     var pT = a.data.broker_prop_type;
@@ -752,16 +1135,85 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
       }
     });
 
+    var devices = a.data.devices;
+    $(".device").each(function(){
+      for(var i=0; i<devices.length; i++){
+         if( $(this).val()==devices[i].device_id ){
+          $(this).prop('checked', true);
+          //$("#tt_db_id_"+$(this).val()).val(tT[i].id);
+        }
+      }
+    });
+
   var bD = a.data.broker_details; 
   $('#bd_id').val(bD.id);
   $('#compLegalType').val(bD.legal_type);
   $('#frating').val(bD.rating);
-  $('#stn').val(bD.service_tax_no);
-  $('#officeSize').val(bD.office_size);
-  $('#employeeNo').val(bD.employee_no);
+  //$('#stn').val(bD.service_tax_no);
+  //$('#officeSize').val(bD.office_size); 
+  //$('#employeeNo').val(bD.employee_no);
   $('#ptManager').val(bD.pt_manager_id);
+  $('#ptRelative').val(bD.pt_relative_id);
+  $('#img_date2').val(bD.form_signup_date);
+  $('#signUpBranch').val(bD.form_signup_branch);
+  //$('#device').val(bD.primary_device_used);
 
+  if(bD.pt_relative_id>0){
+    $("#relative_yes").prop("checked", true);
+    $("#ptRelative").show();
+  }
 
+  var bankDetails = a.data.bank_details; 
+  //$('#bd_id').val(bD.id);
+  $('#bankName').val(bankDetails.bank_id);
+  $('#accountNo').val(bankDetails.account_no);
+  $('#accountType').val(bankDetails.account_type);
+  $('#ifscCode').val(bankDetails.ifsc_code);
+
+//get logo and signupform
+
+  $.ajax({ 
+              type: "POST",
+              url: "/saveCompany.php",
+              data: {'compId': id , 'task':'getCompanyLogo'  },
+
+              beforeSend: function(){
+                console.log('in ajax beforeSend');
+                $("body").addClass("loading");
+                $("#lmkSave").attr('disabled','disabled');
+              },
+              
+
+              success:function(msg){
+                msg = JSON.parse(msg);
+                console.log(msg);
+                $("body").removeClass("loading");
+
+                if(msg){
+                  if(msg.logo){
+                    var logo = msg.logo;
+                    console.log("f-"+logo['service_image_path']);
+                    console.log("s-"+logo.service_image_path);
+
+                    var imgStr = '<img src = "'+logo['service_image_path']+'?width=130&height=100"  alt = "'+logo['alt_text']+'">';
+                    $('#imgPlaceholder').html(imgStr);
+                    $("#imgid").val(logo['service_image_id']);
+                  }
+                  if(msg.signUpForm){
+                    var doc = msg.signUpForm
+                    var docStr = "";
+                    if(doc['service_image_path'])
+                      docStr = '<a href = "'+doc['service_image_path']+'" > Signup Form Link </a>';
+                    $('#signUpPlaceholder').html(docStr);
+                    $("#formid").val(doc['service_image_id']);
+                  }
+                 
+                  //$("#onclick-create").text("Landmark Successfully Created.");
+                 }
+                 
+                       
+              },
+          });
 
 
 
@@ -772,7 +1224,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
     if($('#create_company').css('display') == 'none'){ 
      $('#create_company').show('slow'); 
     }
-
+console.log("here2");
   if(action == 'read'){
 	  $('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
 		if($(this).attr('id') != 'exit_button')		   
@@ -783,6 +1235,7 @@ function editCompany(id,name,type, broker_info_type, des, status, pan, email, ad
 	    $(this).attr('disabled',false);		    
 	  });		
     }
+    console.log("here3");
 }
 
 function refreshIPs(no){
@@ -863,6 +1316,7 @@ function validateEmail(email)
 
 jQuery(function(){
                 iframeUpload.init();
+                iframeUploadSignUpForm.init();
             });
 
 
@@ -879,7 +1333,7 @@ var iframeUpload = {
     },
     complete: function(){
         jQuery('#uploadForm').show();
-        var response = jQuery("iframe").contents().text();
+        var response = jQuery("iframe[name=uploadiframe]").contents().text();
         if(response){
             response = jQuery.parseJSON(response);
             if(response.status == 1){
@@ -891,6 +1345,39 @@ var iframeUpload = {
             else{
               $("#errmsglogo").html('<font color="red">Image Upload Failed.</font>');
               $("#imgUploadStatus").val("0");
+            }
+            
+        }
+        
+    }
+};
+
+
+
+var iframeUploadSignUpForm = {
+    init: function() {
+        jQuery('#uploadSignUpForm').append('<iframe name="uploadiframeSignup" onload="iframeUploadSignUpForm.complete();"></iframe>');
+        jQuery('form.uploadSignUpForm').attr('target','uploadiframeSignup');
+        //jQuery(document).on('submit', 'form.uploadForm', iframeUpload.started);
+    },
+    started: function() {
+        jQuery('#response').removeClass().addClass('loading').html('Loading, please wait.').show();
+        jQuery('#uploadSignUpForm').hide();
+    },
+    complete: function(){
+        jQuery('#uploadSignUpForm').show();
+        var response = jQuery("iframe[name=uploadiframeSignup]").contents().text();
+        if(response){
+            response = jQuery.parseJSON(response);
+            if(response.status == 1){
+              $("#errmsgsignupform").html('<font color="green">Document Successfully Uploaded.</font>');
+              $("#signUpFormUploadStatus").val("1");
+              $("#uploadedSignUpForm").val(response.image);
+
+            }
+            else{
+              $("#errmsgsignupform").html('<font color="red">Document Upload Failed.</font>');
+              $("#signUpFormUploadStatus").val("0");
             }
             
         }
@@ -1488,6 +1975,7 @@ function companyTypeChanged(){
     $("#legalType").show();
     $("#broker_switch").show();
     $("#broker_switch").val("Basic Information");
+    $('.broker_basic').show();
     if (compid>0 && broker_info_status=="Basic"){
       $('#main_table tr').not('.broker_basic').hide();
       $('#broker_extra_field').show();
@@ -1495,6 +1983,8 @@ function companyTypeChanged(){
       $('#broker_table_extra tbody tr').not('.broker_basic').hide();
       $("#broker_switch").prop("value","Advance Information");
     }
+    if(("#brokerId").val()!='')
+      ("#broker_id").show();
   }
   else{
     $("#broker_switch").hide();
@@ -1545,12 +2035,29 @@ function basic_info_bt_clicked(){
       $('#broker_table_extra tbody tr').not('.broker_basic').hide();
       $("#broker_switch").prop("value","Advance Information");
     }
+
+    if(("#brokerId").val()!='')
+      ("#broker_id").show();
   
   
  //$('#main_table tr.broker_basic').show();
   //$('#main_table tr#broker_extra_field').not('.broker_basic_extra').hide();
  //$(".broker_basic").show()
 
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function onNewImageUpload(){
+  $("#errmsglogo").html('');
+}
+function onNewSignUpFormUpload(){
+  $("#errmsgsignupform").html('');
 }
 
 </script>
@@ -1611,11 +2118,17 @@ function basic_info_bt_clicked(){
                        
                     </tr>
                     <tr class="broker_basic">
-                      
                       <div class="ui-widget">
                       <td width="10%" align="right" ><font color = "red">*</font>Name : </td>
                       <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="name"  style="width:250px;"></td> </div><td width="40%" align="left" id="errmsgname"></td>
                       <td><input type="hidden", id="compid"></td>
+                    </tr>
+
+                    <tr id="broker_id" style="display:none" class="broker_basic">
+                      <div class="ui-widget">
+                      <td width="10%" align="right" ><font color = "red"></font>Broker Id : </td>
+                      <td width="40%" align="left" ><input type=text name="name" class="broker_basic" id="brokerId" readonly="readonly" style="width:250px;" ></td> </div><td width="40%" align="left" id="errmsgname"></td>
+                     
                     </tr>
 
                     <tr id="legalType" style="display:none" class="broker_basic">
@@ -1675,7 +2188,7 @@ function basic_info_bt_clicked(){
 
 
                     <tr class="broker_basic">
-                      <td width="20%" align="right" ><font color = "red">*</font>Office Phone No. : </td>
+                      <td width="20%" align="right" ><font color = "red"></font>Office Phone No. : </td>
                       <td width="30%" align="left"><input type=text name="compphone" class="broker_basic" id="compphone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcompphone"></td>
                     </tr>
 
@@ -1708,7 +2221,7 @@ function basic_info_bt_clicked(){
                   <form action="saveCompanyLogo.php" target="uploadiframe" name="uploadForm" id="uploadForm" method="POST" enctype = "multipart/form-data">
                     <tr>
                       <td width="20%" align="right" >Change Logo : </td>
-                      <td width="30%" align="left"><input type="file" name='companyImg' id="companyImg" ><input type="hidden" name='imgUploadStatus' id="imgUploadStatus" value="0"><input type="hidden" name='uploadedImage' id="uploadedImage" value=""><input type="submit" id="upload" value="Upload" name="submit"></td> <td width="20%" align="left" id="errmsglogo"></td>
+                      <td width="30%" align="left"><input type="file" name='companyImg' id="companyImg" onchange="onNewImageUpload()"><input type="hidden" name='imgUploadStatus' id="imgUploadStatus" value="0"><input type="hidden" name='uploadedImage' id="uploadedImage" value=""><input type="submit" id="upload" value="Upload" name="submit"></td> <td width="20%" align="left" id="errmsglogo"></td>
                     </tr>
                     
 
@@ -1821,9 +2334,9 @@ function basic_info_bt_clicked(){
 
 
 <!--  customer care starts --------------------------------------------------------------------     -->
-                    <tr height="15">
+                    <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Customer Care Details</b></td>
-                    </tr> 
+                    </tr>  -->
 
                     <!--<tr>
                       <td width="20%" align="right" >Website : </td>
@@ -1831,7 +2344,7 @@ function basic_info_bt_clicked(){
                     </tr>-->
 
                     
-                    <tr>
+                    <!-- <tr>
 
                       <td width="20%" align="right" >Cust Care Phone : </td>
                       <td width="30%" align="left"><input type=text name="phone" id="cc_phone"  style="width:250px;"></td> <td width="20%" align="left" id="errmsgcc_phone"><input type=hidden name="phone" id="cc_phone_id"></td>
@@ -1847,7 +2360,7 @@ function basic_info_bt_clicked(){
                       <td width="20%" align="right" valign="top">Cust Care Fax :</td>
                      <td width="30%" align="left"><input type=text name="fax" id="cc_fax" style="width:250px;"></td> 
                     <td width="20%" align="left" id="errmsgcc_fax"><input type=hidden name="phone" id="cc_fax_id"></td>
-                    </tr>
+                    </tr> -->
 
                    <!--<tr>
                       <td width="20%" align="right" >Cust Care Email : </td>
@@ -1855,7 +2368,7 @@ function basic_info_bt_clicked(){
                     </tr>-->
 
 <!--   office locations --------------------------------------------------------------     -->
-                   <tr height="15">
+                   <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Office Locations</b></td>
                     </tr> 
                     <tr id="offAddDiv" style="display:none">
@@ -1912,11 +2425,11 @@ function basic_info_bt_clicked(){
                     <tr>
                       <td width="20%" align="right" ><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="openOfficeAddDiv();"></td>
                       <td width="20%" align="left" ><input type="button" align="left" id="addOffLoc" value="Delete" style="cursor:pointer" onclick="deleteOfficeRow();"></td>
-                    </tr>
+                    </tr> -->
 
 
 <!--  coverage ----------------------------------------------------------------------> 
-                    <tr height="15">
+                    <!-- <tr height="15">
                       <td colspan="3" align="left" ><hr><b>Coverage</b></td>
                     </tr> 
 
@@ -1971,7 +2484,7 @@ function basic_info_bt_clicked(){
                     <tr>
                       <td width="20%" align="right" ><input type="button" align="left" id="addOffLoc" value="Add" style="cursor:pointer" onclick="openCoverageDiv();"></td>
                       <td width="20%" align="left" ><input type="button" align="left" id="addOffLoc" value="Delete" style="cursor:pointer" onclick="deleteCoverageRow();"></td>
-                    </tr>
+                    </tr> -->
 
 
 <!--  coverage ends --------------------------------------------------------------------     -->                    
@@ -2022,7 +2535,7 @@ function basic_info_bt_clicked(){
                         </tr>
                         
                         <tr class="broker_basic_extra">
-                          <td width="10%" align="right" valign="top"><font color = "red">*</font>Transaction Types : </td>
+                          <td width="10%" align="right" valign="top"><font color = "red"></font>Transaction Types : </td>
                           <td width="30%" align="left">
                             <table width="100%">
                               {$i=0}
@@ -2065,14 +2578,138 @@ function basic_info_bt_clicked(){
                             <option name=one value='9.00'>9.0</option>
                             <option name=two value='9.50' >9.5</option>
                             <option name=one value='10.00'>10.0</option>
-                                    
                             </select>
+                          </td>
+                        </tr>
+
+                    <tr class="broker_basic_extra">
+                      <td colspan="3" align="left" ><hr><b>Broker Bank Details</b></td>
+                    </tr>
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Bank Name: </td>
+                          <td width="30%" align="left">
+                              <select name="bankName" id="bankName" height="5px" width="200px" >
+                                  <option value=''> select bank </option>
+                                    {foreach from=$bankArray key=k item=v}
+                                        <option value="{$k}" >{$v}</option>
+                                    {/foreach}
+                              </select>
+                          </td>
+                          <td width="20%" align="left" id="errmsgbankname"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Account No: </td>
+                          <td width="30%" align="left">
+                             <input type=text name="accountNo" id="accountNo" style="width:250px;">
+                          </td>
+                          <td width="20%" align="left" id="errmsgaccountno"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Account Type: </td>
+                          <td width="30%" align="left">
+                             <select name="accountType" id="accountType" height="5px" width="200px" >
+                                  <option value=''> select </option>
+                                    {foreach from=$bankAccountType key=k item=v}
+                                        <option value="{$v}">{$v}</option>
+                                    {/foreach}
+                              </select>
+                          </td>
+                          <td width="20%" align="left" id="errmsgaccounttype"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">IFSC Code: </td>
+                          <td width="30%" align="left">
+                             <input type=text name="ifscCode" id="ifscCode" style="width:250px;">
+                          </td>
+                          <td width="20%" align="left" id="errmsgifsccode"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td colspan="3" align="left" ><hr><b>Broker SignUp Details</b></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" ><font color = "red"></font>Form SignUp Date: </td>
+                          <td width="30%" align="left"><input name="img_date2" type="text" class="formstyle2" id="img_date2" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger2" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgsignupdate"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top"><font color='red'>*</font>Proptiger Branch: </td>
+                          <td width="30%" align="left">
+                          <select id="signUpBranch" name="signUpBranch" ><option value=''>Select City</option>
+                                           {foreach from=$ptBranchArray key=k item=v}
+                                               <option value="{$k}">{$v}</option>
+                                           {/foreach}
+                          </select>
+                          </td>
+                          <td width="20%" align="left" id="errmsgsignupbranch"></td>
+                        </tr>
+
+                        <!-- <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Upload Signup Form Soft Copy: </td>
+                          <td width="30%" align="left">
+                             <input type="file" name='signUpForm' id="signUpForm" >
+                          </td>
+                          <td width="20%" align="left" id="errmsgsignupform"></td>
+                        </tr> -->
+
                         <tr>
-                          <td width="20%" align="right" ><font color = "red">*</font>Operation Since : </td>
+                          <td width="20%" align="right" >Uploaded SignUp Form : </td>
+                          <td width="30%" align="left" id="signUpPlaceholder"></td> <td width="20%" align="left" id=""><input type="hidden" name='formid' id="formid"></td>
+                        </tr>
+
+                        </form>
+                        <form action="saveCompanyLogo.php" target="uploadiframeSignup" name="uploadSignUpForm" id="uploadSignUpForm" method="POST" enctype = "multipart/form-data">
+                          <tr>
+                            <td width="20%" align="right" >Upload Signup Form Soft Copy: </td>
+                            <td width="30%" align="left"><input type="file" name='signUpForm' id="signUpForm" onchange="onNewSignUpFormUpload()"><input type="hidden" name='signUpFormUploadStatus' id="signUpFormUploadStatus" value="0"><input type="hidden" name='uploadedSignUpForm' id="uploadedSignUpForm" value=""><input type="submit" id="uploadSignUp" value="uploadSignUp" name="submit"></td> <td width="20%" align="left" id="errmsgsignupform"></td>
+                          </tr>
+                          
+
+                        </form>
+                        
+                        <form>
+
+                        <tr class="broker_basic_extra">
+                          <td colspan="3" align="left" ><hr><b></b></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra">
+                          <td width="20%" align="right" valign="top">Primary Device Usage : </td>
+                          <td width="30%" align="left">
+                           <!-- <select id="device" name="device" valign="center"> 
+                              <option name=one value=''>Select Device Used</option>
+                              {foreach from=$devices key=k item=v}
+                                <option name=one value='{$k}'>{$v}</option>
+                              {/foreach}
+                          </select> -->
+                        
+                            <table width="100%">
+                              {$i=0}
+                            {foreach $devices key=k item=v}
+                              {$i=$i+1}
+                              {if $i%2!=0}<tr>{/if}
+                              <td >
+                            <input type='checkbox' name='device[]' class='device' value='{$k}'>{$v}<input type='hidden' id="tt_db_id_{$k}"> </td>
+                            {if $i%2==0}</tr>{/if}
+                            {/foreach}
+                          </table>
+                          
+                          </td>
+                          <td width="20%" align="left" id="errmsgdevice"></td>
+                          
+                        </tr>
+
+
+                        <tr>
+                          <td width="20%" align="right" ><font color = "red"></font>Years in Operations : </td>
                           <td width="30%" align="left"><input name="img_date1" type="text" class="formstyle2" id="img_date1" readonly="1" />  <img src="../images/cal_1.jpg" id="img_date_trigger1" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" /></td> <td width="20%" align="left" id="errmsgdate"></td>
                         </tr>
 
-                        <tr>
+                        <!-- <tr>
                           <td width="20%" align="right" ><font color = "red">*</font>Service Tax No : </td>
                           <td width="30%" align="left"><input type=text name="stn" id="stn" style="width:250px;"></td> <td width="20%" align="left" id="errmsgstn"><input type=hidden id="bd_id"></td>
                         </tr>
@@ -2085,9 +2722,9 @@ function basic_info_bt_clicked(){
                         <tr>
                           <td width="20%" align="right" ><font color = "red">*</font># Employees : </td>
                           <td width="30%" align="left"><input type=text name="employeeNo" id="employeeNo" style="width:250px;"></td> <td width="20%" align="left" id="errmsgemployeeNo"></td>
-                        </tr>
+                        </tr> -->
 
-                        <tr>
+                        <tr >
                           <td width="10%" align="right" ><font color = "red">*</font>PT Relationship Manager: </td>
                             <td width="20%" height="25" align="left" valign="top">
                                         <select id="ptManager" name="ptManager" >
@@ -2098,6 +2735,21 @@ function basic_info_bt_clicked(){
                                         </select>
                                     </td>
                             <td width="40%" align="left" id="errmsgptmanager"></td>
+                        </tr>
+
+                        <tr class="broker_basic_extra" >
+                          <td width="10%" align="right" ><font color = "red"></font>Any Relative in Proptiger: </td>
+                            <td width="20%" height="25" align="left" valign="top">
+                              <input type="radio" name="relative"  value='Yes' class="relative" id='relative_yes'>Yes &nbsp; &nbsp; <br>
+                              <input type="radio" name="relative" value="No" class="relative" id='relative_no' checked='checked'>No &nbsp; &nbsp;
+                                    <select  id="ptRelative" name="ptRelative" style="display:none">
+                                       <option value=''>select Relative</option>
+                                       {foreach from=$ptRelative key=k item=v}
+                                              <option value="{$k}">{$v}</option>
+                                       {/foreach}
+                                    </select>
+                                    </td>
+                            <td width="40%" align="left" id="errmsgptrelative"></td>
                         </tr>
                       </table>
                       </td>
@@ -2119,14 +2771,13 @@ function basic_info_bt_clicked(){
 
 
                     <div id="search_bottom">
-                    <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter">
+                    <TABLE cellSpacing=1 cellPadding=4 width="50%" align=center border=0 class="tablesorter" id="company_table">
                         <form name="form1" method="post" action="">
                           <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=2% align="center">No.</th>
                                   <th  width=5% align="center">Type</th>
                                   <TH  width=8% align="center">Name</TH>
-                                  <TH  width=8% align="center">Logo</TH>
                                   <TH  width=8% align="center">Address</TH>
                                   <TH  width=8% align="center">Contact Person</TH>
                                  <TH width=6% align="center">Status</TH> 
@@ -2134,53 +2785,33 @@ function basic_info_bt_clicked(){
                                 </TR>
                               
                           </thead>
-                          <tbody>
-                               
-                                {$i=0}
-                                
-                                {foreach from=$compArr key=k item=v}
-                                    {$i=$i+1}
-                                    {if $i%2 == 0}
-                                      {$color = "bgcolor = '#F7F7F7'"}
-                                    {else}                            
-                                      {$color = "bgcolor = '#FCFCFC'"}
-                                    {/if}
-                                <TR {$color}>
-                                  <TD align=center class=td-border>{$i} </TD>
-                                  <TD align=center class=td-border>{$v['type']}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['broker_info_type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','read' );">{$v['name']}</a></TD>
-                                  <TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>
-                                  <TD align=center class=td-border>{$v['address']} City-{$v['city_name']} Pin-{$v['pin']} Ph.N.-{$v['compphone']}</TD>
-                                  
-                                  <TD align=center class=td-border>{foreach from=$v['extra']['cont_person'] key=k1 item=v1} {$v1['person']} &nbsp;Contact No.-{$v1['phone1']} <br> {/foreach} </TD>
-                                  <TD align=center class=td-border>{$v['status']}</TD>
-                                  
-
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return editCompany('{$v['id']}', '{$v['name']}', '{$v['type']}', '{$v['broker_info_type']}', '{$v['des']}', '{$v['status']}', '{$v['pan']}', '{$v['email']}', '{$v['address']}', '{$v['city']}', '{$v['pin']}', '{$v['compphone']}', '{$v['service_image_path']}', '{$v['image_id']}', '{$v['alt_text']}', '{$v['ipsstr']}', '{$v['person']}', '{$v['compfax']}', '{$v['phone']}', '{$v['active_since']}', '{$v['web']}', '{$v['extra_json']}','edit' );">Edit</a><br/><a href="/companyOrdersList.php?compId={$v['id']}" >ViewOrders</a><br/><a href="/createCompanyOrder.php?c={$v['id']}">AddOrders</a><input type="hidden" id="extra_data" value='{$v['extra_json']}'> </TD>
-
-                                </TR>
-                                {/foreach}
-                                <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
-                          </tbody>
+                          <tbody></tbody>
+                          
                           <tfoot>
-                                                        <tr>
-                                                            <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
-                                                                
-                                                                <button class="btn first"><i class="icon-step-backward"></i></button>
-                                                                <button class="btn prev"><i class="icon-arrow-left"></i></button>
-                                                                <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-                                                                <button class="btn next"><i class="icon-arrow-right"></i></button>
-                                                                <button class="btn last"><i class="icon-step-forward"></i></button>
-                                                                <select class="pagesize input-mini" title="Select page size">
-                                                                    <option value="10">10</option>
-                                                                    <option value="20">20</option>
-                                                                    <option value="50">50</option>
-                                                                    <option selected="selected" value="100">100</option>
-                                                                </select>
-                                                                <select class="pagenum input-mini" title="Select page number"></select>
-                                                            </th>
-                                                        </tr>
-                           </tfoot>
+                              <tr>
+                                <th>1</th> <!-- tfoot text will be updated at the same time as the thead -->
+                                <th>2</th>
+                                <th>3</th>
+                                <th>4</th>
+                                <th>5</th>
+                                <th>6</th>
+                                <th>7</th>
+                              </tr>
+                              <tr>
+                                <td class="pager" colspan="8">
+                                  <img src="tablesorter/addons/pager/icons/first.png" class="first"/>
+                                  <img src="tablesorter/addons/pager/icons/prev.png" class="prev"/>
+                                  <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+                                  <img src="tablesorter/addons/pager/icons/next.png" class="next"/>
+                                  <img src="tablesorter/addons/pager/icons/last.png" class="last"/>
+                                  <select class="pagesize">
+                                  <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                  </select>
+                                </td>
+                              </tr>
+                          </tfoot>
                         </form>
                     </TABLE>
                   </div>
@@ -2210,7 +2841,7 @@ function basic_info_bt_clicked(){
                                                                                                                          
         var cals_dict = {}
         
-        for(i=1;i<=1;i++){
+        for(i=1;i<=2;i++){
             cals_dict["img_date_trigger"+i] = "img_date"+i;
      
         };

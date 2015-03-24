@@ -48,20 +48,27 @@
       		{foreach from=$penthouse item=data}
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
 			{/foreach}
-      	}
+  
+    	}
       	else if(value== "Ground Floor"){
       		{foreach from=$ground_floor item=data}
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
 			{/foreach}
       	}
-        else if(value == "Floor Plan" || value == "Floor Plan"){
+        else if(value == "Floor Plan" || value == "Floor Plan" || value == "3D Floor Plan"){
       		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
 
       	$("#floor_name_"+c+" option").each(function() {
       		var str = $("#uploaded_"+c).val();
-      		//alert(str);
-      		if (str.indexOf($(this).text()) >= 0)
+      		var str1 = $("#uploaded3D_"+c).val();
+
+      		console.log("str="+str);
+		console.log("str1="+str1);
+
+      		if (str.indexOf($(this).text()) >= 0 && $(this).text()!="3D Floor Plan")
+		    	$(this).attr("disabled", true);
+		    else if (str1.indexOf($(this).text()) >= 0   && $(this).text()=="3D Floor Plan")
 		    	$(this).attr("disabled", true);
 		});
       	
@@ -153,7 +160,7 @@
 				  <td  nowrap="nowrap" width="1%" align="center" class=whiteTxt >SNo.</td>
 	
 				  <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
-				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size</td>
+				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size/Carpet Area</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Unit Type</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Floor Plan Options</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt><font color="red">*</font>Floor Plan Name</td>
@@ -190,7 +197,9 @@
 				  
 				  </td>
 				 
-				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}</td>
+				  <td>{if $ProjectOptionDetail[$smarty.section.foo.index]['SIZE'] == ''}- {/if}{$ProjectOptionDetail[$smarty.section.foo.index]['SIZE']}/{if $ProjectOptionDetail[$smarty.section.foo.index]['CARPET_AREA'] == ''} -{/if}
+{$ProjectOptionDetail[$smarty.section.foo.index]['CARPET_AREA']}
+</td>
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_TYPE']}</td>
 				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
 				  <td><select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
@@ -205,6 +214,8 @@
 				  		<Option value="0">Select Floor Plan Name</Option>
 				  	</select></td>
 				  	<input type = "hidden" id = "uploaded_{($smarty.section.foo.index+1)}" value="{$uploadedStr[$smarty.section.foo.index]}">
+				  	<input type = "hidden" id = "uploaded3D_{($smarty.section.foo.index+1)}" value="{$uploadedStr3D[$smarty.section.foo.index]}">
+
 				  {else}
 				  <td></td>
 				  	<td><input type = "text" name = "floor_name[]"   {if $plot[$smarty.section.foo.index] == 'yes'} 

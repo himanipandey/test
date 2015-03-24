@@ -68,6 +68,11 @@
             $(err).hide();
           }
         });
+        
+        if($("#completion_date").val() == '0000-00-00'){
+            alert('Invalid Completion Date');
+            return false;
+        }
 
         return date_flag && name_flag && flat_bed && villa_bed;
     }
@@ -202,10 +207,10 @@
                                  <tr>
                                      <td width="20%" align="right" valign="top"><b><b><b>Select Options :</b> </td>
                                      <td width="30%" align="left">
-                                         <select name="options[]" id="options" multiple="multiple" style="width: 236px; height: 210px;">
+                                         <select name="options[]" id="options" multiple="multiple" style="width: 320px; height: 210px;">
                                              <option value="-1">Select Option</option>
                                              {foreach $options as $option}
-                                                 <option selected="selected" value="{$option->options_id}">{$option->option_name} - {$option->size} sqft - {$option->option_type}</option>
+                                                 <option selected="selected" value="{$option->options_id}">{$option->option_name} - {$option->size} {if $option->size != '' && $option->carpet_area != ''} , {$option->carpet_area}(Carpet){/if} {if $option->size == '' && $option->carpet_area != ''}{$option->carpet_area}(Carpet){/if} sqft - {$option->option_type}</option>
                                              {/foreach}
                                          </select>
                                      </td>

@@ -1,5 +1,5 @@
 <?php
-
+//print("<pre>");
 $compid= $_REQUEST['compid'];
 
 $typeArr = Company::getCompanyType(); 
@@ -7,6 +7,13 @@ $smarty->assign("comptype", $typeArr);
 
 $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
+
+$res = City::find('all', array('conditions'=>array("IS_SERVING = '1' and status = 'Active'" ) ));
+$ptBranchArray = array();
+foreach($res as $value) {
+    $ptBranchArray[$value->city_id] = $value->label;
+}
+$smarty->assign("ptBranchArray", $ptBranchArray);
 
 if($compid){
 	$compArr = Company::getAllCompany($arr=array('id'=>$compid));
@@ -21,13 +28,45 @@ $smarty->assign('resiProjectType', $resiProjectType);
 $transactionType = TransactionType::TransactionTypeArr();
 $smarty->assign('transactionType', $transactionType);
 
-$sql = "select ADMINID, FNAME, LNAME from proptiger.PROPTIGER_ADMIN where DEPARTMENT='SALES'";
+$devices = Devices::getAllDevices();
+$smarty->assign('devices', $devices);
+
+$bankArray = BankList::arrBank();
+$smarty->assign("bankArray",$bankArray);
+
+$sql = "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'bank_details' AND COLUMN_NAME = 'account_type'";
+$res = mysql_query($sql);
+$bankAccountType = array();
+while($data = mysql_fetch_assoc($res)){
+    preg_match_all("/'([\w ]*)'/", $data['COLUMN_TYPE'], $values);
+}
+$smarty->assign('bankAccountType', $values[1]);
+
+
+
+
+
+
+
+
+//print_r($transactionType);
+
+$sql = "select ADMINID, FNAME, LNAME from proptiger.PROPTIGER_ADMIN where DEPARTMENT='SALES' order by FNAME ASC, LNAME ASC";
 $res = mysql_query($sql);
 $ptRelManager = array();
 while($data = mysql_fetch_assoc($res)){
     $ptRelManager[$data['ADMINID']] = $data['FNAME']." ".$data['LNAME'];
 }
 $smarty->assign('ptRelManager', $ptRelManager);
+
+$sql = "select ADMINID, FNAME, LNAME, DEPARTMENT from proptiger.PROPTIGER_ADMIN order by FNAME ASC, LNAME ASC, DEPARTMENT ASC";
+$res = mysql_query($sql);
+$ptRelative = array();
+while($data = mysql_fetch_assoc($res)){
+    $ptRelative[$data['ADMINID']] = $data['FNAME']." ".$data['LNAME']."     (".$data['DEPARTMENT'].")";
+}
+$smarty->assign('ptRelative', $ptRelative);
+
 
 $smarty->assign('url', TYPEAHEAD_API_URL);
 
@@ -38,7 +77,7 @@ $namearr = Company::getCompanyNameByQuery('br');
 
 
 //get company logo
-foreach ($compArr as $k => $v) {
+/*foreach ($compArr as $k => $v) {
 	# code...
 
 	$objectId = $v['id'];
@@ -56,7 +95,7 @@ foreach ($compArr as $k => $v) {
         $compArr[$k]['image_id'] = $v1->id;
     }
 
-}
+}*/
 
 $smarty->assign("compArr", $compArr);
 

@@ -1,9 +1,16 @@
+<link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
+
 <script type="text/javascript" src="js/jquery.js"></script>
+
+<script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
+
 <script type="text/javascript" src="js/common.js?version=4"></script>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+
 <script type="text/javascript">
     tinyMCE.init({
         //mode : "textareas",
@@ -469,6 +476,8 @@
 								  </td>
 							   </tr>
 
+							   
+
 							   <tr>
 								  <td width="20%" align="right"><b>Project Latitude :</b> </td>
 								  <td width="30%" align="left"><input type="text" name="txtProjectLattitude" id="txtProjectLattitude" value="{$txtProjectLattitude}" style="width:360px;" /></td>
@@ -794,6 +803,23 @@
 							   </tr>
 							   
 							   <tr>
+                                                                <td width="20%" align="right" valign ="top"><b>Housing Authority:</b> </td><td width="30%" align="left">
+                                                                    <select name = "authority">
+                                                                        <option value="">Select Options</option>
+                                                                        {foreach from = $allAuthorities item = item}
+                                                                            <option value="{$item->id}" {if $item->id == $authority}selected{/if}>
+                                                                                {$item->authority_name}
+                                                                            </option>
+                                                                        {/foreach}
+                                                                    </select>
+                                                                </td>
+                                                                <td width="50%" align="left">&nbsp;</td>
+							   </tr>
+
+							   
+
+
+							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Show price on website ?</b> </td><td width="30%" align="left">
 									{if $shouldDisplayPrice == ''}{$shouldDisplayPrice =1}{/if}
                                                                       <select name="shouldDisplayPrice">
@@ -805,6 +831,36 @@
 								  <td width="50%" align="left"><font color="red"></font>
                                                                   </td>
 							   </tr>
+                                                           
+                                                           <!-- @Jitendra pathak -->
+                                                           <tr>
+                                                               <td width="20%" align="right" valign="top"><b>Construction Contractor</b></td>
+                                                               <td width="30%" align="left" valign="top">
+                                                                   <input type = "text" name = "ConstructionContractor" id = "ConstructionContractor" value = "{$constructionContractor}" style ="width:360px;" data-id="ConstructionContractorId" class="company-type">
+                                                                   <input type = "hidden" name = "ConstructionContractorId" id = "ConstructionContractorId" value = "{$constructionContractorId}" style ="width:360px;">
+                                                               </td>
+                                                               <td with="50%"><font class="company-type-error" style="color: red;display: none">Select contarctor from the suggestion list only</font></td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td width="20%" align="right" valign="top"><b>Maintenance Contractor</b></td>
+                                                               <td width="30%" align="left" valign="top">
+                                                                   <input type = "text" name = "MaintenanceContractor" id = "MaintenanceContractor" value = "{$maintenanceContractor}" style ="width:360px;" data-id="MaintenanceContractorId" class="company-type">
+                                                                   <input type = "hidden" name = "MaintenanceContractorId" id = "MaintenanceContractorId" value = "{$maintenanceContractorId}" style ="width:360px;">
+                                                               </td>
+                                                               <td with="50%"><font class="company-type-error" style="color: red;display: none">Select contarctor from the suggestion list only</font></td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td width="20%" align="right" valign="top"><b>Landscape Architect</b></td>
+                                                               <td width="30%" align="left" valign="top">
+                                                                   <input type = "text" name = "LandscapeArchitect" id = "LandscapeArchitect" value = "{$landscapeArchitect}" style ="width:360px;" data-id="LandscapeArchitectId" class="company-type">
+                                                                   <input type = "hidden" name = "LandscapeArchitectId" id = "LandscapeArchitectId" value = "{$landscapeArchitectId}" style ="width:360px;">
+                                                               </td>
+                                                               <td with="50%"><font class="company-type-error" style="color: red;display: none">Select architect from the suggestion list only</font></td>
+                                                           </tr>
+                                                           
+                                                           
+                                                           
+                                                           
                                <tr>                         {if $skipUpdtnCycle == 1}
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
                                                                     <select name="skipUpdationCycle" onchange="skipUpdationCycleChanged(this.value)">
@@ -900,5 +956,84 @@
             showsTime	  :	true
         });
     });
+    $(document).ready(function(){
+        $("#btnSave").click(function(){
+            if($("#f_date_c_prom").val() == '0000-00-00'){
+                alert('Invalid Promised Completion Date:');
+                return false;
+            }
+        });
+    });
     
+    //@jitendra pathak
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {   
+        _renderItem: function( ul, item ) {
+          //var res = item..split("-");
+              //var tableName = res[1];
+          return $( "<li>" )
+            .append( $( "<a>" ).text( item.label ) )
+            .appendTo( ul );
+        },
+     });
+    $(document).ready(function()   {
+        
+        /*$(".company-type").blur(function(){
+            if($(this).val()==''){
+                var elemId = $(this).attr("data-id");
+                $("#" + elemId).val('');
+            }
+        });*/
+        $(".company-type").catcomplete({
+            source: function( request, response ) {
+              $.ajax({
+                url: "/ajax/searchCompany.php",
+                dataType: "json",
+                data: {
+                  companyType: this.element.attr("name"),
+                  companyTerm: request.term
+                },
+                success: function( data ) {
+                  response( $.map( data.data, function( comapnyName, comapnyId ) {              
+                      return {
+                      label: comapnyName,
+                      value: comapnyName,
+                      id:comapnyId,
+                      }
+
+                  }));
+                }
+              });
+            },
+      
+            select: function( event, ui ) {
+              var elemId = $(this).attr("data-id");
+              $("#" + elemId).val(ui.item.id);
+              $("#"+elemId).parent().parent().find('.company-type-error').hide();
+            },
+            change: function (event, ui){
+                var elemId = $(this).attr("data-id");
+                if (!ui.item &&(this.value !='')) {
+                    $("#" + elemId).val('');
+                    $("#"+elemId).parent().parent().find('.company-type-error').show();
+                }else if(this.value ==''){
+                    $("#" + elemId).val('');
+                    $("#"+elemId).parent().parent().find('.company-type-error').hide();
+                }
+            },
+            open: function() {
+              $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+              $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+        });
+        
+        
+        $("#btnSave").click(function (){
+            if($('.company-type-error').is(":visible")){
+                alert('Please correct the fields, marked in red');
+                return false;
+            }
+        });
+    });
 </script>

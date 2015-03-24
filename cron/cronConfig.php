@@ -193,7 +193,7 @@ $weeklyEmail = array(
                     join suburb s on l.suburb_id = s.suburb_id
                     join city c on s.city_id = c.city_id
             where
-                    ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList))
+                    ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList) OR rp.LATITUDE is null OR rp.LONGITUDE is null)
                 AND rp.status in('Active','ActiveInCms') and rp.version = 'Cms';",
                'subject'=>'Missing Latitude and Longitude List',
                'recipients'=>array('ankur.dhawan@proptiger.com','Ravi.srivastava@proptiger.com'), 

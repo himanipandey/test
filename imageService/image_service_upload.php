@@ -10,6 +10,7 @@ class ImageServiceUpload{
     
 
     static $image_upload_url = IMAGE_SERVICE_URL;
+    static $doc_upload_url = DOC_SERVICE_URL;
 
     static $valid_request_methods = array("POST", "PUT", "DELETE");
     static $object_types = array("project" => "project",
@@ -20,7 +21,8 @@ class ImageServiceUpload{
         "city" => "city",
         "suburb" => "suburb",
         "landmark" => "landmark",
-        "company" => "company"
+        "company" => "company",
+        "listing" => "listing"
     );
     static $sec_image_types = array(
         "project" => array(
@@ -30,6 +32,7 @@ class ImageServiceUpload{
                 "Main Others"=>"mainOthers"
             ),
         ),
+       
     );
     static $image_types = array(
         "project" => array(
@@ -48,7 +51,8 @@ class ImageServiceUpload{
             "amenities"=>"amenities", 
             "main_other"=>"mainOther"
         ),
-        "option" => array("floor_plan" => "floorPlan"),
+        "option" => array("floor_plan" => "floorPlan",
+                           "3d_floor_plan" => "3DFloorPlan" ),
         "builder" => array("builder_image" => "logo"),
         "locality" => array(
             "heroshot" => "heroShot",
@@ -116,8 +120,21 @@ class ImageServiceUpload{
             "sportscomplex" => "sportsComplex"
         ),
         "bank" => array("logo" => "logo"),
-        "company" => array("logo" => "logo")
-        );
+        "company" => array("logo" => "logo",
+                "companysignupform" => "companySignupForm"
+            ),
+        "listing" => array(
+            "bedroom"=> "Bedroom",
+            "bathroom"=>"Bathroom",
+            "balcony"=>"Balcony", 
+            "living"=> "Living",
+            "dining"=> "Dining",
+            "kitchen"=> "Kitchen",
+            "other"=> "Other",
+            ),
+    );
+
+    static $document_types = array("3d_floor_plan", "companysignupform");
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;
@@ -135,20 +152,30 @@ class ImageServiceUpload{
     }
 
     function upload(){
-        if(!isset($this->image))
-            $params = array('image'=>$this->image,'objectType'=>static::$object_types[$this->object],
-            'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
-        else
-             $params = array('image'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
-            'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
+        
+        if(in_array($this->image_type,  static::$document_types)){
+            if(!isset($this->image))
+                $params = array('file'=>$this->image,'objectType'=>static::$object_types[$this->object],
+                'objectId' => $this->object_id, 'documentType' => static::$image_types[$this->object][$this->image_type]);
+            else
+                 $params = array('file'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
+                'objectId' => $this->object_id, 'documentType' => static::$image_types[$this->object][$this->image_type]);
+        }
+        else{
+            if(!isset($this->image))
+                $params = array('image'=>$this->image,'objectType'=>static::$object_types[$this->object],
+                'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
+            else
+                 $params = array('image'=>'@'.$this->image,'objectType'=>static::$object_types[$this->object],
+                'objectId' => $this->object_id, 'imageType' => static::$image_types[$this->object][$this->image_type]);
+        }
+            
 
         $extra_params = $this->extra_params;
         $params = array_merge($params, $extra_params);
 
 
 
-
-        
 
 
         if($this->method == "DELETE"){
@@ -183,7 +210,7 @@ class ImageServiceUpload{
         
         $this->logger->info("");
         
-
+       
         //$this->response_header = $response["header"];
         //$this->response_body = $response["body"];
         //$this->status = $response["status"];
@@ -241,7 +268,15 @@ class ImageServiceUpload{
     }
 
     static function delete($id, $post){
-        $url = static::join_urls(static::$image_upload_url, $id);
+         //print("<pre>");     
+//print_r($post);
+        //die("here1");
+        if($post['dtype']=="3D"){
+                //echo "3d del";
+                $url = static::join_urls(self::$doc_upload_url, $id); //die($url);
+        }
+        else    
+            $url = static::join_urls(static::$image_upload_url, $id);
         //return static::curl_request($post, 'DELETE', $url);
         $returnArr = array("params" => $post, "method" => 'DELETE', "url"=> $url);
         return $returnArr;

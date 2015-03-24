@@ -100,7 +100,7 @@
 				  </td> {if $ErrorMsg["txtOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
 				
-				<tr class="trial_order">
+				<!--<tr class="trial_order">
 				  <td width="20%" align="right" ><font color="red">*</font>Order Duration : </td>
 				  <td width="30%" align="left">
 				    <select id="txtOrderDur" name="txtOrderDur" onChange="calculateTrialOrderExpiryDate(this.value)" {if $page=='view'}disabled=true{/if}>
@@ -116,7 +116,7 @@
 				<tr class="trial_order">
 				  <td width="20%" align="right" ><font color="red">*</font>Exipry Date : </td>
 				  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} type=text name="txtExpiryTrialOrderDate" id="txtExpiryTrialOrderDate" readOnly=true value="{$txtExpiryTrialOrderDate}" style="width:140px;"></td> {if $ErrorMsg["txtExpiryTrialOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtExpiryTrialOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
-				</tr>
+				</tr>-->
 				
 				{if $page=='Edit'}
 				<tr class="trial_order">
@@ -146,13 +146,24 @@
 				  <td width="30%" align="left"><input onkeypress='return isNumberKey2(event)' {if $page=='view'}disabled=true{/if} type=text name="txtOrderAmt" id="txtOrderAmt" value="{$txtOrderAmt}" style="width:250px;"></td> {if $ErrorMsg["txtOrderAmt"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtOrderAmt"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 				</tr>
 				
-				<tr class="paid_order">
+				<tr class="">
 				  <td width="20%" align="right" ><font color="red">*</font>Expiry Date : </td>
 				  <td width="30%" align="left"> <input value="{$txtExpiryOrderDate}" name="txtExpiryOrderDate" type="text" class="formstyle2" id="txtExpiryOrderDate" readonly="1" size="10" />  
 				  {if $page!='view'}
 				  <img src="../images/cal_1.jpg" id="txtExpiryOrderDate_trigger" style="cursor: pointer; border: 1px solid red;" title="Date selector" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
 				  {/if}
 				  </td> {if $ErrorMsg["txtExpiryOrderDate"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtExpiryOrderDate"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+				</tr>
+                                
+                                <tr>
+				  <td width="20%" align="right" >Subscription Status</td>
+				  <td width="30%" align="left">
+                                      <select id="subs_status"  name="status">
+                                          <option value="Active" {if $subscription_status=='Active'}selected{/if}>Active</option>
+                                          <option value="Inactive" {if $subscription_status=='Inactive'}selected{/if}>Inactive</option>
+                                      </select>
+                                  </td>
+				  <td width="50%" align="left" ></td>
 				</tr>
 				
 				<tr class="paid_order">
@@ -311,12 +322,12 @@
 					   <fieldset class="subs_user_{$k}">
 						 <legend>User-{$k}:</legend>
 					     <table class="subs_user_{$k}">
-						  		 
-						   <tr class="subs_user_{$k}">
-							  <td width="20%" align="right" ><font color="red">*</font>Email : </td>
-							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} type=text name="txtSubsUserEmail[]" id="txtSubsUserEmail{$k}" value="{$txtSubsUser[$k-1]}" style="width:240px;"></td> 
+
+					     	<tr class="subs_user_{$k}">
+							  <td width="20%" align="right" ><font color="red">*</font>Full Name : </td>
+							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} {if $page=='edit'}readonly="readonly"{/if} type=text name="txtSubsUserName[]" id="txtSubsUserName{$k}" value="{$txtSubsUserName[$k-1]}" style="width:240px;"></td> 
 							  <td width="50%" align="left" >
-							  {if $ErrorMsg["txtSubsUserEmail"] != ''} <font color = "red">{$ErrorMsg["txtSubsUserEmail"]}</font>{/if}
+							  {if $ErrorMsg["txtSubsUserName"] != ''} <font color = "red">{$ErrorMsg["txtSubsUserName"]}</font>{/if}
 							  {if $page!='view'}
   							   <span style="float:right">
 								  <a href = "javascript:void(0);">
@@ -325,26 +336,42 @@
 								 </span>
 							  {/if}
 							  </td>
+						   	</tr>
+
+						   <tr class="subs_user_{$k}">
+							  <td width="20%" align="right" ><font color="red">*</font>Email : </td>
+							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} {if $page=='edit'}readonly="readonly"{/if} type=text name="txtSubsUserEmail[]" id="txtSubsUserEmail{$k}" value="{$txtSubsUserEmail[$k-1]}" style="width:240px;"></td> 
+							  <td width="50%" align="left" >
+							  {if $ErrorMsg["txtSubsUserEmail"] != ''} <font color = "red">{$ErrorMsg["txtSubsUserEmail"]}</font>{/if}
+							 
+							  </td>
 						   </tr>
 						   <tr class="subs_user_{$k}">
 							  <td width="20%" align="right" ><font color="red">*</font>Contact No : </td>
-							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} onkeypress='return isNumberKey(event)' type=text name="txtSubsUserCont[]"  id="txtSubsUserCont{$k}" value="{$txtSubsUserCont}" style="width:140px;"></td> {if $ErrorMsg["txtSubsUserCont"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserCont"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+							  <td width="30%" align="left"><input {if $page=='view'}disabled=true{/if} {if $page=='edit'}readonly="readonly"{/if} onkeypress='return isNumberKey(event)' type=text name="txtSubsUserCont[]"  id="txtSubsUserCont{$k}" value="{$txtSubsUserCont[$k-1]}" style="width:140px;"></td> {if $ErrorMsg["txtSubsUserCont"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserCont"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 						   </tr>
 						   <tr class="subs_user_{$k}">
 							  <td width="20%" align="right" >User Group : </td>
 							  <td width="30%" align="left">
-							    <select name="txtSubsUserGroup[]">
+							    <select name="txtSubsUserGroup[]"  {if $page=='view'}disabled=true{/if} {if $page=='edit'}readonly="readonly"{/if}>
 									<option value="defualt">Default User Group</option>
 							    </select>
 							  </td>
 							  {if $ErrorMsg["txtSubsUserEmail"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserEmail"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
+						   </tr>
+						   <tr class="subs_user_{$k}">
+							  <td width="20%" align="right" >Disable OTP : </td>
+							  <td width="30%" align="left">
+							  	<input type="checkbox" name="txtSubsUserOtp[]" {if $page=='view'}disabled{/if} {if $txtSubsUserOtp[$k-1]=='TRUE'} checked='checked' {/if}  value="TRUE"  />
+							  </td>
+							  {if $ErrorMsg["txtSubsUserOtp"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtSubsUserOtp"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
 						   </tr>
 						 </table>
 						</fieldset>
 					   {/for}
 				  </td>
 				  <td width="20%" align="right" >&nbsp;</td>
-				</tr>				
+				</tr>
 				
 				<tr>
 				  <td >&nbsp;</td>
@@ -428,9 +455,11 @@ jQuery(document).ready(function(){
 	 	//creating saved localities boxes
 		gAccess_objects = '{$gAccess_ids}';
 		gAccess_objects = JSON.parse(gAccess_objects);
-		$.each(gAccess_objects,function(k,v){
-		  selected_locs.push(k);		 
-		});
+                if(gAccess_objects){
+                    $.each(gAccess_objects,function(k,v){
+                      selected_locs.push(k);		 
+                    });
+                }
 		//updating added locality html	
 	    var url="Refreshlocality.php";
 	     $.ajax({
@@ -543,21 +572,7 @@ jQuery(document).ready(function(){
 		 alert("Order Amount is required.");
 		 return false;   
 	   }	
-	   if($('#txtExpiryOrderDate').val() == ''){
-		 alert("Expiry Date is required.");
-		 return false;   
-	   } 
-	   if($('#txtExpiryOrderDate').val() != ''){
-		date = $('#txtExpiryOrderDate').val();		
-		d1 = new Date(date).toDateString();		
-		d2 = new Date(orderDate).toDateString();
-		d1 = new Date(d1);
-		d2 = new Date(d2);
-		if(d1<d2){
-		  alert("Order Expiry Date must greater than the Order Date.");		 
-		  return false;
-		}
-	  }	
+	   
 	   
 	   if(pmt_detail.length == 0){
 		 alert("Payment Details required.");  
@@ -575,7 +590,23 @@ jQuery(document).ready(function(){
 			return false;			
 		  }  	    
 	  });		  
-	} 	
+	}
+        
+        if($('#txtExpiryOrderDate').val() == ''){
+		 alert("Expiry Date is required.");
+		 return false;   
+        } 
+        if($('#txtExpiryOrderDate').val() != ''){
+             date = $('#txtExpiryOrderDate').val();
+             d1 = new Date(date).toDateString();
+             d2 = new Date(orderDate).toDateString();
+             d1 = new Date(d1);
+             d2 = new Date(d2);
+             if(d1<d2){
+               alert("Order Expiry Date must greater than the Order Date.");		 
+               return false;
+             }
+	  }
 	
 	if(errFlagPmt != ''){
 	  alert(errFlagPmt);
@@ -651,6 +682,10 @@ jQuery(document).ready(function(){
 	subs_user.push(total_subs_user);
 	$('#userNo').val(subs_user.length);
 	$('.subs_user_'+total_subs_user).show();	
+	$('#txtSubsUserName'+total_subs_user).attr('readonly', false);
+	$('#txtSubsUserEmail'+total_subs_user).attr('readonly', false);
+	$('#txtSubsUserCont'+total_subs_user).attr('readonly', false);
+	$('#txtSubsUserGroup'+total_subs_user).attr('readonly', false);
   }
   
   function removeUser(id,rid){	

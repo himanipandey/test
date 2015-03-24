@@ -374,7 +374,15 @@ function fill_options(data1){
                       else
                         var html = "<option name='option_"+__cnt +"' value='"+ data[ __cnt ]['OPTIONS_ID'] +"' ";
                        
-                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +"   (size="+ data[ __cnt ]['SIZE'] + ")<span></option>";
+			var carpet = data[ __cnt ]['CARPET_AREA'];
+			var carpetDisplay = '';
+			if(carpet) carpetDisplay = "(carpet area="+ data[ __cnt ]['CARPET_AREA'] + ")";
+
+			var size = data[ __cnt ]['SIZE'];
+			var SizeDisplay = '';
+			if(size) SizeDisplay = "(size="+ data[ __cnt ]['SIZE'] + ")";
+
+                        html += "><span>"+ data[ __cnt ]['OPTION_NAME'] +SizeDisplay+carpetDisplay+"<span></option>";
                         $('#'+areaId).append( html );
                     }
                     $('#'+areaId).append( "<option value='0'><span> All </span></option>" );
@@ -760,7 +768,7 @@ function isPastDate(date){
                           <tbody>
                                
                                 {$i=0}
-                                
+
                                 {foreach from=$catalogue key=k item=v}
                                     {$i=$i+1}
                                     {if $i%2 == 0}
@@ -771,7 +779,7 @@ function isPastDate(date){
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v['BUILDER_NAME']} {$v['PROJECT_NAME']} {$v['PROJECT_ADDRESS']}</TD>
-                                  <TD align=center class=td-border>{$v['OPTION_NAME']} size({$v['SIZE']})</TD>
+                                  <TD align=center class=td-border>{$v['OPTION_NAME']} size({$v['SIZE']}) {if $v['CARPET_AREA'] != ''}, Carpet Area({$v['CARPET_AREA']}){/if}</TD>
                                   
                                   <!--<TD align=center class=td-border><img src = "{$v['service_image_path']}?width=130&height=100"  width ="100px" height = "100px;" alt = "{$v['alt_text']}"></TD>-->
                                   <TD align=center class=td-border>{$v['coupon_price']}</TD>

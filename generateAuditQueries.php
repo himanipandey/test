@@ -100,7 +100,8 @@
         $tblName = str_replace("_t_","",$tblName);
                 
         echo "DROP TRIGGER IF EXISTS after_".$tblName."_update;<br>";
-		echo $strTriger.";<br><br>";
+    $triggerForUpdate = str_replace("FOR EACH ROW ", "FOR EACH ROW ". $validUpdateCondition . " ", $strTriger) . "; END IF";
+		echo $triggerForUpdate."<br><br>";
                 
         echo "DROP TRIGGER IF EXISTS after_".$tblName."_insert;<br>";
 		echo $trigerForInsert.";<br><br>";                
@@ -110,8 +111,6 @@
                
 		echo $newInsertQry.";<br><br><br><br>";
         
-        echo "CONDITION TO SKIP DUPLICATE INERT IN TRIGGER TABLE <br> $validUpdateCondition";
-                
 	}
         
     function getValidUpdateCondition($dbName, $tableName){

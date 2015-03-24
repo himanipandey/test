@@ -175,116 +175,145 @@ function currentCycleOfProject($projectId,$projectPhase,$projectStage) {
 
 function writeToImageService($imageParams){
 
-         //print'<pre>';
-           //     print_r($imageParams);
-   //echo $imageParams['image_type'];
     $postArr = array();;
     $result = array();
+    //print("<pre>");
+    //print_r($imageParams);die();
     foreach ($imageParams as $k => $v) {
+
         # code...
           //print'<pre>';
           //print_r($v); die();
-        $params = $v['params'];
-        $IMG = $v['img'];
-        $objectId = $v['objectId'];
-        $objectType = $v['objectType'];
-        $newImagePath = $v['newImagePath'];
 
-        $service_extra_paramsArr = array( 
-            "priority"=>$params['priority'],"title"=>$params['title'],"description"=>$params['description'],"takenAt"=>$params['tagged_date'],"altText"=>$params['altText'], "jsonDump"=>json_encode($params['jsonDump']));
+        if($v['upload_from_tmp']=="yes"){
+                $postArr[$k]= $v;
+           //die("here");
 
-        if(!isset($params['tagged_date']) || empty($params['tagged_date']))
-                    unset($service_extra_paramsArr["takenAt"]);
-        if(!isset($params['jsonDump']) || empty($params['jsonDump']))
-                    unset($service_extra_paramsArr["jsonDump"]);
-         if(!isset($params['priority']) || empty($params['priority']))
-                    unset($service_extra_paramsArr["priority"]);
-        if(!isset($params['description']) || empty($params['description']))
-                  $service_extra_paramsArr["description"] = null;  //unset($service_extra_paramsArr["description"]);
-        if(!isset($params['title']) || empty($params['title']))
-                    unset($service_extra_paramsArr["title"]);
-        if(!isset($params['altText']) || empty($params['altText']))
-                    unset($service_extra_paramsArr["altText"]);
-
-               // print'<pre>';
-               // print_r($service_extra_paramsArr);//die();
-
-        if($params['delete']=="yes"){
-             $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id']));
-                $postArr[$k] = $s3upload->delete();
-        }        
-        else if($IMG==""){
-                    //print'<pre>';
-                    //print_r($params);//die();
-                    //die("here");
-            $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId,
-                         "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));
-            $postArr[$k] = $s3upload->updateWithoutImage();
-            //$returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
         }
-             
         else{
-            $returnValue = array();
-            $extension = explode( "/", $IMG['type'] );
-            $extension = $extension[ count( $extension ) - 1 ];
-            $imgType = "";
-            if ( strtolower( $extension ) == "jpg" || strtolower( $extension ) == "jpeg" ) {
-                $imgType = IMAGETYPE_JPEG;
-            }
-            elseif ( strtolower( $extension ) == "gif" ) {
-                $imgType = IMAGETYPE_GIF;
-            }
-            elseif ( strtolower( $extension ) == "png" ) {
-                $imgType = IMAGETYPE_PNG;
-            }
-            else {
-                //  unknown format !!
-            }
-            if ( $imgType == "" ) {
-                $returnValue['error'] = "format not supported";
-            }
-            else {
-                //  no error
-                if($params['image']){
-                    
-                    $imgName = $params['image']; 
-                    $dest = $params['folder'].$imgName;
-                    $source = $newImagePath.$dest;
-                    //echo "here".$imgName.$dest.$source;
-                }
-                else{
-                    $imgName = $objectType."_".$objectId."_".$params['count']."_".time().".".strtolower( $extension );
-                    
-                    $dest = $params['folder'].$imgName;
-                    $source = $newImagePath.$dest;
-                    
-                    
-                    $move = move_uploaded_file($IMG['tmp_name'],$source);
-                }
+            $params = $v['params'];
+            $IMG = $v['img'];
+            $objectId = $v['objectId'];
+            $objectType = $v['objectType'];
+            $newImagePath = $v['newImagePath'];
 
-                //print'<pre>';
-                //print_r($params); //die();
-                //echo "here";
-                
-                $s3upload = new ImageUpload($source, array( "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
-                    "image_type" => strtolower($params['image_type']), "service_image_id"=>$params['service_image_id'],
-                    "service_extra_params" => $service_extra_paramsArr));
-               
-                if(isset($params['update']))
-                    $postArr[$k] = $s3upload->update();
-                    //$returnValue['serviceResponse'] =  $s3upload->update();
-                else{
-                    $postArr[$k] = $s3upload->upload();
-                    //$returnValue['serviceResponse'] =  $s3upload->upload();
+            $service_extra_paramsArr = array( 
+                "priority"=>$params['priority'],
+                "title"=>$params['title'],
+                "description"=>$params['description'],
+                "takenAt"=>$params['tagged_date'],
+                "altText"=>$params['altText'], 
+                "jsonDump"=>json_encode($params['jsonDump']), 
+                "mediaExtraAttributes" => $params['mediaExtraAttributes'] 
+            );
+
+            if(!isset($params['tagged_date']) || empty($params['tagged_date']))
+                        unset($service_extra_paramsArr["takenAt"]);
+            if(!isset($params['jsonDump']) || empty($params['jsonDump']))
+                        unset($service_extra_paramsArr["jsonDump"]);
+             if(!isset($params['priority']) || empty($params['priority']))
+                        unset($service_extra_paramsArr["priority"]);
+            if(!isset($params['description']) || empty($params['description']))
+                      $service_extra_paramsArr["description"] = null;  //unset($service_extra_paramsArr["description"]);
+            if(!isset($params['title']) || empty($params['title']))
+                        unset($service_extra_paramsArr["title"]);
+            if(!isset($params['altText']) || empty($params['altText']))
+                        unset($service_extra_paramsArr["altText"]);
+            if(!isset($params['mediaExtraAttributes']) || empty($params['mediaExtraAttributes']))
+                        unset($service_extra_paramsArr["mediaExtraAttributes"]);
+
+                   // print'<pre>';
+                   // print_r($service_extra_paramsArr);//die();
+
+            if($params['delete']=="yes"){
+                if($params['dtype']=="3D"){
+                    $extra_paramsArr = array("dtype" => "3D");
+                    $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id'],  "service_extra_params" => $extra_paramsArr));
+                    $postArr[$k] = $s3upload->delete();
                 }
-                
-                
-                
+                else{
+                    $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id']));
+                    $postArr[$k] = $s3upload->delete();
+                } 
+            }        
+            else if($IMG==""){
+                        //print'<pre>';
+                        //print_r($params);//die();
+                        //die("here");
+                $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId,
+                             "service_image_id"=>$params['service_image_id'],"image_type" => strtolower($params['image_type']), "service_extra_params" => $service_extra_paramsArr));
+                $postArr[$k] = $s3upload->updateWithoutImage();
+            //$returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
+
+        //print_r($v);
+        
+                //$returnValue['serviceResponse'] =  $s3upload->updateWithoutImage();
             }
+                 
+            else{
+                
+                $returnValue = array();
+                $extension = explode( "/", $IMG['type'] );
+                $extension = $extension[ count( $extension ) - 1 ];
+                $imgType = "";
+                if ( strtolower( $extension ) == "jpg" || strtolower( $extension ) == "jpeg" ) {
+                    $imgType = IMAGETYPE_JPEG;
+                }
+                elseif ( strtolower( $extension ) == "gif" ) {
+                    $imgType = IMAGETYPE_GIF;
+                }
+                elseif ( strtolower( $extension ) == "png" ) {
+                    $imgType = IMAGETYPE_PNG;
+                }
+                else {
+                    //  unknown format !!
+                }
+                /*if ( $imgType == "" ) {
+                    //die("here1");
+                    $returnValue['error'] = "format not supported";
+                }
+                else {*/
+                    //  no error
+                    if($params['image']){
+                        //die("here2");
+                        $imgName = $params['image']; 
+                        $dest = $params['folder'].$imgName;
+                        $source = $newImagePath.$dest;
+                        //echo "here".$imgName.$dest.$source;
+                    }
+                    
+                    else{
+                        $imgName = $objectType."_".$objectId."_".$params['count']."_".time().".".strtolower( $extension );
+                        
+                        $dest = $params['folder'].$imgName;
+                        $source = $newImagePath.$dest;
+                        
+                        $move = move_uploaded_file($IMG['tmp_name'],$source);
+                    }
+
+                    //print'<pre>';
+                    //print_r($params); //die();
+                    //echo "here";
+                    
+                    $s3upload = new ImageUpload($source, array( "image_path" => $dest, "object" => $objectType,"object_id" => $objectId,
+                        "image_type" => strtolower($params['image_type']), "service_image_id"=>$params['service_image_id'],
+                        "service_extra_params" => $service_extra_paramsArr));
+                   
+                    if(isset($params['update']))
+                        $postArr[$k] = $s3upload->update();
+                        //$returnValue['serviceResponse'] =  $s3upload->update();
+                    else{
+                        $postArr[$k] = $s3upload->upload();
+                        //$returnValue['serviceResponse'] =  $s3upload->upload();
+                    }
+                    
+                    
+                    
+                //}
+            }
+
         }
-
     }
-
      
   // print'<pre>';   print_r($postArr);die();
   // array of curl handles
@@ -300,13 +329,24 @@ function writeToImageService($imageParams){
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 //die();
-////print'<pre>';
-  //  print_r($postArr); die();
+//print'<pre>';
+//print_r($postArr); die();
+
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
     $url = $d['url'];
     $method = $d['method'];
     $post = $d['params'];
+    if(array_key_exists("documentType", $post)) {
+        if(!empty($post['documentType'])){
+            $url = DOC_SERVICE_URL;
+        }
+    }
+    /*if(array_key_exists("dtype", $imageParams[$id]['params'])) {
+        if($imageParams[$id]['params']['dtype']=="3D"){
+            $url = DOC_SERVICE_URL;
+        }
+    }*/
     $curly[$id] = curl_init();
  
     //$url = (is_array($d) && !empty($url) ? $url : "");
@@ -381,6 +421,7 @@ else if(count($postArr)==1){
     }
 
 }*/
+//var_dump($result);die();
     return $result;
 }
 
@@ -511,4 +552,22 @@ function replaceSpaces($string){
 	return $output;
 }
 
-
+/*
+ * Author : Jitendra pathak
+ * Purpose : debugging and formatted output
+ */
+function pr($data){
+    echo "<pre>";
+    print_r($data);
+    echo "<pre>";
+}
+/*
+ * Author : Jitendra pathak
+ * Purpose : debug and die and formatted output
+ */
+function prd($data){
+    echo "<pre>";
+    print_r($data);
+    echo "<pre>";
+    die;
+}

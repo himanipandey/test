@@ -1003,6 +1003,17 @@ function broker_call_edit(callId, brokerId)
                                                       {$projectDetails[0].PROJECT_DESCRIPTION}
                                                   </td>
 						</tr>
+						<tr height="25px;">
+                                                    <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Description Reviewed:</b></td>
+                                                    <td>
+                                                    	{if $projectDetails[0].desc_content_flag == 1}
+                                                          Yes
+                                                      	{else}
+                                                          No
+                                                      	{/if}
+                                                      
+                                                  </td>
+						</tr>
                                                 <tr height="25px;">
                                                     <td  nowrap="nowrap" width="1%" align="left" valign ="top"><b>Project Comments:</b></td>
                                                     <td>
@@ -1054,7 +1065,8 @@ function broker_call_edit(callId, brokerId)
 								  	{/if} 
 								{/foreach}
 							</td>
-						</tr>						
+						</tr>
+											
 						<!--<tr height="25px;">
 							<td nowrap="nowrap" width="6%" align="left" valign ="top">
                                                             <b>Reason For UnLaunched Units:</b>
@@ -1147,7 +1159,7 @@ function broker_call_edit(callId, brokerId)
 								<b>Project URL:</b>
 							</td>
 							<td>
-								<a href = "http://www.proptiger.com/{$projectDetails[0].PROJECT_URL}">{$projectDetails[0].PROJECT_URL}</a>
+								<a href = "https://www.proptiger.com/{$projectDetails[0].PROJECT_URL}">{$projectDetails[0].PROJECT_URL}</a>
 							</td>
 						</tr>
 						<tr height="25px;">
@@ -1262,6 +1274,18 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+						<tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Housing Authority:</b>
+                                                    </td>
+                                                    <td>
+                                                        {if $authority != ''}
+                                                                {$authority}
+                                                        {else}
+                                                                --
+                                                        {/if}
+                                                    </td>
+						</tr>
                                                
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
@@ -1331,6 +1355,46 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+                                                <!-- @Jitendra pathak -->
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Construction Contractor: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].cons_comp != ''}
+                                                               {$projectDetails[0].cons_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Maintenace Contractor: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].maint_comp != ''}
+                                                               {$projectDetails[0].maint_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Landscape Architect: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].lands_arch_comp != ''}
+                                                               {$projectDetails[0].lands_arch_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
+                                                
+                                                
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Power backup: </b>
@@ -1630,16 +1694,24 @@ function broker_call_edit(callId, brokerId)
 							  
 							</tr>
 						{/if}
+                                                {array_search('Club House Area',$AmenitiesArr)}
 						{foreach from=$AmenitiesArr key=k item=v} 
 						{if $k != 99}
 						{if array_key_exists($k,$arrNotninty)}
 						<tr height="25px;">
+                                                    
 							<td nowrap="nowrap" align="left"><b>{$v} :</b></td>
 								 <td align ="left" nowrap>
 								 
 								  {if !in_array($arrNotninty[$k],$AmenitiesArr)}
 									 {if count($arrNotninty[$k]) >0} {$arrNotninty[$k]} {else} -- {/if}  
 								  {/if}
+                                                                  {if $v=='Club House'}
+                                                                      <label style="margin-left:20px"><b>Club House Area </b> : </label>
+                                                                      {if $clubHouseArea}
+									 {if $clubHouseArea >0} {$clubHouseArea} {else} -- {/if}  
+                                                                       {/if}
+                                                                  {/if}
 								  </td>	
 							 {/if}
 						</tr>
@@ -1992,7 +2064,7 @@ function broker_call_edit(callId, brokerId)
 											</a>
 											<br>
 										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
-                                        <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({$ImageDataListingArrFloor[data].SIZE} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
+                                        <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({if $ImageDataListingArrFloor[data].SIZE != ''}{$ImageDataListingArrFloor[data].SIZE}{/if} {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE != ''} , {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if}  {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE == ''} {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
 									</div>
 								</td>
 								{$cnt = $cnt+1} 		

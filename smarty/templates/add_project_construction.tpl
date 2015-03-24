@@ -48,7 +48,7 @@
         $("#err_edit_reson").hide();
 	}
 	
-	if($("#month_expected_completion").val()=='' && $("#year_expected_completion").val()=='')
+	if($("#month_expected_completion").val()=='' || $("#year_expected_completion").val()=='')
 	{
             $("#err_date").show();
             flag='yes';

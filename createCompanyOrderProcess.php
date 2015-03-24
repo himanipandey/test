@@ -15,6 +15,11 @@
 	}
   }
   
+if((isset($_REQUEST['o']) && $_REQUEST['page'] == 'view') || isset($_REQUEST['o']) && $_REQUEST['page'] == 'edit'){
+
+
+}
+
   if($_POST['btnSave'] == 'Save'){
 	$order_id = '';  
 	$txtCompId = trim($_POST['txtCompId']);
@@ -24,7 +29,8 @@
 	$txtOrderDate = trim($_POST['txtOrderDate']);
 	$orderType = trim($_POST['orderType']);
 	$txtOrderDur = trim($_POST['txtOrderDur']);
-	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+//	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryOrderDate']);
 	$txtOrderAmt = trim($_POST['txtOrderAmt']);
 	$txtExpiryOrderDate = trim($_POST['txtExpiryOrderDate']);
 	$txtPaymentMethod = $_POST['txtPaymentMethod'];
@@ -40,17 +46,22 @@
 	$catch_access = $_POST['catch_access'];
 	$builder_access = $_POST['builder_access'];
 	$noLicen = trim($_POST['noLicen']);
+	$txtSubsUserName = $_POST['txtSubsUserName'];
 	$txtSubsUserEmail = $_POST['txtSubsUserEmail'];
 	$txtSubsUserCont = $_POST['txtSubsUserCont'];
-	$txtSubsUserGroup = $_POST['txtSubsUserGroup'];
+	$txtSubsUserOtp = $_POST['txtSubsUserOtp'];
+	//print_r($txtSubsUserOtp);
+
 	$pmtNo = trim($_POST['pmtNo']);
 	$userNo = trim($_POST['userNo']);
 	$all_locs = trim($_POST['all_locs']);	
 	$all_locs = ($all_locs)?explode(",",$all_locs):'';	
 	
+        $subs_status = trim($_POST['status']);
+
 	CompanyOrder::transaction(function(){
 	  	
-	  global $order_id,$txtCompId,$orderName,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
+	  global $order_id,$txtCompId,$orderName,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserName, $txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$txtSubsUserOtp,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray,$subs_status;
 	
 	  try{
 		  
@@ -62,7 +73,8 @@
 		  
 		  
 		  #Company Subcription
-		  $res = mysql_query("INSERT INTO `proptiger`.`company_subscriptions` (`id`,`company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`) VALUES (NULL, '".$txtCompId."', '".$_SESSION['adminId']."', '".$expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."')");
+                  $sqlInsert="INSERT INTO `proptiger`.`company_subscriptions` (`id`,`company_id`, `created_by`, `expiry_time`, `created_at`, `updated_at`, `status`) VALUES (NULL, '".$txtCompId."', '".$_SESSION['adminId']."', '".$expiry_date."', '".date('Y-m-d H:i:s')."', '".date('Y-m-d H:i:s')."', '".$subs_status."')";
+		  $res = mysql_query($sqlInsert);
 		  
 		  $subs_id = mysql_insert_id();
 		  
@@ -76,7 +88,7 @@
 		  $company_order->order_date = $txtOrderDate;
 		  if($orderType == 'trial'){
 			 $company_order->order_expiry_date = $txtExpiryTrialOrderDate; 
-			 $company_order->trial_duration =  $txtOrderDur;
+			 $company_order->trial_duration =  '';
 			 $company_order->order_amount =  '';
 		  }
 		  if($orderType == 'paid'){
@@ -154,9 +166,13 @@
 		  #- User Subscription Mapping
 		  $cnt = 0;
 		  while($cnt < $userNo){
+		  	//die("hello".$txtSubsUserOtp[$cnt]);
+		  	//die("hello1");
 			//need to fetch id on basis of email id from forum_user 
+			$name = trim(mysql_real_escape_string($txtSubsUserName[$cnt]));
 			$email = trim(mysql_real_escape_string($txtSubsUserEmail[$cnt]));
-			$phone = trim(mysql_real_escape_string($txtSubsUserCont[$cnt]));			
+			$phone = trim(mysql_real_escape_string($txtSubsUserCont[$cnt]));
+				
 			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'");
 			if(mysql_num_rows($sql_user)){
 			  $userId = mysql_fetch_object($sql_user);	
@@ -178,7 +194,7 @@
 			array_push($contactNumbers, $contact);
             
             $post = array(
-            			"fullName"=>$email,
+            			"fullName"=>$name,
             			"email"=>$email,
             			"contactNumbers"=>$contactNumbers,
             			"password"=>$pwd,
@@ -187,10 +203,27 @@
             		);
 
             $url = USER_API_URL;
+//            $url = 'https://qa.proptiger-ws.com/app/v1/register';
             //echo $post;
             $response = curl_request(json_encode($post), 'POST', $url);
+            
             if($response['statusCode']=="2XX"){
+            	//echo "here";
               $userId = $response['id'];
+              $url = USER_ATTRIBUTES_API_URL."/{$userId}/attribute";
+
+              if($txtSubsUserOtp[$cnt]=="TRUE")
+              	$disable_otp = 'TRUE';
+              else
+              	$disable_otp = 'FALSE';
+              
+
+              $post = array(
+            			"attributeName"=>'OTP_DISABLE',
+            			"attributeValue"=>$disable_otp,
+            		);
+              $response_otp = curl_request(json_encode($post), 'POST', $url);
+             //var_dump($response_otp); echo "creating new user new otp : new order"; die();
             }
              
             else die("error in user mapping : ".$response['error']);
@@ -252,7 +285,8 @@
 	$txtOrderDate = trim($_POST['txtOrderDate']);
 	$orderType = trim($_POST['orderType']);
 	$txtOrderDur = trim($_POST['txtOrderDur']);
-	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+//	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryTrialOrderDate']);
+	$txtExpiryTrialOrderDate = trim($_POST['txtExpiryOrderDate']);
 	$txtOrderAmt = trim($_POST['txtOrderAmt']);
 	$txtExpiryOrderDate = trim($_POST['txtExpiryOrderDate']);
 	
@@ -271,17 +305,23 @@
 	$catch_access = $_POST['catch_access'];
 	$builder_access = $_POST['builder_access'];
 	$noLicen = trim($_POST['noLicen']);
+	$txtSubsUserName = $_POST['txtSubsUserName'];
 	$txtSubsUserEmail = $_POST['txtSubsUserEmail'];
+	//echo "email".$txtSubsUserEmail;
+	//print_r($txtSubsUserEmail);
 	$txtSubsUserCont = $_POST['txtSubsUserCont'];
 	$txtSubsUserGroup = $_POST['txtSubsUserGroup'];
+	$txtSubsUserOtp = $_POST['txtSubsUserOtp'];
 	$pmtNo = trim($_POST['pmtNo']);
 	$userNo = trim($_POST['userNo']);
-	$all_locs = trim($_POST['all_locs']);	
-	$all_locs = ($all_locs)?explode(",",$all_locs):'';	
+	$all_locs = trim($_POST['all_locs']);
+	$all_locs = ($all_locs)?explode(",",$all_locs):'';
 	
+        $subs_status = trim($_POST['status']);
+        
 	CompanyOrder::transaction(function(){
 	  	
-	  global $orderId,$orderName,$subs_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup,$pmtNo,$userNo,$all_locs,$error_flag,$cityArray;
+	  global $orderId,$orderName,$subs_id,$txtCompId,$txtCompName,$txtSalesPerson,$txtOrderDate,$orderType,$txtOrderDur,$txtExpiryTrialOrderDate,$txtOrderAmt,$txtExpiryOrderDate,$txtPaymentId,$txtPaymentMethod,$txtPaymentInstNo,$txtPaymentAmt,$txtPaymentDate,$gAccess,$cities,$locs_cities,$dash_access,$builder_access,$catch_access,$demand_access,$supply_access,$noLicen, $txtSubsUserName,$txtSubsUserEmail,$txtSubsUserCont,$txtSubsUserGroup, $txtSubsUserOtp, $pmtNo,$userNo,$all_locs,$error_flag,$cityArray,$subs_status;
 	
 	  try{
 		  $expiry_date='';
@@ -291,7 +331,8 @@
 		    $expiry_date = $txtExpiryOrderDate;
 		    
 		    #Company Subcription
-		  $res = mysql_query("UPDATE `proptiger`.`company_subscriptions` SET `expiry_time`='".$expiry_date."' WHERE id='".$subs_id."'");
+                  $sqlUpdate = "UPDATE `proptiger`.`company_subscriptions` SET `expiry_time`='".$expiry_date."', `status`='".$subs_status."' WHERE id='".$subs_id."'";
+		  $res = mysql_query($sqlUpdate);
 		  		    
 		  #company Orders
 		  $company_order = CompanyOrder::find($orderId);
@@ -303,7 +344,7 @@
 		  $company_order->order_date = $txtOrderDate;
 		  if($orderType == 'trial'){
 			 $company_order->order_expiry_date = $txtExpiryTrialOrderDate; 
-			 $company_order->trial_duration =  $txtOrderDur;
+			 $company_order->trial_duration =  '';
 			 $company_order->order_amount =  '';
 		  }
 		  if($orderType == 'paid'){
@@ -395,16 +436,81 @@
 		  mysql_query("DELETE FROM `proptiger`.`user_subscription_mappings` WHERE subscription_id='".$subs_id."'");
 		  $cnt = 0;
 		  while($cnt < $userNo){
+		  	//die($txtSubsUserOtp[$cnt]);
 			//need to fetch id on basis of email id from forum_user 
+			$name = trim(mysql_real_escape_string($txtSubsUserName[$cnt]));
 			$email = trim(mysql_real_escape_string($txtSubsUserEmail[$cnt]));
 			$phone = trim(mysql_real_escape_string($txtSubsUserCont[$cnt]));			
-			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'");
-			if(mysql_num_rows($sql_user)){
-			  $userId = mysql_fetch_object($sql_user);	
-			  $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')");
+			$sql_user = mysql_query("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'") or die(mysql_error()); //var_dump("SELECT `USER_ID` FROM `proptiger`.`FORUM_USER` WHERE `EMAIL`='".addslashes($email)."'");
+			if(mysql_num_rows($sql_user)){  
+			  $userId = mysql_fetch_object($sql_user);	 
+			  $res = mysql_query("INSERT INTO `proptiger`.`user_subscription_mappings` (`id`, `subscription_id`, `user_id`, `created_by`, `created_at`) VALUES (NULL, '".$subs_id."', '".$userId->USER_ID."', '".$_SESSION['adminId']."', '".date('Y-m-d H:i:s')."')") or die(mysql_error()); 
+			  //update disable_otp field
+			  //echo "hellodf";
+			  $url = USER_DETAILS_API_URL."/?userId=".$userId->USER_ID; 
+			  //$url = USER_DETAILS_API_URL; 
+			  //$url = $url."/?userId=".$userId;
+			  //die($url);
+			    $response = file_get_contents($url);
+
+			    $otp_disable = array();
+			    
+				
+				$response = json_decode($response);		
+			    if($response->statusCode=="2XX"){
+			    	$data = $response->data;
+			    	foreach ($data as $k => $d) {
+			    		$attributes = array();
+			    		$attributes = $d->attributes;
+			    		foreach ($attributes as $k => $v) {
+			    			if($v->attributeName=='OTP_DISABLE')
+			    				$attributeId = $v->id;
+			    		}
+			    	}
+
+
+			    }
+			    //var_dump($response);
+	    		if($attributeId){
+	    			$url = USER_ATTRIBUTES_API_URL."/{$userId->USER_ID}/attribute/{$attributeId}";
+
+	              if($txtSubsUserOtp[$cnt]=="TRUE")
+	              	$disable_otp = 'TRUE';
+	              else
+	              	$disable_otp = 'FALSE';
+	              
+
+	              $post = array(
+	            			"attributeName"=>'OTP_DISABLE',
+	            			"attributeValue"=>$disable_otp,
+	            		);
+	              $response_otp = curl_request(json_encode($post), 'PUT', $url);
+	             //var_dump($response_otp); echo "updating old user old otp"; die();
+	    		}
+	    		else{
+	    			$url = USER_ATTRIBUTES_API_URL."/{$userId->USER_ID}/attribute";
+
+	              if($txtSubsUserOtp[$cnt]=="TRUE")
+	              	$disable_otp = 'TRUE';
+	              else
+	              	$disable_otp = 'FALSE';
+	              
+
+	              $post = array(
+	            			"attributeName"=>'OTP_DISABLE',
+	            			"attributeValue"=>$disable_otp,
+	            		);
+	              $response_otp = curl_request(json_encode($post), 'POST', $url);
+	              //print("<pre>");
+	              //var_dump($url); var_dump(json_encode($post));
+	             //var_dump($response_otp);echo "creating old user new otp";die();
+	    		}
+
+			  
 			}else{
+				//die("here2");
 			  $compArr = Company::getAllCompany($arr=array('id'=>$txtCompId));		
-			  $pwd = time();
+			  $pwd = time(); 
 			  //create user in forum table			
 			  //mysql_query("INSERT INTO `proptiger`.`FORUM_USER` (`USER_ID`, `USERNAME`, `EMAIL`, `CONTACT`, `PROVIDERID`, `PROVIDER`, `FB_IMAGE_URL`, `IMAGE`, `PASSWORD`, `CITY`, `COUNTRY_ID`, `UNIQUE_USER_ID`, `CREATED_DATE`, `STATUS`, `IS_SUBSCRIBED`, `UNSUBSCRIBED_AT`) VALUES (NULL, '', '".$email."','".$phone."', '0', '', '', ' ', '".md5($pwd)."', '".$cityArray[$compArr[0]['city']]."', '1', '', '".date('Y-m-d H:i:s')."', '1', 0, '".date('Y-m-d H:i:s')."');") or die(mysql_error());
 			  //$userId = mysql_insert_id();
@@ -416,11 +522,11 @@
 						"contactNumber"=> $phone
 					);
 			array_push($contactNumbers, $contact);
-
+            //echo "creating new user";
 			
             
 			  $post = array(
-            			"fullName"=>$email,
+            			"fullName"=>$name,
             			"email"=>$email,
             			"contactNumbers"=>$contactNumbers,
             			"password"=>$pwd,
@@ -429,10 +535,25 @@
             		);
             
             $url = USER_API_URL;
+//            $url = 'https://qa.proptiger-ws.com/app/v1/register';
             //echo $post;
             $response = curl_request(json_encode($post), 'POST', $url);
             if($response['statusCode']=="2XX"){
               $userId = $response['id'];
+              $url = USER_ATTRIBUTES_API_URL."/{$userId}/attribute";
+
+              if($txtSubsUserOtp[$cnt]=="TRUE")
+              	$disable_otp = 'TRUE';
+              else
+              	$disable_otp = 'FALSE';
+              
+
+              $post = array(
+            			"attributeName"=>'OTP_DISABLE',
+            			"attributeValue"=>$disable_otp,
+            		);
+              $response_otp = curl_request(json_encode($post), 'POST', $url);
+              //var_dump($response_otp); echo "creating new user new otp";die();
             }
             else die("error in user mapping : ".$response['error']);
 
@@ -454,7 +575,7 @@
 			$cnt++;	 
 		  }		  
 		   		  
-		  		  
+		 //die("stopped"); 		  
 	  }catch(Exception $e){	
 		  $error_flag = "Some error occurs in Company Order Saving! Try Again";	 	  
 		  return false;	  
@@ -483,6 +604,7 @@
 	 $smarty->assign('txtExpiryTrialOrderDate',$order_details['order_expiry_date']);
 	 $smarty->assign('txtExpiryOrderDate',$order_details['order_expiry_date']);
 	 $smarty->assign('txtOrderAmt',$order_details['order_amount']);
+	 $smarty->assign('subscription_status',$order_details['subscription_status']);
 	
 	 //payment
 	 $smarty->assign('txtPaymentDetails',$order_details['payment_details']);	 
@@ -495,8 +617,51 @@
 	 $smarty->assign('gAccess',$order_details['gAccess']);
 	 $smarty->assign('gAccess_ids',json_encode($order_details['gAccess_ids']));
 
-	 $smarty->assign('txtSubsUser',$order_details['user_emails']);
-	 $smarty->assign('userNo',$order_details['userNo']);
+	 $userIds = $order_details['user_ids'];
+	 //print("<pre>");
+	 //print_r($order_details);
+    $url = USER_DETAILS_API_URL."/?userId=".implode($userIds, ",");
+    $response = file_get_contents($url);
+    $full_name = array();
+    $user_emails = array();
+    $contact_no = array();
+    $otp_disable = array();
+    $user_nos = 0;
+   //echo $url; 
+	//var_dump($response); 
+	
+	$response = json_decode($response);
+    if($response->statusCode=="2XX"){
+    	$data = $response->data;
+    	foreach ($data as $k => $d) {
+    		array_push($full_name, $d->fullName);
+    		array_push($user_emails, $d->email);
+    		$user_nos++;
+    		$contact_nos = $d->contactNumbers;
+    		array_push($contact_no, $contact_nos[0]->contactNumber);
+    		$attributes = array();
+    		$attributes = $d->attributes;
+    		foreach ($attributes as $k => $v) {
+    			if($v->attributeName=='OTP_DISABLE'){
+    				array_push($otp_disable, $v->attributeValue); 
+    			}
+
+    		}
+    	}
+
+
+    }
+    
+
+//print_r($otp_disable);
+    $smarty->assign('txtSubsUserName',$full_name);
+	 //$smarty->assign('txtSubsUserEmail',$order_details['user_emails']);
+   	 $smarty->assign('txtSubsUserEmail',$user_emails);
+	 $smarty->assign('txtSubsUserId',$order_details['user_ids']);
+	 //$smarty->assign('userNo',$order_details['userNo']);
+	 $smarty->assign('userNo',$user_nos);
+	 $smarty->assign('txtSubsUserCont',$contact_no);
+	 $smarty->assign('txtSubsUserOtp',$otp_disable);
 		
      $smarty->assign("subsId",$order_details['subscription_id']);
 	 $smarty->assign("page",$page);

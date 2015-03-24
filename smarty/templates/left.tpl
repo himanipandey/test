@@ -24,9 +24,32 @@
             <tr>
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
+        {/if}
 
+        {if $listingAuth == true}
+            <tr>
+                    <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                      <td align="left" height="22"><A class="leftnav" href="listing_list.php"><font color = "#f15a22">Listing Management</font></A></td>
+            </tr>
+
+            <tr>
+                    <td class="thinline" align="left" colSpan="2"></td>
+            </tr>
             
         {/if}
+        {if $listingPhotoAuth == true}
+
+            <tr>
+                    <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                      <td align="left" height="22"><A class="leftnav" href="listing_img_add.php"><font color = "#f15a22">Upload Listing Photo</font></A></td>
+            </tr>
+
+            <tr>
+                    <td class="thinline" align="left" colSpan="2"></td>
+            </tr>
+
+        {/if}
+
 
         {if $companyAuth == true}
             <tr>
@@ -108,6 +131,15 @@
             <tr>
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
+        {if $authorityAuth == true}
+            <tr>
+                    <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                      <td align="left" height="22"><A class="leftnav" href="housingAuthorities.php" title = "TownShips"><font color = "#f15a22">Housing Authorities Management</font></A></td>
+            </tr>
+            <tr>
+                    <td class="thinline" align="left" colSpan="2"></td>
+            </tr>
+        {/if}
        
         {if $bankAuth == true}
             <tr>
@@ -482,6 +514,15 @@
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
         <td align="left" height="22"><a class="leftnav" href="microsite-add-edit.php"><font color = "#f15a22">Microsite Management</font></a></td>
+
+    </tr>
+    <tr><td class="thinline" align="left" colspan="2"></td></tr>
+    {/if}
+
+    {if $crawlingAuth == true}
+    <tr>
+        <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+        <td align="left" height="22"><a class="leftnav" href="crawling_upload.php"><font color = "#f15a22">Crawling/Youtube Upload</font></a></td>
 
     </tr>
     <tr><td class="thinline" align="left" colspan="2"></td></tr>

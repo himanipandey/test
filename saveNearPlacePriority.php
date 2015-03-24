@@ -1,5 +1,4 @@
 <?php
-
 error_reporting(1);
 ini_set('display_errors','1');
 include("smartyConfig.php");
@@ -9,18 +8,16 @@ include("includes/configs/configs.php");
 include("builder_function.php");
 include("function/functions_priority.php");
 AdminAuthentication();
-
 if($_POST['task']=='editpriority'){
     $priority   = $_POST['prio'];
     $cityId     = $_POST['cityid'];
-
     if(!empty($_POST['nearPlaceId']))
     {
         $nearPlaceId    = $_POST['nearPlaceId'];
         $status = $_POST['status'];
         if($priority < 1 || trim($priority) == '' || $priority > 5){
-    	     echo 4; return;
-    	}
+             echo 4; return;
+        }
         if(!empty($sub)){
             $count = checkNearPlaceAvail($nearPlaceId, $priority, 'suburb', $sub);
             if($count > 0)
@@ -40,27 +37,23 @@ if($_POST['task']=='editpriority'){
                 echo "2";
             }
         }else{
-
             updateNearPlace($nearPlaceId, $priority, $status, 'city', $cityId);
             
         }
     }
     else
     {
-    			
+                
         if($priority < 1 || trim($priority) == '' || $priority > 5){
-    	     echo 4; return;
-    	}
+             echo 4; return;
+        }
             
     }
-
 }
-
 else if($_POST['task']=='createLandmarkAlias'){
     $id = $_POST['id'];
     $city_id = $_POST['cid'];
     $place_type_id = $_POST['placeid'];
-
     $name   = $_POST['name'];
     $address   = $_POST['address'];
     $lat   = $_POST['lat'];
@@ -79,7 +72,6 @@ else if($_POST['task']=='createLandmarkAlias'){
             echo "1";
         else if (!mysql_error()) echo "2";
         else  echo "3";
-
     }
     if ($mode=='create'){
         
@@ -92,7 +84,5 @@ else if($_POST['task']=='createLandmarkAlias'){
     }
         
 }
-
     
-
 ?>
