@@ -1,100 +1,114 @@
 <?php
 
-set_time_limit(0);
-ini_set("memory_limit", "256M");
-include("ftp.new.php");
-$floorPlanOptionsArr = array();
-$villApartment = array();
-$plot = array();
-$commercial = array();
-$uploadedArr = array(); // array of titles ALREADY uploaded in image service 
-$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex", "3D Floor Plan");
-$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan", "3D Floor Plan");
-$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan", "Terrace Floor Plan", "Duplex Floor Plan");
-$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan", "Penthouse Floor Plan", "Terrace Floor Plan");
-$triplex = array("Lower Level Floor", "Medium Level Floor", "Upper Level Floor", "Terrace Floor Plan");
-$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan", "Ground Floor Plan");
-//$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan", "Ground Floor Plan");
-
-$watermark_path = 'images/pt_shadow1.png';
-$projectId = $_REQUEST['projectId'];
-$projectDetail = ResiProject::virtual_find($projectId);
-$projectDetail = array($projectDetail->to_custom_array());
-$builderDetail = ResiBuilder::find($projectDetail[0]['BUILDER_ID']);
-$builderDetail = $builderDetail->to_custom_array();
-$ProjectOptionDetail = getAllProjectOptionsExceptPlot($projectId);
+	set_time_limit(0);
+	ini_set("memory_limit","256M");
+	include("ftp.new.php");
+	$floorPlanOptionsArr = array();
+	$villApartment = array();
+	$plot = array();
+	$commercial = array();
+	$uploadedArr = array(); // array of titles ALREADY uploaded in image service 
+	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex", "3D Floor Plan", "Panorama");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan", "3D Floor Plan", "Panorama");
+	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan", "Terrace Floor Plan", "Duplex Floor Plan");
+	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan", "Penthouse Floor Plan", "Terrace Floor Plan");
+	$triplex = array("Lower Level Floor", "Medium Level Floor", "Upper Level Floor", "Terrace Floor Plan");
+	$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan", "Ground Floor Plan");
+	//$ground_floor = array("Lower Ground Floor Plan", "Upper Ground Floor Plan", "Ground Floor Plan");
 
 
+	// used to differentialte image types with doc types, 3D Floor Plan not added because its actually an image type
+	$documentTypeArr = array("Panorama");
 
-foreach ($ProjectOptionDetail as $k => $v) {
-    $objectType = "property";
-    $image_type = "floor_plan";
-    $objectId = $v['OPTION_ID'];
-
-    $url = ImageServiceUpload::$image_upload_url . "?objectType=$objectType&objectId=" . $objectId;
-    $a_3d_url = DOC_SERVICE_URL . "?objectType=$objectType&objectId=" . $objectId;
-    //echo $url;
-    $content = file_get_contents($url);
-    $imgPath = json_decode($content);
-
-    $arr = array();
-    foreach ($imgPath->data as $k1 => $v1) {
-        array_push($arr, $v1->title);
-    }
-    $arr1 = array();
-    $a_3d_content = file_get_contents($a_3d_url);
-    $a_3d_Path = json_decode($a_3d_content);
-    foreach ($a_3d_Path->data as $k1 => $v1) {
-        array_push($arr1, $v1->description);
-    }
-
-    $uploadedArr[$k] = implode("-", $arr);
-    $uploadedArr3D[$k] = implode("-", $arr1);
-    if ($v['UNIT_TYPE'] == 'Apartment') {
-        $floorPlanOptionsArr[$k] = $apartmentArr;
-        $villApartment[$k] = "yes";
-    } else if ($v['UNIT_TYPE'] == 'Villa') {
-        $floorPlanOptionsArr[$k] = $villaArray;
-        $villApartment[$k] = "yes";
-    } else if ($v['UNIT_TYPE'] == 'Plot') {
-        unset($ProjectOptionDetail[$k]);
-        $plot[$k] = "yes";
-    } else if ($v['UNIT_TYPE'] == 'commercial')
-        $commercial[$k] = "yes";
-}
-//print("<pre>");
-//print_r($uploadedArr);
+	$watermark_path = 'images/pt_shadow1.png';
+	$projectId				=	$_REQUEST['projectId'];
+    $projectDetail = ResiProject::virtual_find($projectId);
+    $projectDetail = array($projectDetail->to_custom_array());
+	$builderDetail			= ResiBuilder::find($projectDetail[0]['BUILDER_ID']);
+    $builderDetail = $builderDetail->to_custom_array();
+	$ProjectOptionDetail	=	getAllProjectOptionsExceptPlot($projectId);
 
 
 
+	foreach ($ProjectOptionDetail as $k => $v) {
+		$objectType = "property";
+		$image_type = "floor_plan";
+	    $objectId = $v['OPTION_ID'];
+	    
+	    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+	    $a_3d_url = DOC_SERVICE_URL."?objectType=$objectType&objectId=".$objectId;
+	    //echo $url;
+	    $content = file_get_contents($url);
+	    $imgPath = json_decode($content);
+	    
+	    $arr = array();
+	    foreach($imgPath->data as $k1=>$v1){
+				array_push($arr, $v1->title);
+		}
+		$arr1 = array();
+		$a_3d_content = file_get_contents($a_3d_url);
+	    $a_3d_Path = json_decode($a_3d_content);
+	    foreach($a_3d_Path->data as $k1=>$v1){
+				array_push($arr1, $v1->description);
+		}
+
+		$uploadedArr[$k] = implode("-", $arr);
+		$uploadedArr3D[$k] = implode("-", $arr1);
+		if($v['UNIT_TYPE']=='Apartment'){
+			$floorPlanOptionsArr[$k] = $apartmentArr;
+			$villApartment[$k] = "yes";
+			
+		}
+		else if($v['UNIT_TYPE']=='Villa'){
+			$floorPlanOptionsArr[$k] = $villaArray;
+			$villApartment[$k] = "yes";
+		}
+		else if($v['UNIT_TYPE']=='Plot'){
+			unset($ProjectOptionDetail[$k]);
+			$plot[$k] = "yes";
+		}
+			
+		else if($v['UNIT_TYPE']=='commercial')
+			$commercial[$k] = "yes";
+
+	}
+	//print("<pre>");
+	//print_r($uploadedArr);
+	
 
 
-$smarty->assign("projectId", $projectId);
-$smarty->assign("ProjectOptionDetail", $ProjectOptionDetail);
-$smarty->assign("ProjectDetail", $projectDetail);
-$smarty->assign("floorPlanOptionsArr", $floorPlanOptionsArr);
-$smarty->assign("villApartment", $villApartment);
-$smarty->assign("plot", $plot);
-$smarty->assign("commercial", $commercial);
-$smarty->assign("duplex", $duplex);
-$smarty->assign("triplex", $triplex);
-$smarty->assign("penthouse", $penthouse);
-$smarty->assign("ground_floor", $ground_floor);
-$smarty->assign("uploadedStr", $uploadedArr);
-$smarty->assign("uploadedStr3D", $uploadedArr3D);
-if (isset($_GET['edit'])) {
-    $smarty->assign("edit_projct", $projectId);
-}
 
-$flag = 0;
-$projectFolderCreated = 0;
-$optionId = '';
-$insertlist = '';
-$ErrorMsg1 = '';
 
-$postArr = array(); // array to store image data to send with http request
-$fileEndName = array();
-//print("<pre>");var_dump($_REQUEST); die();
+	$smarty->assign("projectId", $projectId);
+	$smarty->assign("ProjectOptionDetail",$ProjectOptionDetail);
+	$smarty->assign("ProjectDetail", $projectDetail);
+	$smarty->assign("floorPlanOptionsArr", $floorPlanOptionsArr);
+	$smarty->assign("villApartment", $villApartment);
+	$smarty->assign("plot", $plot);
+	$smarty->assign("commercial", $commercial);
+	$smarty->assign("duplex", $duplex);
+	$smarty->assign("triplex", $triplex);
+	$smarty->assign("penthouse", $penthouse);
+	$smarty->assign("ground_floor", $ground_floor);
+	$smarty->assign("uploadedStr", $uploadedArr);
+	$smarty->assign("uploadedStr3D", $uploadedArr3D);
+	if(isset($_GET['edit']))
+	{
+		$smarty->assign("edit_projct", $projectId);
+	}
+	
+	$flag					=	0;
+	$projectFolderCreated	=	0;
+	$optionId				=	'';
+	$insertlist				=	'';
+	$ErrorMsg1				=   '';
+
+	$postArr = array(); // array to store image data to send with http request
+	$fileEndName = array();
+	//print("<pre>");var_dump($_REQUEST); die();
+
+
+
 if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST['Next'] == "Add More")) {
     /*     * ***********Add new project type if projectid is blank******************************** */
     //print("<pre>");var_dump($_REQUEST); die();
@@ -108,7 +122,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                     //echo strtolower($_FILES["imgurl"]["type"][$key]);
                     if ($_FILES['imgurl']['name'][$key] != '') {
                         $flgins = 1;
-                        if (!in_array(strtolower($_FILES["imgurl"]["type"][$key]), $arrImg)) {
+                        if(!in_array(strtolower($_FILES["imgurl"]["type"][$key]), $arrImg) && !in_array($_REQUEST['floor_name'][$key], $documentTypeArr)) {
                             $ErrorMsg1 = "You can upload only jpg / jpeg gif png images."; //die("here");
                         }
 //                        else if (!preg_match("/-floor-plan\.[a-z]{3,4}$/", $_FILES["imgurl"]["name"][$key])) {
@@ -166,7 +180,13 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                                     $imgurl8 = $projecttbl . "/" . $imgurl1;
 
                                     //list($width, $height) = getimagesize($img['tmp_name']);
-                                    list($width, $height) = getimagesize($createFolder . "/" . $imgurl1);
+                                    if(in_array($_REQUEST['floor_name'][$key], $documentTypeArr)){
+					                	$width = "1053";
+					                	$height =  "600";
+					                }
+					                else{
+					                	list($width, $height) = getimagesize($createFolder."/" . $imgurl1);
+					                }
                                     $media_extra_attributes = array("width" => $width, "height" => $height);
                                     $media_extra_attributes = json_encode($media_extra_attributes);
                                     //$media_extra_attributes =  "{'width':".$width.", 'height':".$height."}";
@@ -177,6 +197,8 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
 
                                     if ($floor_name == "3D Floor Plan")
                                         $image_type = "3DFloorPlan";
+                                    else if ($floor_name == "Panorama")
+                                        $image_type = "Panoramic";
                                     else
                                         $image_type = "floorPlan";
 
@@ -196,6 +218,15 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                                     $tmp['title'] = $floor_name;
                                     $tmp['description'] = $floor_name;
                                     $tmp['altText'] = $altText;
+
+                                    if(in_array($floor_name, $documentTypeArr) || $floor_name=="3D Floor Plan"){
+                                    	$tmp['documentType'] = $image_type;
+                                    	$tmp['file'] = "@" . $img['tmp_name'];
+                                    	unset($tmp['image']);
+                                    	unset($tmp['imageType']);
+                                    	unset($tmp['title']);
+                                    	unset($tmp['altText']);
+                                    }
 
                                     $unitImageArr = array();
                                     $unitImageArr['upload_from_tmp'] = "yes";
@@ -220,6 +251,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
         //print("<pre>");var_dump($serviceResponse);die();
         //$serviceResponse = json_decode($serviceResponse);
       //  print'<pre>'.print_r($serviceResponse,1);die;				                  	
+
         foreach ($serviceResponse as $k => $v) {
 
             if (empty($v->error->msg)) {

@@ -53,7 +53,8 @@ class ImageServiceUpload{
             "projectBrouchure"=>"projectBrouchure"
         ),
         "option" => array("floor_plan" => "floorPlan",
-                           "3d_floor_plan" => "3DFloorPlan" ),
+                           "3d_floor_plan" => "3DFloorPlan",
+                           "panorama" => "Panoramic" ),
         "builder" => array("builder_image" => "logo"),
         "locality" => array(
             "heroshot" => "heroShot",
@@ -135,7 +136,10 @@ class ImageServiceUpload{
             ),
     );
 
-    static $document_types = array("3d_floor_plan", "companysignupform", "projectBrouchure");
+
+    static $document_types = array("3d_floor_plan", "companysignupform", "panorama", "projectBrouchure");
+
+
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;

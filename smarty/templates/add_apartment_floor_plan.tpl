@@ -55,7 +55,7 @@
 				$('<option>').val("{$data}").text("{$data}").appendTo('#floor_name_'+c);
 			{/foreach}
       	}
-        else if(value == "Floor Plan" || value == "Floor Plan" || value == "3D Floor Plan"){
+        else if(value == "Floor Plan" || value == "Floor Plan" || value == "3D Floor Plan" || value == "Panorama"){
       		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
 
@@ -68,7 +68,7 @@
 
       		if (str.indexOf($(this).text()) >= 0 && $(this).text()!="3D Floor Plan")
 		    	$(this).attr("disabled", true);
-		    else if (str1.indexOf($(this).text()) >= 0   && $(this).text()=="3D Floor Plan")
+		    else if (str1.indexOf($(this).text()) >= 0   && $(this).text()!="Floor Plan")
 		    	$(this).attr("disabled", true);
 		});
       	

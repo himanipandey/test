@@ -316,7 +316,8 @@ function writeToImageService($imageParams){
         }
     }
      
-  //print'<pre>';   print_r($postArr);die();
+  // print'<pre>';   print_r($postArr);die(); 
+
   // array of curl handles
     $curly = array();
   // data to be returned
