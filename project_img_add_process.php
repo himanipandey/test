@@ -88,22 +88,12 @@ if (isset($_POST['Next'])) {
     $arrTaggedDate = array();
     $arrTowerId = array();
     $arrDisplayOrder = array();
-    //print("<pre>");
-    //print_r($_FILES['txtlocationplan']);
-    //echo "start:".microtime(true)."<br>";
+  
     foreach ($_FILES['txtlocationplan']['name'] as $k => $v) {
         if ($v != '') {
             if (!in_array(strtolower($_FILES['txtlocationplan']['type'][$k]), $arrImg)) {
                 $ErrorMsg["ImgError"] = "You can upload only " . ucwords(implode(" / ", $arrImg)) . " images.";
             }
-
-//            foreach ($arrType as $planType => $imgNamePart) {
-//                if ($_REQUEST['PType'] == $planType) {
-//                    if (!preg_match("/-" . $imgNamePart . "\.[a-z]{3,4}$/", $v)) {
-//                        $ErrorMsg["ImgError"] = "The word " . $imgNamePart . " should be part of image name at end.";
-//                    }
-//                }
-//            }
 
             $arrValue[$k] = $v;
             $arrTitle[$k] = $_REQUEST['title'][$k];
@@ -258,8 +248,7 @@ if (isset($_POST['Next'])) {
                 $altText = $BuilderName . " " . strtolower($ProjectName) . " " . $arrTitle[$key];
 
                 $tmp = array();
-                $tmp['image'] = "@" . $img['tmp_name'];
-                $tmp['count'] = "location_plan" . $key;
+                $tmp['image'] = "@" . $img['tmp_name'];                
                 $tmp['objectId'] = $projectId;
                 $tmp['objectType'] = "project";
                 $tmp['imageType'] = $image_type;
