@@ -44,10 +44,15 @@ function selectLocality(value){
 function submitButton(){ 
     var cityid = $('#citydd').val();
     var projectid = null;
-    if($("#project_search").val().trim()!='')
-     projectid = $('#selProjId').val();
+    var listingId = null;
+    if($("#project_search").val().trim()!=''){
+        projectid = $('#selProjId').val();
+    }
+    if($("#listing_id").val().trim()!=''){
+        listingId = $('#listing_id').val();
+    }
     var projectName = $('#project_search').val().trim();
-    window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName;
+    window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName+"&listingId=" + listingId;
     return false;
 }
 
@@ -390,6 +395,7 @@ $("#exit_button").click(function(){
 
 
 $('#project_search').val(getParameterByName('projectName'));
+$('#listing_id').val(getParameterByName('listingId'));
 $('#selProjId').val(getParameterByName('projectId'));
 $('#citydd').val(getParameterByName('citydd'));
 
@@ -455,6 +461,7 @@ selProject = $("#selProjId").val();*/
            url += '&city=' + $("#citydd :selected").val();  
            //if($("#project_search").val().trim()!='')
             url += '&project=' + $("#selProjId").val(); 
+            url += '&listingId=' + $("#listing_id").val(); 
           // trigger my custom event
           $(table).trigger('changingUrl', url);
           // send the server the current page
@@ -483,7 +490,7 @@ selProject = $("#selProjId").val();*/
       // OR
       // return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
       ajaxProcessing: function(data){
-        console.log(data);
+        //console.log(data);
         if (data && data.hasOwnProperty('rows')) {
           var indx, r, row, c, d = data.rows,
           // total number of rows (required)
@@ -498,17 +505,19 @@ selProject = $("#selProjId").val();*/
           len = d.length;
           // this will depend on how the json is set up - see City0.json
           // rows
+          
           for ( r=0; r < len; r++ ) {
             row = []; // new row array
             // cells
             for ( c in d[r] ) {
+                
               if (typeof(c) === "string") {
                 // match the key with the header to get the proper column index
                 indx = $.inArray( c, headerXref );
 
                 // add each table cell data to row array
                 if (indx >= 0) {
-                  if(indx==6){//encodeURIComponent(JSON.stringify(d[r][c]))
+                  if(indx==7){//encodeURIComponent(JSON.stringify(d[r][c]))
                     //d[r][c] = {'description': "hello'yes boys"};  
                     var a = d[r][c];
                     //console.log(a);
@@ -1467,7 +1476,7 @@ function getParameterByName(name) {
                                                   <input type=hidden name="selProjId" id="selProjId" >
                                                 </td>
                                                 <td style="padding-left: 10px;">
-                                                    <input type=text name="project_search_id" id="project_search_id" placeholder="Listing Id"  style="width:210px;">
+                                                    <input type=text name="listing_id" id="listing_id" placeholder="Listing Id"  style="width:210px;">
                                                 </td>
 		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
@@ -2011,16 +2020,13 @@ function getParameterByName(name) {
                            <thead>
                                 <TR class = "headingrowcolor">
                                   <th  width=1% align="center">Serial</th>
+                                  <TH width=3% align="center">Listing Id</TH>
                                   <th  width=5% align="center">City</th>
                                   <TH  width=8% align="center">Broker Name</TH>
                                   <TH  width=4% align="center">Project</TH>
                                   <TH  width=8% align="center">Listing</TH>
-                                  
-                                  <TH  width=4% align="center">Price
-                                
-                                  </TH> 
-                                
-                                 <TH width=3% align="center">Save</TH>
+                                  <TH  width=4% align="center">Price</TH>
+                                  <TH width=3% align="center">Save</TH>
                                 </TR>
                               
                           </thead>
@@ -2039,6 +2045,7 @@ function getParameterByName(name) {
                                 <th>5</th>
                                 <th>6</th>
                                 <th>7</th>
+                                <th>8</th>
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">

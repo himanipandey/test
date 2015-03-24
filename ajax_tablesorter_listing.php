@@ -13,13 +13,20 @@ $size = $_REQUEST['size'];
 $start = $page*$size;
 
 $cityId = $_REQUEST['city']; 
-if($cityId=='')
+if($cityId==''){
     $cityId=2;
+}
 $projectId = $_REQUEST['project']; 
-$projStr=NULL;
-if(isset($projectId) && !empty($projectId))
+$listingId = $_REQUEST['listingId']; 
+$projStr="";
+if(isset($projectId) && !empty($projectId) && ($projectId !="null") && ($projectId !="")){
     $projStr = "&projectId=".$projectId;
+}
 
+$listingIdStr="";
+if(isset($listingId) && !empty($listingId) && ($listingId !="null") && ($listingId !="")){
+    $listingIdStr = $listingId;
+}
 
 
 $tbsorterArr = array();
@@ -68,9 +75,12 @@ try{
             $data = $responseLists->body->data;
 
             $tbsorterArr['total_rows'] = $responseLists->body->totalCount;
-            $tbsorterArr['headers'] = array("Serial", "City", "Broker Name", "Project", "Listing", "Price", "Save");
+            $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Save");
             
             $tbsorterArr['rows'] = array();
+            
+            echo "<pre>";
+            print_r(get_object_vars($data[0]));
             
             //var_dump($responseLists->body);
             foreach ($data as $k => $v){ 
@@ -117,7 +127,7 @@ try{
                                             "Listing" => $v->property->unitName."-".$v->property->size."-".$v->property->unitType,
                                             "Price" => $price,
                                             "Save" =>  json_encode($v),//htmlentities(json_encode($v)), //$v,
-                                            "id" => $v->id
+                                            "ListingId" => $v->id
                         );
                 //var_dump($rows);
 
