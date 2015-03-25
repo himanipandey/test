@@ -44,15 +44,11 @@ function selectLocality(value){
 function submitButton(){ 
     var cityid = $('#citydd').val();
     var projectid = null;
-    var listingId = null;
     if($("#project_search").val().trim()!=''){
         projectid = $('#selProjId').val();
     }
-    if($("#listing_id").val().trim()!=''){
-        listingId = $('#listing_id').val();
-    }
     var projectName = $('#project_search').val().trim();
-    window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName+"&listingId=" + listingId;
+    window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName;
     return false;
 }
 function downloadClick(){
@@ -400,7 +396,6 @@ $("#exit_button").click(function(){
 
 
 $('#project_search').val(getParameterByName('projectName'));
-$('#listing_id').val(getParameterByName('listingId'));
 $('#selProjId').val(getParameterByName('projectId'));
 $('#citydd').val(getParameterByName('citydd'));
 
@@ -466,7 +461,6 @@ selProject = $("#selProjId").val();*/
            url += '&city=' + $("#citydd :selected").val();  
            //if($("#project_search").val().trim()!='')
             url += '&project=' + $("#selProjId").val(); 
-            url += '&listingId=' + $("#listing_id").val(); 
           // trigger my custom event
           $(table).trigger('changingUrl', url);
           // send the server the current page
@@ -1481,9 +1475,6 @@ function getParameterByName(name) {
                                                 <td height="25" align="left" valign="top" style="padding-left: 10px;">
                                                     <input type=text name="project_search" id="project_search" placeholder="Project"  style="width:210px;">
                                                   <input type=hidden name="selProjId" id="selProjId" >
-                                                </td>
-                                                <td style="padding-left: 10px;">
-                                                    <input type=text name="listing_id" id="listing_id" placeholder="Listing Id"  style="width:210px;">
                                                 </td>
 		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">

@@ -14,14 +14,9 @@ if ($cityId == '') {
     $cityId = 2;
 }
 $projectId = $_REQUEST['project'];
-$listingId = $_REQUEST['listingId'];
 $projStr = "";
 if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($projectId != "")) {
     $projStr = "&projectId=" . $projectId;
-}
-$listingIdStr = "";
-if (isset($listingId) && !empty($listingId) && ($listingId != "null") && ($listingId != "")) {
-    $listingIdStr = $listingId;
 }
 
 try {
