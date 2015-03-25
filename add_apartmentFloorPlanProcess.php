@@ -18,7 +18,7 @@
 
 
 	// used to differentialte image types with doc types, 3D Floor Plan not added because its actually an image type
-	$documentTypeArr = array("Panorama");
+	$documentTypeArr = array("Panorama", "3D Floor Plan");
 
 	$watermark_path = 'images/pt_shadow1.png';
 	$projectId				=	$_REQUEST['projectId'];
@@ -219,9 +219,9 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                                     $tmp['description'] = $floor_name;
                                     $tmp['altText'] = $altText;
 
-                                    if(in_array($floor_name, $documentTypeArr) || $floor_name=="3D Floor Plan"){
+                                    if(in_array($floor_name, $documentTypeArr) ){
                                     	$tmp['documentType'] = $image_type;
-                                    	$tmp['file'] = "@" . $img['tmp_name'];
+                                    	$tmp['file'] = "@" . $img['tmp_name']. ';filename=' . $img['name']. ';type=' . $img['type'];
                                     	unset($tmp['image']);
                                     	unset($tmp['imageType']);
                                     	unset($tmp['title']);
@@ -248,7 +248,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
         }
 
         $serviceResponse = writeToImageService($postArr);
-        //print("<pre>");var_dump($serviceResponse);die();
+        print("<pre>");var_dump($serviceResponse);die();
         //$serviceResponse = json_decode($serviceResponse);
       //  print'<pre>'.print_r($serviceResponse,1);die;				                  	
 

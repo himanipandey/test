@@ -276,7 +276,7 @@ class ImageServiceUpload{
          //print("<pre>");     
 //print_r($post);
         //die("here1");
-        if($post['dtype']=="3D"){
+        if($post['dtype']=="Document"){
                 //echo "3d del";
                 $url = static::join_urls(self::$doc_upload_url, $id); //die($url);
         }

@@ -10,7 +10,7 @@
 	$commercial = array();
 		
 
-	$documentTypeArr = array("Panoramic");
+	$documentTypeArr = array("Panoramic", "3DFloorPlan");
 		$watermark_path = 'images/pt_shadow1.png';
 		 $projectId = $_GET['projectId'];
 		$projectDetail = ProjectDetail($projectId);
@@ -137,7 +137,7 @@
 		        //$data['objectId'] = $v->objectId; 
 		        //$arr = preg_split('/(?=[A-Z])/',$v->imageType->type);
 		        //$str = ucfirst (implode(" ",$arr));
-		        $data['PLAN_TYPE'] = "3D"; //.$str;
+		        $data['PLAN_TYPE'] = "Document"; //.$str;
 		        $data['DISPLAY_ORDER'] = $v->priority;
 		        $data['IMAGE_DESCRIPTION'] = $v->description;
 		        $data['IMAGE_URL'] = $v->absoluteUrl;
@@ -246,7 +246,7 @@
 
                                $service_image_id = $_REQUEST['service_image_id'][$k];
                                $dtype = $_REQUEST['plan_type'][$k];
-                               if($dtype=="3D"){
+                               if($dtype=="Document"){
                                	$params = array(
 			                        "service_image_id" => $service_image_id,
 			                        "delete" => "yes",
