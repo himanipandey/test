@@ -2554,6 +2554,15 @@ function fetch_project_BSP($projectId){
 	}
 	return $bspArr;
 }
+function fetch_room_categories(){
+    $room_cats_sql = mysql_query("select * from room_category");
+    $room_cats = array();
+    while($row = mysql_fetch_object($room_cats_sql)){
+        $room_cats[$row->ROOM_CATEGORY_ID] = $row->CATEGORY_NAME;//str_replace(' ','', strtolower($row->CATEGORY_NAME));
+        
+    }
+    return $room_cats;
+}
 
 ?>
 
