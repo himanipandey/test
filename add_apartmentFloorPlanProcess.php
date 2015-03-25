@@ -248,7 +248,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
         }
 
         $serviceResponse = writeToImageService($postArr);
-        print("<pre>");var_dump($serviceResponse);die();
+        //print("<pre>");var_dump($serviceResponse);die();
         //$serviceResponse = json_decode($serviceResponse);
       //  print'<pre>'.print_r($serviceResponse,1);die;				                  	
 
