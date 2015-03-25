@@ -343,15 +343,15 @@ if (isset($_POST['btnSave']) && !is_array($ErrorMsg)) {
 
         $builderPath = $newImagePath . strtolower($BuilderName);
 
-        if (!is_dir($builderPath)) {
-            $builder = strtolower(str_replace(" ", "-", $builderPath));
-            mkdir($builder, 0777);
-        }
-
-        $proDir = $newImagePath . strtolower(str_replace(" ", "-", $BuilderName)) . "/" . strtolower(str_replace(" ", "-", $ProjectName));
-        if (!is_dir($proDir)) {
-            mkdir($proDir, 0777);
-        }
+//        if (!is_dir($builderPath)) {
+//            $builder = strtolower(str_replace(" ", "-", $builderPath));
+//            mkdir($builder, 0777);
+//        }
+//
+//        $proDir = $newImagePath . strtolower(str_replace(" ", "-", $BuilderName)) . "/" . strtolower(str_replace(" ", "-", $ProjectName));
+//        if (!is_dir($proDir)) {
+//            mkdir($proDir, 0777);
+//        }
 
 
         foreach ($arrValue as $k => $val) {

@@ -117,6 +117,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
         foreach ($_REQUEST['floor_name'] AS $key => $val) {
             //die($_REQUEST['floor_name'][$key]);
             if ($val != '')
+                //print "<pre>".print_r($_REQUEST['floor_name'],1)."</pre>"; die;
                 if ($_REQUEST['floor_name'][$key] != '' && $_REQUEST['floor_name'][$key] != "0") {
 
                     //echo strtolower($_FILES["imgurl"]["type"][$key]);
@@ -139,30 +140,30 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                                 $imgurl1 = $_FILES["imgurl"]["name"][$key];
                                 $foldlowe = strtolower($BuilderName);
                                 $newdirlow = $newImagePath . $foldlowe;
-                                if ((!is_dir($newdirlow))) {
-                                    $lowerdir = strtolower($BuilderName);
-                                    $newdir = $newImagePath . $lowerdir;
-                                    mkdir($newdir, 0777);
-                                    $flag = 1;
-                                }
+//                                if ((!is_dir($newdirlow))) {
+//                                    $lowerdir = strtolower($BuilderName);
+//                                    $newdir = $newImagePath . $lowerdir;
+//                                    mkdir($newdir, 0777);
+//                                    $flag = 1;
+//                                }
 
                                 /*                                 * **************project folder check********* */
                                 $newdirpro = $newImagePath . $BuilderName . "/" . $ProjectName;
                                 $foldname = strtolower($ProjectName);
                                 $andnewdirpro = $newImagePath . $BuilderName . "/" . $foldname;
-                                if ((!is_dir($newdirpro)) && (!is_dir($andnewdirpro))) {
-
-                                    $lowerpro = strtolower($ProjectName);
-                                    $ndirpro = $newImagePath . strtolower($BuilderName) . "/" . $lowerpro;
-                                    mkdir($ndirpro, 0777);
-                                    $projectFolderCreated = 1;
-                                    $createFolder = $ndirpro; //die("here");
-                                    $img_path = $ndirpro . "/" . $_FILES["imgurl"]["name"][$key]; //die("here");
-                                } else {
-
-                                    $img_path = $newImagePath . $BuilderName . "/" . strtolower($ProjectName) . "/" . $_FILES["imgurl"]["name"][$key];
-                                    $createFolder = $newImagePath . strtolower($BuilderName) . "/" . strtolower($ProjectName);
-                                }
+//                                if ((!is_dir($newdirpro)) && (!is_dir($andnewdirpro))) {
+//
+//                                    $lowerpro = strtolower($ProjectName);
+//                                    $ndirpro = $newImagePath . strtolower($BuilderName) . "/" . $lowerpro;
+//                                    mkdir($ndirpro, 0777);
+//                                    $projectFolderCreated = 1;
+//                                    $createFolder = $ndirpro; //die("here");
+//                                    $img_path = $ndirpro . "/" . $_FILES["imgurl"]["name"][$key]; //die("here");
+//                                } else {
+//
+//                                    $img_path = $newImagePath . $BuilderName . "/" . strtolower($ProjectName) . "/" . $_FILES["imgurl"]["name"][$key];
+//                                    $createFolder = $newImagePath . strtolower($BuilderName) . "/" . strtolower($ProjectName);
+//                                }
                                 /*                                 * ************************project folder check******** */
                                 $projecttbl = "/" . strtolower($BuilderName) . "/" . strtolower($ProjectName);
                                 //$flrplan = strstr($_FILES["imgurl"]["name"][$key], 'floor-plan');
@@ -248,7 +249,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
         }
 
         $serviceResponse = writeToImageService($postArr);
-        print("<pre>");var_dump($serviceResponse);die();
+        //print("<pre>");var_dump($serviceResponse);die();
         //$serviceResponse = json_decode($serviceResponse);
       //  print'<pre>'.print_r($serviceResponse,1);die;				                  	
 

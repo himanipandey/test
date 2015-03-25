@@ -165,17 +165,17 @@ if (isset($_REQUEST['upImg']) && $_REQUEST['upImg'] == 1) {
 //                    print "<pre>" . print_r($_FILES, 1) . "</pre>";
 //                    die;
 //
-//                    $params = array(
-//                        "priority" => $displayPriority,
-//                        "description" => $imgDescription,
-//                        "image_type" => $imgCategory,
-//                        "title" => $imgDisplayName,
-//                        "column_name" => $columnName,
-//                        "folder" => "locality/",
-//                        "image" => $imgName,
-//                        "count" => $__imgCnt,
-//                        "altText" => $imgDisplayName,
-//                    );
+                    $params = array(
+                        "priority" => $displayPriority,
+                        "description" => $imgDescription,
+                        "image_type" => $imgCategory,
+                        "title" => $imgDisplayName,
+                        "column_name" => $columnName,
+                        "folder" => "locality/",
+                        "image" => $imgName,
+                        "count" => $__imgCnt,
+                        "altText" => $imgDisplayName,
+                    );
 //                    
 //                    $unitImageArr['img'] = $img;
 //                    $unitImageArr['objectId'] = $areaId;
@@ -472,6 +472,7 @@ if (isset($_REQUEST['upImg']) && $_REQUEST['upImg'] == 1) {
                     $unitImageArr['method'] = "POST";
                     $unitImageArr['params'] = $tmp;
                     $postArr[$k] = $unitImageArr;
+                    
                     
                 }
             } else {
