@@ -6,15 +6,13 @@ include("dbConfig.php");
 include("includes/configs/configs.php");
 
 if (isset($_POST['newRoom'])) {
-    
+
     $roomType = $_POST['newRoom'];
     $sql = "INSERT INTO " . ROOM_CATEGORY . " (`CATEGORY_NAME`) VALUES ('$roomType')";
 
     $row = mysql_query($sql) or die(mysql_error());
-    
+
     echo "New Room Type added successfully!";
-    
-    
 } else {
 
     $count = $_POST['count'];
@@ -51,6 +49,18 @@ if (isset($_POST['newRoom'])) {
     }
 
     if (empty($error)) {
+        
+        $createdAt = date('Y-m-d H:i:s');
+
+        //check if oldrecord exist
+        $sql_old = "SELECT created_at FROM " . PROJECT_OPTIONS_ROOM_SIZE . " WHERE `OPTIONS_ID` = '$optionId' limit 1";
+        $res_old = mysql_query($sql_old) or die(mysql_error());
+
+        if ($res_old) {
+            $res_old = mysql_fetch_object($res_old);
+            $createdAt = ($res_old->created_at == '0000-00-00 00:00:00')? date('Y-m-d H:i:s') : $res_old->created_at;
+        }
+
         //deleted old records
         $sql_del_old = "DELETE FROM " . PROJECT_OPTIONS_ROOM_SIZE . " WHERE `OPTIONS_ID` = '$optionId'";
         mysql_query($sql_del_old) or die(mysql_error());
@@ -61,12 +71,14 @@ if (isset($_POST['newRoom'])) {
             $lengthIH = $row['length_inch'];
             $breathFT = $row['breath_ft'];
             $breathIH = $row['breath_inch'];
+            $updatedBy = $_SESSION['adminId'];
+            $createdAt = $createdAt;
 
             if (($lengthFT == '' && $breathFT == '') || $catID == '') {
                 continue;
             }
 
-            $sql = "INSERT INTO " . PROJECT_OPTIONS_ROOM_SIZE . " (`OPTIONS_ID`,`ROOM_CATEGORY_ID`,`ROOM_LENGTH`,`ROOM_BREATH`, `ROOM_LENGTH_INCH`, `ROOM_BREATH_INCH`) VALUES ('$optionId',' $catID','$lengthFT', '$breathFT', '$lengthIH','$breathIH')";
+            $sql = "INSERT INTO " . PROJECT_OPTIONS_ROOM_SIZE . " (`OPTIONS_ID`,`ROOM_CATEGORY_ID`,`ROOM_LENGTH`,`ROOM_BREATH`, `ROOM_LENGTH_INCH`, `ROOM_BREATH_INCH`, `updated_by`, `created_at`) VALUES ('$optionId',' $catID','$lengthFT', '$breathFT', '$lengthIH','$breathIH', '$updatedBy', '$createdAt')";
 
             $row = mysql_query($sql) or die(mysql_error());
         }
