@@ -534,9 +534,9 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
                     $doc['type'] = $_FILES["project_brochure"]["type"];
                     $doc['name'] = $_FILES["project_brochure"]["name"];
                     $doc['tmp_name'] = $_FILES["project_brochure"]["tmp_name"];
-
+                    
                     $tmp = array();
-                    $tmp['file'] = "@" . $doc['tmp_name'];
+                    $tmp['file'] = "@" . $_FILES["project_brochure"]["tmp_name"]. ';filename=' . $_FILES['project_brochure']['name']. ';type=' . $_FILES['project_brochure']['type'];
                     $tmp['objectId'] = $projectId;
                     $tmp['objectType'] = "project";
                     $tmp['documentType'] = "projectBrouchure";

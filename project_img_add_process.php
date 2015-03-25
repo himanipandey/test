@@ -191,22 +191,7 @@ if (isset($_POST['Next'])) {
 
         $flag = 0;
         $projectFolderCreated = 0;
-        /*         * *****************Update location,site,layout and master plan from db and also from table******** */
-        $foldlowe = strtolower($BuilderName);
-        $newdirlow = $newImagePath . $foldlowe;
-        if ((!is_dir($newdirlow))) {
-            $lowerdir = strtolower($BuilderName);
-            $newdir = $newImagePath . "" . $lowerdir;
-
-            mkdir($newdir, 0777);
-            $flag = 1;
-        }
-
-        /*         * **************project folder check********* */
-        $newdirpro = $newImagePath . $BuilderName . "/" . $ProjectName;
-        $foldname = strtolower($ProjectName);
-        $andnewdirpro = $newImagePath . $BuilderName . "/" . $foldname;
-
+ 
         $postArr = array(); // array to store image data to send with http request
         $fileEndName = array();
 
