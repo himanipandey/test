@@ -35,7 +35,8 @@ $uriLogin = ADMIN_USER_LOGIN_API_URL; //master
 //$uriLogin = "https://qa.proptiger-ws.com/app/v1/login?username=admin-10@proptiger.com&password=1234&rememberme=true"; //normal user
 //$projectId="653678";
 //$uriListing = "https://qa.proptiger-ws.com/data/v1/entity/user/listing?cityId=2&fields=seller,id,property&start=0&rows=10";
-$uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}{$projStr}&start={$start}&rows={$size}&fields=seller,seller.fullName,id,listing,listing.facingId,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,listing.towerId,listing.phaseId,property,property.propertyId,property.project.name,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
+$fields = "seller,seller.fullName,id,listing,listing.createdAt,listing.facingId,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,listing.towerId,listing.phaseId,property,property.propertyId,property.project.name,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
+$uriListing = LISTING_API_URL."?listingCategory=Resale&cityId={$cityId}{$projStr}&start={$start}&rows={$size}&fields={$fields}";
 
 //echo $uriListing; die;
 //$uri = "https://qa.proptiger-ws.com/data/v1/entity/user/listing";
@@ -70,17 +71,17 @@ try{
     if($ck_new!='')
     {    
         $responseLists = \Httpful\Request::get($uriListing)->addHeader("COOKIE", $ck_new )->send(); 
-        //var_dump($responseLists->body);
+//        print_r($responseLists);die;
         if($responseLists->body->statusCode=="2XX"){
             $data = $responseLists->body->data;
 
             $tbsorterArr['total_rows'] = $responseLists->body->totalCount;
-            $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Save");
+            $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Save");
             
             $tbsorterArr['rows'] = array();
             
-            echo "<pre>";
-            print_r(get_object_vars($data[0]));
+//            echo "<pre>";
+//            print_r(get_object_vars($data[0]));
             
             //var_dump($responseLists->body);
             foreach ($data as $k => $v){ 
@@ -119,6 +120,7 @@ try{
                 $v->property->project->locality->suburb->description = '';   
                 $v->property->project->locality->suburb->city->description = '';                            
                 //echo "here";
+
                 $rows = array(
                                             "Serial" => $start+$k+1,
                                             "City" => $v->property->project->locality->suburb->city->label,
@@ -127,9 +129,9 @@ try{
                                             "Listing" => $v->property->unitName."-".$v->property->size."-".$v->property->unitType,
                                             "Price" => $price,
                                             "Save" =>  json_encode($v),//htmlentities(json_encode($v)), //$v,
-                                            "ListingId" => $v->id
+                                            "ListingId" => $v->id,
+                                            "CreatedDate" => date("Y-m-d",($v->createdAt)/1000)
                         );
-                //var_dump($rows);
 
                 array_push($tbsorterArr['rows'], $rows);
             

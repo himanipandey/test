@@ -55,6 +55,11 @@ function submitButton(){
     window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName+"&listingId=" + listingId;
     return false;
 }
+function downloadClick(){
+    window.location.href=tableSotderUrl.replace('ajax_tablesorter_listing.php','ajax/downloadListing.php');
+    
+    return false;
+}
 
 function isNumeric(val) {
     var validChars = '0123456789.';
@@ -400,7 +405,7 @@ $('#selProjId').val(getParameterByName('projectId'));
 $('#citydd').val(getParameterByName('citydd'));
 
 // tablesorter ajax pager
-
+ tableSotderUrl='';
 {literal}
 $(function(){
 /*var selCity = null;
@@ -465,6 +470,7 @@ selProject = $("#selProjId").val();*/
           // trigger my custom event
           $(table).trigger('changingUrl', url);
           // send the server the current page
+          tableSotderUrl = url;
           return url;
       },
 
@@ -514,10 +520,11 @@ selProject = $("#selProjId").val();*/
               if (typeof(c) === "string") {
                 // match the key with the header to get the proper column index
                 indx = $.inArray( c, headerXref );
-
+//alert("index : "+indx+" \n c : "+c+" \n value :"+d[r][c]);
+//alert(JSON.stringify(d[r]));
                 // add each table cell data to row array
                 if (indx >= 0) {
-                  if(indx==7){//encodeURIComponent(JSON.stringify(d[r][c]))
+                  if(indx==8){//encodeURIComponent(JSON.stringify(d[r][c]))
                     //d[r][c] = {'description': "hello'yes boys"};  
                     var a = d[r][c];
                     //console.log(a);
@@ -1481,6 +1488,9 @@ function getParameterByName(name) {
 		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
 		                                </td>
+		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
+		                                    <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
+		                                </td>
                                             </tr>
                                         </table>
                                     </form>
@@ -2026,6 +2036,7 @@ function getParameterByName(name) {
                                   <TH  width=4% align="center">Project</TH>
                                   <TH  width=8% align="center">Listing</TH>
                                   <TH  width=4% align="center">Price</TH>
+                                  <TH width=3% align="center">Created Date</TH>
                                   <TH width=3% align="center">Save</TH>
                                 </TR>
                               
@@ -2046,6 +2057,7 @@ function getParameterByName(name) {
                                 <th>6</th>
                                 <th>7</th>
                                 <th>8</th>
+                                <th>9</th>
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">
