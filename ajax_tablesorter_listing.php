@@ -70,7 +70,7 @@ try{
             $data = $responseLists->body->data;
 
             $tbsorterArr['total_rows'] = $responseLists->body->totalCount;
-            $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Save");
+            $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Save", "Delete");
             
             $tbsorterArr['rows'] = array();
             
@@ -124,7 +124,8 @@ try{
                                             "Price" => $price,
                                             "Save" =>  json_encode($v),//htmlentities(json_encode($v)), //$v,
                                             "ListingId" => $v->id,
-                                            "CreatedDate" => date("Y-m-d",($v->createdAt)/1000)
+                                            "CreatedDate" => date("Y-m-d",($v->createdAt)/1000),
+                                            "Delete" => ''
                         );
 
                 array_push($tbsorterArr['rows'], $rows);

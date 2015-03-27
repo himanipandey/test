@@ -52,7 +52,7 @@ function submitButton(){
     return false;
 }
 function downloadClick(){
-    window.location.href=tableSotderUrl.replace('ajax_tablesorter_listing.php','ajax/downloadListing.php');
+    window.location.href="{$dirname}/ajax/downloadListing.php";
     
     return false;
 }
@@ -97,6 +97,7 @@ function cleanFields(){
    $("#image_link").html("");
    
 }
+
 
 
 
@@ -347,7 +348,8 @@ function exitButtonClicked(){
 }
 
 
-jQuery(document).ready(function(){  
+jQuery(document).ready(function(){       
+    
   var i;
 
 $('#search-top').show('slow');
@@ -528,8 +530,11 @@ selProject = $("#selProjId").val();*/
                  //var hello = {};
                  //console.log(d[r][c]);
                   //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
-                   }
-                  else
+                   }else if(indx == 9){
+                        var lid = d[r]['ListingId'];
+                        row[indx] =  "<button type='button' class='delete-list' data-listingId=" + lid + " align='left'>Delete</button>";
+                        
+                   }else
                     row[indx] = d[r][c];
                 }
               }
@@ -578,8 +583,6 @@ selProject = $("#selProjId").val();*/
 });
 
 {/literal}
-
-
 
 populate_total_floor();
 
@@ -2020,15 +2023,16 @@ function getParameterByName(name) {
                         <form name="form1" method="post" action="">
                            <thead>
                                 <TR class = "headingrowcolor">
-                                  <th  width=1% align="center">Serial</th>
-                                  <TH width=3% align="center">Listing Id</TH>
-                                  <th  width=5% align="center">City</th>
-                                  <TH  width=8% align="center">Broker Name</TH>
-                                  <TH  width=4% align="center">Project</TH>
-                                  <TH  width=8% align="center">Listing</TH>
-                                  <TH  width=4% align="center">Price</TH>
-                                  <TH width=3% align="center">Created Date</TH>
-                                  <TH width=3% align="center">Save</TH>
+                                  <th align="center">Serial</th>
+                                  <TH align="center">Listing Id</TH>
+                                  <th align="center">City</th>
+                                  <TH align="center">Broker Name</TH>
+                                  <TH align="center">Project</TH>
+                                  <TH align="center">Listing</TH>
+                                  <TH align="center">Price</TH>
+                                  <TH align="center">Created Date</TH>
+                                  <TH align="center">Save</TH>
+                                  <TH align="center">Delete</TH>
                                 </TR>
                               
                           </thead>
@@ -2049,6 +2053,7 @@ function getParameterByName(name) {
                                 <th>7</th>
                                 <th>8</th>
                                 <th>9</th>
+                                <th>10</th>
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">
@@ -2080,3 +2085,32 @@ function getParameterByName(name) {
     </TBODY></TABLE>
   </TD>
 </TR>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".delete-list").live("click",function(event){
+        var listing_id= $(this).attr("data-listingId");
+        if(confirm("Are you sure! you want to delete this record.")){
+            $.ajax({
+                type: "POST",
+                url: '/saveSecondaryListings.php',
+                data : { task : "delete_listing", listingId: listing_id},
+                success : function(data, text){
+                    data = JSON.parse(data);
+                    if(data.code==2){
+                        var target = $( event.target );
+                        target.closest('tr').hide();
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                },
+                error : function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+        }
+        
+    });
+});
+
+</script>

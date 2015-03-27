@@ -76,7 +76,38 @@ else if($_POST['task'] === 'get_broker')  {
     echo $broker_id;
     //$smarty->assign("sel",$Sel);
 
-} 
+}
+else if($_POST['task'] == 'delete_listing'){
+    $login_cookie = authListing();
+    if($login_cookie !=""){
+        $listingId = $_POST['listingId'];
+        $api_url = LISTING_API_URL."/".$listingId;
+        $response = \Httpful\Request::delete($api_url)           
+        ->sendsJson()
+        ->body()
+        ->addHeader("COOKIE", $login_cookie)
+        ->send();
+        
+        if($response->body->statusCode=="2XX"){
+            $returnArr['code'] = "2";
+            $returnArr['msg'] = "Deleted successfully";
+            echo json_encode($returnArr);
+        }
+        else{
+            $returnArr['code'] = "0";
+            $returnArr['msg'] = $response->body->error->msg;
+            echo json_encode($returnArr);
+        }
+        
+    }else{
+        $returnArr['code'] = "0";
+        $returnArr['msg'] = "Authentication error";
+        echo json_encode($returnArr);
+    }
+    
+    
+    
+}
 else {
     //$listing_id = $_POST['listing_id'];
     $listing_id='';
@@ -364,4 +395,20 @@ else {
                     print_r($output_array);*/
     }
 
+function authListing(){
+    $uriLogin = ADMIN_USER_LOGIN_API_URL;
+    $response_login = \Httpful\Request::post($uriLogin)->sendsJson()->body('')->send();
+    $header = $response_login->headers;
+    $header = $header->toArray();
+    $ck = $header['set-cookie'];
+
+    $ck_new = "";
+    for($i = 0; $i < strlen($ck); $i++)  {
+        if($ck[$i] == ';')  {
+            break;
+        }
+        $ck_new = $ck_new.$ck[$i];
+    }
+    return $ck_new;
+}
 ?>

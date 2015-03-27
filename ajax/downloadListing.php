@@ -6,19 +6,6 @@ include("../listing_function.php");
 include("../function/functions_listing.php");
 include("../httpful.phar");
 
-$page = $_REQUEST['page'];
-$size = $_REQUEST['size'];
-$start = $page * $size;
-$cityId = $_REQUEST['city'];
-if ($cityId == '') {
-    $cityId = 2;
-}
-$projectId = $_REQUEST['project'];
-$projStr = "";
-if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($projectId != "")) {
-    $projStr = "&projectId=" . $projectId;
-}
-
 try {
 
     $uriLogin = ADMIN_USER_LOGIN_API_URL;
@@ -38,7 +25,7 @@ try {
     if ($cookie_new != '') {
 
         $fields = "seller,seller.fullName,id,listing,listing.createdAt,listing.facingId,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,listing.towerId,listing.phaseId,property,property.propertyId,property.project.name,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
-        $uriListing = LISTING_API_URL . "?listingCategory=Resale&cityId={$cityId}{$projStr}&start={$start}&rows={$size}&fields={$fields}";
+        $uriListing = LISTING_API_URL . "?listingCategory=Resale&fields={$fields}";
 
         $responseLists = \Httpful\Request::get($uriListing)->addHeader("COOKIE", $cookie_new)->send();
 
