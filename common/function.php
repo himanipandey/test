@@ -227,8 +227,8 @@ function writeToImageService($imageParams){
                    // print_r($service_extra_paramsArr);//die();
 
             if($params['delete']=="yes"){
-                if($params['dtype']=="3D"){
-                    $extra_paramsArr = array("dtype" => "3D");
+                if($params['dtype']=="Document"){
+                    $extra_paramsArr = array("dtype" => $params['dtype']);
                     $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id'],  "service_extra_params" => $extra_paramsArr));
                     $postArr[$k] = $s3upload->delete();
                 }
@@ -316,7 +316,8 @@ function writeToImageService($imageParams){
         }
     }
      
-  //print'<pre>';   print_r($postArr);die();
+  // print'<pre>';   print_r($postArr);die(); 
+
   // array of curl handles
     $curly = array();
   // data to be returned
@@ -349,6 +350,11 @@ $logger = Logger::getLogger("main");
             $url = DOC_SERVICE_URL;
         }
     }*/
+
+
+//print'<pre>';
+//print_r($d); die();
+
     $curly[$id] = curl_init();
  
     //$url = (is_array($d) && !empty($url) ? $url : "");
