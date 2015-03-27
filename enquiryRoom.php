@@ -43,7 +43,7 @@ if (isset($_POST['newRoom'])) {
 
         if ($lengthFT && $breathFT && $catID == 2) {
             $otBedroomsArea = ($lengthFT * 12 + $lengthIH) * ($breathFT * 12 + $breathIH);
-            if ($otBedroomsArea > $masterBedroomsArea)
+            if ($otBedroomsArea >= $masterBedroomsArea)
                 $error[] = 'Area of Master Bedroom should be greater than other bedroom area';
         }
     }
