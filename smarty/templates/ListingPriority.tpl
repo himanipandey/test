@@ -44,10 +44,16 @@ function selectLocality(value){
 function submitButton(){ 
     var cityid = $('#citydd').val();
     var projectid = null;
-    if($("#project_search").val().trim()!='')
-     projectid = $('#selProjId').val();
+    if($("#project_search").val().trim()!=''){
+        projectid = $('#selProjId').val();
+    }
     var projectName = $('#project_search').val().trim();
     window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName;
+    return false;
+}
+function downloadClick(){
+    window.location.href="{$dirname}/ajax/downloadListing.php";
+    
     return false;
 }
 
@@ -91,6 +97,7 @@ function cleanFields(){
    $("#image_link").html("");
    
 }
+
 
 
 
@@ -177,6 +184,7 @@ function editListing(str){
       $("#name").val(jsonDump.owner_name);
       $("#email").val(jsonDump.owner_email);
       $("#number").val(jsonDump.owner_number);
+      $("#alt_number").val(jsonDump.alt_owner_number);
 
       $("#total_floor1").val(jsonDump.total_floor);
 
@@ -341,7 +349,8 @@ function exitButtonClicked(){
 }
 
 
-jQuery(document).ready(function(){  
+jQuery(document).ready(function(){       
+    
   var i;
 
 $('#search-top').show('slow');
@@ -394,7 +403,7 @@ $('#selProjId').val(getParameterByName('projectId'));
 $('#citydd').val(getParameterByName('citydd'));
 
 // tablesorter ajax pager
-
+ tableSotderUrl='';
 {literal}
 $(function(){
 /*var selCity = null;
@@ -458,6 +467,7 @@ selProject = $("#selProjId").val();*/
           // trigger my custom event
           $(table).trigger('changingUrl', url);
           // send the server the current page
+          tableSotderUrl = url;
           return url;
       },
 
@@ -483,7 +493,7 @@ selProject = $("#selProjId").val();*/
       // OR
       // return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
       ajaxProcessing: function(data){
-        console.log(data);
+        //console.log(data);
         if (data && data.hasOwnProperty('rows')) {
           var indx, r, row, c, d = data.rows,
           // total number of rows (required)
@@ -498,17 +508,20 @@ selProject = $("#selProjId").val();*/
           len = d.length;
           // this will depend on how the json is set up - see City0.json
           // rows
+          
           for ( r=0; r < len; r++ ) {
             row = []; // new row array
             // cells
             for ( c in d[r] ) {
+                
               if (typeof(c) === "string") {
                 // match the key with the header to get the proper column index
                 indx = $.inArray( c, headerXref );
-
+//alert("index : "+indx+" \n c : "+c+" \n value :"+d[r][c]);
+//alert(JSON.stringify(d[r]));
                 // add each table cell data to row array
                 if (indx >= 0) {
-                  if(indx==6){//encodeURIComponent(JSON.stringify(d[r][c]))
+                  if(indx==8){//encodeURIComponent(JSON.stringify(d[r][c]))
                     //d[r][c] = {'description': "hello'yes boys"};  
                     var a = d[r][c];
                     //console.log(a);
@@ -518,8 +531,11 @@ selProject = $("#selProjId").val();*/
                  //var hello = {};
                  //console.log(d[r][c]);
                   //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
-                   }
-                  else
+                   }else if(indx == 9){
+                        var lid = d[r]['ListingId'];
+                        row[indx] =  "<button type='button' class='delete-list' data-listingId=" + lid + " align='left'>Delete</button>";
+                        
+                   }else
                     row[indx] = d[r][c];
                 }
               }
@@ -569,8 +585,6 @@ selProject = $("#selProjId").val();*/
 
 {/literal}
 
-
-
 populate_total_floor();
 
 
@@ -588,6 +602,7 @@ $("#lmkSave").click(function(){
     var owner_name = $("#name").val().trim();
     var owner_email = $("#email").val().trim();
     var owner_number = $("#number").val().trim();
+    var alt_owner_number = $("#alt_number").val().trim();
     if(broker_id==pt_broker_id){
           
 
@@ -609,6 +624,12 @@ $("#lmkSave").click(function(){
               alert('Enter Only numeric owner contact no.');
             return false;
             }
+          }
+          if(alt_owner_number !=""){
+               if(!isNumeric(alt_owner_number)){
+                  alert('Enter Only numeric contact no.');
+                  return false;
+                }
           }
             
 
@@ -664,6 +685,7 @@ $("#lmkSave").click(function(){
     var owner_name = $("#name").val().trim();
     var owner_email = $("#email").val().trim();
     var owner_number = $("#number").val().trim();
+    var alt_owner_number = $("#alt_number").val().trim();
 
     var facing = $("#facing2 :selected").val();
     if(facing=='')
@@ -861,7 +883,7 @@ $("#lmkSave").click(function(){
               $("body").addClass("loading");
             },
 
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, alt_owner_number:alt_owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task},
 
 
 
@@ -1448,70 +1470,37 @@ function getParameterByName(name) {
 		<TR>
 		<TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 		    <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
-				<tr>
+                        <tr>
 		            <td>
-		        	    <div id="search-top">
-		                    <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">
-		                        <form method = "get">
+                                <div id="search-top">
+                                    <form method = "get">
+                                        <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">		                        
 		            	            <tr>
-		                                <td width="20%" height="25" align="left" valign="top">
-		                                   
+		                                <td height="25" align="left" valign="top">
+                                                    <select id="citydd" name="citydd" >
+                                                       <option value=''>select city</option>
+                                                       {foreach from=$cityArray key=k item=v}
+                                                           <option value="{$k}" {if $k==$cityId}  {/if}>{$v}</option>
+                                                       {/foreach}
+                                                    </select>
 		                                </td>
-		                                <td width = "10px">&nbsp;
-		                                </td>
-		                                <td width="20%" height="25" align="left" valign="top">
-		                                    <!--<span id = "LocalityList">
-		                                    <select id="locality" name="locality" onchange = "localitySelect(this.value);">
-		                                       <option value=''>select locality</option>
-		                                       {foreach from=$localityArr key=k item=v}
-		                                           <option value="{$v->locality_id}" {if $localityId==$v->locality_id}
-		                                              selected="selected" {/if}>{$v->label}</option>
-		                                       {/foreach}
-		                                    </select>
-		                                    </span> -->
-		                                </td>
-		                          		<!-- <input type="hidden" name="localityId" id = "localityId" value="{$localityId}"> -->
-		                                
-		                                
-		                                <td width = "10px">&nbsp;</td>
-		                                <td width="15%" height="25" align="left" valign="top">
-		                                    <!--<select name="status">
-		                                       <option value='Active' {if $status == 'Active'}selected{/if}>Active</option>
-		                                       <option value='Inactive' {if $status == 'Inactive'}selected{/if}>Inactive</option>
-		                                    </select> -->
-                                        <select id="citydd" name="citydd" >
-                                           <option value=''>select city</option>
-                                           {foreach from=$cityArray key=k item=v}
-                                               <option value="{$k}" {if $k==$cityId}  {/if}>{$v}</option>
-                                           {/foreach}
-                                        </select>
-		                                </td>
-                                    <td width = "10px">&nbsp;
-                                    </td>
-                                    <td width="15%" height="25" align="left" valign="top">
-                                        <!-- <select id="placeType" name="placeType">
-                                           <option value=''>select place type</option>
-                                           {foreach from=$nearPlaceTypesArray key=k item=v}
-                                                  <option value="{$v->id}" {if $placeType==$v->id}  selected="selected" {/if}>{$v->name}</option>
-                                           {/foreach}
-                                        </select>
-                                        -->
-                                      
-                                      <input type=text name="project_search" id="project_search"  style="width:210px;"> 
-                                      <input type=hidden name="selProjId" id="selProjId" >
-                              
-                                    </td>
-		                                <td width = "10px">&nbsp;</td>
-		                                <td width="20%" height="25" align="left" valign="top">
+                                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
+                                                    <input type=text name="project_search" id="project_search" placeholder="Project"  style="width:210px;">
+                                                  <input type=hidden name="selProjId" id="selProjId" >
+                                                </td>
+		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
 		                                </td>
-		                          </tr>
-		                        </form>
-		                    </table>
+		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
+		                                    <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
+		                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
 		                </div> 
 		            </td>
-                </tr>
-            </table>  
+                    </tr>
+                </table>
 
 
 
@@ -1588,6 +1577,19 @@ function getParameterByName(name) {
                               <td id="name2">
                                   <input type=text name="name" id="name"  style="width:150px;">
                               </td>
+                              
+                              <td id="number1">
+
+                                <font id="number_font" color="red" style="display:none">
+                                    *
+                                </font>
+                                Contact Number:
+                              </td>
+                              <td class="number2">
+                                <input type=text name="number" id="number" style="width:150px;">
+                              </td> 
+                              
+                              
                         </tr>
                         <tr id="name_number2">      
                               <td id="email1">
@@ -1602,10 +1604,10 @@ function getParameterByName(name) {
                                 <font id="number_font" color="red" style="display:none">
                                     *
                                 </font>
-                                Contact Number:
+                                Alternate Contact Number:
                               </td>
                               <td class="number2">
-                                <input type=text name="number" id="number" style="width:150px;">   
+                                <input type=text name="alt_number" id="alt_number" style="width:150px;">   
                                 <input type=hidden value="{$proptiger_broker_id}" name="pt_broker_id" id="pt_broker_id" style="width:100px;">  
                               </td>          
                         </tr>
@@ -2043,17 +2045,16 @@ function getParameterByName(name) {
                         <form name="form1" method="post" action="">
                            <thead>
                                 <TR class = "headingrowcolor">
-                                  <th  width=1% align="center">Serial</th>
-                                  <th  width=5% align="center">City</th>
-                                  <TH  width=8% align="center">Broker Name</TH>
-                                  <TH  width=4% align="center">Project</TH>
-                                  <TH  width=8% align="center">Listing</TH>
-                                  
-                                  <TH  width=4% align="center">Price
-                                
-                                  </TH> 
-                                
-                                 <TH width=3% align="center">Save</TH>
+                                  <th align="center">Serial</th>
+                                  <TH align="center">Listing Id</TH>
+                                  <th align="center">City</th>
+                                  <TH align="center">Broker Name</TH>
+                                  <TH align="center">Project</TH>
+                                  <TH align="center">Listing</TH>
+                                  <TH align="center">Price</TH>
+                                  <TH align="center">Created Date</TH>
+                                  <TH align="center">Save</TH>
+                                  <TH align="center">Delete</TH>
                                 </TR>
                               
                           </thead>
@@ -2072,6 +2073,9 @@ function getParameterByName(name) {
                                 <th>5</th>
                                 <th>6</th>
                                 <th>7</th>
+                                <th>8</th>
+                                <th>9</th>
+                                <th>10</th>
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">
@@ -2103,3 +2107,32 @@ function getParameterByName(name) {
     </TBODY></TABLE>
   </TD>
 </TR>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".delete-list").live("click",function(event){
+        var listing_id= $(this).attr("data-listingId");
+        if(confirm("Are you sure! you want to delete this record.")){
+            $.ajax({
+                type: "POST",
+                url: '/saveSecondaryListings.php',
+                data : { task : "delete_listing", listingId: listing_id},
+                success : function(data, text){
+                    data = JSON.parse(data);
+                    if(data.code==2){
+                        var target = $( event.target );
+                        target.closest('tr').hide();
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                },
+                error : function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+        }
+        
+    });
+});
+
+</script>
